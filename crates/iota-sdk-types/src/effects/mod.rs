@@ -9,6 +9,8 @@ pub use v1::{
     UnchangedSharedObject,
 };
 
+use crate::{ObjectDigest, ObjectId, ObjectReference, ObjectVersion, Version};
+
 /// The output or effects of executing a transaction
 ///
 /// # BCS
@@ -37,7 +39,7 @@ mod tests {
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
-    use super::TransactionEffects;
+    use super::{ObjectOut, TransactionEffects};
 
     // The files contain the bas64 encoded raw effects of transactions
     const GENESIS_EFFECTS: &str = include_str!("fixtures/genesis-transaction-effects");
@@ -53,6 +55,205 @@ mod tests {
             let json = serde_json::to_string_pretty(&fx).unwrap();
             println!("{json}");
             assert_eq!(fx, serde_json::from_str(&json).unwrap());
+        }
+    }
+
+    /// Shared inputs are drawn from both the objects a transaction changed and
+    /// those it left unchanged, and a per-epoch config object is not one.
+    #[test]
+    fn input_shared_objects_span_changed_and_unchanged() {
+        use crate::{
+            ChangedObject, IdOperation, InputSharedObject, ObjectDigest, ObjectId, ObjectIn,
+            ObjectOut, ObjectVersion, Owner, TransactionEffectsV1, UnchangedSharedKind,
+            UnchangedSharedObject, Version,
+        };
+
+        let mutated = ObjectId::new([1; 32]);
+        let read_only = ObjectId::new([2; 32]);
+        let read_deleted = ObjectId::new([3; 32]);
+        let mutate_deleted = ObjectId::new([4; 32]);
+        let canceled = ObjectId::new([5; 32]);
+        let per_epoch_config = ObjectId::new([6; 32]);
+        let owned = ObjectId::new([7; 32]);
+        let digest = ObjectDigest::new([8; 32]);
+        let version = Version::from_u64(3);
+
+        let shared_input = |object_id, owner| ChangedObject {
+            object_id,
+            input_state: ObjectIn::Data {
+                version,
+                digest,
+                owner,
+            },
+            output_state: ObjectOut::ObjectWrite { digest, owner },
+            id_operation: IdOperation::None,
+        };
+        let unchanged = |object_id, kind| UnchangedSharedObject { object_id, kind };
+
+        let effects = TransactionEffectsV1 {
+            status: crate::ExecutionStatus::Success,
+            epoch: 0,
+            gas_cost_summary: crate::GasCostSummary::default(),
+            transaction_digest: crate::TransactionDigest::default(),
+            gas_object_index: None,
+            events_digest: None,
+            dependencies: Vec::new(),
+            lamport_version: Version::from_u64(4),
+            changed_objects: vec![
+                shared_input(mutated, Owner::Shared(version)),
+                // An owned input is not a shared input.
+                shared_input(owned, Owner::Address(crate::Address::ZERO)),
+            ],
+            unchanged_shared_objects: vec![
+                unchanged(
+                    read_only,
+                    UnchangedSharedKind::ReadOnlyRoot { version, digest },
+                ),
+                unchanged(read_deleted, UnchangedSharedKind::ReadDeleted { version }),
+                unchanged(
+                    mutate_deleted,
+                    UnchangedSharedKind::MutateDeleted { version },
+                ),
+                unchanged(canceled, UnchangedSharedKind::Canceled { version }),
+                unchanged(per_epoch_config, UnchangedSharedKind::PerEpochConfig),
+            ],
+            auxiliary_data_digest: None,
+        };
+
+        let object = |object_id| ObjectVersion::new(object_id, version);
+        assert_eq!(
+            effects.input_shared_objects(),
+            vec![
+                InputSharedObject::Mutate(crate::ObjectReference::new(mutated, version, digest)),
+                InputSharedObject::ReadOnly(crate::ObjectReference::new(
+                    read_only, version, digest
+                )),
+                InputSharedObject::ReadDeleted(object(read_deleted)),
+                InputSharedObject::MutateDeleted(object(mutate_deleted)),
+                InputSharedObject::Canceled(object(canceled)),
+            ],
+        );
+
+        // A shared object that no longer exists is reported with the tombstone
+        // digest saying why.
+        assert!(
+            InputSharedObject::ReadDeleted(object(read_deleted))
+                .object_reference()
+                .digest
+                .is_deleted()
+        );
+        assert_eq!(
+            InputSharedObject::Canceled(object(canceled))
+                .object_reference()
+                .digest,
+            ObjectDigest::OBJECT_CANCELED,
+        );
+    }
+
+    /// A written object takes the version the transaction assigned, while a
+    /// package keeps the version it was published or upgraded at. The fixtures
+    /// cannot tell these apart, since they publish at their lamport version.
+    #[test]
+    fn object_changes_keep_a_package_at_its_own_version() {
+        use crate::{
+            ChangedObject, IdOperation, ObjectDigest, ObjectId, ObjectIn, ObjectOut, Owner,
+            TransactionEffectsV1, Version,
+        };
+
+        let lamport_version = Version::from_u64(9);
+        let package_version = Version::from_u64(7);
+        let digest = ObjectDigest::new([1; 32]);
+        let object = ObjectId::new([2; 32]);
+        let package = ObjectId::new([3; 32]);
+
+        let effects = TransactionEffectsV1 {
+            status: crate::ExecutionStatus::Success,
+            epoch: 0,
+            gas_cost_summary: crate::GasCostSummary::default(),
+            transaction_digest: crate::TransactionDigest::default(),
+            gas_object_index: None,
+            events_digest: None,
+            dependencies: Vec::new(),
+            lamport_version,
+            changed_objects: vec![
+                ChangedObject {
+                    object_id: object,
+                    input_state: ObjectIn::Missing,
+                    output_state: ObjectOut::ObjectWrite {
+                        digest,
+                        owner: Owner::Address(crate::Address::ZERO),
+                    },
+                    id_operation: IdOperation::Created,
+                },
+                ChangedObject {
+                    object_id: package,
+                    input_state: ObjectIn::Missing,
+                    output_state: ObjectOut::PackageWrite {
+                        version: package_version,
+                        digest,
+                    },
+                    id_operation: IdOperation::Created,
+                },
+            ],
+            unchanged_shared_objects: Vec::new(),
+            auxiliary_data_digest: None,
+        };
+
+        let changes = effects.object_changes();
+        assert_eq!(changes[0].output_version, Some(lamport_version));
+        assert_eq!(changes[1].output_version, Some(package_version));
+
+        // The same distinction reaches the object sets.
+        assert_eq!(
+            effects
+                .created()
+                .into_iter()
+                .map(|owned| owned.reference.version)
+                .collect::<Vec<_>>(),
+            vec![lamport_version, package_version],
+        );
+    }
+
+    /// Each changed object is reported once, with the version and digest of
+    /// whichever sides it existed on.
+    #[test]
+    fn object_changes_resolve_each_side() {
+        for fixture in [GENESIS_EFFECTS, SPONSOR_TX_EFFECTS] {
+            let effects: TransactionEffects =
+                bcs::from_bytes(&Base64::decode_vec(fixture.trim()).unwrap()).unwrap();
+            let fx = effects.as_v1();
+
+            let changes = fx.object_changes();
+            assert_eq!(changes.len(), fx.changed_objects.len());
+
+            for (change, changed) in changes.iter().zip(&fx.changed_objects) {
+                assert_eq!(change.object_id, changed.object_id);
+                assert_eq!(change.id_operation, changed.id_operation);
+                assert_eq!(change.input_version, changed.input_state.version_opt());
+                assert_eq!(change.input_digest, changed.input_state.digest_opt());
+                assert_eq!(
+                    change.input_version.is_some(),
+                    change.input_digest.is_some()
+                );
+                assert_eq!(
+                    change.output_version.is_some(),
+                    change.output_digest.is_some()
+                );
+
+                // A written object takes the version this transaction assigned;
+                // a package keeps the version it was published or upgraded at.
+                match changed.output_state {
+                    ObjectOut::ObjectWrite { digest, .. } => {
+                        assert_eq!(change.output_version, Some(fx.lamport_version));
+                        assert_eq!(change.output_digest, Some(digest));
+                    }
+                    ObjectOut::PackageWrite { version, digest } => {
+                        assert_eq!(change.output_version, Some(version));
+                        assert_eq!(change.output_digest, Some(digest));
+                    }
+                    _ => assert_eq!(change.output_version, None),
+                }
+            }
         }
     }
 
@@ -195,7 +396,97 @@ impl crate::TreeDisplay for TransactionEffects {
     }
 }
 
-crate::impl_tree_display!(TransactionEffects);
+/// A shared object an executed transaction took as input.
+///
+/// Not a wire type: this is the effects' view of the shared objects a
+/// transaction was sequenced against, drawn from both the objects it changed
+/// and those it left unchanged.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub enum InputSharedObject {
+    /// Taken mutably, and written back by the transaction.
+    Mutate(ObjectReference),
+    /// Read without being mutated.
+    ReadOnly(ObjectReference),
+    /// Read, but already deleted by an earlier transaction.
+    ReadDeleted(ObjectVersion),
+    /// Taken mutably, but already deleted by an earlier transaction.
+    MutateDeleted(ObjectVersion),
+    /// Taken by a transaction that consensus canceled; the version carries the
+    /// cancellation reason.
+    Canceled(ObjectVersion),
+}
+
+impl InputSharedObject {
+    /// The object's reference. A shared object that no longer exists is
+    /// reported at the version it was last known at, with the tombstone digest
+    /// for why it is gone.
+    pub fn object_reference(&self) -> ObjectReference {
+        match self {
+            Self::Mutate(reference) | Self::ReadOnly(reference) => *reference,
+            Self::ReadDeleted(object) | Self::MutateDeleted(object) => ObjectReference::new(
+                object.object_id,
+                object.version,
+                ObjectDigest::OBJECT_DELETED,
+            ),
+            Self::Canceled(object) => ObjectReference::new(
+                object.object_id,
+                object.version,
+                ObjectDigest::OBJECT_CANCELED,
+            ),
+        }
+    }
+}
+
+impl crate::TreeDisplay for InputSharedObject {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Input Shared Object")?;
+        let kind = match self {
+            Self::Mutate(_) => "Mutate",
+            Self::ReadOnly(_) => "Read Only",
+            Self::ReadDeleted(_) => "Read Deleted",
+            Self::MutateDeleted(_) => "Mutate Deleted",
+            Self::Canceled(_) => "Canceled",
+        };
+        w.leaf("Kind", &kind, false)?;
+        w.child("Reference", &self.object_reference(), true)
+    }
+}
+
+/// What an executed transaction did to one object, with the version and digest
+/// each side is at resolved.
+///
+/// Not a wire type: this is [`ChangedObject`] with the versions filled in,
+/// since a written object's version is the transaction's rather than one the
+/// entry carries. A `None` version means the object did not exist on that side.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ObjectChange {
+    /// The object's id.
+    pub object_id: ObjectId,
+    /// The version the object was at before the transaction, if it existed.
+    pub input_version: Option<Version>,
+    /// The digest the object had before the transaction, if it existed.
+    pub input_digest: Option<ObjectDigest>,
+    /// The version the object is at after the transaction, if it still exists.
+    pub output_version: Option<Version>,
+    /// The digest the object has after the transaction, if it still exists.
+    pub output_digest: Option<ObjectDigest>,
+    /// Whether the transaction created or deleted the object's id.
+    pub id_operation: IdOperation,
+}
+
+impl crate::TreeDisplay for ObjectChange {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Object Change")?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.option_leaf("Input Version", &self.input_version, false)?;
+        w.option_leaf("Input Digest", &self.input_digest, false)?;
+        w.option_leaf("Output Version", &self.output_version, false)?;
+        w.option_leaf("Output Digest", &self.output_digest, false)?;
+        w.leaf("ID Operation", &self.id_operation, true)
+    }
+}
+
+crate::impl_tree_display!(TransactionEffects, InputSharedObject, ObjectChange);
 
 /// Defines what happened to an ObjectId during execution
 ///

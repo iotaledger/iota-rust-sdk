@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{
-    EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, ObjectDigest,
-    ObjectId, ObjectReference, ObjectVersion, OwnedObjectReference, Owner, TransactionDigest,
-    TransactionEventsDigest, Version,
+    EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, InputSharedObject,
+    ObjectChange, ObjectDigest, ObjectId, ObjectReference, ObjectVersion, OwnedObjectReference,
+    Owner, TransactionDigest, TransactionEventsDigest, Version,
 };
 
 /// Version 1 of TransactionEffects
@@ -437,6 +437,84 @@ impl TransactionEffectsV1 {
                     .input_state
                     .version_opt()
                     .map(|version| ObjectVersion::new(changed.object_id, version))
+            })
+            .collect()
+    }
+
+    /// The shared objects this transaction was sequenced against, whether or
+    /// not it changed them. Excludes per-epoch config objects, which need no
+    /// sequencing.
+    pub fn input_shared_objects(&self) -> Vec<InputSharedObject> {
+        self.changed_objects
+            .iter()
+            .filter_map(|changed| match changed.input_state {
+                ObjectIn::Data {
+                    version,
+                    digest,
+                    owner: Owner::Shared { .. },
+                } => Some(InputSharedObject::Mutate(ObjectReference::new(
+                    changed.object_id,
+                    version,
+                    digest,
+                ))),
+                _ => None,
+            })
+            .chain(
+                self.unchanged_shared_objects
+                    .iter()
+                    .filter_map(|unchanged| {
+                        let object = |version| ObjectVersion::new(unchanged.object_id, version);
+                        match unchanged.kind {
+                            UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+                                Some(InputSharedObject::ReadOnly(ObjectReference::new(
+                                    unchanged.object_id,
+                                    version,
+                                    digest,
+                                )))
+                            }
+                            UnchangedSharedKind::ReadDeleted { version } => {
+                                Some(InputSharedObject::ReadDeleted(object(version)))
+                            }
+                            UnchangedSharedKind::MutateDeleted { version } => {
+                                Some(InputSharedObject::MutateDeleted(object(version)))
+                            }
+                            UnchangedSharedKind::Canceled { version } => {
+                                Some(InputSharedObject::Canceled(object(version)))
+                            }
+                            // A per-epoch config object is read without being
+                            // sequenced, so it is not an input in this sense.
+                            UnchangedSharedKind::PerEpochConfig => None,
+                        }
+                    }),
+            )
+            .collect()
+    }
+
+    /// What this transaction did to each object it changed, with the version
+    /// and digest each side is at resolved.
+    pub fn object_changes(&self) -> Vec<ObjectChange> {
+        self.changed_objects
+            .iter()
+            .map(|changed| {
+                let input = match changed.input_state {
+                    ObjectIn::Data {
+                        version, digest, ..
+                    } => Some((version, digest)),
+                    _ => None,
+                };
+                let output = match changed.output_state {
+                    ObjectOut::ObjectWrite { digest, .. } => Some((self.lamport_version, digest)),
+                    ObjectOut::PackageWrite { version, digest } => Some((version, digest)),
+                    _ => None,
+                };
+                ObjectChange {
+                    object_id: changed.object_id,
+                    input_version: input.map(|(version, _)| version),
+                    input_digest: input.map(|(_, digest)| digest),
+                    output_version: output.map(|(version, _)| version),
+                    output_digest: output.map(|(_, digest)| digest),
+                    id_operation: changed.id_operation,
+                }
             })
             .collect()
     }

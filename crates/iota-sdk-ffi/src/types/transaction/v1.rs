@@ -572,3 +572,65 @@ impl From<iota_sdk::types::ObjectVersion> for ObjectVersion {
         }
     }
 }
+
+/// A shared object an executed transaction took as input.
+#[derive(uniffi::Enum)]
+pub enum InputSharedObject {
+    /// Taken mutably, and written back by the transaction.
+    Mutate { reference: ObjectReference },
+    /// Read without being mutated.
+    ReadOnly { reference: ObjectReference },
+    /// Read, but already deleted by an earlier transaction.
+    ReadDeleted { object: ObjectVersion },
+    /// Taken mutably, but already deleted by an earlier transaction.
+    MutateDeleted { object: ObjectVersion },
+    /// Taken by a transaction that consensus canceled.
+    Canceled { object: ObjectVersion },
+}
+
+impl From<iota_sdk::types::InputSharedObject> for InputSharedObject {
+    fn from(value: iota_sdk::types::InputSharedObject) -> Self {
+        match value {
+            iota_sdk::types::InputSharedObject::Mutate(reference) => Self::Mutate {
+                reference: reference.into(),
+            },
+            iota_sdk::types::InputSharedObject::ReadOnly(reference) => Self::ReadOnly {
+                reference: reference.into(),
+            },
+            iota_sdk::types::InputSharedObject::ReadDeleted(object) => Self::ReadDeleted {
+                object: object.into(),
+            },
+            iota_sdk::types::InputSharedObject::MutateDeleted(object) => Self::MutateDeleted {
+                object: object.into(),
+            },
+            iota_sdk::types::InputSharedObject::Canceled(object) => Self::Canceled {
+                object: object.into(),
+            },
+        }
+    }
+}
+
+/// What an executed transaction did to one object, with the version and digest
+/// each side is at resolved.
+#[derive(uniffi::Record)]
+pub struct ObjectChange {
+    pub object_id: Arc<ObjectId>,
+    pub input_version: Option<Arc<Version>>,
+    pub input_digest: Option<Arc<ObjectDigest>>,
+    pub output_version: Option<Arc<Version>>,
+    pub output_digest: Option<Arc<ObjectDigest>>,
+    pub id_operation: IdOperation,
+}
+
+impl From<iota_sdk::types::ObjectChange> for ObjectChange {
+    fn from(value: iota_sdk::types::ObjectChange) -> Self {
+        Self {
+            object_id: Arc::new(value.object_id.into()),
+            input_version: value.input_version.map(|v| Arc::new(v.into())),
+            input_digest: value.input_digest.map(|d| Arc::new(d.into())),
+            output_version: value.output_version.map(|v| Arc::new(v.into())),
+            output_digest: value.output_digest.map(|d| Arc::new(d.into())),
+            id_operation: value.id_operation,
+        }
+    }
+}
