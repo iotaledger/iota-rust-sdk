@@ -27,9 +27,12 @@ jobs:
           rustc --version
           cargo --version
 
-      - uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+      # Pinned: cargo-semver-checks has to understand the rustdoc JSON format
+      # the runner's stable toolchain emits, so it needs bumping whenever that
+      # format moves ahead of what the pinned version supports.
+      - uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
         with:
-          tool: cargo-semver-checks
+          tool: cargo-semver-checks@0.50.0
 
       - name: Check for breaking API changes
         run: make semver-checks
