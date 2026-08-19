@@ -120,6 +120,11 @@ impl SenderSignedTransaction {
     pub fn signed_transaction(&self) -> &SignedTransaction {
         &self.0
     }
+
+    /// Access the signed transaction carried by this intent message mutably.
+    pub fn signed_transaction_mut(&mut self) -> &mut SignedTransaction {
+        &mut self.0
+    }
 }
 
 impl From<SignedTransaction> for SenderSignedTransaction {
