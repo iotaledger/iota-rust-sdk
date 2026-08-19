@@ -105,7 +105,7 @@ pub struct SenderSignedTransaction(
         feature = "serde",
         serde(with = "::serde_with::As::<crate::_serde::SignedTransactionWithIntentMessage>")
     )]
-    pub SignedTransaction,
+    SignedTransaction,
 );
 
 impl SenderSignedTransaction {
@@ -114,6 +114,11 @@ impl SenderSignedTransaction {
             transaction,
             signatures,
         })
+    }
+
+    /// The signed transaction carried by this intent message.
+    pub fn signed_transaction(&self) -> &SignedTransaction {
+        &self.0
     }
 }
 
