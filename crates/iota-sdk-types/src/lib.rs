@@ -171,7 +171,7 @@ pub use move_core::{Identifier, StructTag, TypeParseError, TypeTag};
 pub use move_package::{MovePackage, MovePackageData, TypeOrigin, UpgradeInfo, UpgradePolicy};
 pub use object::{
     GenesisObject, MoveObjectType, MoveStruct, MoveStructContentsError, Object, ObjectData,
-    ObjectReference, ObjectType, OwnedObjectReference, Owner,
+    ObjectReference, ObjectType, ObjectVersion, OwnedObjectReference, Owner,
 };
 pub use object_id::ObjectId;
 #[cfg(feature = "serde")]

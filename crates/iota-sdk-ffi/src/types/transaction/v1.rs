@@ -476,11 +476,11 @@ pub struct ObjectVersion {
     pub version: Arc<Version>,
 }
 
-impl From<(iota_sdk::types::ObjectId, iota_sdk::types::Version)> for ObjectVersion {
-    fn from((object_id, version): (iota_sdk::types::ObjectId, iota_sdk::types::Version)) -> Self {
+impl From<iota_sdk::types::ObjectVersion> for ObjectVersion {
+    fn from(value: iota_sdk::types::ObjectVersion) -> Self {
         Self {
-            object_id: Arc::new(object_id.into()),
-            version: Arc::new(version.into()),
+            object_id: Arc::new(value.object_id.into()),
+            version: Arc::new(value.version.into()),
         }
     }
 }

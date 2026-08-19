@@ -4,7 +4,7 @@
 
 use crate::{
     EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, ObjectDigest,
-    ObjectId, ObjectReference, OwnedObjectReference, Owner, TransactionDigest,
+    ObjectId, ObjectReference, ObjectVersion, OwnedObjectReference, Owner, TransactionDigest,
     TransactionEventsDigest, Version,
 };
 
@@ -429,14 +429,14 @@ impl crate::TreeDisplay for ObjectOut {
 impl TransactionEffectsV1 {
     /// The id and pre-transaction version of every object that existed before
     /// this transaction and was modified by it (mutated, wrapped or deleted).
-    pub fn modified_at_versions(&self) -> Vec<(ObjectId, Version)> {
+    pub fn modified_at_versions(&self) -> Vec<ObjectVersion> {
         self.changed_objects
             .iter()
             .filter_map(|changed| {
                 changed
                     .input_state
                     .version_opt()
-                    .map(|version| (changed.object_id, version))
+                    .map(|version| ObjectVersion::new(changed.object_id, version))
             })
             .collect()
     }

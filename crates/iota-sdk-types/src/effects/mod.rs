@@ -113,7 +113,7 @@ mod tests {
             let modified: Vec<_> = fx
                 .modified_at_versions()
                 .into_iter()
-                .map(|(object_id, _)| object_id)
+                .map(|modified| modified.object_id)
                 .collect();
             let old_metadata: Vec<_> = fx
                 .old_object_metadata()
