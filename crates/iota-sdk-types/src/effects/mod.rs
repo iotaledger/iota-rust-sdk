@@ -56,6 +56,45 @@ mod tests {
         }
     }
 
+    /// A package write is only ever a create or a mutate: it is not reported as
+    /// an unwrap, and never as the gas object.
+    #[test]
+    fn a_package_write_is_neither_unwrapped_nor_gas() {
+        use crate::{
+            ChangedObject, IdOperation, ObjectDigest, ObjectId, ObjectIn, ObjectOut,
+            TransactionEffectsV1, Version,
+        };
+
+        let package = ObjectId::new([1; 32]);
+        let effects = TransactionEffectsV1 {
+            status: crate::ExecutionStatus::Success,
+            epoch: 0,
+            gas_cost_summary: crate::GasCostSummary::default(),
+            transaction_digest: crate::TransactionDigest::default(),
+            // The one entry stands in as the gas object, which it cannot be.
+            gas_object_index: Some(0),
+            events_digest: None,
+            dependencies: Vec::new(),
+            lamport_version: Version::from_u64(2),
+            changed_objects: vec![ChangedObject {
+                object_id: package,
+                input_state: ObjectIn::Missing,
+                output_state: ObjectOut::PackageWrite {
+                    version: Version::from_u64(1),
+                    digest: ObjectDigest::new([2; 32]),
+                },
+                // Neither created nor deleted, which is what would otherwise
+                // read as an unwrap.
+                id_operation: IdOperation::None,
+            }],
+            unchanged_shared_objects: Vec::new(),
+            auxiliary_data_digest: None,
+        };
+
+        assert!(effects.unwrapped().is_empty());
+        assert!(effects.gas_object().is_none());
+    }
+
     /// Every changed object falls into exactly one of the reported sets, so the
     /// sets partition `changed_objects` and never report an object twice.
     #[test]

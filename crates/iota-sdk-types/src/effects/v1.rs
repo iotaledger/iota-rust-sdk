@@ -490,7 +490,10 @@ impl TransactionEffectsV1 {
         self.changed_objects
             .iter()
             .filter(|changed| {
-                changed.input_state.is_missing() && changed.id_operation == IdOperation::None
+                changed.input_state.is_missing()
+                    && changed.id_operation == IdOperation::None
+                    // A package is never wrapped, so never unwrapped either.
+                    && changed.output_state.is_object_write()
             })
             .filter_map(|changed| self.output_reference(changed))
             .collect()
@@ -534,7 +537,11 @@ impl TransactionEffectsV1 {
     /// for a transaction that requires no gas (a system transaction).
     pub fn gas_object(&self) -> Option<OwnedObjectReference> {
         let changed = self.changed_objects.get(self.gas_object_index? as usize)?;
-        self.output_reference(changed)
+        // Gas is paid in coins, so a gas object is never a package.
+        changed
+            .output_state
+            .is_object_write()
+            .then(|| self.output_reference(changed))?
     }
 
     /// The post-transaction reference and owner of a changed object, or `None`
