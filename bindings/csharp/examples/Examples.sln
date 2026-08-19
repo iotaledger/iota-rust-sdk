@@ -63,7 +63,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetTransaction", "GetTransa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faucet", "Faucet\Faucet.csproj", "{4505C5A2-7755-4643-9EFE-C6F0FEBB65B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscribeTransactions", "SubscribeTransactions\SubscribeTransactions.csproj", "{E18D4EE2-A13D-496C-8203-8787F864334E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscribeTransactionsGraphQL", "SubscribeTransactions\SubscribeTransactions.csproj", "{E18D4EE2-A13D-496C-8203-8787F864334E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DryRunBytes", "DryRunBytes\DryRunBytes.csproj", "{F4F415AC-365B-472B-8659-C62028B2C4E9}"
 EndProject
