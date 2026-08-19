@@ -5,7 +5,8 @@
 //!
 //! This crate contains the [TransactionBuilder], which allows for simple
 //! construction of Programmable Transactions which can be executed on the IOTA
-//! network.
+//! network, and the [MoveViewCallBuilder], which calls `#[view]` functions
+//! without submitting a transaction.
 //!
 //! The builder is designed to allow for a lot of flexibility while also
 //! reducing the necessary boilerplate code. It uses a type-state pattern to
@@ -287,12 +288,37 @@
 //!     }
 //! }
 //! ```
+//!
+//! ## Move View Calls
+//!
+//! Move functions annotated with `#[view]` return a value without altering the
+//! ledger, so calling one needs neither gas nor a signature. The
+//! [MoveViewCallBuilder] assembles such a call and executes it with any client
+//! implementing [MoveViewCallClient], such as the GraphQL client.
+//!
+//! ```
+//! # use iota_sdk_transaction_builder::TestClient;
+//! use iota_sdk_transaction_builder::MoveViewCallBuilder;
+//! use iota_types::ObjectId;
+//!
+//! # #[tokio::main(flavor = "current_thread")]
+//! # async fn main() -> eyre::Result<()> {
+//! # let client = TestClient;
+//! let mut call = MoveViewCallBuilder::new(ObjectId::FRAMEWORK, "shop", "discounted_price")
+//!     .with_client(client);
+//! call.arguments((100u64, 25u64));
+//!
+//! let results = call.execute().await?;
+//! # Ok(())
+//! # }
+//! ```
 
 #![warn(missing_docs)]
 #![deny(unreachable_pub)]
 
 pub mod builder;
 pub mod error;
+pub mod move_view_call;
 pub mod types;
 #[allow(missing_docs)]
 pub mod unresolved;
@@ -307,7 +333,8 @@ pub use self::{
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
         signer::TransactionSigner,
     },
-    types::PureBytes,
+    move_view_call::{MoveViewCallBuilder, MoveViewCallClient},
+    types::{MoveViewArg, MoveViewArgList, PureBytes},
 };
 
 #[cfg(test)]
