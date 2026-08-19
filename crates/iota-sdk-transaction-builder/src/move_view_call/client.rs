@@ -38,3 +38,17 @@ impl<T: MoveViewCallClient> MoveViewCallClient for &T {
         (*self).move_view_call(function_name, type_arguments, arguments)
     }
 }
+
+impl<T: MoveViewCallClient> MoveViewCallClient for std::sync::Arc<T> {
+    type Error = T::Error;
+
+    fn move_view_call(
+        &self,
+        function_name: &str,
+        type_arguments: &[TypeTag],
+        arguments: &[serde_json::Value],
+    ) -> impl std::future::Future<Output = Result<Vec<serde_json::Value>, Self::Error>> {
+        self.as_ref()
+            .move_view_call(function_name, type_arguments, arguments)
+    }
+}
