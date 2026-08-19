@@ -40,7 +40,10 @@ impl Client {
             &v1.kind,
             skip_checks,
             TransactionMetadata {
-                gas_budget: (v1.gas_payment.budget > 0).then_some(v1.gas_payment.budget),
+                // A zero budget asks the node to resolve one against the gas coins, and
+                // is passed on rather than left out: an absent budget is filled in with
+                // the protocol maximum, which the gas coins then have to cover.
+                gas_budget: Some(v1.gas_payment.budget),
                 gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
                 gas_price: Some(v1.gas_payment.price),
                 gas_sponsor: Some(v1.gas_payment.owner),
