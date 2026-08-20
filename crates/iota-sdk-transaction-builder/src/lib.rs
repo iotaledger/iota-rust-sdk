@@ -331,7 +331,7 @@ mod tests {
             coin_digest.parse().unwrap(),
         );
 
-        let recipient = Address::random_with(rand::rng());
+        let recipient = Address::random();
 
         let result = tx.clone().finish();
         assert!(result.is_err());
@@ -359,7 +359,7 @@ mod tests {
         let sponsor: Address = "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
             .parse()
             .unwrap();
-        let recipient = Address::random_with(rand::rng());
+        let recipient = Address::random();
         let coin = ObjectReference::new(
             "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4"
                 .parse()
@@ -403,10 +403,10 @@ mod tests {
         // A non-programmable Transaction kind should not be accepted.
         let txn = Transaction::V1(iota_types::TransactionV1 {
             kind: iota_types::TransactionKind::AuthenticatorStateUpdateV1Deprecated,
-            sender: Address::random_with(rand::rng()),
+            sender: Address::random(),
             gas_payment: iota_types::GasPayment {
                 objects: vec![],
-                owner: Address::random_with(rand::rng()),
+                owner: Address::random(),
                 price: 0,
                 budget: 0,
             },
