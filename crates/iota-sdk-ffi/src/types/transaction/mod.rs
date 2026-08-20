@@ -15,7 +15,7 @@ use crate::{
         move_core::{Identifier, TypeTag},
         object::{GenesisObject, ObjectId, ObjectReference},
         signature::UserSignature,
-        transaction::v1::{ObjectVersion, OwnedObjectReference, TransactionEffectsV1},
+        transaction::v1::TransactionEffectsV1,
         version::Version,
     },
 };
@@ -1767,9 +1767,9 @@ pub struct TransactionEffects(pub iota_sdk::types::TransactionEffects);
 #[uniffi::export]
 impl TransactionEffects {
     #[uniffi::constructor]
-    pub fn new_v1(effects: TransactionEffectsV1) -> Self {
+    pub fn new_v1(effects: &TransactionEffectsV1) -> Self {
         Self(iota_sdk::types::TransactionEffects::V1(Box::new(
-            effects.into(),
+            effects.0.clone(),
         )))
     }
 
@@ -1777,106 +1777,15 @@ impl TransactionEffects {
         self.0.is_v1()
     }
 
+    /// The V1 effects, which is where the object sets and other views derived
+    /// from them are reported. Panics for any other version; a caller that does
+    /// not want to assume one should check `is_v1` first.
     pub fn as_v1(&self) -> TransactionEffectsV1 {
-        self.0.as_v1().clone().into()
+        TransactionEffectsV1(self.0.as_v1().clone())
     }
 
     pub fn digest(&self) -> TransactionEffectsDigest {
         self.0.digest().into()
-    }
-
-    /// The id and pre-transaction version of every object that existed before
-    /// this transaction and was modified by it (mutated, wrapped or deleted).
-    pub fn modified_at_versions(&self) -> Vec<ObjectVersion> {
-        self.0
-            .as_v1()
-            .modified_at_versions()
-            .into_iter()
-            .map(Into::into)
-            .collect()
-    }
-
-    /// The reference and owner, before this transaction, of every object it
-    /// modified.
-    pub fn old_object_metadata(&self) -> Vec<OwnedObjectReference> {
-        self.0
-            .as_v1()
-            .old_object_metadata()
-            .into_iter()
-            .map(Into::into)
-            .collect()
-    }
-
-    /// Objects (Move objects and packages) newly created by this transaction,
-    /// paired with their owner. Excludes objects created and then wrapped
-    /// within the same transaction.
-    pub fn created(&self) -> Vec<OwnedObjectReference> {
-        self.0
-            .as_v1()
-            .created()
-            .into_iter()
-            .map(Into::into)
-            .collect()
-    }
-
-    /// Objects that existed before this transaction and whose contents it
-    /// updated, at their post-transaction reference and owner.
-    pub fn mutated(&self) -> Vec<OwnedObjectReference> {
-        self.0
-            .as_v1()
-            .mutated()
-            .into_iter()
-            .map(Into::into)
-            .collect()
-    }
-
-    /// Objects that were wrapped inside another object before this transaction
-    /// and that it promoted back to top-level objects in the store.
-    pub fn unwrapped(&self) -> Vec<OwnedObjectReference> {
-        self.0
-            .as_v1()
-            .unwrapped()
-            .into_iter()
-            .map(Into::into)
-            .collect()
-    }
-
-    /// Objects that existed before this transaction and that it deleted.
-    pub fn deleted(&self) -> Vec<ObjectReference> {
-        self.0
-            .as_v1()
-            .deleted()
-            .into_iter()
-            .map(Into::into)
-            .collect()
-    }
-
-    /// Objects unwrapped and then deleted within this same transaction, so that
-    /// they existed as top-level objects neither before nor after it.
-    pub fn unwrapped_then_deleted(&self) -> Vec<ObjectReference> {
-        self.0
-            .as_v1()
-            .unwrapped_then_deleted()
-            .into_iter()
-            .map(Into::into)
-            .collect()
-    }
-
-    /// Objects that existed as top-level objects before this transaction and
-    /// that it wrapped inside another object.
-    pub fn wrapped(&self) -> Vec<ObjectReference> {
-        self.0
-            .as_v1()
-            .wrapped()
-            .into_iter()
-            .map(Into::into)
-            .collect()
-    }
-
-    /// The post-transaction reference and owner of the gas object, or `None`
-    /// for a transaction that requires no gas.
-    pub fn gas_object(&self) -> Option<OwnedObjectReference> {
-        self.0.as_v1().gas_object().map(Into::into)
     }
 }
 
