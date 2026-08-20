@@ -199,18 +199,23 @@ pub fn prost_to_json(value: &prost_types::Value) -> serde_json::Value {
 
 /// Converts a serde_json::Value to prost_types::Value.
 ///
-/// `google.protobuf.Value` has only a double for numbers, so integers beyond
-/// 2^53 do not survive the trip. Pass `u64`/`u128` Move arguments as JSON
-/// strings, which is what the node's JSON argument parser expects anyway.
+/// `google.protobuf.Value` carries every number as an `f64`, which cannot hold
+/// every integer exactly. All numeric values go as strings for the receiver to
+/// parse against the type it expects. This applies at every depth, so a number
+/// nested in an array or object becomes a string too.
+///
+/// Numeric values not representable by `serde_json::Number`, eg.
+/// a Move `u128`/`u256` argument, must be passed as
+/// `serde_json::Value::String` directly.
 pub fn json_to_prost(value: &serde_json::Value) -> prost_types::Value {
     use prost_types::{ListValue, Struct, value::Kind};
 
     let kind = match value {
         serde_json::Value::Null => Kind::NullValue(0),
         serde_json::Value::Bool(b) => Kind::BoolValue(*b),
-        // `as_f64` is lossy only for integers past the mantissa, which the doc
-        // comment above tells callers to pass as strings.
-        serde_json::Value::Number(n) => Kind::NumberValue(n.as_f64().unwrap_or(f64::NAN)),
+        // `Display` renders the number as it was parsed, so this neither
+        // rounds nor depends on how `serde_json::Number` stores it.
+        serde_json::Value::Number(n) => Kind::StringValue(n.to_string()),
         serde_json::Value::String(s) => Kind::StringValue(s.clone()),
         serde_json::Value::Array(a) => Kind::ListValue(ListValue {
             values: a.iter().map(json_to_prost).collect(),
@@ -230,10 +235,12 @@ pub fn json_to_prost(value: &serde_json::Value) -> prost_types::Value {
 mod tests {
     use super::{json_to_prost, prost_to_json};
 
+    /// Everything that is not a number is carried through unchanged, at every
+    /// depth.
     #[test]
     fn nesting_survives_the_round_trip_through_prost() {
         let value = serde_json::json!({
-            "list": [1.5, "0x2", true],
+            "list": ["0x2", true],
             "nested": {"flag": false, "nothing": null},
             "text": "0x2::hash::blake2b256",
         });
@@ -241,21 +248,47 @@ mod tests {
         assert_eq!(prost_to_json(&json_to_prost(&value)), value);
     }
 
-    /// `google.protobuf.Value` holds every number as a double, so an integer
-    /// comes back as a float and one past the mantissa comes back rounded.
-    /// This is why Move `u64`/`u128`/`u256` arguments go as JSON strings.
+    /// Numbers do not round-trip: they arrive as strings, so nothing is
+    /// rounded on the way to a receiver that knows the type it wants.
     #[test]
-    fn integers_come_back_as_doubles() {
+    fn numbers_go_as_strings() {
+        for (number, expected) in [
+            (serde_json::json!(2), "2"),
+            (serde_json::json!(-1), "-1"),
+            (serde_json::json!(1.5), "1.5"),
+            (serde_json::json!(u64::MAX), "18446744073709551615"),
+        ] {
+            assert_eq!(
+                prost_to_json(&json_to_prost(&number)),
+                serde_json::json!(expected),
+                "{number} did not arrive as a string"
+            );
+        }
+
+        // Above `u64::MAX` there is no JSON number to start from, so the caller
+        // writes a string — which arrives as itself.
+        let u128_max = serde_json::json!(u128::MAX.to_string());
+        assert_eq!(prost_to_json(&json_to_prost(&u128_max)), u128_max);
+    }
+
+    /// Stringification recurses, so a `vector<u8>` argument written as JSON
+    /// numbers reaches the node as an array of strings.
+    #[test]
+    fn nested_numbers_go_as_strings() {
         assert_eq!(
-            prost_to_json(&json_to_prost(&serde_json::json!(2))),
-            serde_json::json!(2.0)
+            prost_to_json(&json_to_prost(&serde_json::json!([0, 1, 2]))),
+            serde_json::json!(["0", "1", "2"])
         );
 
-        let big = serde_json::json!(u64::MAX);
-        assert_ne!(prost_to_json(&json_to_prost(&big)), big);
-
-        // Passed as a string, the exact value arrives intact.
-        let as_string = serde_json::json!(u64::MAX.to_string());
-        assert_eq!(prost_to_json(&json_to_prost(&as_string)), as_string);
+        assert_eq!(
+            prost_to_json(&json_to_prost(&serde_json::json!({
+                "amount": 5,
+                "nested": [{"weight": 1}],
+            }))),
+            serde_json::json!({
+                "amount": "5",
+                "nested": [{"weight": "1"}],
+            })
+        );
     }
 }

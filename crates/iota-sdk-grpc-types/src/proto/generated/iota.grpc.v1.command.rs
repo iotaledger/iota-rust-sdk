@@ -82,7 +82,8 @@ pub mod input_argument {
         #[prost(message, tag = "1")]
         Bcs(super::super::bcs::BcsData),
         /// The argument as JSON, for the node to encode against the parameter's Move
-        /// type. Numbers wider than a double (`u64`, `u128`, `u256`) go as strings.
+        /// type. `Value` holds numbers as doubles, which cannot represent every
+        /// integer, so numbers must go as strings.
         #[prost(message, tag = "2")]
         Json(::prost_types::Value),
     }

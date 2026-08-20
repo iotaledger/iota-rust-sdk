@@ -25,10 +25,9 @@ impl Client {
     /// submitting a transaction.
     ///
     /// Arguments are passed as JSON and encoded by the node against the
-    /// parameter's Move type, so `u64`/`u128`/`u256` go as strings — a JSON
-    /// number is a double and loses precision past 2^53. To pass BCS-encoded
-    /// arguments instead, build the [`InputArgument`]s yourself and use
-    /// [`view_function_calls`](Self::view_function_calls).
+    /// parameter's Move type. Numbers go over the wire as strings. To
+    /// pass BCS-encoded arguments instead, build the [`InputArgument`]s
+    /// yourself and use [`view_function_calls`](Self::view_function_calls).
     ///
     /// # Parameters
     ///
