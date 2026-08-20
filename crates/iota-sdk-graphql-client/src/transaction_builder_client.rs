@@ -3,7 +3,9 @@
 
 //! Implementation of [`TransactionBuilderClient`] for the GraphQL [`Client`].
 
-use iota_transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx};
+use iota_transaction_builder::{
+    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClient, WaitForTx,
+};
 use iota_types::{
     Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
     TransactionEffects, UserSignature, Version,
@@ -14,6 +16,13 @@ use crate::{
     pagination::{Direction, PaginationFilter},
     query_types::ObjectFilter,
 };
+
+impl Client {
+    /// Create a new [`TransactionBuilder`] with the given sender address.
+    pub fn transaction_builder(&self, sender: Address) -> TransactionBuilder<&Self> {
+        TransactionBuilder::new(sender).with_client(self)
+    }
+}
 
 impl TransactionBuilderClient for Client {
     type Error = crate::error::Error;
