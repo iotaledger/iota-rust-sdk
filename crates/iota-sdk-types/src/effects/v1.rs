@@ -194,7 +194,7 @@ pub enum UnchangedSharedKind {
     /// Deleted shared objects that appear as read-only in the input.
     ReadDeleted { version: Version },
     /// Shared objects in canceled transaction. The sequence number embed
-    /// cancellation reason.
+    /// cancelation reason.
     Canceled { version: Version },
     /// Read of a per-epoch config object that should remain the same during an
     /// epoch.

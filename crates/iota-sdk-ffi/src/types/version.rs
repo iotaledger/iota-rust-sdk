@@ -34,7 +34,7 @@ impl Version {
     }
 
     /// Check if this version is congested, i.e., the corresponding
-    /// object is the reason for transaction cancellation.
+    /// object is the reason for transaction cancelation.
     pub fn is_congested(&self) -> bool {
         self.0.is_congested()
     }
@@ -97,7 +97,7 @@ impl Version {
     }
 
     /// Special version that was assigned to congested objects which
-    /// cause transaction cancellations. Note that this special version
+    /// cause transaction cancelations. Note that this special version
     /// was only used prior to the introduction of a gas price feedback
     /// mechanism, but it is kept for backward compatibility.
     #[uniffi::constructor]

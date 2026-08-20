@@ -83,26 +83,26 @@ impl From<SubscriptionTransactionFilter>
     }
 }
 
-/// A cancellation flag that a pending `next` can wait on.
+/// A cancelation flag that a pending `next` can wait on.
 ///
 /// Foreign async support is uneven — Kotlin, Swift and Python can cancel a
-/// pending call, Go and C# cannot — so cancellation has to be something the
+/// pending call, Go and C# cannot — so cancelation has to be something the
 /// subscription itself understands rather than something the caller's runtime
 /// does to it.
 #[derive(Default)]
 struct Cancel {
-    cancelled: AtomicBool,
+    canceled: AtomicBool,
     notify: Notify,
 }
 
 impl Cancel {
     fn cancel(&self) {
-        self.cancelled.store(true, Ordering::Release);
+        self.canceled.store(true, Ordering::Release);
         self.notify.notify_waiters();
     }
 
-    fn is_cancelled(&self) -> bool {
-        self.cancelled.load(Ordering::Acquire)
+    fn is_canceled(&self) -> bool {
+        self.canceled.load(Ordering::Acquire)
     }
 
     /// Resolve once [`Cancel::cancel`] has been called.
@@ -112,7 +112,7 @@ impl Cancel {
             // Register for a wake-up before reading the flag, so a `cancel`
             // racing with this call cannot be missed.
             let notified = self.notify.notified();
-            if self.is_cancelled() {
+            if self.is_canceled() {
                 return;
             }
             notified.await;
@@ -155,7 +155,7 @@ macro_rules! define_subscription {
         impl $name {
             /// Wait for the next update.
             ///
-            /// Returns `None` once the subscription has been cancelled.
+            /// Returns `None` once the subscription has been canceled.
             /// Concurrent calls are serialized; there is no ordering guarantee
             /// between them.
             ///
@@ -183,9 +183,9 @@ macro_rules! define_subscription {
                 }
             }
 
-            /// Whether the subscription has been cancelled.
-            pub fn is_cancelled(&self) -> bool {
-                self.cancel.is_cancelled()
+            /// Whether the subscription has been canceled.
+            pub fn is_canceled(&self) -> bool {
+                self.cancel.is_canceled()
             }
         }
 
@@ -197,8 +197,8 @@ macro_rules! define_subscription {
                 }
             }
 
-            /// The stream a cancelled subscription is left with, so that
-            /// cancelling drops the WebSocket instead of holding it until the
+            /// The stream a canceled subscription is left with, so that
+            /// canceling drops the WebSocket instead of holding it until the
             /// handle is freed.
             fn drained() -> BoxStream<'static, GqlResult<$item>> {
                 futures::stream::empty().boxed()
@@ -206,12 +206,12 @@ macro_rules! define_subscription {
 
             #[cfg(not(target_arch = "wasm32"))]
             async fn next_update(&self) -> Result<Option<$update>> {
-                if self.cancel.is_cancelled() {
+                if self.cancel.is_canceled() {
                     return Ok(None);
                 }
                 let mut stream = self.stream.lock().await;
-                let cancelled = std::pin::pin!(self.cancel.wait());
-                let item = match futures::future::select(cancelled, stream.next()).await {
+                let canceled = std::pin::pin!(self.cancel.wait());
+                let item = match futures::future::select(canceled, stream.next()).await {
                     futures::future::Either::Left(((), _)) => {
                         *stream = Self::drained();
                         None
