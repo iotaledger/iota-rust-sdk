@@ -200,6 +200,52 @@ impl TransactionEffectsV1 {
         self.0.wrapped().into_iter().map(Into::into).collect()
     }
 
+    /// The shared objects this transaction was sequenced against, whether or
+    /// not it changed them.
+    pub fn input_shared_objects(&self) -> Vec<InputSharedObject> {
+        self.0
+            .input_shared_objects()
+            .into_iter()
+            .map(Into::into)
+            .collect()
+    }
+
+    /// What this transaction did to each object it changed, with the version
+    /// and digest each side is at resolved.
+    pub fn object_changes(&self) -> Vec<ObjectChange> {
+        self.0
+            .object_changes()
+            .into_iter()
+            .map(Into::into)
+            .collect()
+    }
+
+    /// Every object still in the store after this transaction, tagged with how
+    /// it got there.
+    pub fn all_changed_objects(&self) -> Vec<ChangedObjectWrite> {
+        self.0
+            .all_changed_objects()
+            .into_iter()
+            .map(|(object, kind)| ChangedObjectWrite {
+                object: object.into(),
+                kind: kind.into(),
+            })
+            .collect()
+    }
+
+    /// Every object that was in the store before this transaction and is not
+    /// after it, tagged with why.
+    pub fn all_removed_objects(&self) -> Vec<RemovedObject> {
+        self.0
+            .all_removed_objects()
+            .into_iter()
+            .map(|(reference, kind)| RemovedObject {
+                reference: reference.into(),
+                kind: kind.into(),
+            })
+            .collect()
+    }
+
     /// The post-transaction reference and owner of the gas object, or `None`
     /// for a transaction that requires no gas.
     pub fn gas_object(&self) -> Option<OwnedObjectReference> {
