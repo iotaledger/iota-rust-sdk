@@ -34,7 +34,7 @@ class Program
         if (faucetReceipt == null)
             throw new Exception("Failed to request coins from faucet");
 
-        var builder = new TransactionBuilder(sender).WithClient(client);
+        var builder = client.TransactionBuilder(sender);
         builder.PublishPackage(packageData, "upgrade_cap");
         builder.TransferObjects(sender, new[] { PtbArgument.Assigned("upgrade_cap") });
         var tx = await builder.Finish();
@@ -80,7 +80,7 @@ class Program
         if (upgradeCap == null) throw new Exception("Missing upgrade cap");
         if (packageId == null) throw new Exception("Missing package id");
 
-        builder = new TransactionBuilder(sender).WithClient(client);
+        builder = client.TransactionBuilder(sender);
 
         builder.MoveCall(
             Address.Framework(),

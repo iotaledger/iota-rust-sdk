@@ -53,7 +53,7 @@ async def main():
     await faucet.request_and_wait_for_finalized(multisig_address, client)
 
     # 6. Build a send_iota transaction
-    builder = TransactionBuilder(multisig_address).with_client(client)
+    builder = client.transaction_builder(multisig_address)
     builder.send_iota(recipient_address, PtbArgument.u64(amount))
     txn = await builder.finish()
 

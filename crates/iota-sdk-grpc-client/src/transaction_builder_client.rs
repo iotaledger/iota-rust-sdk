@@ -12,7 +12,9 @@ use iota_grpc_types::{
     },
     v1::transaction_execution_service::SimulatedTransaction,
 };
-use iota_transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx};
+use iota_transaction_builder::{
+    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClient, WaitForTx,
+};
 use iota_types::{
     Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
     TransactionEffects, UserSignature, Version,
@@ -48,6 +50,13 @@ fn single_item<T>(
         Ok(item) => Ok(Some(item)),
         Err(e) if e.is_not_found() => Ok(None),
         Err(e) => Err(e),
+    }
+}
+
+impl Client {
+    /// Create a new [`TransactionBuilder`] with the given sender address.
+    pub fn transaction_builder(&self, sender: Address) -> TransactionBuilder<&Self> {
+        TransactionBuilder::new(sender).with_client(self)
     }
 }
 

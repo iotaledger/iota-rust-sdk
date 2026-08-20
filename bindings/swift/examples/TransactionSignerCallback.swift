@@ -34,7 +34,7 @@ struct TransactionSignerCallbackExample {
     let faucet = FaucetClient.newLocalnet()
     _ = try await faucet.requestAndWaitForFinalized(address: senderAddress, client: client)
 
-    let builder = TransactionBuilder(sender: senderAddress).withClient(client: client)
+    let builder = client.transactionBuilder(sender: senderAddress)
     _ = builder.sendIota(recipient: recipientAddress, amount: PtbArgument.u64(value: amount))
 
     let signer = TransactionSigner(signerFn: AsyncSigner(key: privateKey))

@@ -41,7 +41,7 @@ func main() {
 		{"0x2222b466a24399ebcf5ec0f04820812ae20fea1037c736cfec608753aa38b522", 2_000_000_000},
 	}
 
-	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder := client.TransactionBuilder(sender)
 
 	// Prepare amounts and labels
 	var amounts []*iota_sdk.PtbArgument

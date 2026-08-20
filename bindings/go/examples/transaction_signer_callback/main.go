@@ -41,7 +41,7 @@ func main() {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
-	builder := iota_sdk.NewTransactionBuilder(senderAddress).WithClient(client)
+	builder := client.TransactionBuilder(senderAddress)
 	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))
 
 	signer := iota_sdk.NewTransactionSigner(&AsyncSigner{Key: privateKey})

@@ -261,7 +261,7 @@ async fn test_upgrade() {
     check_effects_status_success(effects);
 
     let client = Client::new_localnet();
-    let mut tx = TransactionBuilder::new(address).with_client(&client);
+    let mut tx = client.transaction_builder(address);
     let mut upgrade_cap = None;
     for o in created_objs {
         let obj = client.object(o, None).await.unwrap().unwrap();
