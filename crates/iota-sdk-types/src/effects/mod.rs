@@ -296,6 +296,132 @@ mod tests {
         assert!(effects.gas_object().is_none());
     }
 
+    /// Every object set and both tagged unions, over effects that contain one
+    /// object of each kind. The fixtures hold only created and mutated objects,
+    /// so this is what covers the other four.
+    #[test]
+    fn object_sets_report_each_kind() {
+        use crate::{
+            ChangedObject, IdOperation, ObjectDigest, ObjectId, ObjectIn, ObjectOut,
+            ObjectReference, ObjectRemoveKind, Owner, TransactionEffectsV1, Version, WriteKind,
+        };
+
+        let lamport_version = Version::from_u64(9);
+        let old_version = Version::from_u64(4);
+        let digest = ObjectDigest::new([7; 32]);
+        let owner = Owner::Address(crate::Address::ZERO);
+
+        let created = ObjectId::new([1; 32]);
+        let mutated = ObjectId::new([2; 32]);
+        let unwrapped = ObjectId::new([3; 32]);
+        let deleted = ObjectId::new([4; 32]);
+        let wrapped = ObjectId::new([5; 32]);
+        let unwrapped_then_deleted = ObjectId::new([6; 32]);
+
+        let entry = |object_id, input_state, output_state, id_operation| ChangedObject {
+            object_id,
+            input_state,
+            output_state,
+            id_operation,
+        };
+        let existed = || ObjectIn::Data {
+            version: old_version,
+            digest,
+            owner,
+        };
+        let written = || ObjectOut::ObjectWrite { digest, owner };
+
+        let effects = TransactionEffectsV1 {
+            status: crate::ExecutionStatus::Success,
+            epoch: 0,
+            gas_cost_summary: crate::GasCostSummary::default(),
+            transaction_digest: crate::TransactionDigest::default(),
+            gas_object_index: None,
+            events_digest: None,
+            dependencies: Vec::new(),
+            lamport_version,
+            changed_objects: vec![
+                entry(created, ObjectIn::Missing, written(), IdOperation::Created),
+                entry(mutated, existed(), written(), IdOperation::None),
+                entry(unwrapped, ObjectIn::Missing, written(), IdOperation::None),
+                entry(deleted, existed(), ObjectOut::Missing, IdOperation::Deleted),
+                entry(wrapped, existed(), ObjectOut::Missing, IdOperation::None),
+                entry(
+                    unwrapped_then_deleted,
+                    ObjectIn::Missing,
+                    ObjectOut::Missing,
+                    IdOperation::Deleted,
+                ),
+            ],
+            unchanged_shared_objects: Vec::new(),
+            auxiliary_data_digest: None,
+        };
+
+        let ids = |objects: Vec<crate::OwnedObjectReference>| {
+            objects
+                .into_iter()
+                .map(|owned| owned.reference.object_id)
+                .collect::<Vec<_>>()
+        };
+        let removed_ids = |references: Vec<ObjectReference>| {
+            references
+                .into_iter()
+                .map(|reference| reference.object_id)
+                .collect::<Vec<_>>()
+        };
+
+        assert_eq!(ids(effects.created()), vec![created]);
+        assert_eq!(ids(effects.mutated()), vec![mutated]);
+        assert_eq!(ids(effects.unwrapped()), vec![unwrapped]);
+        assert_eq!(removed_ids(effects.deleted()), vec![deleted]);
+        assert_eq!(removed_ids(effects.wrapped()), vec![wrapped]);
+        assert_eq!(
+            removed_ids(effects.unwrapped_then_deleted()),
+            vec![unwrapped_then_deleted]
+        );
+
+        // The tags, and the order the sets are drawn in.
+        assert_eq!(
+            effects
+                .all_changed_objects()
+                .into_iter()
+                .map(|(object, kind)| (object.reference.object_id, kind))
+                .collect::<Vec<_>>(),
+            vec![
+                (mutated, WriteKind::Mutate),
+                (created, WriteKind::Create),
+                (unwrapped, WriteKind::Unwrap),
+            ]
+        );
+
+        // An object unwrapped and then deleted was never in the store, so it is
+        // not a removal.
+        assert_eq!(
+            effects
+                .all_removed_objects()
+                .into_iter()
+                .map(|(reference, kind)| (reference.object_id, kind))
+                .collect::<Vec<_>>(),
+            vec![
+                (deleted, ObjectRemoveKind::Delete),
+                (wrapped, ObjectRemoveKind::Wrap),
+            ]
+        );
+
+        // Removals carry the tombstone digest for why the object is gone, at the
+        // version this transaction assigned.
+        for (reference, kind) in effects.all_removed_objects() {
+            assert_eq!(reference.version, lamport_version);
+            match kind {
+                ObjectRemoveKind::Delete => assert!(reference.digest.is_deleted()),
+                ObjectRemoveKind::Wrap => assert!(reference.digest.is_wrapped()),
+            }
+        }
+        for reference in effects.unwrapped_then_deleted() {
+            assert!(reference.digest.is_deleted());
+        }
+    }
+
     /// The tagged unions are exactly the sets they are drawn from, so nothing
     /// is dropped or double-counted, and each object carries the right tag.
     #[test]
