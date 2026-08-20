@@ -77,29 +77,29 @@ impl Version {
     pub const CANCELED_READ: Self = Self(Self::MAX_VALID_EXCL.0 + 1);
 
     /// Special version that was assigned to congested objects which
-    /// cause transaction cancelations. Note that this special version
+    /// cause transaction cancellations. Note that this special version
     /// was only used prior to the introduction of a gas price feedback
     /// mechanism, but it is kept for backward compatibility.
     pub const CONGESTED_PRIOR_TO_GAS_PRICE_FEEDBACK: Self = Self(Self::MAX_VALID_EXCL.0 + 2);
 
     pub const RANDOMNESS_UNAVAILABLE: Self = Self(Self::MAX_VALID_EXCL.0 + 3);
 
-    // NOTE: if you want to add new Version constants used for cancelation
-    // reasons different than those used for cancelations due to shared object
+    // NOTE: if you want to add new Version constants used for cancellation
+    // reasons different than those used for cancellations due to shared object
     // congestion, please make sure their offset is less than
     // CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK
 
     /// In the gas price feedback mechanism, versions >=
     /// `Version::MAX_VALID_EXCL` +
     /// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are assigned to
-    /// objects that cause transactions cancelations due to congestion.
+    /// objects that cause transactions cancellations due to congestion.
     ///
     /// Versions larger than `Version::MAX_VALID_EXCL` but
     /// smaller than `Version::MAX_VALID_EXCL` +
     /// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are
-    /// intended for other transaction cancelation reasons.
+    /// intended for other transaction cancellation reasons.
     ///
-    /// There unlikely will be more than 1000 non-congestion cancelation
+    /// There unlikely will be more than 1000 non-congestion cancellation
     /// reasons, but this offset can be increased if needed, as long as
     /// (`Version::MIN_CONGESTED.value()` + maximum gas price) does not
     /// overflow `u64::MAX`.
@@ -107,7 +107,7 @@ impl Version {
 
     /// Minimum congested version used in the gas price feedback
     /// mechanism. A congested version is assigned to objects that
-    /// cause transaction cancelations.
+    /// cause transaction cancellations.
     const MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK: Self =
         Self(Self::MAX_VALID_EXCL.0 + Self::CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK.0);
 
@@ -172,7 +172,7 @@ impl Version {
     }
 
     /// Check if this version is congested, i.e., the corresponding
-    /// object is the reason for transaction cancelation.
+    /// object is the reason for transaction cancellation.
     pub fn is_congested(&self) -> bool {
         *self == Self::CONGESTED_PRIOR_TO_GAS_PRICE_FEEDBACK
             || *self >= Self::MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK

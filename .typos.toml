@@ -23,7 +23,6 @@ extend-ignore-re = [
 groth = "groth"
 typ = "typ"
 consts = "consts"
-cancelations = "cancelations"
 
 [files]
 extend-exclude = [

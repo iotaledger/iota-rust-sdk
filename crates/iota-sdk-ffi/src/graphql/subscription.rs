@@ -83,10 +83,10 @@ impl From<SubscriptionTransactionFilter>
     }
 }
 
-/// A cancelation flag that a pending `next` can wait on.
+/// A cancellation flag that a pending `next` can wait on.
 ///
 /// Foreign async support is uneven — Kotlin, Swift and Python can cancel a
-/// pending call, Go and C# cannot — so cancelation has to be something the
+/// pending call, Go and C# cannot — so cancellation has to be something the
 /// subscription itself understands rather than something the caller's runtime
 /// does to it.
 #[derive(Default)]
