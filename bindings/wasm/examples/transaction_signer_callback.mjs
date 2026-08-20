@@ -51,5 +51,5 @@ const signer = new TransactionSigner(new AsyncSigner(privateKey));
 const effects = await builder.execute(signer, WaitForTx.Finalized);
 
 console.log(`Digest: ${hexEncode(effects.digest().toBytes())}`);
-console.log(`Transaction status: ${effects.asV1().status}`);
+console.log(`Transaction status: ${effects.asV1().status()}`);
 console.log(`Effects: ${effects.asV1()}`);

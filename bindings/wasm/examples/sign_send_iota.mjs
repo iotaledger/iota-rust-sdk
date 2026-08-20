@@ -46,5 +46,5 @@ const userSignature = UserSignature.newSimple(signature);
 const effects = await client.executeTx([userSignature], txn);
 
 console.log(`Digest: ${hexEncode(effects.digest().toBytes())}`);
-console.log(`Transaction status: ${effects.asV1().status}`);
+console.log(`Transaction status: ${effects.asV1().status()}`);
 console.log(`Effects: ${effects.asV1()}`);

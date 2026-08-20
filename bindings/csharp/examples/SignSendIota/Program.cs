@@ -39,7 +39,7 @@ class Program
         var effects = await client.ExecuteTx(new[] { userSignature }, txn);
 
         Console.WriteLine($"Digest: {Iota.HexEncode(effects.Digest().ToBytes())}");
-        Console.WriteLine($"Transaction status: {effects.AsV1().Status}");
+        Console.WriteLine($"Transaction status: {effects.AsV1().Status()}");
         Console.WriteLine($"Effects: {effects.AsV1()}");
     }
 }

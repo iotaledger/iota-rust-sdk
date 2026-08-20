@@ -39,7 +39,7 @@ async def main():
     effects = await builder.execute(signer, WaitForTx.FINALIZED)
 
     print(f"Digest: {hex_encode(effects.digest().to_bytes())}")
-    print(f"Transaction status: {effects.as_v1().status}")
+    print(f"Transaction status: {effects.as_v1().status()}")
     print(f"Effects: {effects.as_v1()}")
 
 
