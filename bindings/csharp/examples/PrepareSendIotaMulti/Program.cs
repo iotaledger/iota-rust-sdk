@@ -26,7 +26,7 @@ class Program
             labels.Add($"coin{i}");
         }
 
-        var builder = new TransactionBuilder(sender).WithClient(client);
+        var builder = client.TransactionBuilder(sender);
 
         builder.SplitCoins(PtbArgument.ObjectId(coinId), amounts.ToArray(), labels.ToArray());
 

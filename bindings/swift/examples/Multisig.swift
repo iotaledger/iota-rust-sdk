@@ -53,7 +53,7 @@ struct MultisigExample {
     _ = try await faucet.requestAndWaitForFinalized(address: multisigAddress, client: client)
 
     // 6. Build a send_iota transaction
-    let builder = TransactionBuilder(sender: multisigAddress).withClient(client: client)
+    let builder = client.transactionBuilder(sender: multisigAddress)
     _ = builder.sendIota(recipient: recipientAddress, amount: PtbArgument.u64(value: amount))
     let txn = try await builder.finish()
 

@@ -14,7 +14,7 @@ class Program
         var sender = keypair.PublicKey().DeriveAddress();
         var signer = TransactionSigner.FromEd25519(keypair);
 
-        var builder = new TransactionBuilder(sender).WithClient(client);
+        var builder = client.TransactionBuilder(sender);
 
         builder.MoveCall(
             Address.Std(),

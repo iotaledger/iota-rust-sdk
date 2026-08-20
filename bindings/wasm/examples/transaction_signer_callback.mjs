@@ -8,7 +8,6 @@ import {
   GraphQlClient,
   hexEncode,
   PtbArgument,
-  TransactionBuilder,
   TransactionSigner,
   TransactionSignerFnOutput,
   initAsync,
@@ -45,7 +44,7 @@ const client = GraphQlClient.newLocalnet();
 const faucet = FaucetClient.newLocalnet();
 await faucet.requestAndWaitForFinalized(senderAddress, client);
 
-const builder = new TransactionBuilder(senderAddress).withClient(client);
+const builder = client.transactionBuilder(senderAddress);
 builder.sendIota(recipientAddress, PtbArgument.u64(amount));
 
 const signer = new TransactionSigner(new AsyncSigner(privateKey));

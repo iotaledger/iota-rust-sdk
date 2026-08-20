@@ -32,7 +32,7 @@ func main() {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
-	builder := iota_sdk.NewTransactionBuilder(senderAddress).WithClient(client)
+	builder := client.TransactionBuilder(senderAddress)
 	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))
 	txn, err := builder.Finish()
 	if err != nil {

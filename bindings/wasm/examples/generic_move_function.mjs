@@ -6,7 +6,6 @@ import {
   GraphQlClient,
   Identifier,
   PtbArgument,
-  TransactionBuilder,
   TypeTag,
   initAsync,
 } from "@iota/sdk-wasm";
@@ -19,7 +18,7 @@ const sender = Address.fromHex(
   "0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e",
 );
 
-const builder = new TransactionBuilder(sender).withClient(client);
+const builder = client.transactionBuilder(sender);
 
 const addr1 = Address.fromHex(
   "0xde49ea53fbadee67d3e35a097cdbea210b659676fc680a0b0c5f11d0763d375e",

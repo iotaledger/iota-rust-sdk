@@ -11,7 +11,7 @@ fun main() = runBlocking {
         val sender =
             Address.fromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
-        val builder = TransactionBuilder(sender).withClient(client)
+        val builder = client.transactionBuilder(sender)
 
         val packageAddr = Address.std()
         val moduleName = Identifier("u64")

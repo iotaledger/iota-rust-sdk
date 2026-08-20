@@ -15,7 +15,7 @@ async def main():
     to_address = Address.from_hex(
         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
-    builder = TransactionBuilder(from_address).with_client(client)
+    builder = client.transaction_builder(from_address)
     builder.send_iota(to_address, PtbArgument.u64(5000000000))
 
     txn = await builder.finish()

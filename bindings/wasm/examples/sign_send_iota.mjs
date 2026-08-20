@@ -8,7 +8,6 @@ import {
   GraphQlClient,
   hexEncode,
   PtbArgument,
-  TransactionBuilder,
   initAsync,
   UserSignature,
 } from "@iota/sdk-wasm";
@@ -32,7 +31,7 @@ const client = GraphQlClient.newLocalnet();
 const faucet = FaucetClient.newLocalnet();
 await faucet.requestAndWaitForFinalized(senderAddress, client);
 
-const builder = new TransactionBuilder(senderAddress).withClient(client);
+const builder = client.transactionBuilder(senderAddress);
 builder.sendIota(recipientAddress, PtbArgument.u64(amount));
 const txn = await builder.finish();
 
