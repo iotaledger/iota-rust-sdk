@@ -1,0 +1,54 @@
+name: Set Up Rust
+description: Install the Rust toolchain, components, and set up the cache.
+inputs:
+  toolchain:
+    description: Type of toolchain to install.
+    required: false
+    default: stable
+  targets:
+    description: Targets triple of the toolchain.
+    required: false
+  components:
+    description: Additional components to install.
+    required: false
+  install:
+    description: Additional tool to install via `cargo install`.
+    required: false
+  cache:
+    description: Whether to set up cache or not.
+    required: false
+    default: "true"
+  cache-root:
+    description: The root of cargo crate.
+    required: false
+    default: "."
+  additional-cache-dirs:
+    description: A newline-separated list of additional cache directories.
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - run: rustup set auto-self-update disable
+      if: contains(runner.os, 'windows')
+      shell: bash
+
+    - id: install
+      name: Install Rust Toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: ${{ inputs.toolchain }}
+        targets: ${{ inputs.targets }}
+        components: ${{ inputs.components }}
+
+    - name: Cache dependencies
+      if: ${{ inputs.cache == 'true' }}
+      uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: "${{ inputs.cache-root }} -> target"
+        cache-directories: ${{ inputs.additional-cache-dirs }}
+
+    - name: Install ${{ inputs.install }}
+      if: ${{ inputs.install != '' }}
+      shell: bash
+      run: cargo install ${{ inputs.install }}

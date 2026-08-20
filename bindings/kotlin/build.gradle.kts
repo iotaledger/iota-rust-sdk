@@ -4,6 +4,7 @@ import org.gradle.api.tasks.bundling.Jar
 
 plugins {
     kotlin("jvm") version "2.2.21"
+    id("org.jetbrains.dokka") version "1.9.20"
     kotlin("plugin.serialization") version "2.2.21"
     id("com.ncorti.ktfmt.gradle") version "0.25.0"
     id("com.vanniktech.maven.publish") version "0.30.0"
@@ -160,4 +161,8 @@ tasks.whenTaskAdded {
     if (name == "sourcesJar") {
         (this as Jar).exclude("**/*.so", "**/*.dylib", "**/*.dll")
     }
+}
+
+tasks.dokkaGfm {
+    outputDirectory.set(layout.projectDirectory.dir("../../docs/kotlin"))
 }
