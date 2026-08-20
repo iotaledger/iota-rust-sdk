@@ -19,7 +19,7 @@ chrono = "0.4.45"
 cynic.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 futures.workspace = true
-reqwest = { workspace = true, features = ["rustls", "webpki-roots", "json"] }
+reqwest = { workspace = true, features = ["rustls", "json"] }
 serde.workspace = true
 serde_json.workspace = true
 strum = { workspace = true, features = ["derive"] }
