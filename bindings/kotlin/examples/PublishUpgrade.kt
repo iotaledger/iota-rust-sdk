@@ -57,9 +57,9 @@ fun main() = runBlocking {
             ?: throw Exception("Failed to request coins from faucet")
 
         // Build the `publish` PTB
-        val builderPublish = TransactionBuilder(sender).withClient(client)
+        val builderPublish = client.transactionBuilder(sender)
         // Publish the package and receive the upgrade cap in return
-        builderPublish.publish(packageData, "upgrade_cap")
+        builderPublish.publishPackage(packageData, "upgrade_cap")
         // Transfer the upgrade cap to the sender address
         builderPublish.transferObjects(sender, listOf(PtbArgument.assigned("upgrade_cap")))
         val txPublish = builderPublish.finish()
@@ -110,7 +110,7 @@ fun main() = runBlocking {
         }
 
         // Build the `upgrade` PTB, that consists of 3 steps
-        val builderUpgrade = TransactionBuilder(sender).withClient(client)
+        val builderUpgrade = client.transactionBuilder(sender)
 
         // Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
         // ticket

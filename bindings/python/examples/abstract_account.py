@@ -20,7 +20,7 @@ async def main():
     if faucet_receipt is None:
         raise Exception("Failed to request coins from faucet")
 
-    builder = TransactionBuilder(from_address).with_client(client)
+    builder = client.transaction_builder(from_address)
     builder.send_iota(to_address, PtbArgument.u64(5000000000))
 
     move_authenticator = await MoveAuthenticatorBuilder(
@@ -51,9 +51,9 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
         raise Exception("Failed to request coins from faucet")
 
     # Build the `publish` PTB
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
     # Publish the package and receive the upgrade cap
-    builder.publish(package_data, "upgrade_cap")
+    builder.publish_package(package_data, "upgrade_cap")
     # Transfer the upgrade cap to the sender address
     builder.transfer_objects(sender, [PtbArgument.assigned("upgrade_cap")])
 
@@ -94,7 +94,7 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
     print(f"Account ID: {account_id.to_hex()}\n")
 
     # Build the `link_auth` PTB
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
     builder.move_call(
         package_id.to_address(),
         Identifier("account"),

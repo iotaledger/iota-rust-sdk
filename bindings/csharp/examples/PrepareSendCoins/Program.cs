@@ -14,7 +14,7 @@ class Program
 
         var coinId = PtbArgument.ObjectIdFromHex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2");
 
-        var builder = new TransactionBuilder(fromAddress).WithClient(client);
+        var builder = client.TransactionBuilder(fromAddress);
 
         builder.SendCoins(new[] { coinId }, toAddress, PtbArgument.U64(50000000000));
 

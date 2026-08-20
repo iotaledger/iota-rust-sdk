@@ -18,7 +18,6 @@ import {
   MovePackageData,
   PtbArgument,
   StructTag,
-  TransactionBuilder,
   initAsync,
   UpgradePolicy,
   WaitForTx,
@@ -58,9 +57,9 @@ if (faucetReceipt === null) {
 }
 
 // Build the `publish` PTB
-let builder = new TransactionBuilder(sender).withClient(client);
+let builder = client.transactionBuilder(sender);
 // Publish the package and receive the upgrade cap
-builder.publish(packageData, "upgrade_cap");
+builder.publishPackage(packageData, "upgrade_cap");
 // Transfer the upgrade cap to the sender address
 builder.transferObjects(sender, [PtbArgument.assigned("upgrade_cap")]);
 let tx = await builder.finish();
@@ -104,7 +103,7 @@ if (upgradeCap === null) throw new Error("Missing upgrade cap");
 if (packageId === null) throw new Error("Missing package id");
 
 // Build the `upgrade` PTB
-builder = new TransactionBuilder(sender).withClient(client);
+builder = client.transactionBuilder(sender);
 // Authorize the upgrade by providing the upgrade cap object id to receive an
 // upgrade ticket
 builder.moveCall(

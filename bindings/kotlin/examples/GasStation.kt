@@ -13,7 +13,7 @@ fun main() = runBlocking {
         var sender = keypair.publicKey().deriveAddress()
         var signer = TransactionSigner.fromEd25519(keypair)
 
-        val builder = TransactionBuilder(sender).withClient(client)
+        val builder = client.transactionBuilder(sender)
 
         builder.moveCall(
             Address.std(),

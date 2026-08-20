@@ -26,7 +26,7 @@ func main() {
 	sender := keypair.PublicKey().DeriveAddress()
 	signer := iota_sdk.TransactionSignerFromEd25519(keypair)
 
-	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder := client.TransactionBuilder(sender)
 
 	package_id := iota_sdk.AddressStd()
 	module_name := identifier("u64")

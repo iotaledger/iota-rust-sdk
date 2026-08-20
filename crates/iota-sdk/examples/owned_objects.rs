@@ -14,10 +14,7 @@ async fn main() -> Result<()> {
     let address = Address::ZERO;
     let owned_objects_page = client
         .objects(
-            Some(ObjectFilter {
-                owner: Some(address),
-                ..Default::default()
-            }),
+            ObjectFilter::default().with_owner(address),
             PaginationFilter::default(),
         )
         .await?;

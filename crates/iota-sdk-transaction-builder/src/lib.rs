@@ -123,7 +123,8 @@
 //!   various amounts.
 //! - [transfer_objects](TransactionBuilder::transfer_objects): Send objects to
 //!   a recipient address.
-//! - [publish](TransactionBuilder::publish): Publish a move package.
+//! - [publish_package](TransactionBuilder::publish_package): Publish a move
+//!   package.
 //!     - `package_id`: Name the package ID returned by the publish call.
 //! - [upgrade](TransactionBuilder::upgrade): Upgrade a move package.
 //! - [make_move_vec](TransactionBuilder::make_move_vec): Create a move

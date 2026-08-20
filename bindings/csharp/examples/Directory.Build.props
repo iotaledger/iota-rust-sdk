@@ -2,6 +2,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
+    <!-- The examples target net8.0, but the README asks only for ".NET 8.0 SDK or
+         higher": roll forward so a machine with just a newer runtime can run them. -->
+    <RollForward>LatestMajor</RollForward>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <!-- Prevent multiple main issues if dotnet build is run at the folder level accidentally -->

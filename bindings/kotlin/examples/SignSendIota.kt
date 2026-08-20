@@ -22,7 +22,7 @@ fun main() = runBlocking {
         val faucet = FaucetClient.newLocalnet()
         faucet.requestAndWaitForFinalized(senderAddress, client)
 
-        val builder = TransactionBuilder(senderAddress).withClient(client)
+        val builder = client.transactionBuilder(senderAddress)
         builder.sendIota(recipientAddress, PtbArgument.u64(amount))
         val txn = builder.finish()
 

@@ -26,7 +26,7 @@ struct AbstractAccountExample {
         userInfo: [NSLocalizedDescriptionKey: "Failed to request coins from faucet"])
     }
 
-    let builder = TransactionBuilder(sender: fromAddress).withClient(client: client)
+    let builder = client.transactionBuilder(sender: fromAddress)
     _ = builder.sendIota(
       recipient: toAddress, amount: PtbArgument.u64(value: 5_000_000_000))
 
@@ -66,9 +66,9 @@ struct AbstractAccountExample {
     }
 
     // Build the `publish` PTB
-    let builder = TransactionBuilder(sender: sender).withClient(client: client)
+    let builder = client.transactionBuilder(sender: sender)
     // Publish the package and receive the upgrade cap
-    _ = builder.publish(packageData: packageData, upgradeCapName: "upgrade_cap")
+    _ = builder.publishPackage(packageData: packageData, upgradeCapName: "upgrade_cap")
     // Transfer the upgrade cap to the sender address
     _ = builder.transferObjects(
       recipient: sender, objects: [PtbArgument.assigned(name: "upgrade_cap")])
@@ -128,7 +128,7 @@ struct AbstractAccountExample {
     print("Account ID: \(accountId.toHex())\n")
 
     // Build the `link_auth` PTB
-    let linkBuilder = TransactionBuilder(sender: sender).withClient(client: client)
+    let linkBuilder = client.transactionBuilder(sender: sender)
     _ = try linkBuilder.moveCall(
       package: packageId.toAddress(),
       module: Identifier(identifier: "account"),

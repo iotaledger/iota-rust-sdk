@@ -10,10 +10,11 @@ use fastcrypto::{
     traits::{KeyPair as _, Signer as _, ToFromBytes as _, VerifyingKey as _},
 };
 use iota_types::{
-    Ed25519PublicKey, Ed25519Signature, SignatureScheme, SimpleSignature, UserSignature,
+    Ed25519PublicKey, Ed25519Signature, PersonalMessage, SignatureScheme, SimpleSignature,
+    Transaction, UserSignature,
 };
 
-use crate::{SignatureError, Signer, Verifier};
+use crate::{IotaVerifier, SignatureError, Signer, Verifier};
 
 #[derive(Clone, Eq, PartialEq, zeroize::Zeroize, zeroize::ZeroizeOnDrop)]
 pub struct Ed25519PrivateKey([u8; Self::LENGTH]);
@@ -382,6 +383,26 @@ impl Verifier<UserSignature> for Ed25519VerifyingKey {
     }
 }
 
+crate::impl_iota_verifier!(Ed25519VerifyingKey);
+
+impl IotaVerifier for Ed25519PublicKey {
+    fn verify_transaction(
+        &self,
+        transaction: &Transaction,
+        signature: &UserSignature,
+    ) -> Result<(), SignatureError> {
+        Ed25519VerifyingKey::new(self)?.verify_transaction(transaction, signature)
+    }
+
+    fn verify_personal_message(
+        &self,
+        message: &PersonalMessage<'_>,
+        signature: &UserSignature,
+    ) -> Result<(), SignatureError> {
+        Ed25519VerifyingKey::new(self)?.verify_personal_message(message, signature)
+    }
+}
+
 #[derive(Clone, Debug, Default)]
 pub struct Ed25519Verifier {}
 
@@ -417,9 +438,11 @@ impl Verifier<UserSignature> for Ed25519Verifier {
     }
 }
 
+crate::impl_iota_verifier!(Ed25519Verifier);
+
 #[cfg(test)]
 mod tests {
-    use iota_types::{PersonalMessage, Transaction};
+    use iota_types::{PersonalMessage, PublicKey, Transaction};
     use test_strategy::proptest;
 
     use super::*;
@@ -432,6 +455,20 @@ mod tests {
         verifier
             .verify_transaction(&transaction, &signature)
             .unwrap();
+
+        let public_key = signer.public_key();
+        public_key
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+        PublicKey::Ed25519(public_key)
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+
+        // a different public key must not verify the signature
+        Ed25519PrivateKey::new([7; 32])
+            .public_key()
+            .verify_transaction(&transaction, &signature)
+            .unwrap_err();
     }
 
     #[proptest]
@@ -447,6 +484,20 @@ mod tests {
         verifier
             .verify_personal_message(&message, &signature)
             .unwrap();
+
+        let public_key = signer.public_key();
+        public_key
+            .verify_personal_message(&message, &signature)
+            .unwrap();
+        PublicKey::Ed25519(public_key)
+            .verify_personal_message(&message, &signature)
+            .unwrap();
+
+        // a different public key must not verify the signature
+        Ed25519PrivateKey::new([7; 32])
+            .public_key()
+            .verify_personal_message(&message, &signature)
+            .unwrap_err();
     }
 
     #[proptest]

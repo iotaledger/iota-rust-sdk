@@ -17,7 +17,7 @@ class Program
         if (faucetReceipt == null)
             throw new Exception("Failed to request coins from faucet");
 
-        var builder = new TransactionBuilder(fromAddress).WithClient(client);
+        var builder = client.TransactionBuilder(fromAddress);
         builder.SendIota(toAddress, PtbArgument.U64(5000000000));
 
         var moveAuthenticator = await new MoveAuthenticatorBuilder(
@@ -45,8 +45,8 @@ class Program
         if (faucetReceipt == null)
             throw new Exception("Failed to request coins from faucet");
 
-        var builder = new TransactionBuilder(sender).WithClient(client);
-        builder.Publish(packageData, "upgrade_cap");
+        var builder = client.TransactionBuilder(sender);
+        builder.PublishPackage(packageData, "upgrade_cap");
         builder.TransferObjects(sender, new[] { PtbArgument.Assigned("upgrade_cap") });
 
         var txSigner = TransactionSigner.FromEd25519(privateKey);
@@ -87,7 +87,7 @@ class Program
         Console.WriteLine($"PackageMetadataV1 ID: {packageMetadataId.ToHex()}");
         Console.WriteLine($"Account ID: {accountId.ToHex()}\n");
 
-        var builder2 = new TransactionBuilder(sender).WithClient(client);
+        var builder2 = client.TransactionBuilder(sender);
         builder2.MoveCall(
             packageId.ToAddress(),
             new Identifier("account"),

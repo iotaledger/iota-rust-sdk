@@ -11,7 +11,6 @@ import {
   MovePackageData,
   ObjectId,
   PtbArgument,
-  TransactionBuilder,
   TransactionSigner,
   initAsync,
   WaitForTx,
@@ -40,9 +39,9 @@ async function setupAccount(client) {
   }
 
   // Build the `publish` PTB
-  let builder = new TransactionBuilder(sender).withClient(client);
+  let builder = client.transactionBuilder(sender);
   // Publish the package and receive the upgrade cap
-  builder.publish(packageData, "upgrade_cap");
+  builder.publishPackage(packageData, "upgrade_cap");
   // Transfer the upgrade cap to the sender address
   builder.transferObjects(sender, [PtbArgument.assigned("upgrade_cap")]);
 
@@ -85,7 +84,7 @@ async function setupAccount(client) {
   console.log(`Account ID: ${accountId.toHex()}\n`);
 
   // Build the `link_auth` PTB
-  builder = new TransactionBuilder(sender).withClient(client);
+  builder = client.transactionBuilder(sender);
   builder.moveCall(
     packageId.toAddress(),
     new Identifier("account"),
@@ -124,7 +123,7 @@ if (faucetReceipt === null) {
   throw new Error("Failed to request coins from faucet");
 }
 
-const builder = new TransactionBuilder(fromAddress).withClient(client);
+const builder = client.transactionBuilder(fromAddress);
 builder.sendIota(toAddress, PtbArgument.u64(5000000000n));
 
 const moveAuthenticator = await new MoveAuthenticatorBuilder(

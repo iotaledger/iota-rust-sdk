@@ -40,7 +40,7 @@ impl Client {
             &v1.kind,
             skip_checks,
             TransactionMetadata {
-                gas_budget: (v1.gas_payment.budget > 0).then_some(v1.gas_payment.budget),
+                gas_budget: Some(v1.gas_payment.budget),
                 gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
                 gas_price: Some(v1.gas_payment.price),
                 gas_sponsor: Some(v1.gas_payment.owner),

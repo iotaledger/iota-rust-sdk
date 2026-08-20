@@ -6,7 +6,6 @@ use std::str::FromStr;
 use eyre::Result;
 use iota_sdk::{
     graphql_client::Client,
-    transaction_builder::TransactionBuilder,
     types::{Address, ObjectId},
 };
 
@@ -24,7 +23,7 @@ async fn main() -> Result<()> {
         ObjectId::from_str("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?,
     ];
 
-    let mut builder = TransactionBuilder::new(from_address).with_client(&client);
+    let mut builder = client.transaction_builder(from_address);
 
     builder.transfer_objects(to_address, objs_to_transfer);
 

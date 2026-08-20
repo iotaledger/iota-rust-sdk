@@ -20,7 +20,7 @@ struct DevInspectExample {
     let name = "name.iota"
     print("Looking up name: \(name)")
 
-    let builder = TransactionBuilder(sender: sender).withClient(client: client)
+    let builder = client.transactionBuilder(sender: sender)
 
     // 1. Get the registry
     _ = try builder.moveCall(

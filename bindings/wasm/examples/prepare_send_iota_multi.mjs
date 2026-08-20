@@ -6,7 +6,6 @@ import {
   GraphQlClient,
   ObjectId,
   PtbArgument,
-  TransactionBuilder,
   initAsync,
 } from "@iota/sdk-wasm";
 
@@ -36,7 +35,7 @@ const recipients = [
 const amounts = recipients.map(([, amount]) => PtbArgument.u64(amount));
 const labels = recipients.map((_, i) => `coin${i}`);
 
-const builder = new TransactionBuilder(sender).withClient(client);
+const builder = client.transactionBuilder(sender);
 
 builder.splitCoins(PtbArgument.objectId(coinId), amounts, labels);
 // Transfer each split coin to the corresponding recipient

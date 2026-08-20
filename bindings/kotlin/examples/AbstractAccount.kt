@@ -17,7 +17,7 @@ fun main() = runBlocking {
         faucet.requestAndWaitForFinalized(fromAddress, client)
             ?: throw Exception("Failed to request coins from faucet")
 
-        val builder = TransactionBuilder(fromAddress).withClient(client)
+        val builder = client.transactionBuilder(fromAddress)
         builder.sendIota(toAddress, PtbArgument.u64(5000000000uL))
 
         val moveAuthenticator =
@@ -52,9 +52,9 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
         ?: throw Exception("Failed to request coins from faucet")
 
     // Build the `publish` PTB
-    var builder = TransactionBuilder(sender).withClient(client)
+    var builder = client.transactionBuilder(sender)
     // Publish the package and receive the upgrade cap
-    builder.publish(packageData, "upgrade_cap")
+    builder.publishPackage(packageData, "upgrade_cap")
     // Transfer the upgrade cap to the sender address
     builder.transferObjects(sender, listOf(PtbArgument.assigned("upgrade_cap")))
 
@@ -101,7 +101,7 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
     println("Account ID: ${accountId.toHex()}\n")
 
     // Build the `link_auth` PTB
-    builder = TransactionBuilder(sender).withClient(client)
+    builder = client.transactionBuilder(sender)
     builder.moveCall(
         `package` = packageId.toAddress(),
         module = Identifier("account"),

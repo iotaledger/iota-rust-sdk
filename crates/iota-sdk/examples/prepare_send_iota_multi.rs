@@ -6,7 +6,7 @@ use std::str::FromStr;
 use eyre::Result;
 use iota_sdk::{
     graphql_client::Client,
-    transaction_builder::{TransactionBuilder, assigned},
+    transaction_builder::assigned,
     types::{Address, ObjectId},
 };
 
@@ -32,7 +32,7 @@ async fn main() -> Result<()> {
         ),
     ];
 
-    let mut builder = TransactionBuilder::new(sender).with_client(&client);
+    let mut builder = client.transaction_builder(sender);
 
     // Extract amounts from recipients
     let amounts: Vec<u64> = recipients.iter().map(|(_, amt)| *amt).collect();

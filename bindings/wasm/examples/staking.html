@@ -297,7 +297,6 @@
       import {
         initAsync,
         GraphQlClient,
-        TransactionBuilder,
         PtbArgument,
         MoveArg,
         Address,
@@ -664,8 +663,8 @@
           // The .stake() method is a high-level helper that splits the
           // requested amount from the gas coin and stakes it.
           const stakeArg = PtbArgument.moveArg(MoveArg.u64(amountNanos));
-          const builder = new TransactionBuilder(senderAddr)
-            .withClient(client)
+          const builder = client
+            .transactionBuilder(senderAddr)
             .stake(stakeArg, validatorAddr);
 
           // Finalize the transaction (resolves gas, etc.)

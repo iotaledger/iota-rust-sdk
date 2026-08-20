@@ -14,7 +14,7 @@ async def main():
     sponsor = Address.from_hex(
         "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
 
     package_addr = Address.std()
     module_name = Identifier("u8")
