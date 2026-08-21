@@ -429,15 +429,13 @@ mod type_digest {
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod signing_message {
     use crate::{
-        Digest, Intent, IntentAppId, IntentMessage, IntentScope, IntentVersion, PersonalMessage,
-        SigningDigest, Transaction, TransactionV1, hash::Hasher,
+        Intent, IntentMessage, IntentScope, PersonalMessage, SigningDigest, Transaction,
+        TransactionV1, hash::Hasher,
     };
 
     impl Transaction {
         pub fn signing_digest(&self) -> SigningDigest {
-            const INTENT: Intent = Intent::iota_transaction();
-            let digest = signing_digest(INTENT, self);
-            digest.into_inner()
+            self.intent_message().signing_digest()
         }
 
         pub fn signing_digest_hex(&self) -> String {
@@ -447,9 +445,7 @@ mod signing_message {
 
     impl TransactionV1 {
         pub fn signing_digest(&self) -> SigningDigest {
-            const INTENT: Intent = Intent::iota_transaction();
-            let digest = signing_digest(INTENT, &Transaction::V1(self.clone()));
-            digest.into_inner()
+            Transaction::V1(self.clone()).signing_digest()
         }
 
         pub fn signing_digest_hex(&self) -> String {
@@ -457,18 +453,9 @@ mod signing_message {
         }
     }
 
-    fn signing_digest<T: serde::Serialize + ?Sized>(intent: Intent, ty: &T) -> Digest {
-        let mut hasher = Hasher::new();
-        hasher.update(intent.to_bytes());
-        bcs::serialize_into(&mut hasher, ty).unwrap();
-        hasher.finalize()
-    }
-
     impl PersonalMessage<'_> {
         pub fn signing_digest(&self) -> SigningDigest {
-            const INTENT: Intent = Intent::personal_message();
-            let digest = signing_digest(INTENT, &self.0);
-            digest.into_inner()
+            IntentMessage::new(Intent::personal_message(), &self.0).signing_digest()
         }
 
         pub fn signing_digest_hex(&self) -> String {
@@ -478,13 +465,8 @@ mod signing_message {
 
     impl crate::CheckpointSummary {
         pub fn signing_message(&self) -> Vec<u8> {
-            const INTENT: Intent = Intent {
-                scope: IntentScope::CheckpointSummary,
-                version: IntentVersion::V0,
-                app_id: IntentAppId::Iota,
-            };
             let mut message = Vec::new();
-            message.extend(INTENT.to_bytes());
+            message.extend(Intent::iota_app(IntentScope::CheckpointSummary).to_bytes());
             bcs::serialize_into(&mut message, self).unwrap();
             bcs::serialize_into(&mut message, &self.epoch).unwrap();
             message
@@ -499,10 +481,10 @@ mod signing_message {
     where
         T: serde::Serialize,
     {
-        pub fn signing_digest(&self) -> Digest {
+        pub fn signing_digest(&self) -> SigningDigest {
             let mut hasher = Hasher::default();
             bcs::serialize_into(&mut hasher, self).unwrap();
-            hasher.finalize()
+            hasher.finalize().into()
         }
     }
 }
