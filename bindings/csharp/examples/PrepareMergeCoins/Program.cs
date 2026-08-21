@@ -14,7 +14,7 @@ class Program
         var coin0 = PtbArgument.ObjectIdFromHex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc");
         var coin1 = PtbArgument.ObjectIdFromHex("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db");
 
-        var builder = new TransactionBuilder(sender).WithClient(client);
+        var builder = client.TransactionBuilder(sender);
 
         builder.MergeCoins(coin0, new[] { coin1 });
 

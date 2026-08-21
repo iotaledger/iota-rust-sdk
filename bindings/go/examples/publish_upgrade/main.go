@@ -68,7 +68,7 @@ func main() {
 	}
 
 	// Build the `publish` PTB
-	builderPublish := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builderPublish := client.TransactionBuilder(sender)
 	// Publish the package and receive the upgrade cap in return
 	builderPublish.PublishPackage(packageData, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
@@ -140,7 +140,7 @@ func main() {
 	}
 
 	// Build the `upgrade` PTB
-	builderUpgrade := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builderUpgrade := client.TransactionBuilder(sender)
 
 	// Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
 	// ticket

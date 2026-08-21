@@ -23,7 +23,7 @@ async def main():
     faucet = FaucetClient.new_localnet()
     await faucet.request_and_wait_for_finalized(sender_address, client)
 
-    builder = TransactionBuilder(sender_address).with_client(client)
+    builder = client.transaction_builder(sender_address)
     builder.send_iota(recipient_address, PtbArgument.u64(amount))
     txn = await builder.finish()
 

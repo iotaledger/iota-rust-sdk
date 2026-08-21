@@ -21,7 +21,6 @@ import {
   MultisigMember,
   PtbArgument,
   SimpleKeypair,
-  TransactionBuilder,
   initAsync,
   UserSignature,
 } from "@iota/sdk-wasm";
@@ -67,7 +66,7 @@ const faucet = FaucetClient.newLocalnet();
 await faucet.requestAndWaitForFinalized(multisigAddress, client);
 
 // 6. Build a send_iota transaction.
-const builder = new TransactionBuilder(multisigAddress).withClient(client);
+const builder = client.transactionBuilder(multisigAddress);
 builder.sendIota(recipientAddress, PtbArgument.u64(amount));
 const txn = await builder.finish();
 

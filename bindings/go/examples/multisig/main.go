@@ -72,7 +72,7 @@ func main() {
 	}
 
 	// 6. Build a send_iota transaction
-	builder := iota_sdk.NewTransactionBuilder(multisigAddress).WithClient(client)
+	builder := client.TransactionBuilder(multisigAddress)
 	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))
 	txn, err := builder.Finish()
 	if err != nil {

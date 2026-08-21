@@ -14,7 +14,6 @@ use eyre::Result;
 use iota_sdk::{
     crypto::{FromMnemonic, IotaSigner, ed25519::Ed25519PrivateKey, multisig::MultisigAggregator},
     graphql_client::{Client, faucet::FaucetClient},
-    transaction_builder::TransactionBuilder,
     types::{Address, MultisigCommittee, MultisigMember, PublicKey, UserSignature},
 };
 
@@ -51,7 +50,7 @@ async fn main() -> Result<()> {
         .await?;
 
     // 5. Build a send_iota transaction
-    let mut builder = TransactionBuilder::new(multisig_address).with_client(&client);
+    let mut builder = client.transaction_builder(multisig_address);
     builder.send_iota(recipient, amount);
     let tx = builder.finish().await?;
 

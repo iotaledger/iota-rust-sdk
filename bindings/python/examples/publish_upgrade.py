@@ -58,7 +58,7 @@ async def main():
         raise Exception("Failed to request coins from faucet")
 
     # Build the `publish` PTB
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
     # Publish the package and receive the upgrade cap in return
     builder.publish_package(package_data, "upgrade_cap")
     # Transfer the upgrade cap to the sender address
@@ -108,7 +108,7 @@ async def main():
         raise Exception("Missing package id")
 
     # Build the `upgrade` PTB
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
 
     # Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
     # ticket

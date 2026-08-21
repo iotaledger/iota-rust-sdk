@@ -14,7 +14,7 @@ fun main() = runBlocking {
         val toAddress =
             Address.fromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
-        val builder = TransactionBuilder(fromAddress).withClient(client)
+        val builder = client.transactionBuilder(fromAddress)
 
         builder.sendIota(toAddress, PtbArgument.u64(5000000000uL))
 

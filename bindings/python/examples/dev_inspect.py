@@ -20,7 +20,7 @@ async def main():
     name = "name.iota"
     print(f"Looking up name: {name}")
 
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
 
     # 1. Get the registry
     builder.move_call(

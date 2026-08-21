@@ -7,7 +7,6 @@ import {
   ObjectFilter,
   PtbArgument,
   StructTag,
-  TransactionBuilder,
   initAsync,
 } from "@iota/sdk-wasm";
 
@@ -27,9 +26,7 @@ if (stakedIotas.data.length === 0) {
 }
 const stakedIota = stakedIotas.data[0];
 
-const builder = new TransactionBuilder(
-  stakedIota.owner().asAddress(),
-).withClient(client);
+const builder = client.transactionBuilder(stakedIota.owner().asAddress());
 
 builder.unstake(PtbArgument.objectId(stakedIota.id()));
 

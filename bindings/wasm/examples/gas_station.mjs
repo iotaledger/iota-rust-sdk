@@ -7,7 +7,6 @@ import {
   GraphQlClient,
   Identifier,
   PtbArgument,
-  TransactionBuilder,
   TransactionSigner,
   initAsync,
 } from "@iota/sdk-wasm";
@@ -21,7 +20,7 @@ const keypair = Ed25519PrivateKey.random();
 const sender = keypair.publicKey().deriveAddress();
 const signer = TransactionSigner.fromEd25519(keypair);
 
-const builder = new TransactionBuilder(sender).withClient(client);
+const builder = client.transactionBuilder(sender);
 
 builder.moveCall(Address.std(), new Identifier("u64"), new Identifier("sqrt"), [
   PtbArgument.u64(64n),
