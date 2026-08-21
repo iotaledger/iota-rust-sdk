@@ -429,13 +429,13 @@ mod type_digest {
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod signing_message {
     use crate::{
-        Digest, Intent, IntentMessage, IntentScope, PersonalMessage, SigningDigest, Transaction,
+        Intent, IntentMessage, IntentScope, PersonalMessage, SigningDigest, Transaction,
         TransactionV1, hash::Hasher,
     };
 
     impl Transaction {
         pub fn signing_digest(&self) -> SigningDigest {
-            self.intent_message().signing_digest().into()
+            self.intent_message().signing_digest()
         }
 
         pub fn signing_digest_hex(&self) -> String {
@@ -455,9 +455,7 @@ mod signing_message {
 
     impl PersonalMessage<'_> {
         pub fn signing_digest(&self) -> SigningDigest {
-            IntentMessage::new(Intent::personal_message(), &self.0)
-                .signing_digest()
-                .into()
+            IntentMessage::new(Intent::personal_message(), &self.0).signing_digest()
         }
 
         pub fn signing_digest_hex(&self) -> String {
@@ -483,10 +481,10 @@ mod signing_message {
     where
         T: serde::Serialize,
     {
-        pub fn signing_digest(&self) -> Digest {
+        pub fn signing_digest(&self) -> SigningDigest {
             let mut hasher = Hasher::default();
             bcs::serialize_into(&mut hasher, self).unwrap();
-            hasher.finalize()
+            hasher.finalize().into()
         }
     }
 }
