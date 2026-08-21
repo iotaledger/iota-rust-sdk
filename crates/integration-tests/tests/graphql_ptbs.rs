@@ -40,7 +40,7 @@ fn move_package_data(file: &str) -> MovePackageData {
 
 /// Generate a random private key and its corresponding address
 fn helper_address_pk() -> (Address, Ed25519PrivateKey) {
-    let pk = Ed25519PrivateKey::random_with(rand::rng());
+    let pk = Ed25519PrivateKey::random();
     let address = pk.public_key().derive_address();
     (address, pk)
 }
