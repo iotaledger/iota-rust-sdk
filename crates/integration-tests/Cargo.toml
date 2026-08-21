@@ -14,7 +14,7 @@ serde_json.workspace = true
 tokio.workspace = true
 
 # internal dependencies
-iota-crypto.workspace = true
+iota-crypto = { workspace = true, features = ["rand"] }
 iota-graphql-client.workspace = true
 iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["rand"] }
