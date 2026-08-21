@@ -3,7 +3,9 @@
 typedoc emits ``<Kind>.<Name>.md`` files next to ``index.md``; the docs site
 wants the same shape as the other languages, one page per type under
 ``types/`` with an overview at the top. Pages for UniFFI plumbing are dropped,
-as in the other bindings.
+as in the other bindings, along with pages for deprecated declarations — the
+bindings carry a deprecated alias per renamed type, and a page holding only
+"use X instead" is not worth a sidebar entry.
 
 Usage: postprocess_wasm.py <typedoc-output-dir>
 """
@@ -35,7 +37,16 @@ def main():
             sys.exit(f"unexpected typedoc output file: {path.name}")
         names[path.name] = match.group("name")
 
-    dropped = {f for f, name in names.items() if common.PLUMBING_RE.match(name)}
+    def deprecated(filename):
+        # typedoc strikes through the heading of a deprecated declaration.
+        with (root / filename).open() as page:
+            return page.readline().startswith("# ~~")
+
+    dropped = {
+        f
+        for f, name in names.items()
+        if common.PLUMBING_RE.match(name) or deprecated(f)
+    }
     taken = {}
     mapping = {
         f: f"types/{common.page_stem(taken, name)}.md"
