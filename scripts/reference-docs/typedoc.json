@@ -1,0 +1,20 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["../../bindings/wasm/dist/types/index.web.d.ts"],
+  "tsconfig": "../../bindings/wasm/tsconfig.types.json",
+  "plugin": ["typedoc-plugin-markdown"],
+  "readme": "none",
+  "githubPages": false,
+  "hideGenerator": true,
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "skipErrorChecking": true,
+  "entryFileName": "index",
+  "outputFileStrategy": "members",
+  "membersWithOwnFile": ["Class", "Interface", "Enum", "TypeAlias", "Function"],
+  "flattenOutputFiles": true,
+  "hidePageHeader": true,
+  "hideBreadcrumbs": true,
+  "useCodeBlocks": true,
+  "expandObjects": true
+}

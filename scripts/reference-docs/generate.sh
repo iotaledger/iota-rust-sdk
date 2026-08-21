@@ -13,8 +13,10 @@
 #   csharp: .NET SDK 8, xmldoc2md (dotnet tool install -g XMLDoc2Markdown)
 #           uniffi-bindgen-cs     (make install-uniffi-bindgen-cs)
 #   swift:  Swift 6 toolchain
+#   wasm:   pnpm, wasm-pack, wasm-bindgen-cli, the wasm32-unknown-unknown
+#           target, and typedoc + typedoc-plugin-markdown on PATH
 #
-# Usage: scripts/reference-docs/generate.sh [python|go|kotlin|csharp|swift|all]
+# Usage: scripts/reference-docs/generate.sh [python|go|kotlin|csharp|swift|wasm|all]
 set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
@@ -99,18 +101,29 @@ gen_swift() {
     package swift
 }
 
+gen_wasm() {
+    make wasm
+    rm -rf "$OUT_DIR/wasm"
+    mkdir -p "$OUT_DIR/wasm/docs/wasm"
+    (cd "$SCRIPT_DIR" && typedoc --options typedoc.json --out "$OUT_DIR/wasm/docs/wasm")
+    python3 "$SCRIPT_DIR/postprocess_wasm.py" "$OUT_DIR/wasm/docs/wasm"
+    package wasm
+}
+
 case "${1:-all}" in
 python) gen_python ;;
 go) gen_go ;;
 kotlin) gen_kotlin ;;
 csharp) gen_csharp ;;
 swift) gen_swift ;;
+wasm) gen_wasm ;;
 all)
     gen_python
     gen_go
     gen_kotlin
     gen_csharp
     gen_swift
+    gen_wasm
     ;;
 *)
     echo "Unknown language: $1" >&2
