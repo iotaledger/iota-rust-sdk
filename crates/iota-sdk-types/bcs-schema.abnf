@@ -453,6 +453,7 @@ transaction-kind = %d00 programmable-transaction                ; Programmable
                  / %d03                                         ; AuthenticatorStateUpdateV1Deprecated
                  / %d04 (size *end-of-epoch-transaction-kind)   ; EndOfEpoch
                  / %d05 randomness-state-update                 ; RandomnessStateUpdate
+                 / %d06 programmable-transaction                ; ProgrammableSystemTransaction
 
 transaction-v1 = transaction-kind         ; kind
                  address                  ; sender

@@ -115,6 +115,7 @@ enum TransactionKind {
   CONSENSUS_COMMIT_PROLOGUE_V1 = 3;
   END_OF_EPOCH = 5;
   RANDOMNESS_STATE_UPDATE = 6;
+  PROGRAMMABLE_SYSTEM_TRANSACTION = 7;
 }
 
 // Filter by transaction kinds (any of the specified kinds).

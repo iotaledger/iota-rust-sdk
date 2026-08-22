@@ -286,6 +286,7 @@ pub struct RandomnessStateUpdate {
 ///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
 ///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
 ///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
+///                     =/ %d06 programmable-transaction               ; ProgrammableSystemTransaction
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -309,6 +310,10 @@ pub enum TransactionKind {
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     /// Randomness update
     RandomnessStateUpdate(RandomnessStateUpdate),
+    /// A system transaction expressed as a programmable transaction.
+    ///
+    /// Only the protocol may produce one; it is never accepted from users.
+    ProgrammableSystemTransaction(ProgrammableTransaction),
 }
 
 impl TransactionKind {
@@ -319,6 +324,7 @@ impl TransactionKind {
 
     crate::def_is_as_into_opt! {
         Programmable(ProgrammableTransaction),
+        ProgrammableSystemTransaction(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     }
@@ -326,6 +332,11 @@ impl TransactionKind {
     /// Create a [`TransactionKind::Programmable`].
     pub fn new_programmable(tx: ProgrammableTransaction) -> Self {
         Self::Programmable(tx)
+    }
+
+    /// Create a [`TransactionKind::ProgrammableSystemTransaction`].
+    pub fn new_programmable_system_transaction(tx: ProgrammableTransaction) -> Self {
+        Self::ProgrammableSystemTransaction(tx)
     }
 
     /// Create a [`TransactionKind::Genesis`].
@@ -355,23 +366,26 @@ impl TransactionKind {
             | TransactionKind::ConsensusCommitPrologueV1(_)
             | TransactionKind::AuthenticatorStateUpdateV1Deprecated
             | TransactionKind::RandomnessStateUpdate(_)
-            | TransactionKind::EndOfEpoch(_) => true,
+            | TransactionKind::EndOfEpoch(_)
+            | TransactionKind::ProgrammableSystemTransaction(_) => true,
             TransactionKind::Programmable(_) => false,
         }
     }
 
-    /// Returns the number of commands, or 0 if it is a system transaction.
+    /// Returns the number of commands, or 0 if it carries no command list.
     pub fn num_commands(&self) -> usize {
         match self {
-            TransactionKind::Programmable(pt) => pt.commands.len(),
+            TransactionKind::Programmable(pt)
+            | TransactionKind::ProgrammableSystemTransaction(pt) => pt.commands.len(),
             _ => 0,
         }
     }
 
-    /// Returns the number of transactions, or 1 if it is a system transaction.
+    /// Returns the number of transactions, or 1 if it carries no command list.
     pub fn num_transactions(&self) -> usize {
         match self {
-            TransactionKind::Programmable(pt) => pt.commands.len(),
+            TransactionKind::Programmable(pt)
+            | TransactionKind::ProgrammableSystemTransaction(pt) => pt.commands.len(),
             _ => 1,
         }
     }
@@ -404,6 +418,10 @@ impl core::fmt::Display for TransactionKind {
             Self::EndOfEpoch(_) => writeln!(f, "Transaction Kind : End of Epoch Transaction"),
             Self::RandomnessStateUpdate(_) => {
                 writeln!(f, "Transaction Kind : Randomness State Update")
+            }
+            Self::ProgrammableSystemTransaction(p) => {
+                writeln!(f, "Transaction Kind : Programmable System")?;
+                write!(f, "{p}")
             }
         }
     }
