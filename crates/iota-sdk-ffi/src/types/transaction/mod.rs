@@ -226,6 +226,13 @@ impl TransactionKind {
         ))
     }
 
+    /// Create a `TransactionKind` for a system transaction expressed as a
+    /// programmable transaction.
+    #[uniffi::constructor]
+    pub fn new_programmable_system_transaction(tx: &ProgrammableTransaction) -> Self {
+        Self(iota_sdk::types::TransactionKind::new_programmable_system_transaction(tx.0.clone()))
+    }
+
     /// Create a `TransactionKind` for a genesis transaction.
     #[uniffi::constructor]
     pub fn new_genesis(tx: &GenesisTransaction) -> Self {

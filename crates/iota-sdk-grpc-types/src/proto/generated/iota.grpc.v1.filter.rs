@@ -261,6 +261,7 @@ pub enum TransactionKind {
     ConsensusCommitPrologueV1 = 3,
     EndOfEpoch = 5,
     RandomnessStateUpdate = 6,
+    ProgrammableSystemTransaction = 7,
 }
 impl TransactionKind {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -275,6 +276,7 @@ impl TransactionKind {
             Self::ConsensusCommitPrologueV1 => "CONSENSUS_COMMIT_PROLOGUE_V1",
             Self::EndOfEpoch => "END_OF_EPOCH",
             Self::RandomnessStateUpdate => "RANDOMNESS_STATE_UPDATE",
+            Self::ProgrammableSystemTransaction => "PROGRAMMABLE_SYSTEM_TRANSACTION",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
@@ -286,6 +288,9 @@ impl TransactionKind {
             "CONSENSUS_COMMIT_PROLOGUE_V1" => Some(Self::ConsensusCommitPrologueV1),
             "END_OF_EPOCH" => Some(Self::EndOfEpoch),
             "RANDOMNESS_STATE_UPDATE" => Some(Self::RandomnessStateUpdate),
+            "PROGRAMMABLE_SYSTEM_TRANSACTION" => {
+                Some(Self::ProgrammableSystemTransaction)
+            }
             _ => None,
         }
     }
