@@ -1,0 +1,29 @@
+# Mutation-testing scope and invocation, shared by `make mutants` and the
+# mutation CI workflows.
+
+# Run tests the way `make test` does.
+test_tool = "nextest"
+additional_cargo_args = ["--all-features"]
+
+# A mutant's test run rebuilds little but may hit slow proptest cases; a hang
+# is reported as a timeout, so the multiplier only needs to beat variance.
+timeout_multiplier = 12.0
+
+# Mutate only code whose tests can run here. Excluded, with the blocker:
+# - iota-sdk-ffi, bindings/: tested through the language bindings, which
+#   cargo-mutants cannot run (1 Rust test vs 1,733 mutants, measured 2026-08-23)
+# - iota-sdk-grpc-types: generated build output
+# - iota-sdk-grpc-proto-build: codegen tooling for the above
+# - iota-sdk-graphql-client(-build), integration-tests: tests need a localnet
+# - examples are demos, not APIs under test
+exclude_globs = [
+  "crates/iota-sdk-ffi/**",
+  "crates/iota-sdk-grpc-types/**",
+  "crates/iota-sdk-grpc-proto-build/**",
+  "crates/iota-sdk-graphql-client/**",
+  "crates/iota-sdk-graphql-client-build/**",
+  "crates/integration-tests/**",
+  "crates/iota-sdk-move-types/examples/**",
+  "crates/iota-sdk/examples/**",
+  "bindings/**",
+]

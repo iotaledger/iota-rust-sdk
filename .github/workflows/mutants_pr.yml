@@ -1,0 +1,54 @@
+name: Mutation gate
+
+# Mutation-tests a pull request's own diff: each mutant is a small code change
+# (gut a function body, flip an operator) that a test should catch; one that
+# survives the full suite marks logic no test asserts. The scope and exclusions
+# live in .cargo/mutants.toml; survivors fail the job unless argued into
+# scripts/mutants-allowlist.txt.
+#
+# The nightly rotation covers the standing tree; this covers a change while it
+# is still in hand.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+concurrency:
+  group: mutants-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  mutants:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+    runs-on: ubuntu-latest
+    # Under the 6h hard limit, so an unusually large PR fails cleanly on time
+    # instead of being killed mid-run with no summary.
+    timeout-minutes: 330
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The diff base is the merge-base with the target branch, which a
+          # shallow clone cannot resolve.
+          fetch-depth: 0
+
+      - uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
+        with:
+          tool: cargo-mutants,cargo-nextest
+
+      - name: Mutate the PR diff
+        run: |
+          base=$(git merge-base "origin/${{ github.base_ref || 'develop' }}" HEAD)
+          make mutants MUTANTS_BASE="$base" MUTANTS_JOBS=4
+
+      - name: Keep the outcome
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mutants-pr-${{ github.event.pull_request.number || github.run_id }}
+          path: mutants.out/
+          retention-days: 14
+          if-no-files-found: ignore
