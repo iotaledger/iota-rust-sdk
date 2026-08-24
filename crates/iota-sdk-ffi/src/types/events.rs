@@ -37,7 +37,7 @@ pub struct Event {
     /// emitted.
     pub sender: Arc<Address>,
     /// The type of the event emitted
-    pub type_: String,
+    pub struct_tag: String,
     /// BCS serialized bytes of the event
     pub contents: Vec<u8>,
 }
@@ -50,7 +50,7 @@ impl TryFrom<Event> for iota_sdk::types::Event {
             package_id: (**value.package_id),
             module: Identifier::from_str(&value.module)?,
             sender: (**value.sender),
-            type_: StructTag::from_str(&value.type_)?,
+            struct_tag: StructTag::from_str(&value.struct_tag)?,
             contents: value.contents,
         })
     }
@@ -62,7 +62,7 @@ impl From<iota_sdk::types::Event> for Event {
             package_id: Arc::new(value.package_id.into()),
             module: value.module.to_string(),
             sender: Arc::new(value.sender.into()),
-            type_: value.type_.to_string(),
+            struct_tag: value.struct_tag.to_string(),
             contents: value.contents,
         }
     }
