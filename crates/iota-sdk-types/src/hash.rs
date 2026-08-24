@@ -250,13 +250,12 @@ impl crate::MultisigCommittee {
     ///
     /// A MultiSig address is defined as the 32-byte Blake2b hash of serializing
     /// the `SignatureScheme` flag (0x03), the threshold (in little endian), and
-    /// the concatenation of all n public keys and their weights, where each
-    /// public key is prefixed with its `SignatureScheme` flag — except Ed25519
-    /// keys, which are hashed without a flag, matching their plain address
-    /// derivation.
+    /// the concatenation of all n flags, public keys and their weights, where
+    /// `flag_i?` is the member's `SignatureScheme` flag — omitted for Ed25519
+    /// keys, matching their plain address derivation.
     ///
-    /// `hash(0x03 || threshold || pk_1 || weight_1
-    /// || ... || pk_n || weight_n)`.
+    /// `hash(0x03 || threshold || flag_1? || pk_1 || weight_1
+    /// || ... || flag_n? || pk_n || weight_n)`.
     pub fn derive_address(&self) -> Address {
         derive_address_from(|hasher| {
             hasher.update([self.scheme().to_u8()]);
