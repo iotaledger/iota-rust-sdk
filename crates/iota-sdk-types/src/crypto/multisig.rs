@@ -882,13 +882,6 @@ pub(crate) mod serialization {
         }
     }
 
-    #[cfg(feature = "hash")]
-    impl From<&MultisigCommittee> for crate::Address {
-        fn from(committee: &MultisigCommittee) -> Self {
-            committee.derive_address()
-        }
-    }
-
     impl FromStr for MultisigAggregatedSignature {
         type Err = MultisigError;
 
