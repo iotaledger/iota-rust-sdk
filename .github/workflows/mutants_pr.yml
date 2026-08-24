@@ -20,6 +20,12 @@ concurrency:
 permissions:
   contents: read
 
+# No `RUSTFLAGS: -Dwarnings` here (unlike tests.yml), deliberately: mutants
+# routinely introduce warnings (e.g. an unused parameter after a body
+# replacement), and denying warnings makes such mutants fail to BUILD, which
+# counts as unviable instead of missed. Measured 2026-08-24: the same mutant
+# is caught without the flag and unviable (exit 0) with it, so adding the
+# flag would leave this gate green while asserting nothing.
 jobs:
   mutants:
     if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
@@ -35,14 +41,19 @@ jobs:
           # shallow clone cannot resolve.
           fetch-depth: 0
 
+      # cargo-mutants is pinned: a new release can change the generated
+      # mutant set, and results must not shift without a code change.
       - uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
         with:
-          tool: cargo-mutants,cargo-nextest
+          tool: cargo-mutants@27.1.0,cargo-nextest
 
       - name: Mutate the PR diff
         run: |
           base=$(git merge-base "origin/${{ github.base_ref || 'develop' }}" HEAD)
-          make mutants MUTANTS_BASE="$base" MUTANTS_JOBS=4
+          # `timeout` rather than the job's own limit: a job killed by GitHub
+          # skips every remaining step, including the artifact upload, so an
+          # overrun would destroy the partial results.
+          timeout 300m make mutants MUTANTS_BASE="$base" MUTANTS_JOBS=4
 
       - name: Keep the outcome
         if: always()

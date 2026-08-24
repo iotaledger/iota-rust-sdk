@@ -22,6 +22,9 @@ on:
 permissions:
   contents: read
 
+# No `RUSTFLAGS: -Dwarnings` here (unlike tests.yml), deliberately: mutants
+# routinely introduce warnings, and denying warnings makes such mutants fail
+# to build, which counts as unviable instead of missed. See mutants_pr.yml.
 jobs:
   plan:
     name: plan rotation shards
@@ -58,9 +61,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      # cargo-mutants is pinned: a new release can change the generated
+      # mutant set, and results must not shift without a code change.
       - uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
         with:
-          tool: cargo-mutants,cargo-nextest
+          tool: cargo-mutants@27.1.0,cargo-nextest
 
       - name: Mutate this slice of the tree
         id: sweep

@@ -20,6 +20,11 @@ import sys
 
 TOTAL_SHARDS = 16
 SHARDS_PER_NIGHT = 4
+if TOTAL_SHARDS % SHARDS_PER_NIGHT:
+    raise ValueError(
+        "TOTAL_SHARDS must be a multiple of SHARDS_PER_NIGHT: "
+        "a remainder would silently leave the trailing shards out of every night"
+    )
 ROTATION_NIGHTS = TOTAL_SHARDS // SHARDS_PER_NIGHT
 
 

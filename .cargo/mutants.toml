@@ -1,7 +1,9 @@
 # Mutation-testing scope and invocation, shared by `make mutants` and the
 # mutation CI workflows.
 
-# Run tests the way `make test` does.
+# Run tests the way `make test` does. nextest does not run doctests, so a
+# mutant only a doctest would catch is reported missed; kill it with a unit
+# test.
 test_tool = "nextest"
 additional_cargo_args = ["--all-features"]
 
