@@ -7,9 +7,9 @@ whole scope is covered on a rolling cycle with no state to keep and no
 discontinuity at New Year. A missed night means those slices wait one
 cycle.
 
-Sizing (measured 2026-08-23): the mutation scope is 2,930 mutants, and
+Sizing (measured 2026-08-24): the mutation scope is 2,799 mutants, and
 comparable code measures ~3.5 mutants/min at 4 jobs on a 4-core runner,
-so 16 shards of ~180 mutants put one shard around an hour. Retune
+so 16 shards of ~175 mutants put one shard around an hour. Retune
 TOTAL_SHARDS from the slowest shard in the workflow's step summary, not
 the average: slices are contiguous file ranges, so their per-mutant cost
 differs widely.

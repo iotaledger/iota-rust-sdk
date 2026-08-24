@@ -20,12 +20,8 @@ concurrency:
 permissions:
   contents: read
 
-# No `RUSTFLAGS: -Dwarnings` here (unlike tests.yml), deliberately: mutants
-# routinely introduce warnings (e.g. an unused parameter after a body
-# replacement), and denying warnings makes such mutants fail to BUILD, which
-# counts as unviable instead of missed. Measured 2026-08-24: the same mutant
-# is caught without the flag and unviable (exit 0) with it, so adding the
-# flag would leave this gate green while asserting nothing.
+# No `RUSTFLAGS: -Dwarnings` here (unlike tests.yml): mutant builds cap lints
+# to warn anyway (cap_lints in .cargo/mutants.toml, with the rationale).
 jobs:
   mutants:
     if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
@@ -41,11 +37,13 @@ jobs:
           # shallow clone cannot resolve.
           fetch-depth: 0
 
-      # cargo-mutants is pinned: a new release can change the generated
-      # mutant set, and results must not shift without a code change.
+      # cargo-mutants and nextest are pinned: a new release can change the
+      # generated mutant set or the test exit codes that classify outcomes,
+      # and results must not shift without a code change. The runner's rustc
+      # still floats (as in tests.yml); that drift is accepted.
       - uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
         with:
-          tool: cargo-mutants@27.1.0,cargo-nextest
+          tool: cargo-mutants@27.1.0,cargo-nextest@0.9.143
 
       - name: Mutate the PR diff
         run: |
@@ -63,3 +61,6 @@ jobs:
           path: mutants.out/
           retention-days: 14
           if-no-files-found: ignore
+          # Without this, retrying the job fails on the artifact name already
+          # existing from the first attempt.
+          overwrite: true

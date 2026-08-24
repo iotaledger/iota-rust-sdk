@@ -2,9 +2,11 @@ name: Mutation rotation
 
 # The PR gate only ever mutates what is changing, so code that predates it has
 # never been mutation-tested. This grinds through the whole mutation scope
-# instead: four sixteenths per night, advancing by a monotonic UTC day index,
-# so the scope is covered on a rolling four-night cycle and re-covered as it
-# changes. Scope and sizing rationale live in .cargo/mutants.toml and
+# instead: four sixteenths per night, advancing by a monotonic UTC day index.
+# The shards are cut from the mutant list regenerated each night, so a merge
+# shifts shard boundaries and a mutant near one can wait extra cycles: the
+# rotation aims at eventual coverage, not a four-night guarantee. Scope and
+# sizing rationale live in .cargo/mutants.toml and
 # scripts/mutants_rotation_plan.py.
 #
 # Misses, mutant timeouts, and overruns fail the job (and thus report to
@@ -22,9 +24,8 @@ on:
 permissions:
   contents: read
 
-# No `RUSTFLAGS: -Dwarnings` here (unlike tests.yml), deliberately: mutants
-# routinely introduce warnings, and denying warnings makes such mutants fail
-# to build, which counts as unviable instead of missed. See mutants_pr.yml.
+# No `RUSTFLAGS: -Dwarnings` here (unlike tests.yml): mutant builds cap lints
+# to warn anyway (cap_lints in .cargo/mutants.toml, with the rationale).
 jobs:
   plan:
     name: plan rotation shards
@@ -41,6 +42,9 @@ jobs:
         env:
           REQUESTED_SHARD: ${{ inputs.shard }}
         run: |
+          # Wall-clock day index: after the next 00:00 UTC, "Re-run all jobs"
+          # re-plans and selects a DIFFERENT night's shards. Retry a failed
+          # night with "Re-run failed jobs", which reuses this plan's outputs.
           day=$(( $(date -u +%s) / 86400 ))
           python3 scripts/mutants_rotation_plan.py "$day" "$REQUESTED_SHARD" >> "$GITHUB_OUTPUT"
 
@@ -61,11 +65,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      # cargo-mutants is pinned: a new release can change the generated
-      # mutant set, and results must not shift without a code change.
+      # cargo-mutants and nextest are pinned: a new release can change the
+      # generated mutant set or the test exit codes that classify outcomes,
+      # and results must not shift without a code change. The runner's rustc
+      # still floats (as in tests.yml); that drift is accepted.
       - uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
         with:
-          tool: cargo-mutants@27.1.0,cargo-nextest
+          tool: cargo-mutants@27.1.0,cargo-nextest@0.9.143
 
       - name: Mutate this slice of the tree
         id: sweep
@@ -80,8 +86,13 @@ jobs:
           status=$?
           set -e
           [ "$status" -eq 124 ] && echo "OVERRAN the 300m step budget" >> "$GITHUB_STEP_SUMMARY"
+          # make flattens every failure to its own exit 2; the recipe records
+          # cargo-mutants' real code in target/mutants-exit (absent when make
+          # failed before cargo-mutants ran, or the step overran).
+          real=$(cat target/mutants-exit 2>/dev/null || echo "n/a")
           echo "elapsed=$(( $(date -u +%s) - started ))" >> "$GITHUB_OUTPUT"
           echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "real=$real" >> "$GITHUB_OUTPUT"
 
       - name: Report
         if: always()
@@ -95,7 +106,8 @@ jobs:
             echo "|---|---|"
             echo "| wall clock | $((elapsed / 60))m $((elapsed % 60))s |"
             echo "| step budget | 300m |"
-            echo "| exit | ${{ steps.sweep.outputs.status || 'n/a' }} (124 = overran) |"
+            echo "| make exit | ${{ steps.sweep.outputs.status || 'n/a' }} (gates the job; 124 = overran) |"
+            echo "| cargo-mutants exit | ${{ steps.sweep.outputs.real || 'n/a' }} (2 missed, 3 timeout, 4 baseline failed; green with 2 = all argued) |"
             echo "| caught | $(count caught.txt) |"
             echo "| missed | $(count missed.txt) |"
             echo "| timeout | $(count timeout.txt) |"
@@ -115,11 +127,22 @@ jobs:
           path: mutants.out/
           retention-days: 14
           if-no-files-found: ignore
+          # Without this, retrying a shard fails on the artifact name already
+          # existing from the first attempt.
+          overwrite: true
 
       - name: Fail on findings
         run: |
           status="${{ steps.sweep.outputs.status }}"
+          real="${{ steps.sweep.outputs.real }}"
           if [ "$status" != "0" ]; then
-            echo "sweep exited $status (missed mutants, mutant timeouts, or a 124 step overrun): failing the run"
+            case "$real" in
+              2)   why="missed mutants (unregistered or overmatched)" ;;
+              3)   why="mutant timeouts (never allowlistable)" ;;
+              4)   why="baseline test failure in the unmutated tree; no mutants ran" ;;
+              n/a) why="cargo-mutants never finished (make exit $status; 124 = the 300m step budget overran)" ;;
+              *)   why="cargo-mutants exited $real; see the log" ;;
+            esac
+            echo "sweep failed, $why: failing the run"
             exit 1
           fi
