@@ -241,6 +241,10 @@ macro_rules! export_iota_types_display {
     ($($core:ty => $name:ident),+ $(,)?) => {
         paste::paste! {$(
             /// Render this type as human-readable text.
+            ///
+            /// The layout is meant for reading and can change between
+            /// releases. Use the JSON or BCS conversions for output that gets
+            /// parsed.
             #[uniffi::export]
             pub fn [< $name:snake _to_display_string >](data: $name) -> String {
                 <$core>::from(data).to_string()
@@ -261,8 +265,12 @@ macro_rules! export_iota_types_objects_display {
                 /// Render this type as human-readable text.
                 ///
                 /// Some types also print this through the binding's native
-                /// string conversion; this method is the one spelling every
+                /// string conversion; this method is the spelling every object
                 /// type has.
+                ///
+                /// The layout is meant for reading and can change between
+                /// releases. Use the JSON or BCS conversions for output that
+                /// gets parsed.
                 pub fn to_display_string(&self) -> String {
                     self.0.to_string()
                 }

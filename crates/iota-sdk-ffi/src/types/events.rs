@@ -115,6 +115,9 @@ pub fn event_to_bcs(data: Event) -> Result<Vec<u8>> {
 }
 
 /// Render an [`Event`] as human-readable text.
+///
+/// The layout is meant for reading and can change between releases. Use the
+/// JSON or BCS conversions for output that gets parsed.
 #[uniffi::export]
 pub fn event_to_display_string(data: Event) -> Result<String> {
     let data: iota_sdk::types::Event = data.try_into()?;
