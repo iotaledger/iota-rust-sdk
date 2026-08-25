@@ -118,12 +118,8 @@ impl SimpleKeypair {
         Ok(self.0.to_pem()?)
     }
 
-    pub fn try_sign(&self, message: &[u8]) -> Result<SimpleSignature> {
-        Ok(Signer::<iota_sdk::types::SimpleSignature>::try_sign(&self.0, message)?.into())
-    }
-
     pub fn try_sign_simple(&self, message: &[u8]) -> Result<SimpleSignature> {
-        self.try_sign(message)
+        Ok(Signer::<iota_sdk::types::SimpleSignature>::try_sign(&self.0, message)?.into())
     }
 
     pub fn try_sign_user(&self, message: &[u8]) -> Result<crate::types::signature::UserSignature> {
