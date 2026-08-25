@@ -637,7 +637,7 @@ impl MakeMoveVector {
     #[uniffi::constructor]
     pub fn new(type_tag: Option<Arc<TypeTag>>, elements: Vec<Arc<Argument>>) -> Self {
         Self(iota_sdk::types::MakeMoveVector {
-            type_: type_tag.map(|type_tag| type_tag.0.clone()),
+            type_tag: type_tag.map(|type_tag| type_tag.0.clone()),
             elements: elements.iter().map(|element| element.0).collect(),
         })
     }
@@ -647,7 +647,7 @@ impl MakeMoveVector {
     /// This is required to be set when the type can't be inferred, for example
     /// when the set of provided arguments are all pure input values.
     pub fn type_tag(&self) -> Option<Arc<TypeTag>> {
-        self.0.type_.clone().map(Into::into).map(Arc::new)
+        self.0.type_tag.clone().map(Into::into).map(Arc::new)
     }
 
     /// The set individual elements to build the vector with

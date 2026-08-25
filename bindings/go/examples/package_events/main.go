@@ -42,7 +42,7 @@ func main() {
 		if event.Module != nil {
 			module = *event.Module
 		}
-		fmt.Println("Type: ", event.Type)
+		fmt.Println("Type: ", event.MoveType)
 		fmt.Println("Sender: ", sender)
 		fmt.Println("Module: ", module)
 		fmt.Println("JSON: ", event.Json)

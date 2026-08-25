@@ -175,7 +175,7 @@ end-of-epoch-transaction-kind = %d00 change-epoch      ; ChangeEpoch
 event = object-id    ; package-id
         identifier   ; module
         address      ; sender
-        struct-tag   ; type-
+        struct-tag   ; struct-tag
         bytes        ; contents
 
 execution-digests = transaction-digest           ; transaction
@@ -276,7 +276,7 @@ intent-signed-transaction = intent                   ; intent
 
 intent-version = %d00   ; V0
 
-make-move-vector = (%d00 / %d01 type-tag)   ; type-
+make-move-vector = (%d00 / %d01 type-tag)   ; type-tag
                    (size *argument)         ; elements
 
 merge-coins = argument           ; coin

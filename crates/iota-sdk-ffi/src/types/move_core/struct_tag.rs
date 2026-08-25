@@ -231,7 +231,9 @@ export_struct_tag_ctors!(
     Irc27Metadata,
     Kiosk,
     KioskOwnerCap,
-    Publisher
+    Publisher,
+    PackageMetadataKey,
+    AuthenticatorFunctionRefV1Key
 );
 export_struct_tag_from_type_tag_ctors!(
     Balance,
