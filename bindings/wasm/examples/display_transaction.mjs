@@ -4,7 +4,11 @@
 // Demonstrates printing types as human-readable text. Object types offer a
 // `toDisplayString()` method, record types a `<type>ToDisplayString()` function.
 
-import { Transaction, gasPaymentToDisplayString, initAsync } from "@iota/sdk-wasm";
+import {
+  Transaction,
+  gasPaymentToDisplayString,
+  initAsync,
+} from "@iota/sdk-wasm";
 
 await initAsync();
 
