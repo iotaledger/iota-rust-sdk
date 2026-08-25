@@ -259,6 +259,10 @@ macro_rules! export_iota_types_objects_display {
             #[uniffi::export]
             impl $name {
                 /// Render this type as human-readable text.
+                ///
+                /// Some types also print this through the binding's native
+                /// string conversion; this method is the one spelling every
+                /// type has.
                 pub fn to_display_string(&self) -> String {
                     self.0.to_string()
                 }
