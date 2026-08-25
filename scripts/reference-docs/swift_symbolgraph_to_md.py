@@ -7,7 +7,7 @@ sidebar categories, so every type is findable by name) plus single
 pages for functions, type aliases, and globals. UniFFI plumbing
 symbols are dropped.
 
-Usage: symbolgraph_to_md.py <Module.symbols.json> <output-dir>
+Usage: swift_symbolgraph_to_md.py <Module.symbols.json> <output-dir>
 """
 
 import json

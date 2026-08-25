@@ -97,7 +97,7 @@ gen_swift() {
         echo "IotaSDK.symbols.json not found under bindings/swift/.build" >&2
         exit 1
     fi
-    python3 "$SCRIPT_DIR/symbolgraph_to_md.py" "$graph" "$OUT_DIR/swift/docs/swift"
+    python3 "$SCRIPT_DIR/swift_symbolgraph_to_md.py" "$graph" "$OUT_DIR/swift/docs/swift"
     package swift
 }
 
@@ -105,7 +105,7 @@ gen_wasm() {
     make wasm
     rm -rf "$OUT_DIR/wasm"
     mkdir -p "$OUT_DIR/wasm/docs/wasm"
-    (cd "$SCRIPT_DIR" && typedoc --options typedoc.json --out "$OUT_DIR/wasm/docs/wasm")
+    (cd "$SCRIPT_DIR" && typedoc --options typedoc-wasm.json --out "$OUT_DIR/wasm/docs/wasm")
     python3 "$SCRIPT_DIR/postprocess_wasm.py" "$OUT_DIR/wasm/docs/wasm"
     package wasm
 }
