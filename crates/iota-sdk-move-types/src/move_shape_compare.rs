@@ -655,6 +655,24 @@ fn expected_entries() -> Vec<Entry> {
         ),
         entry!(
             IotaFramework,
+            "transaction_deny_rules",
+            "TransactionDenyRules",
+            iota_framework::transaction_deny_rules::TransactionDenyRules
+        ),
+        entry!(
+            IotaFramework,
+            "transaction_deny_rules",
+            "TransactionDenyRulesInnerV1",
+            iota_framework::transaction_deny_rules::TransactionDenyRulesInnerV1
+        ),
+        entry!(
+            IotaFramework,
+            "transaction_deny_rules",
+            "TransactionDenyRulesUpdated",
+            iota_framework::transaction_deny_rules::TransactionDenyRulesUpdated
+        ),
+        entry!(
+            IotaFramework,
             "random",
             "Random",
             iota_framework::random::Random
