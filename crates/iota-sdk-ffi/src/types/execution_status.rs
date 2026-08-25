@@ -839,3 +839,12 @@ crate::export_iota_types_json_conversion!(
     PackageUpgradeError,
     TypeArgumentError
 );
+crate::export_iota_types_display!(
+    ExecutionStatus,
+    ExecutionError,
+    MoveLocation,
+    CommandArgumentError,
+    PackageUpgradeError,
+    TypeArgumentError
+);
+crate::export_iota_types_objects_display!(ExecutionErrorWrapper);

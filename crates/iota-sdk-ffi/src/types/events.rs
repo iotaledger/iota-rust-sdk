@@ -114,6 +114,13 @@ pub fn event_to_bcs(data: Event) -> Result<Vec<u8>> {
     Ok(bcs::to_bytes(&data)?)
 }
 
+/// Render an [`Event`] as human-readable text.
+#[uniffi::export]
+pub fn event_to_display_string(data: Event) -> Result<String> {
+    let data: iota_sdk::types::Event = data.try_into()?;
+    Ok(data.to_string())
+}
+
 /// Create an [`Event`] from a JSON encoded string.
 #[uniffi::export]
 pub fn event_from_json(json: &str) -> Result<Event> {
@@ -129,3 +136,4 @@ pub fn event_to_json(data: Event) -> Result<String> {
 
 crate::export_iota_types_objects_bcs_conversion!(TransactionEvents);
 crate::export_iota_types_objects_json_conversion!(TransactionEvents);
+crate::export_iota_types_objects_display!(TransactionEvents);

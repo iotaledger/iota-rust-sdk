@@ -333,3 +333,10 @@ crate::export_iota_types_objects_json_conversion!(
     MultisigCommittee,
     MultisigMember
 );
+crate::export_iota_types_objects_display!(
+    MultisigMemberSignature,
+    PublicKey,
+    MultisigAggregatedSignature,
+    MultisigCommittee,
+    MultisigMember
+);

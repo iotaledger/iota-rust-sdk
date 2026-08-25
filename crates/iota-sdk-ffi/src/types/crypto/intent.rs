@@ -243,3 +243,12 @@ impl PersonalMessage {
         self.0.signing_digest_hex()
     }
 }
+
+crate::export_iota_types_display!(
+    IntentError,
+    IntentScope,
+    IntentVersion,
+    IntentAppId,
+    HashingIntentScope
+);
+crate::export_iota_types_objects_display!(Intent, PersonalMessage);

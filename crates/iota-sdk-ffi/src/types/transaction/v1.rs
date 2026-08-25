@@ -452,3 +452,12 @@ crate::export_iota_types_json_conversion!(
     ObjectOut,
     IdOperation
 );
+crate::export_iota_types_display!(
+    TransactionEffectsV1,
+    ChangedObject,
+    UnchangedSharedObject,
+    UnchangedSharedKind,
+    ObjectIn,
+    ObjectOut,
+    IdOperation
+);

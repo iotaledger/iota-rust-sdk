@@ -235,3 +235,34 @@ macro_rules! export_primitive_types_json_conversion {
         )+}
     };
 }
+
+#[macro_export]
+macro_rules! export_iota_types_display {
+    ($($core:ty => $name:ident),+ $(,)?) => {
+        paste::paste! {$(
+            /// Render this type as human-readable text.
+            #[uniffi::export]
+            pub fn [< $name:snake _to_display_string >](data: $name) -> String {
+                <$core>::from(data).to_string()
+            }
+        )+}
+    };
+    ($($name:ident),+ $(,)?) => {
+        $crate::export_iota_types_display!($(iota_sdk::types::$name => $name),+);
+    };
+}
+
+#[macro_export]
+macro_rules! export_iota_types_objects_display {
+    ($($name:ident),+ $(,)?) => {
+        $(
+            #[uniffi::export]
+            impl $name {
+                /// Render this type as human-readable text.
+                pub fn to_display_string(&self) -> String {
+                    self.0.to_string()
+                }
+            }
+        )+
+    }
+}

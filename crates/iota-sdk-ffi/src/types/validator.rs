@@ -172,3 +172,5 @@ crate::export_iota_types_bcs_conversion!(ValidatorCommittee, ValidatorCommitteeM
 crate::export_iota_types_objects_bcs_conversion!(ValidatorSignature, ValidatorAggregatedSignature);
 crate::export_iota_types_json_conversion!(ValidatorCommittee, ValidatorCommitteeMember);
 crate::export_iota_types_objects_json_conversion!(ValidatorSignature, ValidatorAggregatedSignature);
+crate::export_iota_types_display!(ValidatorCommittee, ValidatorCommitteeMember);
+crate::export_iota_types_objects_display!(ValidatorSignature, ValidatorAggregatedSignature);

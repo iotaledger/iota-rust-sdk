@@ -2043,3 +2043,40 @@ crate::export_iota_types_objects_json_conversion!(
     Argument,
     MoveCall,
 );
+crate::export_iota_types_display!(
+    SignedTransaction,
+    RandomnessStateUpdate,
+    DenyRuleSet,
+    TransactionDenyRulesUpdate,
+    GasPayment,
+    SharedObjectReference,
+    TransactionExpiration
+);
+crate::export_iota_types_objects_display!(
+    Transaction,
+    TransactionV1,
+    TransactionKind,
+    ProgrammableTransaction,
+    Input,
+    Command,
+    TransferObjects,
+    SplitCoins,
+    MergeCoins,
+    Publish,
+    MakeMoveVector,
+    Upgrade,
+    ConsensusCommitPrologueV1,
+    ConsensusDeterminedVersionAssignments,
+    CanceledTransaction,
+    VersionAssignment,
+    GenesisTransaction,
+    ChangeEpoch,
+    SystemPackage,
+    ChangeEpochV2,
+    ChangeEpochV3,
+    ChangeEpochV4,
+    EndOfEpochTransactionKind,
+    TransactionEffects,
+    Argument,
+    MoveCall
+);
