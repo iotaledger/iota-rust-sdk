@@ -3,24 +3,9 @@
 
 use core::str::FromStr;
 
-use iota_sdk::types::{HashingIntentScope, IntentAppId, IntentError, IntentScope, IntentVersion};
+use iota_sdk::types::{HashingIntentScope, IntentAppId, IntentScope, IntentVersion};
 
-/// Intent errors.
-#[uniffi::remote(Enum)]
-#[uniffi::export(Debug)]
-#[non_exhaustive]
-pub enum IntentError {
-    /// Invalid bytes for Intent
-    Bytes,
-    /// Invalid hex string for Intent
-    Hex,
-    /// Invalid Scope for Intent
-    Scope,
-    /// Invalid Version for Intent
-    Version,
-    /// Invalid AppId for Intent
-    AppId,
-}
+use crate::error::Result;
 
 /// Byte signifying the scope of an Intent
 ///
@@ -171,13 +156,13 @@ impl Intent {
 
     /// Create a signing intent from bytes.
     #[uniffi::constructor]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Intent, IntentError> {
+    pub fn from_bytes(bytes: &[u8]) -> Result<Intent> {
         Ok(Intent(iota_sdk::types::crypto::Intent::from_bytes(bytes)?))
     }
 
     /// Create a signing intent from a hex string.
     #[uniffi::constructor]
-    pub fn from_hex(hex: &str) -> Result<Intent, IntentError> {
+    pub fn from_hex(hex: &str) -> Result<Intent> {
         Ok(Intent(iota_sdk::types::crypto::Intent::from_str(hex)?))
     }
 

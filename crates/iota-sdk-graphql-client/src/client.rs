@@ -32,9 +32,9 @@ pub(crate) static USER_AGENT: &str =
 /// response error instead of panicking.
 pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, Error> {
     match (response.data, response.errors) {
-        (_, Some(errors)) if !errors.is_empty() => Err(Error::graphql_error(errors)),
+        (_, Some(errors)) if !errors.is_empty() => Err(Error::Query(errors)),
         (Some(data), _) => Ok(data),
-        (None, _) => Err(Error::empty_response_error()),
+        (None, _) => Err(Error::EmptyResponse),
     }
 }
 
@@ -147,10 +147,10 @@ impl Client {
         let bytes = resp.bytes().await?;
         let target_type = std::any::type_name::<R>();
         if !status.is_success() {
-            return Err(Error::http(url, status, &bytes).while_decoding(target_type));
+            return Err(Error::http(url, status, &bytes, target_type));
         }
         serde_json::from_slice::<R>(&bytes)
-            .map_err(|e| Error::decode(url, status, &bytes, e).while_decoding(target_type))
+            .map_err(|e| Error::json(url, status, &bytes, target_type, e))
     }
 
     /// Run a JSON query on the GraphQL server and return the response.
@@ -228,7 +228,7 @@ mod tests {
         .unwrap();
 
         let err = response_to_err(response).unwrap_err();
-        assert!(err.graphql_errors().is_some());
+        assert!(matches!(err, Error::Query(errors) if !errors.is_empty()));
     }
 
     #[test]
@@ -249,7 +249,7 @@ mod tests {
         .unwrap();
 
         let err = response_to_err(response).unwrap_err();
-        assert!(err.graphql_errors().is_some());
+        assert!(matches!(err, Error::Query(errors) if !errors.is_empty()));
     }
 
     #[tokio::test]

@@ -10,7 +10,7 @@ use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};
 
 use crate::{
     Client,
-    error::{Error, Kind, Result},
+    error::{Error, Result},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
         CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsArgs,
@@ -40,8 +40,7 @@ impl Client {
         let digest = digest.into();
         let seq_num = seq_num.into();
         if digest.is_some() && seq_num.is_some() {
-            return Err(Error::from_error(
-                Kind::Other,
+            return Err(Error::InvalidArgument(
                 "either digest or seq_num must be provided",
             ));
         }
@@ -125,9 +124,8 @@ impl Client {
         seq_num: Option<u64>,
     ) -> Result<Option<u64>> {
         if digest.is_some() && seq_num.is_some() {
-            return Err(Error::from_error(
-                Kind::Other,
-                "Conflicting arguments: either digest or seq_num can be provided, but not both.",
+            return Err(Error::InvalidArgument(
+                "either digest or seq_num can be provided, but not both",
             ));
         }
 

@@ -14,7 +14,7 @@ use iota_types::{
 
 use crate::{
     Client,
-    error::{Error, Kind, Result},
+    error::{Error, Result},
     pagination::{Page, PaginationFilter},
     query_types::{
         IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery,
@@ -99,8 +99,8 @@ impl Client {
             return Ok(None);
         };
 
-        Ok(Some(Name::from_str(&name).map_err(|_| {
-            Error::from_error(Kind::Parse, format!("invalid name: {name}"))
+        Ok(Some(Name::from_str(&name).map_err(|e| {
+            Error::parse(format!("invalid name {name}: {e}"))
         })?))
     }
 }

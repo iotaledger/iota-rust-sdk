@@ -6,7 +6,7 @@ use base64ct::Encoding;
 use iota_types::{ObjectId, SenderSignedTransaction, SignedTransaction, TransactionEffects};
 
 use crate::{
-    error::{self, Error, Kind},
+    error::{self, Error},
     query_types::{Address, Base64, PageInfo, checkpoint::Checkpoint, schema},
 };
 
@@ -301,10 +301,7 @@ impl TryFrom<TransactionBlock> for SignedTransaction {
         if let Some(transaction) = transaction {
             Ok(transaction.into())
         } else {
-            Err(Error::from_error(
-                Kind::Other,
-                "Expected a deserialized transaction but got None",
-            ))
+            Err(Error::EmptyResponseField("transaction bcs"))
         }
     }
 }
@@ -319,11 +316,6 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
             .transpose()?
             .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
             .transpose()?;
-        effects.ok_or_else(|| {
-            Error::from_error(
-                Kind::Other,
-                "Cannot convert GraphQL TxBlockEffects into TransactionEffects",
-            )
-        })
+        effects.ok_or(Error::EmptyResponseField("transaction effects bcs"))
     }
 }

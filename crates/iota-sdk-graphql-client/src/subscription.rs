@@ -22,7 +22,7 @@ use tokio_tungstenite::tungstenite::{client::IntoClientRequest, http::HeaderValu
 
 use crate::{
     Client,
-    error::{Error, Kind, Result},
+    error::{Error, Result},
     query_types::{
         Event, EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs,
         SubscriptionEventFilter, SubscriptionTransactionFilter,
@@ -171,18 +171,12 @@ impl Client {
             "http" => url.set_scheme("ws"),
             "ws" | "wss" => Ok(()),
             other => {
-                return Err(Error::from_message(
-                    Kind::Subscription,
-                    format!("unsupported RPC scheme for subscriptions: {other}"),
-                ));
+                return Err(Error::subscription(format!(
+                    "unsupported RPC scheme for subscriptions: {other}"
+                )));
             }
         }
-        .map_err(|_| {
-            Error::from_message(
-                Kind::Subscription,
-                "failed to derive the WebSocket URL".to_string(),
-            )
-        })?;
+        .map_err(|_| Error::subscription("failed to derive the WebSocket URL"))?;
         url.set_path("/subscriptions");
         Ok(url)
     }
@@ -213,8 +207,8 @@ impl Client {
 fn decode_data<T>(response: cynic::GraphQlResponse<T>) -> Result<T> {
     match (response.data, response.errors) {
         (Some(data), _) => Ok(data),
-        (None, Some(errors)) => Err(Error::graphql_error(errors)),
-        (None, None) => Err(Error::empty_response_error()),
+        (None, Some(errors)) => Err(Error::Query(errors)),
+        (None, None) => Err(Error::EmptyResponse),
     }
 }
 
@@ -249,7 +243,7 @@ where
                                 backoff = INITIAL_BACKOFF;
                                 yield Ok(value);
                             }
-                            Ok(Outcome::Lagged(count)) => yield Err(Error::lagged(count)),
+                            Ok(Outcome::Lagged(count)) => yield Err(Error::Lagged { count }),
                             Ok(Outcome::Skip) => {}
                             Err(error) => {
                                 yield Err(error);

@@ -456,6 +456,13 @@ pub struct MoveStructContentsError {
     actual: usize,
 }
 
+impl MoveStructContentsError {
+    /// Length, in bytes, of the contents that were rejected.
+    pub fn actual(&self) -> usize {
+        self.actual
+    }
+}
+
 /// Type of an IOTA object
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub enum ObjectType {

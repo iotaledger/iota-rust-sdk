@@ -17,7 +17,7 @@ use iota_types::{
 
 use crate::{
     Client, TransactionDataEffects,
-    error::{Error, Kind, Result},
+    error::{Error, Result},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
         ExecuteTransactionArgs, ExecuteTransactionQuery, TransactionBlockArgs,
@@ -173,7 +173,7 @@ impl Client {
                 .into_iter()
                 .map(|node| {
                     let (Some(bcs), Some(effects)) = (node.bcs, node.effects) else {
-                        return Err(Error::empty_response_error());
+                        return Err(Error::EmptyResponseField("transaction bcs or effects"));
                     };
                     let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
                     let effects =
@@ -292,7 +292,7 @@ impl Client {
             },
         )
         .await
-        .map_err(|e| Error::from_error(Kind::Other, e))?
+        .map_err(|_| Error::Timeout)?
     }
 }
 

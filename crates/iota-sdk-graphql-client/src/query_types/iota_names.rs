@@ -103,15 +103,13 @@ impl TryFrom<NameRegistration> for iota_types::iota_names::NameRegistration {
         let bytes = base64ct::Base64::decode_vec(
             value
                 .bcs
-                .ok_or_else(|| {
-                    Error::from_error(crate::error::Kind::Deserialization, "bcs is missing")
-                })?
+                .ok_or(Error::EmptyResponseField("name registration bcs"))?
                 .0
                 .as_str(),
         )?;
         bcs::from_bytes::<iota_types::Object>(&bytes)?
             .to_rust()
-            .map_err(|e| Error::from_error(crate::error::Kind::Deserialization, e))
+            .map_err(Error::deserialization)
     }
 }
 

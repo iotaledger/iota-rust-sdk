@@ -394,9 +394,8 @@ mod serialization {
             base64ct::Base64::encode_string(&bcs::to_bytes(self).expect("bcs encoding failed"))
         }
 
-        pub fn from_base64(base64: &str) -> Result<Self, bcs::Error> {
-            use serde::de::Error;
-            bcs::from_bytes(&base64ct::Base64::decode_vec(base64).map_err(bcs::Error::custom)?)
+        pub fn from_base64(base64: &str) -> Result<Self, crate::FromBase64Error> {
+            Ok(bcs::from_bytes(&base64ct::Base64::decode_vec(base64)?)?)
         }
     }
 

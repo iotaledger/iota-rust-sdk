@@ -10,7 +10,7 @@ use iota_types::{SignedTransaction, TransactionEffects, TypeTag};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 use crate::{
-    error::{Error, Kind, Result},
+    error::{Error, Result},
     query_types::{
         DryRunEffect as GraphQLDryRunEffect, DryRunMutation as GraphQLDryRunMutation,
         DryRunReturn as GraphQLDryRunReturn,
@@ -157,10 +157,9 @@ impl TryFrom<&crate::query_types::TransactionArgument> for TransactionArgument {
                     index: result.ix.map(|ix| ix as u32),
                 })
             }
-            crate::query_types::TransactionArgument::Unknown => Err(Error::from_error(
-                Kind::Deserialization,
-                "Unknown transaction argument type",
-            )),
+            crate::query_types::TransactionArgument::Unknown => {
+                Err(Error::UnknownVariant("transaction argument"))
+            }
         }
     }
 }
@@ -247,7 +246,7 @@ impl DynamicFieldOutput {
         if let Some(dfv) = &self.value {
             bcs::from_bytes::<T>(&dfv.bcs).map_err(Into::into)
         } else {
-            Err(Error::from_error(Kind::Deserialization, "Value is missing"))
+            Err(Error::EmptyResponseField("dynamic field value"))
         }
     }
 }

@@ -11,7 +11,7 @@ use base64ct::Encoding;
 use iota_types::{SenderSignedTransaction, SignedTransaction};
 
 use crate::{
-    error::{self, Error, Kind},
+    error::{self, Error},
     query_types::{
         Address, Base64, DateTime, Event, GQLAddress, JsonValue, MoveData, MoveType,
         TransactionBlockKindInput, normalized_move::MoveModuleQuery, schema,
@@ -231,10 +231,7 @@ impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
         if let Some(transaction) = transaction {
             Ok(transaction.into())
         } else {
-            Err(Error::from_error(
-                Kind::Other,
-                "Expected a deserialized transaction but got None",
-            ))
+            Err(Error::EmptyResponseField("transaction bcs"))
         }
     }
 }

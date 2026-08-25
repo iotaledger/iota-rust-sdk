@@ -6,7 +6,7 @@ use base64ct::{Base64, Encoding};
 use super::{
     Ed25519PublicKey, PublicKeyExt, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
     passkey::{PasskeyAuthenticator, PasskeyPublicKey},
-    signature::InvalidSignatureScheme,
+    signature::InvalidSignatureSchemeError,
 };
 
 #[derive(Debug, thiserror::Error)]
@@ -19,7 +19,7 @@ pub enum PublicKeyError {
     #[error("Invalid input")]
     InvalidInput,
     #[error("{0}")]
-    InvalidSignatureScheme(#[from] InvalidSignatureScheme),
+    InvalidSignatureScheme(#[from] InvalidSignatureSchemeError),
 }
 
 /// Enum of valid public keys for the signature schemes supported by IOTA.

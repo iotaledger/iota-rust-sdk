@@ -22,6 +22,7 @@ mod test_utils;
 
 // Re-export types used by query_types module internally
 pub use client::Client;
+pub use error::{Error, Result};
 pub use iota_transaction_builder::WaitForTx;
 pub(crate) use iota_types::Address;
 pub use output_types::*;

@@ -26,10 +26,10 @@ pub use multisig::{
     MultisigMemberSignature, ThresholdUnit, WeightUnit,
 };
 pub use passkey::{PasskeyAuthenticator, PasskeyPublicKey};
-pub use public_key::PublicKey;
+pub use public_key::{PublicKey, PublicKeyError};
 pub use secp256k1::{Secp256k1PublicKey, Secp256k1Signature};
 pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
-pub use signature::{InvalidSignatureScheme, SignatureScheme, SimpleSignature, UserSignature};
+pub use signature::{InvalidSignatureSchemeError, SignatureScheme, SimpleSignature, UserSignature};
 
 #[cfg(feature = "serde")]
 #[derive(Debug, thiserror::Error)]

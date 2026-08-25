@@ -50,7 +50,7 @@ impl TransactionBuilderClient for Client {
         let cursor = cursor
             .map(String::from_utf8)
             .transpose()
-            .map_err(|e| crate::error::Error::from_error(crate::error::Kind::Parse, e))?;
+            .map_err(crate::error::Error::parse)?;
         let page = self
             .objects(
                 ObjectFilter {
