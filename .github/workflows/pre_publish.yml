@@ -31,10 +31,13 @@ on:
         description: The package to publish.
         options:
           - iota-sdk-types
+          - iota-sdk-move-types
           - iota-sdk-crypto
           - iota-sdk-graphql-client-build
           - iota-sdk-graphql-client
+          - iota-sdk-grpc-types
           - iota-sdk-transaction-builder
+          - iota-sdk-grpc-client
           - iota-sdk
           - iota-csharp-sdk
           - iota-go-sdk
