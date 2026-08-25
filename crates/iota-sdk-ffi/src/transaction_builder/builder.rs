@@ -333,7 +333,7 @@ impl TransactionBuilder {
         use iota_sdk::transaction_builder::unresolved::{Command, MakeMoveVector};
         self.write(|builder| {
             let cmd = Command::MakeMoveVector(MakeMoveVector {
-                type_: Some(type_tag.0.clone()),
+                type_tag: Some(type_tag.0.clone()),
                 elements: elements
                     .iter()
                     .map(|e| builder.apply_argument(e.as_ref()))
@@ -357,14 +357,14 @@ impl TransactionBuilder {
     ///  - `modules`: is the modules' bytecode to be published
     ///  - `dependencies`: is the list of IDs of the transitive dependencies of
     ///    the package
-    pub fn publish(
+    pub fn publish_package(
         self: Arc<Self>,
         package_data: &MovePackageData,
         upgrade_cap_name: String,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .publish(package_data.0.clone())
+                .publish_package(package_data.0.clone())
                 .upgrade_cap(upgrade_cap_name);
         });
         self

@@ -51,7 +51,7 @@ class Program
         await faucet.RequestAndWaitForFinalized(multisigAddress, client);
 
         // 6. Build a send_iota transaction
-        var builder = new TransactionBuilder(multisigAddress).WithClient(client);
+        var builder = client.TransactionBuilder(multisigAddress);
         builder.SendIota(recipientAddress, PtbArgument.U64(amount));
         var txn = await builder.Finish();
 

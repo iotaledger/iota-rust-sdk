@@ -655,6 +655,24 @@ fn expected_entries() -> Vec<Entry> {
         ),
         entry!(
             IotaFramework,
+            "transaction_deny_rules",
+            "TransactionDenyRules",
+            iota_framework::transaction_deny_rules::TransactionDenyRules
+        ),
+        entry!(
+            IotaFramework,
+            "transaction_deny_rules",
+            "TransactionDenyRulesInnerV1",
+            iota_framework::transaction_deny_rules::TransactionDenyRulesInnerV1
+        ),
+        entry!(
+            IotaFramework,
+            "transaction_deny_rules",
+            "TransactionDenyRulesUpdated",
+            iota_framework::transaction_deny_rules::TransactionDenyRulesUpdated
+        ),
+        entry!(
+            IotaFramework,
             "random",
             "Random",
             iota_framework::random::Random
@@ -1145,7 +1163,7 @@ fn expected_entries() -> Vec<Entry> {
 // Package loading
 // ---------------------------------------------------------------------------
 
-/// Parse a `packages_compiled` blob into one normalised module per inner
+/// Parse a `packages_compiled` blob into one normalized module per inner
 /// bytecode payload, keyed by short module name.
 fn load_package(
     package: Package,
@@ -1296,7 +1314,7 @@ fn check_type(
 
     // Rust-side primitive-wrapper types (e.g. `ObjectId`, `Address`) come
     // through the derive as `Datatype { name, args: [] }` but represent a
-    // Move primitive on the wire. Normalise before the structural match.
+    // Move primitive on the wire. Normalize before the structural match.
     if let Shape::Datatype { name, args } = rust
         && args.is_empty()
         && matches!(*name, "ObjectId" | "Address")
@@ -1674,7 +1692,7 @@ fn rejects_option_inner_mismatch() {
     let mut fields =
         struct_fields(<iota_system::staking_pool::StakingPoolV1 as MoveShape>::move_shape());
     // `activation_epoch` is an `Option<u64>`; corrupt the inner type so the
-    // Option normalisation can't paper over it.
+    // Option normalization can't paper over it.
     let Shape::Option(inner) = &mut field_mut(&mut fields, "activation_epoch").shape else {
         panic!("activation_epoch should be an option");
     };

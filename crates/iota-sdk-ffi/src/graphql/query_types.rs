@@ -146,19 +146,18 @@ impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for Transac
 
 impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::TransactionsFilter {
     fn from(value: TransactionsFilter) -> Self {
-        Self {
-            function: value.function,
-            kind: value.kind,
-            after_checkpoint: value.after_checkpoint,
-            at_checkpoint: value.at_checkpoint,
-            before_checkpoint: value.before_checkpoint,
-            sent_address: value.sent_address.map(|v| **v),
-            recv_address: value.recv_address.map(|v| **v),
-            input_object: value.input_object.map(|v| **v),
-            changed_object: value.changed_object.map(|v| **v),
-            transaction_ids: value.transaction_ids,
-            wrapped_or_deleted_object: value.wrapped_or_deleted_object.map(|v| **v),
-        }
+        Self::default()
+            .with_function(value.function)
+            .with_kind(value.kind)
+            .with_after_checkpoint(value.after_checkpoint)
+            .with_at_checkpoint(value.at_checkpoint)
+            .with_before_checkpoint(value.before_checkpoint)
+            .with_sent_address(value.sent_address.map(|v| **v))
+            .with_recv_address(value.recv_address.map(|v| **v))
+            .with_input_object(value.input_object.map(|v| **v))
+            .with_changed_object(value.changed_object.map(|v| **v))
+            .with_transaction_ids(value.transaction_ids)
+            .with_wrapped_or_deleted_object(value.wrapped_or_deleted_object.map(|v| **v))
     }
 }
 
@@ -420,12 +419,11 @@ impl From<iota_sdk::graphql_client::query_types::EventFilter> for EventFilter {
 
 impl From<EventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
     fn from(value: EventFilter) -> Self {
-        Self {
-            emitting_module: value.emitting_module,
-            event_type: value.event_type,
-            sender: value.sender.map(|a| **a),
-            transaction_digest: value.transaction_digest,
-        }
+        Self::default()
+            .with_emitting_module(value.emitting_module)
+            .with_event_type(value.event_type)
+            .with_sender(value.sender.map(|a| **a))
+            .with_transaction_digest(value.transaction_digest)
     }
 }
 
@@ -443,8 +441,8 @@ impl From<EventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
 /// - `timestamp` is absent for events not yet included in a checkpoint (e.g.
 ///   from a dry run or a just-executed transaction).
 ///
-/// `type_`, `contents`, `data` and `json` are always present (non-null in the
-/// GraphQL schema). Unlike the chain `Event`, this type is not
+/// `move_type`, `contents`, `data` and `json` are always present (non-null in
+/// the GraphQL schema). Unlike the chain `Event`, this type is not
 /// BCS/JSON-serializable as a chain event.
 #[derive(uniffi::Record)]
 pub struct GraphQlEvent {
@@ -458,7 +456,7 @@ pub struct GraphQlEvent {
     /// emitted. `None` for system events.
     pub sender: Option<Arc<Address>>,
     /// The type of the event emitted
-    pub type_: String,
+    pub move_type: String,
     /// BCS serialized bytes of the event
     pub contents: Vec<u8>,
     /// UTC timestamp in milliseconds since epoch (1/1/1970)
@@ -486,7 +484,7 @@ impl TryFrom<iota_sdk::graphql_client::query_types::Event> for GraphQlEvent {
             package_id,
             module,
             sender: value.sender.map(|s| Arc::new(Address(s.address))),
-            type_: value.type_.repr,
+            move_type: value.move_type.repr,
             contents: base64ct::Base64::decode_vec(&value.bcs.0)
                 .map_err(crate::error::SdkFfiError::custom)?,
             timestamp: value.timestamp.map(|t| t.0),
@@ -509,7 +507,7 @@ pub struct ObjectFilter {
 impl From<iota_sdk::graphql_client::query_types::ObjectFilter> for ObjectFilter {
     fn from(value: iota_sdk::graphql_client::query_types::ObjectFilter) -> Self {
         Self {
-            type_tag: value.type_,
+            type_tag: value.type_tag,
             owner: value.owner.map(Into::into).map(Arc::new),
             object_ids: value
                 .object_ids
@@ -520,13 +518,14 @@ impl From<iota_sdk::graphql_client::query_types::ObjectFilter> for ObjectFilter 
 
 impl From<ObjectFilter> for iota_sdk::graphql_client::query_types::ObjectFilter {
     fn from(value: ObjectFilter) -> Self {
-        Self {
-            type_: value.type_tag,
-            owner: value.owner.map(|v| **v),
-            object_ids: value
-                .object_ids
-                .map(|v| v.into_iter().map(|v| **v).collect()),
-        }
+        Self::default()
+            .with_type(value.type_tag)
+            .with_owner(value.owner.map(|v| **v))
+            .with_object_ids(
+                value
+                    .object_ids
+                    .map(|v| v.into_iter().map(|v| **v).collect()),
+            )
     }
 }
 
@@ -580,7 +579,7 @@ pub struct DynamicFieldName {
 impl From<iota_sdk::graphql_client::DynamicFieldName> for DynamicFieldName {
     fn from(value: iota_sdk::graphql_client::DynamicFieldName) -> Self {
         Self {
-            type_tag: Arc::new(value.type_.into()),
+            type_tag: Arc::new(value.type_tag.into()),
             bcs: value.bcs,
             json: value.json,
         }
@@ -590,7 +589,7 @@ impl From<iota_sdk::graphql_client::DynamicFieldName> for DynamicFieldName {
 impl From<DynamicFieldName> for iota_sdk::graphql_client::DynamicFieldName {
     fn from(value: DynamicFieldName) -> Self {
         Self {
-            type_: value.type_tag.0.clone(),
+            type_tag: value.type_tag.0.clone(),
             bcs: value.bcs,
             json: value.json,
         }
@@ -607,7 +606,7 @@ pub struct DynamicFieldValue {
 impl From<iota_sdk::graphql_client::DynamicFieldValue> for DynamicFieldValue {
     fn from(value: iota_sdk::graphql_client::DynamicFieldValue) -> Self {
         Self {
-            type_tag: Arc::new(value.type_.into()),
+            type_tag: Arc::new(value.type_tag.into()),
             bcs: value.bcs,
         }
     }
@@ -616,7 +615,7 @@ impl From<iota_sdk::graphql_client::DynamicFieldValue> for DynamicFieldValue {
 impl From<DynamicFieldValue> for iota_sdk::graphql_client::DynamicFieldValue {
     fn from(value: DynamicFieldValue) -> Self {
         Self {
-            type_: value.type_tag.0.clone(),
+            type_tag: value.type_tag.0.clone(),
             bcs: value.bcs,
         }
     }
@@ -1185,7 +1184,7 @@ pub struct MoveField {
     pub name: String,
     #[uniffi::field(name = "type")]
     #[uniffi(default = None)]
-    pub type_: Option<OpenMoveType>,
+    pub move_type: Option<OpenMoveType>,
 }
 
 #[uniffi::remote(Record)]

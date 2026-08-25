@@ -30,7 +30,7 @@ func main() {
 		log.Fatalf("Failed to request coins from faucet: %v", err)
 	}
 
-	builder := iota_sdk.NewTransactionBuilder(fromAddress).WithClient(client)
+	builder := client.TransactionBuilder(fromAddress)
 	builder.SendIota(toAddress, iota_sdk.PtbArgumentU64(5000000000))
 
 	moveAuthenticator, err := iota_sdk.NewMoveAuthenticatorBuilder(
@@ -63,7 +63,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	}
 
 	// Create a random private key to derive a sender address
-	privateKey := iota_sdk.Ed25519PrivateKeyGenerate()
+	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
 	sender := privateKey.PublicKey().DeriveAddress()
 
 	// Fund the sender address for gas payment
@@ -74,9 +74,9 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	}
 
 	// Build the `publish` PTB
-	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder := client.TransactionBuilder(sender)
 	// Publish the package and receive the upgrade cap
-	builder.Publish(packageData, "upgrade_cap")
+	builder.PublishPackage(packageData, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
 	builder.TransferObjects(sender, []*iota_sdk.PtbArgument{iota_sdk.PtbArgumentAssigned("upgrade_cap")})
 
@@ -138,7 +138,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	accountModule, _ := iota_sdk.NewIdentifier("account")
 	linkAuthFn, _ := iota_sdk.NewIdentifier("link_auth")
 
-	builder = iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder = client.TransactionBuilder(sender)
 	builder.MoveCall(
 		packageId.ToAddress(),
 		accountModule,

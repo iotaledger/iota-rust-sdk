@@ -102,13 +102,14 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 ///                 =/ iota-move-verification-timeout
 ///                 =/ shared-object-operation-not-allowed
 ///                 =/ input-object-deleted
-///                 =/ execution-cancelled-due-to-shared-object-congestion
+///                 =/ execution-canceled-due-to-shared-object-congestion
 ///                 =/ address-denied-for-coin
 ///                 =/ coin-type-global-pause
-///                 =/ execution-cancelled-due-to-randomness-unavailable
-///                 =/ execution-cancelled-due-to-shared-object-congestion-v2
+///                 =/ execution-canceled-due-to-randomness-unavailable
+///                 =/ execution-canceled-due-to-shared-object-congestion-v2
 ///                 =/ invalid-linkage
 ///                 =/ move-authentication-error
+///                 =/ execution-canceled-due-to-execution-worker-congestion
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
@@ -143,13 +144,14 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 /// iota-move-verification-timeout                         = %d30
 /// shared-object-operation-not-allowed                    = %d31
 /// input-object-deleted                                   = %d32
-/// execution-cancelled-due-to-shared-object-congestion    = %d33 (vector object-id)
+/// execution-canceled-due-to-shared-object-congestion    = %d33 (vector object-id)
 /// address-denied-for-coin                                = %d34 address string
 /// coin-type-global-pause                                 = %d35 string
-/// execution-cancelled-due-to-randomness-unavailable      = %d36
-/// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
+/// execution-canceled-due-to-randomness-unavailable      = %d36
+/// execution-canceled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
 /// invalid-linkage                                        = %d38
 /// move-authentication-error                              = %d39 execution-error
+/// execution-canceled-due-to-execution-worker-congestion  = %d40 u64
 /// ```
 #[derive(uniffi::Enum)]
 pub enum ExecutionError {
@@ -251,13 +253,13 @@ pub enum ExecutionError {
     SharedObjectOperationNotAllowed,
     /// Requested shared object has been deleted
     InputObjectDeleted,
-    /// Certificate is cancelled due to congestion on shared objects
-    ExecutionCancelledDueToSharedObjectCongestion {
+    /// Certificate is canceled due to congestion on shared objects
+    ExecutionCanceledDueToSharedObjectCongestion {
         congested_objects: Vec<Arc<ObjectId>>,
     },
-    /// Certificate is cancelled due to congestion on shared objects;
+    /// Certificate is canceled due to congestion on shared objects;
     /// suggested gas price can be used to give this certificate more priority.
-    ExecutionCancelledDueToSharedObjectCongestionV2 {
+    ExecutionCanceledDueToSharedObjectCongestionV2 {
         congested_objects: Vec<Arc<ObjectId>>,
         suggested_gas_price: u64,
     },
@@ -268,9 +270,9 @@ pub enum ExecutionError {
     },
     /// Coin type is globally paused for use
     CoinTypeGlobalPause { coin_type: String },
-    /// Certificate is cancelled because randomness could not be generated this
+    /// Certificate is canceled because randomness could not be generated this
     /// epoch
-    ExecutionCancelledDueToRandomnessUnavailable,
+    ExecutionCanceledDueToRandomnessUnavailable,
     /// A valid linkage was unable to be determined for the transaction or one
     /// of its commands.
     InvalidLinkage,
@@ -279,6 +281,10 @@ pub enum ExecutionError {
     /// wrapped error is the failure produced by the authenticator's
     /// execution.
     MoveAuthentication { error: Arc<ExecutionErrorWrapper> },
+    /// Certificate is canceled because the execution workers are congested;
+    /// suggested gas price can be used to give this certificate more priority.
+    /// No individual object is responsible, so none is reported.
+    ExecutionCanceledDueToExecutionWorkerCongestion { suggested_gas_price: u64 },
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -400,19 +406,19 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 Self::SharedObjectOperationNotAllowed
             }
             iota_sdk::types::ExecutionError::InputObjectDeleted => Self::InputObjectDeleted,
-            iota_sdk::types::ExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
+            iota_sdk::types::ExecutionError::ExecutionCanceledDueToSharedObjectCongestion {
                 congested_objects,
-            } => Self::ExecutionCancelledDueToSharedObjectCongestion {
+            } => Self::ExecutionCanceledDueToSharedObjectCongestion {
                 congested_objects: congested_objects
                     .into_iter()
                     .map(Into::into)
                     .map(Arc::new)
                     .collect(),
             },
-            iota_sdk::types::ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+            iota_sdk::types::ExecutionError::ExecutionCanceledDueToSharedObjectCongestionV2 {
                 congested_objects,
                 suggested_gas_price,
-            } => Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
+            } => Self::ExecutionCanceledDueToSharedObjectCongestionV2 {
                 congested_objects: congested_objects
                     .into_iter()
                     .map(Into::into)
@@ -429,8 +435,8 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
             iota_sdk::types::ExecutionError::CoinTypeGlobalPause { coin_type } => {
                 Self::CoinTypeGlobalPause { coin_type }
             }
-            iota_sdk::types::ExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
-                Self::ExecutionCancelledDueToRandomnessUnavailable
+            iota_sdk::types::ExecutionError::ExecutionCanceledDueToRandomnessUnavailable => {
+                Self::ExecutionCanceledDueToRandomnessUnavailable
             }
             iota_sdk::types::ExecutionError::InvalidLinkage => Self::InvalidLinkage,
             iota_sdk::types::ExecutionError::MoveAuthentication { error } => {
@@ -438,6 +444,11 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                     error: Arc::new(ExecutionErrorWrapper(*error)),
                 }
             }
+            iota_sdk::types::ExecutionError::ExecutionCanceledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            } => Self::ExecutionCanceledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            },
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
@@ -532,15 +543,15 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 Self::SharedObjectOperationNotAllowed
             }
             ExecutionError::InputObjectDeleted => Self::InputObjectDeleted,
-            ExecutionError::ExecutionCancelledDueToSharedObjectCongestion { congested_objects } => {
-                Self::ExecutionCancelledDueToSharedObjectCongestion {
+            ExecutionError::ExecutionCanceledDueToSharedObjectCongestion { congested_objects } => {
+                Self::ExecutionCanceledDueToSharedObjectCongestion {
                     congested_objects: congested_objects.into_iter().map(|v| **v).collect(),
                 }
             }
-            ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+            ExecutionError::ExecutionCanceledDueToSharedObjectCongestionV2 {
                 congested_objects,
                 suggested_gas_price,
-            } => Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
+            } => Self::ExecutionCanceledDueToSharedObjectCongestionV2 {
                 congested_objects: congested_objects.into_iter().map(|v| **v).collect(),
                 suggested_gas_price,
             },
@@ -553,12 +564,17 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             ExecutionError::CoinTypeGlobalPause { coin_type } => {
                 Self::CoinTypeGlobalPause { coin_type }
             }
-            ExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
-                Self::ExecutionCancelledDueToRandomnessUnavailable
+            ExecutionError::ExecutionCanceledDueToRandomnessUnavailable => {
+                Self::ExecutionCanceledDueToRandomnessUnavailable
             }
             ExecutionError::InvalidLinkage => Self::InvalidLinkage,
             ExecutionError::MoveAuthentication { error } => Self::MoveAuthentication {
                 error: Box::new(error.0.clone()),
+            },
+            ExecutionError::ExecutionCanceledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            } => Self::ExecutionCanceledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
             },
         }
     }

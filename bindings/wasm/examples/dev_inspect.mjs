@@ -8,7 +8,6 @@ import {
   ObjectId,
   PtbArgument,
   StructTag,
-  TransactionBuilder,
   TypeTag,
   initAsync,
 } from "@iota/sdk-wasm";
@@ -29,7 +28,7 @@ const stdAddress = Address.std();
 const name = "name.iota";
 console.log(`Looking up name: ${name}`);
 
-const builder = new TransactionBuilder(sender).withClient(client);
+const builder = client.transactionBuilder(sender);
 
 // 1. Get the registry
 builder.moveCall(

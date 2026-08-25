@@ -29,6 +29,7 @@ unused_async = "warn"
 
 [workspace.dependencies]
 # external dependencies
+async-stream = "0.3"
 base64ct = "1.6.0"
 bcs = "0.1.6"
 cynic = "3.7.3"
@@ -37,6 +38,7 @@ eyre = "0.6"
 futures = "0.3.29"
 getrandom_2 = { version = "0.2", package = "getrandom", features = ["js"] }
 getrandom_3 = { version = "0.3", package = "getrandom", features = ["wasm_js"] }
+graphql-ws-client = { version = "0.13", default-features = false, features = ["client-cynic", "tungstenite-0.28"] }
 hex = "0.4.3"
 js-sys = "0.3"
 paste = "1.0.15"
@@ -57,6 +59,7 @@ syn = { version = "2", features = ["full"] }
 test-strategy = "0.4.0"
 thiserror = "2.0"
 tokio = "1.52.3"
+tokio-tungstenite = { version = "0.28", default-features = false, features = ["connect", "rustls-tls-webpki-roots"] }
 tonic = "0.14"
 tracing = "0.1"
 variadics_please = "1.1"

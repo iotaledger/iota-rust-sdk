@@ -102,6 +102,14 @@ impl MultisigMember {
     }
 }
 
+impl crate::TreeDisplay for MultisigMember {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Multisig Member")?;
+        w.leaf("Public Key", &self.public_key, false)?;
+        w.leaf("Weight", &self.weight, true)
+    }
+}
+
 /// A multisig committee
 ///
 /// A `MultisigCommittee` is a set of members who collectively control a single
@@ -248,6 +256,14 @@ impl MultisigCommittee {
         }
 
         Ok(())
+    }
+}
+
+impl crate::TreeDisplay for MultisigCommittee {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Multisig Committee")?;
+        w.children("Members", &self.members, false)?;
+        w.leaf("Threshold", &self.threshold, true)
     }
 }
 
@@ -434,6 +450,22 @@ impl MultisigAggregatedSignature {
     }
 }
 
+impl crate::TreeDisplay for MultisigAggregatedSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Multisig Aggregated Signature")?;
+        w.child("Committee", &self.committee, false)?;
+        w.children("Signatures", &self.signatures, false)?;
+        w.leaf("Bitmap", &self.bitmap, true)
+    }
+}
+
+crate::impl_tree_display!(
+    MultisigMember,
+    MultisigCommittee,
+    MultisigAggregatedSignature,
+    MultisigMemberSignature
+);
+
 /// Interpret a bitmap of 01s as a list of indices that is set to 1s.
 /// e.g. 22 = 0b10110, then the result is [1, 2, 4].
 fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
@@ -474,6 +506,18 @@ pub enum MultisigMemberSignature {
     Secp256k1(Secp256k1Signature),
     Secp256r1(Secp256r1Signature),
     Passkey(PasskeyAuthenticator),
+}
+
+impl crate::TreeDisplay for MultisigMemberSignature {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Multisig Member Signature");
+        match self {
+            Self::Ed25519(v) => w.header(&format!("Ed25519Signature({v})")),
+            Self::Secp256k1(v) => w.header(&format!("Secp256k1Signature({v})")),
+            Self::Secp256r1(v) => w.header(&format!("Secp256r1Signature({v})")),
+            Self::Passkey(v) => v.fmt_tree(w),
+        }
+    }
 }
 
 impl MultisigMemberSignature {
@@ -835,13 +879,6 @@ pub(crate) mod serialization {
                     MemberSignature::Passkey(authenticator) => Self::Passkey(authenticator),
                 })
             }
-        }
-    }
-
-    #[cfg(feature = "hash")]
-    impl From<&MultisigCommittee> for crate::Address {
-        fn from(committee: &MultisigCommittee) -> Self {
-            committee.derive_address()
         }
     }
 

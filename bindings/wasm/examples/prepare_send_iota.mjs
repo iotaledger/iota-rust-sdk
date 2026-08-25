@@ -1,13 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  Address,
-  GraphQlClient,
-  PtbArgument,
-  TransactionBuilder,
-  initAsync,
-} from "@iota/sdk-wasm";
+import { Address, GraphQlClient, PtbArgument, initAsync } from "@iota/sdk-wasm";
 
 await initAsync();
 
@@ -20,7 +14,7 @@ const toAddress = Address.fromHex(
   "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900",
 );
 
-const builder = new TransactionBuilder(fromAddress).withClient(client);
+const builder = client.transactionBuilder(fromAddress);
 builder.sendIota(toAddress, PtbArgument.u64(5000000000n));
 
 const txn = await builder.finish();

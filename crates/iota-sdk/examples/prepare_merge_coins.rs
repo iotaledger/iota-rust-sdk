@@ -6,7 +6,6 @@ use std::str::FromStr;
 use eyre::Result;
 use iota_sdk::{
     graphql_client::Client,
-    transaction_builder::TransactionBuilder,
     types::{Address, ObjectId},
 };
 
@@ -21,7 +20,7 @@ async fn main() -> Result<()> {
     let coin_1 =
         ObjectId::from_str("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")?;
 
-    let mut builder = TransactionBuilder::new(sender).with_client(&client);
+    let mut builder = client.transaction_builder(sender);
 
     builder.merge_coins(coin_0, [coin_1]);
 

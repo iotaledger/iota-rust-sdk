@@ -14,7 +14,7 @@ fun main() = runBlocking {
         val coinId =
             ObjectId.fromHex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")
 
-        val builder = TransactionBuilder(sender).withClient(client)
+        val builder = client.transactionBuilder(sender)
 
         builder
             .splitCoins(

@@ -123,7 +123,8 @@
 //!   various amounts.
 //! - [transfer_objects](TransactionBuilder::transfer_objects): Send objects to
 //!   a recipient address.
-//! - [publish](TransactionBuilder::publish): Publish a move package.
+//! - [publish_package](TransactionBuilder::publish_package): Publish a move
+//!   package.
 //!     - `package_id`: Name the package ID returned by the publish call.
 //! - [upgrade](TransactionBuilder::upgrade): Upgrade a move package.
 //! - [make_move_vec](TransactionBuilder::make_move_vec): Create a move
@@ -331,7 +332,7 @@ mod tests {
             coin_digest.parse().unwrap(),
         );
 
-        let recipient = Address::generate(rand::thread_rng());
+        let recipient = Address::random_with(rand::thread_rng());
 
         let result = tx.clone().finish();
         assert!(result.is_err());
@@ -359,7 +360,7 @@ mod tests {
         let sponsor: Address = "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
             .parse()
             .unwrap();
-        let recipient = Address::generate(rand::thread_rng());
+        let recipient = Address::random_with(rand::thread_rng());
         let coin = ObjectReference::new(
             "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4"
                 .parse()
@@ -403,10 +404,10 @@ mod tests {
         // A non-programmable Transaction kind should not be accepted.
         let txn = Transaction::V1(iota_types::TransactionV1 {
             kind: iota_types::TransactionKind::AuthenticatorStateUpdateV1Deprecated,
-            sender: Address::generate(rand::thread_rng()),
+            sender: Address::random_with(rand::thread_rng()),
             gas_payment: iota_types::GasPayment {
                 objects: vec![],
-                owner: Address::generate(rand::thread_rng()),
+                owner: Address::random_with(rand::thread_rng()),
                 price: 0,
                 budget: 0,
             },

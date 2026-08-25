@@ -409,7 +409,6 @@ macro_rules! add_struct_tag_ctor_from_type_tag {
 impl StructTag {
     add_struct_tag_ctor!(
         FRAMEWORK,
-        authenticator_state::AuthenticatorState,
         clock::Clock,
         iota::IotaTreasuryCap,
         kiosk::Kiosk,
@@ -425,8 +424,11 @@ impl StructTag {
         object_bag::ObjectBag,
         tx_context::TxContext,
         deny_list::DenyList,
+        transaction_deny_rules::TransactionDenyRules,
         package_metadata::PackageMetadataV1,
-        module_metadata::ModuleMetadata
+        package_metadata::PackageMetadataKey,
+        module_metadata::ModuleMetadata,
+        account::AuthenticatorFunctionRefV1Key
     );
     add_struct_tag_ctor!(@with_module FRAMEWORK, deny_list::ConfigKey, deny_list::AddressKey, deny_list::GlobalPauseKey);
     add_struct_tag_ctor!(

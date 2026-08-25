@@ -57,7 +57,7 @@ impl Client {
         pagination_filter: PaginationFilter,
     ) -> Result<Page<Coin>> {
         let filter = ObjectFilter {
-            type_: Some(
+            type_tag: Some(
                 coin_type
                     .into()
                     .map(StructTag::new_coin)
@@ -153,7 +153,7 @@ mod tests {
             // address on localnet.
             _ => return,
         };
-        let key = Ed25519PublicKey::generate(rand::thread_rng());
+        let key = Ed25519PublicKey::random_with(rand::thread_rng());
         let address = key.derive_address();
         faucet
             .request_and_wait_for_finalized(address, &client)

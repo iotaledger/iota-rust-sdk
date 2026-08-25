@@ -1,28 +1,30 @@
 # Copyright (c) 2026 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-# TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1000
-
 from lib.iota_sdk import *
 
 import asyncio
 
+# The `view_demo` package published on testnet.
+PACKAGE = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4"
+# A shared `view_demo::shop::Shop` created when the package was published.
+SHOP = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20"
+
 
 async def main():
-    client = GraphQlClient.new_devnet()
+    client = GraphQlClient.new_testnet()
 
     # ===========================================================================
-    # Example 1: Using move_view_call() with typed arguments (blake2b256)
+    # Example 1: Using move_view_call() with typed arguments (primitives)
     # ===========================================================================
     print(
-        "=== Example 1: move_view_call() with typed arguments (blake2b256) ===")
+        "=== Example 1: move_view_call() with typed arguments (primitives) ===")
     print()
 
-    # Using typed arguments: an array of u8 values using the u8_vec constructor
-    hash_args = [MoveViewArg.u8_vec(bytes([0, 1, 2]))]
+    price_args = [MoveViewArg.u64(100), MoveViewArg.u64(25)]
 
-    result = await client.move_view_call("0x2::hash::blake2b256", None,
-                                         hash_args)
+    result = await client.move_view_call(f"{PACKAGE}::shop::discounted_price",
+                                         None, price_args)
 
     if result.error is not None:
         print("Error:", result.error)
@@ -32,16 +34,17 @@ async def main():
         print("No results")
 
     # ===========================================================================
-    # Example 2: Using move_view_call_json() with JSON values (blake2b256)
+    # Example 2: Using move_view_call_json() with JSON values (primitives)
     # ===========================================================================
     print()
     print(
-        "=== Example 2: move_view_call_json() with JSON values (blake2b256) ==="
+        "=== Example 2: move_view_call_json() with JSON values (primitives) ==="
     )
     print()
 
-    json_result = await client.move_view_call_json("0x2::hash::blake2b256",
-                                                   None, ["[0, 1, 2]"])
+    # `u64` is passed as a string so large values survive JSON.
+    json_result = await client.move_view_call_json(
+        f"{PACKAGE}::shop::discounted_price", None, ['"100"', '"25"'])
 
     if json_result.error is not None:
         print("JSON Error:", json_result.error)
@@ -51,51 +54,47 @@ async def main():
         print("No JSON results")
 
     # ===========================================================================
-    # Example 3: Using move_view_call() with typed arguments (auction)
+    # Example 3: Using move_view_call() with typed arguments (shared object)
     # ===========================================================================
-    # print()
-    # print("=== Example 3: move_view_call() with typed arguments (auction) ===")
-    # print()
+    print()
+    print(
+        "=== Example 3: move_view_call() with typed arguments (shared object) ==="
+    )
+    print()
 
-    # object_id = ObjectId.from_hex(
-    #     "0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050")
+    shop_args = [
+        MoveViewArg.object_id(ObjectId.from_hex(SHOP)),
+        MoveViewArg.u64(1)
+    ]
 
-    # auction_args = [
-    #     MoveViewArg.object_id(object_id),
-    #     MoveViewArg.string("auc.iota")
-    # ]
+    shop_result = await client.move_view_call(f"{PACKAGE}::shop::sale_at", None,
+                                              shop_args)
 
-    # auction_result = await client.move_view_call(
-    #     "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
-    #     None, auction_args)
-
-    # if auction_result.error is not None:
-    #     print("Auction Error:", auction_result.error)
-    # elif auction_result.results is not None:
-    #     print("Auction Results:", auction_result.results)
-    # else:
-    #     print("No auction results")
+    if shop_result.error is not None:
+        print("Shop Error:", shop_result.error)
+    elif shop_result.results is not None:
+        print("Shop Results:", shop_result.results)
+    else:
+        print("No shop results")
 
     # ===========================================================================
-    # Example 4: Using move_view_call_json() with JSON values (auction)
+    # Example 4: Using move_view_call_json() with JSON values (shared object)
     # ===========================================================================
-    # print()
-    # print("=== Example 4: move_view_call_json() with JSON values (auction) ===")
-    # print()
+    print()
+    print(
+        "=== Example 4: move_view_call_json() with JSON values (shared object) ==="
+    )
+    print()
 
-    # auction_json_result = await client.move_view_call_json(
-    #     "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
-    #     None, [
-    #         '"0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050"',
-    #         '"auc.iota"'
-    #     ])
+    shop_json_result = await client.move_view_call_json(
+        f"{PACKAGE}::shop::sale_at", None, [f'"{SHOP}"', '"1"'])
 
-    # if auction_json_result.error is not None:
-    #     print("Auction JSON Error:", auction_json_result.error)
-    # elif auction_json_result.results is not None:
-    #     print("Auction JSON Results:", auction_json_result.results)
-    # else:
-    #     print("No auction JSON results")
+    if shop_json_result.error is not None:
+        print("Shop JSON Error:", shop_json_result.error)
+    elif shop_json_result.results is not None:
+        print("Shop JSON Results:", shop_json_result.results)
+    else:
+        print("No shop JSON results")
 
 
 if __name__ == "__main__":

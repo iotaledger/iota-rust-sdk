@@ -107,6 +107,9 @@
 
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
+mod tree_display;
+pub(crate) use tree_display::{TreeDisplay, TreeWriter, impl_tree_display};
+
 #[cfg(feature = "hash")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "hash")))]
 pub mod hash;
@@ -144,8 +147,8 @@ pub use crypto::{
     IntentVersion, InvalidSignatureScheme, MoveAuthenticator, MoveAuthenticatorV1,
     MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberSignature,
     PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey, PublicKeyExt,
-    RandomnessRound, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
-    Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
+    Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
+    SignatureScheme, SimpleSignature, UserSignature,
 };
 pub use digest::{
     CertificateDigest, CheckpointContentsDigest, CheckpointDigest, ConsensusCommitDigest, Digest,
@@ -175,12 +178,12 @@ pub use object_id::ObjectId;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
-    Argument, CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
+    Argument, CanceledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
     Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, DenyRuleSet,
     EndOfEpochTransactionKind, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
-    MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
-    SharedObjectReference, SignedTransaction, SplitCoins, SystemPackage, Transaction,
-    TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind, TransactionV1,
+    MoveCall, ProgrammableTransaction, Publish, RandomnessRound, RandomnessStateUpdate,
+    SenderSignedTransaction, SharedObjectReference, SignedTransaction, SplitCoins, SystemPackage,
+    Transaction, TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind, TransactionV1,
     TransferObjects, Upgrade, VersionAssignment,
 };
 pub use validator::{

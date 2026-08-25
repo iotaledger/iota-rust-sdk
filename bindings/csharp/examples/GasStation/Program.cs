@@ -10,11 +10,11 @@ class Program
         var client = GraphQlClient.NewLocalnet();
         var gasStationUrl = "http://0.0.0.0:9527";
         var gasStationAuthToken = "test";
-        var keypair = Ed25519PrivateKey.Generate();
+        var keypair = Ed25519PrivateKey.Random();
         var sender = keypair.PublicKey().DeriveAddress();
         var signer = TransactionSigner.FromEd25519(keypair);
 
-        var builder = new TransactionBuilder(sender).WithClient(client);
+        var builder = client.TransactionBuilder(sender);
 
         builder.MoveCall(
             Address.Std(),

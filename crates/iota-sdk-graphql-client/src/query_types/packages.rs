@@ -65,11 +65,26 @@ pub struct PackagesQueryArgs<'a> {
     pub last: Option<i32>,
 }
 
-#[derive(Clone, cynic::InputObject, Debug)]
+#[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "MovePackageCheckpointFilter")]
+#[non_exhaustive]
 pub struct PackageCheckpointFilter {
     pub after_checkpoint: Option<u64>,
     pub before_checkpoint: Option<u64>,
+}
+
+impl PackageCheckpointFilter {
+    /// Limit to packages published after the given checkpoint, exclusive.
+    pub fn with_after_checkpoint(mut self, after_checkpoint: impl Into<Option<u64>>) -> Self {
+        self.after_checkpoint = after_checkpoint.into();
+        self
+    }
+
+    /// Limit to packages published before the given checkpoint, exclusive.
+    pub fn with_before_checkpoint(mut self, before_checkpoint: impl Into<Option<u64>>) -> Self {
+        self.before_checkpoint = before_checkpoint.into();
+        self
+    }
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
@@ -104,9 +119,24 @@ pub struct PackageVersionsArgs<'a> {
     pub filter: Option<MovePackageVersionFilter>,
 }
 
-#[derive(Clone, cynic::InputObject, Debug)]
+#[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "MovePackageVersionFilter")]
+#[non_exhaustive]
 pub struct MovePackageVersionFilter {
     pub after_version: Option<u64>,
     pub before_version: Option<u64>,
+}
+
+impl MovePackageVersionFilter {
+    /// Limit to versions after the given version, exclusive.
+    pub fn with_after_version(mut self, after_version: impl Into<Option<u64>>) -> Self {
+        self.after_version = after_version.into();
+        self
+    }
+
+    /// Limit to versions before the given version, exclusive.
+    pub fn with_before_version(mut self, before_version: impl Into<Option<u64>>) -> Self {
+        self.before_version = before_version.into();
+        self
+    }
 }

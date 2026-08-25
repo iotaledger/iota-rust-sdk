@@ -145,6 +145,26 @@ impl MoveAuthenticatorV1 {
     }
 }
 
+impl crate::TreeDisplay for MoveAuthenticator {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Move Authenticator");
+        match self {
+            Self::V1(v1) => v1.fmt_tree(w),
+        }
+    }
+}
+
+impl crate::TreeDisplay for MoveAuthenticatorV1 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Move Authenticator V1")?;
+        w.children("Call Args", &self.call_args, false)?;
+        w.leaves("Type Args", &self.type_args, false)?;
+        w.child("Object to Authenticate", &self.object_to_authenticate, true)
+    }
+}
+
+crate::impl_tree_display!(MoveAuthenticator, MoveAuthenticatorV1);
+
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {

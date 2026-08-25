@@ -1,13 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  Address,
-  GraphQlClient,
-  PtbArgument,
-  TransactionBuilder,
-  initAsync,
-} from "@iota/sdk-wasm";
+import { Address, GraphQlClient, PtbArgument, initAsync } from "@iota/sdk-wasm";
 
 await initAsync();
 
@@ -31,7 +25,7 @@ const objsToTransfer = [
   ),
 ];
 
-const builder = new TransactionBuilder(fromAddress).withClient(client);
+const builder = client.transactionBuilder(fromAddress);
 builder.transferObjects(toAddress, objsToTransfer);
 
 const txn = await builder.finish();

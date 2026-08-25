@@ -44,7 +44,7 @@ struct PublishUpgradeExample {
     print("Digest: \(digest.toBase58())")
 
     // Create a random private key to derive a sender address and for signing
-    let privateKey = Ed25519PrivateKey.generate()
+    let privateKey = Ed25519PrivateKey.random()
     let sender = privateKey.publicKey().deriveAddress()
     print("Sender: \(sender.toHex())")
 
@@ -61,9 +61,9 @@ struct PublishUpgradeExample {
     }
 
     // Build the `publish` PTB
-    let builder = TransactionBuilder(sender: sender).withClient(client: client)
+    let builder = client.transactionBuilder(sender: sender)
     // Publish the package and receive the upgrade cap in return
-    _ = builder.publish(packageData: packageData, upgradeCapName: "upgrade_cap")
+    _ = builder.publishPackage(packageData: packageData, upgradeCapName: "upgrade_cap")
     // Transfer the upgrade cap to the sender address
     _ = builder.transferObjects(
       recipient: sender, objects: [PtbArgument.assigned(name: "upgrade_cap")])
@@ -133,7 +133,7 @@ struct PublishUpgradeExample {
     }
 
     // Build the `upgrade` PTB
-    let upgradeBuilder = TransactionBuilder(sender: sender).withClient(client: client)
+    let upgradeBuilder = client.transactionBuilder(sender: sender)
 
     // Authorize the upgrade
     _ = try upgradeBuilder.moveCall(

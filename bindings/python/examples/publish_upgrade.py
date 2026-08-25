@@ -45,7 +45,7 @@ async def main():
     print(f"Digest: {digest.to_base58()}")
 
     # Create a random private key to derive a sender address and for signing
-    private_key = Ed25519PrivateKey.generate()
+    private_key = Ed25519PrivateKey.random()
     sender = private_key.public_key().derive_address()
     print(f"Sender: {sender.to_hex()}")
 
@@ -58,9 +58,9 @@ async def main():
         raise Exception("Failed to request coins from faucet")
 
     # Build the `publish` PTB
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
     # Publish the package and receive the upgrade cap in return
-    builder.publish(package_data, "upgrade_cap")
+    builder.publish_package(package_data, "upgrade_cap")
     # Transfer the upgrade cap to the sender address
     builder.transfer_objects(sender, [PtbArgument.assigned("upgrade_cap")])
     tx = await builder.finish()
@@ -108,7 +108,7 @@ async def main():
         raise Exception("Missing package id")
 
     # Build the `upgrade` PTB
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
 
     # Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
     # ticket

@@ -20,8 +20,8 @@ bytes   = size *OCTET
 call-arg = %d00 bytes        ; Pure
          / %d01 object-arg   ; Object
 
-cancelled-transaction = transaction-digest           ; digest
-                        (size *version-assignment)   ; version-assignments
+canceled-transaction = transaction-digest           ; digest
+                       (size *version-assignment)   ; version-assignments
 
 certificate-digest = digest
 
@@ -141,7 +141,7 @@ consensus-commit-prologue-v1 = u64                                        ; epoc
                                consensus-commit-digest                    ; consensus-commit-digest
                                consensus-determined-version-assignments   ; consensus-determined-version-assignments
 
-consensus-determined-version-assignments = %d00 (size *cancelled-transaction)   ; CancelledTransactions
+consensus-determined-version-assignments = %d00 (size *canceled-transaction)   ; CanceledTransactions
 
 deny-rule-set = (size *address)     ; denied-addresses
                 (size *object-id)   ; denied-objects
@@ -175,7 +175,7 @@ end-of-epoch-transaction-kind = %d00 change-epoch      ; ChangeEpoch
 event = object-id    ; package-id
         identifier   ; module
         address      ; sender
-        struct-tag   ; type-
+        struct-tag   ; struct-tag
         bytes        ; contents
 
 execution-digests = transaction-digest           ; transaction
@@ -214,13 +214,14 @@ execution-error = %d00                               ; InsufficientGas
                 / %d30                               ; IotaMoveVerificationTimeout
                 / %d31                               ; SharedObjectOperationNotAllowed
                 / %d32                               ; InputObjectDeleted
-                / %d33 (size *object-id)             ; ExecutionCancelledDueToSharedObjectCongestion
+                / %d33 (size *object-id)             ; ExecutionCanceledDueToSharedObjectCongestion
                 / %d34 address string                ; AddressDeniedForCoin
                 / %d35 string                        ; CoinTypeGlobalPause
-                / %d36                               ; ExecutionCancelledDueToRandomnessUnavailable
-                / %d37 (size *object-id) u64         ; ExecutionCancelledDueToSharedObjectCongestionV2
+                / %d36                               ; ExecutionCanceledDueToRandomnessUnavailable
+                / %d37 (size *object-id) u64         ; ExecutionCanceledDueToSharedObjectCongestionV2
                 / %d38                               ; InvalidLinkage
                 / %d39 execution-error               ; MoveAuthentication
+                / %d40 u64                           ; ExecutionCanceledDueToExecutionWorkerCongestion
 
 execution-status = %d00                                     ; Success
                  / %d01 execution-error (%d00 / %d01 u64)   ; Failure
@@ -275,7 +276,7 @@ intent-signed-transaction = intent                   ; intent
 
 intent-version = %d00   ; V0
 
-make-move-vector = (%d00 / %d01 type-tag)   ; type-
+make-move-vector = (%d00 / %d01 type-tag)   ; type-tag
                    (size *argument)         ; elements
 
 merge-coins = argument           ; coin
@@ -522,7 +523,7 @@ uleb128 = *(%x80-FF) %x00-7F   ; variable-length unsigned integer
 unchanged-shared-kind = %d00 version object-digest   ; ReadOnlyRoot
                       / %d01 version                 ; MutateDeleted
                       / %d02 version                 ; ReadDeleted
-                      / %d03 version                 ; Cancelled
+                      / %d03 version                 ; Canceled
                       / %d04                         ; PerEpochConfig
 
 unchanged-shared-object = object-id               ; object-id

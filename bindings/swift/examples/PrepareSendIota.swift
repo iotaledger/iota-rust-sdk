@@ -15,7 +15,7 @@ struct PrepareSendIotaExample {
     let toAddress = try Address.fromHex(
       hex: "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
-    let builder = TransactionBuilder(sender: fromAddress).withClient(client: client)
+    let builder = client.transactionBuilder(sender: fromAddress)
     _ = builder.sendIota(recipient: toAddress, amount: PtbArgument.u64(value: 5_000_000_000))
 
     let txn = try await builder.finish()

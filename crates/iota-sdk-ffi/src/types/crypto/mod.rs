@@ -31,9 +31,9 @@ macro_rules! impl_crypto_object {
             }
 
             #[uniffi::constructor]
-            pub fn generate() -> Self {
+            pub fn random() -> Self {
                 let mut rng = rand::thread_rng();
-                Self(iota_sdk::types::$t::generate(&mut rng))
+                Self(iota_sdk::types::$t::random_with(&mut rng))
             }
 
             pub fn to_bytes(&self) -> Vec<u8> {

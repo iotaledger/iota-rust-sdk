@@ -1343,8 +1343,6 @@ pub mod authenticator_state {
         pub version: u64,
     }
 
-    impl_try_from_object!(AuthenticatorState);
-
     /// Rust version of the Move
     /// `iota::authenticator_state::AuthenticatorStateInner` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2555,6 +2553,115 @@ pub mod deny_list {
     pub struct PerTypeConfigCreated {
         pub key: ConfigKey,
         pub config_id: ID,
+    }
+}
+
+/// Types from `0x2::transaction_deny_rules`.
+pub mod transaction_deny_rules {
+    use iota_types::Address;
+
+    use super::{
+        linked_table::LinkedTable,
+        object::{ID, UID},
+        versioned::Versioned,
+    };
+
+    /// Rust version of the Move
+    /// `iota::transaction_deny_rules::TransactionDenyRules` type.
+    ///
+    /// Singleton shared object storing the active transaction deny rules.
+    /// The actual state lives in a versioned inner field.
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct TransactionDenyRules {
+        pub id: UID,
+        pub inner: Versioned,
+    }
+
+    impl_try_from_object!(TransactionDenyRules);
+
+    /// Rust version of the Move
+    /// `iota::transaction_deny_rules::TransactionDenyRulesInnerV1` type.
+    ///
+    /// The deny lists are `LinkedTable` membership sets — the `bool` value
+    /// is always `true` and never read. Each entry is its own child object,
+    /// so the sets are enumerated by walking the linked keys with
+    /// child-object reads, not by decoding this struct.
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct TransactionDenyRulesInnerV1 {
+        pub version: u64,
+        /// Addresses denied as transaction sender or gas sponsor.
+        pub denied_addresses: LinkedTable<Address, bool>,
+        /// Objects denied as transaction inputs or receiving objects.
+        pub denied_objects: LinkedTable<ID, bool>,
+        /// Packages denied as a (transitive) dependency of any command.
+        pub denied_packages: LinkedTable<ID, bool>,
+        /// Denies all package publishing.
+        pub package_publish_disabled: bool,
+        /// Denies all package upgrades.
+        pub package_upgrade_disabled: bool,
+        /// Denies transactions that use shared objects as inputs.
+        pub shared_object_disabled: bool,
+        /// Denies all user transactions (kill switch).
+        pub user_transaction_disabled: bool,
+        /// Denies transactions that contain receiving objects.
+        pub receiving_objects_disabled: bool,
+        /// Denies transactions signed with a Move authenticator.
+        pub move_authenticator_disabled: bool,
+    }
+
+    /// Rust version of the Move
+    /// `iota::transaction_deny_rules::TransactionDenyRulesUpdated` event.
+    ///
+    /// Emitted on every update; the event stream is the audit history of
+    /// the network's deny rules.
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct TransactionDenyRulesUpdated {
+        /// The epoch in which the update was executed.
+        pub epoch: u64,
+        /// Addresses added to / removed from the sender-or-sponsor deny
+        /// list.
+        pub added_addresses: Vec<Address>,
+        pub removed_addresses: Vec<Address>,
+        /// Objects added to / removed from the input-or-receiving deny
+        /// list.
+        pub added_objects: Vec<ID>,
+        pub removed_objects: Vec<ID>,
+        /// Packages added to / removed from the dependency deny list.
+        pub added_packages: Vec<ID>,
+        pub removed_packages: Vec<ID>,
+        /// Denies all package publishing.
+        pub package_publish_disabled: bool,
+        /// Denies all package upgrades.
+        pub package_upgrade_disabled: bool,
+        /// Denies transactions that use shared objects as inputs.
+        pub shared_object_disabled: bool,
+        /// Denies all user transactions (kill switch).
+        pub user_transaction_disabled: bool,
+        /// Denies transactions that contain receiving objects.
+        pub receiving_objects_disabled: bool,
+        /// Denies transactions signed with a Move authenticator.
+        pub move_authenticator_disabled: bool,
+        /// Deny list sizes after applying the delta.
+        pub denied_addresses_len: u64,
+        pub denied_objects_len: u64,
+        pub denied_packages_len: u64,
     }
 }
 

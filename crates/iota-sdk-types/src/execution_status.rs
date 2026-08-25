@@ -83,6 +83,22 @@ impl ExecutionStatus {
     }
 }
 
+impl crate::TreeDisplay for ExecutionStatus {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Execution Status");
+        match self {
+            ExecutionStatus::Success => w.header("Success"),
+            ExecutionStatus::Failure { error, command } => {
+                w.header("Failure")?;
+                w.leaf("Error", error, false)?;
+                w.option_leaf("Command", command, true)
+            }
+        }
+    }
+}
+
+crate::impl_tree_display!(ExecutionStatus);
+
 fn display_move_location_opt(location: &Option<MoveLocation>) -> impl core::fmt::Display + '_ {
     struct W<'a>(&'a Option<MoveLocation>);
     impl core::fmt::Display for W<'_> {
@@ -154,13 +170,14 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 ///                 =/ iota-move-verification-timeout
 ///                 =/ shared-object-operation-not-allowed
 ///                 =/ input-object-deleted
-///                 =/ execution-cancelled-due-to-shared-object-congestion
+///                 =/ execution-canceled-due-to-shared-object-congestion
 ///                 =/ address-denied-for-coin
 ///                 =/ coin-type-global-pause
-///                 =/ execution-cancelled-due-to-randomness-unavailable
-///                 =/ execution-cancelled-due-to-shared-object-congestion-v2
+///                 =/ execution-canceled-due-to-randomness-unavailable
+///                 =/ execution-canceled-due-to-shared-object-congestion-v2
 ///                 =/ invalid-linkage
 ///                 =/ move-authentication-error
+///                 =/ execution-canceled-due-to-execution-worker-congestion
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
@@ -195,13 +212,14 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 /// iota-move-verification-timeout                         = %d30
 /// shared-object-operation-not-allowed                    = %d31
 /// input-object-deleted                                   = %d32
-/// execution-cancelled-due-to-shared-object-congestion    = %d33 (vector object-id)
+/// execution-canceled-due-to-shared-object-congestion    = %d33 (vector object-id)
 /// address-denied-for-coin                                = %d34 address string
 /// coin-type-global-pause                                 = %d35 string
-/// execution-cancelled-due-to-randomness-unavailable      = %d36
-/// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
+/// execution-canceled-due-to-randomness-unavailable      = %d36
+/// execution-canceled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
 /// invalid-linkage                                        = %d38
 /// move-authentication-error                              = %d39 execution-error
+/// execution-canceled-due-to-execution-worker-congestion  = %d40 u64
 /// ```
 // WARNING: The variant order of this enum is protocol-significant. Each variant's position
 // determines its BCS discriminant (the integer sent over the wire).
@@ -381,26 +399,26 @@ pub enum ExecutionError {
     /// Requested shared object has been deleted
     #[error("Certificate cannot be executed due to a dependency on a deleted shared object")]
     InputObjectDeleted,
-    /// Certificate is cancelled due to congestion on shared objects
-    #[error("Certificate is cancelled due to congestion on shared objects: {}.", display_congested_objects(.congested_objects))]
-    ExecutionCancelledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
+    /// Certificate is canceled due to congestion on shared objects
+    #[error("Certificate is canceled due to congestion on shared objects: {}.", display_congested_objects(.congested_objects))]
+    ExecutionCanceledDueToSharedObjectCongestion { congested_objects: Vec<ObjectId> },
     /// Address is denied for this coin type
     #[error("Address {address:?} is denied for coin {coin_type}")]
     AddressDeniedForCoin { address: Address, coin_type: String },
     /// Coin type is globally paused for use
     #[error("Coin type is globally paused for use: {coin_type}")]
     CoinTypeGlobalPause { coin_type: String },
-    /// Certificate is cancelled because randomness could not be generated this
+    /// Certificate is canceled because randomness could not be generated this
     /// epoch
-    #[error("Certificate is cancelled because randomness could not be generated this epoch")]
-    ExecutionCancelledDueToRandomnessUnavailable,
-    /// Certificate is cancelled due to congestion on shared objects;
+    #[error("Certificate is canceled because randomness could not be generated this epoch")]
+    ExecutionCanceledDueToRandomnessUnavailable,
+    /// Certificate is canceled due to congestion on shared objects;
     /// suggested gas price can be used to give this certificate more priority.
     #[error(
-        "Certificate is cancelled due to congestion on shared objects: {}. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}.",
+        "Certificate is canceled due to congestion on shared objects: {}. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}.",
         display_congested_objects(.congested_objects)
     )]
-    ExecutionCancelledDueToSharedObjectCongestionV2 {
+    ExecutionCanceledDueToSharedObjectCongestionV2 {
         congested_objects: Vec<ObjectId>,
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         suggested_gas_price: u64,
@@ -416,6 +434,16 @@ pub enum ExecutionError {
     #[error("Move authentication failed: {error}")]
     #[cfg_attr(feature = "proptest", weight(0))]
     MoveAuthentication { error: Box<ExecutionError> },
+    /// Certificate is canceled because the execution workers are congested;
+    /// suggested gas price can be used to give this certificate more priority.
+    /// No individual object is responsible, so none is reported.
+    #[error(
+        "Certificate is canceled due to execution-worker congestion. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}."
+    )]
+    ExecutionCanceledDueToExecutionWorkerCongestion {
+        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        suggested_gas_price: u64,
+    },
 }
 
 impl ExecutionError {
@@ -453,13 +481,14 @@ impl ExecutionError {
         IotaMoveVerificationTimeout,
         SharedObjectOperationNotAllowed,
         InputObjectDeleted,
-        ExecutionCancelledDueToSharedObjectCongestion,
+        ExecutionCanceledDueToSharedObjectCongestion,
         AddressDeniedForCoin,
         CoinTypeGlobalPause,
-        ExecutionCancelledDueToRandomnessUnavailable,
-        ExecutionCancelledDueToSharedObjectCongestionV2,
+        ExecutionCanceledDueToRandomnessUnavailable,
+        ExecutionCanceledDueToSharedObjectCongestionV2,
         InvalidLinkage,
         MoveAuthentication,
+        ExecutionCanceledDueToExecutionWorkerCongestion,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
