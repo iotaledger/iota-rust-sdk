@@ -126,7 +126,7 @@ pub struct MoveData(pub serde_json::Value);
 
 #[derive(Clone, Copy, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Address")]
-pub struct GQLAddress {
+pub struct GraphQLAddress {
     pub address: Address,
 }
 

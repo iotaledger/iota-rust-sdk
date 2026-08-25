@@ -28,7 +28,7 @@ use tokio::sync::{Mutex, Notify};
 
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, query_types::GraphQlEvent},
+    graphql::{client::GraphQLClient, query_types::GraphQLEvent},
     types::{address::Address, transaction::SignedTransaction},
 };
 
@@ -244,8 +244,8 @@ define_subscription!(
     Event,
     event,
     iota_sdk::graphql_client::query_types::Event,
-    GraphQlEvent,
-    GraphQlEvent::try_from
+    GraphQLEvent,
+    GraphQLEvent::try_from
 );
 define_subscription!(
     TransactionSubscription,
