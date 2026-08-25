@@ -283,6 +283,26 @@ token-allocation = address                 ; recipient-address
 token-distribution-schedule = u64                        ; pre-minted-supply
                               (size *token-allocation)   ; allocations
 
+transaction-deny-rules = uid         ; id
+                         versioned   ; inner
+
+transaction-deny-rules-updated = u64               ; epoch
+                                 (size *address)   ; added-addresses
+                                 (size *address)   ; removed-addresses
+                                 (size *id)        ; added-objects
+                                 (size *id)        ; removed-objects
+                                 (size *id)        ; added-packages
+                                 (size *id)        ; removed-packages
+                                 bool              ; package-publish-disabled
+                                 bool              ; package-upgrade-disabled
+                                 bool              ; shared-object-disabled
+                                 bool              ; user-transaction-disabled
+                                 bool              ; receiving-objects-disabled
+                                 bool              ; move-authenticator-disabled
+                                 u64               ; denied-addresses-len
+                                 u64               ; denied-objects-len
+                                 u64               ; denied-packages-len
+
 treasury-ownership-renounced = string   ; coin-name
 
 tx-context = address   ; sender
