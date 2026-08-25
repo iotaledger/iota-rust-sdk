@@ -26,7 +26,9 @@ clippy: ## Run Clippy linter
 
 .PHONY: test
 test: fetch-compiled-packages ## Run unit tests
-	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto -p iota-sdk-transaction-builder -p iota-sdk-move-types
+	cargo nextest run --all-features --workspace \
+		--exclude iota-sdk-ffi --exclude iota-sdk-graphql-client --exclude integration-tests \
+		--exclude iota-sdk-grpc-client --exclude polling-indexer --exclude capture-move-type-fixtures
 	cargo nextest run --no-default-features -p iota-sdk-grpc-client
 
 .PHONY: test-docs
