@@ -6,7 +6,6 @@ import {
   GraphQlClient,
   Identifier,
   PtbArgument,
-  TransactionBuilder,
   initAsync,
 } from "@iota/sdk-wasm";
 
@@ -21,7 +20,7 @@ const sponsor = Address.fromHex(
   "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151",
 );
 
-const builder = new TransactionBuilder(sender).withClient(client);
+const builder = client.transactionBuilder(sender);
 
 builder.moveCall(Address.std(), new Identifier("u8"), new Identifier("max"), [
   PtbArgument.u8(0),

@@ -18,7 +18,7 @@ class Program
         var name = "name.iota";
         Console.WriteLine($"Looking up name: {name}");
 
-        var builder = new TransactionBuilder(sender).WithClient(client);
+        var builder = client.TransactionBuilder(sender);
 
         builder.MoveCall(
             iotaNamesPackageAddress,

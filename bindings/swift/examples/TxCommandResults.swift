@@ -12,7 +12,7 @@ struct TxCommandResultsExample {
     let sender = try Address.fromHex(
       hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
-    let builder = TransactionBuilder(sender: sender).withClient(client: client)
+    let builder = client.transactionBuilder(sender: sender)
 
     let packageAddr = Address.std()
     let moduleName = try Identifier(identifier: "u64")

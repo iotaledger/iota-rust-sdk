@@ -685,7 +685,7 @@ async fn capture(
             let df = page
                 .data()
                 .iter()
-                .find(|df| df.name.type_ == want)
+                .find(|df| df.name.type_tag == want)
                 .ok_or_else(|| {
                     format!("no dynamic field of name type `{name_type}` on `{parent}`")
                 })?;

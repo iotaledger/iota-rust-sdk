@@ -35,7 +35,7 @@ fun main() = runBlocking {
                 ),
             )
 
-        val builder = TransactionBuilder(sender).withClient(client)
+        val builder = client.transactionBuilder(sender)
 
         val labels = recipients.indices.map { "coin${it}" }
         val amounts = recipients.map { PtbArgument.u64(it.second) }

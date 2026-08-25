@@ -40,7 +40,7 @@ func main() {
 	}
 	log.Printf("Staking to validator %v", validatorName)
 
-	builder := iota_sdk.NewTransactionBuilder(myAddress).WithClient(client)
+	builder := client.TransactionBuilder(myAddress)
 
 	builder.Stake(iota_sdk.PtbArgumentU64(1000000000), validator.Address)
 

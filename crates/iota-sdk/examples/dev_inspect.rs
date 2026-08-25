@@ -6,7 +6,7 @@ use std::str::FromStr;
 use eyre::Result;
 use iota_sdk::{
     graphql_client::Client,
-    transaction_builder::{SharedMut, TransactionBuilder, assigned},
+    transaction_builder::{SharedMut, assigned},
     types::{Address, Identifier, ObjectId, StructTag, TypeTag},
 };
 
@@ -24,7 +24,7 @@ async fn main() -> Result<()> {
 
     println!("Looking up name: {name}");
 
-    let mut builder = TransactionBuilder::new(sender).with_client(client);
+    let mut builder = client.transaction_builder(sender);
 
     // Step 1: Get the shared registry object
     builder

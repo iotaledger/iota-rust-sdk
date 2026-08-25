@@ -54,7 +54,7 @@ fun main() = runBlocking {
         faucet.requestAndWaitForFinalized(multisigAddress, client)
 
         // 6. Build a send_iota transaction
-        val builder = TransactionBuilder(multisigAddress).withClient(client)
+        val builder = client.transactionBuilder(multisigAddress)
         builder.sendIota(recipientAddress, PtbArgument.u64(amount))
         val txn = builder.finish()
 

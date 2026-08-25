@@ -37,7 +37,7 @@ class Program
         var faucet = FaucetClient.NewLocalnet();
         await faucet.RequestAndWaitForFinalized(senderAddress, client);
 
-        var builder = new TransactionBuilder(senderAddress).WithClient(client);
+        var builder = client.TransactionBuilder(senderAddress);
         builder.SendIota(recipientAddress, PtbArgument.U64(amount));
 
         var signer = new TransactionSigner(new AsyncSigner(privateKey));

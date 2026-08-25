@@ -87,7 +87,8 @@ impl EventFilter {
 pub struct Event {
     pub sending_module: Option<MoveModuleQuery>,
     pub sender: Option<GQLAddress>,
-    pub type_: MoveType,
+    #[cynic(rename = "type")]
+    pub move_type: MoveType,
     pub bcs: Base64,
     pub timestamp: Option<DateTime>,
     pub data: MoveData,

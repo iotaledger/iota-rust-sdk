@@ -27,7 +27,7 @@ func main() {
 	}
 	stakedIota := stakedIotas.Data[0]
 
-	builder := iota_sdk.NewTransactionBuilder(stakedIota.Owner().AsAddress()).WithClient(client)
+	builder := client.TransactionBuilder(stakedIota.Owner().AsAddress())
 	builder.Unstake(iota_sdk.PtbArgumentObjectId(stakedIota.Id()))
 
 	res, err := builder.DryRun(false)

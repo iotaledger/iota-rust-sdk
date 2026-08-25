@@ -30,7 +30,7 @@ func main() {
 
 	sender := addrFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
-	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder := client.TransactionBuilder(sender)
 
 	packageAddr := iota_sdk.AddressStd()
 	moduleName := identifier("u64")

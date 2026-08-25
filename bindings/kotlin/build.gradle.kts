@@ -7,6 +7,7 @@ plugins {
     kotlin("plugin.serialization") version "2.2.21"
     id("com.ncorti.ktfmt.gradle") version "0.25.0"
     id("com.vanniktech.maven.publish") version "0.30.0"
+    id("org.jetbrains.dokka") version "1.9.20"
     application
     signing
 }
@@ -65,6 +66,22 @@ tasks.register<JavaExec>("example") {
     )
 }
 
+// API reference generation (scripts/reference-docs/generate.sh): document
+// only the generated bindings under lib/, not the examples.
+tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+    dokkaSourceSets { named("main") { sourceRoots.setFrom(file("lib")) } }
+}
+
+// lib/ is both a Kotlin source dir and a resources dir, so the sources jar
+// would see the native library twice; it does not belong in a sources
+// artifact at all. configureEach covers the task regardless of when the
+// publish plugin creates it.
+tasks.withType<Jar>().configureEach {
+    if (name == "sourcesJar") {
+        exclude("**/*.so", "**/*.dylib", "**/*.dll")
+    }
+}
+
 sourceSets {
     main {
         kotlin {
@@ -119,6 +136,16 @@ mavenPublishing {
     publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
 
+    // Keep the javadoc jar empty: with the Dokka plugin applied the default
+    // would switch to building it from dokkaHtml, putting Dokka analysis on
+    // the release path (Dokka is only used for the Reference Docs workflow).
+    configure(
+        com.vanniktech.maven.publish.KotlinJvm(
+            javadocJar = com.vanniktech.maven.publish.JavadocJar.Empty(),
+            sourcesJar = true,
+        )
+    )
+
     coordinates("org.iota", "iota-sdk", version.toString())
 
     pom {
@@ -153,11 +180,5 @@ signing {
     if (signingKeyEncoded.isPresent && signingPassword.isPresent) {
         val signingKey = String(Base64.getDecoder().decode(signingKeyEncoded.get()))
         useInMemoryPgpKeys(signingKey, signingPassword.get())
-    }
-}
-
-tasks.whenTaskAdded {
-    if (name == "sourcesJar") {
-        (this as Jar).exclude("**/*.so", "**/*.dylib", "**/*.dll")
     }
 }
