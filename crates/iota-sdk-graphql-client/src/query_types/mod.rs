@@ -145,7 +145,8 @@ pub struct MoveObjectContents {
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveValue")]
 pub struct MoveValue {
-    pub type_: MoveType,
+    #[cynic(rename = "type")]
+    pub move_type: MoveType,
     pub bcs: Base64,
     pub json: Option<JsonValue>,
 }

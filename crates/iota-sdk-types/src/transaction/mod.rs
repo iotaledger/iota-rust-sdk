@@ -1735,8 +1735,8 @@ impl Command {
     }
 
     /// Create a command to construct a Move vector from elements.
-    pub fn new_make_move_vector(type_: Option<TypeTag>, elements: Vec<Argument>) -> Self {
-        Command::MakeMoveVector(MakeMoveVector { type_, elements })
+    pub fn new_make_move_vector(type_tag: Option<TypeTag>, elements: Vec<Argument>) -> Self {
+        Command::MakeMoveVector(MakeMoveVector { type_tag, elements })
     }
 
     /// Create a command to upgrade an existing Move package.
@@ -1920,7 +1920,7 @@ pub struct MakeMoveVector {
     /// This is required to be set when the type can't be inferred, for example
     /// when the set of provided arguments are all pure input values.
     #[cfg_attr(feature = "serde", serde(rename = "type"))]
-    pub type_: Option<TypeTag>,
+    pub type_tag: Option<TypeTag>,
     /// The set individual elements to build the vector with
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub elements: Vec<Argument>,
@@ -1929,7 +1929,7 @@ pub struct MakeMoveVector {
 impl crate::TreeDisplay for MakeMoveVector {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Make Move Vector")?;
-        w.option_leaf("Type", &self.type_, false)?;
+        w.option_leaf("Type Tag", &self.type_tag, false)?;
         w.leaves("Elements", &self.elements, true)
     }
 }

@@ -330,7 +330,7 @@ impl TransactionBuilder {
         use iota_sdk::transaction_builder::unresolved::{Command, MakeMoveVector};
         self.write(|builder| {
             let cmd = Command::MakeMoveVector(MakeMoveVector {
-                type_: Some(type_tag.0.clone()),
+                type_tag: Some(type_tag.0.clone()),
                 elements: elements
                     .iter()
                     .map(|e| builder.apply_argument(e.as_ref()))

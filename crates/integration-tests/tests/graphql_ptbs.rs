@@ -529,7 +529,7 @@ async fn test_events_subscription() {
         while let Some(item) = stream.next().await {
             let event = item.expect("the events subscription returned an error");
             if event
-                .type_
+                .move_type
                 .repr
                 .ends_with("::validator::StakingRequestEvent")
             {

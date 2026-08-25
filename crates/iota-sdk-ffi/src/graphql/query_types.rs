@@ -441,8 +441,8 @@ impl From<EventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
 /// - `timestamp` is absent for events not yet included in a checkpoint (e.g.
 ///   from a dry run or a just-executed transaction).
 ///
-/// `type_`, `contents`, `data` and `json` are always present (non-null in the
-/// GraphQL schema). Unlike the chain `Event`, this type is not
+/// `move_type`, `contents`, `data` and `json` are always present (non-null in
+/// the GraphQL schema). Unlike the chain `Event`, this type is not
 /// BCS/JSON-serializable as a chain event.
 #[derive(uniffi::Record)]
 pub struct GraphQlEvent {
@@ -456,7 +456,7 @@ pub struct GraphQlEvent {
     /// emitted. `None` for system events.
     pub sender: Option<Arc<Address>>,
     /// The type of the event emitted
-    pub type_: String,
+    pub move_type: String,
     /// BCS serialized bytes of the event
     pub contents: Vec<u8>,
     /// UTC timestamp in milliseconds since epoch (1/1/1970)
@@ -484,7 +484,7 @@ impl TryFrom<iota_sdk::graphql_client::query_types::Event> for GraphQlEvent {
             package_id,
             module,
             sender: value.sender.map(|s| Arc::new(Address(s.address))),
-            type_: value.type_.repr,
+            move_type: value.move_type.repr,
             contents: base64ct::Base64::decode_vec(&value.bcs.0)
                 .map_err(crate::error::SdkFfiError::custom)?,
             timestamp: value.timestamp.map(|t| t.0),
@@ -579,7 +579,7 @@ pub struct DynamicFieldName {
 impl From<iota_sdk::graphql_client::DynamicFieldName> for DynamicFieldName {
     fn from(value: iota_sdk::graphql_client::DynamicFieldName) -> Self {
         Self {
-            type_tag: Arc::new(value.type_.into()),
+            type_tag: Arc::new(value.type_tag.into()),
             bcs: value.bcs,
             json: value.json,
         }
@@ -589,7 +589,7 @@ impl From<iota_sdk::graphql_client::DynamicFieldName> for DynamicFieldName {
 impl From<DynamicFieldName> for iota_sdk::graphql_client::DynamicFieldName {
     fn from(value: DynamicFieldName) -> Self {
         Self {
-            type_: value.type_tag.0.clone(),
+            type_tag: value.type_tag.0.clone(),
             bcs: value.bcs,
             json: value.json,
         }
@@ -606,7 +606,7 @@ pub struct DynamicFieldValue {
 impl From<iota_sdk::graphql_client::DynamicFieldValue> for DynamicFieldValue {
     fn from(value: iota_sdk::graphql_client::DynamicFieldValue) -> Self {
         Self {
-            type_tag: Arc::new(value.type_.into()),
+            type_tag: Arc::new(value.type_tag.into()),
             bcs: value.bcs,
         }
     }
@@ -615,7 +615,7 @@ impl From<iota_sdk::graphql_client::DynamicFieldValue> for DynamicFieldValue {
 impl From<DynamicFieldValue> for iota_sdk::graphql_client::DynamicFieldValue {
     fn from(value: DynamicFieldValue) -> Self {
         Self {
-            type_: value.type_tag.0.clone(),
+            type_tag: value.type_tag.0.clone(),
             bcs: value.bcs,
         }
     }
@@ -1184,7 +1184,7 @@ pub struct MoveField {
     pub name: String,
     #[uniffi::field(name = "type")]
     #[uniffi(default = None)]
-    pub type_: Option<OpenMoveType>,
+    pub move_type: Option<OpenMoveType>,
 }
 
 #[uniffi::remote(Record)]

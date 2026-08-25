@@ -1254,7 +1254,7 @@ impl<C, L> TransactionBuilder<C, L> {
             .map(|e| self.apply_argument(e))
             .collect();
         self.cmd_state_change(MakeMoveVector {
-            type_: Some(T::type_tag()),
+            type_tag: Some(T::type_tag()),
             elements,
         })
     }

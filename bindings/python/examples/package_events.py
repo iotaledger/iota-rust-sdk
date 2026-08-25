@@ -22,7 +22,7 @@ async def main():
         # genesis-emitted ones) carry neither.
         sender = event.sender.to_hex() if event.sender is not None else "none"
         module = event.module if event.module is not None else "none"
-        print(f"Type: {event.type}")
+        print(f"Type: {event.move_type}")
         print(f"Sender: {sender}")
         print(f"Module: {module}")
         print(f"JSON: {event.json}")
