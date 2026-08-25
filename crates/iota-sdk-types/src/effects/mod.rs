@@ -539,7 +539,7 @@ mod tests {
     }
 
     /// A transaction that pays for itself reports its gas object; the genesis
-    /// transaction requires no gas and reports none.
+    /// transaction is a system transaction, pays no gas, and reports none.
     #[test]
     fn gas_object_is_absent_without_a_gas_payment() {
         let effects: TransactionEffects =

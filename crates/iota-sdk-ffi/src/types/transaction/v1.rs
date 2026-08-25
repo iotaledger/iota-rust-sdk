@@ -91,7 +91,7 @@ impl TransactionEffectsV1 {
     }
 
     /// The updated gas object, as an index into `changed_objects`. `None` for a
-    /// transaction that requires no gas.
+    /// system transaction, which pays no gas.
     pub fn gas_object_index(&self) -> Option<u32> {
         self.0.gas_object_index
     }
@@ -247,7 +247,7 @@ impl TransactionEffectsV1 {
     }
 
     /// The post-transaction reference and owner of the gas object, or `None`
-    /// for a transaction that requires no gas.
+    /// for a system transaction, which pays no gas.
     pub fn gas_object(&self) -> Option<OwnedObjectReference> {
         self.0.gas_object().map(Into::into)
     }

@@ -642,7 +642,7 @@ impl TransactionEffectsV1 {
     }
 
     /// The post-transaction reference and owner of the gas object, or `None`
-    /// for a transaction that requires no gas (a system transaction).
+    /// for a system transaction, which pays no gas and so names none.
     pub fn gas_object(&self) -> Option<OwnedObjectReference> {
         let changed = self.changed_objects.get(self.gas_object_index? as usize)?;
         // Gas is paid in coins, so a gas object is never a package.
