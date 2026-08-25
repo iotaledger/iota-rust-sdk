@@ -24,14 +24,6 @@ fetch-compiled-packages: ## Fetch the compiled Move packages if missing or out o
 clippy: ## Run Clippy linter
 	cargo clippy --all-features --all-targets
 
-# Workspace-wide so a new crate's tests gate CI by default; opting out is
-# explicit and carries its blocker:
-# - iota-sdk-ffi: tested through the language bindings, which nextest cannot run
-# - iota-sdk-graphql-client, integration-tests: tests need a localnet
-#   (`make test-with-localnet`)
-# - iota-sdk-grpc-client: gated below with --no-default-features; whether the
-#   all-features TLS configuration should also be gated is an open question
-# - polling-indexer, capture-move-type-fixtures: example demos, not APIs under test
 .PHONY: test
 test: fetch-compiled-packages ## Run unit tests
 	cargo nextest run --all-features --workspace \
