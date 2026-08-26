@@ -33,6 +33,187 @@ impl TransactionEffects {
     crate::def_is_as_into_opt!(V1(Box<TransactionEffectsV1>));
 }
 
+impl crate::TreeDisplay for TransactionEffects {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.enum_name("Transaction Effects");
+        match self {
+            Self::V1(v1) => v1.fmt_tree(w),
+        }
+    }
+}
+
+/// A shared object an executed transaction took as input.
+///
+/// Not a wire type: this is the effects' view of the shared objects a
+/// transaction was sequenced against, drawn from both the objects it changed
+/// and those it left unchanged.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub enum InputSharedObject {
+    /// Taken mutably, and written back by the transaction.
+    Mutate(ObjectReference),
+    /// Read without being mutated.
+    ReadOnly(ObjectReference),
+    /// Read, but already deleted by an earlier transaction.
+    ReadDeleted(ObjectVersion),
+    /// Taken mutably, but already deleted by an earlier transaction.
+    MutateDeleted(ObjectVersion),
+    /// Taken by a transaction that consensus canceled; the version carries the
+    /// cancellation reason.
+    Canceled(ObjectVersion),
+}
+
+impl InputSharedObject {
+    /// The object's reference. A shared object that no longer exists is
+    /// reported at the version it was last known at, with the tombstone digest
+    /// for why it is gone.
+    pub fn object_reference(&self) -> ObjectReference {
+        match self {
+            Self::Mutate(reference) | Self::ReadOnly(reference) => *reference,
+            Self::ReadDeleted(object) | Self::MutateDeleted(object) => ObjectReference::new(
+                object.object_id,
+                object.version,
+                ObjectDigest::OBJECT_DELETED,
+            ),
+            Self::Canceled(object) => ObjectReference::new(
+                object.object_id,
+                object.version,
+                ObjectDigest::OBJECT_CANCELED,
+            ),
+        }
+    }
+}
+
+impl crate::TreeDisplay for InputSharedObject {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Input Shared Object")?;
+        let kind = match self {
+            Self::Mutate(_) => "Mutate",
+            Self::ReadOnly(_) => "Read Only",
+            Self::ReadDeleted(_) => "Read Deleted",
+            Self::MutateDeleted(_) => "Mutate Deleted",
+            Self::Canceled(_) => "Canceled",
+        };
+        w.leaf("Kind", &kind, false)?;
+        w.child("Reference", &self.object_reference(), true)
+    }
+}
+
+/// How an object came to be in the store after a transaction wrote it.
+///
+/// Not a wire type: this tags an object reported by
+/// [`TransactionEffectsV1::all_changed_objects`] with which of the object sets
+/// it came from.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub enum WriteKind {
+    /// The object existed already and the transaction changed its contents.
+    Mutate,
+    /// The transaction created the object.
+    Create,
+    /// The object was wrapped inside another object, and the transaction
+    /// restored it to the store.
+    Unwrap,
+}
+
+impl std::fmt::Display for WriteKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let text = match self {
+            Self::Mutate => "Mutate",
+            Self::Create => "Create",
+            Self::Unwrap => "Unwrap",
+        };
+        f.write_str(text)
+    }
+}
+
+/// Why an object is no longer in the store after a transaction.
+///
+/// Not a wire type: this tags an object reported by
+/// [`TransactionEffectsV1::all_removed_objects`] with which of the object sets
+/// it came from.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub enum ObjectRemoveKind {
+    /// The transaction deleted the object.
+    Delete,
+    /// The transaction wrapped the object inside another one.
+    Wrap,
+}
+
+impl std::fmt::Display for ObjectRemoveKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let text = match self {
+            Self::Delete => "Delete",
+            Self::Wrap => "Wrap",
+        };
+        f.write_str(text)
+    }
+}
+
+/// What an executed transaction did to one object, with the version and digest
+/// each side is at resolved.
+///
+/// Not a wire type: this is [`ChangedObject`] with the versions filled in,
+/// since a written object's version is the transaction's rather than one the
+/// entry carries. A `None` version means the object did not exist on that side.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ObjectChange {
+    /// The object's id.
+    pub object_id: ObjectId,
+    /// The version the object was at before the transaction, if it existed.
+    pub input_version: Option<Version>,
+    /// The digest the object had before the transaction, if it existed.
+    pub input_digest: Option<ObjectDigest>,
+    /// The version the object is at after the transaction, if it still exists.
+    pub output_version: Option<Version>,
+    /// The digest the object has after the transaction, if it still exists.
+    pub output_digest: Option<ObjectDigest>,
+    /// Whether the transaction created or deleted the object's id.
+    pub id_operation: IdOperation,
+}
+
+impl crate::TreeDisplay for ObjectChange {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Object Change")?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.option_leaf("Input Version", &self.input_version, false)?;
+        w.option_leaf("Input Digest", &self.input_digest, false)?;
+        w.option_leaf("Output Version", &self.output_version, false)?;
+        w.option_leaf("Output Digest", &self.output_digest, false)?;
+        w.leaf("ID Operation", &self.id_operation, true)
+    }
+}
+
+crate::impl_tree_display!(TransactionEffects, InputSharedObject, ObjectChange);
+
+/// Defines what happened to an ObjectId during execution
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// id-operation = %d00   ; None
+///              / %d01   ; Created
+///              / %d02   ; Deleted
+/// ```
+#[derive(Clone, Copy, Debug, Eq, PartialEq, strum::Display)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Deserialize, serde::Serialize),
+    serde(rename_all = "lowercase")
+)]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[non_exhaustive]
+pub enum IdOperation {
+    None,
+    Created,
+    Deleted,
+}
+
+impl IdOperation {
+    crate::def_is!(None, Created, Deleted);
+}
+
 #[cfg(all(feature = "serde", test))]
 mod tests {
     use base64ct::{Base64, Encoding};
@@ -559,185 +740,4 @@ mod tests {
             bcs::from_bytes(&Base64::decode_vec(GENESIS_EFFECTS.trim()).unwrap()).unwrap();
         assert!(genesis.as_v1().gas_object().is_none());
     }
-}
-
-impl crate::TreeDisplay for TransactionEffects {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.enum_name("Transaction Effects");
-        match self {
-            Self::V1(v1) => v1.fmt_tree(w),
-        }
-    }
-}
-
-/// A shared object an executed transaction took as input.
-///
-/// Not a wire type: this is the effects' view of the shared objects a
-/// transaction was sequenced against, drawn from both the objects it changed
-/// and those it left unchanged.
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub enum InputSharedObject {
-    /// Taken mutably, and written back by the transaction.
-    Mutate(ObjectReference),
-    /// Read without being mutated.
-    ReadOnly(ObjectReference),
-    /// Read, but already deleted by an earlier transaction.
-    ReadDeleted(ObjectVersion),
-    /// Taken mutably, but already deleted by an earlier transaction.
-    MutateDeleted(ObjectVersion),
-    /// Taken by a transaction that consensus canceled; the version carries the
-    /// cancellation reason.
-    Canceled(ObjectVersion),
-}
-
-impl InputSharedObject {
-    /// The object's reference. A shared object that no longer exists is
-    /// reported at the version it was last known at, with the tombstone digest
-    /// for why it is gone.
-    pub fn object_reference(&self) -> ObjectReference {
-        match self {
-            Self::Mutate(reference) | Self::ReadOnly(reference) => *reference,
-            Self::ReadDeleted(object) | Self::MutateDeleted(object) => ObjectReference::new(
-                object.object_id,
-                object.version,
-                ObjectDigest::OBJECT_DELETED,
-            ),
-            Self::Canceled(object) => ObjectReference::new(
-                object.object_id,
-                object.version,
-                ObjectDigest::OBJECT_CANCELED,
-            ),
-        }
-    }
-}
-
-impl crate::TreeDisplay for InputSharedObject {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Input Shared Object")?;
-        let kind = match self {
-            Self::Mutate(_) => "Mutate",
-            Self::ReadOnly(_) => "Read Only",
-            Self::ReadDeleted(_) => "Read Deleted",
-            Self::MutateDeleted(_) => "Mutate Deleted",
-            Self::Canceled(_) => "Canceled",
-        };
-        w.leaf("Kind", &kind, false)?;
-        w.child("Reference", &self.object_reference(), true)
-    }
-}
-
-/// How an object came to be in the store after a transaction wrote it.
-///
-/// Not a wire type: this tags an object reported by
-/// [`TransactionEffectsV1::all_changed_objects`] with which of the object sets
-/// it came from.
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub enum WriteKind {
-    /// The object existed already and the transaction changed its contents.
-    Mutate,
-    /// The transaction created the object.
-    Create,
-    /// The object was wrapped inside another object, and the transaction
-    /// restored it to the store.
-    Unwrap,
-}
-
-impl std::fmt::Display for WriteKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let text = match self {
-            Self::Mutate => "Mutate",
-            Self::Create => "Create",
-            Self::Unwrap => "Unwrap",
-        };
-        f.write_str(text)
-    }
-}
-
-/// Why an object is no longer in the store after a transaction.
-///
-/// Not a wire type: this tags an object reported by
-/// [`TransactionEffectsV1::all_removed_objects`] with which of the object sets
-/// it came from.
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub enum ObjectRemoveKind {
-    /// The transaction deleted the object.
-    Delete,
-    /// The transaction wrapped the object inside another one.
-    Wrap,
-}
-
-impl std::fmt::Display for ObjectRemoveKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let text = match self {
-            Self::Delete => "Delete",
-            Self::Wrap => "Wrap",
-        };
-        f.write_str(text)
-    }
-}
-
-/// What an executed transaction did to one object, with the version and digest
-/// each side is at resolved.
-///
-/// Not a wire type: this is [`ChangedObject`] with the versions filled in,
-/// since a written object's version is the transaction's rather than one the
-/// entry carries. A `None` version means the object did not exist on that side.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct ObjectChange {
-    /// The object's id.
-    pub object_id: ObjectId,
-    /// The version the object was at before the transaction, if it existed.
-    pub input_version: Option<Version>,
-    /// The digest the object had before the transaction, if it existed.
-    pub input_digest: Option<ObjectDigest>,
-    /// The version the object is at after the transaction, if it still exists.
-    pub output_version: Option<Version>,
-    /// The digest the object has after the transaction, if it still exists.
-    pub output_digest: Option<ObjectDigest>,
-    /// Whether the transaction created or deleted the object's id.
-    pub id_operation: IdOperation,
-}
-
-impl crate::TreeDisplay for ObjectChange {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Object Change")?;
-        w.leaf("Object ID", &self.object_id, false)?;
-        w.option_leaf("Input Version", &self.input_version, false)?;
-        w.option_leaf("Input Digest", &self.input_digest, false)?;
-        w.option_leaf("Output Version", &self.output_version, false)?;
-        w.option_leaf("Output Digest", &self.output_digest, false)?;
-        w.leaf("ID Operation", &self.id_operation, true)
-    }
-}
-
-crate::impl_tree_display!(TransactionEffects, InputSharedObject, ObjectChange);
-
-/// Defines what happened to an ObjectId during execution
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// id-operation = %d00   ; None
-///              / %d01   ; Created
-///              / %d02   ; Deleted
-/// ```
-#[derive(Clone, Copy, Debug, Eq, PartialEq, strum::Display)]
-#[cfg_attr(
-    feature = "serde",
-    derive(serde::Deserialize, serde::Serialize),
-    serde(rename_all = "lowercase")
-)]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[non_exhaustive]
-pub enum IdOperation {
-    None,
-    Created,
-    Deleted,
-}
-
-impl IdOperation {
-    crate::def_is!(None, Created, Deleted);
 }
