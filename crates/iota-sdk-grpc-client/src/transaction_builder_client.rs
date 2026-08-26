@@ -1,8 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`TransactionBuilderResolveClient`] and
-//! [`TransactionBuilderClient`] for the GRPC [`Client`].
+//! Implementation of the transaction builder client traits for the GRPC
+//! [`Client`].
 
 use std::time::Duration;
 
@@ -14,8 +14,9 @@ use iota_grpc_types::{
     v1::transaction_execution_service::SimulatedTransaction,
 };
 use iota_transaction_builder::{
-    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClient,
-    TransactionBuilderResolveClient, WaitForTx,
+    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClientBase,
+    TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
+    TransactionBuilderSimulationClient, WaitForTx,
 };
 use iota_types::{
     Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
@@ -27,9 +28,11 @@ use crate::{
     api::{Error, MetadataEnvelope, check_result_count, saturating_usize_to_u32},
 };
 
-/// How long [`TransactionBuilderClient::wait_for_tx`] polls before giving up.
+/// How long [`TransactionBuilderExecutionClient::wait_for_tx`] polls before
+/// giving up.
 const WAIT_FOR_TX_TIMEOUT: Duration = Duration::from_secs(60);
-/// Interval between polls in [`TransactionBuilderClient::wait_for_tx`].
+/// Interval between polls in
+/// [`TransactionBuilderExecutionClient::wait_for_tx`].
 const WAIT_FOR_TX_POLL_INTERVAL: Duration = Duration::from_millis(100);
 
 /// Extract the result for the single item of a one-item batch request.
@@ -62,9 +65,11 @@ impl Client {
     }
 }
 
-impl TransactionBuilderResolveClient for Client {
+impl TransactionBuilderClientBase for Client {
     type Error = crate::api::Error;
+}
 
+impl TransactionBuilderLedgerClient for Client {
     async fn object(
         &self,
         object_id: ObjectId,
@@ -159,8 +164,23 @@ impl TransactionBuilderResolveClient for Client {
             .into_inner();
         Ok(epoch.reference_gas_price)
     }
+}
 
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+impl TransactionBuilderSimulationClient for Client {
+    type DryRunResult = SimulatedTransaction;
+
+    async fn dry_run_tx(
+        &self,
+        tx: &Transaction,
+        skip_checks: bool,
+    ) -> Result<Self::DryRunResult, Self::Error> {
+        Ok(self
+            .simulate_transaction(tx.clone(), skip_checks, SimulateReadMask::default())
+            .await?
+            .into_inner())
+    }
+
+    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<u64, Self::Error> {
         // Simulate with relaxed checks and read the gas used from the resulting
         // effects.
         let simulated = self
@@ -176,7 +196,7 @@ impl TransactionBuilderResolveClient for Client {
             .effects()?
             .effects()?;
         Ok(match effects {
-            TransactionEffects::V1(v1) => Some(v1.gas_cost_summary.gas_used()),
+            TransactionEffects::V1(v1) => v1.gas_cost_summary.gas_used(),
             _ => unimplemented!(
                 "a new TransactionEffects enum variant was added and needs to be handled"
             ),
@@ -184,36 +204,7 @@ impl TransactionBuilderResolveClient for Client {
     }
 }
 
-impl TransactionBuilderClient for Client {
-    type DryRunResult = SimulatedTransaction;
-
-    async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>, Self::Error> {
-        let response = self
-            .get_transactions(
-                [digest],
-                TransactionReadMask::from([
-                    TransactionField::TRANSACTION,
-                    TransactionField::SIGNATURES,
-                ]),
-            )
-            .await;
-
-        match single_item(response)? {
-            Some(tx) => {
-                let transaction = tx.transaction()?.transaction()?;
-                let signatures = Vec::<UserSignature>::try_from(tx.signatures()?)?;
-                Ok(Some(SignedTransaction {
-                    transaction,
-                    signatures,
-                }))
-            }
-            None => Ok(None),
-        }
-    }
-
+impl TransactionBuilderExecutionClient for Client {
     async fn transaction_effects(
         &self,
         digest: TransactionDigest,
@@ -229,17 +220,6 @@ impl TransactionBuilderClient for Client {
             Some(tx) => Ok(Some(tx.effects()?.effects()?)),
             None => Ok(None),
         }
-    }
-
-    async fn dry_run_tx(
-        &self,
-        tx: &Transaction,
-        skip_checks: bool,
-    ) -> Result<Self::DryRunResult, Self::Error> {
-        Ok(self
-            .simulate_transaction(tx.clone(), skip_checks, SimulateReadMask::default())
-            .await?
-            .into_inner())
     }
 
     async fn execute_tx(

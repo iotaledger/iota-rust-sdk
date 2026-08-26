@@ -18,7 +18,8 @@ use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
-    PTBArgument, SharedMut, TransactionBuilderClient, TransactionBuilderResolveClient, WaitForTx,
+    PTBArgument, SharedMut, TransactionBuilderClient, TransactionBuilderLedgerClient,
+    TransactionBuilderSimulationClient, WaitForTx,
     builder::{
         assigned_results::{AssignedResult, AssignedResults},
         gas_station::GasStationData,
@@ -50,7 +51,7 @@ const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
 /// Fallback cap on `gas_payment.objects.len()` used when the protocol-config
 /// value is unavailable (`max_gas_payment_objects` is 256 exclusive at the
 /// time of writing, so 255 inclusive). Auto gas selection fetches the live
-/// value via [`TransactionBuilderResolveClient::protocol_config`] and falls
+/// value via [`TransactionBuilderLedgerClient::protocol_config`] and falls
 /// back to this if the implementation does not expose protocol config or the
 /// value cannot be parsed.
 const DEFAULT_MAX_GAS_PAYMENT_OBJECTS: usize = 255;
@@ -1403,7 +1404,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 }
 
-impl<C: TransactionBuilderResolveClient, L> TransactionBuilder<C, L> {
+impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// Add gas coins that will be consumed. If no gas coins are provided, the
     /// client will set a default list owned by the sender.
     ///
@@ -1762,31 +1763,12 @@ impl<C: TransactionBuilderResolveClient, L> TransactionBuilder<C, L> {
         .into())
     }
 
-    async fn finish_internal(&mut self) -> Result<Transaction, Error> {
-        let mut txn = self.resolve_ptb(true).await?;
-        if self.data.gas_budget.is_none() {
-            let budget = self
-                .client
-                .estimate_tx_budget(&txn)
-                .await
-                .map_err(Error::client)?
-                .ok_or(Error::MissingGasBudget)?;
-            let Transaction::V1(txn) = &mut txn else {
-                unimplemented!("a new enum variant was added and needs to be handled")
-            };
-            // The network enforces a minimum gas budget of base_tx_cost_fixed
-            // (1000) * gas_price. The dry-run estimate can return a value below
-            // this minimum, so we clamp it.
-            let min_budget = txn.gas_payment.price.saturating_mul(1000);
-            txn.gas_payment.budget = budget.max(min_budget);
-        }
-
-        Ok(txn)
-    }
-
-    /// Convert this builder into a transaction.
-    pub async fn finish(mut self) -> Result<Transaction, Error> {
-        self.finish_internal().await
+    /// Convert this builder into a transaction with the given gas budget,
+    /// used as-is (no estimation or minimum clamp) and overriding any budget
+    /// set via [`gas_budget`](Self::gas_budget).
+    pub async fn finish_with_budget(mut self, gas_budget: u64) -> Result<Transaction, Error> {
+        self.data.gas_budget = Some(gas_budget);
+        self.resolve_ptb(true).await
     }
 
     /// Convert this builder into a [`TransactionKind`], resolving the inputs
@@ -1833,7 +1815,42 @@ impl<C: TransactionBuilderResolveClient, L> TransactionBuilder<C, L> {
     }
 }
 
-impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
+impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
+    TransactionBuilder<C, L>
+{
+    async fn finish_internal(&mut self) -> Result<Transaction, Error> {
+        let mut txn = self.resolve_ptb(true).await?;
+        if self.data.gas_budget.is_none() {
+            let budget = self
+                .client
+                .estimate_tx_budget(&txn)
+                .await
+                .map_err(Error::client)?;
+            let Transaction::V1(txn) = &mut txn else {
+                unimplemented!("a new enum variant was added and needs to be handled")
+            };
+            // The network enforces a minimum gas budget of base_tx_cost_fixed
+            // (1000) * gas_price. The dry-run estimate can return a value below
+            // this minimum, so we clamp it.
+            let min_budget = txn.gas_payment.price.saturating_mul(1000);
+            txn.gas_payment.budget = budget.max(min_budget);
+        }
+
+        Ok(txn)
+    }
+
+    /// Convert this builder into a transaction.
+    ///
+    /// When no gas budget was set, it is estimated by simulating the
+    /// transaction via the client
+    /// ([`estimate_tx_budget`](TransactionBuilderSimulationClient::estimate_tx_budget)).
+    /// To build with an explicit budget on a client without simulation
+    /// support, use
+    /// [`finish_with_budget`](TransactionBuilder::finish_with_budget).
+    pub async fn finish(mut self) -> Result<Transaction, Error> {
+        self.finish_internal().await
+    }
+
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<C::DryRunResult, Error> {
         let txn = self.resolve_ptb(false).await?;
@@ -1854,7 +1871,9 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
             .map_err(Error::client)?;
         Ok(res)
     }
+}
 
+impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Execute the transaction and optionally wait for finalization. The
     /// client will be used unless a gas station was configured, in
     /// which case the transaction will be sent to the endpoint for execution.
