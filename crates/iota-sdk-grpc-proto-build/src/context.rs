@@ -319,9 +319,9 @@ mod tests {
         let mut compiler = protox::Compiler::new([&fixtures]).unwrap();
         compiler
             .open_files([
-                "fixture/grpc/v1/nesting_a.proto",
-                "fixture/grpc/v1/nesting_b.proto",
-                "fixture/grpc/v2/nesting_a.proto",
+                "iota/grpc/v1/a.proto",
+                "iota/grpc/v1/b.proto",
+                "iota/grpc/v2/a.proto",
             ])
             .unwrap();
         Context::build(compiler.descriptor_pool())
@@ -348,11 +348,11 @@ mod tests {
     #[test]
     fn same_name_in_different_packages_resolves_to_its_own_package() {
         assert_eq!(
-            message_path(".fixture.grpc.v1.a.Input", "fixture.grpc.v1.b"),
+            message_path(".iota.grpc.v1.a.Input", "iota.grpc.v1.b"),
             "crate::v1::a::Input"
         );
         assert_eq!(
-            message_path(".fixture.grpc.v1.b.Input", "fixture.grpc.v1.a"),
+            message_path(".iota.grpc.v1.b.Input", "iota.grpc.v1.a"),
             "crate::v1::b::Input"
         );
     }
@@ -360,11 +360,11 @@ mod tests {
     #[test]
     fn nested_messages_are_qualified_by_their_outer_messages() {
         assert_eq!(
-            message_path(".fixture.grpc.v1.a.Argument.Input", "fixture.grpc.v1.b"),
+            message_path(".iota.grpc.v1.a.Argument.Input", "iota.grpc.v1.b"),
             "crate::v1::a::argument::Input"
         );
         assert_eq!(
-            message_path(".fixture.grpc.v1.a.Argument.Input", "fixture.grpc.v1.a"),
+            message_path(".iota.grpc.v1.a.Argument.Input", "iota.grpc.v1.a"),
             "crate::v1::a::argument::Input"
         );
     }
@@ -372,7 +372,7 @@ mod tests {
     #[test]
     fn local_top_level_messages_are_unqualified() {
         assert_eq!(
-            message_path(".fixture.grpc.v1.a.Input", "fixture.grpc.v1.a"),
+            message_path(".iota.grpc.v1.a.Input", "iota.grpc.v1.a"),
             "Input"
         );
     }
@@ -380,11 +380,11 @@ mod tests {
     #[test]
     fn builders_of_the_same_package_are_relative_to_field_impls() {
         assert_eq!(
-            builder_path(".fixture.grpc.v1.a.Input", "fixture.grpc.v1.a"),
+            builder_path(".iota.grpc.v1.a.Input", "iota.grpc.v1.a"),
             "InputFieldPathBuilder"
         );
         assert_eq!(
-            builder_path(".fixture.grpc.v1.a.Argument.Input", "fixture.grpc.v1.a"),
+            builder_path(".iota.grpc.v1.a.Argument.Input", "iota.grpc.v1.a"),
             "argument::InputFieldPathBuilder"
         );
     }
@@ -392,7 +392,7 @@ mod tests {
     #[test]
     fn builders_of_other_packages_are_absolute() {
         assert_eq!(
-            builder_path(".fixture.grpc.v1.a.Input", "fixture.grpc.v1.b"),
+            builder_path(".iota.grpc.v1.a.Input", "iota.grpc.v1.b"),
             "crate::v1::a::InputFieldPathBuilder"
         );
     }
@@ -404,36 +404,31 @@ mod tests {
     #[test]
     #[should_panic(expected = "nested builders are only addressable inside their own package")]
     fn builders_of_nested_messages_in_other_packages_are_rejected() {
-        builder_path(".fixture.grpc.v1.a.Argument.Input", "fixture.grpc.v1.b");
+        builder_path(".iota.grpc.v1.a.Argument.Input", "iota.grpc.v1.b");
     }
 
     #[test]
     fn resolve_accepts_both_leading_dot_and_bare_names() {
-        assert_eq!(
-            context().resolve(".fixture.grpc.v1.a.Input").name(),
-            "Input"
-        );
-        assert_eq!(context().resolve("fixture.grpc.v1.a.Input").name(), "Input");
+        assert_eq!(context().resolve(".iota.grpc.v1.a.Input").name(), "Input");
+        assert_eq!(context().resolve("iota.grpc.v1.a.Input").name(), "Input");
     }
 
     #[test]
     fn map_entries_are_recognised() {
         assert!(
             context()
-                .resolve(".fixture.grpc.v1.b.Input.EntriesEntry")
+                .resolve(".iota.grpc.v1.b.Input.EntriesEntry")
                 .is_map_entry()
         );
-        assert!(!context().resolve(".fixture.grpc.v1.b.Input").is_map_entry());
+        assert!(!context().resolve(".iota.grpc.v1.b.Input").is_map_entry());
     }
 
     #[test]
     fn reference_cycles_are_detected_in_both_directions() {
         let context = context();
-        assert!(context.has_reference_cycle(".fixture.grpc.v1.a.Loop", ".fixture.grpc.v1.a.Step"));
-        assert!(context.has_reference_cycle(".fixture.grpc.v1.a.Step", ".fixture.grpc.v1.a.Loop"));
-        assert!(
-            !context.has_reference_cycle(".fixture.grpc.v1.a.Input", ".fixture.grpc.v1.a.Loop")
-        );
+        assert!(context.has_reference_cycle(".iota.grpc.v1.a.Loop", ".iota.grpc.v1.a.Step"));
+        assert!(context.has_reference_cycle(".iota.grpc.v1.a.Step", ".iota.grpc.v1.a.Loop"));
+        assert!(!context.has_reference_cycle(".iota.grpc.v1.a.Input", ".iota.grpc.v1.a.Loop"));
     }
 
     /// The option extensions live in the real protos, so this one compiles
@@ -473,7 +468,7 @@ mod tests {
     #[test]
     fn root_messages_are_yielded_in_declaration_order() {
         let names: Vec<_> = context()
-            .messages_in_declaration_order("fixture.grpc.v1.a")
+            .messages_in_declaration_order("iota.grpc.v1.a")
             .iter()
             .map(|message| message.name().to_owned())
             .collect();
@@ -483,27 +478,27 @@ mod tests {
     #[test]
     fn all_messages_follow_each_parent_with_its_children_and_skip_map_entries() {
         let names: Vec<_> = context()
-            .all_messages_in_declaration_order("fixture.grpc.v1.a")
+            .all_messages_in_declaration_order("iota.grpc.v1.a")
             .iter()
             .map(|message| message.full_name().to_owned())
             .collect();
         assert_eq!(
             names,
             [
-                "fixture.grpc.v1.a.Argument",
-                "fixture.grpc.v1.a.Argument.Input",
-                "fixture.grpc.v1.a.Input",
-                "fixture.grpc.v1.a.Loop",
-                "fixture.grpc.v1.a.Step",
+                "iota.grpc.v1.a.Argument",
+                "iota.grpc.v1.a.Argument.Input",
+                "iota.grpc.v1.a.Input",
+                "iota.grpc.v1.a.Loop",
+                "iota.grpc.v1.a.Step",
             ]
         );
 
         // `Input.EntriesEntry` backs the map field and has no generated type.
         let names: Vec<_> = context()
-            .all_messages_in_declaration_order("fixture.grpc.v1.b")
+            .all_messages_in_declaration_order("iota.grpc.v1.b")
             .iter()
             .map(|message| message.full_name().to_owned())
             .collect();
-        assert_eq!(names, ["fixture.grpc.v1.b.Input"]);
+        assert_eq!(names, ["iota.grpc.v1.b.Input"]);
     }
 }
