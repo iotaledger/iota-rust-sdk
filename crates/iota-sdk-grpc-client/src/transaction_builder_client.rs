@@ -205,23 +205,6 @@ impl TransactionBuilderSimulationClient for Client {
 }
 
 impl TransactionBuilderExecutionClient for Client {
-    async fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>, Self::Error> {
-        let response = self
-            .get_transactions(
-                [digest],
-                TransactionReadMask::from(TransactionField::EFFECTS_BCS),
-            )
-            .await;
-
-        match single_item(response)? {
-            Some(tx) => Ok(Some(tx.effects()?.effects()?)),
-            None => Ok(None),
-        }
-    }
-
     async fn execute_tx(
         &self,
         signatures: &[UserSignature],
@@ -297,6 +280,23 @@ impl TransactionBuilderExecutionClient for Client {
                     WAIT_FOR_TX_TIMEOUT.as_secs()
                 )))
             })?
+    }
+
+    async fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<TransactionEffects>, Self::Error> {
+        let response = self
+            .get_transactions(
+                [digest],
+                TransactionReadMask::from(TransactionField::EFFECTS_BCS),
+            )
+            .await;
+
+        match single_item(response)? {
+            Some(tx) => Ok(Some(tx.effects()?.effects()?)),
+            None => Ok(None),
+        }
     }
 }
 
