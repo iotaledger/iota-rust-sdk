@@ -101,32 +101,7 @@ impl TransactionEvents {
     }
 }
 
-#[uniffi::export]
-impl Event {
-    /// Convert this [`Event`] to BCS encoded bytes.
-    pub fn to_bcs(&self) -> Result<Vec<u8>> {
-        let data: iota_sdk::types::Event = self.clone().try_into()?;
-        Ok(bcs::to_bytes(&data)?)
-    }
-
-    /// Convert this [`Event`] to a JSON encoded string.
-    pub fn to_json(&self) -> Result<String> {
-        let data: iota_sdk::types::Event = self.clone().try_into()?;
-        Ok(serde_json::to_string(&data)?)
-    }
-}
-
-/// Create an [`Event`] from BCS encoded bytes.
-#[uniffi::export]
-pub fn event_from_bcs(bcs: Vec<u8>) -> Result<Event> {
-    Ok(bcs::from_bytes::<iota_sdk::types::Event>(&bcs)?.into())
-}
-
-/// Create an [`Event`] from a JSON encoded string.
-#[uniffi::export]
-pub fn event_from_json(json: &str) -> Result<Event> {
-    Ok(serde_json::from_str::<iota_sdk::types::Event>(json)?.into())
-}
-
+crate::export_iota_types_bcs_conversion!(Event);
+crate::export_iota_types_json_conversion!(Event);
 crate::export_iota_types_objects_bcs_conversion!(TransactionEvents);
 crate::export_iota_types_objects_json_conversion!(TransactionEvents);
