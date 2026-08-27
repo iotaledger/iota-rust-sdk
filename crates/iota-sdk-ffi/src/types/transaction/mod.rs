@@ -114,13 +114,13 @@ pub struct TransactionV1(pub iota_sdk::types::TransactionV1);
 impl TransactionV1 {
     #[uniffi::constructor]
     pub fn new(
-        kind: &TransactionKind,
+        kind: TransactionKind,
         sender: &Address,
         gas_payment: GasPayment,
         expiration: TransactionExpiration,
     ) -> Self {
         Self(iota_sdk::types::TransactionV1 {
-            kind: kind.0.clone(),
+            kind: kind.into(),
             sender: **sender,
             gas_payment: gas_payment.into(),
             expiration,
@@ -213,52 +213,89 @@ impl From<SignedTransaction> for iota_sdk::types::SignedTransaction {
 ///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
 ///                     =/ %d06 transaction-deny-rules-update          ; TransactionDenyRulesUpdate
 /// ```
-#[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
+#[derive(Clone, Debug, Eq, PartialEq, uniffi::Enum)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
-pub struct TransactionKind(pub iota_sdk::types::TransactionKind);
+pub enum TransactionKind {
+    /// A user transaction comprised of a series of native commands and move
+    /// calls
+    Programmable { tx: Arc<ProgrammableTransaction> },
+    /// The genesis transaction
+    Genesis { tx: Arc<GenesisTransaction> },
+    /// V1 of the consensus commit prologue system transaction
+    ConsensusCommitPrologueV1 { tx: Arc<ConsensusCommitPrologueV1> },
+    /// A deprecated authenticator state update, retained so the BCS layout
+    /// keeps its variant index
+    AuthenticatorStateUpdateV1Deprecated,
+    /// Set of operations run at the end of an epoch
+    EndOfEpoch { txs: Vec<EndOfEpochTransactionKind> },
+    /// Update the on-chain randomness state
+    RandomnessStateUpdate { tx: RandomnessStateUpdate },
+    /// Update the transaction deny rules
+    TransactionDenyRulesUpdate { tx: TransactionDenyRulesUpdate },
+}
 
-#[uniffi::export]
-impl TransactionKind {
-    /// Create a `TransactionKind` for a programmable transaction.
-    #[uniffi::constructor]
-    pub fn new_programmable(tx: &ProgrammableTransaction) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_programmable(
-            tx.0.clone(),
-        ))
+impl From<iota_sdk::types::TransactionKind> for TransactionKind {
+    fn from(value: iota_sdk::types::TransactionKind) -> Self {
+        match value {
+            iota_sdk::types::TransactionKind::Programmable(tx) => Self::Programmable {
+                tx: Arc::new(tx.into()),
+            },
+            iota_sdk::types::TransactionKind::Genesis(tx) => Self::Genesis {
+                tx: Arc::new(tx.into()),
+            },
+            iota_sdk::types::TransactionKind::ConsensusCommitPrologueV1(tx) => {
+                Self::ConsensusCommitPrologueV1 {
+                    tx: Arc::new(tx.into()),
+                }
+            }
+            iota_sdk::types::TransactionKind::AuthenticatorStateUpdateV1Deprecated => {
+                Self::AuthenticatorStateUpdateV1Deprecated
+            }
+            iota_sdk::types::TransactionKind::EndOfEpoch(txs) => Self::EndOfEpoch {
+                txs: txs.into_iter().map(Into::into).collect(),
+            },
+            iota_sdk::types::TransactionKind::RandomnessStateUpdate(tx) => {
+                Self::RandomnessStateUpdate { tx: tx.into() }
+            }
+            iota_sdk::types::TransactionKind::TransactionDenyRulesUpdate(tx) => {
+                Self::TransactionDenyRulesUpdate { tx: tx.into() }
+            }
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+        }
     }
+}
 
-    /// Create a `TransactionKind` for a genesis transaction.
-    #[uniffi::constructor]
-    pub fn new_genesis(tx: &GenesisTransaction) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_genesis(tx.0.clone()))
+impl From<TransactionKind> for iota_sdk::types::TransactionKind {
+    fn from(value: TransactionKind) -> Self {
+        match value {
+            TransactionKind::Programmable { tx } => Self::Programmable(tx.0.clone()),
+            TransactionKind::Genesis { tx } => Self::Genesis(tx.0.clone()),
+            TransactionKind::ConsensusCommitPrologueV1 { tx } => {
+                Self::ConsensusCommitPrologueV1(tx.0.clone())
+            }
+            TransactionKind::AuthenticatorStateUpdateV1Deprecated => {
+                Self::AuthenticatorStateUpdateV1Deprecated
+            }
+            TransactionKind::EndOfEpoch { txs } => {
+                Self::EndOfEpoch(txs.into_iter().map(Into::into).collect())
+            }
+            TransactionKind::RandomnessStateUpdate { tx } => Self::RandomnessStateUpdate(tx.into()),
+            TransactionKind::TransactionDenyRulesUpdate { tx } => {
+                Self::TransactionDenyRulesUpdate(tx.into())
+            }
+        }
     }
+}
 
-    /// Create a `TransactionKind` for a consensus-commit-prologue-v1
-    /// transaction.
-    #[uniffi::constructor]
-    pub fn new_consensus_commit_prologue_v1(tx: &ConsensusCommitPrologueV1) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_consensus_commit_prologue_v1(tx.0.clone()))
+impl std::fmt::Display for TransactionKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        std::fmt::Display::fmt(&iota_sdk::types::TransactionKind::from(self.clone()), f)
     }
+}
 
-    /// Create a `TransactionKind` for an end-of-epoch transaction.
-    #[uniffi::constructor]
-    pub fn new_end_of_epoch(tx: Vec<Arc<EndOfEpochTransactionKind>>) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_end_of_epoch(
-            tx.into_iter().map(|tx| tx.0.clone()).collect(),
-        ))
-    }
-
-    /// Create a `TransactionKind` for a randomness-state-update transaction.
-    #[uniffi::constructor]
-    pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_randomness_state_update(tx.into()))
-    }
-
-    /// Create a `TransactionKind` for a transaction-deny-rules-update
-    /// transaction.
-    #[uniffi::constructor]
-    pub fn new_transaction_deny_rules_update(tx: TransactionDenyRulesUpdate) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_transaction_deny_rules_update(tx.into()))
+impl std::hash::Hash for TransactionKind {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        iota_sdk::types::TransactionKind::from(self.clone()).hash(state);
     }
 }
 
@@ -281,34 +318,22 @@ pub struct ProgrammableTransaction(pub iota_sdk::types::ProgrammableTransaction)
 #[uniffi::export]
 impl ProgrammableTransaction {
     #[uniffi::constructor]
-    pub fn new(inputs: Vec<Arc<Input>>, commands: Vec<Arc<Command>>) -> Self {
+    pub fn new(inputs: Vec<Input>, commands: Vec<Command>) -> Self {
         Self(iota_sdk::types::ProgrammableTransaction {
-            inputs: inputs.iter().map(|input| input.0.clone()).collect(),
-            commands: commands.iter().map(|command| command.0.clone()).collect(),
+            inputs: inputs.into_iter().map(Into::into).collect(),
+            commands: commands.into_iter().map(Into::into).collect(),
         })
     }
 
     /// Input objects or primitive values
-    pub fn inputs(&self) -> Vec<Arc<Input>> {
-        self.0
-            .inputs
-            .iter()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-            .collect()
+    pub fn inputs(&self) -> Vec<Input> {
+        self.0.inputs.iter().cloned().map(Into::into).collect()
     }
 
     /// The commands to be executed sequentially. A failure in any command will
     /// result in the failure of the entire transaction.
-    pub fn commands(&self) -> Vec<Arc<Command>> {
-        self.0
-            .commands
-            .iter()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-            .collect()
+    pub fn commands(&self) -> Vec<Command> {
+        self.0.commands.iter().cloned().map(Into::into).collect()
     }
 }
 
@@ -328,44 +353,47 @@ impl ProgrammableTransaction {
 ///            =/ %d01 object-id u64 bool   ; Shared
 ///            =/ %d02 object-reference     ; Receiving
 /// ```
-#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
+#[derive(Clone, Debug, Eq, PartialEq, uniffi::Enum)]
 #[uniffi::export(Debug, Eq)]
-pub struct Input(pub iota_sdk::types::Input);
-
-#[uniffi::export]
-impl Input {
-    /// For normal operations this is required to be a move primitive type and
-    /// not contain structs or objects.
-    #[uniffi::constructor]
-    pub fn new_pure(value: Vec<u8>) -> Self {
-        Self(iota_sdk::types::Input::Pure(value))
-    }
-
+pub enum Input {
+    /// A move value serialized as BCS
+    Pure { value: Vec<u8> },
     /// A move object that is either immutable or address owned
-    #[uniffi::constructor]
-    pub fn new_immutable_or_owned(object_ref: ObjectReference) -> Self {
-        Self(iota_sdk::types::Input::ImmutableOrOwned(object_ref.into()))
-    }
-
+    ImmutableOrOwned { object_ref: ObjectReference },
     /// A move object whose owner is "Shared"
-    #[uniffi::constructor]
-    pub fn new_shared(
-        object_id: &ObjectId,
-        initial_shared_version: &Version,
-        mutable: bool,
-    ) -> Self {
-        Self(iota_sdk::types::Input::Shared(
-            iota_sdk::types::SharedObjectReference {
-                object_id: object_id.0,
-                initial_shared_version: **initial_shared_version,
-                mutable,
-            },
-        ))
-    }
+    Shared {
+        shared_object_ref: SharedObjectReference,
+    },
+    /// A move object that is being received
+    Receiving { object_ref: ObjectReference },
+}
 
-    #[uniffi::constructor]
-    pub fn new_receiving(object_ref: ObjectReference) -> Self {
-        Self(iota_sdk::types::Input::Receiving(object_ref.into()))
+impl From<iota_sdk::types::Input> for Input {
+    fn from(value: iota_sdk::types::Input) -> Self {
+        match value {
+            iota_sdk::types::Input::Pure(value) => Self::Pure { value },
+            iota_sdk::types::Input::ImmutableOrOwned(r) => Self::ImmutableOrOwned {
+                object_ref: r.into(),
+            },
+            iota_sdk::types::Input::Shared(r) => Self::Shared {
+                shared_object_ref: r.into(),
+            },
+            iota_sdk::types::Input::Receiving(r) => Self::Receiving {
+                object_ref: r.into(),
+            },
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+        }
+    }
+}
+
+impl From<Input> for iota_sdk::types::Input {
+    fn from(value: Input) -> Self {
+        match value {
+            Input::Pure { value } => Self::Pure(value),
+            Input::ImmutableOrOwned { object_ref } => Self::ImmutableOrOwned(object_ref.into()),
+            Input::Shared { shared_object_ref } => Self::Shared(shared_object_ref.into()),
+            Input::Receiving { object_ref } => Self::Receiving(object_ref.into()),
+        }
     }
 }
 
@@ -392,67 +420,77 @@ impl Input {
 /// command-make-move-vector    = %d05 make-move-vector
 /// command-upgrade             = %d06 upgrade
 /// ```
-#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
+#[derive(Clone, Debug, Eq, PartialEq, uniffi::Enum)]
 #[uniffi::export(Debug, Eq)]
-pub struct Command(pub iota_sdk::types::Command);
-
-#[uniffi::export]
-impl Command {
+pub enum Command {
     /// A call to either an entry or a public Move function
-    #[uniffi::constructor]
-    pub fn new_move_call(move_call: &MoveCall) -> Self {
-        Self(iota_sdk::types::Command::MoveCall(move_call.0.clone()))
-    }
-
+    MoveCall { move_call: Arc<MoveCall> },
     /// It sends n-objects to the specified address. These objects must have
     /// store (public transfer) and either the previous owner must be an
     /// address or the object must be newly created.
-    #[uniffi::constructor]
-    pub fn new_transfer_objects(transfer_objects: &TransferObjects) -> Self {
-        Self(iota_sdk::types::Command::TransferObjects(
-            transfer_objects.0.clone(),
-        ))
-    }
-
+    TransferObjects {
+        transfer_objects: Arc<TransferObjects>,
+    },
     /// It splits off some amounts into a new coins with those amounts
-    #[uniffi::constructor]
-    pub fn new_split_coins(split_coins: &SplitCoins) -> Self {
-        Self(iota_sdk::types::Command::SplitCoins(split_coins.0.clone()))
-    }
-
+    SplitCoins { split_coins: Arc<SplitCoins> },
     /// It merges n-coins into the first coin
-    #[uniffi::constructor]
-    pub fn new_merge_coins(merge_coins: &MergeCoins) -> Self {
-        Self(iota_sdk::types::Command::MergeCoins(merge_coins.0.clone()))
-    }
-
+    MergeCoins { merge_coins: Arc<MergeCoins> },
     /// Publishes a Move package. It takes the package bytes and a list of the
     /// package's transitive dependencies to link against on-chain.
-    #[uniffi::constructor]
-    pub fn new_publish(publish: &Publish) -> Self {
-        Self(iota_sdk::types::Command::Publish(publish.0.clone()))
-    }
-
+    Publish { publish: Arc<Publish> },
     /// Given n-values of the same type, it constructs a vector. For non objects
     /// or an empty vector, the type tag must be specified.
-    #[uniffi::constructor]
-    pub fn new_make_move_vector(make_move_vector: &MakeMoveVector) -> Self {
-        Self(iota_sdk::types::Command::MakeMoveVector(
-            make_move_vector.0.clone(),
-        ))
-    }
-
+    MakeMoveVector {
+        make_move_vector: Arc<MakeMoveVector>,
+    },
     /// Upgrades a Move package
-    /// Takes (in order):
-    /// 1. A vector of serialized modules for the package.
-    /// 2. A vector of object ids for the transitive dependencies of the new
-    ///    package.
-    /// 3. The object ID of the package being upgraded.
-    /// 4. An argument holding the `UpgradeTicket` that must have been produced
-    ///    from an earlier command in the same programmable transaction.
-    #[uniffi::constructor]
-    pub fn new_upgrade(upgrade: &Upgrade) -> Self {
-        Self(iota_sdk::types::Command::Upgrade(upgrade.0.clone()))
+    Upgrade { upgrade: Arc<Upgrade> },
+}
+
+impl From<iota_sdk::types::Command> for Command {
+    fn from(value: iota_sdk::types::Command) -> Self {
+        match value {
+            iota_sdk::types::Command::MoveCall(c) => Self::MoveCall {
+                move_call: Arc::new(c.into()),
+            },
+            iota_sdk::types::Command::TransferObjects(c) => Self::TransferObjects {
+                transfer_objects: Arc::new(c.into()),
+            },
+            iota_sdk::types::Command::SplitCoins(c) => Self::SplitCoins {
+                split_coins: Arc::new(c.into()),
+            },
+            iota_sdk::types::Command::MergeCoins(c) => Self::MergeCoins {
+                merge_coins: Arc::new(c.into()),
+            },
+            iota_sdk::types::Command::Publish(c) => Self::Publish {
+                publish: Arc::new(c.into()),
+            },
+            iota_sdk::types::Command::MakeMoveVector(c) => Self::MakeMoveVector {
+                make_move_vector: Arc::new(c.into()),
+            },
+            iota_sdk::types::Command::Upgrade(c) => Self::Upgrade {
+                upgrade: Arc::new(c.into()),
+            },
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+        }
+    }
+}
+
+impl From<Command> for iota_sdk::types::Command {
+    fn from(value: Command) -> Self {
+        match value {
+            Command::MoveCall { move_call } => Self::MoveCall(move_call.0.clone()),
+            Command::TransferObjects { transfer_objects } => {
+                Self::TransferObjects(transfer_objects.0.clone())
+            }
+            Command::SplitCoins { split_coins } => Self::SplitCoins(split_coins.0.clone()),
+            Command::MergeCoins { merge_coins } => Self::MergeCoins(merge_coins.0.clone()),
+            Command::Publish { publish } => Self::Publish(publish.0.clone()),
+            Command::MakeMoveVector { make_move_vector } => {
+                Self::MakeMoveVector(make_move_vector.0.clone())
+            }
+            Command::Upgrade { upgrade } => Self::Upgrade(upgrade.0.clone()),
+        }
     }
 }
 
@@ -1291,7 +1329,7 @@ impl ChangeEpochV3 {
     }
 }
 
-#[derive(derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 pub struct ChangeEpochV4(pub iota_sdk::types::ChangeEpochV4);
 
 #[uniffi::export]
@@ -1410,7 +1448,7 @@ impl ChangeEpochV4 {
 /// ```text
 /// randomness-state-update = u64 u64 bytes u64
 /// ```
-#[derive(Clone, uniffi::Record)]
+#[derive(Clone, Debug, Eq, PartialEq, uniffi::Record)]
 pub struct RandomnessStateUpdate {
     /// Epoch of the randomness state update transaction
     pub epoch: u64,
@@ -1566,7 +1604,7 @@ impl From<iota_sdk::types::DenyRuleSet> for DenyRuleSet {
 ///                                 bool              ; move authenticator disabled
 ///                                 version           ; initial shared version
 /// ```
-#[derive(Clone, uniffi::Record)]
+#[derive(Clone, Debug, Eq, PartialEq, uniffi::Record)]
 pub struct TransactionDenyRulesUpdate {
     /// Epoch of the deny-rules update transaction
     pub epoch: u64,
@@ -1662,43 +1700,50 @@ impl From<iota_sdk::types::TransactionDenyRulesUpdate> for TransactionDenyRulesU
 ///                               =/ %d03 change-epoch-v4  ; ChangeEpochV4
 ///                               =/ %d04                  ; TransactionDenyRulesCreate
 /// ```
-#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
+#[derive(Clone, Debug, Eq, PartialEq, uniffi::Enum)]
 #[uniffi::export(Debug, Eq)]
-pub struct EndOfEpochTransactionKind(pub iota_sdk::types::EndOfEpochTransactionKind);
+pub enum EndOfEpochTransactionKind {
+    ChangeEpoch { tx: Arc<ChangeEpoch> },
+    ChangeEpochV2 { tx: Arc<ChangeEpochV2> },
+    ChangeEpochV3 { tx: Arc<ChangeEpochV3> },
+    ChangeEpochV4 { tx: Arc<ChangeEpochV4> },
+    TransactionDenyRulesCreate,
+}
 
-#[uniffi::export]
-impl EndOfEpochTransactionKind {
-    #[uniffi::constructor]
-    pub fn new_change_epoch(tx: &ChangeEpoch) -> Self {
-        Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpoch(
-            tx.0.clone(),
-        ))
+impl From<iota_sdk::types::EndOfEpochTransactionKind> for EndOfEpochTransactionKind {
+    fn from(value: iota_sdk::types::EndOfEpochTransactionKind) -> Self {
+        match value {
+            iota_sdk::types::EndOfEpochTransactionKind::ChangeEpoch(tx) => Self::ChangeEpoch {
+                tx: Arc::new(tx.into()),
+            },
+            iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV2(tx) => Self::ChangeEpochV2 {
+                tx: Arc::new(tx.into()),
+            },
+            iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV3(tx) => Self::ChangeEpochV3 {
+                tx: Arc::new(tx.into()),
+            },
+            iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV4(tx) => Self::ChangeEpochV4 {
+                tx: Arc::new(tx.into()),
+            },
+            iota_sdk::types::EndOfEpochTransactionKind::TransactionDenyRulesCreate => {
+                Self::TransactionDenyRulesCreate
+            }
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+        }
     }
+}
 
-    #[uniffi::constructor]
-    pub fn new_change_epoch_v2(tx: &ChangeEpochV2) -> Self {
-        Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV2(
-            tx.0.clone(),
-        ))
-    }
-
-    #[uniffi::constructor]
-    pub fn new_change_epoch_v3(tx: &ChangeEpochV3) -> Self {
-        Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV3(
-            tx.0.clone(),
-        ))
-    }
-
-    #[uniffi::constructor]
-    pub fn new_change_epoch_v4(tx: &ChangeEpochV4) -> Self {
-        Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV4(
-            tx.0.clone(),
-        ))
-    }
-
-    #[uniffi::constructor]
-    pub fn new_transaction_deny_rules_create() -> Self {
-        Self(iota_sdk::types::EndOfEpochTransactionKind::TransactionDenyRulesCreate)
+impl From<EndOfEpochTransactionKind> for iota_sdk::types::EndOfEpochTransactionKind {
+    fn from(value: EndOfEpochTransactionKind) -> Self {
+        match value {
+            EndOfEpochTransactionKind::ChangeEpoch { tx } => Self::ChangeEpoch(tx.0.clone()),
+            EndOfEpochTransactionKind::ChangeEpochV2 { tx } => Self::ChangeEpochV2(tx.0.clone()),
+            EndOfEpochTransactionKind::ChangeEpochV3 { tx } => Self::ChangeEpochV3(tx.0.clone()),
+            EndOfEpochTransactionKind::ChangeEpochV4 { tx } => Self::ChangeEpochV4(tx.0.clone()),
+            EndOfEpochTransactionKind::TransactionDenyRulesCreate => {
+                Self::TransactionDenyRulesCreate
+            }
+        }
     }
 }
 
@@ -1950,7 +1995,7 @@ impl MoveCall {
 }
 
 /// A shared object input to a programmable transaction
-#[derive(uniffi::Record)]
+#[derive(Clone, Debug, Eq, PartialEq, uniffi::Record)]
 pub struct SharedObjectReference {
     object_id: Arc<ObjectId>,
     initial_shared_version: Arc<Version>,
@@ -1978,6 +2023,9 @@ impl From<SharedObjectReference> for iota_sdk::types::SharedObjectReference {
 }
 
 crate::export_iota_types_bcs_conversion!(
+    Command,
+    Input,
+    TransactionKind,
     SignedTransaction,
     RandomnessStateUpdate,
     DenyRuleSet,
@@ -1988,10 +2036,7 @@ crate::export_remote_types_bcs_conversion!(TransactionExpiration);
 crate::export_iota_types_objects_bcs_conversion!(
     Transaction,
     TransactionV1,
-    TransactionKind,
     ProgrammableTransaction,
-    Input,
-    Command,
     TransferObjects,
     SplitCoins,
     MergeCoins,
@@ -2011,6 +2056,9 @@ crate::export_iota_types_objects_bcs_conversion!(
     MoveCall,
 );
 crate::export_iota_types_json_conversion!(
+    Command,
+    Input,
+    TransactionKind,
     SignedTransaction,
     RandomnessStateUpdate,
     DenyRuleSet,
@@ -2021,10 +2069,7 @@ crate::export_remote_types_json_conversion!(TransactionExpiration);
 crate::export_iota_types_objects_json_conversion!(
     Transaction,
     TransactionV1,
-    TransactionKind,
     ProgrammableTransaction,
-    Input,
-    Command,
     TransferObjects,
     SplitCoins,
     MergeCoins,

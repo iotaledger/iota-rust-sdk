@@ -42,13 +42,13 @@ impl MoveAuthenticatorV1 {
     /// Create a new move authenticator with an immutable object.
     #[uniffi::constructor]
     pub fn new_with_immutable_account_object(
-        call_args: Vec<Arc<Input>>,
+        call_args: Vec<Input>,
         type_args: Vec<Arc<TypeTag>>,
         object_to_authenticate: ObjectReference,
     ) -> Self {
         Self(
             iota_sdk::types::MoveAuthenticatorV1::new_with_immutable_account_object(
-                call_args.into_iter().map(|v| v.0.clone()).collect(),
+                call_args.into_iter().map(Into::into).collect(),
                 type_args.into_iter().map(|v| v.0.clone()).collect(),
                 object_to_authenticate.into(),
             ),
@@ -58,13 +58,13 @@ impl MoveAuthenticatorV1 {
     /// Create a new move authenticator with a shared object.
     #[uniffi::constructor]
     pub fn new_with_shared_account_object(
-        call_args: Vec<Arc<Input>>,
+        call_args: Vec<Input>,
         type_args: Vec<Arc<TypeTag>>,
         object_to_authenticate: SharedObjectReference,
     ) -> Self {
         Self(
             iota_sdk::types::MoveAuthenticatorV1::new_with_shared_account_object(
-                call_args.into_iter().map(|v| v.0.clone()).collect(),
+                call_args.into_iter().map(Into::into).collect(),
                 type_args.into_iter().map(|v| v.0.clone()).collect(),
                 object_to_authenticate.into(),
             ),
@@ -75,14 +75,8 @@ impl MoveAuthenticatorV1 {
         self.0.address().into()
     }
 
-    pub fn call_args(&self) -> Vec<Arc<Input>> {
-        self.0
-            .call_args()
-            .iter()
-            .cloned()
-            .map(Into::into)
-            .map(Arc::new)
-            .collect()
+    pub fn call_args(&self) -> Vec<Input> {
+        self.0.call_args().iter().cloned().map(Into::into).collect()
     }
 
     pub fn type_args(&self) -> Vec<Arc<TypeTag>> {

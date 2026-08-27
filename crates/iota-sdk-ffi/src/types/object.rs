@@ -202,7 +202,7 @@ named_object_id!(
 /// ```text
 /// object-reference = object-id u64 digest
 /// ```
-#[derive(Clone, uniffi::Record)]
+#[derive(Clone, Debug, Eq, PartialEq, uniffi::Record)]
 pub struct ObjectReference {
     object_id: Arc<ObjectId>,
     version: Arc<Version>,
