@@ -3,6 +3,7 @@ name = "capture-move-type-fixtures"
 version = "0.1.0"
 edition = "2024"
 license = "Apache-2.0"
+publish = false
 description = "Capture real on-chain BCS fixtures for the Move types mirrored by iota-sdk-move-types"
 
 [dependencies]
