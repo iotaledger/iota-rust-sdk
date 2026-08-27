@@ -95,6 +95,8 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::ObjectReference>();
     assert_display::<iota_sdk_types::ObjectType>();
     assert_display::<iota_sdk_types::Owner>();
+    assert_display::<iota_sdk_types::ObjectVersion>();
+    assert_display::<iota_sdk_types::OwnedObjectReference>();
     assert_display::<iota_sdk_types::PackageUpgradeError>();
     assert_display::<iota_sdk_types::PasskeyAuthenticator>();
     assert_display::<iota_sdk_types::PasskeyPublicKey>();

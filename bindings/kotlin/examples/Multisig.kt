@@ -78,7 +78,7 @@ fun main() = runBlocking {
         val effects = client.executeTx(listOf(userSignature), txn)
 
         println("Digest: ${hexEncode(effects.digest().toBytes())}")
-        println("Transaction status: ${effects.asV1().status}")
+        println("Transaction status: ${effects.asV1().status()}")
         println("Effects: ${effects.asV1()}")
     } catch (e: Exception) {
         e.printStackTrace()

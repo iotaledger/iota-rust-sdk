@@ -80,7 +80,7 @@ console.log("Success");
 // Resolve UpgradeCap and PackageId via the client
 let upgradeCap = null;
 let packageId = null;
-for (const changedObj of effects.asV1().changedObjects) {
+for (const changedObj of effects.asV1().changedObjects()) {
   if (changedObj.outputState.tag === "ObjectWrite") {
     const objectId = changedObj.objectId;
     const obj = await client.object(objectId);
@@ -149,7 +149,7 @@ effects = await client.executeTx([sig], tx);
 console.log("Success");
 
 // Print the new package version (should now be 2)
-for (const changedObj of effects.asV1().changedObjects) {
+for (const changedObj of effects.asV1().changedObjects()) {
   if (changedObj.outputState.tag === "PackageWrite") {
     console.log(`New Package ID: ${changedObj.objectId.toHex()}`);
     console.log(`New Package version: ${changedObj.outputState.inner.version}`);

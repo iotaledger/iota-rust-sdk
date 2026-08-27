@@ -94,7 +94,7 @@ struct PublishUpgradeExample {
     // Resolve UpgradeCap and PackageId via the client
     var upgradeCap: ObjectId?
     var packageId: ObjectId?
-    for changedObj in effects.asV1().changedObjects {
+    for changedObj in effects.asV1().changedObjects() {
       switch changedObj.outputState {
       case .objectWrite(_, let owner):
         let objectId = changedObj.objectId
@@ -191,7 +191,7 @@ struct PublishUpgradeExample {
     print("Success")
 
     // Print the new package version (should now be 2)
-    for changedObj in upgradeEffects.asV1().changedObjects {
+    for changedObj in upgradeEffects.asV1().changedObjects() {
       if case .packageWrite(let version, _) = changedObj.outputState {
         print("New Package ID: \(changedObj.objectId.toHex())")
         print("New Package version: \(version)")

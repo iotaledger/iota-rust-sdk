@@ -171,7 +171,7 @@ pub use move_core::{Identifier, StructTag, TypeParseError, TypeTag};
 pub use move_package::{MovePackage, MovePackageData, TypeOrigin, UpgradeInfo, UpgradePolicy};
 pub use object::{
     GenesisObject, MoveObjectType, MoveStruct, MoveStructContentsError, Object, ObjectData,
-    ObjectReference, ObjectType, Owner,
+    ObjectReference, ObjectType, ObjectVersion, OwnedObjectReference, Owner,
 };
 pub use object_id::ObjectId;
 #[cfg(feature = "serde")]
@@ -287,7 +287,7 @@ macro_rules! def_is_as_into_opt {
         paste::paste! {
         #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]
         #[inline]
-        pub fn [< into_ $rename _opt >](self) -> Option<$inner> {
+        pub fn [< into_opt_ $rename >](self) -> Option<$inner> {
             #[allow(irrefutable_let_patterns)]
             if let Self::$variant(inner) = self {
                 Some(*inner)
@@ -299,7 +299,7 @@ macro_rules! def_is_as_into_opt {
         #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
         pub fn [< into_ $rename >](self) -> $inner {
-            self.[< into_ $rename _opt >]().expect(&format!("not a {}", stringify!($rename)))
+            self.[< into_opt_ $rename >]().expect(&format!("not a {}", stringify!($rename)))
         }
         }
     };
@@ -334,7 +334,7 @@ macro_rules! def_is_as_into_opt {
         #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or panics otherwise."]
         #[inline]
         pub fn [< as_ $rename >](&self) -> &$inner {
-            self.[< as_ $rename _opt >]().expect(&format!("not a {}", stringify!($variant)))
+            self.[< as_opt_ $rename >]().expect(&format!("not a {}", stringify!($variant)))
         }
 
         #[doc = "Converts this into a " $rename:snake " if it is a " $variant:snake " variant, or returns `None` otherwise."]

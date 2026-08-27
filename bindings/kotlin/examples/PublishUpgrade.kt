@@ -80,7 +80,7 @@ fun main() = runBlocking {
         // Resolve UpgradeCap and PackageId via the client
         var upgradeCap: ObjectId? = null
         var packageId: ObjectId? = null
-        for (changedObj in effectsPublish.asV1().changedObjects) {
+        for (changedObj in effectsPublish.asV1().changedObjects()) {
             if (changedObj.outputState is ObjectOut.ObjectWrite) {
                 val objectId = changedObj.objectId
                 val obj: Object =
@@ -158,7 +158,7 @@ fun main() = runBlocking {
         println("Success")
 
         // Print the new package version (should now be 2)
-        for (changedObj in effectsUpgrade.asV1().changedObjects) {
+        for (changedObj in effectsUpgrade.asV1().changedObjects()) {
             if (changedObj.outputState is ObjectOut.PackageWrite) {
                 val pkgId = changedObj.objectId
                 println("New Package ID: ${pkgId.toHex()}")

@@ -79,7 +79,7 @@ struct MultisigExample {
     let effects = try await client.executeTx(signatures: [userSignature], tx: txn)
 
     print("Digest: \(hexEncode(input: effects.digest().toBytes()))")
-    print("Transaction status: \(effects.asV1().status)")
+    print("Transaction status: \(effects.asV1().status())")
     print("Effects: \(effects.asV1())")
   }
 }

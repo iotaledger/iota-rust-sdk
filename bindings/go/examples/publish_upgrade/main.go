@@ -108,7 +108,7 @@ func main() {
 	// Resolve UpgradeCap and PackageId via the client
 	var upgradeCap *iota_sdk.ObjectId
 	var packageId *iota_sdk.ObjectId
-	for _, changedObj := range (*effectsPublish).AsV1().ChangedObjects {
+	for _, changedObj := range (*effectsPublish).AsV1().ChangedObjects() {
 		if objectWrite, ok := changedObj.OutputState.(iota_sdk.ObjectOutObjectWrite); ok {
 			objectId := changedObj.ObjectId
 			objPtr, err := client.Object(objectId, nil)
@@ -205,7 +205,7 @@ func main() {
 	fmt.Println("Success")
 
 	// Print the new package version (should now be 2)
-	for _, changedObj := range (*effectsUpgrade).AsV1().ChangedObjects {
+	for _, changedObj := range (*effectsUpgrade).AsV1().ChangedObjects() {
 		if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutPackageWrite); ok {
 			pkgId := changedObj.ObjectId
 			fmt.Printf("New Package ID: %s\n", pkgId.ToHex())

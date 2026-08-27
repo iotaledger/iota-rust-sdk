@@ -41,7 +41,7 @@ struct TransactionSignerCallbackExample {
     let effects = try await builder.execute(signer: signer, waitFor: WaitForTx.finalized)
 
     print("Digest: \(hexEncode(input: effects.digest().toBytes()))")
-    print("Transaction status: \(effects.asV1().status)")
+    print("Transaction status: \(effects.asV1().status())")
     print("Effects: \(effects.asV1())")
   }
 }

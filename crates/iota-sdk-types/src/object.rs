@@ -80,6 +80,60 @@ impl crate::TreeDisplay for ObjectReference {
     }
 }
 
+/// An [`ObjectReference`] paired with the owner the object has at that version.
+///
+/// Not a wire type: this is how transaction effects report an object they
+/// touched, since a reference alone does not say who owns it.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct OwnedObjectReference {
+    /// The object's reference.
+    pub reference: ObjectReference,
+    /// The owner the object has at that version.
+    pub owner: Owner,
+}
+
+impl OwnedObjectReference {
+    /// Pairs a reference with the owner the object has at that version.
+    pub const fn new(reference: ObjectReference, owner: Owner) -> Self {
+        Self { reference, owner }
+    }
+}
+
+impl crate::TreeDisplay for OwnedObjectReference {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Owned Object Reference")?;
+        w.child("Reference", &self.reference, false)?;
+        w.leaf("Owner", &self.owner, true)
+    }
+}
+
+/// An [`ObjectId`] paired with one of that object's versions.
+///
+/// Not a wire type: this is how transaction effects report the version an
+/// object was at before the transaction changed it.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct ObjectVersion {
+    /// The object's id.
+    pub object_id: ObjectId,
+    /// The version the object is at.
+    pub version: Version,
+}
+
+impl ObjectVersion {
+    /// Pairs an object id with one of that object's versions.
+    pub const fn new(object_id: ObjectId, version: Version) -> Self {
+        Self { object_id, version }
+    }
+}
+
+impl crate::TreeDisplay for ObjectVersion {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Object Version")?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf("Version", &self.version, true)
+    }
+}
+
 /// Enum of different types of ownership for an object.
 ///
 /// # BCS
@@ -753,6 +807,8 @@ impl crate::TreeDisplay for GenesisObject {
 
 crate::impl_tree_display!(
     ObjectReference,
+    OwnedObjectReference,
+    ObjectVersion,
     ObjectData,
     MoveStruct,
     Object,

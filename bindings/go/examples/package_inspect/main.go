@@ -379,8 +379,8 @@ func resolveUpgradeCapID(client *iota_sdk.GraphQlClient, packageID *iota_sdk.Obj
 
 	for _, effects := range page.Data {
 		effectsV1 := effects.AsV1()
-		writtenVersion := effectsV1.LamportVersion
-		for _, changedObj := range effectsV1.ChangedObjects {
+		writtenVersion := effectsV1.LamportVersion()
+		for _, changedObj := range effectsV1.ChangedObjects() {
 			if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutObjectWrite); !ok {
 				continue
 			}

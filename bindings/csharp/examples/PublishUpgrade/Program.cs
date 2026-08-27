@@ -54,7 +54,7 @@ class Program
 
         ObjectId? upgradeCap = null;
         ObjectId? packageId = null;
-        foreach (var changedObj in effects.AsV1().ChangedObjects)
+        foreach (var changedObj in effects.AsV1().ChangedObjects())
         {
             if (changedObj.OutputState is ObjectOut.ObjectWrite objWrite)
             {
@@ -127,7 +127,7 @@ class Program
         effects = await client.ExecuteTx(new[] { sig }, tx);
         Console.WriteLine("Success");
 
-        foreach (var changedObj in effects.AsV1().ChangedObjects)
+        foreach (var changedObj in effects.AsV1().ChangedObjects())
         {
             if (changedObj.OutputState is ObjectOut.PackageWrite pkgWrite2)
             {
