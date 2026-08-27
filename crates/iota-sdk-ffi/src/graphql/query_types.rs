@@ -445,7 +445,7 @@ impl From<EventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
 /// the GraphQL schema). Unlike the chain `Event`, this type is not
 /// BCS/JSON-serializable as a chain event.
 #[derive(uniffi::Record)]
-pub struct GraphQlEvent {
+pub struct GraphQLEvent {
     /// Package id of the top-level function invoked by a MoveCall command which
     /// triggered this event to be emitted. `None` for system events.
     pub package_id: Option<Arc<ObjectId>>,
@@ -467,7 +467,7 @@ pub struct GraphQlEvent {
     pub json: String,
 }
 
-impl TryFrom<iota_sdk::graphql_client::query_types::Event> for GraphQlEvent {
+impl TryFrom<iota_sdk::graphql_client::query_types::Event> for GraphQLEvent {
     type Error = crate::error::SdkFfiError;
 
     fn try_from(value: iota_sdk::graphql_client::query_types::Event) -> crate::error::Result<Self> {
@@ -748,7 +748,7 @@ impl From<Validator> for iota_sdk::graphql_client::query_types::Validator {
     fn from(value: Validator) -> Self {
         Self {
             apy: value.apy,
-            address: GQLAddress {
+            address: GraphQLAddress {
                 address: value.address.clone(),
             }
             .into(),
@@ -879,21 +879,21 @@ impl From<ValidatorConnection> for iota_sdk::graphql_client::query_types::Valida
 }
 
 #[derive(uniffi::Record)]
-pub struct GQLAddress {
+pub struct GraphQLAddress {
     pub address: Arc<Address>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::GQLAddress> for GQLAddress {
-    fn from(value: iota_sdk::graphql_client::query_types::GQLAddress) -> Self {
-        GQLAddress {
+impl From<iota_sdk::graphql_client::query_types::GraphQLAddress> for GraphQLAddress {
+    fn from(value: iota_sdk::graphql_client::query_types::GraphQLAddress) -> Self {
+        GraphQLAddress {
             address: Arc::new(value.address.into()),
         }
     }
 }
 
-impl From<GQLAddress> for iota_sdk::graphql_client::query_types::GQLAddress {
-    fn from(value: GQLAddress) -> Self {
-        iota_sdk::graphql_client::query_types::GQLAddress {
+impl From<GraphQLAddress> for iota_sdk::graphql_client::query_types::GraphQLAddress {
+    fn from(value: GraphQLAddress) -> Self {
+        iota_sdk::graphql_client::query_types::GraphQLAddress {
             address: (**value.address),
         }
     }

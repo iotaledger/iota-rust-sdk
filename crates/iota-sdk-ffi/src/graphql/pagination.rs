@@ -5,7 +5,7 @@ use iota_sdk::graphql_client::query_types::PageInfo;
 
 use crate::{
     graphql::query_types::{
-        DynamicFieldOutput, Epoch, GraphQlEvent, TransactionDataEffects, Validator,
+        DynamicFieldOutput, Epoch, GraphQLEvent, TransactionDataEffects, Validator,
     },
     types::{
         checkpoint::CheckpointSummary,
@@ -42,7 +42,7 @@ macro_rules! define_paged_record {
 define_paged_record!(SignedTransactionPage, SignedTransaction);
 define_paged_record!(TransactionDataEffectsPage, TransactionDataEffects);
 define_paged_record!(DynamicFieldOutputPage, DynamicFieldOutput);
-define_paged_record!(EventPage, GraphQlEvent);
+define_paged_record!(EventPage, GraphQLEvent);
 define_paged_record!(EpochPage, Epoch);
 define_paged_record!(ValidatorPage, Validator);
 
