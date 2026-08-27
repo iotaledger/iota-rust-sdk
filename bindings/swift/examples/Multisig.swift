@@ -69,9 +69,9 @@ struct MultisigExample {
     let sig1 = try kp1.signTransaction(transaction: txn)
 
     // 8. Aggregate signatures
-    var aggregator = MultisigAggregator.newWithTransaction(committee: committee, transaction: txn)
-    aggregator = try aggregator.withSignature(signature: sig0)
-    aggregator = try aggregator.withSignature(signature: sig1)
+    let aggregator = MultisigAggregator.newWithTransaction(committee: committee, transaction: txn)
+    try aggregator.addSignature(signature: sig0)
+    try aggregator.addSignature(signature: sig1)
     let aggSig = try aggregator.finish()
 
     // 9. Execute
