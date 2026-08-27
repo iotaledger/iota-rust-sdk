@@ -112,7 +112,7 @@ impl UserSignature {
         self.0.scheme()
     }
 
-    fn to_bytes(&self) -> Vec<u8> {
+    pub fn to_bytes(&self) -> Vec<u8> {
         self.0.to_bytes()
     }
 
@@ -272,7 +272,7 @@ impl SimpleSignature {
         self.0.scheme()
     }
 
-    fn to_bytes(&self) -> Vec<u8> {
+    pub fn to_bytes(&self) -> Vec<u8> {
         self.0.to_bytes()
     }
 

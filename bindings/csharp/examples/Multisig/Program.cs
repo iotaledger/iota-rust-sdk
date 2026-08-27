@@ -67,8 +67,8 @@ class Program
 
         // 8. Aggregate signatures
         var aggregator = MultisigAggregator.NewWithTransaction(committee, txn);
-        aggregator = aggregator.WithSignature(sig0);
-        aggregator = aggregator.WithSignature(sig1);
+        aggregator.AddSignature(sig0);
+        aggregator.AddSignature(sig1);
         var aggSig = aggregator.Finish();
 
         // 9. Execute
@@ -76,7 +76,7 @@ class Program
         var effects = await client.ExecuteTx(new[] { userSignature }, txn);
 
         Console.WriteLine($"Digest: {Iota.HexEncode(effects.Digest().ToBytes())}");
-        Console.WriteLine($"Transaction status: {effects.AsV1().Status}");
+        Console.WriteLine($"Transaction status: {effects.AsV1().Status()}");
         Console.WriteLine($"Effects: {effects.AsV1()}");
     }
 }

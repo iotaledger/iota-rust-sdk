@@ -16,7 +16,7 @@ use crate::{
 /// field is required and the type round-trips through BCS/JSON. For events
 /// returned by the GraphQL `events` query — which may originate from system
 /// transactions and therefore lack a sender or emitting module — see
-/// [`GraphQlEvent`](crate::graphql::query_types::GraphQlEvent).
+/// [`GraphQLEvent`](crate::graphql::query_types::GraphQLEvent).
 ///
 /// # BCS
 ///

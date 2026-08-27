@@ -1767,9 +1767,9 @@ pub struct TransactionEffects(pub iota_sdk::types::TransactionEffects);
 #[uniffi::export]
 impl TransactionEffects {
     #[uniffi::constructor]
-    pub fn new_v1(effects: TransactionEffectsV1) -> Self {
+    pub fn new_v1(effects: &TransactionEffectsV1) -> Self {
         Self(iota_sdk::types::TransactionEffects::V1(Box::new(
-            effects.into(),
+            effects.0.clone(),
         )))
     }
 
@@ -1777,8 +1777,11 @@ impl TransactionEffects {
         self.0.is_v1()
     }
 
+    /// The V1 effects, which is where the object sets and other views derived
+    /// from them are reported. Panics for any other version; a caller that does
+    /// not want to assume one should check `is_v1` first.
     pub fn as_v1(&self) -> TransactionEffectsV1 {
-        self.0.as_v1().clone().into()
+        TransactionEffectsV1(self.0.as_v1().clone())
     }
 
     pub fn digest(&self) -> TransactionEffectsDigest {

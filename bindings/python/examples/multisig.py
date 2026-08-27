@@ -67,8 +67,8 @@ async def main():
 
     # 8. Aggregate signatures
     aggregator = MultisigAggregator.new_with_transaction(committee, txn)
-    aggregator = aggregator.with_signature(sig0)
-    aggregator = aggregator.with_signature(sig1)
+    aggregator.add_signature(sig0)
+    aggregator.add_signature(sig1)
     agg_sig = aggregator.finish()
 
     # 9. Execute
@@ -76,7 +76,7 @@ async def main():
     effects = await client.execute_tx([user_signature], txn)
 
     print(f"Digest: {hex_encode(effects.digest().to_bytes())}")
-    print(f"Transaction status: {effects.as_v1().status}")
+    print(f"Transaction status: {effects.as_v1().status()}")
     print(f"Effects: {effects.as_v1()}")
 
 

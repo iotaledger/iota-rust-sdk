@@ -44,7 +44,7 @@ struct AbstractAccountExample {
     let effects = try await builder.execute(
       signer: signer, waitFor: WaitForTx.finalized)
 
-    print("Sending IOTA via abstract account: \(effects.asV1().status)")
+    print("Sending IOTA via abstract account: \(effects.asV1().status())")
   }
 
   static func setupAccount(client: GraphQlClient) async throws -> ObjectId {
@@ -78,14 +78,14 @@ struct AbstractAccountExample {
     let effects = try await builder.execute(
       signer: signer, waitFor: WaitForTx.finalized)
 
-    print("Publishing package: \(effects.asV1().status)\n")
+    print("Publishing package: \(effects.asV1().status())\n")
 
     // Get package, package metadata and account IDs from the effects
     var packageId: ObjectId?
     var packageMetadataId: ObjectId?
     var accountId: ObjectId?
 
-    for changedObj in effects.asV1().changedObjects {
+    for changedObj in effects.asV1().changedObjects() {
       switch changedObj.outputState {
       case .packageWrite(_, _):
         packageId = changedObj.objectId
@@ -145,7 +145,7 @@ struct AbstractAccountExample {
     let linkEffects = try await linkBuilder.execute(
       signer: signer, waitFor: WaitForTx.finalized)
 
-    print("Linking account to authenticate method: \(linkEffects.asV1().status)\n")
+    print("Linking account to authenticate method: \(linkEffects.asV1().status())\n")
 
     return accountId
   }

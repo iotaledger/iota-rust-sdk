@@ -424,6 +424,7 @@ impl StructTag {
         object_bag::ObjectBag,
         tx_context::TxContext,
         deny_list::DenyList,
+        transaction_deny_rules::TransactionDenyRules,
         package_metadata::PackageMetadataV1,
         package_metadata::PackageMetadataKey,
         module_metadata::ModuleMetadata,

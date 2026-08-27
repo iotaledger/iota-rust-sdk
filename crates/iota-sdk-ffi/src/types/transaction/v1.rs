@@ -8,7 +8,7 @@ use iota_sdk::types::{GasCostSummary, IdOperation};
 use crate::types::{
     digest::{EffectsAuxDataDigest, ObjectDigest, TransactionDigest, TransactionEventsDigest},
     execution_status::ExecutionStatus,
-    object::{ObjectId, Owner},
+    object::{ObjectId, ObjectReference, Owner},
     version::Version,
 };
 
@@ -31,91 +31,225 @@ use crate::types::{
 ///              (vector unchanged-shared-object)
 ///              (option digest)                    ; auxiliary data digest
 /// ```
-#[derive(uniffi::Record)]
-pub struct TransactionEffectsV1 {
-    /// The status of the execution
-    pub status: ExecutionStatus,
-    /// The epoch when this transaction was executed.
-    pub epoch: u64,
-    /// The gas used by this transaction
-    pub gas_cost_summary: GasCostSummary,
-    /// The transaction digest
-    pub transaction_digest: Arc<TransactionDigest>,
-    /// The updated gas object reference, as an index into the `changed_objects`
-    /// vector. Having a dedicated field for convenient access.
-    /// System transaction that don't require gas will leave this as None.
-    #[uniffi(default = None)]
-    pub gas_object_index: Option<u32>,
-    /// The digest of the events emitted during execution,
-    /// can be None if the transaction does not emit any event.
-    #[uniffi(default = None)]
-    pub events_digest: Option<Arc<TransactionEventsDigest>>,
-    /// The set of transaction digests this transaction depends on.
-    pub dependencies: Vec<Arc<TransactionDigest>>,
-    /// The version number of all the written Move objects by this transaction.
-    pub lamport_version: Arc<Version>,
-    /// Objects whose state are changed in the object store.
-    pub changed_objects: Vec<ChangedObject>,
-    /// Shared objects that are not mutated in this transaction. Unlike owned
-    /// objects, read-only shared objects' version are not committed in the
-    /// transaction, and in order for a node to catch up and execute it
-    /// without consensus sequencing, the version needs to be committed in
-    /// the effects.
-    pub unchanged_shared_objects: Vec<UnchangedSharedObject>,
-    /// Auxiliary data that are not protocol-critical, generated as part of the
-    /// effects but are stored separately. Storing it separately allows us
-    /// to avoid bloating the effects with data that are not critical.
-    /// It also provides more flexibility on the format and type of the data.
-    #[uniffi(default = None)]
-    pub auxiliary_data_digest: Option<Arc<EffectsAuxDataDigest>>,
-}
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
+pub struct TransactionEffectsV1(pub iota_sdk::types::TransactionEffectsV1);
 
-impl From<iota_sdk::types::TransactionEffectsV1> for TransactionEffectsV1 {
-    fn from(value: iota_sdk::types::TransactionEffectsV1) -> Self {
-        Self {
-            status: value.status.into(),
-            epoch: value.epoch,
-            gas_cost_summary: value.gas_cost_summary,
-            transaction_digest: Arc::new(value.transaction_digest.into()),
-            gas_object_index: value.gas_object_index,
-            events_digest: value.events_digest.map(Into::into).map(Arc::new),
-            dependencies: value
-                .dependencies
+#[uniffi::export]
+impl TransactionEffectsV1 {
+    #[uniffi::constructor]
+    #[allow(clippy::too_many_arguments)]
+    pub fn new(
+        status: ExecutionStatus,
+        epoch: u64,
+        gas_cost_summary: GasCostSummary,
+        transaction_digest: &TransactionDigest,
+        gas_object_index: Option<u32>,
+        events_digest: Option<Arc<TransactionEventsDigest>>,
+        dependencies: Vec<Arc<TransactionDigest>>,
+        lamport_version: &Version,
+        changed_objects: Vec<ChangedObject>,
+        unchanged_shared_objects: Vec<UnchangedSharedObject>,
+        auxiliary_data_digest: Option<Arc<EffectsAuxDataDigest>>,
+    ) -> Self {
+        Self(iota_sdk::types::TransactionEffectsV1 {
+            status: status.into(),
+            epoch,
+            gas_cost_summary,
+            transaction_digest: **transaction_digest,
+            gas_object_index,
+            events_digest: events_digest.map(|digest| **digest),
+            dependencies: dependencies.into_iter().map(|digest| **digest).collect(),
+            lamport_version: **lamport_version,
+            changed_objects: changed_objects.into_iter().map(Into::into).collect(),
+            unchanged_shared_objects: unchanged_shared_objects
                 .into_iter()
                 .map(Into::into)
-                .map(Arc::new)
                 .collect(),
-            lamport_version: Arc::new(value.lamport_version.into()),
-            changed_objects: value.changed_objects.into_iter().map(Into::into).collect(),
-            unchanged_shared_objects: value
-                .unchanged_shared_objects
-                .into_iter()
-                .map(Into::into)
-                .collect(),
-            auxiliary_data_digest: value.auxiliary_data_digest.map(Into::into).map(Arc::new),
-        }
+            auxiliary_data_digest: auxiliary_data_digest.map(|digest| **digest),
+        })
     }
-}
 
-impl From<TransactionEffectsV1> for iota_sdk::types::TransactionEffectsV1 {
-    fn from(value: TransactionEffectsV1) -> Self {
-        Self {
-            status: value.status.into(),
-            epoch: value.epoch,
-            gas_cost_summary: value.gas_cost_summary,
-            transaction_digest: **value.transaction_digest,
-            gas_object_index: value.gas_object_index,
-            events_digest: value.events_digest.map(|v| **v),
-            dependencies: value.dependencies.into_iter().map(|v| **v).collect(),
-            lamport_version: **value.lamport_version,
-            changed_objects: value.changed_objects.into_iter().map(Into::into).collect(),
-            unchanged_shared_objects: value
-                .unchanged_shared_objects
-                .into_iter()
-                .map(Into::into)
-                .collect(),
-            auxiliary_data_digest: value.auxiliary_data_digest.map(|v| **v),
-        }
+    /// The status of the execution.
+    pub fn status(&self) -> ExecutionStatus {
+        self.0.status.clone().into()
+    }
+
+    /// The epoch when this transaction was executed.
+    pub fn epoch(&self) -> u64 {
+        self.0.epoch
+    }
+
+    /// The gas used by this transaction.
+    pub fn gas_cost_summary(&self) -> GasCostSummary {
+        self.0.gas_cost_summary.clone()
+    }
+
+    /// The transaction digest.
+    pub fn transaction_digest(&self) -> TransactionDigest {
+        self.0.transaction_digest.into()
+    }
+
+    /// The updated gas object, as an index into `changed_objects`. `None` for a
+    /// system transaction, which pays no gas.
+    pub fn gas_object_index(&self) -> Option<u32> {
+        self.0.gas_object_index
+    }
+
+    /// The digest of the events emitted during execution, or `None` if the
+    /// transaction emitted none.
+    pub fn events_digest(&self) -> Option<Arc<TransactionEventsDigest>> {
+        self.0.events_digest.map(|digest| Arc::new(digest.into()))
+    }
+
+    /// The transactions this one depends on.
+    pub fn dependencies(&self) -> Vec<Arc<TransactionDigest>> {
+        self.0
+            .dependencies
+            .iter()
+            .map(|digest| Arc::new((*digest).into()))
+            .collect()
+    }
+
+    /// The version this transaction assigned to every output object other than
+    /// packages.
+    pub fn lamport_version(&self) -> Version {
+        self.0.lamport_version.into()
+    }
+
+    /// Objects whose state changed in the object store.
+    pub fn changed_objects(&self) -> Vec<ChangedObject> {
+        self.0
+            .changed_objects
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .collect()
+    }
+
+    /// Shared objects this transaction was sequenced against without changing.
+    pub fn unchanged_shared_objects(&self) -> Vec<UnchangedSharedObject> {
+        self.0
+            .unchanged_shared_objects
+            .iter()
+            .cloned()
+            .map(Into::into)
+            .collect()
+    }
+
+    /// Auxiliary data generated as part of the effects but stored separately.
+    pub fn auxiliary_data_digest(&self) -> Option<Arc<EffectsAuxDataDigest>> {
+        self.0
+            .auxiliary_data_digest
+            .map(|digest| Arc::new(digest.into()))
+    }
+
+    /// The id and pre-transaction version of every object that existed before
+    /// this transaction and was modified by it.
+    pub fn modified_at_versions(&self) -> Vec<ObjectVersion> {
+        self.0
+            .modified_at_versions()
+            .into_iter()
+            .map(Into::into)
+            .collect()
+    }
+
+    /// The reference and owner, before this transaction, of every object it
+    /// modified.
+    pub fn old_object_metadata(&self) -> Vec<OwnedObjectReference> {
+        self.0
+            .old_object_metadata()
+            .into_iter()
+            .map(Into::into)
+            .collect()
+    }
+
+    /// Objects newly created by this transaction, paired with their owner.
+    pub fn created(&self) -> Vec<OwnedObjectReference> {
+        self.0.created().into_iter().map(Into::into).collect()
+    }
+
+    /// Objects that existed before this transaction and whose contents it
+    /// updated, at their post-transaction reference and owner.
+    pub fn mutated(&self) -> Vec<OwnedObjectReference> {
+        self.0.mutated().into_iter().map(Into::into).collect()
+    }
+
+    /// Objects that were wrapped inside another object before this transaction
+    /// and that it restored to the store.
+    pub fn unwrapped(&self) -> Vec<OwnedObjectReference> {
+        self.0.unwrapped().into_iter().map(Into::into).collect()
+    }
+
+    /// Objects that existed before this transaction and that it deleted.
+    pub fn deleted(&self) -> Vec<ObjectReference> {
+        self.0.deleted().into_iter().map(Into::into).collect()
+    }
+
+    /// Objects unwrapped and then deleted within this same transaction.
+    pub fn unwrapped_then_deleted(&self) -> Vec<ObjectReference> {
+        self.0
+            .unwrapped_then_deleted()
+            .into_iter()
+            .map(Into::into)
+            .collect()
+    }
+
+    /// Objects that this transaction wrapped inside another object.
+    pub fn wrapped(&self) -> Vec<ObjectReference> {
+        self.0.wrapped().into_iter().map(Into::into).collect()
+    }
+
+    /// The shared objects this transaction was sequenced against, whether or
+    /// not it changed them.
+    pub fn input_shared_objects(&self) -> Vec<InputSharedObject> {
+        self.0
+            .input_shared_objects()
+            .into_iter()
+            .map(Into::into)
+            .collect()
+    }
+
+    /// What this transaction did to each object it changed, with the version
+    /// and digest each side is at resolved.
+    pub fn object_changes(&self) -> Vec<ObjectChange> {
+        self.0
+            .object_changes()
+            .into_iter()
+            .map(Into::into)
+            .collect()
+    }
+
+    /// Every object still in the store after this transaction, tagged with how
+    /// it got there.
+    pub fn all_changed_objects(&self) -> Vec<ChangedObjectWrite> {
+        self.0
+            .all_changed_objects()
+            .into_iter()
+            .map(|(object, kind)| ChangedObjectWrite {
+                object: object.into(),
+                kind: kind.into(),
+            })
+            .collect()
+    }
+
+    /// Every object that was in the store before this transaction and is not
+    /// after it, tagged with why.
+    pub fn all_removed_objects(&self) -> Vec<RemovedObject> {
+        self.0
+            .all_removed_objects()
+            .into_iter()
+            .map(|(reference, kind)| RemovedObject {
+                reference: reference.into(),
+                kind: kind.into(),
+            })
+            .collect()
+    }
+
+    /// The post-transaction reference and owner of the gas object, or `None`
+    /// for a system transaction, which pays no gas.
+    pub fn gas_object(&self) -> Option<OwnedObjectReference> {
+        self.0.gas_object().map(Into::into)
     }
 }
 
@@ -434,8 +568,9 @@ pub enum IdOperation {
     Deleted,
 }
 
+crate::export_iota_types_objects_bcs_conversion!(TransactionEffectsV1);
+crate::export_iota_types_objects_json_conversion!(TransactionEffectsV1);
 crate::export_iota_types_bcs_conversion!(
-    TransactionEffectsV1,
     ChangedObject,
     UnchangedSharedObject,
     UnchangedSharedKind,
@@ -444,7 +579,6 @@ crate::export_iota_types_bcs_conversion!(
     IdOperation
 );
 crate::export_iota_types_json_conversion!(
-    TransactionEffectsV1,
     ChangedObject,
     UnchangedSharedObject,
     UnchangedSharedKind,
@@ -452,8 +586,8 @@ crate::export_iota_types_json_conversion!(
     ObjectOut,
     IdOperation
 );
+crate::export_iota_types_objects_display!(TransactionEffectsV1);
 crate::export_iota_types_display!(
-    TransactionEffectsV1,
     ChangedObject,
     UnchangedSharedObject,
     UnchangedSharedKind,
@@ -461,3 +595,151 @@ crate::export_iota_types_display!(
     ObjectOut
 );
 crate::export_iota_types_remote_display!(IdOperation);
+
+/// An object reference paired with the owner the object has at that version.
+#[derive(uniffi::Record)]
+pub struct OwnedObjectReference {
+    pub reference: ObjectReference,
+    pub owner: Arc<Owner>,
+}
+
+impl From<iota_sdk::types::OwnedObjectReference> for OwnedObjectReference {
+    fn from(value: iota_sdk::types::OwnedObjectReference) -> Self {
+        Self {
+            reference: value.reference.into(),
+            owner: Arc::new(value.owner.into()),
+        }
+    }
+}
+
+/// An object id paired with one of that object's versions.
+#[derive(uniffi::Record)]
+pub struct ObjectVersion {
+    pub object_id: Arc<ObjectId>,
+    pub version: Arc<Version>,
+}
+
+impl From<iota_sdk::types::ObjectVersion> for ObjectVersion {
+    fn from(value: iota_sdk::types::ObjectVersion) -> Self {
+        Self {
+            object_id: Arc::new(value.object_id.into()),
+            version: Arc::new(value.version.into()),
+        }
+    }
+}
+
+/// A shared object an executed transaction took as input.
+#[derive(uniffi::Enum)]
+pub enum InputSharedObject {
+    /// Taken mutably, and written back by the transaction.
+    Mutate { reference: ObjectReference },
+    /// Read without being mutated.
+    ReadOnly { reference: ObjectReference },
+    /// Read, but already deleted by an earlier transaction.
+    ReadDeleted { object: ObjectVersion },
+    /// Taken mutably, but already deleted by an earlier transaction.
+    MutateDeleted { object: ObjectVersion },
+    /// Taken by a transaction that consensus canceled.
+    Canceled { object: ObjectVersion },
+}
+
+impl From<iota_sdk::types::InputSharedObject> for InputSharedObject {
+    fn from(value: iota_sdk::types::InputSharedObject) -> Self {
+        match value {
+            iota_sdk::types::InputSharedObject::Mutate(reference) => Self::Mutate {
+                reference: reference.into(),
+            },
+            iota_sdk::types::InputSharedObject::ReadOnly(reference) => Self::ReadOnly {
+                reference: reference.into(),
+            },
+            iota_sdk::types::InputSharedObject::ReadDeleted(object) => Self::ReadDeleted {
+                object: object.into(),
+            },
+            iota_sdk::types::InputSharedObject::MutateDeleted(object) => Self::MutateDeleted {
+                object: object.into(),
+            },
+            iota_sdk::types::InputSharedObject::Canceled(object) => Self::Canceled {
+                object: object.into(),
+            },
+        }
+    }
+}
+
+/// What an executed transaction did to one object, with the version and digest
+/// each side is at resolved.
+#[derive(uniffi::Record)]
+pub struct ObjectChange {
+    pub object_id: Arc<ObjectId>,
+    pub input_version: Option<Arc<Version>>,
+    pub input_digest: Option<Arc<ObjectDigest>>,
+    pub output_version: Option<Arc<Version>>,
+    pub output_digest: Option<Arc<ObjectDigest>>,
+    pub id_operation: IdOperation,
+}
+
+impl From<iota_sdk::types::ObjectChange> for ObjectChange {
+    fn from(value: iota_sdk::types::ObjectChange) -> Self {
+        Self {
+            object_id: Arc::new(value.object_id.into()),
+            input_version: value.input_version.map(|v| Arc::new(v.into())),
+            input_digest: value.input_digest.map(|d| Arc::new(d.into())),
+            output_version: value.output_version.map(|v| Arc::new(v.into())),
+            output_digest: value.output_digest.map(|d| Arc::new(d.into())),
+            id_operation: value.id_operation,
+        }
+    }
+}
+
+/// How an object came to be in the store after a transaction wrote it.
+#[derive(uniffi::Enum)]
+pub enum WriteKind {
+    /// The object existed already and the transaction changed its contents.
+    Mutate,
+    /// The transaction created the object.
+    Create,
+    /// The object was wrapped inside another object, and the transaction
+    /// restored it to the store.
+    Unwrap,
+}
+
+impl From<iota_sdk::types::WriteKind> for WriteKind {
+    fn from(value: iota_sdk::types::WriteKind) -> Self {
+        match value {
+            iota_sdk::types::WriteKind::Mutate => Self::Mutate,
+            iota_sdk::types::WriteKind::Create => Self::Create,
+            iota_sdk::types::WriteKind::Unwrap => Self::Unwrap,
+        }
+    }
+}
+
+/// Why an object is no longer in the store after a transaction.
+#[derive(uniffi::Enum)]
+pub enum ObjectRemoveKind {
+    /// The transaction deleted the object.
+    Delete,
+    /// The transaction wrapped the object inside another one.
+    Wrap,
+}
+
+impl From<iota_sdk::types::ObjectRemoveKind> for ObjectRemoveKind {
+    fn from(value: iota_sdk::types::ObjectRemoveKind) -> Self {
+        match value {
+            iota_sdk::types::ObjectRemoveKind::Delete => Self::Delete,
+            iota_sdk::types::ObjectRemoveKind::Wrap => Self::Wrap,
+        }
+    }
+}
+
+/// An object still in the store after a transaction, and how it got there.
+#[derive(uniffi::Record)]
+pub struct ChangedObjectWrite {
+    pub object: OwnedObjectReference,
+    pub kind: WriteKind,
+}
+
+/// An object no longer in the store after a transaction, and why.
+#[derive(uniffi::Record)]
+pub struct RemovedObject {
+    pub reference: ObjectReference,
+    pub kind: ObjectRemoveKind,
+}

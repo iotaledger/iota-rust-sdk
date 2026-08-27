@@ -19,8 +19,9 @@ use crate::{
     },
     types::{
         address::Address,
+        digest::Digest,
         move_core::{Identifier, TypeTag},
-        move_package::MovePackageData,
+        move_package::{MovePackageData, UpgradePolicy},
         object::ObjectId,
         transaction::{Transaction, TransactionEffects},
     },
@@ -55,10 +56,11 @@ impl ClientTransactionBuilder {
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl ClientTransactionBuilder {
     /// Set the sender address.
-    pub fn set_sender(self: Arc<Self>, sender: &Address) {
+    pub fn sender(self: Arc<Self>, sender: &Address) -> Arc<Self> {
         self.write(|builder| {
-            builder.set_sender(**sender);
+            builder.sender(**sender);
         });
+        self
     }
 
     /// Add gas coins that will be consumed. Optional.
@@ -331,6 +333,30 @@ impl ClientTransactionBuilder {
         self
     }
 
+    /// Authorize a package upgrade by calling
+    /// `0x2::package::authorize_upgrade`.
+    ///
+    /// The result assigned to `upgrade_ticket_name` is the `UpgradeTicket`
+    /// expected by `ClientTransactionBuilder::upgrade()`. The digest is the
+    /// digest of the package being upgraded to (`MovePackageData::digest()`).
+    ///
+    /// For the standard upgrade flow, use
+    /// `ClientTransactionBuilder::upgrade_package()` instead.
+    pub fn authorize_upgrade(
+        self: Arc<Self>,
+        upgrade_capability: &PTBArgument,
+        upgrade_policy: &UpgradePolicy,
+        digest: &Digest,
+        upgrade_ticket_name: String,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            builder
+                .authorize_upgrade(upgrade_capability, upgrade_policy.as_u8(), **digest)
+                .assign(upgrade_ticket_name);
+        });
+        self
+    }
+
     /// Upgrade a Move package.
     ///
     ///  - `modules`: is the modules' bytecode for the modules to be published
@@ -339,9 +365,10 @@ impl ClientTransactionBuilder {
     ///  - `package`: is the ID of the current package being upgraded
     ///  - `ticket`: is the upgrade ticket
     ///
-    ///  To get the ticket, you have to call the
-    /// `0x2::package::authorize_upgrade` function, and pass the package
-    /// ID, the upgrade policy, and package digest.
+    /// To get the ticket, use
+    /// `ClientTransactionBuilder::authorize_upgrade()`. The result assigned
+    /// to `name` is the `UpgradeReceipt` expected by
+    /// `ClientTransactionBuilder::commit_upgrade()`.
     #[uniffi::method(default(name = None))]
     pub fn upgrade(
         self: Arc<Self>,
@@ -354,6 +381,46 @@ impl ClientTransactionBuilder {
             builder
                 .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
                 .assign(name);
+        });
+        self
+    }
+
+    /// Commit a package upgrade by calling `0x2::package::commit_upgrade`,
+    /// consuming the `UpgradeReceipt` returned by
+    /// `ClientTransactionBuilder::upgrade()`.
+    pub fn commit_upgrade(
+        self: Arc<Self>,
+        upgrade_capability: &PTBArgument,
+        upgrade_receipt: &PTBArgument,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            builder.commit_upgrade(upgrade_capability, upgrade_receipt);
+        });
+        self
+    }
+
+    /// Upgrade a Move package.
+    ///
+    /// This is a high-level function which chains
+    /// `ClientTransactionBuilder::authorize_upgrade()`,
+    /// `ClientTransactionBuilder::upgrade()` and
+    /// `ClientTransactionBuilder::commit_upgrade()` using the digest from the
+    /// provided `MovePackageData`. Use the individual functions for custom
+    /// upgrade flows.
+    pub fn upgrade_package(
+        self: Arc<Self>,
+        package_id: &ObjectId,
+        package_data: &MovePackageData,
+        upgrade_capability: &PTBArgument,
+        upgrade_policy: &UpgradePolicy,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            builder.upgrade_package(
+                **package_id,
+                package_data.0.clone(),
+                upgrade_capability,
+                upgrade_policy.as_u8(),
+            );
         });
         self
     }
