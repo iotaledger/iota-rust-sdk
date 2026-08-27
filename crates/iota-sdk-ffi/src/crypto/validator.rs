@@ -92,7 +92,7 @@ impl ValidatorCommitteeSignatureAggregator {
         Ok(self
             .0
             .write()
-            .expect("failed to read validator committee signature aggregator")
+            .expect("failed to write validator committee signature aggregator")
             .add_signature(signature.0.clone())?)
     }
 
