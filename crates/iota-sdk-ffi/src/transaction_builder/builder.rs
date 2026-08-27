@@ -76,7 +76,7 @@ impl TransactionBuilder {
     ///
     /// The returned builder has the original inputs and commands but no
     /// sender, gas payment, sponsor, or expiration; the sender defaults to
-    /// the zero address and must be set via `set_sender` before `finish`
+    /// the zero address and must be set via `sender` before `finish`
     /// is called.
     #[uniffi::constructor]
     pub fn from_programmable_transaction(ptb: &ProgrammableTransaction) -> Self {
@@ -91,9 +91,9 @@ impl TransactionBuilder {
     }
 
     /// Set the sender address.
-    pub fn set_sender(self: Arc<Self>, sender: &Address) -> Arc<Self> {
+    pub fn sender(self: Arc<Self>, sender: &Address) -> Arc<Self> {
         self.write(|builder| {
-            builder.set_sender(**sender);
+            builder.sender(**sender);
         });
         self
     }

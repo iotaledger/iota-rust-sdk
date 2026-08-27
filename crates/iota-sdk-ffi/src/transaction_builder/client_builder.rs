@@ -55,9 +55,9 @@ impl ClientTransactionBuilder {
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl ClientTransactionBuilder {
     /// Set the sender address.
-    pub fn set_sender(self: Arc<Self>, sender: &Address) -> Arc<Self> {
+    pub fn sender(self: Arc<Self>, sender: &Address) -> Arc<Self> {
         self.write(|builder| {
-            builder.set_sender(**sender);
+            builder.sender(**sender);
         });
         self
     }
