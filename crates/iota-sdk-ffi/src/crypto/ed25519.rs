@@ -223,13 +223,13 @@ impl Ed25519Verifier {
         Self(iota_sdk::crypto::ed25519::Ed25519Verifier::new())
     }
 
-    fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
+    pub fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
         Ok(iota_sdk::crypto::Verifier::<
             iota_sdk::types::SimpleSignature,
         >::verify(&self.0, message, &signature.0)?)
     }
 
-    fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
+    pub fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
         Ok(
             iota_sdk::crypto::Verifier::<iota_sdk::types::UserSignature>::verify(
                 &self.0,
