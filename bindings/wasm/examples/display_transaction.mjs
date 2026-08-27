@@ -1,11 +1,13 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 //
-// Demonstrates printing types as human-readable text. Most types offer a
-// `toDisplayString()` method; types mirrored from the core crate offer a
+// Demonstrates printing types as human-readable text. Object types offer a
+// `toDisplayString()` method; records are plain objects, so theirs sits on the
+// generated companion object; types mirrored from the core crate offer a
 // `<type>ToDisplayString()` function instead.
 
 import {
+  GasPayment,
   Transaction,
   transactionExpirationToDisplayString,
   initAsync,
@@ -20,6 +22,6 @@ const txBytesBase64 =
 const transaction = Transaction.fromBase64(txBytesBase64);
 console.log(transaction.toDisplayString());
 
-console.log(transaction.gasPayment().toDisplayString());
+console.log(GasPayment.toDisplayString(transaction.gasPayment()));
 
 console.log(transactionExpirationToDisplayString(transaction.expiration()));
