@@ -80,9 +80,9 @@ const sig0 = kp0.signTransaction(txn);
 const sig1 = kp1.signTransaction(txn);
 
 // 8. Aggregate signatures.
-let aggregator = MultisigAggregator.newWithTransaction(committee, txn);
-aggregator = aggregator.withSignature(sig0);
-aggregator = aggregator.withSignature(sig1);
+const aggregator = MultisigAggregator.newWithTransaction(committee, txn);
+aggregator.addSignature(sig0);
+aggregator.addSignature(sig1);
 const aggSig = aggregator.finish();
 
 // 9. Execute.

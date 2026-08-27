@@ -99,12 +99,10 @@ func main() {
 
 	// 8. Aggregate signatures
 	aggregator := iota_sdk.MultisigAggregatorNewWithTransaction(committee, txn)
-	aggregator, err = aggregator.WithSignature(sig0)
-	if err != nil {
+	if err = aggregator.AddSignature(sig0); err != nil {
 		log.Fatalf("Failed to add sig0: %v", err)
 	}
-	aggregator, err = aggregator.WithSignature(sig1)
-	if err != nil {
+	if err = aggregator.AddSignature(sig1); err != nil {
 		log.Fatalf("Failed to add sig1: %v", err)
 	}
 	aggSig, err := aggregator.Finish()

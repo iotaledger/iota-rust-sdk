@@ -68,9 +68,9 @@ fun main() = runBlocking {
         val sig1 = kp1.signTransaction(txn)
 
         // 8. Aggregate signatures
-        var aggregator = MultisigAggregator.newWithTransaction(committee, txn)
-        aggregator = aggregator.withSignature(sig0)
-        aggregator = aggregator.withSignature(sig1)
+        val aggregator = MultisigAggregator.newWithTransaction(committee, txn)
+        aggregator.addSignature(sig0)
+        aggregator.addSignature(sig1)
         val aggSig = aggregator.finish()
 
         // 9. Execute
