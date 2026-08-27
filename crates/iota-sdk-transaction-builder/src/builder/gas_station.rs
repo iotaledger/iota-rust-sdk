@@ -171,6 +171,7 @@ impl FromStr for GasStationVersion {
 }
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 struct ReserveGasRequest {
     gas_budget: u64,
     reserve_duration_secs: u64,
@@ -183,8 +184,10 @@ struct ReserveGasResponse {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
 struct GasReservation {
     pub sponsor_address: Address,
+    #[serde(deserialize_with = "deserialize_readable_u64")]
     pub reservation_id: u64,
     pub gas_coins: Vec<GasObjectRef>,
 }
