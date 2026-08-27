@@ -10,7 +10,7 @@ use crate::{
     graphql::{
         client::GraphQLClient,
         pagination::EventPage,
-        query_types::{EventFilter, GraphQlEvent},
+        query_types::{EventFilter, GraphQLEvent},
     },
 };
 
@@ -37,7 +37,7 @@ impl GraphQLClient {
             .into_parts();
         let events = events
             .into_iter()
-            .map(GraphQlEvent::try_from)
+            .map(GraphQLEvent::try_from)
             .collect::<Result<Vec<_>>>()?;
         Ok(Page::new(page_info, events).into())
     }

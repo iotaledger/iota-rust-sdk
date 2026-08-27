@@ -23,8 +23,16 @@ impl std::fmt::Display for BlstError {
 
 impl std::error::Error for BlstError {}
 
-#[derive(Clone)]
+#[derive(Clone, zeroize::Zeroize, zeroize::ZeroizeOnDrop)]
 pub struct Bls12381PrivateKey(SecretKey);
+
+impl PartialEq for Bls12381PrivateKey {
+    fn eq(&self, other: &Self) -> bool {
+        zeroize::Zeroizing::new(self.0.to_bytes()) == zeroize::Zeroizing::new(other.0.to_bytes())
+    }
+}
+
+impl Eq for Bls12381PrivateKey {}
 
 impl std::fmt::Debug for Bls12381PrivateKey {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
