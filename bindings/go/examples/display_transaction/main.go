@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // This example demonstrates how to print types as human-readable text.
-// Object types offer a `ToDisplayString()` method, record types a
-// `<Type>ToDisplayString()` function.
+// Most types offer a `ToDisplayString()` method; types mirrored from the core
+// crate offer a `<Type>ToDisplayString()` function instead.
 
 package main
 
@@ -23,5 +23,7 @@ func main() {
 	}
 	log.Printf("\n%s", transaction.ToDisplayString())
 
-	log.Printf("\n%s", iota_sdk.GasPaymentToDisplayString(transaction.GasPayment()))
+	log.Printf("\n%s", transaction.GasPayment().ToDisplayString())
+
+	log.Printf("\n%s", iota_sdk.TransactionExpirationToDisplayString(transaction.Expiration()))
 }

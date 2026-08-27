@@ -58,4 +58,4 @@ pub struct GasCostSummary {
 
 crate::export_iota_types_bcs_conversion!(GasCostSummary);
 crate::export_iota_types_json_conversion!(GasCostSummary);
-crate::export_iota_types_display!(GasCostSummary);
+crate::export_iota_types_remote_display!(GasCostSummary);

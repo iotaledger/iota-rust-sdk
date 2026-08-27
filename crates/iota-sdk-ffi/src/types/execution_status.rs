@@ -843,8 +843,7 @@ crate::export_iota_types_display!(
     ExecutionStatus,
     ExecutionError,
     MoveLocation,
-    CommandArgumentError,
-    PackageUpgradeError,
-    TypeArgumentError
+    PackageUpgradeError
 );
+crate::export_iota_types_remote_display!(CommandArgumentError, TypeArgumentError);
 crate::export_iota_types_objects_display!(ExecutionErrorWrapper);

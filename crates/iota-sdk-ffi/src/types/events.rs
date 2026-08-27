@@ -101,6 +101,18 @@ impl TransactionEvents {
     }
 }
 
+#[uniffi::export]
+impl Event {
+    /// Render this type as human-readable text.
+    ///
+    /// The layout is meant for reading and can change between releases. Use the
+    /// JSON or BCS conversions for output that gets parsed.
+    pub fn to_display_string(self) -> Result<String> {
+        let data: iota_sdk::types::Event = self.try_into()?;
+        Ok(data.to_string())
+    }
+}
+
 /// Create an [`Event`] from BCS encoded bytes.
 #[uniffi::export]
 pub fn event_from_bcs(bcs: Vec<u8>) -> Result<Event> {
@@ -112,16 +124,6 @@ pub fn event_from_bcs(bcs: Vec<u8>) -> Result<Event> {
 pub fn event_to_bcs(data: Event) -> Result<Vec<u8>> {
     let data: iota_sdk::types::Event = data.try_into()?;
     Ok(bcs::to_bytes(&data)?)
-}
-
-/// Render an [`Event`] as human-readable text.
-///
-/// The layout is meant for reading and can change between releases. Use the
-/// JSON or BCS conversions for output that gets parsed.
-#[uniffi::export]
-pub fn event_to_display_string(data: Event) -> Result<String> {
-    let data: iota_sdk::types::Event = data.try_into()?;
-    Ok(data.to_string())
 }
 
 /// Create an [`Event`] from a JSON encoded string.

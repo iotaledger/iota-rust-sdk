@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // This example demonstrates how to print types as human-readable text.
-// Object types offer a `toDisplayString()` method, record types a
-// `<type>ToDisplayString()` function.
+// Most types offer a `toDisplayString()` method; types mirrored from the core
+// crate offer a `<type>ToDisplayString()` function instead.
 
 import IotaSDK
 
@@ -17,6 +17,8 @@ struct DisplayTransactionExample {
     let transaction = try Transaction.fromBase64(base64: txBytesBase64)
     print(transaction.toDisplayString())
 
-    print(gasPaymentToDisplayString(data: transaction.gasPayment()))
+    print(transaction.gasPayment().toDisplayString())
+
+    print(transactionExpirationToDisplayString(data: transaction.expiration()))
   }
 }

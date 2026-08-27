@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // This example demonstrates how to print types as human-readable text.
-// Object types offer a `ToDisplayString()` method, record types a
-// `<Type>ToDisplayString()` function.
+// Most types offer a `ToDisplayString()` method; types mirrored from the core
+// crate offer a `<Type>ToDisplayString()` function instead.
 
 using IotaSdk;
 
@@ -17,6 +17,8 @@ class Program
         var transaction = Transaction.FromBase64(txBytesBase64);
         Console.WriteLine(transaction.ToDisplayString());
 
-        Console.WriteLine(Iota.GasPaymentToDisplayString(transaction.GasPayment()));
+        Console.WriteLine(transaction.GasPayment().ToDisplayString());
+
+        Console.WriteLine(Iota.TransactionExpirationToDisplayString(transaction.Expiration()));
     }
 }

@@ -2049,9 +2049,9 @@ crate::export_iota_types_display!(
     DenyRuleSet,
     TransactionDenyRulesUpdate,
     GasPayment,
-    SharedObjectReference,
-    TransactionExpiration
+    SharedObjectReference
 );
+crate::export_iota_types_remote_display!(TransactionExpiration);
 crate::export_iota_types_objects_display!(
     Transaction,
     TransactionV1,

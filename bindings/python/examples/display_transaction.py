@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # This example demonstrates how to print types as human-readable text.
-# Object types offer a `to_display_string()` method, record types a
-# `<type>_to_display_string()` function.
+# Most types offer a `to_display_string()` method; types mirrored from the core
+# crate offer a `<type>_to_display_string()` function instead.
 
 from lib.iota_sdk import *
 
@@ -15,7 +15,9 @@ def main():
     transaction = Transaction.from_base64(tx_bytes_base64)
     print(transaction.to_display_string())
 
-    print(gas_payment_to_display_string(transaction.gas_payment()))
+    print(transaction.gas_payment().to_display_string())
+
+    print(transaction_expiration_to_display_string(transaction.expiration()))
 
 
 if __name__ == "__main__":

@@ -458,6 +458,6 @@ crate::export_iota_types_display!(
     UnchangedSharedObject,
     UnchangedSharedKind,
     ObjectIn,
-    ObjectOut,
-    IdOperation
+    ObjectOut
 );
+crate::export_iota_types_remote_display!(IdOperation);

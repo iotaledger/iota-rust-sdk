@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // This example demonstrates how to print types as human-readable text.
-// Object types offer a `toDisplayString()` method, record types a
-// `<type>ToDisplayString()` function.
+// Most types offer a `toDisplayString()` method; types mirrored from the core
+// crate offer a `<type>ToDisplayString()` function instead.
 
 import iota_sdk.*
 
@@ -16,7 +16,9 @@ fun main() {
         val transaction = Transaction.fromBase64(txBytesBase64)
         println(transaction.toDisplayString())
 
-        println(gasPaymentToDisplayString(transaction.gasPayment()))
+        println(transaction.gasPayment().toDisplayString())
+
+        println(transactionExpirationToDisplayString(transaction.expiration()))
     } catch (e: Exception) {
         e.printStackTrace()
         kotlin.system.exitProcess(1)

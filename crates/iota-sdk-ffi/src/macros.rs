@@ -238,13 +238,34 @@ macro_rules! export_primitive_types_json_conversion {
 
 #[macro_export]
 macro_rules! export_iota_types_display {
+    ($($name:ident),+ $(,)?) => {
+        $(
+            #[uniffi::export]
+            impl $name {
+                /// Render this type as human-readable text.
+                ///
+                /// The layout is meant for reading and can change between
+                /// releases. Use the JSON or BCS conversions for output that
+                /// gets parsed.
+                pub fn to_display_string(self) -> String {
+                    iota_sdk::types::$name::from(self).to_string()
+                }
+            }
+        )+
+    };
+}
+
+/// Same as [`export_iota_types_display`], for types declared with
+/// `#[uniffi::remote(…)]`. Rust allows no inherent impl on a type from another
+/// crate, so these get a function instead of a method.
+#[macro_export]
+macro_rules! export_iota_types_remote_display {
     ($($core:ty => $name:ident),+ $(,)?) => {
         paste::paste! {$(
             /// Render this type as human-readable text.
             ///
-            /// The layout is meant for reading and can change between
-            /// releases. Use the JSON or BCS conversions for output that gets
-            /// parsed.
+            /// The layout is meant for reading and can change between releases.
+            /// Use the JSON or BCS conversions for output that gets parsed.
             #[uniffi::export]
             pub fn [< $name:snake _to_display_string >](data: $name) -> String {
                 <$core>::from(data).to_string()
@@ -252,7 +273,7 @@ macro_rules! export_iota_types_display {
         )+}
     };
     ($($name:ident),+ $(,)?) => {
-        $crate::export_iota_types_display!($(iota_sdk::types::$name => $name),+);
+        $crate::export_iota_types_remote_display!($(iota_sdk::types::$name => $name),+);
     };
 }
 
