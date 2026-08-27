@@ -362,7 +362,7 @@ class Program
 
     static bool TryGetProgrammableTransaction(Transaction tx, out JsonElement programmableTx)
     {
-        using var json = JsonDocument.Parse(Iota.TransactionToJson(tx));
+        using var json = JsonDocument.Parse(tx.ToJson());
         programmableTx = default;
 
         if (

@@ -31,7 +31,7 @@ use crate::types::{
 ///              (vector unchanged-shared-object)
 ///              (option digest)                    ; auxiliary data digest
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct TransactionEffectsV1 {
     /// The status of the execution
     pub status: ExecutionStatus,
@@ -128,7 +128,7 @@ impl From<TransactionEffectsV1> for iota_sdk::types::TransactionEffectsV1 {
 /// ```text
 /// changed-object = object-id object-in object-out id-operation
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct ChangedObject {
     /// Id of the object
     pub object_id: Arc<ObjectId>,
@@ -173,7 +173,7 @@ impl From<ChangedObject> for iota_sdk::types::ChangedObject {
 /// ```text
 /// unchanged-shared-object = object-id unchanged-shared-object-kind
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct UnchangedSharedObject {
     pub object_id: Arc<ObjectId>,
     pub kind: UnchangedSharedKind,
@@ -216,7 +216,7 @@ impl From<UnchangedSharedObject> for iota_sdk::types::UnchangedSharedObject {
 /// canceled           = %d03 u64
 /// per-epoch-config    = %d04
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, uniffi::Enum)]
 pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
@@ -298,7 +298,7 @@ impl From<UnchangedSharedKind> for iota_sdk::types::UnchangedSharedKind {
 /// object-in-missing = %d00
 /// object-in-data    = %d01 u64 digest owner
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, uniffi::Enum)]
 pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
@@ -360,7 +360,7 @@ impl From<ObjectIn> for iota_sdk::types::ObjectIn {
 /// object-out-object-write   = %d01 digest owner
 /// object-out-package-write  = %d02 version digest
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, uniffi::Enum)]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
     Missing,
@@ -440,15 +440,15 @@ crate::export_iota_types_bcs_conversion!(
     UnchangedSharedObject,
     UnchangedSharedKind,
     ObjectIn,
-    ObjectOut,
-    IdOperation
+    ObjectOut
 );
+crate::export_remote_types_bcs_conversion!(IdOperation);
 crate::export_iota_types_json_conversion!(
     TransactionEffectsV1,
     ChangedObject,
     UnchangedSharedObject,
     UnchangedSharedKind,
     ObjectIn,
-    ObjectOut,
-    IdOperation
+    ObjectOut
 );
+crate::export_remote_types_json_conversion!(IdOperation);

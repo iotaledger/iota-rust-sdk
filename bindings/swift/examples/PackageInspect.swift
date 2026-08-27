@@ -312,7 +312,7 @@ private func sameObjectId(_ left: String?, _ right: String?) -> Bool {
 
 private func programmableTransactionJson(_ tx: Transaction) throws -> [String: Any]? {
   guard
-    let data = try transactionToJson(data: tx).data(using: .utf8),
+    let data = try tx.toJson().data(using: .utf8),
     let rawJson = try JSONSerialization.jsonObject(with: data) as? [String: Any],
     let txV1 = rawJson["1"] as? [String: Any],
     let kind = txV1["kind"] as? [String: Any],

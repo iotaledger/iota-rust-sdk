@@ -18,7 +18,6 @@ import iota_sdk.StructTag
 import iota_sdk.Transaction
 import iota_sdk.TransactionsFilter
 import iota_sdk.Value
-import iota_sdk.transactionToJson
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -274,7 +273,7 @@ private fun sameObjectId(left: String?, right: String?): Boolean =
     left != null && right != null && left.equals(right, ignoreCase = true)
 
 private fun programmableTransactionJson(tx: Transaction): JsonObject? {
-    val root = jsonParser.parseToJsonElement(transactionToJson(tx)).jsonObject
+    val root = jsonParser.parseToJsonElement(tx.toJson()).jsonObject
     val txV1 = root["1"]?.jsonObject ?: return null
     val kind = txV1["kind"]?.jsonObject ?: return null
     return kind.takeIf { it["kind"]?.jsonPrimitive?.contentOrNull == "programmable_transaction" }
