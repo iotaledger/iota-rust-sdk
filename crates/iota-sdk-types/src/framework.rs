@@ -64,24 +64,15 @@ impl crate::TreeDisplay for Coin {
 
 crate::impl_tree_display!(Coin);
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
 #[non_exhaustive]
 pub enum CoinFromObjectError {
+    #[error("not a coin")]
     NotACoin,
+    #[error("invalid content length")]
     InvalidContentLength,
 }
 
 impl CoinFromObjectError {
     crate::def_is!(NotACoin, InvalidContentLength);
 }
-
-impl std::fmt::Display for CoinFromObjectError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            CoinFromObjectError::NotACoin => write!(f, "not a coin"),
-            CoinFromObjectError::InvalidContentLength => write!(f, "invalid content length"),
-        }
-    }
-}
-
-impl std::error::Error for CoinFromObjectError {}
