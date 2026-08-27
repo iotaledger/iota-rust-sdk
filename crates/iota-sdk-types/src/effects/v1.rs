@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{
-    EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, ObjectDigest,
-    ObjectId, ObjectReference, ObjectVersion, OwnedObjectReference, Owner, TransactionDigest,
-    TransactionEventsDigest, Version,
+    EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, InputSharedObject,
+    ObjectChange, ObjectDigest, ObjectId, ObjectReference, ObjectRemoveKind, ObjectVersion,
+    OwnedObjectReference, Owner, TransactionDigest, TransactionEventsDigest, Version, WriteKind,
 };
 
 /// Version 1 of TransactionEffects
@@ -441,6 +441,84 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
+    /// The shared objects this transaction was sequenced against, whether or
+    /// not it changed them. Excludes per-epoch config objects, which need no
+    /// sequencing.
+    pub fn input_shared_objects(&self) -> Vec<InputSharedObject> {
+        self.changed_objects
+            .iter()
+            .filter_map(|changed| match changed.input_state {
+                ObjectIn::Data {
+                    version,
+                    digest,
+                    owner: Owner::Shared { .. },
+                } => Some(InputSharedObject::Mutate(ObjectReference::new(
+                    changed.object_id,
+                    version,
+                    digest,
+                ))),
+                _ => None,
+            })
+            .chain(
+                self.unchanged_shared_objects
+                    .iter()
+                    .filter_map(|unchanged| {
+                        let object = |version| ObjectVersion::new(unchanged.object_id, version);
+                        match unchanged.kind {
+                            UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+                                Some(InputSharedObject::ReadOnly(ObjectReference::new(
+                                    unchanged.object_id,
+                                    version,
+                                    digest,
+                                )))
+                            }
+                            UnchangedSharedKind::ReadDeleted { version } => {
+                                Some(InputSharedObject::ReadDeleted(object(version)))
+                            }
+                            UnchangedSharedKind::MutateDeleted { version } => {
+                                Some(InputSharedObject::MutateDeleted(object(version)))
+                            }
+                            UnchangedSharedKind::Canceled { version } => {
+                                Some(InputSharedObject::Canceled(object(version)))
+                            }
+                            // A per-epoch config object is read without being
+                            // sequenced, so it is not an input in this sense.
+                            UnchangedSharedKind::PerEpochConfig => None,
+                        }
+                    }),
+            )
+            .collect()
+    }
+
+    /// What this transaction did to each object it changed, with the version
+    /// and digest each side is at resolved.
+    pub fn object_changes(&self) -> Vec<ObjectChange> {
+        self.changed_objects
+            .iter()
+            .map(|changed| {
+                let input = match changed.input_state {
+                    ObjectIn::Data {
+                        version, digest, ..
+                    } => Some((version, digest)),
+                    _ => None,
+                };
+                let output = match changed.output_state {
+                    ObjectOut::ObjectWrite { digest, .. } => Some((self.lamport_version, digest)),
+                    ObjectOut::PackageWrite { version, digest } => Some((version, digest)),
+                    _ => None,
+                };
+                ObjectChange {
+                    object_id: changed.object_id,
+                    input_version: input.map(|(version, _)| version),
+                    input_digest: input.map(|(_, digest)| digest),
+                    output_version: output.map(|(version, _)| version),
+                    output_digest: output.map(|(_, digest)| digest),
+                    id_operation: changed.id_operation,
+                }
+            })
+            .collect()
+    }
+
     /// The reference and owner, before this transaction, of every object it
     /// modified.
     pub fn old_object_metadata(&self) -> Vec<OwnedObjectReference> {
@@ -533,8 +611,38 @@ impl TransactionEffectsV1 {
         )
     }
 
+    /// Every object still in the store after this transaction, tagged with how
+    /// it got there: the created, mutated and unwrapped objects together.
+    /// Excludes the objects the transaction removed.
+    pub fn all_changed_objects(&self) -> Vec<(OwnedObjectReference, WriteKind)> {
+        let tagged = |kind| move |object| (object, kind);
+        self.mutated()
+            .into_iter()
+            .map(tagged(WriteKind::Mutate))
+            .chain(self.created().into_iter().map(tagged(WriteKind::Create)))
+            .chain(self.unwrapped().into_iter().map(tagged(WriteKind::Unwrap)))
+            .collect()
+    }
+
+    /// Every object that was in the store before this transaction and is not
+    /// after it, tagged with why: the deleted and wrapped objects together.
+    /// Excludes an object the transaction unwrapped and then deleted, which was
+    /// not in the store to begin with.
+    pub fn all_removed_objects(&self) -> Vec<(ObjectReference, ObjectRemoveKind)> {
+        let tagged = |kind| move |reference| (reference, kind);
+        self.deleted()
+            .into_iter()
+            .map(tagged(ObjectRemoveKind::Delete))
+            .chain(
+                self.wrapped()
+                    .into_iter()
+                    .map(tagged(ObjectRemoveKind::Wrap)),
+            )
+            .collect()
+    }
+
     /// The post-transaction reference and owner of the gas object, or `None`
-    /// for a transaction that requires no gas (a system transaction).
+    /// for a system transaction, which pays no gas and so names none.
     pub fn gas_object(&self) -> Option<OwnedObjectReference> {
         let changed = self.changed_objects.get(self.gas_object_index? as usize)?;
         // Gas is paid in coins, so a gas object is never a package.

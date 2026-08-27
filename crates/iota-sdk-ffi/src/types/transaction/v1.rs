@@ -91,7 +91,7 @@ impl TransactionEffectsV1 {
     }
 
     /// The updated gas object, as an index into `changed_objects`. `None` for a
-    /// transaction that requires no gas.
+    /// system transaction, which pays no gas.
     pub fn gas_object_index(&self) -> Option<u32> {
         self.0.gas_object_index
     }
@@ -200,8 +200,54 @@ impl TransactionEffectsV1 {
         self.0.wrapped().into_iter().map(Into::into).collect()
     }
 
+    /// The shared objects this transaction was sequenced against, whether or
+    /// not it changed them.
+    pub fn input_shared_objects(&self) -> Vec<InputSharedObject> {
+        self.0
+            .input_shared_objects()
+            .into_iter()
+            .map(Into::into)
+            .collect()
+    }
+
+    /// What this transaction did to each object it changed, with the version
+    /// and digest each side is at resolved.
+    pub fn object_changes(&self) -> Vec<ObjectChange> {
+        self.0
+            .object_changes()
+            .into_iter()
+            .map(Into::into)
+            .collect()
+    }
+
+    /// Every object still in the store after this transaction, tagged with how
+    /// it got there.
+    pub fn all_changed_objects(&self) -> Vec<ChangedObjectWrite> {
+        self.0
+            .all_changed_objects()
+            .into_iter()
+            .map(|(object, kind)| ChangedObjectWrite {
+                object: object.into(),
+                kind: kind.into(),
+            })
+            .collect()
+    }
+
+    /// Every object that was in the store before this transaction and is not
+    /// after it, tagged with why.
+    pub fn all_removed_objects(&self) -> Vec<RemovedObject> {
+        self.0
+            .all_removed_objects()
+            .into_iter()
+            .map(|(reference, kind)| RemovedObject {
+                reference: reference.into(),
+                kind: kind.into(),
+            })
+            .collect()
+    }
+
     /// The post-transaction reference and owner of the gas object, or `None`
-    /// for a transaction that requires no gas.
+    /// for a system transaction, which pays no gas.
     pub fn gas_object(&self) -> Option<OwnedObjectReference> {
         self.0.gas_object().map(Into::into)
     }
@@ -571,4 +617,120 @@ impl From<iota_sdk::types::ObjectVersion> for ObjectVersion {
             version: Arc::new(value.version.into()),
         }
     }
+}
+
+/// A shared object an executed transaction took as input.
+#[derive(uniffi::Enum)]
+pub enum InputSharedObject {
+    /// Taken mutably, and written back by the transaction.
+    Mutate { reference: ObjectReference },
+    /// Read without being mutated.
+    ReadOnly { reference: ObjectReference },
+    /// Read, but already deleted by an earlier transaction.
+    ReadDeleted { object: ObjectVersion },
+    /// Taken mutably, but already deleted by an earlier transaction.
+    MutateDeleted { object: ObjectVersion },
+    /// Taken by a transaction that consensus canceled.
+    Canceled { object: ObjectVersion },
+}
+
+impl From<iota_sdk::types::InputSharedObject> for InputSharedObject {
+    fn from(value: iota_sdk::types::InputSharedObject) -> Self {
+        match value {
+            iota_sdk::types::InputSharedObject::Mutate(reference) => Self::Mutate {
+                reference: reference.into(),
+            },
+            iota_sdk::types::InputSharedObject::ReadOnly(reference) => Self::ReadOnly {
+                reference: reference.into(),
+            },
+            iota_sdk::types::InputSharedObject::ReadDeleted(object) => Self::ReadDeleted {
+                object: object.into(),
+            },
+            iota_sdk::types::InputSharedObject::MutateDeleted(object) => Self::MutateDeleted {
+                object: object.into(),
+            },
+            iota_sdk::types::InputSharedObject::Canceled(object) => Self::Canceled {
+                object: object.into(),
+            },
+        }
+    }
+}
+
+/// What an executed transaction did to one object, with the version and digest
+/// each side is at resolved.
+#[derive(uniffi::Record)]
+pub struct ObjectChange {
+    pub object_id: Arc<ObjectId>,
+    pub input_version: Option<Arc<Version>>,
+    pub input_digest: Option<Arc<ObjectDigest>>,
+    pub output_version: Option<Arc<Version>>,
+    pub output_digest: Option<Arc<ObjectDigest>>,
+    pub id_operation: IdOperation,
+}
+
+impl From<iota_sdk::types::ObjectChange> for ObjectChange {
+    fn from(value: iota_sdk::types::ObjectChange) -> Self {
+        Self {
+            object_id: Arc::new(value.object_id.into()),
+            input_version: value.input_version.map(|v| Arc::new(v.into())),
+            input_digest: value.input_digest.map(|d| Arc::new(d.into())),
+            output_version: value.output_version.map(|v| Arc::new(v.into())),
+            output_digest: value.output_digest.map(|d| Arc::new(d.into())),
+            id_operation: value.id_operation,
+        }
+    }
+}
+
+/// How an object came to be in the store after a transaction wrote it.
+#[derive(uniffi::Enum)]
+pub enum WriteKind {
+    /// The object existed already and the transaction changed its contents.
+    Mutate,
+    /// The transaction created the object.
+    Create,
+    /// The object was wrapped inside another object, and the transaction
+    /// restored it to the store.
+    Unwrap,
+}
+
+impl From<iota_sdk::types::WriteKind> for WriteKind {
+    fn from(value: iota_sdk::types::WriteKind) -> Self {
+        match value {
+            iota_sdk::types::WriteKind::Mutate => Self::Mutate,
+            iota_sdk::types::WriteKind::Create => Self::Create,
+            iota_sdk::types::WriteKind::Unwrap => Self::Unwrap,
+        }
+    }
+}
+
+/// Why an object is no longer in the store after a transaction.
+#[derive(uniffi::Enum)]
+pub enum ObjectRemoveKind {
+    /// The transaction deleted the object.
+    Delete,
+    /// The transaction wrapped the object inside another one.
+    Wrap,
+}
+
+impl From<iota_sdk::types::ObjectRemoveKind> for ObjectRemoveKind {
+    fn from(value: iota_sdk::types::ObjectRemoveKind) -> Self {
+        match value {
+            iota_sdk::types::ObjectRemoveKind::Delete => Self::Delete,
+            iota_sdk::types::ObjectRemoveKind::Wrap => Self::Wrap,
+        }
+    }
+}
+
+/// An object still in the store after a transaction, and how it got there.
+#[derive(uniffi::Record)]
+pub struct ChangedObjectWrite {
+    pub object: OwnedObjectReference,
+    pub kind: WriteKind,
+}
+
+/// An object no longer in the store after a transaction, and why.
+#[derive(uniffi::Record)]
+pub struct RemovedObject {
+    pub reference: ObjectReference,
+    pub kind: ObjectRemoveKind,
 }
