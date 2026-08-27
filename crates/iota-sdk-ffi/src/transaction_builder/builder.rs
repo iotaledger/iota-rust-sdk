@@ -7,7 +7,7 @@ use std::{
     time::Duration,
 };
 
-use super::client_builder::ClientTransactionBuilder;
+use super::client_builder::{ClientTransactionBuilder, InnerClientTransactionBuilder};
 use crate::{
     error::Result,
     graphql::client::GraphQLClient,
@@ -83,10 +83,13 @@ impl TransactionBuilder {
         Self(iota_sdk::transaction_builder::TransactionBuilder::from(ptb.0.clone()).into())
     }
 
+    /// Use a GraphQL client to automatically resolve the transaction inputs.
     pub fn with_client(&self, client: Arc<GraphQLClient>) -> ClientTransactionBuilder {
         ClientTransactionBuilder(
-            self.read(|builder| builder.clone().with_client(client))
-                .into(),
+            InnerClientTransactionBuilder::from(
+                self.read(|builder| builder.clone().with_client(client)),
+            )
+            .into(),
         )
     }
 
@@ -431,5 +434,22 @@ impl TransactionBuilder {
         Ok(self
             .read(|builder| builder.clone().execute_with_gas_station(signer))
             .await?)
+    }
+}
+
+#[cfg(feature = "grpc")]
+#[uniffi::export]
+impl TransactionBuilder {
+    /// Use a gRPC client to automatically resolve the transaction inputs.
+    pub fn with_grpc_client(
+        &self,
+        client: Arc<crate::grpc::client::GrpcClient>,
+    ) -> ClientTransactionBuilder {
+        ClientTransactionBuilder(
+            InnerClientTransactionBuilder::from(
+                self.read(|builder| builder.clone().with_client(client)),
+            )
+            .into(),
+        )
     }
 }

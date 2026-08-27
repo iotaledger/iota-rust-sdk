@@ -26,17 +26,34 @@ use crate::{
     },
 };
 
-/// A builder for creating transactions which uses a GraphQL client to
-/// automatically resolve inputs. Use `finish` to finalize the transaction data.
+/// The client-backed transaction builders the FFI supports.
+#[derive(Clone, derive_more::From)]
+pub enum InnerClientTransactionBuilder {
+    GraphQl(iota_sdk::transaction_builder::TransactionBuilder<Arc<GraphQLClient>>),
+    #[cfg(feature = "grpc")]
+    Grpc(iota_sdk::transaction_builder::TransactionBuilder<Arc<crate::grpc::client::GrpcClient>>),
+}
+
+/// Apply the same expression to the inner builder, whichever client backs it.
+macro_rules! with_builder {
+    ($inner:expr, |$builder:ident| $body:expr) => {
+        match $inner {
+            InnerClientTransactionBuilder::GraphQl($builder) => $body,
+            #[cfg(feature = "grpc")]
+            InnerClientTransactionBuilder::Grpc($builder) => $body,
+        }
+    };
+}
+
+/// A builder for creating transactions which uses a client to automatically
+/// resolve inputs. Use `finish` to finalize the transaction data.
 #[derive(derive_more::From, uniffi::Object)]
-pub struct ClientTransactionBuilder(
-    pub RwLock<iota_sdk::transaction_builder::TransactionBuilder<Arc<GraphQLClient>>>,
-);
+pub struct ClientTransactionBuilder(pub RwLock<InnerClientTransactionBuilder>);
 
 impl ClientTransactionBuilder {
     fn read<F, T>(&self, f: F) -> T
     where
-        F: FnOnce(&iota_sdk::transaction_builder::TransactionBuilder<Arc<GraphQLClient>>) -> T,
+        F: FnOnce(&InnerClientTransactionBuilder) -> T,
     {
         let lock = self.0.read().expect("error reading from builder");
         f(&lock)
@@ -44,10 +61,16 @@ impl ClientTransactionBuilder {
 
     fn write<F, T>(&self, f: F) -> T
     where
-        F: FnOnce(&mut iota_sdk::transaction_builder::TransactionBuilder<Arc<GraphQLClient>>) -> T,
+        F: FnOnce(&mut InnerClientTransactionBuilder) -> T,
     {
         let mut lock = self.0.write().expect("error writing to builder");
         f(&mut lock)
+    }
+
+    /// Clone the inner builder out of the lock so that async operations can
+    /// be awaited without holding it.
+    fn clone_inner(&self) -> InnerClientTransactionBuilder {
+        self.read(|builder| builder.clone())
     }
 }
 
@@ -56,39 +79,49 @@ impl ClientTransactionBuilder {
 impl ClientTransactionBuilder {
     /// Set the sender address.
     pub fn set_sender(self: Arc<Self>, sender: &Address) {
-        self.write(|builder| {
-            builder.set_sender(**sender);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.set_sender(**sender);
+            })
         });
     }
 
     /// Add gas coins that will be consumed. Optional.
     pub fn gas(self: Arc<Self>, object_ids: Vec<Arc<ObjectId>>) -> Arc<Self> {
-        self.write(|builder| {
-            builder.gas(object_ids.into_iter().map(|id| **id));
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.gas(object_ids.into_iter().map(|id| **id));
+            })
         });
         self
     }
 
     /// Set the gas budget for the transaction.
     pub fn gas_budget(self: Arc<Self>, budget: u64) -> Arc<Self> {
-        self.write(|builder| {
-            builder.gas_budget(budget);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.gas_budget(budget);
+            })
         });
         self
     }
 
     /// Set the gas price for the transaction.
     pub fn gas_price(self: Arc<Self>, price: u64) -> Arc<Self> {
-        self.write(|builder| {
-            builder.gas_price(price);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.gas_price(price);
+            })
         });
         self
     }
 
     /// Set the sponsor of the transaction.
     pub fn sponsor(self: Arc<Self>, sponsor: &Address) -> Arc<Self> {
-        self.write(|builder| {
-            builder.sponsor(**sponsor);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.sponsor(**sponsor);
+            })
         });
         self
     }
@@ -101,29 +134,33 @@ impl ClientTransactionBuilder {
         duration: Option<Duration>,
         headers: Option<HashMap<String, Vec<String>>>,
     ) -> Arc<Self> {
-        self.write(|builder| {
-            let b = builder.gas_station_sponsor(url.parse().expect("invalid URL"));
-            if let Some(duration) = duration {
-                b.gas_reservation_duration(duration);
-            }
-            if let Some(headers) = headers {
-                for (name, values) in headers {
-                    for value in values {
-                        b.add_gas_station_header(
-                            name.parse().expect("invalid header name"),
-                            value.parse().expect("invalid header value"),
-                        );
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                let b = builder.gas_station_sponsor(url.parse().expect("invalid URL"));
+                if let Some(duration) = duration {
+                    b.gas_reservation_duration(duration);
+                }
+                if let Some(headers) = headers {
+                    for (name, values) in headers {
+                        for value in values {
+                            b.add_gas_station_header(
+                                name.parse().expect("invalid header name"),
+                                value.parse().expect("invalid header value"),
+                            );
+                        }
                     }
                 }
-            }
+            })
         });
         self
     }
 
     /// Set the expiration of the transaction to be a specific epoch.
     pub fn expiration(self: Arc<Self>, epoch: u64) -> Arc<Self> {
-        self.write(|builder| {
-            builder.expiration(epoch);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.expiration(epoch);
+            })
         });
         self
     }
@@ -141,12 +178,14 @@ impl ClientTransactionBuilder {
         type_args: Vec<Arc<TypeTag>>,
         names: Vec<String>,
     ) -> Arc<Self> {
-        self.write(|builder| {
-            builder
-                .move_call(**package, &module.as_str(), &function.as_str())
-                .arguments(arguments)
-                .type_tags(type_args.into_iter().map(|v| v.0.clone()))
-                .assign(names);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder
+                    .move_call(**package, &module.as_str(), &function.as_str())
+                    .arguments(arguments)
+                    .type_tags(type_args.into_iter().map(|v| v.0.clone()))
+                    .assign(names);
+            })
         });
         self
     }
@@ -157,8 +196,10 @@ impl ClientTransactionBuilder {
     /// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
     /// sent.
     pub fn send_iota(self: Arc<Self>, recipient: &Address, amount: &PTBArgument) -> Arc<Self> {
-        self.write(|builder| {
-            builder.send_iota(**recipient, amount);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.send_iota(**recipient, amount);
+            })
         });
         self
     }
@@ -185,8 +226,10 @@ impl ClientTransactionBuilder {
         recipient: &Address,
         amount: Option<Arc<PTBArgument>>,
     ) -> Arc<Self> {
-        self.write(|builder| {
-            builder.send_coins::<_, &PTBArgument>(coins, **recipient, amount.as_deref());
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.send_coins::<_, &PTBArgument>(coins, **recipient, amount.as_deref());
+            })
         });
         self
     }
@@ -198,8 +241,10 @@ impl ClientTransactionBuilder {
         recipient: &Address,
         objects: Vec<Arc<PTBArgument>>,
     ) -> Arc<Self> {
-        self.write(|builder| {
-            builder.transfer_objects(**recipient, objects);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.transfer_objects(**recipient, objects);
+            })
         });
         self
     }
@@ -225,11 +270,13 @@ impl ClientTransactionBuilder {
     /// `ClientTransactionBuilder::send_coins()` or
     /// `ClientTransactionBuilder::send_iota()` instead.
     pub fn pay(self: Arc<Self>, coins: Vec<Arc<PTBArgument>>, payments: Vec<Payment>) -> Arc<Self> {
-        self.write(|builder| {
-            builder.pay(
-                coins,
-                payments.into_iter().map(|p| (**p.recipient, p.amount)),
-            );
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.pay(
+                    coins,
+                    payments.into_iter().map(|p| (**p.recipient, p.amount)),
+                );
+            })
         });
         self
     }
@@ -246,8 +293,10 @@ impl ClientTransactionBuilder {
     /// `ClientTransactionBuilder::pay()`. For a single recipient, consider
     /// using `ClientTransactionBuilder::send_iota()` instead.
     pub fn pay_iota(self: Arc<Self>, payments: Vec<Payment>) -> Arc<Self> {
-        self.write(|builder| {
-            builder.pay_iota(payments.into_iter().map(|p| (**p.recipient, p.amount)));
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.pay_iota(payments.into_iter().map(|p| (**p.recipient, p.amount)));
+            })
         });
         self
     }
@@ -260,8 +309,10 @@ impl ClientTransactionBuilder {
         amounts: Vec<Arc<PTBArgument>>,
         names: Vec<String>,
     ) -> Arc<Self> {
-        self.write(|builder| {
-            builder.split_coins(coin, amounts).assign(names);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.split_coins(coin, amounts).assign(names);
+            })
         });
         self
     }
@@ -277,8 +328,10 @@ impl ClientTransactionBuilder {
         primary_coin: &PTBArgument,
         consumed_coins: Vec<Arc<PTBArgument>>,
     ) -> Arc<Self> {
-        self.write(|builder| {
-            builder.merge_coins(primary_coin, consumed_coins);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.merge_coins(primary_coin, consumed_coins);
+            })
         });
         self
     }
@@ -292,15 +345,17 @@ impl ClientTransactionBuilder {
         name: String,
     ) -> Arc<Self> {
         use iota_sdk::transaction_builder::unresolved::{Command, MakeMoveVector};
-        self.write(|builder| {
-            let cmd = Command::MakeMoveVector(MakeMoveVector {
-                type_tag: Some(type_tag.0.clone()),
-                elements: elements
-                    .iter()
-                    .map(|e| builder.apply_argument(e.as_ref()))
-                    .collect(),
-            });
-            builder.assigned_command(cmd, name);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                let cmd = Command::MakeMoveVector(MakeMoveVector {
+                    type_tag: Some(type_tag.0.clone()),
+                    elements: elements
+                        .iter()
+                        .map(|e| builder.apply_argument(e.as_ref()))
+                        .collect(),
+                });
+                builder.assigned_command(cmd, name);
+            })
         });
         self
     }
@@ -323,10 +378,12 @@ impl ClientTransactionBuilder {
         package_data: &MovePackageData,
         upgrade_cap_name: String,
     ) -> Arc<Self> {
-        self.write(|builder| {
-            builder
-                .publish_package(package_data.0.clone())
-                .upgrade_cap(upgrade_cap_name);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder
+                    .publish_package(package_data.0.clone())
+                    .upgrade_cap(upgrade_cap_name);
+            })
         });
         self
     }
@@ -350,10 +407,12 @@ impl ClientTransactionBuilder {
         upgrade_ticket: &PTBArgument,
         name: Option<String>,
     ) -> Arc<Self> {
-        self.write(|builder| {
-            builder
-                .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
-                .assign(name);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder
+                    .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
+                    .assign(name);
+            })
         });
         self
     }
@@ -363,34 +422,47 @@ impl ClientTransactionBuilder {
     /// This is a high-level function which will split the provided stake amount
     /// from the gas coin and then stake using the resulting coin.
     pub fn stake(self: Arc<Self>, stake: &PTBArgument, validator_address: &Address) -> Arc<Self> {
-        self.write(|builder| {
-            builder.stake(stake, **validator_address);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.stake(stake, **validator_address);
+            })
         });
         self
     }
 
     /// Withdraw stake from a validator's staking pool.
     pub fn unstake(self: Arc<Self>, staked_iota: &PTBArgument) -> Arc<Self> {
-        self.write(|builder| {
-            builder.unstake(staked_iota);
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                builder.unstake(staked_iota);
+            })
         });
         self
     }
 
     /// Convert this builder into a transaction.
     pub async fn finish(&self) -> Result<Transaction> {
-        Ok(Transaction(
-            self.read(|builder| builder.clone().finish()).await?,
-        ))
+        Ok(Transaction(match self.clone_inner() {
+            InnerClientTransactionBuilder::GraphQl(builder) => builder.finish().await?,
+            #[cfg(feature = "grpc")]
+            InnerClientTransactionBuilder::Grpc(builder) => builder.finish().await?,
+        }))
     }
 
     /// Dry run the transaction.
     #[uniffi::method(default(skip_checks = false))]
     pub async fn dry_run(&self, skip_checks: bool) -> Result<DryRunResult> {
-        Ok(self
-            .read(|builder| builder.clone().dry_run(skip_checks))
-            .await?
-            .into())
+        match self.clone_inner() {
+            InnerClientTransactionBuilder::GraphQl(builder) => {
+                Ok(builder.dry_run(skip_checks).await?.into())
+            }
+            #[cfg(feature = "grpc")]
+            InnerClientTransactionBuilder::Grpc(builder) => {
+                crate::grpc::output_types::dry_run_result_from_simulated(
+                    &builder.dry_run(skip_checks).await?,
+                )
+            }
+        }
     }
 
     /// Execute the transaction and optionally wait for finalization.
@@ -400,10 +472,16 @@ impl ClientTransactionBuilder {
         signer: &TransactionSigner,
         wait_for: Option<WaitForTx>,
     ) -> Result<TransactionEffects> {
-        Ok(self
-            .read(|builder| builder.clone().execute(signer, wait_for))
-            .await?
-            .into())
+        Ok(match self.clone_inner() {
+            InnerClientTransactionBuilder::GraphQl(builder) => {
+                builder.execute(signer, wait_for).await?
+            }
+            #[cfg(feature = "grpc")]
+            InnerClientTransactionBuilder::Grpc(builder) => {
+                builder.execute(signer, wait_for).await?
+            }
+        }
+        .into())
     }
 
     /// Execute the transaction and optionally wait for finalization.
@@ -414,13 +492,19 @@ impl ClientTransactionBuilder {
         sponsor_signer: &TransactionSigner,
         wait_for: Option<WaitForTx>,
     ) -> Result<TransactionEffects> {
-        Ok(self
-            .read(|builder| {
+        Ok(match self.clone_inner() {
+            InnerClientTransactionBuilder::GraphQl(builder) => {
                 builder
-                    .clone()
                     .execute_with_sponsor(signer, sponsor_signer, wait_for)
-            })
-            .await?
-            .into())
+                    .await?
+            }
+            #[cfg(feature = "grpc")]
+            InnerClientTransactionBuilder::Grpc(builder) => {
+                builder
+                    .execute_with_sponsor(signer, sponsor_signer, wait_for)
+                    .await?
+            }
+        }
+        .into())
     }
 }

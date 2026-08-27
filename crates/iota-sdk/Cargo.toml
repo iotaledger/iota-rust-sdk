@@ -45,9 +45,16 @@ move-types = ["dep:iota-move-types"]
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
 # gRPC
+# TLS is enabled so that the HTTPS constructors (`new_mainnet`,
+# `new_testnet`, ...) work out of the box. The bundled webpki roots are used
+# instead of the platform's native certificate store because the latter is
+# unavailable on mobile targets (Android/iOS bindings); this also matches the
+# behavior of the GraphQL client (reqwest with `rustls-tls`).
 grpc = [
   "dep:iota-grpc-client",
   "dep:iota-grpc-types",
+  "iota-grpc-client/tls-ring",
+  "iota-grpc-client/tls-webpki-roots",
 ]
 # TLS support for the gRPC client (required to reach `https://` endpoints
 # such as the public testnet/mainnet nodes).
@@ -107,3 +114,11 @@ required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 [[example]]
 name = "decode_staked_iota"
 required-features = ["move-types"]
+
+[[example]]
+name = "grpc_stream_checkpoints"
+required-features = ["grpc"]
+
+[[example]]
+name = "grpc_execute_transaction"
+required-features = ["grpc"]

@@ -13,6 +13,14 @@ web:
   entrypoint: ./src/ts/index.web.ts
   target: bundler
 
+  # The FFI crate's `grpc` default feature pulls in tonic, which does not build
+  # for wasm32-unknown-unknown, so opt out of the defaults and name what the
+  # WASM bindings need.
+  defaultFeatures: false
+  features:
+    - crypto
+    - bls12381
+
   # RUSTFLAGS for the wasm32 compilation.
   rustflags:
     - "-C"
