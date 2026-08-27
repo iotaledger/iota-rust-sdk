@@ -247,7 +247,7 @@ def same_object_id(left, right):
 
 
 def programmable_transaction_json(tx):
-    tx_v1 = json.loads(transaction_to_json(tx)).get("1")
+    tx_v1 = json.loads(tx.to_json()).get("1")
     if not isinstance(tx_v1, dict):
         return None
 
