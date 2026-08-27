@@ -7,7 +7,7 @@ plugins {
     kotlin("plugin.serialization") version "2.4.10"
     id("com.ncorti.ktfmt.gradle") version "0.27.0"
     id("com.vanniktech.maven.publish") version "0.37.0"
-    id("org.jetbrains.dokka") version "2.2.0"
+    id("org.jetbrains.dokka") version "1.9.20"
     application
     signing
 }
