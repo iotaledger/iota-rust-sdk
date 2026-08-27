@@ -169,18 +169,7 @@ impl TransactionBuilderLedgerClient for Client {
 impl TransactionBuilderSimulationClient for Client {
     type DryRunResult = SimulatedTransaction;
 
-    async fn dry_run_tx(
-        &self,
-        tx: &Transaction,
-        skip_checks: bool,
-    ) -> Result<Self::DryRunResult, Self::Error> {
-        Ok(self
-            .simulate_transaction(tx.clone(), skip_checks, SimulateReadMask::default())
-            .await?
-            .into_inner())
-    }
-
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<u64, Self::Error> {
+    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
         // Simulate with relaxed checks and read the gas used from the resulting
         // effects.
         let simulated = self
@@ -196,11 +185,22 @@ impl TransactionBuilderSimulationClient for Client {
             .effects()?
             .effects()?;
         Ok(match effects {
-            TransactionEffects::V1(v1) => v1.gas_cost_summary.gas_used(),
+            TransactionEffects::V1(v1) => Some(v1.gas_cost_summary.gas_used()),
             _ => unimplemented!(
                 "a new TransactionEffects enum variant was added and needs to be handled"
             ),
         })
+    }
+
+    async fn dry_run_tx(
+        &self,
+        tx: &Transaction,
+        skip_checks: bool,
+    ) -> Result<Self::DryRunResult, Self::Error> {
+        Ok(self
+            .simulate_transaction(tx.clone(), skip_checks, SimulateReadMask::default())
+            .await?
+            .into_inner())
     }
 }
 

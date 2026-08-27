@@ -131,19 +131,22 @@ pub trait TransactionBuilderSimulationClient: TransactionBuilderClientBase {
     /// The result of a dry run.
     type DryRunResult;
 
+    /// Estimate the gas budget needed for a transaction, typically by
+    /// simulating it and reading the gas cost from the result. `Ok(None)`
+    /// means no estimate is available;
+    /// [`finish`](crate::TransactionBuilder::finish) then fails unless a
+    /// budget was set explicitly.
+    fn estimate_tx_budget(
+        &self,
+        tx: &Transaction,
+    ) -> impl std::future::Future<Output = Result<Option<u64>, Self::Error>>;
+
     /// Dry run a transaction
     fn dry_run_tx(
         &self,
         tx: &Transaction,
         skip_checks: bool,
     ) -> impl std::future::Future<Output = Result<Self::DryRunResult, Self::Error>>;
-
-    /// Estimate the gas budget needed for a transaction, typically by
-    /// simulating it and reading the gas cost from the result.
-    fn estimate_tx_budget(
-        &self,
-        tx: &Transaction,
-    ) -> impl std::future::Future<Output = Result<u64, Self::Error>>;
 }
 
 /// Transaction execution: submitting a transaction and tracking its result
@@ -238,19 +241,19 @@ impl<T: TransactionBuilderLedgerClient> TransactionBuilderLedgerClient for &T {
 impl<T: TransactionBuilderSimulationClient> TransactionBuilderSimulationClient for &T {
     type DryRunResult = T::DryRunResult;
 
+    fn estimate_tx_budget(
+        &self,
+        tx: &Transaction,
+    ) -> impl std::future::Future<Output = Result<Option<u64>, Self::Error>> {
+        (*self).estimate_tx_budget(tx)
+    }
+
     fn dry_run_tx(
         &self,
         tx: &Transaction,
         skip_checks: bool,
     ) -> impl std::future::Future<Output = Result<Self::DryRunResult, Self::Error>> {
         (*self).dry_run_tx(tx, skip_checks)
-    }
-
-    fn estimate_tx_budget(
-        &self,
-        tx: &Transaction,
-    ) -> impl std::future::Future<Output = Result<u64, Self::Error>> {
-        (*self).estimate_tx_budget(tx)
     }
 }
 
@@ -329,19 +332,19 @@ impl<T: TransactionBuilderSimulationClient> TransactionBuilderSimulationClient
 {
     type DryRunResult = T::DryRunResult;
 
+    fn estimate_tx_budget(
+        &self,
+        tx: &Transaction,
+    ) -> impl std::future::Future<Output = Result<Option<u64>, Self::Error>> {
+        self.as_ref().estimate_tx_budget(tx)
+    }
+
     fn dry_run_tx(
         &self,
         tx: &Transaction,
         skip_checks: bool,
     ) -> impl std::future::Future<Output = Result<Self::DryRunResult, Self::Error>> {
         self.as_ref().dry_run_tx(tx, skip_checks)
-    }
-
-    fn estimate_tx_budget(
-        &self,
-        tx: &Transaction,
-    ) -> impl std::future::Future<Output = Result<u64, Self::Error>> {
-        self.as_ref().estimate_tx_budget(tx)
     }
 }
 
@@ -487,16 +490,16 @@ pub(crate) mod test_client {
     impl TransactionBuilderSimulationClient for TestClient {
         type DryRunResult = ();
 
+        async fn estimate_tx_budget(&self, _tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+            Ok(Some(50_000_000))
+        }
+
         async fn dry_run_tx(
             &self,
             _tx: &Transaction,
             _skip_checks: bool,
         ) -> Result<Self::DryRunResult, Self::Error> {
             Ok(())
-        }
-
-        async fn estimate_tx_budget(&self, _tx: &Transaction) -> Result<u64, Self::Error> {
-            Ok(50_000_000)
         }
     }
 
@@ -611,16 +614,16 @@ pub(crate) mod test_client {
     impl TransactionBuilderSimulationClient for RecordingClient {
         type DryRunResult = ();
 
+        async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+            crate::TestClient.estimate_tx_budget(tx).await
+        }
+
         async fn dry_run_tx(
             &self,
             tx: &Transaction,
             skip_checks: bool,
         ) -> Result<Self::DryRunResult, Self::Error> {
             crate::TestClient.dry_run_tx(tx, skip_checks).await
-        }
-
-        async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<u64, Self::Error> {
-            crate::TestClient.estimate_tx_budget(tx).await
         }
     }
 

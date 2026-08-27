@@ -99,37 +99,22 @@ impl TransactionBuilderLedgerClient for Client {
 impl TransactionBuilderSimulationClient for Client {
     type DryRunResult = DryRunResult;
 
+    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+        let res = self.dry_run_tx(tx, true).await?;
+        Ok(res.effects.map(|effects| match effects {
+            TransactionEffects::V1(v1) => v1.gas_cost_summary.gas_used(),
+            _ => unimplemented!(
+                "a new TransactionEffects enum variant was added and needs to be handled"
+            ),
+        }))
+    }
+
     async fn dry_run_tx(
         &self,
         tx: &Transaction,
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
         (*self).dry_run_tx(tx, skip_checks).await
-    }
-
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<u64, Self::Error> {
-        let result = (*self).dry_run_tx(tx, true).await?;
-        // Effects carry the gas cost even when the dry run execution itself
-        // failed. Without effects there is nothing to read, so the
-        // server-reported error (if any) is surfaced.
-        let Some(effects) = &result.effects else {
-            return Err(match &result.error {
-                Some(error) => crate::error::Error::from_error(
-                    crate::error::Kind::Query,
-                    format!("dry run failed: {error}"),
-                ),
-                None => crate::error::Error::from_error(
-                    crate::error::Kind::Missing,
-                    "dry run returned no effects",
-                ),
-            });
-        };
-        Ok(match effects {
-            TransactionEffects::V1(v1) => v1.gas_cost_summary.gas_used(),
-            _ => unimplemented!(
-                "a new TransactionEffects enum variant was added and needs to be handled"
-            ),
-        })
     }
 }
 

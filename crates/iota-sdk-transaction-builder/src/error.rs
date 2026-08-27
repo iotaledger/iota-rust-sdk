@@ -42,6 +42,8 @@ pub enum Error {
     MissingTransaction(TransactionDigest),
     #[error("Missing gas objects")]
     MissingGasObjects,
+    #[error("Missing gas budget")]
+    MissingGasBudget,
     #[error("Missing gas price")]
     MissingGasPrice,
     #[error("Missing object kind for object {0}")]

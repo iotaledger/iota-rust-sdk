@@ -1825,7 +1825,8 @@ impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
                 .client
                 .estimate_tx_budget(&txn)
                 .await
-                .map_err(Error::client)?;
+                .map_err(Error::client)?
+                .ok_or(Error::MissingGasBudget)?;
             let Transaction::V1(txn) = &mut txn else {
                 unimplemented!("a new enum variant was added and needs to be handled")
             };

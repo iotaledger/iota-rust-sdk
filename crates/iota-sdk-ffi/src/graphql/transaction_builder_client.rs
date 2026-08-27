@@ -77,16 +77,16 @@ impl TransactionBuilderLedgerClient for GraphQLClient {
 impl TransactionBuilderSimulationClient for GraphQLClient {
     type DryRunResult = DryRunResult;
 
+    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+        TransactionBuilderSimulationClient::estimate_tx_budget(&*self.0.read().await, tx).await
+    }
+
     async fn dry_run_tx(
         &self,
         tx: &Transaction,
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
         TransactionBuilderSimulationClient::dry_run_tx(&*self.0.read().await, tx, skip_checks).await
-    }
-
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<u64, Self::Error> {
-        TransactionBuilderSimulationClient::estimate_tx_budget(&*self.0.read().await, tx).await
     }
 }
 

@@ -425,15 +425,15 @@ mod tests {
             TransactionBuilderLedgerClient, TransactionBuilderSimulationClient,
         };
 
-        /// Forwards to [`TestClient`] but reports a tiny gas estimate, to
-        /// exercise the minimum-budget clamp in `finish()`.
-        struct LowEstimateClient(TestClient);
+        /// Forwards to [`TestClient`] but reports a fixed gas estimate, to
+        /// exercise the estimation handling in `finish()`.
+        struct FixedEstimateClient(TestClient, Option<u64>);
 
-        impl TransactionBuilderClientBase for LowEstimateClient {
+        impl TransactionBuilderClientBase for FixedEstimateClient {
             type Error = TestClientError;
         }
 
-        impl TransactionBuilderLedgerClient for LowEstimateClient {
+        impl TransactionBuilderLedgerClient for FixedEstimateClient {
             async fn object(
                 &self,
                 object_id: ObjectId,
@@ -460,8 +460,15 @@ mod tests {
             }
         }
 
-        impl TransactionBuilderSimulationClient for LowEstimateClient {
+        impl TransactionBuilderSimulationClient for FixedEstimateClient {
             type DryRunResult = ();
+
+            async fn estimate_tx_budget(
+                &self,
+                _tx: &Transaction,
+            ) -> Result<Option<u64>, Self::Error> {
+                Ok(self.1)
+            }
 
             async fn dry_run_tx(
                 &self,
@@ -470,15 +477,11 @@ mod tests {
             ) -> Result<Self::DryRunResult, Self::Error> {
                 self.0.dry_run_tx(tx, skip_checks).await
             }
-
-            async fn estimate_tx_budget(&self, _tx: &Transaction) -> Result<u64, Self::Error> {
-                Ok(1)
-            }
         }
 
         #[tokio::test]
         async fn an_estimate_below_the_network_minimum_is_clamped() {
-            let builder = super::builder_with(LowEstimateClient(TestClient));
+            let builder = super::builder_with(FixedEstimateClient(TestClient, Some(1)));
             let txn = builder.finish().await.unwrap();
             let iota_types::Transaction::V1(txn) = txn else {
                 panic!("expected a V1 transaction");
@@ -486,6 +489,15 @@ mod tests {
             // TestClient's reference gas price is 1000, so the enforced
             // minimum is 1000 * 1000 rather than the estimated 1.
             assert_eq!(txn.gas_payment.budget, 1_000_000);
+        }
+
+        #[tokio::test]
+        async fn no_estimate_and_no_budget_fails_with_missing_gas_budget() {
+            let builder = super::builder_with(FixedEstimateClient(TestClient, None));
+            assert!(matches!(
+                builder.finish().await,
+                Err(crate::error::Error::MissingGasBudget)
+            ));
         }
 
         #[tokio::test]
@@ -573,16 +585,19 @@ mod tests {
         impl TransactionBuilderSimulationClient for PagingClient {
             type DryRunResult = ();
 
+            async fn estimate_tx_budget(
+                &self,
+                tx: &Transaction,
+            ) -> Result<Option<u64>, Self::Error> {
+                TestClient.estimate_tx_budget(tx).await
+            }
+
             async fn dry_run_tx(
                 &self,
                 tx: &Transaction,
                 skip_checks: bool,
             ) -> Result<Self::DryRunResult, Self::Error> {
                 TestClient.dry_run_tx(tx, skip_checks).await
-            }
-
-            async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<u64, Self::Error> {
-                TestClient.estimate_tx_budget(tx).await
             }
         }
 
