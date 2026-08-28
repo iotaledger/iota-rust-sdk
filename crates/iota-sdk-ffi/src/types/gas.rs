@@ -80,3 +80,4 @@ impl From<GasCostSummary> for iota_sdk::types::GasCostSummary {
 
 crate::export_iota_types_bcs_conversion!(GasCostSummary);
 crate::export_iota_types_json_conversion!(GasCostSummary);
+crate::export_iota_types_display!(GasCostSummary);

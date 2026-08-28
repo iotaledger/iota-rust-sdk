@@ -73,6 +73,7 @@ impl Digest {
 
 crate::export_iota_types_objects_bcs_conversion!(Digest);
 crate::export_iota_types_objects_json_conversion!(Digest);
+crate::export_iota_types_objects_display!(Digest);
 
 /// Defines an FFI object mirroring one of the core SDK's domain-specific digest
 /// newtypes (e.g. `TransactionDigest`). Each wraps the corresponding
@@ -137,6 +138,7 @@ macro_rules! ffi_digest_wrapper {
 
         crate::export_iota_types_objects_bcs_conversion!($name);
         crate::export_iota_types_objects_json_conversion!($name);
+        crate::export_iota_types_objects_display!($name);
     };
 }
 

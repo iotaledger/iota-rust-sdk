@@ -93,7 +93,7 @@ impl Name {
 
 /// Two different view options for a name.
 /// `At` -> `test@example` | `Dot` -> `test.example.iota`
-#[derive(uniffi::Enum)]
+#[derive(Copy, Clone, Debug, uniffi::Enum)]
 pub enum NameFormat {
     At,
     Dot,
@@ -107,3 +107,15 @@ impl From<NameFormat> for iota_sdk::types::iota_names::NameFormat {
         }
     }
 }
+
+impl From<iota_sdk::types::iota_names::NameFormat> for NameFormat {
+    fn from(value: iota_sdk::types::iota_names::NameFormat) -> Self {
+        match value {
+            iota_sdk::types::iota_names::NameFormat::At => Self::At,
+            iota_sdk::types::iota_names::NameFormat::Dot => Self::Dot,
+        }
+    }
+}
+
+crate::export_iota_types_display!(iota_sdk::types::iota_names::NameFormat => NameFormat);
+crate::export_iota_types_objects_display!(NameRegistration, Name);

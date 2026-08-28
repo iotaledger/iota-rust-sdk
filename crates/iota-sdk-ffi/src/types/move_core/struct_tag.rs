@@ -260,3 +260,4 @@ export_struct_tag_from_struct_tag_ctors!(
 
 crate::export_iota_types_objects_bcs_conversion!(Identifier, StructTag);
 crate::export_iota_types_objects_json_conversion!(Identifier, StructTag);
+crate::export_iota_types_objects_display!(Identifier, StructTag);

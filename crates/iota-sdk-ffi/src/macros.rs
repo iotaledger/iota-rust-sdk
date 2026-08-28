@@ -248,3 +248,60 @@ macro_rules! export_primitive_types_json_conversion {
         )+}
     };
 }
+
+#[macro_export]
+macro_rules! export_iota_types_display {
+    ($($core:ty => $name:ident),+ $(,)?) => {
+        $(
+            #[uniffi::export]
+            impl $name {
+                /// Render this type as human-readable text.
+                ///
+                /// The layout is meant for reading and can change between
+                /// releases. Use the JSON or BCS conversions for output that
+                /// gets parsed.
+                pub fn to_display_string(&self) -> String {
+                    <$core>::from(self.clone()).to_string()
+                }
+            }
+        )+
+    };
+    ($($name:ident),+ $(,)?) => {
+        $(
+            #[uniffi::export]
+            impl $name {
+                /// Render this type as human-readable text.
+                ///
+                /// The layout is meant for reading and can change between
+                /// releases. Use the JSON or BCS conversions for output that
+                /// gets parsed.
+                pub fn to_display_string(&self) -> String {
+                    iota_sdk::types::$name::from(self.clone()).to_string()
+                }
+            }
+        )+
+    };
+}
+
+#[macro_export]
+macro_rules! export_iota_types_objects_display {
+    ($($name:ident),+ $(,)?) => {
+        $(
+            #[uniffi::export]
+            impl $name {
+                /// Render this type as human-readable text.
+                ///
+                /// Some types also print this through the binding's native
+                /// string conversion; this method is the spelling every object
+                /// type has.
+                ///
+                /// The layout is meant for reading and can change between
+                /// releases. Use the JSON or BCS conversions for output that
+                /// gets parsed.
+                pub fn to_display_string(&self) -> String {
+                    self.0.to_string()
+                }
+            }
+        )+
+    }
+}

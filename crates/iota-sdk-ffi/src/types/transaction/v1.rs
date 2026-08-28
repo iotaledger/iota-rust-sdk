@@ -605,6 +605,15 @@ crate::export_iota_types_json_conversion!(
     ObjectOut,
     IdOperation
 );
+crate::export_iota_types_objects_display!(TransactionEffectsV1);
+crate::export_iota_types_display!(
+    ChangedObject,
+    UnchangedSharedObject,
+    UnchangedSharedKind,
+    ObjectIn,
+    ObjectOut,
+    IdOperation
+);
 
 /// An object reference paired with the owner the object has at that version.
 #[derive(uniffi::Record)]

@@ -4,7 +4,7 @@
 use core::str::FromStr;
 
 /// Intent errors.
-#[derive(Debug, derive_more::Display, uniffi::Enum)]
+#[derive(Clone, Debug, derive_more::Display, uniffi::Enum)]
 pub enum IntentError {
     /// Invalid bytes for Intent
     #[display("invalid bytes for Intent")]
@@ -36,6 +36,18 @@ impl From<iota_sdk::types::IntentError> for IntentError {
     }
 }
 
+impl From<IntentError> for iota_sdk::types::IntentError {
+    fn from(value: IntentError) -> Self {
+        match value {
+            IntentError::Bytes => Self::Bytes,
+            IntentError::Hex => Self::Hex,
+            IntentError::Scope => Self::Scope,
+            IntentError::Version => Self::Version,
+            IntentError::AppId => Self::AppId,
+        }
+    }
+}
+
 /// Byte signifying the scope of an Intent
 ///
 /// This enum specifies the intent scope. Two intents for different scopes
@@ -49,7 +61,7 @@ impl From<iota_sdk::types::IntentError> for IntentError {
 /// ```text
 /// intent-scope = u8
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, Debug, uniffi::Enum)]
 pub enum IntentScope {
     /// Used for a user signature on a transaction data.
     TransactionData = 0,
@@ -123,7 +135,7 @@ impl From<IntentScope> for iota_sdk::types::IntentScope {
 /// ```text
 /// intent-version = u8
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, Debug, uniffi::Enum)]
 pub enum IntentVersion {
     V0 = 0,
 }
@@ -160,7 +172,7 @@ impl From<IntentVersion> for iota_sdk::types::IntentVersion {
 /// ```text
 /// intent-app-id = u8
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, Debug, uniffi::Enum)]
 pub enum IntentAppId {
     Iota = 0,
     Consensus = 1,
@@ -288,7 +300,7 @@ impl Intent {
 /// A 1-byte domain separator for hashing Object ID in IOTA. It starts from
 /// 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
 /// derived as the hash of `flag || pubkey`.
-#[derive(uniffi::Enum)]
+#[derive(Clone, Debug, uniffi::Enum)]
 pub enum HashingIntentScope {
     ChildObjectId = 0xf0,
     RegularObjectId = 0xf1,
@@ -343,3 +355,12 @@ impl PersonalMessage {
         self.0.signing_digest_hex()
     }
 }
+
+crate::export_iota_types_display!(
+    IntentError,
+    IntentScope,
+    IntentVersion,
+    IntentAppId,
+    HashingIntentScope
+);
+crate::export_iota_types_objects_display!(Intent, PersonalMessage);

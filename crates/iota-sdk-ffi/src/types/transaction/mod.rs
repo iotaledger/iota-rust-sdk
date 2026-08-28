@@ -1969,7 +1969,7 @@ impl MoveCall {
 }
 
 /// A shared object input to a programmable transaction
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct SharedObjectReference {
     object_id: Arc<ObjectId>,
     initial_shared_version: Arc<Version>,
@@ -2061,4 +2061,41 @@ crate::export_iota_types_objects_json_conversion!(
     TransactionEffects,
     Argument,
     MoveCall,
+);
+crate::export_iota_types_display!(
+    SignedTransaction,
+    RandomnessStateUpdate,
+    DenyRuleSet,
+    TransactionDenyRulesUpdate,
+    GasPayment,
+    SharedObjectReference,
+    TransactionExpiration
+);
+crate::export_iota_types_objects_display!(
+    Transaction,
+    TransactionV1,
+    TransactionKind,
+    ProgrammableTransaction,
+    Input,
+    Command,
+    TransferObjects,
+    SplitCoins,
+    MergeCoins,
+    Publish,
+    MakeMoveVector,
+    Upgrade,
+    ConsensusCommitPrologueV1,
+    ConsensusDeterminedVersionAssignments,
+    CanceledTransaction,
+    VersionAssignment,
+    GenesisTransaction,
+    ChangeEpoch,
+    SystemPackage,
+    ChangeEpochV2,
+    ChangeEpochV3,
+    ChangeEpochV4,
+    EndOfEpochTransactionKind,
+    TransactionEffects,
+    Argument,
+    MoveCall
 );
