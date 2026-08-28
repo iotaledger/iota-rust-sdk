@@ -302,9 +302,9 @@ impl SimpleSignature {
         self.0.is_ed25519()
     }
 
-    pub fn ed25519_sig_opt(&self) -> Option<Arc<Ed25519Signature>> {
+    pub fn opt_ed25519_sig(&self) -> Option<Arc<Ed25519Signature>> {
         self.0
-            .as_ed25519_sig_opt()
+            .as_opt_ed25519_sig()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -314,9 +314,9 @@ impl SimpleSignature {
         (*self.0.as_ed25519_sig()).into()
     }
 
-    pub fn ed25519_pub_key_opt(&self) -> Option<Arc<Ed25519PublicKey>> {
+    pub fn opt_ed25519_pub_key(&self) -> Option<Arc<Ed25519PublicKey>> {
         self.0
-            .as_ed25519_pub_key_opt()
+            .as_opt_ed25519_pub_key()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -330,9 +330,9 @@ impl SimpleSignature {
         self.0.is_secp256k1()
     }
 
-    pub fn secp256k1_sig_opt(&self) -> Option<Arc<Secp256k1Signature>> {
+    pub fn opt_secp256k1_sig(&self) -> Option<Arc<Secp256k1Signature>> {
         self.0
-            .as_secp256k1_sig_opt()
+            .as_opt_secp256k1_sig()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -342,9 +342,9 @@ impl SimpleSignature {
         (*self.0.as_secp256k1_sig()).into()
     }
 
-    pub fn secp256k1_pub_key_opt(&self) -> Option<Arc<Secp256k1PublicKey>> {
+    pub fn opt_secp256k1_pub_key(&self) -> Option<Arc<Secp256k1PublicKey>> {
         self.0
-            .as_secp256k1_pub_key_opt()
+            .as_opt_secp256k1_pub_key()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -358,9 +358,9 @@ impl SimpleSignature {
         self.0.is_secp256r1()
     }
 
-    pub fn secp256r1_sig_opt(&self) -> Option<Arc<Secp256r1Signature>> {
+    pub fn opt_secp256r1_sig(&self) -> Option<Arc<Secp256r1Signature>> {
         self.0
-            .as_secp256r1_sig_opt()
+            .as_opt_secp256r1_sig()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -370,9 +370,9 @@ impl SimpleSignature {
         (*self.0.as_secp256r1_sig()).into()
     }
 
-    pub fn secp256r1_pub_key_opt(&self) -> Option<Arc<Secp256r1PublicKey>> {
+    pub fn opt_secp256r1_pub_key(&self) -> Option<Arc<Secp256r1PublicKey>> {
         self.0
-            .as_secp256r1_pub_key_opt()
+            .as_opt_secp256r1_pub_key()
             .cloned()
             .map(Into::into)
             .map(Arc::new)

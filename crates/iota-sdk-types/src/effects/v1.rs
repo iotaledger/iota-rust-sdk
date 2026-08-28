@@ -270,7 +270,7 @@ pub enum ObjectIn {
 impl ObjectIn {
     crate::def_is!(Missing, Data);
 
-    pub fn version_opt(&self) -> Option<Version> {
+    pub fn opt_version(&self) -> Option<Version> {
         if let Self::Data { version, .. } = self {
             Some(*version)
         } else {
@@ -279,10 +279,10 @@ impl ObjectIn {
     }
 
     pub fn version(&self) -> Version {
-        self.version_opt().expect("object does not exist")
+        self.opt_version().expect("object does not exist")
     }
 
-    pub fn digest_opt(&self) -> Option<ObjectDigest> {
+    pub fn opt_digest(&self) -> Option<ObjectDigest> {
         if let Self::Data { digest, .. } = self {
             Some(*digest)
         } else {
@@ -291,10 +291,10 @@ impl ObjectIn {
     }
 
     pub fn digest(&self) -> ObjectDigest {
-        self.digest_opt().expect("object does not exist")
+        self.opt_digest().expect("object does not exist")
     }
 
-    pub fn owner_opt(&self) -> Option<Owner> {
+    pub fn opt_owner(&self) -> Option<Owner> {
         if let Self::Data { owner, .. } = self {
             Some(*owner)
         } else {
@@ -303,7 +303,7 @@ impl ObjectIn {
     }
 
     pub fn owner(&self) -> Owner {
-        self.owner_opt().expect("object does not exist")
+        self.opt_owner().expect("object does not exist")
     }
 }
 
@@ -358,7 +358,7 @@ pub enum ObjectOut {
 impl ObjectOut {
     crate::def_is!(Missing, ObjectWrite, PackageWrite);
 
-    pub fn object_digest_opt(&self) -> Option<ObjectDigest> {
+    pub fn opt_object_digest(&self) -> Option<ObjectDigest> {
         if let Self::ObjectWrite { digest, .. } = self {
             Some(*digest)
         } else {
@@ -367,10 +367,10 @@ impl ObjectOut {
     }
 
     pub fn object_digest(&self) -> ObjectDigest {
-        self.object_digest_opt().expect("object does not exist")
+        self.opt_object_digest().expect("object does not exist")
     }
 
-    pub fn object_owner_opt(&self) -> Option<Owner> {
+    pub fn opt_object_owner(&self) -> Option<Owner> {
         if let Self::ObjectWrite { owner, .. } = self {
             Some(*owner)
         } else {
@@ -379,10 +379,10 @@ impl ObjectOut {
     }
 
     pub fn object_owner(&self) -> Owner {
-        self.object_owner_opt().expect("object does not exist")
+        self.opt_object_owner().expect("object does not exist")
     }
 
-    pub fn package_version_opt(&self) -> Option<Version> {
+    pub fn opt_package_version(&self) -> Option<Version> {
         if let Self::PackageWrite { version, .. } = self {
             Some(*version)
         } else {
@@ -391,10 +391,10 @@ impl ObjectOut {
     }
 
     pub fn package_version(&self) -> Version {
-        self.package_version_opt().expect("object does not exist")
+        self.opt_package_version().expect("object does not exist")
     }
 
-    pub fn package_digest_opt(&self) -> Option<ObjectDigest> {
+    pub fn opt_package_digest(&self) -> Option<ObjectDigest> {
         if let Self::PackageWrite { digest, .. } = self {
             Some(*digest)
         } else {
@@ -403,7 +403,7 @@ impl ObjectOut {
     }
 
     pub fn package_digest(&self) -> ObjectDigest {
-        self.package_digest_opt().expect("package does not exist")
+        self.opt_package_digest().expect("package does not exist")
     }
 }
 
@@ -435,7 +435,7 @@ impl TransactionEffectsV1 {
             .filter_map(|changed| {
                 changed
                     .input_state
-                    .version_opt()
+                    .opt_version()
                     .map(|version| ObjectVersion::new(changed.object_id, version))
             })
             .collect()

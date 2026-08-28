@@ -410,8 +410,8 @@ mod tests {
             for (change, changed) in changes.iter().zip(&fx.changed_objects) {
                 assert_eq!(change.object_id, changed.object_id);
                 assert_eq!(change.id_operation, changed.id_operation);
-                assert_eq!(change.input_version, changed.input_state.version_opt());
-                assert_eq!(change.input_digest, changed.input_state.digest_opt());
+                assert_eq!(change.input_version, changed.input_state.opt_version());
+                assert_eq!(change.input_digest, changed.input_state.opt_digest());
                 assert_eq!(
                     change.input_version.is_some(),
                     change.input_digest.is_some()

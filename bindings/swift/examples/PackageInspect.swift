@@ -292,7 +292,7 @@ private func resolveUpgradeCapId(
         objectId: changedObj.objectId,
         version: effectsV1.lamportVersion()
       ),
-        object.asStructOpt()?.structType == StructTag.newUpgradeCap()
+        object.asOptStruct()?.structType == StructTag.newUpgradeCap()
       {
         return changedObj.objectId
       }

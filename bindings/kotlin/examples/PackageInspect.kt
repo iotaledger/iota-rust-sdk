@@ -260,7 +260,7 @@ private suspend fun resolveUpgradeCapId(client: GraphQlClient, packageId: Object
             }
 
             val obj = client.`object`(changedObj.objectId, effectsV1.lamportVersion()) ?: continue
-            if (obj.asStructOpt()?.structType == StructTag.newUpgradeCap()) {
+            if (obj.asOptStruct()?.structType == StructTag.newUpgradeCap()) {
                 return changedObj.objectId
             }
         }

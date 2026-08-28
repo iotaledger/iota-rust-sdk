@@ -76,9 +76,9 @@ impl StructTag {
     }
 
     /// Returns the coin type part of a `StructTag`, if this is a Coin type
-    pub fn coin_type_opt(&self) -> Option<Arc<TypeTag>> {
+    pub fn opt_coin_type(&self) -> Option<Arc<TypeTag>> {
         self.0
-            .coin_type_opt()
+            .opt_coin_type()
             .cloned()
             .map(Into::into)
             .map(Arc::new)

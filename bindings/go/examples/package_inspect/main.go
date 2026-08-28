@@ -395,7 +395,7 @@ func resolveUpgradeCapID(client *iota_sdk.GraphQlClient, packageID *iota_sdk.Obj
 			}
 
 			obj := *objPtr
-			if obj.AsStructOpt() != nil {
+			if obj.AsOptStruct() != nil {
 				upgradeCapType := iota_sdk.StructTagNewUpgradeCap()
 				if obj.AsStruct().StructType.Eq(upgradeCapType) {
 					return changedObj.ObjectId, nil
