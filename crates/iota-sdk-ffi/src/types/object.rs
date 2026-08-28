@@ -202,7 +202,7 @@ named_object_id!(
 /// ```text
 /// object-reference = object-id u64 digest
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct ObjectReference {
     object_id: Arc<ObjectId>,
     version: Arc<Version>,
@@ -396,7 +396,7 @@ impl ObjectData {
 /// ```text
 /// type-origin = identifier identifier object-id
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct TypeOrigin {
     /// The name of the module the data type resides in.
     pub module_name: Arc<Identifier>,
@@ -436,7 +436,7 @@ impl From<TypeOrigin> for iota_sdk::types::TypeOrigin {
 /// ```text
 /// upgrade-info = object-id u64
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct UpgradeInfo {
     /// ID of the upgraded package
     pub upgraded_id: Arc<ObjectId>,
@@ -555,7 +555,7 @@ impl MovePackage {
 ///
 /// ; The first 32 bytes of the `bytes` contents are the object's object-id.
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct MoveStruct {
     /// The type of this object
     pub struct_type: Arc<StructTag>,

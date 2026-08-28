@@ -18,7 +18,7 @@ use crate::types::{address::Address, digest::Digest, object::ObjectId};
 /// success = %d00
 /// failure = %d01 execution-error (option u64)
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, uniffi::Enum)]
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
     Success,
@@ -153,7 +153,7 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 /// move-authentication-error                              = %d39 execution-error
 /// execution-canceled-due-to-execution-worker-congestion  = %d40 u64
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, uniffi::Enum)]
 pub enum ExecutionError {
     // General transaction errors
     /// Insufficient Gas
@@ -589,7 +589,7 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
 /// ```text
 /// move-location = object-id identifier u16 u16 (option identifier)
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct MoveLocation {
     /// The package id
     pub package: Arc<ObjectId>,
@@ -722,7 +722,7 @@ pub enum CommandArgumentError {
 /// unknown-upgrade-policy      = %d04 u8
 /// package-id-does-not-match   = %d05 object-id object-id
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, uniffi::Enum)]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
     UnableToFetchPackage { package_id: Arc<ObjectId> },
@@ -827,15 +827,13 @@ crate::export_iota_types_bcs_conversion!(
     ExecutionStatus,
     ExecutionError,
     MoveLocation,
-    CommandArgumentError,
-    PackageUpgradeError,
-    TypeArgumentError
+    PackageUpgradeError
 );
+crate::export_remote_types_bcs_conversion!(CommandArgumentError, TypeArgumentError);
 crate::export_iota_types_json_conversion!(
     ExecutionStatus,
     ExecutionError,
     MoveLocation,
-    CommandArgumentError,
-    PackageUpgradeError,
-    TypeArgumentError
+    PackageUpgradeError
 );
+crate::export_remote_types_json_conversion!(CommandArgumentError, TypeArgumentError);
