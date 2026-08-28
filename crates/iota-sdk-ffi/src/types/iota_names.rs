@@ -93,7 +93,7 @@ impl Name {
 
 /// Two different view options for a name.
 /// `At` -> `test@example` | `Dot` -> `test.example.iota`
-#[derive(Copy, Clone, Debug, uniffi::Enum)]
+#[derive(Clone, Copy, Debug, uniffi::Enum)]
 pub enum NameFormat {
     At,
     Dot,
