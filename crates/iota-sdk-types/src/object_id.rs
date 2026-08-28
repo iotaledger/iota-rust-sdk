@@ -22,7 +22,7 @@ use super::{Address, address::AddressParseError};
 /// ```text
 /// object-id = address
 /// ```
-#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Default, derive_more::Deref, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -218,6 +218,42 @@ impl From<ObjectId> for Vec<u8> {
     }
 }
 
+impl PartialEq<[u8; Self::LENGTH]> for ObjectId {
+    fn eq(&self, other: &[u8; Self::LENGTH]) -> bool {
+        self.0 == *other
+    }
+}
+
+impl PartialEq<ObjectId> for [u8; ObjectId::LENGTH] {
+    fn eq(&self, other: &ObjectId) -> bool {
+        *self == other.0
+    }
+}
+
+impl PartialEq<ObjectId> for &[u8] {
+    fn eq(&self, other: &ObjectId) -> bool {
+        *self == other.0
+    }
+}
+
+impl PartialEq<&[u8]> for ObjectId {
+    fn eq(&self, other: &&[u8]) -> bool {
+        self.0 == *other
+    }
+}
+
+impl PartialEq<Vec<u8>> for ObjectId {
+    fn eq(&self, other: &Vec<u8>) -> bool {
+        self.0 == *other
+    }
+}
+
+impl PartialEq<ObjectId> for Vec<u8> {
+    fn eq(&self, other: &ObjectId) -> bool {
+        *self == other.0
+    }
+}
+
 impl std::str::FromStr for ObjectId {
     type Err = AddressParseError;
 
@@ -228,12 +264,84 @@ impl std::str::FromStr for ObjectId {
 
 impl std::fmt::Debug for ObjectId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "ObjectId(\"{self}\")")
+        f.debug_tuple("ObjectId")
+            .field(&format_args!("\"{self}\""))
+            .finish()
     }
 }
 
 impl std::fmt::Display for ObjectId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.to_canonical_string(true).fmt(f)
+    }
+}
+
+impl std::fmt::LowerHex for ObjectId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        std::fmt::LowerHex::fmt(&self.0, f)
+    }
+}
+
+impl std::fmt::UpperHex for ObjectId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        std::fmt::UpperHex::fmt(&self.0, f)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[cfg(target_arch = "wasm32")]
+    use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::{Address, ObjectId};
+
+    #[test]
+    fn debug_format_matches_address() {
+        let object_id = ObjectId::from_u16(2);
+        let address = Address::from_u16(2);
+
+        assert_eq!(
+            format!("{object_id:?}"),
+            format!("{address:?}").replace("Address", "ObjectId")
+        );
+        assert_eq!(
+            format!("{object_id:#?}"),
+            format!("{address:#?}").replace("Address", "ObjectId")
+        );
+    }
+
+    #[test]
+    fn partial_eq_bytes() {
+        let object_id = ObjectId::from_u16(2);
+        let matching = *object_id.bytes();
+        let non_matching = [1u8; 32];
+
+        assert_eq!(object_id, matching);
+        assert_eq!(matching, object_id);
+        assert_ne!(object_id, non_matching);
+        assert_ne!(non_matching, object_id);
+        assert_eq!(object_id, matching.as_slice());
+        assert_eq!(matching.as_slice(), object_id);
+        assert_eq!(object_id, matching.to_vec());
+        assert_eq!(matching.to_vec(), object_id);
+    }
+
+    #[test]
+    fn hex_formats() {
+        let object_id = ObjectId::from_short_hex("0xab").unwrap();
+        let raw = "00000000000000000000000000000000000000000000000000000000000000ab";
+
+        assert_eq!(format!("{object_id:x}"), raw);
+        assert_eq!(format!("{object_id:#x}"), format!("0x{raw}"));
+        assert_eq!(format!("{object_id:X}"), raw.to_uppercase());
+        assert_eq!(
+            format!("{object_id:#X}"),
+            format!("0x{}", raw.to_uppercase())
+        );
+    }
+
+    #[test]
+    fn default_is_zero() {
+        assert_eq!(ObjectId::default(), ObjectId::ZERO);
     }
 }

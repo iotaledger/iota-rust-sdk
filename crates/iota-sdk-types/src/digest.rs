@@ -294,7 +294,7 @@ pub type SigningDigest = [u8; Digest::LENGTH];
 macro_rules! impl_digest_wrapper {
     ($(#[$meta:meta])* $name:ident) => {
         $(#[$meta])*
-        #[derive(Clone, Copy, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+        #[derive(Clone, Copy, Default, derive_more::Deref, Eq, Hash, Ord, PartialEq, PartialOrd)]
         #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
         #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
         #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -431,6 +431,42 @@ macro_rules! impl_digest_wrapper {
         impl From<$name> for [u8; Digest::LENGTH] {
             fn from(digest: $name) -> Self {
                 digest.into_inner()
+            }
+        }
+
+        impl PartialEq<[u8; Self::LENGTH]> for $name {
+            fn eq(&self, other: &[u8; Self::LENGTH]) -> bool {
+                self.0 == *other
+            }
+        }
+
+        impl PartialEq<$name> for [u8; Digest::LENGTH] {
+            fn eq(&self, other: &$name) -> bool {
+                *self == other.0
+            }
+        }
+
+        impl PartialEq<$name> for &[u8] {
+            fn eq(&self, other: &$name) -> bool {
+                *self == other.0
+            }
+        }
+
+        impl PartialEq<&[u8]> for $name {
+            fn eq(&self, other: &&[u8]) -> bool {
+                self.0 == *other
+            }
+        }
+
+        impl PartialEq<Vec<u8>> for $name {
+            fn eq(&self, other: &Vec<u8>) -> bool {
+                self.0 == *other
+            }
+        }
+
+        impl PartialEq<$name> for Vec<u8> {
+            fn eq(&self, other: &$name) -> bool {
+                *self == other.0
             }
         }
 
@@ -729,6 +765,28 @@ mod tests {
         assert_transparent!(ConsensusCommitDigest);
         assert_transparent!(MisbehaviorReportDigest);
         assert_transparent!(MoveAuthenticatorDigest);
+    }
+
+    #[test]
+    fn wrapper_partial_eq_bytes() {
+        let digest = TransactionDigest::new([1u8; 32]);
+        let matching = [1u8; 32];
+        let non_matching = [2u8; 32];
+
+        assert_eq!(digest, matching);
+        assert_eq!(matching, digest);
+        assert_ne!(digest, non_matching);
+        assert_ne!(non_matching, digest);
+        assert_eq!(digest, matching.as_slice());
+        assert_eq!(matching.as_slice(), digest);
+        assert_eq!(digest, matching.to_vec());
+        assert_eq!(matching.to_vec(), digest);
+    }
+
+    #[test]
+    fn wrapper_deref() {
+        let digest = TransactionDigest::new([1u8; 32]);
+        assert_eq!(*digest, Digest::new([1u8; 32]));
     }
 
     #[test]

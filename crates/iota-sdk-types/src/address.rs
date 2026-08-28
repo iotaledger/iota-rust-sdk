@@ -57,7 +57,7 @@ use crate::ObjectId;
 /// ```text
 /// address = 32OCTET
 /// ```
-#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Default, derive_more::Deref, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
@@ -332,6 +332,42 @@ impl From<super::ObjectId> for Address {
     }
 }
 
+impl PartialEq<[u8; Self::LENGTH]> for Address {
+    fn eq(&self, other: &[u8; Self::LENGTH]) -> bool {
+        &self.0 == other
+    }
+}
+
+impl PartialEq<Address> for [u8; Address::LENGTH] {
+    fn eq(&self, other: &Address) -> bool {
+        self == &other.0
+    }
+}
+
+impl PartialEq<Address> for &[u8] {
+    fn eq(&self, other: &Address) -> bool {
+        *self == other.0.as_slice()
+    }
+}
+
+impl PartialEq<&[u8]> for Address {
+    fn eq(&self, other: &&[u8]) -> bool {
+        self.0.as_slice() == *other
+    }
+}
+
+impl PartialEq<Vec<u8>> for Address {
+    fn eq(&self, other: &Vec<u8>) -> bool {
+        self.0.as_slice() == other.as_slice()
+    }
+}
+
+impl PartialEq<Address> for Vec<u8> {
+    fn eq(&self, other: &Address) -> bool {
+        self.as_slice() == other.0.as_slice()
+    }
+}
+
 impl std::fmt::Display for Address {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.to_canonical_string(true).fmt(f)
@@ -343,6 +379,34 @@ impl std::fmt::Debug for Address {
         f.debug_tuple("Address")
             .field(&format_args!("\"{self}\""))
             .finish()
+    }
+}
+
+impl std::fmt::LowerHex for Address {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if f.alternate() {
+            write!(f, "0x")?;
+        }
+
+        for byte in self.0 {
+            write!(f, "{byte:02x}")?;
+        }
+
+        Ok(())
+    }
+}
+
+impl std::fmt::UpperHex for Address {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if f.alternate() {
+            write!(f, "0x")?;
+        }
+
+        for byte in self.0 {
+            write!(f, "{byte:02X}")?;
+        }
+
+        Ok(())
     }
 }
 
@@ -398,7 +462,7 @@ mod tests {
 
         #[proptest]
         fn roundtrip_display_fromstr(address: Address) {
-            assert_eq!(address, address.to_string().parse().unwrap());
+            assert_eq!(address, address.to_string().parse::<Address>().unwrap());
         }
     }
 
@@ -536,6 +600,38 @@ mod tests {
             address.to_canonical_string(false),
             "0000000000000000000000000000000000000000000000000000000000000002"
         );
+    }
+
+    #[test]
+    fn partial_eq_bytes() {
+        let address = Address::from_u16(2);
+        let matching = *address.bytes();
+        let non_matching = [1u8; 32];
+
+        assert_eq!(address, matching);
+        assert_eq!(matching, address);
+        assert_ne!(address, non_matching);
+        assert_ne!(non_matching, address);
+        assert_eq!(address, matching.as_slice());
+        assert_eq!(matching.as_slice(), address);
+        assert_eq!(address, matching.to_vec());
+        assert_eq!(matching.to_vec(), address);
+    }
+
+    #[test]
+    fn hex_formats() {
+        let address = Address::from_short_hex("0xab").unwrap();
+        let raw = "00000000000000000000000000000000000000000000000000000000000000ab";
+
+        assert_eq!(format!("{address:x}"), raw);
+        assert_eq!(format!("{address:#x}"), format!("0x{raw}"));
+        assert_eq!(format!("{address:X}"), raw.to_uppercase());
+        assert_eq!(format!("{address:#X}"), format!("0x{}", raw.to_uppercase()));
+    }
+
+    #[test]
+    fn default_is_zero() {
+        assert_eq!(Address::default(), Address::ZERO);
     }
 
     #[test]
