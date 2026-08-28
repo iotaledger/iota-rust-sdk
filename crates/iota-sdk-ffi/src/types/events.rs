@@ -103,5 +103,19 @@ impl TransactionEvents {
 
 crate::export_iota_types_bcs_conversion!(Event);
 crate::export_iota_types_json_conversion!(Event);
+
+#[uniffi::export]
+impl Event {
+    /// Render this type as human-readable text.
+    ///
+    /// The layout is meant for reading and can change between releases. Use the
+    /// JSON or BCS conversions for output that gets parsed.
+    pub fn to_display_string(&self) -> Result<String> {
+        let data: iota_sdk::types::Event = self.clone().try_into()?;
+        Ok(data.to_string())
+    }
+}
+
 crate::export_iota_types_objects_bcs_conversion!(TransactionEvents);
 crate::export_iota_types_objects_json_conversion!(TransactionEvents);
+crate::export_iota_types_objects_display!(TransactionEvents);

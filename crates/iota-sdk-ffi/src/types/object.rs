@@ -820,3 +820,13 @@ crate::export_iota_types_objects_json_conversion!(
     Owner,
     GenesisObject
 );
+crate::export_iota_types_display!(ObjectReference, TypeOrigin, UpgradeInfo, MoveStruct);
+crate::export_iota_types_objects_display!(
+    ObjectId,
+    Object,
+    ObjectData,
+    MovePackage,
+    Owner,
+    ObjectType,
+    GenesisObject
+);
