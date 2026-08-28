@@ -511,7 +511,7 @@ pub struct MoveStructContentsError {
 }
 
 /// Type of an IOTA object
-#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum ObjectType {
     /// Move package containing one or more bytecode modules
     Package,
@@ -530,6 +530,24 @@ impl std::fmt::Display for ObjectType {
         match self {
             ObjectType::Package => write!(f, "Package"),
             ObjectType::Struct(struct_tag) => write!(f, "Struct({struct_tag})"),
+        }
+    }
+}
+
+impl std::str::FromStr for ObjectType {
+    type Err = crate::TypeParseError;
+
+    /// Parses the [`Display`](std::fmt::Display) form of an object type; the
+    /// `Struct(…)` wrapper around the struct tag is optional.
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s == "Package" {
+            Ok(Self::Package)
+        } else {
+            let s = s
+                .strip_prefix("Struct(")
+                .and_then(|s| s.strip_suffix(')'))
+                .unwrap_or(s);
+            s.parse().map(Self::Struct)
         }
     }
 }
@@ -1222,5 +1240,34 @@ mod serialization {
                 assert_eq!(object, serde_json::from_str(&json).unwrap());
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[cfg(target_arch = "wasm32")]
+    use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::ObjectType;
+
+    #[test]
+    fn object_type_display_fromstr_roundtrip() {
+        let package = ObjectType::Package;
+        assert_eq!(package, package.to_string().parse().unwrap());
+
+        let object_type: ObjectType = "Struct(0x2::coin::Coin<0x2::iota::IOTA>)".parse().unwrap();
+        assert_eq!(object_type, object_type.to_string().parse().unwrap());
+    }
+
+    #[test]
+    fn object_type_fromstr_bare_struct_tag() {
+        assert_eq!(
+            "0x2::coin::Coin<0x2::iota::IOTA>"
+                .parse::<ObjectType>()
+                .unwrap(),
+            "Struct(0x2::coin::Coin<0x2::iota::IOTA>)".parse().unwrap()
+        );
+
+        assert!("NotAnObjectType".parse::<ObjectType>().is_err());
     }
 }

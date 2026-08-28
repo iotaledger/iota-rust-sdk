@@ -1578,7 +1578,7 @@ impl crate::TreeDisplay for Input {
 }
 
 /// A shared object input to a programmable transaction
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct SharedObjectReference {
@@ -1604,6 +1604,35 @@ impl SharedObjectReference {
             initial_shared_version,
             mutable,
         }
+    }
+
+    /// Returns a reference to the object id that this SharedObjectReference is
+    /// referring to.
+    pub fn object_id(&self) -> &ObjectId {
+        &self.object_id
+    }
+
+    /// Returns the version the object was shared at.
+    pub fn initial_shared_version(&self) -> Version {
+        self.initial_shared_version
+    }
+
+    /// Returns whether the caller asks for a mutable reference to the shared
+    /// object.
+    pub fn mutable(&self) -> bool {
+        self.mutable
+    }
+
+    /// Returns a 3-tuple containing the object id, initial shared version, and
+    /// mutability.
+    pub fn into_parts(self) -> (ObjectId, Version, bool) {
+        let Self {
+            object_id,
+            initial_shared_version,
+            mutable,
+        } = self;
+
+        (object_id, initial_shared_version, mutable)
     }
 }
 

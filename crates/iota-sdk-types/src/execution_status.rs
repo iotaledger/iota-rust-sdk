@@ -17,7 +17,7 @@ use super::{Address, Digest, Identifier, ObjectId};
 /// success = %d00
 /// failure = %d01 execution-error (option u64)
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
@@ -226,7 +226,7 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 // Reordering or inserting variants will break protocol compatibility.
 // New variants MUST be added at the end.
 // The `execution_error_bcs_discriminants` snapshot test enforces this.
-#[derive(Clone, Debug, Eq, Error, PartialEq, strum::AsRefStr)]
+#[derive(Clone, Debug, Eq, Error, Hash, PartialEq, strum::AsRefStr)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
