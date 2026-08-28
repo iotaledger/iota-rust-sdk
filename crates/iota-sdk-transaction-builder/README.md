@@ -11,6 +11,18 @@ provided via `with_client`, the resulting builder uses it to resolve and validat
 (e.g. looking up object references and gas data from the network). Without a client, all inputs —
 object references, gas payment, gas price, and budget — must be supplied manually.
 
+## Custom client implementations
+
+`TransactionBuilderClient` is a plain trait, so any transport can back the builder by implementing
+it: fetching objects, the reference gas price, protocol configuration, and executing or dry-running
+transactions. Ready-made implementations ship with the
+[`iota-sdk-graphql-client`](https://crates.io/crates/iota-sdk-graphql-client) and
+[`iota-sdk-grpc-client`](https://crates.io/crates/iota-sdk-grpc-client) crates.
+
+To write your own, pick an `Error` and `DryRunResult` type and implement the required methods;
+`objects_by_id` (per-object loop) and `protocol_config` (defaults) have default implementations
+worth overriding when your transport can batch requests or fetch the real protocol configuration.
+
 ## Example
 
 ```rust,ignore
