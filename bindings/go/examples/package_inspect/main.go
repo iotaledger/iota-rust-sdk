@@ -412,7 +412,7 @@ func sameObjectID(left string, right string) bool {
 }
 
 func programmableTransactionFromTransaction(tx *iota_sdk.Transaction) (*programmableTransactionJSON, error) {
-	jsonString, err := iota_sdk.TransactionToJson(tx)
+	jsonString, err := tx.ToJson()
 	if err != nil {
 		return nil, err
 	}

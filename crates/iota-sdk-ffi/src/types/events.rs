@@ -25,7 +25,7 @@ use crate::{
 /// ```text
 /// event = object-id identifier address struct-tag bytes
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct Event {
     /// Package id of the top-level function invoked by a MoveCall command which
     /// triggered this event to be emitted.
@@ -101,31 +101,7 @@ impl TransactionEvents {
     }
 }
 
-/// Create an [`Event`] from BCS encoded bytes.
-#[uniffi::export]
-pub fn event_from_bcs(bcs: Vec<u8>) -> Result<Event> {
-    Ok(bcs::from_bytes::<iota_sdk::types::Event>(&bcs)?.into())
-}
-
-/// Convert an [`Event`] to BCS encoded bytes.
-#[uniffi::export]
-pub fn event_to_bcs(data: Event) -> Result<Vec<u8>> {
-    let data: iota_sdk::types::Event = data.try_into()?;
-    Ok(bcs::to_bytes(&data)?)
-}
-
-/// Create an [`Event`] from a JSON encoded string.
-#[uniffi::export]
-pub fn event_from_json(json: &str) -> Result<Event> {
-    Ok(serde_json::from_str::<iota_sdk::types::Event>(json)?.into())
-}
-
-/// Convert an [`Event`] to a JSON encoded string.
-#[uniffi::export]
-pub fn event_to_json(data: Event) -> Result<String> {
-    let data: iota_sdk::types::Event = data.try_into()?;
-    Ok(serde_json::to_string(&data)?)
-}
-
+crate::export_iota_types_bcs_conversion!(Event);
+crate::export_iota_types_json_conversion!(Event);
 crate::export_iota_types_objects_bcs_conversion!(TransactionEvents);
 crate::export_iota_types_objects_json_conversion!(TransactionEvents);
