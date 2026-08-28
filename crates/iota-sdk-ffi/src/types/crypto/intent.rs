@@ -31,7 +31,7 @@ impl From<iota_sdk::types::IntentError> for IntentError {
             iota_sdk::types::IntentError::Scope => Self::Scope,
             iota_sdk::types::IntentError::Version => Self::Version,
             iota_sdk::types::IntentError::AppId => Self::AppId,
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new IntentError variant was added and needs to be handled"),
         }
     }
 }
@@ -100,7 +100,7 @@ impl From<iota_sdk::types::IntentScope> for IntentScope {
             iota_sdk::types::IntentScope::ConsensusBlock => Self::ConsensusBlock,
             iota_sdk::types::IntentScope::DiscoveryPeers => Self::DiscoveryPeers,
             iota_sdk::types::IntentScope::AuthorityCapabilities => Self::AuthorityCapabilities,
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new IntentScope variant was added and needs to be handled"),
         }
     }
 }
@@ -144,7 +144,7 @@ impl From<iota_sdk::types::IntentVersion> for IntentVersion {
     fn from(value: iota_sdk::types::IntentVersion) -> Self {
         match value {
             iota_sdk::types::IntentVersion::V0 => Self::V0,
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new IntentVersion variant was added and needs to be handled"),
         }
     }
 }
@@ -183,7 +183,7 @@ impl From<iota_sdk::types::IntentAppId> for IntentAppId {
         match value {
             iota_sdk::types::IntentAppId::Iota => Self::Iota,
             iota_sdk::types::IntentAppId::Consensus => Self::Consensus,
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new IntentAppId variant was added and needs to be handled"),
         }
     }
 }
