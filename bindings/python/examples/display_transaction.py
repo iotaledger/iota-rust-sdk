@@ -1,9 +1,8 @@
 # Copyright (c) 2026 IOTA Stiftung
 # SPDX-License-Identifier: Apache-2.0
 
-# This example demonstrates how to print types as human-readable text.
-# Most types offer a `to_display_string()` method; types mirrored from the core
-# crate offer a `<type>_to_display_string()` function instead.
+# This example demonstrates how to print types as human-readable text
+# with the `to_display_string()` method.
 
 from lib.iota_sdk import *
 
@@ -16,8 +15,6 @@ def main():
     print(transaction.to_display_string())
 
     print(transaction.gas_payment().to_display_string())
-
-    print(transaction_expiration_to_display_string(transaction.expiration()))
 
 
 if __name__ == "__main__":

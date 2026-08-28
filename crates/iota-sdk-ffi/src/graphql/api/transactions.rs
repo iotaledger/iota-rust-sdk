@@ -5,14 +5,12 @@
 
 use std::{sync::Arc, time::Duration};
 
-use iota_sdk::graphql_client::{WaitForTransaction, pagination::PaginationFilter};
-
 use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
         pagination::{SignedTransactionPage, TransactionDataEffectsPage, TransactionEffectsPage},
-        query_types::{TransactionDataEffects, TransactionsFilter},
+        query_types::{PaginationFilter, TransactionDataEffects, TransactionsFilter},
     },
     types::{
         digest::TransactionDigest,
@@ -30,8 +28,7 @@ use crate::{
 /// objects created by this transaction), but subsequent queries using the
 /// transaction ID can still fail until the transaction is indexed on the
 /// indexer.
-#[uniffi::remote(Enum)]
-#[non_exhaustive]
+#[derive(uniffi::Enum)]
 pub enum WaitForTransaction {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions (you can reference objects created by this transaction),
@@ -45,8 +42,16 @@ pub enum WaitForTransaction {
     IndexedOnNode,
     /// Indicates that the transaction has been included in a checkpoint, and
     /// all queries may include it.
-    #[default]
     Finalized,
+}
+
+impl From<WaitForTransaction> for iota_sdk::graphql_client::WaitForTransaction {
+    fn from(value: WaitForTransaction) -> Self {
+        match value {
+            WaitForTransaction::IndexedOnNode => Self::IndexedOnNode,
+            WaitForTransaction::Finalized => Self::Finalized,
+        }
+    }
 }
 
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
@@ -108,7 +113,7 @@ impl GraphQLClient {
             .await
             .transactions(
                 filter.map(Into::into),
-                pagination_filter.unwrap_or_default(),
+                pagination_filter.map(Into::into).unwrap_or_default(),
             )
             .await?
             .map(Into::into)
@@ -128,7 +133,7 @@ impl GraphQLClient {
             .await
             .transactions_effects(
                 filter.map(Into::into),
-                pagination_filter.unwrap_or_default(),
+                pagination_filter.map(Into::into).unwrap_or_default(),
             )
             .await?
             .map(Into::into)
@@ -149,7 +154,7 @@ impl GraphQLClient {
             .await
             .transactions_data_effects(
                 filter.map(Into::into),
-                pagination_filter.unwrap_or_default(),
+                pagination_filter.map(Into::into).unwrap_or_default(),
             )
             .await?
             .map(Into::into)
@@ -174,7 +179,7 @@ impl GraphQLClient {
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
                 &transaction.0,
-                wait_for,
+                wait_for.map(Into::into),
             )
             .await?
             .into())
@@ -220,7 +225,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .wait_for_transaction(**digest, wait_for, timeout)
+            .wait_for_transaction(**digest, wait_for.into(), timeout)
             .await?)
     }
 }

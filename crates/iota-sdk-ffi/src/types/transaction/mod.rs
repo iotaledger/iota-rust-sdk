@@ -3,8 +3,6 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::TransactionExpiration;
-
 use crate::{
     error::Result,
     types::{
@@ -123,7 +121,7 @@ impl TransactionV1 {
             kind: kind.0.clone(),
             sender: **sender,
             gas_payment: gas_payment.into(),
-            expiration,
+            expiration: expiration.into(),
         })
     }
 
@@ -140,7 +138,7 @@ impl TransactionV1 {
     }
 
     pub fn expiration(&self) -> TransactionExpiration {
-        self.0.expiration
+        self.0.expiration.into()
     }
 
     pub fn digest(&self) -> TransactionDigest {
@@ -1807,14 +1805,34 @@ impl TransactionEffects {
 /// transaction-expiration =  %d00      ; none
 ///                        =/ %d01 u64  ; epoch
 /// ```
-#[uniffi::remote(Enum)]
-#[non_exhaustive]
+#[derive(Clone, uniffi::Enum)]
 pub enum TransactionExpiration {
     /// The transaction has no expiration
     None,
     /// Validators won't sign a transaction unless the expiration Epoch
     /// is greater than or equal to the current epoch
     Epoch(u64),
+}
+
+impl From<iota_sdk::types::TransactionExpiration> for TransactionExpiration {
+    fn from(value: iota_sdk::types::TransactionExpiration) -> Self {
+        match value {
+            iota_sdk::types::TransactionExpiration::None => Self::None,
+            iota_sdk::types::TransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
+            _ => unimplemented!(
+                "a new TransactionExpiration variant was added and needs to be handled"
+            ),
+        }
+    }
+}
+
+impl From<TransactionExpiration> for iota_sdk::types::TransactionExpiration {
+    fn from(value: TransactionExpiration) -> Self {
+        match value {
+            TransactionExpiration::None => Self::None,
+            TransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
+        }
+    }
 }
 
 /// An argument to a programmable transaction command
@@ -1993,9 +2011,9 @@ crate::export_iota_types_bcs_conversion!(
     RandomnessStateUpdate,
     DenyRuleSet,
     TransactionDenyRulesUpdate,
-    GasPayment
+    GasPayment,
+    TransactionExpiration
 );
-crate::export_remote_types_bcs_conversion!(TransactionExpiration);
 crate::export_iota_types_objects_bcs_conversion!(
     Transaction,
     TransactionV1,
@@ -2026,9 +2044,9 @@ crate::export_iota_types_json_conversion!(
     RandomnessStateUpdate,
     DenyRuleSet,
     TransactionDenyRulesUpdate,
-    GasPayment
+    GasPayment,
+    TransactionExpiration
 );
-crate::export_remote_types_json_conversion!(TransactionExpiration);
 crate::export_iota_types_objects_json_conversion!(
     Transaction,
     TransactionV1,
@@ -2060,9 +2078,9 @@ crate::export_iota_types_display!(
     DenyRuleSet,
     TransactionDenyRulesUpdate,
     GasPayment,
-    SharedObjectReference
+    SharedObjectReference,
+    TransactionExpiration
 );
-crate::export_remote_types_display!(TransactionExpiration);
 crate::export_iota_types_objects_display!(
     Transaction,
     TransactionV1,

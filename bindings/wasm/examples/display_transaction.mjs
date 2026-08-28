@@ -2,16 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 // Demonstrates printing types as human-readable text. Object types offer a
-// `toDisplayString()` method; records are plain objects, so theirs sits on the
-// generated companion object; types mirrored from the core crate offer a
-// `<type>ToDisplayString()` function instead.
+// `toDisplayString()` method; records and enums are plain objects, so theirs
+// sits on the generated companion object.
 
-import {
-  GasPayment,
-  Transaction,
-  transactionExpirationToDisplayString,
-  initAsync,
-} from "@iota/sdk-wasm";
+import { GasPayment, Transaction, initAsync } from "@iota/sdk-wasm";
 
 await initAsync();
 
@@ -23,5 +17,3 @@ const transaction = Transaction.fromBase64(txBytesBase64);
 console.log(transaction.toDisplayString());
 
 console.log(GasPayment.toDisplayString(transaction.gasPayment()));
-
-console.log(transactionExpirationToDisplayString(transaction.expiration()));

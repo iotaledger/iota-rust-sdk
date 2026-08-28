@@ -7,9 +7,12 @@ pub mod multisig;
 pub mod passkey;
 pub mod public_key;
 
-use iota_sdk::types::{PublicKeyExt, SignatureScheme};
+use iota_sdk::types::PublicKeyExt;
 
-use crate::{error::Result, types::address::Address};
+use crate::{
+    error::Result,
+    types::{address::Address, signature::SignatureScheme},
+};
 
 macro_rules! impl_crypto_object {
     ($(#[$meta:meta])* $t:ident) => {
@@ -87,7 +90,7 @@ impl Ed25519PublicKey {
 
     /// Returns the signature scheme for this public key.
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     /// Returns the bytes with signature scheme flag prepended.
@@ -124,7 +127,7 @@ impl Secp256k1PublicKey {
 
     /// Returns the signature scheme for this public key.
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     /// Returns the bytes with signature scheme flag prepended.
@@ -161,7 +164,7 @@ impl Secp256r1PublicKey {
 
     /// Returns the signature scheme for this public key.
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     /// Returns the bytes with signature scheme flag prepended
