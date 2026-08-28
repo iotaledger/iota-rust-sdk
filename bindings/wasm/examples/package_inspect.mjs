@@ -13,7 +13,6 @@ import {
   ObjectFilter,
   PaginationFilter,
   StructTag,
-  transactionToJson,
   TransactionsFilter,
   initAsync,
 } from "@iota/sdk-wasm";
@@ -157,7 +156,7 @@ function sameObjectId(left, right) {
 function programmableTransactionJson(tx) {
   let parsed;
   try {
-    parsed = JSON.parse(transactionToJson(tx));
+    parsed = JSON.parse(tx.toJson());
   } catch {
     return null;
   }

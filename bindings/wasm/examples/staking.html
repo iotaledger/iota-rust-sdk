@@ -301,7 +301,7 @@
         MoveArg,
         Address,
         UserSignature,
-        transactionFromBcs,
+        Transaction,
         WaitForTransaction,
       } from "../dist/iota-sdk.js";
 
@@ -757,7 +757,7 @@
           // The wallet returns { bytes, signature } — we need to submit
           // the transaction + signature to the network via our SDK client.
           const signedBytes = fromBase64(signed.bytes);
-          const signedTx = transactionFromBcs(signedBytes.buffer);
+          const signedTx = Transaction.fromBcs(signedBytes.buffer);
 
           const sigBytes = fromBase64(signed.signature);
           const userSig = UserSignature.fromBytes(sigBytes.buffer);
