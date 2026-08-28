@@ -339,7 +339,7 @@ impl MoveStruct {
     ) -> Result<Self, MoveStructContentsError> {
         if contents.len() < ObjectId::LENGTH {
             return Err(MoveStructContentsError {
-                actual: contents.len(),
+                contents_len: contents.len(),
             });
         }
         Ok(Self {
@@ -407,7 +407,7 @@ impl MoveStruct {
     pub fn set_contents(&mut self, contents: Vec<u8>) -> Result<(), MoveStructContentsError> {
         if contents.len() < ObjectId::LENGTH {
             return Err(MoveStructContentsError {
-                actual: contents.len(),
+                contents_len: contents.len(),
             });
         }
         self.contents = contents;
@@ -449,17 +449,17 @@ impl crate::TreeDisplay for MoveStruct {
 /// [`ObjectId`].
 #[derive(Clone, Debug, thiserror::Error)]
 #[error(
-    "MoveStruct contents must be at least {} bytes to contain an ObjectId, got {actual}",
+    "MoveStruct contents must be at least {} bytes to contain an ObjectId, got {contents_len}",
     ObjectId::LENGTH
 )]
 pub struct MoveStructContentsError {
-    actual: usize,
+    contents_len: usize,
 }
 
 impl MoveStructContentsError {
     /// Length, in bytes, of the contents that were rejected.
-    pub fn actual(&self) -> usize {
-        self.actual
+    pub fn contents_len(&self) -> usize {
+        self.contents_len
     }
 }
 

@@ -107,7 +107,7 @@ pub enum Error {
     InvalidArgument(&'static str),
 
     /// The operation did not complete within its deadline.
-    #[error("deadline elapsed")]
+    #[error("timed out")]
     Timeout,
 
     /// A faucet request failed.
