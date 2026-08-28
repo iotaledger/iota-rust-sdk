@@ -58,6 +58,6 @@ func main() {
 		log.Fatalf("Failed to execute: %v", err)
 	}
 	log.Printf("Digest: %s", iota_sdk.HexEncode((*effects).Digest().ToBytes()))
-	log.Printf("Transaction status: %v", (*effects).AsV1().Status)
+	log.Printf("Transaction status: %v", (*effects).AsV1().Status())
 	log.Printf("Effects: %+v", (*effects).AsV1())
 }

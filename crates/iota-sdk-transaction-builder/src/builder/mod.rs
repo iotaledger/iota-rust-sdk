@@ -91,8 +91,9 @@ pub struct TransactionBuildData {
 }
 
 impl TransactionBuildData {
-    fn set_sender(&mut self, sender: Address) {
+    fn sender(&mut self, sender: Address) -> &mut Self {
         self.sender = sender;
+        self
     }
 
     fn set_input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
@@ -316,7 +317,7 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
     /// The returned builder has the original inputs and commands but no
     /// sender, gas payment, sponsor, or expiration; the sender defaults to
     /// [`Address::ZERO`] and must be set with
-    /// [`set_sender`](TransactionBuilder::set_sender) before
+    /// [`sender`](TransactionBuilder::sender) before
     /// [`finish`](TransactionBuilder::finish) is called.
     fn from(ptb: ProgrammableTransaction) -> Self {
         let ProgrammableTransaction {
@@ -413,8 +414,9 @@ impl TryFrom<Transaction> for TransactionBuilder {
 
 impl<C, L> TransactionBuilder<C, L> {
     /// Set the sender address.
-    pub fn set_sender(&mut self, sender: Address) {
-        self.data.set_sender(sender);
+    pub fn sender(&mut self, sender: Address) -> &mut Self {
+        self.data.sender(sender);
+        self
     }
 
     /// Apply the given parameter and return the generated argument

@@ -34,7 +34,7 @@ fun main() = runBlocking {
         val effects = builder.execute(signer, WaitForTx.FINALIZED)
 
         println("Digest: ${hexEncode(effects.digest().toBytes())}")
-        println("Transaction status: ${effects.asV1().status}")
+        println("Transaction status: ${effects.asV1().status()}")
         println("Effects: ${effects.asV1()}")
     } catch (e: Exception) {
         e.printStackTrace()

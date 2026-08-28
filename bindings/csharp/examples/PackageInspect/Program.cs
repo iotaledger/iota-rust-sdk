@@ -335,14 +335,14 @@ class Program
         foreach (var effects in page.Data)
         {
             var effectsV1 = effects.AsV1();
-            foreach (var changedObj in effectsV1.ChangedObjects)
+            foreach (var changedObj in effectsV1.ChangedObjects())
             {
                 if (changedObj.OutputState is not ObjectOut.ObjectWrite)
                 {
                     continue;
                 }
 
-                var obj = await client.Object(changedObj.ObjectId, effectsV1.LamportVersion);
+                var obj = await client.Object(changedObj.ObjectId, effectsV1.LamportVersion());
                 if (
                     obj?.AsStructOpt()?.StructType?.Equals(StructTag.NewUpgradeCap()) == true
                 )

@@ -73,7 +73,10 @@ Each command method adds one or more commands to the final transaction. Some com
 - `split_coins`: Split a coin into coins of various amounts.
 - `transfer_objects`: Send objects to a recipient address.
 - `publish`: Publish a move package.
-- `upgrade`: Upgrade a move package.
+- `authorize_upgrade`: Authorize a move package upgrade, producing an `UpgradeTicket`.
+- `upgrade`: Upgrade a move package, consuming the `UpgradeTicket` and producing an `UpgradeReceipt`.
+- `commit_upgrade`: Commit a move package upgrade, consuming the `UpgradeReceipt`.
+- `upgrade_package`: Authorize, perform, and commit a move package upgrade in one call.
 - `make_move_vec`: Create a move `vector`.
 
 #### Metadata

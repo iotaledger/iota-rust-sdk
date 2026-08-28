@@ -80,9 +80,9 @@ const sig0 = kp0.signTransaction(txn);
 const sig1 = kp1.signTransaction(txn);
 
 // 8. Aggregate signatures.
-let aggregator = MultisigAggregator.newWithTransaction(committee, txn);
-aggregator = aggregator.withSignature(sig0);
-aggregator = aggregator.withSignature(sig1);
+const aggregator = MultisigAggregator.newWithTransaction(committee, txn);
+aggregator.addSignature(sig0);
+aggregator.addSignature(sig1);
 const aggSig = aggregator.finish();
 
 // 9. Execute.
@@ -90,5 +90,5 @@ const userSignature = UserSignature.newMultisig(aggSig);
 const effects = await client.executeTx([userSignature], txn);
 
 console.log(`Digest: ${hexEncode(effects.digest().toBytes())}`);
-console.log(`Transaction status: ${effects.asV1().status}`);
+console.log(`Transaction status: ${effects.asV1().status()}`);
 console.log(`Effects: ${effects.asV1()}`);

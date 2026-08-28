@@ -283,14 +283,14 @@ private func resolveUpgradeCapId(
 
   for effects in page.data {
     let effectsV1 = effects.asV1()
-    for changedObj in effectsV1.changedObjects {
+    for changedObj in effectsV1.changedObjects() {
       guard case .objectWrite = changedObj.outputState else {
         continue
       }
 
       if let object = try await client.object(
         objectId: changedObj.objectId,
-        version: effectsV1.lamportVersion
+        version: effectsV1.lamportVersion()
       ),
         object.asStructOpt()?.structType == StructTag.newUpgradeCap()
       {

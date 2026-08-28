@@ -131,11 +131,11 @@ async function resolveUpgradeCapId(client, packageId) {
   );
   for (const effects of page.data) {
     const effectsV1 = effects.asV1();
-    for (const changedObj of effectsV1.changedObjects) {
+    for (const changedObj of effectsV1.changedObjects()) {
       if (!changedObj.outputState.isObjectWrite()) continue;
       const obj = await client.object(
         changedObj.objectId,
-        effectsV1.lamportVersion,
+        effectsV1.lamportVersion(),
       );
       if (obj !== null && obj.asStructOpt() !== null) {
         if (

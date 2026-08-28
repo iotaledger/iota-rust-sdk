@@ -83,7 +83,7 @@ async def main():
     # Resolve UpgradeCap and PackageId via the client
     upgrade_cap = None
     package_id = None
-    for changed_obj in effects.as_v1().changed_objects:
+    for changed_obj in effects.as_v1().changed_objects():
         if changed_obj.output_state.is_object_write():
             object_id = changed_obj.object_id
             obj = await client.object(object_id, None)
@@ -161,7 +161,7 @@ async def main():
     print("Success")
 
     # Print the new package version (should now be 2)
-    for changed_obj in effects.as_v1().changed_objects:
+    for changed_obj in effects.as_v1().changed_objects():
         if changed_obj.output_state.is_package_write():
             print(f"New Package ID: {changed_obj.object_id.to_hex()}")
             print(f"New Package version: {changed_obj.output_state.version}")
