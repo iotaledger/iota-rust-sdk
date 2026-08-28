@@ -739,7 +739,7 @@ impl From<iota_sdk::types::CommandArgumentError> for CommandArgumentError {
             iota_sdk::types::CommandArgumentError::InvalidArgumentArity => {
                 Self::InvalidArgumentArity
             }
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new CommandArgumentError variant was added and needs to be handled"),
         }
     }
 }
@@ -900,7 +900,7 @@ impl From<iota_sdk::types::TypeArgumentError> for TypeArgumentError {
             iota_sdk::types::TypeArgumentError::ConstraintNotSatisfied => {
                 Self::ConstraintNotSatisfied
             }
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new TypeArgumentError variant was added and needs to be handled"),
         }
     }
 }

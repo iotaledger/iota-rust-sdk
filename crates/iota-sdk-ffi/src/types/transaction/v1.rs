@@ -572,7 +572,7 @@ impl From<iota_sdk::types::IdOperation> for IdOperation {
             iota_sdk::types::IdOperation::None => Self::None,
             iota_sdk::types::IdOperation::Created => Self::Created,
             iota_sdk::types::IdOperation::Deleted => Self::Deleted,
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new IdOperation variant was added and needs to be handled"),
         }
     }
 }

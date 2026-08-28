@@ -311,7 +311,7 @@ impl From<iota_sdk::types::HashingIntentScope> for HashingIntentScope {
         match value {
             iota_sdk::types::HashingIntentScope::ChildObjectId => Self::ChildObjectId,
             iota_sdk::types::HashingIntentScope::RegularObjectId => Self::RegularObjectId,
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new HashingIntentScope variant was added and needs to be handled"),
         }
     }
 }
