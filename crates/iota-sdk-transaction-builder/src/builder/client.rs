@@ -4,8 +4,8 @@
 use std::collections::BTreeMap;
 
 use iota_types::{
-    Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
-    TransactionEffects, UserSignature, Version,
+    Address, Object, ObjectId, StructTag, Transaction, TransactionDigest, TransactionEffects,
+    UserSignature, Version,
 };
 
 /// Determines what to wait for after executing a transaction.
@@ -36,14 +36,14 @@ pub enum WaitForTx {
 }
 
 /// One page of objects plus an optional cursor for the next page. See
-/// [`TransactionBuilderClient::objects`].
+/// [`TransactionBuilderLedgerClient::objects`].
 #[derive(Clone, Debug)]
 pub struct ObjectsPage {
     /// The objects in this page.
     pub data: Vec<Object>,
     /// Opaque continuation cursor for fetching the next page; `None` when no
     /// further pages exist. Pass it back as the `cursor` argument to
-    /// [`TransactionBuilderClient::objects`] to advance.
+    /// [`TransactionBuilderLedgerClient::objects`] to advance.
     pub next_cursor: Option<Vec<u8>>,
 }
 
@@ -56,14 +56,17 @@ pub struct ProtocolConfig {
     pub attributes: BTreeMap<String, String>,
 }
 
-/// A trait which defines methods needed from the client for the Transaction
-/// Builder.
-pub trait TransactionBuilderClient {
+/// Base trait shared by the transaction builder client traits, carrying the
+/// client's error type.
+pub trait TransactionBuilderClientBase {
     /// The error type for this client.
     type Error: 'static + std::error::Error + Send + Sync;
-    /// The result of a dry run.
-    type DryRunResult;
+}
 
+/// Read-only access to ledger state: everything the Transaction Builder needs
+/// to resolve and build a transaction
+/// ([`finish_with_budget`](crate::TransactionBuilder::finish_with_budget)).
+pub trait TransactionBuilderLedgerClient: TransactionBuilderClientBase {
     /// Fetch an object
     fn object(
         &self,
@@ -114,25 +117,25 @@ pub trait TransactionBuilderClient {
         std::future::ready(Ok(ProtocolConfig::default()))
     }
 
-    /// Fetch a transaction
-    fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> impl std::future::Future<Output = Result<Option<SignedTransaction>, Self::Error>>;
-
-    /// Fetch transaction effects
-    fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>>;
-
     /// Get the reference gas price
     fn reference_gas_price(
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> impl std::future::Future<Output = Result<Option<u64>, Self::Error>>;
+}
 
-    /// Estimate the gas budget needed for a transaction
+/// Transaction simulation: dry runs and the gas budget estimation built on
+/// them ([`finish`](crate::TransactionBuilder::finish),
+/// [`dry_run`](crate::TransactionBuilder::dry_run)).
+pub trait TransactionBuilderSimulationClient: TransactionBuilderClientBase {
+    /// The result of a dry run.
+    type DryRunResult;
+
+    /// Estimate the gas budget needed for a transaction, typically by
+    /// simulating it and reading the gas cost from the result. `Ok(None)`
+    /// means no estimate is available;
+    /// [`finish`](crate::TransactionBuilder::finish) then fails unless a
+    /// budget was set explicitly.
     fn estimate_tx_budget(
         &self,
         tx: &Transaction,
@@ -144,7 +147,11 @@ pub trait TransactionBuilderClient {
         tx: &Transaction,
         skip_checks: bool,
     ) -> impl std::future::Future<Output = Result<Self::DryRunResult, Self::Error>>;
+}
 
+/// Transaction execution: submitting a transaction and tracking its result
+/// ([`execute`](crate::TransactionBuilder::execute)).
+pub trait TransactionBuilderExecutionClient: TransactionBuilderClientBase {
     /// Execute a transaction
     fn execute_tx(
         &self,
@@ -159,12 +166,39 @@ pub trait TransactionBuilderClient {
         digest: TransactionDigest,
         wait_for: WaitForTx,
     ) -> impl std::future::Future<Output = Result<(), Self::Error>>;
+
+    /// Fetch the effects of an executed transaction
+    fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>>;
 }
 
-impl<T: TransactionBuilderClient> TransactionBuilderClient for &T {
-    type Error = T::Error;
-    type DryRunResult = T::DryRunResult;
+/// A full transaction builder client: ledger reads, simulation, and execution.
+///
+/// This is a blanket alias — do not implement it directly. Implement
+/// [`TransactionBuilderLedgerClient`], [`TransactionBuilderSimulationClient`],
+/// and [`TransactionBuilderExecutionClient`] instead, and this trait is
+/// implemented automatically.
+pub trait TransactionBuilderClient:
+    TransactionBuilderLedgerClient
+    + TransactionBuilderSimulationClient
+    + TransactionBuilderExecutionClient
+{
+}
 
+impl<T> TransactionBuilderClient for T where
+    T: TransactionBuilderLedgerClient
+        + TransactionBuilderSimulationClient
+        + TransactionBuilderExecutionClient
+{
+}
+
+impl<T: TransactionBuilderClientBase> TransactionBuilderClientBase for &T {
+    type Error = T::Error;
+}
+
+impl<T: TransactionBuilderLedgerClient> TransactionBuilderLedgerClient for &T {
     fn object(
         &self,
         object_id: ObjectId,
@@ -196,26 +230,16 @@ impl<T: TransactionBuilderClient> TransactionBuilderClient for &T {
         (*self).protocol_config()
     }
 
-    fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> impl std::future::Future<Output = Result<Option<SignedTransaction>, Self::Error>> {
-        (*self).transaction(digest)
-    }
-
-    fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>> {
-        (*self).transaction_effects(digest)
-    }
-
     fn reference_gas_price(
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> impl std::future::Future<Output = Result<Option<u64>, Self::Error>> {
         (*self).reference_gas_price(epoch)
     }
+}
+
+impl<T: TransactionBuilderSimulationClient> TransactionBuilderSimulationClient for &T {
+    type DryRunResult = T::DryRunResult;
 
     fn estimate_tx_budget(
         &self,
@@ -231,7 +255,9 @@ impl<T: TransactionBuilderClient> TransactionBuilderClient for &T {
     ) -> impl std::future::Future<Output = Result<Self::DryRunResult, Self::Error>> {
         (*self).dry_run_tx(tx, skip_checks)
     }
+}
 
+impl<T: TransactionBuilderExecutionClient> TransactionBuilderExecutionClient for &T {
     fn execute_tx(
         &self,
         signatures: &[UserSignature],
@@ -248,12 +274,20 @@ impl<T: TransactionBuilderClient> TransactionBuilderClient for &T {
     ) -> impl std::future::Future<Output = Result<(), Self::Error>> {
         (*self).wait_for_tx(digest, wait_for)
     }
+
+    fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>> {
+        (*self).transaction_effects(digest)
+    }
 }
 
-impl<T: TransactionBuilderClient> TransactionBuilderClient for std::sync::Arc<T> {
+impl<T: TransactionBuilderClientBase> TransactionBuilderClientBase for std::sync::Arc<T> {
     type Error = T::Error;
-    type DryRunResult = T::DryRunResult;
+}
 
+impl<T: TransactionBuilderLedgerClient> TransactionBuilderLedgerClient for std::sync::Arc<T> {
     fn object(
         &self,
         object_id: ObjectId,
@@ -285,26 +319,18 @@ impl<T: TransactionBuilderClient> TransactionBuilderClient for std::sync::Arc<T>
         self.as_ref().protocol_config()
     }
 
-    fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> impl std::future::Future<Output = Result<Option<SignedTransaction>, Self::Error>> {
-        self.as_ref().transaction(digest)
-    }
-
-    fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>> {
-        self.as_ref().transaction_effects(digest)
-    }
-
     fn reference_gas_price(
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> impl std::future::Future<Output = Result<Option<u64>, Self::Error>> {
         self.as_ref().reference_gas_price(epoch)
     }
+}
+
+impl<T: TransactionBuilderSimulationClient> TransactionBuilderSimulationClient
+    for std::sync::Arc<T>
+{
+    type DryRunResult = T::DryRunResult;
 
     fn estimate_tx_budget(
         &self,
@@ -320,7 +346,9 @@ impl<T: TransactionBuilderClient> TransactionBuilderClient for std::sync::Arc<T>
     ) -> impl std::future::Future<Output = Result<Self::DryRunResult, Self::Error>> {
         self.as_ref().dry_run_tx(tx, skip_checks)
     }
+}
 
+impl<T: TransactionBuilderExecutionClient> TransactionBuilderExecutionClient for std::sync::Arc<T> {
     fn execute_tx(
         &self,
         signatures: &[UserSignature],
@@ -337,6 +365,13 @@ impl<T: TransactionBuilderClient> TransactionBuilderClient for std::sync::Arc<T>
     ) -> impl std::future::Future<Output = Result<(), Self::Error>> {
         self.as_ref().wait_for_tx(digest, wait_for)
     }
+
+    fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> impl std::future::Future<Output = Result<Option<TransactionEffects>, Self::Error>> {
+        self.as_ref().transaction_effects(digest)
+    }
 }
 
 #[cfg(feature = "test-client")]
@@ -344,11 +379,14 @@ pub(crate) mod test_client {
     //! Test utilities for the transaction builder.
 
     use iota_types::{
-        Address, MoveStruct, Object, ObjectData, ObjectId, Owner, SignedTransaction, StructTag,
-        Transaction, TransactionDigest, TransactionEffects, UserSignature, Version,
+        Address, MoveStruct, Object, ObjectData, ObjectId, Owner, StructTag, Transaction,
+        TransactionDigest, TransactionEffects, UserSignature, Version,
     };
 
-    use super::{TransactionBuilderClient, WaitForTx};
+    use super::{
+        TransactionBuilderClientBase, TransactionBuilderExecutionClient,
+        TransactionBuilderLedgerClient, TransactionBuilderSimulationClient, WaitForTx,
+    };
     use crate::ObjectsPage;
 
     /// Balance, in NANOS, of every fabricated coin. Large enough to cover any
@@ -378,7 +416,7 @@ pub(crate) mod test_client {
         )
     }
 
-    /// A test client that implements [`TransactionBuilderClient`] by
+    /// A test client that implements the transaction builder client traits by
     /// fabricating objects on demand.
     ///
     /// It is useful for building transactions in tests, examples, and doc tests
@@ -388,7 +426,8 @@ pub(crate) mod test_client {
     /// selection always finds a single funded coin. This is enough to drive
     /// [`finish`](crate::TransactionBuilder::finish) to completion, but the
     /// resulting transaction references made-up objects and cannot be executed
-    /// — [`execute_tx`](TransactionBuilderClient::execute_tx) returns an error.
+    /// — [`execute_tx`](TransactionBuilderExecutionClient::execute_tx) returns
+    /// an error.
     #[derive(Clone, Copy, Debug, Default)]
     pub struct TestClient;
 
@@ -397,10 +436,11 @@ pub(crate) mod test_client {
     #[error("TestClientError: {0}")]
     pub struct TestClientError(pub String);
 
-    impl TransactionBuilderClient for TestClient {
+    impl TransactionBuilderClientBase for TestClient {
         type Error = TestClientError;
-        type DryRunResult = ();
+    }
 
+    impl TransactionBuilderLedgerClient for TestClient {
         async fn object(
             &self,
             object_id: ObjectId,
@@ -439,26 +479,16 @@ pub(crate) mod test_client {
             })
         }
 
-        async fn transaction(
-            &self,
-            _digest: TransactionDigest,
-        ) -> Result<Option<SignedTransaction>, Self::Error> {
-            Ok(None)
-        }
-
-        async fn transaction_effects(
-            &self,
-            _digest: TransactionDigest,
-        ) -> Result<Option<TransactionEffects>, Self::Error> {
-            Ok(None)
-        }
-
         async fn reference_gas_price(
             &self,
             _epoch: impl Into<Option<u64>>,
         ) -> Result<Option<u64>, Self::Error> {
             Ok(Some(1000))
         }
+    }
+
+    impl TransactionBuilderSimulationClient for TestClient {
+        type DryRunResult = ();
 
         async fn estimate_tx_budget(&self, _tx: &Transaction) -> Result<Option<u64>, Self::Error> {
             Ok(Some(50_000_000))
@@ -471,7 +501,9 @@ pub(crate) mod test_client {
         ) -> Result<Self::DryRunResult, Self::Error> {
             Ok(())
         }
+    }
 
+    impl TransactionBuilderExecutionClient for TestClient {
         async fn execute_tx(
             &self,
             _signatures: &[UserSignature],
@@ -489,6 +521,13 @@ pub(crate) mod test_client {
             _wait_for: WaitForTx,
         ) -> Result<(), Self::Error> {
             Ok(())
+        }
+
+        async fn transaction_effects(
+            &self,
+            _digest: TransactionDigest,
+        ) -> Result<Option<TransactionEffects>, Self::Error> {
+            Ok(None)
         }
     }
 
@@ -516,10 +555,11 @@ pub(crate) mod test_client {
         }
     }
 
-    impl TransactionBuilderClient for RecordingClient {
+    impl TransactionBuilderClientBase for RecordingClient {
         type Error = crate::TestClientError;
-        type DryRunResult = ();
+    }
 
+    impl TransactionBuilderLedgerClient for RecordingClient {
         async fn object(
             &self,
             object_id: ObjectId,
@@ -563,26 +603,16 @@ pub(crate) mod test_client {
                 .await
         }
 
-        async fn transaction(
-            &self,
-            digest: iota_types::TransactionDigest,
-        ) -> Result<Option<iota_types::SignedTransaction>, Self::Error> {
-            crate::TestClient.transaction(digest).await
-        }
-
-        async fn transaction_effects(
-            &self,
-            digest: iota_types::TransactionDigest,
-        ) -> Result<Option<TransactionEffects>, Self::Error> {
-            crate::TestClient.transaction_effects(digest).await
-        }
-
         async fn reference_gas_price(
             &self,
             epoch: impl Into<Option<u64>>,
         ) -> Result<Option<u64>, Self::Error> {
             crate::TestClient.reference_gas_price(epoch).await
         }
+    }
+
+    impl TransactionBuilderSimulationClient for RecordingClient {
+        type DryRunResult = ();
 
         async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
             crate::TestClient.estimate_tx_budget(tx).await
@@ -595,7 +625,9 @@ pub(crate) mod test_client {
         ) -> Result<Self::DryRunResult, Self::Error> {
             crate::TestClient.dry_run_tx(tx, skip_checks).await
         }
+    }
 
+    impl TransactionBuilderExecutionClient for RecordingClient {
         async fn execute_tx(
             &self,
             signatures: &[iota_types::UserSignature],
@@ -611,6 +643,13 @@ pub(crate) mod test_client {
             wait_for: WaitForTx,
         ) -> Result<(), Self::Error> {
             crate::TestClient.wait_for_tx(digest, wait_for).await
+        }
+
+        async fn transaction_effects(
+            &self,
+            digest: iota_types::TransactionDigest,
+        ) -> Result<Option<TransactionEffects>, Self::Error> {
+            crate::TestClient.transaction_effects(digest).await
         }
     }
 }

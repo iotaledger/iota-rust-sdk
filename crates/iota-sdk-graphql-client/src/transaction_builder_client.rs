@@ -1,14 +1,17 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`TransactionBuilderClient`] for the GraphQL [`Client`].
+//! Implementation of the transaction builder client traits for the GraphQL
+//! [`Client`].
 
 use iota_transaction_builder::{
-    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClient, WaitForTx,
+    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClientBase,
+    TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
+    TransactionBuilderSimulationClient, WaitForTx,
 };
 use iota_types::{
-    Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
-    TransactionEffects, UserSignature, Version,
+    Address, Object, ObjectId, StructTag, Transaction, TransactionDigest, TransactionEffects,
+    UserSignature, Version,
 };
 
 use crate::{
@@ -24,10 +27,11 @@ impl Client {
     }
 }
 
-impl TransactionBuilderClient for Client {
+impl TransactionBuilderClientBase for Client {
     type Error = crate::error::Error;
-    type DryRunResult = DryRunResult;
+}
 
+impl TransactionBuilderLedgerClient for Client {
     async fn object(
         &self,
         object_id: ObjectId,
@@ -84,26 +88,16 @@ impl TransactionBuilderClient for Client {
         Ok(ProtocolConfig { attributes })
     }
 
-    async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>, Self::Error> {
-        self.transaction(digest).await
-    }
-
-    async fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>, Self::Error> {
-        self.transaction_effects(digest).await
-    }
-
     async fn reference_gas_price(
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
         self.reference_gas_price(epoch).await
     }
+}
+
+impl TransactionBuilderSimulationClient for Client {
+    type DryRunResult = DryRunResult;
 
     async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
         let res = self.dry_run_tx(tx, true).await?;
@@ -122,7 +116,9 @@ impl TransactionBuilderClient for Client {
     ) -> Result<Self::DryRunResult, Self::Error> {
         (*self).dry_run_tx(tx, skip_checks).await
     }
+}
 
+impl TransactionBuilderExecutionClient for Client {
     async fn execute_tx(
         &self,
         signatures: &[UserSignature],
@@ -138,5 +134,12 @@ impl TransactionBuilderClient for Client {
         wait_for: WaitForTx,
     ) -> Result<(), Self::Error> {
         self.wait_for_tx(digest, wait_for, None).await
+    }
+
+    async fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<TransactionEffects>, Self::Error> {
+        self.transaction_effects(digest).await
     }
 }
