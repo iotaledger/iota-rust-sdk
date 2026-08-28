@@ -111,3 +111,4 @@ impl PasskeyPublicKey {
 
 crate::export_iota_types_objects_bcs_conversion!(PasskeyAuthenticator);
 crate::export_iota_types_objects_json_conversion!(PasskeyAuthenticator);
+crate::export_iota_types_objects_display!(PasskeyAuthenticator, PasskeyPublicKey);

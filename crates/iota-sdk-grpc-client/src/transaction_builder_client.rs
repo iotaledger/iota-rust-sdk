@@ -1,19 +1,22 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`TransactionBuilderClient`] for the GRPC [`Client`].
+//! Implementation of the transaction builder client traits for the GRPC
+//! [`Client`].
 
 use std::time::Duration;
 
 use iota_grpc_types::{
     read_mask_fields::{
         EpochField, EpochReadMask, ExecuteTransactionReadMask, ObjectReadMask, OwnedObjectReadMask,
-        SimulateReadMask, TransactionField, TransactionReadMask,
+        SimulateField, SimulateReadMask, TransactionField, TransactionReadMask,
     },
     v1::transaction_execution_service::SimulatedTransaction,
 };
 use iota_transaction_builder::{
-    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClient, WaitForTransaction,
+    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClientBase,
+    TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
+    TransactionBuilderSimulationClient, WaitForTransaction,
 };
 use iota_types::{
     Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
@@ -25,11 +28,11 @@ use crate::{
     api::{Error, MetadataEnvelope, check_result_count, saturating_usize_to_u32},
 };
 
-/// How long [`TransactionBuilderClient::wait_for_transaction`] polls before
-/// giving up.
+/// How long [`TransactionBuilderExecutionClient::wait_for_transaction`] polls
+/// before giving up.
 const WAIT_FOR_TRANSACTION_TIMEOUT: Duration = Duration::from_secs(60);
 /// Interval between polls in
-/// [`TransactionBuilderClient::wait_for_transaction`].
+/// [`TransactionBuilderExecutionClient::wait_for_transaction`].
 const WAIT_FOR_TRANSACTION_POLL_INTERVAL: Duration = Duration::from_millis(100);
 
 /// Extract the result for the single item of a one-item batch request.
@@ -62,10 +65,11 @@ impl Client {
     }
 }
 
-impl TransactionBuilderClient for Client {
+impl TransactionBuilderClientBase for Client {
     type Error = crate::api::Error;
-    type DryRunResult = SimulatedTransaction;
+}
 
+impl TransactionBuilderLedgerClient for Client {
     async fn object(
         &self,
         object_id: ObjectId,
@@ -147,50 +151,6 @@ impl TransactionBuilderClient for Client {
         Ok(ProtocolConfig { attributes })
     }
 
-    async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>, Self::Error> {
-        let response = self
-            .get_transactions(
-                [digest],
-                TransactionReadMask::from([
-                    TransactionField::TRANSACTION,
-                    TransactionField::SIGNATURES,
-                ]),
-            )
-            .await;
-
-        match single_item(response)? {
-            Some(tx) => {
-                let transaction = tx.transaction()?.transaction()?;
-                let signatures = Vec::<UserSignature>::try_from(tx.signatures()?)?;
-                Ok(Some(SignedTransaction {
-                    transaction,
-                    signatures,
-                }))
-            }
-            None => Ok(None),
-        }
-    }
-
-    async fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>, Self::Error> {
-        let response = self
-            .get_transactions(
-                [digest],
-                TransactionReadMask::from(TransactionField::EFFECTS_BCS),
-            )
-            .await;
-
-        match single_item(response)? {
-            Some(tx) => Ok(Some(tx.effects()?.effects()?)),
-            None => Ok(None),
-        }
-    }
-
     async fn reference_gas_price(
         &self,
         epoch: impl Into<Option<u64>>,
@@ -204,6 +164,10 @@ impl TransactionBuilderClient for Client {
             .into_inner();
         Ok(epoch.reference_gas_price)
     }
+}
+
+impl TransactionBuilderSimulationClient for Client {
+    type DryRunResult = SimulatedTransaction;
 
     async fn estimate_transaction_budget(
         &self,
@@ -212,7 +176,11 @@ impl TransactionBuilderClient for Client {
         // Simulate with relaxed checks and read the gas used from the resulting
         // effects.
         let simulated = self
-            .simulate_transaction(transaction.clone(), true, SimulateReadMask::default())
+            .simulate_transaction(
+                transaction.clone(),
+                true,
+                SimulateField::EXECUTED_TRANSACTION_EFFECTS_BCS,
+            )
             .await?;
         let effects = simulated
             .into_inner()
@@ -241,7 +209,9 @@ impl TransactionBuilderClient for Client {
             .await?
             .into_inner())
     }
+}
 
+impl TransactionBuilderExecutionClient for Client {
     async fn execute_transaction(
         &self,
         signatures: &[UserSignature],
@@ -321,6 +291,23 @@ impl TransactionBuilderClient for Client {
                     WAIT_FOR_TRANSACTION_TIMEOUT.as_secs()
                 )))
             })?
+    }
+
+    async fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<TransactionEffects>, Self::Error> {
+        let response = self
+            .get_transactions(
+                [digest],
+                TransactionReadMask::from(TransactionField::EFFECTS_BCS),
+            )
+            .await;
+
+        match single_item(response)? {
+            Some(tx) => Ok(Some(tx.effects()?.effects()?)),
+            None => Ok(None),
+        }
     }
 }
 

@@ -15,9 +15,16 @@
 //! ## Online vs. Offline Builder
 //!
 //! The Transaction Builder can be used with or without a client implementing
-//! [TransactionBuilderClient]. When one is provided via the
+//! [TransactionBuilderLedgerClient]. When one is provided via the
 //! [with_client](TransactionBuilder::with_client) method, the resulting builder
-//! will use it to find and validate provided IDs.
+//! will use it to find and validate provided IDs. A ledger-only client can
+//! build transactions with an explicit gas budget via
+//! [finish_with_budget](TransactionBuilder::finish_with_budget). Clients that
+//! also implement [TransactionBuilderSimulationClient] enable
+//! [dry_run](TransactionBuilder::dry_run) and
+//! [finish](TransactionBuilder::finish) with automatic gas budget estimation;
+//! clients that additionally implement [TransactionBuilderExecutionClient]
+//! enable [execute](TransactionBuilder::execute).
 //!
 //! ### Example with Client Resolution
 //!
@@ -165,7 +172,9 @@
 //! There are several ways to finish the builder. First, the
 //! [finish](TransactionBuilder::finish) method can be used to return the
 //! resulting [Transaction](iota_types::Transaction), which can be manually
-//! serialized, executed, etc.
+//! serialized, executed, etc. On a client without simulation support, use
+//! [finish_with_budget](TransactionBuilder::finish_with_budget) instead and
+//! provide the gas budget explicitly.
 //!
 //! Additionally, when a client is provided, the builder can directly
 //! [dry_run](TransactionBuilder::dry_run) or
@@ -302,7 +311,11 @@ pub use self::builder::client::test_client::{RecordingClient, TestClient, TestCl
 pub use self::{
     builder::{
         TransactionBuilder,
-        client::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTransaction},
+        client::{
+            ObjectsPage, ProtocolConfig, TransactionBuilderClient, TransactionBuilderClientBase,
+            TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
+            TransactionBuilderSimulationClient, WaitForTransaction,
+        },
         move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
         signer::TransactionSigner,
@@ -315,6 +328,324 @@ mod tests {
     use iota_types::{Address, ObjectReference, Transaction, Version};
 
     use crate::TransactionBuilder;
+
+    /// A builder with one send_coins command, shared by the client tests.
+    #[cfg(feature = "test-client")]
+    fn builder_with<C>(client: C) -> TransactionBuilder<C> {
+        let sender = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient = "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+            .parse()
+            .unwrap();
+        let coin: iota_types::ObjectId =
+            "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4"
+                .parse()
+                .unwrap();
+        let mut builder = TransactionBuilder::new(sender).with_client(client);
+        builder.send_coins([coin], recipient, 1000u64);
+        builder
+    }
+
+    #[cfg(feature = "test-client")]
+    mod ledger_client {
+        use iota_types::{Object, ObjectId, StructTag, Version};
+
+        use crate::{
+            ObjectsPage, TestClient, TestClientError, TransactionBuilderClientBase,
+            TransactionBuilderLedgerClient,
+        };
+
+        /// Implements only [`TransactionBuilderLedgerClient`] by forwarding to
+        /// [`TestClient`], to verify that building a transaction with an
+        /// explicit budget requires neither simulation nor execution support.
+        struct LedgerOnlyClient(TestClient);
+
+        impl TransactionBuilderClientBase for LedgerOnlyClient {
+            type Error = TestClientError;
+        }
+
+        impl TransactionBuilderLedgerClient for LedgerOnlyClient {
+            async fn object(
+                &self,
+                object_id: ObjectId,
+                version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                self.0.object(object_id, version).await
+            }
+
+            async fn objects(
+                &self,
+                struct_tag: Option<StructTag>,
+                owner: iota_types::Address,
+                cursor: Option<Vec<u8>>,
+                limit: Option<usize>,
+            ) -> Result<ObjectsPage, Self::Error> {
+                self.0.objects(struct_tag, owner, cursor, limit).await
+            }
+
+            async fn reference_gas_price(
+                &self,
+                epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                self.0.reference_gas_price(epoch).await
+            }
+        }
+
+        #[tokio::test]
+        async fn finish_with_budget_requires_only_the_ledger_client() {
+            let builder = super::builder_with(LedgerOnlyClient(TestClient));
+            let txn = builder.finish_with_budget(123_456_789).await.unwrap();
+            let iota_types::Transaction::V1(txn) = txn else {
+                panic!("expected a V1 transaction");
+            };
+            assert_eq!(txn.gas_payment.budget, 123_456_789);
+        }
+
+        #[tokio::test]
+        async fn finish_with_budget_overrides_the_setter_and_skips_the_clamp() {
+            // 1 is below the network minimum (price * 1000), so a clamp
+            // would have changed it.
+            let mut builder = super::builder_with(LedgerOnlyClient(TestClient));
+            builder.gas_budget(2_000_000);
+            let txn = builder.finish_with_budget(1).await.unwrap();
+            let iota_types::Transaction::V1(txn) = txn else {
+                panic!("expected a V1 transaction");
+            };
+            assert_eq!(txn.gas_payment.budget, 1);
+        }
+    }
+
+    #[cfg(feature = "test-client")]
+    mod budget_estimation {
+        use iota_types::{Object, ObjectId, StructTag, Transaction, Version};
+
+        use crate::{
+            ObjectsPage, TestClient, TestClientError, TransactionBuilderClientBase,
+            TransactionBuilderLedgerClient, TransactionBuilderSimulationClient,
+        };
+
+        /// Forwards to [`TestClient`] but reports a fixed gas estimate, to
+        /// exercise the estimation handling in `finish()`.
+        struct FixedEstimateClient(TestClient, Option<u64>);
+
+        impl TransactionBuilderClientBase for FixedEstimateClient {
+            type Error = TestClientError;
+        }
+
+        impl TransactionBuilderLedgerClient for FixedEstimateClient {
+            async fn object(
+                &self,
+                object_id: ObjectId,
+                version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                self.0.object(object_id, version).await
+            }
+
+            async fn objects(
+                &self,
+                struct_tag: Option<StructTag>,
+                owner: iota_types::Address,
+                cursor: Option<Vec<u8>>,
+                limit: Option<usize>,
+            ) -> Result<ObjectsPage, Self::Error> {
+                self.0.objects(struct_tag, owner, cursor, limit).await
+            }
+
+            async fn reference_gas_price(
+                &self,
+                epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                self.0.reference_gas_price(epoch).await
+            }
+        }
+
+        impl TransactionBuilderSimulationClient for FixedEstimateClient {
+            type DryRunResult = ();
+
+            async fn estimate_transaction_budget(
+                &self,
+                _transaction: &Transaction,
+            ) -> Result<Option<u64>, Self::Error> {
+                Ok(self.1)
+            }
+
+            async fn dry_run_transaction(
+                &self,
+                transaction: &Transaction,
+                skip_checks: bool,
+            ) -> Result<Self::DryRunResult, Self::Error> {
+                self.0.dry_run_transaction(transaction, skip_checks).await
+            }
+        }
+
+        #[tokio::test]
+        async fn an_estimate_below_the_network_minimum_is_clamped() {
+            let builder = super::builder_with(FixedEstimateClient(TestClient, Some(1)));
+            let txn = builder.finish().await.unwrap();
+            let iota_types::Transaction::V1(txn) = txn else {
+                panic!("expected a V1 transaction");
+            };
+            // TestClient's reference gas price is 1000, so the enforced
+            // minimum is 1000 * 1000 rather than the estimated 1.
+            assert_eq!(txn.gas_payment.budget, 1_000_000);
+        }
+
+        #[tokio::test]
+        async fn no_estimate_and_no_budget_fails_with_missing_gas_budget() {
+            let builder = super::builder_with(FixedEstimateClient(TestClient, None));
+            assert!(matches!(
+                builder.finish().await,
+                Err(crate::error::Error::MissingGasBudget)
+            ));
+        }
+
+        #[tokio::test]
+        async fn an_estimate_above_the_network_minimum_is_used_as_is() {
+            let builder = super::builder_with(TestClient);
+            let txn = builder.finish().await.unwrap();
+            let iota_types::Transaction::V1(txn) = txn else {
+                panic!("expected a V1 transaction");
+            };
+            // TestClient's estimate, above the 1_000_000 minimum.
+            assert_eq!(txn.gas_payment.budget, 50_000_000);
+        }
+
+        #[tokio::test]
+        async fn a_set_budget_skips_estimation_in_finish() {
+            let mut builder = super::builder_with(TestClient);
+            builder.gas_budget(7_000_000);
+            let txn = builder.finish().await.unwrap();
+            let iota_types::Transaction::V1(txn) = txn else {
+                panic!("expected a V1 transaction");
+            };
+            // Not TestClient's 50_000_000 estimate.
+            assert_eq!(txn.gas_payment.budget, 7_000_000);
+        }
+    }
+
+    #[cfg(feature = "test-client")]
+    mod gas_pagination {
+        use std::sync::{
+            Arc,
+            atomic::{AtomicUsize, Ordering},
+        };
+
+        use iota_types::{Object, ObjectId, StructTag, Transaction, Version};
+
+        use crate::{
+            ObjectsPage, TestClient, TestClientError, TransactionBuilderClientBase,
+            TransactionBuilderLedgerClient, TransactionBuilderSimulationClient,
+        };
+
+        /// Serves gas coins in three single-coin pages and counts the
+        /// `objects` calls, to pin how far automatic gas selection paginates.
+        struct PagingClient {
+            pages_served: Arc<AtomicUsize>,
+        }
+
+        impl TransactionBuilderClientBase for PagingClient {
+            type Error = TestClientError;
+        }
+
+        impl TransactionBuilderLedgerClient for PagingClient {
+            async fn object(
+                &self,
+                object_id: ObjectId,
+                version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                TestClient.object(object_id, version).await
+            }
+
+            async fn objects(
+                &self,
+                _struct_tag: Option<StructTag>,
+                _owner: iota_types::Address,
+                cursor: Option<Vec<u8>>,
+                _limit: Option<usize>,
+            ) -> Result<ObjectsPage, Self::Error> {
+                self.pages_served.fetch_add(1, Ordering::SeqCst);
+                let page = cursor.map_or(0, |c| c[0]);
+                let coin_id = ObjectId::from_bytes([0xa0 + page; ObjectId::LENGTH]).unwrap();
+                let coin = TestClient.object(coin_id, None).await?.unwrap();
+                Ok(ObjectsPage {
+                    data: vec![coin],
+                    next_cursor: (page < 2).then(|| vec![page + 1]),
+                })
+            }
+
+            async fn reference_gas_price(
+                &self,
+                epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                TestClient.reference_gas_price(epoch).await
+            }
+        }
+
+        impl TransactionBuilderSimulationClient for PagingClient {
+            type DryRunResult = ();
+
+            async fn estimate_transaction_budget(
+                &self,
+                transaction: &Transaction,
+            ) -> Result<Option<u64>, Self::Error> {
+                TestClient.estimate_transaction_budget(transaction).await
+            }
+
+            async fn dry_run_transaction(
+                &self,
+                transaction: &Transaction,
+                skip_checks: bool,
+            ) -> Result<Self::DryRunResult, Self::Error> {
+                TestClient
+                    .dry_run_transaction(transaction, skip_checks)
+                    .await
+            }
+        }
+
+        fn gas_coin_count(txn: &iota_types::Transaction) -> usize {
+            let iota_types::Transaction::V1(txn) = txn else {
+                panic!("expected a V1 transaction");
+            };
+            txn.gas_payment.objects.len()
+        }
+
+        #[tokio::test]
+        async fn an_explicit_budget_stops_gas_selection_at_the_covering_page() {
+            // `finish_with_budget` sets the budget before resolution, so gas
+            // selection stops as soon as the first page covers it.
+            let pages_served = Arc::new(AtomicUsize::new(0));
+            let builder = super::builder_with(PagingClient {
+                pages_served: pages_served.clone(),
+            });
+            let txn = builder.finish_with_budget(1000).await.unwrap();
+            assert_eq!(pages_served.load(Ordering::SeqCst), 1);
+            assert_eq!(gas_coin_count(&txn), 1);
+        }
+
+        #[tokio::test]
+        async fn a_budget_no_single_coin_covers_accumulates_pages() {
+            // Each fabricated coin holds 1e12; a 1.5e12 budget needs two.
+            let pages_served = Arc::new(AtomicUsize::new(0));
+            let builder = super::builder_with(PagingClient {
+                pages_served: pages_served.clone(),
+            });
+            let txn = builder.finish_with_budget(1_500_000_000_000).await.unwrap();
+            assert_eq!(pages_served.load(Ordering::SeqCst), 2);
+            assert_eq!(gas_coin_count(&txn), 2);
+        }
+
+        #[tokio::test]
+        async fn without_a_budget_gas_selection_walks_every_page() {
+            let pages_served = Arc::new(AtomicUsize::new(0));
+            let builder = super::builder_with(PagingClient {
+                pages_served: pages_served.clone(),
+            });
+            let txn = builder.finish().await.unwrap();
+            assert_eq!(pages_served.load(Ordering::SeqCst), 3);
+            assert_eq!(gas_coin_count(&txn), 3);
+        }
+    }
 
     #[tokio::test]
     async fn test_finish() {

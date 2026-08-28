@@ -58,3 +58,4 @@ pub struct GasCostSummary {
 
 crate::export_remote_types_bcs_conversion!(GasCostSummary);
 crate::export_remote_types_json_conversion!(GasCostSummary);
+crate::export_remote_types_display!(GasCostSummary);
