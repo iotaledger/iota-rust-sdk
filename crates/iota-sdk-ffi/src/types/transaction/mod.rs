@@ -219,44 +219,52 @@ pub struct TransactionKind(pub iota_sdk::types::TransactionKind);
 impl TransactionKind {
     /// Create a `TransactionKind` for a programmable transaction.
     #[uniffi::constructor]
-    pub fn new_programmable(tx: &ProgrammableTransaction) -> Self {
+    pub fn new_programmable(transaction: &ProgrammableTransaction) -> Self {
         Self(iota_sdk::types::TransactionKind::new_programmable(
-            tx.0.clone(),
+            transaction.0.clone(),
         ))
     }
 
     /// Create a `TransactionKind` for a genesis transaction.
     #[uniffi::constructor]
-    pub fn new_genesis(tx: &GenesisTransaction) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_genesis(tx.0.clone()))
+    pub fn new_genesis(transaction: &GenesisTransaction) -> Self {
+        Self(iota_sdk::types::TransactionKind::new_genesis(
+            transaction.0.clone(),
+        ))
     }
 
     /// Create a `TransactionKind` for a consensus-commit-prologue-v1
     /// transaction.
     #[uniffi::constructor]
-    pub fn new_consensus_commit_prologue_v1(tx: &ConsensusCommitPrologueV1) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_consensus_commit_prologue_v1(tx.0.clone()))
+    pub fn new_consensus_commit_prologue_v1(transaction: &ConsensusCommitPrologueV1) -> Self {
+        Self(
+            iota_sdk::types::TransactionKind::new_consensus_commit_prologue_v1(
+                transaction.0.clone(),
+            ),
+        )
     }
 
     /// Create a `TransactionKind` for an end-of-epoch transaction.
     #[uniffi::constructor]
-    pub fn new_end_of_epoch(tx: Vec<Arc<EndOfEpochTransactionKind>>) -> Self {
+    pub fn new_end_of_epoch(transaction: Vec<Arc<EndOfEpochTransactionKind>>) -> Self {
         Self(iota_sdk::types::TransactionKind::new_end_of_epoch(
-            tx.into_iter().map(|tx| tx.0.clone()).collect(),
+            transaction.into_iter().map(|kind| kind.0.clone()).collect(),
         ))
     }
 
     /// Create a `TransactionKind` for a randomness-state-update transaction.
     #[uniffi::constructor]
-    pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_randomness_state_update(tx.into()))
+    pub fn new_randomness_state_update(transaction: RandomnessStateUpdate) -> Self {
+        Self(iota_sdk::types::TransactionKind::new_randomness_state_update(transaction.into()))
     }
 
     /// Create a `TransactionKind` for a transaction-deny-rules-update
     /// transaction.
     #[uniffi::constructor]
-    pub fn new_transaction_deny_rules_update(tx: TransactionDenyRulesUpdate) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_transaction_deny_rules_update(tx.into()))
+    pub fn new_transaction_deny_rules_update(transaction: TransactionDenyRulesUpdate) -> Self {
+        Self(
+            iota_sdk::types::TransactionKind::new_transaction_deny_rules_update(transaction.into()),
+        )
     }
 }
 
@@ -1667,30 +1675,30 @@ pub struct EndOfEpochTransactionKind(pub iota_sdk::types::EndOfEpochTransactionK
 #[uniffi::export]
 impl EndOfEpochTransactionKind {
     #[uniffi::constructor]
-    pub fn new_change_epoch(tx: &ChangeEpoch) -> Self {
+    pub fn new_change_epoch(transaction: &ChangeEpoch) -> Self {
         Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpoch(
-            tx.0.clone(),
+            transaction.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn new_change_epoch_v2(tx: &ChangeEpochV2) -> Self {
+    pub fn new_change_epoch_v2(transaction: &ChangeEpochV2) -> Self {
         Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV2(
-            tx.0.clone(),
+            transaction.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn new_change_epoch_v3(tx: &ChangeEpochV3) -> Self {
+    pub fn new_change_epoch_v3(transaction: &ChangeEpochV3) -> Self {
         Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV3(
-            tx.0.clone(),
+            transaction.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn new_change_epoch_v4(tx: &ChangeEpochV4) -> Self {
+    pub fn new_change_epoch_v4(transaction: &ChangeEpochV4) -> Self {
         Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV4(
-            tx.0.clone(),
+            transaction.0.clone(),
         ))
     }
 

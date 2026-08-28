@@ -314,7 +314,7 @@ pub use self::{
         client::{
             ObjectsPage, ProtocolConfig, TransactionBuilderClient, TransactionBuilderClientBase,
             TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
-            TransactionBuilderSimulationClient, WaitForTx,
+            TransactionBuilderSimulationClient, WaitForTransaction,
         },
         move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
@@ -463,19 +463,19 @@ mod tests {
         impl TransactionBuilderSimulationClient for FixedEstimateClient {
             type DryRunResult = ();
 
-            async fn estimate_tx_budget(
+            async fn estimate_transaction_budget(
                 &self,
-                _tx: &Transaction,
+                _transaction: &Transaction,
             ) -> Result<Option<u64>, Self::Error> {
                 Ok(self.1)
             }
 
-            async fn dry_run_tx(
+            async fn dry_run_transaction(
                 &self,
-                tx: &Transaction,
+                transaction: &Transaction,
                 skip_checks: bool,
             ) -> Result<Self::DryRunResult, Self::Error> {
-                self.0.dry_run_tx(tx, skip_checks).await
+                self.0.dry_run_transaction(transaction, skip_checks).await
             }
         }
 
@@ -585,19 +585,21 @@ mod tests {
         impl TransactionBuilderSimulationClient for PagingClient {
             type DryRunResult = ();
 
-            async fn estimate_tx_budget(
+            async fn estimate_transaction_budget(
                 &self,
-                tx: &Transaction,
+                transaction: &Transaction,
             ) -> Result<Option<u64>, Self::Error> {
-                TestClient.estimate_tx_budget(tx).await
+                TestClient.estimate_transaction_budget(transaction).await
             }
 
-            async fn dry_run_tx(
+            async fn dry_run_transaction(
                 &self,
-                tx: &Transaction,
+                transaction: &Transaction,
                 skip_checks: bool,
             ) -> Result<Self::DryRunResult, Self::Error> {
-                TestClient.dry_run_tx(tx, skip_checks).await
+                TestClient
+                    .dry_run_transaction(transaction, skip_checks)
+                    .await
             }
         }
 

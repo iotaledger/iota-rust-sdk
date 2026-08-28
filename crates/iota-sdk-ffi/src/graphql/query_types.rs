@@ -68,14 +68,14 @@ impl From<TransactionMetadata> for iota_sdk::graphql_client::query_types::Transa
 
 #[derive(uniffi::Record)]
 pub struct TransactionDataEffects {
-    pub tx: SignedTransaction,
+    pub signed_transaction: SignedTransaction,
     pub effects: Arc<TransactionEffects>,
 }
 
 impl From<iota_sdk::graphql_client::TransactionDataEffects> for TransactionDataEffects {
     fn from(value: iota_sdk::graphql_client::TransactionDataEffects) -> Self {
         Self {
-            tx: value.tx.into(),
+            signed_transaction: value.signed_transaction.into(),
             effects: Arc::new(value.effects.into()),
         }
     }
@@ -84,7 +84,7 @@ impl From<iota_sdk::graphql_client::TransactionDataEffects> for TransactionDataE
 impl From<TransactionDataEffects> for iota_sdk::graphql_client::TransactionDataEffects {
     fn from(value: TransactionDataEffects) -> Self {
         Self {
-            tx: value.tx.into(),
+            signed_transaction: value.signed_transaction.into(),
             effects: value.effects.0.clone(),
         }
     }

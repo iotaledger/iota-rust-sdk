@@ -11,7 +11,7 @@ mod dry_run;
 mod dynamic_fields;
 mod epoch;
 mod events;
-mod execute_tx;
+mod execute_transaction;
 mod iota_names;
 mod move_view_call;
 mod normalized_move;
@@ -45,7 +45,7 @@ pub use dynamic_fields::{
 };
 pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, ValidatorSet};
 pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
-pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
+pub use execute_transaction::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
 pub use iota_names::{
     IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs,
     IotaNamesDefaultNameQuery, IotaNamesRegistrationsArgs, IotaNamesRegistrationsQuery,

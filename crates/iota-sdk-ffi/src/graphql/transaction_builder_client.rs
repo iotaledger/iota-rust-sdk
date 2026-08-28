@@ -4,7 +4,7 @@
 use std::sync::Arc;
 
 use iota_sdk::{
-    graphql_client::{Client, DryRunResult, WaitForTx},
+    graphql_client::{Client, DryRunResult, WaitForTransaction},
     transaction_builder::{
         ObjectsPage, ProtocolConfig, TransactionBuilderClientBase,
         TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
@@ -77,42 +77,58 @@ impl TransactionBuilderLedgerClient for GraphQLClient {
 impl TransactionBuilderSimulationClient for GraphQLClient {
     type DryRunResult = DryRunResult;
 
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
-        TransactionBuilderSimulationClient::estimate_tx_budget(&*self.0.read().await, tx).await
+    async fn estimate_transaction_budget(
+        &self,
+        transaction: &Transaction,
+    ) -> Result<Option<u64>, Self::Error> {
+        TransactionBuilderSimulationClient::estimate_transaction_budget(
+            &*self.0.read().await,
+            transaction,
+        )
+        .await
     }
 
-    async fn dry_run_tx(
+    async fn dry_run_transaction(
         &self,
-        tx: &Transaction,
+        transaction: &Transaction,
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
-        TransactionBuilderSimulationClient::dry_run_tx(&*self.0.read().await, tx, skip_checks).await
+        TransactionBuilderSimulationClient::dry_run_transaction(
+            &*self.0.read().await,
+            transaction,
+            skip_checks,
+        )
+        .await
     }
 }
 
 impl TransactionBuilderExecutionClient for GraphQLClient {
-    async fn execute_tx(
+    async fn execute_transaction(
         &self,
         signatures: &[iota_sdk::types::UserSignature],
-        tx: &Transaction,
-        wait_for: impl Into<Option<WaitForTx>>,
+        transaction: &Transaction,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Self::Error> {
-        TransactionBuilderExecutionClient::execute_tx(
+        TransactionBuilderExecutionClient::execute_transaction(
             &*self.0.read().await,
             signatures,
-            tx,
+            transaction,
             wait_for,
         )
         .await
     }
 
-    async fn wait_for_tx(
+    async fn wait_for_transaction(
         &self,
         digest: TransactionDigest,
-        wait_for: WaitForTx,
+        wait_for: WaitForTransaction,
     ) -> Result<(), Self::Error> {
-        TransactionBuilderExecutionClient::wait_for_tx(&*self.0.read().await, digest, wait_for)
-            .await
+        TransactionBuilderExecutionClient::wait_for_transaction(
+            &*self.0.read().await,
+            digest,
+            wait_for,
+        )
+        .await
     }
 
     async fn transaction_effects(

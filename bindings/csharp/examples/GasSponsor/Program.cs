@@ -32,7 +32,7 @@ class Program
         Console.WriteLine($"Signing Digest: {txn.SigningDigestHex()}");
         Console.WriteLine($"Txn Bytes: {txn.ToBase64()}");
 
-        var res = await client.DryRunTx(txn);
+        var res = await client.DryRunTransaction(txn);
         if (res.Error != null)
         {
             throw new Exception($"Failed to send gas sponsor tx: {res.Error}");

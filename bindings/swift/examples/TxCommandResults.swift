@@ -54,7 +54,7 @@ struct TxCommandResultsExample {
     print("Signing Digest:", txn.signingDigestHex())
     print("Txn Bytes:", txn.toBase64())
 
-    let res = try await client.dryRunTx(tx: txn, skipChecks: false)
+    let res = try await client.dryRunTransaction(transaction: txn, skipChecks: false)
     if res.error != nil {
       throw NSError(
         domain: "TxCommandResults", code: 1,

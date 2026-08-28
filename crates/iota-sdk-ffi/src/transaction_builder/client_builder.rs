@@ -9,7 +9,9 @@ use std::{
 
 use crate::{
     error::Result,
-    graphql::{api::transactions::WaitForTx, client::GraphQLClient, output_types::DryRunResult},
+    graphql::{
+        api::transactions::WaitForTransaction, client::GraphQLClient, output_types::DryRunResult,
+    },
     transaction_builder::{
         Payment,
         ptb_arg::{MoveArg, PTBArgument},
@@ -473,7 +475,7 @@ impl ClientTransactionBuilder {
     pub async fn execute(
         &self,
         signer: &TransactionSigner,
-        wait_for: Option<WaitForTx>,
+        wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         Ok(self
             .read(|builder| builder.clone().execute(signer, wait_for.map(Into::into)))
@@ -487,7 +489,7 @@ impl ClientTransactionBuilder {
         &self,
         signer: &TransactionSigner,
         sponsor_signer: &TransactionSigner,
-        wait_for: Option<WaitForTx>,
+        wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         Ok(self
             .read(|builder| {
