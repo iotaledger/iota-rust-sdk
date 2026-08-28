@@ -21,7 +21,7 @@ use crate::{
 /// validator-committee = u64 ; epoch
 ///                       (vector validator-committee-member)
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct ValidatorCommittee {
     pub epoch: EpochId,
     pub members: Vec<ValidatorCommitteeMember>,

@@ -169,7 +169,7 @@ impl TransactionV1 {
     }
 }
 
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct SignedTransaction {
     pub transaction: Arc<Transaction>,
     pub signatures: Vec<Arc<UserSignature>>,
@@ -1410,7 +1410,7 @@ impl ChangeEpochV4 {
 /// ```text
 /// randomness-state-update = u64 u64 bytes u64
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct RandomnessStateUpdate {
     /// Epoch of the randomness state update transaction
     pub epoch: u64,
@@ -1467,7 +1467,7 @@ impl From<iota_sdk::types::RandomnessStateUpdate> for RandomnessStateUpdate {
 ///                 bool               ; receiving objects disabled
 ///                 bool               ; move authenticator disabled
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct DenyRuleSet {
     /// Addresses denied as transaction sender or gas sponsor. A denied
     /// address can still receive objects.
@@ -1566,7 +1566,7 @@ impl From<iota_sdk::types::DenyRuleSet> for DenyRuleSet {
 ///                                 bool              ; move authenticator disabled
 ///                                 version           ; initial shared version
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct TransactionDenyRulesUpdate {
     /// Epoch of the deny-rules update transaction
     pub epoch: u64,
@@ -1714,7 +1714,7 @@ impl EndOfEpochTransactionKind {
 ///               u64                       ; price
 ///               u64                       ; budget
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct GasPayment {
     pub objects: Vec<ObjectReference>,
     /// Owner of the gas objects, either the transaction sender or a sponsor
@@ -1985,9 +1985,9 @@ crate::export_iota_types_bcs_conversion!(
     RandomnessStateUpdate,
     DenyRuleSet,
     TransactionDenyRulesUpdate,
-    GasPayment,
-    TransactionExpiration,
+    GasPayment
 );
+crate::export_remote_types_bcs_conversion!(TransactionExpiration);
 crate::export_iota_types_objects_bcs_conversion!(
     Transaction,
     TransactionV1,
@@ -2018,9 +2018,9 @@ crate::export_iota_types_json_conversion!(
     RandomnessStateUpdate,
     DenyRuleSet,
     TransactionDenyRulesUpdate,
-    GasPayment,
-    TransactionExpiration,
+    GasPayment
 );
+crate::export_remote_types_json_conversion!(TransactionExpiration);
 crate::export_iota_types_objects_json_conversion!(
     Transaction,
     TransactionV1,
