@@ -48,14 +48,9 @@ impl Client {
     /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
     /// [`UnexpectedObject`]: crate::ProtocolError::UnexpectedObject
     ///
-    /// # Read Mask
-    ///
-    /// The `read_mask` parameter controls which fields the server returns; use
-    /// `ObjectReadMask::default()` for the default mask, or pass an
-    /// [`ObjectReadMask`](iota_grpc_types::read_mask_fields::ObjectReadMask)
-    /// built from an
-    /// [`ObjectField`](iota_grpc_types::read_mask_fields::ObjectField) or any
-    /// slice/array/vec of fields.
+    /// Uses the default field mask `ObjectReadMask::default()`. Use
+    /// [`get_objects_masked`](Self::get_objects_masked) to specify a custom
+    /// mask.
     ///
     /// # Example
     ///
@@ -68,15 +63,88 @@ impl Client {
     /// let object_id: ObjectId = "0x2".parse()?;
     /// let ids = [object_id];
     ///
-    /// // Default mask
-    /// let objs = client.get_objects(ids, ObjectReadMask::default()).await?;
+    /// let objs = client.get_objects(ids).await?;
     ///
-    /// // Selected fields
+    /// for obj in objs.body() {
+    ///     let obj = match obj {
+    ///         Ok(obj) => obj,
+    ///         // Only this ID failed; the remaining objects are still usable
+    ///         Err(e) => {
+    ///             eprintln!("could not read object: {e}");
+    ///             continue;
+    ///         }
+    ///     };
+    ///
+    ///     // Convert proto object to SDK type
+    ///     let sdk_obj = obj.object()?;
+    ///     println!("Got object ID: {:?}", sdk_obj.id());
+    ///     let obj_ref = obj.object_reference()?;
+    ///     println!("Object version: {:?}", obj_ref.version());
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn get_objects(
+        &self,
+        refs: impl IntoIterator<Item = ObjectId>,
+    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
+        let refs = refs.into_iter().map(|id| (id, None)).collect::<Vec<_>>();
+
+        self.get_objects_internal(refs, Default::default()).await
+    }
+
+    /// Get objects by their IDs.
+    ///
+    /// Returns proto `Object` types. Use `obj.object()` to convert to SDK
+    /// type, or use `obj.object_reference()` to get the object reference.
+    ///
+    /// Results are returned in the same order as the input refs.
+    /// If an object is not found, an error is returned.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`Error::EmptyRequest`] if `refs` is empty.
+    ///
+    /// Each ID gets its own result: an object that is not found (never
+    /// existed, was deleted, or has been pruned by the serving node) yields
+    /// [`Error::Server`] with code `NOT_FOUND` in that slot only, leaving the
+    /// other objects intact. The outer `Result` is reserved for failures of the
+    /// call itself, such as a transport error, and for a server that answered
+    /// with a different number of results than IDs requested
+    /// ([`UnexpectedResultCount`]), which leaves no way to tell which ID each
+    /// result belongs to, or answered a position with a different object than
+    /// the one requested there ([`UnexpectedObject`]). The answered id is read
+    /// from the object reference or its BCS, so a read mask that includes
+    /// neither leaves nothing to check.
+    ///
+    /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
+    /// [`UnexpectedObject`]: crate::ProtocolError::UnexpectedObject
+    ///
+    /// # Read Mask
+    ///
+    /// The `read_mask` parameter controls which fields the server returns.
+    /// Pass an [`ObjectField`](iota_grpc_types::read_mask_fields::ObjectField)
+    /// or any slice/array/vec of fields — conversion is automatic.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::ObjectField;
+    /// # use iota_types::ObjectId;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = Client::new_localnet()?;
+    /// let object_id: ObjectId = "0x2".parse()?;
+    /// let ids = [object_id];
+    ///
+    /// // Single field
     /// let objs = client
-    ///     .get_objects(
-    ///         ids,
-    ///         ObjectReadMask::from([ObjectField::REFERENCE, ObjectField::BCS]),
-    ///     )
+    ///     .get_objects_masked(ids, ObjectField::REFERENCE_OBJECT_ID)
+    ///     .await?;
+    ///
+    /// // Multiple fields
+    /// let objs = client
+    ///     .get_objects_masked(ids, [ObjectField::REFERENCE, ObjectField::BCS])
     ///     .await?;
     ///
     /// for obj in objs.body() {
@@ -110,7 +178,7 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_objects(
+    pub async fn get_objects_masked(
         &self,
         refs: impl IntoIterator<Item = ObjectId>,
         read_mask: impl IntoReadMask<ObjectReadMask>,
@@ -148,30 +216,22 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::{ObjectField, ObjectReadMask};
+    /// # use iota_sdk_grpc_client::{Client, ReadMask};
+    /// # use iota_sdk_grpc_client::read_mask_fields::ObjectField;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let object_id: ObjectId = "0x2".parse()?;
     ///
-    /// // Default mask
+    /// // Get objects with default mask
     /// let objs = client
-    ///     .get_objects_with_versions([(object_id, None)], ObjectReadMask::default())
-    ///     .await?;
-    ///
-    /// // Selected fields
-    /// let objs = client
-    ///     .get_objects_with_versions(
-    ///         [(object_id, None)],
-    ///         ObjectReadMask::from(ObjectField::REFERENCE_OBJECT_ID),
-    ///     )
+    ///     .get_objects_with_versions([(object_id, None)])
     ///     .await?;
     ///
     /// for obj in objs.body() {
     ///     let obj = match obj {
     ///         Ok(obj) => obj,
-    ///         // Only this ref failed; the remaining objects are still usable
+    ///         // Only this ID failed; the remaining objects are still usable
     ///         Err(e) => {
     ///             eprintln!("could not read object: {e}");
     ///             continue;
@@ -188,6 +248,74 @@ impl Client {
     /// # }
     /// ```
     pub async fn get_objects_with_versions(
+        &self,
+        refs: impl IntoIterator<Item = (ObjectId, Option<Version>)>,
+    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
+        self.get_objects_internal(refs.into_iter().collect(), Default::default())
+            .await
+    }
+
+    /// Get objects by their IDs and optional versions.
+    ///
+    /// Returns proto `Object` types. Use `obj.object()` to convert to SDK
+    /// type, or use `obj.object_reference()` to get the object reference.
+    ///
+    /// Results are returned in the same order as the input refs.
+    /// If an object is not found, an error is returned.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`Error::EmptyRequest`] if `refs` is empty.
+    ///
+    /// # Read Mask
+    ///
+    /// The `read_mask` parameter controls which fields the server returns.
+    /// Pass an [`ObjectField`](iota_grpc_types::read_mask_fields::ObjectField)
+    /// or any slice/array/vec of fields — conversion is automatic.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::read_mask_fields::{ObjectField, ObjectReadMask};
+    /// # use iota_types::ObjectId;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = Client::new_localnet()?;
+    /// let object_id: ObjectId = "0x2".parse()?;
+    ///
+    /// // Default mask
+    /// let objs = client
+    ///     .get_objects_with_versions_masked([(object_id, None)], ObjectReadMask::default())
+    ///     .await?;
+    ///
+    /// // Selected fields
+    /// let objs = client
+    ///     .get_objects_with_versions_masked(
+    ///         [(object_id, None)],
+    ///         ObjectReadMask::from(ObjectField::REFERENCE_OBJECT_ID),
+    ///     )
+    ///     .await?;
+    ///
+    /// for obj in objs.body() {
+    ///     let obj = match obj {
+    ///         Ok(obj) => obj,
+    ///         // Only this ID failed; the remaining objects are still usable
+    ///         Err(e) => {
+    ///             eprintln!("could not read object: {e}");
+    ///             continue;
+    ///         }
+    ///     };
+    ///
+    ///     // Convert proto object to SDK type
+    ///     let sdk_obj = obj.object()?;
+    ///     println!("Got object ID: {:?}", sdk_obj.id());
+    ///     let obj_ref = obj.object_reference()?;
+    ///     println!("Object version: {:?}", obj_ref.version());
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn get_objects_with_versions_masked(
         &self,
         refs: impl IntoIterator<Item = (ObjectId, Option<Version>)>,
         read_mask: impl IntoReadMask<ObjectReadMask>,

@@ -5,8 +5,9 @@
 //!
 //! # Read Mask
 //!
-//! Pass `DynamicFieldReadMask::default()` for the default mask, or a
-//! [`DynamicFieldReadMask`] built from a
+//! [`list_dynamic_fields`](Client::list_dynamic_fields) uses the default field
+//! mask `DynamicFieldReadMask::default()`. Use
+//! [`list_dynamic_fields_masked`](Client::list_dynamic_fields_masked) to pass a
 //! [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
 //! (or any slice/array/vec of fields).
 
@@ -46,34 +47,27 @@ impl Client {
     /// (with access to `next_page_token`), or call `.collect(limit)` to
     /// auto-paginate through all results.
     ///
-    /// The `read_mask` controls which fields the server returns; use
-    /// `DynamicFieldReadMask::default()` for the default field mask, or pass a
-    /// [`DynamicFieldReadMask`](iota_grpc_types::read_mask_fields::DynamicFieldReadMask)
-    /// built from a
-    /// [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
-    /// or any slice/array/vec of fields.
+    /// Uses the default field mask `DynamicFieldReadMask::default()`. Use
+    /// [`list_dynamic_fields_masked`](Self::list_dynamic_fields_masked) to
+    /// specify a custom mask.
     ///
     /// # Parameters
     ///
     /// - `parent` - The object ID of the parent object.
     /// - `page_size` - Optional maximum number of fields per page.
     /// - `page_token` - Optional continuation token from a previous page.
-    /// - `read_mask` - Field mask controlling the returned fields.
     ///
     /// # Examples
     ///
     /// Single page:
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::DynamicFieldReadMask;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let parent: ObjectId = "0x2".parse()?;
     ///
-    /// let page = client
-    ///     .list_dynamic_fields(parent, None, None, DynamicFieldReadMask::default())
-    ///     .await?;
+    /// let page = client.list_dynamic_fields(parent, None, None).await?;
     /// for field in &page.body().items {
     ///     println!("Dynamic field: {:?}", field);
     /// }
@@ -84,14 +78,13 @@ impl Client {
     /// Auto-paginate:
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::DynamicFieldReadMask;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let parent: ObjectId = "0x2".parse()?;
     ///
     /// let all = client
-    ///     .list_dynamic_fields(parent, Some(50), None, DynamicFieldReadMask::default())
+    ///     .list_dynamic_fields(parent, Some(50), None)
     ///     .collect(None)
     ///     .await?;
     /// for field in all.body() {
@@ -101,6 +94,26 @@ impl Client {
     /// # }
     /// ```
     pub fn list_dynamic_fields(
+        &self,
+        parent: ObjectId,
+        page_size: impl Into<Option<u32>>,
+        page_token: impl Into<Option<prost::bytes::Bytes>>,
+    ) -> ListDynamicFieldsQuery {
+        self.list_dynamic_fields_internal(
+            parent,
+            page_size.into(),
+            page_token.into(),
+            Default::default(),
+        )
+    }
+
+    /// List dynamic fields owned by a parent object, with a custom read mask.
+    ///
+    /// See [`list_dynamic_fields`](Self::list_dynamic_fields) for behavior.
+    /// Pass a
+    /// [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
+    /// or any slice/array/vec of fields — conversion is automatic.
+    pub fn list_dynamic_fields_masked(
         &self,
         parent: ObjectId,
         page_size: impl Into<Option<u32>>,

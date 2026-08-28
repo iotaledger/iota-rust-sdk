@@ -35,17 +35,19 @@ impl Client {
     /// - `result.balance_changes()` - Get balance changes (if requested)
     /// - `result.object_changes()` - Get object changes (if requested)
     ///
-    /// The `read_mask` controls which fields the server returns; use
-    /// `ExecuteTransactionReadMask::default()` for the default mask. Pass a
-    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// or any slice/array/vec of fields — conversion is automatic.
+    /// Uses the default field mask `TransactionReadMask::default()` which
+    /// includes effects, events, and input/output objects. Use
+    /// [`execute_transaction_masked`](Self::execute_transaction_masked) to
+    /// specify a custom mask.
     ///
     /// # Checkpoint Inclusion
     ///
     /// If `checkpoint_inclusion_timeout_ms` is set, the server will wait up to
     /// the specified duration (in milliseconds) for the transaction to be
-    /// included in a checkpoint before returning. When set, include
-    /// `checkpoint` and `timestamp` in the `read_mask` to receive the data.
+    /// included in a checkpoint before returning. When set, callers wanting
+    /// the checkpoint metadata should use
+    /// [`execute_transaction_masked`](Self::execute_transaction_masked) with a
+    /// mask that includes `checkpoint` and `timestamp`.
     ///
     /// # Example
     ///
@@ -57,9 +59,7 @@ impl Client {
     /// let client = Client::new_localnet()?;
     ///
     /// let signed_tx: SignedTransaction = todo!();
-    /// let result = client
-    ///     .execute_transaction(signed_tx, None, ExecuteTransactionReadMask::default())
-    ///     .await?;
+    /// let result = client.execute_transaction(signed_tx, None).await?;
     ///
     /// let effects = result.body().effects()?.effects()?;
     /// println!("Status: {:?}", effects.as_v1().status);
@@ -75,12 +75,32 @@ impl Client {
         &self,
         signed_transaction: SignedTransaction,
         checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
+    ) -> Result<MetadataEnvelope<ExecutedTransaction>> {
+        self.execute_transactions_internal(
+            vec![signed_transaction],
+            checkpoint_inclusion_timeout_ms.into(),
+            Default::default(),
+        )
+        .await?
+        .try_map(extract_single_execution_result)
+    }
+
+    /// Execute a signed transaction, with a custom read mask.
+    ///
+    /// See [`execute_transaction`](Self::execute_transaction) for behavior.
+    /// Pass a
+    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
+    /// or any slice/array/vec of fields — conversion is automatic.
+    pub async fn execute_transaction_masked(
+        &self,
+        signed_transaction: SignedTransaction,
+        checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
         read_mask: impl IntoReadMask<ExecuteTransactionReadMask>,
     ) -> Result<MetadataEnvelope<ExecutedTransaction>> {
-        self.execute_transactions(
+        self.execute_transactions_internal(
             vec![signed_transaction],
-            checkpoint_inclusion_timeout_ms,
-            read_mask,
+            checkpoint_inclusion_timeout_ms.into(),
+            read_mask.into_read_mask(),
         )
         .await?
         .try_map(extract_single_execution_result)
@@ -95,18 +115,18 @@ impl Client {
     /// input. Each element is either the successfully executed transaction or
     /// the per-item error returned by the server.
     ///
-    /// The `read_mask` controls which fields the server returns for each
-    /// `ExecutedTransaction`; use `ExecuteTransactionReadMask::default()` for
-    /// the default mask. Pass a
-    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// or any slice/array/vec of fields — conversion is automatic.
+    /// Uses the default field mask `TransactionReadMask::default()`. Use
+    /// [`execute_transactions_masked`](Self::execute_transactions_masked) to
+    /// specify a custom mask.
     ///
     /// # Checkpoint Inclusion
     ///
     /// If `checkpoint_inclusion_timeout_ms` is set, the server will wait up to
     /// the specified duration (in milliseconds) for all executed transactions
-    /// to be included in a checkpoint before returning. When set, include
-    /// `checkpoint` and `timestamp` in the `read_mask` to receive the data.
+    /// to be included in a checkpoint before returning. Callers wanting the
+    /// checkpoint metadata should use
+    /// [`execute_transactions_masked`](Self::execute_transactions_masked) with
+    /// a mask that includes `checkpoint` and `timestamp`.
     ///
     /// # Errors
     ///
@@ -117,10 +137,41 @@ impl Client {
         &self,
         transactions: Vec<SignedTransaction>,
         checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
+    ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
+        self.execute_transactions_internal(
+            transactions,
+            checkpoint_inclusion_timeout_ms.into(),
+            Default::default(),
+        )
+        .await
+    }
+
+    /// Execute a batch of signed transactions, with a custom read mask.
+    ///
+    /// See [`execute_transactions`](Self::execute_transactions) for behavior.
+    /// Pass a
+    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
+    /// or any slice/array/vec of fields — conversion is automatic.
+    pub async fn execute_transactions_masked(
+        &self,
+        transactions: Vec<SignedTransaction>,
+        checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
         read_mask: impl IntoReadMask<ExecuteTransactionReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
-        let read_mask = read_mask.into_read_mask();
-        let checkpoint_inclusion_timeout_ms = checkpoint_inclusion_timeout_ms.into();
+        self.execute_transactions_internal(
+            transactions,
+            checkpoint_inclusion_timeout_ms.into(),
+            read_mask.into_read_mask(),
+        )
+        .await
+    }
+
+    async fn execute_transactions_internal(
+        &self,
+        transactions: Vec<SignedTransaction>,
+        checkpoint_inclusion_timeout_ms: Option<u64>,
+        read_mask: ExecuteTransactionReadMask,
+    ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
         if transactions.is_empty() {
             return Err(Error::EmptyRequest);
         }

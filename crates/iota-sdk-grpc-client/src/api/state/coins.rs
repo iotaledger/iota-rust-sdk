@@ -56,15 +56,10 @@ impl Client {
     /// access to `next_page_token`), or call `.collect(limit)` to
     /// auto-paginate through all results.
     ///
-    /// Each returned [`Coin`] is converted from the underlying proto
-    /// `Object`. The `read_mask` controls which fields the server returns; use
-    /// `OwnedObjectReadMask::default()` for the default field mask (which
-    /// includes `bcs`, required for conversion), or pass an
-    /// [`OwnedObjectReadMask`](iota_grpc_types::read_mask_fields::OwnedObjectReadMask)
-    /// — it **must** include
-    /// [`OwnedObjectField::BCS`](iota_grpc_types::read_mask_fields::OwnedObjectField::BCS)
-    /// because the proto `Object` → SDK `Coin` conversion deserializes the BCS
-    /// payload.
+    /// Each returned [`Coin`] is converted from the underlying proto `Object`.
+    /// Uses the default field mask `OwnedObjectReadMask::default()`, which
+    /// includes the `bcs` field required for that conversion. Use
+    /// [`get_coins_masked`](Self::get_coins_masked) to specify a custom mask.
     ///
     /// # Parameters
     ///
@@ -74,22 +69,18 @@ impl Client {
     ///   types (with type `0x2::coin::Coin`).
     /// - `page_size` - Optional maximum number of coins per page.
     /// - `page_token` - Optional continuation token from a previous page.
-    /// - `read_mask` - Field mask controlling the returned fields.
     ///
     /// # Examples
     ///
     /// Single page:
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::OwnedObjectReadMask;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
-    /// let page = client
-    ///     .get_coins(owner, None, None, None, OwnedObjectReadMask::default())
-    ///     .await?;
+    /// let page = client.get_coins(owner, None, None, None).await?;
     /// for coin in &page.body().items {
     ///     println!("Coin {}: {}", coin.id(), coin.balance());
     /// }
@@ -100,14 +91,13 @@ impl Client {
     /// Auto-paginate:
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::OwnedObjectReadMask;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let all = client
-    ///     .get_coins(owner, None, Some(50), None, OwnedObjectReadMask::default())
+    ///     .get_coins(owner, None, Some(50), None)
     ///     .collect(Some(500))
     ///     .await?;
     /// for coin in all.body() {
@@ -117,6 +107,28 @@ impl Client {
     /// # }
     /// ```
     pub fn get_coins(
+        &self,
+        owner: Address,
+        coin_type: impl Into<Option<StructTag>>,
+        page_size: impl Into<Option<u32>>,
+        page_token: impl Into<Option<prost::bytes::Bytes>>,
+    ) -> GetCoinsQuery {
+        self.get_coins_internal(
+            owner,
+            coin_type.into(),
+            page_size.into(),
+            page_token.into(),
+            Default::default(),
+        )
+    }
+
+    /// List coins owned by an address, with a custom read mask.
+    ///
+    /// See [`get_coins`](Self::get_coins) for behavior. The mask **must**
+    /// include [`OwnedObjectField::BCS`](iota_grpc_types::read_mask_fields::OwnedObjectField::BCS)
+    /// because the proto `Object` → SDK `Coin` conversion deserializes the BCS
+    /// payload.
+    pub fn get_coins_masked(
         &self,
         owner: Address,
         coin_type: impl Into<Option<StructTag>>,

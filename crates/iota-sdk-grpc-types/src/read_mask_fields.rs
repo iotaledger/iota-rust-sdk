@@ -11,17 +11,17 @@
 //! matching kind — conversion happens automatically:
 //!
 //! ```ignore
-//! use iota_sdk_grpc_types::read_mask_fields::{ObjectField, ObjectReadMask};
+//! use iota_sdk_grpc_types::read_mask_fields::ObjectField;
 //!
 //! // Default mask.
-//! client.get_objects([id], ObjectReadMask::default()).await?;
+//! client.get_objects([id]).await?;
 //!
 //! // A single field.
-//! client.get_objects([id], ObjectField::BCS).await?;
+//! client.get_objects_masked([id], ObjectField::BCS).await?;
 //!
 //! // Multiple fields.
 //! client
-//!     .get_objects([id], [ObjectField::REFERENCE, ObjectField::BCS])
+//!     .get_objects_masked([id], [ObjectField::REFERENCE, ObjectField::BCS])
 //!     .await?;
 //! ```
 //!
@@ -642,8 +642,8 @@ define_field_paths! {
 }
 
 define_scoped_read_mask! {
-    /// Scoped read mask for checkpoint queries (`get_checkpoint_*`,
-    /// `stream_checkpoints`, `stream_checkpoints_filtered`).
+    /// Scoped read mask for checkpoint queries (`get_checkpoint_*_masked`,
+    /// `stream_checkpoints_masked`, `stream_checkpoints_filtered_masked`).
     pub struct CheckpointResponseReadMask from CheckpointResponseField default GET_CHECKPOINT_READ_MASK;
 }
 

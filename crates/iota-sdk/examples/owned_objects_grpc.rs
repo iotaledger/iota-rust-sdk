@@ -10,7 +10,7 @@
 
 use eyre::Result;
 use iota_sdk::{
-    grpc_client::{Client, read_mask_fields::OwnedObjectReadMask},
+    grpc_client::Client,
     types::{Address, StructTag},
 };
 
@@ -23,9 +23,7 @@ async fn main() -> Result<()> {
 
     // First page: 10 results, no filter on type. The returned page includes
     // a `next_page_token` to feed back in for the following page.
-    let page = client
-        .list_owned_objects(owner, None, 10, None, OwnedObjectReadMask::default())
-        .await?;
+    let page = client.list_owned_objects(owner, None, 10, None).await?;
     println!("First page: {} objects", page.body().items.len());
     for obj in &page.body().items {
         println!("  {}", obj.object_reference()?.object_id);
@@ -37,7 +35,7 @@ async fn main() -> Result<()> {
     // Auto-paginate: only IOTA coins, capped at 50 across all pages.
     let iota_coin: StructTag = "0x2::coin::Coin<0x2::iota::IOTA>".parse()?;
     let coins = client
-        .list_owned_objects(owner, iota_coin, 25, None, OwnedObjectReadMask::default())
+        .list_owned_objects(owner, iota_coin, 25, None)
         .collect(Some(50))
         .await?;
     println!("---");

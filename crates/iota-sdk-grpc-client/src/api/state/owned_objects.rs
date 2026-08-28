@@ -5,9 +5,10 @@
 //!
 //! # Read Mask
 //!
-//! Pass `OwnedObjectReadMask::default()` for the default mask, or an
-//! [`OwnedObjectReadMask`] built from
-//! an [`OwnedObjectField`](iota_grpc_types::read_mask_fields::OwnedObjectField)
+//! [`list_owned_objects`](Client::list_owned_objects) uses the default field
+//! mask `OwnedObjectReadMask::default()`. Use
+//! [`list_owned_objects_masked`](Client::list_owned_objects_masked) to pass an
+//! [`OwnedObjectField`](iota_grpc_types::read_mask_fields::OwnedObjectField)
 //! (or any slice/array/vec of fields).
 
 use iota_grpc_types::{
@@ -44,12 +45,9 @@ impl Client {
     /// (with access to `next_page_token`), or call `.collect(limit)` to
     /// auto-paginate through all results.
     ///
-    /// The `read_mask` controls which fields the server returns; use
-    /// `OwnedObjectReadMask::default()` for the default field mask, or pass an
-    /// [`OwnedObjectReadMask`](iota_grpc_types::read_mask_fields::OwnedObjectReadMask)
-    /// built from an
-    /// [`OwnedObjectField`](iota_grpc_types::read_mask_fields::OwnedObjectField)
-    /// or any slice/array/vec of fields.
+    /// Uses the default field mask `OwnedObjectReadMask::default()`. Use
+    /// [`list_owned_objects_masked`](Self::list_owned_objects_masked) to
+    /// specify a custom mask.
     ///
     /// # Parameters
     ///
@@ -57,22 +55,18 @@ impl Client {
     /// - `object_type` - Optional type filter as a [`StructTag`].
     /// - `page_size` - Optional maximum number of objects per page.
     /// - `page_token` - Optional continuation token from a previous page.
-    /// - `read_mask` - Field mask controlling the returned fields.
     ///
     /// # Examples
     ///
     /// Single page:
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::OwnedObjectReadMask;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
-    /// let page = client
-    ///     .list_owned_objects(owner, None, None, None, OwnedObjectReadMask::default())
-    ///     .await?;
+    /// let page = client.list_owned_objects(owner, None, None, None).await?;
     /// for obj in &page.body().items {
     ///     println!("Owned object: {:?}", obj);
     /// }
@@ -83,14 +77,13 @@ impl Client {
     /// Auto-paginate:
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::OwnedObjectReadMask;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let all = client
-    ///     .list_owned_objects(owner, None, Some(50), None, OwnedObjectReadMask::default())
+    ///     .list_owned_objects(owner, None, Some(50), None)
     ///     .collect(Some(500))
     ///     .await?;
     /// for obj in all.body() {
@@ -100,6 +93,28 @@ impl Client {
     /// # }
     /// ```
     pub fn list_owned_objects(
+        &self,
+        owner: Address,
+        object_type: impl Into<Option<StructTag>>,
+        page_size: impl Into<Option<u32>>,
+        page_token: impl Into<Option<prost::bytes::Bytes>>,
+    ) -> ListOwnedObjectsQuery {
+        self.list_owned_objects_internal(
+            owner,
+            object_type.into(),
+            page_size.into(),
+            page_token.into(),
+            Default::default(),
+        )
+    }
+
+    /// List objects owned by an address, with a custom read mask.
+    ///
+    /// See [`list_owned_objects`](Self::list_owned_objects) for behavior. Pass
+    /// an
+    /// [`OwnedObjectField`](iota_grpc_types::read_mask_fields::OwnedObjectField)
+    /// or any slice/array/vec of fields — conversion is automatic.
+    pub fn list_owned_objects_masked(
         &self,
         owner: Address,
         object_type: impl Into<Option<StructTag>>,

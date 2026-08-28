@@ -5,11 +5,11 @@
 //!
 //! # Read Mask
 //!
-//! All checkpoint query methods accept a `read_mask` to control which data is
-//! included in the response. Pass `CheckpointResponseReadMask::default()` for
-//! the default mask, or a
+//! Each checkpoint query has a default variant that uses
+//! `CheckpointResponseReadMask::default()` and a `_masked` variant that accepts
+//! a custom mask. Pass a
 //! [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-//! (or any slice/array/vec of fields) — conversion is automatic.
+//! (or any slice/array/vec of fields) to the latter — conversion is automatic.
 
 use std::pin::Pin;
 
@@ -38,33 +38,48 @@ use crate::{
 impl Client {
     /// Get the latest checkpoint.
     ///
-    /// Returns the checkpoint with fields populated according to the
-    /// `read_mask`; use `CheckpointResponseReadMask::default()` for the
-    /// default field mask. Pass a
-    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields — conversion is automatic.
+    /// Returns the checkpoint with fields populated according to the default
+    /// field mask `CheckpointResponseReadMask::default()`. Use
+    /// [`get_checkpoint_latest_masked`](Self::get_checkpoint_latest_masked) to
+    /// specify a custom mask.
     ///
     /// # Parameters
     ///
     /// * `transactions_filter` - Optional filter to apply to transactions
     /// * `events_filter` - Optional filter to apply to events
-    /// * `read_mask` - Field mask controlling the returned fields
     ///
     /// # Example
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
-    /// let checkpoint = client
-    ///     .get_checkpoint_latest(None, None, CheckpointResponseReadMask::default())
-    ///     .await?;
+    /// let checkpoint = client.get_checkpoint_latest(None, None).await?;
     /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
     /// # Ok(())
     /// # }
     /// ```
     pub async fn get_checkpoint_latest(
+        &self,
+        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
+        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
+    ) -> Result<MetadataEnvelope<CheckpointResponse>> {
+        self.get_checkpoint_internal(
+            get_checkpoint_request::CheckpointId::Latest(true),
+            transactions_filter.into(),
+            events_filter.into(),
+            Default::default(),
+        )
+        .await
+    }
+
+    /// Get the latest checkpoint, with a custom read mask.
+    ///
+    /// See [`get_checkpoint_latest`](Self::get_checkpoint_latest) for behavior.
+    /// Pass a
+    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
+    /// or any slice/array/vec of fields — conversion is automatic.
+    pub async fn get_checkpoint_latest_masked(
         &self,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
@@ -81,34 +96,53 @@ impl Client {
 
     /// Get checkpoint by sequence number.
     ///
-    /// Returns the checkpoint with fields populated according to the
-    /// `read_mask`; use `CheckpointResponseReadMask::default()` for the
-    /// default field mask. Pass a
-    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields — conversion is automatic.
+    /// Returns the checkpoint with fields populated according to the default
+    /// field mask `CheckpointResponseReadMask::default()`. Use
+    /// [`get_checkpoint_by_sequence_number_masked`](Self::get_checkpoint_by_sequence_number_masked)
+    /// to specify a custom mask.
     ///
     /// # Parameters
     ///
     /// * `sequence_number` - The checkpoint sequence number to fetch
     /// * `transactions_filter` - Optional filter to apply to transactions
     /// * `events_filter` - Optional filter to apply to events
-    /// * `read_mask` - Field mask controlling the returned fields
     ///
     /// # Example
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let checkpoint = client
-    ///     .get_checkpoint_by_sequence_number(100, None, None, CheckpointResponseReadMask::default())
+    ///     .get_checkpoint_by_sequence_number(100, None, None)
     ///     .await?;
     /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
     /// # Ok(())
     /// # }
     /// ```
     pub async fn get_checkpoint_by_sequence_number(
+        &self,
+        sequence_number: CheckpointSequenceNumber,
+        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
+        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
+    ) -> Result<MetadataEnvelope<CheckpointResponse>> {
+        self.get_checkpoint_internal(
+            get_checkpoint_request::CheckpointId::SequenceNumber(sequence_number),
+            transactions_filter.into(),
+            events_filter.into(),
+            Default::default(),
+        )
+        .await
+    }
+
+    /// Get checkpoint by sequence number, with a custom read mask.
+    ///
+    /// See
+    /// [`get_checkpoint_by_sequence_number`](Self::get_checkpoint_by_sequence_number)
+    /// for behavior. Pass a
+    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
+    /// or any slice/array/vec of fields — conversion is automatic.
+    pub async fn get_checkpoint_by_sequence_number_masked(
         &self,
         sequence_number: CheckpointSequenceNumber,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
@@ -126,36 +160,52 @@ impl Client {
 
     /// Get checkpoint by digest.
     ///
-    /// Returns the checkpoint with fields populated according to the
-    /// `read_mask`; use `CheckpointResponseReadMask::default()` for the
-    /// default field mask. Pass a
-    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields — conversion is automatic.
+    /// Returns the checkpoint with fields populated according to the default
+    /// field mask `CheckpointResponseReadMask::default()`. Use
+    /// [`get_checkpoint_by_digest_masked`](Self::get_checkpoint_by_digest_masked)
+    /// to specify a custom mask.
     ///
     /// # Parameters
     ///
     /// * `digest` - The checkpoint digest to fetch
     /// * `transactions_filter` - Optional filter to apply to transactions
     /// * `events_filter` - Optional filter to apply to events
-    /// * `read_mask` - Field mask controlling the returned fields
     ///
     /// # Example
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # use iota_types::CheckpointDigest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let digest: CheckpointDigest = todo!();
-    /// let checkpoint = client
-    ///     .get_checkpoint_by_digest(digest, None, None, CheckpointResponseReadMask::default())
-    ///     .await?;
+    /// let checkpoint = client.get_checkpoint_by_digest(digest, None, None).await?;
     /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
     /// # Ok(())
     /// # }
     /// ```
     pub async fn get_checkpoint_by_digest(
+        &self,
+        digest: CheckpointDigest,
+        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
+        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
+    ) -> Result<MetadataEnvelope<CheckpointResponse>> {
+        self.get_checkpoint_internal(
+            get_checkpoint_request::CheckpointId::Digest(digest.into()),
+            transactions_filter.into(),
+            events_filter.into(),
+            Default::default(),
+        )
+        .await
+    }
+
+    /// Get checkpoint by digest, with a custom read mask.
+    ///
+    /// See [`get_checkpoint_by_digest`](Self::get_checkpoint_by_digest) for
+    /// behavior. Pass a
+    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
+    /// or any slice/array/vec of fields — conversion is automatic.
+    pub async fn get_checkpoint_by_digest_masked(
         &self,
         digest: CheckpointDigest,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
@@ -242,11 +292,9 @@ impl Client {
     /// To skip non-matching checkpoints entirely, use
     /// [`stream_checkpoints_filtered`](Self::stream_checkpoints_filtered).
     ///
-    /// The `read_mask` controls which fields the server returns; use
-    /// `CheckpointResponseReadMask::default()` for the default field mask.
-    /// Pass a
-    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields — conversion is automatic.
+    /// Uses the default field mask `CheckpointResponseReadMask::default()`. Use
+    /// [`stream_checkpoints_masked`](Self::stream_checkpoints_masked) to
+    /// specify a custom mask.
     ///
     /// **Note:** The metadata in the returned [`MetadataEnvelope`] is captured
     /// from the initial gRPC response headers when the stream is opened. It is
@@ -260,24 +308,16 @@ impl Client {
     ///   indefinitely.
     /// * `transactions_filter` - Optional filter to apply to transactions
     /// * `events_filter` - Optional filter to apply to events
-    /// * `read_mask` - Field mask controlling the returned fields
     ///
     /// # Example
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::Client;
-    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let mut stream = client
-    ///     .stream_checkpoints(
-    ///         Some(0),
-    ///         Some(10),
-    ///         None,
-    ///         None,
-    ///         CheckpointResponseReadMask::default(),
-    ///     )
+    ///     .stream_checkpoints(Some(0), Some(10), None, None)
     ///     .await?;
     ///
     /// while let Some(checkpoint) = stream.body_mut().next().await {
@@ -288,6 +328,30 @@ impl Client {
     /// # }
     /// ```
     pub async fn stream_checkpoints(
+        &self,
+        start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
+        end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
+        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
+        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
+    ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointResponse>> + Send>>>>
+    {
+        self.stream_checkpoints_internal(
+            start_sequence_number.into(),
+            end_sequence_number.into(),
+            transactions_filter.into(),
+            events_filter.into(),
+            Default::default(),
+        )
+        .await
+    }
+
+    /// Stream checkpoints across a range, with a custom read mask.
+    ///
+    /// See [`stream_checkpoints`](Self::stream_checkpoints) for behavior. Pass
+    /// a
+    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
+    /// or any slice/array/vec of fields — conversion is automatic.
+    pub async fn stream_checkpoints_masked(
         &self,
         start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
         end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
@@ -362,11 +426,9 @@ impl Client {
     ///
     /// At least one of `transactions_filter` or `events_filter` must be set.
     ///
-    /// The `read_mask` controls which fields the server returns; use
-    /// `CheckpointResponseReadMask::default()` for the default field mask.
-    /// Pass a
-    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields — conversion is automatic.
+    /// Uses the default field mask `CheckpointResponseReadMask::default()`. Use
+    /// [`stream_checkpoints_filtered_masked`](Self::stream_checkpoints_filtered_masked)
+    /// to specify a custom mask.
     ///
     /// # Parameters
     ///
@@ -378,13 +440,11 @@ impl Client {
     /// * `events_filter` - Optional filter to apply to events
     /// * `progress_interval_ms` - Optional progress message interval in
     ///   milliseconds. Defaults to 2000ms. Minimum 500ms.
-    /// * `read_mask` - Field mask controlling the returned fields
     ///
     /// # Example
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::{Client, CheckpointStreamItem};
-    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # use iota_grpc_types::v1::filter as grpc_filter;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
@@ -392,14 +452,7 @@ impl Client {
     /// // At least one filter is required
     /// let tx_filter = grpc_filter::TransactionFilter::default();
     /// let mut stream = client
-    ///     .stream_checkpoints_filtered(
-    ///         Some(0),
-    ///         None,
-    ///         Some(tx_filter),
-    ///         None,
-    ///         None,
-    ///         CheckpointResponseReadMask::default(),
-    ///     )
+    ///     .stream_checkpoints_filtered(Some(0), None, Some(tx_filter), None, None)
     ///     .await?;
     ///
     /// while let Some(item) = stream.body_mut().next().await {
@@ -419,6 +472,35 @@ impl Client {
     /// # }
     /// ```
     pub async fn stream_checkpoints_filtered(
+        &self,
+        start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
+        end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
+        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
+        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
+        progress_interval_ms: impl Into<Option<u32>>,
+    ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointStreamItem>> + Send>>>>
+    {
+        self.stream_checkpoints_raw(
+            start_sequence_number.into(),
+            end_sequence_number.into(),
+            transactions_filter.into(),
+            events_filter.into(),
+            true,
+            progress_interval_ms.into(),
+            Default::default(),
+        )
+        .await
+    }
+
+    /// Stream checkpoints, skipping those with no matching data, with a
+    /// custom read mask.
+    ///
+    /// See [`stream_checkpoints_filtered`](Self::stream_checkpoints_filtered)
+    /// for behavior. Pass a
+    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
+    /// or any slice/array/vec of fields — conversion is automatic.
+    #[allow(clippy::too_many_arguments)]
+    pub async fn stream_checkpoints_filtered_masked(
         &self,
         start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
         end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
