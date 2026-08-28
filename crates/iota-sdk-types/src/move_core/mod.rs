@@ -12,6 +12,7 @@ mod struct_tag;
 mod type_tag;
 
 pub use identifier::Identifier;
+pub use parse::{MAX_IDENTIFIER_LENGTH, MAX_TYPE_TAG_NESTING};
 pub use struct_tag::StructTag;
 pub use type_tag::TypeTag;
 

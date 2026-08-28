@@ -105,6 +105,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::PasskeyPublicKey>();
     assert_display::<iota_sdk_types::ProgrammableTransaction>();
     assert_display::<iota_sdk_types::PublicKey>();
+    assert_display::<iota_sdk_types::PublicKeyError>();
     assert_display::<iota_sdk_types::Publish>();
     assert_display::<iota_sdk_types::RandomnessRound>();
     assert_display::<iota_sdk_types::RandomnessStateUpdate>();
