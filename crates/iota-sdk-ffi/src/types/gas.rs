@@ -1,8 +1,6 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::types::GasCostSummary;
-
 /// Summary of gas charges.
 ///
 /// Storage is charged independently of computation.
@@ -39,7 +37,7 @@ use iota_sdk::types::GasCostSummary;
 ///                    u64 ; storage-rebate
 ///                    u64 ; non-refundable-storage-fee
 /// ```
-#[uniffi::remote(Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct GasCostSummary {
     /// Cost of computation/execution
     pub computation_cost: u64,
@@ -56,6 +54,30 @@ pub struct GasCostSummary {
     pub non_refundable_storage_fee: u64,
 }
 
-crate::export_remote_types_bcs_conversion!(GasCostSummary);
-crate::export_remote_types_json_conversion!(GasCostSummary);
-crate::export_remote_types_display!(GasCostSummary);
+impl From<iota_sdk::types::GasCostSummary> for GasCostSummary {
+    fn from(value: iota_sdk::types::GasCostSummary) -> Self {
+        Self {
+            computation_cost: value.computation_cost,
+            computation_cost_burned: value.computation_cost_burned,
+            storage_cost: value.storage_cost,
+            storage_rebate: value.storage_rebate,
+            non_refundable_storage_fee: value.non_refundable_storage_fee,
+        }
+    }
+}
+
+impl From<GasCostSummary> for iota_sdk::types::GasCostSummary {
+    fn from(value: GasCostSummary) -> Self {
+        Self {
+            computation_cost: value.computation_cost,
+            computation_cost_burned: value.computation_cost_burned,
+            storage_cost: value.storage_cost,
+            storage_rebate: value.storage_rebate,
+            non_refundable_storage_fee: value.non_refundable_storage_fee,
+        }
+    }
+}
+
+crate::export_iota_types_bcs_conversion!(GasCostSummary);
+crate::export_iota_types_json_conversion!(GasCostSummary);
+crate::export_iota_types_display!(GasCostSummary);

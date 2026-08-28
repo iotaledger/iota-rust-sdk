@@ -1,9 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// This example demonstrates how to print types as human-readable text.
-// Most types offer a `ToDisplayString()` method; types mirrored from the core
-// crate offer a `<Type>ToDisplayString()` function instead.
+// This example demonstrates how to print types as human-readable text
+// with the `ToDisplayString()` method.
 
 package main
 
@@ -24,6 +23,4 @@ func main() {
 	log.Printf("\n%s", transaction.ToDisplayString())
 
 	log.Printf("\n%s", transaction.GasPayment().ToDisplayString())
-
-	log.Printf("\n%s", iota_sdk.TransactionExpirationToDisplayString(transaction.Expiration()))
 }

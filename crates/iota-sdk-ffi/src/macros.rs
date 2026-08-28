@@ -167,27 +167,6 @@ macro_rules! export_iota_types_objects_bcs_conversion {
     )+}
 }
 
-/// Export BCS conversions for a `#[uniffi::remote]` type, which the orphan rule
-/// keeps this crate from giving an inherent impl.
-#[macro_export]
-macro_rules! export_remote_types_bcs_conversion {
-    ($($name:ident),+ $(,)?) => {
-        paste::paste! {$(
-            /// Create this type from BCS encoded bytes.
-            #[uniffi::export]
-            pub fn [< $name:snake _from_bcs >](bcs: Vec<u8>) -> $crate::error::Result<$name> {
-                Ok(::bcs::from_bytes::<iota_sdk::types::$name>(&bcs)?)
-            }
-
-            /// Convert this type to BCS encoded bytes.
-            #[uniffi::export]
-            pub fn [< $name:snake _to_bcs >](data: $name) -> $crate::error::Result<Vec<u8>> {
-                Ok(::bcs::to_bytes(&data)?)
-            }
-        )+}
-    }
-}
-
 #[macro_export]
 macro_rules! export_primitive_types_bcs_conversion {
     ($($name:ty),+ $(,)?) => {
@@ -251,26 +230,6 @@ macro_rules! export_iota_types_objects_json_conversion {
     )+}
 }
 
-/// JSON counterpart of [`crate::export_remote_types_bcs_conversion`].
-#[macro_export]
-macro_rules! export_remote_types_json_conversion {
-    ($($name:ident),+ $(,)?) => {
-        paste::paste! {$(
-            /// Create this type from a JSON encoded string.
-            #[uniffi::export]
-            pub fn [< $name:snake _from_json >](json: &str) -> $crate::error::Result<$name> {
-                Ok(serde_json::from_str::<iota_sdk::types::$name>(json)?)
-            }
-
-            /// Convert this type to a JSON encoded string.
-            #[uniffi::export]
-            pub fn [< $name:snake _to_json >](data: $name) -> $crate::error::Result<String> {
-                Ok(serde_json::to_string(&data)?)
-            }
-        )+}
-    }
-}
-
 #[macro_export]
 macro_rules! export_primitive_types_json_conversion {
     ($($name:ty),+ $(,)?) => {
@@ -292,6 +251,21 @@ macro_rules! export_primitive_types_json_conversion {
 
 #[macro_export]
 macro_rules! export_iota_types_display {
+    ($($core:ty => $name:ident),+ $(,)?) => {
+        $(
+            #[uniffi::export]
+            impl $name {
+                /// Render this type as human-readable text.
+                ///
+                /// The layout is meant for reading and can change between
+                /// releases. Use the JSON or BCS conversions for output that
+                /// gets parsed.
+                pub fn to_display_string(&self) -> String {
+                    <$core>::from(self.clone()).to_string()
+                }
+            }
+        )+
+    };
     ($($name:ident),+ $(,)?) => {
         $(
             #[uniffi::export]
@@ -306,28 +280,6 @@ macro_rules! export_iota_types_display {
                 }
             }
         )+
-    };
-}
-
-/// Display counterpart of [`crate::export_remote_types_bcs_conversion`], for a
-/// `#[uniffi::remote]` type the orphan rule keeps this crate from giving an
-/// inherent impl.
-#[macro_export]
-macro_rules! export_remote_types_display {
-    ($($core:ty => $name:ident),+ $(,)?) => {
-        paste::paste! {$(
-            /// Render this type as human-readable text.
-            ///
-            /// The layout is meant for reading and can change between releases.
-            /// Use the JSON or BCS conversions for output that gets parsed.
-            #[uniffi::export]
-            pub fn [< $name:snake _to_display_string >](data: $name) -> String {
-                <$core>::from(data).to_string()
-            }
-        )+}
-    };
-    ($($name:ident),+ $(,)?) => {
-        $crate::export_remote_types_display!($(iota_sdk::types::$name => $name),+);
     };
 }
 

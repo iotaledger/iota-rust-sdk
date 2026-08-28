@@ -1,9 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// This example demonstrates how to print types as human-readable text.
-// Most types offer a `toDisplayString()` method; types mirrored from the core
-// crate offer a `<type>ToDisplayString()` function instead.
+// This example demonstrates how to print types as human-readable text
+// with the `toDisplayString()` method.
 
 import iota_sdk.*
 
@@ -17,8 +16,6 @@ fun main() {
         println(transaction.toDisplayString())
 
         println(transaction.gasPayment().toDisplayString())
-
-        println(transactionExpirationToDisplayString(transaction.expiration()))
     } catch (e: Exception) {
         e.printStackTrace()
         kotlin.system.exitProcess(1)

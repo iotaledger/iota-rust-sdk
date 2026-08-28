@@ -3,7 +3,7 @@
 
 use std::{str::FromStr, sync::Arc};
 
-use iota_sdk::types::iota_names::{IotaNamesNft, NameFormat};
+use iota_sdk::types::iota_names::IotaNamesNft;
 
 use crate::{error::Result, types::object::ObjectId};
 
@@ -87,17 +87,35 @@ impl Name {
     /// Formats a name into a string based on the available output formats.
     /// The default separator is `.`
     pub fn format(&self, format: NameFormat) -> String {
-        self.0.format(format)
+        self.0.format(format.into())
     }
 }
 
 /// Two different view options for a name.
 /// `At` -> `test@example` | `Dot` -> `test.example.iota`
-#[uniffi::remote(Enum)]
+#[derive(Clone, Copy, Debug, uniffi::Enum)]
 pub enum NameFormat {
     At,
     Dot,
 }
 
-crate::export_remote_types_display!(iota_sdk::types::iota_names::NameFormat => NameFormat);
+impl From<NameFormat> for iota_sdk::types::iota_names::NameFormat {
+    fn from(value: NameFormat) -> Self {
+        match value {
+            NameFormat::At => Self::At,
+            NameFormat::Dot => Self::Dot,
+        }
+    }
+}
+
+impl From<iota_sdk::types::iota_names::NameFormat> for NameFormat {
+    fn from(value: iota_sdk::types::iota_names::NameFormat) -> Self {
+        match value {
+            iota_sdk::types::iota_names::NameFormat::At => Self::At,
+            iota_sdk::types::iota_names::NameFormat::Dot => Self::Dot,
+        }
+    }
+}
+
+crate::export_iota_types_display!(iota_sdk::types::iota_names::NameFormat => NameFormat);
 crate::export_iota_types_objects_display!(NameRegistration, Name);
