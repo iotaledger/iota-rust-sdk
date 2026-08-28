@@ -449,6 +449,16 @@ impl ClientTransactionBuilder {
         ))
     }
 
+    /// Convert this builder into a transaction with the given gas budget,
+    /// used as-is (no estimation or minimum clamp) and overriding any budget
+    /// set via `gas_budget`.
+    pub async fn finish_with_budget(&self, gas_budget: u64) -> Result<Transaction> {
+        Ok(Transaction(
+            self.read(|builder| builder.clone().finish_with_budget(gas_budget))
+                .await?,
+        ))
+    }
+
     /// Dry run the transaction.
     #[uniffi::method(default(skip_checks = false))]
     pub async fn dry_run(&self, skip_checks: bool) -> Result<DryRunResult> {
