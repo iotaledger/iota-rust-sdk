@@ -16,6 +16,7 @@ pub use struct_tag::StructTag;
 pub use type_tag::TypeTag;
 
 #[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
 pub enum TypeParseError {
     #[error("failed to parse {input}: {}", source.as_ref().map(|s| s.to_string()).unwrap_or_else(|| "unknown error".to_string()))]
     Parse {

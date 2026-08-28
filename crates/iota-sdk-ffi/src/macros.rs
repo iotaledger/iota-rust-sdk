@@ -118,41 +118,71 @@ macro_rules! ffi_move_object_generic {
     };
 }
 
+/// Export BCS conversions for a `uniffi::Record` or `uniffi::Enum` mirrored
+/// from `iota_sdk::types`.
+///
+/// `from_bcs` is a free function because no language backend renders
+/// `Record::constructors`.
 #[macro_export]
 macro_rules! export_iota_types_bcs_conversion {
-    ($($name:ty),+ $(,)?) => {
+    ($($name:ident),+ $(,)?) => {
         paste::paste! {$(
+            #[uniffi::export]
+            impl $name {
+                /// Convert this type to BCS encoded bytes.
+                pub fn to_bcs(&self) -> $crate::error::Result<Vec<u8>> {
+                    let data: iota_sdk::types::$name = self.clone().try_into()?;
+                    Ok(::bcs::to_bytes(&data)?)
+                }
+            }
+
             /// Create this type from BCS encoded bytes.
             #[uniffi::export]
             pub fn [< $name:snake _from_bcs >](bcs: Vec<u8>) -> $crate::error::Result<$name> {
-                let data = bcs::from_bytes::<iota_sdk::types::$name>(&bcs)?;
+                let data = ::bcs::from_bytes::<iota_sdk::types::$name>(&bcs)?;
                 Ok(data.into())
-            }
-
-            /// Convert this type to BCS encoded bytes.
-            #[uniffi::export]
-            pub fn [< $name:snake _to_bcs >](data: $name) -> $crate::error::Result<Vec<u8>> {
-                let data: iota_sdk::types::$name = data.into();
-                Ok(bcs::to_bytes(&data)?)
             }
         )+}
     }
 }
 
+/// Export BCS conversions for a `uniffi::Object` newtype wrapping a type from
+/// `iota_sdk::types`.
 #[macro_export]
 macro_rules! export_iota_types_objects_bcs_conversion {
-    ($($name:ty),+ $(,)?) => {
+    ($($name:ident),+ $(,)?) => {$(
+        #[uniffi::export]
+        impl $name {
+            /// Create this type from BCS encoded bytes.
+            #[uniffi::constructor]
+            pub fn from_bcs(bcs: Vec<u8>) -> $crate::error::Result<Self> {
+                Ok($name(::bcs::from_bytes::<iota_sdk::types::$name>(&bcs)?))
+            }
+
+            /// Convert this type to BCS encoded bytes.
+            pub fn to_bcs(&self) -> $crate::error::Result<Vec<u8>> {
+                Ok(::bcs::to_bytes(&self.0)?)
+            }
+        }
+    )+}
+}
+
+/// Export BCS conversions for a `#[uniffi::remote]` type, which the orphan rule
+/// keeps this crate from giving an inherent impl.
+#[macro_export]
+macro_rules! export_remote_types_bcs_conversion {
+    ($($name:ident),+ $(,)?) => {
         paste::paste! {$(
             /// Create this type from BCS encoded bytes.
             #[uniffi::export]
             pub fn [< $name:snake _from_bcs >](bcs: Vec<u8>) -> $crate::error::Result<$name> {
-                Ok($name(bcs::from_bytes::<iota_sdk::types::$name>(&bcs)?))
+                Ok(::bcs::from_bytes::<iota_sdk::types::$name>(&bcs)?)
             }
 
             /// Convert this type to BCS encoded bytes.
             #[uniffi::export]
-            pub fn [< $name:snake _to_bcs >](data: std::sync::Arc<$name>) -> $crate::error::Result<Vec<u8>> {
-                Ok(bcs::to_bytes(&data.0)?)
+            pub fn [< $name:snake _to_bcs >](data: $name) -> $crate::error::Result<Vec<u8>> {
+                Ok(::bcs::to_bytes(&data)?)
             }
         )+}
     }
@@ -177,41 +207,65 @@ macro_rules! export_primitive_types_bcs_conversion {
     };
 }
 
+/// JSON counterpart of [`crate::export_iota_types_bcs_conversion`].
 #[macro_export]
 macro_rules! export_iota_types_json_conversion {
-    ($($name:ty),+ $(,)?) => {
+    ($($name:ident),+ $(,)?) => {
         paste::paste! {$(
-            /// Create this type from JSON encoded string.
+            #[uniffi::export]
+            impl $name {
+                /// Convert this type to a JSON encoded string.
+                pub fn to_json(&self) -> $crate::error::Result<String> {
+                    let data: iota_sdk::types::$name = self.clone().try_into()?;
+                    Ok(serde_json::to_string(&data)?)
+                }
+            }
+
+            /// Create this type from a JSON encoded string.
             #[uniffi::export]
             pub fn [< $name:snake _from_json >](json: &str) -> $crate::error::Result<$name> {
                 let data = serde_json::from_str::<iota_sdk::types::$name>(json)?;
                 Ok(data.into())
             }
-
-            /// Convert this type to JSON encoded string.
-            #[uniffi::export]
-            pub fn [< $name:snake _to_json >](data: $name) -> $crate::error::Result<String> {
-                let data: iota_sdk::types::$name = data.into();
-                Ok(serde_json::to_string(&data)?)
-            }
         )+}
     }
 }
 
+/// JSON counterpart of [`crate::export_iota_types_objects_bcs_conversion`].
 #[macro_export]
 macro_rules! export_iota_types_objects_json_conversion {
-    ($($name:ty),+ $(,)?) => {
-        paste::paste! {$(
-            /// Create this type from JSON encoded string.
-            #[uniffi::export]
-            pub fn [< $name:snake _from_json >](json: &str) -> $crate::error::Result<$name> {
+    ($($name:ident),+ $(,)?) => {$(
+        #[uniffi::export]
+        impl $name {
+            /// Create this type from a JSON encoded string.
+            #[uniffi::constructor]
+            pub fn from_json(json: &str) -> $crate::error::Result<Self> {
                 Ok($name(serde_json::from_str::<iota_sdk::types::$name>(json)?))
             }
 
-            /// Convert this type to JSON encoded string.
+            /// Convert this type to a JSON encoded string.
+            pub fn to_json(&self) -> $crate::error::Result<String> {
+                Ok(serde_json::to_string(&self.0)?)
+            }
+        }
+    )+}
+}
+
+/// JSON counterpart of [`crate::export_remote_types_bcs_conversion`].
+#[macro_export]
+macro_rules! export_remote_types_json_conversion {
+    ($($name:ident),+ $(,)?) => {
+        paste::paste! {$(
+            /// Create this type from a JSON encoded string.
             #[uniffi::export]
-            pub fn [< $name:snake _to_json >](data: std::sync::Arc<$name>) -> $crate::error::Result<String> {
-                Ok(serde_json::to_string(&data.0)?)
+            pub fn [< $name:snake _from_json >](json: &str) -> $crate::error::Result<$name> {
+                Ok(serde_json::from_str::<iota_sdk::types::$name>(json)?)
+            }
+
+            /// Convert this type to a JSON encoded string.
+            #[uniffi::export]
+            pub fn [< $name:snake _to_json >](data: $name) -> $crate::error::Result<String> {
+                Ok(serde_json::to_string(&data)?)
             }
         )+}
     }
@@ -247,19 +301,19 @@ macro_rules! export_iota_types_display {
                 /// The layout is meant for reading and can change between
                 /// releases. Use the JSON or BCS conversions for output that
                 /// gets parsed.
-                pub fn to_display_string(self) -> String {
-                    iota_sdk::types::$name::from(self).to_string()
+                pub fn to_display_string(&self) -> String {
+                    iota_sdk::types::$name::from(self.clone()).to_string()
                 }
             }
         )+
     };
 }
 
-/// Same as [`export_iota_types_display`], for types declared with
-/// `#[uniffi::remote(…)]`. Rust allows no inherent impl on a type from another
-/// crate, so these get a function instead of a method.
+/// Display counterpart of [`crate::export_remote_types_bcs_conversion`], for a
+/// `#[uniffi::remote]` type the orphan rule keeps this crate from giving an
+/// inherent impl.
 #[macro_export]
-macro_rules! export_iota_types_remote_display {
+macro_rules! export_remote_types_display {
     ($($core:ty => $name:ident),+ $(,)?) => {
         paste::paste! {$(
             /// Render this type as human-readable text.
@@ -273,7 +327,7 @@ macro_rules! export_iota_types_remote_display {
         )+}
     };
     ($($name:ident),+ $(,)?) => {
-        $crate::export_iota_types_remote_display!($(iota_sdk::types::$name => $name),+);
+        $crate::export_remote_types_display!($(iota_sdk::types::$name => $name),+);
     };
 }
 

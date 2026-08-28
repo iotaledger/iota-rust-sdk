@@ -244,7 +244,7 @@ impl PersonalMessage {
     }
 }
 
-crate::export_iota_types_remote_display!(
+crate::export_remote_types_display!(
     IntentError,
     IntentScope,
     IntentVersion,

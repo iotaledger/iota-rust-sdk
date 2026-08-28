@@ -56,6 +56,6 @@ pub struct GasCostSummary {
     pub non_refundable_storage_fee: u64,
 }
 
-crate::export_iota_types_bcs_conversion!(GasCostSummary);
-crate::export_iota_types_json_conversion!(GasCostSummary);
-crate::export_iota_types_remote_display!(GasCostSummary);
+crate::export_remote_types_bcs_conversion!(GasCostSummary);
+crate::export_remote_types_json_conversion!(GasCostSummary);
+crate::export_remote_types_display!(GasCostSummary);

@@ -359,7 +359,7 @@ impl CheckpointCommitment {
 ///                     (vector checkpoint-commitment)      ; epoch_commitments
 ///                     i64                                 ; epoch_supply_change
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct EndOfEpochData {
     pub next_epoch_committee: Vec<ValidatorCommitteeMember>,
     pub next_epoch_protocol_version: u64,

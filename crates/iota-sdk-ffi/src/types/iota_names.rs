@@ -99,5 +99,5 @@ pub enum NameFormat {
     Dot,
 }
 
-crate::export_iota_types_remote_display!(iota_sdk::types::iota_names::NameFormat => NameFormat);
+crate::export_remote_types_display!(iota_sdk::types::iota_names::NameFormat => NameFormat);
 crate::export_iota_types_objects_display!(NameRegistration, Name);
