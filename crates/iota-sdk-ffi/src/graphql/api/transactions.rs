@@ -5,7 +5,7 @@
 
 use std::{sync::Arc, time::Duration};
 
-use iota_sdk::graphql_client::{WaitForTx, pagination::PaginationFilter};
+use iota_sdk::graphql_client::{WaitForTransaction, pagination::PaginationFilter};
 
 use crate::{
     error::Result,
@@ -23,16 +23,16 @@ use crate::{
 
 /// Determines what to wait for after executing a transaction.
 ///
-/// Users should almost always use WaitForTx::Finalized (the default).
+/// Users should almost always use WaitForTransaction::Finalized (the default).
 /// The GraphQL client interacts with the indexer, not the fullnode directly.
-/// Using WaitForTx::IndexedOnNode only guarantees the transaction is
+/// Using WaitForTransaction::IndexedOnNode only guarantees the transaction is
 /// indexed on the fullnode (meaning you can submit transactions that reference
 /// objects created by this transaction), but subsequent queries using the
 /// transaction ID can still fail until the transaction is indexed on the
 /// indexer.
 #[uniffi::remote(Enum)]
 #[non_exhaustive]
-pub enum WaitForTx {
+pub enum WaitForTransaction {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions (you can reference objects created by this transaction),
     /// and that the transaction itself is indexed on the fullnode.
@@ -40,7 +40,8 @@ pub enum WaitForTx {
     /// **Warning:** This does not guarantee the transaction is indexed on the
     /// indexer. Since the GraphQL client queries the indexer, subsequent
     /// queries with this transaction ID may still fail. Prefer
-    /// WaitForTx::Finalized unless you have a specific reason to use this.
+    /// WaitForTransaction::Finalized unless you have a specific reason to use
+    /// this.
     IndexedOnNode,
     /// Indicates that the transaction has been included in a checkpoint, and
     /// all queries may include it.
@@ -157,22 +158,22 @@ impl GraphQLClient {
 
     /// Execute a transaction.
     #[uniffi::method(default(wait_for = None))]
-    pub async fn execute_tx(
+    pub async fn execute_transaction(
         &self,
         signatures: Vec<Arc<UserSignature>>,
-        tx: &Transaction,
-        wait_for: Option<WaitForTx>,
+        transaction: &Transaction,
+        wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         Ok(self
             .0
             .read()
             .await
-            .execute_tx(
+            .execute_transaction(
                 &signatures
                     .into_iter()
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
-                &tx.0,
+                &transaction.0,
                 wait_for,
             )
             .await?
@@ -182,34 +183,44 @@ impl GraphQLClient {
     /// Returns whether the transaction for the given digest has been indexed
     /// on the node. This means that it can be queried by its digest and its
     /// effects will be usable for subsequent transactions. To check for
-    /// full finalization, use `is_tx_finalized`.
+    /// full finalization, use `is_transaction_finalized`.
     #[uniffi::method]
-    pub async fn is_tx_indexed_on_node(&self, digest: &TransactionDigest) -> Result<bool> {
-        Ok(self.0.read().await.is_tx_indexed_on_node(**digest).await?)
+    pub async fn is_transaction_indexed_on_node(&self, digest: &TransactionDigest) -> Result<bool> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .is_transaction_indexed_on_node(**digest)
+            .await?)
     }
 
     /// Returns whether the transaction for the given digest has been included
     /// in a checkpoint (finalized).
     #[uniffi::method]
-    pub async fn is_tx_finalized(&self, digest: &TransactionDigest) -> Result<bool> {
-        Ok(self.0.read().await.is_tx_finalized(**digest).await?)
+    pub async fn is_transaction_finalized(&self, digest: &TransactionDigest) -> Result<bool> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .is_transaction_finalized(**digest)
+            .await?)
     }
 
     /// Wait for the indexing (on the node, not the indexer) or finalization of
     /// a transaction by its digest. An optional timeout can be provided,
     /// which, if exceeded, will return an error (default 60s).
     #[uniffi::method(default(timeout = None))]
-    pub async fn wait_for_tx(
+    pub async fn wait_for_transaction(
         &self,
         digest: &TransactionDigest,
-        wait_for: WaitForTx,
+        wait_for: WaitForTransaction,
         timeout: Option<Duration>,
     ) -> Result<()> {
         Ok(self
             .0
             .read()
             .await
-            .wait_for_tx(**digest, wait_for, timeout)
+            .wait_for_transaction(**digest, wait_for, timeout)
             .await?)
     }
 }

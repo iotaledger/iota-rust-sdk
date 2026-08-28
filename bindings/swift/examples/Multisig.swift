@@ -57,7 +57,7 @@ struct MultisigExample {
     _ = builder.sendIota(recipient: recipientAddress, amount: PtbArgument.u64(value: amount))
     let txn = try await builder.finish()
 
-    let dryRunResult = try await client.dryRunTx(tx: txn)
+    let dryRunResult = try await client.dryRunTransaction(transaction: txn)
     if dryRunResult.error != nil {
       throw NSError(
         domain: "Multisig", code: 1,
@@ -76,7 +76,7 @@ struct MultisigExample {
 
     // 9. Execute
     let userSignature = UserSignature.newMultisig(signature: aggSig)
-    let effects = try await client.executeTx(signatures: [userSignature], tx: txn)
+    let effects = try await client.executeTransaction(signatures: [userSignature], transaction: txn)
 
     print("Digest: \(hexEncode(input: effects.digest().toBytes()))")
     print("Transaction status: \(effects.asV1().status())")

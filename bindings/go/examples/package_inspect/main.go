@@ -555,7 +555,7 @@ func wasPackagePublishedAsImmutable(client *iota_sdk.GraphQlClient, packageID *i
 		}
 
 		for _, txData := range page.Data {
-			madeImmutable, err := publishesPackageAsImmutable(txData.Tx.Transaction)
+			madeImmutable, err := publishesPackageAsImmutable(txData.SignedTransaction.Transaction)
 			if err != nil {
 				return false, err
 			}
@@ -584,7 +584,7 @@ func wasUpgradeCapUsedForMakeImmutable(client *iota_sdk.GraphQlClient, upgradeCa
 		}
 
 		for _, txData := range page.Data {
-			madeImmutable, err := usesUpgradeCapForMakeImmutable(txData.Tx.Transaction, upgradeCapID)
+			madeImmutable, err := usesUpgradeCapForMakeImmutable(txData.SignedTransaction.Transaction, upgradeCapID)
 			if err != nil {
 				return false, err
 			}

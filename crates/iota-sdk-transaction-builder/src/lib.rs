@@ -302,7 +302,7 @@ pub use self::builder::client::test_client::{RecordingClient, TestClient, TestCl
 pub use self::{
     builder::{
         TransactionBuilder,
-        client::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx},
+        client::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTransaction},
         move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
         signer::TransactionSigner,

@@ -7,7 +7,7 @@ use std::{
     time::Duration,
 };
 
-use iota_sdk::graphql_client::WaitForTx;
+use iota_sdk::graphql_client::WaitForTransaction;
 
 use crate::{
     error::Result,
@@ -465,7 +465,7 @@ impl ClientTransactionBuilder {
     pub async fn execute(
         &self,
         signer: &TransactionSigner,
-        wait_for: Option<WaitForTx>,
+        wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         Ok(self
             .read(|builder| builder.clone().execute(signer, wait_for))
@@ -479,7 +479,7 @@ impl ClientTransactionBuilder {
         &self,
         signer: &TransactionSigner,
         sponsor_signer: &TransactionSigner,
-        wait_for: Option<WaitForTx>,
+        wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         Ok(self
             .read(|builder| {

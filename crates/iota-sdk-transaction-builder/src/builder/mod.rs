@@ -18,7 +18,7 @@ use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
-    PTBArgument, SharedMut, TransactionBuilderClient, WaitForTx,
+    PTBArgument, SharedMut, TransactionBuilderClient, WaitForTransaction,
     builder::{
         assigned_results::{AssignedResult, AssignedResults},
         gas_station::GasStationData,
@@ -1767,7 +1767,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         if self.data.gas_budget.is_none() {
             let budget = self
                 .client
-                .estimate_tx_budget(&txn)
+                .estimate_transaction_budget(&txn)
                 .await
                 .map_err(Error::client)?
                 .ok_or(Error::MissingGasBudget)?;
@@ -1847,7 +1847,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         }
         let res = self
             .client
-            .dry_run_tx(&txn, skip_checks)
+            .dry_run_transaction(&txn, skip_checks)
             .await
             .map_err(Error::client)?;
         Ok(res)
@@ -1859,7 +1859,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     pub async fn execute(
         mut self,
         signer: &impl TransactionSigner,
-        wait_for: impl Into<Option<WaitForTx>>,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
         let gas_station_data = self.data.gas_station_data.take();
@@ -1868,7 +1868,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         Ok(if let Some(gas_station_data) = gas_station_data {
             let digest = gas_station_data.execute_txn(&mut txn, signer).await?;
             self.client
-                .wait_for_tx(digest, WaitForTx::Finalized)
+                .wait_for_transaction(digest, WaitForTransaction::Finalized)
                 .await
                 .map_err(Error::client)?;
             self.client
@@ -1878,7 +1878,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                 .ok_or_else(|| Error::MissingTransaction(digest))?
         } else {
             self.client
-                .execute_tx(
+                .execute_transaction(
                     &[signer.sign(&txn).await.map_err(Error::signature)?],
                     &txn,
                     wait_for,
@@ -1894,7 +1894,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         mut self,
         signer: &impl TransactionSigner,
         sponsor_signer: &impl TransactionSigner,
-        wait_for: impl Into<Option<WaitForTx>>,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
@@ -1905,7 +1905,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         ];
 
         self.client
-            .execute_tx(&signatures, &txn, wait_for)
+            .execute_transaction(&signatures, &txn, wait_for)
             .await
             .map_err(Error::client)
     }

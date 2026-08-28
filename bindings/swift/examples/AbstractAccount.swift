@@ -42,7 +42,7 @@ struct AbstractAccountExample {
     let signer = TransactionSigner.fromMoveAuthenticator(
       auth: moveAuthenticator)
     let effects = try await builder.execute(
-      signer: signer, waitFor: WaitForTx.finalized)
+      signer: signer, waitFor: WaitForTransaction.finalized)
 
     print("Sending IOTA via abstract account: \(effects.asV1().status())")
   }
@@ -76,7 +76,7 @@ struct AbstractAccountExample {
     // Sign and execute the transaction (publish the package)
     let signer = TransactionSigner.fromEd25519(key: privateKey)
     let effects = try await builder.execute(
-      signer: signer, waitFor: WaitForTx.finalized)
+      signer: signer, waitFor: WaitForTransaction.finalized)
 
     print("Publishing package: \(effects.asV1().status())\n")
 
@@ -143,7 +143,7 @@ struct AbstractAccountExample {
 
     // Sign and execute the transaction (link the authenticator)
     let linkEffects = try await linkBuilder.execute(
-      signer: signer, waitFor: WaitForTx.finalized)
+      signer: signer, waitFor: WaitForTransaction.finalized)
 
     print("Linking account to authenticate method: \(linkEffects.asV1().status())\n")
 

@@ -251,7 +251,8 @@ async function wasPackagePublishedAsImmutable(client, packageId) {
       forwardPage(cursor),
     );
     for (const txData of page.data) {
-      if (publishesPackageAsImmutable(txData.tx.transaction)) return true;
+      if (publishesPackageAsImmutable(txData.signedTransaction.transaction))
+        return true;
     }
     if (page.pageInfo.hasNextPage) cursor = page.pageInfo.endCursor;
     else return false;
@@ -266,7 +267,12 @@ async function wasUpgradeCapUsedForMakeImmutable(client, upgradeCapId) {
       forwardPage(cursor),
     );
     for (const txData of page.data) {
-      if (usesUpgradeCapForMakeImmutable(txData.tx.transaction, upgradeCapId))
+      if (
+        usesUpgradeCapForMakeImmutable(
+          txData.signedTransaction.transaction,
+          upgradeCapId,
+        )
+      )
         return true;
     }
     if (page.pageInfo.hasNextPage) cursor = page.pageInfo.endCursor;
