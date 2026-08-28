@@ -19,17 +19,17 @@ impl GraphQLClient {
     /// Get the `CheckpointSummary` for a given checkpoint digest or
     /// checkpoint id. If none is provided, it will use the last known
     /// checkpoint id.
-    #[uniffi::method(default(digest = None, seq_num = None))]
+    #[uniffi::method(default(digest = None, sequence_number = None))]
     pub async fn checkpoint(
         &self,
         digest: Option<Arc<CheckpointDigest>>,
-        seq_num: Option<u64>,
+        sequence_number: Option<u64>,
     ) -> Result<Option<Arc<CheckpointSummary>>> {
         Ok(self
             .0
             .read()
             .await
-            .checkpoint(digest.map(|d| **d), seq_num)
+            .checkpoint(digest.map(|d| **d), sequence_number)
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -80,12 +80,15 @@ impl GraphQLClient {
 
     /// The total number of transaction blocks in the network by the end of the
     /// provided checkpoint sequence number.
-    pub async fn total_transaction_blocks_by_seq_num(&self, seq_num: u64) -> Result<Option<u64>> {
+    pub async fn total_transaction_blocks_by_sequence_number(
+        &self,
+        sequence_number: u64,
+    ) -> Result<Option<u64>> {
         Ok(self
             .0
             .read()
             .await
-            .total_transaction_blocks_by_seq_num(seq_num)
+            .total_transaction_blocks_by_sequence_number(sequence_number)
             .await?)
     }
 
