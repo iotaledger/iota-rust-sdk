@@ -5,11 +5,13 @@
 
 use std::sync::Arc;
 
-use iota_sdk::{graphql_client::pagination::PaginationFilter, types::CheckpointSequenceNumber};
+use iota_sdk::types::CheckpointSequenceNumber;
 
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, pagination::CheckpointSummaryPage},
+    graphql::{
+        client::GraphQLClient, pagination::CheckpointSummaryPage, query_types::PaginationFilter,
+    },
     types::{checkpoint::CheckpointSummary, digest::CheckpointDigest},
 };
 
@@ -45,7 +47,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .checkpoints(pagination_filter.unwrap_or_default())
+            .checkpoints(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())

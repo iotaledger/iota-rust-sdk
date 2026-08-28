@@ -3,23 +3,37 @@
 
 use core::str::FromStr;
 
-use iota_sdk::types::{HashingIntentScope, IntentAppId, IntentError, IntentScope, IntentVersion};
-
 /// Intent errors.
-#[uniffi::remote(Enum)]
-#[uniffi::export(Debug)]
-#[non_exhaustive]
+#[derive(Debug, derive_more::Display, uniffi::Enum)]
 pub enum IntentError {
     /// Invalid bytes for Intent
+    #[display("invalid bytes for Intent")]
     Bytes,
     /// Invalid hex string for Intent
+    #[display("invalid hex string for Intent")]
     Hex,
     /// Invalid Scope for Intent
+    #[display("invalid Scope for Intent")]
     Scope,
     /// Invalid Version for Intent
+    #[display("invalid Version for Intent")]
     Version,
     /// Invalid AppId for Intent
+    #[display("invalid AppId for Intent")]
     AppId,
+}
+
+impl From<iota_sdk::types::IntentError> for IntentError {
+    fn from(value: iota_sdk::types::IntentError) -> Self {
+        match value {
+            iota_sdk::types::IntentError::Bytes => Self::Bytes,
+            iota_sdk::types::IntentError::Hex => Self::Hex,
+            iota_sdk::types::IntentError::Scope => Self::Scope,
+            iota_sdk::types::IntentError::Version => Self::Version,
+            iota_sdk::types::IntentError::AppId => Self::AppId,
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+        }
+    }
 }
 
 /// Byte signifying the scope of an Intent
@@ -35,9 +49,7 @@ pub enum IntentError {
 /// ```text
 /// intent-scope = u8
 /// ```
-#[uniffi::remote(Enum)]
-#[uniffi::export(Debug, Eq, Hash)]
-#[non_exhaustive]
+#[derive(uniffi::Enum)]
 pub enum IntentScope {
     /// Used for a user signature on a transaction data.
     TransactionData = 0,
@@ -63,6 +75,41 @@ pub enum IntentScope {
     AuthorityCapabilities = 9,
 }
 
+impl From<iota_sdk::types::IntentScope> for IntentScope {
+    fn from(value: iota_sdk::types::IntentScope) -> Self {
+        match value {
+            iota_sdk::types::IntentScope::TransactionData => Self::TransactionData,
+            iota_sdk::types::IntentScope::TransactionEffects => Self::TransactionEffects,
+            iota_sdk::types::IntentScope::CheckpointSummary => Self::CheckpointSummary,
+            iota_sdk::types::IntentScope::PersonalMessage => Self::PersonalMessage,
+            iota_sdk::types::IntentScope::SenderSignedTransaction => Self::SenderSignedTransaction,
+            iota_sdk::types::IntentScope::ProofOfPossession => Self::ProofOfPossession,
+            iota_sdk::types::IntentScope::BridgeEventDeprecated => Self::BridgeEventDeprecated,
+            iota_sdk::types::IntentScope::ConsensusBlock => Self::ConsensusBlock,
+            iota_sdk::types::IntentScope::DiscoveryPeers => Self::DiscoveryPeers,
+            iota_sdk::types::IntentScope::AuthorityCapabilities => Self::AuthorityCapabilities,
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+        }
+    }
+}
+
+impl From<IntentScope> for iota_sdk::types::IntentScope {
+    fn from(value: IntentScope) -> Self {
+        match value {
+            IntentScope::TransactionData => Self::TransactionData,
+            IntentScope::TransactionEffects => Self::TransactionEffects,
+            IntentScope::CheckpointSummary => Self::CheckpointSummary,
+            IntentScope::PersonalMessage => Self::PersonalMessage,
+            IntentScope::SenderSignedTransaction => Self::SenderSignedTransaction,
+            IntentScope::ProofOfPossession => Self::ProofOfPossession,
+            IntentScope::BridgeEventDeprecated => Self::BridgeEventDeprecated,
+            IntentScope::ConsensusBlock => Self::ConsensusBlock,
+            IntentScope::DiscoveryPeers => Self::DiscoveryPeers,
+            IntentScope::AuthorityCapabilities => Self::AuthorityCapabilities,
+        }
+    }
+}
+
 /// Byte signifying the version of an Intent
 ///
 /// The version here is to distinguish between signing different versions of the
@@ -76,11 +123,26 @@ pub enum IntentScope {
 /// ```text
 /// intent-version = u8
 /// ```
-#[uniffi::remote(Enum)]
-#[uniffi::export(Debug, Eq, Hash)]
-#[non_exhaustive]
+#[derive(uniffi::Enum)]
 pub enum IntentVersion {
     V0 = 0,
+}
+
+impl From<iota_sdk::types::IntentVersion> for IntentVersion {
+    fn from(value: iota_sdk::types::IntentVersion) -> Self {
+        match value {
+            iota_sdk::types::IntentVersion::V0 => Self::V0,
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+        }
+    }
+}
+
+impl From<IntentVersion> for iota_sdk::types::IntentVersion {
+    fn from(value: IntentVersion) -> Self {
+        match value {
+            IntentVersion::V0 => Self::V0,
+        }
+    }
 }
 
 /// Byte signifying the application id of an Intent
@@ -98,12 +160,29 @@ pub enum IntentVersion {
 /// ```text
 /// intent-app-id = u8
 /// ```
-#[uniffi::remote(Enum)]
-#[uniffi::export(Debug, Eq, Hash)]
-#[non_exhaustive]
+#[derive(uniffi::Enum)]
 pub enum IntentAppId {
     Iota = 0,
     Consensus = 1,
+}
+
+impl From<iota_sdk::types::IntentAppId> for IntentAppId {
+    fn from(value: iota_sdk::types::IntentAppId) -> Self {
+        match value {
+            iota_sdk::types::IntentAppId::Iota => Self::Iota,
+            iota_sdk::types::IntentAppId::Consensus => Self::Consensus,
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+        }
+    }
+}
+
+impl From<IntentAppId> for iota_sdk::types::IntentAppId {
+    fn from(value: IntentAppId) -> Self {
+        match value {
+            IntentAppId::Iota => Self::Iota,
+            IntentAppId::Consensus => Self::Consensus,
+        }
+    }
 }
 
 /// A Signing Intent
@@ -134,7 +213,11 @@ impl Intent {
     /// Create a new signing intent.
     #[uniffi::constructor]
     pub fn new(scope: IntentScope, version: IntentVersion, app_id: IntentAppId) -> Self {
-        Self(iota_sdk::types::Intent::new(scope, version, app_id))
+        Self(iota_sdk::types::Intent::new(
+            scope.into(),
+            version.into(),
+            app_id.into(),
+        ))
     }
 
     /// Create a new IOTA app signing intent.
@@ -183,17 +266,17 @@ impl Intent {
 
     /// Get the scope of the signing intent.
     pub fn scope(&self) -> IntentScope {
-        self.0.scope
+        self.0.scope.into()
     }
 
     /// Get the version of the signing intent.
     pub fn version(&self) -> IntentVersion {
-        self.0.version
+        self.0.version.into()
     }
 
     /// Get the app id of the signing intent.
     pub fn app_id(&self) -> IntentAppId {
-        self.0.app_id
+        self.0.app_id.into()
     }
 
     /// Convert the signing intent to bytes.
@@ -205,12 +288,29 @@ impl Intent {
 /// A 1-byte domain separator for hashing Object ID in IOTA. It starts from
 /// 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
 /// derived as the hash of `flag || pubkey`.
-#[uniffi::remote(Enum)]
-#[uniffi::export(Eq, Debug, Hash)]
-#[non_exhaustive]
+#[derive(uniffi::Enum)]
 pub enum HashingIntentScope {
     ChildObjectId = 0xf0,
     RegularObjectId = 0xf1,
+}
+
+impl From<iota_sdk::types::HashingIntentScope> for HashingIntentScope {
+    fn from(value: iota_sdk::types::HashingIntentScope) -> Self {
+        match value {
+            iota_sdk::types::HashingIntentScope::ChildObjectId => Self::ChildObjectId,
+            iota_sdk::types::HashingIntentScope::RegularObjectId => Self::RegularObjectId,
+            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+        }
+    }
+}
+
+impl From<HashingIntentScope> for iota_sdk::types::HashingIntentScope {
+    fn from(value: HashingIntentScope) -> Self {
+        match value {
+            HashingIntentScope::ChildObjectId => Self::ChildObjectId,
+            HashingIntentScope::RegularObjectId => Self::RegularObjectId,
+        }
+    }
 }
 
 /// A personal message that wraps around a byte array.
