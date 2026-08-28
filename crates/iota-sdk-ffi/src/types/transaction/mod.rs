@@ -1811,7 +1811,9 @@ impl From<iota_sdk::types::TransactionExpiration> for TransactionExpiration {
         match value {
             iota_sdk::types::TransactionExpiration::None => Self::None,
             iota_sdk::types::TransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
-            _ => unimplemented!("a new TransactionExpiration variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new TransactionExpiration variant was added and needs to be handled"
+            ),
         }
     }
 }

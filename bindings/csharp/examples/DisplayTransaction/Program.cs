@@ -1,9 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// This example demonstrates how to print types as human-readable text.
-// Most types offer a `ToDisplayString()` method; types mirrored from the core
-// crate offer a `<Type>ToDisplayString()` function instead.
+// This example demonstrates how to print types as human-readable text
+// with the `ToDisplayString()` method.
 
 using IotaSdk;
 
@@ -18,7 +17,5 @@ class Program
         Console.WriteLine(transaction.ToDisplayString());
 
         Console.WriteLine(transaction.GasPayment().ToDisplayString());
-
-        Console.WriteLine(Iota.TransactionExpirationToDisplayString(transaction.Expiration()));
     }
 }
