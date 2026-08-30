@@ -328,84 +328,84 @@ impl SimpleSignature {
         self.0.is_ed25519()
     }
 
-    pub fn ed25519_sig_opt(&self) -> Option<Arc<Ed25519Signature>> {
+    pub fn ed25519_signature_opt(&self) -> Option<Arc<Ed25519Signature>> {
         self.0
-            .as_ed25519_sig_opt()
+            .as_ed25519_signature_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn ed25519_sig(&self) -> Ed25519Signature {
-        (*self.0.as_ed25519_sig()).into()
+    pub fn ed25519_signature(&self) -> Ed25519Signature {
+        (*self.0.as_ed25519_signature()).into()
     }
 
-    pub fn ed25519_pub_key_opt(&self) -> Option<Arc<Ed25519PublicKey>> {
+    pub fn ed25519_public_key_opt(&self) -> Option<Arc<Ed25519PublicKey>> {
         self.0
-            .as_ed25519_pub_key_opt()
+            .as_ed25519_public_key_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn ed25519_pub_key(&self) -> Ed25519PublicKey {
-        (*self.0.as_ed25519_pub_key()).into()
+    pub fn ed25519_public_key(&self) -> Ed25519PublicKey {
+        (*self.0.as_ed25519_public_key()).into()
     }
 
     pub fn is_secp256k1(&self) -> bool {
         self.0.is_secp256k1()
     }
 
-    pub fn secp256k1_sig_opt(&self) -> Option<Arc<Secp256k1Signature>> {
+    pub fn secp256k1_signature_opt(&self) -> Option<Arc<Secp256k1Signature>> {
         self.0
-            .as_secp256k1_sig_opt()
+            .as_secp256k1_signature_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn secp256k1_sig(&self) -> Secp256k1Signature {
-        (*self.0.as_secp256k1_sig()).into()
+    pub fn secp256k1_signature(&self) -> Secp256k1Signature {
+        (*self.0.as_secp256k1_signature()).into()
     }
 
-    pub fn secp256k1_pub_key_opt(&self) -> Option<Arc<Secp256k1PublicKey>> {
+    pub fn secp256k1_public_key_opt(&self) -> Option<Arc<Secp256k1PublicKey>> {
         self.0
-            .as_secp256k1_pub_key_opt()
+            .as_secp256k1_public_key_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn secp256k1_pub_key(&self) -> Secp256k1PublicKey {
-        (*self.0.as_secp256k1_pub_key()).into()
+    pub fn secp256k1_public_key(&self) -> Secp256k1PublicKey {
+        (*self.0.as_secp256k1_public_key()).into()
     }
 
     pub fn is_secp256r1(&self) -> bool {
         self.0.is_secp256r1()
     }
 
-    pub fn secp256r1_sig_opt(&self) -> Option<Arc<Secp256r1Signature>> {
+    pub fn secp256r1_signature_opt(&self) -> Option<Arc<Secp256r1Signature>> {
         self.0
-            .as_secp256r1_sig_opt()
+            .as_secp256r1_signature_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn secp256r1_sig(&self) -> Secp256r1Signature {
-        (*self.0.as_secp256r1_sig()).into()
+    pub fn secp256r1_signature(&self) -> Secp256r1Signature {
+        (*self.0.as_secp256r1_signature()).into()
     }
 
-    pub fn secp256r1_pub_key_opt(&self) -> Option<Arc<Secp256r1PublicKey>> {
+    pub fn secp256r1_public_key_opt(&self) -> Option<Arc<Secp256r1PublicKey>> {
         self.0
-            .as_secp256r1_pub_key_opt()
+            .as_secp256r1_public_key_opt()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn secp256r1_pub_key(&self) -> Secp256r1PublicKey {
-        (*self.0.as_secp256r1_pub_key()).into()
+    pub fn secp256r1_public_key(&self) -> Secp256r1PublicKey {
+        (*self.0.as_secp256r1_public_key()).into()
     }
 }
 
