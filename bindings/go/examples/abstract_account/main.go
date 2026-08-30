@@ -107,7 +107,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 
 			if objPtr != nil {
 				obj := *objPtr
-				if obj.AsStructOpt() != nil {
+				if obj.AsOptStruct() != nil {
 					typeName := obj.AsStruct().StructType.Name().String()
 					if typeName == "PackageMetadataV1" {
 						packageMetadataId = objectId

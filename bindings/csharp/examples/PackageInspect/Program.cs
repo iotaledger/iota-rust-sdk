@@ -344,7 +344,7 @@ class Program
 
                 var obj = await client.Object(changedObj.ObjectId, effectsV1.LamportVersion());
                 if (
-                    obj?.AsStructOpt()?.StructType?.Equals(StructTag.NewUpgradeCap()) == true
+                    obj?.AsOptStruct()?.StructType?.Equals(StructTag.NewUpgradeCap()) == true
                 )
                 {
                     return changedObj.ObjectId;

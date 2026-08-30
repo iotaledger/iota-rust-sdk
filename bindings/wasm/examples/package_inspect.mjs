@@ -136,7 +136,7 @@ async function resolveUpgradeCapId(client, packageId) {
         changedObj.objectId,
         effectsV1.lamportVersion(),
       );
-      if (obj !== null && obj.asStructOpt() !== null) {
+      if (obj !== null && obj.asOptStruct() !== null) {
         if (
           obj.asStruct().structType.eq?.(StructTag.newUpgradeCap()) ??
           false

@@ -235,7 +235,7 @@ async def resolve_upgrade_cap_id(client, package_id):
 
             obj = await client.object(changed_obj.object_id,
                                       effects_v1.lamport_version())
-            if obj is not None and obj.as_struct_opt() is not None:
+            if obj is not None and obj.as_opt_struct() is not None:
                 if obj.as_struct().struct_type == StructTag.new_upgrade_cap():
                     return changed_obj.object_id
 

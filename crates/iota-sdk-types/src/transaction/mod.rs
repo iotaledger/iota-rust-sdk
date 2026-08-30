@@ -1519,7 +1519,7 @@ impl Input {
     /// Returns the object id referenced by this input, if any.
     ///
     /// Returns `None` for `Pure` inputs.
-    pub fn object_id_opt(&self) -> Option<&ObjectId> {
+    pub fn opt_object_id(&self) -> Option<&ObjectId> {
         match self {
             Self::Pure { .. } => None,
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(&obj_ref.object_id),
@@ -1537,17 +1537,9 @@ impl Input {
 
     /// Returns the [`ObjectReference`] if this is an `ImmutableOrOwned` or
     /// `Receiving` input.
-    pub fn as_object_ref_opt(&self) -> Option<&ObjectReference> {
+    pub fn as_opt_object_ref(&self) -> Option<&ObjectReference> {
         match self {
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(obj_ref),
-            _ => None,
-        }
-    }
-
-    /// Returns the pure value bytes if this is a `Pure` input.
-    pub fn as_pure_value_opt(&self) -> Option<&[u8]> {
-        match self {
-            Self::Pure(value) => Some(value),
             _ => None,
         }
     }
@@ -2036,7 +2028,7 @@ impl std::fmt::Display for Argument {
 impl Argument {
     crate::def_is!(Gas, Input, Result, NestedResult);
 
-    pub fn as_input_opt(&self) -> Option<u16> {
+    pub fn as_opt_input(&self) -> Option<u16> {
         if let Self::Input(idx) = self {
             Some(*idx)
         } else {
@@ -2045,10 +2037,10 @@ impl Argument {
     }
 
     pub fn as_input(&self) -> u16 {
-        self.as_input_opt().expect("not an input")
+        self.as_opt_input().expect("not an input")
     }
 
-    pub fn as_result_opt(&self) -> Option<u16> {
+    pub fn as_opt_result(&self) -> Option<u16> {
         if let Self::Result(idx) = self {
             Some(*idx)
         } else {
@@ -2057,10 +2049,10 @@ impl Argument {
     }
 
     pub fn as_result(&self) -> u16 {
-        self.as_result_opt().expect("not a result")
+        self.as_opt_result().expect("not a result")
     }
 
-    pub fn as_nested_result_opt(&self) -> Option<(u16, u16)> {
+    pub fn as_opt_nested_result(&self) -> Option<(u16, u16)> {
         if let Self::NestedResult(idx0, idx1) = self {
             Some((*idx0, *idx1))
         } else {
@@ -2069,7 +2061,7 @@ impl Argument {
     }
 
     pub fn as_nested_result(&self) -> (u16, u16) {
-        self.as_nested_result_opt().expect("not a nested result")
+        self.as_opt_nested_result().expect("not a nested result")
     }
 
     /// Get the nested result for this result at the given index. Returns None

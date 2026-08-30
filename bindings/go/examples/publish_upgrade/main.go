@@ -116,7 +116,7 @@ func main() {
 				log.Fatalf("Failed to get object: %v", err)
 			}
 			obj := *objPtr
-			if obj.AsStructOpt() != nil {
+			if obj.AsOptStruct() != nil {
 				upgradeCapType := iota_sdk.StructTagNewUpgradeCap()
 				if obj.AsStruct().StructType.Eq(upgradeCapType) {
 					fmt.Printf("UpgradeCap: %s\n", objectId.ToHex())

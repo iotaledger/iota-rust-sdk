@@ -276,8 +276,8 @@ impl Object {
     }
 
     /// Try to interpret this object as a move struct
-    pub fn as_struct_opt(&self) -> Option<MoveStruct> {
-        self.0.as_struct_opt().cloned().map(Into::into)
+    pub fn as_opt_struct(&self) -> Option<MoveStruct> {
+        self.0.as_opt_struct().cloned().map(Into::into)
     }
 
     /// Interpret this object as a move struct
@@ -286,9 +286,9 @@ impl Object {
     }
 
     /// Try to interpret this object as a move package
-    pub fn as_package_opt(&self) -> Option<Arc<MovePackage>> {
+    pub fn as_opt_package(&self) -> Option<Arc<MovePackage>> {
         self.0
-            .as_package_opt()
+            .as_opt_package()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
