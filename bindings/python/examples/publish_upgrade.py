@@ -67,7 +67,7 @@ async def main():
 
     # Perform a dry-run first to check if everything is correct
     print("> Publishing package (dry run):")
-    result = await client.dry_run_tx(tx, False)
+    result = await client.dry_run_transaction(tx, False)
     if result.error is not None:
         raise Exception(f"Dry run failed: {result.error}")
     if result.effects is None:
@@ -77,7 +77,8 @@ async def main():
     # Sign and execute the transaction (publish the package)
     print("> Publishing package:")
     sig = private_key.sign_transaction(tx)
-    effects = await client.execute_tx([sig], tx, WaitForTx.FINALIZED)
+    effects = await client.execute_transaction([sig], tx,
+                                               WaitForTransaction.FINALIZED)
     print("Success")
 
     # Resolve UpgradeCap and PackageId via the client
@@ -147,7 +148,7 @@ async def main():
 
     # Perform a dry-run first to check if everything is correct
     print("> Upgrading package (dry run):")
-    result = await client.dry_run_tx(tx, False)
+    result = await client.dry_run_transaction(tx, False)
     if result.error is not None:
         raise Exception(f"Dry run failed: {result.error}")
     if result.effects is None:
@@ -157,7 +158,7 @@ async def main():
     # Sign and execute the transaction (upgrade the package)
     print("> Upgrading package:")
     sig = private_key.sign_transaction(tx)
-    effects = await client.execute_tx([sig], tx)
+    effects = await client.execute_transaction([sig], tx)
     print("Success")
 
     # Print the new package version (should now be 2)

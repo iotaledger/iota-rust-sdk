@@ -13,7 +13,7 @@ import {
   PtbArgument,
   TransactionSigner,
   initAsync,
-  WaitForTx,
+  WaitForTransaction,
 } from "@iota/sdk-wasm";
 
 await initAsync();
@@ -47,7 +47,7 @@ async function setupAccount(client) {
 
   // Sign and execute the transaction (publish the package)
   const signer = TransactionSigner.fromEd25519(privateKey);
-  let effects = await builder.execute(signer, WaitForTx.Finalized);
+  let effects = await builder.execute(signer, WaitForTransaction.Finalized);
 
   console.log(`Publishing package: ${effects.asV1().status()}\n`);
 
@@ -98,7 +98,7 @@ async function setupAccount(client) {
   );
 
   // Sign and execute the transaction (link the authenticator)
-  effects = await builder.execute(signer, WaitForTx.Finalized);
+  effects = await builder.execute(signer, WaitForTransaction.Finalized);
   console.log(
     `Linking account to authenticate method: ${effects.asV1().status()}\n`,
   );
@@ -133,6 +133,6 @@ const moveAuthenticator = await new MoveAuthenticatorBuilder(
 ).finish(client);
 
 const signer = TransactionSigner.fromMoveAuthenticator(moveAuthenticator);
-const effects = await builder.execute(signer, WaitForTx.Finalized);
+const effects = await builder.execute(signer, WaitForTransaction.Finalized);
 
 console.log(`Sending IOTA via abstract account: ${effects.asV1().status()}`);
