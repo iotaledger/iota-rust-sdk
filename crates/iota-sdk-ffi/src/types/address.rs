@@ -202,3 +202,4 @@ named_address!(
 
 crate::export_iota_types_objects_bcs_conversion!(Address);
 crate::export_iota_types_objects_json_conversion!(Address);
+crate::export_iota_types_objects_display!(Address);

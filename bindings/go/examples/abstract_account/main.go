@@ -46,7 +46,7 @@ func main() {
 	}
 
 	signer := iota_sdk.TransactionSignerFromMoveAuthenticator(moveAuthenticator)
-	waitFor := iota_sdk.WaitForTxFinalized
+	waitFor := iota_sdk.WaitForTransactionFinalized
 	effects, err := builder.Execute(signer, &waitFor)
 	if err != nil {
 		log.Fatalf("Failed to execute transaction: %v", err)
@@ -82,7 +82,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 
 	// Sign and execute the transaction (publish the package)
 	signer := iota_sdk.TransactionSignerFromEd25519(privateKey)
-	waitFor := iota_sdk.WaitForTxFinalized
+	waitFor := iota_sdk.WaitForTransactionFinalized
 	effects, err := builder.Execute(signer, &waitFor)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute transaction: %w", err)
@@ -107,7 +107,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 
 			if objPtr != nil {
 				obj := *objPtr
-				if obj.AsStructOpt() != nil {
+				if obj.AsOptStruct() != nil {
 					typeName := obj.AsStruct().StructType.Name().String()
 					if typeName == "PackageMetadataV1" {
 						packageMetadataId = objectId

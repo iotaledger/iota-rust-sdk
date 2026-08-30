@@ -31,7 +31,7 @@ impl Coin {
             super::ObjectData::Struct(move_struct) => {
                 let coin_type = move_struct
                     .object_type()
-                    .coin_type_opt()
+                    .opt_coin_type()
                     .ok_or(CoinFromObjectError::NotACoin)?;
 
                 let contents = move_struct.contents();

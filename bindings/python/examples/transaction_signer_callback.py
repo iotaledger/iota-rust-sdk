@@ -36,7 +36,7 @@ async def main():
     builder.send_iota(recipient_address, PtbArgument.u64(amount))
 
     signer = TransactionSigner(AsyncSigner(private_key))
-    effects = await builder.execute(signer, WaitForTx.FINALIZED)
+    effects = await builder.execute(signer, WaitForTransaction.FINALIZED)
 
     print(f"Digest: {hex_encode(effects.digest().to_bytes())}")
     print(f"Transaction status: {effects.as_v1().status()}")

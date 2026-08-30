@@ -1,17 +1,14 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::{
-    crypto::{FromMnemonic, ToFromBech32, ToFromBytes},
-    types::SignatureScheme,
-};
+use iota_sdk::crypto::{FromMnemonic, ToFromBech32, ToFromBytes};
 use rand::rngs::OsRng;
 
 use crate::{
     error::{Result, SdkFfiError},
     types::{
         crypto::{Ed25519PublicKey, Ed25519Signature, intent::PersonalMessage},
-        signature::{SimpleSignature, UserSignature},
+        signature::{SignatureScheme, SimpleSignature, UserSignature},
     },
 };
 
@@ -31,7 +28,7 @@ impl Ed25519PrivateKey {
     }
 
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     pub fn verifying_key(&self) -> Ed25519VerifyingKey {

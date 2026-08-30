@@ -40,7 +40,7 @@ class Program
         var tx = await builder.Finish();
 
         Console.WriteLine("> Publishing package (dry run):");
-        var result = await client.DryRunTx(tx);
+        var result = await client.DryRunTransaction(tx);
         if (result.Error != null)
             throw new Exception($"Dry run failed: {result.Error}");
         if (result.Effects == null)
@@ -49,7 +49,7 @@ class Program
 
         Console.WriteLine("> Publishing package:");
         var sig = privateKey.SignTransaction(tx);
-        var effects = await client.ExecuteTx(new[] { sig }, tx, WaitForTx.Finalized);
+        var effects = await client.ExecuteTransaction(new[] { sig }, tx, WaitForTransaction.Finalized);
         Console.WriteLine("Success");
 
         ObjectId? upgradeCap = null;
@@ -115,7 +115,7 @@ class Program
         tx = await builder.Finish();
 
         Console.WriteLine("> Upgrading package (dry run):");
-        result = await client.DryRunTx(tx);
+        result = await client.DryRunTransaction(tx);
         if (result.Error != null)
             throw new Exception($"Dry run failed: {result.Error}");
         if (result.Effects == null)
@@ -124,7 +124,7 @@ class Program
 
         Console.WriteLine("> Upgrading package:");
         sig = privateKey.SignTransaction(tx);
-        effects = await client.ExecuteTx(new[] { sig }, tx);
+        effects = await client.ExecuteTransaction(new[] { sig }, tx);
         Console.WriteLine("Success");
 
         foreach (var changedObj in effects.AsV1().ChangedObjects())
