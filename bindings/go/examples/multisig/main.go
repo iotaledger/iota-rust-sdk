@@ -79,7 +79,7 @@ func main() {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
-	dryRunResult, err := client.DryRunTx(txn, false)
+	dryRunResult, err := client.DryRunTransaction(txn, false)
 	if err != nil {
 		log.Fatalf("Failed to dry run: %v", err)
 	}
@@ -112,7 +112,7 @@ func main() {
 
 	// 9. Execute
 	userSignature := iota_sdk.UserSignatureNewMultisig(aggSig)
-	effects, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSignature}, txn, nil)
+	effects, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{userSignature}, txn, nil)
 	if err != nil {
 		log.Fatalf("Failed to execute: %v", err)
 	}

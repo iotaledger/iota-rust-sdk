@@ -348,7 +348,8 @@ async def was_package_published_as_immutable(client, package_id):
         )
 
         for tx_data in page.data:
-            if publishes_package_as_immutable(tx_data.tx.transaction):
+            if publishes_package_as_immutable(
+                    tx_data.signed_transaction.transaction):
                 return True
 
         if page.page_info.has_next_page:
@@ -367,8 +368,8 @@ async def was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id):
         )
 
         for tx_data in page.data:
-            if uses_upgrade_cap_for_make_immutable(tx_data.tx.transaction,
-                                                   upgrade_cap_id):
+            if uses_upgrade_cap_for_make_immutable(
+                    tx_data.signed_transaction.transaction, upgrade_cap_id):
                 return True
 
         if page.page_info.has_next_page:
