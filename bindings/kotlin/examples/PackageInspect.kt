@@ -373,7 +373,7 @@ private suspend fun wasPackagePublishedAsImmutable(
             )
 
         for (txData in page.data) {
-            if (publishesPackageAsImmutable(txData.tx.transaction)) {
+            if (publishesPackageAsImmutable(txData.signedTransaction.transaction)) {
                 return true
             }
         }
@@ -400,7 +400,9 @@ private suspend fun wasUpgradeCapUsedForMakeImmutable(
             )
 
         for (txData in page.data) {
-            if (usesUpgradeCapForMakeImmutable(txData.tx.transaction, upgradeCapId)) {
+            if (
+                usesUpgradeCapForMakeImmutable(txData.signedTransaction.transaction, upgradeCapId)
+            ) {
                 return true
             }
         }

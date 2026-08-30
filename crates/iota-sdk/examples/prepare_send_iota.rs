@@ -24,7 +24,7 @@ async fn main() -> Result<()> {
     println!("Signing Digest: {}", txn.signing_digest_hex());
     println!("Txn Bytes: {}", txn.to_base64());
 
-    let res = client.dry_run_tx(&txn, false).await?;
+    let res = client.dry_run_transaction(&txn, false).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to send IOTA: {err}");

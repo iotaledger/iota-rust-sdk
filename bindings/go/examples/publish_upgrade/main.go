@@ -80,7 +80,7 @@ func main() {
 
 	// Perform a dry-run first to check if everything is correct
 	fmt.Println("> Publishing package (dry run):")
-	resultPublish, err := client.DryRunTx(txPublish, false)
+	resultPublish, err := client.DryRunTransaction(txPublish, false)
 	if err != nil {
 		log.Fatalf("Dry run failed: %v", err)
 	}
@@ -98,8 +98,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	waitFor := iota_sdk.WaitForTxFinalized
-	effectsPublish, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSigPublish}, txPublish, &waitFor)
+	waitFor := iota_sdk.WaitForTransactionFinalized
+	effectsPublish, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{userSigPublish}, txPublish, &waitFor)
 	if err != nil {
 		log.Fatalf("Transaction failed: %v", err)
 	}
@@ -180,7 +180,7 @@ func main() {
 
 	// Perform a dry-run first to check if everything is correct
 	fmt.Println("> Upgrading package (dry run):")
-	resultUpgrade, err := client.DryRunTx(txUpgrade, false)
+	resultUpgrade, err := client.DryRunTransaction(txUpgrade, false)
 	if err != nil {
 		log.Fatalf("Dry run failed: %v", err)
 	}
@@ -198,7 +198,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	effectsUpgrade, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSigUpgrade}, txUpgrade, nil)
+	effectsUpgrade, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{userSigUpgrade}, txUpgrade, nil)
 	if err != nil {
 		log.Fatalf("Transaction failed: %v", err)
 	}

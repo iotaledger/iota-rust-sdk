@@ -605,33 +605,33 @@ impl TransactionKind {
     }
 
     /// Create a [`TransactionKind::Programmable`].
-    pub fn new_programmable(tx: ProgrammableTransaction) -> Self {
-        Self::Programmable(tx)
+    pub fn new_programmable(transaction: ProgrammableTransaction) -> Self {
+        Self::Programmable(transaction)
     }
 
     /// Create a [`TransactionKind::Genesis`].
-    pub fn new_genesis(tx: GenesisTransaction) -> Self {
-        Self::Genesis(tx)
+    pub fn new_genesis(transaction: GenesisTransaction) -> Self {
+        Self::Genesis(transaction)
     }
 
     /// Create a [`TransactionKind::ConsensusCommitPrologueV1`].
-    pub fn new_consensus_commit_prologue_v1(tx: ConsensusCommitPrologueV1) -> Self {
-        Self::ConsensusCommitPrologueV1(tx)
+    pub fn new_consensus_commit_prologue_v1(transaction: ConsensusCommitPrologueV1) -> Self {
+        Self::ConsensusCommitPrologueV1(transaction)
     }
 
     /// Create a [`TransactionKind::EndOfEpoch`].
-    pub fn new_end_of_epoch(tx: Vec<EndOfEpochTransactionKind>) -> Self {
-        Self::EndOfEpoch(tx)
+    pub fn new_end_of_epoch(transaction: Vec<EndOfEpochTransactionKind>) -> Self {
+        Self::EndOfEpoch(transaction)
     }
 
     /// Create a [`TransactionKind::RandomnessStateUpdate`].
-    pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
-        Self::RandomnessStateUpdate(tx)
+    pub fn new_randomness_state_update(transaction: RandomnessStateUpdate) -> Self {
+        Self::RandomnessStateUpdate(transaction)
     }
 
     /// Create a [`TransactionKind::TransactionDenyRulesUpdate`].
-    pub fn new_transaction_deny_rules_update(tx: TransactionDenyRulesUpdate) -> Self {
-        Self::TransactionDenyRulesUpdate(tx)
+    pub fn new_transaction_deny_rules_update(transaction: TransactionDenyRulesUpdate) -> Self {
+        Self::TransactionDenyRulesUpdate(transaction)
     }
 
     /// Returns `true` if this is a system transaction.

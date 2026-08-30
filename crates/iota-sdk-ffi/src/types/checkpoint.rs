@@ -3,13 +3,12 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::GasCostSummary;
-
 use crate::types::{
     digest::{
         CheckpointContentsDigest, CheckpointDigest, Digest, TransactionDigest,
         TransactionEffectsDigest,
     },
+    gas::GasCostSummary,
     signature::UserSignature,
     validator::ValidatorCommitteeMember,
 };
@@ -84,7 +83,7 @@ impl CheckpointSummary {
             network_total_transactions,
             **contents_digest,
             previous_digest.map(|v| **v),
-            epoch_rolling_gas_cost_summary,
+            epoch_rolling_gas_cost_summary.into(),
             timestamp_ms,
             checkpoint_commitments
                 .into_iter()
@@ -126,7 +125,7 @@ impl CheckpointSummary {
     /// The running total gas costs of all transactions included in the current
     /// epoch so far until this checkpoint.
     pub fn epoch_rolling_gas_cost_summary(&self) -> GasCostSummary {
-        self.0.epoch_rolling_gas_cost_summary.clone()
+        self.0.epoch_rolling_gas_cost_summary.clone().into()
     }
 
     /// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
@@ -416,6 +415,14 @@ crate::export_iota_types_objects_bcs_conversion!(
 );
 crate::export_iota_types_json_conversion!(EndOfEpochData);
 crate::export_iota_types_objects_json_conversion!(
+    CheckpointSummary,
+    CheckpointContents,
+    CheckpointContentsV1,
+    CheckpointTransactionInfo,
+    CheckpointCommitment
+);
+crate::export_iota_types_display!(EndOfEpochData);
+crate::export_iota_types_objects_display!(
     CheckpointSummary,
     CheckpointContents,
     CheckpointContentsV1,

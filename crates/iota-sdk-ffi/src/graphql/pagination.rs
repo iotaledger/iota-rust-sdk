@@ -1,11 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::graphql_client::query_types::PageInfo;
-
 use crate::{
     graphql::query_types::{
-        DynamicFieldOutput, Epoch, GraphQLEvent, TransactionDataEffects, Validator,
+        DynamicFieldOutput, Epoch, GraphQLEvent, PageInfo, TransactionDataEffects, Validator,
     },
     types::{
         checkpoint::CheckpointSummary,

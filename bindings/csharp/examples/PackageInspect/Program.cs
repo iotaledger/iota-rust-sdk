@@ -534,7 +534,7 @@ class Program
 
             foreach (var txData in page.Data)
             {
-                if (PublishesPackageAsImmutable(txData.Tx.Transaction))
+                if (PublishesPackageAsImmutable(txData.SignedTransaction.Transaction))
                 {
                     return true;
                 }
@@ -565,7 +565,7 @@ class Program
 
             foreach (var txData in page.Data)
             {
-                if (UsesUpgradeCapForMakeImmutable(txData.Tx.Transaction, upgradeCapId))
+                if (UsesUpgradeCapForMakeImmutable(txData.SignedTransaction.Transaction, upgradeCapId))
                 {
                     return true;
                 }

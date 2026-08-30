@@ -441,7 +441,7 @@ async fn was_package_published_as_immutable(client: &Client, package_id: ObjectI
         if page
             .data
             .iter()
-            .any(|tx_data| publishes_package_as_immutable(&tx_data.tx.transaction))
+            .any(|tx_data| publishes_package_as_immutable(&tx_data.signed_transaction.transaction))
         {
             return Ok(true);
         }
@@ -469,7 +469,10 @@ async fn was_upgrade_cap_used_for_make_immutable(
             .await?;
 
         if page.data.iter().any(|tx_data| {
-            uses_upgrade_cap_for_make_immutable(&tx_data.tx.transaction, upgrade_cap_id)
+            uses_upgrade_cap_for_make_immutable(
+                &tx_data.signed_transaction.transaction,
+                upgrade_cap_id,
+            )
         }) {
             return Ok(true);
         }

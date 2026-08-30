@@ -5,11 +5,13 @@
 
 use std::sync::Arc;
 
-use iota_sdk::graphql_client::pagination::PaginationFilter;
-
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, pagination::CoinPage, query_types::CoinMetadata},
+    graphql::{
+        client::GraphQLClient,
+        pagination::CoinPage,
+        query_types::{CoinMetadata, PaginationFilter},
+    },
     types::{address::Address, move_core::StructTag},
 };
 
@@ -34,7 +36,7 @@ impl GraphQLClient {
             .coins(
                 **owner,
                 coin_type.map(|t| t.0.clone()),
-                pagination_filter.unwrap_or_default(),
+                pagination_filter.map(Into::into).unwrap_or_default(),
             )
             .await?
             .map(Into::into)
@@ -52,7 +54,10 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .gas_coins(**owner, pagination_filter.unwrap_or_default())
+            .gas_coins(
+                **owner,
+                pagination_filter.map(Into::into).unwrap_or_default(),
+            )
             .await?
             .map(Into::into)
             .into())
