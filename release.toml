@@ -1,3 +1,4 @@
+consolidate-commits = false
 enable-all-features = true
 pre-release-hook = [
   "sh",
