@@ -7,7 +7,7 @@ use crate::{
     error::Result,
     types::{
         address::Address,
-        digest::{ObjectDigest, TransactionDigest},
+        digest::{Digest, ObjectDigest, TransactionDigest},
         move_core::{Identifier, StructTag, TypeTag},
         version::Version,
     },
@@ -552,6 +552,21 @@ impl MovePackage {
             .iter()
             .map(|(k, v)| (Arc::new((*k).into()), v.clone().into()))
             .collect()
+    }
+
+    /// Calculate the digest of the MovePackage.
+    pub fn digest(&self) -> Digest {
+        self.0.digest().into()
+    }
+
+    /// Retrieve the module from this package with the given Identifier.
+    pub fn module(&self, name: &Identifier) -> Option<Vec<u8>> {
+        self.0.modules.get(&name.0).cloned()
+    }
+
+    /// Return the size of the package in bytes
+    pub fn size(&self) -> u64 {
+        self.0.size() as _
     }
 }
 
