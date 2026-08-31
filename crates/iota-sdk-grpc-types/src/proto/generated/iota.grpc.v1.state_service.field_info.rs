@@ -7,34 +7,6 @@ mod _field_impls {
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::coin::CoinMetadata;
-    #[allow(unused_imports)]
-    use crate::v1::coin::CoinMetadataFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::coin::CoinTreasury;
-    #[allow(unused_imports)]
-    use crate::v1::coin::CoinTreasuryFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::coin::RegulatedCoinMetadata;
-    #[allow(unused_imports)]
-    use crate::v1::coin::RegulatedCoinMetadataFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::dynamic_field::DynamicField;
-    #[allow(unused_imports)]
-    use crate::v1::dynamic_field::DynamicFieldFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::object::Object;
-    #[allow(unused_imports)]
-    use crate::v1::object::ObjectFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::Address;
-    #[allow(unused_imports)]
-    use crate::v1::types::AddressFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectId;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectIdFieldPathBuilder;
     impl ListDynamicFieldsRequest {
         pub const PARENT_FIELD: &'static MessageField = &MessageField {
             name: "parent",
@@ -42,7 +14,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const PAGE_SIZE_FIELD: &'static MessageField = &MessageField {
             name: "page_size",
@@ -106,9 +78,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn parent(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn parent(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(ListDynamicFieldsRequest::PARENT_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn page_size(mut self) -> String {
             self.path.push(ListDynamicFieldsRequest::PAGE_SIZE_FIELD.name);
@@ -134,7 +106,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(DynamicField::FIELDS),
+            message_fields: Some(crate::v1::dynamic_field::DynamicField::FIELDS),
         };
         pub const NEXT_PAGE_TOKEN_FIELD: &'static MessageField = &MessageField {
             name: "next_page_token",
@@ -171,9 +143,13 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn dynamic_fields(mut self) -> DynamicFieldFieldPathBuilder {
+        pub fn dynamic_fields(
+            mut self,
+        ) -> crate::v1::dynamic_field::DynamicFieldFieldPathBuilder {
             self.path.push(ListDynamicFieldsResponse::DYNAMIC_FIELDS_FIELD.name);
-            DynamicFieldFieldPathBuilder::new_with_base(self.path)
+            crate::v1::dynamic_field::DynamicFieldFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
         pub fn next_page_token(mut self) -> String {
             self.path.push(ListDynamicFieldsResponse::NEXT_PAGE_TOKEN_FIELD.name);
@@ -187,7 +163,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Address::FIELDS),
+            message_fields: Some(crate::v1::types::Address::FIELDS),
         };
         pub const PAGE_SIZE_FIELD: &'static MessageField = &MessageField {
             name: "page_size",
@@ -260,9 +236,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn owner(mut self) -> AddressFieldPathBuilder {
+        pub fn owner(mut self) -> crate::v1::types::AddressFieldPathBuilder {
             self.path.push(ListOwnedObjectsRequest::OWNER_FIELD.name);
-            AddressFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::AddressFieldPathBuilder::new_with_base(self.path)
         }
         pub fn page_size(mut self) -> String {
             self.path.push(ListOwnedObjectsRequest::PAGE_SIZE_FIELD.name);
@@ -292,7 +268,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(Object::FIELDS),
+            message_fields: Some(crate::v1::object::Object::FIELDS),
         };
         pub const NEXT_PAGE_TOKEN_FIELD: &'static MessageField = &MessageField {
             name: "next_page_token",
@@ -329,9 +305,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn objects(mut self) -> ObjectFieldPathBuilder {
+        pub fn objects(mut self) -> crate::v1::object::ObjectFieldPathBuilder {
             self.path.push(ListOwnedObjectsResponse::OBJECTS_FIELD.name);
-            ObjectFieldPathBuilder::new_with_base(self.path)
+            crate::v1::object::ObjectFieldPathBuilder::new_with_base(self.path)
         }
         pub fn next_page_token(mut self) -> String {
             self.path.push(ListOwnedObjectsResponse::NEXT_PAGE_TOKEN_FIELD.name);
@@ -391,7 +367,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(CoinMetadata::FIELDS),
+            message_fields: Some(crate::v1::coin::CoinMetadata::FIELDS),
         };
         pub const TREASURY_FIELD: &'static MessageField = &MessageField {
             name: "treasury",
@@ -399,7 +375,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(CoinTreasury::FIELDS),
+            message_fields: Some(crate::v1::coin::CoinTreasury::FIELDS),
         };
         pub const REGULATED_METADATA_FIELD: &'static MessageField = &MessageField {
             name: "regulated_metadata",
@@ -407,7 +383,7 @@ mod _field_impls {
             number: 4i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(RegulatedCoinMetadata::FIELDS),
+            message_fields: Some(crate::v1::coin::RegulatedCoinMetadata::FIELDS),
         };
     }
     impl MessageFields for GetCoinInfoResponse {
@@ -442,17 +418,21 @@ mod _field_impls {
             self.path.push(GetCoinInfoResponse::COIN_TYPE_FIELD.name);
             self.finish()
         }
-        pub fn metadata(mut self) -> CoinMetadataFieldPathBuilder {
+        pub fn metadata(mut self) -> crate::v1::coin::CoinMetadataFieldPathBuilder {
             self.path.push(GetCoinInfoResponse::METADATA_FIELD.name);
-            CoinMetadataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::coin::CoinMetadataFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn treasury(mut self) -> CoinTreasuryFieldPathBuilder {
+        pub fn treasury(mut self) -> crate::v1::coin::CoinTreasuryFieldPathBuilder {
             self.path.push(GetCoinInfoResponse::TREASURY_FIELD.name);
-            CoinTreasuryFieldPathBuilder::new_with_base(self.path)
+            crate::v1::coin::CoinTreasuryFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn regulated_metadata(mut self) -> RegulatedCoinMetadataFieldPathBuilder {
+        pub fn regulated_metadata(
+            mut self,
+        ) -> crate::v1::coin::RegulatedCoinMetadataFieldPathBuilder {
             self.path.push(GetCoinInfoResponse::REGULATED_METADATA_FIELD.name);
-            RegulatedCoinMetadataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::coin::RegulatedCoinMetadataFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
     }
 }
