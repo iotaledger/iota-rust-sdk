@@ -238,7 +238,7 @@ jobs:
         uses: cargo-bins/release-pr@dca4a39944c532bbde5e485142fb05a8158edec1 # v2.1.4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          version: ${{ inputs.version != '' && inputs.version || inputs.level }}
+          version: ${{ inputs.version || inputs.level }}
           crate-name: ${{ inputs.package }}
           git-user-name: "IOTA Foundation"
           git-user-email: info@iota.org
