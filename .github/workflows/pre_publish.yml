@@ -5,7 +5,7 @@ on:
     inputs:
       level:
         type: choice
-        required: true
+        required: false
         description: |
           The level of version bump to make.
 
@@ -17,6 +17,8 @@ on:
           - rc:      Increase the rc pre-version (x.y.z-rc.M)
           - beta:    Increase the beta pre-version (x.y.z-beta.M)
           - alpha:   Increase the alpha pre-version (x.y.z-alpha.M)
+
+          Ignored if `version` is set.
         options:
           - major
           - minor
@@ -25,6 +27,12 @@ on:
           - rc
           - beta
           - alpha
+      version:
+        type: string
+        required: false
+        description: |
+          A fully qualified semver version to set directly (e.g. 1.2.3 or 1.2.3-rc.1).
+          If set, `level` is ignored.
       package:
         type: choice
         required: true
@@ -82,14 +90,18 @@ jobs:
       - name: Bump C# version
         if: inputs.package == 'iota-csharp-sdk'
         run: |
-          git fetch --tags
-          LATEST_TAG=$(git tag -l "*iota-csharp-sdk*" --sort=-v:refname | head -n 1)
-          if [ -z "$LATEST_TAG" ]; then
-            LATEST_TAG="iota-csharp-sdk-v0.0.0"
+          if [[ -n "${{ inputs.version }}" ]]; then
+            NEW_VERSION="${{ inputs.version }}"
+          else
+            git fetch --tags
+            LATEST_TAG=$(git tag -l "*iota-csharp-sdk*" --sort=-v:refname | head -n 1)
+            if [ -z "$LATEST_TAG" ]; then
+              LATEST_TAG="iota-csharp-sdk-v0.0.0"
+            fi
+            LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
+            source .github/bump_version.sh
+            NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
           fi
-          LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
-          source .github/bump_version.sh
-          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
           # Update the version in IotaSdk.csproj
@@ -104,14 +116,18 @@ jobs:
       - name: Bump Go version
         if: inputs.package == 'iota-go-sdk'
         run: |
-          git fetch --tags
-          LATEST_TAG=$(git tag -l "*iota-go-sdk*" --sort=-v:refname | head -n 1)
-          if [ -z "$LATEST_TAG" ]; then
-            LATEST_TAG="iota-go-sdk-v0.0.0"
+          if [[ -n "${{ inputs.version }}" ]]; then
+            NEW_VERSION="${{ inputs.version }}"
+          else
+            git fetch --tags
+            LATEST_TAG=$(git tag -l "*iota-go-sdk*" --sort=-v:refname | head -n 1)
+            if [ -z "$LATEST_TAG" ]; then
+              LATEST_TAG="iota-go-sdk-v0.0.0"
+            fi
+            LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
+            source .github/bump_version.sh
+            NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
           fi
-          LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
-          source .github/bump_version.sh
-          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
           # Generate changelog for Go
@@ -120,15 +136,17 @@ jobs:
       - name: Bump Kotlin version
         if: inputs.package == 'iota-kotlin-sdk'
         run: |
-          source ./.github/bump_version.sh
-
-          # Read current version from build.gradle.kts
+          # Read current version from build.gradle.kts (needed for sed replacement below)
           CONFIG="bindings/kotlin/build.gradle.kts"
           CURRENT_VERSION=$(grep '^version = ' $CONFIG | sed 's/version = "\(.*\)"/\1/')
-          echo "Current version: $CURRENT_VERSION"
 
-          # Bump the version using the input level
-          NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          if [[ -n "${{ inputs.version }}" ]]; then
+            NEW_VERSION="${{ inputs.version }}"
+          else
+            echo "Current version: $CURRENT_VERSION"
+            source ./.github/bump_version.sh
+            NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          fi
           echo "New version: $NEW_VERSION"
 
           # Update the version in build.gradle.kts
@@ -146,14 +164,17 @@ jobs:
         run: |
           source ./.github/bump_version.sh
 
-          # Read current version from pyproject.toml
+          # Read current PEP 440 version (needed for sed replacement below)
           CONFIG="bindings/python/src/pyproject.toml"
           CURRENT_VERSION_PEP440=$(grep '^version = ' $CONFIG | sed 's/version = "\(.*\)"/\1/')
-          CURRENT_VERSION=$(pep440_to_semver "$CURRENT_VERSION_PEP440")
-          echo "Current version: $CURRENT_VERSION"
 
-          # Bump the version using the input level
-          NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          if [[ -n "${{ inputs.version }}" ]]; then
+            NEW_VERSION="${{ inputs.version }}"
+          else
+            CURRENT_VERSION=$(pep440_to_semver "$CURRENT_VERSION_PEP440")
+            echo "Current version: $CURRENT_VERSION"
+            NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          fi
           echo "New version: $NEW_VERSION"
 
           # Update the version in pyproject.toml
@@ -170,14 +191,18 @@ jobs:
       - name: Bump Swift version
         if: inputs.package == 'iota-swift-sdk'
         run: |
-          git fetch --tags
-          LATEST_TAG=$(git tag -l "*iota-swift-sdk*" --sort=-v:refname | head -n 1)
-          if [ -z "$LATEST_TAG" ]; then
-            LATEST_TAG="iota-swift-sdk-v0.0.0"
+          if [[ -n "${{ inputs.version }}" ]]; then
+            NEW_VERSION="${{ inputs.version }}"
+          else
+            git fetch --tags
+            LATEST_TAG=$(git tag -l "*iota-swift-sdk*" --sort=-v:refname | head -n 1)
+            if [ -z "$LATEST_TAG" ]; then
+              LATEST_TAG="iota-swift-sdk-v0.0.0"
+            fi
+            LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
+            source .github/bump_version.sh
+            NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
           fi
-          LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
-          source .github/bump_version.sh
-          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
           # Generate changelog for Swift
@@ -216,7 +241,7 @@ jobs:
         uses: cargo-bins/release-pr@dca4a39944c532bbde5e485142fb05a8158edec1 # v2.1.4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          version: ${{ inputs.level }}
+          version: ${{ inputs.version || inputs.level }}
           crate-name: ${{ inputs.package }}
           git-user-name: "IOTA Foundation"
           git-user-email: info@iota.org
