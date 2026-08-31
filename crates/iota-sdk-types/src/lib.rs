@@ -115,6 +115,7 @@ pub(crate) use tree_display::{TreeDisplay, TreeWriter, impl_tree_display};
 pub mod hash;
 
 pub mod address;
+pub mod changes;
 pub mod checkpoint;
 pub mod crypto;
 pub mod digest;
@@ -135,6 +136,7 @@ pub mod validator;
 pub mod version;
 
 pub use address::{Address, AddressParseError};
+pub use changes::{BalanceChange, DeriveChangesError, ObjectChange};
 pub use checkpoint::{
     CheckpointCommitment, CheckpointContents, CheckpointContentsV1, CheckpointData,
     CheckpointSequenceNumber, CheckpointSummary, CheckpointTimestamp, CheckpointTransaction,

@@ -17,6 +17,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::Address>();
     assert_display::<iota_sdk_types::AddressParseError>();
     assert_display::<iota_sdk_types::Argument>();
+    assert_display::<iota_sdk_types::BalanceChange>();
     assert_display::<iota_sdk_types::Bls12381PublicKey>();
     assert_display::<iota_sdk_types::Bls12381Signature>();
     assert_display::<iota_sdk_types::CanceledTransaction>();
@@ -40,6 +41,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::ConsensusDeterminedVersionAssignments>();
     assert_display::<iota_sdk_types::DenyRuleSet>();
     assert_display::<iota_sdk_types::Digest>();
+    assert_display::<iota_sdk_types::DeriveChangesError>();
     assert_display::<iota_sdk_types::DigestParseError>();
     assert_display::<iota_sdk_types::Ed25519PublicKey>();
     assert_display::<iota_sdk_types::Ed25519Signature>();
@@ -88,6 +90,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::iota_names::registry::NameRecord>();
     assert_display::<iota_sdk_types::iota_names::NameRegistration>();
     assert_display::<iota_sdk_types::Object>();
+    assert_display::<iota_sdk_types::ObjectChange>();
     assert_display::<iota_sdk_types::ObjectData>();
     assert_display::<iota_sdk_types::ObjectId>();
     assert_display::<iota_sdk_types::ObjectIn>();
