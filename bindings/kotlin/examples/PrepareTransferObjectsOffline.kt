@@ -49,7 +49,7 @@ fun main() = runBlocking {
         println("Signing Digest: ${txn.signingDigestHex()}")
         println("Txn Bytes: ${txn.toBase64()}")
 
-        val res = client.dryRunTx(txn)
+        val res = client.dryRunTransaction(txn)
 
         if (res.error != null) {
             throw Exception("Failed to transfer objects: ${res.error}")

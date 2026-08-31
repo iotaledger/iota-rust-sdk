@@ -3,11 +3,10 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::{GasCostSummary, IdOperation};
-
 use crate::types::{
     digest::{EffectsAuxDataDigest, ObjectDigest, TransactionDigest, TransactionEventsDigest},
     execution_status::ExecutionStatus,
+    gas::GasCostSummary,
     object::{ObjectId, ObjectReference, Owner},
     version::Version,
 };
@@ -31,7 +30,7 @@ use crate::types::{
 ///              (vector unchanged-shared-object)
 ///              (option digest)                    ; auxiliary data digest
 /// ```
-#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
+#[derive(Clone, Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct TransactionEffectsV1(pub iota_sdk::types::TransactionEffectsV1);
 
@@ -55,7 +54,7 @@ impl TransactionEffectsV1 {
         Self(iota_sdk::types::TransactionEffectsV1 {
             status: status.into(),
             epoch,
-            gas_cost_summary,
+            gas_cost_summary: gas_cost_summary.into(),
             transaction_digest: **transaction_digest,
             gas_object_index,
             events_digest: events_digest.map(|digest| **digest),
@@ -82,7 +81,7 @@ impl TransactionEffectsV1 {
 
     /// The gas used by this transaction.
     pub fn gas_cost_summary(&self) -> GasCostSummary {
-        self.0.gas_cost_summary.clone()
+        self.0.gas_cost_summary.clone().into()
     }
 
     /// The transaction digest.
@@ -262,7 +261,7 @@ impl TransactionEffectsV1 {
 /// ```text
 /// changed-object = object-id object-in object-out id-operation
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct ChangedObject {
     /// Id of the object
     pub object_id: Arc<ObjectId>,
@@ -282,7 +281,7 @@ impl From<iota_sdk::types::ChangedObject> for ChangedObject {
             object_id: Arc::new(value.object_id.into()),
             input_state: value.input_state.into(),
             output_state: value.output_state.into(),
-            id_operation: value.id_operation,
+            id_operation: value.id_operation.into(),
         }
     }
 }
@@ -293,7 +292,7 @@ impl From<ChangedObject> for iota_sdk::types::ChangedObject {
             object_id: **value.object_id,
             input_state: value.input_state.into(),
             output_state: value.output_state.into(),
-            id_operation: value.id_operation,
+            id_operation: value.id_operation.into(),
         }
     }
 }
@@ -307,7 +306,7 @@ impl From<ChangedObject> for iota_sdk::types::ChangedObject {
 /// ```text
 /// unchanged-shared-object = object-id unchanged-shared-object-kind
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct UnchangedSharedObject {
     pub object_id: Arc<ObjectId>,
     pub kind: UnchangedSharedKind,
@@ -350,7 +349,7 @@ impl From<UnchangedSharedObject> for iota_sdk::types::UnchangedSharedObject {
 /// canceled           = %d03 u64
 /// per-epoch-config    = %d04
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, uniffi::Enum)]
 pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
     /// ObjectDigest for protocol correctness, but it will make it easier to
@@ -432,7 +431,7 @@ impl From<UnchangedSharedKind> for iota_sdk::types::UnchangedSharedKind {
 /// object-in-missing = %d00
 /// object-in-data    = %d01 u64 digest owner
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, uniffi::Enum)]
 pub enum ObjectIn {
     Missing,
     /// The old version, digest and owner.
@@ -494,7 +493,7 @@ impl From<ObjectIn> for iota_sdk::types::ObjectIn {
 /// object-out-object-write   = %d01 digest owner
 /// object-out-package-write  = %d02 version digest
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, uniffi::Enum)]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
     Missing,
@@ -559,13 +558,33 @@ impl From<ObjectOut> for iota_sdk::types::ObjectOut {
 /// id-operation-created    = %d01
 /// id-operation-deleted    = %d02
 /// ```
-#[uniffi::remote(Enum)]
-#[non_exhaustive]
+#[derive(Clone, uniffi::Enum)]
 #[repr(u8)]
 pub enum IdOperation {
     None,
     Created,
     Deleted,
+}
+
+impl From<iota_sdk::types::IdOperation> for IdOperation {
+    fn from(value: iota_sdk::types::IdOperation) -> Self {
+        match value {
+            iota_sdk::types::IdOperation::None => Self::None,
+            iota_sdk::types::IdOperation::Created => Self::Created,
+            iota_sdk::types::IdOperation::Deleted => Self::Deleted,
+            _ => unimplemented!("a new IdOperation variant was added and needs to be handled"),
+        }
+    }
+}
+
+impl From<IdOperation> for iota_sdk::types::IdOperation {
+    fn from(value: IdOperation) -> Self {
+        match value {
+            IdOperation::None => Self::None,
+            IdOperation::Created => Self::Created,
+            IdOperation::Deleted => Self::Deleted,
+        }
+    }
 }
 
 crate::export_iota_types_objects_bcs_conversion!(TransactionEffectsV1);
@@ -579,6 +598,15 @@ crate::export_iota_types_bcs_conversion!(
     IdOperation
 );
 crate::export_iota_types_json_conversion!(
+    ChangedObject,
+    UnchangedSharedObject,
+    UnchangedSharedKind,
+    ObjectIn,
+    ObjectOut,
+    IdOperation
+);
+crate::export_iota_types_objects_display!(TransactionEffectsV1);
+crate::export_iota_types_display!(
     ChangedObject,
     UnchangedSharedObject,
     UnchangedSharedKind,
@@ -676,7 +704,7 @@ impl From<iota_sdk::types::ObjectChange> for ObjectChange {
             input_digest: value.input_digest.map(|d| Arc::new(d.into())),
             output_version: value.output_version.map(|v| Arc::new(v.into())),
             output_digest: value.output_digest.map(|d| Arc::new(d.into())),
-            id_operation: value.id_operation,
+            id_operation: value.id_operation.into(),
         }
     }
 }

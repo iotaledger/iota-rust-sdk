@@ -21,14 +21,15 @@ use std::sync::{
 };
 
 use futures::{StreamExt, stream::BoxStream};
-use iota_sdk::graphql_client::{
-    error::Result as GraphQLResult, query_types::TransactionBlockKindInput,
-};
+use iota_sdk::graphql_client::error::Result as GraphQLResult;
 use tokio::sync::{Mutex, Notify};
 
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, query_types::GraphQLEvent},
+    graphql::{
+        client::GraphQLClient,
+        query_types::{GraphQLEvent, TransactionBlockKindInput},
+    },
     types::{address::Address, transaction::SignedTransaction},
 };
 
@@ -77,7 +78,7 @@ impl From<SubscriptionTransactionFilter>
 {
     fn from(value: SubscriptionTransactionFilter) -> Self {
         Self::default()
-            .with_kind(value.kind)
+            .with_kind(value.kind.map(Into::into))
             .with_signing_address(value.signing_address.map(|a| a.0))
             .with_function(value.function)
     }

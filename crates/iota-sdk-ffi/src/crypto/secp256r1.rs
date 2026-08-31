@@ -1,16 +1,13 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::{
-    crypto::{FromMnemonic, ToFromBech32, ToFromBytes, Verifier},
-    types::SignatureScheme,
-};
+use iota_sdk::crypto::{FromMnemonic, ToFromBech32, ToFromBytes, Verifier};
 
 use crate::{
     error::{Result, SdkFfiError},
     types::{
         crypto::{Secp256r1PublicKey, Secp256r1Signature, intent::PersonalMessage},
-        signature::{SimpleSignature, UserSignature},
+        signature::{SignatureScheme, SimpleSignature, UserSignature},
     },
 };
 
@@ -30,7 +27,7 @@ impl Secp256r1PrivateKey {
     }
 
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     /// Get the public key corresponding to this private key.

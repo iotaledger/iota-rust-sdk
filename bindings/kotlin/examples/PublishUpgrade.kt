@@ -66,7 +66,7 @@ fun main() = runBlocking {
 
         // Perform a dry-run first to check if everything is correct
         println("> Publishing package (dry run):")
-        val resultPublish = client.dryRunTx(txPublish, false)
+        val resultPublish = client.dryRunTransaction(txPublish, false)
         resultPublish.error?.let { throw Exception("Dry run failed: $it") }
         resultPublish.effects ?: throw Exception("Dry run failed: no effects")
         println("Success")
@@ -74,7 +74,8 @@ fun main() = runBlocking {
         // Sign and execute the transaction (publish the package)
         println("> Publishing package:")
         val sigPublish = privateKey.signTransaction(txPublish)
-        val effectsPublish = client.executeTx(listOf(sigPublish), txPublish, WaitForTx.FINALIZED)
+        val effectsPublish =
+            client.executeTransaction(listOf(sigPublish), txPublish, WaitForTransaction.FINALIZED)
         println("Success")
 
         // Resolve UpgradeCap and PackageId via the client
@@ -146,7 +147,7 @@ fun main() = runBlocking {
 
         // Perform a dry-run to check if everything is fine
         println("> Upgrading package (dry run):")
-        val resultUpgrade = client.dryRunTx(txUpgrade, false)
+        val resultUpgrade = client.dryRunTransaction(txUpgrade, false)
         resultUpgrade.error?.let { throw Exception("Dry run failed: $it") }
         resultUpgrade.effects ?: throw Exception("Dry run failed: no effects")
         println("Success")
@@ -154,7 +155,7 @@ fun main() = runBlocking {
         // Sign and execute the transaction (upgrade the package)
         println("> Upgrading package:")
         val sigUpgrade = privateKey.signTransaction(txUpgrade)
-        val effectsUpgrade = client.executeTx(listOf(sigUpgrade), txUpgrade)
+        val effectsUpgrade = client.executeTransaction(listOf(sigUpgrade), txUpgrade)
         println("Success")
 
         // Print the new package version (should now be 2)
