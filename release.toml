@@ -1,3 +1,4 @@
+consolidate-commits = false
 enable-all-features = true
 pre-release-hook = [
   "sh",
@@ -5,4 +6,5 @@ pre-release-hook = [
   'cd "$WORKSPACE_ROOT" && ./.github/gen_changelog.sh "$CRATE_NAME" "${CRATE_ROOT#"$WORKSPACE_ROOT"/}" "$COMMIT_TO" "$NEW_VERSION" true',
 ]
 owners = ["github:iotaledger:dev-tools"]
+pre-release-commit-message = "release: {{crate_name}} v{{version}}"
 sign-commit = true
