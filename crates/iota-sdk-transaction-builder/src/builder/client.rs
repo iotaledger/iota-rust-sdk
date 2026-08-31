@@ -428,7 +428,7 @@ pub(crate) mod test_client {
     /// selection always finds a single funded coin. This is enough to drive
     /// [`finish`](crate::TransactionBuilder::finish) to completion, but the
     /// resulting transaction references made-up objects and cannot be executed
-    /// — [`execute_transaction`](TransactionBuilderClient::execute_transaction)
+    /// — [`execute_transaction`](TransactionBuilderExecutionClient::execute_transaction)
     /// returns an error.
     ///
     /// It also implements [`MoveViewCallClient`] by echoing the call arguments
