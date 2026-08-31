@@ -69,11 +69,11 @@ impl Client {
     /// let ids = [object_id];
     ///
     /// // Default mask
-    /// let objs = client.get_objects(ids, ObjectReadMask::default()).await?;
+    /// let objs = client.objects(ids, ObjectReadMask::default()).await?;
     ///
     /// // Selected fields
     /// let objs = client
-    ///     .get_objects(
+    ///     .objects(
     ///         ids,
     ///         ObjectReadMask::from([ObjectField::REFERENCE, ObjectField::BCS]),
     ///     )
@@ -110,14 +110,14 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_objects(
+    pub async fn objects(
         &self,
         refs: impl IntoIterator<Item = ObjectId>,
         read_mask: impl IntoReadMask<ObjectReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
         let refs = refs.into_iter().map(|id| (id, None)).collect::<Vec<_>>();
 
-        self.get_objects_internal(refs, read_mask.into_read_mask())
+        self.objects_internal(refs, read_mask.into_read_mask())
             .await
     }
 
@@ -133,7 +133,7 @@ impl Client {
     /// Returns [`Error::EmptyRequest`] if `refs` is empty.
     ///
     /// Each ref gets its own result, with the same meaning as in
-    /// [`get_objects`](Client::get_objects): a requested version the serving
+    /// [`objects`](Client::objects): a requested version the serving
     /// node does not have fails only its own slot.
     ///
     /// # Read Mask
@@ -157,12 +157,12 @@ impl Client {
     ///
     /// // Default mask
     /// let objs = client
-    ///     .get_objects_with_versions([(object_id, None)], ObjectReadMask::default())
+    ///     .objects_with_versions([(object_id, None)], ObjectReadMask::default())
     ///     .await?;
     ///
     /// // Selected fields
     /// let objs = client
-    ///     .get_objects_with_versions(
+    ///     .objects_with_versions(
     ///         [(object_id, None)],
     ///         ObjectReadMask::from(ObjectField::REFERENCE_OBJECT_ID),
     ///     )
@@ -187,16 +187,16 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_objects_with_versions(
+    pub async fn objects_with_versions(
         &self,
         refs: impl IntoIterator<Item = (ObjectId, Option<Version>)>,
         read_mask: impl IntoReadMask<ObjectReadMask>,
     ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
-        self.get_objects_internal(refs.into_iter().collect(), read_mask.into_read_mask())
+        self.objects_internal(refs.into_iter().collect(), read_mask.into_read_mask())
             .await
     }
 
-    async fn get_objects_internal(
+    async fn objects_internal(
         &self,
         refs: Vec<(ObjectId, Option<Version>)>,
         read_mask: ObjectReadMask,

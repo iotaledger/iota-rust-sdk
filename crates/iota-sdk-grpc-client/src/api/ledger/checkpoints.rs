@@ -58,19 +58,19 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let checkpoint = client
-    ///     .get_checkpoint_latest(None, None, CheckpointResponseReadMask::default())
+    ///     .latest_checkpoint(None, None, CheckpointResponseReadMask::default())
     ///     .await?;
     /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_checkpoint_latest(
+    pub async fn latest_checkpoint(
         &self,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
         read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
     ) -> Result<MetadataEnvelope<CheckpointResponse>> {
-        self.get_checkpoint_internal(
+        self.checkpoint_internal(
             get_checkpoint_request::CheckpointId::Latest(true),
             transactions_filter.into(),
             events_filter.into(),
@@ -102,20 +102,20 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let checkpoint = client
-    ///     .get_checkpoint_by_sequence_number(100, None, None, CheckpointResponseReadMask::default())
+    ///     .checkpoint_by_sequence_number(100, None, None, CheckpointResponseReadMask::default())
     ///     .await?;
     /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_checkpoint_by_sequence_number(
+    pub async fn checkpoint_by_sequence_number(
         &self,
         sequence_number: CheckpointSequenceNumber,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
         read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
     ) -> Result<MetadataEnvelope<CheckpointResponse>> {
-        self.get_checkpoint_internal(
+        self.checkpoint_internal(
             get_checkpoint_request::CheckpointId::SequenceNumber(sequence_number),
             transactions_filter.into(),
             events_filter.into(),
@@ -149,20 +149,20 @@ impl Client {
     /// let client = Client::new_localnet()?;
     /// let digest: CheckpointDigest = todo!();
     /// let checkpoint = client
-    ///     .get_checkpoint_by_digest(digest, None, None, CheckpointResponseReadMask::default())
+    ///     .checkpoint_by_digest(digest, None, None, CheckpointResponseReadMask::default())
     ///     .await?;
     /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_checkpoint_by_digest(
+    pub async fn checkpoint_by_digest(
         &self,
         digest: CheckpointDigest,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
         read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
     ) -> Result<MetadataEnvelope<CheckpointResponse>> {
-        self.get_checkpoint_internal(
+        self.checkpoint_internal(
             get_checkpoint_request::CheckpointId::Digest(digest.into()),
             transactions_filter.into(),
             events_filter.into(),
@@ -172,7 +172,7 @@ impl Client {
     }
 
     /// Internal helper to fetch checkpoint by any ID type.
-    async fn get_checkpoint_internal(
+    async fn checkpoint_internal(
         &self,
         checkpoint_id: get_checkpoint_request::CheckpointId,
         transactions_filter: Option<grpc_filter::TransactionFilter>,

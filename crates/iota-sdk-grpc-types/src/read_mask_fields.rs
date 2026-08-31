@@ -14,14 +14,14 @@
 //! use iota_sdk_grpc_types::read_mask_fields::{ObjectField, ObjectReadMask};
 //!
 //! // Default mask.
-//! client.get_objects([id], ObjectReadMask::default()).await?;
+//! client.objects([id], ObjectReadMask::default()).await?;
 //!
 //! // A single field.
-//! client.get_objects([id], ObjectField::BCS).await?;
+//! client.objects([id], ObjectField::BCS).await?;
 //!
 //! // Multiple fields.
 //! client
-//!     .get_objects([id], [ObjectField::REFERENCE, ObjectField::BCS])
+//!     .objects([id], [ObjectField::REFERENCE, ObjectField::BCS])
 //!     .await?;
 //! ```
 //!
@@ -284,7 +284,7 @@ define_field_paths! {
 }
 
 define_scoped_read_mask! {
-    /// Scoped read mask for `get_objects` / `get_objects_with_versions`.
+    /// Scoped read mask for `objects` / `objects_with_versions`.
     pub struct ObjectReadMask from ObjectField default GET_OBJECTS_READ_MASK;
 }
 
@@ -293,7 +293,7 @@ define_scoped_read_mask! {
 // =============================================================================
 
 define_field_paths! {
-    /// Field paths for `list_owned_objects` and `get_coins`.
+    /// Field paths for `list_owned_objects` and `coins`.
     pub struct OwnedObjectField {
         /// Wildcard — request all fields.
         ALL = "*",
@@ -315,7 +315,7 @@ define_field_paths! {
 }
 
 define_scoped_read_mask! {
-    /// Scoped read mask for `list_owned_objects` and `get_coins`.
+    /// Scoped read mask for `list_owned_objects` and `coins`.
     pub struct OwnedObjectReadMask from OwnedObjectField default LIST_OWNED_OBJECTS_READ_MASK;
 }
 

@@ -3,7 +3,7 @@
 
 //! High-level API for listing coins owned by an address.
 //!
-//! Wraps [`Client::list_owned_objects`](crate::Client::list_owned_objects)
+//! Wraps [`Client::owned_objects`](crate::Client::owned_objects)
 //! with a coin type filter and converts each returned proto `Object` into an
 //! [`iota_types::framework::Coin`].
 //!
@@ -31,7 +31,7 @@ use crate::{
 define_list_query! {
     /// Builder for listing coins owned by an address.
     ///
-    /// Created by [`Client::get_coins`]. Await directly for a single page
+    /// Created by [`Client::coins`]. Await directly for a single page
     /// (with access to `next_page_token`), or call
     /// [`.collect(limit)`](Self::collect) to auto-paginate.
     pub struct GetCoinsQuery {
@@ -88,7 +88,7 @@ impl Client {
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let page = client
-    ///     .get_coins(owner, None, None, None, OwnedObjectReadMask::default())
+    ///     .coins(owner, None, None, None, OwnedObjectReadMask::default())
     ///     .await?;
     /// for coin in &page.body().items {
     ///     println!("Coin {}: {}", coin.id(), coin.balance());
@@ -107,7 +107,7 @@ impl Client {
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let all = client
-    ///     .get_coins(owner, None, Some(50), None, OwnedObjectReadMask::default())
+    ///     .coins(owner, None, Some(50), None, OwnedObjectReadMask::default())
     ///     .collect(Some(500))
     ///     .await?;
     /// for coin in all.body() {
@@ -116,7 +116,7 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn get_coins(
+    pub fn coins(
         &self,
         owner: Address,
         coin_type: impl Into<Option<StructTag>>,
@@ -124,7 +124,7 @@ impl Client {
         page_token: impl Into<Option<prost::bytes::Bytes>>,
         read_mask: impl IntoReadMask<OwnedObjectReadMask>,
     ) -> GetCoinsQuery {
-        self.get_coins_internal(
+        self.coins_internal(
             owner,
             coin_type.into(),
             page_size.into(),
@@ -133,7 +133,7 @@ impl Client {
         )
     }
 
-    fn get_coins_internal(
+    fn coins_internal(
         &self,
         owner: Address,
         coin_type: Option<StructTag>,

@@ -4,8 +4,8 @@
 //! gRPC counterpart to `get_object.rs`.
 //!
 //! Highlights two things about the gRPC API:
-//! - `get_objects` is batched (it takes an iterable of ids and streams the
-//!   matched objects back), so we just hand it one id.
+//! - `objects` is batched (it takes an iterable of ids and streams the matched
+//!   objects back), so we just hand it one id.
 //! - The returned proto `Object` is *lazy* — you convert into the SDK type only
 //!   when you need the deserialized fields.
 
@@ -23,7 +23,7 @@ async fn main() -> Result<()> {
         "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755".parse()?;
 
     let response = client
-        .get_objects([object_id], ObjectReadMask::default())
+        .objects([object_id], ObjectReadMask::default())
         .await?;
     // Each requested id gets its own result, so a failure here concerns only
     // this object.

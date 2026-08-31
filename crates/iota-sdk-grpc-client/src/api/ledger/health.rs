@@ -26,7 +26,7 @@ impl Client {
     ///   node is considered healthy only if the latest executed checkpoint
     ///   timestamp is within this many milliseconds of the current system time.
     ///   If `None`, the server applies its default threshold (5 seconds).
-    pub async fn get_health(
+    pub async fn health(
         &self,
         threshold_ms: impl Into<Option<u64>>,
     ) -> Result<MetadataEnvelope<GetHealthResponse>> {

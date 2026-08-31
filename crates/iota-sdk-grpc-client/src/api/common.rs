@@ -138,7 +138,7 @@ pub enum ProtocolError {
     #[error("expected {expected} results, got {actual}")]
     UnexpectedResultCount { expected: usize, actual: usize },
 
-    /// `get_objects` answered a position with a different object than the one
+    /// `objects` answered a position with a different object than the one
     /// requested there.
     #[error("requested object {expected} at position {position}, but got {actual}")]
     UnexpectedObject {
@@ -147,7 +147,7 @@ pub enum ProtocolError {
         actual: ObjectId,
     },
 
-    /// `get_transactions` answered a position with a different transaction than
+    /// `transactions` answered a position with a different transaction than
     /// the one requested there.
     #[error("requested transaction {expected} at position {position}, but got {actual}")]
     UnexpectedTransaction {

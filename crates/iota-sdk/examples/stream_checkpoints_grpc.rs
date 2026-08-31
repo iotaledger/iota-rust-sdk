@@ -23,7 +23,7 @@ async fn main() -> Result<()> {
     // Pick a starting point a few checkpoints behind head so the example
     // returns promptly instead of waiting on new blocks.
     let head = client
-        .get_checkpoint_latest(None, None, CheckpointResponseReadMask::default())
+        .latest_checkpoint(None, None, CheckpointResponseReadMask::default())
         .await?
         .body()
         .sequence_number();

@@ -27,7 +27,7 @@ use crate::{
 define_list_query! {
     /// Builder for listing dynamic fields of a parent object.
     ///
-    /// Created by [`Client::list_dynamic_fields`]. Await directly for a
+    /// Created by [`Client::dynamic_fields`]. Await directly for a
     /// single page, or call [`.collect(limit)`](Self::collect) to
     /// auto-paginate.
     pub struct ListDynamicFieldsQuery {
@@ -72,7 +72,7 @@ impl Client {
     /// let parent: ObjectId = "0x2".parse()?;
     ///
     /// let page = client
-    ///     .list_dynamic_fields(parent, None, None, DynamicFieldReadMask::default())
+    ///     .dynamic_fields(parent, None, None, DynamicFieldReadMask::default())
     ///     .await?;
     /// for field in &page.body().items {
     ///     println!("Dynamic field: {:?}", field);
@@ -91,7 +91,7 @@ impl Client {
     /// let parent: ObjectId = "0x2".parse()?;
     ///
     /// let all = client
-    ///     .list_dynamic_fields(parent, Some(50), None, DynamicFieldReadMask::default())
+    ///     .dynamic_fields(parent, Some(50), None, DynamicFieldReadMask::default())
     ///     .collect(None)
     ///     .await?;
     /// for field in all.body() {
@@ -100,14 +100,14 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn list_dynamic_fields(
+    pub fn dynamic_fields(
         &self,
         parent: ObjectId,
         page_size: impl Into<Option<u32>>,
         page_token: impl Into<Option<prost::bytes::Bytes>>,
         read_mask: impl IntoReadMask<DynamicFieldReadMask>,
     ) -> ListDynamicFieldsQuery {
-        self.list_dynamic_fields_internal(
+        self.dynamic_fields_internal(
             parent,
             page_size.into(),
             page_token.into(),
@@ -115,7 +115,7 @@ impl Client {
         )
     }
 
-    fn list_dynamic_fields_internal(
+    fn dynamic_fields_internal(
         &self,
         parent: ObjectId,
         page_size: Option<u32>,
