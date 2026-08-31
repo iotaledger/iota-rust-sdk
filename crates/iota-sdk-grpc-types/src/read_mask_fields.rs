@@ -643,7 +643,7 @@ define_field_paths! {
 
 define_scoped_read_mask! {
     /// Scoped read mask for checkpoint queries (`get_checkpoint_*`,
-    /// `stream_checkpoints`, `stream_checkpoints_filtered`).
+    /// `stream_checkpoints`, `checkpoints_stream_filtered`).
     pub struct CheckpointResponseReadMask from CheckpointResponseField default GET_CHECKPOINT_READ_MASK;
 }
 

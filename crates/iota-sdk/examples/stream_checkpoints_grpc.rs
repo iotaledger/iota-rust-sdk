@@ -34,7 +34,7 @@ async fn main() -> Result<()> {
     // `CheckpointResponseReadMask::default()` (or compose more fields) to
     // pull more data per checkpoint.
     let mut stream = client
-        .stream_checkpoints(
+        .checkpoints_stream(
             start,
             end,
             None,

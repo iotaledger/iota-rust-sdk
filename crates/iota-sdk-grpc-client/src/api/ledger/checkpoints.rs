@@ -240,7 +240,7 @@ impl Client {
     /// transactions or events within it.
     ///
     /// To skip non-matching checkpoints entirely, use
-    /// [`stream_checkpoints_filtered`](Self::stream_checkpoints_filtered).
+    /// [`checkpoints_stream_filtered`](Self::checkpoints_stream_filtered).
     ///
     /// The `read_mask` controls which fields the server returns; use
     /// `CheckpointResponseReadMask::default()` for the default field mask.
@@ -271,7 +271,7 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let mut stream = client
-    ///     .stream_checkpoints(
+    ///     .checkpoints_stream(
     ///         Some(0),
     ///         Some(10),
     ///         None,
@@ -287,7 +287,7 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn stream_checkpoints(
+    pub async fn checkpoints_stream(
         &self,
         start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
         end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
@@ -296,7 +296,7 @@ impl Client {
         read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
     ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointResponse>> + Send>>>>
     {
-        self.stream_checkpoints_internal(
+        self.checkpoints_stream_internal(
             start_sequence_number.into(),
             end_sequence_number.into(),
             transactions_filter.into(),
@@ -306,7 +306,7 @@ impl Client {
         .await
     }
 
-    async fn stream_checkpoints_internal(
+    async fn checkpoints_stream_internal(
         &self,
         start_sequence_number: Option<CheckpointSequenceNumber>,
         end_sequence_number: Option<CheckpointSequenceNumber>,
@@ -316,7 +316,7 @@ impl Client {
     ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointResponse>> + Send>>>>
     {
         let envelope = self
-            .stream_checkpoints_raw(
+            .checkpoints_stream_raw(
                 start_sequence_number,
                 end_sequence_number,
                 transactions_filter,
@@ -344,7 +344,7 @@ impl Client {
 
     /// Stream checkpoints, skipping those with no matching data.
     ///
-    /// Unlike [`stream_checkpoints`](Self::stream_checkpoints), this method
+    /// Unlike [`checkpoints_stream`](Self::checkpoints_stream), this method
     /// sets `filter_checkpoints = true` on the server, which means checkpoints
     /// without any matching transactions or events are skipped entirely.
     ///
@@ -392,7 +392,7 @@ impl Client {
     /// // At least one filter is required
     /// let tx_filter = grpc_filter::TransactionFilter::default();
     /// let mut stream = client
-    ///     .stream_checkpoints_filtered(
+    ///     .checkpoints_stream_filtered(
     ///         Some(0),
     ///         None,
     ///         Some(tx_filter),
@@ -418,7 +418,7 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn stream_checkpoints_filtered(
+    pub async fn checkpoints_stream_filtered(
         &self,
         start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
         end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
@@ -428,7 +428,7 @@ impl Client {
         read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
     ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointStreamItem>> + Send>>>>
     {
-        self.stream_checkpoints_raw(
+        self.checkpoints_stream_raw(
             start_sequence_number.into(),
             end_sequence_number.into(),
             transactions_filter.into(),
@@ -443,7 +443,7 @@ impl Client {
     /// Internal helper that builds the stream request and returns the raw
     /// [`CheckpointStreamItem`] stream.
     #[expect(clippy::too_many_arguments)]
-    async fn stream_checkpoints_raw(
+    async fn checkpoints_stream_raw(
         &self,
         start_sequence_number: Option<CheckpointSequenceNumber>,
         end_sequence_number: Option<CheckpointSequenceNumber>,
