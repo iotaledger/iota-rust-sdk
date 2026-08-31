@@ -198,6 +198,77 @@ mod keypair {
             self.verifying_key().public_key()
         }
 
+        /// Returns the inner ed25519 private key, or `None` if this keypair
+        /// uses another scheme.
+        #[cfg(feature = "ed25519")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
+        pub fn as_opt_ed25519(&self) -> Option<&crate::ed25519::Ed25519PrivateKey> {
+            match &self.inner {
+                InnerKeypair::Ed25519(private_key) => Some(private_key),
+                #[cfg(any(feature = "secp256k1", feature = "secp256r1"))]
+                _ => None,
+            }
+        }
+
+        /// Returns the inner ed25519 private key.
+        ///
+        /// # Panics
+        ///
+        /// Panics if this keypair uses another scheme.
+        #[cfg(feature = "ed25519")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
+        pub fn as_ed25519(&self) -> &crate::ed25519::Ed25519PrivateKey {
+            self.as_opt_ed25519().expect("not an ed25519 private key")
+        }
+
+        /// Returns the inner secp256k1 private key, or `None` if this keypair
+        /// uses another scheme.
+        #[cfg(feature = "secp256k1")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]
+        pub fn as_opt_secp256k1(&self) -> Option<&crate::secp256k1::Secp256k1PrivateKey> {
+            match &self.inner {
+                InnerKeypair::Secp256k1(private_key) => Some(private_key),
+                #[cfg(any(feature = "ed25519", feature = "secp256r1"))]
+                _ => None,
+            }
+        }
+
+        /// Returns the inner secp256k1 private key.
+        ///
+        /// # Panics
+        ///
+        /// Panics if this keypair uses another scheme.
+        #[cfg(feature = "secp256k1")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]
+        pub fn as_secp256k1(&self) -> &crate::secp256k1::Secp256k1PrivateKey {
+            self.as_opt_secp256k1()
+                .expect("not a secp256k1 private key")
+        }
+
+        /// Returns the inner secp256r1 private key, or `None` if this keypair
+        /// uses another scheme.
+        #[cfg(feature = "secp256r1")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256r1")))]
+        pub fn as_opt_secp256r1(&self) -> Option<&crate::secp256r1::Secp256r1PrivateKey> {
+            match &self.inner {
+                InnerKeypair::Secp256r1(private_key) => Some(private_key),
+                #[cfg(any(feature = "ed25519", feature = "secp256k1"))]
+                _ => None,
+            }
+        }
+
+        /// Returns the inner secp256r1 private key.
+        ///
+        /// # Panics
+        ///
+        /// Panics if this keypair uses another scheme.
+        #[cfg(feature = "secp256r1")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256r1")))]
+        pub fn as_secp256r1(&self) -> &crate::secp256r1::Secp256r1PrivateKey {
+            self.as_opt_secp256r1()
+                .expect("not a secp256r1 private key")
+        }
+
         /// Encode a SimpleKeypair as `flag || privkey` in bytes
         pub fn to_bytes(&self) -> Vec<u8> {
             use crate::ToFromBytes;
@@ -881,5 +952,27 @@ mod tests {
         let bech32m = bech32::encode::<Bech32m>(hrp, &payload).unwrap();
         assert_ne!(bech32, bech32m);
         SimpleKeypair::from_bech32(&bech32m).unwrap_err();
+    }
+
+    #[proptest]
+    fn scheme_accessors(ed25519: Ed25519PrivateKey, secp256k1: Secp256k1PrivateKey) {
+        let keypair = SimpleKeypair::from(ed25519.clone());
+        assert_eq!(keypair.as_opt_ed25519(), Some(&ed25519));
+        assert_eq!(keypair.as_ed25519(), &ed25519);
+        assert_eq!(keypair.as_opt_secp256k1(), None);
+        assert_eq!(keypair.as_opt_secp256r1(), None);
+
+        let keypair = SimpleKeypair::from(secp256k1.clone());
+        assert_eq!(keypair.as_opt_secp256k1(), Some(&secp256k1));
+        assert_eq!(keypair.as_secp256k1(), &secp256k1);
+        assert_eq!(keypair.as_opt_ed25519(), None);
+        assert_eq!(keypair.as_opt_secp256r1(), None);
+    }
+
+    #[test]
+    #[should_panic = "not an ed25519 private key"]
+    fn as_ed25519_panics_on_other_scheme() {
+        let keypair = SimpleKeypair::from(Secp256k1PrivateKey::random());
+        keypair.as_ed25519();
     }
 }
