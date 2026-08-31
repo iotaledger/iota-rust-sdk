@@ -10,7 +10,7 @@ use iota_types::{SignedTransaction, Transaction, TransactionEffects, Transaction
 
 use crate::{
     Client, DryRunEffect, DryRunResult,
-    error::Result,
+    error::GraphQLResult,
     query_types::{DryRunArgs, DryRunQuery, ObjectRef, TransactionMetadata},
 };
 
@@ -22,7 +22,11 @@ impl Client {
     /// prevent access to objects that are owned by addresses other than the
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks.
-    pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
+    pub async fn dry_run_tx(
+        &self,
+        tx: &Transaction,
+        skip_checks: bool,
+    ) -> GraphQLResult<DryRunResult> {
         let Transaction::V1(v1) = tx else {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
@@ -64,7 +68,7 @@ impl Client {
         tx_kind: &TransactionKind,
         skip_checks: bool,
         tx_meta: TransactionMetadata,
-    ) -> Result<DryRunResult> {
+    ) -> GraphQLResult<DryRunResult> {
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx_kind)?);
         self.dry_run(tx_bytes, skip_checks, Some(tx_meta)).await
     }
@@ -75,7 +79,7 @@ impl Client {
         tx_bytes: String,
         skip_checks: bool,
         tx_meta: impl Into<Option<TransactionMetadata>>,
-    ) -> Result<DryRunResult> {
+    ) -> GraphQLResult<DryRunResult> {
         let operation = DryRunQuery::build(DryRunArgs {
             tx_bytes,
             skip_checks,
@@ -90,7 +94,7 @@ impl Client {
             .iter()
             .flatten()
             .map(DryRunEffect::try_from)
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         let txn_block = &response.dry_run_transaction_block.transaction;
 

@@ -8,7 +8,7 @@ use cynic::QueryBuilder;
 
 use crate::{
     Client,
-    error::Result,
+    error::GraphQLResult,
     pagination::{Page, PaginationFilter},
     query_types::{
         ActiveValidatorsArgs, ActiveValidatorsQuery, ChainIdentifierQuery, EpochArgs,
@@ -18,7 +18,7 @@ use crate::{
 
 impl Client {
     /// Get the chain identifier.
-    pub async fn chain_id(&self) -> Result<String> {
+    pub async fn chain_id(&self) -> GraphQLResult<String> {
         let operation = ChainIdentifierQuery::build(());
         let response = self.run_query(&operation).await?;
 
@@ -30,7 +30,10 @@ impl Client {
     ///
     /// This will return `Ok(None)` if the epoch requested is not available in
     /// the GraphQL service (e.g., due to pruning).
-    pub async fn reference_gas_price(&self, epoch: impl Into<Option<u64>>) -> Result<Option<u64>> {
+    pub async fn reference_gas_price(
+        &self,
+        epoch: impl Into<Option<u64>>,
+    ) -> GraphQLResult<Option<u64>> {
         let operation = EpochSummaryQuery::build(EpochArgs { id: epoch.into() });
         let response = self.run_query(&operation).await?;
 
@@ -45,7 +48,7 @@ impl Client {
     pub async fn protocol_config(
         &self,
         version: impl Into<Option<u64>>,
-    ) -> Result<ProtocolConfigs> {
+    ) -> GraphQLResult<ProtocolConfigs> {
         let operation = ProtocolConfigQuery::build(ProtocolVersionArgs { id: version.into() });
         let response = self.run_query(&operation).await?;
         Ok(response.protocol_config)
@@ -58,7 +61,7 @@ impl Client {
         &self,
         epoch: impl Into<Option<u64>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<Validator>> {
+    ) -> GraphQLResult<Page<Validator>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = ActiveValidatorsQuery::build(ActiveValidatorsArgs {

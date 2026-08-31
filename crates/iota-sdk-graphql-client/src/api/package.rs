@@ -10,7 +10,7 @@ use iota_types::{Address, MovePackage, Object, Version};
 
 use crate::{
     Client, Page,
-    error::Result,
+    error::GraphQLResult,
     pagination::PaginationFilter,
     query_types::{
         LatestPackageQuery, MoveFunction, MoveModule, MovePackageVersionFilter,
@@ -36,7 +36,7 @@ impl Client {
         &self,
         address: Address,
         version: impl Into<Option<Version>>,
-    ) -> Result<Option<MovePackage>> {
+    ) -> GraphQLResult<Option<MovePackage>> {
         let operation = PackageQuery::build(PackageArgs {
             address,
             version: version.into().map(|v| v.as_u64()),
@@ -63,7 +63,7 @@ impl Client {
         pagination_filter: PaginationFilter,
         after_version: impl Into<Option<Version>>,
         before_version: impl Into<Option<Version>>,
-    ) -> Result<Page<MovePackage>> {
+    ) -> GraphQLResult<Page<MovePackage>> {
         let pagination = self.pagination_filter(pagination_filter).await;
         let operation = PackageVersionsQuery::build(PackageVersionsArgs {
             address,
@@ -89,11 +89,11 @@ impl Client {
                 b64.as_ref()
                     .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
             })
-            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+            .collect::<GraphQLResult<Vec<_>, base64ct::Error>>()?;
         let packages = bcs
             .iter()
             .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
+            .collect::<GraphQLResult<Vec<_>, bcs::Error>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -101,7 +101,7 @@ impl Client {
     /// Fetch the latest version of the package at address.
     /// This corresponds to the package with the highest version that shares its
     /// original ID with the package at address.
-    pub async fn package_latest(&self, address: Address) -> Result<Option<MovePackage>> {
+    pub async fn package_latest(&self, address: Address) -> GraphQLResult<Option<MovePackage>> {
         let operation = LatestPackageQuery::build(PackageArgs {
             address,
             version: None,
@@ -131,7 +131,7 @@ impl Client {
         pagination_filter: PaginationFilter,
         after_checkpoint: impl Into<Option<u64>>,
         before_checkpoint: impl Into<Option<u64>>,
-    ) -> Result<Page<MovePackage>> {
+    ) -> GraphQLResult<Page<MovePackage>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = PackagesQuery::build(PackagesQueryArgs {
@@ -157,11 +157,11 @@ impl Client {
                 b64.as_ref()
                     .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
             })
-            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+            .collect::<GraphQLResult<Vec<_>, base64ct::Error>>()?;
         let packages = bcs
             .iter()
             .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
+            .collect::<GraphQLResult<Vec<_>, bcs::Error>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -174,7 +174,7 @@ impl Client {
         module: &str,
         function: &str,
         version: impl Into<Option<Version>>,
-    ) -> Result<Option<MoveFunction>> {
+    ) -> GraphQLResult<Option<MoveFunction>> {
         let operation = NormalizedMoveFunctionQuery::build(NormalizedMoveFunctionQueryArgs {
             address: package,
             module,
@@ -202,7 +202,7 @@ impl Client {
         pagination_filter_friends: PaginationFilter,
         pagination_filter_functions: PaginationFilter,
         pagination_filter_structs: PaginationFilter,
-    ) -> Result<Option<MoveModule>> {
+    ) -> GraphQLResult<Option<MoveModule>> {
         let enums = self.pagination_filter(pagination_filter_enums).await;
         let friends = self.pagination_filter(pagination_filter_friends).await;
         let functions = self.pagination_filter(pagination_filter_functions).await;

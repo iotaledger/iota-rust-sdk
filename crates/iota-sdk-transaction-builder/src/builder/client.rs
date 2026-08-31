@@ -392,7 +392,7 @@ pub(crate) mod test_client {
     #[derive(Clone, Copy, Debug, Default)]
     pub struct TestClient;
 
-    /// Error type for [`TestClient`].
+    /// TransactionBuilderError type for [`TestClient`].
     #[derive(Clone, Debug, thiserror::Error)]
     #[error("TestClientError: {0}")]
     pub struct TestClientError(pub String);

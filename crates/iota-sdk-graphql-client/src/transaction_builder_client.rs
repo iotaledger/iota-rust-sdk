@@ -25,7 +25,7 @@ impl Client {
 }
 
 impl TransactionBuilderClient for Client {
-    type Error = crate::error::Error;
+    type Error = crate::error::GraphQLError;
     type DryRunResult = DryRunResult;
 
     async fn object(
@@ -50,7 +50,7 @@ impl TransactionBuilderClient for Client {
         let cursor = cursor
             .map(String::from_utf8)
             .transpose()
-            .map_err(crate::error::Error::parse)?;
+            .map_err(crate::error::GraphQLError::parse)?;
         let page = self
             .objects(
                 ObjectFilter {

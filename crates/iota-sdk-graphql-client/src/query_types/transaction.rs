@@ -6,7 +6,7 @@ use base64ct::Encoding;
 use iota_types::{ObjectId, SenderSignedTransaction, SignedTransaction, TransactionEffects};
 
 use crate::{
-    error::{self, Error},
+    error::{self, GraphQLError},
     query_types::{Address, Base64, PageInfo, checkpoint::Checkpoint, schema},
 };
 
@@ -288,7 +288,7 @@ pub struct TransactionBlockEffectsConnection {
 }
 
 impl TryFrom<TransactionBlock> for SignedTransaction {
-    type Error = error::Error;
+    type Error = error::GraphQLError;
 
     fn try_from(value: TransactionBlock) -> Result<Self, Self::Error> {
         let transaction = value
@@ -301,13 +301,13 @@ impl TryFrom<TransactionBlock> for SignedTransaction {
         if let Some(transaction) = transaction {
             Ok(transaction.into())
         } else {
-            Err(Error::EmptyResponseField("transaction bcs"))
+            Err(GraphQLError::EmptyResponseField("transaction bcs"))
         }
     }
 }
 
 impl TryFrom<TxBlockEffects> for TransactionEffects {
-    type Error = error::Error;
+    type Error = error::GraphQLError;
 
     fn try_from(value: TxBlockEffects) -> Result<Self, Self::Error> {
         let effects = value
@@ -316,6 +316,6 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
             .transpose()?
             .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
             .transpose()?;
-        effects.ok_or(Error::EmptyResponseField("transaction effects bcs"))
+        effects.ok_or(GraphQLError::EmptyResponseField("transaction effects bcs"))
     }
 }

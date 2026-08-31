@@ -103,8 +103,9 @@ pub use api::{
 };
 // Re-export types for convenience
 pub use api::{
-    CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, Error, MetadataEnvelope, Page,
-    ProtocolError, ReadMask, Result, RpcStatus, execution::simulate::SimulateTransactionInput,
+    CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, GrpcError, GrpcResult,
+    MetadataEnvelope, Page, ProtocolError, ReadMask, RpcStatus,
+    execution::simulate::SimulateTransactionInput,
 };
 // Re-export all read mask constants (endpoint defaults)
 pub use api::{

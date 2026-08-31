@@ -11,7 +11,7 @@ use iota_grpc_types::{
 
 use crate::{
     Client,
-    api::{MetadataEnvelope, Result, TryFromProtoError},
+    api::{GrpcResult, MetadataEnvelope, TryFromProtoError},
 };
 
 impl Client {
@@ -90,7 +90,7 @@ impl Client {
         &self,
         epoch: impl Into<Option<u64>>,
         read_mask: impl IntoReadMask<EpochReadMask>,
-    ) -> Result<MetadataEnvelope<Epoch>> {
+    ) -> GrpcResult<MetadataEnvelope<Epoch>> {
         let read_mask = read_mask.into_read_mask();
         let mut request = GetEpochRequest::default().with_read_mask(read_mask);
 
@@ -120,7 +120,7 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_reference_gas_price(&self) -> Result<MetadataEnvelope<u64>> {
+    pub async fn get_reference_gas_price(&self) -> GrpcResult<MetadataEnvelope<u64>> {
         self.get_epoch_field("reference_gas_price", |e| e.reference_gas_price)
             .await
     }
@@ -130,7 +130,7 @@ impl Client {
         &self,
         field: &str,
         extractor: impl FnOnce(Epoch) -> Option<T>,
-    ) -> Result<MetadataEnvelope<T>> {
+    ) -> GrpcResult<MetadataEnvelope<T>> {
         // Current epoch (no epoch field set)
         let request = GetEpochRequest::default().with_read_mask(FieldMask {
             paths: vec![field.to_string()],

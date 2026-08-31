@@ -4,12 +4,12 @@
 use std::str::FromStr;
 
 use iota_sdk::{
-    graphql_client::{Client, error::Result, query_types::TransactionsFilter},
+    graphql_client::{Client, error::GraphQLResult, query_types::TransactionsFilter},
     types::ObjectId,
 };
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> GraphQLResult<()> {
     let client = Client::new_testnet();
 
     let shared_obj_id =

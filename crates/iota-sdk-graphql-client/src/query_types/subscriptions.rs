@@ -11,7 +11,7 @@ use base64ct::Encoding;
 use iota_types::{SenderSignedTransaction, SignedTransaction};
 
 use crate::{
-    error::{self, Error},
+    error::{self, GraphQLError},
     query_types::{
         Address, Base64, DateTime, Event, GQLAddress, JsonValue, MoveData, MoveType,
         TransactionBlockKindInput, normalized_move::MoveModuleQuery, schema,
@@ -218,7 +218,7 @@ pub struct SubscriptionTransactionBlock {
 }
 
 impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
-    type Error = error::Error;
+    type Error = error::GraphQLError;
 
     fn try_from(value: SubscriptionTransactionBlock) -> Result<Self, Self::Error> {
         let transaction = value
@@ -231,7 +231,7 @@ impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
         if let Some(transaction) = transaction {
             Ok(transaction.into())
         } else {
-            Err(Error::EmptyResponseField("transaction bcs"))
+            Err(GraphQLError::EmptyResponseField("transaction bcs"))
         }
     }
 }

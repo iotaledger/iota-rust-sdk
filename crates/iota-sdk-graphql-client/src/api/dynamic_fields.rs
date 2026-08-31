@@ -11,7 +11,7 @@ use iota_types::{Address, TypeTag};
 
 use crate::{
     Client, DynamicFieldOutput, NameValue,
-    error::Result,
+    error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
         DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
@@ -27,7 +27,7 @@ impl Client {
         &self,
         address: Address,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<DynamicFieldOutput>> + '_ {
+    ) -> impl Stream<Item = GraphQLResult<DynamicFieldOutput>> + '_ {
         stream_paginated_query(
             move |filter| self.dynamic_fields(address, filter),
             streaming_direction,
@@ -60,7 +60,7 @@ impl Client {
         address: Address,
         type_tag: TypeTag,
         name: impl Into<NameValue>,
-    ) -> Result<Option<DynamicFieldOutput>> {
+    ) -> GraphQLResult<Option<DynamicFieldOutput>> {
         let bcs = name.into().0;
         let operation = DynamicFieldQuery::build(DynamicFieldArgs {
             address,
@@ -95,7 +95,7 @@ impl Client {
         address: Address,
         type_tag: TypeTag,
         name: impl Into<NameValue>,
-    ) -> Result<Option<DynamicFieldOutput>> {
+    ) -> GraphQLResult<Option<DynamicFieldOutput>> {
         let bcs = name.into().0;
         let operation = DynamicObjectFieldQuery::build(DynamicFieldArgs {
             address,
@@ -123,7 +123,7 @@ impl Client {
         &self,
         address: Address,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<DynamicFieldOutput>> {
+    ) -> GraphQLResult<Page<DynamicFieldOutput>> {
         let pagination = self.pagination_filter(pagination_filter).await;
         let operation = DynamicFieldsOwnerQuery::build(DynamicFieldConnectionArgs {
             address,
@@ -144,7 +144,7 @@ impl Client {
                 .nodes
                 .into_iter()
                 .map(TryInto::try_into)
-                .collect::<Result<Vec<_>>>()?,
+                .collect::<GraphQLResult<Vec<_>>>()?,
         ))
     }
 }

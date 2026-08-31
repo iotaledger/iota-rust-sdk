@@ -25,7 +25,7 @@ use iota_types::{Address, Identifier, StructTag, framework::Coin};
 
 use crate::{
     Client, InterceptedChannel,
-    api::{Error, Result, TryFromProtoError, define_list_query},
+    api::{GrpcError, GrpcResult, TryFromProtoError, define_list_query},
 };
 
 define_list_query! {
@@ -44,9 +44,10 @@ define_list_query! {
     }
 }
 
-fn object_to_coin(obj: &iota_grpc_types::v1::object::Object) -> Result<Coin> {
+fn object_to_coin(obj: &iota_grpc_types::v1::object::Object) -> GrpcResult<Coin> {
     let sdk_obj = obj.object()?;
-    Coin::try_from_object(&sdk_obj).map_err(|e| Error::from(TryFromProtoError::invalid("coin", e)))
+    Coin::try_from_object(&sdk_obj)
+        .map_err(|e| GrpcError::from(TryFromProtoError::invalid("coin", e)))
 }
 
 impl Client {

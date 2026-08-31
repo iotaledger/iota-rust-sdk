@@ -146,7 +146,7 @@ impl DynamicField {
 }
 
 impl TryFrom<DynamicField> for DynamicFieldOutput {
-    type Error = error::Error;
+    type Error = error::GraphQLError;
 
     fn try_from(val: DynamicField) -> Result<Self, Self::Error> {
         let typetag = TypeTag::from_str(

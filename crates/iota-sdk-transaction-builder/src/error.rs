@@ -12,7 +12,7 @@ use crate::builder::gas_station::{GasStationVersion, VersionParsingError};
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 #[allow(missing_docs)]
-pub enum Error {
+pub enum TransactionBuilderError {
     #[error("Conversion error due to input issue: {0}")]
     Input(String),
     #[error("Gas object should be an immutable or owned object")]
@@ -98,7 +98,7 @@ pub enum Error {
     DryRun(String),
 }
 
-impl Error {
+impl TransactionBuilderError {
     /// Create a client error
     pub fn client<E: 'static + std::error::Error + Send + Sync>(e: E) -> Self {
         Self::Client(Box::new(e))

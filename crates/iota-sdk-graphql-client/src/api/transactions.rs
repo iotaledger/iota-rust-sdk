@@ -17,7 +17,7 @@ use iota_types::{
 
 use crate::{
     Client, TransactionDataEffects,
-    error::{Error, Result},
+    error::{GraphQLError, GraphQLResult},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
         ExecuteTransactionArgs, ExecuteTransactionQuery, TransactionBlockArgs,
@@ -34,7 +34,7 @@ impl Client {
     pub async fn transaction(
         &self,
         digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>> {
+    ) -> GraphQLResult<Option<SignedTransaction>> {
         let operation = TransactionBlockQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -51,7 +51,7 @@ impl Client {
         &self,
         filter: impl Into<Option<TransactionsFilter>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<SignedTransaction>> {
+    ) -> GraphQLResult<Page<SignedTransaction>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = TransactionBlocksQuery::build(TransactionBlocksQueryArgs {
@@ -71,7 +71,7 @@ impl Client {
             .nodes
             .into_iter()
             .map(|n| n.try_into())
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GraphQLResult<Vec<_>>>()?;
         Ok(Page::new(page_info, transactions))
     }
 
@@ -79,7 +79,7 @@ impl Client {
     pub async fn transaction_effects(
         &self,
         digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>> {
+    ) -> GraphQLResult<Option<TransactionEffects>> {
         let operation = TransactionBlockEffectsQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -96,7 +96,7 @@ impl Client {
         &self,
         filter: impl Into<Option<TransactionsFilter>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<TransactionEffects>> {
+    ) -> GraphQLResult<Page<TransactionEffects>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = TransactionBlocksEffectsQuery::build(TransactionBlocksQueryArgs {
@@ -116,7 +116,7 @@ impl Client {
             .nodes
             .into_iter()
             .map(|n| n.try_into())
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GraphQLResult<Vec<_>>>()?;
         Ok(Page::new(page_info, transactions))
     }
 
@@ -124,7 +124,7 @@ impl Client {
     pub async fn transaction_data_effects(
         &self,
         digest: TransactionDigest,
-    ) -> Result<Option<TransactionDataEffects>> {
+    ) -> GraphQLResult<Option<TransactionDataEffects>> {
         let operation = TransactionBlockWithEffectsQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -152,7 +152,7 @@ impl Client {
         &self,
         filter: impl Into<Option<TransactionsFilter>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<TransactionDataEffects>> {
+    ) -> GraphQLResult<Page<TransactionDataEffects>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = TransactionBlocksWithEffectsQuery::build(TransactionBlocksQueryArgs {
@@ -173,7 +173,9 @@ impl Client {
                 .into_iter()
                 .map(|node| {
                     let (Some(bcs), Some(effects)) = (node.bcs, node.effects) else {
-                        return Err(Error::EmptyResponseField("transaction bcs or effects"));
+                        return Err(GraphQLError::EmptyResponseField(
+                            "transaction bcs or effects",
+                        ));
                     };
                     let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
                     let effects =
@@ -186,7 +188,7 @@ impl Client {
                         effects,
                     })
                 })
-                .collect::<Result<Vec<_>>>()?
+                .collect::<GraphQLResult<Vec<_>>>()?
         };
 
         Ok(Page::new(page_info, transactions))
@@ -198,7 +200,7 @@ impl Client {
         &self,
         filter: impl Into<Option<TransactionsFilter>>,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<TransactionEffects>> + '_ {
+    ) -> impl Stream<Item = GraphQLResult<TransactionEffects>> + '_ {
         let filter = filter.into();
         stream_paginated_query(
             move |pag_filter| self.transactions_effects(filter.clone(), pag_filter),
@@ -212,7 +214,7 @@ impl Client {
         signatures: &[UserSignature],
         tx: &Transaction,
         wait_for: impl Into<Option<WaitForTx>>,
-    ) -> Result<TransactionEffects> {
+    ) -> GraphQLResult<TransactionEffects> {
         let wait_for = wait_for.into();
         let operation = ExecuteTransactionQuery::build(ExecuteTransactionArgs {
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
@@ -236,7 +238,7 @@ impl Client {
     /// on the node. This means that it can be queried by its digest and its
     /// effects will be usable for subsequent transactions. To check for
     /// full finalization, use [`Self::is_tx_finalized`].
-    pub async fn is_tx_indexed_on_node(&self, digest: TransactionDigest) -> Result<bool> {
+    pub async fn is_tx_indexed_on_node(&self, digest: TransactionDigest) -> GraphQLResult<bool> {
         let operation = TransactionBlockIndexedQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -248,7 +250,7 @@ impl Client {
 
     /// Returns whether the transaction for the given digest has been included
     /// in a checkpoint (finalized).
-    pub async fn is_tx_finalized(&self, digest: TransactionDigest) -> Result<bool> {
+    pub async fn is_tx_finalized(&self, digest: TransactionDigest) -> GraphQLResult<bool> {
         let operation = TransactionBlockCheckpointQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -273,7 +275,7 @@ impl Client {
         digest: TransactionDigest,
         wait_for: WaitForTx,
         timeout: impl Into<Option<Duration>>,
-    ) -> Result<()> {
+    ) -> GraphQLResult<()> {
         crate::wait::timeout(
             timeout.into().unwrap_or_else(|| Duration::from_secs(60)),
             async {
@@ -292,7 +294,7 @@ impl Client {
             },
         )
         .await
-        .map_err(|_| Error::Timeout)?
+        .map_err(|_| GraphQLError::Timeout)?
     }
 }
 

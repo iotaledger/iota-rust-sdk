@@ -22,7 +22,7 @@ use std::sync::{
 
 use futures::{StreamExt, stream::BoxStream};
 use iota_sdk::graphql_client::{
-    error::Result as GqlResult, query_types::TransactionBlockKindInput,
+    error::GraphQLResult as GqlResult, query_types::TransactionBlockKindInput,
 };
 use tokio::sync::{Mutex, Notify};
 
@@ -264,11 +264,11 @@ define_subscription!(
 /// a dropped WebSocket, a failed handshake, or the server dropping payloads for
 /// a client that fell behind.
 #[cfg(not(target_arch = "wasm32"))]
-fn is_recoverable(error: &iota_sdk::graphql_client::error::Error) -> bool {
+fn is_recoverable(error: &iota_sdk::graphql_client::error::GraphQLError) -> bool {
     matches!(
         error,
-        iota_sdk::graphql_client::error::Error::Subscription(_)
-            | iota_sdk::graphql_client::error::Error::Lagged { .. }
+        iota_sdk::graphql_client::error::GraphQLError::Subscription(_)
+            | iota_sdk::graphql_client::error::GraphQLError::Lagged { .. }
     )
 }
 

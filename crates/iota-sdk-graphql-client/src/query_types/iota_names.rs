@@ -4,7 +4,7 @@
 use base64ct::Encoding;
 
 use crate::{
-    error::Error,
+    error::GraphQLError,
     query_types::{Address, Base64, GQLAddress, PageInfo, schema},
 };
 
@@ -97,19 +97,19 @@ pub struct NameRegistration {
 }
 
 impl TryFrom<NameRegistration> for iota_types::iota_names::NameRegistration {
-    type Error = Error;
+    type Error = GraphQLError;
 
     fn try_from(value: NameRegistration) -> Result<Self, Self::Error> {
         let bytes = base64ct::Base64::decode_vec(
             value
                 .bcs
-                .ok_or(Error::EmptyResponseField("name registration bcs"))?
+                .ok_or(GraphQLError::EmptyResponseField("name registration bcs"))?
                 .0
                 .as_str(),
         )?;
         bcs::from_bytes::<iota_types::Object>(&bytes)?
             .to_rust()
-            .map_err(Error::deserialization)
+            .map_err(GraphQLError::deserialization)
     }
 }
 

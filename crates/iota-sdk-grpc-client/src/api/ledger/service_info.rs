@@ -10,7 +10,7 @@ use iota_grpc_types::{
 
 use crate::{
     Client,
-    api::{MetadataEnvelope, Result},
+    api::{GrpcResult, MetadataEnvelope},
 };
 
 impl Client {
@@ -51,7 +51,7 @@ impl Client {
     pub async fn get_service_info(
         &self,
         read_mask: impl IntoReadMask<ServiceInfoReadMask>,
-    ) -> Result<MetadataEnvelope<GetServiceInfoResponse>> {
+    ) -> GrpcResult<MetadataEnvelope<GetServiceInfoResponse>> {
         let read_mask = read_mask.into_read_mask();
         let request = GetServiceInfoRequest::default().with_read_mask(read_mask);
 

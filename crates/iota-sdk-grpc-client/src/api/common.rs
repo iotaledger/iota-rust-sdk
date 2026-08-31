@@ -31,8 +31,8 @@ use super::MetadataEnvelope;
 /// Errors that can occur during gRPC client API operations.
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
-pub enum Error {
-    /// Error converting proto types to SDK types.
+pub enum GrpcError {
+    /// GrpcError converting proto types to SDK types.
     #[error("proto conversion error: {0}")]
     ProtoConversion(#[from] Box<TryFromProtoError>),
 
@@ -45,7 +45,7 @@ pub enum Error {
     #[error("protocol error: {0}")]
     Protocol(ProtocolError),
 
-    /// Error converting signatures to proto format.
+    /// GrpcError converting signatures to proto format.
     #[error("signature conversion error: {0}")]
     Signature(GrpcConversionError),
 
@@ -62,7 +62,7 @@ pub enum Error {
     Grpc(Box<tonic::Status>),
 }
 
-impl Error {
+impl GrpcError {
     /// Returns `true` if the error carries a `NOT_FOUND` status, whether the
     /// server reported it for the call or for a single item of a batched
     /// request.
@@ -76,43 +76,43 @@ impl Error {
     /// checkpoint, do report absence at the call level.
     pub fn is_not_found(&self) -> bool {
         match self {
-            Error::Server(status) => status.code == i32::from(tonic::Code::NotFound),
-            Error::Grpc(status) => status.code() == tonic::Code::NotFound,
+            GrpcError::Server(status) => status.code == i32::from(tonic::Code::NotFound),
+            GrpcError::Grpc(status) => status.code() == tonic::Code::NotFound,
             _ => false,
         }
     }
 }
 
-impl From<TryFromProtoError> for Error {
+impl From<TryFromProtoError> for GrpcError {
     fn from(err: TryFromProtoError) -> Self {
-        Error::ProtoConversion(Box::new(err))
+        GrpcError::ProtoConversion(Box::new(err))
     }
 }
 
-impl From<tonic::Status> for Error {
+impl From<tonic::Status> for GrpcError {
     fn from(status: tonic::Status) -> Self {
-        Error::Grpc(Box::new(status))
+        GrpcError::Grpc(Box::new(status))
     }
 }
 
-impl From<Error> for tonic::Status {
-    fn from(err: Error) -> Self {
+impl From<GrpcError> for tonic::Status {
+    fn from(err: GrpcError) -> Self {
         match err {
-            Error::ProtoConversion(e) => {
+            GrpcError::ProtoConversion(e) => {
                 tonic::Status::internal(format!("proto conversion error: {e}"))
             }
-            Error::Server(status) => status.to_tonic_status(),
-            Error::Protocol(err) => tonic::Status::internal(format!("protocol error: {err}")),
-            Error::Signature(err) => {
+            GrpcError::Server(status) => status.to_tonic_status(),
+            GrpcError::Protocol(err) => tonic::Status::internal(format!("protocol error: {err}")),
+            GrpcError::Signature(err) => {
                 tonic::Status::internal(format!("signature conversion error: {err}"))
             }
-            Error::EmptyRequest => {
+            GrpcError::EmptyRequest => {
                 tonic::Status::invalid_argument("empty request: at least one item must be provided")
             }
-            Error::UnexpectedEndOfStream => {
+            GrpcError::UnexpectedEndOfStream => {
                 tonic::Status::internal("stream ended unexpectedly: has_next was true")
             }
-            Error::Grpc(status) => *status,
+            GrpcError::Grpc(status) => *status,
         }
     }
 }
@@ -129,7 +129,7 @@ pub enum ProtocolError {
     #[error("empty response field: {0}")]
     EmptyResponseField(&'static str),
 
-    /// Error during checkpoint data stream reassembly.
+    /// GrpcError during checkpoint data stream reassembly.
     #[error("checkpoint stream error: {0}")]
     CheckpointStream(#[from] CheckpointStreamError),
 
@@ -182,8 +182,8 @@ pub enum CheckpointStreamError {
     IncompleteStream { sequence_number: u64 },
 }
 
-/// Result type alias for API operations.
-pub type Result<T> = std::result::Result<T, Error>;
+/// GrpcResult type alias for API operations.
+pub type GrpcResult<T> = std::result::Result<T, GrpcError>;
 
 // =============================================================================
 // Field Masks
@@ -253,7 +253,7 @@ pub fn saturating_usize_to_u32(value: usize) -> u32 {
 }
 
 /// A trait for proto result types that follow the pattern of having
-/// `Some(Result::Value)`, `Some(Result::Error)`, or `None`.
+/// `Some(GrpcResult::Value)`, `Some(GrpcResult::Error)`, or `None`.
 ///
 /// This allows generic handling of gRPC response results that can be either
 /// a success value, a server error, or missing.
@@ -262,7 +262,7 @@ pub trait ProtoResult {
     type Value;
 
     /// Extract the result, converting to our error types.
-    fn into_result(self) -> Result<Self::Value>;
+    fn into_result(self) -> GrpcResult<Self::Value>;
 }
 
 /// Convert a batch of proto results into one result per requested item,
@@ -270,9 +270,10 @@ pub trait ProtoResult {
 ///
 /// The batched RPCs report a failure for a single item as a `google.rpc.Status`
 /// in that item's slot, so the outcome for one item is independent of the
-/// others: a caller that needs every item can `collect::<Result<Vec<_>>>()`,
-/// while one that tolerates gaps can inspect each slot.
-pub fn into_item_results<T: ProtoResult>(batch: Vec<T>) -> Vec<Result<T::Value>> {
+/// others: a caller that needs every item can
+/// `collect::<GrpcResult<Vec<_>>>()`, while one that tolerates gaps can inspect
+/// each slot.
+pub fn into_item_results<T: ProtoResult>(batch: Vec<T>) -> Vec<GrpcResult<T::Value>> {
     batch.into_iter().map(ProtoResult::into_result).collect()
 }
 
@@ -280,11 +281,11 @@ pub fn into_item_results<T: ProtoResult>(batch: Vec<T>) -> Vec<Result<T::Value>>
 ///
 /// Callers pair results with requests by position, so a count that does not
 /// match the request leaves no way to tell which item each result belongs to.
-pub fn check_result_count<T>(results: &[T], expected: usize) -> Result<()> {
+pub fn check_result_count<T>(results: &[T], expected: usize) -> GrpcResult<()> {
     if results.len() == expected {
         Ok(())
     } else {
-        Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+        Err(GrpcError::Protocol(ProtocolError::UnexpectedResultCount {
             expected,
             actual: results.len(),
         }))
@@ -297,16 +298,16 @@ pub fn check_result_count<T>(results: &[T], expected: usize) -> Result<()> {
 /// holds object `i`, so the pairing callers rely on is checked rather than
 /// trusted.
 pub fn check_object_identity(
-    results: &[Result<ProtoObject>],
+    results: &[GrpcResult<ProtoObject>],
     requested: &[(ObjectId, Option<Version>)],
-) -> Result<()> {
+) -> GrpcResult<()> {
     for (position, (result, (expected, _))) in results.iter().zip(requested).enumerate() {
         let Ok(object) = result else { continue };
         let Some(actual) = answered_object_id(object)? else {
             continue;
         };
         if actual != *expected {
-            return Err(Error::Protocol(ProtocolError::UnexpectedObject {
+            return Err(GrpcError::Protocol(ProtocolError::UnexpectedObject {
                 position,
                 expected: *expected,
                 actual,
@@ -321,16 +322,16 @@ pub fn check_object_identity(
 /// See [`check_object_identity`] for why the pairing is checked rather than
 /// trusted.
 pub fn check_transaction_identity(
-    results: &[Result<ExecutedTransaction>],
+    results: &[GrpcResult<ExecutedTransaction>],
     requested: &[TransactionDigest],
-) -> Result<()> {
+) -> GrpcResult<()> {
     for (position, (result, expected)) in results.iter().zip(requested).enumerate() {
         let Ok(transaction) = result else { continue };
         let Some(actual) = answered_transaction_digest(transaction)? else {
             continue;
         };
         if actual != *expected {
-            return Err(Error::Protocol(ProtocolError::UnexpectedTransaction {
+            return Err(GrpcError::Protocol(ProtocolError::UnexpectedTransaction {
                 position,
                 expected: *expected,
                 actual,
@@ -343,7 +344,7 @@ pub fn check_transaction_identity(
 /// The id of an answered object, taken from its reference or, when the read
 /// mask left that out, from its BCS. `None` when it carries neither, leaving
 /// nothing to compare.
-fn answered_object_id(object: &ProtoObject) -> Result<Option<ObjectId>> {
+fn answered_object_id(object: &ProtoObject) -> GrpcResult<Option<ObjectId>> {
     if let Some(id) = object
         .reference
         .as_ref()
@@ -362,7 +363,7 @@ fn answered_object_id(object: &ProtoObject) -> Result<Option<ObjectId>> {
 /// carries neither, leaving nothing to compare.
 fn answered_transaction_digest(
     transaction: &ExecutedTransaction,
-) -> Result<Option<TransactionDigest>> {
+) -> GrpcResult<Option<TransactionDigest>> {
     let Some(transaction) = transaction.transaction.as_ref() else {
         return Ok(None);
     };
@@ -378,12 +379,12 @@ fn answered_transaction_digest(
 impl ProtoResult for ObjectResult {
     type Value = ProtoObject;
 
-    fn into_result(self) -> Result<Self::Value> {
+    fn into_result(self) -> GrpcResult<Self::Value> {
         match self.result {
             Some(object_result::Result::Object(obj)) => Ok(obj),
-            Some(object_result::Result::Error(e)) => Err(Error::Server(e)),
+            Some(object_result::Result::Error(e)) => Err(GrpcError::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+            Some(_) => Err(GrpcError::Protocol(ProtocolError::UnknownVariant(
                 "object result",
             ))),
         }
@@ -393,12 +394,12 @@ impl ProtoResult for ObjectResult {
 impl ProtoResult for TransactionResult {
     type Value = ExecutedTransaction;
 
-    fn into_result(self) -> Result<Self::Value> {
+    fn into_result(self) -> GrpcResult<Self::Value> {
         match self.result {
             Some(transaction_result::Result::ExecutedTransaction(tx)) => Ok(tx),
-            Some(transaction_result::Result::Error(e)) => Err(Error::Server(e)),
+            Some(transaction_result::Result::Error(e)) => Err(GrpcError::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+            Some(_) => Err(GrpcError::Protocol(ProtocolError::UnknownVariant(
                 "transaction result",
             ))),
         }
@@ -408,12 +409,12 @@ impl ProtoResult for TransactionResult {
 impl ProtoResult for ExecuteTransactionResult {
     type Value = ExecutedTransaction;
 
-    fn into_result(self) -> Result<Self::Value> {
+    fn into_result(self) -> GrpcResult<Self::Value> {
         match self.result {
             Some(execute_transaction_result::Result::ExecutedTransaction(tx)) => Ok(tx),
-            Some(execute_transaction_result::Result::Error(e)) => Err(Error::Server(e)),
+            Some(execute_transaction_result::Result::Error(e)) => Err(GrpcError::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+            Some(_) => Err(GrpcError::Protocol(ProtocolError::UnknownVariant(
                 "execute transaction result",
             ))),
         }
@@ -423,12 +424,12 @@ impl ProtoResult for ExecuteTransactionResult {
 impl ProtoResult for SimulateTransactionResult {
     type Value = SimulatedTransaction;
 
-    fn into_result(self) -> Result<Self::Value> {
+    fn into_result(self) -> GrpcResult<Self::Value> {
         match self.result {
             Some(simulate_transaction_result::Result::SimulatedTransaction(tx)) => Ok(tx),
-            Some(simulate_transaction_result::Result::Error(e)) => Err(Error::Server(e)),
+            Some(simulate_transaction_result::Result::Error(e)) => Err(GrpcError::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+            Some(_) => Err(GrpcError::Protocol(ProtocolError::UnknownVariant(
                 "simulate transaction result",
             ))),
         }
@@ -445,14 +446,14 @@ impl ProtoResult for SimulateTransactionResult {
 /// The `extract` closure receives each stream message and must return
 /// `(has_next, items)`.  Because some streams require fallible per-item
 /// conversion (e.g. via [`ProtoResult`]), the closure itself returns
-/// `Result<…>`.
+/// `GrpcResult<…>`.
 pub async fn collect_stream<T, I, F>(
     mut stream: tonic::Streaming<T>,
     metadata: tonic::metadata::MetadataMap,
     extract: F,
-) -> Result<MetadataEnvelope<Vec<I>>>
+) -> GrpcResult<MetadataEnvelope<Vec<I>>>
 where
-    F: Fn(T) -> Result<(bool, Vec<I>)>,
+    F: Fn(T) -> GrpcResult<(bool, Vec<I>)>,
 {
     let mut results = Vec::new();
     let mut has_next = false;
@@ -464,7 +465,7 @@ where
     }
 
     if has_next {
-        return Err(Error::UnexpectedEndOfStream);
+        return Err(GrpcError::UnexpectedEndOfStream);
     }
 
     Ok(MetadataEnvelope::new(results, metadata))
@@ -494,9 +495,10 @@ pub struct Page<T> {
 /// - `$item_type` — the item type exposed by the builder
 /// - `$rpc_method` — the RPC method name on the service client
 /// - `$items_field` — the field name on the response containing the items vec
-/// - `map_item` (optional) — a fallible `fn(&ProtoItem) -> Result<$item_type>`
-///   applied to each response element. When omitted, items are passed through
-///   unchanged (so `$item_type` must be the response field's element type).
+/// - `map_item` (optional) — a fallible `fn(&ProtoItem) ->
+///   GrpcResult<$item_type>` applied to each response element. When omitted,
+///   items are passed through unchanged (so `$item_type` must be the response
+///   field's element type).
 ///
 /// # Example
 ///
@@ -522,7 +524,7 @@ pub struct Page<T> {
 ///         item: Coin,
 ///         rpc_method: list_owned_objects,
 ///         items_field: objects,
-///         map_item: object_to_coin, // fn(&Object) -> Result<Coin>
+///         map_item: object_to_coin, // fn(&Object) -> GrpcResult<Coin>
 ///     }
 /// }
 /// ```
@@ -547,13 +549,13 @@ macro_rules! define_list_query {
                 item: $item_type,
                 rpc_method: $rpc_method,
                 items_field: $items_field,
-                map_item: |item| $crate::api::Result::Ok(item),
+                map_item: |item| $crate::api::GrpcResult::Ok(item),
             }
         }
     };
 
     // Conversion variant: each response element is mapped through `$map_item`,
-    // a fallible `fn(&ProtoItem) -> Result<$item_type>`.
+    // a fallible `fn(&ProtoItem) -> GrpcResult<$item_type>`.
     (
         $(#[$meta:meta])*
         pub struct $query_name:ident {
@@ -623,7 +625,7 @@ macro_rules! define_list_query {
             pub async fn collect(
                 self,
                 limit: impl Into<Option<u32>>,
-            ) -> $crate::api::Result<$crate::api::MetadataEnvelope<Vec<$item_type>>> {
+            ) -> $crate::api::GrpcResult<$crate::api::MetadataEnvelope<Vec<$item_type>>> {
                 let limit = limit.into();
                 let mut all_items: Vec<$item_type> = Vec::new();
                 let mut next_page_token = self.page_token;
@@ -689,7 +691,7 @@ macro_rules! define_list_query {
         }
 
         impl ::std::future::IntoFuture for $query_name {
-            type Output = $crate::api::Result<
+            type Output = $crate::api::GrpcResult<
                 $crate::api::MetadataEnvelope<$crate::api::Page<$item_type>>,
             >;
             type IntoFuture = ::std::pin::Pin<
@@ -722,7 +724,7 @@ macro_rules! define_list_query {
                         .$items_field
                         .into_iter()
                         .map(map_item)
-                        .collect::<$crate::api::Result<Vec<$item_type>>>()?;
+                        .collect::<$crate::api::GrpcResult<Vec<$item_type>>>()?;
 
                     Ok($crate::api::MetadataEnvelope::new(
                         $crate::api::Page {
@@ -748,9 +750,9 @@ pub fn proto_object_id(id: ObjectId) -> ProtoObjectId {
 pub fn build_proto_transaction<T: Serialize>(
     data: &T,
     digest: TransactionDigest,
-) -> Result<ProtoTransaction> {
+) -> GrpcResult<ProtoTransaction> {
     let bcs = BcsData::serialize(data)
-        .map_err(|e| Error::from(TryFromProtoError::invalid("transaction", e)))?;
+        .map_err(|e| GrpcError::from(TryFromProtoError::invalid("transaction", e)))?;
 
     let proto_transaction = ProtoTransaction::default()
         .with_digest(digest)
@@ -773,8 +775,9 @@ mod tests {
     };
 
     use super::{
-        BcsData, Error, ExecutedTransaction, ObjectResult, ProtoTransaction, ProtocolError, Result,
-        check_object_identity, check_transaction_identity, into_item_results, proto_object_id,
+        BcsData, ExecutedTransaction, GrpcError, GrpcResult, ObjectResult, ProtoTransaction,
+        ProtocolError, check_object_identity, check_transaction_identity, into_item_results,
+        proto_object_id,
     };
 
     #[test]
@@ -793,7 +796,7 @@ mod tests {
 
         assert_eq!(items.len(), 3);
         assert!(items[0].is_ok());
-        assert!(matches!(items[1], Err(Error::Server(_))));
+        assert!(matches!(items[1], Err(GrpcError::Server(_))));
         assert!(items[2].is_ok());
     }
 
@@ -817,7 +820,7 @@ mod tests {
 
     /// A proto object carrying just its reference, as the default read mask
     /// requests.
-    fn answered(id: ObjectId) -> Result<Object> {
+    fn answered(id: ObjectId) -> GrpcResult<Object> {
         let mut object = Object::default();
         object.reference =
             Some(ProtoObjectReference::default().with_object_id(proto_object_id(id)));
@@ -868,7 +871,7 @@ mod tests {
         let results = vec![answered(object_id(1)), answered(object_id(9))];
 
         let err = check_object_identity(&results, &requested).unwrap_err();
-        let Error::Protocol(ProtocolError::UnexpectedObject {
+        let GrpcError::Protocol(ProtocolError::UnexpectedObject {
             position,
             expected,
             actual,
@@ -886,7 +889,7 @@ mod tests {
         let requested = [(object_id(1), None), (object_id(2), None)];
         let results = vec![
             answered(object_id(1)),
-            Err(Error::Server(Status {
+            Err(GrpcError::Server(Status {
                 code: tonic::Code::NotFound.into(),
                 message: String::new(),
                 details: Vec::new(),
@@ -902,7 +905,7 @@ mod tests {
         let results = vec![Ok(answered_with_bcs_only(object_id(9)))];
 
         let err = check_object_identity(&results, &requested).unwrap_err();
-        let Error::Protocol(ProtocolError::UnexpectedObject {
+        let GrpcError::Protocol(ProtocolError::UnexpectedObject {
             expected, actual, ..
         }) = err
         else {
@@ -929,7 +932,7 @@ mod tests {
         ];
 
         let err = check_transaction_identity(&results, &requested).unwrap_err();
-        let Error::Protocol(ProtocolError::UnexpectedTransaction {
+        let GrpcError::Protocol(ProtocolError::UnexpectedTransaction {
             position,
             expected,
             actual,
@@ -944,13 +947,13 @@ mod tests {
 
     #[test]
     fn not_found_is_recognized_at_the_call_and_item_level() {
-        let item_level = Error::Server(Status {
+        let item_level = GrpcError::Server(Status {
             code: tonic::Code::NotFound.into(),
             message: String::new(),
             details: Vec::new(),
         });
-        let call_level = Error::from(tonic::Status::not_found("gone"));
-        let other = Error::Server(Status {
+        let call_level = GrpcError::from(tonic::Status::not_found("gone"));
+        let other = GrpcError::Server(Status {
             code: tonic::Code::Internal.into(),
             message: String::new(),
             details: Vec::new(),
@@ -959,6 +962,6 @@ mod tests {
         assert!(item_level.is_not_found());
         assert!(call_level.is_not_found());
         assert!(!other.is_not_found());
-        assert!(!Error::EmptyRequest.is_not_found());
+        assert!(!GrpcError::EmptyRequest.is_not_found());
     }
 }

@@ -415,7 +415,7 @@ mod tests {
         });
         assert!(matches!(
             TransactionBuilder::try_from(txn),
-            Err(crate::error::Error::UnsupportedTransactionKind)
+            Err(crate::error::TransactionBuilderError::UnsupportedTransactionKind)
         ));
     }
 }

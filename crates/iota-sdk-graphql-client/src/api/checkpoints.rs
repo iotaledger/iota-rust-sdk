@@ -10,7 +10,7 @@ use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};
 
 use crate::{
     Client,
-    error::{Error, Result},
+    error::{GraphQLError, GraphQLResult},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
         CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsArgs,
@@ -25,7 +25,7 @@ impl Client {
     pub fn checkpoints_stream(
         &self,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<CheckpointSummary>> + '_ {
+    ) -> impl Stream<Item = GraphQLResult<CheckpointSummary>> + '_ {
         stream_paginated_query(move |filter| self.checkpoints(filter), streaming_direction)
     }
 
@@ -36,11 +36,11 @@ impl Client {
         &self,
         digest: impl Into<Option<CheckpointDigest>>,
         seq_num: impl Into<Option<u64>>,
-    ) -> Result<Option<CheckpointSummary>> {
+    ) -> GraphQLResult<Option<CheckpointSummary>> {
         let digest = digest.into();
         let seq_num = seq_num.into();
         if digest.is_some() && seq_num.is_some() {
-            return Err(Error::InvalidArgument(
+            return Err(GraphQLError::InvalidArgument(
                 "either digest or seq_num must be provided",
             ));
         }
@@ -60,7 +60,7 @@ impl Client {
     pub async fn checkpoints(
         &self,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<CheckpointSummary>> {
+    ) -> GraphQLResult<Page<CheckpointSummary>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = CheckpointsQuery::build(CheckpointsArgs {
@@ -77,7 +77,7 @@ impl Client {
             .nodes
             .into_iter()
             .map(|c| c.try_into())
-            .collect::<Result<Vec<CheckpointSummary>, _>>()?;
+            .collect::<GraphQLResult<Vec<CheckpointSummary>, _>>()?;
 
         Ok(Page::new(page_info, nodes))
     }
@@ -86,7 +86,7 @@ impl Client {
     /// executed.
     pub async fn latest_checkpoint_sequence_number(
         &self,
-    ) -> Result<Option<CheckpointSequenceNumber>> {
+    ) -> GraphQLResult<Option<CheckpointSequenceNumber>> {
         Ok(self
             .checkpoint(None, None)
             .await?
@@ -98,21 +98,24 @@ impl Client {
     pub async fn total_transaction_blocks_by_digest(
         &self,
         digest: CheckpointDigest,
-    ) -> Result<Option<u64>> {
+    ) -> GraphQLResult<Option<u64>> {
         self.internal_total_transaction_blocks(Some(digest.to_string()), None)
             .await
     }
 
     /// The total number of transaction blocks in the network by the end of the
     /// provided checkpoint sequence number.
-    pub async fn total_transaction_blocks_by_seq_num(&self, seq_num: u64) -> Result<Option<u64>> {
+    pub async fn total_transaction_blocks_by_seq_num(
+        &self,
+        seq_num: u64,
+    ) -> GraphQLResult<Option<u64>> {
         self.internal_total_transaction_blocks(None, Some(seq_num))
             .await
     }
 
     /// The total number of transaction blocks in the network by the end of the
     /// last known checkpoint.
-    pub async fn total_transaction_blocks(&self) -> Result<Option<u64>> {
+    pub async fn total_transaction_blocks(&self) -> GraphQLResult<Option<u64>> {
         self.internal_total_transaction_blocks(None, None).await
     }
 
@@ -122,9 +125,9 @@ impl Client {
         &self,
         digest: Option<String>,
         seq_num: Option<u64>,
-    ) -> Result<Option<u64>> {
+    ) -> GraphQLResult<Option<u64>> {
         if digest.is_some() && seq_num.is_some() {
-            return Err(Error::InvalidArgument(
+            return Err(GraphQLError::InvalidArgument(
                 "either digest or seq_num can be provided, but not both",
             ));
         }
