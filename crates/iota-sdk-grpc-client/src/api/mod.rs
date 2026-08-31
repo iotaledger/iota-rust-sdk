@@ -216,7 +216,7 @@ impl CheckpointResponse {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let cp = client
-    ///     .latest_checkpoint(None, None, CheckpointResponseReadMask::default())
+    ///     .checkpoint_latest(None, None, CheckpointResponseReadMask::default())
     ///     .await?;
     /// let data = cp.body().checkpoint_data()?;
     /// # Ok(())

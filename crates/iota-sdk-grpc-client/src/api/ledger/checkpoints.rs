@@ -58,13 +58,13 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let checkpoint = client
-    ///     .latest_checkpoint(None, None, CheckpointResponseReadMask::default())
+    ///     .checkpoint_latest(None, None, CheckpointResponseReadMask::default())
     ///     .await?;
     /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn latest_checkpoint(
+    pub async fn checkpoint_latest(
         &self,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
