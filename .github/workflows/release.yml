@@ -53,7 +53,11 @@ jobs:
             PACKAGE_ROOT="bindings/wasm"
           fi
           CHANGELOG=$(./.github/gen_changelog.sh "$PACKAGE" "$PACKAGE_ROOT" ${{ github.sha }} "$VERSION")
-          echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV
+          {
+            echo "CHANGELOG<<CHANGELOG_EOF"
+            echo "$CHANGELOG"
+            echo "CHANGELOG_EOF"
+          } >> $GITHUB_ENV
 
       - name: Create GitHub release
         env:
