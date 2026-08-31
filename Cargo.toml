@@ -78,7 +78,7 @@ iota-grpc-types = { version = "0.0.1-alpha.1", package = "iota-sdk-grpc-types", 
 iota-move-types = { version = "0.0.1-alpha.1", package = "iota-sdk-move-types", path = "crates/iota-sdk-move-types", default-features = false }
 iota-sdk = { version = "3.0.0-alpha.1", package = "iota-sdk", path = "crates/iota-sdk", default-features = false }
 iota-transaction-builder = { version = "0.0.1-alpha.1", package = "iota-sdk-transaction-builder", path = "crates/iota-sdk-transaction-builder", default-features = false }
-iota-types = { version = "0.0.1-alpha.1", package = "iota-sdk-types", path = "crates/iota-sdk-types", default-features = false }
+iota-types = { version = "1.0.0-beta.1", package = "iota-sdk-types", path = "crates/iota-sdk-types", default-features = false }
 
 # Custom profile for WASM builds — optimizes for binary size.
 # Usage: cargo build -p iota-sdk-wasm --profile wasm-release --target wasm32-unknown-unknown
