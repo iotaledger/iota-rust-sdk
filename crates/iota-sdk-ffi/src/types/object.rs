@@ -564,7 +564,7 @@ impl MovePackage {
         self.0.modules.get(&name.0).cloned()
     }
 
-    /// Return the size of the package in bytes
+    /// Return the size of the package in bytes.
     pub fn size(&self) -> u64 {
         self.0.size() as _
     }
