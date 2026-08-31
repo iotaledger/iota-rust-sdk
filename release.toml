@@ -1,9 +1,4 @@
 enable-all-features = true
-# cargo-release treats this array as pre-split argv (no shell), so wrap in `sh -c`
-# to expand the env vars it exports. The hook runs with cwd = crate root and an
-# absolute CRATE_ROOT, while gen_changelog.sh expects repo-root cwd and a relative
-# package path, hence the cd and the prefix strip. COMMIT_TO comes from the
-# pre-publish workflow environment.
 pre-release-hook = [
   "sh",
   "-c",
