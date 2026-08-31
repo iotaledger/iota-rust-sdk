@@ -7,7 +7,7 @@ on:
         type: choice
         required: false
         description: |
-          The level of version bump to make. Required unless an exact version is given.
+          The level of version bump to make. Ignored when an exact version is given.
 
           Possible values:
           - major:   Increase the major version (x.0.0)
@@ -74,18 +74,13 @@ jobs:
         with:
           fetch-depth: 0 # required for git-cliff to have full history
 
-      - name: Validate version inputs
+      - name: Validate version input
+        if: inputs.version != ''
         run: |
-          if [ -z "$VERSION_OVERRIDE" ] && [ -z "${{ inputs.level }}" ]; then
-            echo "Either a bump level or an exact version must be provided." >&2
+          source .github/bump_version.sh
+          if ! parse_version "$VERSION_OVERRIDE" > /dev/null; then
+            echo "Invalid semver: $VERSION_OVERRIDE" >&2
             exit 1
-          fi
-          if [ -n "$VERSION_OVERRIDE" ]; then
-            source .github/bump_version.sh
-            if ! parse_version "$VERSION_OVERRIDE" > /dev/null; then
-              echo "Invalid semver: $VERSION_OVERRIDE" >&2
-              exit 1
-            fi
           fi
 
       - name: Install cargo-release
