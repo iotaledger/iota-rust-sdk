@@ -229,13 +229,13 @@ async def resolve_upgrade_cap_id(client, package_id):
 
     for effects in page.data:
         effects_v1 = effects.as_v1()
-        for changed_obj in effects_v1.changed_objects:
+        for changed_obj in effects_v1.changed_objects():
             if not changed_obj.output_state.is_object_write():
                 continue
 
             obj = await client.object(changed_obj.object_id,
-                                      effects_v1.lamport_version)
-            if obj is not None and obj.as_struct_opt() is not None:
+                                      effects_v1.lamport_version())
+            if obj is not None and obj.as_opt_struct() is not None:
                 if obj.as_struct().struct_type == StructTag.new_upgrade_cap():
                     return changed_obj.object_id
 
@@ -348,7 +348,8 @@ async def was_package_published_as_immutable(client, package_id):
         )
 
         for tx_data in page.data:
-            if publishes_package_as_immutable(tx_data.tx.transaction):
+            if publishes_package_as_immutable(
+                    tx_data.signed_transaction.transaction):
                 return True
 
         if page.page_info.has_next_page:
@@ -367,8 +368,8 @@ async def was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id):
         )
 
         for tx_data in page.data:
-            if uses_upgrade_cap_for_make_immutable(tx_data.tx.transaction,
-                                                   upgrade_cap_id):
+            if uses_upgrade_cap_for_make_immutable(
+                    tx_data.signed_transaction.transaction, upgrade_cap_id):
                 return True
 
         if page.page_info.has_next_page:

@@ -3,8 +3,6 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::TransactionExpiration;
-
 use crate::{
     error::Result,
     types::{
@@ -123,7 +121,7 @@ impl TransactionV1 {
             kind: kind.into(),
             sender: **sender,
             gas_payment: gas_payment.into(),
-            expiration,
+            expiration: expiration.into(),
         })
     }
 
@@ -140,7 +138,7 @@ impl TransactionV1 {
     }
 
     pub fn expiration(&self) -> TransactionExpiration {
-        self.0.expiration
+        self.0.expiration.into()
     }
 
     pub fn digest(&self) -> TransactionDigest {
@@ -964,10 +962,7 @@ impl GenesisTransaction {
     pub fn new(objects: Vec<Arc<GenesisObject>>, events: Vec<Event>) -> crate::error::Result<Self> {
         Ok(Self(iota_sdk::types::GenesisTransaction {
             objects: objects.iter().map(|object| object.0.clone()).collect(),
-            events: events
-                .into_iter()
-                .map(TryInto::try_into)
-                .collect::<crate::error::Result<_>>()?,
+            events: events.into_iter().map(Into::into).collect::<Vec<_>>(),
         }))
     }
 
@@ -1812,9 +1807,9 @@ pub struct TransactionEffects(pub iota_sdk::types::TransactionEffects);
 #[uniffi::export]
 impl TransactionEffects {
     #[uniffi::constructor]
-    pub fn new_v1(effects: TransactionEffectsV1) -> Self {
+    pub fn new_v1(effects: &TransactionEffectsV1) -> Self {
         Self(iota_sdk::types::TransactionEffects::V1(Box::new(
-            effects.into(),
+            effects.0.clone(),
         )))
     }
 
@@ -1822,8 +1817,11 @@ impl TransactionEffects {
         self.0.is_v1()
     }
 
+    /// The V1 effects, which is where the object sets and other views derived
+    /// from them are reported. Panics for any other version; a caller that does
+    /// not want to assume one should check `is_v1` first.
     pub fn as_v1(&self) -> TransactionEffectsV1 {
-        self.0.as_v1().clone().into()
+        TransactionEffectsV1(self.0.as_v1().clone())
     }
 
     pub fn digest(&self) -> TransactionEffectsDigest {
@@ -1841,14 +1839,34 @@ impl TransactionEffects {
 /// transaction-expiration =  %d00      ; none
 ///                        =/ %d01 u64  ; epoch
 /// ```
-#[uniffi::remote(Enum)]
-#[non_exhaustive]
+#[derive(Clone, uniffi::Enum)]
 pub enum TransactionExpiration {
     /// The transaction has no expiration
     None,
     /// Validators won't sign a transaction unless the expiration Epoch
     /// is greater than or equal to the current epoch
     Epoch(u64),
+}
+
+impl From<iota_sdk::types::TransactionExpiration> for TransactionExpiration {
+    fn from(value: iota_sdk::types::TransactionExpiration) -> Self {
+        match value {
+            iota_sdk::types::TransactionExpiration::None => Self::None,
+            iota_sdk::types::TransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
+            _ => unimplemented!(
+                "a new TransactionExpiration variant was added and needs to be handled"
+            ),
+        }
+    }
+}
+
+impl From<TransactionExpiration> for iota_sdk::types::TransactionExpiration {
+    fn from(value: TransactionExpiration) -> Self {
+        match value {
+            TransactionExpiration::None => Self::None,
+            TransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
+        }
+    }
 }
 
 /// An argument to a programmable transaction command
@@ -2030,9 +2048,9 @@ crate::export_iota_types_bcs_conversion!(
     RandomnessStateUpdate,
     DenyRuleSet,
     TransactionDenyRulesUpdate,
-    GasPayment
+    GasPayment,
+    TransactionExpiration
 );
-crate::export_remote_types_bcs_conversion!(TransactionExpiration);
 crate::export_iota_types_objects_bcs_conversion!(
     Transaction,
     TransactionV1,
@@ -2063,9 +2081,9 @@ crate::export_iota_types_json_conversion!(
     RandomnessStateUpdate,
     DenyRuleSet,
     TransactionDenyRulesUpdate,
-    GasPayment
+    GasPayment,
+    TransactionExpiration
 );
-crate::export_remote_types_json_conversion!(TransactionExpiration);
 crate::export_iota_types_objects_json_conversion!(
     Transaction,
     TransactionV1,
@@ -2087,4 +2105,41 @@ crate::export_iota_types_objects_json_conversion!(
     TransactionEffects,
     Argument,
     MoveCall,
+);
+crate::export_iota_types_display!(
+    SignedTransaction,
+    RandomnessStateUpdate,
+    DenyRuleSet,
+    TransactionDenyRulesUpdate,
+    GasPayment,
+    SharedObjectReference,
+    TransactionExpiration,
+    TransactionKind,
+    Input,
+    Command,
+    EndOfEpochTransactionKind,
+);
+crate::export_iota_types_objects_display!(
+    Transaction,
+    TransactionV1,
+    ProgrammableTransaction,
+    TransferObjects,
+    SplitCoins,
+    MergeCoins,
+    Publish,
+    MakeMoveVector,
+    Upgrade,
+    ConsensusCommitPrologueV1,
+    ConsensusDeterminedVersionAssignments,
+    CanceledTransaction,
+    VersionAssignment,
+    GenesisTransaction,
+    ChangeEpoch,
+    SystemPackage,
+    ChangeEpochV2,
+    ChangeEpochV3,
+    ChangeEpochV4,
+    TransactionEffects,
+    Argument,
+    MoveCall
 );

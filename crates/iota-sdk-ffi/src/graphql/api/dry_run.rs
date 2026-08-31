@@ -22,12 +22,16 @@ impl GraphQLClient {
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks. Defaults to false.
     #[uniffi::method(default(skip_checks = false))]
-    pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
+    pub async fn dry_run_transaction(
+        &self,
+        transaction: &Transaction,
+        skip_checks: bool,
+    ) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
             .await
-            .dry_run_tx(&tx.0, skip_checks)
+            .dry_run_transaction(&transaction.0, skip_checks)
             .await?
             .into())
     }
@@ -40,19 +44,23 @@ impl GraphQLClient {
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks. Defaults to false.
     ///
-    /// `tx_meta` is the transaction metadata.
+    /// `transaction_metadata` is the transaction metadata.
     #[uniffi::method(default(skip_checks = false))]
-    pub async fn dry_run_tx_kind(
+    pub async fn dry_run_transaction_kind(
         &self,
-        tx_kind: TransactionKind,
-        tx_meta: TransactionMetadata,
+        transaction_kind: TransactionKind,
+        transaction_metadata: TransactionMetadata,
         skip_checks: bool,
     ) -> Result<DryRunResult> {
         Ok(self
             .0
             .read()
             .await
-            .dry_run_tx_kind(&tx_kind.into(), skip_checks, tx_meta.into())
+            .dry_run_transaction_kind(
+                &transaction_kind.into(),
+                skip_checks,
+                transaction_metadata.into(),
+            )
             .await?
             .into())
     }

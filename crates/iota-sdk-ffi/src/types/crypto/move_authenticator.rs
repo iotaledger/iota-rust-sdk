@@ -93,3 +93,5 @@ impl MoveAuthenticatorV1 {
         self.0.object_to_authenticate().clone().into()
     }
 }
+
+crate::export_iota_types_objects_display!(MoveAuthenticator, MoveAuthenticatorV1);

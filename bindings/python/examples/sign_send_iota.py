@@ -27,17 +27,17 @@ async def main():
     builder.send_iota(recipient_address, PtbArgument.u64(amount))
     txn = await builder.finish()
 
-    dry_run_result = await client.dry_run_tx(txn)
+    dry_run_result = await client.dry_run_transaction(txn)
     if dry_run_result.error is not None:
         raise Exception(f"Dry run failed: {dry_run_result.error}")
 
     signature = private_key.try_sign_simple(txn.signing_digest())
     user_signature = UserSignature.new_simple(signature)
 
-    effects = await client.execute_tx([user_signature], txn)
+    effects = await client.execute_transaction([user_signature], txn)
 
     print(f"Digest: {hex_encode(effects.digest().to_bytes())}")
-    print(f"Transaction status: {effects.as_v1().status}")
+    print(f"Transaction status: {effects.as_v1().status()}")
     print(f"Effects: {effects.as_v1()}")
 
 

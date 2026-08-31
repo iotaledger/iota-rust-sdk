@@ -20,7 +20,7 @@ import {
   StructTag,
   initAsync,
   UpgradePolicy,
-  WaitForTx,
+  WaitForTransaction,
 } from "@iota/sdk-wasm";
 
 await initAsync();
@@ -66,7 +66,7 @@ let tx = await builder.finish();
 
 // Perform a dry-run first to check if everything is correct
 console.log("> Publishing package (dry run):");
-let result = await client.dryRunTx(tx, false);
+let result = await client.dryRunTransaction(tx, false);
 if (result.error) throw new Error(`Dry run failed: ${result.error}`);
 if (result.effects === null) throw new Error("Dry run failed: no effects");
 console.log("Success");
@@ -74,13 +74,17 @@ console.log("Success");
 // Sign and execute the transaction (publish the package)
 console.log("> Publishing package:");
 let sig = privateKey.signTransaction(tx);
-let effects = await client.executeTx([sig], tx, WaitForTx.Finalized);
+let effects = await client.executeTransaction(
+  [sig],
+  tx,
+  WaitForTransaction.Finalized,
+);
 console.log("Success");
 
 // Resolve UpgradeCap and PackageId via the client
 let upgradeCap = null;
 let packageId = null;
-for (const changedObj of effects.asV1().changedObjects) {
+for (const changedObj of effects.asV1().changedObjects()) {
   if (changedObj.outputState.tag === "ObjectWrite") {
     const objectId = changedObj.objectId;
     const obj = await client.object(objectId);
@@ -137,7 +141,7 @@ tx = await builder.finish();
 
 // Perform a dry-run first to check if everything is correct
 console.log("> Upgrading package (dry run):");
-result = await client.dryRunTx(tx, false);
+result = await client.dryRunTransaction(tx, false);
 if (result.error) throw new Error(`Dry run failed: ${result.error}`);
 if (result.effects === null) throw new Error("Dry run failed: no effects");
 console.log("Success");
@@ -145,11 +149,11 @@ console.log("Success");
 // Sign and execute the transaction (upgrade the package)
 console.log("> Upgrading package:");
 sig = privateKey.signTransaction(tx);
-effects = await client.executeTx([sig], tx);
+effects = await client.executeTransaction([sig], tx);
 console.log("Success");
 
 // Print the new package version (should now be 2)
-for (const changedObj of effects.asV1().changedObjects) {
+for (const changedObj of effects.asV1().changedObjects()) {
   if (changedObj.outputState.tag === "PackageWrite") {
     console.log(`New Package ID: ${changedObj.objectId.toHex()}`);
     console.log(`New Package version: ${changedObj.outputState.inner.version}`);

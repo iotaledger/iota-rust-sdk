@@ -95,11 +95,17 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::ObjectReference>();
     assert_display::<iota_sdk_types::ObjectType>();
     assert_display::<iota_sdk_types::Owner>();
+    assert_display::<iota_sdk_types::InputSharedObject>();
+    assert_display::<iota_sdk_types::ObjectChange>();
+    assert_display::<iota_sdk_types::ObjectRemoveKind>();
+    assert_display::<iota_sdk_types::ObjectVersion>();
+    assert_display::<iota_sdk_types::OwnedObjectReference>();
     assert_display::<iota_sdk_types::PackageUpgradeError>();
     assert_display::<iota_sdk_types::PasskeyAuthenticator>();
     assert_display::<iota_sdk_types::PasskeyPublicKey>();
     assert_display::<iota_sdk_types::ProgrammableTransaction>();
     assert_display::<iota_sdk_types::PublicKey>();
+    assert_display::<iota_sdk_types::PublicKeyError>();
     assert_display::<iota_sdk_types::Publish>();
     assert_display::<iota_sdk_types::RandomnessRound>();
     assert_display::<iota_sdk_types::RandomnessStateUpdate>();
@@ -147,6 +153,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::ValidatorSignature>();
     assert_display::<iota_sdk_types::VersionAssignment>();
     assert_display::<iota_sdk_types::Version>();
+    assert_display::<iota_sdk_types::WriteKind>();
     assert_display::<iota_sdk_types::version::VersionError>();
 }
 

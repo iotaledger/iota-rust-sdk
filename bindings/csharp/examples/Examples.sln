@@ -57,6 +57,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignSendIota", "SignSendIot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonRoundtrip", "JsonRoundtrip\JsonRoundtrip.csproj", "{30466BFD-5822-49FF-A33C-DECCFF7F3B7A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisplayTransaction", "DisplayTransaction\DisplayTransaction.csproj", "{6F3C1A94-77E5-4A62-9D3B-2C8B5E4D1F70}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectsByType", "ObjectsByType\ObjectsByType.csproj", "{A3043894-A5BD-481D-9561-22A95173772E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetTransaction", "GetTransaction\GetTransaction.csproj", "{314853E9-13DD-40BB-BE30-AA406EF7B470}"
@@ -281,5 +283,9 @@ Global
 		{042B80AD-AD76-4608-AFA7-4D65CD70DD93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{042B80AD-AD76-4608-AFA7-4D65CD70DD93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{042B80AD-AD76-4608-AFA7-4D65CD70DD93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F3C1A94-77E5-4A62-9D3B-2C8B5E4D1F70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F3C1A94-77E5-4A62-9D3B-2C8B5E4D1F70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F3C1A94-77E5-4A62-9D3B-2C8B5E4D1F70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F3C1A94-77E5-4A62-9D3B-2C8B5E4D1F70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

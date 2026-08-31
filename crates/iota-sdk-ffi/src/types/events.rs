@@ -1,13 +1,15 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{str::FromStr, sync::Arc};
+use std::sync::Arc;
 
-use iota_sdk::types::{Identifier, StructTag};
+use iota_sdk::types::Identifier;
 
 use crate::{
     error::Result,
-    types::{address::Address, digest::TransactionEventsDigest, object::ObjectId},
+    types::{
+        address::Address, digest::TransactionEventsDigest, move_core::StructTag, object::ObjectId,
+    },
 };
 
 /// An event emitted during the successful execution of a transaction.
@@ -16,7 +18,7 @@ use crate::{
 /// field is required and the type round-trips through BCS/JSON. For events
 /// returned by the GraphQL `events` query — which may originate from system
 /// transactions and therefore lack a sender or emitting module — see
-/// [`GraphQlEvent`](crate::graphql::query_types::GraphQlEvent).
+/// [`GraphQLEvent`](crate::graphql::query_types::GraphQLEvent).
 ///
 /// # BCS
 ///
@@ -37,22 +39,20 @@ pub struct Event {
     /// emitted.
     pub sender: Arc<Address>,
     /// The type of the event emitted
-    pub struct_tag: String,
+    pub struct_tag: Arc<StructTag>,
     /// BCS serialized bytes of the event
     pub contents: Vec<u8>,
 }
 
-impl TryFrom<Event> for iota_sdk::types::Event {
-    type Error = crate::error::SdkFfiError;
-
-    fn try_from(value: Event) -> Result<Self> {
-        Ok(Self {
+impl From<Event> for iota_sdk::types::Event {
+    fn from(value: Event) -> Self {
+        Self {
             package_id: (**value.package_id),
-            module: Identifier::from_str(&value.module)?,
+            module: Identifier::new_unchecked(&value.module),
             sender: (**value.sender),
-            struct_tag: StructTag::from_str(&value.struct_tag)?,
+            struct_tag: value.struct_tag.0.clone(),
             contents: value.contents,
-        })
+        }
     }
 }
 
@@ -62,7 +62,7 @@ impl From<iota_sdk::types::Event> for Event {
             package_id: Arc::new(value.package_id.into()),
             module: value.module.to_string(),
             sender: Arc::new(value.sender.into()),
-            struct_tag: value.struct_tag.to_string(),
+            struct_tag: Arc::new(value.struct_tag.into()),
             contents: value.contents,
         }
     }
@@ -85,10 +85,7 @@ impl TransactionEvents {
     #[uniffi::constructor]
     pub fn new(events: Vec<Event>) -> Result<Self> {
         Ok(Self(iota_sdk::types::TransactionEvents(
-            events
-                .into_iter()
-                .map(TryInto::try_into)
-                .collect::<Result<_>>()?,
+            events.into_iter().map(Into::into).collect::<Vec<_>>(),
         )))
     }
 
@@ -101,32 +98,9 @@ impl TransactionEvents {
     }
 }
 
-#[uniffi::export]
-impl Event {
-    /// Convert this [`Event`] to BCS encoded bytes.
-    pub fn to_bcs(&self) -> Result<Vec<u8>> {
-        let data: iota_sdk::types::Event = self.clone().try_into()?;
-        Ok(bcs::to_bytes(&data)?)
-    }
-
-    /// Convert this [`Event`] to a JSON encoded string.
-    pub fn to_json(&self) -> Result<String> {
-        let data: iota_sdk::types::Event = self.clone().try_into()?;
-        Ok(serde_json::to_string(&data)?)
-    }
-}
-
-/// Create an [`Event`] from BCS encoded bytes.
-#[uniffi::export]
-pub fn event_from_bcs(bcs: Vec<u8>) -> Result<Event> {
-    Ok(bcs::from_bytes::<iota_sdk::types::Event>(&bcs)?.into())
-}
-
-/// Create an [`Event`] from a JSON encoded string.
-#[uniffi::export]
-pub fn event_from_json(json: &str) -> Result<Event> {
-    Ok(serde_json::from_str::<iota_sdk::types::Event>(json)?.into())
-}
-
+crate::export_iota_types_bcs_conversion!(Event);
+crate::export_iota_types_json_conversion!(Event);
+crate::export_iota_types_display!(Event);
 crate::export_iota_types_objects_bcs_conversion!(TransactionEvents);
 crate::export_iota_types_objects_json_conversion!(TransactionEvents);
+crate::export_iota_types_objects_display!(TransactionEvents);

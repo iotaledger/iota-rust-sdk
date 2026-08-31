@@ -69,6 +69,14 @@ impl ObjectId {
         Ok(Self(iota_sdk::types::ObjectId::from_prefixed_hex(hex)?))
     }
 
+    /// Parses an ObjectId from a full-length hex string (64 hex characters),
+    /// without a `0x` prefix. Will return an error if the string has a `0x`
+    /// prefix or is not exactly 64 hex characters long.
+    #[uniffi::constructor]
+    pub fn from_raw_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::ObjectId::from_raw_hex(hex)?))
+    }
+
     /// Parses an ObjectId from a hex string, with or without a `0x` prefix.
     /// The string can be of variable length; if it's shorter than 64 hex
     /// characters, it will be left-padded with `0`s.
@@ -85,6 +93,15 @@ impl ObjectId {
         Ok(Self(iota_sdk::types::ObjectId::from_prefixed_short_hex(
             hex,
         )?))
+    }
+
+    /// Parses an ObjectId from a hex string without a `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s. Will return an error if
+    /// the string has a `0x` prefix.
+    #[uniffi::constructor]
+    pub fn from_raw_short_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::ObjectId::from_raw_short_hex(hex)?))
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -276,8 +293,8 @@ impl Object {
     }
 
     /// Try to interpret this object as a move struct
-    pub fn as_struct_opt(&self) -> Option<MoveStruct> {
-        self.0.as_struct_opt().cloned().map(Into::into)
+    pub fn as_opt_struct(&self) -> Option<MoveStruct> {
+        self.0.as_opt_struct().cloned().map(Into::into)
     }
 
     /// Interpret this object as a move struct
@@ -286,9 +303,9 @@ impl Object {
     }
 
     /// Try to interpret this object as a move package
-    pub fn as_package_opt(&self) -> Option<Arc<MovePackage>> {
+    pub fn as_opt_package(&self) -> Option<Arc<MovePackage>> {
         self.0
-            .as_package_opt()
+            .as_opt_package()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -818,5 +835,15 @@ crate::export_iota_types_objects_json_conversion!(
     ObjectData,
     MovePackage,
     Owner,
+    GenesisObject
+);
+crate::export_iota_types_display!(ObjectReference, TypeOrigin, UpgradeInfo, MoveStruct);
+crate::export_iota_types_objects_display!(
+    ObjectId,
+    Object,
+    ObjectData,
+    MovePackage,
+    Owner,
+    ObjectType,
     GenesisObject
 );

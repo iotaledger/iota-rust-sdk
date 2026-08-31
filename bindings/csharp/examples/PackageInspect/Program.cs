@@ -335,16 +335,16 @@ class Program
         foreach (var effects in page.Data)
         {
             var effectsV1 = effects.AsV1();
-            foreach (var changedObj in effectsV1.ChangedObjects)
+            foreach (var changedObj in effectsV1.ChangedObjects())
             {
                 if (changedObj.OutputState is not ObjectOut.ObjectWrite)
                 {
                     continue;
                 }
 
-                var obj = await client.Object(changedObj.ObjectId, effectsV1.LamportVersion);
+                var obj = await client.Object(changedObj.ObjectId, effectsV1.LamportVersion());
                 if (
-                    obj?.AsStructOpt()?.StructType?.Equals(StructTag.NewUpgradeCap()) == true
+                    obj?.AsOptStruct()?.StructType?.Equals(StructTag.NewUpgradeCap()) == true
                 )
                 {
                     return changedObj.ObjectId;
@@ -534,7 +534,7 @@ class Program
 
             foreach (var txData in page.Data)
             {
-                if (PublishesPackageAsImmutable(txData.Tx.Transaction))
+                if (PublishesPackageAsImmutable(txData.SignedTransaction.Transaction))
                 {
                     return true;
                 }
@@ -565,7 +565,7 @@ class Program
 
             foreach (var txData in page.Data)
             {
-                if (UsesUpgradeCapForMakeImmutable(txData.Tx.Transaction, upgradeCapId))
+                if (UsesUpgradeCapForMakeImmutable(txData.SignedTransaction.Transaction, upgradeCapId))
                 {
                     return true;
                 }

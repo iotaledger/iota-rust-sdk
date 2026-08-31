@@ -120,3 +120,5 @@ impl Version {
         Ok(Self(self.0.previous()?))
     }
 }
+
+crate::export_iota_types_objects_display!(Version);

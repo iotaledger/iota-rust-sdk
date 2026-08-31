@@ -27,9 +27,9 @@ class Program
         ).Finish(client);
 
         var signer = TransactionSigner.FromMoveAuthenticator(moveAuthenticator);
-        var effects = await builder.Execute(signer, WaitForTx.Finalized);
+        var effects = await builder.Execute(signer, WaitForTransaction.Finalized);
 
-        Console.WriteLine($"Sending IOTA via abstract account: {effects.AsV1().Status}");
+        Console.WriteLine($"Sending IOTA via abstract account: {effects.AsV1().Status()}");
     }
 
     static async Task<ObjectId> SetupAccount(GraphQlClient client)
@@ -50,15 +50,15 @@ class Program
         builder.TransferObjects(sender, new[] { PtbArgument.Assigned("upgrade_cap") });
 
         var txSigner = TransactionSigner.FromEd25519(privateKey);
-        var effects = await builder.Execute(txSigner, WaitForTx.Finalized);
+        var effects = await builder.Execute(txSigner, WaitForTransaction.Finalized);
 
-        Console.WriteLine($"Publishing package: {effects.AsV1().Status}\n");
+        Console.WriteLine($"Publishing package: {effects.AsV1().Status()}\n");
 
         ObjectId? packageId = null;
         ObjectId? packageMetadataId = null;
         ObjectId? accountId = null;
 
-        foreach (var changedObj in effects.AsV1().ChangedObjects)
+        foreach (var changedObj in effects.AsV1().ChangedObjects())
         {
             if (changedObj.OutputState is ObjectOut.PackageWrite)
             {
@@ -101,8 +101,8 @@ class Program
             }
         );
 
-        var effects2 = await builder2.Execute(txSigner, WaitForTx.Finalized);
-        Console.WriteLine($"Linking account to authenticate method: {effects2.AsV1().Status}\n");
+        var effects2 = await builder2.Execute(txSigner, WaitForTransaction.Finalized);
+        Console.WriteLine($"Linking account to authenticate method: {effects2.AsV1().Status()}\n");
 
         return accountId;
     }
