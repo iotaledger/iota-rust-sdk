@@ -86,6 +86,10 @@ jobs:
             exit 1
           fi
 
+      - name: Verify the package can be published
+        if: startsWith(inputs.package, 'iota-sdk')
+        run: cargo publish --dry-run -p "${{ inputs.package }}" --all-features
+
       - name: Install cargo-release
         if: startsWith(inputs.package, 'iota-sdk')
         uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
