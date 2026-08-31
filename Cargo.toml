@@ -70,7 +70,7 @@ wasm-bindgen-test = "0.3"
 # internal dependencies
 iota-bcs-schema = { version = "1.0.0-beta.1", package = "iota-sdk-bcs-schema", path = "crates/iota-sdk-bcs-schema" }
 iota-crypto = { version = "1.0.0-beta.1", package = "iota-sdk-crypto", path = "crates/iota-sdk-crypto", default-features = false }
-iota-graphql-client = { version = "0.0.1-alpha.1", package = "iota-sdk-graphql-client", path = "crates/iota-sdk-graphql-client", default-features = false }
+iota-graphql-client = { version = "1.0.0-beta.1", package = "iota-sdk-graphql-client", path = "crates/iota-sdk-graphql-client", default-features = false }
 iota-graphql-client-build = { version = "1.0.0-beta.1", package = "iota-sdk-graphql-client-build", path = "crates/iota-sdk-graphql-client-build", default-features = false }
 iota-grpc-client = { version = "0.0.1-alpha.1", package = "iota-sdk-grpc-client", path = "crates/iota-sdk-grpc-client", default-features = false }
 iota-grpc-proto-build = { version = "0.0.1-alpha.1", package = "iota-sdk-grpc-proto-build", path = "crates/iota-sdk-grpc-proto-build", default-features = false }
