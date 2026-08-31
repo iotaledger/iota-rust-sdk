@@ -5,9 +5,9 @@ on:
     inputs:
       level:
         type: choice
-        required: true
+        required: false
         description: |
-          The level of version bump to make.
+          The level of version bump to make. Ignored when an exact version is given.
 
           Possible values:
           - major:   Increase the major version (x.0.0)
@@ -25,6 +25,12 @@ on:
           - rc
           - beta
           - alpha
+      version:
+        type: string
+        required: false
+        description: |
+          Exact version to release (e.g. 1.2.3 or 1.2.3-rc.1), instead of bumping.
+          Takes precedence over the level.
       package:
         type: choice
         required: true
@@ -54,6 +60,8 @@ jobs:
       pull-requests: write
       contents: write
     runs-on: ubuntu-latest
+    env:
+      VERSION_OVERRIDE: ${{ inputs.version }}
     steps:
       - name: Exit if the branch is not develop
         if: github.ref != 'refs/heads/develop'
@@ -65,6 +73,15 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0 # required for git-cliff to have full history
+
+      - name: Validate version input
+        if: inputs.version != ''
+        run: |
+          source .github/bump_version.sh
+          if ! parse_version "$VERSION_OVERRIDE" > /dev/null; then
+            echo "Invalid semver: $VERSION_OVERRIDE" >&2
+            exit 1
+          fi
 
       - name: Install cargo-release
         if: startsWith(inputs.package, 'iota-sdk')
@@ -89,7 +106,7 @@ jobs:
           fi
           LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
           source .github/bump_version.sh
-          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
+          NEW_VERSION=${VERSION_OVERRIDE:-$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")}
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
           # Update the version in IotaSdk.csproj
@@ -111,7 +128,7 @@ jobs:
           fi
           LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
           source .github/bump_version.sh
-          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
+          NEW_VERSION=${VERSION_OVERRIDE:-$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")}
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
           # Generate changelog for Go
@@ -128,7 +145,7 @@ jobs:
           echo "Current version: $CURRENT_VERSION"
 
           # Bump the version using the input level
-          NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          NEW_VERSION=${VERSION_OVERRIDE:-$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")}
           echo "New version: $NEW_VERSION"
 
           # Update the version in build.gradle.kts
@@ -153,7 +170,7 @@ jobs:
           echo "Current version: $CURRENT_VERSION"
 
           # Bump the version using the input level
-          NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          NEW_VERSION=${VERSION_OVERRIDE:-$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")}
           echo "New version: $NEW_VERSION"
 
           # Update the version in pyproject.toml
@@ -177,7 +194,7 @@ jobs:
           fi
           LATEST_VERSION=$(echo "$LATEST_TAG" | sed -nr 's|.*-v(.*)|\1|p')
           source .github/bump_version.sh
-          NEW_VERSION=$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")
+          NEW_VERSION=${VERSION_OVERRIDE:-$(bump_semver "$LATEST_VERSION" "${{ inputs.level }}")}
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
           # Generate changelog for Swift
@@ -193,7 +210,7 @@ jobs:
           echo "Current version: $CURRENT_VERSION"
 
           # Bump the version using the input level
-          NEW_VERSION=$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")
+          NEW_VERSION=${VERSION_OVERRIDE:-$(bump_semver "$CURRENT_VERSION" "${{ inputs.level }}")}
           echo "New version: $NEW_VERSION"
 
           # Update the version in package.json
@@ -216,7 +233,7 @@ jobs:
         uses: cargo-bins/release-pr@dca4a39944c532bbde5e485142fb05a8158edec1 # v2.1.4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          version: ${{ inputs.level }}
+          version: ${{ inputs.version || inputs.level }}
           crate-name: ${{ inputs.package }}
           git-user-name: "IOTA Foundation"
           git-user-email: info@iota.org
