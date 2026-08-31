@@ -1,14 +1,17 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`TransactionBuilderClient`] for the GraphQL [`Client`].
+//! Implementation of the transaction builder client traits for the GraphQL
+//! [`Client`].
 
 use iota_transaction_builder::{
-    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClient, WaitForTx,
+    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClientBase,
+    TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
+    TransactionBuilderSimulationClient, WaitForTransaction,
 };
 use iota_types::{
-    Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
-    TransactionEffects, UserSignature, Version,
+    Address, Object, ObjectId, StructTag, Transaction, TransactionDigest, TransactionEffects,
+    UserSignature, Version,
 };
 
 use crate::{
@@ -24,10 +27,11 @@ impl Client {
     }
 }
 
-impl TransactionBuilderClient for Client {
+impl TransactionBuilderClientBase for Client {
     type Error = crate::error::GraphQLError;
-    type DryRunResult = DryRunResult;
+}
 
+impl TransactionBuilderLedgerClient for Client {
     async fn object(
         &self,
         object_id: ObjectId,
@@ -84,29 +88,22 @@ impl TransactionBuilderClient for Client {
         Ok(ProtocolConfig { attributes })
     }
 
-    async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>, Self::Error> {
-        self.transaction(digest).await
-    }
-
-    async fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>, Self::Error> {
-        self.transaction_effects(digest).await
-    }
-
     async fn reference_gas_price(
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
         self.reference_gas_price(epoch).await
     }
+}
 
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
-        let res = self.dry_run_tx(tx, true).await?;
+impl TransactionBuilderSimulationClient for Client {
+    type DryRunResult = DryRunResult;
+
+    async fn estimate_transaction_budget(
+        &self,
+        transaction: &Transaction,
+    ) -> Result<Option<u64>, Self::Error> {
+        let res = self.dry_run_transaction(transaction, true).await?;
         Ok(res.effects.map(|effects| match effects {
             TransactionEffects::V1(v1) => v1.gas_cost_summary.gas_used(),
             _ => unimplemented!(
@@ -115,28 +112,38 @@ impl TransactionBuilderClient for Client {
         }))
     }
 
-    async fn dry_run_tx(
+    async fn dry_run_transaction(
         &self,
-        tx: &Transaction,
+        transaction: &Transaction,
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
-        (*self).dry_run_tx(tx, skip_checks).await
+        (*self).dry_run_transaction(transaction, skip_checks).await
     }
+}
 
-    async fn execute_tx(
+impl TransactionBuilderExecutionClient for Client {
+    async fn execute_transaction(
         &self,
         signatures: &[UserSignature],
-        tx: &Transaction,
-        wait_for: impl Into<Option<WaitForTx>>,
+        transaction: &Transaction,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Self::Error> {
-        self.execute_tx(signatures, tx, wait_for).await
+        self.execute_transaction(signatures, transaction, wait_for)
+            .await
     }
 
-    async fn wait_for_tx(
+    async fn wait_for_transaction(
         &self,
         digest: TransactionDigest,
-        wait_for: WaitForTx,
+        wait_for: WaitForTransaction,
     ) -> Result<(), Self::Error> {
-        self.wait_for_tx(digest, wait_for, None).await
+        self.wait_for_transaction(digest, wait_for, None).await
+    }
+
+    async fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<TransactionEffects>, Self::Error> {
+        self.transaction_effects(digest).await
     }
 }

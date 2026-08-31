@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tracing::{error, info};
 
-use crate::WaitForTx;
+use crate::WaitForTransaction;
 
 pub const FAUCET_LOCAL_HOST: &str = "http://localhost:9123";
 
@@ -244,7 +244,7 @@ impl FaucetClient {
             .collect::<HashSet<_>>();
         for digest in tx_digests {
             client
-                .wait_for_tx(digest, WaitForTx::Finalized, None)
+                .wait_for_transaction(digest, WaitForTransaction::Finalized, None)
                 .await?;
         }
 

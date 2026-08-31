@@ -3,8 +3,6 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::TransactionExpiration;
-
 use crate::{
     error::Result,
     types::{
@@ -123,7 +121,7 @@ impl TransactionV1 {
             kind: kind.0.clone(),
             sender: **sender,
             gas_payment: gas_payment.into(),
-            expiration,
+            expiration: expiration.into(),
         })
     }
 
@@ -140,7 +138,7 @@ impl TransactionV1 {
     }
 
     pub fn expiration(&self) -> TransactionExpiration {
-        self.0.expiration
+        self.0.expiration.into()
     }
 
     pub fn digest(&self) -> TransactionDigest {
@@ -169,7 +167,7 @@ impl TransactionV1 {
     }
 }
 
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct SignedTransaction {
     pub transaction: Arc<Transaction>,
     pub signatures: Vec<Arc<UserSignature>>,
@@ -221,44 +219,52 @@ pub struct TransactionKind(pub iota_sdk::types::TransactionKind);
 impl TransactionKind {
     /// Create a `TransactionKind` for a programmable transaction.
     #[uniffi::constructor]
-    pub fn new_programmable(tx: &ProgrammableTransaction) -> Self {
+    pub fn new_programmable(transaction: &ProgrammableTransaction) -> Self {
         Self(iota_sdk::types::TransactionKind::new_programmable(
-            tx.0.clone(),
+            transaction.0.clone(),
         ))
     }
 
     /// Create a `TransactionKind` for a genesis transaction.
     #[uniffi::constructor]
-    pub fn new_genesis(tx: &GenesisTransaction) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_genesis(tx.0.clone()))
+    pub fn new_genesis(transaction: &GenesisTransaction) -> Self {
+        Self(iota_sdk::types::TransactionKind::new_genesis(
+            transaction.0.clone(),
+        ))
     }
 
     /// Create a `TransactionKind` for a consensus-commit-prologue-v1
     /// transaction.
     #[uniffi::constructor]
-    pub fn new_consensus_commit_prologue_v1(tx: &ConsensusCommitPrologueV1) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_consensus_commit_prologue_v1(tx.0.clone()))
+    pub fn new_consensus_commit_prologue_v1(transaction: &ConsensusCommitPrologueV1) -> Self {
+        Self(
+            iota_sdk::types::TransactionKind::new_consensus_commit_prologue_v1(
+                transaction.0.clone(),
+            ),
+        )
     }
 
     /// Create a `TransactionKind` for an end-of-epoch transaction.
     #[uniffi::constructor]
-    pub fn new_end_of_epoch(tx: Vec<Arc<EndOfEpochTransactionKind>>) -> Self {
+    pub fn new_end_of_epoch(transaction: Vec<Arc<EndOfEpochTransactionKind>>) -> Self {
         Self(iota_sdk::types::TransactionKind::new_end_of_epoch(
-            tx.into_iter().map(|tx| tx.0.clone()).collect(),
+            transaction.into_iter().map(|kind| kind.0.clone()).collect(),
         ))
     }
 
     /// Create a `TransactionKind` for a randomness-state-update transaction.
     #[uniffi::constructor]
-    pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_randomness_state_update(tx.into()))
+    pub fn new_randomness_state_update(transaction: RandomnessStateUpdate) -> Self {
+        Self(iota_sdk::types::TransactionKind::new_randomness_state_update(transaction.into()))
     }
 
     /// Create a `TransactionKind` for a transaction-deny-rules-update
     /// transaction.
     #[uniffi::constructor]
-    pub fn new_transaction_deny_rules_update(tx: TransactionDenyRulesUpdate) -> Self {
-        Self(iota_sdk::types::TransactionKind::new_transaction_deny_rules_update(tx.into()))
+    pub fn new_transaction_deny_rules_update(transaction: TransactionDenyRulesUpdate) -> Self {
+        Self(
+            iota_sdk::types::TransactionKind::new_transaction_deny_rules_update(transaction.into()),
+        )
     }
 }
 
@@ -1410,7 +1416,7 @@ impl ChangeEpochV4 {
 /// ```text
 /// randomness-state-update = u64 u64 bytes u64
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct RandomnessStateUpdate {
     /// Epoch of the randomness state update transaction
     pub epoch: u64,
@@ -1467,7 +1473,7 @@ impl From<iota_sdk::types::RandomnessStateUpdate> for RandomnessStateUpdate {
 ///                 bool               ; receiving objects disabled
 ///                 bool               ; move authenticator disabled
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct DenyRuleSet {
     /// Addresses denied as transaction sender or gas sponsor. A denied
     /// address can still receive objects.
@@ -1566,7 +1572,7 @@ impl From<iota_sdk::types::DenyRuleSet> for DenyRuleSet {
 ///                                 bool              ; move authenticator disabled
 ///                                 version           ; initial shared version
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct TransactionDenyRulesUpdate {
     /// Epoch of the deny-rules update transaction
     pub epoch: u64,
@@ -1669,30 +1675,30 @@ pub struct EndOfEpochTransactionKind(pub iota_sdk::types::EndOfEpochTransactionK
 #[uniffi::export]
 impl EndOfEpochTransactionKind {
     #[uniffi::constructor]
-    pub fn new_change_epoch(tx: &ChangeEpoch) -> Self {
+    pub fn new_change_epoch(transaction: &ChangeEpoch) -> Self {
         Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpoch(
-            tx.0.clone(),
+            transaction.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn new_change_epoch_v2(tx: &ChangeEpochV2) -> Self {
+    pub fn new_change_epoch_v2(transaction: &ChangeEpochV2) -> Self {
         Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV2(
-            tx.0.clone(),
+            transaction.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn new_change_epoch_v3(tx: &ChangeEpochV3) -> Self {
+    pub fn new_change_epoch_v3(transaction: &ChangeEpochV3) -> Self {
         Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV3(
-            tx.0.clone(),
+            transaction.0.clone(),
         ))
     }
 
     #[uniffi::constructor]
-    pub fn new_change_epoch_v4(tx: &ChangeEpochV4) -> Self {
+    pub fn new_change_epoch_v4(transaction: &ChangeEpochV4) -> Self {
         Self(iota_sdk::types::EndOfEpochTransactionKind::ChangeEpochV4(
-            tx.0.clone(),
+            transaction.0.clone(),
         ))
     }
 
@@ -1714,7 +1720,7 @@ impl EndOfEpochTransactionKind {
 ///               u64                       ; price
 ///               u64                       ; budget
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct GasPayment {
     pub objects: Vec<ObjectReference>,
     /// Owner of the gas objects, either the transaction sender or a sponsor
@@ -1767,9 +1773,9 @@ pub struct TransactionEffects(pub iota_sdk::types::TransactionEffects);
 #[uniffi::export]
 impl TransactionEffects {
     #[uniffi::constructor]
-    pub fn new_v1(effects: TransactionEffectsV1) -> Self {
+    pub fn new_v1(effects: &TransactionEffectsV1) -> Self {
         Self(iota_sdk::types::TransactionEffects::V1(Box::new(
-            effects.into(),
+            effects.0.clone(),
         )))
     }
 
@@ -1777,8 +1783,11 @@ impl TransactionEffects {
         self.0.is_v1()
     }
 
+    /// The V1 effects, which is where the object sets and other views derived
+    /// from them are reported. Panics for any other version; a caller that does
+    /// not want to assume one should check `is_v1` first.
     pub fn as_v1(&self) -> TransactionEffectsV1 {
-        self.0.as_v1().clone().into()
+        TransactionEffectsV1(self.0.as_v1().clone())
     }
 
     pub fn digest(&self) -> TransactionEffectsDigest {
@@ -1796,14 +1805,34 @@ impl TransactionEffects {
 /// transaction-expiration =  %d00      ; none
 ///                        =/ %d01 u64  ; epoch
 /// ```
-#[uniffi::remote(Enum)]
-#[non_exhaustive]
+#[derive(Clone, uniffi::Enum)]
 pub enum TransactionExpiration {
     /// The transaction has no expiration
     None,
     /// Validators won't sign a transaction unless the expiration Epoch
     /// is greater than or equal to the current epoch
     Epoch(u64),
+}
+
+impl From<iota_sdk::types::TransactionExpiration> for TransactionExpiration {
+    fn from(value: iota_sdk::types::TransactionExpiration) -> Self {
+        match value {
+            iota_sdk::types::TransactionExpiration::None => Self::None,
+            iota_sdk::types::TransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
+            _ => unimplemented!(
+                "a new TransactionExpiration variant was added and needs to be handled"
+            ),
+        }
+    }
+}
+
+impl From<TransactionExpiration> for iota_sdk::types::TransactionExpiration {
+    fn from(value: TransactionExpiration) -> Self {
+        match value {
+            TransactionExpiration::None => Self::None,
+            TransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
+        }
+    }
 }
 
 /// An argument to a programmable transaction command
@@ -1950,7 +1979,7 @@ impl MoveCall {
 }
 
 /// A shared object input to a programmable transaction
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct SharedObjectReference {
     object_id: Arc<ObjectId>,
     initial_shared_version: Arc<Version>,
@@ -1983,7 +2012,7 @@ crate::export_iota_types_bcs_conversion!(
     DenyRuleSet,
     TransactionDenyRulesUpdate,
     GasPayment,
-    TransactionExpiration,
+    TransactionExpiration
 );
 crate::export_iota_types_objects_bcs_conversion!(
     Transaction,
@@ -2016,7 +2045,7 @@ crate::export_iota_types_json_conversion!(
     DenyRuleSet,
     TransactionDenyRulesUpdate,
     GasPayment,
-    TransactionExpiration,
+    TransactionExpiration
 );
 crate::export_iota_types_objects_json_conversion!(
     Transaction,
@@ -2042,4 +2071,41 @@ crate::export_iota_types_objects_json_conversion!(
     TransactionEffects,
     Argument,
     MoveCall,
+);
+crate::export_iota_types_display!(
+    SignedTransaction,
+    RandomnessStateUpdate,
+    DenyRuleSet,
+    TransactionDenyRulesUpdate,
+    GasPayment,
+    SharedObjectReference,
+    TransactionExpiration
+);
+crate::export_iota_types_objects_display!(
+    Transaction,
+    TransactionV1,
+    TransactionKind,
+    ProgrammableTransaction,
+    Input,
+    Command,
+    TransferObjects,
+    SplitCoins,
+    MergeCoins,
+    Publish,
+    MakeMoveVector,
+    Upgrade,
+    ConsensusCommitPrologueV1,
+    ConsensusDeterminedVersionAssignments,
+    CanceledTransaction,
+    VersionAssignment,
+    GenesisTransaction,
+    ChangeEpoch,
+    SystemPackage,
+    ChangeEpochV2,
+    ChangeEpochV3,
+    ChangeEpochV4,
+    EndOfEpochTransactionKind,
+    TransactionEffects,
+    Argument,
+    MoveCall
 );

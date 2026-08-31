@@ -18,7 +18,8 @@ use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
-    PTBArgument, SharedMut, TransactionBuilderClient, WaitForTx,
+    PTBArgument, SharedMut, TransactionBuilderClient, TransactionBuilderLedgerClient,
+    TransactionBuilderSimulationClient, WaitForTransaction,
     builder::{
         assigned_results::{AssignedResult, AssignedResults},
         gas_station::GasStationData,
@@ -50,9 +51,9 @@ const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
 /// Fallback cap on `gas_payment.objects.len()` used when the protocol-config
 /// value is unavailable (`max_gas_payment_objects` is 256 exclusive at the
 /// time of writing, so 255 inclusive). Auto gas selection fetches the live
-/// value via [`TransactionBuilderClient::protocol_config`] and falls back to
-/// this if the implementation does not expose protocol config or the value
-/// cannot be parsed.
+/// value via [`TransactionBuilderLedgerClient::protocol_config`] and falls
+/// back to this if the implementation does not expose protocol config or the
+/// value cannot be parsed.
 const DEFAULT_MAX_GAS_PAYMENT_OBJECTS: usize = 255;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
@@ -91,8 +92,9 @@ pub struct TransactionBuildData {
 }
 
 impl TransactionBuildData {
-    fn set_sender(&mut self, sender: Address) {
+    fn sender(&mut self, sender: Address) -> &mut Self {
         self.sender = sender;
+        self
     }
 
     fn set_input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
@@ -318,7 +320,7 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
     /// The returned builder has the original inputs and commands but no
     /// sender, gas payment, sponsor, or expiration; the sender defaults to
     /// [`Address::ZERO`] and must be set with
-    /// [`set_sender`](TransactionBuilder::set_sender) before
+    /// [`sender`](TransactionBuilder::sender) before
     /// [`finish`](TransactionBuilder::finish) is called.
     fn from(ptb: ProgrammableTransaction) -> Self {
         let ProgrammableTransaction {
@@ -415,8 +417,9 @@ impl TryFrom<Transaction> for TransactionBuilder {
 
 impl<C, L> TransactionBuilder<C, L> {
     /// Set the sender address.
-    pub fn set_sender(&mut self, sender: Address) {
-        self.data.set_sender(sender);
+    pub fn sender(&mut self, sender: Address) -> &mut Self {
+        self.data.sender(sender);
+        self
     }
 
     /// Apply the given parameter and return the generated argument
@@ -1403,7 +1406,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 }
 
-impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
+impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// Add gas coins that will be consumed. If no gas coins are provided, the
     /// client will set a default list owned by the sender.
     ///
@@ -1767,31 +1770,15 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         .into())
     }
 
-    async fn finish_internal(&mut self) -> Result<Transaction, TransactionBuilderError> {
-        let mut txn = self.resolve_ptb(true).await?;
-        if self.data.gas_budget.is_none() {
-            let budget = self
-                .client
-                .estimate_tx_budget(&txn)
-                .await
-                .map_err(TransactionBuilderError::client)?
-                .ok_or(TransactionBuilderError::MissingGasBudget)?;
-            let Transaction::V1(txn) = &mut txn else {
-                unimplemented!("a new enum variant was added and needs to be handled")
-            };
-            // The network enforces a minimum gas budget of base_tx_cost_fixed
-            // (1000) * gas_price. The dry-run estimate can return a value below
-            // this minimum, so we clamp it.
-            let min_budget = txn.gas_payment.price.saturating_mul(1000);
-            txn.gas_payment.budget = budget.max(min_budget);
-        }
-
-        Ok(txn)
-    }
-
-    /// Convert this builder into a transaction.
-    pub async fn finish(mut self) -> Result<Transaction, TransactionBuilderError> {
-        self.finish_internal().await
+    /// Convert this builder into a transaction with the given gas budget,
+    /// used as-is (no estimation or minimum clamp) and overriding any budget
+    /// set via [`gas_budget`](Self::gas_budget).
+    pub async fn finish_with_budget(
+        mut self,
+        gas_budget: u64,
+    ) -> Result<Transaction, TransactionBuilderError> {
+        self.data.gas_budget = Some(gas_budget);
+        self.resolve_ptb(true).await
     }
 
     /// Convert this builder into a [`TransactionKind`], resolving the inputs
@@ -1836,6 +1823,44 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         let (kind, _gas) = self.resolve_kind().await?;
         Ok(kind)
     }
+}
+
+impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
+    TransactionBuilder<C, L>
+{
+    async fn finish_internal(&mut self) -> Result<Transaction, TransactionBuilderError> {
+        let mut txn = self.resolve_ptb(true).await?;
+        if self.data.gas_budget.is_none() {
+            let budget = self
+                .client
+                .estimate_transaction_budget(&txn)
+                .await
+                .map_err(TransactionBuilderError::client)?
+                .ok_or(TransactionBuilderError::MissingGasBudget)?;
+            let Transaction::V1(txn) = &mut txn else {
+                unimplemented!("a new enum variant was added and needs to be handled")
+            };
+            // The network enforces a minimum gas budget of base_tx_cost_fixed
+            // (1000) * gas_price. The dry-run estimate can return a value below
+            // this minimum, so we clamp it.
+            let min_budget = txn.gas_payment.price.saturating_mul(1000);
+            txn.gas_payment.budget = budget.max(min_budget);
+        }
+
+        Ok(txn)
+    }
+
+    /// Convert this builder into a transaction.
+    ///
+    /// When no gas budget was set, it is estimated by simulating the
+    /// transaction via the client
+    /// ([`estimate_transaction_budget`](TransactionBuilderSimulationClient::estimate_transaction_budget)).
+    /// To build with an explicit budget on a client without simulation
+    /// support, use
+    /// [`finish_with_budget`](TransactionBuilder::finish_with_budget).
+    pub async fn finish(mut self) -> Result<Transaction, TransactionBuilderError> {
+        self.finish_internal().await
+    }
 
     /// Dry run the transaction.
     pub async fn dry_run(
@@ -1855,19 +1880,21 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         }
         let res = self
             .client
-            .dry_run_tx(&txn, skip_checks)
+            .dry_run_transaction(&txn, skip_checks)
             .await
             .map_err(TransactionBuilderError::client)?;
         Ok(res)
     }
+}
 
+impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Execute the transaction and optionally wait for finalization. The
     /// client will be used unless a gas station was configured, in
     /// which case the transaction will be sent to the endpoint for execution.
     pub async fn execute(
         mut self,
         signer: &impl TransactionSigner,
-        wait_for: impl Into<Option<WaitForTx>>,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, TransactionBuilderError> {
         let wait_for = wait_for.into();
         let gas_station_data = self.data.gas_station_data.take();
@@ -1876,7 +1903,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         Ok(if let Some(gas_station_data) = gas_station_data {
             let digest = gas_station_data.execute_txn(&mut txn, signer).await?;
             self.client
-                .wait_for_tx(digest, WaitForTx::Finalized)
+                .wait_for_transaction(digest, WaitForTransaction::Finalized)
                 .await
                 .map_err(TransactionBuilderError::client)?;
             self.client
@@ -1886,7 +1913,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                 .ok_or_else(|| TransactionBuilderError::MissingTransaction(digest))?
         } else {
             self.client
-                .execute_tx(
+                .execute_transaction(
                     &[signer
                         .sign(&txn)
                         .await
@@ -1905,7 +1932,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         mut self,
         signer: &impl TransactionSigner,
         sponsor_signer: &impl TransactionSigner,
-        wait_for: impl Into<Option<WaitForTx>>,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, TransactionBuilderError> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
@@ -1922,7 +1949,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         ];
 
         self.client
-            .execute_tx(&signatures, &txn, wait_for)
+            .execute_transaction(&signatures, &txn, wait_for)
             .await
             .map_err(TransactionBuilderError::client)
     }
@@ -1960,19 +1987,7 @@ impl<C> TransactionBuilder<C, MoveCall> {
     }
 }
 
-impl TransactionBuilder<(), Publish> {
-    /// Get the package ID from the UpgradeCap so that it can be used for future
-    /// commands.
-    pub fn package_id(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder {
-        let cap = self.result();
-        self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
-            .arguments([cap])
-            .assign(name)
-            .reset()
-    }
-}
-
-impl<C: TransactionBuilderClient> TransactionBuilder<C, Publish> {
+impl<C> TransactionBuilder<C, Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
     pub fn package_id(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder<C> {
@@ -1982,9 +1997,7 @@ impl<C: TransactionBuilderClient> TransactionBuilder<C, Publish> {
             .assign(name)
             .reset()
     }
-}
 
-impl<C> TransactionBuilder<C, Publish> {
     /// Finish the publish call and return the UpgradeCap.
     pub fn upgrade_cap(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder<C> {
         name.push_assigned_results(&mut self.data);

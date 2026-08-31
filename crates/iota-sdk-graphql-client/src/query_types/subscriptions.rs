@@ -13,7 +13,7 @@ use iota_types::{SenderSignedTransaction, SignedTransaction};
 use crate::{
     error::{self, GraphQLError},
     query_types::{
-        Address, Base64, DateTime, Event, GQLAddress, JsonValue, MoveData, MoveType,
+        Address, Base64, DateTime, Event, GraphQLAddress, JsonValue, MoveData, MoveType,
         TransactionBlockKindInput, normalized_move::MoveModuleQuery, schema,
     },
 };
@@ -175,7 +175,7 @@ pub struct Lagged {
 pub struct SubscriptionEvent {
     pub transaction_block: Option<TxBlockDigest>,
     pub sending_module: Option<MoveModuleQuery>,
-    pub sender: Option<GQLAddress>,
+    pub sender: Option<GraphQLAddress>,
     #[cynic(rename = "type")]
     pub move_type: MoveType,
     pub bcs: Base64,

@@ -71,7 +71,7 @@ struct PublishUpgradeExample {
 
     // Perform a dry-run first to check if everything is correct
     print("> Publishing package (dry run):")
-    let dryResult = try await client.dryRunTx(tx: tx, skipChecks: false)
+    let dryResult = try await client.dryRunTransaction(transaction: tx, skipChecks: false)
     if dryResult.error != nil {
       throw NSError(
         domain: "PublishUpgrade", code: 1,
@@ -87,14 +87,14 @@ struct PublishUpgradeExample {
     // Sign and execute the transaction (publish the package)
     print("> Publishing package:")
     let sig = try privateKey.signTransaction(transaction: tx)
-    let effects = try await client.executeTx(
-      signatures: [sig], tx: tx, waitFor: WaitForTx.finalized)
+    let effects = try await client.executeTransaction(
+      signatures: [sig], transaction: tx, waitFor: WaitForTransaction.finalized)
     print("Success")
 
     // Resolve UpgradeCap and PackageId via the client
     var upgradeCap: ObjectId?
     var packageId: ObjectId?
-    for changedObj in effects.asV1().changedObjects {
+    for changedObj in effects.asV1().changedObjects() {
       switch changedObj.outputState {
       case .objectWrite(_, let owner):
         let objectId = changedObj.objectId
@@ -171,7 +171,8 @@ struct PublishUpgradeExample {
 
     // Perform a dry-run first to check if everything is correct
     print("> Upgrading package (dry run):")
-    let upgradeDryResult = try await client.dryRunTx(tx: upgradeTx, skipChecks: false)
+    let upgradeDryResult = try await client.dryRunTransaction(
+      transaction: upgradeTx, skipChecks: false)
     if upgradeDryResult.error != nil {
       throw NSError(
         domain: "PublishUpgrade", code: 1,
@@ -187,11 +188,12 @@ struct PublishUpgradeExample {
     // Sign and execute the transaction (upgrade the package)
     print("> Upgrading package:")
     let upgradeSig = try privateKey.signTransaction(transaction: upgradeTx)
-    let upgradeEffects = try await client.executeTx(signatures: [upgradeSig], tx: upgradeTx)
+    let upgradeEffects = try await client.executeTransaction(
+      signatures: [upgradeSig], transaction: upgradeTx)
     print("Success")
 
     // Print the new package version (should now be 2)
-    for changedObj in upgradeEffects.asV1().changedObjects {
+    for changedObj in upgradeEffects.asV1().changedObjects() {
       if case .packageWrite(let version, _) = changedObj.outputState {
         print("New Package ID: \(changedObj.objectId.toHex())")
         print("New Package version: \(version)")

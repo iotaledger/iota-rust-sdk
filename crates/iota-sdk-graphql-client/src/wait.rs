@@ -28,7 +28,7 @@ pub(crate) async fn timeout<F: Future>(duration: Duration, f: F) -> Result<F::Ou
 pub(crate) async fn timeout<F: Future>(
     duration: Duration,
     f: F,
-) -> GraphQLResult<F::Output, Elapsed> {
+) -> Result<F::Output, Elapsed> {
     use futures::future::Either;
     let work = std::pin::pin!(f);
     let timer = std::pin::pin!(wasm_time::Sleep::new(duration));

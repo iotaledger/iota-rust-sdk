@@ -41,10 +41,10 @@ class Program
         builder.SendIota(recipientAddress, PtbArgument.U64(amount));
 
         var signer = new TransactionSigner(new AsyncSigner(privateKey));
-        var effects = await builder.Execute(signer, WaitForTx.Finalized);
+        var effects = await builder.Execute(signer, WaitForTransaction.Finalized);
 
         Console.WriteLine($"Digest: {Iota.HexEncode(effects.Digest().ToBytes())}");
-        Console.WriteLine($"Transaction status: {effects.AsV1().Status}");
+        Console.WriteLine($"Transaction status: {effects.AsV1().Status()}");
         Console.WriteLine($"Effects: {effects.AsV1()}");
     }
 }

@@ -26,7 +26,7 @@ fun main() = runBlocking {
         builder.sendIota(recipientAddress, PtbArgument.u64(amount))
         val txn = builder.finish()
 
-        val dryRunResult = client.dryRunTx(txn, false)
+        val dryRunResult = client.dryRunTransaction(txn, false)
         if (dryRunResult.error != null) {
             throw Exception("Dry run failed: ${dryRunResult.error}")
         }
@@ -34,10 +34,10 @@ fun main() = runBlocking {
         val signature = privateKey.trySignSimple(txn.signingDigest())
         val userSignature = UserSignature.newSimple(signature)
 
-        val effects = client.executeTx(listOf(userSignature), txn)
+        val effects = client.executeTransaction(listOf(userSignature), txn)
 
         println("Digest: ${hexEncode(effects.digest().toBytes())}")
-        println("Transaction status: ${effects.asV1().status}")
+        println("Transaction status: ${effects.asV1().status()}")
         println("Effects: ${effects.asV1()}")
     } catch (e: Exception) {
         e.printStackTrace()

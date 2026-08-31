@@ -21,14 +21,15 @@ use std::sync::{
 };
 
 use futures::{StreamExt, stream::BoxStream};
-use iota_sdk::graphql_client::{
-    error::GraphQLResult as GqlResult, query_types::TransactionBlockKindInput,
-};
+use iota_sdk::graphql_client::error::GraphQLResult;
 use tokio::sync::{Mutex, Notify};
 
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, query_types::GraphQlEvent},
+    graphql::{
+        client::GraphQLClient,
+        query_types::{GraphQLEvent, TransactionBlockKindInput},
+    },
     types::{address::Address, transaction::SignedTransaction},
 };
 
@@ -77,7 +78,7 @@ impl From<SubscriptionTransactionFilter>
 {
     fn from(value: SubscriptionTransactionFilter) -> Self {
         Self::default()
-            .with_kind(value.kind)
+            .with_kind(value.kind.map(Into::into))
             .with_signing_address(value.signing_address.map(|a| a.0))
             .with_function(value.function)
     }
@@ -147,7 +148,7 @@ macro_rules! define_subscription {
         /// `cancel` has been called, since the subscription itself never ends.
         #[derive(uniffi::Object)]
         pub struct $name {
-            stream: Mutex<BoxStream<'static, GqlResult<$item>>>,
+            stream: Mutex<BoxStream<'static, GraphQLResult<$item>>>,
             cancel: Cancel,
         }
 
@@ -190,7 +191,7 @@ macro_rules! define_subscription {
         }
 
         impl $name {
-            fn new(stream: BoxStream<'static, GqlResult<$item>>) -> Self {
+            fn new(stream: BoxStream<'static, GraphQLResult<$item>>) -> Self {
                 Self {
                     stream: Mutex::new(stream),
                     cancel: Cancel::default(),
@@ -200,7 +201,7 @@ macro_rules! define_subscription {
             /// The stream a canceled subscription is left with, so that
             /// canceling drops the WebSocket instead of holding it until the
             /// handle is freed.
-            fn drained() -> BoxStream<'static, GqlResult<$item>> {
+            fn drained() -> BoxStream<'static, GraphQLResult<$item>> {
                 futures::stream::empty().boxed()
             }
 
@@ -244,8 +245,8 @@ define_subscription!(
     Event,
     event,
     iota_sdk::graphql_client::query_types::Event,
-    GraphQlEvent,
-    GraphQlEvent::try_from
+    GraphQLEvent,
+    GraphQLEvent::try_from
 );
 define_subscription!(
     TransactionSubscription,
@@ -285,7 +286,7 @@ fn open_events(
     client: iota_sdk::graphql_client::Client,
     filter: Option<SubscriptionEventFilter>,
     start_after: Option<String>,
-) -> BoxStream<'static, GqlResult<iota_sdk::graphql_client::query_types::Event>> {
+) -> BoxStream<'static, GraphQLResult<iota_sdk::graphql_client::query_types::Event>> {
     let filter = filter.map(Into::into);
     async_stream::stream! {
         let client = client;
@@ -304,7 +305,7 @@ fn open_events(
     _client: iota_sdk::graphql_client::Client,
     _filter: Option<SubscriptionEventFilter>,
     _start_after: Option<String>,
-) -> BoxStream<'static, GqlResult<iota_sdk::graphql_client::query_types::Event>> {
+) -> BoxStream<'static, GraphQLResult<iota_sdk::graphql_client::query_types::Event>> {
     futures::stream::empty().boxed()
 }
 
@@ -314,7 +315,7 @@ fn open_transactions(
     client: iota_sdk::graphql_client::Client,
     filter: Option<SubscriptionTransactionFilter>,
     start_after: Option<String>,
-) -> BoxStream<'static, GqlResult<iota_sdk::types::SignedTransaction>> {
+) -> BoxStream<'static, GraphQLResult<iota_sdk::types::SignedTransaction>> {
     let filter = filter.map(Into::into);
     async_stream::stream! {
         let client = client;
@@ -333,7 +334,7 @@ fn open_transactions(
     _client: iota_sdk::graphql_client::Client,
     _filter: Option<SubscriptionTransactionFilter>,
     _start_after: Option<String>,
-) -> BoxStream<'static, GqlResult<iota_sdk::types::SignedTransaction>> {
+) -> BoxStream<'static, GraphQLResult<iota_sdk::types::SignedTransaction>> {
     futures::stream::empty().boxed()
 }
 

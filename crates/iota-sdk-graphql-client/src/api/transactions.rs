@@ -9,7 +9,7 @@ use std::time::Duration;
 use base64ct::Encoding;
 use cynic::{MutationBuilder, QueryBuilder};
 use futures::Stream;
-use iota_transaction_builder::WaitForTx;
+use iota_transaction_builder::WaitForTransaction;
 use iota_types::{
     SenderSignedTransaction, SignedTransaction, Transaction, TransactionDigest, TransactionEffects,
     UserSignature,
@@ -138,7 +138,7 @@ impl Client {
                 let effects: TransactionEffects = bcs::from_bytes(&effects)?;
 
                 Ok(Some(TransactionDataEffects {
-                    tx: transaction.into(),
+                    signed_transaction: transaction.into(),
                     effects,
                 }))
             }
@@ -184,7 +184,7 @@ impl Client {
                     let effects: TransactionEffects = bcs::from_bytes(&effects)?;
 
                     Ok(TransactionDataEffects {
-                        tx: transaction.into(),
+                        signed_transaction: transaction.into(),
                         effects,
                     })
                 })
@@ -209,16 +209,16 @@ impl Client {
     }
 
     /// Execute a transaction.
-    pub async fn execute_tx(
+    pub async fn execute_transaction(
         &self,
         signatures: &[UserSignature],
-        tx: &Transaction,
-        wait_for: impl Into<Option<WaitForTx>>,
+        transaction: &Transaction,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> GraphQLResult<TransactionEffects> {
         let wait_for = wait_for.into();
         let operation = ExecuteTransactionQuery::build(ExecuteTransactionArgs {
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
-            tx_bytes: base64ct::Base64::encode_string(bcs::to_bytes(tx).unwrap().as_ref()),
+            tx_bytes: base64ct::Base64::encode_string(bcs::to_bytes(transaction).unwrap().as_ref()),
         });
 
         let response = self.run_query(&operation).await?;
@@ -228,7 +228,8 @@ impl Client {
         let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
 
         if let Some(wait_for) = wait_for {
-            self.wait_for_tx(tx.digest(), wait_for, None).await?;
+            self.wait_for_transaction(transaction.digest(), wait_for, None)
+                .await?;
         }
 
         Ok(effects)
@@ -237,8 +238,11 @@ impl Client {
     /// Returns whether the transaction for the given digest has been indexed
     /// on the node. This means that it can be queried by its digest and its
     /// effects will be usable for subsequent transactions. To check for
-    /// full finalization, use [`Self::is_tx_finalized`].
-    pub async fn is_tx_indexed_on_node(&self, digest: TransactionDigest) -> GraphQLResult<bool> {
+    /// full finalization, use [`Self::is_transaction_finalized`].
+    pub async fn is_transaction_indexed_on_node(
+        &self,
+        digest: TransactionDigest,
+    ) -> GraphQLResult<bool> {
         let operation = TransactionBlockIndexedQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -250,7 +254,7 @@ impl Client {
 
     /// Returns whether the transaction for the given digest has been included
     /// in a checkpoint (finalized).
-    pub async fn is_tx_finalized(&self, digest: TransactionDigest) -> GraphQLResult<bool> {
+    pub async fn is_transaction_finalized(&self, digest: TransactionDigest) -> GraphQLResult<bool> {
         let operation = TransactionBlockCheckpointQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -270,10 +274,10 @@ impl Client {
     /// Wait for the indexing or finalization of a transaction
     /// by its digest. An optional timeout can be provided, which, if
     /// exceeded, will return an error (default 60s).
-    pub async fn wait_for_tx(
+    pub async fn wait_for_transaction(
         &self,
         digest: TransactionDigest,
-        wait_for: WaitForTx,
+        wait_for: WaitForTransaction,
         timeout: impl Into<Option<Duration>>,
     ) -> GraphQLResult<()> {
         crate::wait::timeout(
@@ -281,10 +285,10 @@ impl Client {
             async {
                 loop {
                     if match wait_for {
-                        WaitForTx::IndexedOnNode => self.is_tx_indexed_on_node(digest).await?,
-                        WaitForTx::Finalized => self.is_tx_finalized(digest).await?,
+                        WaitForTransaction::IndexedOnNode => self.is_transaction_indexed_on_node(digest).await?,
+                        WaitForTransaction::Finalized => self.is_transaction_finalized(digest).await?,
                         _ => unimplemented!(
-                            "a new WaitForTx enum variant was added and needs to be handled"
+                            "a new WaitForTransaction enum variant was added and needs to be handled"
                         ),
                     } {
                         break Ok(());

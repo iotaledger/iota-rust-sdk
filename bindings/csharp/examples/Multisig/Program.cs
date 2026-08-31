@@ -55,7 +55,7 @@ class Program
         builder.SendIota(recipientAddress, PtbArgument.U64(amount));
         var txn = await builder.Finish();
 
-        var dryRunResult = await client.DryRunTx(txn);
+        var dryRunResult = await client.DryRunTransaction(txn);
         if (dryRunResult.Error != null)
         {
             throw new Exception($"Dry run failed: {dryRunResult.Error}");
@@ -67,16 +67,16 @@ class Program
 
         // 8. Aggregate signatures
         var aggregator = MultisigAggregator.NewWithTransaction(committee, txn);
-        aggregator = aggregator.WithSignature(sig0);
-        aggregator = aggregator.WithSignature(sig1);
+        aggregator.AddSignature(sig0);
+        aggregator.AddSignature(sig1);
         var aggSig = aggregator.Finish();
 
         // 9. Execute
         var userSignature = UserSignature.NewMultisig(aggSig);
-        var effects = await client.ExecuteTx(new[] { userSignature }, txn);
+        var effects = await client.ExecuteTransaction(new[] { userSignature }, txn);
 
         Console.WriteLine($"Digest: {Iota.HexEncode(effects.Digest().ToBytes())}");
-        Console.WriteLine($"Transaction status: {effects.AsV1().Status}");
+        Console.WriteLine($"Transaction status: {effects.AsV1().Status()}");
         Console.WriteLine($"Effects: {effects.AsV1()}");
     }
 }
