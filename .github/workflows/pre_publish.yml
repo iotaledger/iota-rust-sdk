@@ -36,6 +36,7 @@ on:
         required: true
         description: The package to publish.
         options:
+          - iota-sdk-bcs-schema
           - iota-sdk-types
           - iota-sdk-move-types
           - iota-sdk-crypto
