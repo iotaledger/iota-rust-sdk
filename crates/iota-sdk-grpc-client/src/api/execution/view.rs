@@ -47,11 +47,12 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     ///
+    /// // `discounted_price` has to be declared `#[view]` in the package.
     /// let outputs = client
     ///     .view_function_call(
-    ///         "0x2::hash::blake2b256",
+    ///         "0x1234::shop::discounted_price",
     ///         &[],
-    ///         &[serde_json::json!([0, 1, 2])],
+    ///         &[serde_json::json!(100), serde_json::json!(25)],
     ///         ViewFunctionCallReadMask::default(),
     ///     )
     ///     .await?;
