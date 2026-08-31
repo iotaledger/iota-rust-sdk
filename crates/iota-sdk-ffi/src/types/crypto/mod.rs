@@ -40,7 +40,7 @@ macro_rules! impl_crypto_object {
             }
 
             pub fn to_bytes(&self) -> Vec<u8> {
-                self.0.as_bytes().to_vec()
+                self.0.bytes().to_vec()
             }
         }
     };
