@@ -23,11 +23,11 @@ struct SignSendIotaExample {
     let faucet = FaucetClient.newLocalnet()
     _ = try await faucet.requestAndWaitForFinalized(address: senderAddress, client: client)
 
-    let builder = TransactionBuilder(sender: senderAddress).withClient(client: client)
+    let builder = client.transactionBuilder(sender: senderAddress)
     _ = builder.sendIota(recipient: recipientAddress, amount: PtbArgument.u64(value: amount))
     let txn = try await builder.finish()
 
-    let dryRunResult = try await client.dryRunTx(tx: txn)
+    let dryRunResult = try await client.dryRunTransaction(transaction: txn)
     if dryRunResult.error != nil {
       throw NSError(
         domain: "SignSendIota", code: 1,
@@ -37,10 +37,10 @@ struct SignSendIotaExample {
     let signature = try privateKey.trySignSimple(message: txn.signingDigest())
     let userSignature = UserSignature.newSimple(signature: signature)
 
-    let effects = try await client.executeTx(signatures: [userSignature], tx: txn)
+    let effects = try await client.executeTransaction(signatures: [userSignature], transaction: txn)
 
     print("Digest: \(hexEncode(input: effects.digest().toBytes()))")
-    print("Transaction status: \(effects.asV1().status)")
+    print("Transaction status: \(effects.asV1().status())")
     print("Effects: \(effects.asV1())")
   }
 }

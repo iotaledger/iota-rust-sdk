@@ -44,7 +44,7 @@ struct PublishUpgradeExample {
     print("Digest: \(digest.toBase58())")
 
     // Create a random private key to derive a sender address and for signing
-    let privateKey = Ed25519PrivateKey.generate()
+    let privateKey = Ed25519PrivateKey.random()
     let sender = privateKey.publicKey().deriveAddress()
     print("Sender: \(sender.toHex())")
 
@@ -61,9 +61,9 @@ struct PublishUpgradeExample {
     }
 
     // Build the `publish` PTB
-    let builder = TransactionBuilder(sender: sender).withClient(client: client)
+    let builder = client.transactionBuilder(sender: sender)
     // Publish the package and receive the upgrade cap in return
-    _ = builder.publish(packageData: packageData, upgradeCapName: "upgrade_cap")
+    _ = builder.publishPackage(packageData: packageData, upgradeCapName: "upgrade_cap")
     // Transfer the upgrade cap to the sender address
     _ = builder.transferObjects(
       recipient: sender, objects: [PtbArgument.assigned(name: "upgrade_cap")])
@@ -71,7 +71,7 @@ struct PublishUpgradeExample {
 
     // Perform a dry-run first to check if everything is correct
     print("> Publishing package (dry run):")
-    let dryResult = try await client.dryRunTx(tx: tx, skipChecks: false)
+    let dryResult = try await client.dryRunTransaction(transaction: tx, skipChecks: false)
     if dryResult.error != nil {
       throw NSError(
         domain: "PublishUpgrade", code: 1,
@@ -87,14 +87,14 @@ struct PublishUpgradeExample {
     // Sign and execute the transaction (publish the package)
     print("> Publishing package:")
     let sig = try privateKey.signTransaction(transaction: tx)
-    let effects = try await client.executeTx(
-      signatures: [sig], tx: tx, waitFor: WaitForTx.finalized)
+    let effects = try await client.executeTransaction(
+      signatures: [sig], transaction: tx, waitFor: WaitForTransaction.finalized)
     print("Success")
 
     // Resolve UpgradeCap and PackageId via the client
     var upgradeCap: ObjectId?
     var packageId: ObjectId?
-    for changedObj in effects.asV1().changedObjects {
+    for changedObj in effects.asV1().changedObjects() {
       switch changedObj.outputState {
       case .objectWrite(_, let owner):
         let objectId = changedObj.objectId
@@ -133,7 +133,7 @@ struct PublishUpgradeExample {
     }
 
     // Build the `upgrade` PTB
-    let upgradeBuilder = TransactionBuilder(sender: sender).withClient(client: client)
+    let upgradeBuilder = client.transactionBuilder(sender: sender)
 
     // Authorize the upgrade
     _ = try upgradeBuilder.moveCall(
@@ -171,7 +171,8 @@ struct PublishUpgradeExample {
 
     // Perform a dry-run first to check if everything is correct
     print("> Upgrading package (dry run):")
-    let upgradeDryResult = try await client.dryRunTx(tx: upgradeTx, skipChecks: false)
+    let upgradeDryResult = try await client.dryRunTransaction(
+      transaction: upgradeTx, skipChecks: false)
     if upgradeDryResult.error != nil {
       throw NSError(
         domain: "PublishUpgrade", code: 1,
@@ -187,11 +188,12 @@ struct PublishUpgradeExample {
     // Sign and execute the transaction (upgrade the package)
     print("> Upgrading package:")
     let upgradeSig = try privateKey.signTransaction(transaction: upgradeTx)
-    let upgradeEffects = try await client.executeTx(signatures: [upgradeSig], tx: upgradeTx)
+    let upgradeEffects = try await client.executeTransaction(
+      signatures: [upgradeSig], transaction: upgradeTx)
     print("Success")
 
     // Print the new package version (should now be 2)
-    for changedObj in upgradeEffects.asV1().changedObjects {
+    for changedObj in upgradeEffects.asV1().changedObjects() {
       if case .packageWrite(let version, _) = changedObj.outputState {
         print("New Package ID: \(changedObj.objectId.toHex())")
         print("New Package version: \(version)")

@@ -1,13 +1,17 @@
 [package]
 name = "integration-tests"
 version = "0.0.0"
+authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
 publish = false
+repository = "https://github.com/iotaledger/iota-rust-sdk/"
+description = "Integration tests for the IOTA Rust SDK"
 
 [dev-dependencies]
 # external dependencies
 eyre.workspace = true
+futures.workspace = true
 rand.workspace = true
 serde_json.workspace = true
 tokio.workspace = true

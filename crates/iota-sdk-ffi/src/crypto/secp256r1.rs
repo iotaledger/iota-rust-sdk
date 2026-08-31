@@ -1,17 +1,14 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::{
-    crypto::{FromMnemonic, ToFromBech32, ToFromBytes, Verifier},
-    types::SignatureScheme,
-};
+use iota_sdk::crypto::{FromMnemonic, ToFromBech32, ToFromBytes, Verifier};
 use rand::rngs::OsRng;
 
 use crate::{
     error::{Result, SdkFfiError},
     types::{
         crypto::{Secp256r1PublicKey, Secp256r1Signature, intent::PersonalMessage},
-        signature::{SimpleSignature, UserSignature},
+        signature::{SignatureScheme, SimpleSignature, UserSignature},
     },
 };
 
@@ -31,7 +28,7 @@ impl Secp256r1PrivateKey {
     }
 
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     /// Get the public key corresponding to this private key.
@@ -86,10 +83,8 @@ impl Secp256r1PrivateKey {
 
     /// Generate a new random Secp256r1PrivateKey
     #[uniffi::constructor]
-    pub fn generate() -> Self {
-        Self(iota_sdk::crypto::secp256r1::Secp256r1PrivateKey::generate(
-            OsRng,
-        ))
+    pub fn random() -> Self {
+        Self(iota_sdk::crypto::secp256r1::Secp256r1PrivateKey::random_with(OsRng))
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary

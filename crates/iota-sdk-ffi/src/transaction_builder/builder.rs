@@ -18,8 +18,9 @@ use crate::{
     },
     types::{
         address::Address,
+        digest::Digest,
         move_core::{Identifier, TypeTag},
-        move_package::MovePackageData,
+        move_package::{MovePackageData, UpgradePolicy},
         object::{ObjectId, ObjectReference},
         transaction::{ProgrammableTransaction, Transaction},
     },
@@ -76,7 +77,7 @@ impl TransactionBuilder {
     ///
     /// The returned builder has the original inputs and commands but no
     /// sender, gas payment, sponsor, or expiration; the sender defaults to
-    /// the zero address and must be set via `set_sender` before `finish`
+    /// the zero address and must be set via `sender` before `finish`
     /// is called.
     #[uniffi::constructor]
     pub fn from_programmable_transaction(ptb: &ProgrammableTransaction) -> Self {
@@ -91,10 +92,11 @@ impl TransactionBuilder {
     }
 
     /// Set the sender address.
-    pub fn set_sender(self: Arc<Self>, sender: &Address) {
+    pub fn sender(self: Arc<Self>, sender: &Address) -> Arc<Self> {
         self.write(|builder| {
-            builder.set_sender(**sender);
+            builder.sender(**sender);
         });
+        self
     }
 
     /// Add gas coins that will be consumed. Optional.
@@ -330,7 +332,7 @@ impl TransactionBuilder {
         use iota_sdk::transaction_builder::unresolved::{Command, MakeMoveVector};
         self.write(|builder| {
             let cmd = Command::MakeMoveVector(MakeMoveVector {
-                type_: Some(type_tag.0.clone()),
+                type_tag: Some(type_tag.0.clone()),
                 elements: elements
                     .iter()
                     .map(|e| builder.apply_argument(e.as_ref()))
@@ -354,15 +356,39 @@ impl TransactionBuilder {
     ///  - `modules`: is the modules' bytecode to be published
     ///  - `dependencies`: is the list of IDs of the transitive dependencies of
     ///    the package
-    pub fn publish(
+    pub fn publish_package(
         self: Arc<Self>,
         package_data: &MovePackageData,
         upgrade_cap_name: String,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .publish(package_data.0.clone())
+                .publish_package(package_data.0.clone())
                 .upgrade_cap(upgrade_cap_name);
+        });
+        self
+    }
+
+    /// Authorize a package upgrade by calling
+    /// `0x2::package::authorize_upgrade`.
+    ///
+    /// The result assigned to `upgrade_ticket_name` is the `UpgradeTicket`
+    /// expected by `TransactionBuilder::upgrade()`. The digest is the digest
+    /// of the package being upgraded to (`MovePackageData::digest()`).
+    ///
+    /// For the standard upgrade flow, use
+    /// `TransactionBuilder::upgrade_package()` instead.
+    pub fn authorize_upgrade(
+        self: Arc<Self>,
+        upgrade_capability: &PTBArgument,
+        upgrade_policy: &UpgradePolicy,
+        digest: &Digest,
+        upgrade_ticket_name: String,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            builder
+                .authorize_upgrade(upgrade_capability, upgrade_policy.as_u8(), **digest)
+                .assign(upgrade_ticket_name);
         });
         self
     }
@@ -375,9 +401,9 @@ impl TransactionBuilder {
     ///  - `package`: is the ID of the current package being upgraded
     ///  - `ticket`: is the upgrade ticket
     ///
-    ///  To get the ticket, you have to call the
-    /// `0x2::package::authorize_upgrade` function, and pass the package
-    /// ID, the upgrade policy, and package digest.
+    /// To get the ticket, use `TransactionBuilder::authorize_upgrade()`. The
+    /// result assigned to `name` is the `UpgradeReceipt` expected by
+    /// `TransactionBuilder::commit_upgrade()`.
     #[uniffi::method(default(name = None))]
     pub fn upgrade(
         self: Arc<Self>,
@@ -390,6 +416,46 @@ impl TransactionBuilder {
             builder
                 .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
                 .assign(name);
+        });
+        self
+    }
+
+    /// Commit a package upgrade by calling `0x2::package::commit_upgrade`,
+    /// consuming the `UpgradeReceipt` returned by
+    /// `TransactionBuilder::upgrade()`.
+    pub fn commit_upgrade(
+        self: Arc<Self>,
+        upgrade_capability: &PTBArgument,
+        upgrade_receipt: &PTBArgument,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            builder.commit_upgrade(upgrade_capability, upgrade_receipt);
+        });
+        self
+    }
+
+    /// Upgrade a Move package.
+    ///
+    /// This is a high-level function which chains
+    /// `TransactionBuilder::authorize_upgrade()`,
+    /// `TransactionBuilder::upgrade()` and
+    /// `TransactionBuilder::commit_upgrade()` using the digest from the
+    /// provided `MovePackageData`. Use the individual functions for custom
+    /// upgrade flows.
+    pub fn upgrade_package(
+        self: Arc<Self>,
+        package_id: &ObjectId,
+        package_data: &MovePackageData,
+        upgrade_capability: &PTBArgument,
+        upgrade_policy: &UpgradePolicy,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            builder.upgrade_package(
+                **package_id,
+                package_data.0.clone(),
+                upgrade_capability,
+                upgrade_policy.as_u8(),
+            );
         });
         self
     }

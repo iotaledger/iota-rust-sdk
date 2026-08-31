@@ -45,7 +45,7 @@ fun main() = runBlocking {
         println("Digest: ${digest.toBase58()}")
 
         // Create a random private key to derive a sender address and for signing
-        val privateKey = Ed25519PrivateKey.generate()
+        val privateKey = Ed25519PrivateKey.random()
         val sender = privateKey.publicKey().deriveAddress()
         println("Sender: ${sender.toHex()}")
 
@@ -57,16 +57,16 @@ fun main() = runBlocking {
             ?: throw Exception("Failed to request coins from faucet")
 
         // Build the `publish` PTB
-        val builderPublish = TransactionBuilder(sender).withClient(client)
+        val builderPublish = client.transactionBuilder(sender)
         // Publish the package and receive the upgrade cap in return
-        builderPublish.publish(packageData, "upgrade_cap")
+        builderPublish.publishPackage(packageData, "upgrade_cap")
         // Transfer the upgrade cap to the sender address
         builderPublish.transferObjects(sender, listOf(PtbArgument.assigned("upgrade_cap")))
         val txPublish = builderPublish.finish()
 
         // Perform a dry-run first to check if everything is correct
         println("> Publishing package (dry run):")
-        val resultPublish = client.dryRunTx(txPublish, false)
+        val resultPublish = client.dryRunTransaction(txPublish, false)
         resultPublish.error?.let { throw Exception("Dry run failed: $it") }
         resultPublish.effects ?: throw Exception("Dry run failed: no effects")
         println("Success")
@@ -74,13 +74,14 @@ fun main() = runBlocking {
         // Sign and execute the transaction (publish the package)
         println("> Publishing package:")
         val sigPublish = privateKey.signTransaction(txPublish)
-        val effectsPublish = client.executeTx(listOf(sigPublish), txPublish, WaitForTx.FINALIZED)
+        val effectsPublish =
+            client.executeTransaction(listOf(sigPublish), txPublish, WaitForTransaction.FINALIZED)
         println("Success")
 
         // Resolve UpgradeCap and PackageId via the client
         var upgradeCap: ObjectId? = null
         var packageId: ObjectId? = null
-        for (changedObj in effectsPublish.asV1().changedObjects) {
+        for (changedObj in effectsPublish.asV1().changedObjects()) {
             if (changedObj.outputState is ObjectOut.ObjectWrite) {
                 val objectId = changedObj.objectId
                 val obj: Object =
@@ -110,7 +111,7 @@ fun main() = runBlocking {
         }
 
         // Build the `upgrade` PTB, that consists of 3 steps
-        val builderUpgrade = TransactionBuilder(sender).withClient(client)
+        val builderUpgrade = client.transactionBuilder(sender)
 
         // Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
         // ticket
@@ -146,7 +147,7 @@ fun main() = runBlocking {
 
         // Perform a dry-run to check if everything is fine
         println("> Upgrading package (dry run):")
-        val resultUpgrade = client.dryRunTx(txUpgrade, false)
+        val resultUpgrade = client.dryRunTransaction(txUpgrade, false)
         resultUpgrade.error?.let { throw Exception("Dry run failed: $it") }
         resultUpgrade.effects ?: throw Exception("Dry run failed: no effects")
         println("Success")
@@ -154,11 +155,11 @@ fun main() = runBlocking {
         // Sign and execute the transaction (upgrade the package)
         println("> Upgrading package:")
         val sigUpgrade = privateKey.signTransaction(txUpgrade)
-        val effectsUpgrade = client.executeTx(listOf(sigUpgrade), txUpgrade)
+        val effectsUpgrade = client.executeTransaction(listOf(sigUpgrade), txUpgrade)
         println("Success")
 
         // Print the new package version (should now be 2)
-        for (changedObj in effectsUpgrade.asV1().changedObjects) {
+        for (changedObj in effectsUpgrade.asV1().changedObjects()) {
             if (changedObj.outputState is ObjectOut.PackageWrite) {
                 val pkgId = changedObj.objectId
                 println("New Package ID: ${pkgId.toHex()}")

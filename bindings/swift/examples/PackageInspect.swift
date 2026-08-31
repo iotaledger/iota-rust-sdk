@@ -283,16 +283,16 @@ private func resolveUpgradeCapId(
 
   for effects in page.data {
     let effectsV1 = effects.asV1()
-    for changedObj in effectsV1.changedObjects {
+    for changedObj in effectsV1.changedObjects() {
       guard case .objectWrite = changedObj.outputState else {
         continue
       }
 
       if let object = try await client.object(
         objectId: changedObj.objectId,
-        version: effectsV1.lamportVersion
+        version: effectsV1.lamportVersion()
       ),
-        object.asStructOpt()?.structType == StructTag.newUpgradeCap()
+        object.asOptStruct()?.structType == StructTag.newUpgradeCap()
       {
         return changedObj.objectId
       }
@@ -312,7 +312,7 @@ private func sameObjectId(_ left: String?, _ right: String?) -> Bool {
 
 private func programmableTransactionJson(_ tx: Transaction) throws -> [String: Any]? {
   guard
-    let data = try transactionToJson(data: tx).data(using: .utf8),
+    let data = try tx.toJson().data(using: .utf8),
     let rawJson = try JSONSerialization.jsonObject(with: data) as? [String: Any],
     let txV1 = rawJson["1"] as? [String: Any],
     let kind = txV1["kind"] as? [String: Any],
@@ -426,7 +426,7 @@ private func wasPackagePublishedAsImmutable(
     )
 
     for txData in page.data {
-      if try publishesPackageAsImmutable(txData.tx.transaction) {
+      if try publishesPackageAsImmutable(txData.signedTransaction.transaction) {
         return true
       }
     }
@@ -453,7 +453,7 @@ private func wasUpgradeCapUsedForMakeImmutable(
 
     for txData in page.data {
       if try usesUpgradeCapForMakeImmutable(
-        txData.tx.transaction,
+        txData.signedTransaction.transaction,
         upgradeCapId: upgradeCapId
       ) {
         return true

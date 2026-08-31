@@ -173,7 +173,7 @@ impl StructTag {
     }
 
     /// Returns the coin type if this is a Coin type, None otherwise
-    pub fn coin_type_opt(&self) -> Option<&crate::TypeTag> {
+    pub fn opt_coin_type(&self) -> Option<&crate::TypeTag> {
         if self.is_coin() {
             self.type_params.first()
         } else {
@@ -183,7 +183,7 @@ impl StructTag {
 
     /// Returns the coin type of this `StructTag`, panics if not a coin
     pub fn coin_type(&self) -> &TypeTag {
-        self.coin_type_opt().expect("not a coin")
+        self.opt_coin_type().expect("not a coin")
     }
 
     /// Returns the address part of a `StructTag`
@@ -424,8 +424,11 @@ impl StructTag {
         object_bag::ObjectBag,
         tx_context::TxContext,
         deny_list::DenyList,
+        transaction_deny_rules::TransactionDenyRules,
         package_metadata::PackageMetadataV1,
-        module_metadata::ModuleMetadata
+        package_metadata::PackageMetadataKey,
+        module_metadata::ModuleMetadata,
+        account::AuthenticatorFunctionRefV1Key
     );
     add_struct_tag_ctor!(@with_module FRAMEWORK, deny_list::ConfigKey, deny_list::AddressKey, deny_list::GlobalPauseKey);
     add_struct_tag_ctor!(

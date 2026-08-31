@@ -64,6 +64,7 @@ pub enum Kind {
     Http {
         status: reqwest::StatusCode,
     },
+    Subscription,
     Other,
 }
 
@@ -162,6 +163,17 @@ impl Error {
         self
     }
 
+    /// Create an error signaling that the subscription server dropped
+    /// `count` payloads before the next one because the client could not keep
+    /// up. The stream continues after this error.
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn lagged(count: i32) -> Self {
+        Self::from_message(
+            Kind::Subscription,
+            format!("subscription lagged: {count} payload(s) dropped by the server"),
+        )
+    }
+
     /// Create a Query kind of error with the original graphql errors.
     pub fn graphql_error(errors: Vec<GraphQlError>) -> Self {
         Self {
@@ -183,6 +195,7 @@ impl std::fmt::Display for Kind {
             Kind::Query => write!(f, "Query error:"),
             Kind::Missing => write!(f, "Missing:"),
             Kind::Http { status } => write!(f, "HTTP {status}:"),
+            Kind::Subscription => write!(f, "Subscription error:"),
             Kind::Other => write!(f, "Error:"),
         }
     }
@@ -272,6 +285,20 @@ impl From<TryFromIntError> for Error {
 impl From<TypeParseError> for Error {
     fn from(error: TypeParseError) -> Self {
         Self::from_error(Kind::Parse, error)
+    }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+impl From<tokio_tungstenite::tungstenite::Error> for Error {
+    fn from(error: tokio_tungstenite::tungstenite::Error) -> Self {
+        Self::from_error(Kind::Subscription, error)
+    }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+impl From<graphql_ws_client::Error> for Error {
+    fn from(error: graphql_ws_client::Error) -> Self {
+        Self::from_error(Kind::Subscription, error)
     }
 }
 

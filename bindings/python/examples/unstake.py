@@ -18,8 +18,7 @@ async def main():
         raise Exception("no staked iotas found")
     staked_iota = staked_iotas.data[0]
 
-    builder = TransactionBuilder(
-        staked_iota.owner().as_address()).with_client(client)
+    builder = client.transaction_builder(staked_iota.owner().as_address())
 
     builder.unstake(PtbArgument.object_id(staked_iota.id()))
 

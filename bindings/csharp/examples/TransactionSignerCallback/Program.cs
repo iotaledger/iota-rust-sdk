@@ -37,14 +37,14 @@ class Program
         var faucet = FaucetClient.NewLocalnet();
         await faucet.RequestAndWaitForFinalized(senderAddress, client);
 
-        var builder = new TransactionBuilder(senderAddress).WithClient(client);
+        var builder = client.TransactionBuilder(senderAddress);
         builder.SendIota(recipientAddress, PtbArgument.U64(amount));
 
         var signer = new TransactionSigner(new AsyncSigner(privateKey));
-        var effects = await builder.Execute(signer, WaitForTx.Finalized);
+        var effects = await builder.Execute(signer, WaitForTransaction.Finalized);
 
         Console.WriteLine($"Digest: {Iota.HexEncode(effects.Digest().ToBytes())}");
-        Console.WriteLine($"Transaction status: {effects.AsV1().Status}");
+        Console.WriteLine($"Transaction status: {effects.AsV1().Status()}");
         Console.WriteLine($"Effects: {effects.AsV1()}");
     }
 }

@@ -23,8 +23,16 @@ impl std::fmt::Display for BlstError {
 
 impl std::error::Error for BlstError {}
 
-#[derive(Clone)]
+#[derive(Clone, zeroize::Zeroize, zeroize::ZeroizeOnDrop)]
 pub struct Bls12381PrivateKey(SecretKey);
+
+impl PartialEq for Bls12381PrivateKey {
+    fn eq(&self, other: &Self) -> bool {
+        zeroize::Zeroizing::new(self.0.to_bytes()) == zeroize::Zeroizing::new(other.0.to_bytes())
+    }
+}
+
+impl Eq for Bls12381PrivateKey {}
 
 impl std::fmt::Debug for Bls12381PrivateKey {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -74,7 +82,7 @@ impl Bls12381PrivateKey {
         self.verifying_key().public_key()
     }
 
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -82,6 +90,14 @@ impl Bls12381PrivateKey {
         rng.fill_bytes(&mut buf);
         let secret_key = SecretKey::key_gen(&buf, &[]).unwrap();
         Self(secret_key)
+    }
+
+    /// Generate a new private key using the operating system's random number
+    /// generator.
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::random_with(rand_core::OsRng)
     }
 
     pub fn sign_checkpoint_summary(&self, summary: &CheckpointSummary) -> ValidatorSignature {

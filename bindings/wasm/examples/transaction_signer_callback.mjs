@@ -8,11 +8,10 @@ import {
   GraphQlClient,
   hexEncode,
   PtbArgument,
-  TransactionBuilder,
   TransactionSigner,
   TransactionSignerFnOutput,
   initAsync,
-  WaitForTx,
+  WaitForTransaction,
 } from "@iota/sdk-wasm";
 
 await initAsync();
@@ -45,12 +44,12 @@ const client = GraphQlClient.newLocalnet();
 const faucet = FaucetClient.newLocalnet();
 await faucet.requestAndWaitForFinalized(senderAddress, client);
 
-const builder = new TransactionBuilder(senderAddress).withClient(client);
+const builder = client.transactionBuilder(senderAddress);
 builder.sendIota(recipientAddress, PtbArgument.u64(amount));
 
 const signer = new TransactionSigner(new AsyncSigner(privateKey));
-const effects = await builder.execute(signer, WaitForTx.Finalized);
+const effects = await builder.execute(signer, WaitForTransaction.Finalized);
 
 console.log(`Digest: ${hexEncode(effects.digest().toBytes())}`);
-console.log(`Transaction status: ${effects.asV1().status}`);
+console.log(`Transaction status: ${effects.asV1().status()}`);
 console.log(`Effects: ${effects.asV1()}`);

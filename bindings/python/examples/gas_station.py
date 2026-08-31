@@ -10,11 +10,11 @@ async def main():
     client = GraphQlClient.new_localnet()
     gas_station_url = "http://0.0.0.0:9527"
     gas_station_auth_token = "test"
-    keypair = Ed25519PrivateKey.generate()
+    keypair = Ed25519PrivateKey.random()
     sender = keypair.public_key().derive_address()
     signer = TransactionSigner.from_ed25519(keypair)
 
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
 
     builder.move_call(
         Address.std(),

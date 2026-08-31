@@ -36,7 +36,7 @@ func main() {
 	coinObjId := objIdFromHex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")
 	amount := iota_sdk.PtbArgumentU64(50000000000)
 
-	builder := iota_sdk.NewTransactionBuilder(fromAddress).WithClient(client)
+	builder := client.TransactionBuilder(fromAddress)
 	builder.SendCoins([]*iota_sdk.PtbArgument{coinObjId}, toAddress, &amount)
 
 	txn, err := builder.Finish()

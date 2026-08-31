@@ -18,7 +18,8 @@ use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
-    PTBArgument, SharedMut, TransactionBuilderClient, WaitForTx,
+    PTBArgument, SharedMut, TransactionBuilderClient, TransactionBuilderLedgerClient,
+    TransactionBuilderSimulationClient, WaitForTransaction,
     builder::{
         assigned_results::{AssignedResult, AssignedResults},
         gas_station::GasStationData,
@@ -50,9 +51,9 @@ const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
 /// Fallback cap on `gas_payment.objects.len()` used when the protocol-config
 /// value is unavailable (`max_gas_payment_objects` is 256 exclusive at the
 /// time of writing, so 255 inclusive). Auto gas selection fetches the live
-/// value via [`TransactionBuilderClient::protocol_config`] and falls back to
-/// this if the implementation does not expose protocol config or the value
-/// cannot be parsed.
+/// value via [`TransactionBuilderLedgerClient::protocol_config`] and falls
+/// back to this if the implementation does not expose protocol config or the
+/// value cannot be parsed.
 const DEFAULT_MAX_GAS_PAYMENT_OBJECTS: usize = 255;
 
 /// A transaction builder which can be used to construct [`Transaction`]s.
@@ -91,8 +92,9 @@ pub struct TransactionBuildData {
 }
 
 impl TransactionBuildData {
-    fn set_sender(&mut self, sender: Address) {
+    fn sender(&mut self, sender: Address) -> &mut Self {
         self.sender = sender;
+        self
     }
 
     fn set_input(&mut self, kind: InputKind, is_gas: bool) -> Argument {
@@ -316,7 +318,7 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
     /// The returned builder has the original inputs and commands but no
     /// sender, gas payment, sponsor, or expiration; the sender defaults to
     /// [`Address::ZERO`] and must be set with
-    /// [`set_sender`](TransactionBuilder::set_sender) before
+    /// [`sender`](TransactionBuilder::sender) before
     /// [`finish`](TransactionBuilder::finish) is called.
     fn from(ptb: ProgrammableTransaction) -> Self {
         let ProgrammableTransaction {
@@ -413,8 +415,9 @@ impl TryFrom<Transaction> for TransactionBuilder {
 
 impl<C, L> TransactionBuilder<C, L> {
     /// Set the sender address.
-    pub fn set_sender(&mut self, sender: Address) {
-        self.data.set_sender(sender);
+    pub fn sender(&mut self, sender: Address) -> &mut Self {
+        self.data.sender(sender);
+        self
     }
 
     /// Apply the given parameter and return the generated argument
@@ -981,7 +984,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Publish a move package.
-    pub fn publish(
+    pub fn publish_package(
         &mut self,
         package_data: MovePackageData,
     ) -> &mut TransactionBuilder<C, Publish> {
@@ -991,7 +994,63 @@ impl<C, L> TransactionBuilder<C, L> {
         })
     }
 
-    /// Upgrade a move package.
+    /// Authorize a package upgrade by calling
+    /// `0x2::package::authorize_upgrade`.
+    ///
+    /// The command's result is the `UpgradeTicket` expected by
+    /// [`upgrade`](Self::upgrade). The policy is one of the
+    /// [`UpgradePolicy`](iota_types::UpgradePolicy) constants and the digest
+    /// is the digest of the package being upgraded to
+    /// ([`MovePackageData::digest`]).
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, MovePackageData, ObjectId, UpgradePolicy};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let package_id =
+    ///     ObjectId::from_hex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
+    /// let upgrade_cap =
+    ///     ObjectId::from_hex("0x13e8d0b5cdec156e44c0834274a431505954eb27a8f774a7f9044c2908c1c494")?;
+    /// # let modules = vec![vec![0u8]];
+    /// # let dependencies = vec![];
+    /// let package_data = MovePackageData::new(modules, dependencies);
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// let upgrade_ticket = builder
+    ///     .authorize_upgrade(upgrade_cap, UpgradePolicy::COMPATIBLE, package_data.digest)
+    ///     .result();
+    /// let upgrade_receipt = builder
+    ///     .upgrade(package_id, package_data, upgrade_ticket)
+    ///     .result();
+    /// builder.commit_upgrade(upgrade_cap, upgrade_receipt);
+    /// let txn = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn authorize_upgrade<Cap: PTBArgument, P: PTBArgument, D: PTBArgument>(
+        &mut self,
+        upgrade_capability: Cap,
+        upgrade_policy: P,
+        digest: D,
+    ) -> &mut TransactionBuilder<C, MoveCall> {
+        self.move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
+            .arguments((upgrade_capability, upgrade_policy, digest))
+    }
+
+    /// Add the raw `Upgrade` command, consuming the `UpgradeTicket` returned
+    /// by [`authorize_upgrade`](Self::authorize_upgrade) and producing the
+    /// `UpgradeReceipt` expected by [`commit_upgrade`](Self::commit_upgrade).
+    ///
+    /// For the standard upgrade flow, use
+    /// [`upgrade_package`](Self::upgrade_package) instead.
     pub fn upgrade<U: PTBArgument>(
         &mut self,
         package_id: ObjectId,
@@ -1005,6 +1064,76 @@ impl<C, L> TransactionBuilder<C, L> {
             package: package_id,
             ticket,
         })
+    }
+
+    /// Commit a package upgrade by calling `0x2::package::commit_upgrade`,
+    /// consuming the `UpgradeReceipt` returned by [`upgrade`](Self::upgrade).
+    ///
+    /// See [`authorize_upgrade`](Self::authorize_upgrade) for an example of
+    /// the full upgrade flow.
+    pub fn commit_upgrade<Cap: PTBArgument, R: PTBArgument>(
+        &mut self,
+        upgrade_capability: Cap,
+        upgrade_receipt: R,
+    ) -> &mut TransactionBuilder<C, MoveCall> {
+        self.move_call(Address::FRAMEWORK, "package", "commit_upgrade")
+            .arguments((upgrade_capability, upgrade_receipt))
+    }
+
+    /// Upgrade a move package.
+    ///
+    /// This is a high-level function which chains
+    /// [`authorize_upgrade`](Self::authorize_upgrade),
+    /// [`upgrade`](Self::upgrade) and [`commit_upgrade`](Self::commit_upgrade)
+    /// using the digest from the provided [`MovePackageData`]. Use the
+    /// individual functions for custom upgrade flows.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, MovePackageData, ObjectId, UpgradePolicy};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let package_id =
+    ///     ObjectId::from_hex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
+    /// let upgrade_cap =
+    ///     ObjectId::from_hex("0x13e8d0b5cdec156e44c0834274a431505954eb27a8f774a7f9044c2908c1c494")?;
+    /// # let modules = vec![vec![0u8]];
+    /// # let dependencies = vec![];
+    /// let package_data = MovePackageData::new(modules, dependencies);
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// builder.upgrade_package(
+    ///     package_id,
+    ///     package_data,
+    ///     upgrade_cap,
+    ///     UpgradePolicy::COMPATIBLE,
+    /// );
+    /// let txn = builder.finish().await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn upgrade_package<Cap: PTBArgument, P: PTBArgument>(
+        &mut self,
+        package_id: ObjectId,
+        package_data: MovePackageData,
+        upgrade_capability: Cap,
+        upgrade_policy: P,
+    ) -> &mut TransactionBuilder<C, MoveCall> {
+        let upgrade_cap = self.apply_argument(upgrade_capability);
+        let upgrade_ticket = self
+            .authorize_upgrade(upgrade_cap, upgrade_policy, package_data.digest)
+            .result();
+        let upgrade_receipt = self
+            .upgrade(package_id, package_data, upgrade_ticket)
+            .result();
+        self.commit_upgrade(upgrade_cap, upgrade_receipt)
     }
 
     /// Add stake to a validator's staking pool.
@@ -1037,7 +1166,7 @@ impl<C, L> TransactionBuilder<C, L> {
         stake_amount: S,
         validator_address: Address,
     ) -> &mut Self {
-        let coin = self.split_coins(Argument::Gas, [stake_amount]).arg();
+        let coin = self.split_coins(Argument::Gas, [stake_amount]).result();
         self.move_call(
             Address::SYSTEM,
             Identifier::IOTA_SYSTEM_MODULE.as_str(),
@@ -1128,7 +1257,7 @@ impl<C, L> TransactionBuilder<C, L> {
             .map(|e| self.apply_argument(e))
             .collect();
         self.cmd_state_change(MakeMoveVector {
-            type_: Some(T::type_tag()),
+            type_tag: Some(T::type_tag()),
             elements,
         })
     }
@@ -1275,7 +1404,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 }
 
-impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
+impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// Add gas coins that will be consumed. If no gas coins are provided, the
     /// client will set a default list owned by the sender.
     ///
@@ -1634,31 +1763,12 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         .into())
     }
 
-    async fn finish_internal(&mut self) -> Result<Transaction, Error> {
-        let mut txn = self.resolve_ptb(true).await?;
-        if self.data.gas_budget.is_none() {
-            let budget = self
-                .client
-                .estimate_tx_budget(&txn)
-                .await
-                .map_err(Error::client)?
-                .ok_or(Error::MissingGasBudget)?;
-            let Transaction::V1(txn) = &mut txn else {
-                unimplemented!("a new enum variant was added and needs to be handled")
-            };
-            // The network enforces a minimum gas budget of base_tx_cost_fixed
-            // (1000) * gas_price. The dry-run estimate can return a value below
-            // this minimum, so we clamp it.
-            let min_budget = txn.gas_payment.price.saturating_mul(1000);
-            txn.gas_payment.budget = budget.max(min_budget);
-        }
-
-        Ok(txn)
-    }
-
-    /// Convert this builder into a transaction.
-    pub async fn finish(mut self) -> Result<Transaction, Error> {
-        self.finish_internal().await
+    /// Convert this builder into a transaction with the given gas budget,
+    /// used as-is (no estimation or minimum clamp) and overriding any budget
+    /// set via [`gas_budget`](Self::gas_budget).
+    pub async fn finish_with_budget(mut self, gas_budget: u64) -> Result<Transaction, Error> {
+        self.data.gas_budget = Some(gas_budget);
+        self.resolve_ptb(true).await
     }
 
     /// Convert this builder into a [`TransactionKind`], resolving the inputs
@@ -1703,6 +1813,44 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         let (kind, _gas) = self.resolve_kind().await?;
         Ok(kind)
     }
+}
+
+impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
+    TransactionBuilder<C, L>
+{
+    async fn finish_internal(&mut self) -> Result<Transaction, Error> {
+        let mut txn = self.resolve_ptb(true).await?;
+        if self.data.gas_budget.is_none() {
+            let budget = self
+                .client
+                .estimate_transaction_budget(&txn)
+                .await
+                .map_err(Error::client)?
+                .ok_or(Error::MissingGasBudget)?;
+            let Transaction::V1(txn) = &mut txn else {
+                unimplemented!("a new enum variant was added and needs to be handled")
+            };
+            // The network enforces a minimum gas budget of base_tx_cost_fixed
+            // (1000) * gas_price. The dry-run estimate can return a value below
+            // this minimum, so we clamp it.
+            let min_budget = txn.gas_payment.price.saturating_mul(1000);
+            txn.gas_payment.budget = budget.max(min_budget);
+        }
+
+        Ok(txn)
+    }
+
+    /// Convert this builder into a transaction.
+    ///
+    /// When no gas budget was set, it is estimated by simulating the
+    /// transaction via the client
+    /// ([`estimate_transaction_budget`](TransactionBuilderSimulationClient::estimate_transaction_budget)).
+    /// To build with an explicit budget on a client without simulation
+    /// support, use
+    /// [`finish_with_budget`](TransactionBuilder::finish_with_budget).
+    pub async fn finish(mut self) -> Result<Transaction, Error> {
+        self.finish_internal().await
+    }
 
     /// Dry run the transaction.
     pub async fn dry_run(mut self, skip_checks: bool) -> Result<C::DryRunResult, Error> {
@@ -1719,19 +1867,21 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         }
         let res = self
             .client
-            .dry_run_tx(&txn, skip_checks)
+            .dry_run_transaction(&txn, skip_checks)
             .await
             .map_err(Error::client)?;
         Ok(res)
     }
+}
 
+impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Execute the transaction and optionally wait for finalization. The
     /// client will be used unless a gas station was configured, in
     /// which case the transaction will be sent to the endpoint for execution.
     pub async fn execute(
         mut self,
         signer: &impl TransactionSigner,
-        wait_for: impl Into<Option<WaitForTx>>,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
         let gas_station_data = self.data.gas_station_data.take();
@@ -1740,7 +1890,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         Ok(if let Some(gas_station_data) = gas_station_data {
             let digest = gas_station_data.execute_txn(&mut txn, signer).await?;
             self.client
-                .wait_for_tx(digest, WaitForTx::Finalized)
+                .wait_for_transaction(digest, WaitForTransaction::Finalized)
                 .await
                 .map_err(Error::client)?;
             self.client
@@ -1750,7 +1900,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                 .ok_or_else(|| Error::MissingTransaction(digest))?
         } else {
             self.client
-                .execute_tx(
+                .execute_transaction(
                     &[signer.sign(&txn).await.map_err(Error::signature)?],
                     &txn,
                     wait_for,
@@ -1766,7 +1916,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         mut self,
         signer: &impl TransactionSigner,
         sponsor_signer: &impl TransactionSigner,
-        wait_for: impl Into<Option<WaitForTx>>,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Error> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
@@ -1777,7 +1927,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         ];
 
         self.client
-            .execute_tx(&signatures, &txn, wait_for)
+            .execute_transaction(&signatures, &txn, wait_for)
             .await
             .map_err(Error::client)
     }
@@ -1815,31 +1965,17 @@ impl<C> TransactionBuilder<C, MoveCall> {
     }
 }
 
-impl TransactionBuilder<(), Publish> {
-    /// Get the package ID from the UpgradeCap so that it can be used for future
-    /// commands.
-    pub fn package_id(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder {
-        let cap = self.arg();
-        self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
-            .arguments([cap])
-            .assign(name)
-            .reset()
-    }
-}
-
-impl<C: TransactionBuilderClient> TransactionBuilder<C, Publish> {
+impl<C> TransactionBuilder<C, Publish> {
     /// Get the package ID from the UpgradeCap so that it can be used for future
     /// commands.
     pub fn package_id(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder<C> {
-        let cap = self.arg();
+        let cap = self.result();
         self.move_call(Address::FRAMEWORK, "package", "upgrade_package")
             .arguments([cap])
             .assign(name)
             .reset()
     }
-}
 
-impl<C> TransactionBuilder<C, Publish> {
     /// Finish the publish call and return the UpgradeCap.
     pub fn upgrade_cap(&mut self, name: impl AssignedResult) -> &mut TransactionBuilder<C> {
         name.push_assigned_results(&mut self.data);
@@ -1856,7 +1992,7 @@ impl<C, L: Into<Command>> TransactionBuilder<C, L> {
     }
 
     /// Get the argument representing the last command.
-    pub fn arg(&mut self) -> Argument {
+    pub fn result(&mut self) -> Argument {
         Argument::Result((self.data.commands.len() - 1) as _)
     }
 }
@@ -2143,7 +2279,7 @@ mod tests {
     /// commands and no inputs are added.
     #[test]
     fn pay_without_payments_adds_nothing() {
-        let sender = Address::generate(rand::thread_rng());
+        let sender = Address::random_with(rand::thread_rng());
         let coin_id = |seed: u8| ObjectId::new([seed; ObjectId::LENGTH]);
 
         let mut builder = TransactionBuilder::new(sender);
@@ -2372,7 +2508,7 @@ mod tests {
         /// back to a single-object request.
         #[tokio::test]
         async fn all_inputs_are_fetched_in_one_request() {
-            let sender = Address::generate(rand::thread_rng());
+            let sender = Address::random_with(rand::thread_rng());
             let client = RecordingClient::default();
 
             let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
@@ -2408,7 +2544,7 @@ mod tests {
         /// so the shared object keeps its shared kind.
         #[tokio::test]
         async fn batched_objects_are_matched_to_their_inputs() {
-            let sender = Address::generate(rand::thread_rng());
+            let sender = Address::random_with(rand::thread_rng());
             let coin = object_id(1);
 
             let mut builder =
@@ -2433,7 +2569,7 @@ mod tests {
         /// A missing object is still reported by its own id.
         #[tokio::test]
         async fn a_missing_object_is_named_in_the_error() {
-            let sender = Address::generate(rand::thread_rng());
+            let sender = Address::random_with(rand::thread_rng());
             let absent = object_id(2);
             let client = RecordingClient {
                 missing: vec![absent],
@@ -2485,7 +2621,7 @@ mod tests {
         /// coin.
         #[tokio::test]
         async fn keeps_the_coin_that_gas_selection_would_claim() {
-            let sender = Address::generate(rand::thread_rng());
+            let sender = Address::random_with(rand::thread_rng());
 
             let mut builder = TransactionBuilder::new(sender).with_client(TestClient);
             builder.split_coins(SELECTABLE_GAS_COIN, [1_000u64]);
@@ -2505,8 +2641,8 @@ mod tests {
         /// [`TransactionKind`], so setting them makes no difference.
         #[tokio::test]
         async fn ignores_gas_and_transaction_metadata() {
-            let sender = Address::generate(rand::thread_rng());
-            let recipient = Address::generate(rand::thread_rng());
+            let sender = Address::random_with(rand::thread_rng());
+            let recipient = Address::random_with(rand::thread_rng());
             let coin = ObjectId::new([7; ObjectId::LENGTH]);
 
             let mut plain = TransactionBuilder::new(sender).with_client(TestClient);
@@ -2519,7 +2655,7 @@ mod tests {
                 .gas_refs([object_ref(99, 7)])
                 .gas_budget(5_000_000)
                 .gas_price(1000)
-                .sponsor(Address::generate(rand::thread_rng()))
+                .sponsor(Address::random_with(rand::thread_rng()))
                 .expiration(42);
 
             assert_eq!(decorated.finish_kind().await.unwrap(), expected);
@@ -2529,7 +2665,7 @@ mod tests {
         /// stops the builder from picking gas coins of its own.
         #[tokio::test]
         async fn gas_refs_are_used_as_given() {
-            let sender = Address::generate(rand::thread_rng());
+            let sender = Address::random_with(rand::thread_rng());
             // A version the test client never fabricates, so a lookup that
             // overwrote the reference would be visible.
             let gas_coin = object_ref(3, 4242);

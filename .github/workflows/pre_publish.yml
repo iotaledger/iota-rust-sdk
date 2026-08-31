@@ -31,10 +31,13 @@ on:
         description: The package to publish.
         options:
           - iota-sdk-types
+          - iota-sdk-move-types
           - iota-sdk-crypto
           - iota-sdk-graphql-client-build
           - iota-sdk-graphql-client
+          - iota-sdk-grpc-types
           - iota-sdk-transaction-builder
+          - iota-sdk-grpc-client
           - iota-sdk
           - iota-csharp-sdk
           - iota-go-sdk
@@ -59,22 +62,22 @@ jobs:
           exit 0
 
       - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0 # required for git-cliff to have full history
 
       - name: Install cargo-release
         if: startsWith(inputs.package, 'iota-sdk')
-        uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+        uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
         with:
           tool: cargo-release@0.25.20
 
       - name: Install git-cliff
-        uses: taiki-e/install-action@f535147c22906d77695e11cb199e764aa610a4fc # v2.62.46
+        uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
         with:
           tool: git-cliff
 
-      - uses: chainguard-dev/actions/setup-gitsign@0cda751b114eb55c388e88f7479292668165602a # v1.0.2
+      - uses: chainguard-dev/actions/setup-gitsign@7bd1e94b2a1b7faa891392757de7d89489070c5c # v1.6.32
 
       - name: Bump C# version
         if: inputs.package == 'iota-csharp-sdk'
@@ -210,7 +213,7 @@ jobs:
       - name: Create PR for Rust
         if: startsWith(inputs.package, 'iota-sdk')
         id: pr-create-rust
-        uses: cargo-bins/release-pr@0c019c0e5a6b9f722578d231d43ba900cacc5ffa # v2.1.3
+        uses: cargo-bins/release-pr@dca4a39944c532bbde5e485142fb05a8158edec1 # v2.1.4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           version: ${{ inputs.level }}
@@ -223,7 +226,7 @@ jobs:
       - name: Create Pull Request
         if: inputs.package == 'iota-csharp-sdk' || inputs.package == 'iota-go-sdk' || inputs.package == 'iota-kotlin-sdk' || inputs.package == 'iota-python-sdk' || inputs.package == 'iota-swift-sdk' || inputs.package == 'iota-wasm-sdk'
         id: pr-create-bindings
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           commit-message: "release: bump `${{ inputs.package }}` version to `${{ env.NEW_VERSION }}`"
           title: "release: bump `${{ inputs.package }}` version to `${{ env.NEW_VERSION }}`"

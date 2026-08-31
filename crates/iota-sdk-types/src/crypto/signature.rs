@@ -78,7 +78,7 @@ impl SimpleSignature {
 
     crate::def_is!(Ed25519, Secp256k1, Secp256r1);
 
-    pub fn as_ed25519_sig_opt(&self) -> Option<&Ed25519Signature> {
+    pub fn as_opt_ed25519_signature(&self) -> Option<&Ed25519Signature> {
         if let Self::Ed25519 { signature, .. } = self {
             Some(signature)
         } else {
@@ -86,11 +86,12 @@ impl SimpleSignature {
         }
     }
 
-    pub fn as_ed25519_sig(&self) -> &Ed25519Signature {
-        self.as_ed25519_sig_opt().expect("not an ed25519 signature")
+    pub fn as_ed25519_signature(&self) -> &Ed25519Signature {
+        self.as_opt_ed25519_signature()
+            .expect("not an ed25519 signature")
     }
 
-    pub fn as_ed25519_pub_key_opt(&self) -> Option<&Ed25519PublicKey> {
+    pub fn as_opt_ed25519_public_key(&self) -> Option<&Ed25519PublicKey> {
         if let Self::Ed25519 { public_key, .. } = self {
             Some(public_key)
         } else {
@@ -98,12 +99,12 @@ impl SimpleSignature {
         }
     }
 
-    pub fn as_ed25519_pub_key(&self) -> &Ed25519PublicKey {
-        self.as_ed25519_pub_key_opt()
+    pub fn as_ed25519_public_key(&self) -> &Ed25519PublicKey {
+        self.as_opt_ed25519_public_key()
             .expect("not an ed25519 public key")
     }
 
-    pub fn into_ed25519_opt(self) -> Option<(Ed25519Signature, Ed25519PublicKey)> {
+    pub fn into_opt_ed25519(self) -> Option<(Ed25519Signature, Ed25519PublicKey)> {
         if let Self::Ed25519 {
             signature,
             public_key,
@@ -117,10 +118,10 @@ impl SimpleSignature {
     }
 
     pub fn into_ed25519(self) -> (Ed25519Signature, Ed25519PublicKey) {
-        self.into_ed25519_opt().expect("not an ed25519 signature")
+        self.into_opt_ed25519().expect("not an ed25519 signature")
     }
 
-    pub fn as_secp256k1_sig_opt(&self) -> Option<&Secp256k1Signature> {
+    pub fn as_opt_secp256k1_signature(&self) -> Option<&Secp256k1Signature> {
         if let Self::Secp256k1 { signature, .. } = self {
             Some(signature)
         } else {
@@ -128,12 +129,12 @@ impl SimpleSignature {
         }
     }
 
-    pub fn as_secp256k1_sig(&self) -> &Secp256k1Signature {
-        self.as_secp256k1_sig_opt()
+    pub fn as_secp256k1_signature(&self) -> &Secp256k1Signature {
+        self.as_opt_secp256k1_signature()
             .expect("not an secp256k1 signature")
     }
 
-    pub fn as_secp256k1_pub_key_opt(&self) -> Option<&Secp256k1PublicKey> {
+    pub fn as_opt_secp256k1_public_key(&self) -> Option<&Secp256k1PublicKey> {
         if let Self::Secp256k1 { public_key, .. } = self {
             Some(public_key)
         } else {
@@ -141,12 +142,12 @@ impl SimpleSignature {
         }
     }
 
-    pub fn as_secp256k1_pub_key(&self) -> &Secp256k1PublicKey {
-        self.as_secp256k1_pub_key_opt()
+    pub fn as_secp256k1_public_key(&self) -> &Secp256k1PublicKey {
+        self.as_opt_secp256k1_public_key()
             .expect("not an secp256k1 public key")
     }
 
-    pub fn into_secp256k1_opt(self) -> Option<(Secp256k1Signature, Secp256k1PublicKey)> {
+    pub fn into_opt_secp256k1(self) -> Option<(Secp256k1Signature, Secp256k1PublicKey)> {
         if let Self::Secp256k1 {
             signature,
             public_key,
@@ -160,11 +161,11 @@ impl SimpleSignature {
     }
 
     pub fn into_secp256k1(self) -> (Secp256k1Signature, Secp256k1PublicKey) {
-        self.into_secp256k1_opt()
+        self.into_opt_secp256k1()
             .expect("not an secp256k1 signature")
     }
 
-    pub fn as_secp256r1_sig_opt(&self) -> Option<&Secp256r1Signature> {
+    pub fn as_opt_secp256r1_signature(&self) -> Option<&Secp256r1Signature> {
         if let Self::Secp256r1 { signature, .. } = self {
             Some(signature)
         } else {
@@ -172,12 +173,12 @@ impl SimpleSignature {
         }
     }
 
-    pub fn as_secp256r1_sig(&self) -> &Secp256r1Signature {
-        self.as_secp256r1_sig_opt()
+    pub fn as_secp256r1_signature(&self) -> &Secp256r1Signature {
+        self.as_opt_secp256r1_signature()
             .expect("not an secp256r1 signature")
     }
 
-    pub fn as_secp256r1_pub_key_opt(&self) -> Option<&Secp256r1PublicKey> {
+    pub fn as_opt_secp256r1_public_key(&self) -> Option<&Secp256r1PublicKey> {
         if let Self::Secp256r1 { public_key, .. } = self {
             Some(public_key)
         } else {
@@ -185,12 +186,12 @@ impl SimpleSignature {
         }
     }
 
-    pub fn as_secp256r1_pub_key(&self) -> &Secp256r1PublicKey {
-        self.as_secp256r1_pub_key_opt()
+    pub fn as_secp256r1_public_key(&self) -> &Secp256r1PublicKey {
+        self.as_opt_secp256r1_public_key()
             .expect("not an secp256r1 public key")
     }
 
-    pub fn into_secp256r1_opt(self) -> Option<(Secp256r1Signature, Secp256r1PublicKey)> {
+    pub fn into_opt_secp256r1(self) -> Option<(Secp256r1Signature, Secp256r1PublicKey)> {
         if let Self::Secp256r1 {
             signature,
             public_key,
@@ -204,7 +205,7 @@ impl SimpleSignature {
     }
 
     pub fn into_secp256r1(self) -> (Secp256r1Signature, Secp256r1PublicKey) {
-        self.into_secp256r1_opt()
+        self.into_opt_secp256r1()
             .expect("not an secp256r1 signature")
     }
 

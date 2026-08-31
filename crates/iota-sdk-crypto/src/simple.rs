@@ -2,10 +2,10 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_types::{SimpleSignature, UserSignature};
+use iota_types::{PersonalMessage, PublicKey, SimpleSignature, Transaction, UserSignature};
 use signature::Verifier;
 
-use crate::SignatureError;
+use crate::{IotaVerifier, SignatureError};
 
 pub struct SimpleVerifier;
 
@@ -63,6 +63,64 @@ impl Verifier<UserSignature> for SimpleVerifier {
         <Self as Verifier<SimpleSignature>>::verify(self, message, signature)
     }
 }
+
+crate::impl_iota_verifier!(SimpleVerifier);
+
+// Implements `IotaVerifier` for `PublicKey`: schemes whose feature is
+// enabled delegate to the inner public key, disabled ones report the missing
+// feature.
+macro_rules! impl_iota_verifier_for_public_key {
+    ($($variant:ident = $feature:literal),+ $(,)?) => {
+        impl IotaVerifier for PublicKey {
+            fn verify_transaction(
+                &self,
+                transaction: &Transaction,
+                signature: &UserSignature,
+            ) -> Result<(), SignatureError> {
+                match self {
+                    $(
+                        #[cfg(feature = $feature)]
+                        PublicKey::$variant(public_key) => {
+                            public_key.verify_transaction(transaction, signature)
+                        }
+                        #[cfg(not(feature = $feature))]
+                        PublicKey::$variant(_) => Err(SignatureError::from_source(
+                            concat!("support for ", $feature, " is not enabled"),
+                        )),
+                    )+
+                    _ => Err(SignatureError::from_source("unknown signature scheme")),
+                }
+            }
+
+            fn verify_personal_message(
+                &self,
+                message: &PersonalMessage<'_>,
+                signature: &UserSignature,
+            ) -> Result<(), SignatureError> {
+                match self {
+                    $(
+                        #[cfg(feature = $feature)]
+                        PublicKey::$variant(public_key) => {
+                            public_key.verify_personal_message(message, signature)
+                        }
+                        #[cfg(not(feature = $feature))]
+                        PublicKey::$variant(_) => Err(SignatureError::from_source(
+                            concat!("support for ", $feature, " is not enabled"),
+                        )),
+                    )+
+                    _ => Err(SignatureError::from_source("unknown signature scheme")),
+                }
+            }
+        }
+    };
+}
+
+impl_iota_verifier_for_public_key!(
+    Ed25519 = "ed25519",
+    Secp256k1 = "secp256k1",
+    Secp256r1 = "secp256r1",
+    Passkey = "passkey",
+);
 
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
@@ -518,6 +576,8 @@ mod keypair {
         }
     }
 
+    crate::impl_iota_verifier!(SimpleVerifyingKey);
+
     #[cfg(feature = "ed25519")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
     impl From<crate::ed25519::Ed25519VerifyingKey> for SimpleVerifyingKey {
@@ -741,7 +801,8 @@ mod tests {
     fn test_bech32_roundtrip_ed25519() {
         use rand::{SeedableRng, rngs::StdRng};
 
-        let keypair: SimpleKeypair = Ed25519PrivateKey::generate(StdRng::from_seed([1; 32])).into();
+        let keypair: SimpleKeypair =
+            Ed25519PrivateKey::random_with(StdRng::from_seed([1; 32])).into();
         let encoded = keypair.to_bech32().unwrap();
         let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
         assert_eq!(keypair.public_key(), decoded.public_key());
@@ -757,7 +818,7 @@ mod tests {
         use rand::{SeedableRng, rngs::StdRng};
 
         let keypair: SimpleKeypair =
-            Secp256k1PrivateKey::generate(StdRng::from_seed([2; 32])).into();
+            Secp256k1PrivateKey::random_with(StdRng::from_seed([2; 32])).into();
         let encoded = keypair.to_bech32().unwrap();
         let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
         assert_eq!(keypair.public_key(), decoded.public_key());
@@ -773,7 +834,7 @@ mod tests {
         use rand::{SeedableRng, rngs::StdRng};
 
         let keypair: SimpleKeypair =
-            Secp256r1PrivateKey::generate(StdRng::from_seed([3; 32])).into();
+            Secp256r1PrivateKey::random_with(StdRng::from_seed([3; 32])).into();
         let encoded = keypair.to_bech32().unwrap();
         let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
         assert_eq!(keypair.public_key(), decoded.public_key());

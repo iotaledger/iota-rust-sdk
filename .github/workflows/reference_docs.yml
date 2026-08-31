@@ -1,0 +1,95 @@
+name: Reference Docs
+
+# Validates on pull requests that the per-language API reference markdown
+# still generates (see scripts/reference-docs/generate.sh). Nothing is
+# published from here: the tarballs the docs site consumes are built and
+# uploaded to S3 by the iota repository's "Upload IOTA SDK References to
+# S3" workflow, which checks out this repository at the revision pinned
+# in docs/site/iota-sdk-references.rev and runs generate.sh directly.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/reference_docs.yml"
+      - "scripts/reference-docs/**"
+      # Generation also runs the binding builds, so their build configuration
+      # can break it without touching the scripts.
+      - "Makefile"
+      - "bindings/kotlin/build.gradle.kts"
+      - "bindings/wasm/package.json"
+      - "bindings/wasm/tsconfig*.json"
+
+concurrency:
+  group: reference-docs-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [python, go, kotlin, csharp, swift, wasm]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          key: reference-docs-${{ matrix.language }}
+
+      - name: Install pydoc-markdown
+        if: matrix.language == 'python'
+        run: pip install pydoc-markdown
+
+      - name: Install gomarkdoc and uniffi-bindgen-go
+        if: matrix.language == 'go'
+        run: |
+          go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest
+          echo "$HOME/go/bin" >> "$GITHUB_PATH"
+          make install-uniffi-bindgen-go
+
+      - name: Setup Java
+        if: matrix.language == 'kotlin'
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+        with:
+          distribution: "oracle"
+          java-version: "21"
+          cache: "gradle"
+
+      - name: Install Swift
+        if: matrix.language == 'swift'
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
+        with:
+          swift-version: "6.0"
+
+      - name: Setup .NET
+        if: matrix.language == 'csharp'
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Install uniffi-bindgen-cs and xmldoc2md
+        if: matrix.language == 'csharp'
+        run: |
+          make install-uniffi-bindgen-cs
+          dotnet tool install --global XMLDoc2Markdown
+
+      - uses: taiki-e/install-action@b6ff580856c41316412a0b9b60540fbc6f8c82cc # v2.86.7
+        if: matrix.language == 'wasm'
+        with:
+          tool: wasm-pack
+
+      - name: Install WASM bindings prerequisites
+        if: matrix.language == 'wasm'
+        run: |
+          sudo apt-get install -y clang
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-bindgen-cli --version 0.2.122
+          npm install -g pnpm@10 typedoc typedoc-plugin-markdown
+
+      - name: Generate the ${{ matrix.language }} reference
+        run: ./scripts/reference-docs/generate.sh ${{ matrix.language }}

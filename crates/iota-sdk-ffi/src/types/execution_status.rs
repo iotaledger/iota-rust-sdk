@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::{CommandArgumentError, Identifier, TypeArgumentError};
+use iota_sdk::types::Identifier;
 
 use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
@@ -18,7 +18,7 @@ use crate::types::{address::Address, digest::Digest, object::ObjectId};
 /// success = %d00
 /// failure = %d01 execution-error (option u64)
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, uniffi::Enum)]
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
     Success,
@@ -109,6 +109,7 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 ///                 =/ execution-canceled-due-to-shared-object-congestion-v2
 ///                 =/ invalid-linkage
 ///                 =/ move-authentication-error
+///                 =/ execution-canceled-due-to-execution-worker-congestion
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
@@ -150,8 +151,9 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 /// execution-canceled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
 /// invalid-linkage                                        = %d38
 /// move-authentication-error                              = %d39 execution-error
+/// execution-canceled-due-to-execution-worker-congestion  = %d40 u64
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, uniffi::Enum)]
 pub enum ExecutionError {
     // General transaction errors
     /// Insufficient Gas
@@ -279,6 +281,10 @@ pub enum ExecutionError {
     /// wrapped error is the failure produced by the authenticator's
     /// execution.
     MoveAuthentication { error: Arc<ExecutionErrorWrapper> },
+    /// Certificate is canceled because the execution workers are congested;
+    /// suggested gas price can be used to give this certificate more priority.
+    /// No individual object is responsible, so none is reported.
+    ExecutionCanceledDueToExecutionWorkerCongestion { suggested_gas_price: u64 },
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -353,14 +359,17 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 Self::NonEntryFunctionInvoked
             }
             iota_sdk::types::ExecutionError::CommandArgumentError { argument, kind } => {
-                Self::CommandArgument { argument, kind }
+                Self::CommandArgument {
+                    argument,
+                    kind: kind.into(),
+                }
             }
             iota_sdk::types::ExecutionError::TypeArgumentError {
                 type_argument,
                 kind,
             } => Self::TypeArgument {
                 type_argument,
-                kind,
+                kind: kind.into(),
             },
             iota_sdk::types::ExecutionError::UnusedValueWithoutDrop { result, subresult } => {
                 Self::UnusedValueWithoutDrop { result, subresult }
@@ -438,6 +447,11 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                     error: Arc::new(ExecutionErrorWrapper(*error)),
                 }
             }
+            iota_sdk::types::ExecutionError::ExecutionCanceledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            } => Self::ExecutionCanceledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            },
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
@@ -486,15 +500,16 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             ExecutionError::ArityMismatch => Self::ArityMismatch,
             ExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
             ExecutionError::NonEntryFunctionInvoked => Self::NonEntryFunctionInvoked,
-            ExecutionError::CommandArgument { argument, kind } => {
-                Self::CommandArgumentError { argument, kind }
-            }
+            ExecutionError::CommandArgument { argument, kind } => Self::CommandArgumentError {
+                argument,
+                kind: kind.into(),
+            },
             ExecutionError::TypeArgument {
                 type_argument,
                 kind,
             } => Self::TypeArgumentError {
                 type_argument,
-                kind,
+                kind: kind.into(),
             },
             ExecutionError::UnusedValueWithoutDrop { result, subresult } => {
                 Self::UnusedValueWithoutDrop { result, subresult }
@@ -560,6 +575,11 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             ExecutionError::MoveAuthentication { error } => Self::MoveAuthentication {
                 error: Box::new(error.0.clone()),
             },
+            ExecutionError::ExecutionCanceledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            } => Self::ExecutionCanceledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            },
         }
     }
 }
@@ -573,7 +593,7 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
 /// ```text
 /// move-location = object-id identifier u16 u16 (option identifier)
 /// ```
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct MoveLocation {
     /// The package id
     pub package: Arc<ObjectId>,
@@ -646,8 +666,7 @@ impl From<MoveLocation> for iota_sdk::types::MoveLocation {
 /// invalid-object-by-mut-ref                   = %d10
 /// shared-object-operation-not-allowed         = %d11
 /// ```
-#[uniffi::remote(Enum)]
-#[non_exhaustive]
+#[derive(Clone, uniffi::Enum)]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
     TypeMismatch,
@@ -685,6 +704,76 @@ pub enum CommandArgumentError {
     InvalidArgumentArity,
 }
 
+impl From<iota_sdk::types::CommandArgumentError> for CommandArgumentError {
+    fn from(value: iota_sdk::types::CommandArgumentError) -> Self {
+        match value {
+            iota_sdk::types::CommandArgumentError::TypeMismatch => Self::TypeMismatch,
+            iota_sdk::types::CommandArgumentError::InvalidBcsBytes => Self::InvalidBcsBytes,
+            iota_sdk::types::CommandArgumentError::InvalidUsageOfPureArgument => {
+                Self::InvalidUsageOfPureArgument
+            }
+            iota_sdk::types::CommandArgumentError::InvalidArgumentToPrivateEntryFunction => {
+                Self::InvalidArgumentToPrivateEntryFunction
+            }
+            iota_sdk::types::CommandArgumentError::IndexOutOfBounds { index } => {
+                Self::IndexOutOfBounds { index }
+            }
+            iota_sdk::types::CommandArgumentError::SecondaryIndexOutOfBounds {
+                result,
+                subresult,
+            } => Self::SecondaryIndexOutOfBounds { result, subresult },
+            iota_sdk::types::CommandArgumentError::InvalidResultArity { result } => {
+                Self::InvalidResultArity { result }
+            }
+            iota_sdk::types::CommandArgumentError::InvalidGasCoinUsage => Self::InvalidGasCoinUsage,
+            iota_sdk::types::CommandArgumentError::InvalidValueUsage => Self::InvalidValueUsage,
+            iota_sdk::types::CommandArgumentError::InvalidObjectByValue => {
+                Self::InvalidObjectByValue
+            }
+            iota_sdk::types::CommandArgumentError::InvalidObjectByMutRef => {
+                Self::InvalidObjectByMutRef
+            }
+            iota_sdk::types::CommandArgumentError::SharedObjectOperationNotAllowed => {
+                Self::SharedObjectOperationNotAllowed
+            }
+            iota_sdk::types::CommandArgumentError::InvalidArgumentArity => {
+                Self::InvalidArgumentArity
+            }
+            _ => unimplemented!(
+                "a new CommandArgumentError variant was added and needs to be handled"
+            ),
+        }
+    }
+}
+
+impl From<CommandArgumentError> for iota_sdk::types::CommandArgumentError {
+    fn from(value: CommandArgumentError) -> Self {
+        match value {
+            CommandArgumentError::TypeMismatch => Self::TypeMismatch,
+            CommandArgumentError::InvalidBcsBytes => Self::InvalidBcsBytes,
+            CommandArgumentError::InvalidUsageOfPureArgument => Self::InvalidUsageOfPureArgument,
+            CommandArgumentError::InvalidArgumentToPrivateEntryFunction => {
+                Self::InvalidArgumentToPrivateEntryFunction
+            }
+            CommandArgumentError::IndexOutOfBounds { index } => Self::IndexOutOfBounds { index },
+            CommandArgumentError::SecondaryIndexOutOfBounds { result, subresult } => {
+                Self::SecondaryIndexOutOfBounds { result, subresult }
+            }
+            CommandArgumentError::InvalidResultArity { result } => {
+                Self::InvalidResultArity { result }
+            }
+            CommandArgumentError::InvalidGasCoinUsage => Self::InvalidGasCoinUsage,
+            CommandArgumentError::InvalidValueUsage => Self::InvalidValueUsage,
+            CommandArgumentError::InvalidObjectByValue => Self::InvalidObjectByValue,
+            CommandArgumentError::InvalidObjectByMutRef => Self::InvalidObjectByMutRef,
+            CommandArgumentError::SharedObjectOperationNotAllowed => {
+                Self::SharedObjectOperationNotAllowed
+            }
+            CommandArgumentError::InvalidArgumentArity => Self::InvalidArgumentArity,
+        }
+    }
+}
+
 /// An error with a upgrading a package
 ///
 /// # BCS
@@ -706,7 +795,7 @@ pub enum CommandArgumentError {
 /// unknown-upgrade-policy      = %d04 u8
 /// package-id-does-not-match   = %d05 object-id object-id
 /// ```
-#[derive(uniffi::Enum)]
+#[derive(Clone, uniffi::Enum)]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
     UnableToFetchPackage { package_id: Arc<ObjectId> },
@@ -797,9 +886,8 @@ impl From<PackageUpgradeError> for iota_sdk::types::PackageUpgradeError {
 /// type-not-found = %d00
 /// constraint-not-satisfied = %d01
 /// ```
-#[uniffi::remote(Enum)]
+#[derive(Clone, uniffi::Enum)]
 #[repr(u8)]
-#[non_exhaustive]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
     TypeNotFound,
@@ -807,19 +895,51 @@ pub enum TypeArgumentError {
     ConstraintNotSatisfied,
 }
 
+impl From<iota_sdk::types::TypeArgumentError> for TypeArgumentError {
+    fn from(value: iota_sdk::types::TypeArgumentError) -> Self {
+        match value {
+            iota_sdk::types::TypeArgumentError::TypeNotFound => Self::TypeNotFound,
+            iota_sdk::types::TypeArgumentError::ConstraintNotSatisfied => {
+                Self::ConstraintNotSatisfied
+            }
+            _ => {
+                unimplemented!("a new TypeArgumentError variant was added and needs to be handled")
+            }
+        }
+    }
+}
+
+impl From<TypeArgumentError> for iota_sdk::types::TypeArgumentError {
+    fn from(value: TypeArgumentError) -> Self {
+        match value {
+            TypeArgumentError::TypeNotFound => Self::TypeNotFound,
+            TypeArgumentError::ConstraintNotSatisfied => Self::ConstraintNotSatisfied,
+        }
+    }
+}
+
 crate::export_iota_types_bcs_conversion!(
     ExecutionStatus,
     ExecutionError,
     MoveLocation,
-    CommandArgumentError,
     PackageUpgradeError,
+    CommandArgumentError,
     TypeArgumentError
 );
 crate::export_iota_types_json_conversion!(
     ExecutionStatus,
     ExecutionError,
     MoveLocation,
-    CommandArgumentError,
     PackageUpgradeError,
+    CommandArgumentError,
     TypeArgumentError
 );
+crate::export_iota_types_display!(
+    ExecutionStatus,
+    ExecutionError,
+    MoveLocation,
+    PackageUpgradeError,
+    CommandArgumentError,
+    TypeArgumentError
+);
+crate::export_iota_types_objects_display!(ExecutionErrorWrapper);

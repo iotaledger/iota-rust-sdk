@@ -15,7 +15,7 @@ struct PrepareSplitCoinsExample {
     let coinId = try ObjectId.fromHex(
       hex: "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")
 
-    let builder = TransactionBuilder(sender: sender).withClient(client: client)
+    let builder = client.transactionBuilder(sender: sender)
 
     _ = builder.splitCoins(
       coin: PtbArgument.objectId(id: coinId),

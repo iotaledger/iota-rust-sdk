@@ -40,9 +40,9 @@ async fn main() -> Result<()> {
     let tx = builder.finish().await?;
 
     println!("Signing Digest: {}", tx.signing_digest_hex());
-    println!("Tx Bytes: {}", tx.to_base64());
+    println!("Txn Bytes: {}", tx.to_base64());
 
-    let res = client.dry_run_tx(&tx, false).await?;
+    let res = client.dry_run_transaction(&tx, false).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to send tx: {err}");

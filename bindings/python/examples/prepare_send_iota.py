@@ -15,7 +15,7 @@ async def main():
     to_address = Address.from_hex(
         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
-    builder = TransactionBuilder(from_address).with_client(client)
+    builder = client.transaction_builder(from_address)
     builder.send_iota(to_address, PtbArgument.u64(5000000000))
 
     txn = await builder.finish()
@@ -23,7 +23,7 @@ async def main():
     print("Signing Digest:", txn.signing_digest_hex())
     print("Txn Bytes:", txn.to_base64())
 
-    res = await client.dry_run_tx(txn)
+    res = await client.dry_run_transaction(txn)
     if res.error is not None:
         raise Exception("Failed to send IOTA:", res.error)
 

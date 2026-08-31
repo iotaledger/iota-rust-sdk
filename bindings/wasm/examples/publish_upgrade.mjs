@@ -18,10 +18,9 @@ import {
   MovePackageData,
   PtbArgument,
   StructTag,
-  TransactionBuilder,
   initAsync,
   UpgradePolicy,
-  WaitForTx,
+  WaitForTransaction,
 } from "@iota/sdk-wasm";
 
 await initAsync();
@@ -44,7 +43,7 @@ const digest = packageData.digest();
 console.log(`Digest: ${digest.toBase58()}`);
 
 // Create a random private key to derive a sender address and for signing
-const privateKey = Ed25519PrivateKey.generate();
+const privateKey = Ed25519PrivateKey.random();
 const sender = privateKey.publicKey().deriveAddress();
 console.log(`Sender: ${sender.toHex()}`);
 
@@ -58,16 +57,16 @@ if (faucetReceipt === null) {
 }
 
 // Build the `publish` PTB
-let builder = new TransactionBuilder(sender).withClient(client);
+let builder = client.transactionBuilder(sender);
 // Publish the package and receive the upgrade cap
-builder.publish(packageData, "upgrade_cap");
+builder.publishPackage(packageData, "upgrade_cap");
 // Transfer the upgrade cap to the sender address
 builder.transferObjects(sender, [PtbArgument.assigned("upgrade_cap")]);
 let tx = await builder.finish();
 
 // Perform a dry-run first to check if everything is correct
 console.log("> Publishing package (dry run):");
-let result = await client.dryRunTx(tx, false);
+let result = await client.dryRunTransaction(tx, false);
 if (result.error) throw new Error(`Dry run failed: ${result.error}`);
 if (result.effects === null) throw new Error("Dry run failed: no effects");
 console.log("Success");
@@ -75,13 +74,17 @@ console.log("Success");
 // Sign and execute the transaction (publish the package)
 console.log("> Publishing package:");
 let sig = privateKey.signTransaction(tx);
-let effects = await client.executeTx([sig], tx, WaitForTx.Finalized);
+let effects = await client.executeTransaction(
+  [sig],
+  tx,
+  WaitForTransaction.Finalized,
+);
 console.log("Success");
 
 // Resolve UpgradeCap and PackageId via the client
 let upgradeCap = null;
 let packageId = null;
-for (const changedObj of effects.asV1().changedObjects) {
+for (const changedObj of effects.asV1().changedObjects()) {
   if (changedObj.outputState.tag === "ObjectWrite") {
     const objectId = changedObj.objectId;
     const obj = await client.object(objectId);
@@ -104,7 +107,7 @@ if (upgradeCap === null) throw new Error("Missing upgrade cap");
 if (packageId === null) throw new Error("Missing package id");
 
 // Build the `upgrade` PTB
-builder = new TransactionBuilder(sender).withClient(client);
+builder = client.transactionBuilder(sender);
 // Authorize the upgrade by providing the upgrade cap object id to receive an
 // upgrade ticket
 builder.moveCall(
@@ -138,7 +141,7 @@ tx = await builder.finish();
 
 // Perform a dry-run first to check if everything is correct
 console.log("> Upgrading package (dry run):");
-result = await client.dryRunTx(tx, false);
+result = await client.dryRunTransaction(tx, false);
 if (result.error) throw new Error(`Dry run failed: ${result.error}`);
 if (result.effects === null) throw new Error("Dry run failed: no effects");
 console.log("Success");
@@ -146,11 +149,11 @@ console.log("Success");
 // Sign and execute the transaction (upgrade the package)
 console.log("> Upgrading package:");
 sig = privateKey.signTransaction(tx);
-effects = await client.executeTx([sig], tx);
+effects = await client.executeTransaction([sig], tx);
 console.log("Success");
 
 // Print the new package version (should now be 2)
-for (const changedObj of effects.asV1().changedObjects) {
+for (const changedObj of effects.asV1().changedObjects()) {
   if (changedObj.outputState.tag === "PackageWrite") {
     console.log(`New Package ID: ${changedObj.objectId.toHex()}`);
     console.log(`New Package version: ${changedObj.outputState.inner.version}`);

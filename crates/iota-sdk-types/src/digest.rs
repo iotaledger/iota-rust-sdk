@@ -50,7 +50,7 @@ impl Digest {
     /// Generates a new digest from the provided random number generator.
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -62,7 +62,7 @@ impl Digest {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::generate(rand_core::OsRng)
+        Self::random_with(rand_core::OsRng)
     }
 
     /// Returns a slice to the inner array representation of this digest.
@@ -269,6 +269,7 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDiges
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
+#[non_exhaustive]
 pub enum DigestParseError {
     #[error("digest must be Base58 string of length 44")]
     Base58(#[from] bs58::decode::Error),
@@ -321,11 +322,11 @@ macro_rules! impl_digest_wrapper {
             /// Generates a new digest from the provided random number generator.
             #[cfg(feature = "rand")]
             #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-            pub fn generate<R>(rng: R) -> Self
+            pub fn random_with<R>(rng: R) -> Self
             where
                 R: rand_core::RngCore + rand_core::CryptoRng,
             {
-                Self(Digest::generate(rng))
+                Self(Digest::random_with(rng))
             }
 
             /// Generates a new random digest.
