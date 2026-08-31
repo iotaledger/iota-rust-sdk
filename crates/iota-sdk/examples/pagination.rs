@@ -20,10 +20,7 @@ async fn main() -> Result<()> {
         println!("Fetching page with cursor: {cursor:?}");
         let owned_objects_page = client
             .objects(
-                Some(ObjectFilter {
-                    owner: Some(address),
-                    ..Default::default()
-                }),
+                ObjectFilter::default().with_owner(address),
                 PaginationFilter {
                     cursor,
                     // Limit to 1 to demonstrate pagination

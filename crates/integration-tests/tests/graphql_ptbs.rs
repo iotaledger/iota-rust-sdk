@@ -12,7 +12,7 @@ use iota_graphql_client::{
     query_types::SubscriptionEventFilter,
 };
 use iota_transaction_builder::{
-    MoveViewCallBuilder, TransactionBuilder, WaitForTx, assigned, error::Error,
+    MoveViewCallBuilder, TransactionBuilder, WaitForTransaction, assigned, error::Error,
     unresolved::Argument,
 };
 use iota_types::{
@@ -75,7 +75,11 @@ async fn helper_setup() -> (
         .sent;
     let tx_digest = coins.first().unwrap().transfer_tx_digest;
     client
-        .wait_for_tx(tx_digest, WaitForTx::Finalized, Duration::from_secs(60))
+        .wait_for_transaction(
+            tx_digest,
+            WaitForTransaction::Finalized,
+            Duration::from_secs(60),
+        )
         .await
         .unwrap();
 
@@ -110,7 +114,7 @@ async fn test_transfer_obj_execution() {
     let recipient = Address::random_with(rand::thread_rng());
     tx.transfer_objects(recipient, [coin]);
 
-    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
 
     // check that recipient has 1 coin
@@ -131,7 +135,7 @@ async fn test_move_call() {
         .generics::<u64>()
         .arguments([Some(1u64)]);
 
-    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
 }
 
@@ -146,7 +150,7 @@ async fn test_split_transfer() {
     let recipient = Address::random_with(rand::thread_rng());
     tx.transfer_objects(recipient, [assigned("coin")]);
 
-    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
 
     // check that recipient has 1 coin
@@ -166,7 +170,11 @@ async fn test_split_without_transfer_should_fail() {
     // transfer 1 IOTA
     tx.split_coins(coin, [1_000_000_000u64]);
 
-    match tx.execute(&pk, WaitForTx::Finalized).await.unwrap() {
+    match tx
+        .execute(&pk, WaitForTransaction::Finalized)
+        .await
+        .unwrap()
+    {
         TransactionEffects::V1(v1) => {
             // The tx failed, so we expect Failure instead of Success
             assert_ne!(ExecutionStatus::Success, v1.status);
@@ -192,7 +200,7 @@ async fn test_merge_coins() {
     tx.merge_coins(coin1, coins_to_merge);
     let client = tx.get_client().clone();
 
-    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
 
     // check that there are two coins
@@ -209,7 +217,7 @@ async fn test_make_move_vec() {
 
     tx.make_move_vec([1u64]);
 
-    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
 }
 
@@ -222,7 +230,7 @@ async fn test_publish() {
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
 
-    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
 }
 
@@ -235,7 +243,7 @@ async fn test_upgrade() {
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
 
-    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     let mut package_id: Option<ObjectId> = None;
     let mut created_objs = vec![];
     if let Ok(ref effects) = effects {
@@ -262,7 +270,7 @@ async fn test_upgrade() {
     check_effects_status_success(effects);
 
     let client = Client::new_localnet();
-    let mut tx = TransactionBuilder::new(address).with_client(&client);
+    let mut tx = client.transaction_builder(address);
     let mut upgrade_cap = None;
     for o in created_objs {
         let obj = client.object(o, None).await.unwrap().unwrap();
@@ -296,7 +304,7 @@ async fn test_upgrade() {
 
     tx.gas([coins.last().unwrap().id]);
 
-    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
 }
 
@@ -321,12 +329,12 @@ async fn test_auto_gas_selection_with_many_coins() {
             .collect();
         tx.transfer_objects(sender, outputs);
     }
-    check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await);
+    check_effects_status_success(tx.execute(&pk, WaitForTransaction::Finalized).await);
 
     let mut tx2 = TransactionBuilder::new(sender).with_client(client);
     let recipient = Address::random_with(rand::thread_rng());
     tx2.send_iota(recipient, 1_000u64);
-    check_effects_status_success(tx2.execute(&pk, WaitForTx::Finalized).await);
+    check_effects_status_success(tx2.execute(&pk, WaitForTransaction::Finalized).await);
 }
 
 /// Pin all 255 gas coins (the protocol cap, `gas().len() <
@@ -355,7 +363,7 @@ async fn test_manual_gas_pin_consolidates_255_coins() {
             .map(|i| Argument::NestedResult(0, i))
             .collect::<Vec<_>>(),
     );
-    check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await);
+    check_effects_status_success(tx.execute(&pk, WaitForTransaction::Finalized).await);
 
     async fn list_coins(client: &Client, owner: Address) -> Vec<(ObjectId, u64)> {
         let mut out = Vec::new();
@@ -401,7 +409,7 @@ async fn test_manual_gas_pin_consolidates_255_coins() {
     tx2.gas(split_ids)
         .gas_budget(GAS_BUDGET)
         .send_iota(recipient, 1_000u64);
-    check_effects_status_success(tx2.execute(&pk, WaitForTx::Finalized).await);
+    check_effects_status_success(tx2.execute(&pk, WaitForTransaction::Finalized).await);
 
     // send_iota's output belongs to `recipient`, so the only delta on
     // sender's side is the 255 → 1 smashing.
@@ -442,7 +450,7 @@ async fn test_auto_gas_pins_full_first_page_for_consolidation() {
             .map(|i| Argument::NestedResult(0, i))
             .collect::<Vec<_>>(),
     );
-    check_effects_status_success(tx.execute(&pk, WaitForTx::Finalized).await);
+    check_effects_status_success(tx.execute(&pk, WaitForTransaction::Finalized).await);
 
     // Build (but don't execute) a fresh tx without pinning gas. The
     // resolved transaction reveals what auto-gas picked.
@@ -484,7 +492,7 @@ async fn test_transactions_subscription() {
         tx.split_coins(gas, [1_000_000_000u64]).assign("coin");
         let recipient = Address::random_with(rand::thread_rng());
         tx.transfer_objects(recipient, [assigned("coin")]);
-        let _ = tx.execute(&pk, WaitForTx::Finalized).await;
+        let _ = tx.execute(&pk, WaitForTransaction::Finalized).await;
     });
 
     let item = tokio::time::timeout(Duration::from_secs(120), stream.next())
@@ -506,9 +514,7 @@ async fn test_events_subscription() {
     use futures::StreamExt;
 
     let client = Client::new_localnet();
-    let filter = SubscriptionEventFilter {
-        emitting_module: Some("0x3".to_owned()),
-    };
+    let filter = SubscriptionEventFilter::default().with_emitting_module("0x3".to_owned());
     let mut stream = client.events_stream(filter, None);
 
     tokio::spawn(async move {
@@ -525,14 +531,14 @@ async fn test_events_subscription() {
             .address;
         let (mut tx, _, pk, _) = helper_setup().await;
         tx.stake(1_000_000_000u64, validator);
-        let _ = tx.execute(&pk, WaitForTx::Finalized).await;
+        let _ = tx.execute(&pk, WaitForTransaction::Finalized).await;
     });
 
     let event = tokio::time::timeout(Duration::from_secs(120), async {
         while let Some(item) = stream.next().await {
             let event = item.expect("the events subscription returned an error");
             if event
-                .type_
+                .move_type
                 .repr
                 .ends_with("::validator::StakingRequestEvent")
             {
@@ -556,7 +562,7 @@ async fn test_move_view_call() {
         .upgrade_cap("cap")
         .transfer_objects(address, [assigned("cap")]);
 
-    let effects = tx.execute(&pk, WaitForTx::Finalized).await;
+    let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     let mut package_id: Option<ObjectId> = None;
     if let Ok(ref effects) = effects {
         match effects {

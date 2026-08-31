@@ -6,10 +6,8 @@ use std::str::FromStr;
 use eyre::{OptionExt, Result, bail};
 use iota_sdk::{
     crypto::ed25519::Ed25519PrivateKey,
-    graphql_client::{Client, WaitForTx, faucet::FaucetClient},
-    transaction_builder::{
-        MoveAuthenticatorBuilder, Shared, SharedMut, TransactionBuilder, assigned,
-    },
+    graphql_client::{Client, WaitForTransaction, faucet::FaucetClient},
+    transaction_builder::{MoveAuthenticatorBuilder, Shared, SharedMut, assigned},
     types::{Address, Identifier, MovePackageData, ObjectId, ObjectOut},
 };
 
@@ -29,7 +27,7 @@ async fn main() -> Result<()> {
         bail!("Failed to request coins from faucet");
     };
 
-    let mut builder = TransactionBuilder::new(account_address).with_client(&client);
+    let mut builder = client.transaction_builder(account_address);
     builder.send_iota(to_address, 5000000000u64);
 
     let move_authenticator = MoveAuthenticatorBuilder::new(account_address.into())
@@ -38,7 +36,7 @@ async fn main() -> Result<()> {
         .await?;
 
     let effects = builder
-        .execute(&move_authenticator, WaitForTx::Finalized)
+        .execute(&move_authenticator, WaitForTransaction::Finalized)
         .await?;
     println!(
         "Sending IOTA via abstract account: {:?}",
@@ -66,7 +64,7 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
     };
 
     // Build the `publish` PTB
-    let mut builder = TransactionBuilder::new(sender).with_client(&client);
+    let mut builder = client.transaction_builder(sender);
     builder
         // Publish the package and receive the upgrade cap
         .publish_package(package_data)
@@ -75,7 +73,9 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
         .transfer_objects(sender, [assigned("upgrade_cap")]);
 
     // Sign and execute the transaction (publish the package)
-    let effects = builder.execute(&private_key, WaitForTx::Finalized).await?;
+    let effects = builder
+        .execute(&private_key, WaitForTransaction::Finalized)
+        .await?;
     println!("Publishing package: {:?}\n", effects.as_v1().status);
 
     // Get package, package metadata and account IDs from the effects
@@ -118,7 +118,7 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
     println!("Account ID: {account_id}\n");
 
     // Build the `link_auth` PTB
-    let mut builder = TransactionBuilder::new(sender).with_client(&client);
+    let mut builder = client.transaction_builder(sender);
     builder
         .move_call(package_id, "account", "link_auth")
         .arguments((
@@ -129,7 +129,9 @@ async fn setup_account(client: &Client) -> Result<ObjectId> {
         ));
 
     // Sign and execute the transaction (link the authenticator)
-    let effects = builder.execute(&private_key, WaitForTx::Finalized).await?;
+    let effects = builder
+        .execute(&private_key, WaitForTransaction::Finalized)
+        .await?;
     println!(
         "Linking account to authenticate method: {:?}\n",
         effects.as_v1().status

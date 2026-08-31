@@ -5,6 +5,9 @@ authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
 publish = false
+readme = "README.md"
+repository = "https://github.com/iotaledger/iota-rust-sdk/"
+description = "FFI layer powering the IOTA SDK language bindings via UniFFI"
 
 [[bin]]
 name = "uniffi-bindgen"
@@ -37,6 +40,7 @@ async-trait = "0.1.89"
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from", "deref", "display"] }
+futures.workspace = true
 hex.workspace = true
 paste.workspace = true
 primitive-types.workspace = true
@@ -52,6 +56,8 @@ uniffi = { version = "0.31", features = ["cli", "tokio", "wasm-unstable-single-t
 iota-sdk = { version = "3.0.0-alpha.1", path = "../iota-sdk", default-features = false, features = ["graphql", "txn-builder", "types", "move-types", "serde", "rand", "hash"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+# drives the subscription streams, which only exist off wasm32
+async-stream.workspace = true
 # sync for tokio::sync::RwLock used in the graphql client wrapper
 tokio = { workspace = true, features = ["sync"] }
 

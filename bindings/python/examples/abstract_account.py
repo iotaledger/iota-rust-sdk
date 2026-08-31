@@ -20,7 +20,7 @@ async def main():
     if faucet_receipt is None:
         raise Exception("Failed to request coins from faucet")
 
-    builder = TransactionBuilder(from_address).with_client(client)
+    builder = client.transaction_builder(from_address)
     builder.send_iota(to_address, PtbArgument.u64(5000000000))
 
     move_authenticator = await MoveAuthenticatorBuilder(
@@ -31,9 +31,9 @@ async def main():
     ).finish(client)
 
     signer = TransactionSigner.from_move_authenticator(move_authenticator)
-    effects = await builder.execute(signer, WaitForTx.FINALIZED)
+    effects = await builder.execute(signer, WaitForTransaction.FINALIZED)
 
-    print(f"Sending IOTA via abstract account: {effects.as_v1().status}")
+    print(f"Sending IOTA via abstract account: {effects.as_v1().status()}")
 
 
 async def setup_account(client: GraphQlClient) -> ObjectId:
@@ -51,7 +51,7 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
         raise Exception("Failed to request coins from faucet")
 
     # Build the `publish` PTB
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
     # Publish the package and receive the upgrade cap
     builder.publish_package(package_data, "upgrade_cap")
     # Transfer the upgrade cap to the sender address
@@ -59,16 +59,16 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
 
     # Sign and execute the transaction (publish the package)
     signer = TransactionSigner.from_ed25519(private_key)
-    effects = await builder.execute(signer, WaitForTx.FINALIZED)
+    effects = await builder.execute(signer, WaitForTransaction.FINALIZED)
 
-    print(f"Publishing package: {effects.as_v1().status}\n")
+    print(f"Publishing package: {effects.as_v1().status()}\n")
 
     # Get package, package metadata and account IDs from the effects
     package_id = None
     package_metadata_id = None
     account_id = None
 
-    for changed_obj in effects.as_v1().changed_objects:
+    for changed_obj in effects.as_v1().changed_objects():
         if changed_obj.output_state.is_package_write():
             package_id = changed_obj.object_id
         elif changed_obj.output_state.is_object_write():
@@ -94,7 +94,7 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
     print(f"Account ID: {account_id.to_hex()}\n")
 
     # Build the `link_auth` PTB
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
     builder.move_call(
         package_id.to_address(),
         Identifier("account"),
@@ -108,9 +108,10 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
     )
 
     # Sign and execute the transaction (link the authenticator)
-    effects = await builder.execute(signer, WaitForTx.FINALIZED)
+    effects = await builder.execute(signer, WaitForTransaction.FINALIZED)
 
-    print(f"Linking account to authenticate method: {effects.as_v1().status}\n")
+    print(
+        f"Linking account to authenticate method: {effects.as_v1().status()}\n")
 
     return account_id
 

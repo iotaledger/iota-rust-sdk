@@ -4,7 +4,7 @@
 use std::str::FromStr;
 
 use eyre::Result;
-use iota_sdk::{graphql_client::Client, transaction_builder::TransactionBuilder, types::Address};
+use iota_sdk::{graphql_client::Client, types::Address};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -15,7 +15,7 @@ async fn main() -> Result<()> {
     let sponsor_address =
         Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
 
-    let mut builder = TransactionBuilder::new(sender_address).with_client(&client);
+    let mut builder = client.transaction_builder(sender_address);
     let tx = builder
         .move_call(Address::STD, "u8", "max")
         .arguments((0u8, 1u8))
@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     println!("Signing Digest: {}", tx.signing_digest_hex());
     println!("Tx Bytes: {}", tx.to_base64());
 
-    let res = client.dry_run_tx(&tx, false).await?;
+    let res = client.dry_run_transaction(&tx, false).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to send gas sponsor tx: {err}");

@@ -26,7 +26,7 @@ struct AbstractAccountExample {
         userInfo: [NSLocalizedDescriptionKey: "Failed to request coins from faucet"])
     }
 
-    let builder = TransactionBuilder(sender: fromAddress).withClient(client: client)
+    let builder = client.transactionBuilder(sender: fromAddress)
     _ = builder.sendIota(
       recipient: toAddress, amount: PtbArgument.u64(value: 5_000_000_000))
 
@@ -42,9 +42,9 @@ struct AbstractAccountExample {
     let signer = TransactionSigner.fromMoveAuthenticator(
       auth: moveAuthenticator)
     let effects = try await builder.execute(
-      signer: signer, waitFor: WaitForTx.finalized)
+      signer: signer, waitFor: WaitForTransaction.finalized)
 
-    print("Sending IOTA via abstract account: \(effects.asV1().status)")
+    print("Sending IOTA via abstract account: \(effects.asV1().status())")
   }
 
   static func setupAccount(client: GraphQlClient) async throws -> ObjectId {
@@ -66,7 +66,7 @@ struct AbstractAccountExample {
     }
 
     // Build the `publish` PTB
-    let builder = TransactionBuilder(sender: sender).withClient(client: client)
+    let builder = client.transactionBuilder(sender: sender)
     // Publish the package and receive the upgrade cap
     _ = builder.publishPackage(packageData: packageData, upgradeCapName: "upgrade_cap")
     // Transfer the upgrade cap to the sender address
@@ -76,16 +76,16 @@ struct AbstractAccountExample {
     // Sign and execute the transaction (publish the package)
     let signer = TransactionSigner.fromEd25519(key: privateKey)
     let effects = try await builder.execute(
-      signer: signer, waitFor: WaitForTx.finalized)
+      signer: signer, waitFor: WaitForTransaction.finalized)
 
-    print("Publishing package: \(effects.asV1().status)\n")
+    print("Publishing package: \(effects.asV1().status())\n")
 
     // Get package, package metadata and account IDs from the effects
     var packageId: ObjectId?
     var packageMetadataId: ObjectId?
     var accountId: ObjectId?
 
-    for changedObj in effects.asV1().changedObjects {
+    for changedObj in effects.asV1().changedObjects() {
       switch changedObj.outputState {
       case .packageWrite(_, _):
         packageId = changedObj.objectId
@@ -128,7 +128,7 @@ struct AbstractAccountExample {
     print("Account ID: \(accountId.toHex())\n")
 
     // Build the `link_auth` PTB
-    let linkBuilder = TransactionBuilder(sender: sender).withClient(client: client)
+    let linkBuilder = client.transactionBuilder(sender: sender)
     _ = try linkBuilder.moveCall(
       package: packageId.toAddress(),
       module: Identifier(identifier: "account"),
@@ -143,9 +143,9 @@ struct AbstractAccountExample {
 
     // Sign and execute the transaction (link the authenticator)
     let linkEffects = try await linkBuilder.execute(
-      signer: signer, waitFor: WaitForTx.finalized)
+      signer: signer, waitFor: WaitForTransaction.finalized)
 
-    print("Linking account to authenticate method: \(linkEffects.asV1().status)\n")
+    print("Linking account to authenticate method: \(linkEffects.asV1().status())\n")
 
     return accountId
   }

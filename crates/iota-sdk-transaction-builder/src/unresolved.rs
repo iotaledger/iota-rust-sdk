@@ -142,7 +142,7 @@ impl From<iota_types::Command> for Command {
                 dependencies: c.dependencies,
             }),
             iota_types::Command::MakeMoveVector(c) => Self::MakeMoveVector(MakeMoveVector {
-                type_: c.type_,
+                type_tag: c.type_tag,
                 elements: c.elements.into_iter().map(Into::into).collect(),
             }),
             iota_types::Command::Upgrade(c) => Self::Upgrade(Upgrade {
@@ -202,14 +202,14 @@ impl Upgrade {
 
 #[derive(Clone, Debug)]
 pub struct MakeMoveVector {
-    pub type_: Option<TypeTag>,
+    pub type_tag: Option<TypeTag>,
     pub elements: Vec<Argument>,
 }
 
 impl MakeMoveVector {
     fn resolve(self, input_map: &HashMap<InputId, u16>) -> iota_types::MakeMoveVector {
         iota_types::MakeMoveVector {
-            type_: self.type_,
+            type_tag: self.type_tag,
             elements: self
                 .elements
                 .into_iter()

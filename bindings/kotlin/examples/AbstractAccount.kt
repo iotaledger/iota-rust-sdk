@@ -17,7 +17,7 @@ fun main() = runBlocking {
         faucet.requestAndWaitForFinalized(fromAddress, client)
             ?: throw Exception("Failed to request coins from faucet")
 
-        val builder = TransactionBuilder(fromAddress).withClient(client)
+        val builder = client.transactionBuilder(fromAddress)
         builder.sendIota(toAddress, PtbArgument.u64(5000000000uL))
 
         val moveAuthenticator =
@@ -29,9 +29,9 @@ fun main() = runBlocking {
                 .finish(client)
 
         val signer = TransactionSigner.fromMoveAuthenticator(moveAuthenticator)
-        val effects = builder.execute(signer, WaitForTx.FINALIZED)
+        val effects = builder.execute(signer, WaitForTransaction.FINALIZED)
 
-        println("Sending IOTA via abstract account: ${effects.asV1().status}")
+        println("Sending IOTA via abstract account: ${effects.asV1().status()}")
     } catch (e: Exception) {
         e.printStackTrace()
         kotlin.system.exitProcess(1)
@@ -52,7 +52,7 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
         ?: throw Exception("Failed to request coins from faucet")
 
     // Build the `publish` PTB
-    var builder = TransactionBuilder(sender).withClient(client)
+    var builder = client.transactionBuilder(sender)
     // Publish the package and receive the upgrade cap
     builder.publishPackage(packageData, "upgrade_cap")
     // Transfer the upgrade cap to the sender address
@@ -60,16 +60,16 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
 
     // Sign and execute the transaction (publish the package)
     val signer = TransactionSigner.fromEd25519(privateKey)
-    var effects = builder.execute(signer, WaitForTx.FINALIZED)
+    var effects = builder.execute(signer, WaitForTransaction.FINALIZED)
 
-    println("Publishing package: ${effects.asV1().status}\n")
+    println("Publishing package: ${effects.asV1().status()}\n")
 
     // Get package, package metadata and account IDs from the effects
     var packageId: ObjectId? = null
     var packageMetadataId: ObjectId? = null
     var accountId: ObjectId? = null
 
-    for (changedObj in effects.asV1().changedObjects) {
+    for (changedObj in effects.asV1().changedObjects()) {
         if (changedObj.outputState is ObjectOut.PackageWrite) {
             packageId = changedObj.objectId
         } else if (changedObj.outputState is ObjectOut.ObjectWrite) {
@@ -101,7 +101,7 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
     println("Account ID: ${accountId.toHex()}\n")
 
     // Build the `link_auth` PTB
-    builder = TransactionBuilder(sender).withClient(client)
+    builder = client.transactionBuilder(sender)
     builder.moveCall(
         `package` = packageId.toAddress(),
         module = Identifier("account"),
@@ -116,9 +116,9 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
     )
 
     // Sign and execute the transaction (link the authenticator)
-    effects = builder.execute(signer, WaitForTx.FINALIZED)
+    effects = builder.execute(signer, WaitForTransaction.FINALIZED)
 
-    println("Linking account to authenticate method: ${effects.asV1().status}\n")
+    println("Linking account to authenticate method: ${effects.asV1().status()}\n")
 
     return accountId
 }

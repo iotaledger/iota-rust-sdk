@@ -72,14 +72,14 @@ func main() {
 	}
 
 	// 6. Build a send_iota transaction
-	builder := iota_sdk.NewTransactionBuilder(multisigAddress).WithClient(client)
+	builder := client.TransactionBuilder(multisigAddress)
 	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))
 	txn, err := builder.Finish()
 	if err != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
-	dryRunResult, err := client.DryRunTx(txn, false)
+	dryRunResult, err := client.DryRunTransaction(txn, false)
 	if err != nil {
 		log.Fatalf("Failed to dry run: %v", err)
 	}
@@ -99,12 +99,10 @@ func main() {
 
 	// 8. Aggregate signatures
 	aggregator := iota_sdk.MultisigAggregatorNewWithTransaction(committee, txn)
-	aggregator, err = aggregator.WithSignature(sig0)
-	if err != nil {
+	if err = aggregator.AddSignature(sig0); err != nil {
 		log.Fatalf("Failed to add sig0: %v", err)
 	}
-	aggregator, err = aggregator.WithSignature(sig1)
-	if err != nil {
+	if err = aggregator.AddSignature(sig1); err != nil {
 		log.Fatalf("Failed to add sig1: %v", err)
 	}
 	aggSig, err := aggregator.Finish()
@@ -114,11 +112,11 @@ func main() {
 
 	// 9. Execute
 	userSignature := iota_sdk.UserSignatureNewMultisig(aggSig)
-	effects, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSignature}, txn, nil)
+	effects, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{userSignature}, txn, nil)
 	if err != nil {
 		log.Fatalf("Failed to execute: %v", err)
 	}
 	log.Printf("Digest: %s", iota_sdk.HexEncode((*effects).Digest().ToBytes()))
-	log.Printf("Transaction status: %v", (*effects).AsV1().Status)
+	log.Printf("Transaction status: %v", (*effects).AsV1().Status())
 	log.Printf("Effects: %+v", (*effects).AsV1())
 }

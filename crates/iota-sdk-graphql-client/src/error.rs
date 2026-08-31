@@ -163,7 +163,7 @@ impl Error {
         self
     }
 
-    /// Create an error signalling that the subscription server dropped
+    /// Create an error signaling that the subscription server dropped
     /// `count` payloads before the next one because the client could not keep
     /// up. The stream continues after this error.
     #[cfg(not(target_arch = "wasm32"))]

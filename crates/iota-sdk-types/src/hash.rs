@@ -4,7 +4,7 @@
 
 use blake2::Digest as DigestTrait;
 
-use crate::{Address, Digest, PublicKeyExt, crypto::PublicKey};
+use crate::{Address, Digest, PublicKeyExt};
 
 type Blake2b256 = blake2::Blake2b<blake2::digest::consts::U32>;
 
@@ -26,12 +26,7 @@ impl Hasher {
     /// Finalize hashing, consuming the Hasher instance and returning the
     /// resultant hash or `Digest`.
     pub fn finalize(self) -> Digest {
-        let mut buf = [0; Digest::LENGTH];
-        let result = self.0.finalize();
-
-        buf.copy_from_slice(&result);
-
-        Digest::new(buf)
+        Digest::new(self.0.finalize().into())
     }
 
     /// Convenience function for creating a new Hasher instance, hashing the
@@ -51,6 +46,13 @@ impl std::io::Write for Hasher {
     fn flush(&mut self) -> std::io::Result<()> {
         self.0.flush()
     }
+}
+
+/// Hash the bytes written by `write` and turn the digest into an `Address`.
+fn derive_address_from(write: impl FnOnce(&mut Hasher)) -> Address {
+    let mut hasher = Hasher::new();
+    write(&mut hasher);
+    Address::new(hasher.finalize().into_inner())
 }
 
 impl crate::Ed25519PublicKey {
@@ -74,10 +76,7 @@ impl crate::Ed25519PublicKey {
     /// assert_eq!(address, public_key.derive_address());
     /// ```
     pub fn derive_address(&self) -> Address {
-        let mut hasher = Hasher::new();
-        self.write_into_hasher(&mut hasher);
-        let digest = hasher.finalize();
-        Address::new(digest.into_inner())
+        derive_address_from(|hasher| self.write_into_hasher(hasher))
     }
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
@@ -87,6 +86,12 @@ impl crate::Ed25519PublicKey {
 
 impl From<crate::Ed25519PublicKey> for Address {
     fn from(public_key: crate::Ed25519PublicKey) -> Self {
+        public_key.derive_address()
+    }
+}
+
+impl From<&crate::Ed25519PublicKey> for Address {
+    fn from(public_key: &crate::Ed25519PublicKey) -> Self {
         public_key.derive_address()
     }
 }
@@ -114,10 +119,7 @@ impl crate::Secp256k1PublicKey {
     /// assert_eq!(address, public_key.derive_address());
     /// ```
     pub fn derive_address(&self) -> Address {
-        let mut hasher = Hasher::new();
-        self.write_into_hasher(&mut hasher);
-        let digest = hasher.finalize();
-        Address::new(digest.into_inner())
+        derive_address_from(|hasher| self.write_into_hasher(hasher))
     }
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
@@ -128,6 +130,12 @@ impl crate::Secp256k1PublicKey {
 
 impl From<crate::Secp256k1PublicKey> for Address {
     fn from(public_key: crate::Secp256k1PublicKey) -> Self {
+        public_key.derive_address()
+    }
+}
+
+impl From<&crate::Secp256k1PublicKey> for Address {
+    fn from(public_key: &crate::Secp256k1PublicKey) -> Self {
         public_key.derive_address()
     }
 }
@@ -155,10 +163,7 @@ impl crate::Secp256r1PublicKey {
     /// assert_eq!(address, public_key.derive_address());
     /// ```
     pub fn derive_address(&self) -> Address {
-        let mut hasher = Hasher::new();
-        self.write_into_hasher(&mut hasher);
-        let digest = hasher.finalize();
-        Address::new(digest.into_inner())
+        derive_address_from(|hasher| self.write_into_hasher(hasher))
     }
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
@@ -173,6 +178,12 @@ impl From<crate::Secp256r1PublicKey> for Address {
     }
 }
 
+impl From<&crate::Secp256r1PublicKey> for Address {
+    fn from(public_key: &crate::Secp256r1PublicKey) -> Self {
+        public_key.derive_address()
+    }
+}
+
 impl crate::PasskeyPublicKey {
     /// Derive an `Address` from this Passkey Public Key
     ///
@@ -182,10 +193,7 @@ impl crate::PasskeyPublicKey {
     ///
     /// `hash( 0x06 || 33-byte secp256r1 public key)`
     pub fn derive_address(&self) -> Address {
-        let mut hasher = Hasher::new();
-        self.write_into_hasher(&mut hasher);
-        let digest = hasher.finalize();
-        Address::new(digest.into_inner())
+        derive_address_from(|hasher| self.write_into_hasher(hasher))
     }
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
@@ -200,13 +208,27 @@ impl From<crate::PasskeyPublicKey> for Address {
     }
 }
 
+impl From<&crate::PasskeyPublicKey> for Address {
+    fn from(public_key: &crate::PasskeyPublicKey) -> Self {
+        public_key.derive_address()
+    }
+}
+
 impl crate::PublicKey {
+    /// Derive an `Address` from this Public Key
+    ///
+    /// See the `derive_address` documentation of the concrete key types for
+    /// the scheme-specific derivation.
     pub fn derive_address(&self) -> Address {
+        derive_address_from(|hasher| self.write_into_hasher(hasher))
+    }
+
+    fn write_into_hasher(&self, hasher: &mut Hasher) {
         match self {
-            Self::Ed25519(pk) => pk.derive_address(),
-            Self::Secp256k1(pk) => pk.derive_address(),
-            Self::Secp256r1(pk) => pk.derive_address(),
-            Self::Passkey(pk) => pk.derive_address(),
+            Self::Ed25519(pk) => pk.write_into_hasher(hasher),
+            Self::Secp256k1(pk) => pk.write_into_hasher(hasher),
+            Self::Secp256r1(pk) => pk.write_into_hasher(hasher),
+            Self::Passkey(pk) => pk.write_into_hasher(hasher),
         }
     }
 }
@@ -217,40 +239,45 @@ impl From<crate::PublicKey> for Address {
     }
 }
 
+impl From<&crate::PublicKey> for Address {
+    fn from(public_key: &crate::PublicKey) -> Self {
+        public_key.derive_address()
+    }
+}
+
 impl crate::MultisigCommittee {
     /// Derive an `Address` from this MultisigCommittee.
     ///
-    /// A MultiSig address
-    /// is defined as the 32-byte Blake2b hash of serializing the
-    /// `SignatureScheme` flag (0x03), the threshold (in little endian), and
-    /// the concatenation of all n flag, public keys and its weight.
+    /// A MultiSig address is defined as the 32-byte Blake2b hash of serializing
+    /// the `SignatureScheme` flag (0x03), the threshold (in little endian), and
+    /// the concatenation of all n flags, public keys and their weights, where
+    /// `flag_i?` is the member's `SignatureScheme` flag — omitted for Ed25519
+    /// keys, matching their plain address derivation.
     ///
-    /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
-    /// || ... || flag_n || pk_n || weight_n)`.
+    /// `hash(0x03 || threshold || flag_1? || pk_1 || weight_1
+    /// || ... || flag_n? || pk_n || weight_n)`.
     pub fn derive_address(&self) -> Address {
-        let mut hasher = Hasher::new();
-        hasher.update([self.scheme().to_u8()]);
-        hasher.update(self.threshold().to_le_bytes());
+        derive_address_from(|hasher| {
+            hasher.update([self.scheme().to_u8()]);
+            hasher.update(self.threshold().to_le_bytes());
 
-        for member in self.members() {
-            match member.public_key() {
-                PublicKey::Ed25519(p) => p.write_into_hasher(&mut hasher),
-                PublicKey::Secp256k1(p) => p.write_into_hasher(&mut hasher),
-                PublicKey::Secp256r1(p) => p.write_into_hasher(&mut hasher),
-                PublicKey::Passkey(p) => p.write_into_hasher(&mut hasher),
+            for member in self.members() {
+                member.public_key().write_into_hasher(hasher);
+                hasher.update(member.weight().to_le_bytes());
             }
-
-            hasher.update(member.weight().to_le_bytes());
-        }
-
-        let digest = hasher.finalize();
-        Address::new(digest.into_inner())
+        })
     }
 }
 
 impl From<crate::MultisigCommittee> for Address {
-    fn from(public_key: crate::MultisigCommittee) -> Self {
-        public_key.derive_address()
+    fn from(committee: crate::MultisigCommittee) -> Self {
+        committee.derive_address()
+    }
+}
+
+impl From<&crate::MultisigCommittee> for Address {
+    fn from(committee: &crate::MultisigCommittee) -> Self {
+        committee.derive_address()
     }
 }
 
@@ -272,6 +299,12 @@ impl From<crate::UserSignature> for Address {
     }
 }
 
+impl From<&crate::UserSignature> for Address {
+    fn from(signature: &crate::UserSignature) -> Self {
+        signature.derive_address()
+    }
+}
+
 /// Error returned when no signature in a
 /// [`SignedTransaction`](crate::SignedTransaction) commits to an expected
 /// signer address.
@@ -282,6 +315,15 @@ impl From<crate::UserSignature> for Address {
 pub struct MissingSignatureError {
     /// The address no signature commits to.
     pub address: Address,
+}
+
+/// Borrowed mirror of [`Transaction`](crate::Transaction) that serializes
+/// identically, allowing digests of a [`TransactionV1`](crate::TransactionV1)
+/// to be computed without cloning it into the owned enum.
+#[cfg(feature = "serde")]
+#[derive(serde::Serialize)]
+enum TransactionRef<'a> {
+    V1(&'a crate::TransactionV1),
 }
 
 #[cfg(feature = "serde")]
@@ -321,14 +363,14 @@ mod type_digest {
     impl crate::Transaction {
         pub fn digest(&self) -> TransactionDigest {
             const SALT: &str = "TransactionData::";
-            type_digest(SALT, &self).into()
+            type_digest(SALT, self).into()
         }
     }
 
     impl crate::TransactionV1 {
         pub fn digest(&self) -> TransactionDigest {
             const SALT: &str = "TransactionData::";
-            type_digest(SALT, &crate::Transaction::V1(self.clone())).into()
+            type_digest(SALT, &super::TransactionRef::V1(self)).into()
         }
     }
 
@@ -420,7 +462,7 @@ mod type_digest {
     fn type_digest<T: serde::Serialize>(salt: &str, ty: &T) -> Digest {
         let mut hasher = Hasher::new();
         hasher.update(salt);
-        bcs::serialize_into(&mut hasher, ty).unwrap();
+        bcs::serialize_into(&mut hasher, ty).expect("bcs serialization failed");
         hasher.finalize()
     }
 }
@@ -429,15 +471,13 @@ mod type_digest {
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod signing_message {
     use crate::{
-        Digest, Intent, IntentAppId, IntentMessage, IntentScope, IntentVersion, PersonalMessage,
-        SigningDigest, Transaction, TransactionV1, hash::Hasher,
+        Intent, IntentMessage, IntentScope, PersonalMessage, SigningDigest, Transaction,
+        TransactionV1, hash::Hasher,
     };
 
     impl Transaction {
         pub fn signing_digest(&self) -> SigningDigest {
-            const INTENT: Intent = Intent::iota_transaction();
-            let digest = signing_digest(INTENT, self);
-            digest.into_inner()
+            self.intent_message().signing_digest()
         }
 
         pub fn signing_digest_hex(&self) -> String {
@@ -447,9 +487,8 @@ mod signing_message {
 
     impl TransactionV1 {
         pub fn signing_digest(&self) -> SigningDigest {
-            const INTENT: Intent = Intent::iota_transaction();
-            let digest = signing_digest(INTENT, &Transaction::V1(self.clone()));
-            digest.into_inner()
+            IntentMessage::new(Intent::iota_transaction(), super::TransactionRef::V1(self))
+                .signing_digest()
         }
 
         pub fn signing_digest_hex(&self) -> String {
@@ -457,18 +496,9 @@ mod signing_message {
         }
     }
 
-    fn signing_digest<T: serde::Serialize + ?Sized>(intent: Intent, ty: &T) -> Digest {
-        let mut hasher = Hasher::new();
-        hasher.update(intent.to_bytes());
-        bcs::serialize_into(&mut hasher, ty).unwrap();
-        hasher.finalize()
-    }
-
     impl PersonalMessage<'_> {
         pub fn signing_digest(&self) -> SigningDigest {
-            const INTENT: Intent = Intent::personal_message();
-            let digest = signing_digest(INTENT, &self.0);
-            digest.into_inner()
+            IntentMessage::new(Intent::personal_message(), &self.0).signing_digest()
         }
 
         pub fn signing_digest_hex(&self) -> String {
@@ -478,15 +508,10 @@ mod signing_message {
 
     impl crate::CheckpointSummary {
         pub fn signing_message(&self) -> Vec<u8> {
-            const INTENT: Intent = Intent {
-                scope: IntentScope::CheckpointSummary,
-                version: IntentVersion::V0,
-                app_id: IntentAppId::Iota,
-            };
             let mut message = Vec::new();
-            message.extend(INTENT.to_bytes());
-            bcs::serialize_into(&mut message, self).unwrap();
-            bcs::serialize_into(&mut message, &self.epoch).unwrap();
+            message.extend(Intent::iota_app(IntentScope::CheckpointSummary).to_bytes());
+            bcs::serialize_into(&mut message, self).expect("bcs serialization failed");
+            bcs::serialize_into(&mut message, &self.epoch).expect("bcs serialization failed");
             message
         }
 
@@ -499,16 +524,16 @@ mod signing_message {
     where
         T: serde::Serialize,
     {
-        pub fn signing_digest(&self) -> Digest {
-            let mut hasher = Hasher::default();
-            bcs::serialize_into(&mut hasher, self).unwrap();
-            hasher.finalize()
+        pub fn signing_digest(&self) -> SigningDigest {
+            let mut hasher = Hasher::new();
+            bcs::serialize_into(&mut hasher, self).expect("bcs serialization failed");
+            hasher.finalize().into()
         }
     }
 }
 
-/// A 1-byte domain separator for hashing Object ID in IOTA. It is starting from
-/// 0xf0 to ensure no hashing collision for any ObjectId vs Address which is
+/// A 1-byte domain separator for hashing Object ID in IOTA. It starts from 0xf0
+/// to ensure no hashing collision for any ObjectId vs Address which is
 /// derived as the hash of `flag || pubkey`.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -523,7 +548,7 @@ impl crate::ObjectId {
     /// Create an ObjectId from a transaction digest and `count`.
     ///
     /// `count` is the number of objects that have been created during a
-    /// transactions.
+    /// transaction.
     pub fn derive_id(digest: crate::TransactionDigest, count: u64) -> Self {
         let mut hasher = Hasher::new();
         hasher.update([HashingIntent::RegularObjectId as u8]);
@@ -604,6 +629,18 @@ mod tests {
     #[proptest]
     fn roundtrip_hashing_intent(intent: HashingIntent) {
         assert_eq!(Ok(intent), HashingIntent::from_byte(intent as u8));
+    }
+
+    // Guards that `TransactionRef` stays serialization-identical to
+    // `Transaction`.
+    #[cfg(feature = "serde")]
+    #[proptest]
+    fn transaction_v1_digests_match_transaction(transaction: crate::TransactionV1) {
+        let digest = transaction.digest();
+        let signing_digest = transaction.signing_digest();
+        let transaction = crate::Transaction::V1(transaction);
+        assert_eq!(digest, transaction.digest());
+        assert_eq!(signing_digest, transaction.signing_digest());
     }
 }
 

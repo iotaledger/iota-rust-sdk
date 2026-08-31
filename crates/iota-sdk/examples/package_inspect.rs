@@ -250,10 +250,7 @@ async fn print_object_samples(
 
     let objects = client
         .objects(
-            ObjectFilter {
-                type_: Some(type_tag.to_owned()),
-                ..Default::default()
-            },
+            ObjectFilter::default().with_type(type_tag.to_owned()),
             PaginationFilter {
                 limit: Some(3),
                 ..forward_page(None)
@@ -298,10 +295,7 @@ fn extract_policy_value(contents: &serde_json::Value) -> Option<u8> {
 async fn resolve_upgrade_cap_id(client: &Client, package_id: ObjectId) -> Result<Option<ObjectId>> {
     let effects_page = client
         .transactions_effects(
-            TransactionsFilter {
-                changed_object: Some(package_id),
-                ..Default::default()
-            },
+            TransactionsFilter::default().with_changed_object(package_id),
             PaginationFilter {
                 direction: Direction::Forward,
                 cursor: None,
@@ -326,7 +320,7 @@ async fn resolve_upgrade_cap_id(client: &Client, package_id: ObjectId) -> Result
             };
 
             if object
-                .as_struct_opt()
+                .as_opt_struct()
                 .is_some_and(|move_struct| move_struct.object_type().is_upgrade_cap())
             {
                 return Ok(Some(changed_object.object_id));
@@ -375,7 +369,7 @@ fn publishes_package_as_immutable(tx: &Transaction) -> bool {
             command.as_opt_move_call().is_some_and(|move_call| {
                 is_package_make_immutable_call(move_call)
                     && move_call.arguments.len() == 1
-                    && move_call.arguments[0].as_result_opt() == Some(*publish_index)
+                    && move_call.arguments[0].as_opt_result() == Some(*publish_index)
             })
         })
 }
@@ -427,7 +421,7 @@ fn uses_upgrade_cap_for_make_immutable(tx: &Transaction, upgrade_cap_id: ObjectI
             is_package_make_immutable_call(move_call)
                 && move_call.arguments.len() == 1
                 && move_call.arguments[0]
-                    .as_input_opt()
+                    .as_opt_input()
                     .is_some_and(|input_index| upgrade_cap_inputs.contains(&input_index))
         })
     })
@@ -439,10 +433,7 @@ async fn was_package_published_as_immutable(client: &Client, package_id: ObjectI
     loop {
         let page = client
             .transactions_data_effects(
-                TransactionsFilter {
-                    changed_object: Some(package_id),
-                    ..Default::default()
-                },
+                TransactionsFilter::default().with_changed_object(package_id),
                 forward_page(cursor.clone()),
             )
             .await?;
@@ -450,7 +441,7 @@ async fn was_package_published_as_immutable(client: &Client, package_id: ObjectI
         if page
             .data
             .iter()
-            .any(|tx_data| publishes_package_as_immutable(&tx_data.tx.transaction))
+            .any(|tx_data| publishes_package_as_immutable(&tx_data.signed_transaction.transaction))
         {
             return Ok(true);
         }
@@ -472,16 +463,16 @@ async fn was_upgrade_cap_used_for_make_immutable(
     loop {
         let page = client
             .transactions_data_effects(
-                TransactionsFilter {
-                    input_object: Some(upgrade_cap_id),
-                    ..Default::default()
-                },
+                TransactionsFilter::default().with_input_object(upgrade_cap_id),
                 forward_page(cursor.clone()),
             )
             .await?;
 
         if page.data.iter().any(|tx_data| {
-            uses_upgrade_cap_for_make_immutable(&tx_data.tx.transaction, upgrade_cap_id)
+            uses_upgrade_cap_for_make_immutable(
+                &tx_data.signed_transaction.transaction,
+                upgrade_cap_id,
+            )
         }) {
             return Ok(true);
         }

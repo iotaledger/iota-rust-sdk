@@ -39,10 +39,8 @@ async fn main() -> Result<()> {
     }
 
     let mut transactions = client.transactions_stream(
-        SubscriptionTransactionFilter {
-            kind: Some(TransactionBlockKindInput::ProgrammableTx),
-            ..Default::default()
-        },
+        SubscriptionTransactionFilter::default()
+            .with_kind(TransactionBlockKindInput::ProgrammableTx),
         None,
     );
 
@@ -76,7 +74,7 @@ async fn main() -> Result<()> {
         while let Some(item) = events.next().await {
             match item {
                 Ok(event) => {
-                    println!("  {}", event.type_.repr);
+                    println!("  {}", event.move_type.repr);
                     taken += 1;
                     if taken == HOW_MANY {
                         break;

@@ -14,7 +14,6 @@ use eyre::Result;
 use iota_sdk::{
     crypto::{FromMnemonic, IotaSigner, ed25519::Ed25519PrivateKey, multisig::MultisigAggregator},
     graphql_client::{Client, faucet::FaucetClient},
-    transaction_builder::TransactionBuilder,
     types::{Address, MultisigCommittee, MultisigMember, PublicKey, UserSignature},
 };
 
@@ -51,11 +50,11 @@ async fn main() -> Result<()> {
         .await?;
 
     // 5. Build a send_iota transaction
-    let mut builder = TransactionBuilder::new(multisig_address).with_client(&client);
+    let mut builder = client.transaction_builder(multisig_address);
     builder.send_iota(recipient, amount);
     let tx = builder.finish().await?;
 
-    let dry_run = client.dry_run_tx(&tx, false).await?;
+    let dry_run = client.dry_run_transaction(&tx, false).await?;
     if let Some(err) = dry_run.error {
         eyre::bail!("Dry run failed: {err}");
     }
@@ -72,7 +71,7 @@ async fn main() -> Result<()> {
 
     // 8. Execute
     let user_sig = UserSignature::Multisig(multisig_sig);
-    let effects = client.execute_tx(&[user_sig], &tx, None).await?;
+    let effects = client.execute_transaction(&[user_sig], &tx, None).await?;
     println!("Digest: {}", effects.digest());
     println!("Transaction status: {:?}", effects.as_v1().status);
     println!("Effects: {effects:#?}");

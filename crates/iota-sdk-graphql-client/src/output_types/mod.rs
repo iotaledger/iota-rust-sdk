@@ -118,7 +118,7 @@ impl TryFrom<&GraphQLDryRunMutation> for DryRunMutation {
 
     fn try_from(mutation: &GraphQLDryRunMutation) -> Result<Self> {
         let input = TransactionArgument::try_from(&mutation.input)?;
-        let type_tag = TypeTag::from_str(&mutation.type_.repr)?;
+        let type_tag = TypeTag::from_str(&mutation.move_type.repr)?;
         let bcs = base64ct::Base64::decode_vec(&mutation.bcs.0)?;
 
         Ok(DryRunMutation {
@@ -133,7 +133,7 @@ impl TryFrom<&GraphQLDryRunReturn> for DryRunReturn {
     type Error = Error;
 
     fn try_from(return_val: &GraphQLDryRunReturn) -> Result<Self> {
-        let type_tag = TypeTag::from_str(&return_val.type_.repr)?;
+        let type_tag = TypeTag::from_str(&return_val.move_type.repr)?;
         let bcs = base64ct::Base64::decode_vec(&return_val.bcs.0)?;
 
         Ok(DryRunReturn { type_tag, bcs })
@@ -167,7 +167,7 @@ impl TryFrom<&crate::query_types::TransactionArgument> for TransactionArgument {
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct TransactionDataEffects {
-    pub tx: SignedTransaction,
+    pub signed_transaction: SignedTransaction,
     pub effects: TransactionEffects,
 }
 
@@ -176,7 +176,7 @@ pub struct TransactionDataEffects {
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct DynamicFieldName {
     /// The type name of this dynamic field name
-    pub type_: TypeTag,
+    pub type_tag: TypeTag,
     /// The bcs bytes of this dynamic field name
     pub bcs: Vec<u8>,
     /// The json representation of the dynamic field name
@@ -186,7 +186,7 @@ pub struct DynamicFieldName {
 /// The value part of a dynamic field.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct DynamicFieldValue {
-    pub type_: TypeTag,
+    pub type_tag: TypeTag,
     pub bcs: Vec<u8>,
 }
 
@@ -226,9 +226,9 @@ impl DynamicFieldOutput {
     /// Deserialize the name of the dynamic field into the specified type.
     pub fn deserialize_name<T: DeserializeOwned>(&self, expected_type: &TypeTag) -> Result<T> {
         assert_eq!(
-            expected_type, &self.name.type_,
+            expected_type, &self.name.type_tag,
             "Expected type {expected_type}, but got {}",
-            self.name.type_
+            self.name.type_tag
         );
 
         let bcs = &self.name.bcs;
@@ -237,7 +237,7 @@ impl DynamicFieldOutput {
 
     /// Deserialize the value of the dynamic field into the specified type.
     pub fn deserialize_value<T: DeserializeOwned>(&self, expected_type: &TypeTag) -> Result<T> {
-        let typetag = self.value.as_ref().map(|dfv| &dfv.type_);
+        let typetag = self.value.as_ref().map(|dfv| &dfv.type_tag);
         assert_eq!(
             Some(&expected_type),
             typetag.as_ref(),

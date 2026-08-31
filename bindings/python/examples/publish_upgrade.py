@@ -58,7 +58,7 @@ async def main():
         raise Exception("Failed to request coins from faucet")
 
     # Build the `publish` PTB
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
     # Publish the package and receive the upgrade cap in return
     builder.publish_package(package_data, "upgrade_cap")
     # Transfer the upgrade cap to the sender address
@@ -67,7 +67,7 @@ async def main():
 
     # Perform a dry-run first to check if everything is correct
     print("> Publishing package (dry run):")
-    result = await client.dry_run_tx(tx, False)
+    result = await client.dry_run_transaction(tx, False)
     if result.error is not None:
         raise Exception(f"Dry run failed: {result.error}")
     if result.effects is None:
@@ -77,13 +77,14 @@ async def main():
     # Sign and execute the transaction (publish the package)
     print("> Publishing package:")
     sig = private_key.sign_transaction(tx)
-    effects = await client.execute_tx([sig], tx, WaitForTx.FINALIZED)
+    effects = await client.execute_transaction([sig], tx,
+                                               WaitForTransaction.FINALIZED)
     print("Success")
 
     # Resolve UpgradeCap and PackageId via the client
     upgrade_cap = None
     package_id = None
-    for changed_obj in effects.as_v1().changed_objects:
+    for changed_obj in effects.as_v1().changed_objects():
         if changed_obj.output_state.is_object_write():
             object_id = changed_obj.object_id
             obj = await client.object(object_id, None)
@@ -108,7 +109,7 @@ async def main():
         raise Exception("Missing package id")
 
     # Build the `upgrade` PTB
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
 
     # Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
     # ticket
@@ -147,7 +148,7 @@ async def main():
 
     # Perform a dry-run first to check if everything is correct
     print("> Upgrading package (dry run):")
-    result = await client.dry_run_tx(tx, False)
+    result = await client.dry_run_transaction(tx, False)
     if result.error is not None:
         raise Exception(f"Dry run failed: {result.error}")
     if result.effects is None:
@@ -157,11 +158,11 @@ async def main():
     # Sign and execute the transaction (upgrade the package)
     print("> Upgrading package:")
     sig = private_key.sign_transaction(tx)
-    effects = await client.execute_tx([sig], tx)
+    effects = await client.execute_transaction([sig], tx)
     print("Success")
 
     # Print the new package version (should now be 2)
-    for changed_obj in effects.as_v1().changed_objects:
+    for changed_obj in effects.as_v1().changed_objects():
         if changed_obj.output_state.is_package_write():
             print(f"New Package ID: {changed_obj.object_id.to_hex()}")
             print(f"New Package version: {changed_obj.output_state.version}")

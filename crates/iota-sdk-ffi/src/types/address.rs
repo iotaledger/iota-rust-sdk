@@ -83,6 +83,14 @@ impl Address {
         Ok(Self(iota_sdk::types::Address::from_prefixed_hex(hex)?))
     }
 
+    /// Parses an Address from a full-length hex string (64 hex characters),
+    /// without a `0x` prefix. Will return an error if the string has a `0x`
+    /// prefix or is not exactly 64 hex characters long.
+    #[uniffi::constructor]
+    pub fn from_raw_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::Address::from_raw_hex(hex)?))
+    }
+
     /// Parses an Address from a hex string, with or without a `0x` prefix.
     /// The string can be of variable length; if it's shorter than 64 hex
     /// characters, it will be left-padded with `0`s.
@@ -99,6 +107,15 @@ impl Address {
         Ok(Self(iota_sdk::types::Address::from_prefixed_short_hex(
             hex,
         )?))
+    }
+
+    /// Parses an Address from a hex string without a `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s. Will return an error if
+    /// the string has a `0x` prefix.
+    #[uniffi::constructor]
+    pub fn from_raw_short_hex(hex: &str) -> Result<Self> {
+        Ok(Self(iota_sdk::types::Address::from_raw_short_hex(hex)?))
     }
 
     #[uniffi::constructor]
@@ -185,3 +202,4 @@ named_address!(
 
 crate::export_iota_types_objects_bcs_conversion!(Address);
 crate::export_iota_types_objects_json_conversion!(Address);
+crate::export_iota_types_objects_display!(Address);

@@ -5,7 +5,7 @@ use base64ct::Encoding;
 
 use crate::{
     error::Error,
-    query_types::{Address, Base64, GQLAddress, PageInfo, schema},
+    query_types::{Address, Base64, GraphQLAddress, PageInfo, schema},
 };
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -16,7 +16,7 @@ use crate::{
 )]
 pub struct ResolveIotaNamesAddressQuery {
     #[arguments(name: $name)]
-    pub resolve_iota_names_address: Option<GQLAddress>,
+    pub resolve_iota_names_address: Option<GraphQLAddress>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]

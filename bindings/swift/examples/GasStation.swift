@@ -15,7 +15,7 @@ struct GasStationExample {
       let sender = keypair.publicKey().deriveAddress()
       let signer = TransactionSigner.fromEd25519(key: keypair)
 
-      let builder = TransactionBuilder(sender: sender).withClient(client: client)
+      let builder = client.transactionBuilder(sender: sender)
 
       _ = try builder.moveCall(
         package: Address.std(),

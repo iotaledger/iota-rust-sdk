@@ -30,7 +30,7 @@ func main() {
 
 	sender := addrFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
-	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder := client.TransactionBuilder(sender)
 
 	packageAddr := iota_sdk.AddressStd()
 	moduleName := identifier("u64")
@@ -74,7 +74,7 @@ func main() {
 	log.Printf("Signing Digest: %v", txn.SigningDigestHex())
 	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
-	res, err := client.DryRunTx(txn, false)
+	res, err := client.DryRunTransaction(txn, false)
 	if err != nil {
 		log.Fatalf("Failed to send tx: %v", err)
 	}

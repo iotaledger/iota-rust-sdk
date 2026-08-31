@@ -1,27 +1,48 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::sync::Arc;
+
 use iota_sdk::{
-    graphql_client::{Client, DryRunResult, WaitForTx},
-    transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient},
+    graphql_client::{Client, DryRunResult, WaitForTransaction},
+    transaction_builder::{
+        ObjectsPage, ProtocolConfig, TransactionBuilderClientBase,
+        TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
+        TransactionBuilderSimulationClient,
+    },
     types::{
         Address, Object, ObjectId, StructTag, Transaction, TransactionDigest, TransactionEffects,
         Version,
     },
 };
 
-use crate::graphql::client::GraphQLClient;
+use crate::{
+    graphql::client::GraphQLClient,
+    transaction_builder::{builder::TransactionBuilder, client_builder::ClientTransactionBuilder},
+};
 
-impl TransactionBuilderClient for GraphQLClient {
-    type Error = <Client as TransactionBuilderClient>::Error;
-    type DryRunResult = DryRunResult;
+#[uniffi::export]
+impl GraphQLClient {
+    /// Create a new `TransactionBuilder` with the given sender address.
+    pub fn transaction_builder(
+        self: Arc<GraphQLClient>,
+        sender: &crate::types::address::Address,
+    ) -> ClientTransactionBuilder {
+        TransactionBuilder::new(sender).with_client(self)
+    }
+}
 
+impl TransactionBuilderClientBase for GraphQLClient {
+    type Error = <Client as TransactionBuilderClientBase>::Error;
+}
+
+impl TransactionBuilderLedgerClient for GraphQLClient {
     async fn object(
         &self,
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> Result<Option<Object>, Self::Error> {
-        TransactionBuilderClient::object(&*self.0.read().await, object_id, version).await
+        TransactionBuilderLedgerClient::object(&*self.0.read().await, object_id, version).await
     }
 
     async fn objects(
@@ -31,61 +52,89 @@ impl TransactionBuilderClient for GraphQLClient {
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> Result<ObjectsPage, Self::Error> {
-        TransactionBuilderClient::objects(&*self.0.read().await, struct_tag, owner, cursor, limit)
-            .await
+        TransactionBuilderLedgerClient::objects(
+            &*self.0.read().await,
+            struct_tag,
+            owner,
+            cursor,
+            limit,
+        )
+        .await
     }
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
-        TransactionBuilderClient::protocol_config(&*self.0.read().await).await
-    }
-
-    async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<iota_sdk::types::SignedTransaction>, Self::Error> {
-        TransactionBuilderClient::transaction(&*self.0.read().await, digest).await
-    }
-
-    async fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>, Self::Error> {
-        TransactionBuilderClient::transaction_effects(&*self.0.read().await, digest).await
+        TransactionBuilderLedgerClient::protocol_config(&*self.0.read().await).await
     }
 
     async fn reference_gas_price(
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
-        TransactionBuilderClient::reference_gas_price(&*self.0.read().await, epoch).await
+        TransactionBuilderLedgerClient::reference_gas_price(&*self.0.read().await, epoch).await
     }
+}
 
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
-        TransactionBuilderClient::estimate_tx_budget(&*self.0.read().await, tx).await
-    }
+impl TransactionBuilderSimulationClient for GraphQLClient {
+    type DryRunResult = DryRunResult;
 
-    async fn dry_run_tx(
+    async fn estimate_transaction_budget(
         &self,
-        tx: &Transaction,
+        transaction: &Transaction,
+    ) -> Result<Option<u64>, Self::Error> {
+        TransactionBuilderSimulationClient::estimate_transaction_budget(
+            &*self.0.read().await,
+            transaction,
+        )
+        .await
+    }
+
+    async fn dry_run_transaction(
+        &self,
+        transaction: &Transaction,
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
-        TransactionBuilderClient::dry_run_tx(&*self.0.read().await, tx, skip_checks).await
+        TransactionBuilderSimulationClient::dry_run_transaction(
+            &*self.0.read().await,
+            transaction,
+            skip_checks,
+        )
+        .await
     }
+}
 
-    async fn execute_tx(
+impl TransactionBuilderExecutionClient for GraphQLClient {
+    async fn execute_transaction(
         &self,
         signatures: &[iota_sdk::types::UserSignature],
-        tx: &Transaction,
-        wait_for: impl Into<Option<WaitForTx>>,
+        transaction: &Transaction,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Self::Error> {
-        TransactionBuilderClient::execute_tx(&*self.0.read().await, signatures, tx, wait_for).await
+        TransactionBuilderExecutionClient::execute_transaction(
+            &*self.0.read().await,
+            signatures,
+            transaction,
+            wait_for,
+        )
+        .await
     }
 
-    async fn wait_for_tx(
+    async fn wait_for_transaction(
         &self,
         digest: TransactionDigest,
-        wait_for: WaitForTx,
+        wait_for: WaitForTransaction,
     ) -> Result<(), Self::Error> {
-        TransactionBuilderClient::wait_for_tx(&*self.0.read().await, digest, wait_for).await
+        TransactionBuilderExecutionClient::wait_for_transaction(
+            &*self.0.read().await,
+            digest,
+            wait_for,
+        )
+        .await
+    }
+
+    async fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<TransactionEffects>, Self::Error> {
+        TransactionBuilderExecutionClient::transaction_effects(&*self.0.read().await, digest).await
     }
 }

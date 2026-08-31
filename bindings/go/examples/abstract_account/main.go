@@ -30,7 +30,7 @@ func main() {
 		log.Fatalf("Failed to request coins from faucet: %v", err)
 	}
 
-	builder := iota_sdk.NewTransactionBuilder(fromAddress).WithClient(client)
+	builder := client.TransactionBuilder(fromAddress)
 	builder.SendIota(toAddress, iota_sdk.PtbArgumentU64(5000000000))
 
 	moveAuthenticator, err := iota_sdk.NewMoveAuthenticatorBuilder(
@@ -46,13 +46,13 @@ func main() {
 	}
 
 	signer := iota_sdk.TransactionSignerFromMoveAuthenticator(moveAuthenticator)
-	waitFor := iota_sdk.WaitForTxFinalized
+	waitFor := iota_sdk.WaitForTransactionFinalized
 	effects, err := builder.Execute(signer, &waitFor)
 	if err != nil {
 		log.Fatalf("Failed to execute transaction: %v", err)
 	}
 
-	fmt.Printf("Sending IOTA via abstract account: %v\n", (*effects).AsV1().Status)
+	fmt.Printf("Sending IOTA via abstract account: %v\n", (*effects).AsV1().Status())
 }
 
 func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
@@ -74,7 +74,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	}
 
 	// Build the `publish` PTB
-	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder := client.TransactionBuilder(sender)
 	// Publish the package and receive the upgrade cap
 	builder.PublishPackage(packageData, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
@@ -82,20 +82,20 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 
 	// Sign and execute the transaction (publish the package)
 	signer := iota_sdk.TransactionSignerFromEd25519(privateKey)
-	waitFor := iota_sdk.WaitForTxFinalized
+	waitFor := iota_sdk.WaitForTransactionFinalized
 	effects, err := builder.Execute(signer, &waitFor)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute transaction: %w", err)
 	}
 
-	fmt.Printf("Publishing package: %v\n\n", (*effects).AsV1().Status)
+	fmt.Printf("Publishing package: %v\n\n", (*effects).AsV1().Status())
 
 	// Get package, package metadata and account IDs from the effects
 	var packageId *iota_sdk.ObjectId
 	var packageMetadataId *iota_sdk.ObjectId
 	var accountId *iota_sdk.ObjectId
 
-	for _, changedObj := range (*effects).AsV1().ChangedObjects {
+	for _, changedObj := range (*effects).AsV1().ChangedObjects() {
 		if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutPackageWrite); ok {
 			packageId = changedObj.ObjectId
 		} else if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutObjectWrite); ok {
@@ -107,7 +107,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 
 			if objPtr != nil {
 				obj := *objPtr
-				if obj.AsStructOpt() != nil {
+				if obj.AsOptStruct() != nil {
 					typeName := obj.AsStruct().StructType.Name().String()
 					if typeName == "PackageMetadataV1" {
 						packageMetadataId = objectId
@@ -138,7 +138,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	accountModule, _ := iota_sdk.NewIdentifier("account")
 	linkAuthFn, _ := iota_sdk.NewIdentifier("link_auth")
 
-	builder = iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder = client.TransactionBuilder(sender)
 	builder.MoveCall(
 		packageId.ToAddress(),
 		accountModule,
@@ -159,7 +159,7 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 		return nil, fmt.Errorf("failed to execute transaction: %w", err)
 	}
 
-	fmt.Printf("Linking account to authenticate method: %v\n\n", (*effects).AsV1().Status)
+	fmt.Printf("Linking account to authenticate method: %v\n\n", (*effects).AsV1().Status())
 
 	return accountId, nil
 }

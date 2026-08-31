@@ -68,7 +68,7 @@ func main() {
 	}
 
 	// Build the `publish` PTB
-	builderPublish := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builderPublish := client.TransactionBuilder(sender)
 	// Publish the package and receive the upgrade cap in return
 	builderPublish.PublishPackage(packageData, "upgrade_cap")
 	// Transfer the upgrade cap to the sender address
@@ -80,7 +80,7 @@ func main() {
 
 	// Perform a dry-run first to check if everything is correct
 	fmt.Println("> Publishing package (dry run):")
-	resultPublish, err := client.DryRunTx(txPublish, false)
+	resultPublish, err := client.DryRunTransaction(txPublish, false)
 	if err != nil {
 		log.Fatalf("Dry run failed: %v", err)
 	}
@@ -98,8 +98,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	waitFor := iota_sdk.WaitForTxFinalized
-	effectsPublish, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSigPublish}, txPublish, &waitFor)
+	waitFor := iota_sdk.WaitForTransactionFinalized
+	effectsPublish, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{userSigPublish}, txPublish, &waitFor)
 	if err != nil {
 		log.Fatalf("Transaction failed: %v", err)
 	}
@@ -108,7 +108,7 @@ func main() {
 	// Resolve UpgradeCap and PackageId via the client
 	var upgradeCap *iota_sdk.ObjectId
 	var packageId *iota_sdk.ObjectId
-	for _, changedObj := range (*effectsPublish).AsV1().ChangedObjects {
+	for _, changedObj := range (*effectsPublish).AsV1().ChangedObjects() {
 		if objectWrite, ok := changedObj.OutputState.(iota_sdk.ObjectOutObjectWrite); ok {
 			objectId := changedObj.ObjectId
 			objPtr, err := client.Object(objectId, nil)
@@ -116,7 +116,7 @@ func main() {
 				log.Fatalf("Failed to get object: %v", err)
 			}
 			obj := *objPtr
-			if obj.AsStructOpt() != nil {
+			if obj.AsOptStruct() != nil {
 				upgradeCapType := iota_sdk.StructTagNewUpgradeCap()
 				if obj.AsStruct().StructType.Eq(upgradeCapType) {
 					fmt.Printf("UpgradeCap: %s\n", objectId.ToHex())
@@ -140,7 +140,7 @@ func main() {
 	}
 
 	// Build the `upgrade` PTB
-	builderUpgrade := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builderUpgrade := client.TransactionBuilder(sender)
 
 	// Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
 	// ticket
@@ -180,7 +180,7 @@ func main() {
 
 	// Perform a dry-run first to check if everything is correct
 	fmt.Println("> Upgrading package (dry run):")
-	resultUpgrade, err := client.DryRunTx(txUpgrade, false)
+	resultUpgrade, err := client.DryRunTransaction(txUpgrade, false)
 	if err != nil {
 		log.Fatalf("Dry run failed: %v", err)
 	}
@@ -198,14 +198,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	effectsUpgrade, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSigUpgrade}, txUpgrade, nil)
+	effectsUpgrade, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{userSigUpgrade}, txUpgrade, nil)
 	if err != nil {
 		log.Fatalf("Transaction failed: %v", err)
 	}
 	fmt.Println("Success")
 
 	// Print the new package version (should now be 2)
-	for _, changedObj := range (*effectsUpgrade).AsV1().ChangedObjects {
+	for _, changedObj := range (*effectsUpgrade).AsV1().ChangedObjects() {
 		if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutPackageWrite); ok {
 			pkgId := changedObj.ObjectId
 			fmt.Printf("New Package ID: %s\n", pkgId.ToHex())

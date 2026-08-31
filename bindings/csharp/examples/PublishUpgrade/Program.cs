@@ -34,13 +34,13 @@ class Program
         if (faucetReceipt == null)
             throw new Exception("Failed to request coins from faucet");
 
-        var builder = new TransactionBuilder(sender).WithClient(client);
+        var builder = client.TransactionBuilder(sender);
         builder.PublishPackage(packageData, "upgrade_cap");
         builder.TransferObjects(sender, new[] { PtbArgument.Assigned("upgrade_cap") });
         var tx = await builder.Finish();
 
         Console.WriteLine("> Publishing package (dry run):");
-        var result = await client.DryRunTx(tx);
+        var result = await client.DryRunTransaction(tx);
         if (result.Error != null)
             throw new Exception($"Dry run failed: {result.Error}");
         if (result.Effects == null)
@@ -49,12 +49,12 @@ class Program
 
         Console.WriteLine("> Publishing package:");
         var sig = privateKey.SignTransaction(tx);
-        var effects = await client.ExecuteTx(new[] { sig }, tx, WaitForTx.Finalized);
+        var effects = await client.ExecuteTransaction(new[] { sig }, tx, WaitForTransaction.Finalized);
         Console.WriteLine("Success");
 
         ObjectId? upgradeCap = null;
         ObjectId? packageId = null;
-        foreach (var changedObj in effects.AsV1().ChangedObjects)
+        foreach (var changedObj in effects.AsV1().ChangedObjects())
         {
             if (changedObj.OutputState is ObjectOut.ObjectWrite objWrite)
             {
@@ -80,7 +80,7 @@ class Program
         if (upgradeCap == null) throw new Exception("Missing upgrade cap");
         if (packageId == null) throw new Exception("Missing package id");
 
-        builder = new TransactionBuilder(sender).WithClient(client);
+        builder = client.TransactionBuilder(sender);
 
         builder.MoveCall(
             Address.Framework(),
@@ -115,7 +115,7 @@ class Program
         tx = await builder.Finish();
 
         Console.WriteLine("> Upgrading package (dry run):");
-        result = await client.DryRunTx(tx);
+        result = await client.DryRunTransaction(tx);
         if (result.Error != null)
             throw new Exception($"Dry run failed: {result.Error}");
         if (result.Effects == null)
@@ -124,10 +124,10 @@ class Program
 
         Console.WriteLine("> Upgrading package:");
         sig = privateKey.SignTransaction(tx);
-        effects = await client.ExecuteTx(new[] { sig }, tx);
+        effects = await client.ExecuteTransaction(new[] { sig }, tx);
         Console.WriteLine("Success");
 
-        foreach (var changedObj in effects.AsV1().ChangedObjects)
+        foreach (var changedObj in effects.AsV1().ChangedObjects())
         {
             if (changedObj.OutputState is ObjectOut.PackageWrite pkgWrite2)
             {

@@ -10,6 +10,7 @@ pub mod move_view_call_client;
 pub mod output_types;
 pub mod pagination;
 pub mod query_types;
+pub mod subscription;
 pub mod transaction_builder_client;
 
 uniffi::custom_type!(Value, String, {

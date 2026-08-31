@@ -38,7 +38,7 @@ func main() {
 		objIdFromHex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2"),
 	}
 
-	builder := iota_sdk.NewTransactionBuilder(fromAddress).WithClient(client)
+	builder := client.TransactionBuilder(fromAddress)
 	builder.TransferObjects(toAddress, objsToTransfer)
 
 	txn, err := builder.Finish()
@@ -49,7 +49,7 @@ func main() {
 	log.Printf("Signing Digest: %v", txn.SigningDigestHex())
 	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
-	res, err := client.DryRunTx(txn, false)
+	res, err := client.DryRunTransaction(txn, false)
 	if err != nil {
 		log.Fatalf("Failed to transfer objects: %v", err)
 	}

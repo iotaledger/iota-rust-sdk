@@ -13,7 +13,6 @@ import {
   ObjectFilter,
   PaginationFilter,
   StructTag,
-  transactionToJson,
   TransactionsFilter,
   initAsync,
 } from "@iota/sdk-wasm";
@@ -131,13 +130,13 @@ async function resolveUpgradeCapId(client, packageId) {
   );
   for (const effects of page.data) {
     const effectsV1 = effects.asV1();
-    for (const changedObj of effectsV1.changedObjects) {
+    for (const changedObj of effectsV1.changedObjects()) {
       if (!changedObj.outputState.isObjectWrite()) continue;
       const obj = await client.object(
         changedObj.objectId,
-        effectsV1.lamportVersion,
+        effectsV1.lamportVersion(),
       );
-      if (obj !== null && obj.asStructOpt() !== null) {
+      if (obj !== null && obj.asOptStruct() !== null) {
         if (
           obj.asStruct().structType.eq?.(StructTag.newUpgradeCap()) ??
           false
@@ -157,7 +156,7 @@ function sameObjectId(left, right) {
 function programmableTransactionJson(tx) {
   let parsed;
   try {
-    parsed = JSON.parse(transactionToJson(tx));
+    parsed = JSON.parse(tx.toJson());
   } catch {
     return null;
   }
@@ -251,7 +250,8 @@ async function wasPackagePublishedAsImmutable(client, packageId) {
       forwardPage(cursor),
     );
     for (const txData of page.data) {
-      if (publishesPackageAsImmutable(txData.tx.transaction)) return true;
+      if (publishesPackageAsImmutable(txData.signedTransaction.transaction))
+        return true;
     }
     if (page.pageInfo.hasNextPage) cursor = page.pageInfo.endCursor;
     else return false;
@@ -266,7 +266,12 @@ async function wasUpgradeCapUsedForMakeImmutable(client, upgradeCapId) {
       forwardPage(cursor),
     );
     for (const txData of page.data) {
-      if (usesUpgradeCapForMakeImmutable(txData.tx.transaction, upgradeCapId))
+      if (
+        usesUpgradeCapForMakeImmutable(
+          txData.signedTransaction.transaction,
+          upgradeCapId,
+        )
+      )
         return true;
     }
     if (page.pageInfo.hasNextPage) cursor = page.pageInfo.endCursor;

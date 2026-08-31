@@ -27,7 +27,7 @@ struct PrepareSendIotaMultiExample {
     let amounts = recipients.map { PtbArgument.u64(value: $0.1) }
     let labels = (0..<recipients.count).map { "coin\($0)" }
 
-    let builder = TransactionBuilder(sender: sender).withClient(client: client)
+    let builder = client.transactionBuilder(sender: sender)
 
     _ = builder.splitCoins(
       coin: PtbArgument.objectId(id: coinId), amounts: amounts, names: labels)
@@ -42,7 +42,7 @@ struct PrepareSendIotaMultiExample {
     print("Signing Digest:", txn.signingDigestHex())
     print("Txn Bytes:", txn.toBase64())
 
-    let res = try await client.dryRunTx(tx: txn)
+    let res = try await client.dryRunTransaction(transaction: txn)
 
     if res.error != nil {
       throw NSError(

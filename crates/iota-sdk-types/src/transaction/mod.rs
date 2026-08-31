@@ -105,7 +105,7 @@ pub struct SenderSignedTransaction(
         feature = "serde",
         serde(with = "::serde_with::As::<crate::_serde::SignedTransactionWithIntentMessage>")
     )]
-    pub SignedTransaction,
+    SignedTransaction,
 );
 
 impl SenderSignedTransaction {
@@ -114,6 +114,22 @@ impl SenderSignedTransaction {
             transaction,
             signatures,
         })
+    }
+
+    /// The signed transaction carried by this intent message.
+    pub fn signed_transaction(&self) -> &SignedTransaction {
+        &self.0
+    }
+
+    /// Access the signed transaction carried by this intent message mutably.
+    pub fn signed_transaction_mut(&mut self) -> &mut SignedTransaction {
+        &mut self.0
+    }
+
+    /// Consume this intent message and return the signed transaction it
+    /// carries.
+    pub fn into_signed_transaction(self) -> SignedTransaction {
+        self.0
     }
 }
 
@@ -589,33 +605,33 @@ impl TransactionKind {
     }
 
     /// Create a [`TransactionKind::Programmable`].
-    pub fn new_programmable(tx: ProgrammableTransaction) -> Self {
-        Self::Programmable(tx)
+    pub fn new_programmable(transaction: ProgrammableTransaction) -> Self {
+        Self::Programmable(transaction)
     }
 
     /// Create a [`TransactionKind::Genesis`].
-    pub fn new_genesis(tx: GenesisTransaction) -> Self {
-        Self::Genesis(tx)
+    pub fn new_genesis(transaction: GenesisTransaction) -> Self {
+        Self::Genesis(transaction)
     }
 
     /// Create a [`TransactionKind::ConsensusCommitPrologueV1`].
-    pub fn new_consensus_commit_prologue_v1(tx: ConsensusCommitPrologueV1) -> Self {
-        Self::ConsensusCommitPrologueV1(tx)
+    pub fn new_consensus_commit_prologue_v1(transaction: ConsensusCommitPrologueV1) -> Self {
+        Self::ConsensusCommitPrologueV1(transaction)
     }
 
     /// Create a [`TransactionKind::EndOfEpoch`].
-    pub fn new_end_of_epoch(tx: Vec<EndOfEpochTransactionKind>) -> Self {
-        Self::EndOfEpoch(tx)
+    pub fn new_end_of_epoch(transaction: Vec<EndOfEpochTransactionKind>) -> Self {
+        Self::EndOfEpoch(transaction)
     }
 
     /// Create a [`TransactionKind::RandomnessStateUpdate`].
-    pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
-        Self::RandomnessStateUpdate(tx)
+    pub fn new_randomness_state_update(transaction: RandomnessStateUpdate) -> Self {
+        Self::RandomnessStateUpdate(transaction)
     }
 
     /// Create a [`TransactionKind::TransactionDenyRulesUpdate`].
-    pub fn new_transaction_deny_rules_update(tx: TransactionDenyRulesUpdate) -> Self {
-        Self::TransactionDenyRulesUpdate(tx)
+    pub fn new_transaction_deny_rules_update(transaction: TransactionDenyRulesUpdate) -> Self {
+        Self::TransactionDenyRulesUpdate(transaction)
     }
 
     /// Returns `true` if this is a system transaction.
@@ -1503,7 +1519,7 @@ impl Input {
     /// Returns the object id referenced by this input, if any.
     ///
     /// Returns `None` for `Pure` inputs.
-    pub fn object_id_opt(&self) -> Option<&ObjectId> {
+    pub fn opt_object_id(&self) -> Option<&ObjectId> {
         match self {
             Self::Pure { .. } => None,
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(&obj_ref.object_id),
@@ -1521,17 +1537,9 @@ impl Input {
 
     /// Returns the [`ObjectReference`] if this is an `ImmutableOrOwned` or
     /// `Receiving` input.
-    pub fn as_object_ref_opt(&self) -> Option<&ObjectReference> {
+    pub fn as_opt_object_ref(&self) -> Option<&ObjectReference> {
         match self {
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(obj_ref),
-            _ => None,
-        }
-    }
-
-    /// Returns the pure value bytes if this is a `Pure` input.
-    pub fn as_pure_value_opt(&self) -> Option<&[u8]> {
-        match self {
-            Self::Pure(value) => Some(value),
             _ => None,
         }
     }
@@ -1719,8 +1727,8 @@ impl Command {
     }
 
     /// Create a command to construct a Move vector from elements.
-    pub fn new_make_move_vector(type_: Option<TypeTag>, elements: Vec<Argument>) -> Self {
-        Command::MakeMoveVector(MakeMoveVector { type_, elements })
+    pub fn new_make_move_vector(type_tag: Option<TypeTag>, elements: Vec<Argument>) -> Self {
+        Command::MakeMoveVector(MakeMoveVector { type_tag, elements })
     }
 
     /// Create a command to upgrade an existing Move package.
@@ -1904,7 +1912,7 @@ pub struct MakeMoveVector {
     /// This is required to be set when the type can't be inferred, for example
     /// when the set of provided arguments are all pure input values.
     #[cfg_attr(feature = "serde", serde(rename = "type"))]
-    pub type_: Option<TypeTag>,
+    pub type_tag: Option<TypeTag>,
     /// The set individual elements to build the vector with
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub elements: Vec<Argument>,
@@ -1913,7 +1921,7 @@ pub struct MakeMoveVector {
 impl crate::TreeDisplay for MakeMoveVector {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Make Move Vector")?;
-        w.option_leaf("Type", &self.type_, false)?;
+        w.option_leaf("Type Tag", &self.type_tag, false)?;
         w.leaves("Elements", &self.elements, true)
     }
 }
@@ -2020,7 +2028,7 @@ impl std::fmt::Display for Argument {
 impl Argument {
     crate::def_is!(Gas, Input, Result, NestedResult);
 
-    pub fn as_input_opt(&self) -> Option<u16> {
+    pub fn as_opt_input(&self) -> Option<u16> {
         if let Self::Input(idx) = self {
             Some(*idx)
         } else {
@@ -2029,10 +2037,10 @@ impl Argument {
     }
 
     pub fn as_input(&self) -> u16 {
-        self.as_input_opt().expect("not an input")
+        self.as_opt_input().expect("not an input")
     }
 
-    pub fn as_result_opt(&self) -> Option<u16> {
+    pub fn as_opt_result(&self) -> Option<u16> {
         if let Self::Result(idx) = self {
             Some(*idx)
         } else {
@@ -2041,10 +2049,10 @@ impl Argument {
     }
 
     pub fn as_result(&self) -> u16 {
-        self.as_result_opt().expect("not a result")
+        self.as_opt_result().expect("not a result")
     }
 
-    pub fn as_nested_result_opt(&self) -> Option<(u16, u16)> {
+    pub fn as_opt_nested_result(&self) -> Option<(u16, u16)> {
         if let Self::NestedResult(idx0, idx1) = self {
             Some((*idx0, *idx1))
         } else {
@@ -2053,7 +2061,7 @@ impl Argument {
     }
 
     pub fn as_nested_result(&self) -> (u16, u16) {
-        self.as_nested_result_opt().expect("not a nested result")
+        self.as_opt_nested_result().expect("not a nested result")
     }
 
     /// Get the nested result for this result at the given index. Returns None
