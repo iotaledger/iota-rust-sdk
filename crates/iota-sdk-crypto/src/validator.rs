@@ -286,7 +286,7 @@ impl ValidatorCommitteeSignatureAggregator {
         let mut bitmap = roaring::RoaringBitmap::new();
         bitmap.insert(*member_idx as u32);
         let agg_sig = AggregateSignature::from_signature(
-            &Signature::from_bytes(signature.signature.inner())
+            &Signature::from_bytes(signature.signature.bytes())
                 .expect("signature was already verified"),
         );
 
@@ -296,7 +296,7 @@ impl ValidatorCommitteeSignatureAggregator {
                 bitmap.insert(*member_idx as u32);
                 agg_sig
                     .add_signature(
-                        &Signature::from_bytes(signature.signature.inner())
+                        &Signature::from_bytes(signature.signature.bytes())
                             .expect("signature was already verified"),
                         false,
                     )
