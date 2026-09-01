@@ -4,43 +4,6 @@
 
 mod _accessor_impls {
     #![allow(clippy::useless_conversion)]
-    impl super::GetCoinInfoRequest {
-        /// Sets `coin_type` with the provided value.
-        pub fn with_coin_type<T: Into<String>>(mut self, field: T) -> Self {
-            self.coin_type = Some(field.into());
-            self
-        }
-    }
-    impl super::GetCoinInfoResponse {
-        /// Sets `coin_type` with the provided value.
-        pub fn with_coin_type<T: Into<String>>(mut self, field: T) -> Self {
-            self.coin_type = Some(field.into());
-            self
-        }
-        /// Sets `metadata` with the provided value.
-        pub fn with_metadata<T: Into<super::super::coin::CoinMetadata>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.metadata = Some(field.into());
-            self
-        }
-        /// Sets `treasury` with the provided value.
-        pub fn with_treasury<T: Into<super::super::coin::CoinTreasury>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.treasury = Some(field.into());
-            self
-        }
-        /// Sets `regulated_metadata` with the provided value.
-        pub fn with_regulated_metadata<
-            T: Into<super::super::coin::RegulatedCoinMetadata>,
-        >(mut self, field: T) -> Self {
-            self.regulated_metadata = Some(field.into());
-            self
-        }
-    }
     impl super::ListDynamicFieldsRequest {
         /// Sets `parent` with the provided value.
         pub fn with_parent<T: Into<super::super::types::ObjectId>>(
@@ -148,6 +111,43 @@ mod _accessor_impls {
             field: T,
         ) -> Self {
             self.next_page_token = Some(field.into());
+            self
+        }
+    }
+    impl super::GetCoinInfoRequest {
+        /// Sets `coin_type` with the provided value.
+        pub fn with_coin_type<T: Into<String>>(mut self, field: T) -> Self {
+            self.coin_type = Some(field.into());
+            self
+        }
+    }
+    impl super::GetCoinInfoResponse {
+        /// Sets `coin_type` with the provided value.
+        pub fn with_coin_type<T: Into<String>>(mut self, field: T) -> Self {
+            self.coin_type = Some(field.into());
+            self
+        }
+        /// Sets `metadata` with the provided value.
+        pub fn with_metadata<T: Into<super::super::coin::CoinMetadata>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.metadata = Some(field.into());
+            self
+        }
+        /// Sets `treasury` with the provided value.
+        pub fn with_treasury<T: Into<super::super::coin::CoinTreasury>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.treasury = Some(field.into());
+            self
+        }
+        /// Sets `regulated_metadata` with the provided value.
+        pub fn with_regulated_metadata<
+            T: Into<super::super::coin::RegulatedCoinMetadata>,
+        >(mut self, field: T) -> Self {
+            self.regulated_metadata = Some(field.into());
             self
         }
     }

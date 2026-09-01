@@ -16,7 +16,6 @@ workspace = true
 bitflags = "2.13"
 heck = { version = ">=0.4, <=0.5" }
 itertools = "0.15.0"
-petgraph = "0.8"
 prettyplease = "0.3"
 proc-macro2.workspace = true
 prost.workspace = true
