@@ -363,7 +363,7 @@ impl Verifier<SimpleSignature> for Ed25519VerifyingKey {
             return Err(SignatureError::from_source("not an ed25519 signature"));
         };
 
-        if public_key.bytes().as_slice() != self.0.as_ref() {
+        if public_key.bytes() != self.0.as_ref() {
             return Err(SignatureError::from_source(
                 "public_key in signature does not match",
             ));

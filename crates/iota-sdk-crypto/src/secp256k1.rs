@@ -260,7 +260,7 @@ pub struct Secp256k1VerifyingKey(FcSecp256k1PublicKey);
 
 impl Secp256k1VerifyingKey {
     pub fn new(public_key: &Secp256k1PublicKey) -> Result<Self, SignatureError> {
-        FcSecp256k1PublicKey::from_bytes(public_key.bytes().as_ref())
+        FcSecp256k1PublicKey::from_bytes(public_key.bytes())
             .map(Self)
             .map_err(SignatureError::from_source)
     }
