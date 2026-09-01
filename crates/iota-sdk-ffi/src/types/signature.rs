@@ -3,8 +3,6 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::SignatureScheme;
-
 use crate::{
     error::Result,
     types::crypto::{
@@ -37,8 +35,7 @@ use crate::{
 /// Flag `%d05` is reserved: it was formerly used for the now-removed zklogin
 /// authenticator (which was never enabled on chain) and is intentionally
 /// skipped.
-#[uniffi::remote(Enum)]
-#[non_exhaustive]
+#[derive(Clone, uniffi::Enum)]
 #[repr(u8)]
 pub enum SignatureScheme {
     Ed25519 = 0x00,
@@ -48,6 +45,35 @@ pub enum SignatureScheme {
     Bls12381 = 0x04,
     PasskeyAuthenticator = 0x06,
     MoveAuthenticator = 0x07,
+}
+
+impl From<iota_sdk::types::SignatureScheme> for SignatureScheme {
+    fn from(value: iota_sdk::types::SignatureScheme) -> Self {
+        match value {
+            iota_sdk::types::SignatureScheme::Ed25519 => Self::Ed25519,
+            iota_sdk::types::SignatureScheme::Secp256k1 => Self::Secp256k1,
+            iota_sdk::types::SignatureScheme::Secp256r1 => Self::Secp256r1,
+            iota_sdk::types::SignatureScheme::Multisig => Self::Multisig,
+            iota_sdk::types::SignatureScheme::Bls12381 => Self::Bls12381,
+            iota_sdk::types::SignatureScheme::PasskeyAuthenticator => Self::PasskeyAuthenticator,
+            iota_sdk::types::SignatureScheme::MoveAuthenticator => Self::MoveAuthenticator,
+            _ => unimplemented!("a new SignatureScheme variant was added and needs to be handled"),
+        }
+    }
+}
+
+impl From<SignatureScheme> for iota_sdk::types::SignatureScheme {
+    fn from(value: SignatureScheme) -> Self {
+        match value {
+            SignatureScheme::Ed25519 => Self::Ed25519,
+            SignatureScheme::Secp256k1 => Self::Secp256k1,
+            SignatureScheme::Secp256r1 => Self::Secp256r1,
+            SignatureScheme::Multisig => Self::Multisig,
+            SignatureScheme::Bls12381 => Self::Bls12381,
+            SignatureScheme::PasskeyAuthenticator => Self::PasskeyAuthenticator,
+            SignatureScheme::MoveAuthenticator => Self::MoveAuthenticator,
+        }
+    }
 }
 
 /// A signature from a user
@@ -109,7 +135,7 @@ impl UserSignature {
 
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -269,7 +295,7 @@ impl SimpleSignature {
     }
 
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -302,86 +328,88 @@ impl SimpleSignature {
         self.0.is_ed25519()
     }
 
-    pub fn ed25519_sig_opt(&self) -> Option<Arc<Ed25519Signature>> {
+    pub fn opt_ed25519_signature(&self) -> Option<Arc<Ed25519Signature>> {
         self.0
-            .as_ed25519_sig_opt()
+            .as_opt_ed25519_signature()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn ed25519_sig(&self) -> Ed25519Signature {
-        (*self.0.as_ed25519_sig()).into()
+    pub fn ed25519_signature(&self) -> Ed25519Signature {
+        (*self.0.as_ed25519_signature()).into()
     }
 
-    pub fn ed25519_pub_key_opt(&self) -> Option<Arc<Ed25519PublicKey>> {
+    pub fn opt_ed25519_public_key(&self) -> Option<Arc<Ed25519PublicKey>> {
         self.0
-            .as_ed25519_pub_key_opt()
+            .as_opt_ed25519_public_key()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn ed25519_pub_key(&self) -> Ed25519PublicKey {
-        (*self.0.as_ed25519_pub_key()).into()
+    pub fn ed25519_public_key(&self) -> Ed25519PublicKey {
+        (*self.0.as_ed25519_public_key()).into()
     }
 
     pub fn is_secp256k1(&self) -> bool {
         self.0.is_secp256k1()
     }
 
-    pub fn secp256k1_sig_opt(&self) -> Option<Arc<Secp256k1Signature>> {
+    pub fn opt_secp256k1_signature(&self) -> Option<Arc<Secp256k1Signature>> {
         self.0
-            .as_secp256k1_sig_opt()
+            .as_opt_secp256k1_signature()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn secp256k1_sig(&self) -> Secp256k1Signature {
-        (*self.0.as_secp256k1_sig()).into()
+    pub fn secp256k1_signature(&self) -> Secp256k1Signature {
+        (*self.0.as_secp256k1_signature()).into()
     }
 
-    pub fn secp256k1_pub_key_opt(&self) -> Option<Arc<Secp256k1PublicKey>> {
+    pub fn opt_secp256k1_public_key(&self) -> Option<Arc<Secp256k1PublicKey>> {
         self.0
-            .as_secp256k1_pub_key_opt()
+            .as_opt_secp256k1_public_key()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn secp256k1_pub_key(&self) -> Secp256k1PublicKey {
-        (*self.0.as_secp256k1_pub_key()).into()
+    pub fn secp256k1_public_key(&self) -> Secp256k1PublicKey {
+        (*self.0.as_secp256k1_public_key()).into()
     }
 
     pub fn is_secp256r1(&self) -> bool {
         self.0.is_secp256r1()
     }
 
-    pub fn secp256r1_sig_opt(&self) -> Option<Arc<Secp256r1Signature>> {
+    pub fn opt_secp256r1_signature(&self) -> Option<Arc<Secp256r1Signature>> {
         self.0
-            .as_secp256r1_sig_opt()
+            .as_opt_secp256r1_signature()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn secp256r1_sig(&self) -> Secp256r1Signature {
-        (*self.0.as_secp256r1_sig()).into()
+    pub fn secp256r1_signature(&self) -> Secp256r1Signature {
+        (*self.0.as_secp256r1_signature()).into()
     }
 
-    pub fn secp256r1_pub_key_opt(&self) -> Option<Arc<Secp256r1PublicKey>> {
+    pub fn opt_secp256r1_public_key(&self) -> Option<Arc<Secp256r1PublicKey>> {
         self.0
-            .as_secp256r1_pub_key_opt()
+            .as_opt_secp256r1_public_key()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
     }
 
-    pub fn secp256r1_pub_key(&self) -> Secp256r1PublicKey {
-        (*self.0.as_secp256r1_pub_key()).into()
+    pub fn secp256r1_public_key(&self) -> Secp256r1PublicKey {
+        (*self.0.as_secp256r1_public_key()).into()
     }
 }
 
 crate::export_iota_types_objects_bcs_conversion!(UserSignature, SimpleSignature);
 crate::export_iota_types_objects_json_conversion!(UserSignature, SimpleSignature);
+crate::export_iota_types_display!(SignatureScheme);
+crate::export_iota_types_objects_display!(UserSignature, SimpleSignature);

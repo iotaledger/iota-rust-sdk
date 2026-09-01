@@ -7,11 +7,11 @@ use std::{
     time::Duration,
 };
 
-use iota_sdk::graphql_client::WaitForTx;
-
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, output_types::DryRunResult},
+    graphql::{
+        api::transactions::WaitForTransaction, client::GraphQLClient, output_types::DryRunResult,
+    },
     transaction_builder::{
         Payment,
         ptb_arg::{MoveArg, PTBArgument},
@@ -451,6 +451,16 @@ impl ClientTransactionBuilder {
         ))
     }
 
+    /// Convert this builder into a transaction with the given gas budget,
+    /// used as-is (no estimation or minimum clamp) and overriding any budget
+    /// set via `gas_budget`.
+    pub async fn finish_with_budget(&self, gas_budget: u64) -> Result<Transaction> {
+        Ok(Transaction(
+            self.read(|builder| builder.clone().finish_with_budget(gas_budget))
+                .await?,
+        ))
+    }
+
     /// Dry run the transaction.
     #[uniffi::method(default(skip_checks = false))]
     pub async fn dry_run(&self, skip_checks: bool) -> Result<DryRunResult> {
@@ -465,10 +475,10 @@ impl ClientTransactionBuilder {
     pub async fn execute(
         &self,
         signer: &TransactionSigner,
-        wait_for: Option<WaitForTx>,
+        wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         Ok(self
-            .read(|builder| builder.clone().execute(signer, wait_for))
+            .read(|builder| builder.clone().execute(signer, wait_for.map(Into::into)))
             .await?
             .into())
     }
@@ -479,13 +489,15 @@ impl ClientTransactionBuilder {
         &self,
         signer: &TransactionSigner,
         sponsor_signer: &TransactionSigner,
-        wait_for: Option<WaitForTx>,
+        wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         Ok(self
             .read(|builder| {
-                builder
-                    .clone()
-                    .execute_with_sponsor(signer, sponsor_signer, wait_for)
+                builder.clone().execute_with_sponsor(
+                    signer,
+                    sponsor_signer,
+                    wait_for.map(Into::into),
+                )
             })
             .await?
             .into())

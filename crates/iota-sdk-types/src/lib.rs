@@ -146,8 +146,8 @@ pub use crypto::{
     INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError, IntentMessage, IntentScope,
     IntentVersion, InvalidSignatureScheme, MoveAuthenticator, MoveAuthenticatorV1,
     MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberSignature,
-    PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey, PublicKeyExt,
-    Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
+    PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey, PublicKeyError,
+    PublicKeyExt, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
     SignatureScheme, SimpleSignature, UserSignature,
 };
 pub use digest::{
@@ -168,7 +168,9 @@ pub use execution_status::{
 };
 pub use framework::Coin;
 pub use gas::GasCostSummary;
-pub use move_core::{Identifier, StructTag, TypeParseError, TypeTag};
+pub use move_core::{
+    Identifier, MAX_IDENTIFIER_LENGTH, MAX_TYPE_TAG_NESTING, StructTag, TypeParseError, TypeTag,
+};
 pub use move_package::{MovePackage, MovePackageData, TypeOrigin, UpgradeInfo, UpgradePolicy};
 pub use object::{
     GenesisObject, MoveObjectType, MoveStruct, MoveStructContentsError, Object, ObjectData,

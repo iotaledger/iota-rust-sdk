@@ -32,3 +32,5 @@ impl Coin {
         self.0.balance()
     }
 }
+
+crate::export_iota_types_objects_display!(Coin);

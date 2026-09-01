@@ -292,7 +292,7 @@ private func resolveUpgradeCapId(
         objectId: changedObj.objectId,
         version: effectsV1.lamportVersion()
       ),
-        object.asStructOpt()?.structType == StructTag.newUpgradeCap()
+        object.asOptStruct()?.structType == StructTag.newUpgradeCap()
       {
         return changedObj.objectId
       }
@@ -426,7 +426,7 @@ private func wasPackagePublishedAsImmutable(
     )
 
     for txData in page.data {
-      if try publishesPackageAsImmutable(txData.tx.transaction) {
+      if try publishesPackageAsImmutable(txData.signedTransaction.transaction) {
         return true
       }
     }
@@ -453,7 +453,7 @@ private func wasUpgradeCapUsedForMakeImmutable(
 
     for txData in page.data {
       if try usesUpgradeCapForMakeImmutable(
-        txData.tx.transaction,
+        txData.signedTransaction.transaction,
         upgradeCapId: upgradeCapId
       ) {
         return true

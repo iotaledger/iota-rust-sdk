@@ -1,10 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::{
-    crypto::{Signer, ToFromBech32, Verifier},
-    types::SignatureScheme,
-};
+use iota_sdk::crypto::{Signer, ToFromBech32, Verifier};
 
 use crate::{
     crypto::{
@@ -13,7 +10,7 @@ use crate::{
     error::Result,
     types::{
         crypto::{intent::PersonalMessage, public_key::PublicKey},
-        signature::SimpleSignature,
+        signature::{SignatureScheme, SimpleSignature},
     },
 };
 #[derive(derive_more::From, uniffi::Object)]
@@ -59,7 +56,7 @@ impl SimpleKeypair {
     }
 
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     pub fn verifying_key(&self) -> SimpleVerifyingKey {
@@ -150,7 +147,7 @@ pub struct SimpleVerifyingKey(iota_sdk::crypto::simple::SimpleVerifyingKey);
 #[uniffi::export]
 impl SimpleVerifyingKey {
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     pub fn public_key(&self) -> PublicKey {

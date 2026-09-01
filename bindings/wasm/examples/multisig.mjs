@@ -70,7 +70,7 @@ const builder = client.transactionBuilder(multisigAddress);
 builder.sendIota(recipientAddress, PtbArgument.u64(amount));
 const txn = await builder.finish();
 
-const dryRunResult = await client.dryRunTx(txn);
+const dryRunResult = await client.dryRunTransaction(txn);
 if (dryRunResult.error) {
   throw new Error(`Dry run failed: ${dryRunResult.error}`);
 }
@@ -87,7 +87,7 @@ const aggSig = aggregator.finish();
 
 // 9. Execute.
 const userSignature = UserSignature.newMultisig(aggSig);
-const effects = await client.executeTx([userSignature], txn);
+const effects = await client.executeTransaction([userSignature], txn);
 
 console.log(`Digest: ${hexEncode(effects.digest().toBytes())}`);
 console.log(`Transaction status: ${effects.asV1().status()}`);

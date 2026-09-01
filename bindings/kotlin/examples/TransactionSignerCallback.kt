@@ -31,7 +31,7 @@ fun main() = runBlocking {
         builder.sendIota(recipientAddress, PtbArgument.u64(amount))
 
         val signer = TransactionSigner(AsyncSigner(privateKey))
-        val effects = builder.execute(signer, WaitForTx.FINALIZED)
+        val effects = builder.execute(signer, WaitForTransaction.FINALIZED)
 
         println("Digest: ${hexEncode(effects.digest().toBytes())}")
         println("Transaction status: ${effects.asV1().status()}")
