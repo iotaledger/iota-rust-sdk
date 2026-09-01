@@ -10,12 +10,12 @@
 //! # Read Mask
 //!
 //! The default read mask is
-//! [`LIST_OWNED_OBJECTS_READ_MASK`](iota_grpc_types::read_masks::LIST_OWNED_OBJECTS_READ_MASK);
-//! the `bcs` field is required for the proto `Object` → SDK `Coin` conversion,
-//! so callers supplying a custom mask must include it.
+//! [`LIST_OWNED_OBJECTS_READ_MASK`](iota_grpc_types::read_masks::LIST_OWNED_OBJECTS_READ_MASK).
+//! Every `Coin` is decoded from the `bcs` field, so a mask that omits it is
+//! amended to include it rather than failing every object in the response.
 
 use iota_grpc_types::{
-    read_mask_fields::{IntoReadMask, OwnedObjectReadMask},
+    read_mask_fields::{IntoReadMask, OwnedObjectField, OwnedObjectReadMask},
     v1::{
         state_service::{ListOwnedObjectsRequest, state_service_client::StateServiceClient},
         types::Address as ProtoAddress,
@@ -44,6 +44,25 @@ define_list_query! {
     }
 }
 
+/// Add `bcs` to `mask` unless it is already covered.
+///
+/// Without it every object in the response fails to convert, and the mask is
+/// the only way a caller could ask for that, so there is nothing to preserve by
+/// passing it through untouched.
+fn with_bcs(mask: OwnedObjectReadMask) -> OwnedObjectReadMask {
+    let paths = mask.as_str();
+    let covered = paths
+        .split(',')
+        .any(|path| matches!(path.trim(), "*" | "bcs"));
+    if covered {
+        mask
+    } else if paths.trim().is_empty() {
+        OwnedObjectReadMask::from(OwnedObjectField::BCS)
+    } else {
+        OwnedObjectReadMask::from(format!("{paths},bcs"))
+    }
+}
+
 fn object_to_coin(obj: &iota_grpc_types::v1::object::Object) -> Result<Coin> {
     let sdk_obj = obj.object()?;
     Coin::try_from_object(&sdk_obj).map_err(|e| Error::from(TryFromProtoError::invalid("coin", e)))
@@ -58,13 +77,11 @@ impl Client {
     ///
     /// Each returned [`Coin`] is converted from the underlying proto
     /// `Object`. The `read_mask` controls which fields the server returns; use
-    /// `OwnedObjectReadMask::default()` for the default field mask (which
-    /// includes `bcs`, required for conversion), or pass an
+    /// `OwnedObjectReadMask::default()` for the default field mask, or pass an
     /// [`OwnedObjectReadMask`](iota_grpc_types::read_mask_fields::OwnedObjectReadMask)
-    /// — it **must** include
+    /// of your own. The conversion decodes the BCS payload, so
     /// [`OwnedObjectField::BCS`](iota_grpc_types::read_mask_fields::OwnedObjectField::BCS)
-    /// because the proto `Object` → SDK `Coin` conversion deserializes the BCS
-    /// payload.
+    /// is added to the mask when it is missing.
     ///
     /// # Parameters
     ///
@@ -156,7 +173,7 @@ impl Client {
         let base_request = ListOwnedObjectsRequest::default()
             .with_owner(ProtoAddress::default().with_address(Vec::from(owner)))
             .with_object_type(coin_type.to_string())
-            .with_read_mask(read_mask);
+            .with_read_mask(with_bcs(read_mask));
 
         GetCoinsQuery::new(
             self.state_service_client(),
@@ -165,5 +182,42 @@ impl Client {
             page_size,
             page_token,
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn default_mask_already_covers_bcs() {
+        let mask = OwnedObjectReadMask::default();
+        assert_eq!(with_bcs(mask.clone()).as_str(), mask.as_str());
+    }
+
+    #[test]
+    fn wildcard_covers_bcs() {
+        let mask = OwnedObjectReadMask::from(OwnedObjectField::ALL);
+        assert_eq!(with_bcs(mask).as_str(), "*");
+    }
+
+    /// The case that used to fail every object in the response.
+    #[test]
+    fn mask_without_bcs_gains_it() {
+        let mask = OwnedObjectReadMask::from(OwnedObjectField::REFERENCE);
+        assert_eq!(with_bcs(mask).as_str(), "reference,bcs");
+    }
+
+    #[test]
+    fn empty_mask_becomes_bcs_alone() {
+        let mask = OwnedObjectReadMask::from(String::new());
+        assert_eq!(with_bcs(mask).as_str(), "bcs");
+    }
+
+    /// `bcs` in any position counts, so the mask is not appended to twice.
+    #[test]
+    fn bcs_anywhere_in_the_mask_counts() {
+        let mask = OwnedObjectReadMask::from("bcs,reference.version".to_string());
+        assert_eq!(with_bcs(mask).as_str(), "bcs,reference.version");
     }
 }
