@@ -13,7 +13,7 @@
 
 #![cfg(feature = "serde")]
 use iota_sdk_move_types::{
-    FromObjectError, MoveType,
+    FromObjectError, MoveObject, MoveType,
     iota_framework::{
         balance::Balance,
         clock::Clock,
@@ -110,6 +110,14 @@ macro_rules! coin_marker_validation_tests {
                     $ty::<IOTA>::try_from(&object),
                     Err(FromObjectError::WrongType)
                 ));
+            }
+
+            /// The tag the mirror advertises has to be the one it accepts,
+            /// including the type parameter.
+            #[test]
+            fn struct_tag_matches_the_type_it_decodes() {
+                assert_eq!($ty::<IOTA>::struct_tag().to_string(), IOTA_TAG);
+                assert_eq!($ty::<Foo>::struct_tag().to_string(), FOO_TAG);
             }
 
             #[test]
@@ -267,6 +275,12 @@ macro_rules! object_tag_validation_tests {
             fn accepts_matching_tag() {
                 let object = object_with_tag($tag, FIXTURE);
                 <$ty>::try_from(&object).expect("tag matches");
+            }
+
+            /// The tag the mirror advertises has to be the one it accepts.
+            #[test]
+            fn struct_tag_matches_the_type_it_decodes() {
+                assert_eq!(<$ty>::struct_tag().to_string(), $tag);
             }
 
             #[test]

@@ -360,7 +360,7 @@ pub mod coin {
         }
     }
 
-    impl_try_from_object_generic!(CoinMetadata<T>);
+    impl_try_from_object_generic!(@struct_param CoinMetadata<T>);
 
     /// Rust version of the Move `iota::coin::RegulatedCoinMetadata<T>` type.
     ///
@@ -415,7 +415,7 @@ pub mod coin {
         }
     }
 
-    impl_try_from_object_generic!(TreasuryCap<T>);
+    impl_try_from_object_generic!(@struct_param TreasuryCap<T>);
 
     /// Rust version of the Move `iota::coin::DenyCapV1<T>` type.
     ///
@@ -1908,7 +1908,7 @@ pub mod coin_manager {
         pub metadata_immutable: bool,
     }
 
-    impl_try_from_object_generic!(CoinManager<T>);
+    impl_try_from_object_generic!(@struct_param CoinManager<T>);
 
     /// Rust version of the Move
     /// `iota::coin_manager::CoinManagerTreasuryCap<T>` type.
