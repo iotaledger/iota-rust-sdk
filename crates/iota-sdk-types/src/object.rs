@@ -291,7 +291,11 @@ impl MoveObjectType {
         Self(tag)
     }
 
-    pub fn into_inner(self) -> StructTag {
+    pub fn struct_tag(&self) -> &StructTag {
+        &self.0
+    }
+
+    pub fn into_struct_tag(self) -> StructTag {
         self.0
     }
 }

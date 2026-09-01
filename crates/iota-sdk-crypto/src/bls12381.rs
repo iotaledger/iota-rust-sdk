@@ -123,7 +123,7 @@ pub struct Bls12381VerifyingKey(pub(crate) PublicKey);
 
 impl Bls12381VerifyingKey {
     pub fn new(public_key: &Bls12381PublicKey) -> Result<Self, SignatureError> {
-        PublicKey::key_validate(public_key.inner())
+        PublicKey::key_validate(public_key.bytes())
             .map(Self)
             .map_err(BlstError)
             .map_err(SignatureError::from_source)
@@ -136,7 +136,7 @@ impl Bls12381VerifyingKey {
 
 impl Verifier<Bls12381Signature> for Bls12381VerifyingKey {
     fn verify(&self, message: &[u8], signature: &Bls12381Signature) -> Result<(), SignatureError> {
-        let signature = Signature::sig_validate(signature.inner(), true)
+        let signature = Signature::sig_validate(signature.bytes(), true)
             .map_err(BlstError)
             .map_err(SignatureError::from_source)?;
 
