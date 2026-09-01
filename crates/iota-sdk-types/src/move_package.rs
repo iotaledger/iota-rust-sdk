@@ -266,9 +266,9 @@ impl MovePackage {
         )
     }
 
-    /// It is important that this function is shared across both the calculation
-    /// of the digest for the package, and the calculation of the digest
-    /// on-chain.
+    // It is important that this function is shared across both the calculation
+    // of the digest for the package, and the calculation of the digest
+    // on-chain.
     #[cfg(feature = "hash")]
     pub fn compute_digest_for_modules_and_deps<'a>(
         modules: impl IntoIterator<Item = &'a Vec<u8>>,
@@ -296,7 +296,7 @@ impl MovePackage {
     }
 
     /// Retrieve the module from this package with the given [Identifier].
-    pub fn get_module(&self, name: &Identifier) -> Option<&Vec<u8>> {
+    pub fn module(&self, name: &Identifier) -> Option<&Vec<u8>> {
         self.modules.get(name)
     }
 

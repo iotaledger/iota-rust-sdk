@@ -36,6 +36,7 @@ on:
         required: true
         description: The package to publish.
         options:
+          - iota-sdk-bcs-schema
           - iota-sdk-types
           - iota-sdk-move-types
           - iota-sdk-crypto
@@ -84,6 +85,10 @@ jobs:
             echo "Invalid semver: $VERSION_OVERRIDE" >&2
             exit 1
           fi
+
+      - name: Verify the package can be published
+        if: startsWith(inputs.package, 'iota-sdk')
+        run: cargo publish --dry-run -p "${{ inputs.package }}" --all-features
 
       - name: Install cargo-release
         if: startsWith(inputs.package, 'iota-sdk')
