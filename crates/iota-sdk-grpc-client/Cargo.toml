@@ -25,6 +25,7 @@ tonic = { workspace = true, features = ["zstd"] }
 
 # internal dependencies
 iota-grpc-types.workspace = true
+iota-move-types = { workspace = true, features = ["serde"], optional = true }
 iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
@@ -33,6 +34,9 @@ default = ["tls-ring", "tls-native-roots"]
 tls-ring = ["tonic/tls-ring"]
 tls-native-roots = ["tonic/tls-native-roots"]
 tls-webpki-roots = ["tonic/tls-webpki-roots"]
+# Typed `list_owned_move_objects` queries, decoding each object into a
+# Move-type mirror.
+move-types = ["dep:iota-move-types"]
 
 [dev-dependencies]
 tokio.workspace = true

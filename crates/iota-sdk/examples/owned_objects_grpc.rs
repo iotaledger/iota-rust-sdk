@@ -11,6 +11,7 @@
 use eyre::Result;
 use iota_sdk::{
     grpc_client::{Client, read_mask_fields::OwnedObjectReadMask},
+    move_types::iota_system::staking_pool::StakedIota,
     types::{Address, StructTag},
 };
 
@@ -48,6 +49,19 @@ async fn main() -> Result<()> {
     for obj in coins.body() {
         let r = obj.object_reference()?;
         println!("  {}  v{}", r.object_id, r.version);
+    }
+
+    // Same builder, but the type filter comes from `StakedIota` and each
+    // object arrives decoded, so neither the type string nor the BCS step
+    // above appears here.
+    let staked = client
+        .list_owned_move_objects::<StakedIota>(owner, 25, None)
+        .collect(Some(50))
+        .await?;
+    println!("---");
+    println!("StakedIota objects ({} returned):", staked.body().len());
+    for stake in staked.body() {
+        println!("  {}  {} nanos", stake.id(), stake.principal());
     }
 
     Ok(())
