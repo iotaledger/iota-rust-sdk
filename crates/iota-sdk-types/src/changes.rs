@@ -79,10 +79,13 @@ impl crate::TreeDisplay for BalanceChange {
 
 /// What a transaction did to one object, named as a kind.
 ///
-/// Deriving this needs the objects as well as the effects, since `object_type`
-/// and `owner` are not in the effects. Where only the effects are at hand,
-/// [`ChangedObject`](crate::ChangedObject) carries each side's state, and the
-/// object sets report the version each changed object ends at.
+/// Not a wire type: this is the output of [`derive_object_changes`], computed
+/// from the effects and the objects they name.
+///
+/// Naming the kind needs the objects as well as the effects, since
+/// `object_type` and `owner` are not in the effects. Where only the effects are
+/// at hand, [`ChangedObject`](crate::ChangedObject) carries each side's state,
+/// and the object sets report the version each changed object ends at.
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub enum ObjectChange {
