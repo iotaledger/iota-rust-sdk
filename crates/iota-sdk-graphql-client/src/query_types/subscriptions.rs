@@ -13,7 +13,7 @@ use iota_types::{SenderSignedTransaction, SignedTransaction};
 use crate::{
     error::{self, Error, Kind},
     query_types::{
-        Address, Base64, DateTime, Event, GQLAddress, JsonValue, MoveData, MoveType,
+        Address, Base64, DateTime, Event, GraphQLAddress, JsonValue, MoveData, MoveType,
         TransactionBlockKindInput, normalized_move::MoveModuleQuery, schema,
     },
 };
@@ -175,8 +175,9 @@ pub struct Lagged {
 pub struct SubscriptionEvent {
     pub transaction_block: Option<TxBlockDigest>,
     pub sending_module: Option<MoveModuleQuery>,
-    pub sender: Option<GQLAddress>,
-    pub type_: MoveType,
+    pub sender: Option<GraphQLAddress>,
+    #[cynic(rename = "type")]
+    pub move_type: MoveType,
     pub bcs: Base64,
     pub timestamp: Option<DateTime>,
     pub data: MoveData,
@@ -197,7 +198,7 @@ impl From<SubscriptionEvent> for Event {
         Event {
             sending_module: event.sending_module,
             sender: event.sender,
-            type_: event.type_,
+            move_type: event.move_type,
             bcs: event.bcs,
             timestamp: event.timestamp,
             data: event.data,

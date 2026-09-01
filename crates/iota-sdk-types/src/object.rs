@@ -80,6 +80,60 @@ impl crate::TreeDisplay for ObjectReference {
     }
 }
 
+/// An [`ObjectReference`] paired with the owner the object has at that version.
+///
+/// Not a wire type: this is how transaction effects report an object they
+/// touched, since a reference alone does not say who owns it.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct OwnedObjectReference {
+    /// The object's reference.
+    pub reference: ObjectReference,
+    /// The owner the object has at that version.
+    pub owner: Owner,
+}
+
+impl OwnedObjectReference {
+    /// Pairs a reference with the owner the object has at that version.
+    pub const fn new(reference: ObjectReference, owner: Owner) -> Self {
+        Self { reference, owner }
+    }
+}
+
+impl crate::TreeDisplay for OwnedObjectReference {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Owned Object Reference")?;
+        w.child("Reference", &self.reference, false)?;
+        w.leaf("Owner", &self.owner, true)
+    }
+}
+
+/// An [`ObjectId`] paired with one of that object's versions.
+///
+/// Not a wire type: this is how transaction effects report the version an
+/// object was at before the transaction changed it.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct ObjectVersion {
+    /// The object's id.
+    pub object_id: ObjectId,
+    /// The version the object is at.
+    pub version: Version,
+}
+
+impl ObjectVersion {
+    /// Pairs an object id with one of that object's versions.
+    pub const fn new(object_id: ObjectId, version: Version) -> Self {
+        Self { object_id, version }
+    }
+}
+
+impl crate::TreeDisplay for ObjectVersion {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Object Version")?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf("Version", &self.version, true)
+    }
+}
+
 /// Enum of different types of ownership for an object.
 ///
 /// # BCS
@@ -237,7 +291,11 @@ impl MoveObjectType {
         Self(tag)
     }
 
-    pub fn into_inner(self) -> StructTag {
+    pub fn struct_tag(&self) -> &StructTag {
+        &self.0
+    }
+
+    pub fn into_struct_tag(self) -> StructTag {
         self.0
     }
 }
@@ -558,7 +616,7 @@ impl Object {
     }
 
     /// Try to interpret this object as a move struct
-    pub fn as_struct_opt(&self) -> Option<&MoveStruct> {
+    pub fn as_opt_struct(&self) -> Option<&MoveStruct> {
         match &self.data {
             ObjectData::Struct(struct_) => Some(struct_),
             _ => None,
@@ -567,11 +625,11 @@ impl Object {
 
     /// Interpret this object as a move struct
     pub fn as_struct(&self) -> &MoveStruct {
-        self.as_struct_opt().expect("not a move struct")
+        self.as_opt_struct().expect("not a move struct")
     }
 
     /// Try to interpret this object as a move package
-    pub fn as_package_opt(&self) -> Option<&MovePackage> {
+    pub fn as_opt_package(&self) -> Option<&MovePackage> {
         match &self.data {
             ObjectData::Package(package) => Some(package),
             _ => None,
@@ -580,7 +638,7 @@ impl Object {
 
     /// Interpret this object as a move package
     pub fn as_package(&self) -> &MovePackage {
-        self.as_package_opt().expect("not a move package")
+        self.as_opt_package().expect("not a move package")
     }
 
     /// Return this object's owner
@@ -610,7 +668,7 @@ impl Object {
     pub fn to_rust<'de, T: serde::Deserialize<'de>>(
         &'de self,
     ) -> Result<T, Box<dyn std::error::Error + Send + Sync>> {
-        let contents = self.as_struct_opt().ok_or("not a struct")?.contents();
+        let contents = self.as_opt_struct().ok_or("not a struct")?.contents();
         Ok(bcs::from_bytes::<T>(contents)?)
     }
 
@@ -651,14 +709,14 @@ impl Object {
 
     /// Returns true if this object is a gas coin.
     pub fn is_gas_coin(&self) -> bool {
-        self.as_struct_opt()
+        self.as_opt_struct()
             .is_some_and(|move_object| move_object.struct_tag().is_gas_coin())
     }
 
     /// Returns the coin's type parameter if this object is a coin.
-    pub fn coin_type_opt(&self) -> Option<&TypeTag> {
-        self.as_struct_opt()
-            .and_then(|move_object| move_object.struct_tag().coin_type_opt())
+    pub fn opt_coin_type(&self) -> Option<&TypeTag> {
+        self.as_opt_struct()
+            .and_then(|move_object| move_object.struct_tag().opt_coin_type())
     }
 
     /// Returns the address of the single owner of this object (address- or
@@ -753,6 +811,8 @@ impl crate::TreeDisplay for GenesisObject {
 
 crate::impl_tree_display!(
     ObjectReference,
+    OwnedObjectReference,
+    ObjectVersion,
     ObjectData,
     MoveStruct,
     Object,
@@ -829,7 +889,7 @@ mod serialization {
 
     impl<'a> MoveObjectTypeRef<'a> {
         fn from_struct_tag(s: &'a StructTag) -> Self {
-            if let Some(coin_type) = s.coin_type_opt() {
+            if let Some(coin_type) = s.opt_coin_type() {
                 if let TypeTag::Struct(s_inner) = coin_type
                     && s_inner.address() == Address::FRAMEWORK
                     && s_inner.module() == "iota"

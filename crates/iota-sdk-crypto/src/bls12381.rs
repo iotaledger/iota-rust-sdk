@@ -23,8 +23,16 @@ impl std::fmt::Display for BlstError {
 
 impl std::error::Error for BlstError {}
 
-#[derive(Clone)]
+#[derive(Clone, zeroize::Zeroize, zeroize::ZeroizeOnDrop)]
 pub struct Bls12381PrivateKey(SecretKey);
+
+impl PartialEq for Bls12381PrivateKey {
+    fn eq(&self, other: &Self) -> bool {
+        zeroize::Zeroizing::new(self.0.to_bytes()) == zeroize::Zeroizing::new(other.0.to_bytes())
+    }
+}
+
+impl Eq for Bls12381PrivateKey {}
 
 impl std::fmt::Debug for Bls12381PrivateKey {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -115,7 +123,7 @@ pub struct Bls12381VerifyingKey(pub(crate) PublicKey);
 
 impl Bls12381VerifyingKey {
     pub fn new(public_key: &Bls12381PublicKey) -> Result<Self, SignatureError> {
-        PublicKey::key_validate(public_key.inner())
+        PublicKey::key_validate(public_key.bytes())
             .map(Self)
             .map_err(BlstError)
             .map_err(SignatureError::from_source)
@@ -128,7 +136,7 @@ impl Bls12381VerifyingKey {
 
 impl Verifier<Bls12381Signature> for Bls12381VerifyingKey {
     fn verify(&self, message: &[u8], signature: &Bls12381Signature) -> Result<(), SignatureError> {
-        let signature = Signature::sig_validate(signature.inner(), true)
+        let signature = Signature::sig_validate(signature.bytes(), true)
             .map_err(BlstError)
             .map_err(SignatureError::from_source)?;
 

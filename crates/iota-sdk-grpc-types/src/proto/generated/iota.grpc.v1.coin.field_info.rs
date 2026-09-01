@@ -7,10 +7,6 @@ mod _field_impls {
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectId;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectIdFieldPathBuilder;
     impl CoinMetadata {
         pub const ID_FIELD: &'static MessageField = &MessageField {
             name: "id",
@@ -18,7 +14,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const DECIMALS_FIELD: &'static MessageField = &MessageField {
             name: "decimals",
@@ -66,7 +62,7 @@ mod _field_impls {
             number: 7i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const METADATA_CAP_STATE_FIELD: &'static MessageField = &MessageField {
             name: "metadata_cap_state",
@@ -109,9 +105,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(CoinMetadata::ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn decimals(mut self) -> String {
             self.path.push(CoinMetadata::DECIMALS_FIELD.name);
@@ -133,9 +129,9 @@ mod _field_impls {
             self.path.push(CoinMetadata::ICON_URL_FIELD.name);
             self.finish()
         }
-        pub fn metadata_cap_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn metadata_cap_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(CoinMetadata::METADATA_CAP_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn metadata_cap_state(mut self) -> String {
             self.path.push(CoinMetadata::METADATA_CAP_STATE_FIELD.name);
@@ -149,7 +145,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const TOTAL_SUPPLY_FIELD: &'static MessageField = &MessageField {
             name: "total_supply",
@@ -195,9 +191,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(CoinTreasury::ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn total_supply(mut self) -> String {
             self.path.push(CoinTreasury::TOTAL_SUPPLY_FIELD.name);
@@ -215,7 +211,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const COIN_METADATA_OBJECT_FIELD: &'static MessageField = &MessageField {
             name: "coin_metadata_object",
@@ -223,7 +219,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const DENY_CAP_OBJECT_FIELD: &'static MessageField = &MessageField {
             name: "deny_cap_object",
@@ -231,7 +227,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const ALLOW_GLOBAL_PAUSE_FIELD: &'static MessageField = &MessageField {
             name: "allow_global_pause",
@@ -288,17 +284,19 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(RegulatedCoinMetadata::ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn coin_metadata_object(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn coin_metadata_object(
+            mut self,
+        ) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(RegulatedCoinMetadata::COIN_METADATA_OBJECT_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn deny_cap_object(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn deny_cap_object(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(RegulatedCoinMetadata::DENY_CAP_OBJECT_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn allow_global_pause(mut self) -> String {
             self.path.push(RegulatedCoinMetadata::ALLOW_GLOBAL_PAUSE_FIELD.name);

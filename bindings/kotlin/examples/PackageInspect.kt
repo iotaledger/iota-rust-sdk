@@ -18,7 +18,6 @@ import iota_sdk.StructTag
 import iota_sdk.Transaction
 import iota_sdk.TransactionsFilter
 import iota_sdk.Value
-import iota_sdk.transactionToJson
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -255,13 +254,13 @@ private suspend fun resolveUpgradeCapId(client: GraphQlClient, packageId: Object
 
     for (effects in page.data) {
         val effectsV1 = effects.asV1()
-        for (changedObj in effectsV1.changedObjects) {
+        for (changedObj in effectsV1.changedObjects()) {
             if (changedObj.outputState !is ObjectOut.ObjectWrite) {
                 continue
             }
 
-            val obj = client.`object`(changedObj.objectId, effectsV1.lamportVersion) ?: continue
-            if (obj.asStructOpt()?.structType == StructTag.newUpgradeCap()) {
+            val obj = client.`object`(changedObj.objectId, effectsV1.lamportVersion()) ?: continue
+            if (obj.asOptStruct()?.structType == StructTag.newUpgradeCap()) {
                 return changedObj.objectId
             }
         }
@@ -274,7 +273,7 @@ private fun sameObjectId(left: String?, right: String?): Boolean =
     left != null && right != null && left.equals(right, ignoreCase = true)
 
 private fun programmableTransactionJson(tx: Transaction): JsonObject? {
-    val root = jsonParser.parseToJsonElement(transactionToJson(tx)).jsonObject
+    val root = jsonParser.parseToJsonElement(tx.toJson()).jsonObject
     val txV1 = root["1"]?.jsonObject ?: return null
     val kind = txV1["kind"]?.jsonObject ?: return null
     return kind.takeIf { it["kind"]?.jsonPrimitive?.contentOrNull == "programmable_transaction" }
@@ -374,7 +373,7 @@ private suspend fun wasPackagePublishedAsImmutable(
             )
 
         for (txData in page.data) {
-            if (publishesPackageAsImmutable(txData.tx.transaction)) {
+            if (publishesPackageAsImmutable(txData.signedTransaction.transaction)) {
                 return true
             }
         }
@@ -401,7 +400,9 @@ private suspend fun wasUpgradeCapUsedForMakeImmutable(
             )
 
         for (txData in page.data) {
-            if (usesUpgradeCapForMakeImmutable(txData.tx.transaction, upgradeCapId)) {
+            if (
+                usesUpgradeCapForMakeImmutable(txData.signedTransaction.transaction, upgradeCapId)
+            ) {
                 return true
             }
         }

@@ -204,10 +204,10 @@ impl MultisigCommittee {
     }
 
     /// Get the index of a public key in the committee, if it is a member.
-    pub fn get_public_key_index(&self, pk: &PublicKey) -> Option<u8> {
+    pub fn index(&self, public_key: &PublicKey) -> Option<u8> {
         self.members
             .iter()
-            .position(|member| &member.public_key == pk)
+            .position(|member| &member.public_key == public_key)
             .map(|x| x as u8)
     }
 
@@ -374,7 +374,7 @@ impl MultisigAggregatedSignature {
                 .to_public_key()
                 .map_err(|_| MultisigError::UnallowedSignatureType)?;
             let index = committee
-                .get_public_key_index(&pk)
+                .index(&pk)
                 .ok_or(MultisigError::NoPublicKeyForSignature(sig_index))?;
             if bitmap & (1 << index) != 0 {
                 return Err(MultisigError::DuplicatePublicKey);
@@ -879,13 +879,6 @@ pub(crate) mod serialization {
                     MemberSignature::Passkey(authenticator) => Self::Passkey(authenticator),
                 })
             }
-        }
-    }
-
-    #[cfg(feature = "hash")]
-    impl From<&MultisigCommittee> for crate::Address {
-        fn from(committee: &MultisigCommittee) -> Self {
-            committee.derive_address()
         }
     }
 

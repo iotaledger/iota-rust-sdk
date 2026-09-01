@@ -618,7 +618,7 @@ async fn capture(
             // into FIXTURES as a `Source::ObjectId` pin.
             eprintln!("    └─ discovered: {}", object.id());
             let move_struct = object
-                .as_struct_opt()
+                .as_opt_struct()
                 .ok_or("object is not a Move struct")?;
             Ok(move_struct.contents().to_vec())
         }
@@ -629,7 +629,7 @@ async fn capture(
                 .await?
                 .ok_or_else(|| format!("object `{id_str}` not found on this network"))?;
             let move_struct = object
-                .as_struct_opt()
+                .as_opt_struct()
                 .ok_or("object is not a Move struct")?;
             Ok(move_struct.contents().to_vec())
         }
@@ -685,7 +685,7 @@ async fn capture(
             let df = page
                 .data()
                 .iter()
-                .find(|df| df.name.type_ == want)
+                .find(|df| df.name.type_tag == want)
                 .ok_or_else(|| {
                     format!("no dynamic field of name type `{name_type}` on `{parent}`")
                 })?;

@@ -1,4 +1,5 @@
 target/
+dist/
 *.lock
 .idea
 .DS_Store

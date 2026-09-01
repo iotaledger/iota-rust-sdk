@@ -1,19 +1,22 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`TransactionBuilderClient`] for the GRPC [`Client`].
+//! Implementation of the transaction builder client traits for the GRPC
+//! [`Client`].
 
 use std::time::Duration;
 
 use iota_grpc_types::{
     read_mask_fields::{
         EpochField, EpochReadMask, ExecuteTransactionReadMask, ObjectReadMask, OwnedObjectReadMask,
-        SimulateReadMask, TransactionField, TransactionReadMask,
+        SimulateField, SimulateReadMask, TransactionField, TransactionReadMask,
     },
     v1::transaction_execution_service::SimulatedTransaction,
 };
 use iota_transaction_builder::{
-    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClient, WaitForTx,
+    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClientBase,
+    TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
+    TransactionBuilderSimulationClient, WaitForTransaction,
 };
 use iota_types::{
     Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
@@ -25,10 +28,12 @@ use crate::{
     api::{Error, MetadataEnvelope, check_result_count, saturating_usize_to_u32},
 };
 
-/// How long [`TransactionBuilderClient::wait_for_tx`] polls before giving up.
-const WAIT_FOR_TX_TIMEOUT: Duration = Duration::from_secs(60);
-/// Interval between polls in [`TransactionBuilderClient::wait_for_tx`].
-const WAIT_FOR_TX_POLL_INTERVAL: Duration = Duration::from_millis(100);
+/// How long [`TransactionBuilderExecutionClient::wait_for_transaction`] polls
+/// before giving up.
+const WAIT_FOR_TRANSACTION_TIMEOUT: Duration = Duration::from_secs(60);
+/// Interval between polls in
+/// [`TransactionBuilderExecutionClient::wait_for_transaction`].
+const WAIT_FOR_TRANSACTION_POLL_INTERVAL: Duration = Duration::from_millis(100);
 
 /// Extract the result for the single item of a one-item batch request.
 ///
@@ -60,10 +65,11 @@ impl Client {
     }
 }
 
-impl TransactionBuilderClient for Client {
+impl TransactionBuilderClientBase for Client {
     type Error = crate::api::Error;
-    type DryRunResult = SimulatedTransaction;
+}
 
+impl TransactionBuilderLedgerClient for Client {
     async fn object(
         &self,
         object_id: ObjectId,
@@ -145,31 +151,146 @@ impl TransactionBuilderClient for Client {
         Ok(ProtocolConfig { attributes })
     }
 
-    async fn transaction(
+    async fn reference_gas_price(
+        &self,
+        epoch: impl Into<Option<u64>>,
+    ) -> Result<Option<u64>, Self::Error> {
+        let epoch = self
+            .get_epoch(
+                epoch.into(),
+                EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE),
+            )
+            .await?
+            .into_inner();
+        Ok(epoch.reference_gas_price)
+    }
+}
+
+impl TransactionBuilderSimulationClient for Client {
+    type DryRunResult = SimulatedTransaction;
+
+    async fn estimate_transaction_budget(
+        &self,
+        transaction: &Transaction,
+    ) -> Result<Option<u64>, Self::Error> {
+        // Simulate with relaxed checks and read the gas used from the resulting
+        // effects.
+        let simulated = self
+            .simulate_transaction(
+                transaction.clone(),
+                true,
+                SimulateField::EXECUTED_TRANSACTION_EFFECTS_BCS,
+            )
+            .await?;
+        let effects = simulated
+            .into_inner()
+            .executed_transaction()?
+            .effects()?
+            .effects()?;
+        Ok(match effects {
+            TransactionEffects::V1(v1) => Some(v1.gas_cost_summary.gas_used()),
+            _ => unimplemented!(
+                "a new TransactionEffects enum variant was added and needs to be handled"
+            ),
+        })
+    }
+
+    async fn dry_run_transaction(
+        &self,
+        transaction: &Transaction,
+        skip_checks: bool,
+    ) -> Result<Self::DryRunResult, Self::Error> {
+        Ok(self
+            .simulate_transaction(
+                transaction.clone(),
+                skip_checks,
+                SimulateReadMask::default(),
+            )
+            .await?
+            .into_inner())
+    }
+}
+
+impl TransactionBuilderExecutionClient for Client {
+    async fn execute_transaction(
+        &self,
+        signatures: &[UserSignature],
+        transaction: &Transaction,
+        wait_for: impl Into<Option<WaitForTransaction>>,
+    ) -> Result<TransactionEffects, Self::Error> {
+        let wait_for = wait_for.into();
+        let signed_transaction = SignedTransaction {
+            transaction: transaction.clone(),
+            signatures: signatures.to_vec(),
+        };
+        let result = Client::execute_transaction(
+            self,
+            signed_transaction,
+            None,
+            ExecuteTransactionReadMask::default(),
+        )
+        .await?
+        .into_inner();
+        let effects = result.effects()?.effects()?;
+
+        if let Some(wait_for) = wait_for {
+            self.wait_for_transaction(transaction.digest(), wait_for)
+                .await?;
+        }
+
+        Ok(effects)
+    }
+
+    async fn wait_for_transaction(
         &self,
         digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>, Self::Error> {
-        let response = self
-            .get_transactions(
-                [digest],
-                TransactionReadMask::from([
-                    TransactionField::TRANSACTION,
-                    TransactionField::SIGNATURES,
-                ]),
-            )
-            .await;
-
-        match single_item(response)? {
-            Some(tx) => {
-                let transaction = tx.transaction()?.transaction()?;
-                let signatures = Vec::<UserSignature>::try_from(tx.signatures()?)?;
-                Ok(Some(SignedTransaction {
-                    transaction,
-                    signatures,
-                }))
+        wait_for: WaitForTransaction,
+    ) -> Result<(), Self::Error> {
+        // Request only the field that proves the desired condition: any
+        // transaction field confirms it is indexed on the node, while
+        // `checkpoint` is only populated once it has been finalized.
+        let mask = match wait_for {
+            WaitForTransaction::IndexedOnNode => {
+                TransactionReadMask::from(TransactionField::TRANSACTION_DIGEST)
             }
-            None => Ok(None),
-        }
+            WaitForTransaction::Finalized => {
+                TransactionReadMask::from(TransactionField::CHECKPOINT)
+            }
+            _ => {
+                unimplemented!(
+                    "a new WaitForTransaction enum variant was added and needs to be handled"
+                )
+            }
+        };
+
+        let poll = async {
+            let mut interval = tokio::time::interval(WAIT_FOR_TRANSACTION_POLL_INTERVAL);
+            loop {
+                interval.tick().await;
+                let response = self.get_transactions([digest], mask.clone()).await;
+
+                // An absent transaction is not indexed yet — keep polling.
+                if let Some(tx) = single_item(response)? {
+                    let ready = match wait_for {
+                        WaitForTransaction::IndexedOnNode => true,
+                        WaitForTransaction::Finalized => tx.checkpoint_sequence_number().is_ok(),
+                        _ => unreachable!("checked above"),
+                    };
+                    if ready {
+                        return Ok(());
+                    }
+                }
+            }
+        };
+
+        tokio::time::timeout(WAIT_FOR_TRANSACTION_TIMEOUT, poll)
+            .await
+            .map_err(|_| {
+                Error::from(tonic::Status::deadline_exceeded(format!(
+                    "timed out waiting for transaction {digest} after {}s",
+                    WAIT_FOR_TRANSACTION_TIMEOUT.as_secs()
+                )))
+            })?
     }
 
     async fn transaction_effects(
@@ -187,127 +308,6 @@ impl TransactionBuilderClient for Client {
             Some(tx) => Ok(Some(tx.effects()?.effects()?)),
             None => Ok(None),
         }
-    }
-
-    async fn reference_gas_price(
-        &self,
-        epoch: impl Into<Option<u64>>,
-    ) -> Result<Option<u64>, Self::Error> {
-        let epoch = self
-            .get_epoch(
-                epoch.into(),
-                EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE),
-            )
-            .await?
-            .into_inner();
-        Ok(epoch.reference_gas_price)
-    }
-
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
-        // Simulate with relaxed checks and read the gas used from the resulting
-        // effects.
-        let simulated = self
-            .simulate_transaction(tx.clone(), true, SimulateReadMask::default())
-            .await?;
-        let effects = simulated
-            .into_inner()
-            .executed_transaction()?
-            .effects()?
-            .effects()?;
-        Ok(match effects {
-            TransactionEffects::V1(v1) => Some(v1.gas_cost_summary.gas_used()),
-            _ => unimplemented!(
-                "a new TransactionEffects enum variant was added and needs to be handled"
-            ),
-        })
-    }
-
-    async fn dry_run_tx(
-        &self,
-        tx: &Transaction,
-        skip_checks: bool,
-    ) -> Result<Self::DryRunResult, Self::Error> {
-        Ok(self
-            .simulate_transaction(tx.clone(), skip_checks, SimulateReadMask::default())
-            .await?
-            .into_inner())
-    }
-
-    async fn execute_tx(
-        &self,
-        signatures: &[UserSignature],
-        tx: &Transaction,
-        wait_for: impl Into<Option<WaitForTx>>,
-    ) -> Result<TransactionEffects, Self::Error> {
-        let wait_for = wait_for.into();
-        let signed_transaction = SignedTransaction {
-            transaction: tx.clone(),
-            signatures: signatures.to_vec(),
-        };
-        // The default execute read mask includes `effects`.
-        let result = self
-            .execute_transaction(
-                signed_transaction,
-                None,
-                ExecuteTransactionReadMask::default(),
-            )
-            .await?
-            .into_inner();
-        let effects = result.effects()?.effects()?;
-
-        if let Some(wait_for) = wait_for {
-            self.wait_for_tx(tx.digest(), wait_for).await?;
-        }
-
-        Ok(effects)
-    }
-
-    async fn wait_for_tx(
-        &self,
-        digest: TransactionDigest,
-        wait_for: WaitForTx,
-    ) -> Result<(), Self::Error> {
-        // Request only the field that proves the desired condition: any
-        // transaction field confirms it is indexed on the node, while
-        // `checkpoint` is only populated once it has been finalized.
-        let mask = match wait_for {
-            WaitForTx::IndexedOnNode => {
-                TransactionReadMask::from(TransactionField::TRANSACTION_DIGEST)
-            }
-            WaitForTx::Finalized => TransactionReadMask::from(TransactionField::CHECKPOINT),
-            _ => {
-                unimplemented!("a new WaitForTx enum variant was added and needs to be handled")
-            }
-        };
-
-        let poll = async {
-            let mut interval = tokio::time::interval(WAIT_FOR_TX_POLL_INTERVAL);
-            loop {
-                interval.tick().await;
-                let response = self.get_transactions([digest], mask.clone()).await;
-
-                // An absent transaction is not indexed yet — keep polling.
-                if let Some(tx) = single_item(response)? {
-                    let ready = match wait_for {
-                        WaitForTx::IndexedOnNode => true,
-                        WaitForTx::Finalized => tx.checkpoint_sequence_number().is_ok(),
-                        _ => unreachable!("checked above"),
-                    };
-                    if ready {
-                        return Ok(());
-                    }
-                }
-            }
-        };
-
-        tokio::time::timeout(WAIT_FOR_TX_TIMEOUT, poll)
-            .await
-            .map_err(|_| {
-                Error::from(tonic::Status::deadline_exceeded(format!(
-                    "timed out waiting for transaction {digest} after {}s",
-                    WAIT_FOR_TX_TIMEOUT.as_secs()
-                )))
-            })?
     }
 }
 

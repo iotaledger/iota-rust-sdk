@@ -18,7 +18,7 @@ class Program
         {
             // Sender and module are optional: some events (such as system- or
             // genesis-emitted ones) carry neither.
-            Console.WriteLine($"Type: {evt.Type}");
+            Console.WriteLine($"Type: {evt.MoveType}");
             Console.WriteLine($"Sender: {evt.Sender?.ToHex() ?? "none"}");
             Console.WriteLine($"Module: {evt.Module ?? "none"}");
             Console.WriteLine($"JSON: {evt.Json}");

@@ -16,11 +16,11 @@ fun main() {
         val transaction = Transaction.fromBase64(txBytesBase64)
 
         // Convert the transaction to JSON
-        val json = transactionToJson(transaction)
+        val json = transaction.toJson()
         println("Transaction as JSON:\n$json")
 
         // Convert the JSON back to a transaction
-        val transactionFromJson = transactionFromJson(json)
+        val transactionFromJson = Transaction.fromJson(json)
         println("Parsed transaction back from JSON: $transactionFromJson")
     } catch (e: Exception) {
         e.printStackTrace()

@@ -251,13 +251,6 @@ mod serialization {
         }
     }
 
-    #[cfg(feature = "hash")]
-    impl From<&PublicKey> for crate::Address {
-        fn from(pk: &PublicKey) -> Self {
-            pk.derive_address()
-        }
-    }
-
     impl FromStr for PublicKey {
         type Err = PublicKeyError;
 

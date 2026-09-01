@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{
-    EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, ObjectDigest,
-    ObjectId, Owner, TransactionDigest, TransactionEventsDigest, Version,
+    EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, InputSharedObject,
+    ObjectChange, ObjectDigest, ObjectId, ObjectReference, ObjectRemoveKind, ObjectVersion,
+    OwnedObjectReference, Owner, TransactionDigest, TransactionEventsDigest, Version, WriteKind,
 };
 
 /// Version 1 of TransactionEffects
@@ -269,7 +270,7 @@ pub enum ObjectIn {
 impl ObjectIn {
     crate::def_is!(Missing, Data);
 
-    pub fn version_opt(&self) -> Option<Version> {
+    pub fn opt_version(&self) -> Option<Version> {
         if let Self::Data { version, .. } = self {
             Some(*version)
         } else {
@@ -278,10 +279,10 @@ impl ObjectIn {
     }
 
     pub fn version(&self) -> Version {
-        self.version_opt().expect("object does not exist")
+        self.opt_version().expect("object does not exist")
     }
 
-    pub fn digest_opt(&self) -> Option<ObjectDigest> {
+    pub fn opt_digest(&self) -> Option<ObjectDigest> {
         if let Self::Data { digest, .. } = self {
             Some(*digest)
         } else {
@@ -290,10 +291,10 @@ impl ObjectIn {
     }
 
     pub fn digest(&self) -> ObjectDigest {
-        self.digest_opt().expect("object does not exist")
+        self.opt_digest().expect("object does not exist")
     }
 
-    pub fn owner_opt(&self) -> Option<Owner> {
+    pub fn opt_owner(&self) -> Option<Owner> {
         if let Self::Data { owner, .. } = self {
             Some(*owner)
         } else {
@@ -302,7 +303,7 @@ impl ObjectIn {
     }
 
     pub fn owner(&self) -> Owner {
-        self.owner_opt().expect("object does not exist")
+        self.opt_owner().expect("object does not exist")
     }
 }
 
@@ -357,7 +358,7 @@ pub enum ObjectOut {
 impl ObjectOut {
     crate::def_is!(Missing, ObjectWrite, PackageWrite);
 
-    pub fn object_digest_opt(&self) -> Option<ObjectDigest> {
+    pub fn opt_object_digest(&self) -> Option<ObjectDigest> {
         if let Self::ObjectWrite { digest, .. } = self {
             Some(*digest)
         } else {
@@ -366,10 +367,10 @@ impl ObjectOut {
     }
 
     pub fn object_digest(&self) -> ObjectDigest {
-        self.object_digest_opt().expect("object does not exist")
+        self.opt_object_digest().expect("object does not exist")
     }
 
-    pub fn object_owner_opt(&self) -> Option<Owner> {
+    pub fn opt_object_owner(&self) -> Option<Owner> {
         if let Self::ObjectWrite { owner, .. } = self {
             Some(*owner)
         } else {
@@ -378,10 +379,10 @@ impl ObjectOut {
     }
 
     pub fn object_owner(&self) -> Owner {
-        self.object_owner_opt().expect("object does not exist")
+        self.opt_object_owner().expect("object does not exist")
     }
 
-    pub fn package_version_opt(&self) -> Option<Version> {
+    pub fn opt_package_version(&self) -> Option<Version> {
         if let Self::PackageWrite { version, .. } = self {
             Some(*version)
         } else {
@@ -390,10 +391,10 @@ impl ObjectOut {
     }
 
     pub fn package_version(&self) -> Version {
-        self.package_version_opt().expect("object does not exist")
+        self.opt_package_version().expect("object does not exist")
     }
 
-    pub fn package_digest_opt(&self) -> Option<ObjectDigest> {
+    pub fn opt_package_digest(&self) -> Option<ObjectDigest> {
         if let Self::PackageWrite { digest, .. } = self {
             Some(*digest)
         } else {
@@ -402,7 +403,7 @@ impl ObjectOut {
     }
 
     pub fn package_digest(&self) -> ObjectDigest {
-        self.package_digest_opt().expect("package does not exist")
+        self.opt_package_digest().expect("package does not exist")
     }
 }
 
@@ -422,5 +423,287 @@ impl crate::TreeDisplay for ObjectOut {
                 w.leaf("Digest", digest, true)
             }
         }
+    }
+}
+
+impl TransactionEffectsV1 {
+    /// The id and pre-transaction version of every object that existed before
+    /// this transaction and was modified by it (mutated, wrapped or deleted).
+    pub fn modified_at_versions(&self) -> Vec<ObjectVersion> {
+        self.changed_objects
+            .iter()
+            .filter_map(|changed| {
+                changed
+                    .input_state
+                    .opt_version()
+                    .map(|version| ObjectVersion::new(changed.object_id, version))
+            })
+            .collect()
+    }
+
+    /// The shared objects this transaction was sequenced against, whether or
+    /// not it changed them. Excludes per-epoch config objects, which need no
+    /// sequencing.
+    pub fn input_shared_objects(&self) -> Vec<InputSharedObject> {
+        self.changed_objects
+            .iter()
+            .filter_map(|changed| match changed.input_state {
+                ObjectIn::Data {
+                    version,
+                    digest,
+                    owner: Owner::Shared { .. },
+                } => Some(InputSharedObject::Mutate(ObjectReference::new(
+                    changed.object_id,
+                    version,
+                    digest,
+                ))),
+                _ => None,
+            })
+            .chain(
+                self.unchanged_shared_objects
+                    .iter()
+                    .filter_map(|unchanged| {
+                        let object = |version| ObjectVersion::new(unchanged.object_id, version);
+                        match unchanged.kind {
+                            UnchangedSharedKind::ReadOnlyRoot { version, digest } => {
+                                Some(InputSharedObject::ReadOnly(ObjectReference::new(
+                                    unchanged.object_id,
+                                    version,
+                                    digest,
+                                )))
+                            }
+                            UnchangedSharedKind::ReadDeleted { version } => {
+                                Some(InputSharedObject::ReadDeleted(object(version)))
+                            }
+                            UnchangedSharedKind::MutateDeleted { version } => {
+                                Some(InputSharedObject::MutateDeleted(object(version)))
+                            }
+                            UnchangedSharedKind::Canceled { version } => {
+                                Some(InputSharedObject::Canceled(object(version)))
+                            }
+                            // A per-epoch config object is read without being
+                            // sequenced, so it is not an input in this sense.
+                            UnchangedSharedKind::PerEpochConfig => None,
+                        }
+                    }),
+            )
+            .collect()
+    }
+
+    /// What this transaction did to each object it changed, with the version
+    /// and digest each side is at resolved.
+    pub fn object_changes(&self) -> Vec<ObjectChange> {
+        self.changed_objects
+            .iter()
+            .map(|changed| {
+                let input = match changed.input_state {
+                    ObjectIn::Data {
+                        version, digest, ..
+                    } => Some((version, digest)),
+                    _ => None,
+                };
+                let output = match changed.output_state {
+                    ObjectOut::ObjectWrite { digest, .. } => Some((self.lamport_version, digest)),
+                    ObjectOut::PackageWrite { version, digest } => Some((version, digest)),
+                    _ => None,
+                };
+                ObjectChange {
+                    object_id: changed.object_id,
+                    input_version: input.map(|(version, _)| version),
+                    input_digest: input.map(|(_, digest)| digest),
+                    output_version: output.map(|(version, _)| version),
+                    output_digest: output.map(|(_, digest)| digest),
+                    id_operation: changed.id_operation,
+                }
+            })
+            .collect()
+    }
+
+    /// The reference and owner, before this transaction, of every object it
+    /// modified.
+    pub fn old_object_metadata(&self) -> Vec<OwnedObjectReference> {
+        self.changed_objects
+            .iter()
+            .filter_map(|changed| match changed.input_state {
+                ObjectIn::Data {
+                    version,
+                    digest,
+                    owner,
+                } => Some(OwnedObjectReference::new(
+                    ObjectReference::new(changed.object_id, version, digest),
+                    owner,
+                )),
+                _ => None,
+            })
+            .collect()
+    }
+
+    /// Objects (Move objects and packages) newly created by this transaction,
+    /// paired with their owner. Excludes objects created and then wrapped
+    /// within the same transaction.
+    pub fn created(&self) -> Vec<OwnedObjectReference> {
+        self.changed_objects
+            .iter()
+            .filter(|changed| {
+                changed.input_state.is_missing() && changed.id_operation == IdOperation::Created
+            })
+            .filter_map(|changed| self.output_reference(changed))
+            .collect()
+    }
+
+    /// Objects that existed before this transaction and whose contents it
+    /// updated (in-place mutations and system package upgrades), at their
+    /// post-transaction reference and owner.
+    pub fn mutated(&self) -> Vec<OwnedObjectReference> {
+        self.changed_objects
+            .iter()
+            .filter(|changed| changed.input_state.is_data())
+            .filter_map(|changed| self.output_reference(changed))
+            .collect()
+    }
+
+    /// Objects that were wrapped inside another object before this transaction
+    /// and that it promoted back to top-level objects in the store.
+    pub fn unwrapped(&self) -> Vec<OwnedObjectReference> {
+        self.changed_objects
+            .iter()
+            .filter(|changed| {
+                changed.input_state.is_missing()
+                    && changed.id_operation == IdOperation::None
+                    // A package is never wrapped, so never unwrapped either.
+                    && changed.output_state.is_object_write()
+            })
+            .filter_map(|changed| self.output_reference(changed))
+            .collect()
+    }
+
+    /// Objects that existed before this transaction and that it deleted.
+    /// References carry the version this transaction assigned and the
+    /// [`ObjectDigest::OBJECT_DELETED`] tombstone digest.
+    pub fn deleted(&self) -> Vec<ObjectReference> {
+        self.removed_references(
+            |changed| changed.input_state.is_data() && changed.id_operation == IdOperation::Deleted,
+            ObjectDigest::OBJECT_DELETED,
+        )
+    }
+
+    /// Objects unwrapped and then deleted within this same transaction, so
+    /// that they existed as top-level objects neither before nor after it.
+    /// References carry the version this transaction assigned and the
+    /// [`ObjectDigest::OBJECT_DELETED`] tombstone digest.
+    pub fn unwrapped_then_deleted(&self) -> Vec<ObjectReference> {
+        self.removed_references(
+            |changed| {
+                changed.input_state.is_missing() && changed.id_operation == IdOperation::Deleted
+            },
+            ObjectDigest::OBJECT_DELETED,
+        )
+    }
+
+    /// Objects that existed as top-level objects before this transaction and
+    /// that it wrapped inside another object, so they are no longer visible in
+    /// the object store. References carry the version this transaction assigned
+    /// and the [`ObjectDigest::OBJECT_WRAPPED`] tombstone digest.
+    pub fn wrapped(&self) -> Vec<ObjectReference> {
+        self.removed_references(
+            |changed| changed.input_state.is_data() && changed.id_operation == IdOperation::None,
+            ObjectDigest::OBJECT_WRAPPED,
+        )
+    }
+
+    /// Every object still in the store after this transaction, tagged with how
+    /// it got there: the created, mutated and unwrapped objects together.
+    /// Excludes the objects the transaction removed.
+    pub fn all_changed_objects(&self) -> Vec<(OwnedObjectReference, WriteKind)> {
+        let tagged = |kind| move |object| (object, kind);
+        self.mutated()
+            .into_iter()
+            .map(tagged(WriteKind::Mutate))
+            .chain(self.created().into_iter().map(tagged(WriteKind::Create)))
+            .chain(self.unwrapped().into_iter().map(tagged(WriteKind::Unwrap)))
+            .collect()
+    }
+
+    /// Every object that was in the store before this transaction and is not
+    /// after it, tagged with why: the deleted and wrapped objects together.
+    /// Excludes an object the transaction unwrapped and then deleted, which was
+    /// not in the store to begin with.
+    pub fn all_removed_objects(&self) -> Vec<(ObjectReference, ObjectRemoveKind)> {
+        let tagged = |kind| move |reference| (reference, kind);
+        self.deleted()
+            .into_iter()
+            .map(tagged(ObjectRemoveKind::Delete))
+            .chain(
+                self.wrapped()
+                    .into_iter()
+                    .map(tagged(ObjectRemoveKind::Wrap)),
+            )
+            .collect()
+    }
+
+    /// The post-transaction reference and owner of the gas object, or `None`
+    /// for a system transaction, which pays no gas and so names none.
+    pub fn gas_object(&self) -> Option<OwnedObjectReference> {
+        let changed = self.changed_objects.get(self.gas_object_index? as usize)?;
+        // Gas is paid in coins, so a gas object is never a package.
+        changed
+            .output_state
+            .is_object_write()
+            .then(|| self.output_reference(changed))?
+    }
+
+    /// The post-transaction reference and owner of a changed object, or `None`
+    /// if this transaction removed it from the store. A package carries its own
+    /// version; every other object takes the version this transaction assigned.
+    fn output_reference(&self, changed: &ChangedObject) -> Option<OwnedObjectReference> {
+        match changed.output_state {
+            ObjectOut::ObjectWrite { digest, owner } => Some(OwnedObjectReference::new(
+                ObjectReference::new(changed.object_id, self.lamport_version, digest),
+                owner,
+            )),
+            ObjectOut::PackageWrite { version, digest } => Some(OwnedObjectReference::new(
+                ObjectReference::new(changed.object_id, version, digest),
+                Owner::Immutable,
+            )),
+            _ => None,
+        }
+    }
+
+    /// References, carrying `digest` as their tombstone, to the objects this
+    /// transaction removed from the store that `select` accepts.
+    fn removed_references(
+        &self,
+        select: impl Fn(&ChangedObject) -> bool,
+        digest: ObjectDigest,
+    ) -> Vec<ObjectReference> {
+        self.changed_objects
+            .iter()
+            .filter(|changed| changed.output_state.is_missing() && select(changed))
+            .map(|changed| ObjectReference::new(changed.object_id, self.lamport_version, digest))
+            .collect()
+    }
+}
+
+#[cfg(all(feature = "proptest", test))]
+mod tests {
+    use test_strategy::proptest;
+
+    use super::TransactionEffectsV1;
+
+    /// The six object sets are selected by mutually exclusive combinations of
+    /// input state, output state and id operation, so together they report each
+    /// changed object at most once — for any effects, not only well-formed
+    /// ones. The fixtures cover the other half, that real effects leave none
+    /// out.
+    #[proptest]
+    fn object_sets_report_each_changed_object_at_most_once(effects: TransactionEffectsV1) {
+        let reported = effects.created().len()
+            + effects.mutated().len()
+            + effects.unwrapped().len()
+            + effects.deleted().len()
+            + effects.unwrapped_then_deleted().len()
+            + effects.wrapped().len();
+
+        assert!(reported <= effects.changed_objects.len());
     }
 }
