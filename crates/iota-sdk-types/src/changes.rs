@@ -80,8 +80,9 @@ impl crate::TreeDisplay for BalanceChange {
 
 /// What a transaction did to one object, named as a kind.
 ///
-/// Not a wire type: this is the output of [`derive_object_changes`], computed
-/// from the effects and the objects they name.
+/// Not a wire type: this is the output of
+/// [`TransactionEffectsV1::object_changes`], computed from the effects and the
+/// objects they name.
 ///
 /// Naming the kind needs the objects as well as the effects, since
 /// `object_type` and `owner` are not in the effects. Where only the effects are
@@ -302,6 +303,137 @@ impl TransactionEffectsV1 {
             })
             .collect())
     }
+
+    /// The object changes of this transaction, from these effects and the
+    /// objects it read and wrote.
+    ///
+    /// `sender` is the transaction's, which the effects do not carry.
+    /// `input_objects` provides the types of deleted and wrapped objects, so it
+    /// must hold them at the versions
+    /// [`TransactionEffectsV1::modified_at_versions`] gives.
+    ///
+    /// Errors if an object these effects name is missing from the sets —
+    /// skipping it would drop a change from the result.
+    pub fn object_changes<'a>(
+        &self,
+        sender: Address,
+        input_objects: impl IntoIterator<Item = &'a Object>,
+        output_objects: impl IntoIterator<Item = &'a Object>,
+    ) -> Result<Vec<ObjectChange>, DeriveChangesError> {
+        let mut object_changes = vec![];
+
+        let modified_at_versions = self
+            .modified_at_versions()
+            .into_iter()
+            .map(|modified| (modified.object_id, modified.version))
+            .collect::<BTreeMap<_, _>>();
+
+        let outputs: BTreeMap<(ObjectId, Version), &Object> = output_objects
+            .into_iter()
+            .map(|o| ((o.id(), o.version()), o))
+            .collect();
+
+        // Input objects are the objects at their modified-at versions, so they are
+        // unique per id and provide the pre-transaction state of removed objects.
+        let inputs_by_id: BTreeMap<ObjectId, &Object> =
+            input_objects.into_iter().map(|o| (o.id(), o)).collect();
+
+        for (changed, kind) in self.all_changed_objects() {
+            let OwnedObjectReference { reference, owner } = changed;
+            let ObjectReference {
+                object_id,
+                version,
+                digest,
+            } = reference;
+            let Some(object) = outputs.get(&(object_id, version)) else {
+                return Err(DeriveChangesError::MissingObject { object_id, version });
+            };
+            if let Some(move_object_type) = object.data.opt_object_type() {
+                let object_type: StructTag = move_object_type.clone().into();
+
+                match kind {
+                    WriteKind::Mutate => object_changes.push(ObjectChange::Mutated {
+                        sender,
+                        owner,
+                        object_type,
+                        object_id,
+                        version,
+                        // A mutated object was read at some version, so the
+                        // effects always name one for it.
+                        previous_version: *modified_at_versions
+                            .get(&object_id)
+                            .expect("a mutated object has a modified-at version"),
+                        digest,
+                    }),
+                    WriteKind::Create => object_changes.push(ObjectChange::Created {
+                        sender,
+                        owner,
+                        object_type,
+                        object_id,
+                        version,
+                        digest,
+                    }),
+                    WriteKind::Unwrap => object_changes.push(ObjectChange::Unwrapped {
+                        sender,
+                        owner,
+                        object_type,
+                        object_id,
+                        version,
+                        digest,
+                    }),
+                }
+            } else if let Some(package) = object.data.as_opt_package()
+                && kind == WriteKind::Create
+            {
+                object_changes.push(ObjectChange::Published {
+                    package_id: package.id(),
+                    version: package.version(),
+                    digest,
+                    modules: package
+                        .serialized_module_map()
+                        .keys()
+                        .map(|k| k.to_string())
+                        .collect(),
+                })
+            }
+        }
+
+        for (removed_object, kind) in self.all_removed_objects() {
+            let object_id = removed_object.object_id;
+            let version = removed_object.version;
+            let Some(object) = inputs_by_id.get(&object_id) else {
+                // The input object lives at its modified-at version, not at the
+                // removed reference's (tombstone) version.
+                return Err(DeriveChangesError::MissingObject {
+                    object_id,
+                    version: modified_at_versions
+                        .get(&object_id)
+                        .copied()
+                        .unwrap_or(version),
+                });
+            };
+            // Packages cannot be removed; skip non-Move objects.
+            if let Some(move_object_type) = object.data.opt_object_type() {
+                let object_type: StructTag = move_object_type.clone().into();
+                match kind {
+                    ObjectRemoveKind::Delete => object_changes.push(ObjectChange::Deleted {
+                        sender,
+                        object_type,
+                        object_id,
+                        version,
+                    }),
+                    ObjectRemoveKind::Wrap => object_changes.push(ObjectChange::Wrapped {
+                        sender,
+                        object_type,
+                        object_id,
+                        version,
+                    }),
+                }
+            }
+        }
+
+        Ok(object_changes)
+    }
 }
 
 /// Look up an object and return its owner, coin type and balance if it is a
@@ -331,136 +463,6 @@ fn coin_owner_type_value(
         })?
         .balance();
     Ok(Some((object.owner, coin_type, value)))
-}
-
-/// Derive the object changes of a transaction from its effects and the objects
-/// it read and wrote.
-///
-/// `input_objects` provides the types of deleted and wrapped objects, so it
-/// must hold them at the versions
-/// [`TransactionEffectsV1::modified_at_versions`] gives.
-///
-/// Errors if an object the effects name is missing from the sets — skipping it
-/// would drop a change from the result.
-pub fn derive_object_changes<'a>(
-    sender: Address,
-    effects: &TransactionEffectsV1,
-    input_objects: impl IntoIterator<Item = &'a Object>,
-    output_objects: impl IntoIterator<Item = &'a Object>,
-) -> Result<Vec<ObjectChange>, DeriveChangesError> {
-    let mut object_changes = vec![];
-
-    let modified_at_versions = effects
-        .modified_at_versions()
-        .into_iter()
-        .map(|modified| (modified.object_id, modified.version))
-        .collect::<BTreeMap<_, _>>();
-
-    let outputs: BTreeMap<(ObjectId, Version), &Object> = output_objects
-        .into_iter()
-        .map(|o| ((o.id(), o.version()), o))
-        .collect();
-
-    // Input objects are the objects at their modified-at versions, so they are
-    // unique per id and provide the pre-transaction state of removed objects.
-    let inputs_by_id: BTreeMap<ObjectId, &Object> =
-        input_objects.into_iter().map(|o| (o.id(), o)).collect();
-
-    for (changed, kind) in effects.all_changed_objects() {
-        let OwnedObjectReference { reference, owner } = changed;
-        let ObjectReference {
-            object_id,
-            version,
-            digest,
-        } = reference;
-        let Some(object) = outputs.get(&(object_id, version)) else {
-            return Err(DeriveChangesError::MissingObject { object_id, version });
-        };
-        if let Some(move_object_type) = object.data.opt_object_type() {
-            let object_type: StructTag = move_object_type.clone().into();
-
-            match kind {
-                WriteKind::Mutate => object_changes.push(ObjectChange::Mutated {
-                    sender,
-                    owner,
-                    object_type,
-                    object_id,
-                    version,
-                    // A mutated object was read at some version, so the
-                    // effects always name one for it.
-                    previous_version: *modified_at_versions
-                        .get(&object_id)
-                        .expect("a mutated object has a modified-at version"),
-                    digest,
-                }),
-                WriteKind::Create => object_changes.push(ObjectChange::Created {
-                    sender,
-                    owner,
-                    object_type,
-                    object_id,
-                    version,
-                    digest,
-                }),
-                WriteKind::Unwrap => object_changes.push(ObjectChange::Unwrapped {
-                    sender,
-                    owner,
-                    object_type,
-                    object_id,
-                    version,
-                    digest,
-                }),
-            }
-        } else if let Some(package) = object.data.as_opt_package()
-            && kind == WriteKind::Create
-        {
-            object_changes.push(ObjectChange::Published {
-                package_id: package.id(),
-                version: package.version(),
-                digest,
-                modules: package
-                    .serialized_module_map()
-                    .keys()
-                    .map(|k| k.to_string())
-                    .collect(),
-            })
-        }
-    }
-
-    for (removed_object, kind) in effects.all_removed_objects() {
-        let object_id = removed_object.object_id;
-        let version = removed_object.version;
-        let Some(object) = inputs_by_id.get(&object_id) else {
-            // The input object lives at its modified-at version, not at the
-            // removed reference's (tombstone) version.
-            return Err(DeriveChangesError::MissingObject {
-                object_id,
-                version: modified_at_versions
-                    .get(&object_id)
-                    .copied()
-                    .unwrap_or(version),
-            });
-        };
-        // Packages cannot be removed; skip non-Move objects.
-        if let Some(move_object_type) = object.data.opt_object_type() {
-            let object_type: StructTag = move_object_type.clone().into();
-            match kind {
-                ObjectRemoveKind::Delete => object_changes.push(ObjectChange::Deleted {
-                    sender,
-                    object_type,
-                    object_id,
-                    version,
-                }),
-                ObjectRemoveKind::Wrap => object_changes.push(ObjectChange::Wrapped {
-                    sender,
-                    object_type,
-                    object_id,
-                    version,
-                }),
-            }
-        }
-    }
-
-    Ok(object_changes)
 }
 
 #[cfg(test)]
@@ -872,7 +874,7 @@ mod tests {
             gas_coin(mutated_id, LAMPORT, owner, 1),
         ];
 
-        let changes = derive_object_changes(sender, &effects, &inputs, &outputs).unwrap();
+        let changes = effects.object_changes(sender, &inputs, &outputs).unwrap();
         let object_type = StructTag::new_gas_coin();
         assert_eq!(
             changes,
@@ -931,7 +933,7 @@ mod tests {
         }]);
         let outputs = vec![gas_coin(id, LAMPORT, owner, 1)];
 
-        let changes = derive_object_changes(sender, &effects, &[], &outputs).unwrap();
+        let changes = effects.object_changes(sender, &[], &outputs).unwrap();
         assert!(matches!(
             changes.as_slice(),
             [ObjectChange::Unwrapped { object_id, .. }] if *object_id == id
@@ -1000,7 +1002,7 @@ mod tests {
         ];
         let inputs = vec![package(ObjectId::FRAMEWORK, 1)];
 
-        let changes = derive_object_changes(sender, &effects, &inputs, &outputs).unwrap();
+        let changes = effects.object_changes(sender, &inputs, &outputs).unwrap();
         let published_ids: Vec<_> = changes
             .iter()
             .map(|change| match change {
@@ -1033,7 +1035,7 @@ mod tests {
         let effects = effects(vec![created(id, owner)]);
 
         assert_eq!(
-            derive_object_changes(sender, &effects, &[], &[]),
+            effects.object_changes(sender, &[], &[]),
             Err(DeriveChangesError::MissingObject {
                 object_id: id,
                 version: Version::from_u64(LAMPORT),
@@ -1052,7 +1054,7 @@ mod tests {
         let effects = effects(vec![deleted(id, owner)]);
 
         assert_eq!(
-            derive_object_changes(sender, &effects, &[], &[]),
+            effects.object_changes(sender, &[], &[]),
             Err(DeriveChangesError::MissingObject {
                 object_id: id,
                 version: Version::from_u64(INPUT_VERSION),
