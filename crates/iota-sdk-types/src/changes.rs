@@ -57,6 +57,9 @@ impl std::error::Error for DeriveChangesError {}
 
 /// The net change in balance of one coin type for one owner, summed over
 /// every coin of that type the transaction touched.
+///
+/// Not a wire type: this is the output of [`derive_balance_changes`],
+/// computed from the effects and the objects they name.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct BalanceChange {
     pub owner: Owner,
