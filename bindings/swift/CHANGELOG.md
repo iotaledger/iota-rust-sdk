@@ -1,5 +1,9 @@
 ## [1.0.0-beta.2] - 2026-09-01
 
+### 🐛 Bug Fixes
+
+- Name the macOS dylib slice after its install name (#1445)
+
 ## [1.0.0-beta.1] - 2026-09-01
 
 ### 🚀 Features
