@@ -6,12 +6,6 @@
 //! Wraps [`Client::list_owned_objects`](crate::Client::list_owned_objects)
 //! with a coin type filter and converts each returned proto `Object` into an
 //! [`iota_types::framework::Coin`].
-//!
-//! # Read Mask
-//!
-//! Not a parameter here. Every `Coin` is decoded from the `bcs` field and the
-//! proto `Object` is discarded, so no mask other than the one the conversion
-//! needs can change what a caller observes.
 
 use iota_grpc_types::{
     read_mask_fields::OwnedObjectReadMask,
