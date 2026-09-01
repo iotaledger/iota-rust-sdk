@@ -52,7 +52,7 @@ impl std::io::Write for Hasher {
 fn derive_address_from(write: impl FnOnce(&mut Hasher)) -> Address {
     let mut hasher = Hasher::new();
     write(&mut hasher);
-    Address::new(hasher.finalize().into_inner())
+    Address::new(hasher.finalize().into_bytes())
 }
 
 impl crate::Ed25519PublicKey {
@@ -69,7 +69,7 @@ impl crate::Ed25519PublicKey {
     /// let public_key_bytes = [0; 32];
     /// let mut hasher = Hasher::new();
     /// hasher.update(public_key_bytes);
-    /// let address = Address::new(hasher.finalize().into_inner());
+    /// let address = Address::new(hasher.finalize().into_bytes());
     /// println!("Address: {}", address);
     ///
     /// let public_key = Ed25519PublicKey::new(public_key_bytes);
@@ -80,7 +80,7 @@ impl crate::Ed25519PublicKey {
     }
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
-        hasher.update(self.inner());
+        hasher.update(self.bytes());
     }
 }
 
@@ -112,7 +112,7 @@ impl crate::Secp256k1PublicKey {
     /// let mut hasher = Hasher::new();
     /// hasher.update([0x01]); // The SignatureScheme flag for Secp256k1 is `1`
     /// hasher.update(public_key_bytes);
-    /// let address = Address::new(hasher.finalize().into_inner());
+    /// let address = Address::new(hasher.finalize().into_bytes());
     /// println!("Address: {}", address);
     ///
     /// let public_key = Secp256k1PublicKey::new(public_key_bytes);
@@ -124,7 +124,7 @@ impl crate::Secp256k1PublicKey {
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
         hasher.update([self.scheme().to_u8()]);
-        hasher.update(self.inner());
+        hasher.update(self.bytes());
     }
 }
 
@@ -156,7 +156,7 @@ impl crate::Secp256r1PublicKey {
     /// let mut hasher = Hasher::new();
     /// hasher.update([0x02]); // The SignatureScheme flag for Secp256r1 is `2`
     /// hasher.update(public_key_bytes);
-    /// let address = Address::new(hasher.finalize().into_inner());
+    /// let address = Address::new(hasher.finalize().into_bytes());
     /// println!("Address: {}", address);
     ///
     /// let public_key = Secp256r1PublicKey::new(public_key_bytes);
@@ -168,7 +168,7 @@ impl crate::Secp256r1PublicKey {
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
         hasher.update([self.scheme().to_u8()]);
-        hasher.update(self.inner());
+        hasher.update(self.bytes());
     }
 }
 
@@ -198,7 +198,7 @@ impl crate::PasskeyPublicKey {
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
         hasher.update([self.scheme().to_u8()]);
-        hasher.update(self.inner().inner());
+        hasher.update(self.inner().bytes());
     }
 }
 
@@ -555,7 +555,7 @@ impl crate::ObjectId {
         hasher.update(digest);
         hasher.update(count.to_le_bytes());
         let digest = hasher.finalize();
-        Self::new(digest.into_inner())
+        Self::new(digest.into_bytes())
     }
 
     /// Derive an ObjectId for a Dynamic Child Object.
@@ -577,7 +577,7 @@ impl crate::ObjectId {
             .expect("bcs serialization of `TypeTag` cannot fail");
         let digest = hasher.finalize();
 
-        Self::new(digest.into_inner())
+        Self::new(digest.into_bytes())
     }
 
     /// Derive the ObjectId of a derived object (`0x2::derived_object`).
