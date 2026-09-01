@@ -40,8 +40,8 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::ConsensusCommitPrologueV1>();
     assert_display::<iota_sdk_types::ConsensusDeterminedVersionAssignments>();
     assert_display::<iota_sdk_types::DenyRuleSet>();
-    assert_display::<iota_sdk_types::Digest>();
     assert_display::<iota_sdk_types::DeriveChangesError>();
+    assert_display::<iota_sdk_types::Digest>();
     assert_display::<iota_sdk_types::DigestParseError>();
     assert_display::<iota_sdk_types::Ed25519PublicKey>();
     assert_display::<iota_sdk_types::Ed25519Signature>();

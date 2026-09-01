@@ -58,8 +58,9 @@ impl std::error::Error for DeriveChangesError {}
 /// The net change in balance of one coin type for one owner, summed over
 /// every coin of that type the transaction touched.
 ///
-/// Not a wire type: this is the output of [`derive_balance_changes`],
-/// computed from the effects and the objects they name.
+/// Not a wire type: this is the output of
+/// [`TransactionEffectsV1::balance_changes`], computed from the effects and
+/// the objects they name.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct BalanceChange {
     pub owner: Owner,
@@ -86,6 +87,9 @@ impl crate::TreeDisplay for BalanceChange {
 /// `object_type` and `owner` are not in the effects. Where only the effects are
 /// at hand, [`ChangedObject`](crate::ChangedObject) carries each side's state,
 /// and the object sets report the version each changed object ends at.
+///
+/// There is no kind for a mutated package, so a system package upgrade — which
+/// keeps its id and is therefore a mutate — is not reported at all.
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub enum ObjectChange {
@@ -221,77 +225,83 @@ impl crate::TreeDisplay for ObjectChange {
 
 crate::impl_tree_display!(BalanceChange, ObjectChange);
 
-/// Derive the balance changes of a transaction from its effects and the
-/// objects it read and wrote.
-///
-/// For a failed transaction only the gas charge is reported, which needs no
-/// objects; a transaction that names no gas object reports nothing.
-/// `mocked_coin` excludes a gas coin mocked during simulation, which is in
-/// neither object set.
-///
-/// Errors if any object the effects name is missing from the sets — a missing
-/// input coin would corrupt the delta of any coin whose output is present.
-pub fn derive_balance_changes<'a>(
-    effects: &TransactionEffectsV1,
-    input_objects: impl IntoIterator<Item = &'a Object>,
-    output_objects: impl IntoIterator<Item = &'a Object>,
-    mocked_coin: Option<ObjectId>,
-) -> Result<Vec<BalanceChange>, DeriveChangesError> {
-    // Only charge gas when the transaction fails, skipping all object parsing.
-    if effects.status != ExecutionStatus::Success {
-        return Ok(effects
-            .gas_object()
-            .map(|gas| BalanceChange {
-                owner: gas.owner,
-                coin_type: TypeTag::from(StructTag::new_gas()),
-                amount: (effects.gas_cost_summary.net_gas_usage() as i128).neg(),
-            })
+impl TransactionEffectsV1 {
+    /// The balance changes of this transaction, from these effects and the
+    /// objects it read and wrote.
+    ///
+    /// For a failed transaction only the gas charge is reported, which needs no
+    /// objects; a transaction that names no gas object reports nothing.
+    /// `mocked_object` excludes an object mocked during simulation, which is
+    /// in neither object set — today that is the gas coin a local run mints.
+    /// Object changes have no equivalent, so a mocked object that is not a coin
+    /// still errors there.
+    ///
+    /// Errors if any object these effects name is missing from the sets — a
+    /// missing input coin would corrupt the delta of any coin whose output is
+    /// present.
+    pub fn balance_changes<'a>(
+        &self,
+        input_objects: impl IntoIterator<Item = &'a Object>,
+        output_objects: impl IntoIterator<Item = &'a Object>,
+        mocked_object: Option<ObjectId>,
+    ) -> Result<Vec<BalanceChange>, DeriveChangesError> {
+        // Only charge gas when the transaction fails, skipping all object parsing.
+        if self.status != ExecutionStatus::Success {
+            return Ok(self
+                .gas_object()
+                .map(|gas| BalanceChange {
+                    owner: gas.owner,
+                    coin_type: TypeTag::from(StructTag::new_gas()),
+                    amount: (self.gas_cost_summary.net_gas_usage() as i128).neg(),
+                })
+                .into_iter()
+                .collect());
+        }
+
+        let objects: BTreeMap<(ObjectId, Version), &Object> = input_objects
             .into_iter()
-            .collect());
+            .chain(output_objects)
+            .map(|o| ((o.id(), o.version()), o))
+            .collect();
+
+        let mut balances = BTreeMap::<(Owner, TypeTag), i128>::new();
+
+        // 1. subtract all input coins
+        for modified in self.modified_at_versions() {
+            let (id, version) = (modified.object_id, modified.version);
+            // The mocked object is in neither object set.
+            if matches!(mocked_object, Some(mocked) if id == mocked) {
+                continue;
+            }
+            if let Some((owner, coin_type, amount)) = coin_owner_type_value(&objects, id, version)?
+            {
+                *balances.entry((owner, coin_type)).or_default() -= amount as i128;
+            }
+        }
+
+        // 2. add all mutated coins
+        for (changed, _) in self.all_changed_objects() {
+            let object_ref = changed.reference;
+            if matches!(mocked_object, Some(mocked) if object_ref.object_id == mocked) {
+                continue;
+            }
+            if let Some((owner, coin_type, amount)) =
+                coin_owner_type_value(&objects, object_ref.object_id, object_ref.version)?
+            {
+                *balances.entry((owner, coin_type)).or_default() += amount as i128;
+            }
+        }
+
+        Ok(balances
+            .into_iter()
+            .filter(|(_, amount)| *amount != 0)
+            .map(|((owner, coin_type), amount)| BalanceChange {
+                owner,
+                coin_type,
+                amount,
+            })
+            .collect())
     }
-
-    let objects: BTreeMap<(ObjectId, Version), &Object> = input_objects
-        .into_iter()
-        .chain(output_objects)
-        .map(|o| ((o.id(), o.version()), o))
-        .collect();
-
-    let mut balances = BTreeMap::<(Owner, TypeTag), i128>::new();
-
-    // 1. subtract all input coins
-    for modified in effects.modified_at_versions() {
-        let (id, version) = (modified.object_id, modified.version);
-        // The mocked gas coin is in neither object set.
-        if matches!(mocked_coin, Some(coin) if id == coin) {
-            continue;
-        }
-        if let Some((owner, coin_type, amount)) = coin_owner_type_value(&objects, id, version)? {
-            *balances.entry((owner, coin_type)).or_default() -= amount as i128;
-        }
-    }
-
-    // 2. add all mutated coins
-    for (changed, _) in effects.all_changed_objects() {
-        let object_ref = changed.reference;
-        if matches!(mocked_coin, Some(coin) if object_ref.object_id == coin) {
-            continue;
-        }
-        if let Some((owner, coin_type, amount)) =
-            coin_owner_type_value(&objects, object_ref.object_id, object_ref.version)?
-        {
-            *balances.entry((owner, coin_type)).or_default() += amount as i128;
-        }
-    }
-
-    Ok(balances
-        .into_iter()
-        .filter(|(_, amount)| *amount != 0)
-        .map(|((owner, coin_type), amount)| BalanceChange {
-            owner,
-            coin_type,
-            amount,
-        })
-        .collect())
 }
 
 /// Look up an object and return its owner, coin type and balance if it is a
@@ -595,7 +605,7 @@ mod tests {
             gas_coin(received, LAMPORT, recipient, 30),
         ];
 
-        let changes = derive_balance_changes(&effects, &inputs, &outputs, None).unwrap();
+        let changes = effects.balance_changes(&inputs, &outputs, None).unwrap();
         let gas = TypeTag::from(StructTag::new_gas());
         assert_eq!(
             changes,
@@ -636,7 +646,7 @@ mod tests {
             gas_coin(second, LAMPORT, recipient, 20),
         ];
 
-        let changes = derive_balance_changes(&effects, &inputs, &outputs, None).unwrap();
+        let changes = effects.balance_changes(&inputs, &outputs, None).unwrap();
         let gas = TypeTag::from(StructTag::new_gas());
         assert_eq!(
             changes,
@@ -673,7 +683,7 @@ mod tests {
             coin(other_id, LAMPORT, owner, 8, other_type.clone()),
         ];
 
-        let changes = derive_balance_changes(&effects, &inputs, &outputs, None).unwrap();
+        let changes = effects.balance_changes(&inputs, &outputs, None).unwrap();
         let amounts: Vec<_> = changes
             .iter()
             .map(|change| (change.coin_type.clone(), change.amount))
@@ -698,7 +708,8 @@ mod tests {
         let outputs = vec![gas_coin(id, LAMPORT, owner, 100)];
 
         assert!(
-            derive_balance_changes(&effects, &inputs, &outputs, None)
+            effects
+                .balance_changes(&inputs, &outputs, None)
                 .unwrap()
                 .is_empty()
         );
@@ -715,7 +726,7 @@ mod tests {
         let outputs = vec![gas_coin(id, LAMPORT, owner, 100)];
 
         assert_eq!(
-            derive_balance_changes(&effects, &[], &outputs, None),
+            effects.balance_changes(&[], &outputs, None),
             Err(DeriveChangesError::MissingObject {
                 object_id: id,
                 version: Version::from_u64(INPUT_VERSION),
@@ -723,21 +734,22 @@ mod tests {
         );
     }
 
-    /// A gas coin mocked during simulation is in neither object set, so naming
+    /// An object mocked during simulation is in neither object set, so naming
     /// it keeps the run from erroring on it.
     #[test]
-    fn a_mocked_gas_coin_is_excluded() {
+    fn a_mocked_object_is_excluded() {
         let owner = Owner::Address(address(1));
         let mock = object_id(10);
 
         let effects = effects(vec![mutated(mock, owner)]);
 
         assert!(
-            derive_balance_changes(&effects, &[], &[], Some(mock))
+            effects
+                .balance_changes(&[], &[], Some(mock))
                 .unwrap()
                 .is_empty()
         );
-        assert!(derive_balance_changes(&effects, &[], &[], None).is_err());
+        assert!(effects.balance_changes(&[], &[], None).is_err());
     }
 
     /// A failed transaction changed nothing but still paid gas, so the charge
@@ -760,7 +772,7 @@ mod tests {
             ..GasCostSummary::default()
         };
 
-        let changes = derive_balance_changes(&effects, &[], &[], None).unwrap();
+        let changes = effects.balance_changes(&[], &[], None).unwrap();
         assert_eq!(
             changes,
             vec![BalanceChange {
@@ -785,11 +797,7 @@ mod tests {
             ..GasCostSummary::default()
         };
 
-        assert!(
-            derive_balance_changes(&effects, &[], &[], None)
-                .unwrap()
-                .is_empty()
-        );
+        assert!(effects.balance_changes(&[], &[], None).unwrap().is_empty());
     }
 
     /// A changed object that is not a coin contributes no balance change.
@@ -827,7 +835,7 @@ mod tests {
             gas_coin(coin_id, LAMPORT, owner, 90),
         ];
 
-        let changes = derive_balance_changes(&effects, &inputs, &outputs, None).unwrap();
+        let changes = effects.balance_changes(&inputs, &outputs, None).unwrap();
         assert_eq!(
             changes.len(),
             1,
@@ -865,38 +873,43 @@ mod tests {
         ];
 
         let changes = derive_object_changes(sender, &effects, &inputs, &outputs).unwrap();
-        let kinds: Vec<_> = changes
-            .iter()
-            .map(|change| match change {
-                ObjectChange::Created { object_id, .. } => ("created", *object_id),
-                ObjectChange::Mutated { object_id, .. } => ("mutated", *object_id),
-                ObjectChange::Deleted { object_id, .. } => ("deleted", *object_id),
-                ObjectChange::Wrapped { object_id, .. } => ("wrapped", *object_id),
-                ObjectChange::Unwrapped { object_id, .. } => ("unwrapped", *object_id),
-                ObjectChange::Published { package_id, .. } => ("published", *package_id),
-            })
-            .collect();
+        let object_type = StructTag::new_gas_coin();
         assert_eq!(
-            kinds,
+            changes,
             vec![
-                ("mutated", mutated_id),
-                ("created", created_id),
-                ("deleted", deleted_id),
-                ("wrapped", wrapped_id),
+                ObjectChange::Mutated {
+                    sender,
+                    owner,
+                    object_type: object_type.clone(),
+                    object_id: mutated_id,
+                    version: Version::from_u64(LAMPORT),
+                    previous_version: Version::from_u64(INPUT_VERSION),
+                    digest: digest(1),
+                },
+                ObjectChange::Created {
+                    sender,
+                    owner,
+                    object_type: object_type.clone(),
+                    object_id: created_id,
+                    version: Version::from_u64(LAMPORT),
+                    digest: digest(1),
+                },
+                // A removed object is reported at the version this transaction
+                // assigned, not the version it was read at.
+                ObjectChange::Deleted {
+                    sender,
+                    object_type: object_type.clone(),
+                    object_id: deleted_id,
+                    version: Version::from_u64(LAMPORT),
+                },
+                ObjectChange::Wrapped {
+                    sender,
+                    object_type,
+                    object_id: wrapped_id,
+                    version: Version::from_u64(LAMPORT),
+                },
             ]
         );
-
-        // A mutated object reports where it came from.
-        let ObjectChange::Mutated {
-            previous_version, ..
-        } = changes
-            .iter()
-            .find(|change| matches!(change, ObjectChange::Mutated { .. }))
-            .unwrap()
-        else {
-            unreachable!()
-        };
-        assert_eq!(*previous_version, Version::from_u64(INPUT_VERSION));
     }
 
     /// An unwrapped object is a write with no input state whose id already
