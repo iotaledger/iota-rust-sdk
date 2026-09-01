@@ -11,6 +11,10 @@ description = "GraphQL RPC Client for the IOTA Blockchain"
 [lints]
 workspace = true
 
+[features]
+# Typed `move_objects` queries, decoding each object into a Move-type mirror.
+move-types = ["dep:iota-move-types"]
+
 [dependencies]
 # external dependencies
 base64ct = { workspace = true, features = ["alloc", "std"] }
@@ -30,6 +34,7 @@ url = "2.5.3"
 variadics_please.workspace = true
 
 # internal dependencies
+iota-move-types = { workspace = true, features = ["serde"], optional = true }
 iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 

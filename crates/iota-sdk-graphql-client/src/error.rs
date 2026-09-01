@@ -302,6 +302,13 @@ impl From<graphql_ws_client::Error> for Error {
     }
 }
 
+#[cfg(feature = "move-types")]
+impl From<iota_move_types::FromObjectError> for Error {
+    fn from(error: iota_move_types::FromObjectError) -> Self {
+        Self::from_error(Kind::Deserialization, error)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

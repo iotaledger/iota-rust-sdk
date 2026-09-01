@@ -41,7 +41,7 @@ pem = ["crypto", "iota-crypto/pem"]
 bls12381 = ["crypto", "iota-crypto/bls12381"]
 bech32 = ["crypto", "iota-crypto/bech32"]
 mnemonic = ["crypto", "iota-crypto/mnemonic"]
-move-types = ["dep:iota-move-types"]
+move-types = ["dep:iota-move-types", "iota-graphql-client?/move-types"]
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
 # gRPC
@@ -106,4 +106,4 @@ required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]
 name = "decode_staked_iota"
-required-features = ["move-types"]
+required-features = ["graphql", "move-types"]
