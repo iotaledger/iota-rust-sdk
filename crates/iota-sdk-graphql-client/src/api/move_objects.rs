@@ -20,7 +20,7 @@ use crate::{
 /// [`ObjectFilter`] without its type field: the Move type comes from the type
 /// parameter, so there is no second place to set it and nothing to disagree
 /// about.
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct MoveObjectFilter {
     /// Filter by the address owning the object.
     pub owner: Option<Address>,
