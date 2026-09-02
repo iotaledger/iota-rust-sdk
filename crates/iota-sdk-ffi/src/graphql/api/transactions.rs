@@ -3,7 +3,7 @@
 
 //! Transactions API implementation.
 
-use std::{sync::Arc, time::Duration};
+use std::{collections::HashMap, sync::Arc, time::Duration};
 
 use crate::{
     error::Result,
@@ -69,6 +69,24 @@ impl GraphQLClient {
             .transaction(**digest)
             .await?
             .map(Into::into))
+    }
+
+    /// Get transactions by their digests, including transactions that are not
+    /// checkpointed yet. Digests that were not found are absent from the
+    /// returned map.
+    pub async fn transactions_by_digest(
+        &self,
+        digests: Vec<Arc<TransactionDigest>>,
+    ) -> Result<HashMap<Arc<TransactionDigest>, SignedTransaction>> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .transactions_by_digest(digests.into_iter().map(|d| **d))
+            .await?
+            .into_iter()
+            .map(|(digest, transaction)| (Arc::new(digest.into()), transaction.into()))
+            .collect())
     }
 
     /// Get a transaction's effects by its digest.
