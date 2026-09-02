@@ -23,37 +23,22 @@ use crate::{
 };
 
 /// Error deriving balance or object changes from a transaction's effects.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
 #[non_exhaustive]
 pub enum DeriveChangesError {
     /// An object the effects name was not among the supplied objects.
+    #[error("object {object_id} at version {version} is unavailable (possibly pruned)")]
     MissingObject {
         object_id: ObjectId,
         version: Version,
     },
     /// An object whose type is a coin had contents that are not a valid coin.
+    #[error("coin object {object_id} at version {version} has malformed contents")]
     MalformedCoin {
         object_id: ObjectId,
         version: Version,
     },
 }
-
-impl std::fmt::Display for DeriveChangesError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::MissingObject { object_id, version } => write!(
-                f,
-                "object {object_id} at version {version} is unavailable (possibly pruned)"
-            ),
-            Self::MalformedCoin { object_id, version } => write!(
-                f,
-                "coin object {object_id} at version {version} has malformed contents"
-            ),
-        }
-    }
-}
-
-impl std::error::Error for DeriveChangesError {}
 
 /// The net change in balance of one coin type for one owner, summed over
 /// every coin of that type the transaction touched.
