@@ -9,26 +9,60 @@
 // network that produces nothing.
 
 import {
+  Address,
+  Ed25519PrivateKey,
+  FaucetClient,
   GraphQlClient,
+  PtbArgument,
   SubscriptionTransactionFilter,
-  TransactionBlockKindInput,
+  UserSignature,
   initAsync,
 } from "@iota/sdk-wasm";
 
 await initAsync();
 
 const DEADLINE_MS = 60_000;
+const amount = 1000n;
+const recipientAddress = Address.fromHex(
+  "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900",
+);
+
+const privateKey = Ed25519PrivateKey.random();
+const senderAddress = privateKey.publicKey().deriveAddress();
+console.log(`Sender address: ${senderAddress.toHex()}`);
 
 const client = GraphQlClient.newLocalnet();
+
+const faucet = FaucetClient.newLocalnet();
+const receipt = await faucet.requestAndWaitForFinalized(senderAddress, client);
+if (!receipt || receipt.sent.length === 0) {
+  throw new Error("Faucet did not fund the sender");
+}
+
+// Any of the funding digests will do: the transaction below is executed after
+// all of them, and the sender filter keeps the faucet's own transactions out of
+// the stream.
+const startAfter = receipt.sent[0].transferTxDigest.toBase58();
+
 const subscription = await client.transactionsSubscription(
-  SubscriptionTransactionFilter.new({
-    kind: TransactionBlockKindInput.ProgrammableTx,
-  }),
+  SubscriptionTransactionFilter.new({ signingAddress: senderAddress }),
+  startAfter,
 );
 
 const watchdog = setTimeout(() => subscription.cancel(), DEADLINE_MS);
 
 try {
+  const builder = client.transactionBuilder(senderAddress);
+  builder.sendIota(recipientAddress, PtbArgument.u64(amount));
+  const txn = await builder.finish();
+
+  const signature = privateKey.trySignSimple(txn.signingDigest());
+  const effects = await client.executeTransaction(
+    [UserSignature.newSimple(signature)],
+    txn,
+  );
+  console.log(`Executed: ${effects.digest().toBase58()}`);
+
   console.log("Waiting for a transaction...");
   while (true) {
     const update = await subscription.next();
@@ -38,7 +72,7 @@ try {
 
     if (update.tag === "Transaction") {
       const { transaction } = update.inner.transaction;
-      console.log(`Digest: ${transaction.digest()}`);
+      console.log(`Digest: ${transaction.digest().toBase58()}`);
       console.log(`Sender: ${transaction.sender().toHex()}`);
       break;
     } else {
