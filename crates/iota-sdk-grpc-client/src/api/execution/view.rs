@@ -108,11 +108,10 @@ impl Client {
         )
         .await?
         .try_map(|results| {
-            results.into_iter().next().ok_or_else(|| {
-                Error::Protocol(ProtocolError::EmptyResponseField(
-                    "view_function_call_results",
-                ))
-            })?
+            results
+                .into_iter()
+                .next()
+                .ok_or_else(|| Error::Protocol(ProtocolError::EmptyResponseField("call_results")))?
         })
     }
 
