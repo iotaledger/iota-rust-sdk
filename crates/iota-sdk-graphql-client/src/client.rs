@@ -30,7 +30,7 @@ pub(crate) static USER_AGENT: &str =
 /// list is surfaced as a query error rather than being treated as a
 /// success. A response with neither `data` nor `errors` is reported as an empty
 /// response error instead of panicking.
-pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> GraphQLResult<T, GraphQLError> {
+pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> GraphQLResult<T> {
     match (response.data, response.errors) {
         (_, Some(errors)) if !errors.is_empty() => Err(GraphQLError::Query(errors)),
         (Some(data), _) => Ok(data),

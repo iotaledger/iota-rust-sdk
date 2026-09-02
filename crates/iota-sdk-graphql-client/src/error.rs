@@ -47,7 +47,7 @@ fn display_graphql_errors(errors: &[GraphQlError]) -> String {
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum GraphQLError {
-    /// The request failed before a response was received.
+    /// The request could not be sent, or the response could not be read.
     #[error("request error: {0}")]
     Request(#[source] reqwest::Error),
 
@@ -125,9 +125,10 @@ pub enum GraphQLError {
     Lagged { count: i32 },
 }
 
-/// The HTTP response an [`GraphQLError::Http`] or [`GraphQLError::Json`] was
+/// The HTTP response a [`GraphQLError::Http`] or [`GraphQLError::Json`] was
 /// raised for.
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct HttpResponse {
     pub url: Url,
     pub status: StatusCode,
@@ -150,13 +151,13 @@ impl HttpResponse {
 }
 
 impl GraphQLError {
-    /// Build an [`GraphQLError::Http`] from a non-success response, retaining a
+    /// Build a [`GraphQLError::Http`] from a non-success response, retaining a
     /// truncated, UTF-8-lossy snapshot of the body.
     pub(crate) fn http(url: Url, status: StatusCode, body: &[u8], target_type: &str) -> Self {
         Self::Http(HttpResponse::new(url, status, body, target_type))
     }
 
-    /// Build an [`GraphQLError::Json`] from a response whose body is not valid
+    /// Build a [`GraphQLError::Json`] from a response whose body is not valid
     /// JSON, retaining a truncated, UTF-8-lossy snapshot of the body.
     pub(crate) fn json(
         url: Url,

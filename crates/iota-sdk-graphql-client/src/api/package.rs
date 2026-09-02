@@ -89,11 +89,11 @@ impl Client {
                 b64.as_ref()
                     .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
             })
-            .collect::<GraphQLResult<Vec<_>, base64ct::Error>>()?;
+            .collect::<Result<Vec<_>, base64ct::Error>>()?;
         let packages = bcs
             .iter()
             .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-            .collect::<GraphQLResult<Vec<_>, bcs::Error>>()?;
+            .collect::<Result<Vec<_>, bcs::Error>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -157,11 +157,11 @@ impl Client {
                 b64.as_ref()
                     .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
             })
-            .collect::<GraphQLResult<Vec<_>, base64ct::Error>>()?;
+            .collect::<Result<Vec<_>, base64ct::Error>>()?;
         let packages = bcs
             .iter()
             .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-            .collect::<GraphQLResult<Vec<_>, bcs::Error>>()?;
+            .collect::<Result<Vec<_>, bcs::Error>>()?;
 
         Ok(Page::new(page_info, packages))
     }

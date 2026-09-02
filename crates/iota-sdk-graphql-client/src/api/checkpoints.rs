@@ -41,7 +41,7 @@ impl Client {
         let seq_num = seq_num.into();
         if digest.is_some() && seq_num.is_some() {
             return Err(GraphQLError::InvalidArgument(
-                "either digest or seq_num must be provided",
+                "either digest or seq_num can be provided, but not both",
             ));
         }
 

@@ -32,7 +32,7 @@ use super::MetadataEnvelope;
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum GrpcError {
-    /// GrpcError converting proto types to SDK types.
+    /// Error converting proto types to SDK types.
     #[error("proto conversion error: {0}")]
     ProtoConversion(#[from] Box<TryFromProtoError>),
 
@@ -45,7 +45,7 @@ pub enum GrpcError {
     #[error("protocol error: {0}")]
     Protocol(ProtocolError),
 
-    /// GrpcError converting signatures to proto format.
+    /// Error converting signatures to proto format.
     #[error("signature conversion error: {0}")]
     Signature(GrpcConversionError),
 
@@ -129,7 +129,7 @@ pub enum ProtocolError {
     #[error("empty response field: {0}")]
     EmptyResponseField(&'static str),
 
-    /// GrpcError during checkpoint data stream reassembly.
+    /// Error during checkpoint data stream reassembly.
     #[error("checkpoint stream error: {0}")]
     CheckpointStream(#[from] CheckpointStreamError),
 
@@ -182,7 +182,7 @@ pub enum CheckpointStreamError {
     IncompleteStream { sequence_number: u64 },
 }
 
-/// GrpcResult type alias for API operations.
+/// Result type alias for API operations.
 pub type GrpcResult<T> = std::result::Result<T, GrpcError>;
 
 // =============================================================================
@@ -253,7 +253,7 @@ pub fn saturating_usize_to_u32(value: usize) -> u32 {
 }
 
 /// A trait for proto result types that follow the pattern of having
-/// `Some(GrpcResult::Value)`, `Some(GrpcResult::Error)`, or `None`.
+/// `Some(Result::Value)`, `Some(Result::Error)`, or `None`.
 ///
 /// This allows generic handling of gRPC response results that can be either
 /// a success value, a server error, or missing.

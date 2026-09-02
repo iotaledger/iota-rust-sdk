@@ -228,11 +228,7 @@ impl FaucetClient {
         address: Address,
         client: &crate::Client,
     ) -> Result<Option<FaucetReceipt>, crate::error::GraphQLError> {
-        let Some(receipt) = self
-            .request_and_wait(address)
-            .await
-            .map_err(crate::error::GraphQLError::Faucet)?
-        else {
+        let Some(receipt) = self.request_and_wait(address).await? else {
             return Ok(None);
         };
 

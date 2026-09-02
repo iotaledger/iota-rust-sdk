@@ -99,11 +99,11 @@ impl Client {
                 b64.as_ref()
                     .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
             })
-            .collect::<GraphQLResult<Vec<_>, base64ct::Error>>()?;
+            .collect::<Result<Vec<_>, base64ct::Error>>()?;
         let objects = bcs
             .iter()
             .map(|b| bcs::from_bytes::<iota_types::Object>(b))
-            .collect::<GraphQLResult<Vec<_>, bcs::Error>>()?;
+            .collect::<Result<Vec<_>, bcs::Error>>()?;
 
         Ok(Page::new(page_info, objects))
     }
