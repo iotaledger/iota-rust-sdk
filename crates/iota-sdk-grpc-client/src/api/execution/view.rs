@@ -17,7 +17,7 @@ use iota_types::TypeTag;
 
 use crate::{
     Client,
-    api::{Error, MetadataEnvelope, ProtocolError, Result, into_item_results},
+    api::{Error, MetadataEnvelope, ProtocolError, Result, check_result_count, into_item_results},
 };
 
 impl Client {
@@ -138,6 +138,8 @@ impl Client {
     /// Returns [`Error::EmptyRequest`] if `function_calls` is empty.
     /// Returns a transport-level [`Error::Grpc`] if the entire RPC fails
     /// (e.g. batch size exceeded).
+    /// Returns [`ProtocolError::UnexpectedResultCount`] if the server did not
+    /// answer every call, since results are paired with calls by position.
     pub async fn view_function_calls(
         &self,
         function_calls: Vec<ViewFunctionCallItem>,
@@ -147,6 +149,7 @@ impl Client {
             return Err(Error::EmptyRequest);
         }
 
+        let expected_results = function_calls.len();
         let read_mask = read_mask.into_read_mask();
         let request = ViewFunctionCallsRequest::default()
             .with_view_function_calls(function_calls)
@@ -157,6 +160,9 @@ impl Client {
             .view_function_calls(request)
             .await?;
 
-        Ok(MetadataEnvelope::from(response).map(|r| into_item_results(r.call_results)))
+        let response = MetadataEnvelope::from(response).map(|r| into_item_results(r.call_results));
+        check_result_count(response.body(), expected_results)?;
+
+        Ok(response)
     }
 }
