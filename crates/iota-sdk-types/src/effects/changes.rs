@@ -257,7 +257,7 @@ impl TransactionEffectsV1 {
         for modified in self.modified_at_versions() {
             let (id, version) = (modified.object_id, modified.version);
             // The mocked object is in neither object set.
-            if matches!(mocked_object, Some(mocked) if id == mocked) {
+            if mocked_object == Some(id) {
                 continue;
             }
             if let Some((owner, coin_type, amount)) = coin_owner_type_value(&objects, id, version)?
@@ -269,7 +269,7 @@ impl TransactionEffectsV1 {
         // 2. add all mutated coins
         for (changed, _) in self.all_changed_objects() {
             let object_ref = changed.reference;
-            if matches!(mocked_object, Some(mocked) if object_ref.object_id == mocked) {
+            if mocked_object == Some(object_ref.object_id) {
                 continue;
             }
             if let Some((owner, coin_type, amount)) =
