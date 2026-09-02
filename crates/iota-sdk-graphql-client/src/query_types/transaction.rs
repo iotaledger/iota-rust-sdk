@@ -73,7 +73,7 @@ pub struct TransactionBlockIndexedQuery {
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "TransactionBlocksQueryArgs"
+    variables = "TransactionBlocksArgs"
 )]
 pub struct TransactionBlocksQuery {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
@@ -84,7 +84,7 @@ pub struct TransactionBlocksQuery {
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "TransactionBlocksQueryArgs"
+    variables = "TransactionBlocksArgs"
 )]
 pub struct TransactionBlocksWithEffectsQuery {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
@@ -95,7 +95,7 @@ pub struct TransactionBlocksWithEffectsQuery {
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "TransactionBlocksQueryArgs"
+    variables = "TransactionBlocksArgs"
 )]
 pub struct TransactionBlocksEffectsQuery {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
@@ -111,7 +111,7 @@ pub struct TransactionBlockArgs {
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct TransactionBlocksQueryArgs {
+pub struct TransactionBlocksArgs {
     pub first: Option<i32>,
     pub after: Option<String>,
     pub last: Option<i32>,

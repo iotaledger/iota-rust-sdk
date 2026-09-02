@@ -1361,8 +1361,8 @@ pub struct MovePackageQuery {
     pub bcs: Option<Base64>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MovePackageQuery> for MovePackageQuery {
-    fn from(value: iota_sdk::graphql_client::query_types::MovePackageQuery) -> Self {
+impl From<iota_sdk::graphql_client::query_types::MovePackage> for MovePackageQuery {
+    fn from(value: iota_sdk::graphql_client::query_types::MovePackage) -> Self {
         Self {
             address: Arc::new(value.address.into()),
             bcs: value.bcs,
@@ -1370,7 +1370,7 @@ impl From<iota_sdk::graphql_client::query_types::MovePackageQuery> for MovePacka
     }
 }
 
-impl From<MovePackageQuery> for iota_sdk::graphql_client::query_types::MovePackageQuery {
+impl From<MovePackageQuery> for iota_sdk::graphql_client::query_types::MovePackage {
     fn from(value: MovePackageQuery) -> Self {
         Self {
             address: (**value.address),
@@ -1385,8 +1385,8 @@ pub struct MoveModuleQuery {
     pub name: String,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveModuleQuery> for MoveModuleQuery {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveModuleQuery) -> Self {
+impl From<iota_sdk::graphql_client::query_types::MoveModuleRef> for MoveModuleQuery {
+    fn from(value: iota_sdk::graphql_client::query_types::MoveModuleRef) -> Self {
         Self {
             package: value.package.into(),
             name: value.name,
@@ -1394,7 +1394,7 @@ impl From<iota_sdk::graphql_client::query_types::MoveModuleQuery> for MoveModule
     }
 }
 
-impl From<MoveModuleQuery> for iota_sdk::graphql_client::query_types::MoveModuleQuery {
+impl From<MoveModuleQuery> for iota_sdk::graphql_client::query_types::MoveModuleRef {
     fn from(value: MoveModuleQuery) -> Self {
         Self {
             package: value.package.into(),
@@ -1470,8 +1470,8 @@ pub struct MoveStructQuery {
     pub type_parameters: Option<Vec<MoveStructTypeParameter>>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveStructQuery> for MoveStructQuery {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveStructQuery) -> Self {
+impl From<iota_sdk::graphql_client::query_types::MoveStruct> for MoveStructQuery {
+    fn from(value: iota_sdk::graphql_client::query_types::MoveStruct) -> Self {
         Self {
             abilities: value
                 .abilities
@@ -1487,7 +1487,7 @@ impl From<iota_sdk::graphql_client::query_types::MoveStructQuery> for MoveStruct
     }
 }
 
-impl From<MoveStructQuery> for iota_sdk::graphql_client::query_types::MoveStructQuery {
+impl From<MoveStructQuery> for iota_sdk::graphql_client::query_types::MoveStruct {
     fn from(value: MoveStructQuery) -> Self {
         Self {
             abilities: value

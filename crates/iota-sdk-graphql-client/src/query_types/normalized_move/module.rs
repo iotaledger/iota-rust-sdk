@@ -3,14 +3,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::query_types::{
-    Address, MoveAbility, MoveFunction, MovePackageQuery, OpenMoveType, PageInfo, schema,
+    Address, MoveAbility, MoveFunction, MovePackage, OpenMoveType, PageInfo, schema,
 };
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "NormalizedMoveModuleQueryArgs"
+    variables = "NormalizedMoveModuleArgs"
 )]
 pub struct NormalizedMoveModuleQuery {
     #[arguments(address: $package, version: $version)]
@@ -18,7 +18,7 @@ pub struct NormalizedMoveModuleQuery {
 }
 
 #[derive(Clone, cynic::QueryVariables, Debug)]
-pub struct NormalizedMoveModuleQueryArgs<'a> {
+pub struct NormalizedMoveModuleArgs<'a> {
     pub package: Address,
     pub module: &'a str,
     pub version: Option<u64>,
@@ -44,7 +44,7 @@ pub struct NormalizedMoveModuleQueryArgs<'a> {
 #[cynic(
     schema = "rpc",
     graphql_type = "MovePackage",
-    variables = "NormalizedMoveModuleQueryArgs"
+    variables = "NormalizedMoveModuleArgs"
 )]
 pub struct MovePackageModule {
     #[arguments(name: $module)]
@@ -55,7 +55,7 @@ pub struct MovePackageModule {
 #[cynic(
     schema = "rpc",
     graphql_type = "MoveModule",
-    variables = "NormalizedMoveModuleQueryArgs"
+    variables = "NormalizedMoveModuleArgs"
 )]
 pub struct MoveModule {
     pub file_format_version: i32,
@@ -73,12 +73,12 @@ pub struct MoveModule {
 #[cynic(schema = "rpc", graphql_type = "MoveStructConnection")]
 pub struct MoveStructConnection {
     pub page_info: PageInfo,
-    pub nodes: Vec<MoveStructQuery>,
+    pub nodes: Vec<MoveStruct>,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveStruct")]
-pub struct MoveStructQuery {
+pub struct MoveStruct {
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
     pub fields: Option<Vec<MoveField>>,
@@ -88,14 +88,14 @@ pub struct MoveStructQuery {
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModuleConnection")]
 pub struct MoveModuleConnection {
-    pub nodes: Vec<MoveModuleQuery>,
+    pub nodes: Vec<MoveModuleRef>,
     pub page_info: PageInfo,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModule")]
-pub struct MoveModuleQuery {
-    pub package: MovePackageQuery,
+pub struct MoveModuleRef {
+    pub package: MovePackage,
     pub name: String,
 }
 

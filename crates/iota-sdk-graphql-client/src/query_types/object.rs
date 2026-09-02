@@ -9,14 +9,14 @@ use crate::query_types::{Address, Base64, MoveObjectContents, ObjectId, PageInfo
 // ===========================================================================
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectQueryArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectArgs")]
 pub struct ObjectQuery {
     #[arguments(address: $object_id, version: $version)]
     pub object: Option<Object>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectsQueryArgs")]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectsArgs")]
 pub struct ObjectsQuery {
     #[arguments(after: $after, before: $before, filter: $filter, first: $first, last: $last)]
     pub objects: ObjectConnection,
@@ -27,13 +27,13 @@ pub struct ObjectsQuery {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ObjectQueryArgs {
+pub struct ObjectArgs {
     pub object_id: ObjectId,
     pub version: Option<u64>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ObjectsQueryArgs {
+pub struct ObjectsArgs {
     pub after: Option<String>,
     pub before: Option<String>,
     pub filter: Option<ObjectFilter>,

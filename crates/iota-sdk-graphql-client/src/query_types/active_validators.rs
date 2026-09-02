@@ -12,7 +12,7 @@ use crate::query_types::{Base64, BigInt, GraphQLAddress, MoveObject, ObjectId, P
 )]
 pub struct ActiveValidatorsQuery {
     #[arguments(id: $id)]
-    pub epoch: Option<EpochValidator>,
+    pub epoch: Option<EpochValidatorSet>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
@@ -30,8 +30,8 @@ pub struct ActiveValidatorsArgs<'a> {
     graphql_type = "Epoch",
     variables = "ActiveValidatorsArgs"
 )]
-pub struct EpochValidator {
-    pub validator_set: Option<ValidatorSetQuery>,
+pub struct EpochValidatorSet {
+    pub validator_set: Option<ValidatorSetActiveValidators>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -40,7 +40,7 @@ pub struct EpochValidator {
     graphql_type = "ValidatorSet",
     variables = "ActiveValidatorsArgs"
 )]
-pub struct ValidatorSetQuery {
+pub struct ValidatorSetActiveValidators {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
     pub active_validators: ValidatorConnection,
 }

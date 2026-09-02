@@ -32,7 +32,7 @@ pub struct ResolveIotaNamesAddressArgs {
 )]
 pub struct IotaNamesAddressRegistrationsQuery {
     #[arguments(address: $address)]
-    pub address: Option<IotaNamesRegistrationsQuery>,
+    pub address: Option<AddressIotaNamesRegistrations>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -43,7 +43,7 @@ pub struct IotaNamesAddressRegistrationsQuery {
 )]
 pub struct IotaNamesAddressDefaultNameQuery {
     #[arguments(address: $address)]
-    pub address: Option<IotaNamesDefaultNameQuery>,
+    pub address: Option<AddressIotaNamesDefaultName>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -52,7 +52,7 @@ pub struct IotaNamesAddressDefaultNameQuery {
     graphql_type = "Address",
     variables = "IotaNamesRegistrationsArgs"
 )]
-pub struct IotaNamesRegistrationsQuery {
+pub struct AddressIotaNamesRegistrations {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
     pub iota_names_registrations: NameRegistrationConnection,
 }
@@ -72,7 +72,7 @@ pub struct IotaNamesRegistrationsArgs {
     graphql_type = "Address",
     variables = "IotaNamesDefaultNameArgs"
 )]
-pub struct IotaNamesDefaultNameQuery {
+pub struct AddressIotaNamesDefaultName {
     #[arguments(format: $format)]
     pub iota_names_default_name: Option<String>,
 }

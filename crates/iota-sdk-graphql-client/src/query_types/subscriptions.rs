@@ -14,7 +14,7 @@ use crate::{
     error::{self, Error, Kind},
     query_types::{
         Address, Base64, DateTime, Event, GraphQLAddress, JsonValue, MoveData, MoveType,
-        TransactionBlockKindInput, normalized_move::MoveModuleQuery, schema,
+        TransactionBlockKindInput, normalized_move::MoveModuleRef, schema,
     },
 };
 
@@ -174,7 +174,7 @@ pub struct Lagged {
 #[cynic(schema = "rpc", graphql_type = "Event")]
 pub struct SubscriptionEvent {
     pub transaction_block: Option<TransactionBlockDigest>,
-    pub sending_module: Option<MoveModuleQuery>,
+    pub sending_module: Option<MoveModuleRef>,
     pub sender: Option<GraphQLAddress>,
     #[cynic(rename = "type")]
     pub move_type: MoveType,

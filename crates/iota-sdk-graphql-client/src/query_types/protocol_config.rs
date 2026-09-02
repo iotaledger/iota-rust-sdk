@@ -12,7 +12,7 @@ use crate::query_types::schema;
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "ProtocolVersionArgs"
+    variables = "ProtocolConfigArgs"
 )]
 pub struct ProtocolConfigQuery {
     #[arguments(protocolVersion: $id)]
@@ -24,7 +24,7 @@ pub struct ProtocolConfigQuery {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ProtocolVersionArgs {
+pub struct ProtocolConfigArgs {
     pub id: Option<u64>,
 }
 
