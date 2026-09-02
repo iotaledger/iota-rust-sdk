@@ -209,16 +209,6 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// What this transaction did to each object it changed, with the version
-    /// and digest each side is at resolved.
-    pub fn object_changes(&self) -> Vec<ObjectChange> {
-        self.0
-            .object_changes()
-            .into_iter()
-            .map(Into::into)
-            .collect()
-    }
-
     /// Every object still in the store after this transaction, tagged with how
     /// it got there.
     pub fn all_changed_objects(&self) -> Vec<ChangedObjectWrite> {
@@ -680,31 +670,6 @@ impl From<iota_sdk::types::InputSharedObject> for InputSharedObject {
             iota_sdk::types::InputSharedObject::Canceled(object) => Self::Canceled {
                 object: object.into(),
             },
-        }
-    }
-}
-
-/// What an executed transaction did to one object, with the version and digest
-/// each side is at resolved.
-#[derive(uniffi::Record)]
-pub struct ObjectChange {
-    pub object_id: Arc<ObjectId>,
-    pub input_version: Option<Arc<Version>>,
-    pub input_digest: Option<Arc<ObjectDigest>>,
-    pub output_version: Option<Arc<Version>>,
-    pub output_digest: Option<Arc<ObjectDigest>>,
-    pub id_operation: IdOperation,
-}
-
-impl From<iota_sdk::types::ObjectChange> for ObjectChange {
-    fn from(value: iota_sdk::types::ObjectChange) -> Self {
-        Self {
-            object_id: Arc::new(value.object_id.into()),
-            input_version: value.input_version.map(|v| Arc::new(v.into())),
-            input_digest: value.input_digest.map(|d| Arc::new(d.into())),
-            output_version: value.output_version.map(|v| Arc::new(v.into())),
-            output_digest: value.output_digest.map(|d| Arc::new(d.into())),
-            id_operation: value.id_operation.into(),
         }
     }
 }

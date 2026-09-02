@@ -261,9 +261,15 @@ impl From<tokio_tungstenite::tungstenite::Error> for GraphQLError {
     }
 }
 
-#[cfg(not(target_arch = "wasm32"))]
 impl From<graphql_ws_client::Error> for GraphQLError {
     fn from(error: graphql_ws_client::Error) -> Self {
+        Self::Subscription(error.into())
+    }
+}
+
+#[cfg(target_arch = "wasm32")]
+impl From<ws_stream_wasm::WsErr> for GraphQLError {
+    fn from(error: ws_stream_wasm::WsErr) -> Self {
         Self::Subscription(error.into())
     }
 }

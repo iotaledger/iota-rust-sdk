@@ -266,9 +266,9 @@ impl MovePackage {
         )
     }
 
-    /// It is important that this function is shared across both the calculation
-    /// of the digest for the package, and the calculation of the digest
-    /// on-chain.
+    // It is important that this function is shared across both the calculation
+    // of the digest for the package, and the calculation of the digest
+    // on-chain.
     #[cfg(feature = "hash")]
     pub fn compute_digest_for_modules_and_deps<'a>(
         modules: impl IntoIterator<Item = &'a Vec<u8>>,
@@ -280,7 +280,7 @@ impl MovePackage {
             .chain(
                 modules
                     .into_iter()
-                    .map(|module| Hasher::digest(module).into_inner()),
+                    .map(|module| Hasher::digest(module).into_bytes()),
             )
             .collect::<Vec<_>>();
 
@@ -296,7 +296,7 @@ impl MovePackage {
     }
 
     /// Retrieve the module from this package with the given [Identifier].
-    pub fn get_module(&self, name: &Identifier) -> Option<&Vec<u8>> {
+    pub fn module(&self, name: &Identifier) -> Option<&Vec<u8>> {
         self.modules.get(name)
     }
 
@@ -428,7 +428,7 @@ mod serialization {
         use super::*;
 
         pub fn serialize<S: Serializer>(value: &Digest, serializer: S) -> Result<S::Ok, S::Error> {
-            value.as_bytes().serialize(serializer)
+            value.bytes().serialize(serializer)
         }
 
         pub fn deserialize<'de, D>(deserializer: D) -> Result<Digest, D::Error>

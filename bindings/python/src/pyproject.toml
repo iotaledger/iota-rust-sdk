@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "iota-sdk"
-version = "3.0.0a1"
+version = "3.0.0b1"
 description = "IOTA SDK Python bindings"
 readme = "README.md"
 license = "Apache-2.0"

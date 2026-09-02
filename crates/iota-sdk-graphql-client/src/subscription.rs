@@ -8,9 +8,6 @@
 //! data as it arrives and never terminate on their own. The stream
 //! transparently reconnects on disconnect, resuming from the last item it
 //! delivered via the subscription's `startAfter` cursor.
-//!
-//! Only built for non-wasm targets; the transport relies on
-//! `tokio-tungstenite`.
 
 use std::{future::Future, time::Duration};
 
@@ -18,7 +15,6 @@ use cynic::SubscriptionBuilder;
 use futures::{Stream, StreamExt};
 use iota_types::SignedTransaction;
 use reqwest::Url;
-use tokio_tungstenite::tungstenite::{client::IntoClientRequest, http::HeaderValue};
 
 use crate::{
     Client,
@@ -37,6 +33,8 @@ use crate::{
 const INITIAL_BACKOFF: Duration = Duration::from_millis(250);
 /// Upper bound on the reconnect backoff.
 const MAX_BACKOFF: Duration = Duration::from_secs(5);
+/// The WebSocket subprotocol subscriptions are served over.
+const WS_PROTOCOL: &str = "graphql-transport-ws";
 
 /// The result of decoding a single subscription payload.
 enum Outcome<T> {
@@ -190,17 +188,36 @@ impl Client {
     where
         Operation: graphql_ws_client::graphql::GraphqlOperation + Unpin + Send + 'static,
     {
-        let url = self.ws_url()?;
-        let mut request = url.as_str().into_client_request()?;
-        request.headers_mut().insert(
-            "Sec-WebSocket-Protocol",
-            HeaderValue::from_static("graphql-transport-ws"),
-        );
-        let (connection, _response) = tokio_tungstenite::connect_async(request).await?;
+        let connection = connect(&self.ws_url()?).await?;
         Ok(graphql_ws_client::Client::build(connection)
             .subscribe(operation)
             .await?)
     }
+}
+
+/// Open a WebSocket to `url`, negotiating the `graphql-transport-ws`
+/// subprotocol.
+///
+/// The two transports negotiate it differently: tungstenite sets it as a header
+/// on the upgrade request, while a browser `WebSocket` rejects arbitrary
+/// headers and takes the subprotocol as a constructor argument instead.
+#[cfg(not(target_arch = "wasm32"))]
+async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection + Send + 'static> {
+    use tokio_tungstenite::tungstenite::{client::IntoClientRequest, http::HeaderValue};
+
+    let mut request = url.as_str().into_client_request()?;
+    request.headers_mut().insert(
+        "Sec-WebSocket-Protocol",
+        HeaderValue::from_static(WS_PROTOCOL),
+    );
+    let (connection, _response) = tokio_tungstenite::connect_async(request).await?;
+    Ok(connection)
+}
+
+#[cfg(target_arch = "wasm32")]
+async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection + Send + 'static> {
+    let connection = ws_stream_wasm::WsMeta::connect(url.as_str(), Some(vec![WS_PROTOCOL])).await?;
+    Ok(graphql_ws_client::ws_stream_wasm::Connection::new(connection).await)
 }
 
 /// Decode the data payload from a subscription response, surfacing GraphQL
@@ -255,7 +272,7 @@ where
                 }
                 Err(error) => yield Err(error),
             }
-            tokio::time::sleep(backoff).await;
+            crate::wait::sleep(backoff).await;
             backoff = (backoff * 2).min(MAX_BACKOFF);
         }
     })
