@@ -81,9 +81,9 @@ pub use normalized_move::{
 };
 pub use object::{ObjectArgs, ObjectFilter, ObjectKey, ObjectQuery, ObjectsArgs, ObjectsQuery};
 pub use packages::{
-    LatestPackageQuery, MovePackage, MovePackageConnection, MovePackageVersionFilter, PackageArgs,
-    PackageCheckpointFilter, PackageQuery, PackageVersionsArgs, PackageVersionsQuery, PackagesArgs,
-    PackagesQuery,
+    LatestPackageQuery, MovePackage, MovePackageCheckpointFilter, MovePackageConnection,
+    MovePackageVersionFilter, PackageArgs, PackageQuery, PackageVersionsArgs, PackageVersionsQuery,
+    PackagesArgs, PackagesQuery,
 };
 pub use protocol_config::{
     ProtocolConfigArgs, ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigQuery,
@@ -99,10 +99,10 @@ pub use subscriptions::{
 };
 pub use transaction::{
     TransactionBlock, TransactionBlockArgs, TransactionBlockCheckpointQuery,
-    TransactionBlockEffectsQuery, TransactionBlockIndexedQuery, TransactionBlockKindInput,
-    TransactionBlockQuery, TransactionBlockWithEffects, TransactionBlockWithEffectsQuery,
-    TransactionBlocksArgs, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
-    TransactionBlocksWithEffectsQuery, TransactionsFilter,
+    TransactionBlockEffectsQuery, TransactionBlockFilter, TransactionBlockIndexedQuery,
+    TransactionBlockKindInput, TransactionBlockQuery, TransactionBlockWithEffects,
+    TransactionBlockWithEffectsQuery, TransactionBlocksArgs, TransactionBlocksEffectsQuery,
+    TransactionBlocksQuery, TransactionBlocksWithEffectsQuery,
 };
 
 use crate::error;
@@ -249,3 +249,9 @@ pub type NormalizedMoveModuleQueryArgs<'a> = NormalizedMoveModuleArgs<'a>;
 
 #[deprecated(note = "renamed to `ProtocolConfigArgs`")]
 pub type ProtocolVersionArgs = ProtocolConfigArgs;
+
+#[deprecated(note = "renamed to `TransactionBlockFilter`")]
+pub type TransactionsFilter = TransactionBlockFilter;
+
+#[deprecated(note = "renamed to `MovePackageCheckpointFilter`")]
+pub type PackageCheckpointFilter = MovePackageCheckpointFilter;

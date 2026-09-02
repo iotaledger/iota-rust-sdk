@@ -13,9 +13,9 @@ use crate::{
     error::Result,
     pagination::PaginationFilter,
     query_types::{
-        LatestPackageQuery, MoveFunction, MoveModule, MovePackageVersionFilter,
-        NormalizedMoveFunctionArgs, NormalizedMoveFunctionQuery, NormalizedMoveModuleArgs,
-        NormalizedMoveModuleQuery, PackageArgs, PackageCheckpointFilter, PackageQuery,
+        LatestPackageQuery, MoveFunction, MoveModule, MovePackageCheckpointFilter,
+        MovePackageVersionFilter, NormalizedMoveFunctionArgs, NormalizedMoveFunctionQuery,
+        NormalizedMoveModuleArgs, NormalizedMoveModuleQuery, PackageArgs, PackageQuery,
         PackageVersionsArgs, PackageVersionsQuery, PackagesArgs, PackagesQuery,
     },
 };
@@ -139,7 +139,7 @@ impl Client {
             before: pagination.before.as_deref(),
             first: pagination.first,
             last: pagination.last,
-            filter: Some(PackageCheckpointFilter {
+            filter: Some(MovePackageCheckpointFilter {
                 after_checkpoint: after_checkpoint.into(),
                 before_checkpoint: before_checkpoint.into(),
             }),

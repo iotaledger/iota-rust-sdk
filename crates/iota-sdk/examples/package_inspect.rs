@@ -10,7 +10,7 @@ use iota_sdk::{
     graphql_client::{
         Client,
         pagination::{Direction, PaginationFilter},
-        query_types::{MoveAbility, ObjectFilter, TransactionsFilter},
+        query_types::{MoveAbility, ObjectFilter, TransactionBlockFilter},
     },
     types::{Address, Input, MoveCall, MovePackage, ObjectId, Transaction, UpgradePolicy},
 };
@@ -295,7 +295,7 @@ fn extract_policy_value(contents: &serde_json::Value) -> Option<u8> {
 async fn resolve_upgrade_cap_id(client: &Client, package_id: ObjectId) -> Result<Option<ObjectId>> {
     let effects_page = client
         .transactions_effects(
-            TransactionsFilter::default().with_changed_object(package_id),
+            TransactionBlockFilter::default().with_changed_object(package_id),
             PaginationFilter {
                 direction: Direction::Forward,
                 cursor: None,
@@ -433,7 +433,7 @@ async fn was_package_published_as_immutable(client: &Client, package_id: ObjectI
     loop {
         let page = client
             .transactions_data_effects(
-                TransactionsFilter::default().with_changed_object(package_id),
+                TransactionBlockFilter::default().with_changed_object(package_id),
                 forward_page(cursor.clone()),
             )
             .await?;
@@ -463,7 +463,7 @@ async fn was_upgrade_cap_used_for_make_immutable(
     loop {
         let page = client
             .transactions_data_effects(
-                TransactionsFilter::default().with_input_object(upgrade_cap_id),
+                TransactionBlockFilter::default().with_input_object(upgrade_cap_id),
                 forward_page(cursor.clone()),
             )
             .await?;

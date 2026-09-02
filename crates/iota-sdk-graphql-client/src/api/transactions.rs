@@ -21,10 +21,10 @@ use crate::{
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
         ExecuteTransactionArgs, ExecuteTransactionQuery, TransactionBlockArgs,
-        TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery,
+        TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery, TransactionBlockFilter,
         TransactionBlockIndexedQuery, TransactionBlockQuery, TransactionBlockWithEffectsQuery,
         TransactionBlocksArgs, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
-        TransactionBlocksWithEffectsQuery, TransactionsFilter,
+        TransactionBlocksWithEffectsQuery,
     },
     streams::stream_paginated_query,
 };
@@ -49,7 +49,7 @@ impl Client {
     /// Get a page of transactions based on the provided filters.
     pub async fn transactions(
         &self,
-        filter: impl Into<Option<TransactionsFilter>>,
+        filter: impl Into<Option<TransactionBlockFilter>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<SignedTransaction>> {
         let pagination = self.pagination_filter(pagination_filter).await;
@@ -94,7 +94,7 @@ impl Client {
     /// Get a page of transactions' effects based on the provided filters.
     pub async fn transactions_effects(
         &self,
-        filter: impl Into<Option<TransactionsFilter>>,
+        filter: impl Into<Option<TransactionBlockFilter>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<TransactionEffects>> {
         let pagination = self.pagination_filter(pagination_filter).await;
@@ -150,7 +150,7 @@ impl Client {
     /// filters.
     pub async fn transactions_data_effects(
         &self,
-        filter: impl Into<Option<TransactionsFilter>>,
+        filter: impl Into<Option<TransactionBlockFilter>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<TransactionDataEffects>> {
         let pagination = self.pagination_filter(pagination_filter).await;
@@ -196,7 +196,7 @@ impl Client {
     /// transaction filter.
     pub fn transactions_effects_stream(
         &self,
-        filter: impl Into<Option<TransactionsFilter>>,
+        filter: impl Into<Option<TransactionBlockFilter>>,
         streaming_direction: Direction,
     ) -> impl Stream<Item = Result<TransactionEffects>> + '_ {
         let filter = filter.into();
@@ -299,7 +299,7 @@ impl Client {
 
 #[cfg(test)]
 mod tests {
-    use crate::{PaginationFilter, query_types::TransactionsFilter, test_utils::test_client};
+    use crate::{PaginationFilter, query_types::TransactionBlockFilter, test_utils::test_client};
 
     #[tokio::test]
     async fn test_transaction_effects_query() {
@@ -379,7 +379,7 @@ mod tests {
 
         client
             .transactions_data_effects(
-                TransactionsFilter {
+                TransactionBlockFilter {
                     transaction_ids: Some(vec![digest.to_string()]),
                     ..Default::default()
                 },

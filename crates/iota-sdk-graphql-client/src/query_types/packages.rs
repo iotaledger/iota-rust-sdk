@@ -56,7 +56,7 @@ pub struct PackagesQuery {
 pub struct PackagesArgs<'a> {
     pub after: Option<&'a str>,
     pub before: Option<&'a str>,
-    pub filter: Option<PackageCheckpointFilter>,
+    pub filter: Option<MovePackageCheckpointFilter>,
     pub first: Option<i32>,
     pub last: Option<i32>,
 }
@@ -64,12 +64,12 @@ pub struct PackagesArgs<'a> {
 #[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "MovePackageCheckpointFilter")]
 #[non_exhaustive]
-pub struct PackageCheckpointFilter {
+pub struct MovePackageCheckpointFilter {
     pub after_checkpoint: Option<u64>,
     pub before_checkpoint: Option<u64>,
 }
 
-impl PackageCheckpointFilter {
+impl MovePackageCheckpointFilter {
     /// Limit to packages published after the given checkpoint, exclusive.
     pub fn with_after_checkpoint(mut self, after_checkpoint: impl Into<Option<u64>>) -> Self {
         self.after_checkpoint = after_checkpoint.into();
