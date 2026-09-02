@@ -114,6 +114,8 @@ pub struct TransactionsFilter {
     pub transaction_ids: Option<Vec<String>>,
     #[uniffi(default = None)]
     pub wrapped_or_deleted_object: Option<Arc<ObjectId>>,
+    #[uniffi(default = None)]
+    pub affected_address: Option<Arc<Address>>,
 }
 
 impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for TransactionsFilter {
@@ -133,6 +135,7 @@ impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for Transac
                 .wrapped_or_deleted_object
                 .map(Into::into)
                 .map(Arc::new),
+            affected_address: value.affected_address.map(Into::into).map(Arc::new),
         }
     }
 }
@@ -151,6 +154,7 @@ impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::Transac
             .with_changed_object(value.changed_object.map(|v| **v))
             .with_transaction_ids(value.transaction_ids)
             .with_wrapped_or_deleted_object(value.wrapped_or_deleted_object.map(|v| **v))
+            .with_affected_address(value.affected_address.map(|v| **v))
     }
 }
 

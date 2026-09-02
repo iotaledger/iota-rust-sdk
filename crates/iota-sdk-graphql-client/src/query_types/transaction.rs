@@ -188,6 +188,9 @@ pub struct TransactionsFilter {
     pub before_checkpoint: Option<u64>,
     pub sent_address: Option<Address>,
     pub recv_address: Option<Address>,
+    // Nodes older than v1.31 reject the whole filter over an unknown field,
+    // even a null one, so an unset `affected_address` must not be sent.
+    #[cynic(skip_serializing_if = "Option::is_none")]
     pub affected_address: Option<Address>,
     pub input_object: Option<ObjectId>,
     pub changed_object: Option<ObjectId>,
@@ -333,5 +336,28 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
                 "Cannot convert GraphQL TxBlockEffects into TransactionEffects",
             )
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use cynic::QueryBuilder;
+
+    use super::*;
+
+    /// `affectedAddress` reached the nodes only in v1.31, so a filter that
+    /// does not use it must not mention it either.
+    #[test]
+    fn unset_affected_address_is_not_serialized() {
+        let operation = TransactionBlocksQuery::build(TransactionBlocksQueryArgs {
+            first: None,
+            after: None,
+            last: None,
+            before: None,
+            filter: Some(TransactionsFilter::default()),
+        });
+
+        let query = serde_json::to_string(&operation).unwrap();
+        assert!(!query.contains("affectedAddress"), "{query}");
     }
 }
