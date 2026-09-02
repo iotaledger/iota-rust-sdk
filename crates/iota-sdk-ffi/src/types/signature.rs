@@ -57,7 +57,9 @@ impl From<iota_sdk::types::SignatureScheme> for SignatureScheme {
             iota_sdk::types::SignatureScheme::Bls12381 => Self::Bls12381,
             iota_sdk::types::SignatureScheme::PasskeyAuthenticator => Self::PasskeyAuthenticator,
             iota_sdk::types::SignatureScheme::MoveAuthenticator => Self::MoveAuthenticator,
-            _ => unimplemented!("a new SignatureScheme variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new SignatureScheme enum variant was added and needs to be handled"
+            ),
         }
     }
 }

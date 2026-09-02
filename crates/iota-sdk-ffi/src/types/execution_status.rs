@@ -44,7 +44,9 @@ impl From<iota_sdk::types::ExecutionStatus> for ExecutionStatus {
                 error: error.into(),
                 command,
             },
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new ExecutionStatus enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -452,7 +454,9 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
             } => Self::ExecutionCanceledDueToExecutionWorkerCongestion {
                 suggested_gas_price,
             },
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new ExecutionError enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -740,7 +744,7 @@ impl From<iota_sdk::types::CommandArgumentError> for CommandArgumentError {
                 Self::InvalidArgumentArity
             }
             _ => unimplemented!(
-                "a new CommandArgumentError variant was added and needs to be handled"
+                "a new CommandArgumentError enum variant was added and needs to be handled"
             ),
         }
     }
@@ -841,7 +845,9 @@ impl From<iota_sdk::types::PackageUpgradeError> for PackageUpgradeError {
                 package_id: Arc::new(package_id.into()),
                 ticket_id: Arc::new(ticket_id.into()),
             },
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new PackageUpgradeError enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -903,7 +909,9 @@ impl From<iota_sdk::types::TypeArgumentError> for TypeArgumentError {
                 Self::ConstraintNotSatisfied
             }
             _ => {
-                unimplemented!("a new TypeArgumentError variant was added and needs to be handled")
+                unimplemented!(
+                    "a new TypeArgumentError enum variant was added and needs to be handled"
+                )
             }
         }
     }
