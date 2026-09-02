@@ -11,8 +11,8 @@ use cynic::{MutationBuilder, QueryBuilder};
 use futures::Stream;
 use iota_transaction_builder::WaitForTransaction;
 use iota_types::{
-    SenderSignedTransaction, SignedTransaction, Transaction, TransactionDigest, TransactionEffects,
-    UserSignature,
+    Address, SenderSignedTransaction, SignedTransaction, Transaction, TransactionDigest,
+    TransactionEffects, UserSignature,
 };
 
 use crate::{
@@ -20,11 +20,12 @@ use crate::{
     error::{Error, Kind, Result},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        ExecuteTransactionArgs, ExecuteTransactionQuery, TransactionBlockArgs,
-        TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery,
-        TransactionBlockIndexedQuery, TransactionBlockQuery, TransactionBlockWithEffectsQuery,
-        TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
-        TransactionBlocksWithEffectsQuery, TransactionsFilter,
+        AddressTransactionBlockRelationship, AddressTransactionBlocksQuery,
+        AddressTransactionsQuery, AddressTransactionsQueryArgs, ExecuteTransactionArgs,
+        ExecuteTransactionQuery, TransactionBlockArgs, TransactionBlockCheckpointQuery,
+        TransactionBlockEffectsQuery, TransactionBlockIndexedQuery, TransactionBlockQuery,
+        TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
+        TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery, TransactionsFilter,
     },
     streams::stream_paginated_query,
 };
@@ -73,6 +74,43 @@ impl Client {
             .map(|n| n.try_into())
             .collect::<Result<Vec<_>>>()?;
         Ok(Page::new(page_info, transactions))
+    }
+
+    /// Get a page of transactions related to the given address. `relation`
+    /// selects how the address relates to them, defaulting to the
+    /// transactions it sent.
+    pub async fn address_transactions(
+        &self,
+        address: Address,
+        relation: impl Into<Option<AddressTransactionBlockRelationship>>,
+        filter: impl Into<Option<TransactionsFilter>>,
+        pagination_filter: PaginationFilter,
+    ) -> Result<Page<SignedTransaction>> {
+        let pagination = self.pagination_filter(pagination_filter).await;
+
+        let operation = AddressTransactionsQuery::build(AddressTransactionsQueryArgs {
+            address,
+            after: pagination.after,
+            before: pagination.before,
+            first: pagination.first,
+            last: pagination.last,
+            relation: relation.into(),
+            filter: filter.into(),
+        });
+
+        let response = self.run_query(&operation).await?;
+
+        let Some(AddressTransactionBlocksQuery { transaction_blocks }) = response.address else {
+            return Ok(Page::new_empty());
+        };
+
+        let transactions = transaction_blocks
+            .nodes
+            .into_iter()
+            .map(|n| n.try_into())
+            .collect::<Result<Vec<_>>>()?;
+
+        Ok(Page::new(transaction_blocks.page_info, transactions))
     }
 
     /// Get a transaction's effects by its digest.
@@ -299,7 +337,11 @@ impl Client {
 
 #[cfg(test)]
 mod tests {
-    use crate::{PaginationFilter, query_types::TransactionsFilter, test_utils::test_client};
+    use crate::{
+        PaginationFilter,
+        query_types::{AddressTransactionBlockRelationship, TransactionsFilter},
+        test_utils::test_client,
+    };
 
     #[tokio::test]
     async fn test_transaction_effects_query() {
@@ -350,6 +392,43 @@ mod tests {
             "Transactions query returned no data for {} network",
             client.rpc_server()
         );
+    }
+
+    #[tokio::test]
+    async fn test_address_transactions() {
+        let client = test_client();
+        let transactions = client
+            .transactions(None, PaginationFilter::default())
+            .await
+            .unwrap();
+        let sender = transactions.data()[0].transaction.as_v1().sender;
+
+        for relation in [
+            AddressTransactionBlockRelationship::Sent,
+            AddressTransactionBlockRelationship::Recv,
+            AddressTransactionBlockRelationship::Affected,
+        ] {
+            let page = client
+                .address_transactions(sender, relation, None, PaginationFilter::default())
+                .await
+                .map_err(|e| {
+                    format!(
+                        "Address transactions query with relation {relation:?} failed for {} \
+                         network: Error {e}",
+                        client.rpc_server()
+                    )
+                })
+                .unwrap();
+
+            if matches!(relation, AddressTransactionBlockRelationship::Sent) {
+                assert!(
+                    page.data()
+                        .iter()
+                        .all(|tx| tx.transaction.as_v1().sender == sender),
+                    "Sent relation returned a transaction from another sender"
+                );
+            }
+        }
     }
 
     #[tokio::test]
