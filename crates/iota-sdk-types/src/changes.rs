@@ -84,10 +84,11 @@ impl crate::TreeDisplay for BalanceChange {
 /// [`TransactionEffectsV1::object_changes`], computed from the effects and the
 /// objects they name.
 ///
-/// Naming the kind needs the objects as well as the effects, since
-/// `object_type` and `owner` are not in the effects. Where only the effects are
-/// at hand, [`ChangedObject`](crate::ChangedObject) carries each side's state,
-/// and the object sets report the version each changed object ends at.
+/// The effects name every object a transaction changed but carry no contents,
+/// so `object_type` has to come from the object itself. Where only the effects
+/// are at hand, [`ChangedObject`](crate::ChangedObject) carries each side's
+/// version, digest and owner, and the object sets report the version each
+/// changed object ends at.
 ///
 /// There is no kind for a mutated package, so a system package upgrade — which
 /// keeps its id and is therefore a mutate — is not reported at all.
