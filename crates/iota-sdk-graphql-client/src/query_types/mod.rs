@@ -19,7 +19,6 @@ mod object;
 mod packages;
 mod protocol_config;
 mod service_config;
-#[cfg(not(target_arch = "wasm32"))]
 mod subscriptions;
 mod transaction;
 
@@ -75,7 +74,6 @@ pub use protocol_config::{
 };
 use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
-#[cfg(not(target_arch = "wasm32"))]
 pub use subscriptions::{
     EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs, Lagged,
     SubscriptionEvent, SubscriptionEventFilter, SubscriptionTransactionBlock,

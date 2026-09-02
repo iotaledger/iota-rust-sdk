@@ -38,7 +38,7 @@ eyre = "0.6"
 futures = "0.3.29"
 getrandom_2 = { version = "0.2", package = "getrandom", features = ["js"] }
 getrandom_3 = { version = "0.3", package = "getrandom", features = ["wasm_js"] }
-graphql-ws-client = { version = "0.13", default-features = false, features = ["client-cynic", "tungstenite-0.28"] }
+graphql-ws-client = { version = "0.13", default-features = false, features = ["client-cynic"] }
 hex = "0.4.3"
 js-sys = "0.3"
 paste = "1.0.15"
@@ -66,6 +66,7 @@ variadics_please = "1.1"
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
 wasm-bindgen-test = "0.3"
+ws_stream_wasm = "0.7"
 
 # internal dependencies
 iota-bcs-schema = { version = "1.0.0-beta.1", package = "iota-sdk-bcs-schema", path = "crates/iota-sdk-bcs-schema" }
