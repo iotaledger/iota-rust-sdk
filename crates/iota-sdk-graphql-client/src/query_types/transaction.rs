@@ -116,7 +116,7 @@ pub struct TransactionBlocksArgs {
     pub after: Option<String>,
     pub last: Option<i32>,
     pub before: Option<String>,
-    pub filter: Option<TransactionsFilter>,
+    pub filter: Option<TransactionBlockFilter>,
 }
 
 // ===========================================================================
@@ -180,7 +180,7 @@ pub enum TransactionBlockKindInput {
 #[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
 #[non_exhaustive]
-pub struct TransactionsFilter {
+pub struct TransactionBlockFilter {
     pub function: Option<String>,
     pub kind: Option<TransactionBlockKindInput>,
     pub after_checkpoint: Option<u64>,
@@ -194,7 +194,7 @@ pub struct TransactionsFilter {
     pub transaction_ids: Option<Vec<String>>,
 }
 
-impl TransactionsFilter {
+impl TransactionBlockFilter {
     /// Filter by package, module, or function name, e.g. `"0x03"`,
     /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
     pub fn with_function(mut self, function: impl Into<Option<String>>) -> Self {

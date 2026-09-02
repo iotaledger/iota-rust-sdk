@@ -5,7 +5,7 @@ Polling-based custom indexer example built on top of `iota_sdk::graphql_client::
 This example demonstrates a polling indexer flow with:
 
 - checkpoint polling with persisted watermark progress in PostgreSQL,
-- transaction ingestion using `TransactionsFilter::after_checkpoint` / `before_checkpoint`,
+- transaction ingestion using `TransactionBlockFilter::after_checkpoint` / `before_checkpoint`,
 - event ingestion + filtering,
 - storage into PostgreSQL.
 

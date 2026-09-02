@@ -6,7 +6,7 @@ use std::{cmp, collections::HashMap, time::Duration};
 use iota_sdk::{
     graphql_client::{
         Client, PaginationFilter,
-        query_types::{EventFilter, TransactionsFilter},
+        query_types::{EventFilter, TransactionBlockFilter},
     },
     types::{ExecutionStatus, SignedTransaction, Transaction},
 };
@@ -191,7 +191,7 @@ impl Indexer {
     async fn process_batch(&self, range_start: u64, range_end: u64) -> anyhow::Result<()> {
         info!(range_start, range_end, "processing batch");
 
-        let tx_filter = TransactionsFilter::default()
+        let tx_filter = TransactionBlockFilter::default()
             .with_function(self.config.filters.derived_tx_function())
             .with_sent_address(self.config.filters.tx_sender)
             .with_after_checkpoint(range_start.checked_sub(1))
@@ -319,7 +319,7 @@ impl Indexer {
         .execute(&self.pool)
         .await?;
 
-        let tx_filter = TransactionsFilter::default()
+        let tx_filter = TransactionBlockFilter::default()
             .with_function(self.config.filters.tx_function.clone())
             .with_sent_address(self.config.filters.tx_sender)
             .with_after_checkpoint(sequence.checked_sub(1))

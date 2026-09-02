@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_sdk::graphql_client::{
-    Client, error::Result, pagination::PaginationFilter, query_types::TransactionsFilter,
+    Client, error::Result, pagination::PaginationFilter, query_types::TransactionBlockFilter,
 };
 
 #[tokio::main]
@@ -11,7 +11,7 @@ async fn main() -> Result<()> {
 
     let transactions = client
         .transactions(
-            TransactionsFilter::default()
+            TransactionBlockFilter::default()
                 .with_function("0x3::iota_system::request_add_stake".to_string()),
             PaginationFilter::default(),
         )

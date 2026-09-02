@@ -116,8 +116,8 @@ pub struct TransactionsFilter {
     pub wrapped_or_deleted_object: Option<Arc<ObjectId>>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for TransactionsFilter {
-    fn from(value: iota_sdk::graphql_client::query_types::TransactionsFilter) -> Self {
+impl From<iota_sdk::graphql_client::query_types::TransactionBlockFilter> for TransactionsFilter {
+    fn from(value: iota_sdk::graphql_client::query_types::TransactionBlockFilter) -> Self {
         Self {
             function: value.function,
             kind: value.kind.map(Into::into),
@@ -137,7 +137,7 @@ impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for Transac
     }
 }
 
-impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::TransactionsFilter {
+impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::TransactionBlockFilter {
     fn from(value: TransactionsFilter) -> Self {
         Self::default()
             .with_function(value.function)
