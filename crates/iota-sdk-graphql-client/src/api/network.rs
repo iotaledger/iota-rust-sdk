@@ -12,7 +12,7 @@ use crate::{
     pagination::{Page, PaginationFilter},
     query_types::{
         ActiveValidatorsArgs, ActiveValidatorsQuery, ChainIdentifierQuery, EpochArgs,
-        EpochSummaryQuery, ProtocolConfigQuery, ProtocolConfigs, ProtocolVersionArgs, Validator,
+        EpochSummaryQuery, ProtocolConfigArgs, ProtocolConfigQuery, ProtocolConfigs, Validator,
     },
 };
 
@@ -46,7 +46,7 @@ impl Client {
         &self,
         version: impl Into<Option<u64>>,
     ) -> Result<ProtocolConfigs> {
-        let operation = ProtocolConfigQuery::build(ProtocolVersionArgs { id: version.into() });
+        let operation = ProtocolConfigQuery::build(ProtocolConfigArgs { id: version.into() });
         let response = self.run_query(&operation).await?;
         Ok(response.protocol_config)
     }

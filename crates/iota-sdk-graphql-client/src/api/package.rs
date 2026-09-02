@@ -14,9 +14,9 @@ use crate::{
     pagination::PaginationFilter,
     query_types::{
         LatestPackageQuery, MoveFunction, MoveModule, MovePackageVersionFilter,
-        NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
-        NormalizedMoveModuleQueryArgs, PackageArgs, PackageCheckpointFilter, PackageQuery,
-        PackageVersionsArgs, PackageVersionsQuery, PackagesQuery, PackagesQueryArgs,
+        NormalizedMoveFunctionArgs, NormalizedMoveFunctionQuery, NormalizedMoveModuleArgs,
+        NormalizedMoveModuleQuery, PackageArgs, PackageCheckpointFilter, PackageQuery,
+        PackageVersionsArgs, PackageVersionsQuery, PackagesArgs, PackagesQuery,
     },
 };
 
@@ -134,7 +134,7 @@ impl Client {
     ) -> Result<Page<MovePackage>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = PackagesQuery::build(PackagesQueryArgs {
+        let operation = PackagesQuery::build(PackagesArgs {
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
             first: pagination.first,
@@ -175,7 +175,7 @@ impl Client {
         function: &str,
         version: impl Into<Option<Version>>,
     ) -> Result<Option<MoveFunction>> {
-        let operation = NormalizedMoveFunctionQuery::build(NormalizedMoveFunctionQueryArgs {
+        let operation = NormalizedMoveFunctionQuery::build(NormalizedMoveFunctionArgs {
             address: package,
             module,
             function,
@@ -207,7 +207,7 @@ impl Client {
         let friends = self.pagination_filter(pagination_filter_friends).await;
         let functions = self.pagination_filter(pagination_filter_functions).await;
         let structs = self.pagination_filter(pagination_filter_structs).await;
-        let operation = NormalizedMoveModuleQuery::build(NormalizedMoveModuleQueryArgs {
+        let operation = NormalizedMoveModuleQuery::build(NormalizedMoveModuleArgs {
             package,
             module,
             version: version.into().map(|v| v.as_u64()),

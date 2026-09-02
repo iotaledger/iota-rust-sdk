@@ -11,12 +11,12 @@ use crate::{
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "BalanceArgs")]
 pub struct BalanceQuery {
     #[arguments(address: $address)]
-    pub owner: Option<Owner>,
+    pub owner: Option<OwnerBalance>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Owner", variables = "BalanceArgs")]
-pub struct Owner {
+pub struct OwnerBalance {
     #[arguments(type: $coin_type)]
     pub balance: Option<Balance>,
 }

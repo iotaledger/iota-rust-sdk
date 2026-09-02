@@ -13,8 +13,8 @@
 //!   ([`Validator`], [`Event`]), as are enums and input objects
 //!   ([`TransactionBlockKindInput`], [`EventFilter`]).
 //! - A fragment that only descends through one field to reach a nested fragment
-//!   is named `<GraphqlType><Field>`: `OwnerDynamicField` selects
-//!   `Owner.dynamicField`, `TransactionBlockEffectsCheckpoint` selects
+//!   is named `<GraphqlType><Field>`: `OwnerDynamicField` selects `Owner,
+//!   OwnerBalance.dynamicField`, `TransactionBlockEffectsCheckpoint` selects
 //!   `TransactionBlockEffects.checkpoint`.
 //! - When one GraphQL type has several fragments, a suffix says what sets each
 //!   apart ([`TransactionBlockWithEffects`], `EpochSummary`).
@@ -42,10 +42,10 @@ mod subscriptions;
 mod transaction;
 
 pub use active_validators::{
-    ActiveValidatorsArgs, ActiveValidatorsQuery, EpochValidator, Validator, ValidatorConnection,
-    ValidatorCredentials, ValidatorSetQuery,
+    ActiveValidatorsArgs, ActiveValidatorsQuery, EpochValidatorSet, Validator, ValidatorConnection,
+    ValidatorCredentials, ValidatorSetActiveValidators,
 };
-pub use balance::{Balance, BalanceArgs, BalanceQuery, Owner};
+pub use balance::{Balance, BalanceArgs, BalanceQuery, OwnerBalance};
 pub use chain::ChainIdentifierQuery;
 pub use checkpoint::{
     CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsArgs,
@@ -62,11 +62,11 @@ pub use dynamic_fields::{
     DynamicFieldsOwnerQuery, DynamicObjectFieldQuery,
 };
 pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, ValidatorSet};
-pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
+pub use events::{Event, EventConnection, EventFilter, EventsArgs, EventsQuery};
 pub use execute_transaction::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
 pub use iota_names::{
-    IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs,
-    IotaNamesDefaultNameQuery, IotaNamesRegistrationsArgs, IotaNamesRegistrationsQuery,
+    AddressIotaNamesDefaultName, AddressIotaNamesRegistrations, IotaNamesAddressDefaultNameQuery,
+    IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs, IotaNamesRegistrationsArgs,
     NameRegistration, NameRegistrationConnection, ResolveIotaNamesAddressArgs,
     ResolveIotaNamesAddressQuery,
 };
@@ -75,21 +75,19 @@ pub use move_view_call::{MoveViewCallArgs, MoveViewCallQuery, MoveViewResult};
 pub use normalized_move::{
     MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunction,
     MoveFunctionConnection, MoveFunctionTypeParameter, MoveModule, MoveModuleConnection,
-    MoveModuleQuery, MoveStructConnection, MoveStructQuery, MoveStructTypeParameter,
-    MoveVisibility, NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs,
-    NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs, OpenMoveType,
+    MoveModuleRef, MoveStruct, MoveStructConnection, MoveStructTypeParameter, MoveVisibility,
+    NormalizedMoveFunctionArgs, NormalizedMoveFunctionQuery, NormalizedMoveModuleArgs,
+    NormalizedMoveModuleQuery, OpenMoveType,
 };
-pub use object::{
-    ObjectFilter, ObjectKey, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs,
-};
+pub use object::{ObjectArgs, ObjectFilter, ObjectKey, ObjectQuery, ObjectsArgs, ObjectsQuery};
 pub use packages::{
-    LatestPackageQuery, MovePackageConnection, MovePackageQuery, MovePackageVersionFilter,
-    PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs, PackageVersionsQuery,
-    PackagesQuery, PackagesQueryArgs,
+    LatestPackageQuery, MovePackage, MovePackageConnection, MovePackageVersionFilter, PackageArgs,
+    PackageCheckpointFilter, PackageQuery, PackageVersionsArgs, PackageVersionsQuery, PackagesArgs,
+    PackagesQuery,
 };
 pub use protocol_config::{
-    ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigQuery, ProtocolConfigs,
-    ProtocolVersionArgs,
+    ProtocolConfigArgs, ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigQuery,
+    ProtocolConfigs,
 };
 use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
@@ -103,7 +101,7 @@ pub use transaction::{
     TransactionBlock, TransactionBlockArgs, TransactionBlockCheckpointQuery,
     TransactionBlockEffectsQuery, TransactionBlockIndexedQuery, TransactionBlockKindInput,
     TransactionBlockQuery, TransactionBlockWithEffects, TransactionBlockWithEffectsQuery,
-    TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
+    TransactionBlocksArgs, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
     TransactionBlocksWithEffectsQuery, TransactionsFilter,
 };
 
@@ -199,3 +197,55 @@ impl TryFrom<BigInt> for u64 {
         Ok(value.0.parse::<u64>()?)
     }
 }
+
+// ===========================================================================
+// Deprecated aliases
+// ===========================================================================
+
+#[deprecated(note = "renamed to `MovePackage`")]
+pub type MovePackageQuery = MovePackage;
+
+#[deprecated(note = "renamed to `MoveStruct`")]
+pub type MoveStructQuery = MoveStruct;
+
+#[deprecated(note = "renamed to `MoveModuleRef`")]
+pub type MoveModuleQuery = MoveModuleRef;
+
+#[deprecated(note = "renamed to `ValidatorSetActiveValidators`")]
+pub type ValidatorSetQuery = ValidatorSetActiveValidators;
+
+#[deprecated(note = "renamed to `EpochValidatorSet`")]
+pub type EpochValidator = EpochValidatorSet;
+
+#[deprecated(note = "renamed to `AddressIotaNamesRegistrations`")]
+pub type IotaNamesRegistrationsQuery = AddressIotaNamesRegistrations;
+
+#[deprecated(note = "renamed to `AddressIotaNamesDefaultName`")]
+pub type IotaNamesDefaultNameQuery = AddressIotaNamesDefaultName;
+
+#[deprecated(note = "renamed to `OwnerBalance`")]
+pub type Owner = OwnerBalance;
+
+#[deprecated(note = "renamed to `EventsArgs`")]
+pub type EventsQueryArgs<'a> = EventsArgs<'a>;
+
+#[deprecated(note = "renamed to `ObjectArgs`")]
+pub type ObjectQueryArgs = ObjectArgs;
+
+#[deprecated(note = "renamed to `ObjectsArgs`")]
+pub type ObjectsQueryArgs = ObjectsArgs;
+
+#[deprecated(note = "renamed to `PackagesArgs`")]
+pub type PackagesQueryArgs<'a> = PackagesArgs<'a>;
+
+#[deprecated(note = "renamed to `TransactionBlocksArgs`")]
+pub type TransactionBlocksQueryArgs = TransactionBlocksArgs;
+
+#[deprecated(note = "renamed to `NormalizedMoveFunctionArgs`")]
+pub type NormalizedMoveFunctionQueryArgs<'a> = NormalizedMoveFunctionArgs<'a>;
+
+#[deprecated(note = "renamed to `NormalizedMoveModuleArgs`")]
+pub type NormalizedMoveModuleQueryArgs<'a> = NormalizedMoveModuleArgs<'a>;
+
+#[deprecated(note = "renamed to `ProtocolConfigArgs`")]
+pub type ProtocolVersionArgs = ProtocolConfigArgs;

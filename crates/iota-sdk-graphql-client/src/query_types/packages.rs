@@ -14,7 +14,7 @@ use crate::query_types::{Base64, PageInfo, schema};
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageArgs")]
 pub struct PackageQuery {
     #[arguments(address: $address, version: $version)]
-    pub package: Option<MovePackageQuery>,
+    pub package: Option<MovePackage>,
 }
 
 // ===========================================================================
@@ -25,7 +25,7 @@ pub struct PackageQuery {
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageArgs")]
 pub struct LatestPackageQuery {
     #[arguments(address: $address)]
-    pub latest_package: Option<MovePackageQuery>,
+    pub latest_package: Option<MovePackage>,
 }
 
 #[derive(Clone, cynic::QueryVariables, Debug)]
@@ -36,7 +36,7 @@ pub struct PackageArgs {
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackage")]
-pub struct MovePackageQuery {
+pub struct MovePackage {
     pub address: Address,
     pub bcs: Option<Base64>,
 }
@@ -46,18 +46,14 @@ pub struct MovePackageQuery {
 // ===========================================================================
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
-#[cynic(
-    schema = "rpc",
-    graphql_type = "Query",
-    variables = "PackagesQueryArgs"
-)]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "PackagesArgs")]
 pub struct PackagesQuery {
     #[arguments(after: $after, before: $before, filter: $filter, first: $first, last: $last)]
     pub packages: MovePackageConnection,
 }
 
 #[derive(Clone, cynic::QueryVariables, Debug)]
-pub struct PackagesQueryArgs<'a> {
+pub struct PackagesArgs<'a> {
     pub after: Option<&'a str>,
     pub before: Option<&'a str>,
     pub filter: Option<PackageCheckpointFilter>,
@@ -90,7 +86,7 @@ impl PackageCheckpointFilter {
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackageConnection")]
 pub struct MovePackageConnection {
-    pub nodes: Vec<MovePackageQuery>,
+    pub nodes: Vec<MovePackage>,
     pub page_info: PageInfo,
 }
 

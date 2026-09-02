@@ -8,7 +8,7 @@ use crate::query_types::{Address, MoveFunction, schema};
 #[cynic(
     schema = "rpc",
     graphql_type = "Query",
-    variables = "NormalizedMoveFunctionQueryArgs"
+    variables = "NormalizedMoveFunctionArgs"
 )]
 pub struct NormalizedMoveFunctionQuery {
     #[arguments(address: $address, version: $version)]
@@ -16,7 +16,7 @@ pub struct NormalizedMoveFunctionQuery {
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct NormalizedMoveFunctionQueryArgs<'a> {
+pub struct NormalizedMoveFunctionArgs<'a> {
     pub address: Address,
     pub version: Option<u64>,
     pub module: &'a str,
@@ -27,7 +27,7 @@ pub struct NormalizedMoveFunctionQueryArgs<'a> {
 #[cynic(
     schema = "rpc",
     graphql_type = "MovePackage",
-    variables = "NormalizedMoveFunctionQueryArgs"
+    variables = "NormalizedMoveFunctionArgs"
 )]
 pub struct MovePackageModuleFunction {
     #[arguments(name: $module)]
@@ -38,7 +38,7 @@ pub struct MovePackageModuleFunction {
 #[cynic(
     schema = "rpc",
     graphql_type = "MoveModule",
-    variables = "NormalizedMoveFunctionQueryArgs"
+    variables = "NormalizedMoveFunctionArgs"
 )]
 pub struct MoveModuleFunction {
     #[arguments(name: $function)]
