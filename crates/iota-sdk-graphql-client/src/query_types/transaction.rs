@@ -101,6 +101,18 @@ pub struct TransactionBlocksEffectsQuery {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
     pub transaction_blocks: TransactionBlockEffectsConnection,
 }
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Query",
+    variables = "TransactionsByDigestsQueryArgs"
+)]
+pub struct TransactionsByDigestsQuery {
+    #[arguments(digests: $digests, limit: $limit, cursor: $cursor)]
+    pub transactions_by_digests: TransactionsByDigestsPage,
+}
+
 // ===========================================================================
 // Transaction Block(s) Query Args
 // ===========================================================================
@@ -108,6 +120,13 @@ pub struct TransactionBlocksEffectsQuery {
 #[derive(cynic::QueryVariables, Debug)]
 pub struct TransactionBlockArgs {
     pub digest: String,
+}
+
+#[derive(cynic::QueryVariables, Debug)]
+pub struct TransactionsByDigestsQueryArgs {
+    pub digests: Vec<String>,
+    pub limit: Option<i32>,
+    pub cursor: Option<String>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
@@ -285,6 +304,16 @@ pub struct TransactionBlockWithEffectsConnection {
 pub struct TransactionBlockEffectsConnection {
     pub nodes: Vec<TxBlockEffects>,
     pub page_info: PageInfo,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionsByDigestsPage")]
+pub struct TransactionsByDigestsPage {
+    /// One entry per requested digest, in the order they were requested,
+    /// `None` when the transaction was not found.
+    pub nodes: Vec<Option<TransactionBlock>>,
+    pub has_next_page: bool,
+    pub end_cursor: Option<String>,
 }
 
 impl TryFrom<TransactionBlock> for SignedTransaction {
