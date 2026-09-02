@@ -4,7 +4,7 @@
 //! High-level API for calling Move view functions.
 
 use iota_grpc_types::{
-    proto::json_to_prost,
+    proto::json_to_prost_stringify_numbers,
     read_mask_fields::{IntoReadMask, ViewFunctionCallReadMask},
     v1::{
         command::InputArgument,
@@ -97,7 +97,10 @@ impl Client {
                     .with_inputs(
                         call_args
                             .iter()
-                            .map(|arg| InputArgument::default().with_json(json_to_prost(arg)))
+                            .map(|arg| {
+                                InputArgument::default()
+                                    .with_json(json_to_prost_stringify_numbers(arg))
+                            })
                             .collect(),
                     ),
             ],

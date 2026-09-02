@@ -23,7 +23,7 @@ use eyre::Result;
 use iota_sdk::{
     grpc_client::{Client, read_mask_fields::ViewFunctionCallReadMask},
     grpc_types::{
-        proto::json_to_prost,
+        proto::json_to_prost_stringify_numbers,
         v1::{command::InputArgument, transaction_execution_service::ViewFunctionCallItem},
     },
 };
@@ -104,7 +104,7 @@ fn view_call(fq_function_name: &str, args: Vec<serde_json::Value>) -> ViewFuncti
         .with_fq_function_name(fq_function_name)
         .with_inputs(
             args.iter()
-                .map(|arg| InputArgument::default().with_json(json_to_prost(arg)))
+                .map(|arg| InputArgument::default().with_json(json_to_prost_stringify_numbers(arg)))
                 .collect(),
         )
 }
