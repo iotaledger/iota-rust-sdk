@@ -83,7 +83,7 @@ pub use subscriptions::{
     TransactionsSubscriptionArgs,
 };
 pub use transaction::{
-    AddressTransactionRelationship, AddressTransactionBlocksQuery, AddressTransactionsQuery,
+    AddressTransactionBlocksQuery, AddressTransactionRelationship, AddressTransactionsQuery,
     AddressTransactionsQueryArgs, TransactionBlock, TransactionBlockArgs,
     TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery, TransactionBlockIndexedQuery,
     TransactionBlockKindInput, TransactionBlockQuery, TransactionBlockWithEffects,
