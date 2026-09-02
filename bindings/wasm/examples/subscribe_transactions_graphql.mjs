@@ -19,7 +19,7 @@ await initAsync();
 
 const DEADLINE_MS = 60_000;
 
-const client = GraphQlClient.newTestnet();
+const client = GraphQlClient.newLocalnet();
 const subscription = await client.transactionsSubscription(
   SubscriptionTransactionFilter.new({
     kind: TransactionBlockKindInput.ProgrammableTx,
