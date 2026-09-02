@@ -20,12 +20,12 @@ use crate::{
     error::{Error, Kind, Result},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        AddressTransactionBlockRelationship, AddressTransactionBlocksQuery,
-        AddressTransactionsQuery, AddressTransactionsQueryArgs, ExecuteTransactionArgs,
-        ExecuteTransactionQuery, TransactionBlockArgs, TransactionBlockCheckpointQuery,
-        TransactionBlockEffectsQuery, TransactionBlockIndexedQuery, TransactionBlockQuery,
-        TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
-        TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery, TransactionsFilter,
+        AddressTransactionBlocksQuery, AddressTransactionRelationship, AddressTransactionsQuery,
+        AddressTransactionsQueryArgs, ExecuteTransactionArgs, ExecuteTransactionQuery,
+        TransactionBlockArgs, TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery,
+        TransactionBlockIndexedQuery, TransactionBlockQuery, TransactionBlockWithEffectsQuery,
+        TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
+        TransactionBlocksWithEffectsQuery, TransactionsFilter,
     },
     streams::stream_paginated_query,
 };
@@ -82,7 +82,7 @@ impl Client {
     pub async fn address_transactions(
         &self,
         address: Address,
-        relation: impl Into<Option<AddressTransactionBlockRelationship>>,
+        relation: impl Into<Option<AddressTransactionRelationship>>,
         filter: impl Into<Option<TransactionsFilter>>,
         pagination_filter: PaginationFilter,
     ) -> Result<Page<SignedTransaction>> {
@@ -339,7 +339,7 @@ impl Client {
 mod tests {
     use crate::{
         PaginationFilter,
-        query_types::{AddressTransactionBlockRelationship, TransactionsFilter},
+        query_types::{AddressTransactionRelationship, TransactionsFilter},
         test_utils::test_client,
     };
 
@@ -404,9 +404,9 @@ mod tests {
         let sender = transactions.data()[0].transaction.as_v1().sender;
 
         for relation in [
-            AddressTransactionBlockRelationship::Sent,
-            AddressTransactionBlockRelationship::Recv,
-            AddressTransactionBlockRelationship::Affected,
+            AddressTransactionRelationship::Sent,
+            AddressTransactionRelationship::Recv,
+            AddressTransactionRelationship::Affected,
         ] {
             let page = client
                 .address_transactions(sender, relation, None, PaginationFilter::default())
@@ -420,7 +420,7 @@ mod tests {
                 })
                 .unwrap();
 
-            if matches!(relation, AddressTransactionBlockRelationship::Sent) {
+            if matches!(relation, AddressTransactionRelationship::Sent) {
                 assert!(
                     page.data()
                         .iter()

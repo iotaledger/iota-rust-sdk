@@ -139,7 +139,7 @@ pub struct AddressTransactionsQueryArgs {
     pub after: Option<String>,
     pub last: Option<i32>,
     pub before: Option<String>,
-    pub relation: Option<AddressTransactionBlockRelationship>,
+    pub relation: Option<AddressTransactionRelationship>,
     pub filter: Option<TransactionsFilter>,
 }
 
@@ -218,7 +218,7 @@ pub enum TransactionBlockKindInput {
     rename_all = "SCREAMING_SNAKE_CASE"
 )]
 #[non_exhaustive]
-pub enum AddressTransactionBlockRelationship {
+pub enum AddressTransactionRelationship {
     /// Transactions the address has sent.
     Sent,
     /// Transactions that sent objects to the address.
