@@ -2,8 +2,10 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+pub mod changes;
 mod v1;
 
+pub use changes::{BalanceChange, DeriveChangesError, ObjectChange};
 pub use v1::{
     ChangedObject, ObjectIn, ObjectOut, TransactionEffectsV1, UnchangedSharedKind,
     UnchangedSharedObject,

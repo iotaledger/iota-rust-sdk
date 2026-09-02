@@ -115,7 +115,6 @@ pub(crate) use tree_display::{TreeDisplay, TreeWriter, impl_tree_display};
 pub mod hash;
 
 pub mod address;
-pub mod changes;
 pub mod checkpoint;
 pub mod crypto;
 pub mod digest;
@@ -136,7 +135,6 @@ pub mod validator;
 pub mod version;
 
 pub use address::{Address, AddressParseError};
-pub use changes::{BalanceChange, DeriveChangesError, ObjectChange};
 pub use checkpoint::{
     CheckpointCommitment, CheckpointContents, CheckpointContentsV1, CheckpointData,
     CheckpointSequenceNumber, CheckpointSummary, CheckpointTimestamp, CheckpointTransaction,
@@ -159,9 +157,9 @@ pub use digest::{
     TransactionEffectsDigest, TransactionEventsDigest,
 };
 pub use effects::{
-    ChangedObject, IdOperation, InputSharedObject, ObjectIn, ObjectOut, ObjectRemoveKind,
-    TransactionEffects, TransactionEffectsV1, UnchangedSharedKind, UnchangedSharedObject,
-    WriteKind,
+    BalanceChange, ChangedObject, DeriveChangesError, IdOperation, InputSharedObject, ObjectChange,
+    ObjectIn, ObjectOut, ObjectRemoveKind, TransactionEffects, TransactionEffectsV1,
+    UnchangedSharedKind, UnchangedSharedObject, WriteKind,
 };
 pub use events::{Event, TransactionEvents};
 pub use execution_status::{
