@@ -110,6 +110,8 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 ///                 =/ invalid-linkage
 ///                 =/ move-authentication-error
 ///                 =/ execution-canceled-due-to-execution-worker-congestion
+///                 =/ move-vector-elem-too-big
+///                 =/ move-raw-value-too-big
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
@@ -152,6 +154,8 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 /// invalid-linkage                                        = %d38
 /// move-authentication-error                              = %d39 execution-error
 /// execution-canceled-due-to-execution-worker-congestion  = %d40 u64
+/// move-vector-elem-too-big                               = %d41 u64 u64
+/// move-raw-value-too-big                                 = %d42 u64 u64
 /// ```
 #[derive(Clone, uniffi::Enum)]
 pub enum ExecutionError {

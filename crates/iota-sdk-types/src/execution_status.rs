@@ -178,6 +178,8 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 ///                 =/ invalid-linkage
 ///                 =/ move-authentication-error
 ///                 =/ execution-canceled-due-to-execution-worker-congestion
+///                 =/ move-vector-elem-too-big
+///                 =/ move-raw-value-too-big
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
