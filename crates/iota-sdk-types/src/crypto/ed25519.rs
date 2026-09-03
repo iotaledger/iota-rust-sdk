@@ -57,11 +57,11 @@ impl Ed25519PublicKey {
     }
 
     /// Return the underlying byte array of an Ed25519PublicKey.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 }
@@ -71,7 +71,7 @@ impl PublicKeyExt for Ed25519PublicKey {
 
     /// Returns the public key as bytes.
     fn as_bytes(&self) -> &[u8] {
-        &self.0
+        self.bytes()
     }
 
     /// Tries to create an Ed25519PublicKey from bytes.
@@ -107,7 +107,7 @@ impl AsRef<[u8; Self::LENGTH]> for Ed25519PublicKey {
 
 impl From<Ed25519PublicKey> for [u8; Ed25519PublicKey::LENGTH] {
     fn from(public_key: Ed25519PublicKey) -> Self {
-        public_key.into_inner()
+        public_key.into_bytes()
     }
 }
 
@@ -184,15 +184,11 @@ impl Ed25519Signature {
     }
 
     /// Return the underlying byte array of an Ed25519Signature.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-        &self.0
-    }
-
-    pub const fn as_bytes(&self) -> &[u8] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
@@ -223,7 +219,7 @@ impl AsRef<[u8; Self::LENGTH]> for Ed25519Signature {
 
 impl From<Ed25519Signature> for [u8; Ed25519Signature::LENGTH] {
     fn from(signature: Ed25519Signature) -> Self {
-        signature.into_inner()
+        signature.into_bytes()
     }
 }
 

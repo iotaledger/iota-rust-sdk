@@ -280,7 +280,7 @@ impl MovePackage {
             .chain(
                 modules
                     .into_iter()
-                    .map(|module| Hasher::digest(module).into_inner()),
+                    .map(|module| Hasher::digest(module).into_bytes()),
             )
             .collect::<Vec<_>>();
 
@@ -429,7 +429,7 @@ mod serialization {
         use super::*;
 
         pub fn serialize<S: Serializer>(value: &Digest, serializer: S) -> Result<S::Ok, S::Error> {
-            value.as_bytes().serialize(serializer)
+            value.bytes().serialize(serializer)
         }
 
         pub fn deserialize<'de, D>(deserializer: D) -> Result<Digest, D::Error>
