@@ -21,27 +21,42 @@ use crate::{
 /// validator-committee = u64 ; epoch
 ///                       (vector validator-committee-member)
 /// ```
-#[derive(Clone, uniffi::Record)]
-pub struct ValidatorCommittee {
-    pub epoch: EpochId,
-    pub members: Vec<ValidatorCommitteeMember>,
-}
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
+pub struct ValidatorCommittee(pub iota_sdk::types::ValidatorCommittee);
 
-impl From<iota_sdk::types::ValidatorCommittee> for ValidatorCommittee {
-    fn from(value: iota_sdk::types::ValidatorCommittee) -> Self {
-        Self {
-            epoch: value.epoch,
-            members: value.members.into_iter().map(Into::into).collect(),
-        }
+#[uniffi::export]
+impl ValidatorCommittee {
+    /// Construct a `ValidatorCommittee` and verify it via `validate`.
+    #[uniffi::constructor]
+    pub fn new(epoch: EpochId, members: Vec<ValidatorCommitteeMember>) -> Result<Self> {
+        Ok(Self(iota_sdk::types::ValidatorCommittee::new(
+            epoch,
+            members.into_iter().map(Into::into).collect(),
+        )?))
     }
-}
 
-impl From<ValidatorCommittee> for iota_sdk::types::ValidatorCommittee {
-    fn from(value: ValidatorCommittee) -> Self {
-        Self {
-            epoch: value.epoch,
-            members: value.members.into_iter().map(Into::into).collect(),
-        }
+    pub fn epoch(&self) -> EpochId {
+        self.0.epoch
+    }
+
+    pub fn members(&self) -> Vec<ValidatorCommitteeMember> {
+        self.0.members.iter().cloned().map(Into::into).collect()
+    }
+
+    /// The combined stake of all members.
+    pub fn total_stake(&self) -> Result<u64> {
+        Ok(self.0.total_stake()?)
+    }
+
+    /// Checks if the committee is valid.
+    ///
+    /// A valid committee is one that:
+    ///  - Has at least one member
+    ///  - Has a nonzero total stake that fits in a `u64`
+    ///  - Contains no duplicate public keys
+    pub fn validate(&self) -> Result<()> {
+        Ok(self.0.validate()?)
     }
 }
 
@@ -168,9 +183,21 @@ impl ValidatorAggregatedSignature {
     }
 }
 
-crate::export_iota_types_bcs_conversion!(ValidatorCommittee, ValidatorCommitteeMember);
-crate::export_iota_types_objects_bcs_conversion!(ValidatorSignature, ValidatorAggregatedSignature);
-crate::export_iota_types_json_conversion!(ValidatorCommittee, ValidatorCommitteeMember);
-crate::export_iota_types_objects_json_conversion!(ValidatorSignature, ValidatorAggregatedSignature);
-crate::export_iota_types_display!(ValidatorCommittee, ValidatorCommitteeMember);
-crate::export_iota_types_objects_display!(ValidatorSignature, ValidatorAggregatedSignature);
+crate::export_iota_types_bcs_conversion!(ValidatorCommitteeMember);
+crate::export_iota_types_objects_bcs_conversion!(
+    ValidatorCommittee,
+    ValidatorSignature,
+    ValidatorAggregatedSignature
+);
+crate::export_iota_types_json_conversion!(ValidatorCommitteeMember);
+crate::export_iota_types_objects_json_conversion!(
+    ValidatorCommittee,
+    ValidatorSignature,
+    ValidatorAggregatedSignature
+);
+crate::export_iota_types_display!(ValidatorCommitteeMember);
+crate::export_iota_types_objects_display!(
+    ValidatorCommittee,
+    ValidatorSignature,
+    ValidatorAggregatedSignature
+);

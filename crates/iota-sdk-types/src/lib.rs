@@ -190,7 +190,8 @@ pub use transaction::{
     TransferObjects, Upgrade, VersionAssignment,
 };
 pub use validator::{
-    ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
+    ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeError,
+    ValidatorCommitteeMember, ValidatorSignature,
 };
 pub use version::Version;
 
