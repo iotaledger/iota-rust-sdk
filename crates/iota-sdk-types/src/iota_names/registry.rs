@@ -16,6 +16,7 @@ use crate::{
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct Table {
     pub id: ObjectId,
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub size: u64,
 }
 
@@ -93,6 +94,7 @@ pub struct NameRecord {
     /// purchased by someone else.
     pub nft_id: ObjectId,
     /// Timestamp in milliseconds when the record expires.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub expiration_timestamp_ms: u64,
     /// The target address that this name points to.
     pub target_address: Option<Address>,
@@ -238,5 +240,38 @@ mod tests {
         name.expiration_timestamp_ms = system_time - 10;
 
         assert!(name.is_node_expired(system_time));
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn u64_fields_serialize_as_strings_in_json() {
+        let record = NameRecord {
+            nft_id: ObjectId::ZERO,
+            data: Default::default(),
+            target_address: None,
+            expiration_timestamp_ms: 18446744073709551615,
+        };
+        let json = serde_json::to_value(&record).unwrap();
+        assert_eq!(json["expiration_timestamp_ms"], "18446744073709551615");
+        let restored: NameRecord = serde_json::from_value(json).unwrap();
+        assert_eq!(
+            restored.expiration_timestamp_ms,
+            record.expiration_timestamp_ms
+        );
+
+        let table = Table {
+            id: ObjectId::ZERO,
+            size: 42,
+        };
+        let json = serde_json::to_value(&table).unwrap();
+        assert_eq!(json["size"], "42");
+        let restored: Table = serde_json::from_value(json).unwrap();
+        assert_eq!(restored, table);
+
+        // BCS stays plain u64: 8 little-endian bytes, no string.
+        let bcs = bcs::to_bytes(&table).unwrap();
+        assert_eq!(bcs[ObjectId::LENGTH..], 42u64.to_le_bytes());
+        let restored: Table = bcs::from_bytes(&bcs).unwrap();
+        assert_eq!(restored, table);
     }
 }
