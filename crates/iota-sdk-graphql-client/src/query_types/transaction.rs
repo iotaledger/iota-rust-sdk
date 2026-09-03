@@ -188,9 +188,6 @@ pub struct TransactionsFilter {
     pub before_checkpoint: Option<u64>,
     pub sent_address: Option<Address>,
     pub recv_address: Option<Address>,
-    // Nodes older than v1.31 reject the whole filter over an unknown field,
-    // even a null one, so an unset `affected_address` must not be sent.
-    #[cynic(skip_serializing_if = "Option::is_none")]
     pub affected_address: Option<Address>,
     pub input_object: Option<ObjectId>,
     pub changed_object: Option<ObjectId>,
