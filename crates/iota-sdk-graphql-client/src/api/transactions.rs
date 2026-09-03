@@ -76,8 +76,8 @@ impl Client {
         Ok(Page::new(page_info, transactions))
     }
 
-    /// Get a page of transactions related to the given address. `relation`
-    /// selects how the address relates to them, defaulting to the
+    /// Get a page of transactions related to the given address.
+    /// `relation` selects how the address relates to them, defaulting to the
     /// transactions it sent.
     pub async fn address_transactions(
         &self,

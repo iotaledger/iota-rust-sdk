@@ -124,8 +124,8 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Get a page of transactions related to the given address. `relation`
-    /// selects how the address relates to them, defaulting to the
+    /// Get a page of transactions related to the given address.
+    /// `relation` selects how the address relates to them, defaulting to the
     /// transactions it sent.
     #[uniffi::method(default(relation = None, filter = None, pagination_filter = None))]
     pub async fn address_transactions(
