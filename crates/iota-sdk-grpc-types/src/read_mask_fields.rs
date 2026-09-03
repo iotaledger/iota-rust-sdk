@@ -305,10 +305,6 @@ define_field_paths! {
         REFERENCE_VERSION = "reference.version",
         /// The object content digest.
         REFERENCE_DIGEST = "reference.digest",
-        /// The Move type of the object.
-        OBJECT_TYPE = "object_type",
-        /// The object owner.
-        OWNER = "owner",
         /// The full BCS-encoded object.
         BCS = "bcs",
     }

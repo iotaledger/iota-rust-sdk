@@ -14,7 +14,7 @@ plugins {
 
 group = "org.iota"
 
-version = "0.0.1-alpha.4"
+version = "1.0.0-beta.1"
 
 repositories { mavenCentral() }
 
