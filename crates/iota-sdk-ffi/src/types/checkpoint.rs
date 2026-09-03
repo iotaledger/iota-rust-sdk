@@ -450,6 +450,7 @@ crate::export_iota_types_objects_json_conversion!(
 crate::export_iota_types_display!(EndOfEpochData);
 crate::export_iota_types_objects_display!(
     CheckpointSummary,
+    SignedCheckpointSummary,
     CheckpointContents,
     CheckpointContentsV1,
     CheckpointTransactionInfo,

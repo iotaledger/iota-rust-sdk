@@ -195,3 +195,9 @@ crate::export_iota_types_objects_json_conversion!(
     ValidatorSignature,
     ValidatorAggregatedSignature
 );
+crate::export_iota_types_display!(ValidatorCommitteeMember);
+crate::export_iota_types_objects_display!(
+    ValidatorCommittee,
+    ValidatorSignature,
+    ValidatorAggregatedSignature
+);
