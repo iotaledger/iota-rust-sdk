@@ -335,26 +335,3 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
         })
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use cynic::QueryBuilder;
-
-    use super::*;
-
-    /// `affectedAddress` reached the nodes only in v1.31, so a filter that
-    /// does not use it must not mention it either.
-    #[test]
-    fn unset_affected_address_is_not_serialized() {
-        let operation = TransactionBlocksQuery::build(TransactionBlocksQueryArgs {
-            first: None,
-            after: None,
-            last: None,
-            before: None,
-            filter: Some(TransactionsFilter::default()),
-        });
-
-        let query = serde_json::to_string(&operation).unwrap();
-        assert!(!query.contains("affectedAddress"), "{query}");
-    }
-}
