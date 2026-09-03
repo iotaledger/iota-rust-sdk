@@ -65,10 +65,11 @@ impl ValidatorCommittee {
         if self.members.is_empty() {
             return Err(ValidatorCommitteeError::EmptyCommittee);
         }
-        if self.total_stake()? == 0 {
-            return Err(ValidatorCommitteeError::ZeroTotalStake);
-        }
+        let mut total_stake: u64 = 0;
         for (idx, member) in self.members.iter().enumerate() {
+            total_stake = total_stake
+                .checked_add(member.stake)
+                .ok_or(ValidatorCommitteeError::StakeOverflow)?;
             if self
                 .members
                 .iter()
@@ -77,6 +78,9 @@ impl ValidatorCommittee {
             {
                 return Err(ValidatorCommitteeError::DuplicatePublicKey);
             }
+        }
+        if total_stake == 0 {
+            return Err(ValidatorCommitteeError::ZeroTotalStake);
         }
 
         Ok(())
