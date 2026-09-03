@@ -24,13 +24,12 @@ fetch-compiled-packages: ## Fetch the compiled Move packages if missing or out o
 clippy: ## Run Clippy linter
 	cargo clippy --all-features --all-targets
 
-# Crates left out of `cargo semver-checks`, which needs a crates.io release to
-# diff against: these have none yet. `iota-sdk` does have releases, but its
-# latest stable one is the unrelated legacy SDK that previously held the name,
-# so it stays excluded until 3.0.0 is published.
+# `iota-sdk` is left out of `cargo semver-checks`, which diffs against the
+# latest crates.io release: its latest stable one is the unrelated legacy SDK
+# that previously held the name, so it stays excluded until 3.0.0 is published.
 .PHONY: semver-checks
 semver-checks: ## Check the published crates for breaking API changes
-	cargo semver-checks --workspace --exclude iota-sdk --exclude iota-sdk-grpc-client --exclude iota-sdk-grpc-types --exclude iota-sdk-move-types
+	cargo semver-checks --workspace --exclude iota-sdk
 
 .PHONY: test
 test: fetch-compiled-packages ## Run unit tests

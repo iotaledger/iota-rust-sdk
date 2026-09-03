@@ -166,7 +166,6 @@ impl Error {
     /// Create an error signaling that the subscription server dropped
     /// `count` payloads before the next one because the client could not keep
     /// up. The stream continues after this error.
-    #[cfg(not(target_arch = "wasm32"))]
     pub fn lagged(count: i32) -> Self {
         Self::from_message(
             Kind::Subscription,
@@ -295,9 +294,15 @@ impl From<tokio_tungstenite::tungstenite::Error> for Error {
     }
 }
 
-#[cfg(not(target_arch = "wasm32"))]
 impl From<graphql_ws_client::Error> for Error {
     fn from(error: graphql_ws_client::Error) -> Self {
+        Self::from_error(Kind::Subscription, error)
+    }
+}
+
+#[cfg(target_arch = "wasm32")]
+impl From<ws_stream_wasm::WsErr> for Error {
+    fn from(error: ws_stream_wasm::WsErr) -> Self {
         Self::from_error(Kind::Subscription, error)
     }
 }

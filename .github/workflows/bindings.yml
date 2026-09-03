@@ -141,9 +141,18 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make swift-examples
-      # Release example requires iota-sdk-swift package to be published first
-      # - name: Run the release example
-      #   run: make swift-release-example
+
+  # Separate macOS job: the XCFramework binary target in the published
+  # iota-sdk-swift package can only be consumed on Apple platforms.
+  swift-release-example:
+    if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
+    needs: diff
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Run the release example
+        run: make swift-release-example
 
   wasm:
     if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
