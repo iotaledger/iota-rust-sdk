@@ -762,4 +762,21 @@ mod tests {
         );
         assert_eq!(verifier.committee(), &committee0);
     }
+
+    /// Exactly the threshold is enough: three of four equal stakes close the
+    /// epoch. `committee_chain_walk` signs with all four, one unit above it.
+    #[proptest]
+    fn certification_at_the_quorum_threshold_is_accepted(
+        keys: [Bls12381PrivateKey; 4],
+        summary: CheckpointSummary,
+    ) {
+        let committee0 = committee(&keys, 0);
+        let next = committee(&keys, 1);
+        let mut verifier = CommitteeChainVerifier::new(committee0.clone()).unwrap();
+
+        let signed = certify(&keys[..3], committee0, close_epoch(summary, 0, &next));
+        verifier.verify_epoch_close(&signed).unwrap();
+        assert_eq!(verifier.epoch(), 1);
+        assert_eq!(verifier.committee(), &next);
+    }
 }
