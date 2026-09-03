@@ -190,6 +190,82 @@ pub struct SimulateTransactionsResponse {
     #[prost(message, repeated, tag = "1")]
     pub transaction_results: ::prost::alloc::vec::Vec<SimulateTransactionResult>,
 }
+/// A single view function to call.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ViewFunctionCallItem {
+    /// Fully qualified function name, `<package>::<module>::<function>`.
+    #[prost(string, tag = "1")]
+    pub fq_function_name: ::prost::alloc::string::String,
+    /// Type arguments, in declaration order, for a generic function.
+    #[prost(message, repeated, tag = "2")]
+    pub type_args: ::prost::alloc::vec::Vec<super::types::TypeTag>,
+    /// Call arguments, in declaration order.
+    #[prost(message, repeated, tag = "3")]
+    pub inputs: ::prost::alloc::vec::Vec<super::command::InputArgument>,
+}
+#[non_exhaustive]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ViewFunctionCallsRequest {
+    /// List of view functions to call. Each call runs in its own transaction, so
+    /// one call aborting leaves the others unaffected.
+    /// For a single function call, provide a list with one item.
+    #[prost(message, repeated, tag = "1")]
+    pub view_function_calls: ::prost::alloc::vec::Vec<ViewFunctionCallItem>,
+    /// Mask specifying which fields to read, applied to each ViewFunctionCallOutputs
+    /// in the response. If no mask is specified, defaults to `execution_result`.
+    #[prost(message, optional, tag = "2")]
+    pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// The outcome of running a single view function call.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ViewFunctionCallOutputs {
+    #[prost(oneof = "view_function_call_outputs::ExecutionResult", tags = "1, 2")]
+    pub execution_result: ::core::option::Option<
+        view_function_call_outputs::ExecutionResult,
+    >,
+}
+/// Nested message and enum types in `ViewFunctionCallOutputs`.
+pub mod view_function_call_outputs {
+    #[non_exhaustive]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ExecutionResult {
+        /// The values the function returned.
+        #[prost(message, tag = "1")]
+        ReturnValues(super::super::command::CommandOutputs),
+        /// Why the call aborted.
+        #[prost(message, tag = "2")]
+        ExecutionError(super::ExecutionError),
+    }
+}
+/// The result of a single view function call: either the call ran (and returned
+/// or aborted), or the server rejected it.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ViewFunctionCallResult {
+    #[prost(oneof = "view_function_call_result::Result", tags = "1, 2")]
+    pub result: ::core::option::Option<view_function_call_result::Result>,
+}
+/// Nested message and enum types in `ViewFunctionCallResult`.
+pub mod view_function_call_result {
+    #[non_exhaustive]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Result {
+        #[prost(message, tag = "1")]
+        CallOutputs(super::ViewFunctionCallOutputs),
+        #[prost(message, tag = "2")]
+        Error(crate::google::rpc::Status),
+    }
+}
+/// Response message for `TransactionExecutionService.ViewFunctionCalls`.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ViewFunctionCallsResponse {
+    /// Results for each call in the request, in the same order.
+    #[prost(message, repeated, tag = "1")]
+    pub call_results: ::prost::alloc::vec::Vec<ViewFunctionCallResult>,
+}
 /// Generated client implementations.
 pub mod transaction_execution_service_client {
     #![allow(
@@ -341,6 +417,35 @@ pub mod transaction_execution_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
+        pub async fn view_function_calls(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ViewFunctionCallsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ViewFunctionCallsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/iota.grpc.v1.transaction_execution_service.TransactionExecutionService/ViewFunctionCalls",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "iota.grpc.v1.transaction_execution_service.TransactionExecutionService",
+                        "ViewFunctionCalls",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// Generated server implementations.
@@ -368,6 +473,13 @@ pub mod transaction_execution_service_server {
             request: tonic::Request<super::SimulateTransactionsRequest>,
         ) -> std::result::Result<
             tonic::Response<super::SimulateTransactionsResponse>,
+            tonic::Status,
+        >;
+        async fn view_function_calls(
+            &self,
+            request: tonic::Request<super::ViewFunctionCallsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ViewFunctionCallsResponse>,
             tonic::Status,
         >;
     }
@@ -535,6 +647,57 @@ pub mod transaction_execution_service_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let method = SimulateTransactionsSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/iota.grpc.v1.transaction_execution_service.TransactionExecutionService/ViewFunctionCalls" => {
+                    #[allow(non_camel_case_types)]
+                    struct ViewFunctionCallsSvc<T: TransactionExecutionService>(
+                        pub Arc<T>,
+                    );
+                    impl<
+                        T: TransactionExecutionService,
+                    > tonic::server::UnaryService<super::ViewFunctionCallsRequest>
+                    for ViewFunctionCallsSvc<T> {
+                        type Response = super::ViewFunctionCallsResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ViewFunctionCallsRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as TransactionExecutionService>::view_function_calls(
+                                        &inner,
+                                        request,
+                                    )
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = ViewFunctionCallsSvc(inner);
                         let codec = tonic_prost::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(
