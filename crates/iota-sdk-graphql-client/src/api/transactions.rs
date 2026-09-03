@@ -57,7 +57,7 @@ impl Client {
         let operation = TransactionBlocksQuery::build(TransactionBlocksQueryArgs {
             after: pagination.after,
             before: pagination.before,
-            filter: filter.into(),
+            filter: filter.into().map(Into::into),
             first: pagination.first,
             last: pagination.last,
         });
@@ -102,7 +102,7 @@ impl Client {
         let operation = TransactionBlocksEffectsQuery::build(TransactionBlocksQueryArgs {
             after: pagination.after,
             before: pagination.before,
-            filter: filter.into(),
+            filter: filter.into().map(Into::into),
             first: pagination.first,
             last: pagination.last,
         });
@@ -158,7 +158,7 @@ impl Client {
         let operation = TransactionBlocksWithEffectsQuery::build(TransactionBlocksQueryArgs {
             after: pagination.after,
             before: pagination.before,
-            filter: filter.into(),
+            filter: filter.into().map(Into::into),
             first: pagination.first,
             last: pagination.last,
         });
@@ -379,10 +379,7 @@ mod tests {
 
         client
             .transactions_data_effects(
-                TransactionsFilter {
-                    transaction_ids: Some(vec![digest.to_string()]),
-                    ..Default::default()
-                },
+                TransactionsFilter::default().with_transaction_ids(vec![digest.to_string()]),
                 PaginationFilter::default(),
             )
             .await

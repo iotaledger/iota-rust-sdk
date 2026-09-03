@@ -116,7 +116,7 @@ pub struct TransactionBlocksQueryArgs {
     pub after: Option<String>,
     pub last: Option<i32>,
     pub before: Option<String>,
-    pub filter: Option<TransactionsFilter>,
+    pub filter: Option<TransactionBlockFilter>,
 }
 
 // ===========================================================================
@@ -177,34 +177,112 @@ pub enum TransactionBlockKindInput {
     EndOfEpochTx,
 }
 
-#[derive(Clone, cynic::InputObject, Debug, Default)]
-#[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
+/// The transaction filters that the GraphQL service can only serve one of at
+/// a time.
+///
+/// Combining two of the object or address filters requires a `scanLimit`,
+/// which is deprecated and stops being supported with the v1.38 release, and
+/// [`Kind`](Self::Kind) cannot be combined with any of the others at all.
+/// Making them variants of one enum keeps those queries from being built in
+/// the first place.
+#[derive(Clone, Debug)]
 #[non_exhaustive]
+pub enum TransactionsSelector {
+    /// Select by package, module, or function name, e.g. `"0x03"`,
+    /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
+    Function(String),
+    /// Select by transaction kind.
+    Kind(TransactionBlockKindInput),
+    /// Select transactions that sent an object to the given address.
+    RecvAddress(Address),
+    /// Select transactions that used the given object as an input.
+    InputObject(ObjectId),
+    /// Select transactions that output a version of the given object.
+    ChangedObject(ObjectId),
+    /// Select transactions that wrapped or deleted the given object.
+    WrappedOrDeletedObject(ObjectId),
+}
+
+/// Filter for transaction queries.
+///
+/// Holds at most one [`TransactionsSelector`], so each of the setters that
+/// picks one replaces whichever was set before; the sender, checkpoint and
+/// digest filters can be combined with it and with each other freely.
+#[derive(Clone, Debug, Default)]
 pub struct TransactionsFilter {
-    pub function: Option<String>,
-    pub kind: Option<TransactionBlockKindInput>,
-    pub after_checkpoint: Option<u64>,
-    pub at_checkpoint: Option<u64>,
-    pub before_checkpoint: Option<u64>,
-    pub sent_address: Option<Address>,
-    pub recv_address: Option<Address>,
-    pub input_object: Option<ObjectId>,
-    pub changed_object: Option<ObjectId>,
-    pub wrapped_or_deleted_object: Option<ObjectId>,
-    pub transaction_ids: Option<Vec<String>>,
+    selector: Option<TransactionsSelector>,
+    sent_address: Option<Address>,
+    after_checkpoint: Option<u64>,
+    at_checkpoint: Option<u64>,
+    before_checkpoint: Option<u64>,
+    transaction_ids: Option<Vec<String>>,
 }
 
 impl TransactionsFilter {
-    /// Filter by package, module, or function name, e.g. `"0x03"`,
-    /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
-    pub fn with_function(mut self, function: impl Into<Option<String>>) -> Self {
-        self.function = function.into();
+    /// Select on a function, kind, address or object, replacing the selector
+    /// already set, if any.
+    pub fn with_selector(mut self, selector: impl Into<Option<TransactionsSelector>>) -> Self {
+        self.selector = selector.into();
         self
     }
 
-    /// Filter by transaction kind.
-    pub fn with_kind(mut self, kind: impl Into<Option<TransactionBlockKindInput>>) -> Self {
-        self.kind = kind.into();
+    /// Select by package, module, or function name, e.g. `"0x03"`,
+    /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_function(self, function: impl Into<Option<String>>) -> Self {
+        self.with_selector(function.into().map(TransactionsSelector::Function))
+    }
+
+    /// Select by transaction kind.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_kind(self, kind: impl Into<Option<TransactionBlockKindInput>>) -> Self {
+        self.with_selector(kind.into().map(TransactionsSelector::Kind))
+    }
+
+    /// Select transactions that sent an object to the given address.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_recv_address(self, recv_address: impl Into<Option<Address>>) -> Self {
+        self.with_selector(recv_address.into().map(TransactionsSelector::RecvAddress))
+    }
+
+    /// Select transactions that used the given object as an input.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_input_object(self, input_object: impl Into<Option<ObjectId>>) -> Self {
+        self.with_selector(input_object.into().map(TransactionsSelector::InputObject))
+    }
+
+    /// Select transactions that output a version of the given object.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_changed_object(self, changed_object: impl Into<Option<ObjectId>>) -> Self {
+        self.with_selector(
+            changed_object
+                .into()
+                .map(TransactionsSelector::ChangedObject),
+        )
+    }
+
+    /// Select transactions that wrapped or deleted the given object.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_wrapped_or_deleted_object(
+        self,
+        wrapped_or_deleted_object: impl Into<Option<ObjectId>>,
+    ) -> Self {
+        self.with_selector(
+            wrapped_or_deleted_object
+                .into()
+                .map(TransactionsSelector::WrappedOrDeletedObject),
+        )
+    }
+
+    /// Filter by sender address.
+    pub fn with_sent_address(mut self, sent_address: impl Into<Option<Address>>) -> Self {
+        self.sent_address = sent_address.into();
         self
     }
 
@@ -226,43 +304,98 @@ impl TransactionsFilter {
         self
     }
 
-    /// Filter by sender address.
-    pub fn with_sent_address(mut self, sent_address: impl Into<Option<Address>>) -> Self {
-        self.sent_address = sent_address.into();
-        self
-    }
-
-    /// Filter by the address receiving an object from the transaction.
-    pub fn with_recv_address(mut self, recv_address: impl Into<Option<Address>>) -> Self {
-        self.recv_address = recv_address.into();
-        self
-    }
-
-    /// Filter by an object used as input to the transaction.
-    pub fn with_input_object(mut self, input_object: impl Into<Option<ObjectId>>) -> Self {
-        self.input_object = input_object.into();
-        self
-    }
-
-    /// Filter by an object changed by the transaction.
-    pub fn with_changed_object(mut self, changed_object: impl Into<Option<ObjectId>>) -> Self {
-        self.changed_object = changed_object.into();
-        self
-    }
-
-    /// Filter by an object wrapped or deleted by the transaction.
-    pub fn with_wrapped_or_deleted_object(
-        mut self,
-        wrapped_or_deleted_object: impl Into<Option<ObjectId>>,
-    ) -> Self {
-        self.wrapped_or_deleted_object = wrapped_or_deleted_object.into();
-        self
-    }
-
     /// Filter by transaction digests.
     pub fn with_transaction_ids(mut self, transaction_ids: impl Into<Option<Vec<String>>>) -> Self {
         self.transaction_ids = transaction_ids.into();
         self
+    }
+
+    /// The selector this filter selects on, if any.
+    pub fn selector(&self) -> Option<&TransactionsSelector> {
+        self.selector.as_ref()
+    }
+
+    /// The sender address this filter is limited to, if any.
+    pub fn sent_address(&self) -> Option<Address> {
+        self.sent_address
+    }
+
+    /// The exclusive lower checkpoint bound of this filter, if any.
+    pub fn after_checkpoint(&self) -> Option<u64> {
+        self.after_checkpoint
+    }
+
+    /// The checkpoint this filter is limited to, if any.
+    pub fn at_checkpoint(&self) -> Option<u64> {
+        self.at_checkpoint
+    }
+
+    /// The exclusive upper checkpoint bound of this filter, if any.
+    pub fn before_checkpoint(&self) -> Option<u64> {
+        self.before_checkpoint
+    }
+
+    /// The transaction digests this filter is limited to, if any.
+    pub fn transaction_ids(&self) -> Option<&[String]> {
+        self.transaction_ids.as_deref()
+    }
+}
+
+/// The GraphQL input object, built from a [`TransactionsFilter`].
+#[derive(Clone, cynic::InputObject, Debug, Default)]
+#[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
+pub struct TransactionBlockFilter {
+    function: Option<String>,
+    kind: Option<TransactionBlockKindInput>,
+    after_checkpoint: Option<u64>,
+    at_checkpoint: Option<u64>,
+    before_checkpoint: Option<u64>,
+    sent_address: Option<Address>,
+    recv_address: Option<Address>,
+    input_object: Option<ObjectId>,
+    changed_object: Option<ObjectId>,
+    wrapped_or_deleted_object: Option<ObjectId>,
+    transaction_ids: Option<Vec<String>>,
+}
+
+impl From<TransactionsFilter> for TransactionBlockFilter {
+    fn from(filter: TransactionsFilter) -> Self {
+        let TransactionsFilter {
+            selector,
+            sent_address,
+            after_checkpoint,
+            at_checkpoint,
+            before_checkpoint,
+            transaction_ids,
+        } = filter;
+
+        let mut input = Self {
+            sent_address,
+            after_checkpoint,
+            at_checkpoint,
+            before_checkpoint,
+            transaction_ids,
+            ..Default::default()
+        };
+
+        if let Some(selector) = selector {
+            match selector {
+                TransactionsSelector::Function(function) => input.function = Some(function),
+                TransactionsSelector::Kind(kind) => input.kind = Some(kind),
+                TransactionsSelector::RecvAddress(address) => input.recv_address = Some(address),
+                TransactionsSelector::InputObject(object_id) => {
+                    input.input_object = Some(object_id)
+                }
+                TransactionsSelector::ChangedObject(object_id) => {
+                    input.changed_object = Some(object_id)
+                }
+                TransactionsSelector::WrappedOrDeletedObject(object_id) => {
+                    input.wrapped_or_deleted_object = Some(object_id)
+                }
+            }
+        }
+
+        input
     }
 }
 

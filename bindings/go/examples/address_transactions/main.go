@@ -23,16 +23,14 @@ func main() {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
-	outgoing, err := client.Transactions(&iota_sdk.TransactionsFilter{
-		SentAddress: &address,
-	}, nil)
+	sentFilter := iota_sdk.NewTransactionsFilter().WithSentAddress(address)
+	outgoing, err := client.Transactions(&sentFilter, nil)
 	if err != nil {
 		log.Fatalf("Failed to fetch outgoing transactions: %v", err)
 	}
 
-	incoming, err := client.Transactions(&iota_sdk.TransactionsFilter{
-		RecvAddress: &address,
-	}, nil)
+	recvFilter := iota_sdk.NewTransactionsFilter().WithRecvAddress(address)
+	incoming, err := client.Transactions(&recvFilter, nil)
 	if err != nil {
 		log.Fatalf("Failed to fetch incoming transactions: %v", err)
 	}
