@@ -12,7 +12,6 @@ pub mod output_types;
 pub mod pagination;
 pub mod query_types;
 pub mod streams;
-#[cfg(not(target_arch = "wasm32"))]
 mod subscription;
 mod transaction_builder_client;
 mod wait;

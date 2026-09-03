@@ -4,8 +4,8 @@
 
 use crate::{
     EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, InputSharedObject,
-    ObjectChange, ObjectDigest, ObjectId, ObjectReference, ObjectRemoveKind, ObjectVersion,
-    OwnedObjectReference, Owner, TransactionDigest, TransactionEventsDigest, Version, WriteKind,
+    ObjectDigest, ObjectId, ObjectReference, ObjectRemoveKind, ObjectVersion, OwnedObjectReference,
+    Owner, TransactionDigest, TransactionEventsDigest, Version, WriteKind,
 };
 
 /// Version 1 of TransactionEffects
@@ -487,35 +487,6 @@ impl TransactionEffectsV1 {
                         }
                     }),
             )
-            .collect()
-    }
-
-    /// What this transaction did to each object it changed, with the version
-    /// and digest each side is at resolved.
-    pub fn object_changes(&self) -> Vec<ObjectChange> {
-        self.changed_objects
-            .iter()
-            .map(|changed| {
-                let input = match changed.input_state {
-                    ObjectIn::Data {
-                        version, digest, ..
-                    } => Some((version, digest)),
-                    _ => None,
-                };
-                let output = match changed.output_state {
-                    ObjectOut::ObjectWrite { digest, .. } => Some((self.lamport_version, digest)),
-                    ObjectOut::PackageWrite { version, digest } => Some((version, digest)),
-                    _ => None,
-                };
-                ObjectChange {
-                    object_id: changed.object_id,
-                    input_version: input.map(|(version, _)| version),
-                    input_digest: input.map(|(_, digest)| digest),
-                    output_version: output.map(|(version, _)| version),
-                    output_digest: output.map(|(_, digest)| digest),
-                    id_operation: changed.id_operation,
-                }
-            })
             .collect()
     }
 

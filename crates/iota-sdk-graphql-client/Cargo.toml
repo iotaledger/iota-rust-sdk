@@ -17,6 +17,7 @@ move-types = ["dep:iota-move-types"]
 
 [dependencies]
 # external dependencies
+async-stream.workspace = true
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 chrono = "0.4.26"
@@ -38,18 +39,19 @@ iota-move-types = { workspace = true, features = ["serde"], optional = true }
 iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
-# Subscriptions are delivered over a WebSocket and are only built for non-wasm
-# targets.
+# Subscriptions are delivered over a WebSocket. The transport differs per
+# target, so `graphql-ws-client` picks up a different integration on each.
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-async-stream.workspace = true
-graphql-ws-client.workspace = true
+graphql-ws-client = { workspace = true, features = ["tungstenite-0.28"] }
 tokio-tungstenite.workspace = true
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom_2.workspace = true
+graphql-ws-client = { workspace = true, features = ["ws_stream_wasm"] }
 js-sys.workspace = true
 wasm-bindgen.workspace = true
 wasm-bindgen-futures.workspace = true
+ws_stream_wasm.workspace = true
 
 [dev-dependencies]
 # external dependencies
