@@ -725,4 +725,41 @@ mod tests {
         assert!(matches!(err, CommitteeChainError::Signature(_)));
         assert_eq!(verifier.committee(), &committee0);
     }
+
+    /// A closing checkpoint certified by a stake minority fails on weight, not
+    /// on the signature: one member's signature verifies, the quorum does not.
+    /// `certify` cannot build this case, since `finish` refuses it.
+    #[proptest]
+    fn under_quorum_certification_is_rejected(
+        keys: [Bls12381PrivateKey; 4],
+        summary: CheckpointSummary,
+    ) {
+        let committee0 = committee(&keys, 0);
+        let next = committee(&keys, 1);
+        let mut verifier = CommitteeChainVerifier::new(committee0.clone()).unwrap();
+
+        let checkpoint = close_epoch(summary, 0, &next);
+        // One of four equal stakes: weight 1 against a threshold of 3.
+        let lone = keys[0].sign_checkpoint_summary(&checkpoint);
+        let mut bitmap = roaring::RoaringBitmap::new();
+        bitmap.insert(0);
+        let signed = SignedCheckpointSummary {
+            checkpoint,
+            signature: ValidatorAggregatedSignature {
+                epoch: lone.epoch,
+                signature: lone.signature,
+                bitmap,
+            },
+        };
+
+        let err = verifier.verify_epoch_close(&signed).unwrap_err();
+        // `Signature` is also how a bad signature is reported, so the message
+        // is what separates the two.
+        assert!(matches!(err, CommitteeChainError::Signature(_)), "{err}");
+        assert!(
+            err.to_string().contains("insufficient signing weight"),
+            "{err}"
+        );
+        assert_eq!(verifier.committee(), &committee0);
+    }
 }
