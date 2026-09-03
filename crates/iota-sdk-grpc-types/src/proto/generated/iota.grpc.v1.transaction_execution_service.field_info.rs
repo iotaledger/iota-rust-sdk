@@ -601,5 +601,278 @@ mod _field_impls {
             SimulateTransactionResultFieldPathBuilder::new_with_base(self.path)
         }
     }
+    impl ViewFunctionCallItem {
+        pub const FQ_FUNCTION_NAME_FIELD: &'static MessageField = &MessageField {
+            name: "fq_function_name",
+            json_name: "fqFunctionName",
+            number: 1i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: None,
+        };
+        pub const TYPE_ARGS_FIELD: &'static MessageField = &MessageField {
+            name: "type_args",
+            json_name: "typeArgs",
+            number: 2i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: Some(crate::v1::types::TypeTag::FIELDS),
+        };
+        pub const INPUTS_FIELD: &'static MessageField = &MessageField {
+            name: "inputs",
+            json_name: "inputs",
+            number: 3i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: Some(crate::v1::command::InputArgument::FIELDS),
+        };
+    }
+    impl MessageFields for ViewFunctionCallItem {
+        const FIELDS: &'static [&'static MessageField] = &[
+            Self::FQ_FUNCTION_NAME_FIELD,
+            Self::TYPE_ARGS_FIELD,
+            Self::INPUTS_FIELD,
+        ];
+    }
+    impl ViewFunctionCallItem {
+        pub fn path_builder() -> ViewFunctionCallItemFieldPathBuilder {
+            ViewFunctionCallItemFieldPathBuilder::new()
+        }
+    }
+    pub struct ViewFunctionCallItemFieldPathBuilder {
+        path: Vec<&'static str>,
+    }
+    impl ViewFunctionCallItemFieldPathBuilder {
+        #[allow(clippy::new_without_default)]
+        pub fn new() -> Self {
+            Self { path: Default::default() }
+        }
+        #[doc(hidden)]
+        pub fn new_with_base(base: Vec<&'static str>) -> Self {
+            Self { path: base }
+        }
+        pub fn finish(self) -> String {
+            self.path.join(".")
+        }
+        pub fn fq_function_name(mut self) -> String {
+            self.path.push(ViewFunctionCallItem::FQ_FUNCTION_NAME_FIELD.name);
+            self.finish()
+        }
+        pub fn type_args(mut self) -> crate::v1::types::TypeTagFieldPathBuilder {
+            self.path.push(ViewFunctionCallItem::TYPE_ARGS_FIELD.name);
+            crate::v1::types::TypeTagFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn inputs(mut self) -> crate::v1::command::InputArgumentFieldPathBuilder {
+            self.path.push(ViewFunctionCallItem::INPUTS_FIELD.name);
+            crate::v1::command::InputArgumentFieldPathBuilder::new_with_base(self.path)
+        }
+    }
+    impl ViewFunctionCallsRequest {
+        pub const VIEW_FUNCTION_CALLS_FIELD: &'static MessageField = &MessageField {
+            name: "view_function_calls",
+            json_name: "viewFunctionCalls",
+            number: 1i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: Some(ViewFunctionCallItem::FIELDS),
+        };
+        pub const READ_MASK_FIELD: &'static MessageField = &MessageField {
+            name: "read_mask",
+            json_name: "readMask",
+            number: 2i32,
+            is_optional: true,
+            is_map: false,
+            message_fields: None,
+        };
+    }
+    impl MessageFields for ViewFunctionCallsRequest {
+        const FIELDS: &'static [&'static MessageField] = &[
+            Self::VIEW_FUNCTION_CALLS_FIELD,
+            Self::READ_MASK_FIELD,
+        ];
+    }
+    impl ViewFunctionCallsRequest {
+        pub fn path_builder() -> ViewFunctionCallsRequestFieldPathBuilder {
+            ViewFunctionCallsRequestFieldPathBuilder::new()
+        }
+    }
+    pub struct ViewFunctionCallsRequestFieldPathBuilder {
+        path: Vec<&'static str>,
+    }
+    impl ViewFunctionCallsRequestFieldPathBuilder {
+        #[allow(clippy::new_without_default)]
+        pub fn new() -> Self {
+            Self { path: Default::default() }
+        }
+        #[doc(hidden)]
+        pub fn new_with_base(base: Vec<&'static str>) -> Self {
+            Self { path: base }
+        }
+        pub fn finish(self) -> String {
+            self.path.join(".")
+        }
+        pub fn view_function_calls(mut self) -> ViewFunctionCallItemFieldPathBuilder {
+            self.path.push(ViewFunctionCallsRequest::VIEW_FUNCTION_CALLS_FIELD.name);
+            ViewFunctionCallItemFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn read_mask(mut self) -> String {
+            self.path.push(ViewFunctionCallsRequest::READ_MASK_FIELD.name);
+            self.finish()
+        }
+    }
+    impl ViewFunctionCallOutputs {
+        pub const RETURN_VALUES_FIELD: &'static MessageField = &MessageField {
+            name: "return_values",
+            json_name: "returnValues",
+            number: 1i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: Some(crate::v1::command::CommandOutput::FIELDS),
+        };
+        pub const EXECUTION_ERROR_FIELD: &'static MessageField = &MessageField {
+            name: "execution_error",
+            json_name: "executionError",
+            number: 2i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: Some(ExecutionError::FIELDS),
+        };
+    }
+    impl ViewFunctionCallOutputs {
+        pub const EXECUTION_RESULT_ONEOF: &'static str = "execution_result";
+    }
+    impl MessageFields for ViewFunctionCallOutputs {
+        const FIELDS: &'static [&'static MessageField] = &[
+            Self::RETURN_VALUES_FIELD,
+            Self::EXECUTION_ERROR_FIELD,
+        ];
+        const ONEOFS: &'static [&'static str] = &["execution_result"];
+    }
+    impl ViewFunctionCallOutputs {
+        pub fn path_builder() -> ViewFunctionCallOutputsFieldPathBuilder {
+            ViewFunctionCallOutputsFieldPathBuilder::new()
+        }
+    }
+    pub struct ViewFunctionCallOutputsFieldPathBuilder {
+        path: Vec<&'static str>,
+    }
+    impl ViewFunctionCallOutputsFieldPathBuilder {
+        #[allow(clippy::new_without_default)]
+        pub fn new() -> Self {
+            Self { path: Default::default() }
+        }
+        #[doc(hidden)]
+        pub fn new_with_base(base: Vec<&'static str>) -> Self {
+            Self { path: base }
+        }
+        pub fn finish(self) -> String {
+            self.path.join(".")
+        }
+        pub fn return_values(
+            mut self,
+        ) -> crate::v1::command::CommandOutputFieldPathBuilder {
+            self.path.push(ViewFunctionCallOutputs::RETURN_VALUES_FIELD.name);
+            crate::v1::command::CommandOutputFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn execution_error(mut self) -> ExecutionErrorFieldPathBuilder {
+            self.path.push(ViewFunctionCallOutputs::EXECUTION_ERROR_FIELD.name);
+            ExecutionErrorFieldPathBuilder::new_with_base(self.path)
+        }
+    }
+    impl ViewFunctionCallResult {
+        pub const CALL_OUTPUTS_FIELD: &'static MessageField = &MessageField {
+            name: "call_outputs",
+            json_name: "callOutputs",
+            number: 1i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: Some(ViewFunctionCallOutputs::FIELDS),
+        };
+        pub const ERROR_FIELD: &'static MessageField = &MessageField {
+            name: "error",
+            json_name: "error",
+            number: 2i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: None,
+        };
+    }
+    impl ViewFunctionCallResult {
+        pub const RESULT_ONEOF: &'static str = "result";
+    }
+    impl MessageFields for ViewFunctionCallResult {
+        const FIELDS: &'static [&'static MessageField] = &[
+            Self::CALL_OUTPUTS_FIELD,
+            Self::ERROR_FIELD,
+        ];
+        const ONEOFS: &'static [&'static str] = &["result"];
+    }
+    impl ViewFunctionCallResult {
+        pub fn path_builder() -> ViewFunctionCallResultFieldPathBuilder {
+            ViewFunctionCallResultFieldPathBuilder::new()
+        }
+    }
+    pub struct ViewFunctionCallResultFieldPathBuilder {
+        path: Vec<&'static str>,
+    }
+    impl ViewFunctionCallResultFieldPathBuilder {
+        #[allow(clippy::new_without_default)]
+        pub fn new() -> Self {
+            Self { path: Default::default() }
+        }
+        #[doc(hidden)]
+        pub fn new_with_base(base: Vec<&'static str>) -> Self {
+            Self { path: base }
+        }
+        pub fn finish(self) -> String {
+            self.path.join(".")
+        }
+        pub fn call_outputs(mut self) -> ViewFunctionCallOutputsFieldPathBuilder {
+            self.path.push(ViewFunctionCallResult::CALL_OUTPUTS_FIELD.name);
+            ViewFunctionCallOutputsFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn error(mut self) -> String {
+            self.path.push(ViewFunctionCallResult::ERROR_FIELD.name);
+            self.finish()
+        }
+    }
+    impl ViewFunctionCallsResponse {
+        pub const CALL_RESULTS_FIELD: &'static MessageField = &MessageField {
+            name: "call_results",
+            json_name: "callResults",
+            number: 1i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: Some(ViewFunctionCallResult::FIELDS),
+        };
+    }
+    impl MessageFields for ViewFunctionCallsResponse {
+        const FIELDS: &'static [&'static MessageField] = &[Self::CALL_RESULTS_FIELD];
+    }
+    impl ViewFunctionCallsResponse {
+        pub fn path_builder() -> ViewFunctionCallsResponseFieldPathBuilder {
+            ViewFunctionCallsResponseFieldPathBuilder::new()
+        }
+    }
+    pub struct ViewFunctionCallsResponseFieldPathBuilder {
+        path: Vec<&'static str>,
+    }
+    impl ViewFunctionCallsResponseFieldPathBuilder {
+        #[allow(clippy::new_without_default)]
+        pub fn new() -> Self {
+            Self { path: Default::default() }
+        }
+        #[doc(hidden)]
+        pub fn new_with_base(base: Vec<&'static str>) -> Self {
+            Self { path: base }
+        }
+        pub fn finish(self) -> String {
+            self.path.join(".")
+        }
+        pub fn call_results(mut self) -> ViewFunctionCallResultFieldPathBuilder {
+            self.path.push(ViewFunctionCallsResponse::CALL_RESULTS_FIELD.name);
+            ViewFunctionCallResultFieldPathBuilder::new_with_base(self.path)
+        }
+    }
 }
 pub use _field_impls::*;

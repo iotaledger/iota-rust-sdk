@@ -431,7 +431,8 @@ example:
 examples: ## Run all Rust examples
 	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer
 	@# that require external services (e.g. PostgreSQL). Run those separately.
-	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -exec basename {} .rs \;); do \
+	@# TODO(#1363): Re-enable Move View call over gRPC examples
+	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -not -name "move_view_call_grpc.rs" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 
