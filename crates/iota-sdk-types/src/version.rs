@@ -61,8 +61,8 @@ impl Version {
     /// is assigned to, does not appear in a canceled transaction.
     pub const MIN_VALID_INCL: Self = Self(u64::MIN);
 
-    /// The initial shared version for shared system objects.
-    pub const INITIAL_SHARED_VERSION: Self = Self(1);
+    /// The initial version for objects.
+    pub const INITIAL: Self = Self(1);
 
     /// An exclusive upper limit on a valid version: versions
     /// strictly smaller than this limit are valid versions.
@@ -111,8 +111,6 @@ impl Version {
     /// cause transaction cancellations.
     const MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK: Self =
         Self(Self::MAX_VALID_EXCL.0 + Self::CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK.0);
-
-    pub const OBJECT_START: Self = Self(1);
 
     /// Create a new Version from a u64 value
     pub const fn from_u64(value: u64) -> Self {

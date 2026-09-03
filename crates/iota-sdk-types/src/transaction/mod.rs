@@ -1484,21 +1484,21 @@ impl Input {
     /// Shared `Input` for the IOTA system state object.
     pub const IOTA_SYSTEM_MUTABLE: Self = Self::Shared(SharedObjectReference {
         object_id: ObjectId::SYSTEM_STATE,
-        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        initial_shared_version: Version::INITIAL,
         mutable: true,
     });
 
     /// Shared `Input` for the clock object.
     pub const CLOCK_IMMUTABLE: Self = Self::Shared(SharedObjectReference {
         object_id: ObjectId::CLOCK,
-        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        initial_shared_version: Version::INITIAL,
         mutable: false,
     });
 
     /// Shared `Input` for the clock object.
     pub const CLOCK_MUTABLE: Self = Self::Shared(SharedObjectReference {
         object_id: ObjectId::CLOCK,
-        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        initial_shared_version: Version::INITIAL,
         mutable: true,
     });
 
@@ -1584,7 +1584,7 @@ pub struct SharedObjectReference {
 impl SharedObjectReference {
     pub const IOTA_SYSTEM_STATE_OBJ_MUTABLE: Self = Self {
         object_id: ObjectId::SYSTEM_STATE,
-        initial_shared_version: Version::INITIAL_SHARED_VERSION,
+        initial_shared_version: Version::INITIAL,
         mutable: true,
     };
 
