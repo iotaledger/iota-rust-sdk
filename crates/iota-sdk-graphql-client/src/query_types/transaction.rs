@@ -44,7 +44,7 @@ pub struct TransactionBlockWithEffectsQuery {
 )]
 pub struct TransactionBlockEffectsQuery {
     #[arguments(digest: $digest)]
-    pub transaction_block: Option<TxBlockEffects>,
+    pub transaction_block: Option<TransactionBlockEffectsOnly>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -55,7 +55,7 @@ pub struct TransactionBlockEffectsQuery {
 )]
 pub struct TransactionBlockCheckpointQuery {
     #[arguments(digest: $digest)]
-    pub transaction_block: Option<TxBlockCheckpoint>,
+    pub transaction_block: Option<TransactionBlockCheckpointOnly>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -99,7 +99,7 @@ pub struct TransactionBlocksWithEffectsQuery {
 )]
 pub struct TransactionBlocksEffectsQuery {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
-    pub transaction_blocks: TransactionBlockEffectsConnection,
+    pub transaction_blocks: TransactionBlockEffectsOnlyConnection,
 }
 // ===========================================================================
 // Transaction Block(s) Query Args
@@ -139,14 +139,14 @@ pub struct TransactionBlockWithEffects {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TxBlockEffects {
+pub struct TransactionBlockEffectsOnly {
     pub effects: Option<TransactionBlockEffects>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TxBlockCheckpoint {
-    pub effects: Option<TransactionBlockCheckpoint>,
+pub struct TransactionBlockCheckpointOnly {
+    pub effects: Option<TransactionBlockEffectsCheckpoint>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -157,7 +157,7 @@ pub struct TransactionBlockEffects {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
-pub struct TransactionBlockCheckpoint {
+pub struct TransactionBlockEffectsCheckpoint {
     pub checkpoint: Option<Checkpoint>,
 }
 
@@ -282,8 +282,8 @@ pub struct TransactionBlockWithEffectsConnection {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockConnection")]
-pub struct TransactionBlockEffectsConnection {
-    pub nodes: Vec<TxBlockEffects>,
+pub struct TransactionBlockEffectsOnlyConnection {
+    pub nodes: Vec<TransactionBlockEffectsOnly>,
     pub page_info: PageInfo,
 }
 
@@ -309,10 +309,10 @@ impl TryFrom<TransactionBlock> for SignedTransaction {
     }
 }
 
-impl TryFrom<TxBlockEffects> for TransactionEffects {
+impl TryFrom<TransactionBlockEffectsOnly> for TransactionEffects {
     type Error = error::Error;
 
-    fn try_from(value: TxBlockEffects) -> Result<Self, Self::Error> {
+    fn try_from(value: TransactionBlockEffectsOnly) -> Result<Self, Self::Error> {
         let effects = value
             .effects
             .map(|fx| base64ct::Base64::decode_vec(fx.bcs.unwrap().0.as_str()))
@@ -322,7 +322,7 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
         effects.ok_or_else(|| {
             Error::from_error(
                 Kind::Other,
-                "Cannot convert GraphQL TxBlockEffects into TransactionEffects",
+                "Cannot convert GraphQL TransactionBlockEffectsOnly into TransactionEffects",
             )
         })
     }
