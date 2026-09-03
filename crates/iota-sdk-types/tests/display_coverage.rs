@@ -49,6 +49,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::EndOfEpochTransactionKind>();
     assert_display::<iota_sdk_types::Event>();
     assert_display::<iota_sdk_types::ExecutionError>();
+    assert_display::<iota_sdk_types::ExecutionFailure>();
     assert_display::<iota_sdk_types::ExecutionStatus>();
     assert_display::<iota_sdk_types::GasCostSummary>();
     assert_display::<iota_sdk_types::GasPayment>();

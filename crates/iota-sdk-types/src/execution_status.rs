@@ -99,6 +99,62 @@ impl crate::TreeDisplay for ExecutionStatus {
 
 crate::impl_tree_display!(ExecutionStatus);
 
+/// An execution failure together with its underlying cause.
+///
+/// This mirrors [`ExecutionStatus::Failure`] but additionally carries the
+/// source of the error. The source is produced while a node executes the
+/// transaction and is not deterministic across validators, so it is never
+/// part of the effects committed on chain.
+///
+/// The source type parameter defaults to `String`, the form in which
+/// simulation (dry run) APIs report the source to clients. The node itself
+/// builds these failures with a live error object as the source while
+/// executing a transaction.
+#[derive(Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[non_exhaustive]
+pub struct ExecutionFailure<S = String> {
+    /// The error encountered during execution.
+    pub error: ExecutionError,
+    /// The error's underlying cause, if any.
+    pub source: Option<S>,
+    /// The command, if any, during which the error occurred.
+    pub command: Option<u64>,
+}
+
+impl<S> ExecutionFailure<S> {
+    pub fn new(error: ExecutionError, source: Option<S>, command: Option<u64>) -> Self {
+        Self {
+            error,
+            source,
+            command,
+        }
+    }
+}
+
+impl<S: core::fmt::Display> core::fmt::Display for ExecutionFailure<S> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "{}: {}", self.error.as_ref(), self.error)?;
+        if let Some(source) = &self.source {
+            write!(f, "; caused by: {source}")?;
+        }
+        if let Some(command) = self.command {
+            write!(f, "; at command index: {command}")?;
+        }
+        Ok(())
+    }
+}
+
+/// Drops the source, which cannot be part of the on-chain execution status.
+impl<S> From<ExecutionFailure<S>> for ExecutionStatus {
+    fn from(failure: ExecutionFailure<S>) -> Self {
+        Self::Failure {
+            error: failure.error,
+            command: failure.command,
+        }
+    }
+}
+
 fn display_move_location_opt(location: &Option<MoveLocation>) -> impl core::fmt::Display + '_ {
     struct W<'a>(&'a Option<MoveLocation>);
     impl core::fmt::Display for W<'_> {
