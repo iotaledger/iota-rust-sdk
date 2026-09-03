@@ -94,7 +94,7 @@ jobs:
           make fetch-compiled-packages
 
           echo "Generating coverage data (.profraw files)."
-          cargo llvm-cov --ignore-run-fail --no-report nextest --workspace --exclude iota-sdk-ffi --exclude iota-sdk-graphql-client-build --exclude iota-sdk-grpc-types
+          cargo llvm-cov --ignore-run-fail --no-report nextest --workspace --exclude iota-sdk-ffi --exclude iota-sdk-graphql-client-build
 
           echo "Merging .profraw files."
           find target/llvm-cov-target -name '*.profraw' -print0 | xargs -0 $LLVM_PROFDATA merge \
@@ -109,8 +109,11 @@ jobs:
           cd target
 
           echo "Creating report (lcov.info)."
+          # The generated files are include!d, so llvm-cov records their paths
+          # with `..` segments; a pattern spelling out the directory matches nothing.
           LLVM_PROFILE_FILE="nextest.profdata" cargo llvm-cov report \
             --lcov \
+            --ignore-filename-regex 'iota-sdk-grpc-types/.*generated/' \
             --output-path lcov.info
 
           echo "Removing absolute path prefix: ${{ github.workspace }} from report."
