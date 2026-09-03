@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
 
 use base64ct::Encoding;
 use iota_sdk::graphql_client::query_types::{
@@ -90,67 +90,122 @@ impl From<TransactionDataEffects> for iota_sdk::graphql_client::TransactionDataE
     }
 }
 
-#[derive(uniffi::Record)]
-pub struct TransactionsFilter {
-    #[uniffi(default = None)]
-    pub function: Option<String>,
-    #[uniffi(default = None)]
-    pub kind: Option<TransactionBlockKindInput>,
-    #[uniffi(default = None)]
-    pub after_checkpoint: Option<u64>,
-    #[uniffi(default = None)]
-    pub at_checkpoint: Option<u64>,
-    #[uniffi(default = None)]
-    pub before_checkpoint: Option<u64>,
-    #[uniffi(default = None)]
-    pub sent_address: Option<Arc<Address>>,
-    #[uniffi(default = None)]
-    pub recv_address: Option<Arc<Address>>,
-    #[uniffi(default = None)]
-    pub input_object: Option<Arc<ObjectId>>,
-    #[uniffi(default = None)]
-    pub changed_object: Option<Arc<ObjectId>>,
-    #[uniffi(default = None)]
-    pub transaction_ids: Option<Vec<String>>,
-    #[uniffi(default = None)]
-    pub wrapped_or_deleted_object: Option<Arc<ObjectId>>,
-}
+/// Filter for transaction queries.
+///
+/// Holds at most one of the function, kind, address and object filters that
+/// the GraphQL service can only serve one of at a time, so each of those
+/// setters replaces whichever was set before; the sender, checkpoint and
+/// digest filters can be combined with them and with each other freely.
+#[derive(Default, uniffi::Object)]
+pub struct TransactionsFilter(RwLock<iota_sdk::graphql_client::query_types::TransactionsFilter>);
 
-impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for TransactionsFilter {
-    fn from(value: iota_sdk::graphql_client::query_types::TransactionsFilter) -> Self {
-        Self {
-            function: value.function,
-            kind: value.kind.map(Into::into),
-            after_checkpoint: value.after_checkpoint,
-            at_checkpoint: value.at_checkpoint,
-            before_checkpoint: value.before_checkpoint,
-            sent_address: value.sent_address.map(Into::into).map(Arc::new),
-            recv_address: value.recv_address.map(Into::into).map(Arc::new),
-            input_object: value.input_object.map(Into::into).map(Arc::new),
-            changed_object: value.changed_object.map(Into::into).map(Arc::new),
-            transaction_ids: value.transaction_ids,
-            wrapped_or_deleted_object: value
-                .wrapped_or_deleted_object
-                .map(Into::into)
-                .map(Arc::new),
-        }
+impl TransactionsFilter {
+    fn update(
+        &self,
+        f: impl FnOnce(
+            iota_sdk::graphql_client::query_types::TransactionsFilter,
+        ) -> iota_sdk::graphql_client::query_types::TransactionsFilter,
+    ) {
+        let mut lock = self.0.write().expect("error writing to filter");
+        *lock = f(std::mem::take(&mut *lock));
     }
 }
 
-impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::TransactionsFilter {
-    fn from(value: TransactionsFilter) -> Self {
+impl From<&TransactionsFilter> for iota_sdk::graphql_client::query_types::TransactionsFilter {
+    fn from(value: &TransactionsFilter) -> Self {
+        value.0.read().expect("error reading from filter").clone()
+    }
+}
+
+#[uniffi::export]
+impl TransactionsFilter {
+    /// Create a filter that selects on nothing.
+    #[uniffi::constructor]
+    pub fn new() -> Self {
         Self::default()
-            .with_function(value.function)
-            .with_kind(value.kind.map(Into::into))
-            .with_after_checkpoint(value.after_checkpoint)
-            .with_at_checkpoint(value.at_checkpoint)
-            .with_before_checkpoint(value.before_checkpoint)
-            .with_sent_address(value.sent_address.map(|v| **v))
-            .with_recv_address(value.recv_address.map(|v| **v))
-            .with_input_object(value.input_object.map(|v| **v))
-            .with_changed_object(value.changed_object.map(|v| **v))
-            .with_transaction_ids(value.transaction_ids)
-            .with_wrapped_or_deleted_object(value.wrapped_or_deleted_object.map(|v| **v))
+    }
+
+    /// Select by package, module, or function name, e.g. `"0x03"`,
+    /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_function(self: Arc<Self>, function: String) -> Arc<Self> {
+        self.update(|filter| filter.with_function(function));
+        self
+    }
+
+    /// Select by transaction kind.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_kind(self: Arc<Self>, kind: TransactionBlockKindInput) -> Arc<Self> {
+        let kind = GraphQLTransactionBlockKindInput::from(kind);
+        self.update(|filter| filter.with_kind(kind));
+        self
+    }
+
+    /// Select transactions that sent an object to the given address.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_recv_address(self: Arc<Self>, recv_address: &Address) -> Arc<Self> {
+        self.update(|filter| filter.with_recv_address(**recv_address));
+        self
+    }
+
+    /// Select transactions that used the given object as an input.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_input_object(self: Arc<Self>, input_object: &ObjectId) -> Arc<Self> {
+        self.update(|filter| filter.with_input_object(**input_object));
+        self
+    }
+
+    /// Select transactions that output a version of the given object.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_changed_object(self: Arc<Self>, changed_object: &ObjectId) -> Arc<Self> {
+        self.update(|filter| filter.with_changed_object(**changed_object));
+        self
+    }
+
+    /// Select transactions that wrapped or deleted the given object.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_wrapped_or_deleted_object(
+        self: Arc<Self>,
+        wrapped_or_deleted_object: &ObjectId,
+    ) -> Arc<Self> {
+        self.update(|filter| filter.with_wrapped_or_deleted_object(**wrapped_or_deleted_object));
+        self
+    }
+
+    /// Filter by sender address.
+    pub fn with_sent_address(self: Arc<Self>, sent_address: &Address) -> Arc<Self> {
+        self.update(|filter| filter.with_sent_address(**sent_address));
+        self
+    }
+
+    /// Limit to transactions executed after the given checkpoint, exclusive.
+    pub fn with_after_checkpoint(self: Arc<Self>, after_checkpoint: u64) -> Arc<Self> {
+        self.update(|filter| filter.with_after_checkpoint(after_checkpoint));
+        self
+    }
+
+    /// Limit to transactions executed in the given checkpoint.
+    pub fn with_at_checkpoint(self: Arc<Self>, at_checkpoint: u64) -> Arc<Self> {
+        self.update(|filter| filter.with_at_checkpoint(at_checkpoint));
+        self
+    }
+
+    /// Limit to transactions executed before the given checkpoint, exclusive.
+    pub fn with_before_checkpoint(self: Arc<Self>, before_checkpoint: u64) -> Arc<Self> {
+        self.update(|filter| filter.with_before_checkpoint(before_checkpoint));
+        self
+    }
+
+    /// Filter by transaction digests.
+    pub fn with_transaction_ids(self: Arc<Self>, transaction_ids: Vec<String>) -> Arc<Self> {
+        self.update(|filter| filter.with_transaction_ids(transaction_ids));
+        self
     }
 }
 

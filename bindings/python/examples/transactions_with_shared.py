@@ -13,7 +13,7 @@ async def main():
         "0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")
 
     transactions = await client.transactions(
-        TransactionsFilter(input_object=shared_obj_id),)
+        TransactionsFilter().with_input_object(shared_obj_id),)
 
     for transaction in transactions.data:
         print("Digest:", transaction.transaction.digest().to_base58())

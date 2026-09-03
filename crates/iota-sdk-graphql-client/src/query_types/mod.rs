@@ -82,10 +82,11 @@ pub use subscriptions::{
 };
 pub use transaction::{
     TransactionBlock, TransactionBlockArgs, TransactionBlockCheckpointQuery,
-    TransactionBlockEffectsQuery, TransactionBlockIndexedQuery, TransactionBlockKindInput,
-    TransactionBlockQuery, TransactionBlockWithEffects, TransactionBlockWithEffectsQuery,
-    TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
-    TransactionBlocksWithEffectsQuery, TransactionsFilter,
+    TransactionBlockEffectsQuery, TransactionBlockFilter, TransactionBlockIndexedQuery,
+    TransactionBlockKindInput, TransactionBlockQuery, TransactionBlockWithEffects,
+    TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
+    TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery, TransactionsFilter,
+    TransactionsSelector,
 };
 
 use crate::error;

@@ -369,8 +369,9 @@ func extractPolicy(contents string) (uint8, bool) {
 
 func resolveUpgradeCapID(client *iota_sdk.GraphQlClient, packageID *iota_sdk.ObjectId) (*iota_sdk.ObjectId, error) {
 	limit := int32(1)
+	filter := iota_sdk.NewTransactionsFilter().WithChangedObject(packageID)
 	page, err := client.TransactionsEffects(
-		&iota_sdk.TransactionsFilter{ChangedObject: &packageID},
+		&filter,
 		&iota_sdk.PaginationFilter{Direction: iota_sdk.DirectionForward, Limit: &limit},
 	)
 	if err != nil {
@@ -544,10 +545,11 @@ func usesUpgradeCapForMakeImmutable(tx *iota_sdk.Transaction, upgradeCapID *iota
 
 func wasPackagePublishedAsImmutable(client *iota_sdk.GraphQlClient, packageID *iota_sdk.ObjectId) (bool, error) {
 	var cursor *string
+	filter := iota_sdk.NewTransactionsFilter().WithChangedObject(packageID)
 
 	for {
 		page, err := client.TransactionsDataEffects(
-			&iota_sdk.TransactionsFilter{ChangedObject: &packageID},
+			&filter,
 			forwardPage(cursor),
 		)
 		if err != nil {
@@ -573,10 +575,11 @@ func wasPackagePublishedAsImmutable(client *iota_sdk.GraphQlClient, packageID *i
 
 func wasUpgradeCapUsedForMakeImmutable(client *iota_sdk.GraphQlClient, upgradeCapID *iota_sdk.ObjectId) (bool, error) {
 	var cursor *string
+	filter := iota_sdk.NewTransactionsFilter().WithInputObject(upgradeCapID)
 
 	for {
 		page, err := client.TransactionsDataEffects(
-			&iota_sdk.TransactionsFilter{InputObject: &upgradeCapID},
+			&filter,
 			forwardPage(cursor),
 		)
 		if err != nil {

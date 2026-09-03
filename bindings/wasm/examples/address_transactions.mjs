@@ -22,10 +22,10 @@ const address = Address.fromHex(
 );
 
 const outgoing = await client.transactions(
-  TransactionsFilter.new({ sentAddress: address }),
+  new TransactionsFilter().withSentAddress(address),
 );
 const incoming = await client.transactions(
-  TransactionsFilter.new({ recvAddress: address }),
+  new TransactionsFilter().withRecvAddress(address),
 );
 
 console.log(`Transactions for ${address.toHex()}`);
