@@ -7,26 +7,6 @@ mod _field_impls {
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsData;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsDataFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::command::CommandResult;
-    #[allow(unused_imports)]
-    use crate::v1::command::CommandResultFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::signatures::UserSignature;
-    #[allow(unused_imports)]
-    use crate::v1::signatures::UserSignatureFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::transaction::ExecutedTransaction;
-    #[allow(unused_imports)]
-    use crate::v1::transaction::ExecutedTransactionFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::transaction::Transaction;
-    #[allow(unused_imports)]
-    use crate::v1::transaction::TransactionFieldPathBuilder;
     impl ExecuteTransactionItem {
         pub const TRANSACTION_FIELD: &'static MessageField = &MessageField {
             name: "transaction",
@@ -34,7 +14,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Transaction::FIELDS),
+            message_fields: Some(crate::v1::transaction::Transaction::FIELDS),
         };
         pub const SIGNATURES_FIELD: &'static MessageField = &MessageField {
             name: "signatures",
@@ -42,7 +22,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(UserSignature::FIELDS),
+            message_fields: Some(crate::v1::signatures::UserSignature::FIELDS),
         };
     }
     impl MessageFields for ExecuteTransactionItem {
@@ -71,13 +51,19 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn transaction(mut self) -> TransactionFieldPathBuilder {
+        pub fn transaction(
+            mut self,
+        ) -> crate::v1::transaction::TransactionFieldPathBuilder {
             self.path.push(ExecuteTransactionItem::TRANSACTION_FIELD.name);
-            TransactionFieldPathBuilder::new_with_base(self.path)
+            crate::v1::transaction::TransactionFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn signatures(mut self) -> UserSignatureFieldPathBuilder {
+        pub fn signatures(
+            mut self,
+        ) -> crate::v1::signatures::UserSignatureFieldPathBuilder {
             self.path.push(ExecuteTransactionItem::SIGNATURES_FIELD.name);
-            UserSignatureFieldPathBuilder::new_with_base(self.path)
+            crate::v1::signatures::UserSignatureFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
     }
     impl ExecuteTransactionsRequest {
@@ -157,7 +143,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(ExecutedTransaction::FIELDS),
+            message_fields: Some(crate::v1::transaction::ExecutedTransaction::FIELDS),
         };
         pub const ERROR_FIELD: &'static MessageField = &MessageField {
             name: "error",
@@ -198,9 +184,13 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn executed_transaction(mut self) -> ExecutedTransactionFieldPathBuilder {
+        pub fn executed_transaction(
+            mut self,
+        ) -> crate::v1::transaction::ExecutedTransactionFieldPathBuilder {
             self.path.push(ExecuteTransactionResult::EXECUTED_TRANSACTION_FIELD.name);
-            ExecutedTransactionFieldPathBuilder::new_with_base(self.path)
+            crate::v1::transaction::ExecutedTransactionFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
         pub fn error(mut self) -> String {
             self.path.push(ExecuteTransactionResult::ERROR_FIELD.name);
@@ -256,7 +246,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Transaction::FIELDS),
+            message_fields: Some(crate::v1::transaction::Transaction::FIELDS),
         };
         pub const TX_CHECKS_FIELD: &'static MessageField = &MessageField {
             name: "tx_checks",
@@ -293,9 +283,11 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn transaction(mut self) -> TransactionFieldPathBuilder {
+        pub fn transaction(
+            mut self,
+        ) -> crate::v1::transaction::TransactionFieldPathBuilder {
             self.path.push(SimulateTransactionItem::TRANSACTION_FIELD.name);
-            TransactionFieldPathBuilder::new_with_base(self.path)
+            crate::v1::transaction::TransactionFieldPathBuilder::new_with_base(self.path)
         }
         pub fn tx_checks(mut self) -> String {
             self.path.push(SimulateTransactionItem::TX_CHECKS_FIELD.name);
@@ -362,7 +354,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
         pub const SOURCE_FIELD: &'static MessageField = &MessageField {
             name: "source",
@@ -408,9 +400,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn bcs_kind(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs_kind(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(ExecutionError::BCS_KIND_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
         pub fn source(mut self) -> String {
             self.path.push(ExecutionError::SOURCE_FIELD.name);
@@ -428,7 +420,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ExecutedTransaction::FIELDS),
+            message_fields: Some(crate::v1::transaction::ExecutedTransaction::FIELDS),
         };
         pub const SUGGESTED_GAS_PRICE_FIELD: &'static MessageField = &MessageField {
             name: "suggested_gas_price",
@@ -444,7 +436,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(CommandResult::FIELDS),
+            message_fields: Some(crate::v1::command::CommandResult::FIELDS),
         };
         pub const EXECUTION_ERROR_FIELD: &'static MessageField = &MessageField {
             name: "execution_error",
@@ -487,17 +479,23 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn executed_transaction(mut self) -> ExecutedTransactionFieldPathBuilder {
+        pub fn executed_transaction(
+            mut self,
+        ) -> crate::v1::transaction::ExecutedTransactionFieldPathBuilder {
             self.path.push(SimulatedTransaction::EXECUTED_TRANSACTION_FIELD.name);
-            ExecutedTransactionFieldPathBuilder::new_with_base(self.path)
+            crate::v1::transaction::ExecutedTransactionFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
         pub fn suggested_gas_price(mut self) -> String {
             self.path.push(SimulatedTransaction::SUGGESTED_GAS_PRICE_FIELD.name);
             self.finish()
         }
-        pub fn command_results(mut self) -> CommandResultFieldPathBuilder {
+        pub fn command_results(
+            mut self,
+        ) -> crate::v1::command::CommandResultFieldPathBuilder {
             self.path.push(SimulatedTransaction::COMMAND_RESULTS_FIELD.name);
-            CommandResultFieldPathBuilder::new_with_base(self.path)
+            crate::v1::command::CommandResultFieldPathBuilder::new_with_base(self.path)
         }
         pub fn execution_error(mut self) -> ExecutionErrorFieldPathBuilder {
             self.path.push(SimulatedTransaction::EXECUTION_ERROR_FIELD.name);

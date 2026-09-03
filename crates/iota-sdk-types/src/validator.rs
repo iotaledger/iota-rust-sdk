@@ -204,7 +204,7 @@ impl serde_with::SerializeAs<Bls12381PublicKey> for BinaryValidatorPublicKey {
     where
         S: serde::Serializer,
     {
-        ::serde_with::Bytes::serialize_as(source.inner(), serializer)
+        ::serde_with::Bytes::serialize_as(source.bytes(), serializer)
     }
 }
 
