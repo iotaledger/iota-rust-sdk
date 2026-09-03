@@ -891,8 +891,7 @@ impl From<GraphQLAddressTransactionRelationship> for AddressTransactionRelations
             GraphQLAddressTransactionRelationship::Recv => Self::Recv,
             GraphQLAddressTransactionRelationship::Affected => Self::Affected,
             _ => unimplemented!(
-                "a new GraphQLAddressTransactionRelationship variant was added and needs to be \
-                 handled"
+                "a new GraphQLAddressTransactionRelationship enum variant was added and needs to be handled"
             ),
         }
     }
