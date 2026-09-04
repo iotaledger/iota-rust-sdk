@@ -5,11 +5,14 @@ use std::sync::Arc;
 
 use crate::{
     error::Result,
-    types::crypto::{
-        Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
-        Secp256r1PublicKey, Secp256r1Signature, move_authenticator::MoveAuthenticator,
-        multisig::MultisigAggregatedSignature, passkey::PasskeyAuthenticator,
-        public_key::PublicKey,
+    types::{
+        address::Address,
+        crypto::{
+            Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
+            Secp256r1PublicKey, Secp256r1Signature, move_authenticator::MoveAuthenticator,
+            multisig::MultisigAggregatedSignature, passkey::PasskeyAuthenticator,
+            public_key::PublicKey,
+        },
     },
 };
 
@@ -136,6 +139,11 @@ impl UserSignature {
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme().into()
+    }
+
+    /// Derive the `Address` of the signer that this signature authenticates.
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -296,6 +304,11 @@ impl SimpleSignature {
 
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme().into()
+    }
+
+    /// Derive the `Address` of the public key that produced this signature.
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
