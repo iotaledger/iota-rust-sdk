@@ -37,8 +37,8 @@ impl GraphQLClient {
             .into_parts();
         let events = events
             .into_iter()
-            .map(GraphQLEvent::try_from)
-            .collect::<Result<Vec<_>>>()?;
+            .map(GraphQLEvent::from)
+            .collect::<Vec<_>>();
         Ok(Page::new(page_info, events).into())
     }
 }

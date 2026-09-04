@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::error::Result;
 
-#[derive(derive_more::Deref, derive_more::From, uniffi::Object)]
+#[derive(Debug, derive_more::Deref, derive_more::From, Eq, PartialEq, uniffi::Object)]
 pub struct Version(iota_sdk::types::Version);
 
 #[uniffi::export]

@@ -48,7 +48,7 @@ impl GraphQLClient {
     #[uniffi::method(default(skip_checks = false))]
     pub async fn dry_run_transaction_kind(
         &self,
-        transaction_kind: &TransactionKind,
+        transaction_kind: TransactionKind,
         transaction_metadata: TransactionMetadata,
         skip_checks: bool,
     ) -> Result<DryRunResult> {
@@ -57,7 +57,7 @@ impl GraphQLClient {
             .read()
             .await
             .dry_run_transaction_kind(
-                &transaction_kind.0,
+                &transaction_kind.into(),
                 skip_checks,
                 transaction_metadata.into(),
             )

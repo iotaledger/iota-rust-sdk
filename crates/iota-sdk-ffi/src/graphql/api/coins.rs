@@ -65,13 +65,13 @@ impl GraphQLClient {
 
     /// Get the coin metadata for the coin type.
     pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<CoinMetadata>> {
-        self.0
+        Ok(self
+            .0
             .read()
             .await
             .coin_metadata(coin_type)
             .await?
-            .map(CoinMetadata::try_from)
-            .transpose()
+            .map(CoinMetadata::from))
     }
 
     /// Get total supply for the coin type.

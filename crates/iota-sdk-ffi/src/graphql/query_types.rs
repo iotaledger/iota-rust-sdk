@@ -5,17 +5,14 @@ use std::sync::Arc;
 
 use base64ct::Encoding;
 use iota_sdk::graphql_client::query_types::{
-    Base64, BigInt, TransactionBlockKindInput as GraphQLTransactionBlockKindInput,
+    Base64, BigInt, MoveData, TransactionBlockKindInput as GraphQLTransactionBlockKindInput,
 };
 
-use crate::{
-    error::SdkFfiError,
-    types::{
-        address::Address,
-        move_core::TypeTag,
-        object::ObjectId,
-        transaction::{SignedTransaction, TransactionEffects},
-    },
+use crate::types::{
+    address::Address,
+    move_core::TypeTag,
+    object::ObjectId,
+    transaction::{SignedTransaction, TransactionEffects},
 };
 
 uniffi::custom_type!(Base64, String, {
@@ -464,10 +461,8 @@ pub struct GraphQLEvent {
     pub json: String,
 }
 
-impl TryFrom<iota_sdk::graphql_client::query_types::Event> for GraphQLEvent {
-    type Error = crate::error::SdkFfiError;
-
-    fn try_from(value: iota_sdk::graphql_client::query_types::Event) -> crate::error::Result<Self> {
+impl From<iota_sdk::graphql_client::query_types::Event> for GraphQLEvent {
+    fn from(value: iota_sdk::graphql_client::query_types::Event) -> Self {
         let (package_id, module) = match value.sending_module {
             Some(sending_module) => (
                 Some(Arc::new(ObjectId(iota_sdk::types::ObjectId::from(
@@ -477,17 +472,50 @@ impl TryFrom<iota_sdk::graphql_client::query_types::Event> for GraphQLEvent {
             ),
             None => (None, None),
         };
-        Ok(Self {
+        Self {
             package_id,
             module,
             sender: value.sender.map(|s| Arc::new(Address(s.address))),
             move_type: value.move_type.repr,
-            contents: base64ct::Base64::decode_vec(&value.bcs.0)
-                .map_err(crate::error::SdkFfiError::custom)?,
+            contents: base64ct::Base64::decode_vec(&value.bcs.0).unwrap(),
             timestamp: value.timestamp.map(|t| t.0),
             data: value.data.0.to_string(),
             json: value.json.to_string(),
-        })
+        }
+    }
+}
+
+impl From<GraphQLEvent> for iota_sdk::graphql_client::query_types::Event {
+    fn from(value: GraphQLEvent) -> Self {
+        let sending_module = match (value.package_id, value.module) {
+            (Some(package_id), Some(module)) => {
+                Some(iota_sdk::graphql_client::query_types::MoveModuleQuery {
+                    package: iota_sdk::graphql_client::query_types::MovePackageQuery {
+                        address: package_id.0.into(),
+                        bcs: Some(Base64(base64ct::Base64::encode_string(
+                            package_id.0.as_bytes(),
+                        ))),
+                    },
+                    name: module,
+                })
+            }
+            _ => None,
+        };
+        Self {
+            sending_module,
+            sender: value
+                .sender
+                .map(|s| iota_sdk::graphql_client::query_types::GraphQLAddress { address: s.0 }),
+            move_type: iota_sdk::graphql_client::query_types::MoveType {
+                repr: value.move_type,
+            },
+            bcs: Base64(base64ct::Base64::encode_string(&value.contents)),
+            timestamp: value
+                .timestamp
+                .map(iota_sdk::graphql_client::query_types::DateTime),
+            data: MoveData(serde_json::from_str(&value.data).unwrap()),
+            json: serde_json::from_str(&value.json).unwrap(),
+        }
     }
 }
 
@@ -1135,25 +1163,18 @@ pub struct CoinMetadata {
     pub version: u64,
 }
 
-impl TryFrom<iota_sdk::graphql_client::query_types::CoinMetadata> for CoinMetadata {
-    type Error = SdkFfiError;
-
-    fn try_from(
-        value: iota_sdk::graphql_client::query_types::CoinMetadata,
-    ) -> Result<Self, Self::Error> {
-        Ok(Self {
+impl From<iota_sdk::graphql_client::query_types::CoinMetadata> for CoinMetadata {
+    fn from(value: iota_sdk::graphql_client::query_types::CoinMetadata) -> Self {
+        Self {
             address: Arc::new(value.address.into()),
             decimals: value.decimals,
             description: value.description,
             icon_url: value.icon_url,
             name: value.name,
             symbol: value.symbol,
-            // The GraphQL `BigInt` scalar carries the supply as a decimal
-            // string; on-chain a coin's supply is a `u64`, so parse it into one
-            // to expose a native integer (e.g. `bigint` in TS) to bindings.
-            supply: value.supply.map(u64::try_from).transpose()?,
+            supply: value.supply.map(u64::try_from).transpose().unwrap(),
             version: value.version,
-        })
+        }
     }
 }
 
