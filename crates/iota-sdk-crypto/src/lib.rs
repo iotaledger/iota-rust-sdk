@@ -335,19 +335,24 @@ impl<T: ToFromFlaggedBytes<Error = PrivateKeyError>> ToFromBech32 for T {
 
     #[cfg(feature = "bech32")]
     fn from_bech32(value: &str) -> Result<Self, Self::Error> {
-        use bech32::Hrp;
+        use bech32::{Hrp, primitives::decode::CheckedHrpstring};
 
         let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
             .map_err(|e| PrivateKeyError::Bech32Hrp(format!("{e}")))?;
 
-        let (hrp, data) = bech32::decode(value)
+        // Only the Bech32 checksum is valid for this encoding; `bech32::decode`
+        // would also accept a Bech32m checksum.
+        let parsed = CheckedHrpstring::new::<bech32::Bech32>(value)
             .map_err(|e| PrivateKeyError::Bech32(format!("decoding failed: {e}")))?;
 
+        let hrp = parsed.hrp();
         if hrp != expected_hrp {
             return Err(PrivateKeyError::Bech32Hrp(format!(
                 "expected {IOTA_PRIV_KEY_PREFIX}, got {hrp}"
             )));
         }
+
+        let data: Vec<u8> = parsed.byte_iter().collect();
 
         if data.is_empty() {
             return Err(PrivateKeyError::EmptyData("bech32 data".to_string()));
