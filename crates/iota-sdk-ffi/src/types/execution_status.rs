@@ -110,6 +110,8 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 ///                 =/ invalid-linkage
 ///                 =/ move-authentication-error
 ///                 =/ execution-canceled-due-to-execution-worker-congestion
+///                 =/ move-vector-elem-too-big
+///                 =/ move-raw-value-too-big
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
@@ -152,6 +154,8 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 /// invalid-linkage                                        = %d38
 /// move-authentication-error                              = %d39 execution-error
 /// execution-canceled-due-to-execution-worker-congestion  = %d40 u64
+/// move-vector-elem-too-big                               = %d41 u64 u64
+/// move-raw-value-too-big                                 = %d42 u64 u64
 /// ```
 #[derive(Clone, uniffi::Enum)]
 pub enum ExecutionError {
@@ -285,6 +289,19 @@ pub enum ExecutionError {
     /// suggested gas price can be used to give this certificate more priority.
     /// No individual object is responsible, so none is reported.
     ExecutionCanceledDueToExecutionWorkerCongestion { suggested_gas_price: u64 },
+    /// Move vector element (passed to MakeMoveVec) is larger than the maximum
+    /// size. The maximum is scaled based on the type of the vector element.
+    MoveVectorElemTooBig {
+        value_size: u64,
+        max_scaled_size: u64,
+    },
+    /// Move value (possibly an upgrade ticket or a dev-inspect value) is larger
+    /// than the maximum size. The maximum is scaled based on the type of the
+    /// value.
+    MoveRawValueTooBig {
+        value_size: u64,
+        max_scaled_size: u64,
+    },
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -452,6 +469,20 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
             } => Self::ExecutionCanceledDueToExecutionWorkerCongestion {
                 suggested_gas_price,
             },
+            iota_sdk::types::ExecutionError::MoveVectorElemTooBig {
+                value_size,
+                max_scaled_size,
+            } => Self::MoveVectorElemTooBig {
+                value_size,
+                max_scaled_size,
+            },
+            iota_sdk::types::ExecutionError::MoveRawValueTooBig {
+                value_size,
+                max_scaled_size,
+            } => Self::MoveRawValueTooBig {
+                value_size,
+                max_scaled_size,
+            },
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         }
     }
@@ -579,6 +610,20 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 suggested_gas_price,
             } => Self::ExecutionCanceledDueToExecutionWorkerCongestion {
                 suggested_gas_price,
+            },
+            ExecutionError::MoveVectorElemTooBig {
+                value_size,
+                max_scaled_size,
+            } => Self::MoveVectorElemTooBig {
+                value_size,
+                max_scaled_size,
+            },
+            ExecutionError::MoveRawValueTooBig {
+                value_size,
+                max_scaled_size,
+            } => Self::MoveRawValueTooBig {
+                value_size,
+                max_scaled_size,
             },
         }
     }
