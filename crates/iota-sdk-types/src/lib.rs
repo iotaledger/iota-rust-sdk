@@ -169,13 +169,14 @@ pub use object_id::ObjectId;
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
-    Argument, CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
-    ClaimRegistryCreate, Command, ConsensusCommitPrologueV1,
-    ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
-    MoveCall, ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
-    SharedObjectReference, SignedTransaction, SplitCoins, SystemPackage, Transaction,
-    TransactionExpiration, TransactionKind, TransactionV1, TransferObjects, Upgrade,
-    VersionAssignment,
+    AccountClaimKind, Argument, CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3,
+    ChangeEpochV4, ClaimAccountTransaction, ClaimRegistryCreate, Command,
+    ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind,
+    GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall,
+    ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
+    SharedObjectReference, SignedTransaction, SmartAccountBuildKind, SmartAccountClaim, SplitCoins,
+    SystemPackage, Transaction, TransactionExpiration, TransactionKind, TransactionV1,
+    TransferObjects, Upgrade, VersionAssignment,
 };
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,

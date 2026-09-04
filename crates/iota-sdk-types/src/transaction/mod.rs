@@ -6,7 +6,7 @@ use super::{
     Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, ObjectId,
     ObjectReference, ProtocolVersion, RandomnessRound, TypeTag, UserSignature, Version,
 };
-use crate::utils::write_sep;
+use crate::{crypto::PublicKey, utils::write_sep};
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -183,6 +183,7 @@ pub struct RandomnessStateUpdate {
 ///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
 ///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
 ///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
+///                     =/ %d06 claim-account-transaction              ; ClaimAccount
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -206,6 +207,8 @@ pub enum TransactionKind {
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     /// Randomness update
     RandomnessStateUpdate(RandomnessStateUpdate),
+    /// User transaction claiming the sender's address as an account object.
+    ClaimAccount(ClaimAccountTransaction),
 }
 
 impl TransactionKind {
@@ -218,6 +221,7 @@ impl TransactionKind {
         Programmable(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
+        ClaimAccount(ClaimAccountTransaction),
     }
 
     /// Create a [`TransactionKind::Programmable`].
@@ -245,6 +249,11 @@ impl TransactionKind {
         Self::RandomnessStateUpdate(tx)
     }
 
+    /// Create a [`TransactionKind::ClaimAccount`].
+    pub fn new_claim_account(tx: ClaimAccountTransaction) -> Self {
+        Self::ClaimAccount(tx)
+    }
+
     /// Returns `true` if this is a system transaction.
     pub fn is_system(&self) -> bool {
         match self {
@@ -253,7 +262,7 @@ impl TransactionKind {
             | TransactionKind::AuthenticatorStateUpdateV1Deprecated
             | TransactionKind::RandomnessStateUpdate(_)
             | TransactionKind::EndOfEpoch(_) => true,
-            TransactionKind::Programmable(_) => false,
+            TransactionKind::Programmable(_) | TransactionKind::ClaimAccount(_) => false,
         }
     }
 
@@ -302,6 +311,7 @@ impl core::fmt::Display for TransactionKind {
             Self::RandomnessStateUpdate(_) => {
                 writeln!(f, "Transaction Kind : Randomness State Update")
             }
+            Self::ClaimAccount(_) => writeln!(f, "Transaction Kind : Claim Account"),
         }
     }
 }
@@ -1554,4 +1564,100 @@ pub struct MoveCall {
     /// The arguments to the function.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub arguments: Vec<Argument>,
+}
+
+/// A transaction that claims the sender's address, creating an account object
+/// whose id is that address.
+///
+/// The address must be derivable from the public key in the claim, and can be
+/// claimed only once.
+///
+/// # BCS
+///
+/// ```text
+/// claim-account-transaction = account-claim-kind
+/// ```
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub struct ClaimAccountTransaction {
+    /// The type of account to create, and the parameters it is created with.
+    pub kind: AccountClaimKind,
+}
+
+impl ClaimAccountTransaction {
+    /// Creates a [`ClaimAccountTransaction`] that claims a `SmartAccount`.
+    pub fn new_smart_account(claim: SmartAccountClaim) -> Self {
+        Self {
+            kind: AccountClaimKind::SmartAccount(claim),
+        }
+    }
+}
+
+/// The type of account created by a [`ClaimAccountTransaction`].
+///
+/// # BCS
+///
+/// ```text
+/// account-claim-kind = %d00 smart-account-claim ; SmartAccount
+/// ```
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[non_exhaustive]
+pub enum AccountClaimKind {
+    /// Create an `iota::smart_account::SmartAccount` at the claimed address.
+    SmartAccount(SmartAccountClaim),
+}
+
+impl AccountClaimKind {
+    crate::def_is_as_into_opt!(SmartAccount(SmartAccountClaim));
+}
+
+/// Parameters for claiming an `iota::smart_account::SmartAccount`.
+///
+/// The account is authenticated by the built-in authenticator for
+/// `public_key`'s signature scheme, so its owner keeps signing transactions
+/// with the same key after the claim.
+///
+/// # BCS
+///
+/// ```text
+/// smart-account-claim = public-key smart-account-build-kind
+/// ```
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub struct SmartAccountClaim {
+    /// Public key of the address being claimed, and the key the account's
+    /// built-in authenticator verifies signatures against. The transaction is
+    /// rejected unless this key derives the transaction sender's address.
+    pub public_key: PublicKey,
+    /// Whether the created account object is mutable or immutable.
+    pub build_kind: SmartAccountBuildKind,
+}
+
+/// Whether the account object created by a [`SmartAccountClaim`] can be changed
+/// after the claim.
+///
+/// # BCS
+///
+/// ```text
+/// smart-account-build-kind =  %d00 ; Mutable
+///                          =/ %d01 ; Immutable
+/// ```
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub enum SmartAccountBuildKind {
+    /// A shared object: the account can rotate its authenticator and add,
+    /// remove or mutate its fields.
+    Mutable,
+    /// A frozen object: neither the authenticator nor any field can ever
+    /// change.
+    Immutable,
 }
