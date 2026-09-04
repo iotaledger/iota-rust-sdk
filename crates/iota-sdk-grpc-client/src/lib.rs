@@ -52,6 +52,8 @@ pub mod api;
 mod transaction_builder_client;
 
 // Re-export all read mask constants (per-method fields)
+#[cfg(feature = "move-types")]
+pub use api::state::move_objects::ListOwnedMoveObjectsQuery;
 pub use api::{
     // CheckpointResponse per-method masks
     CHECKPOINT_CONTENTS_BCS,
