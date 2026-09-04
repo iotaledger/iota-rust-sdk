@@ -202,7 +202,7 @@ impl TransactionsFilter {
         self
     }
 
-    /// Filter by transaction digests.
+    /// Select by transaction digests.
     pub fn with_transaction_ids(self: Arc<Self>, transaction_ids: Vec<String>) -> Arc<Self> {
         self.update(|filter| filter.with_transaction_ids(transaction_ids));
         self

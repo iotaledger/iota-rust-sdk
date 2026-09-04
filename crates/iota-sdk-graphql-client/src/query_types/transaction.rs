@@ -297,7 +297,7 @@ impl TransactionsFilter {
         self
     }
 
-    /// Filter by transaction digests.
+    /// Select by transaction digests.
     pub fn with_transaction_ids(mut self, transaction_ids: impl Into<Option<Vec<String>>>) -> Self {
         self.transaction_ids = transaction_ids.into();
         self
