@@ -188,6 +188,7 @@ pub struct TransactionsFilter {
     pub before_checkpoint: Option<u64>,
     pub sent_address: Option<Address>,
     pub recv_address: Option<Address>,
+    pub affected_address: Option<Address>,
     pub input_object: Option<ObjectId>,
     pub changed_object: Option<ObjectId>,
     pub wrapped_or_deleted_object: Option<ObjectId>,
@@ -235,6 +236,13 @@ impl TransactionsFilter {
     /// Filter by the address receiving an object from the transaction.
     pub fn with_recv_address(mut self, recv_address: impl Into<Option<Address>>) -> Self {
         self.recv_address = recv_address.into();
+        self
+    }
+
+    /// Filter by an address the transaction affected: the sender, a
+    /// recipient, or the owner of the gas payment.
+    pub fn with_affected_address(mut self, affected_address: impl Into<Option<Address>>) -> Self {
+        self.affected_address = affected_address.into();
         self
     }
 

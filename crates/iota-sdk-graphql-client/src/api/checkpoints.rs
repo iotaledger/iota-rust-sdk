@@ -35,20 +35,20 @@ impl Client {
     pub async fn checkpoint(
         &self,
         digest: impl Into<Option<CheckpointDigest>>,
-        seq_num: impl Into<Option<u64>>,
+        sequence_number: impl Into<Option<u64>>,
     ) -> GraphQLResult<Option<CheckpointSummary>> {
         let digest = digest.into();
-        let seq_num = seq_num.into();
-        if digest.is_some() && seq_num.is_some() {
+        let sequence_number = sequence_number.into();
+        if digest.is_some() && sequence_number.is_some() {
             return Err(GraphQLError::InvalidArgument(
-                "either digest or seq_num can be provided, but not both",
+                "either digest or sequence_number can be provided, but not both",
             ));
         }
 
         let operation = CheckpointQuery::build(CheckpointArgs {
             id: CheckpointId {
                 digest: digest.map(|d| d.to_string()),
-                sequence_number: seq_num,
+                sequence_number,
             },
         });
         let response = self.run_query(&operation).await?;
@@ -105,11 +105,11 @@ impl Client {
 
     /// The total number of transaction blocks in the network by the end of the
     /// provided checkpoint sequence number.
-    pub async fn total_transaction_blocks_by_seq_num(
+    pub async fn total_transaction_blocks_by_sequence_number(
         &self,
-        seq_num: u64,
+        sequence_number: u64,
     ) -> GraphQLResult<Option<u64>> {
-        self.internal_total_transaction_blocks(None, Some(seq_num))
+        self.internal_total_transaction_blocks(None, Some(sequence_number))
             .await
     }
 
@@ -124,18 +124,18 @@ impl Client {
     async fn internal_total_transaction_blocks(
         &self,
         digest: Option<String>,
-        seq_num: Option<u64>,
+        sequence_number: Option<u64>,
     ) -> GraphQLResult<Option<u64>> {
-        if digest.is_some() && seq_num.is_some() {
+        if digest.is_some() && sequence_number.is_some() {
             return Err(GraphQLError::InvalidArgument(
-                "either digest or seq_num can be provided, but not both",
+                "either digest or sequence_number can be provided, but not both",
             ));
         }
 
         let operation = CheckpointTotalTxQuery::build(CheckpointArgs {
             id: CheckpointId {
                 digest,
-                sequence_number: seq_num,
+                sequence_number,
             },
         });
         let response = self.run_query(&operation).await?;
@@ -240,7 +240,7 @@ mod tests {
             .unwrap();
         assert!(total_transaction_blocks > 0);
 
-        let checkpoint_seq_num = client
+        let checkpoint_sequence_number = client
             .latest_checkpoint_sequence_number()
             .await
             .map_err(|e| {
@@ -251,18 +251,18 @@ mod tests {
             })
             .unwrap()
             .unwrap();
-        let total_transaction_blocks_by_seq_num = client
-            .total_transaction_blocks_by_seq_num(checkpoint_seq_num)
+        let total_transaction_blocks_by_sequence_number = client
+            .total_transaction_blocks_by_sequence_number(checkpoint_sequence_number)
             .await
             .unwrap()
             .unwrap();
         assert!(
-            total_transaction_blocks_by_seq_num >= total_transaction_blocks,
-            "expected at least {total_transaction_blocks} transaction blocks, found {total_transaction_blocks_by_seq_num}"
+            total_transaction_blocks_by_sequence_number >= total_transaction_blocks,
+            "expected at least {total_transaction_blocks} transaction blocks, found {total_transaction_blocks_by_sequence_number}"
         );
 
         let checkpoint = client
-            .checkpoint(None, Some(checkpoint_seq_num))
+            .checkpoint(None, Some(checkpoint_sequence_number))
             .await
             .unwrap()
             .unwrap();
@@ -273,7 +273,7 @@ mod tests {
             .unwrap()
             .unwrap();
         assert_eq!(
-            total_transaction_blocks_by_seq_num,
+            total_transaction_blocks_by_sequence_number,
             total_transaction_blocks_by_digest
         );
     }
