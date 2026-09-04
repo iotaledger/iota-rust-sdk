@@ -177,14 +177,7 @@ pub enum TransactionBlockKindInput {
     EndOfEpochTx,
 }
 
-/// The transaction filters that the GraphQL service can only serve one of at
-/// a time.
-///
-/// Combining two of the object or address filters requires a `scanLimit`,
-/// which is deprecated and stops being supported with the v1.38 release, and
-/// [`Kind`](Self::Kind) cannot be combined with any of the others at all.
-/// Making them variants of one enum keeps those queries from being built in
-/// the first place.
+/// Selection criteria for querying transactions.
 #[derive(Clone, Debug)]
 #[non_exhaustive]
 pub enum TransactionsSelector {
