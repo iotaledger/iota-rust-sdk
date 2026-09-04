@@ -5,7 +5,8 @@ use std::sync::Arc;
 
 use base64ct::Encoding;
 use iota_sdk::graphql_client::query_types::{
-    Base64, BigInt, TransactionBlockKindInput as GraphQLTransactionBlockKindInput,
+    AddressTransactionRelationship as GraphQLAddressTransactionRelationship, Base64, BigInt,
+    TransactionBlockKindInput as GraphQLTransactionBlockKindInput,
 };
 
 use crate::{
@@ -871,6 +872,41 @@ impl From<TransactionBlockKindInput> for GraphQLTransactionBlockKindInput {
             TransactionBlockKindInput::ConsensusCommitPrologueV1 => Self::ConsensusCommitPrologueV1,
             TransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
             TransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
+        }
+    }
+}
+
+/// The relationship between an address and a transaction.
+#[derive(uniffi::Enum)]
+pub enum AddressTransactionRelationship {
+    /// Transactions the address has sent.
+    Sent,
+    /// Transactions that sent objects to the address.
+    Recv,
+    /// Transactions that affected the address: it is the sender, a recipient,
+    /// or the owner of the gas payment.
+    Affected,
+}
+
+impl From<GraphQLAddressTransactionRelationship> for AddressTransactionRelationship {
+    fn from(value: GraphQLAddressTransactionRelationship) -> Self {
+        match value {
+            GraphQLAddressTransactionRelationship::Sent => Self::Sent,
+            GraphQLAddressTransactionRelationship::Recv => Self::Recv,
+            GraphQLAddressTransactionRelationship::Affected => Self::Affected,
+            _ => unimplemented!(
+                "a new GraphQLAddressTransactionRelationship enum variant was added and needs to be handled"
+            ),
+        }
+    }
+}
+
+impl From<AddressTransactionRelationship> for GraphQLAddressTransactionRelationship {
+    fn from(value: AddressTransactionRelationship) -> Self {
+        match value {
+            AddressTransactionRelationship::Sent => Self::Sent,
+            AddressTransactionRelationship::Recv => Self::Recv,
+            AddressTransactionRelationship::Affected => Self::Affected,
         }
     }
 }

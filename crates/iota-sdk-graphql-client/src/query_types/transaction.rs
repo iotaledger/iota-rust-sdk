@@ -101,6 +101,28 @@ pub struct TransactionBlocksEffectsQuery {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
     pub transaction_blocks: TransactionBlockEffectsConnection,
 }
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Query",
+    variables = "AddressTransactionsQueryArgs"
+)]
+pub struct AddressTransactionsQuery {
+    #[arguments(address: $address)]
+    pub address: Option<AddressTransactionBlocksQuery>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Address",
+    variables = "AddressTransactionsQueryArgs"
+)]
+pub struct AddressTransactionBlocksQuery {
+    #[arguments(first: $first, after: $after, last: $last, before: $before, relation: $relation, filter: $filter)]
+    pub transaction_blocks: TransactionBlockConnection,
+}
+
 // ===========================================================================
 // Transaction Block(s) Query Args
 // ===========================================================================
@@ -108,6 +130,17 @@ pub struct TransactionBlocksEffectsQuery {
 #[derive(cynic::QueryVariables, Debug)]
 pub struct TransactionBlockArgs {
     pub digest: String,
+}
+
+#[derive(cynic::QueryVariables, Debug)]
+pub struct AddressTransactionsQueryArgs {
+    pub address: Address,
+    pub first: Option<i32>,
+    pub after: Option<String>,
+    pub last: Option<i32>,
+    pub before: Option<String>,
+    pub relation: Option<AddressTransactionRelationship>,
+    pub filter: Option<TransactionsFilter>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
@@ -175,6 +208,24 @@ pub enum TransactionBlockKindInput {
     ConsensusCommitPrologueV1,
     RandomnessStateUpdate,
     EndOfEpochTx,
+}
+
+/// The relationship between an address and a transaction.
+#[derive(Clone, Copy, cynic::Enum, Debug)]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "AddressTransactionBlockRelationship",
+    rename_all = "SCREAMING_SNAKE_CASE"
+)]
+#[non_exhaustive]
+pub enum AddressTransactionRelationship {
+    /// Transactions the address has sent.
+    Sent,
+    /// Transactions that sent objects to the address.
+    Recv,
+    /// Transactions that affected the address: it is the sender, a recipient,
+    /// or the owner of the gas payment.
+    Affected,
 }
 
 #[derive(Clone, cynic::InputObject, Debug, Default)]

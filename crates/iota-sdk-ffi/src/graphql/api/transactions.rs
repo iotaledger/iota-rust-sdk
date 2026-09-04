@@ -10,9 +10,13 @@ use crate::{
     graphql::{
         client::GraphQLClient,
         pagination::{SignedTransactionPage, TransactionDataEffectsPage, TransactionEffectsPage},
-        query_types::{PaginationFilter, TransactionDataEffects, TransactionsFilter},
+        query_types::{
+            AddressTransactionRelationship, PaginationFilter, TransactionDataEffects,
+            TransactionsFilter,
+        },
     },
     types::{
+        address::Address,
         digest::TransactionDigest,
         signature::UserSignature,
         transaction::{SignedTransaction, Transaction, TransactionEffects},
@@ -112,6 +116,32 @@ impl GraphQLClient {
             .read()
             .await
             .transactions(
+                filter.map(Into::into),
+                pagination_filter.map(Into::into).unwrap_or_default(),
+            )
+            .await?
+            .map(Into::into)
+            .into())
+    }
+
+    /// Get a page of transactions related to the given address.
+    /// `relation` selects how the address relates to them, defaulting to the
+    /// transactions it sent.
+    #[uniffi::method(default(relation = None, filter = None, pagination_filter = None))]
+    pub async fn address_transactions(
+        &self,
+        address: &Address,
+        relation: Option<AddressTransactionRelationship>,
+        filter: Option<TransactionsFilter>,
+        pagination_filter: Option<PaginationFilter>,
+    ) -> Result<SignedTransactionPage> {
+        Ok(self
+            .0
+            .read()
+            .await
+            .address_transactions(
+                **address,
+                relation.map(Into::into),
                 filter.map(Into::into),
                 pagination_filter.map(Into::into).unwrap_or_default(),
             )
