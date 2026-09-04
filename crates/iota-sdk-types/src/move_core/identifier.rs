@@ -218,6 +218,18 @@ impl std::fmt::Display for Identifier {
     }
 }
 
+impl From<Identifier> for String {
+    fn from(value: Identifier) -> Self {
+        value.to_string()
+    }
+}
+
+impl From<&Identifier> for String {
+    fn from(value: &Identifier) -> Self {
+        value.to_string()
+    }
+}
+
 impl std::str::FromStr for Identifier {
     type Err = TypeParseError;
 
