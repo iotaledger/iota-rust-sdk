@@ -153,7 +153,7 @@ mod tests {
             // address on localnet.
             _ => return,
         };
-        let key = Ed25519PublicKey::random_with(rand::thread_rng());
+        let key = Ed25519PublicKey::random_with(rand::rng());
         let address = key.derive_address();
         faucet
             .request_and_wait_for_finalized(address, &client)

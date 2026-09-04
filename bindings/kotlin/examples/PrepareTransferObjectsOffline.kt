@@ -24,14 +24,13 @@ fun main() = runBlocking {
                     "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2"
                 ),
             )
-        val objsToTransfer =
-            objects.map {
-                val obj = client.`object`(it)
-                if (obj == null) {
-                    throw Exception("Missing object: ${it}")
-                }
-                PtbArgument.objectRef(obj.objectRef())
+        val objsToTransfer = objects.map {
+            val obj = client.`object`(it)
+            if (obj == null) {
+                throw Exception("Missing object: ${it}")
             }
+            PtbArgument.objectRef(obj.objectRef())
+        }
         val gasCoinId =
             ObjectId.fromHex("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")
         val gasCoin = client.`object`(gasCoinId)

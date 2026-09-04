@@ -16,18 +16,18 @@ workspace = true
 async-stream.workspace = true
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
-chrono = "0.4.26"
+chrono = "0.4.45"
 cynic.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 futures.workspace = true
-reqwest = { workspace = true, features = ["rustls-tls", "json"] }
+reqwest = { workspace = true, features = ["rustls", "json"] }
 serde.workspace = true
 serde_json.workspace = true
 strum = { workspace = true, features = ["derive"] }
 thiserror.workspace = true
 tokio = { workspace = true, features = ["time"] }
 tracing.workspace = true
-url = "2.5.3"
+url = "2.5.8"
 variadics_please.workspace = true
 
 # internal dependencies

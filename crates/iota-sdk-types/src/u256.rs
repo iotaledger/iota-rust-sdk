@@ -4,15 +4,13 @@
 
 // Before we can expose this in the public interface it likely needs to be
 // wrapped so that the type from our dependency doesn't leak
-pub(crate) type U256 = bnum::BUintD8<32>;
+pub(crate) type U256 = bnum::types::U256;
 
 // This is a constant time assert to ensure that the backing storage for U256 is
 // 32 bytes long
 #[allow(unused)]
 const ASSERT_32_BYTES: () = {
-    let u256 = U256::ZERO;
-
-    let _digits: &[u8; 32] = u256.digits();
+    assert!(core::mem::size_of::<U256>() == 32);
 };
 
 // This is a constant time assert to ensure endianness of the underlying storage
@@ -33,7 +31,6 @@ const ASSERT_ENDIANNESS: () = {
         true
     }
 
-    let one_platform = U256::ONE;
     let one_le = {
         let mut buf = [0; 32];
         buf[0] = 1;
@@ -47,23 +44,21 @@ const ASSERT_ENDIANNESS: () = {
     };
 
     // To little endian
-    let le = one_platform.to_le();
-    assert!(const_bytes_equal(&one_le, le.digits().as_slice()));
+    assert!(const_bytes_equal(
+        &one_le,
+        &U256::from_le_bytes(one_le).to_le_bytes()
+    ));
 
     // To big endian
-    let be = one_platform.to_be();
-    assert!(const_bytes_equal(&one_be, be.digits().as_slice()));
-
-    // From little endian
     assert!(const_bytes_equal(
-        one_platform.digits().as_slice(),
-        U256::from_le(U256::from_digits(one_le)).digits().as_slice()
+        &one_be,
+        &U256::from_le_bytes(one_le).to_be_bytes()
     ));
 
     // From big endian
     assert!(const_bytes_equal(
-        one_platform.digits().as_slice(),
-        U256::from_be(U256::from_digits(one_be)).digits().as_slice()
+        &one_le,
+        &U256::from_be_bytes(one_be).to_le_bytes()
     ));
 };
 
@@ -114,7 +109,6 @@ mod tests {
 
     #[test]
     fn endianness() {
-        let one_platform = U256::ONE;
         let one_le = {
             let mut buf = [0; 32];
             buf[0] = 1;
@@ -127,17 +121,15 @@ mod tests {
             buf
         };
 
+        let one = U256::from_le_bytes(one_le);
+
         // To little endian
-        let le = one_platform.to_le();
-        assert_eq!(one_le, *le.digits());
+        assert_eq!(one_le, one.to_le_bytes());
 
         // To big endian
-        let be = one_platform.to_be();
-        assert_eq!(one_be, *be.digits());
+        assert_eq!(one_be, one.to_be_bytes());
 
-        // From little endian
-        assert_eq!(one_platform, U256::from_le(U256::from_digits(one_le)));
         // From big endian
-        assert_eq!(one_platform, U256::from_be(U256::from_digits(one_be)));
+        assert_eq!(one, U256::from_be_bytes(one_be));
     }
 }

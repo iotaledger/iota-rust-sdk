@@ -12,4 +12,4 @@ description = "GraphQL RPC Client for the IOTA Blockchain"
 workspace = true
 
 [dependencies]
-cynic-codegen = "3.7.3"
+cynic-codegen = "3.14.0"

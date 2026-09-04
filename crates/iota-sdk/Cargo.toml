@@ -51,8 +51,8 @@ grpc = [
 ]
 # TLS support for the gRPC client (required to reach `https://` endpoints
 # such as the public testnet/mainnet nodes).
+grpc-tls-aws-lc = ["grpc", "iota-grpc-client/tls-aws-lc"]
 grpc-tls-native-roots = ["grpc", "iota-grpc-client/tls-native-roots"]
-grpc-tls-ring = ["grpc", "iota-grpc-client/tls-ring"]
 # Transaction Builder
 txn-builder = ["dep:iota-transaction-builder"]
 # Types
@@ -79,7 +79,7 @@ eyre.workspace = true
 futures.workspace = true
 hex.workspace = true
 rand.workspace = true
-reqwest = { workspace = true, features = ["rustls-tls", "json"] }
+reqwest = { workspace = true, features = ["rustls", "json"] }
 serde_json.workspace = true
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 
@@ -87,22 +87,22 @@ tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 iota-graphql-client-build.workspace = true
 
 # gRPC examples: skipped unless the gRPC TLS features are enabled (e.g.
-# `cargo run --example chain_id_grpc --features grpc-tls-native-roots,grpc-tls-ring`).
+# `cargo run --example chain_id_grpc --features grpc-tls-native-roots,grpc-tls-aws-lc`).
 [[example]]
 name = "chain_id_grpc"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+required-features = ["grpc-tls-native-roots", "grpc-tls-aws-lc"]
 
 [[example]]
 name = "get_object_grpc"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+required-features = ["grpc-tls-native-roots", "grpc-tls-aws-lc"]
 
 [[example]]
 name = "owned_objects_grpc"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+required-features = ["grpc-tls-native-roots", "grpc-tls-aws-lc"]
 
 [[example]]
 name = "stream_checkpoints_grpc"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+required-features = ["grpc-tls-native-roots", "grpc-tls-aws-lc"]
 
 [[example]]
 name = "move_view_call_grpc"

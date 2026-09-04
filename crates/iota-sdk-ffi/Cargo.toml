@@ -37,7 +37,7 @@ workspace = true
 [dependencies]
 # external dependencies
 async-stream.workspace = true
-async-trait = "0.1.89"
+async-trait = "0.1.92"
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from", "deref", "display"] }
@@ -45,7 +45,6 @@ futures.workspace = true
 hex.workspace = true
 paste.workspace = true
 primitive-types.workspace = true
-rand.workspace = true
 roaring.workspace = true
 serde.workspace = true
 serde_json.workspace = true

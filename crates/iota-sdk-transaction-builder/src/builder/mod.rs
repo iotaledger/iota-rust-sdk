@@ -2279,7 +2279,7 @@ mod tests {
     /// commands and no inputs are added.
     #[test]
     fn pay_without_payments_adds_nothing() {
-        let sender = Address::random_with(rand::thread_rng());
+        let sender = Address::random();
         let coin_id = |seed: u8| ObjectId::new([seed; ObjectId::LENGTH]);
 
         let mut builder = TransactionBuilder::new(sender);
@@ -2508,7 +2508,7 @@ mod tests {
         /// back to a single-object request.
         #[tokio::test]
         async fn all_inputs_are_fetched_in_one_request() {
-            let sender = Address::random_with(rand::thread_rng());
+            let sender = Address::random();
             let client = RecordingClient::default();
 
             let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
@@ -2544,7 +2544,7 @@ mod tests {
         /// so the shared object keeps its shared kind.
         #[tokio::test]
         async fn batched_objects_are_matched_to_their_inputs() {
-            let sender = Address::random_with(rand::thread_rng());
+            let sender = Address::random();
             let coin = object_id(1);
 
             let mut builder =
@@ -2569,7 +2569,7 @@ mod tests {
         /// A missing object is still reported by its own id.
         #[tokio::test]
         async fn a_missing_object_is_named_in_the_error() {
-            let sender = Address::random_with(rand::thread_rng());
+            let sender = Address::random();
             let absent = object_id(2);
             let client = RecordingClient {
                 missing: vec![absent],
@@ -2621,7 +2621,7 @@ mod tests {
         /// coin.
         #[tokio::test]
         async fn keeps_the_coin_that_gas_selection_would_claim() {
-            let sender = Address::random_with(rand::thread_rng());
+            let sender = Address::random();
 
             let mut builder = TransactionBuilder::new(sender).with_client(TestClient);
             builder.split_coins(SELECTABLE_GAS_COIN, [1_000u64]);
@@ -2641,8 +2641,8 @@ mod tests {
         /// [`TransactionKind`], so setting them makes no difference.
         #[tokio::test]
         async fn ignores_gas_and_transaction_metadata() {
-            let sender = Address::random_with(rand::thread_rng());
-            let recipient = Address::random_with(rand::thread_rng());
+            let sender = Address::random();
+            let recipient = Address::random();
             let coin = ObjectId::new([7; ObjectId::LENGTH]);
 
             let mut plain = TransactionBuilder::new(sender).with_client(TestClient);
@@ -2655,7 +2655,7 @@ mod tests {
                 .gas_refs([object_ref(99, 7)])
                 .gas_budget(5_000_000)
                 .gas_price(1000)
-                .sponsor(Address::random_with(rand::thread_rng()))
+                .sponsor(Address::random())
                 .expiration(42);
 
             assert_eq!(decorated.finish_kind().await.unwrap(), expected);
@@ -2665,7 +2665,7 @@ mod tests {
         /// stops the builder from picking gas coins of its own.
         #[tokio::test]
         async fn gas_refs_are_used_as_given() {
-            let sender = Address::random_with(rand::thread_rng());
+            let sender = Address::random();
             // A version the test client never fabricates, so a lookup that
             // overwrote the reference would be visible.
             let gas_coin = object_ref(3, 4242);
