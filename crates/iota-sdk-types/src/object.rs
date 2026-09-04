@@ -951,18 +951,29 @@ mod serialization {
                 // (e.g. `Other(0x2::coin::Coin<0x2::iota::IOTA>)` and
                 // `GasCoin`), but serialization always emits the specialized
                 // one. Reject the others so BCS round-trips stay byte-faithful
-                // and digests computed over them stay stable.
+                // and digests computed over them stay stable. Only the
+                // variants carrying a payload can be non-canonical: `Other`
+                // may wrap any specialized tag and `Coin` may wrap the IOTA
+                // type, while `GasCoin` and `StakedIota` are always canonical.
                 let parsed = MoveObjectTypeWrapper::deserialize(deserializer)?;
-                let parsed_idx = parsed.variant_index();
-                let tag = parsed.into_struct_tag();
-                let canonical_idx = MoveObjectTypeRef::from_struct_tag(&tag).variant_index();
-                if parsed_idx != canonical_idx {
-                    return Err(serde::de::Error::custom(format!(
-                        "non-canonical MoveObjectType encoding: variant {parsed_idx} would be \
-                         re-encoded as variant {canonical_idx}",
-                    )));
+                match parsed {
+                    MoveObjectTypeWrapper::Other(_) | MoveObjectTypeWrapper::Coin(_) => {
+                        let parsed_idx = parsed.variant_index();
+                        let tag = parsed.into_struct_tag();
+                        let canonical_idx =
+                            MoveObjectTypeRef::from_struct_tag(&tag).variant_index();
+                        if parsed_idx != canonical_idx {
+                            return Err(serde::de::Error::custom(format!(
+                                "non-canonical MoveObjectType encoding: variant {parsed_idx} \
+                                 would be re-encoded as variant {canonical_idx}",
+                            )));
+                        }
+                        Ok(Self(tag))
+                    }
+                    MoveObjectTypeWrapper::GasCoin | MoveObjectTypeWrapper::StakedIota => {
+                        Ok(Self(parsed.into_struct_tag()))
+                    }
                 }
-                Ok(Self(tag))
             }
         }
     }
