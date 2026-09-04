@@ -227,8 +227,14 @@ mod tests {
         }))
         .unwrap();
 
-        let err = response_to_err(response).unwrap_err();
-        assert!(matches!(err, GraphQLError::Query(errors) if !errors.is_empty()));
+        let GraphQLError::Query(errors) = response_to_err(response).unwrap_err() else {
+            panic!("expected GraphQLError::Query");
+        };
+        assert_eq!(errors.len(), 1);
+        assert_eq!(
+            errors[0].message,
+            "Page size 75 exceeds the max page size of 50"
+        );
     }
 
     #[test]
@@ -248,8 +254,11 @@ mod tests {
         }))
         .unwrap();
 
-        let err = response_to_err(response).unwrap_err();
-        assert!(matches!(err, GraphQLError::Query(errors) if !errors.is_empty()));
+        let GraphQLError::Query(errors) = response_to_err(response).unwrap_err() else {
+            panic!("expected GraphQLError::Query");
+        };
+        assert_eq!(errors.len(), 1);
+        assert_eq!(errors[0].message, "boom");
     }
 
     #[tokio::test]

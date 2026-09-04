@@ -50,7 +50,6 @@ pub enum GraphQLError {
     /// The request could not be sent, or the response could not be read.
     #[error("request error: {0}")]
     Request(#[source] reqwest::Error),
-
     /// The server answered with a non-success HTTP status.
     #[error(
         "GraphQL request to {url} failed with HTTP {status} while decoding `{target_type}`, \
@@ -61,7 +60,6 @@ pub enum GraphQLError {
         body = .0.body,
     )]
     Http(Box<HttpResponse>),
-
     /// The response body could not be parsed as JSON.
     #[error(
         "GraphQL request to {url} returned HTTP {status} but the body could not be parsed as JSON \
@@ -76,48 +74,37 @@ pub enum GraphQLError {
         #[source]
         source: serde_json::Error,
     },
-
     /// The server returned errors for the query.
     #[error("query error: [{}]", display_graphql_errors(.0))]
     Query(Vec<GraphQlError>),
-
     /// The response carried neither data nor errors.
     #[error("query error: expected a non-empty response data from query")]
     EmptyResponse,
-
     /// A response field the client needs to build its return value was empty.
     #[error("empty response field: {0}")]
     EmptyResponseField(&'static str),
-
     /// The server returned a variant of a GraphQL union or enum this client
     /// does not know.
     #[error("unknown {0} variant")]
     UnknownVariant(&'static str),
-
     /// A response value could not be deserialized into its SDK type.
     #[error("deserialization error: {0}")]
     Deserialization(#[source] BoxError),
-
     /// A response value or a caller-supplied string could not be parsed.
     #[error("parse error: {0}")]
     Parse(#[source] BoxError),
-
     /// The arguments passed to a query cannot be combined.
     #[error("invalid argument: {0}")]
     InvalidArgument(&'static str),
-
     /// The operation did not complete within its deadline.
     #[error("timed out")]
     Timeout,
-
     /// A faucet request failed.
     #[error("faucet error: {0}")]
     Faucet(#[source] FaucetError),
-
     /// The subscription transport failed.
     #[error("subscription error: {0}")]
     Subscription(#[source] BoxError),
-
     /// The subscription server dropped `count` payloads before the next one
     /// because the client could not keep up. The stream continues after this
     /// error.
