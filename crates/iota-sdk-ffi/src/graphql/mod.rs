@@ -6,6 +6,7 @@ use serde_json::Value;
 pub mod api;
 pub mod client;
 pub mod faucet;
+pub mod move_view_call_client;
 pub mod output_types;
 pub mod pagination;
 pub mod query_types;

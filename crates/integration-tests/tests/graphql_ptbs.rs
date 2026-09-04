@@ -12,7 +12,8 @@ use iota_graphql_client::{
     query_types::SubscriptionEventFilter,
 };
 use iota_transaction_builder::{
-    TransactionBuilder, WaitForTransaction, assigned, error::Error, unresolved::Argument,
+    MoveViewCallBuilder, TransactionBuilder, WaitForTransaction, assigned, error::Error,
+    unresolved::Argument,
 };
 use iota_types::{
     Address, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectType, Transaction,
@@ -616,4 +617,12 @@ async fn test_move_view_call() {
         .await
         .unwrap();
     assert_doubled(result);
+
+    // Builder, executed twice to check that it survives a call
+    let mut call = MoveViewCallBuilder::new(package_id.unwrap(), "test_example", "double")
+        .with_client(&client);
+    call.argument(21u64);
+    let results = call.execute().await.unwrap();
+    assert_eq!(results, call.execute().await.unwrap());
+    assert_eq!(results, [serde_json::json!("42")]);
 }

@@ -7,9 +7,11 @@ use iota_types::{Address, TypeTag};
 
 mod move_arg;
 mod move_type;
+mod move_view_arg;
 
 pub use move_arg::{MoveArg, MoveArgCollection, PureBytes};
 pub use move_type::{MoveType, MoveTypes};
+pub use move_view_arg::{MoveViewArg, MoveViewArgList};
 use primitive_types::U256;
 
 macro_rules! impl_simple_move_type {

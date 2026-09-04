@@ -389,7 +389,7 @@ pub(crate) mod test_client {
         TransactionBuilderClientBase, TransactionBuilderExecutionClient,
         TransactionBuilderLedgerClient, TransactionBuilderSimulationClient, WaitForTransaction,
     };
-    use crate::ObjectsPage;
+    use crate::{MoveViewCallClient, ObjectsPage};
 
     /// Balance, in NANOS, of every fabricated coin. Large enough to cover any
     /// gas budget the builder might estimate in a doc test or example.
@@ -428,8 +428,11 @@ pub(crate) mod test_client {
     /// selection always finds a single funded coin. This is enough to drive
     /// [`finish`](crate::TransactionBuilder::finish) to completion, but the
     /// resulting transaction references made-up objects and cannot be executed
-    /// — [`execute_transaction`](TransactionBuilderExecutionClient::execute_transaction) returns
-    /// an error.
+    /// — [`execute_transaction`](TransactionBuilderExecutionClient::execute_transaction)
+    /// returns an error.
+    ///
+    /// It also implements [`MoveViewCallClient`] by echoing the call arguments
+    /// back as the return values of the view function.
     #[derive(Clone, Copy, Debug, Default)]
     pub struct TestClient;
 
@@ -437,6 +440,19 @@ pub(crate) mod test_client {
     #[derive(Clone, Debug, thiserror::Error)]
     #[error("TestClientError: {0}")]
     pub struct TestClientError(pub String);
+
+    impl MoveViewCallClient for TestClient {
+        type Error = TestClientError;
+
+        async fn move_view_call(
+            &self,
+            _function_name: &str,
+            _type_arguments: &[iota_types::TypeTag],
+            arguments: &[serde_json::Value],
+        ) -> Result<Vec<serde_json::Value>, Self::Error> {
+            Ok(arguments.to_vec())
+        }
+    }
 
     impl TransactionBuilderClientBase for TestClient {
         type Error = TestClientError;
