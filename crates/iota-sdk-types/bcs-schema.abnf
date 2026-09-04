@@ -1,6 +1,8 @@
 ; Auto-generated BCS schema definitions
 ; Do not edit manually
 
+account-claim-kind = %d00 smart-account-claim   ; SmartAccount
+
 address = 32OCTET
 
 argument = %d00           ; Gas
@@ -98,6 +100,8 @@ checkpoint-transaction = %d01 intent-signed-transaction     ; transaction
                          (%d00 / %d01 transaction-events)   ; events
                          (size *object)                     ; input-objects
                          (size *object)                     ; output-objects
+
+claim-account-transaction = account-claim-kind   ; kind
 
 claim-registry-create = unit
 
@@ -341,6 +345,12 @@ signed-transaction = transaction              ; transaction
 
 size    = uleb128   ; BCS sequence/string length (ULEB128-encoded)
 
+smart-account-build-kind = %d00   ; Mutable
+                         / %d01   ; Immutable
+
+smart-account-claim = public-key                 ; public-key
+                      smart-account-build-kind   ; build-kind
+
 split-coins = argument           ; coin
               (size *argument)   ; amounts
 
@@ -382,6 +392,7 @@ transaction-kind = %d00 programmable-transaction                ; Programmable
                  / %d03                                         ; AuthenticatorStateUpdateV1Deprecated
                  / %d04 (size *end-of-epoch-transaction-kind)   ; EndOfEpoch
                  / %d05 randomness-state-update                 ; RandomnessStateUpdate
+                 / %d06 claim-account-transaction               ; ClaimAccount
 
 transaction-v1 = transaction-kind         ; kind
                  address                  ; sender

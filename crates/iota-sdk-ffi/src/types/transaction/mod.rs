@@ -10,6 +10,7 @@ use crate::{
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
+        crypto::public_key::PublicKey,
         digest::Digest,
         events::Event,
         move_core::{Identifier, TypeTag},
@@ -211,6 +212,7 @@ impl From<SignedTransaction> for iota_sdk::types::SignedTransaction {
 ///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
 ///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
 ///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
+///                     =/ %d06 claim-account-transaction              ; ClaimAccount
 /// ```
 #[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
@@ -251,6 +253,14 @@ impl TransactionKind {
     #[uniffi::constructor]
     pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
         Self(iota_sdk::types::TransactionKind::new_randomness_state_update(tx.into()))
+    }
+
+    /// Create a `TransactionKind` for a claim-account transaction.
+    #[uniffi::constructor]
+    pub fn new_claim_account(tx: &ClaimAccountTransaction) -> Self {
+        Self(iota_sdk::types::TransactionKind::new_claim_account(
+            tx.0.clone(),
+        ))
     }
 }
 
@@ -1512,6 +1522,148 @@ impl EndOfEpochTransactionKind {
     }
 }
 
+/// Claim of the account at the transaction sender's address
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// claim-account-transaction = account-claim-kind   ; kind
+/// ```
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
+pub struct ClaimAccountTransaction(pub iota_sdk::types::ClaimAccountTransaction);
+
+#[uniffi::export]
+impl ClaimAccountTransaction {
+    /// Create a `ClaimAccountTransaction` that claims a smart account.
+    #[uniffi::constructor]
+    pub fn new_smart_account(claim: SmartAccountClaim) -> Self {
+        Self(iota_sdk::types::ClaimAccountTransaction::new_smart_account(
+            claim.into(),
+        ))
+    }
+
+    /// The type of account to create, and the parameters it is created with.
+    pub fn kind(&self) -> Arc<AccountClaimKind> {
+        Arc::new(self.0.kind.clone().into())
+    }
+}
+
+/// The type of account created by a `ClaimAccountTransaction`
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// account-claim-kind = %d00 smart-account-claim   ; SmartAccount
+/// ```
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
+pub struct AccountClaimKind(pub iota_sdk::types::AccountClaimKind);
+
+#[uniffi::export]
+impl AccountClaimKind {
+    /// Create an `AccountClaimKind` that claims a smart account.
+    #[uniffi::constructor]
+    pub fn new_smart_account(claim: SmartAccountClaim) -> Self {
+        Self(iota_sdk::types::AccountClaimKind::SmartAccount(
+            claim.into(),
+        ))
+    }
+
+    pub fn is_smart_account(&self) -> bool {
+        self.0.is_smart_account()
+    }
+
+    pub fn as_smart_account_opt(&self) -> Option<SmartAccountClaim> {
+        self.0.as_smart_account_opt().cloned().map(Into::into)
+    }
+
+    pub fn as_smart_account(&self) -> SmartAccountClaim {
+        self.0.as_smart_account().clone().into()
+    }
+}
+
+/// Parameters for claiming a smart account
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// smart-account-claim = public-key                 ; public-key
+///                       smart-account-build-kind   ; build-kind
+/// ```
+#[derive(uniffi::Record)]
+pub struct SmartAccountClaim {
+    /// Public key of the address being claimed, and the key the account's
+    /// built-in authenticator verifies signatures against. The transaction is
+    /// rejected unless this key derives the transaction sender's address.
+    pub public_key: Arc<PublicKey>,
+    /// Whether the created account object is mutable or immutable.
+    pub build_kind: SmartAccountBuildKind,
+}
+
+impl From<iota_sdk::types::SmartAccountClaim> for SmartAccountClaim {
+    fn from(value: iota_sdk::types::SmartAccountClaim) -> Self {
+        Self {
+            public_key: Arc::new(value.public_key.into()),
+            build_kind: value.build_kind.into(),
+        }
+    }
+}
+
+impl From<SmartAccountClaim> for iota_sdk::types::SmartAccountClaim {
+    fn from(value: SmartAccountClaim) -> Self {
+        Self {
+            public_key: value.public_key.0.clone(),
+            build_kind: value.build_kind.into(),
+        }
+    }
+}
+
+/// Whether the account object created by a `SmartAccountClaim` can be changed
+/// after the claim
+///
+/// # BCS
+///
+/// The BCS serialized form for this type is defined by the following ABNF:
+///
+/// ```text
+/// smart-account-build-kind =  %d00   ; Mutable
+///                          =/ %d01   ; Immutable
+/// ```
+#[derive(uniffi::Enum)]
+pub enum SmartAccountBuildKind {
+    /// A shared object: the account can rotate its authenticator and add,
+    /// remove or mutate its fields.
+    Mutable,
+    /// A frozen object: neither the authenticator nor any field can ever
+    /// change.
+    Immutable,
+}
+
+impl From<iota_sdk::types::SmartAccountBuildKind> for SmartAccountBuildKind {
+    fn from(value: iota_sdk::types::SmartAccountBuildKind) -> Self {
+        match value {
+            iota_sdk::types::SmartAccountBuildKind::Mutable => Self::Mutable,
+            iota_sdk::types::SmartAccountBuildKind::Immutable => Self::Immutable,
+        }
+    }
+}
+
+impl From<SmartAccountBuildKind> for iota_sdk::types::SmartAccountBuildKind {
+    fn from(value: SmartAccountBuildKind) -> Self {
+        match value {
+            SmartAccountBuildKind::Mutable => Self::Mutable,
+            SmartAccountBuildKind::Immutable => Self::Immutable,
+        }
+    }
+}
+
 /// Payment information for executing a transaction
 ///
 /// # BCS
@@ -1764,6 +1916,8 @@ crate::export_iota_types_bcs_conversion!(
     RandomnessStateUpdate,
     GasPayment,
     TransactionExpiration,
+    SmartAccountClaim,
+    SmartAccountBuildKind,
 );
 crate::export_iota_types_objects_bcs_conversion!(
     Transaction,
@@ -1789,12 +1943,16 @@ crate::export_iota_types_objects_bcs_conversion!(
     TransactionEffects,
     Argument,
     MoveCall,
+    ClaimAccountTransaction,
+    AccountClaimKind,
 );
 crate::export_iota_types_json_conversion!(
     SignedTransaction,
     RandomnessStateUpdate,
     GasPayment,
     TransactionExpiration,
+    SmartAccountClaim,
+    SmartAccountBuildKind,
 );
 crate::export_iota_types_objects_json_conversion!(
     Transaction,
@@ -1820,4 +1978,6 @@ crate::export_iota_types_objects_json_conversion!(
     TransactionEffects,
     Argument,
     MoveCall,
+    ClaimAccountTransaction,
+    AccountClaimKind,
 );
