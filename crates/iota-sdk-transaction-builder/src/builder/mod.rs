@@ -1680,7 +1680,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                                 mutable: false,
                             }),
                             _ => unimplemented!(
-                                "a new enum variant was added and needs to be handled"
+                                "a new Owner enum variant was added and needs to be handled"
                             ),
                         };
                         let idx = inputs.len();
@@ -1828,7 +1828,7 @@ impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
                 .map_err(Error::client)?
                 .ok_or(Error::MissingGasBudget)?;
             let Transaction::V1(txn) = &mut txn else {
-                unimplemented!("a new enum variant was added and needs to be handled")
+                unimplemented!("a new Transaction enum variant was added and needs to be handled")
             };
             // The network enforces a minimum gas budget of base_tx_cost_fixed
             // (1000) * gas_price. The dry-run estimate can return a value below
@@ -1857,7 +1857,7 @@ impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
         let txn = self.resolve_ptb(false).await?;
         {
             let Transaction::V1(txn) = &txn else {
-                unimplemented!("a new enum variant was added and needs to be handled")
+                unimplemented!("a new Transaction enum variant was added and needs to be handled")
             };
             if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
                 return Err(Error::DryRun(

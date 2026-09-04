@@ -856,7 +856,7 @@ impl From<GraphQLTransactionBlockKindInput> for TransactionBlockKindInput {
             GraphQLTransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
             GraphQLTransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
             _ => unimplemented!(
-                "a new GraphQLTransactionBlockKindInput variant was added and needs to be handled"
+                "a new TransactionBlockKindInput enum variant was added and needs to be handled"
             ),
         }
     }
@@ -1226,7 +1226,9 @@ impl From<iota_sdk::graphql_client::query_types::MoveVisibility> for MoveVisibil
             iota_sdk::graphql_client::query_types::MoveVisibility::Public => Self::Public,
             iota_sdk::graphql_client::query_types::MoveVisibility::Private => Self::Private,
             iota_sdk::graphql_client::query_types::MoveVisibility::Friend => Self::Friend,
-            _ => unimplemented!("a new MoveVisibility variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new MoveVisibility enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -1247,7 +1249,7 @@ impl From<iota_sdk::graphql_client::query_types::MoveAbility> for MoveAbility {
             iota_sdk::graphql_client::query_types::MoveAbility::Drop => Self::Drop,
             iota_sdk::graphql_client::query_types::MoveAbility::Key => Self::Key,
             iota_sdk::graphql_client::query_types::MoveAbility::Store => Self::Store,
-            _ => unimplemented!("a new MoveAbility variant was added and needs to be handled"),
+            _ => unimplemented!("a new MoveAbility enum variant was added and needs to be handled"),
         }
     }
 }
@@ -1791,7 +1793,7 @@ impl From<iota_sdk::graphql_client::query_types::Feature> for Feature {
             iota_sdk::graphql_client::query_types::Feature::DynamicFields => Self::DynamicFields,
             iota_sdk::graphql_client::query_types::Feature::Subscriptions => Self::Subscriptions,
             iota_sdk::graphql_client::query_types::Feature::SystemState => Self::SystemState,
-            _ => unimplemented!("a new Feature variant was added and needs to be handled"),
+            _ => unimplemented!("a new Feature enum variant was added and needs to be handled"),
         }
     }
 }
