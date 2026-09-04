@@ -9,7 +9,7 @@ use iota_types::Address;
 
 use crate::{
     Client,
-    error::Result,
+    error::GraphQLResult,
     query_types::{BalanceArgs, BalanceQuery},
 };
 
@@ -21,7 +21,7 @@ impl Client {
         &self,
         address: Address,
         coin_type: impl Into<Option<String>>,
-    ) -> Result<Option<u64>> {
+    ) -> GraphQLResult<Option<u64>> {
         let operation = BalanceQuery::build(BalanceArgs {
             address,
             coin_type: coin_type.into(),

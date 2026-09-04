@@ -12,7 +12,8 @@ use iota_graphql_client::{
     query_types::SubscriptionEventFilter,
 };
 use iota_transaction_builder::{
-    TransactionBuilder, WaitForTransaction, assigned, error::Error, unresolved::Argument,
+    TransactionBuilder, WaitForTransaction, assigned, error::TransactionBuilderError,
+    unresolved::Argument,
 };
 use iota_types::{
     Address, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectType, Transaction,
@@ -89,7 +90,7 @@ async fn helper_setup() -> (
 }
 
 /// Check the effects to ensure the transaction was successfully executed.
-fn check_effects_status_success(effects: Result<TransactionEffects, Error>) {
+fn check_effects_status_success(effects: Result<TransactionEffects, TransactionBuilderError>) {
     assert!(effects.is_ok(), "Execution failed. Effects: {effects:?}");
 
     // check that it succeeded

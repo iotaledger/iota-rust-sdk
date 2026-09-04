@@ -16,8 +16,8 @@ use iota_types::{ObjectId, Version};
 use crate::{
     Client,
     api::{
-        Error, MetadataEnvelope, Result, check_object_identity, check_result_count, collect_stream,
-        into_item_results, proto_object_id, saturating_usize_to_u32,
+        GrpcError, GrpcResult, MetadataEnvelope, check_object_identity, check_result_count,
+        collect_stream, into_item_results, proto_object_id, saturating_usize_to_u32,
     },
 };
 
@@ -31,19 +31,20 @@ impl Client {
     ///
     /// # Errors
     ///
-    /// Returns [`Error::EmptyRequest`] if `refs` is empty.
+    /// Returns [`GrpcError::EmptyRequest`] if `refs` is empty.
     ///
     /// Each ID gets its own result: an object that is not found (never
     /// existed, was deleted, or has been pruned by the serving node) yields
-    /// [`Error::Server`] with code `NOT_FOUND` in that slot only, leaving the
-    /// other objects intact. The outer `Result` is reserved for failures of the
-    /// call itself, such as a transport error, and for a server that answered
-    /// with a different number of results than IDs requested
-    /// ([`UnexpectedResultCount`]), which leaves no way to tell which ID each
-    /// result belongs to, or answered a position with a different object than
-    /// the one requested there ([`UnexpectedObject`]). The answered id is read
-    /// from the object reference or its BCS, so a read mask that includes
-    /// neither leaves nothing to check.
+    /// [`GrpcError::Server`] with code `NOT_FOUND` in that slot only, leaving
+    /// the other objects intact. The outer `GrpcResult` is reserved for
+    /// failures of the call itself, such as a transport error, and for a
+    /// server that answered with a different number of results than IDs
+    /// requested ([`UnexpectedResultCount`]), which leaves no way to tell
+    /// which ID each result belongs to, or answered a position with a
+    /// different object than the one requested there
+    /// ([`UnexpectedObject`]). The answered id is read from the object
+    /// reference or its BCS, so a read mask that includes neither leaves
+    /// nothing to check.
     ///
     /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
     /// [`UnexpectedObject`]: crate::ProtocolError::UnexpectedObject
@@ -114,7 +115,7 @@ impl Client {
         &self,
         refs: impl IntoIterator<Item = ObjectId>,
         read_mask: impl IntoReadMask<ObjectReadMask>,
-    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<Object>>>> {
         let refs = refs.into_iter().map(|id| (id, None)).collect::<Vec<_>>();
 
         self.get_objects_internal(refs, read_mask.into_read_mask())
@@ -130,7 +131,7 @@ impl Client {
     ///
     /// # Errors
     ///
-    /// Returns [`Error::EmptyRequest`] if `refs` is empty.
+    /// Returns [`GrpcError::EmptyRequest`] if `refs` is empty.
     ///
     /// Each ref gets its own result, with the same meaning as in
     /// [`get_objects`](Client::get_objects): a requested version the serving
@@ -191,7 +192,7 @@ impl Client {
         &self,
         refs: impl IntoIterator<Item = (ObjectId, Option<Version>)>,
         read_mask: impl IntoReadMask<ObjectReadMask>,
-    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<Object>>>> {
         self.get_objects_internal(refs.into_iter().collect(), read_mask.into_read_mask())
             .await
     }
@@ -200,9 +201,9 @@ impl Client {
         &self,
         refs: Vec<(ObjectId, Option<Version>)>,
         read_mask: ObjectReadMask,
-    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<Object>>>> {
         if refs.is_empty() {
-            return Err(Error::EmptyRequest);
+            return Err(GrpcError::EmptyRequest);
         }
 
         let requests = ObjectRequests::default().with_requests(

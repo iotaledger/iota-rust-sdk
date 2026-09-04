@@ -50,6 +50,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::Event>();
     assert_display::<iota_sdk_types::ExecutionError>();
     assert_display::<iota_sdk_types::ExecutionStatus>();
+    assert_display::<iota_sdk_types::FromBase64Error>();
     assert_display::<iota_sdk_types::GasCostSummary>();
     assert_display::<iota_sdk_types::GasPayment>();
     assert_display::<iota_sdk_types::GenesisObject>();
@@ -65,7 +66,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::IntentError>();
     assert_display::<iota_sdk_types::IntentScope>();
     assert_display::<iota_sdk_types::IntentVersion>();
-    assert_display::<iota_sdk_types::InvalidSignatureScheme>();
+    assert_display::<iota_sdk_types::InvalidSignatureSchemeError>();
     assert_display::<iota_sdk_types::iota_names::config::IotaNamesConfig>();
     assert_display::<iota_sdk_types::iota_names::error::IotaNamesError>();
     assert_display::<iota_sdk_types::MakeMoveVector>();

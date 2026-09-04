@@ -141,14 +141,17 @@ pub use checkpoint::{
     CheckpointTransactionInfo, EndOfEpochData, EpochId, ProtocolVersion, SignedCheckpointSummary,
     StakeUnit,
 };
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+pub use crypto::SignatureFromBytesError;
 pub use crypto::{
     Bls12381PublicKey, Bls12381Signature, Ed25519PublicKey, Ed25519Signature, HashingIntentScope,
     INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError, IntentMessage, IntentScope,
-    IntentVersion, InvalidSignatureScheme, MoveAuthenticator, MoveAuthenticatorV1,
-    MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberSignature,
-    PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey, PublicKeyError,
-    PublicKeyExt, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
-    SignatureScheme, SimpleSignature, UserSignature,
+    IntentVersion, InvalidSignatureSchemeError, MoveAuthenticator, MoveAuthenticatorV1,
+    MultisigAggregatedSignature, MultisigCommittee, MultisigError, MultisigMember,
+    MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey,
+    PublicKeyError, PublicKeyExt, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
+    Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
 };
 pub use digest::{
     CertificateDigest, CheckpointContentsDigest, CheckpointDigest, ConsensusCommitDigest, Digest,
@@ -166,8 +169,9 @@ pub use execution_status::{
     CommandArgumentError, ExecutionError, ExecutionStatus, MoveLocation, PackageUpgradeError,
     TypeArgumentError,
 };
-pub use framework::Coin;
+pub use framework::{Coin, CoinFromObjectError};
 pub use gas::GasCostSummary;
+pub use iota_names::error::IotaNamesError;
 pub use move_core::{
     Identifier, MAX_IDENTIFIER_LENGTH, MAX_TYPE_TAG_NESTING, StructTag, TypeParseError, TypeTag,
 };
@@ -193,15 +197,32 @@ pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeError,
     ValidatorCommitteeMember, ValidatorSignature,
 };
-pub use version::Version;
+pub use version::{Version, VersionError};
 
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;
+
+/// Error returned when decoding a type from a base64-encoded string of its BCS
+/// bytes.
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+#[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
+pub enum FromBase64Error {
+    /// The input is not valid base64.
+    #[error("invalid base64: {0}")]
+    Base64(#[from] base64ct::Error),
+    /// The decoded bytes are not a valid BCS encoding of the target type.
+    #[error("invalid BCS: {0}")]
+    Bcs(#[from] bcs::Error),
+}
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod bcs_base64 {
     use base64ct::Encoding;
+
+    use crate::FromBase64Error;
 
     macro_rules! impl_bcs_base64 {
         ($($type:ident),* $(,)?) => {
@@ -224,10 +245,9 @@ mod bcs_base64 {
                     }
 
                     #[doc = "Deserialize a `" $type "` from a base64-encoded string of its BCS bytes."]
-                    pub fn from_base64(bytes: &str) -> Result<Self, bcs::Error> {
-                        let decoded = base64ct::Base64::decode_vec(bytes)
-                            .map_err(|e| bcs::Error::Custom(e.to_string()))?;
-                        Self::from_bcs(&decoded)
+                    pub fn from_base64(bytes: &str) -> Result<Self, FromBase64Error> {
+                        let decoded = base64ct::Base64::decode_vec(bytes)?;
+                        Ok(Self::from_bcs(&decoded)?)
                     }
                 }
             }
@@ -236,6 +256,7 @@ mod bcs_base64 {
     }
 
     impl_bcs_base64!(
+        MovePackageData,
         Object,
         SenderSignedTransaction,
         Transaction,

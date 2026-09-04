@@ -19,7 +19,7 @@ use futures::stream::BoxStream;
 #[cfg(target_arch = "wasm32")]
 use futures::stream::LocalBoxStream;
 use futures::{Stream, StreamExt};
-use iota_sdk::graphql_client::error::Result as GraphQLResult;
+use iota_sdk::graphql_client::error::GraphQLResult;
 use tokio::sync::{Mutex, Notify};
 
 use crate::{
@@ -277,13 +277,14 @@ define_subscription!(
 /// Whether the subscription recovers from `error` on its own, in which case it
 /// is reported as an interruption instead of being raised.
 ///
-/// [`Kind::Subscription`] covers exactly the transport-level failures the
-/// reconnect loop handles — a dropped WebSocket, a failed handshake, or the
-/// server dropping payloads for a client that fell behind.
-fn is_recoverable(error: &iota_sdk::graphql_client::error::Error) -> bool {
+/// These are exactly the transport-level failures the reconnect loop handles —
+/// a dropped WebSocket, a failed handshake, or the server dropping payloads for
+/// a client that fell behind.
+fn is_recoverable(error: &iota_sdk::graphql_client::error::GraphQLError) -> bool {
     matches!(
-        error.kind(),
-        iota_sdk::graphql_client::error::Kind::Subscription
+        error,
+        iota_sdk::graphql_client::error::GraphQLError::Subscription(_)
+            | iota_sdk::graphql_client::error::GraphQLError::Lagged { .. }
     )
 }
 

@@ -12,7 +12,7 @@ use iota_grpc_types::v1::{
 };
 use tonic::codec::CompressionEncoding;
 
-use crate::{api::Result, interceptors::HeadersInterceptor};
+use crate::{api::GrpcResult, interceptors::HeadersInterceptor};
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
@@ -39,7 +39,7 @@ pub struct Client {
 
 impl Client {
     /// Create a new Client instance for the given gRPC server URI.
-    pub fn new<T>(uri: T) -> Result<Self>
+    pub fn new<T>(uri: T) -> GrpcResult<Self>
     where
         T: TryInto<http::Uri>,
         T::Error: Into<BoxError>,
@@ -90,25 +90,25 @@ impl Client {
 
     /// Create a new client connected to the `mainnet` gRPC server:
     /// <https://grpc.mainnet.iota.cafe:443>.
-    pub fn new_mainnet() -> Result<Self> {
+    pub fn new_mainnet() -> GrpcResult<Self> {
         Self::new(MAINNET_HOST)
     }
 
     /// Create a new client connected to the `testnet` gRPC server:
     /// <https://grpc.testnet.iota.cafe:443>.
-    pub fn new_testnet() -> Result<Self> {
+    pub fn new_testnet() -> GrpcResult<Self> {
         Self::new(TESTNET_HOST)
     }
 
     /// Create a new client connected to the `devnet` gRPC server:
     /// <https://grpc.devnet.iota.cafe:443>.
-    pub fn new_devnet() -> Result<Self> {
+    pub fn new_devnet() -> GrpcResult<Self> {
         Self::new(DEVNET_HOST)
     }
 
     /// Create a new client connected to a `localnet` gRPC server:
     /// <http://localhost:9000>.
-    pub fn new_localnet() -> Result<Self> {
+    pub fn new_localnet() -> GrpcResult<Self> {
         Self::new(LOCAL_HOST)
     }
 
@@ -228,7 +228,7 @@ mod tests {
         use super::Client;
 
         let status = match Client::new("https://example.com") {
-            Err(crate::api::Error::Grpc(status)) => status,
+            Err(crate::api::GrpcError::Grpc(status)) => status,
             Err(other) => panic!("expected Error::Grpc, got: {other:?}"),
             Ok(_) => panic!("new should fail without tls-ring"),
         };

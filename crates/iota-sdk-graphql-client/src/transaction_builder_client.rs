@@ -28,7 +28,7 @@ impl Client {
 }
 
 impl TransactionBuilderClientBase for Client {
-    type Error = crate::error::Error;
+    type Error = crate::error::GraphQLError;
 }
 
 impl TransactionBuilderLedgerClient for Client {
@@ -51,10 +51,7 @@ impl TransactionBuilderLedgerClient for Client {
         // Vec<u8> is lossless. Caller-supplied cursors must come from a
         // prior call to this method; anything else is rejected here
         // rather than panicked on.
-        let cursor = cursor
-            .map(String::from_utf8)
-            .transpose()
-            .map_err(|e| crate::error::Error::from_error(crate::error::Kind::Parse, e))?;
+        let cursor = cursor.map(String::from_utf8).transpose()?;
         let page = self
             .objects(
                 ObjectFilter {

@@ -14,7 +14,9 @@ mod metadata;
 pub mod move_package;
 pub mod state;
 
-pub use common::{CheckpointStreamError, Error, Page, ProtocolError, ReadMask, Result, RpcStatus};
+pub use common::{
+    CheckpointStreamError, GrpcError, GrpcResult, Page, ProtocolError, ReadMask, RpcStatus,
+};
 pub(crate) use common::{
     TryFromProtoError, build_proto_transaction, check_object_identity, check_result_count,
     check_transaction_identity, collect_stream, define_list_query, into_item_results,
@@ -124,7 +126,7 @@ impl CheckpointResponse {
     ///
     /// **Read mask:** `"checkpoint.summary"` (see
     /// [`CHECKPOINT_RESPONSE_SUMMARY`])
-    pub fn summary(&self) -> Result<&iota_grpc_types::v1::checkpoint::CheckpointSummary> {
+    pub fn summary(&self) -> GrpcResult<&iota_grpc_types::v1::checkpoint::CheckpointSummary> {
         self.summary
             .as_ref()
             .ok_or_else(|| TryFromProtoError::missing("summary").into())
@@ -136,7 +138,7 @@ impl CheckpointResponse {
     /// Requires the checkpoint summary and signature to be present.
     ///
     /// **Read mask:** see [`CHECKPOINT_RESPONSE_SIGNED_SUMMARY`]
-    pub fn signed_summary(&self) -> Result<iota_types::SignedCheckpointSummary> {
+    pub fn signed_summary(&self) -> GrpcResult<iota_types::SignedCheckpointSummary> {
         Ok(iota_types::SignedCheckpointSummary {
             checkpoint: self.summary()?.summary()?,
             signature: self.signature()?.signature()?,
@@ -149,7 +151,7 @@ impl CheckpointResponse {
     /// [`CHECKPOINT_RESPONSE_SIGNATURE`])
     pub fn signature(
         &self,
-    ) -> Result<&iota_grpc_types::v1::signatures::ValidatorAggregatedSignature> {
+    ) -> GrpcResult<&iota_grpc_types::v1::signatures::ValidatorAggregatedSignature> {
         self.signature
             .as_ref()
             .ok_or_else(|| TryFromProtoError::missing("signature").into())
@@ -165,7 +167,7 @@ impl CheckpointResponse {
     ///
     /// **Read mask:** `"checkpoint.contents"` (see
     /// [`CHECKPOINT_RESPONSE_CONTENTS`])
-    pub fn contents(&self) -> Result<&iota_grpc_types::v1::checkpoint::CheckpointContents> {
+    pub fn contents(&self) -> GrpcResult<&iota_grpc_types::v1::checkpoint::CheckpointContents> {
         self.contents
             .as_ref()
             .ok_or_else(|| TryFromProtoError::missing("contents").into())
@@ -222,7 +224,7 @@ impl CheckpointResponse {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn checkpoint_data(&self) -> Result<iota_types::checkpoint::CheckpointData> {
+    pub fn checkpoint_data(&self) -> GrpcResult<iota_types::checkpoint::CheckpointData> {
         Ok(iota_types::checkpoint::CheckpointData {
             checkpoint_contents: self.contents()?.contents()?,
             checkpoint_summary: iota_types::SignedCheckpointSummary {

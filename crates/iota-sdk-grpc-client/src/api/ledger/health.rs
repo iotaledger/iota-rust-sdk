@@ -7,7 +7,7 @@ use iota_grpc_types::v1::ledger_service::{GetHealthRequest, GetHealthResponse};
 
 use crate::{
     Client,
-    api::{MetadataEnvelope, Result},
+    api::{GrpcResult, MetadataEnvelope},
 };
 
 impl Client {
@@ -29,7 +29,7 @@ impl Client {
     pub async fn get_health(
         &self,
         threshold_ms: impl Into<Option<u64>>,
-    ) -> Result<MetadataEnvelope<GetHealthResponse>> {
+    ) -> GrpcResult<MetadataEnvelope<GetHealthResponse>> {
         let mut request = GetHealthRequest::default();
         if let Some(ms) = threshold_ms.into() {
             request = request.with_threshold_ms(ms);

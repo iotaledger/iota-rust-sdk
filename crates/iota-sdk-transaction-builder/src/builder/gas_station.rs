@@ -13,7 +13,7 @@ use reqwest::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::{builder::signer::TransactionSigner, error::Error};
+use crate::{builder::signer::TransactionSigner, error::TransactionBuilderError};
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
@@ -239,22 +239,22 @@ impl GasStationData {
     async fn gas_station_version(
         &self,
         client: &reqwest::Client,
-    ) -> Result<GasStationVersion, Error> {
+    ) -> Result<GasStationVersion, TransactionBuilderError> {
         let url = self
             .url
             .join(GasStationRequestKind::Version.as_path())
-            .map_err(Error::InvalidUrl)?;
+            .map_err(TransactionBuilderError::InvalidUrl)?;
         let response = client
             .request(reqwest::Method::GET, url.clone())
             .headers(self.headers.clone())
             .send()
             .await
-            .map_err(|e| Error::GasStationRequest {
+            .map_err(|e| TransactionBuilderError::GasStationRequest {
                 source: e,
                 gas_station_url: url.clone(),
             })?
             .error_for_status()
-            .map_err(|e| Error::GasStationRequest {
+            .map_err(|e| TransactionBuilderError::GasStationRequest {
                 source: e,
                 gas_station_url: url.clone(),
             })?;
@@ -264,13 +264,13 @@ impl GasStationData {
             response
                 .bytes()
                 .await
-                .map_err(|_| Error::GasStationResponse {
+                .map_err(|_| TransactionBuilderError::GasStationResponse {
                     message: None,
                     gas_station_url: url.clone(),
                 })?
                 .to_vec(),
         )
-        .map_err(|_| Error::GasStationResponse {
+        .map_err(|_| TransactionBuilderError::GasStationResponse {
             message: None,
             gas_station_url: url.clone(),
         })?;
@@ -278,15 +278,18 @@ impl GasStationData {
         // We only care about the version.
         // Using `rfind` instead of `find` because the pkg's version might have a suffix
         // like "-alpha".
-        let separator_idx = version_info
-            .rfind('-')
-            .ok_or_else(|| Error::GasStationResponse {
-                message: None,
-                gas_station_url: url,
-            })?;
+        let separator_idx =
+            version_info
+                .rfind('-')
+                .ok_or_else(|| TransactionBuilderError::GasStationResponse {
+                    message: None,
+                    gas_station_url: url,
+                })?;
         version_info.truncate(separator_idx);
 
-        let version = version_info.parse().map_err(Error::VersionParsing)?;
+        let version = version_info
+            .parse()
+            .map_err(TransactionBuilderError::VersionParsing)?;
 
         Ok(version)
     }
@@ -295,14 +298,14 @@ impl GasStationData {
         &mut self,
         gas_budget: u64,
         client: &reqwest::Client,
-    ) -> Result<GasReservation, Error> {
+    ) -> Result<GasReservation, TransactionBuilderError> {
         self.headers
             .entry(reqwest::header::CONTENT_TYPE)
             .or_insert_with(|| HeaderValue::from_static("application/json"));
 
         let version = self.gas_station_version(client).await?;
         if version < GasStationVersion::MIN {
-            return Err(Error::InvalidGasStationVersion {
+            return Err(TransactionBuilderError::InvalidGasStationVersion {
                 min_required_version: GasStationVersion::MIN,
                 version,
             });
@@ -311,7 +314,7 @@ impl GasStationData {
         let url = self
             .url
             .join(GasStationRequestKind::ReserveGas.as_path())
-            .map_err(Error::InvalidUrl)?;
+            .map_err(TransactionBuilderError::InvalidUrl)?;
 
         let response = client
             .request(reqwest::Method::POST, url.clone())
@@ -322,12 +325,12 @@ impl GasStationData {
             .headers(self.headers.clone())
             .send()
             .await
-            .map_err(|e| Error::GasStationRequest {
+            .map_err(|e| TransactionBuilderError::GasStationRequest {
                 source: e,
                 gas_station_url: url.clone(),
             })?
             .error_for_status()
-            .map_err(|e| Error::GasStationRequest {
+            .map_err(|e| TransactionBuilderError::GasStationRequest {
                 source: e,
                 gas_station_url: url.clone(),
             })?;
@@ -336,13 +339,13 @@ impl GasStationData {
             response
                 .json()
                 .await
-                .map_err(|e| Error::GasStationRequest {
+                .map_err(|e| TransactionBuilderError::GasStationRequest {
                     source: e,
                     gas_station_url: url.clone(),
                 })?;
 
         let Some(gas_reservation) = res.result else {
-            return Err(Error::GasStationResponse {
+            return Err(TransactionBuilderError::GasStationResponse {
                 message: res.error,
                 gas_station_url: url.clone(),
             });
@@ -355,15 +358,15 @@ impl GasStationData {
         self,
         txn: &mut Transaction,
         signer: &impl TransactionSigner,
-    ) -> Result<TransactionDigest, Error> {
+    ) -> Result<TransactionDigest, TransactionBuilderError> {
         let url = self
             .url
             .join(GasStationRequestKind::ExecuteTx.as_path())
-            .map_err(Error::InvalidUrl)?;
+            .map_err(TransactionBuilderError::InvalidUrl)?;
         let effects = self.execute_txn_inner(&url, txn, signer).await?;
 
         TransactionDigest::deserialize(&effects["transactionDigest"]).map_err(|e| {
-            Error::GasStationResponse {
+            TransactionBuilderError::GasStationResponse {
                 message: Some(e.to_string()),
                 gas_station_url: url,
             }
@@ -374,11 +377,11 @@ impl GasStationData {
         self,
         txn: &mut Transaction,
         signer: &impl TransactionSigner,
-    ) -> Result<serde_json::Value, Error> {
+    ) -> Result<serde_json::Value, TransactionBuilderError> {
         let url = self
             .url
             .join(GasStationRequestKind::ExecuteTx.as_path())
-            .map_err(Error::InvalidUrl)?;
+            .map_err(TransactionBuilderError::InvalidUrl)?;
         self.execute_txn_inner(&url, txn, signer).await
     }
 
@@ -387,7 +390,7 @@ impl GasStationData {
         url: &Url,
         txn: &mut Transaction,
         signer: &impl TransactionSigner,
-    ) -> Result<serde_json::Value, Error> {
+    ) -> Result<serde_json::Value, TransactionBuilderError> {
         let client = reqwest::Client::new();
         let reservation_id = match txn {
             Transaction::V1(inner_txn) => {
@@ -414,12 +417,14 @@ impl GasStationData {
             _ => unimplemented!("a new enum variant was added and needs to be handled"),
         };
 
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&txn).map_err(Error::Bcs)?);
+        let tx_bytes = base64ct::Base64::encode_string(
+            &bcs::to_bytes(&txn).map_err(TransactionBuilderError::Bcs)?,
+        );
 
         let user_sig = signer
             .sign(txn)
             .await
-            .map_err(Error::signature)?
+            .map_err(TransactionBuilderError::signature)?
             .to_base64();
 
         let response = client
@@ -433,12 +438,12 @@ impl GasStationData {
             })
             .send()
             .await
-            .map_err(|e| Error::GasStationRequest {
+            .map_err(|e| TransactionBuilderError::GasStationRequest {
                 source: e,
                 gas_station_url: url.clone(),
             })?
             .error_for_status()
-            .map_err(|e| Error::GasStationRequest {
+            .map_err(|e| TransactionBuilderError::GasStationRequest {
                 source: e,
                 gas_station_url: url.clone(),
             })?;
@@ -447,13 +452,13 @@ impl GasStationData {
             response
                 .json()
                 .await
-                .map_err(|e| Error::GasStationRequest {
+                .map_err(|e| TransactionBuilderError::GasStationRequest {
                     source: e,
                     gas_station_url: url.clone(),
                 })?;
 
         let Some(effects) = res.effects else {
-            return Err(Error::GasStationResponse {
+            return Err(TransactionBuilderError::GasStationResponse {
                 message: res.error,
                 gas_station_url: url.clone(),
             });

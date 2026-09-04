@@ -174,7 +174,7 @@ pub struct PageInfo {
 }
 
 impl TryFrom<BigInt> for u64 {
-    type Error = error::Error;
+    type Error = error::GraphQLError;
 
     fn try_from(value: BigInt) -> Result<Self, Self::Error> {
         Ok(value.0.parse::<u64>()?)

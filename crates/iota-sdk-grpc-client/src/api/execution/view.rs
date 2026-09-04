@@ -17,7 +17,10 @@ use iota_types::TypeTag;
 
 use crate::{
     Client,
-    api::{Error, MetadataEnvelope, ProtocolError, Result, check_result_count, into_item_results},
+    api::{
+        GrpcError, GrpcResult, MetadataEnvelope, ProtocolError, check_result_count,
+        into_item_results,
+    },
 };
 
 impl Client {
@@ -73,8 +76,8 @@ impl Client {
     ///
     /// # Errors
     ///
-    /// Returns [`Error::EmptyRequest`] if `fq_function_name` is empty.
-    /// Returns [`Error::Server`] if the node rejected the call (an unknown
+    /// Returns [`GrpcError::EmptyRequest`] if `fq_function_name` is empty.
+    /// Returns [`GrpcError::Server`] if the node rejected the call (an unknown
     /// function, a wrong argument count, a non-view function). A call that ran
     /// and *aborted* is not an error here — it comes back as
     /// [`ViewFunctionCallOutputs::execution_error`].
@@ -84,9 +87,9 @@ impl Client {
         type_args: &[TypeTag],
         call_args: &[serde_json::Value],
         read_mask: impl IntoReadMask<ViewFunctionCallReadMask>,
-    ) -> Result<MetadataEnvelope<ViewFunctionCallOutputs>> {
+    ) -> GrpcResult<MetadataEnvelope<ViewFunctionCallOutputs>> {
         if fq_function_name.is_empty() {
-            return Err(Error::EmptyRequest);
+            return Err(GrpcError::EmptyRequest);
         }
 
         self.view_function_calls(
@@ -108,10 +111,9 @@ impl Client {
         )
         .await?
         .try_map(|results| {
-            results
-                .into_iter()
-                .next()
-                .ok_or_else(|| Error::Protocol(ProtocolError::EmptyResponseField("call_results")))?
+            results.into_iter().next().ok_or_else(|| {
+                GrpcError::Protocol(ProtocolError::EmptyResponseField("call_results"))
+            })?
         })
     }
 
@@ -120,8 +122,8 @@ impl Client {
     /// Each call runs in its own transaction on the server, so one call being
     /// rejected leaves the rest untouched.
     ///
-    /// Returns a `Vec<Result<ViewFunctionCallOutputs>>` in the same order as
-    /// the input. Each element is either the outputs of that call or the
+    /// Returns a `Vec<GrpcResult<ViewFunctionCallOutputs>>` in the same order
+    /// as the input. Each element is either the outputs of that call or the
     /// per-item error the server returned for it. Note that a call which ran
     /// and aborted lands in the `Ok` slot — the abort is reported by
     /// [`ViewFunctionCallOutputs::execution_error`]; only a call the server
@@ -135,8 +137,8 @@ impl Client {
     ///
     /// # Errors
     ///
-    /// Returns [`Error::EmptyRequest`] if `function_calls` is empty.
-    /// Returns a transport-level [`Error::Grpc`] if the entire RPC fails
+    /// Returns [`GrpcError::EmptyRequest`] if `function_calls` is empty.
+    /// Returns a transport-level [`GrpcError::Grpc`] if the entire RPC fails
     /// (e.g. batch size exceeded).
     /// Returns [`ProtocolError::UnexpectedResultCount`] if the server did not
     /// answer every call, since results are paired with calls by position.
@@ -144,9 +146,9 @@ impl Client {
         &self,
         function_calls: Vec<ViewFunctionCallItem>,
         read_mask: impl IntoReadMask<ViewFunctionCallReadMask>,
-    ) -> Result<MetadataEnvelope<Vec<Result<ViewFunctionCallOutputs>>>> {
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ViewFunctionCallOutputs>>>> {
         if function_calls.is_empty() {
-            return Err(Error::EmptyRequest);
+            return Err(GrpcError::EmptyRequest);
         }
 
         let expected_results = function_calls.len();

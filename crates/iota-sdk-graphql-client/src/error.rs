@@ -2,15 +2,20 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::num::{ParseIntError, TryFromIntError};
+use std::{
+    num::{ParseIntError, TryFromIntError},
+    string::FromUtf8Error,
+};
 
 use cynic::GraphQlError;
-use iota_types::{AddressParseError, DigestParseError, TypeParseError};
+use iota_types::{AddressParseError, DigestParseError, IotaNamesError, TypeParseError};
 use reqwest::{StatusCode, Url};
+
+use crate::faucet::FaucetError;
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
-pub type Result<T, E = Error> = std::result::Result<T, E>;
+pub type GraphQLResult<T> = std::result::Result<T, GraphQLError>;
 
 /// Maximum number of body bytes retained in an HTTP/decode error. Load
 /// balancer and gateway pages can be hundreds of KB, so the body is truncated
@@ -29,281 +34,233 @@ fn truncated_body(bytes: &[u8]) -> String {
     body
 }
 
-/// General error type for the client. It is used to wrap all the possible
-/// errors that can occur.
-#[derive(Debug)]
-pub struct Error {
-    inner: Box<InnerError>,
+fn display_graphql_errors(errors: &[GraphQlError]) -> String {
+    errors
+        .iter()
+        .map(|e| e.to_string())
+        .collect::<Vec<_>>()
+        .join(", ")
 }
 
-/// Error type for the client. It is split into multiple fields to allow for
-/// more granular error handling. The `source` field is used to store the
-/// original error.
-#[derive(Debug)]
-struct InnerError {
-    /// Error kind.
-    kind: Kind,
-    /// Errors returned by the GraphQL server.
-    query_errors: Option<Vec<GraphQlError>>,
-    /// The original error.
-    source: Option<BoxError>,
-    /// Name of the type the response was being deserialized into, if known.
-    /// Recorded by the client so a bare HTTP/JSON error also reveals *what*
-    /// the client was trying to decode.
-    target_type: Option<String>,
-}
-
-#[derive(Clone, Copy, Debug)]
+/// Errors returned by the GraphQL client.
+///
+/// A queried object, transaction or checkpoint that does not exist is reported
+/// as `Ok(None)`, so absence never surfaces here and there is nothing to test
+/// an error against to detect it.
+#[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
-pub enum Kind {
-    Deserialization,
-    Parse,
-    Query,
-    Missing,
-    /// The HTTP response carried a non-success status code.
-    Http {
-        status: reqwest::StatusCode,
+pub enum GraphQLError {
+    /// The request could not be sent, or the response could not be read.
+    #[error("request error: {0}")]
+    Request(#[from] reqwest::Error),
+    /// The server answered with a non-success HTTP status.
+    #[error(
+        "GraphQL request to {url} failed with HTTP {status} while decoding `{target_type}`, \
+         body={body:?}",
+        url = .0.url,
+        status = .0.status,
+        target_type = .0.target_type,
+        body = .0.body,
+    )]
+    Http(Box<HttpResponse>),
+    /// The response body could not be parsed as JSON.
+    #[error(
+        "GraphQL request to {url} returned HTTP {status} but the body could not be parsed as JSON \
+         while decoding `{target_type}` (body={body:?}): {source}",
+        url = .response.url,
+        status = .response.status,
+        target_type = .response.target_type,
+        body = .response.body,
+    )]
+    Json {
+        response: Box<HttpResponse>,
+        #[source]
+        source: serde_json::Error,
     },
-    Subscription,
-    Other,
+    /// The server returned errors for the query.
+    #[error("query error: [{}]", display_graphql_errors(.0))]
+    Query(Vec<GraphQlError>),
+    /// The response carried neither data nor errors.
+    #[error("query error: expected a non-empty response data from query")]
+    EmptyResponse,
+    /// A response field the client needs to build its return value was empty.
+    #[error("empty response field: {0}")]
+    EmptyResponseField(&'static str),
+    /// The server returned a variant of a GraphQL union or enum this client
+    /// does not know.
+    #[error("unknown {0} variant")]
+    UnknownVariant(&'static str),
+    /// A response value could not be deserialized into its SDK type.
+    #[error("deserialization error: {0}")]
+    Deserialization(#[source] BoxError),
+    /// A response value or a caller-supplied string could not be parsed.
+    #[error("parse error: {0}")]
+    Parse(#[source] BoxError),
+    /// The arguments passed to a query cannot be combined.
+    #[error("invalid argument: {0}")]
+    InvalidArgument(&'static str),
+    /// The operation did not complete within its deadline.
+    #[error("timed out")]
+    Timeout,
+    /// A faucet request failed.
+    #[error("faucet error: {0}")]
+    Faucet(#[from] FaucetError),
+    /// The subscription transport failed.
+    #[error("subscription error: {0}")]
+    Subscription(#[source] BoxError),
+    /// The subscription server dropped `count` payloads before the next one
+    /// because the client could not keep up. The stream continues after this
+    /// error.
+    #[error("subscription lagged: {count} payload(s) dropped by the server")]
+    Lagged { count: i32 },
 }
 
-impl std::error::Error for Error {
-    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        // `Display` already renders the inner error's own message inline, so we
-        // expose only its *underlying* cause here. Returning the inner error
-        // directly would make cause-chain formatters (e.g. `anyhow`/`eyre`
-        // `{:?}`) repeat that message verbatim under "Caused by".
-        self.inner.source.as_deref()?.source()
-    }
+/// The HTTP response a [`GraphQLError::Http`] or [`GraphQLError::Json`] was
+/// raised for.
+#[derive(Debug)]
+#[non_exhaustive]
+pub struct HttpResponse {
+    pub url: Url,
+    pub status: StatusCode,
+    /// Truncated, UTF-8-lossy snapshot of the response body.
+    pub body: String,
+    /// Name of the type the response was being decoded into. A bare status or
+    /// `serde_json` error does not reveal what the client was decoding.
+    pub target_type: &'static str,
 }
 
-impl Error {
-    /// Error kind, useful for programmatic handling (e.g. matching on
-    /// [`Kind::Http`] to retry on certain status codes).
-    pub fn kind(&self) -> Kind {
-        self.inner.kind
-    }
-
-    /// Original GraphQL query errors.
-    pub fn graphql_errors(&self) -> Option<&[GraphQlError]> {
-        self.inner.query_errors.as_deref()
-    }
-
-    /// Convert the given error into a generic error.
-    pub fn from_error<E: Into<BoxError>>(kind: Kind, error: E) -> Self {
-        Self {
-            inner: Box::new(InnerError {
-                kind,
-                source: Some(error.into()),
-                query_errors: None,
-                target_type: None,
-            }),
-        }
-    }
-
-    /// Convert the given message into a generic error.
-    pub fn from_message(kind: Kind, message: String) -> Self {
-        Self {
-            inner: Box::new(InnerError {
-                kind,
-                source: Some(message.into()),
-                query_errors: None,
-                target_type: None,
-            }),
-        }
-    }
-
-    /// Special constructor for queries that expect to return data but it's
-    /// none.
-    pub fn empty_response_error() -> Self {
-        Self {
-            inner: Box::new(InnerError {
-                kind: Kind::Query,
-                source: Some("Expected a non-empty response data from query".into()),
-                query_errors: None,
-                target_type: None,
-            }),
-        }
-    }
-
-    /// Create an error for a non-success HTTP response, capturing the request
-    /// URL, the HTTP status (code + reason phrase) and a truncated, UTF-8-lossy
-    /// snapshot of the response body.
-    pub fn http(url: Url, status: StatusCode, body: &[u8]) -> Self {
-        Self::from_message(
-            Kind::Http { status },
-            format!(
-                "GraphQL request to {url} failed, body={:?}",
-                truncated_body(body)
-            ),
-        )
-    }
-
-    /// Create an error for a response whose body could not be parsed as JSON,
-    /// capturing the request URL, the HTTP status, a truncated, UTF-8-lossy
-    /// snapshot of the body and the underlying `serde_json` error.
-    pub fn decode(url: Url, status: StatusCode, body: &[u8], source: serde_json::Error) -> Self {
-        Self::from_message(
-            Kind::Deserialization,
-            format!(
-                "GraphQL request to {url} returned HTTP {status} but the body could not be parsed \
-                 as JSON (body={:?}): {source}",
-                truncated_body(body)
-            ),
-        )
-    }
-
-    /// Record the name of the type the response was being deserialized into,
-    /// adding `while decoding \`T\`` context to the error message. A plain HTTP
-    /// status or `serde_json` error does not reveal *what* the client was
-    /// trying to decode; this fills that gap.
-    pub fn while_decoding(mut self, target_type: impl Into<String>) -> Self {
-        self.inner.target_type = Some(target_type.into());
-        self
-    }
-
-    /// Create an error signaling that the subscription server dropped
-    /// `count` payloads before the next one because the client could not keep
-    /// up. The stream continues after this error.
-    pub fn lagged(count: i32) -> Self {
-        Self::from_message(
-            Kind::Subscription,
-            format!("subscription lagged: {count} payload(s) dropped by the server"),
-        )
-    }
-
-    /// Create a Query kind of error with the original graphql errors.
-    pub fn graphql_error(errors: Vec<GraphQlError>) -> Self {
-        Self {
-            inner: Box::new(InnerError {
-                kind: Kind::Query,
-                source: None,
-                query_errors: Some(errors),
-                target_type: None,
-            }),
-        }
+impl HttpResponse {
+    fn new(url: Url, status: StatusCode, body: &[u8], target_type: &'static str) -> Box<Self> {
+        Box::new(Self {
+            url,
+            status,
+            body: truncated_body(body),
+            target_type,
+        })
     }
 }
 
-impl std::fmt::Display for Kind {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Kind::Deserialization => write!(f, "Deserialization error:"),
-            Kind::Parse => write!(f, "Parse error:"),
-            Kind::Query => write!(f, "Query error:"),
-            Kind::Missing => write!(f, "Missing:"),
-            Kind::Http { status } => write!(f, "HTTP {status}:"),
-            Kind::Subscription => write!(f, "Subscription error:"),
-            Kind::Other => write!(f, "Error:"),
+impl GraphQLError {
+    /// Build a [`GraphQLError::Http`] from a non-success response, retaining a
+    /// truncated, UTF-8-lossy snapshot of the body.
+    pub(crate) fn http(
+        url: Url,
+        status: StatusCode,
+        body: &[u8],
+        target_type: &'static str,
+    ) -> Self {
+        Self::Http(HttpResponse::new(url, status, body, target_type))
+    }
+
+    /// Build a [`GraphQLError::Json`] from a response whose body is not valid
+    /// JSON, retaining a truncated, UTF-8-lossy snapshot of the body.
+    pub(crate) fn json(
+        url: Url,
+        status: StatusCode,
+        body: &[u8],
+        target_type: &'static str,
+        source: serde_json::Error,
+    ) -> Self {
+        Self::Json {
+            response: HttpResponse::new(url, status, body, target_type),
+            source,
         }
+    }
+
+    /// Wrap an error raised while turning a response value into its SDK type.
+    pub fn deserialization<E: Into<BoxError>>(error: E) -> Self {
+        Self::Deserialization(error.into())
+    }
+
+    /// Wrap a subscription transport failure.
+    pub fn subscription<E: Into<BoxError>>(error: E) -> Self {
+        Self::Subscription(error.into())
     }
 }
 
-impl std::fmt::Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.inner.kind)?;
-
-        if let Some(source) = &self.inner.source {
-            write!(f, " {source}")?;
-        }
-
-        if let Some(target_type) = &self.inner.target_type {
-            write!(f, " (while decoding `{target_type}`)")?;
-        }
-
-        if let Some(errors) = &self.inner.query_errors {
-            write!(
-                f,
-                " [{}]",
-                errors
-                    .iter()
-                    .map(|e| e.to_string())
-                    .collect::<Vec<_>>()
-                    .join(", ")
-            )?;
-        }
-        Ok(())
-    }
-}
-
-impl From<bcs::Error> for Error {
+impl From<bcs::Error> for GraphQLError {
     fn from(error: bcs::Error) -> Self {
-        Self::from_error(Kind::Deserialization, error)
+        Self::Deserialization(error.into())
     }
 }
 
-impl From<reqwest::Error> for Error {
-    fn from(error: reqwest::Error) -> Self {
-        Self::from_error(Kind::Other, error)
-    }
-}
-
-impl From<url::ParseError> for Error {
+impl From<url::ParseError> for GraphQLError {
     fn from(error: url::ParseError) -> Self {
-        Self::from_error(Kind::Parse, error)
+        Self::Parse(error.into())
     }
 }
 
-impl From<ParseIntError> for Error {
+impl From<ParseIntError> for GraphQLError {
     fn from(error: ParseIntError) -> Self {
-        Self::from_error(Kind::Parse, error)
+        Self::Parse(error.into())
     }
 }
 
-impl From<AddressParseError> for Error {
+impl From<AddressParseError> for GraphQLError {
     fn from(error: AddressParseError) -> Self {
-        Self::from_error(Kind::Parse, error)
+        Self::Parse(error.into())
     }
 }
 
-impl From<base64ct::Error> for Error {
+impl From<base64ct::Error> for GraphQLError {
     fn from(error: base64ct::Error) -> Self {
-        Self::from_error(Kind::Parse, error)
+        Self::Parse(error.into())
     }
 }
 
-impl From<chrono::ParseError> for Error {
+impl From<chrono::ParseError> for GraphQLError {
     fn from(error: chrono::ParseError) -> Self {
-        Self::from_error(Kind::Parse, error)
+        Self::Parse(error.into())
     }
 }
 
-impl From<DigestParseError> for Error {
+impl From<DigestParseError> for GraphQLError {
     fn from(error: DigestParseError) -> Self {
-        Self::from_error(Kind::Parse, error)
+        Self::Parse(error.into())
     }
 }
 
-impl From<TryFromIntError> for Error {
+impl From<TryFromIntError> for GraphQLError {
     fn from(error: TryFromIntError) -> Self {
-        Self::from_error(Kind::Parse, error)
+        Self::Parse(error.into())
     }
 }
 
-impl From<TypeParseError> for Error {
+impl From<TypeParseError> for GraphQLError {
     fn from(error: TypeParseError) -> Self {
-        Self::from_error(Kind::Parse, error)
+        Self::Parse(error.into())
+    }
+}
+
+impl From<IotaNamesError> for GraphQLError {
+    fn from(error: IotaNamesError) -> Self {
+        Self::Parse(error.into())
+    }
+}
+
+impl From<FromUtf8Error> for GraphQLError {
+    fn from(error: FromUtf8Error) -> Self {
+        Self::Parse(error.into())
     }
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-impl From<tokio_tungstenite::tungstenite::Error> for Error {
+impl From<tokio_tungstenite::tungstenite::Error> for GraphQLError {
     fn from(error: tokio_tungstenite::tungstenite::Error) -> Self {
-        Self::from_error(Kind::Subscription, error)
+        Self::Subscription(error.into())
     }
 }
 
-impl From<graphql_ws_client::Error> for Error {
+impl From<graphql_ws_client::Error> for GraphQLError {
     fn from(error: graphql_ws_client::Error) -> Self {
-        Self::from_error(Kind::Subscription, error)
+        Self::Subscription(error.into())
     }
 }
 
 #[cfg(target_arch = "wasm32")]
-impl From<ws_stream_wasm::WsErr> for Error {
+impl From<ws_stream_wasm::WsErr> for GraphQLError {
     fn from(error: ws_stream_wasm::WsErr) -> Self {
-        Self::from_error(Kind::Subscription, error)
+        Self::Subscription(error.into())
     }
 }
 
@@ -312,20 +269,36 @@ mod tests {
     use super::*;
 
     #[test]
-    fn http_error_surfaces_status_and_body() {
+    fn http_error_surfaces_status_body_and_decode_target() {
         let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
-        let error = Error::http(url, StatusCode::TOO_MANY_REQUESTS, b"Too Many Requests");
+        let error = GraphQLError::http(
+            url,
+            StatusCode::TOO_MANY_REQUESTS,
+            b"Too Many Requests",
+            "my_crate::MyResponse",
+        );
         let message = error.to_string();
         assert!(message.contains("https://graphql.devnet.iota.cafe"));
         assert!(message.contains("HTTP 429 Too Many Requests"));
         assert!(message.contains("Too Many Requests"));
+        assert!(message.contains("while decoding `my_crate::MyResponse`"));
+        // The status stays inspectable instead of only being rendered.
+        assert!(
+            matches!(error, GraphQLError::Http(response) if response.status == StatusCode::TOO_MANY_REQUESTS)
+        );
     }
 
     #[test]
-    fn decode_error_surfaces_status_body_and_source() {
+    fn json_error_surfaces_status_body_and_source() {
         let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
         let serde_error = serde_json::from_slice::<serde_json::Value>(b"not json").unwrap_err();
-        let error = Error::decode(url, StatusCode::OK, b"not json", serde_error);
+        let error = GraphQLError::json(
+            url,
+            StatusCode::OK,
+            b"not json",
+            "my_crate::MyResponse",
+            serde_error,
+        );
         let message = error.to_string();
         assert!(message.contains("https://graphql.devnet.iota.cafe"));
         assert!(message.contains("HTTP 200 OK"));
@@ -335,62 +308,16 @@ mod tests {
     }
 
     #[test]
-    fn http_error_has_no_duplicate_cause() {
-        // The full message lives in `Display`; there is no underlying cause, so
-        // `source()` must be `None` to avoid cause-chain formatters repeating
-        // the message under "Caused by".
+    fn wrapped_error_is_exposed_as_the_cause() {
         use std::error::Error as _;
 
-        let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
-        let error = Error::http(url, StatusCode::TOO_MANY_REQUESTS, b"Too Many Requests");
-        assert!(error.source().is_none());
-    }
-
-    #[test]
-    fn wrapped_error_exposes_underlying_cause_not_its_own_message() {
-        use std::error::Error as _;
-
-        #[derive(Debug)]
-        struct Inner;
-        impl std::fmt::Display for Inner {
-            fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-                write!(f, "inner cause")
-            }
-        }
-        impl std::error::Error for Inner {}
-
-        #[derive(Debug)]
-        struct Outer(Inner);
-        impl std::fmt::Display for Outer {
-            fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-                write!(f, "outer message")
-            }
-        }
-        impl std::error::Error for Outer {
-            fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-                Some(&self.0)
-            }
-        }
-
-        let error = Error::from_error(Kind::Other, Outer(Inner));
-        // `Display` carries the wrapped error's own message exactly once.
-        assert!(error.to_string().contains("outer message"));
-        // `source()` skips that already-rendered message and exposes the
-        // deeper cause, so the chain does not repeat "outer message".
-        let source = error.source().expect("expected an underlying cause");
-        assert_eq!(source.to_string(), "inner cause");
-    }
-
-    #[test]
-    fn while_decoding_adds_target_type_and_keeps_status() {
-        let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
-        let error = Error::http(url, StatusCode::BAD_GATEWAY, b"Bad Gateway")
-            .while_decoding("my_crate::MyResponse");
-        let message = error.to_string();
-        // The decode target is surfaced in the message,
-        assert!(message.contains("while decoding `my_crate::MyResponse`"));
-        // yet the HTTP status remains programmatically inspectable.
-        assert!(matches!(error.kind(), Kind::Http { status } if status == StatusCode::BAD_GATEWAY));
+        let bcs_error = bcs::from_bytes::<u64>(&[]).unwrap_err();
+        let expected = bcs_error.to_string();
+        let error = GraphQLError::from(bcs_error);
+        assert_eq!(
+            error.source().expect("expected a cause").to_string(),
+            expected
+        );
     }
 
     #[test]

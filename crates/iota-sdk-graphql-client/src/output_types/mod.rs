@@ -10,7 +10,7 @@ use iota_types::{SignedTransaction, TransactionEffects, TypeTag};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 use crate::{
-    error::{Error, Kind, Result},
+    error::{GraphQLError, GraphQLResult},
     query_types::{
         DryRunEffect as GraphQLDryRunEffect, DryRunMutation as GraphQLDryRunMutation,
         DryRunReturn as GraphQLDryRunReturn,
@@ -87,16 +87,16 @@ pub enum TransactionArgument {
 }
 
 impl TryFrom<&GraphQLDryRunEffect> for DryRunEffect {
-    type Error = Error;
+    type Error = GraphQLError;
 
-    fn try_from(effect: &GraphQLDryRunEffect) -> Result<Self> {
+    fn try_from(effect: &GraphQLDryRunEffect) -> GraphQLResult<Self> {
         let mutated_references = effect
             .mutated_references
             .as_ref()
             .unwrap_or(&Vec::new())
             .iter()
             .map(DryRunMutation::try_from)
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         let return_values = effect
             .return_values
@@ -104,7 +104,7 @@ impl TryFrom<&GraphQLDryRunEffect> for DryRunEffect {
             .unwrap_or(&Vec::new())
             .iter()
             .map(DryRunReturn::try_from)
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         Ok(DryRunEffect {
             mutated_references,
@@ -114,9 +114,9 @@ impl TryFrom<&GraphQLDryRunEffect> for DryRunEffect {
 }
 
 impl TryFrom<&GraphQLDryRunMutation> for DryRunMutation {
-    type Error = Error;
+    type Error = GraphQLError;
 
-    fn try_from(mutation: &GraphQLDryRunMutation) -> Result<Self> {
+    fn try_from(mutation: &GraphQLDryRunMutation) -> GraphQLResult<Self> {
         let input = TransactionArgument::try_from(&mutation.input)?;
         let type_tag = TypeTag::from_str(&mutation.move_type.repr)?;
         let bcs = base64ct::Base64::decode_vec(&mutation.bcs.0)?;
@@ -130,9 +130,9 @@ impl TryFrom<&GraphQLDryRunMutation> for DryRunMutation {
 }
 
 impl TryFrom<&GraphQLDryRunReturn> for DryRunReturn {
-    type Error = Error;
+    type Error = GraphQLError;
 
-    fn try_from(return_val: &GraphQLDryRunReturn) -> Result<Self> {
+    fn try_from(return_val: &GraphQLDryRunReturn) -> GraphQLResult<Self> {
         let type_tag = TypeTag::from_str(&return_val.move_type.repr)?;
         let bcs = base64ct::Base64::decode_vec(&return_val.bcs.0)?;
 
@@ -141,9 +141,9 @@ impl TryFrom<&GraphQLDryRunReturn> for DryRunReturn {
 }
 
 impl TryFrom<&crate::query_types::TransactionArgument> for TransactionArgument {
-    type Error = Error;
+    type Error = GraphQLError;
 
-    fn try_from(arg: &crate::query_types::TransactionArgument) -> Result<Self> {
+    fn try_from(arg: &crate::query_types::TransactionArgument) -> GraphQLResult<Self> {
         match arg {
             crate::query_types::TransactionArgument::GasCoin(_) => Ok(TransactionArgument::GasCoin),
             crate::query_types::TransactionArgument::Input(input) => {
@@ -157,10 +157,9 @@ impl TryFrom<&crate::query_types::TransactionArgument> for TransactionArgument {
                     index: result.ix.map(|ix| ix as u32),
                 })
             }
-            crate::query_types::TransactionArgument::Unknown => Err(Error::from_error(
-                Kind::Deserialization,
-                "Unknown transaction argument type",
-            )),
+            crate::query_types::TransactionArgument::Unknown => {
+                Err(GraphQLError::UnknownVariant("transaction argument"))
+            }
         }
     }
 }
@@ -224,7 +223,10 @@ impl From<BcsName> for NameValue {
 
 impl DynamicFieldOutput {
     /// Deserialize the name of the dynamic field into the specified type.
-    pub fn deserialize_name<T: DeserializeOwned>(&self, expected_type: &TypeTag) -> Result<T> {
+    pub fn deserialize_name<T: DeserializeOwned>(
+        &self,
+        expected_type: &TypeTag,
+    ) -> GraphQLResult<T> {
         assert_eq!(
             expected_type, &self.name.type_tag,
             "Expected type {expected_type}, but got {}",
@@ -236,7 +238,10 @@ impl DynamicFieldOutput {
     }
 
     /// Deserialize the value of the dynamic field into the specified type.
-    pub fn deserialize_value<T: DeserializeOwned>(&self, expected_type: &TypeTag) -> Result<T> {
+    pub fn deserialize_value<T: DeserializeOwned>(
+        &self,
+        expected_type: &TypeTag,
+    ) -> GraphQLResult<T> {
         let typetag = self.value.as_ref().map(|dfv| &dfv.type_tag);
         assert_eq!(
             Some(&expected_type),
@@ -247,7 +252,7 @@ impl DynamicFieldOutput {
         if let Some(dfv) = &self.value {
             bcs::from_bytes::<T>(&dfv.bcs).map_err(Into::into)
         } else {
-            Err(Error::from_error(Kind::Deserialization, "Value is missing"))
+            Err(GraphQLError::EmptyResponseField("dynamic field value"))
         }
     }
 }

@@ -3,50 +3,7 @@
 
 use core::str::FromStr;
 
-/// Intent errors.
-#[derive(Clone, Debug, derive_more::Display, uniffi::Enum)]
-pub enum IntentError {
-    /// Invalid bytes for Intent
-    #[display("invalid bytes for Intent")]
-    Bytes,
-    /// Invalid hex string for Intent
-    #[display("invalid hex string for Intent")]
-    Hex,
-    /// Invalid Scope for Intent
-    #[display("invalid Scope for Intent")]
-    Scope,
-    /// Invalid Version for Intent
-    #[display("invalid Version for Intent")]
-    Version,
-    /// Invalid AppId for Intent
-    #[display("invalid AppId for Intent")]
-    AppId,
-}
-
-impl From<iota_sdk::types::IntentError> for IntentError {
-    fn from(value: iota_sdk::types::IntentError) -> Self {
-        match value {
-            iota_sdk::types::IntentError::Bytes => Self::Bytes,
-            iota_sdk::types::IntentError::Hex => Self::Hex,
-            iota_sdk::types::IntentError::Scope => Self::Scope,
-            iota_sdk::types::IntentError::Version => Self::Version,
-            iota_sdk::types::IntentError::AppId => Self::AppId,
-            _ => unimplemented!("a new IntentError variant was added and needs to be handled"),
-        }
-    }
-}
-
-impl From<IntentError> for iota_sdk::types::IntentError {
-    fn from(value: IntentError) -> Self {
-        match value {
-            IntentError::Bytes => Self::Bytes,
-            IntentError::Hex => Self::Hex,
-            IntentError::Scope => Self::Scope,
-            IntentError::Version => Self::Version,
-            IntentError::AppId => Self::AppId,
-        }
-    }
-}
+use crate::error::Result;
 
 /// Byte signifying the scope of an Intent
 ///
@@ -266,13 +223,13 @@ impl Intent {
 
     /// Create a signing intent from bytes.
     #[uniffi::constructor]
-    pub fn from_bytes(bytes: &[u8]) -> Result<Intent, IntentError> {
+    pub fn from_bytes(bytes: &[u8]) -> Result<Intent> {
         Ok(Intent(iota_sdk::types::crypto::Intent::from_bytes(bytes)?))
     }
 
     /// Create a signing intent from a hex string.
     #[uniffi::constructor]
-    pub fn from_hex(hex: &str) -> Result<Intent, IntentError> {
+    pub fn from_hex(hex: &str) -> Result<Intent> {
         Ok(Intent(iota_sdk::types::crypto::Intent::from_str(hex)?))
     }
 
@@ -358,11 +315,5 @@ impl PersonalMessage {
     }
 }
 
-crate::export_iota_types_display!(
-    IntentError,
-    IntentScope,
-    IntentVersion,
-    IntentAppId,
-    HashingIntentScope
-);
+crate::export_iota_types_display!(IntentScope, IntentVersion, IntentAppId, HashingIntentScope);
 crate::export_iota_types_objects_display!(Intent, PersonalMessage);

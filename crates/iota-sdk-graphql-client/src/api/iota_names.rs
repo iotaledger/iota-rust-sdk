@@ -14,7 +14,7 @@ use iota_types::{
 
 use crate::{
     Client,
-    error::{Error, Kind, Result},
+    error::GraphQLResult,
     pagination::{Page, PaginationFilter},
     query_types::{
         IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery,
@@ -25,7 +25,7 @@ use crate::{
 
 impl Client {
     /// Return the resolved address for the given name.
-    pub async fn iota_names_lookup(&self, name: &str) -> Result<Option<Address>> {
+    pub async fn iota_names_lookup(&self, name: &str) -> GraphQLResult<Option<Address>> {
         let operation = ResolveIotaNamesAddressQuery::build(ResolveIotaNamesAddressArgs {
             name: name.to_owned(),
         });
@@ -46,7 +46,7 @@ impl Client {
         &self,
         address: Address,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<NameRegistration>> {
+    ) -> GraphQLResult<Page<NameRegistration>> {
         let pagination = self.pagination_filter(pagination_filter).await;
         let operation = IotaNamesAddressRegistrationsQuery::build(IotaNamesRegistrationsArgs {
             address,
@@ -73,7 +73,7 @@ impl Client {
                 .nodes
                 .into_iter()
                 .map(TryInto::try_into)
-                .collect::<Result<Vec<_>>>()?,
+                .collect::<GraphQLResult<Vec<_>>>()?,
         ))
     }
 
@@ -82,7 +82,7 @@ impl Client {
         &self,
         address: Address,
         format: impl Into<Option<NameFormat>>,
-    ) -> Result<Option<Name>> {
+    ) -> GraphQLResult<Option<Name>> {
         let operation = IotaNamesAddressDefaultNameQuery::build(IotaNamesDefaultNameArgs {
             address,
             format: format.into().map(Into::into),
@@ -99,8 +99,6 @@ impl Client {
             return Ok(None);
         };
 
-        Ok(Some(Name::from_str(&name).map_err(|_| {
-            Error::from_error(Kind::Parse, format!("invalid name: {name}"))
-        })?))
+        Ok(Some(Name::from_str(&name)?))
     }
 }

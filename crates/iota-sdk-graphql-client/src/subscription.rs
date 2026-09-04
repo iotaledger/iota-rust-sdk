@@ -18,7 +18,7 @@ use reqwest::Url;
 
 use crate::{
     Client,
-    error::{Error, Kind, Result},
+    error::{GraphQLError, GraphQLResult},
     query_types::{
         Event, EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs,
         SubscriptionEventFilter, SubscriptionTransactionFilter,
@@ -63,7 +63,7 @@ impl Client {
         &self,
         filter: impl Into<Option<SubscriptionEventFilter>>,
         start_after: impl Into<Option<String>>,
-    ) -> impl Stream<Item = Result<Event>> + Unpin + '_ {
+    ) -> impl Stream<Item = GraphQLResult<Event>> + Unpin + '_ {
         let filter = filter.into();
         reconnecting_subscription(
             move |cursor| {
@@ -80,7 +80,7 @@ impl Client {
                     // next one shows up. Advance the resume cursor to the
                     // previous transaction's digest only when the digest changes.
                     let mut current_tx: Option<String> = None;
-                    let mapped = subscription.map(move |item| -> Result<Outcome<Event>> {
+                    let mapped = subscription.map(move |item| -> GraphQLResult<Outcome<Event>> {
                         let data = decode_data(item?)?;
                         Ok(match data.events {
                             EventSubscriptionPayload::Event(event) => {
@@ -125,7 +125,7 @@ impl Client {
         &self,
         filter: impl Into<Option<SubscriptionTransactionFilter>>,
         start_after: impl Into<Option<String>>,
-    ) -> impl Stream<Item = Result<SignedTransaction>> + Unpin + '_ {
+    ) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin + '_ {
         let filter = filter.into();
         reconnecting_subscription(
             move |cursor| {
@@ -137,22 +137,23 @@ impl Client {
                     });
                     let subscription = self.open_subscription(operation).await?;
 
-                    let mapped = subscription.map(|item| -> Result<Outcome<SignedTransaction>> {
-                        let data = decode_data(item?)?;
-                        Ok(match data.transactions {
-                            TransactionBlockSubscriptionPayload::TransactionBlock(block) => {
-                                let cursor = block.digest.clone();
-                                Outcome::Item {
-                                    value: SignedTransaction::try_from(block)?,
-                                    cursor,
+                    let mapped =
+                        subscription.map(|item| -> GraphQLResult<Outcome<SignedTransaction>> {
+                            let data = decode_data(item?)?;
+                            Ok(match data.transactions {
+                                TransactionBlockSubscriptionPayload::TransactionBlock(block) => {
+                                    let cursor = block.digest.clone();
+                                    Outcome::Item {
+                                        value: SignedTransaction::try_from(block)?,
+                                        cursor,
+                                    }
                                 }
-                            }
-                            TransactionBlockSubscriptionPayload::Lagged(lagged) => {
-                                Outcome::Lagged(lagged.count)
-                            }
-                            TransactionBlockSubscriptionPayload::Unknown => Outcome::Skip,
-                        })
-                    });
+                                TransactionBlockSubscriptionPayload::Lagged(lagged) => {
+                                    Outcome::Lagged(lagged.count)
+                                }
+                                TransactionBlockSubscriptionPayload::Unknown => Outcome::Skip,
+                            })
+                        });
                     Ok(mapped.boxed())
                 }
             },
@@ -162,25 +163,19 @@ impl Client {
 
     /// Derive the WebSocket URL for subscriptions from the configured RPC URL,
     /// upgrading the scheme (`http` → `ws`, `https` → `wss`).
-    fn ws_url(&self) -> Result<Url> {
+    fn ws_url(&self) -> GraphQLResult<Url> {
         let mut url = self.rpc.clone();
         match url.scheme() {
             "https" => url.set_scheme("wss"),
             "http" => url.set_scheme("ws"),
             "ws" | "wss" => Ok(()),
-            other => {
-                return Err(Error::from_message(
-                    Kind::Subscription,
-                    format!("unsupported RPC scheme for subscriptions: {other}"),
+            _ => {
+                return Err(GraphQLError::InvalidArgument(
+                    "subscriptions need an http, https, ws or wss RPC URL",
                 ));
             }
         }
-        .map_err(|_| {
-            Error::from_message(
-                Kind::Subscription,
-                "failed to derive the WebSocket URL".to_string(),
-            )
-        })?;
+        .map_err(|_| GraphQLError::subscription("failed to derive the WebSocket URL"))?;
         url.set_path("/subscriptions");
         Ok(url)
     }
@@ -189,7 +184,7 @@ impl Client {
     async fn open_subscription<Operation>(
         &self,
         operation: Operation,
-    ) -> Result<graphql_ws_client::Subscription<Operation>>
+    ) -> GraphQLResult<graphql_ws_client::Subscription<Operation>>
     where
         Operation: graphql_ws_client::graphql::GraphqlOperation + Unpin + Send + 'static,
     {
@@ -207,7 +202,7 @@ impl Client {
 /// on the upgrade request, while a browser `WebSocket` rejects arbitrary
 /// headers and takes the subprotocol as a constructor argument instead.
 #[cfg(not(target_arch = "wasm32"))]
-async fn connect(url: &Url) -> Result<impl graphql_ws_client::Connection + Send + 'static> {
+async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection + Send + 'static> {
     use tokio_tungstenite::tungstenite::{client::IntoClientRequest, http::HeaderValue};
 
     let mut request = url.as_str().into_client_request()?;
@@ -220,18 +215,18 @@ async fn connect(url: &Url) -> Result<impl graphql_ws_client::Connection + Send 
 }
 
 #[cfg(target_arch = "wasm32")]
-async fn connect(url: &Url) -> Result<impl graphql_ws_client::Connection + Send + 'static> {
+async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection + Send + 'static> {
     let connection = ws_stream_wasm::WsMeta::connect(url.as_str(), Some(vec![WS_PROTOCOL])).await?;
     Ok(graphql_ws_client::ws_stream_wasm::Connection::new(connection).await)
 }
 
 /// Decode the data payload from a subscription response, surfacing GraphQL
 /// errors and treating an empty response as a skippable payload.
-fn decode_data<T>(response: cynic::GraphQlResponse<T>) -> Result<T> {
+fn decode_data<T>(response: cynic::GraphQlResponse<T>) -> GraphQLResult<T> {
     match (response.data, response.errors) {
         (Some(data), _) => Ok(data),
-        (None, Some(errors)) => Err(Error::graphql_error(errors)),
-        (None, None) => Err(Error::empty_response_error()),
+        (None, Some(errors)) => Err(GraphQLError::Query(errors)),
+        (None, None) => Err(GraphQLError::EmptyResponse),
     }
 }
 
@@ -244,12 +239,12 @@ fn decode_data<T>(response: cynic::GraphQlResponse<T>) -> Result<T> {
 fn reconnecting_subscription<'a, T, C, Fut, S>(
     connect: C,
     initial_cursor: Option<String>,
-) -> impl Stream<Item = Result<T>> + Unpin + 'a
+) -> impl Stream<Item = GraphQLResult<T>> + Unpin + 'a
 where
     T: 'a,
     C: Fn(Option<String>) -> Fut + 'a,
-    Fut: Future<Output = Result<S>> + 'a,
-    S: Stream<Item = Result<Outcome<T>>> + Unpin + 'a,
+    Fut: Future<Output = GraphQLResult<S>> + 'a,
+    S: Stream<Item = GraphQLResult<Outcome<T>>> + Unpin + 'a,
 {
     Box::pin(async_stream::stream! {
         let mut cursor = initial_cursor;
@@ -266,7 +261,7 @@ where
                                 backoff = INITIAL_BACKOFF;
                                 yield Ok(value);
                             }
-                            Ok(Outcome::Lagged(count)) => yield Err(Error::lagged(count)),
+                            Ok(Outcome::Lagged(count)) => yield Err(GraphQLError::Lagged { count }),
                             Ok(Outcome::Skip) => {}
                             Err(error) => {
                                 yield Err(error);
