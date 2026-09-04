@@ -19,6 +19,9 @@ use crate::{
     streams::stream_paginated_query,
 };
 
+const CONFLICTING_CHECKPOINT_ID: &str =
+    "either digest or sequence_number can be provided, but not both";
+
 impl Client {
     /// Get a stream of [`CheckpointSummary`]. Note that this will fetch all
     /// checkpoints which may trigger a lot of requests.
@@ -40,9 +43,7 @@ impl Client {
         let digest = digest.into();
         let sequence_number = sequence_number.into();
         if digest.is_some() && sequence_number.is_some() {
-            return Err(GraphQLError::InvalidArgument(
-                "either digest or sequence_number can be provided, but not both",
-            ));
+            return Err(GraphQLError::InvalidArgument(CONFLICTING_CHECKPOINT_ID));
         }
 
         let operation = CheckpointQuery::build(CheckpointArgs {
@@ -77,7 +78,7 @@ impl Client {
             .nodes
             .into_iter()
             .map(|c| c.try_into())
-            .collect::<GraphQLResult<Vec<CheckpointSummary>, _>>()?;
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         Ok(Page::new(page_info, nodes))
     }
@@ -127,9 +128,7 @@ impl Client {
         sequence_number: Option<u64>,
     ) -> GraphQLResult<Option<u64>> {
         if digest.is_some() && sequence_number.is_some() {
-            return Err(GraphQLError::InvalidArgument(
-                "either digest or sequence_number can be provided, but not both",
-            ));
+            return Err(GraphQLError::InvalidArgument(CONFLICTING_CHECKPOINT_ID));
         }
 
         let operation = CheckpointTotalTxQuery::build(CheckpointArgs {

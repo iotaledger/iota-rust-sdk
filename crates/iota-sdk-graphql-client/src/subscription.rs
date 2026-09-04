@@ -169,10 +169,10 @@ impl Client {
             "https" => url.set_scheme("wss"),
             "http" => url.set_scheme("ws"),
             "ws" | "wss" => Ok(()),
-            other => {
-                return Err(GraphQLError::subscription(format!(
-                    "unsupported RPC scheme for subscriptions: {other}"
-                )));
+            _ => {
+                return Err(GraphQLError::InvalidArgument(
+                    "subscriptions need an http, https, ws or wss RPC URL",
+                ));
             }
         }
         .map_err(|_| GraphQLError::subscription("failed to derive the WebSocket URL"))?;

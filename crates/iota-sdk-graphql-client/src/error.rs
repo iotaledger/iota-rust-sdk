@@ -2,17 +2,20 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::num::{ParseIntError, TryFromIntError};
+use std::{
+    num::{ParseIntError, TryFromIntError},
+    string::FromUtf8Error,
+};
 
 use cynic::GraphQlError;
-use iota_types::{AddressParseError, DigestParseError, TypeParseError};
+use iota_types::{AddressParseError, DigestParseError, IotaNamesError, TypeParseError};
 use reqwest::{StatusCode, Url};
 
 use crate::faucet::FaucetError;
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
-pub type GraphQLResult<T, E = GraphQLError> = std::result::Result<T, E>;
+pub type GraphQLResult<T> = std::result::Result<T, GraphQLError>;
 
 /// Maximum number of body bytes retained in an HTTP/decode error. Load
 /// balancer and gateway pages can be hundreds of KB, so the body is truncated
@@ -49,7 +52,7 @@ fn display_graphql_errors(errors: &[GraphQlError]) -> String {
 pub enum GraphQLError {
     /// The request could not be sent, or the response could not be read.
     #[error("request error: {0}")]
-    Request(#[source] reqwest::Error),
+    Request(#[from] reqwest::Error),
     /// The server answered with a non-success HTTP status.
     #[error(
         "GraphQL request to {url} failed with HTTP {status} while decoding `{target_type}`, \
@@ -101,7 +104,7 @@ pub enum GraphQLError {
     Timeout,
     /// A faucet request failed.
     #[error("faucet error: {0}")]
-    Faucet(#[source] FaucetError),
+    Faucet(#[from] FaucetError),
     /// The subscription transport failed.
     #[error("subscription error: {0}")]
     Subscription(#[source] BoxError),
@@ -123,16 +126,16 @@ pub struct HttpResponse {
     pub body: String,
     /// Name of the type the response was being decoded into. A bare status or
     /// `serde_json` error does not reveal what the client was decoding.
-    pub target_type: String,
+    pub target_type: &'static str,
 }
 
 impl HttpResponse {
-    fn new(url: Url, status: StatusCode, body: &[u8], target_type: &str) -> Box<Self> {
+    fn new(url: Url, status: StatusCode, body: &[u8], target_type: &'static str) -> Box<Self> {
         Box::new(Self {
             url,
             status,
             body: truncated_body(body),
-            target_type: target_type.to_owned(),
+            target_type,
         })
     }
 }
@@ -140,7 +143,12 @@ impl HttpResponse {
 impl GraphQLError {
     /// Build a [`GraphQLError::Http`] from a non-success response, retaining a
     /// truncated, UTF-8-lossy snapshot of the body.
-    pub(crate) fn http(url: Url, status: StatusCode, body: &[u8], target_type: &str) -> Self {
+    pub(crate) fn http(
+        url: Url,
+        status: StatusCode,
+        body: &[u8],
+        target_type: &'static str,
+    ) -> Self {
         Self::Http(HttpResponse::new(url, status, body, target_type))
     }
 
@@ -150,7 +158,7 @@ impl GraphQLError {
         url: Url,
         status: StatusCode,
         body: &[u8],
-        target_type: &str,
+        target_type: &'static str,
         source: serde_json::Error,
     ) -> Self {
         Self::Json {
@@ -164,12 +172,6 @@ impl GraphQLError {
         Self::Deserialization(error.into())
     }
 
-    /// Wrap an error raised while parsing a response value or a
-    /// caller-supplied string.
-    pub fn parse<E: Into<BoxError>>(error: E) -> Self {
-        Self::Parse(error.into())
-    }
-
     /// Wrap a subscription transport failure.
     pub fn subscription<E: Into<BoxError>>(error: E) -> Self {
         Self::Subscription(error.into())
@@ -179,18 +181,6 @@ impl GraphQLError {
 impl From<bcs::Error> for GraphQLError {
     fn from(error: bcs::Error) -> Self {
         Self::Deserialization(error.into())
-    }
-}
-
-impl From<reqwest::Error> for GraphQLError {
-    fn from(error: reqwest::Error) -> Self {
-        Self::Request(error)
-    }
-}
-
-impl From<FaucetError> for GraphQLError {
-    fn from(error: FaucetError) -> Self {
-        Self::Faucet(error)
     }
 }
 
@@ -238,6 +228,18 @@ impl From<TryFromIntError> for GraphQLError {
 
 impl From<TypeParseError> for GraphQLError {
     fn from(error: TypeParseError) -> Self {
+        Self::Parse(error.into())
+    }
+}
+
+impl From<IotaNamesError> for GraphQLError {
+    fn from(error: IotaNamesError) -> Self {
+        Self::Parse(error.into())
+    }
+}
+
+impl From<FromUtf8Error> for GraphQLError {
+    fn from(error: FromUtf8Error) -> Self {
         Self::Parse(error.into())
     }
 }

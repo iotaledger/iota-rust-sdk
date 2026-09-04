@@ -256,6 +256,7 @@ mod bcs_base64 {
     }
 
     impl_bcs_base64!(
+        MovePackageData,
         Object,
         SenderSignedTransaction,
         Transaction,

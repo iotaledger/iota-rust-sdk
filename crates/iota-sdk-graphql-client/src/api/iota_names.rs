@@ -14,7 +14,7 @@ use iota_types::{
 
 use crate::{
     Client,
-    error::{GraphQLError, GraphQLResult},
+    error::GraphQLResult,
     pagination::{Page, PaginationFilter},
     query_types::{
         IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery,
@@ -99,8 +99,6 @@ impl Client {
             return Ok(None);
         };
 
-        Ok(Some(Name::from_str(&name).map_err(|e| {
-            GraphQLError::parse(format!("invalid name {name}: {e}"))
-        })?))
+        Ok(Some(Name::from_str(&name)?))
     }
 }

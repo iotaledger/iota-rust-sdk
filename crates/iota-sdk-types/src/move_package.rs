@@ -389,16 +389,6 @@ mod serialization {
 
     use super::*;
 
-    impl MovePackageData {
-        pub fn to_base64(&self) -> String {
-            base64ct::Base64::encode_string(&bcs::to_bytes(self).expect("bcs encoding failed"))
-        }
-
-        pub fn from_base64(base64: &str) -> Result<Self, crate::FromBase64Error> {
-            Ok(bcs::from_bytes(&base64ct::Base64::decode_vec(base64)?)?)
-        }
-    }
-
     pub mod modules {
         use super::*;
 

@@ -25,7 +25,7 @@ use iota_types::{
 
 use crate::{
     Client,
-    api::{GrpcError, MetadataEnvelope, check_result_count, saturating_usize_to_u32},
+    api::{GrpcError, GrpcResult, MetadataEnvelope, check_result_count, saturating_usize_to_u32},
 };
 
 /// How long [`TransactionBuilderExecutionClient::wait_for_transaction`] polls
@@ -46,8 +46,8 @@ const WAIT_FOR_TRANSACTION_POLL_INTERVAL: Duration = Duration::from_millis(100);
 /// item: the batched reads answer every request, so an empty batch says the
 /// server broke that promise rather than that the item is missing.
 fn single_item<T>(
-    response: Result<MetadataEnvelope<Vec<Result<T, GrpcError>>>, GrpcError>,
-) -> Result<Option<T>, GrpcError> {
+    response: GrpcResult<MetadataEnvelope<Vec<GrpcResult<T>>>>,
+) -> GrpcResult<Option<T>> {
     let mut items = response?.into_inner();
     check_result_count(&items, 1)?;
 
@@ -315,7 +315,7 @@ impl TransactionBuilderExecutionClient for Client {
 mod tests {
     use tonic::metadata::MetadataMap;
 
-    use super::{GrpcError, MetadataEnvelope, single_item};
+    use super::{GrpcError, GrpcResult, MetadataEnvelope, single_item};
     use crate::api::{ProtocolError, RpcStatus};
 
     fn not_found_status() -> RpcStatus {
@@ -328,7 +328,7 @@ mod tests {
 
     #[test]
     fn a_not_found_for_the_call_itself_is_not_an_absent_item() {
-        let response: Result<MetadataEnvelope<Vec<Result<u32, GrpcError>>>, GrpcError> =
+        let response: GrpcResult<MetadataEnvelope<Vec<GrpcResult<u32>>>> =
             Err(GrpcError::from(tonic::Status::not_found("no such route")));
 
         assert!(
@@ -339,7 +339,7 @@ mod tests {
 
     #[test]
     fn a_not_found_for_the_item_is_an_absent_item() {
-        let items: Vec<Result<u32, GrpcError>> = vec![Err(GrpcError::Server(not_found_status()))];
+        let items: Vec<GrpcResult<u32>> = vec![Err(GrpcError::Server(not_found_status()))];
         let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
 
         assert!(
@@ -351,7 +351,7 @@ mod tests {
 
     #[test]
     fn an_empty_batch_is_not_an_absent_item() {
-        let items: Vec<Result<u32, GrpcError>> = Vec::new();
+        let items: Vec<GrpcResult<u32>> = Vec::new();
         let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
 
         assert!(
@@ -368,7 +368,7 @@ mod tests {
 
     #[test]
     fn a_batch_with_more_results_than_requested_is_an_error() {
-        let items: Vec<Result<u32, GrpcError>> = vec![Ok(1), Ok(2)];
+        let items: Vec<GrpcResult<u32>> = vec![Ok(1), Ok(2)];
         let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
 
         assert!(
