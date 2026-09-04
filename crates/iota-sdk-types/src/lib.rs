@@ -174,9 +174,9 @@ pub use transaction::{
     ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind,
     GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall,
     ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
-    SharedObjectReference, SignedTransaction, SmartAccountBuildKind, SmartAccountClaim,
-    SmartAccountField, SplitCoins, SystemPackage, Transaction, TransactionExpiration,
-    TransactionKind, TransactionV1, TransferObjects, Upgrade, VersionAssignment,
+    SharedObjectReference, SignedTransaction, SmartAccountBuildKind, SmartAccountClaim, SplitCoins,
+    SystemPackage, Transaction, TransactionExpiration, TransactionKind, TransactionV1,
+    TransferObjects, Upgrade, VersionAssignment,
 };
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
