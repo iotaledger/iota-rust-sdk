@@ -852,9 +852,6 @@ mod serialization {
         /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
         /// 0x2::iota::IOTA`)
         Coin(TypeTag),
-        // NOTE: if adding a new type here, and there are existing on-chain objects of that
-        // type with Other(_), that is ok, but you must hand-roll PartialEq/Eq/Ord/maybe Hash
-        // to make sure the new type and Other(_) are interpreted consistently.
     }
 
     /// See `MoveObjectType`
@@ -871,9 +868,6 @@ mod serialization {
         /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
         /// 0x2::iota::IOTA`)
         Coin(&'a TypeTag),
-        // NOTE: if adding a new type here, and there are existing on-chain objects of that
-        // type with Other(_), that is ok, but you must hand-roll PartialEq/Eq/Ord/maybe Hash
-        // to make sure the new type and Other(_) are interpreted consistently.
     }
 
     impl MoveObjectTypeWrapper {
@@ -883,6 +877,17 @@ mod serialization {
                 MoveObjectTypeWrapper::GasCoin => StructTag::new_gas_coin(),
                 MoveObjectTypeWrapper::StakedIota => StructTag::new_staked_iota(),
                 MoveObjectTypeWrapper::Coin(type_tag) => StructTag::new_coin(type_tag),
+            }
+        }
+
+        /// Wire-format variant index, compared against the canonical encoding
+        /// chosen by `MoveObjectTypeRef::from_struct_tag`.
+        fn variant_index(&self) -> u8 {
+            match self {
+                Self::Other(_) => 0,
+                Self::GasCoin => 1,
+                Self::StakedIota => 2,
+                Self::Coin(_) => 3,
             }
         }
     }
@@ -910,6 +915,15 @@ mod serialization {
                 Self::Other(s)
             }
         }
+
+        fn variant_index(&self) -> u8 {
+            match self {
+                Self::Other(_) => 0,
+                Self::GasCoin => 1,
+                Self::StakedIota => 2,
+                Self::Coin(_) => 3,
+            }
+        }
     }
 
     impl Serialize for MoveObjectType {
@@ -933,7 +947,33 @@ mod serialization {
             if deserializer.is_human_readable() {
                 StructTag::deserialize(deserializer).map(Self)
             } else {
-                MoveObjectTypeWrapper::deserialize(deserializer).map(|t| Self(t.into_struct_tag()))
+                // The same `StructTag` is reachable from several wire forms
+                // (e.g. `Other(0x2::coin::Coin<0x2::iota::IOTA>)` and
+                // `GasCoin`), but serialization always emits the specialized
+                // one. Reject the others so BCS round-trips stay byte-faithful
+                // and digests computed over them stay stable. Only the
+                // variants carrying a payload can be non-canonical: `Other`
+                // may wrap any specialized tag and `Coin` may wrap the IOTA
+                // type, while `GasCoin` and `StakedIota` are always canonical.
+                let parsed = MoveObjectTypeWrapper::deserialize(deserializer)?;
+                match parsed {
+                    MoveObjectTypeWrapper::Other(_) | MoveObjectTypeWrapper::Coin(_) => {
+                        let parsed_idx = parsed.variant_index();
+                        let tag = parsed.into_struct_tag();
+                        let canonical_idx =
+                            MoveObjectTypeRef::from_struct_tag(&tag).variant_index();
+                        if parsed_idx != canonical_idx {
+                            return Err(serde::de::Error::custom(format!(
+                                "non-canonical MoveObjectType encoding: variant {parsed_idx} \
+                                 would be re-encoded as variant {canonical_idx}",
+                            )));
+                        }
+                        Ok(Self(tag))
+                    }
+                    MoveObjectTypeWrapper::GasCoin | MoveObjectTypeWrapper::StakedIota => {
+                        Ok(Self(parsed.into_struct_tag()))
+                    }
+                }
             }
         }
     }
@@ -1011,6 +1051,54 @@ mod serialization {
 
         use super::*;
         use crate::{Identifier, TypeOrigin, UpgradeInfo, object::Object};
+
+        // A non-canonical `MoveObjectType` wire form such as `Other(<gas coin
+        // tag>)` used to deserialize successfully and then re-serialize as the
+        // specialized variant, so the same logical value had several BCS
+        // encodings. Each must now be rejected at deserialization.
+        #[test]
+        fn non_canonical_move_object_type_is_rejected() {
+            // Variant indices on the wire (uleb128, one byte here):
+            //   0 = Other(StructTag), 1 = GasCoin, 2 = StakedIota, 3 = Coin(TypeTag)
+            fn other(tag: StructTag) -> Vec<u8> {
+                [&[0u8][..], &bcs::to_bytes(&tag).unwrap()].concat()
+            }
+            fn coin(type_tag: TypeTag) -> Vec<u8> {
+                [&[3u8][..], &bcs::to_bytes(&type_tag).unwrap()].concat()
+            }
+
+            let non_canonical = [
+                ("Other(gas coin tag)", other(StructTag::new_gas_coin())),
+                ("Other(StakedIota tag)", other(StructTag::new_staked_iota())),
+                (
+                    "Other(Coin<non-IOTA> tag)",
+                    other(StructTag::new_coin(TypeTag::U64)),
+                ),
+                ("Coin(IOTA type tag)", coin(StructTag::new_gas().into())),
+            ];
+            for (label, bytes) in non_canonical {
+                let err = bcs::from_bytes::<MoveObjectType>(&bytes).unwrap_err();
+                assert!(
+                    err.to_string().contains("non-canonical MoveObjectType"),
+                    "{label}: unexpected error: {err}"
+                );
+            }
+
+            // The canonical forms still round-trip.
+            for tag in [
+                StructTag::new_gas_coin(),
+                StructTag::new_staked_iota(),
+                StructTag::new_coin(TypeTag::U64),
+                StructTag::new_gas(),
+            ] {
+                let object_type = MoveObjectType::new(tag);
+                let bytes = bcs::to_bytes(&object_type).unwrap();
+                assert_eq!(
+                    bcs::from_bytes::<MoveObjectType>(&bytes).unwrap(),
+                    object_type
+                );
+            }
+        }
 
         #[test]
         fn package_object_json_snapshot() {
