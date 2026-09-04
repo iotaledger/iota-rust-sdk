@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["ModuleMetadata","ModuleMetadataKey","ViewFunctionMetadataV1FieldName"]};

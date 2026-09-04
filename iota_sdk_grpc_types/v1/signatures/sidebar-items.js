@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["UserSignature","UserSignatureFieldPathBuilder","UserSignatures","UserSignaturesFieldPathBuilder","ValidatorAggregatedSignature","ValidatorAggregatedSignatureFieldPathBuilder"]};

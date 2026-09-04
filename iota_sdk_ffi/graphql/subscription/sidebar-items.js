@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["EventUpdate","TransactionUpdate"],"struct":["EventSubscription","SubscriptionEventFilter","SubscriptionTransactionFilter","TransactionSubscription"]};

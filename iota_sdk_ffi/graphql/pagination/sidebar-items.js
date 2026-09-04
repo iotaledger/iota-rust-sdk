@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["CheckpointSummaryPage","CoinPage","DynamicFieldOutputPage","EpochPage","EventPage","MovePackagePage","NameRegistrationPage","ObjectPage","SignedTransactionPage","TransactionDataEffectsPage","TransactionEffectsPage","ValidatorPage"]};

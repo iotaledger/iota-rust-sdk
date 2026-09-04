@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["MAX_IDENTIFIER_LENGTH","MAX_TYPE_TAG_NESTING"],"enum":["TypeParseError","TypeTag"],"struct":["Identifier","StructTag"]};

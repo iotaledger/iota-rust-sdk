@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="IOTA Transaction Builder"><title>iota_sdk_transaction_builder - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-1ed95124.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="iota_sdk_transaction_builder" data-themes="" data-resource-suffix="" data-rustdoc-version="1.98.0 (88d9e12ae 2026-08-18)" data-channel="1.98.0" data-search-js="search-9944d736.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="../static.files/storage-41dd4d93.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate iota_sdk_transaction_builder</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../iota_sdk_transaction_builder/index.html">iota_<wbr>sdk_<wbr>transaction_<wbr>builder</a><span class="version">1.0.0-beta.1</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#iota-transaction-builder" title="IOTA Transaction Builder">IOTA Transaction Builder</a><ul><li><a href="#online-vs-offline-builder" title="Online vs. Offline Builder">Online vs. Offline Builder</a></li><li><a href="#methods" title="Methods">Methods</a></li><li><a href="#finalization-and-execution" title="Finalization and Execution">Finalization and Execution</a></li><li><a href="#gas-station" title="Gas Station">Gas Station</a></li><li><a href="#traits-and-helpers" title="Traits and Helpers">Traits and Helpers</a></li></ul></li></ul><h3><a href="#reexports">Crate Items</a></h3><ul class="block"><li><a href="#reexports" title="Re-exports">Re-exports</a></li><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#enums" title="Enums">Enums</a></li><li><a href="#traits" title="Traits">Traits</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1>Crate <span>iota_<wbr>sdk_<wbr>transaction_<wbr>builder</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/iota_sdk_transaction_builder/lib.rs.html#4-752">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="iota-transaction-builder"><a class="doc-anchor" href="#iota-transaction-builder">§</a>IOTA Transaction Builder</h2>
+<p>This crate contains the <a href="builder/struct.TransactionBuilder.html" title="struct iota_sdk_transaction_builder::builder::TransactionBuilder">TransactionBuilder</a>, which allows for simple
+construction of Programmable Transactions which can be executed on the IOTA
+network.</p>
+<p>The builder is designed to allow for a lot of flexibility while also
+reducing the necessary boilerplate code. It uses a type-state pattern to
+ensure the proper flow through the various functions. It is chainable via
+mutable references.</p>
+<h3 id="online-vs-offline-builder"><a class="doc-anchor" href="#online-vs-offline-builder">§</a>Online vs. Offline Builder</h3>
+<p>The Transaction Builder can be used with or without a client implementing
+<a href="trait.TransactionBuilderLedgerClient.html" title="trait iota_sdk_transaction_builder::TransactionBuilderLedgerClient">TransactionBuilderLedgerClient</a>. When one is provided via the
+<a href="builder/struct.TransactionBuilder.html#method.with_client" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::with_client">with_client</a> method, the resulting builder
+will use it to find and validate provided IDs. A ledger-only client can
+build transactions with an explicit gas budget via
+<a href="builder/struct.TransactionBuilder.html#method.finish_with_budget" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::finish_with_budget">finish_with_budget</a>. Clients that
+also implement <a href="trait.TransactionBuilderSimulationClient.html" title="trait iota_sdk_transaction_builder::TransactionBuilderSimulationClient">TransactionBuilderSimulationClient</a> enable
+<a href="builder/struct.TransactionBuilder.html#method.dry_run" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::dry_run">dry_run</a> and
+<a href="builder/struct.TransactionBuilder.html#method.finish" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::finish">finish</a> with automatic gas budget estimation;
+clients that additionally implement <a href="trait.TransactionBuilderExecutionClient.html" title="trait iota_sdk_transaction_builder::TransactionBuilderExecutionClient">TransactionBuilderExecutionClient</a>
+enable <a href="builder/struct.TransactionBuilder.html#method.execute" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::execute">execute</a>.</p>
+<h4 id="example-with-client-resolution"><a class="doc-anchor" href="#example-with-client-resolution">§</a>Example with Client Resolution</h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>iota_sdk_transaction_builder::TransactionBuilder;
+<span class="kw">use </span>iota_types::{Address, ObjectId, Transaction};
+
+
+<span class="kw">let </span>sender =
+    Address::from_str(<span class="string">"0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151"</span>)<span class="question-mark">?</span>;
+<span class="kw">let </span>to_address =
+    Address::from_str(<span class="string">"0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"</span>)<span class="question-mark">?</span>;
+
+<span class="kw">let </span><span class="kw-2">mut </span>builder = TransactionBuilder::new(sender).with_client(client);
+
+<span class="kw">let </span>coin =
+    ObjectId::from_str(<span class="string">"0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2"</span>)<span class="question-mark">?</span>;
+
+builder.send_coins([coin], to_address, <span class="number">50000000000u64</span>);
+
+<span class="kw">let </span>txn: Transaction = builder.finish().<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div><h4 id="example-without-client-resolution"><a class="doc-anchor" href="#example-without-client-resolution">§</a>Example without Client Resolution</h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>iota_sdk_transaction_builder::TransactionBuilder;
+<span class="kw">use </span>iota_types::{Address, ObjectDigest, ObjectId, ObjectReference, Transaction, Version};
+
+<span class="kw">let </span>sender =
+    Address::from_str(<span class="string">"0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151"</span>)<span class="question-mark">?</span>;
+<span class="kw">let </span>to_address =
+    Address::from_str(<span class="string">"0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"</span>)<span class="question-mark">?</span>;
+
+<span class="kw">let </span><span class="kw-2">mut </span>builder = TransactionBuilder::new(sender);
+
+<span class="kw">let </span>coin = ObjectReference {
+    object_id: ObjectId::from_str(
+        <span class="string">"0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2"</span>,
+    )<span class="question-mark">?</span>,
+    digest: ObjectDigest::from_str(<span class="string">"hSAGU3ZwDwxptd17ZK1QPDdJLhvPMfpSxe1p892GFVn"</span>)<span class="question-mark">?</span>,
+    version: Version::from_u64(<span class="number">545110774</span>),
+};
+<span class="kw">let </span>gas_coin = ObjectReference {
+    object_id: ObjectId::from_str(
+        <span class="string">"0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db"</span>,
+    )<span class="question-mark">?</span>,
+    digest: ObjectDigest::from_str(<span class="string">"8ahH5RXFnK1jttQEWTypYX7MRzLuQDEXk7fhMHCyZekX"</span>)<span class="question-mark">?</span>,
+    version: Version::from_u64(<span class="number">473053810</span>),
+};
+
+builder
+    .send_coins([coin], to_address, <span class="number">50000000000u64</span>)
+    .gas([gas_coin])
+    .gas_budget(<span class="number">1000000000</span>)
+    .gas_price(<span class="number">100</span>);
+
+<span class="kw">let </span>txn: Transaction = builder.finish()<span class="question-mark">?</span>;</code></pre></div>
+<p>NOTE: It is possible to provide an <a href="iota_types::ObjectId">ObjectId</a> to an
+offline client builder, but this will cause the builder to fail when calling
+<code>finish</code>.</p>
+<h3 id="methods"><a class="doc-anchor" href="#methods">§</a>Methods</h3>
+<p>There are three kinds of methods available:</p>
+<h4 id="commands"><a class="doc-anchor" href="#commands">§</a>Commands</h4>
+<p>Each command method adds one or more commands to the final transaction. Some
+commands have optional follow-up methods. All command results can be
+assigned a name via <a href="builder/struct.TransactionBuilder.html#method.assign" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::assign">assign</a>. Assigning a name
+to a command allows them to be used later in the transaction via the
+<a href="builder/ptb_arguments/fn.assigned.html" title="fn iota_sdk_transaction_builder::builder::ptb_arguments::assigned">assigned</a> method.</p>
+<ul>
+<li><a href="builder/struct.TransactionBuilder.html#method.move_call" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::move_call">move_call</a>: Call a move function.
+<ul>
+<li><code>arguments</code>: Add arguments to the move call.</li>
+<li><code>generics</code>: Add generic types to the move call using types that
+implement <a href="types/trait.MoveType.html" title="trait iota_sdk_transaction_builder::types::MoveType">MoveType</a>.</li>
+<li><code>type_tags</code>: Add generic types directly using the
+<a href="iota_types::TypeTag">TypeTag</a>.</li>
+</ul>
+</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.send_iota" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::send_iota">send_iota</a>: Send IOTA coins to a recipient
+address.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.send_coins" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::send_coins">send_coins</a>: Send coins of any type to a
+recipient address.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.pay" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::pay">pay</a>: Send coins of any type to several
+recipients, each paired with the amount to send.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.pay_iota" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::pay_iota">pay_iota</a>: Send IOTA coins from the gas
+coin to several recipients.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.merge_coins" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::merge_coins">merge_coins</a>: Merge a list of coins into
+a single primary coin.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.split_coins" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::split_coins">split_coins</a>: Split a coin into coins of
+various amounts.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.transfer_objects" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::transfer_objects">transfer_objects</a>: Send objects to
+a recipient address.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.publish_package" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::publish_package">publish_package</a>: Publish a move
+package.
+<ul>
+<li><code>package_id</code>: Name the package ID returned by the publish call.</li>
+</ul>
+</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.upgrade" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::upgrade">upgrade</a>: Upgrade a move package.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.make_move_vec" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::make_move_vec">make_move_vec</a>: Create a move
+<code>vector</code>.</li>
+</ul>
+<h4 id="metadata"><a class="doc-anchor" href="#metadata">§</a>Metadata</h4>
+<p>These methods set various metadata which may be needed for the execution.</p>
+<ul>
+<li><a href="builder/struct.TransactionBuilder.html#method.gas" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::gas">gas</a>: Add gas coins to pay for the execution.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.gas_refs" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::gas_refs">gas_refs</a>: Add gas coins that the caller
+has already resolved to references.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.gas_budget" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::gas_budget">gas_budget</a>: Set the maximum gas budget
+to spend.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.gas_price" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::gas_price">gas_price</a>: Set the gas price.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.sponsor" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::sponsor">sponsor</a>: Set the gas sponsor address.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.gas_station_sponsor" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::gas_station_sponsor">gas_station_sponsor</a>: Set the
+gas station URL. See <a href="index.html#gas-station" title="mod iota_sdk_transaction_builder">Gas Station</a> for more info.</li>
+<li><a href="builder/struct.TransactionBuilder.html#method.expiration" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::expiration">expiration</a>: Set the transaction
+expiration epoch.</li>
+</ul>
+<h4 id="other"><a class="doc-anchor" href="#other">§</a>Other</h4>
+<p>Many other methods exist, either to get data or allow for development on top
+of the builder. Typically, these methods should not be needed, but they are
+made available for special circumstances.</p>
+<ul>
+<li><a href="builder/struct.TransactionBuilder.html#method.apply_argument" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::apply_argument">apply_argument</a></li>
+<li><a href="builder/struct.TransactionBuilder.html#method.apply_arguments" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::apply_arguments">apply_arguments</a></li>
+<li><a href="builder/struct.TransactionBuilder.html#method.input" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::input">input</a></li>
+<li><a href="builder/struct.TransactionBuilder.html#method.pure_bytes" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::pure_bytes">pure_bytes</a></li>
+<li><a href="builder/struct.TransactionBuilder.html#method.pure" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::pure">pure</a></li>
+<li><a href="builder/struct.TransactionBuilder.html#method.command" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::command">command</a></li>
+<li><a href="builder/struct.TransactionBuilder.html#method.assigned_command" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::assigned_command">assigned_command</a></li>
+</ul>
+<h3 id="finalization-and-execution"><a class="doc-anchor" href="#finalization-and-execution">§</a>Finalization and Execution</h3>
+<p>There are several ways to finish the builder. First, the
+<a href="builder/struct.TransactionBuilder.html#method.finish" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::finish">finish</a> method can be used to return the
+resulting <a href="iota_types::Transaction">Transaction</a>, which can be manually
+serialized, executed, etc. On a client without simulation support, use
+<a href="builder/struct.TransactionBuilder.html#method.finish_with_budget" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::finish_with_budget">finish_with_budget</a> instead and
+provide the gas budget explicitly.</p>
+<p>Additionally, when a client is provided, the builder can directly
+<a href="builder/struct.TransactionBuilder.html#method.dry_run" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::dry_run">dry_run</a> or
+<a href="builder/struct.TransactionBuilder.html#method.execute" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::execute">execute</a> the transaction.</p>
+<p>When the gas payment is decided elsewhere,
+<a href="builder/struct.TransactionBuilder.html#method.finish_kind" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::finish_kind">finish_kind</a> returns just the
+<a href="iota_types::TransactionKind">TransactionKind</a>: the inputs are resolved with
+the client, but no gas coins are selected, no budget is estimated and no gas
+price is fetched.</p>
+<p>When the transaction is resolved, the builder will try to ensure a valid
+state by de-duplicating and converting appropriate inputs into references to
+the gas coin. This means that the same input can be passed multiple times
+and the final transaction will only contain one instance. However, in some
+cases an invalid state can still be reached. For instance, if a coin is used
+both for gas and as part of a group of coins, i.e. when transferring
+objects, the transaction can not possibly be valid.</p>
+<h4 id="defaults"><a class="doc-anchor" href="#defaults">§</a>Defaults</h4>
+<p>When a client is provided, the builder can set some values by default. The
+following are the default behaviors for each metadata value.</p>
+<ul>
+<li>Gas: One page of coins owned by the sender.</li>
+<li>Gas Budget: A dry run will be used to estimate.</li>
+<li>Gas Price: The current reference gas price.</li>
+</ul>
+<h3 id="gas-station"><a class="doc-anchor" href="#gas-station">§</a>Gas Station</h3>
+<p>The Transaction Builder supports executing via a
+<a href="https://github.com/iotaledger/gas-station">Gas Station</a>. To do so, the URL
+must be provided via
+<a href="builder/struct.TransactionBuilder.html#method.gas_station_sponsor" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::gas_station_sponsor">gas_station_sponsor</a>. Additional
+configuration can then be provided via
+<a href="builder/struct.TransactionBuilder.html#method.gas_reservation_duration" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::gas_reservation_duration">gas_reservation_duration</a> and
+<a href="builder/struct.TransactionBuilder.html#method.add_gas_station_header" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::add_gas_station_header">add_gas_station_header</a>.</p>
+<p>By default the request will contain the header <code>Content-Type: application/json</code></p>
+<p>When this data has been set, calling <a href="builder/struct.TransactionBuilder.html#method.execute" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::execute">execute</a>
+will request gas from and send the resulting transaction to this endpoint
+instead of using the client.</p>
+<h3 id="traits-and-helpers"><a class="doc-anchor" href="#traits-and-helpers">§</a>Traits and Helpers</h3>
+<p>This crate provides several traits which enable the functionality of the
+builder. Often, when providing arguments, functions will accept either a
+single <a href="builder/ptb_arguments/trait.PTBArgument.html" title="trait iota_sdk_transaction_builder::builder::ptb_arguments::PTBArgument">PTBArgument</a> or a <a href="builder/ptb_arguments/trait.PTBArgumentList.html" title="trait iota_sdk_transaction_builder::builder::ptb_arguments::PTBArgumentList">PTBArgumentList</a>.</p>
+<p><a href="builder/ptb_arguments/trait.PTBArgument.html" title="trait iota_sdk_transaction_builder::builder::ptb_arguments::PTBArgument">PTBArgument</a> is implemented for any type implementing
+<a href="types/trait.MoveArg.html" title="trait iota_sdk_transaction_builder::types::MoveArg">MoveArg</a> as well as:</p>
+<ul>
+<li><a href="unresolved/enum.Argument.html" title="enum iota_sdk_transaction_builder::unresolved::Argument">unresolved::Argument</a>: Arguments returned by various builder functions.
+Distinct from [iota_types::Argument], which cannot be used.</li>
+<li><a href="iota_types::Input">Input</a>: A resolved input.</li>
+<li><a href="iota_types::ObjectId">ObjectId</a>: An object’s ID. Can only be used when a
+client is provided. This will be assumed immutable or owned.</li>
+<li><a href="iota_types::ObjectReference">ObjectReference</a>: An object’s reference.
+This will be assumed immutable or owned.</li>
+<li><a href="builder/ptb_arguments/struct.Assigned.html" title="struct iota_sdk_transaction_builder::builder::ptb_arguments::Assigned">Assigned</a>: A reference to the result of
+a previous assigned command, set with
+<a href="builder/struct.TransactionBuilder.html#method.assign" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::assign">assign</a>.</li>
+<li><a href="builder/ptb_arguments/struct.Shared.html" title="struct iota_sdk_transaction_builder::builder::ptb_arguments::Shared">Shared</a>: Allows specifying shared immutable move objects.</li>
+<li><a href="builder/ptb_arguments/struct.SharedMut.html" title="struct iota_sdk_transaction_builder::builder::ptb_arguments::SharedMut">SharedMut</a>: Allows specifying shared mutable move objects.</li>
+<li><a href="builder/ptb_arguments/struct.Receiving.html" title="struct iota_sdk_transaction_builder::builder::ptb_arguments::Receiving">Receiving</a>: Allows specifying receiving move objects.</li>
+</ul>
+<p><a href="builder/ptb_arguments/trait.PTBArgumentList.html" title="trait iota_sdk_transaction_builder::builder::ptb_arguments::PTBArgumentList">PTBArgumentList</a> is implemented for collection types, and represents a set
+of arguments. For move calls, this enables tuples of rust values to
+represent the parameters defined in the smart contract. For calls like
+<a href="builder/struct.TransactionBuilder.html#method.merge_coins" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::merge_coins">merge_coins</a>, this can represent a list of
+coins.</p>
+<p><a href="types/trait.MoveArg.html" title="trait iota_sdk_transaction_builder::types::MoveArg">MoveArg</a> represents types that can be serialized and
+provided to the transaction as pure bytes.</p>
+<p><a href="types/trait.MoveType.html" title="trait iota_sdk_transaction_builder::types::MoveType">MoveType</a> defines the type tag for a rust type, so that it
+can be used for generic arguments.</p>
+<h4 id="example"><a class="doc-anchor" href="#example">§</a>Example</h4>
+<p>The following function is defined in move in <code>vec_map</code>:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code>public fun from_keys_values&lt;K: copy, V&gt;(<span class="kw-2">mut </span>keys: vector&lt;K&gt;, <span class="kw-2">mut </span>values: vector&lt;V&gt;): VecMap&lt;K, V&gt;</code></pre></div>
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code>builder
+    .move_call(Address::TWO, <span class="string">"vec_map"</span>, <span class="string">"from_keys_values"</span>)
+    .generics::&lt;(Address, u64)&gt;()
+    .arguments(([address1, address2], [<span class="number">10000000u64</span>, <span class="number">20000000u64</span>]));</code></pre></div><h4 id="custom-type"><a class="doc-anchor" href="#custom-type">§</a>Custom Type</h4>
+<p>In order to use a custom type, implement <a href="types/trait.MoveType.html" title="trait iota_sdk_transaction_builder::types::MoveType">MoveType</a> and
+<a href="types/trait.MoveArg.html" title="trait iota_sdk_transaction_builder::types::MoveArg">MoveArg</a>.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[derive(serde::Serialize)]
+</span><span class="kw">struct </span>MyStruct {
+    val1: String,
+    val2: u64,
+}
+
+<span class="kw">impl </span>MoveType <span class="kw">for </span>MyStruct {
+    <span class="kw">fn </span>type_tag() -&gt; TypeTag {
+        TypeTag::from_str(<span class="string">"0x0::my_module::MyStruct"</span>).unwrap()
+    }
+}
+
+<span class="kw">impl </span>MoveArg <span class="kw">for </span>MyStruct {
+    <span class="kw">fn </span>pure_bytes(<span class="self">self</span>) -&gt; PureBytes {
+        PureBytes(bcs::to_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>).unwrap())
+    }
+}</code></pre></div></div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><dl class="item-table reexports"><dt id="reexport.TransactionBuilder"><code>pub use self::builder::<a class="struct" href="builder/struct.TransactionBuilder.html" title="struct iota_sdk_transaction_builder::builder::TransactionBuilder">TransactionBuilder</a>;</code></dt><dt id="reexport.MoveAuthenticatorBuilder"><code>pub use self::builder::move_authenticator::<a class="struct" href="builder/move_authenticator/struct.MoveAuthenticatorBuilder.html" title="struct iota_sdk_transaction_builder::builder::move_authenticator::MoveAuthenticatorBuilder">MoveAuthenticatorBuilder</a>;</code></dt><dt id="reexport.PTBArgument"><code>pub use self::builder::ptb_arguments::<a class="trait" href="builder/ptb_arguments/trait.PTBArgument.html" title="trait iota_sdk_transaction_builder::builder::ptb_arguments::PTBArgument">PTBArgument</a>;</code></dt><dt id="reexport.PTBArgumentList"><code>pub use self::builder::ptb_arguments::<a class="trait" href="builder/ptb_arguments/trait.PTBArgumentList.html" title="trait iota_sdk_transaction_builder::builder::ptb_arguments::PTBArgumentList">PTBArgumentList</a>;</code></dt><dt id="reexport.Receiving"><code>pub use self::builder::ptb_arguments::<a class="struct" href="builder/ptb_arguments/struct.Receiving.html" title="struct iota_sdk_transaction_builder::builder::ptb_arguments::Receiving">Receiving</a>;</code></dt><dt id="reexport.Shared"><code>pub use self::builder::ptb_arguments::<a class="struct" href="builder/ptb_arguments/struct.Shared.html" title="struct iota_sdk_transaction_builder::builder::ptb_arguments::Shared">Shared</a>;</code></dt><dt id="reexport.SharedMut"><code>pub use self::builder::ptb_arguments::<a class="struct" href="builder/ptb_arguments/struct.SharedMut.html" title="struct iota_sdk_transaction_builder::builder::ptb_arguments::SharedMut">SharedMut</a>;</code></dt><dt id="reexport.assigned"><code>pub use self::builder::ptb_arguments::<a class="fn" href="builder/ptb_arguments/fn.assigned.html" title="fn iota_sdk_transaction_builder::builder::ptb_arguments::assigned">assigned</a>;</code></dt><dt id="reexport.TransactionSigner"><code>pub use self::builder::signer::<a class="trait" href="builder/signer/trait.TransactionSigner.html" title="trait iota_sdk_transaction_builder::builder::signer::TransactionSigner">TransactionSigner</a>;</code></dt><dt id="reexport.PureBytes"><code>pub use self::types::<a class="struct" href="types/struct.PureBytes.html" title="struct iota_sdk_transaction_builder::types::PureBytes">PureBytes</a>;</code></dt></dl><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="builder/index.html" title="mod iota_sdk_transaction_builder::builder">builder</a></dt><dd>Builder for Programmable Transactions.</dd><dt><a class="mod" href="error/index.html" title="mod iota_sdk_transaction_builder::error">error</a></dt><dd>Transaction Builder errors.</dd><dt><a class="mod" href="types/index.html" title="mod iota_sdk_transaction_builder::types">types</a></dt><dd>Types for use with the transaction builder.</dd><dt><a class="mod" href="unresolved/index.html" title="mod iota_sdk_transaction_builder::unresolved">unresolved</a></dt><dd>Types representing unresolved data in a PTB.</dd></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.ObjectsPage.html" title="struct iota_sdk_transaction_builder::ObjectsPage">Objects<wbr>Page</a></dt><dd>One page of objects plus an optional cursor for the next page. See
+<a href="trait.TransactionBuilderLedgerClient.html#tymethod.objects" title="method iota_sdk_transaction_builder::TransactionBuilderLedgerClient::objects"><code>TransactionBuilderLedgerClient::objects</code></a>.</dd><dt><a class="struct" href="struct.ProtocolConfig.html" title="struct iota_sdk_transaction_builder::ProtocolConfig">Protocol<wbr>Config</a></dt><dd>Transport-neutral view of the chain’s protocol configuration: a flat
+map of attribute name to value, parsed by callers as needed.</dd><dt><a class="struct" href="struct.RecordingClient.html" title="struct iota_sdk_transaction_builder::RecordingClient">Recording<wbr>Client</a></dt><dd>A <a href="struct.TestClient.html" title="struct iota_sdk_transaction_builder::TestClient"><code>TestClient</code></a> that records how the builder asked for objects, and can
+report chosen ids as missing.</dd><dt><a class="struct" href="struct.TestClient.html" title="struct iota_sdk_transaction_builder::TestClient">Test<wbr>Client</a></dt><dd>A test client that implements the transaction builder client traits by
+fabricating objects on demand.</dd><dt><a class="struct" href="struct.TestClientError.html" title="struct iota_sdk_transaction_builder::TestClientError">Test<wbr>Client<wbr>Error</a></dt><dd>Error type for <a href="struct.TestClient.html" title="struct iota_sdk_transaction_builder::TestClient"><code>TestClient</code></a>.</dd></dl><h2 id="enums" class="section-header">Enums<a href="#enums" class="anchor">§</a></h2><dl class="item-table"><dt><a class="enum" href="enum.WaitForTransaction.html" title="enum iota_sdk_transaction_builder::WaitForTransaction">Wait<wbr>ForTransaction</a></dt><dd>Determines what to wait for after executing a transaction.</dd></dl><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><dl class="item-table"><dt><a class="trait" href="trait.TransactionBuilderClient.html" title="trait iota_sdk_transaction_builder::TransactionBuilderClient">Transaction<wbr>Builder<wbr>Client</a></dt><dd>A full transaction builder client: ledger reads, simulation, and execution.</dd><dt><a class="trait" href="trait.TransactionBuilderClientBase.html" title="trait iota_sdk_transaction_builder::TransactionBuilderClientBase">Transaction<wbr>Builder<wbr>Client<wbr>Base</a></dt><dd>Base trait shared by the transaction builder client traits, carrying the
+client’s error type.</dd><dt><a class="trait" href="trait.TransactionBuilderExecutionClient.html" title="trait iota_sdk_transaction_builder::TransactionBuilderExecutionClient">Transaction<wbr>Builder<wbr>Execution<wbr>Client</a></dt><dd>Transaction execution: submitting a transaction and tracking its result
+(<a href="builder/struct.TransactionBuilder.html#method.execute" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::execute"><code>execute</code></a>).</dd><dt><a class="trait" href="trait.TransactionBuilderLedgerClient.html" title="trait iota_sdk_transaction_builder::TransactionBuilderLedgerClient">Transaction<wbr>Builder<wbr>Ledger<wbr>Client</a></dt><dd>Read-only access to ledger state: everything the Transaction Builder needs
+to resolve and build a transaction
+(<a href="builder/struct.TransactionBuilder.html#method.finish_with_budget" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::finish_with_budget"><code>finish_with_budget</code></a>).</dd><dt><a class="trait" href="trait.TransactionBuilderSimulationClient.html" title="trait iota_sdk_transaction_builder::TransactionBuilderSimulationClient">Transaction<wbr>Builder<wbr>Simulation<wbr>Client</a></dt><dd>Transaction simulation: dry runs and the gas budget estimation built on
+them (<a href="builder/struct.TransactionBuilder.html#method.finish" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::finish"><code>finish</code></a>,
+<a href="builder/struct.TransactionBuilder.html#method.dry_run" title="method iota_sdk_transaction_builder::builder::TransactionBuilder::dry_run"><code>dry_run</code></a>).</dd></dl></section></div></main></body></html>

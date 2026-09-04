@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ValidatorCommitteeError"],"struct":["ValidatorAggregatedSignature","ValidatorCommittee","ValidatorCommitteeMember","ValidatorSignature"]};

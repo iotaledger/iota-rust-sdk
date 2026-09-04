@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["AuthenticatorMetadataV1","ModuleMetadataV1","ModuleMetadataV1FieldName","ModuleName","ModulesMetadataFieldName","PackageMetadataKey","PackageMetadataV1","PackageMetadataVersionFieldName"]};

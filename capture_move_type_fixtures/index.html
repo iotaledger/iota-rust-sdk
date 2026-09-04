@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Capture real on-chain BCS fixtures for the Move types mirrored by `iota-sdk-move-types`."><title>capture_move_type_fixtures - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-1ed95124.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="capture_move_type_fixtures" data-themes="" data-resource-suffix="" data-rustdoc-version="1.98.0 (88d9e12ae 2026-08-18)" data-channel="1.98.0" data-search-js="search-9944d736.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="../static.files/storage-41dd4d93.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate capture_move_type_fixtures</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../capture_move_type_fixtures/index.html">capture_<wbr>move_<wbr>type_<wbr>fixtures</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#capture-strategies" title="Capture strategies">Capture strategies</a></li></ul><h3><a href="#structs">Crate Items</a></h3><ul class="block"><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#enums" title="Enums">Enums</a></li><li><a href="#constants" title="Constants">Constants</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1>Crate <span>capture_<wbr>move_<wbr>type_<wbr>fixtures</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/capture_move_type_fixtures/main.rs.html#4-695">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Capture real on-chain BCS fixtures for the Move types mirrored by
+<code>iota-sdk-move-types</code>.</p>
+<p>For each entry in <a href="constant.FIXTURES.html" title="constant capture_move_type_fixtures::FIXTURES"><code>FIXTURES</code></a>, the script queries a live IOTA
+GraphQL endpoint, fetches the pinned object, extracts the raw BCS
+bytes of the inner Move struct, and writes them to
+<code>crates/iota-sdk-move-types/tests/fixtures/&lt;name&gt;.bcs</code>.</p>
+<p>This is a standalone package (rather than an example of
+<code>iota-sdk-move-types</code>) so its GraphQL/<code>tokio</code> dependencies stay out of
+<code>iota-sdk-move-types</code>’ own dependency graph — that crate runs its tests
+under wasm, where <code>tokio</code>/<code>reqwest</code> don’t build.</p>
+<p>Invocation:</p>
+<div class="example-wrap"><pre class="language-bash"><code>cargo run -p capture-move-type-fixtures
+# optional: pick a different network (defaults to mainnet)
+IOTA_NETWORK=testnet cargo run -p capture-move-type-fixtures
+IOTA_NETWORK=devnet cargo run -p capture-move-type-fixtures</code></pre></div><h2 id="capture-strategies"><a class="doc-anchor" href="#capture-strategies">§</a>Capture strategies</h2>
+<ul>
+<li><a href="enum.Source.html#variant.ObjectId" title="variant capture_move_type_fixtures::Source::ObjectId"><code>Source::ObjectId</code></a>: fetch a specific object by its known address. The
+default for almost all fixtures — every entry carries a hard-pinned
+mainnet object ID so re-runs produce the same bytes byte-for-byte. When a
+pinned object is spent / deleted, capture for that fixture fails loudly;
+the operator picks a fresh ID (often via <a href="enum.Source.html#variant.TypeFilter" title="variant capture_move_type_fixtures::Source::TypeFilter"><code>Source::TypeFilter</code></a> locally)
+and commits the new pin alongside the new fixture.</li>
+<li><a href="enum.Source.html#variant.TypeFilter" title="variant capture_move_type_fixtures::Source::TypeFilter"><code>Source::TypeFilter</code></a>: ask the GraphQL endpoint for any object matching
+the given fully-qualified type tag and take the first one returned. Useful
+for <em>discovery</em> (finding a candidate to pin), but inherently
+non-deterministic across runs so we don’t leave this in <code>FIXTURES</code>
+permanently.</li>
+<li><a href="enum.Source.html#variant.DynamicField" title="variant capture_move_type_fixtures::Source::DynamicField"><code>Source::DynamicField</code></a>: walk a dynamic field of a parent object. Used
+for the versioned inner state (<code>IotaSystemStateInnerV2</code> sits as a dynamic
+field of the 0x5 wrapper, keyed by version number).</li>
+<li><a href="enum.Source.html#variant.Event" title="variant capture_move_type_fixtures::Source::Event"><code>Source::Event</code></a>: fetch the BCS contents of an event, pinned by the
+digest of the transaction that emitted it plus its fully-qualified type.
+Events are immutable history, so unlike object pins these can never be
+spent or deleted — re-runs always produce the same bytes.</li>
+<li><a href="enum.Source.html#variant.DynamicFieldName" title="variant capture_move_type_fixtures::Source::DynamicFieldName"><code>Source::DynamicFieldName</code></a>: capture the BCS of a dynamic field’s <em>name</em>
+struct (not its value). Used for the small key types that only ever exist
+as dynamic-field names — e.g. <code>kiosk::Item</code>/<code>Listing</code>/<code>Lock</code>, which key
+the items, listings and locks stored on a <code>Kiosk</code>. Takes the first field
+on the parent whose name type matches, so the bytes are stable as long as
+the parent’s dynamic fields are unchanged.</li>
+</ul>
+<p>Run this manually whenever you want to refresh the fixtures
+against current chain state — there is no automated CI job that
+re-runs it.</p>
+</div></details><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.Fixture.html" title="struct capture_move_type_fixtures::Fixture">Fixture</a><span title="Restricted Visibility">&nbsp;🔒</span> </dt><dd>What to capture and where to put it.</dd></dl><h2 id="enums" class="section-header">Enums<a href="#enums" class="anchor">§</a></h2><dl class="item-table"><dt><a class="enum" href="enum.Source.html" title="enum capture_move_type_fixtures::Source">Source</a><span title="Restricted Visibility">&nbsp;🔒</span> </dt></dl><h2 id="constants" class="section-header">Constants<a href="#constants" class="anchor">§</a></h2><dl class="item-table"><dt><a class="constant" href="constant.FIXTURES.html" title="constant capture_move_type_fixtures::FIXTURES">FIXTURES</a><span title="Restricted Visibility">&nbsp;🔒</span> </dt><dd>One representative fixture per Move struct we care about. The
+object IDs below were captured once from mainnet (via
+<code>Source::TypeFilter</code> against the live GraphQL endpoint) and
+pinned here for byte-for-byte stability across CI runs.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.capture.html" title="fn capture_move_type_fixtures::capture">capture</a><span title="Restricted Visibility">&nbsp;🔒</span> </dt><dd>Resolve a <a href="enum.Source.html" title="enum capture_move_type_fixtures::Source"><code>Source</code></a> into the raw BCS bytes of the Move struct
+contents.</dd><dt><a class="fn" href="fn.main.html" title="fn capture_move_type_fixtures::main">main</a><span title="Restricted Visibility">&nbsp;🔒</span> </dt></dl></section></div></main></body></html>

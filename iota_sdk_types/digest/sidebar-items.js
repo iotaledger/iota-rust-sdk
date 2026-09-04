@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["DigestParseError"],"struct":["CertificateDigest","CheckpointContentsDigest","CheckpointDigest","ConsensusCommitDigest","Digest","EffectsAuxDataDigest","MisbehaviorReportDigest","MoveAuthenticatorDigest","ObjectDigest","SenderSignedDataDigest","TransactionDigest","TransactionEffectsDigest","TransactionEventsDigest"],"type":["SigningDigest"]};

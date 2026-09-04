@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ObjectData","ObjectType","Owner"],"struct":["GenesisObject","MoveObjectType","MoveStruct","MoveStructContentsError","Object","ObjectReference","ObjectVersion","OwnedObjectReference"]};

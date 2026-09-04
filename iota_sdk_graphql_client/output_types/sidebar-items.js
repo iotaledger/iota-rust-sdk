@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["TransactionArgument"],"struct":["BcsName","DryRunEffect","DryRunMutation","DryRunResult","DryRunReturn","DynamicFieldName","DynamicFieldOutput","DynamicFieldValue","NameValue","TransactionDataEffects"]};

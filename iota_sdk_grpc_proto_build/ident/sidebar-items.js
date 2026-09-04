@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["sanitize_identifier","to_snake","to_upper_camel"]};

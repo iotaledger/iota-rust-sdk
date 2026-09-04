@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["UpgradePolicy"],"struct":["MovePackage","MovePackageData","TypeOrigin","UpgradeInfo"]};

@@ -1,0 +1,183 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/iota-sdk-graphql-client/src/query_types/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-1ed95124.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="iota_sdk_graphql_client" data-themes="" data-resource-suffix="" data-rustdoc-version="1.98.0 (88d9e12ae 2026-08-18)" data-channel="1.98.0" data-search-js="search-9944d736.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="../../../static.files/storage-41dd4d93.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1><div class="sub-heading">iota_sdk_graphql_client/query_types/</div>mod.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="comment">// Copyright (c) Mysten Labs, Inc.
+<a href=#2 id=2 data-nosnippet>2</a>// Modifications Copyright (c) 2025 IOTA Stiftung
+<a href=#3 id=3 data-nosnippet>3</a>// SPDX-License-Identifier: Apache-2.0
+<a href=#4 id=4 data-nosnippet>4</a>
+<a href=#5 id=5 data-nosnippet>5</a></span><span class="kw">mod </span><a href="active_validators.rs.html#5-129">active_validators</a>;
+<a href=#6 id=6 data-nosnippet>6</a><span class="kw">mod </span><a href="balance.rs.html#5-34">balance</a>;
+<a href=#7 id=7 data-nosnippet>7</a><span class="kw">mod </span><a href="chain.rs.html#5-15">chain</a>;
+<a href=#8 id=8 data-nosnippet>8</a><span class="kw">mod </span><a href="checkpoint.rs.html#5-95">checkpoint</a>;
+<a href=#9 id=9 data-nosnippet>9</a><span class="kw">mod </span><a href="coin.rs.html#9-51">coin</a>;
+<a href=#10 id=10 data-nosnippet>10</a><span class="kw">mod </span><a href="dry_run.rs.html#5-113">dry_run</a>;
+<a href=#11 id=11 data-nosnippet>11</a><span class="kw">mod </span><a href="dynamic_fields.rs.html#5-171">dynamic_fields</a>;
+<a href=#12 id=12 data-nosnippet>12</a><span class="kw">mod </span><a href="epoch.rs.html#5-131">epoch</a>;
+<a href=#13 id=13 data-nosnippet>13</a><span class="kw">mod </span><a href="events.rs.html#5-96">events</a>;
+<a href=#14 id=14 data-nosnippet>14</a><span class="kw">mod </span><a href="execute_transaction.rs.html#5-35">execute_transaction</a>;
+<a href=#15 id=15 data-nosnippet>15</a><span class="kw">mod </span><a href="iota_names.rs.html#4-136">iota_names</a>;
+<a href=#16 id=16 data-nosnippet>16</a><span class="kw">mod </span><a href="move_view_call.rs.html#4-57">move_view_call</a>;
+<a href=#17 id=17 data-nosnippet>17</a><span class="kw">mod </span><a href="normalized_move/mod.rs.html#5-127">normalized_move</a>;
+<a href=#18 id=18 data-nosnippet>18</a><span class="kw">mod </span><a href="object.rs.html#5-98">object</a>;
+<a href=#19 id=19 data-nosnippet>19</a><span class="kw">mod </span><a href="packages.rs.html#5-142">packages</a>;
+<a href=#20 id=20 data-nosnippet>20</a><span class="kw">mod </span><a href="protocol_config.rs.html#5-73">protocol_config</a>;
+<a href=#21 id=21 data-nosnippet>21</a><span class="kw">mod </span><a href="service_config.rs.html#5-97">service_config</a>;
+<a href=#22 id=22 data-nosnippet>22</a><span class="kw">mod </span><a href="subscriptions.rs.html#4-246">subscriptions</a>;
+<a href=#23 id=23 data-nosnippet>23</a><span class="kw">mod </span><a href="transaction.rs.html#5-337">transaction</a>;
+<a href=#24 id=24 data-nosnippet>24</a>
+<a href=#25 id=25 data-nosnippet>25</a><span class="kw">pub use </span>active_validators::{
+<a href=#26 id=26 data-nosnippet>26</a>    <a href="active_validators.rs.html#19-25">ActiveValidatorsArgs</a>, <a href="active_validators.rs.html#13-16">ActiveValidatorsQuery</a>, <a href="active_validators.rs.html#33-35">EpochValidator</a>, <a href="active_validators.rs.html#58-115">Validator</a>, <a href="active_validators.rs.html#50-53">ValidatorConnection</a>,
+<a href=#27 id=27 data-nosnippet>27</a>    <a href="active_validators.rs.html#120-129">ValidatorCredentials</a>, <a href="active_validators.rs.html#43-46">ValidatorSetQuery</a>,
+<a href=#28 id=28 data-nosnippet>28</a>};
+<a href=#29 id=29 data-nosnippet>29</a><span class="kw">pub use </span>balance::{<a href="balance.rs.html#26-28">Balance</a>, <a href="balance.rs.html#31-34">BalanceArgs</a>, <a href="balance.rs.html#12-15">BalanceQuery</a>, <a href="balance.rs.html#19-22">Owner</a>};
+<a href=#30 id=30 data-nosnippet>30</a><span class="kw">pub use </span><a href="chain.rs.html#13-15">chain::ChainIdentifierQuery</a>;
+<a href=#31 id=31 data-nosnippet>31</a><span class="kw">pub use </span>checkpoint::{
+<a href=#32 id=32 data-nosnippet>32</a>    <a href="checkpoint.rs.html#64-66">CheckpointArgs</a>, <a href="checkpoint.rs.html#70-73">CheckpointId</a>, <a href="checkpoint.rs.html#19-22">CheckpointQuery</a>, <a href="checkpoint.rs.html#26-29">CheckpointTotalTxQuery</a>, <a href="checkpoint.rs.html#52-57">CheckpointsArgs</a>,
+<a href=#33 id=33 data-nosnippet>33</a>    <a href="checkpoint.rs.html#39-42">CheckpointsQuery</a>,
+<a href=#34 id=34 data-nosnippet>34</a>};
+<a href=#35 id=35 data-nosnippet>35</a><span class="kw">pub use </span>coin::{<a href="coin.rs.html#34-51">CoinMetadata</a>, <a href="coin.rs.html#21-23">CoinMetadataArgs</a>, <a href="coin.rs.html#11-14">CoinMetadataQuery</a>};
+<a href=#36 id=36 data-nosnippet>36</a><span class="kw">use </span>cynic::impl_scalar;
+<a href=#37 id=37 data-nosnippet>37</a><span class="kw">pub use </span>dry_run::{
+<a href=#38 id=38 data-nosnippet>38</a>    <a href="dry_run.rs.html#81-85">DryRunArgs</a>, <a href="dry_run.rs.html#27-30">DryRunEffect</a>, <a href="dry_run.rs.html#34-39">DryRunMutation</a>, <a href="dry_run.rs.html#12-15">DryRunQuery</a>, <a href="dry_run.rs.html#19-23">DryRunResult</a>, <a href="dry_run.rs.html#43-47">DryRunReturn</a>, <a href="dry_run.rs.html#62-65">GasCoin</a>,
+<a href=#39 id=39 data-nosnippet>39</a>    <a href="dry_run.rs.html#69-71">Input</a>, <a href="dry_run.rs.html#99-103">ObjectRef</a>, <a href="dry_run.rs.html#75-78">ResultArg</a>, <a href="dry_run.rs.html#52-58">TransactionArgument</a>, <a href="dry_run.rs.html#89-95">TransactionMetadata</a>,
+<a href=#40 id=40 data-nosnippet>40</a>};
+<a href=#41 id=41 data-nosnippet>41</a><span class="kw">pub use </span>dynamic_fields::{
+<a href=#42 id=42 data-nosnippet>42</a>    <a href="dynamic_fields.rs.html#51-54">DynamicFieldArgs</a>, <a href="dynamic_fields.rs.html#57-63">DynamicFieldConnectionArgs</a>, <a href="dynamic_fields.rs.html#91-95">DynamicFieldName</a>, <a href="dynamic_fields.rs.html#38-41">DynamicFieldQuery</a>,
+<a href=#43 id=43 data-nosnippet>43</a>    <a href="dynamic_fields.rs.html#21-24">DynamicFieldsOwnerQuery</a>, <a href="dynamic_fields.rs.html#105-108">DynamicObjectFieldQuery</a>,
+<a href=#44 id=44 data-nosnippet>44</a>};
+<a href=#45 id=45 data-nosnippet>45</a><span class="kw">pub use </span>epoch::{<a href="epoch.rs.html#53-100">Epoch</a>, <a href="epoch.rs.html#29-31">EpochArgs</a>, <a href="epoch.rs.html#12-15">EpochQuery</a>, <a href="epoch.rs.html#19-22">EpochSummaryQuery</a>, <a href="epoch.rs.html#104-131">ValidatorSet</a>};
+<a href=#46 id=46 data-nosnippet>46</a><span class="kw">pub use </span>events::{<a href="events.rs.html#87-96">Event</a>, <a href="events.rs.html#40-43">EventConnection</a>, <a href="events.rs.html#48-53">EventFilter</a>, <a href="events.rs.html#16-19">EventsQuery</a>, <a href="events.rs.html#26-32">EventsQueryArgs</a>};
+<a href=#47 id=47 data-nosnippet>47</a><span class="kw">pub use </span>execute_transaction::{<a href="execute_transaction.rs.html#19-22">ExecuteTransactionArgs</a>, <a href="execute_transaction.rs.html#13-16">ExecuteTransactionQuery</a>, <a href="execute_transaction.rs.html#26-29">ExecutionResult</a>};
+<a href=#48 id=48 data-nosnippet>48</a><span class="kw">pub use </span>iota_names::{
+<a href=#49 id=49 data-nosnippet>49</a>    <a href="iota_names.rs.html#44-47">IotaNamesAddressDefaultNameQuery</a>, <a href="iota_names.rs.html#33-36">IotaNamesAddressRegistrationsQuery</a>, <a href="iota_names.rs.html#81-84">IotaNamesDefaultNameArgs</a>,
+<a href=#50 id=50 data-nosnippet>50</a>    <a href="iota_names.rs.html#75-78">IotaNamesDefaultNameQuery</a>, <a href="iota_names.rs.html#61-67">IotaNamesRegistrationsArgs</a>, <a href="iota_names.rs.html#55-58">IotaNamesRegistrationsQuery</a>,
+<a href=#51 id=51 data-nosnippet>51</a>    <a href="iota_names.rs.html#95-97">NameRegistration</a>, <a href="iota_names.rs.html#88-91">NameRegistrationConnection</a>, <a href="iota_names.rs.html#23-25">ResolveIotaNamesAddressArgs</a>,
+<a href=#52 id=52 data-nosnippet>52</a>    <a href="iota_names.rs.html#17-20">ResolveIotaNamesAddressQuery</a>,
+<a href=#53 id=53 data-nosnippet>53</a>};
+<a href=#54 id=54 data-nosnippet>54</a><span class="kw">use </span>iota_types::{<a href="../../../iota_sdk_types/address/struct.Address.html">Address</a>, <a href="../../../iota_sdk_types/object_id/struct.ObjectId.html">ObjectId</a>};
+<a href=#55 id=55 data-nosnippet>55</a><span class="kw">pub use </span>move_view_call::{<a href="move_view_call.rs.html#49-57">MoveViewCallArgs</a>, <a href="move_view_call.rs.html#22-25">MoveViewCallQuery</a>, <a href="move_view_call.rs.html#35-41">MoveViewResult</a>};
+<a href=#56 id=56 data-nosnippet>56</a><span class="kw">pub use </span>normalized_move::{
+<a href=#57 id=57 data-nosnippet>57</a>    <a href="normalized_move/mod.rs.html#21-26">MoveAbility</a>, <a href="normalized_move/module.rs.html#118-123">MoveEnum</a>, <a href="normalized_move/module.rs.html#111-114">MoveEnumConnection</a>, <a href="normalized_move/module.rs.html#127-130">MoveEnumVariant</a>, <a href="normalized_move/module.rs.html#134-138">MoveField</a>, <a href="normalized_move/mod.rs.html#40-48">MoveFunction</a>,
+<a href=#58 id=58 data-nosnippet>58</a>    <a href="normalized_move/module.rs.html#104-107">MoveFunctionConnection</a>, <a href="normalized_move/mod.rs.html#119-121">MoveFunctionTypeParameter</a>, <a href="normalized_move/module.rs.html#60-70">MoveModule</a>, <a href="normalized_move/module.rs.html#90-93">MoveModuleConnection</a>,
+<a href=#59 id=59 data-nosnippet>59</a>    <a href="normalized_move/module.rs.html#97-100">MoveModuleQuery</a>, <a href="normalized_move/module.rs.html#74-77">MoveStructConnection</a>, <a href="normalized_move/module.rs.html#81-86">MoveStructQuery</a>, <a href="normalized_move/module.rs.html#142-145">MoveStructTypeParameter</a>,
+<a href=#60 id=60 data-nosnippet>60</a>    <a href="normalized_move/mod.rs.html#32-36">MoveVisibility</a>, <a href="normalized_move/function.rs.html#13-16">NormalizedMoveFunctionQuery</a>, <a href="normalized_move/function.rs.html#19-24">NormalizedMoveFunctionQueryArgs</a>,
+<a href=#61 id=61 data-nosnippet>61</a>    <a href="normalized_move/module.rs.html#15-18">NormalizedMoveModuleQuery</a>, <a href="normalized_move/module.rs.html#21-41">NormalizedMoveModuleQueryArgs</a>, <a href="normalized_move/mod.rs.html#125-127">OpenMoveType</a>,
+<a href=#62 id=62 data-nosnippet>62</a>};
+<a href=#63 id=63 data-nosnippet>63</a><span class="kw">pub use </span>object::{
+<a href=#64 id=64 data-nosnippet>64</a>    <a href="object.rs.html#58-63">ObjectFilter</a>, <a href="object.rs.html#88-91">ObjectKey</a>, <a href="object.rs.html#13-16">ObjectQuery</a>, <a href="object.rs.html#30-33">ObjectQueryArgs</a>, <a href="object.rs.html#20-23">ObjectsQuery</a>, <a href="object.rs.html#36-42">ObjectsQueryArgs</a>,
+<a href=#65 id=65 data-nosnippet>65</a>};
+<a href=#66 id=66 data-nosnippet>66</a><span class="kw">pub use </span>packages::{
+<a href=#67 id=67 data-nosnippet>67</a>    <a href="packages.rs.html#26-29">LatestPackageQuery</a>, <a href="packages.rs.html#92-95">MovePackageConnection</a>, <a href="packages.rs.html#39-42">MovePackageQuery</a>, <a href="packages.rs.html#125-128">MovePackageVersionFilter</a>,
+<a href=#68 id=68 data-nosnippet>68</a>    <a href="packages.rs.html#32-35">PackageArgs</a>, <a href="packages.rs.html#71-74">PackageCheckpointFilter</a>, <a href="packages.rs.html#15-18">PackageQuery</a>, <a href="packages.rs.html#113-120">PackageVersionsArgs</a>, <a href="packages.rs.html#107-110">PackageVersionsQuery</a>,
+<a href=#69 id=69 data-nosnippet>69</a>    <a href="packages.rs.html#54-57">PackagesQuery</a>, <a href="packages.rs.html#60-66">PackagesQueryArgs</a>,
+<a href=#70 id=70 data-nosnippet>70</a>};
+<a href=#71 id=71 data-nosnippet>71</a><span class="kw">pub use </span>protocol_config::{
+<a href=#72 id=72 data-nosnippet>72</a>    <a href="protocol_config.rs.html#70-73">ProtocolConfigAttr</a>, <a href="protocol_config.rs.html#62-65">ProtocolConfigFeatureFlag</a>, <a href="protocol_config.rs.html#17-20">ProtocolConfigQuery</a>, <a href="protocol_config.rs.html#41-55">ProtocolConfigs</a>,
+<a href=#73 id=73 data-nosnippet>73</a>    <a href="protocol_config.rs.html#27-29">ProtocolVersionArgs</a>,
+<a href=#74 id=74 data-nosnippet>74</a>};
+<a href=#75 id=75 data-nosnippet>75</a><span class="kw">use </span><a href="https://docs.rs/serde_json/1.0.151/serde_json/value/enum.Value.html">serde_json::Value</a> <span class="kw">as </span>JsonValue;
+<a href=#76 id=76 data-nosnippet>76</a><span class="kw">pub use </span>service_config::{<a href="service_config.rs.html#91-97">Feature</a>, <a href="service_config.rs.html#24-75">ServiceConfig</a>, <a href="service_config.rs.html#13-15">ServiceConfigQuery</a>};
+<a href=#77 id=77 data-nosnippet>77</a><span class="kw">pub use </span>subscriptions::{
+<a href=#78 id=78 data-nosnippet>78</a>    <a href="subscriptions.rs.html#140-145">EventSubscriptionPayload</a>, <a href="subscriptions.rs.html#31-34">EventsSubscription</a>, <a href="subscriptions.rs.html#52-55">EventsSubscriptionArgs</a>, <a href="subscriptions.rs.html#161-164">Lagged</a>,
+<a href=#79 id=79 data-nosnippet>79</a>    <a href="subscriptions.rs.html#175-185">SubscriptionEvent</a>, <a href="subscriptions.rs.html#72-76">SubscriptionEventFilter</a>, <a href="subscriptions.rs.html#215-218">SubscriptionTransactionBlock</a>,
+<a href=#80 id=80 data-nosnippet>80</a>    <a href="subscriptions.rs.html#92-105">SubscriptionTransactionFilter</a>, <a href="subscriptions.rs.html#150-155">TransactionBlockSubscriptionPayload</a>, <a href="subscriptions.rs.html#42-45">TransactionsSubscription</a>,
+<a href=#81 id=81 data-nosnippet>81</a>    <a href="subscriptions.rs.html#58-61">TransactionsSubscriptionArgs</a>,
+<a href=#82 id=82 data-nosnippet>82</a>};
+<a href=#83 id=83 data-nosnippet>83</a><span class="kw">pub use </span>transaction::{
+<a href=#84 id=84 data-nosnippet>84</a>    <a href="transaction.rs.html#128-131">TransactionBlock</a>, <a href="transaction.rs.html#109-111">TransactionBlockArgs</a>, <a href="transaction.rs.html#56-59">TransactionBlockCheckpointQuery</a>,
+<a href=#85 id=85 data-nosnippet>85</a>    <a href="transaction.rs.html#45-48">TransactionBlockEffectsQuery</a>, <a href="transaction.rs.html#67-70">TransactionBlockIndexedQuery</a>, <a href="transaction.rs.html#171-178">TransactionBlockKindInput</a>,
+<a href=#86 id=86 data-nosnippet>86</a>    <a href="transaction.rs.html#23-26">TransactionBlockQuery</a>, <a href="transaction.rs.html#135-138">TransactionBlockWithEffects</a>, <a href="transaction.rs.html#34-37">TransactionBlockWithEffectsQuery</a>,
+<a href=#87 id=87 data-nosnippet>87</a>    <a href="transaction.rs.html#100-103">TransactionBlocksEffectsQuery</a>, <a href="transaction.rs.html#78-81">TransactionBlocksQuery</a>, <a href="transaction.rs.html#114-120">TransactionBlocksQueryArgs</a>,
+<a href=#88 id=88 data-nosnippet>88</a>    <a href="transaction.rs.html#89-92">TransactionBlocksWithEffectsQuery</a>, <a href="transaction.rs.html#183-196">TransactionsFilter</a>,
+<a href=#89 id=89 data-nosnippet>89</a>};
+<a href=#90 id=90 data-nosnippet>90</a>
+<a href=#91 id=91 data-nosnippet>91</a><span class="kw">use </span><a href="../lib.rs.html#9"><span class="kw">crate</span>::error</a>;
+<a href=#92 id=92 data-nosnippet>92</a>
+<a href=#93 id=93 data-nosnippet>93</a><span class="attr">#[cynic::schema(<span class="string">"rpc"</span>)]
+<a href=#94 id=94 data-nosnippet>94</a></span><span class="kw">pub mod </span><a href="#93">schema</a> {}
+<a href=#95 id=95 data-nosnippet>95</a>
+<a href=#96 id=96 data-nosnippet>96</a><span class="comment">// ===========================================================================
+<a href=#97 id=97 data-nosnippet>97</a>// Scalars
+<a href=#98 id=98 data-nosnippet>98</a>// ===========================================================================
+<a href=#99 id=99 data-nosnippet>99</a>
+<a href=#100 id=100 data-nosnippet>100</a></span><span class="macro">impl_scalar!</span>(<a href="../../../iota_sdk_types/address/struct.Address.html">Address</a>, schema::IotaAddress);
+<a href=#101 id=101 data-nosnippet>101</a><span class="macro">impl_scalar!</span>(<a href="../../../iota_sdk_types/object_id/struct.ObjectId.html">ObjectId</a>, schema::IotaAddress);
+<a href=#102 id=102 data-nosnippet>102</a><span class="macro">impl_scalar!</span>(<a href="https://doc.rust-lang.org/1.98.0/std/primitive.u64.html">u64</a>, schema::UInt53);
+<a href=#103 id=103 data-nosnippet>103</a><span class="macro">impl_scalar!</span>(<a href="https://docs.rs/serde_json/1.0.151/serde_json/value/enum.Value.html">JsonValue</a>, schema::JSON);
+<a href=#104 id=104 data-nosnippet>104</a>
+<a href=#105 id=105 data-nosnippet>105</a><span class="attr">#[derive(<a href="https://doc.rust-lang.org/1.98.0/core/clone/derive.Clone.html">Clone</a>, cynic::Scalar, <a href="https://doc.rust-lang.org/1.98.0/core/fmt/macros/derive.Debug.html">Debug</a>, derive_more::From)]
+<a href=#106 id=106 data-nosnippet>106</a>#[cynic(graphql_type = <span class="string">"Base64"</span>)]
+<a href=#107 id=107 data-nosnippet>107</a></span><span class="kw">pub struct </span><a href="#107">Base64</a>(<span class="kw">pub </span><a href="https://doc.rust-lang.org/1.98.0/alloc/string/struct.String.html">String</a>);
+<a href=#108 id=108 data-nosnippet>108</a>
+<a href=#109 id=109 data-nosnippet>109</a><span class="attr">#[derive(<a href="https://doc.rust-lang.org/1.98.0/core/clone/derive.Clone.html">Clone</a>, cynic::Scalar, <a href="https://doc.rust-lang.org/1.98.0/core/fmt/macros/derive.Debug.html">Debug</a>, derive_more::From)]
+<a href=#110 id=110 data-nosnippet>110</a>#[cynic(graphql_type = <span class="string">"BigInt"</span>)]
+<a href=#111 id=111 data-nosnippet>111</a></span><span class="kw">pub struct </span><a href="#111">BigInt</a>(<span class="kw">pub </span><a href="https://doc.rust-lang.org/1.98.0/alloc/string/struct.String.html">String</a>);
+<a href=#112 id=112 data-nosnippet>112</a>
+<a href=#113 id=113 data-nosnippet>113</a><span class="attr">#[derive(<a href="https://doc.rust-lang.org/1.98.0/core/clone/derive.Clone.html">Clone</a>, cynic::Scalar, <a href="https://doc.rust-lang.org/1.98.0/core/fmt/macros/derive.Debug.html">Debug</a>)]
+<a href=#114 id=114 data-nosnippet>114</a>#[cynic(graphql_type = <span class="string">"DateTime"</span>)]
+<a href=#115 id=115 data-nosnippet>115</a></span><span class="kw">pub struct </span><a href="#115">DateTime</a>(<span class="kw">pub </span><a href="https://doc.rust-lang.org/1.98.0/alloc/string/struct.String.html">String</a>);
+<a href=#116 id=116 data-nosnippet>116</a>
+<a href=#117 id=117 data-nosnippet>117</a><span class="attr">#[derive(<a href="https://doc.rust-lang.org/1.98.0/core/clone/derive.Clone.html">Clone</a>, cynic::Scalar, <a href="https://doc.rust-lang.org/1.98.0/core/fmt/macros/derive.Debug.html">Debug</a>, derive_more::From)]
+<a href=#118 id=118 data-nosnippet>118</a>#[cynic(graphql_type = <span class="string">"MoveData"</span>)]
+<a href=#119 id=119 data-nosnippet>119</a></span><span class="kw">pub struct </span><a href="#119">MoveData</a>(<span class="kw">pub </span>serde_json::<a href="https://docs.rs/serde_json/1.0.151/serde_json/value/enum.Value.html">Value</a>);
+<a href=#120 id=120 data-nosnippet>120</a>
+<a href=#121 id=121 data-nosnippet>121</a><span class="comment">// ===========================================================================
+<a href=#122 id=122 data-nosnippet>122</a>// Types used in several queries
+<a href=#123 id=123 data-nosnippet>123</a>// ===========================================================================
+<a href=#124 id=124 data-nosnippet>124</a>
+<a href=#125 id=125 data-nosnippet>125</a></span><span class="attr">#[derive(<a href="https://doc.rust-lang.org/1.98.0/core/clone/derive.Clone.html">Clone</a>, <a href="https://doc.rust-lang.org/1.98.0/core/marker/derive.Copy.html">Copy</a>, cynic::QueryFragment, <a href="https://doc.rust-lang.org/1.98.0/core/fmt/macros/derive.Debug.html">Debug</a>)]
+<a href=#126 id=126 data-nosnippet>126</a>#[cynic(schema = <span class="string">"rpc"</span>, graphql_type = <span class="string">"Address"</span>)]
+<a href=#127 id=127 data-nosnippet>127</a></span><span class="kw">pub struct </span><a href="#127-129">GraphQLAddress</a> {
+<a href=#128 id=128 data-nosnippet>128</a>    <span class="kw">pub </span>address: <a href="../../../iota_sdk_types/address/struct.Address.html">Address</a>,
+<a href=#129 id=129 data-nosnippet>129</a>}
+<a href=#130 id=130 data-nosnippet>130</a>
+<a href=#131 id=131 data-nosnippet>131</a><span class="attr">#[derive(<a href="https://doc.rust-lang.org/1.98.0/core/clone/derive.Clone.html">Clone</a>, cynic::QueryFragment, <a href="https://doc.rust-lang.org/1.98.0/core/fmt/macros/derive.Debug.html">Debug</a>)]
+<a href=#132 id=132 data-nosnippet>132</a>#[cynic(schema = <span class="string">"rpc"</span>, graphql_type = <span class="string">"MoveObject"</span>)]
+<a href=#133 id=133 data-nosnippet>133</a></span><span class="kw">pub struct </span><a href="#133-135">MoveObject</a> {
+<a href=#134 id=134 data-nosnippet>134</a>    <span class="kw">pub </span>bcs: <a class="prelude-ty" href="https://doc.rust-lang.org/1.98.0/core/option/enum.Option.html">Option</a>&lt;<a href="#107">Base64</a>&gt;,
+<a href=#135 id=135 data-nosnippet>135</a>}
+<a href=#136 id=136 data-nosnippet>136</a>
+<a href=#137 id=137 data-nosnippet>137</a><span class="attr">#[derive(cynic::QueryFragment, <a href="https://doc.rust-lang.org/1.98.0/core/fmt/macros/derive.Debug.html">Debug</a>)]
+<a href=#138 id=138 data-nosnippet>138</a>#[cynic(schema = <span class="string">"rpc"</span>, graphql_type = <span class="string">"MoveObject"</span>)]
+<a href=#139 id=139 data-nosnippet>139</a></span><span class="kw">pub struct </span><a href="#139-141">MoveObjectContents</a> {
+<a href=#140 id=140 data-nosnippet>140</a>    <span class="kw">pub </span>contents: <a class="prelude-ty" href="https://doc.rust-lang.org/1.98.0/core/option/enum.Option.html">Option</a>&lt;<a href="#145-150">MoveValue</a>&gt;,
+<a href=#141 id=141 data-nosnippet>141</a>}
+<a href=#142 id=142 data-nosnippet>142</a>
+<a href=#143 id=143 data-nosnippet>143</a><span class="attr">#[derive(cynic::QueryFragment, <a href="https://doc.rust-lang.org/1.98.0/core/fmt/macros/derive.Debug.html">Debug</a>)]
+<a href=#144 id=144 data-nosnippet>144</a>#[cynic(schema = <span class="string">"rpc"</span>, graphql_type = <span class="string">"MoveValue"</span>)]
+<a href=#145 id=145 data-nosnippet>145</a></span><span class="kw">pub struct </span><a href="#145-150">MoveValue</a> {
+<a href=#146 id=146 data-nosnippet>146</a>    <span class="attr">#[cynic(rename = <span class="string">"type"</span>)]
+<a href=#147 id=147 data-nosnippet>147</a>    </span><span class="kw">pub </span>move_type: <a href="#154-156">MoveType</a>,
+<a href=#148 id=148 data-nosnippet>148</a>    <span class="kw">pub </span>bcs: <a href="#107">Base64</a>,
+<a href=#149 id=149 data-nosnippet>149</a>    <span class="kw">pub </span>json: <a class="prelude-ty" href="https://doc.rust-lang.org/1.98.0/core/option/enum.Option.html">Option</a>&lt;<a href="https://docs.rs/serde_json/1.0.151/serde_json/value/enum.Value.html">JsonValue</a>&gt;,
+<a href=#150 id=150 data-nosnippet>150</a>}
+<a href=#151 id=151 data-nosnippet>151</a>
+<a href=#152 id=152 data-nosnippet>152</a><span class="attr">#[derive(<a href="https://doc.rust-lang.org/1.98.0/core/clone/derive.Clone.html">Clone</a>, cynic::QueryFragment, <a href="https://doc.rust-lang.org/1.98.0/core/fmt/macros/derive.Debug.html">Debug</a>)]
+<a href=#153 id=153 data-nosnippet>153</a>#[cynic(schema = <span class="string">"rpc"</span>, graphql_type = <span class="string">"MoveType"</span>)]
+<a href=#154 id=154 data-nosnippet>154</a></span><span class="kw">pub struct </span><a href="#154-156">MoveType</a> {
+<a href=#155 id=155 data-nosnippet>155</a>    <span class="kw">pub </span>repr: <a href="https://doc.rust-lang.org/1.98.0/alloc/string/struct.String.html">String</a>,
+<a href=#156 id=156 data-nosnippet>156</a>}
+<a href=#157 id=157 data-nosnippet>157</a>
+<a href=#158 id=158 data-nosnippet>158</a><span class="comment">// ===========================================================================
+<a href=#159 id=159 data-nosnippet>159</a>// Utility Types
+<a href=#160 id=160 data-nosnippet>160</a>// ===========================================================================
+<a href=#161 id=161 data-nosnippet>161</a>
+<a href=#162 id=162 data-nosnippet>162</a></span><span class="attr">#[derive(<a href="https://doc.rust-lang.org/1.98.0/core/clone/derive.Clone.html">Clone</a>, cynic::QueryFragment, <a href="https://doc.rust-lang.org/1.98.0/core/fmt/macros/derive.Debug.html">Debug</a>, <a href="https://doc.rust-lang.org/1.98.0/core/default/derive.Default.html">Default</a>)]
+<a href=#163 id=163 data-nosnippet>163</a>#[cynic(schema = <span class="string">"rpc"</span>, graphql_type = <span class="string">"PageInfo"</span>)]
+<a href=#164 id=164 data-nosnippet>164</a></span><span class="doccomment">/// Information about pagination in a connection.
+<a href=#165 id=165 data-nosnippet>165</a></span><span class="kw">pub struct </span><a href="#165-174">PageInfo</a> {
+<a href=#166 id=166 data-nosnippet>166</a>    <span class="doccomment">/// When paginating backwards, are there more items?
+<a href=#167 id=167 data-nosnippet>167</a>    </span><span class="kw">pub </span>has_previous_page: <a href="https://doc.rust-lang.org/1.98.0/std/primitive.bool.html">bool</a>,
+<a href=#168 id=168 data-nosnippet>168</a>    <span class="doccomment">/// Are there more items when paginating forwards?
+<a href=#169 id=169 data-nosnippet>169</a>    </span><span class="kw">pub </span>has_next_page: <a href="https://doc.rust-lang.org/1.98.0/std/primitive.bool.html">bool</a>,
+<a href=#170 id=170 data-nosnippet>170</a>    <span class="doccomment">/// When paginating backwards, the cursor to continue.
+<a href=#171 id=171 data-nosnippet>171</a>    </span><span class="kw">pub </span>start_cursor: <a class="prelude-ty" href="https://doc.rust-lang.org/1.98.0/core/option/enum.Option.html">Option</a>&lt;<a href="https://doc.rust-lang.org/1.98.0/alloc/string/struct.String.html">String</a>&gt;,
+<a href=#172 id=172 data-nosnippet>172</a>    <span class="doccomment">/// When paginating forwards, the cursor to continue.
+<a href=#173 id=173 data-nosnippet>173</a>    </span><span class="kw">pub </span>end_cursor: <a class="prelude-ty" href="https://doc.rust-lang.org/1.98.0/core/option/enum.Option.html">Option</a>&lt;<a href="https://doc.rust-lang.org/1.98.0/alloc/string/struct.String.html">String</a>&gt;,
+<a href=#174 id=174 data-nosnippet>174</a>}
+<a href=#175 id=175 data-nosnippet>175</a>
+<a href=#176 id=176 data-nosnippet>176</a><span class="kw">impl </span><a href="https://doc.rust-lang.org/1.98.0/core/convert/trait.TryFrom.html">TryFrom</a>&lt;<a href="#111">BigInt</a>&gt; <span class="kw">for </span><a href="https://doc.rust-lang.org/1.98.0/std/primitive.u64.html">u64</a> {
+<a href=#177 id=177 data-nosnippet>177</a>    <span class="kw">type </span>Error = error::<a href="../error.rs.html#35-37">Error</a>;
+<a href=#178 id=178 data-nosnippet>178</a>
+<a href=#179 id=179 data-nosnippet>179</a>    <span class="kw">fn </span>try_from(value: <a href="#111">BigInt</a>) -&gt; <a class="prelude-ty" href="https://doc.rust-lang.org/1.98.0/core/result/enum.Result.html">Result</a>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+<a href=#180 id=180 data-nosnippet>180</a>        <a class="prelude-val" href="https://doc.rust-lang.org/1.98.0/core/result/enum.Result.html#variant.Ok">Ok</a>(value.<span class="number">0</span>.parse::&lt;u64&gt;()<span class="question-mark">?</span>)
+<a href=#181 id=181 data-nosnippet>181</a>    }
+<a href=#182 id=182 data-nosnippet>182</a>}
+</code></pre></div></section></main></body></html>

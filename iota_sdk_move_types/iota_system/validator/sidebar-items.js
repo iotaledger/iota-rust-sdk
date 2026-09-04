@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["StakingRequestEvent","UnstakingRequestEvent","ValidatorMetadataV1","ValidatorV1"]};

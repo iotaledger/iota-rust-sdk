@@ -1,0 +1,9 @@
+(function() {
+    const implementors = Object.fromEntries([["iota_sdk_grpc_client",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.98.0/core/future/into_future/trait.IntoFuture.html\" title=\"trait core::future::into_future::IntoFuture\">IntoFuture</a> for <a class=\"struct\" href=\"iota_sdk_grpc_client/api/state/coins/struct.GetCoinsQuery.html\" title=\"struct iota_sdk_grpc_client::api::state::coins::GetCoinsQuery\">GetCoinsQuery</a>",0],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.98.0/core/future/into_future/trait.IntoFuture.html\" title=\"trait core::future::into_future::IntoFuture\">IntoFuture</a> for <a class=\"struct\" href=\"iota_sdk_grpc_client/api/state/dynamic_fields/struct.ListDynamicFieldsQuery.html\" title=\"struct iota_sdk_grpc_client::api::state::dynamic_fields::ListDynamicFieldsQuery\">ListDynamicFieldsQuery</a>",0],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.98.0/core/future/into_future/trait.IntoFuture.html\" title=\"trait core::future::into_future::IntoFuture\">IntoFuture</a> for <a class=\"struct\" href=\"iota_sdk_grpc_client/api/state/owned_objects/struct.ListOwnedObjectsQuery.html\" title=\"struct iota_sdk_grpc_client::api::state::owned_objects::ListOwnedObjectsQuery\">ListOwnedObjectsQuery</a>",0],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.98.0/core/future/into_future/trait.IntoFuture.html\" title=\"trait core::future::into_future::IntoFuture\">IntoFuture</a> for <a class=\"struct\" href=\"iota_sdk_grpc_client/api/move_package/package_versions/struct.ListPackageVersionsQuery.html\" title=\"struct iota_sdk_grpc_client::api::move_package::package_versions::ListPackageVersionsQuery\">ListPackageVersionsQuery</a>",0]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":59,"fragment_lengths":[1672]}
