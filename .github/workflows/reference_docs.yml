@@ -88,7 +88,7 @@ jobs:
         run: |
           sudo apt-get install -y clang
           rustup target add wasm32-unknown-unknown
-          cargo install wasm-bindgen-cli --version 0.2.122
+          cargo install wasm-bindgen-cli --version 0.2.128
           npm install -g pnpm@10 typedoc typedoc-plugin-markdown
 
       - name: Generate the ${{ matrix.language }} reference
