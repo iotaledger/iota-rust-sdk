@@ -113,6 +113,28 @@ pub struct TransactionsByDigestsQuery {
     pub transactions_by_digests: TransactionsByDigestsPage,
 }
 
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Query",
+    variables = "AddressTransactionsQueryArgs"
+)]
+pub struct AddressTransactionsQuery {
+    #[arguments(address: $address)]
+    pub address: Option<AddressTransactionBlocksQuery>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Address",
+    variables = "AddressTransactionsQueryArgs"
+)]
+pub struct AddressTransactionBlocksQuery {
+    #[arguments(first: $first, after: $after, last: $last, before: $before, relation: $relation, filter: $filter)]
+    pub transaction_blocks: TransactionBlockConnection,
+}
+
 // ===========================================================================
 // Transaction Block(s) Query Args
 // ===========================================================================
@@ -127,6 +149,17 @@ pub struct TransactionsByDigestsQueryArgs {
     pub digests: Vec<String>,
     pub limit: Option<i32>,
     pub cursor: Option<String>,
+}
+
+#[derive(cynic::QueryVariables, Debug)]
+pub struct AddressTransactionsQueryArgs {
+    pub address: Address,
+    pub first: Option<i32>,
+    pub after: Option<String>,
+    pub last: Option<i32>,
+    pub before: Option<String>,
+    pub relation: Option<AddressTransactionRelationship>,
+    pub filter: Option<TransactionsFilter>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
@@ -196,6 +229,24 @@ pub enum TransactionBlockKindInput {
     EndOfEpochTx,
 }
 
+/// The relationship between an address and a transaction.
+#[derive(Clone, Copy, cynic::Enum, Debug)]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "AddressTransactionBlockRelationship",
+    rename_all = "SCREAMING_SNAKE_CASE"
+)]
+#[non_exhaustive]
+pub enum AddressTransactionRelationship {
+    /// Transactions the address has sent.
+    Sent,
+    /// Transactions that sent objects to the address.
+    Recv,
+    /// Transactions that affected the address: it is the sender, a recipient,
+    /// or the owner of the gas payment.
+    Affected,
+}
+
 #[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
 #[non_exhaustive]
@@ -207,6 +258,7 @@ pub struct TransactionsFilter {
     pub before_checkpoint: Option<u64>,
     pub sent_address: Option<Address>,
     pub recv_address: Option<Address>,
+    pub affected_address: Option<Address>,
     pub input_object: Option<ObjectId>,
     pub changed_object: Option<ObjectId>,
     pub wrapped_or_deleted_object: Option<ObjectId>,
@@ -254,6 +306,13 @@ impl TransactionsFilter {
     /// Filter by the address receiving an object from the transaction.
     pub fn with_recv_address(mut self, recv_address: impl Into<Option<Address>>) -> Self {
         self.recv_address = recv_address.into();
+        self
+    }
+
+    /// Filter by an address the transaction affected: the sender, a
+    /// recipient, or the owner of the gas payment.
+    pub fn with_affected_address(mut self, affected_address: impl Into<Option<Address>>) -> Self {
+        self.affected_address = affected_address.into();
         self
     }
 

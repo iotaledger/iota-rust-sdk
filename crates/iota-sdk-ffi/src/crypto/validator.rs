@@ -6,7 +6,7 @@ use std::sync::RwLock;
 use crate::{
     error::Result,
     types::{
-        checkpoint::CheckpointSummary,
+        checkpoint::{CheckpointSummary, EpochId, SignedCheckpointSummary},
         validator::{ValidatorAggregatedSignature, ValidatorCommittee, ValidatorSignature},
     },
 };
@@ -20,10 +20,10 @@ pub struct ValidatorCommitteeSignatureVerifier(
 #[uniffi::export]
 impl ValidatorCommitteeSignatureVerifier {
     #[uniffi::constructor]
-    pub fn new(committee: ValidatorCommittee) -> Result<Self> {
+    pub fn new(committee: &ValidatorCommittee) -> Result<Self> {
         Ok(Self(
             iota_sdk::crypto::validator::ValidatorCommitteeSignatureVerifier::new(
-                committee.into(),
+                committee.0.clone(),
             )?,
         ))
     }
@@ -67,12 +67,12 @@ pub struct ValidatorCommitteeSignatureAggregator(
 impl ValidatorCommitteeSignatureAggregator {
     #[uniffi::constructor]
     pub fn new_checkpoint_summary(
-        committee: ValidatorCommittee,
+        committee: &ValidatorCommittee,
         summary: &CheckpointSummary,
     ) -> Result<Self> {
         Ok(Self(
             iota_sdk::crypto::validator::ValidatorCommitteeSignatureAggregator::new_checkpoint_summary(
-                committee.into(),
+                committee.0.clone(),
                 &summary.0,
             )?
             .into(),
@@ -103,5 +103,61 @@ impl ValidatorCommitteeSignatureAggregator {
             .expect("failed to read validator committee signature aggregator")
             .finish()?
             .into())
+    }
+}
+
+/// Verifies the committee chain: the sequence of committees linked by each
+/// epoch's certified closing checkpoint, whose end-of-epoch data elects the
+/// committee of the next epoch.
+///
+/// Starting from a trusted committee (typically the genesis committee, the
+/// operator's trust root), feed it each epoch's closing
+/// `SignedCheckpointSummary` in epoch order via `Self::verify_epoch_close`;
+/// every summary a consumer obtains this way is committee-verified, with no
+/// trust in whatever transport delivered it.
+///
+/// The walk is transport-agnostic by design — callers drive their own loop (an
+/// in-memory list, a remote-store stream, files on disk) and feed summaries in;
+/// this type only holds the verification state.
+#[derive(Debug, derive_more::From, uniffi::Object)]
+#[uniffi::export(Debug)]
+pub struct CommitteeChainVerifier(pub RwLock<iota_sdk::crypto::validator::CommitteeChainVerifier>);
+
+#[uniffi::export]
+impl CommitteeChainVerifier {
+    #[uniffi::constructor]
+    pub fn new(trusted_committee: &ValidatorCommittee) -> Result<Self> {
+        Ok(Self(
+            iota_sdk::crypto::validator::CommitteeChainVerifier::new(trusted_committee.0.clone())?
+                .into(),
+        ))
+    }
+
+    /// The epoch whose closing checkpoint must be fed next.
+    pub fn epoch(&self) -> EpochId {
+        self.0
+            .read()
+            .expect("failed to read committee chain verifier")
+            .epoch()
+    }
+
+    /// The committee of the epoch whose closing checkpoint must be fed next.
+    pub fn committee(&self) -> ValidatorCommittee {
+        self.0
+            .read()
+            .expect("failed to read committee chain verifier")
+            .committee()
+            .clone()
+            .into()
+    }
+
+    /// Verify `summary` as the certified closing checkpoint of the current
+    /// epoch and advance to the committee it elects for the next epoch.
+    pub fn verify_epoch_close(&self, summary: &SignedCheckpointSummary) -> Result<()> {
+        Ok(self
+            .0
+            .write()
+            .expect("failed to write committee chain verifier")
+            .verify_epoch_close(&summary.0)?)
     }
 }

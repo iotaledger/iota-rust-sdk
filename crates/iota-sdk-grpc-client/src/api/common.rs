@@ -18,7 +18,8 @@ use iota_grpc_types::{
         transaction::{ExecutedTransaction, Transaction as ProtoTransaction},
         transaction_execution_service::{
             ExecuteTransactionResult, SimulateTransactionResult, SimulatedTransaction,
-            execute_transaction_result, simulate_transaction_result,
+            ViewFunctionCallOutputs, ViewFunctionCallResult, execute_transaction_result,
+            simulate_transaction_result, view_function_call_result,
         },
         types::ObjectId as ProtoObjectId,
     },
@@ -435,6 +436,21 @@ impl ProtoResult for SimulateTransactionResult {
     }
 }
 
+impl ProtoResult for ViewFunctionCallResult {
+    type Value = ViewFunctionCallOutputs;
+
+    fn into_result(self) -> Result<Self::Value> {
+        match self.result {
+            Some(view_function_call_result::Result::CallOutputs(r)) => Ok(r),
+            Some(view_function_call_result::Result::Error(e)) => Err(Error::Server(e)),
+            None => Err(TryFromProtoError::missing("result").into()),
+            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+                "view function call result",
+            ))),
+        }
+    }
+}
+
 /// Collect all items from a paginated gRPC stream into a single `Vec`.
 ///
 /// This handles the common pattern of iterating over a `tonic::Streaming<T>`,
@@ -764,8 +780,8 @@ mod tests {
     use iota_grpc_types::{
         google::rpc::Status,
         v1::{
-            object::Object, types::ObjectReference as ProtoObjectReference,
-            versioned::VersionedObject,
+            command::CommandOutputs, object::Object, transaction_execution_service::ExecutionError,
+            types::ObjectReference as ProtoObjectReference, versioned::VersionedObject,
         },
     };
     use iota_types::{
@@ -774,7 +790,8 @@ mod tests {
 
     use super::{
         BcsData, Error, ExecutedTransaction, ObjectResult, ProtoTransaction, ProtocolError, Result,
-        check_object_identity, check_transaction_identity, into_item_results, proto_object_id,
+        ViewFunctionCallOutputs, ViewFunctionCallResult, check_object_identity,
+        check_transaction_identity, into_item_results, proto_object_id,
     };
 
     #[test]
@@ -805,6 +822,64 @@ mod tests {
         ];
 
         assert_eq!(into_item_results(batch).len(), 2);
+    }
+
+    /// Each view function call runs in its own transaction, so a call the node
+    /// refuses fails only its own slot.
+    #[test]
+    fn a_rejected_view_function_call_keeps_the_surrounding_calls() {
+        let batch = vec![
+            ViewFunctionCallResult::default().with_call_outputs(
+                ViewFunctionCallOutputs::default().with_return_values(CommandOutputs::default()),
+            ),
+            ViewFunctionCallResult::default().with_error(Status {
+                code: tonic::Code::InvalidArgument.into(),
+                message: "no function 'nope' in module 0x2::hash".to_owned(),
+                details: Vec::new(),
+            }),
+        ];
+
+        let items = into_item_results(batch);
+
+        assert_eq!(items.len(), 2);
+        assert!(items[0].is_ok());
+        assert!(matches!(items[1], Err(Error::Server(_))));
+    }
+
+    /// A call that ran and aborted is not a failed *request*: it occupies the
+    /// `Ok` slot, and the abort is read off the outputs. Only a call the node
+    /// refused to run yields `Err`.
+    #[test]
+    fn an_aborted_view_function_call_reports_through_its_outputs() {
+        let batch = vec![
+            ViewFunctionCallResult::default().with_call_outputs(
+                ViewFunctionCallOutputs::default().with_return_values(CommandOutputs::default()),
+            ),
+            ViewFunctionCallResult::default().with_call_outputs(
+                ViewFunctionCallOutputs::default()
+                    .with_execution_error(ExecutionError::default().with_source("MoveAbort(1)")),
+            ),
+        ];
+
+        let items = into_item_results(batch);
+
+        let returned = items[0].as_ref().expect("the call returned");
+        assert!(returned.return_values().is_some());
+        assert!(returned.execution_error().is_none());
+
+        let aborted = items[1].as_ref().expect("the call ran, then aborted");
+        assert!(aborted.return_values().is_none());
+        assert_eq!(
+            aborted.execution_error().and_then(|e| e.source.as_deref()),
+            Some("MoveAbort(1)")
+        );
+    }
+
+    #[test]
+    fn a_view_function_call_result_without_a_variant_is_a_protocol_error() {
+        let items = into_item_results(vec![ViewFunctionCallResult::default()]);
+
+        assert!(matches!(items[0], Err(Error::ProtoConversion(_))));
     }
 
     fn object_id(byte: u8) -> ObjectId {
