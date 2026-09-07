@@ -955,7 +955,11 @@ mod tests {
     }
 
     #[proptest]
-    fn scheme_accessors(ed25519: Ed25519PrivateKey, secp256k1: Secp256k1PrivateKey) {
+    fn scheme_accessors(
+        ed25519: Ed25519PrivateKey,
+        secp256k1: Secp256k1PrivateKey,
+        secp256r1: Secp256r1PrivateKey,
+    ) {
         let keypair = SimpleKeypair::from(ed25519.clone());
         assert_eq!(keypair.as_opt_ed25519(), Some(&ed25519));
         assert_eq!(keypair.as_ed25519(), &ed25519);
@@ -967,6 +971,12 @@ mod tests {
         assert_eq!(keypair.as_secp256k1(), &secp256k1);
         assert_eq!(keypair.as_opt_ed25519(), None);
         assert_eq!(keypair.as_opt_secp256r1(), None);
+
+        let keypair = SimpleKeypair::from(secp256r1.clone());
+        assert_eq!(keypair.as_opt_secp256r1(), Some(&secp256r1));
+        assert_eq!(keypair.as_secp256r1(), &secp256r1);
+        assert_eq!(keypair.as_opt_ed25519(), None);
+        assert_eq!(keypair.as_opt_secp256k1(), None);
     }
 
     #[test]
