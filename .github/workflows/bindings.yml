@@ -27,6 +27,9 @@ jobs:
               - ".github/workflows/bindings.yml"
               - "bindings/**"
               - "crates/iota-sdk-ffi/**"
+              # The jobs below build and run the bindings through `make`.
+              - "Makefile"
+              - "scripts/**"
 
   csharp:
     if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
