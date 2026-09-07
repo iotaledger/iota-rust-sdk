@@ -3,10 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{
-    Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, ObjectId,
-    ObjectReference, ProtocolVersion, RandomnessRound, TypeTag, UserSignature, Version,
+    Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier,
+    InvalidSignatureScheme, ObjectId, ObjectReference, ProtocolVersion, PublicKey, RandomnessRound,
+    SignatureScheme, TypeTag, UserSignature, Version,
 };
-use crate::{crypto::PublicKey, utils::write_sep};
+use crate::utils::write_sep;
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
@@ -1618,26 +1619,100 @@ impl AccountClaimKind {
 
 /// Parameters for claiming an `iota::smart_account::SmartAccount`.
 ///
-/// The account is authenticated by the built-in authenticator for
-/// `public_key`'s signature scheme, so its owner keeps signing transactions
-/// with the same key after the claim.
+/// The account is authenticated by the built-in authenticator for the claimed
+/// key's signature scheme, so its owner keeps signing transactions with the
+/// same key after the claim.
+///
+/// The key is carried as a scheme flag plus raw bytes rather than as a
+/// [`PublicKey`], so that every scheme the framework accepts can be expressed,
+/// including `MultiSig`. Both are validated on chain.
 ///
 /// # BCS
 ///
 /// ```text
-/// smart-account-claim = public-key smart-account-build-kind
+/// smart-account-claim = u8      ; public-key-scheme
+///                       bytes   ; public-key-raw-bytes
+///                       smart-account-build-kind
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SmartAccountClaim {
-    /// Public key of the address being claimed, and the key the account's
-    /// built-in authenticator verifies signatures against. The transaction is
-    /// rejected unless this key derives the transaction sender's address.
-    pub public_key: PublicKey,
+    /// Signature-scheme flag of the public key for the address being claimed:
+    /// `0x00` Ed25519, `0x01` Secp256k1, `0x02` Secp256r1, `0x03` MultiSig or
+    /// `0x06` Passkey.
+    pub public_key_scheme: u8,
+    /// Raw public key bytes, without the scheme flag prefix. For `MultiSig`
+    /// this is a BCS-encoded multisig public key.
+    ///
+    /// The transaction is rejected unless the scheme and these bytes derive
+    /// the transaction sender's address.
+    pub public_key_raw_bytes: Vec<u8>,
     /// Whether the created account object is mutable or immutable.
     pub build_kind: SmartAccountBuildKind,
+}
+
+impl SmartAccountClaim {
+    /// Creates a claim of the address derived from `public_key`, which is the
+    /// address a transaction signed by the corresponding private key is sent
+    /// from.
+    pub fn new(public_key: &PublicKey, build_kind: SmartAccountBuildKind) -> Self {
+        Self::new_unchecked(
+            public_key.scheme(),
+            public_key.as_ref().to_vec(),
+            build_kind,
+        )
+    }
+
+    /// Creates a claim of the address derived from `committee`, which is the
+    /// address a transaction signed by that committee is sent from.
+    ///
+    /// The committee is carried BCS encoded, the form the chain decodes it
+    /// from.
+    #[cfg(feature = "serde")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+    pub fn new_multisig(
+        committee: &crate::MultisigCommittee,
+        build_kind: SmartAccountBuildKind,
+    ) -> Self {
+        Self::new_unchecked(
+            SignatureScheme::Multisig,
+            bcs::to_bytes(committee).expect("bcs serialization failed"),
+            build_kind,
+        )
+    }
+
+    /// Creates a claim of the address derived from the public key described by
+    /// `scheme` and `public_key_raw_bytes`, without checking that the two
+    /// describe a key at all.
+    ///
+    /// [`Self::new`] and `Self::new_multisig` take the key itself and so
+    /// cannot produce a mismatched pair; reach for this only when the key
+    /// material is already encoded. Only `Ed25519`, `Secp256k1`, `Secp256r1`,
+    /// `Multisig` and `PasskeyAuthenticator` are valid schemes for an account
+    /// public key, and the bytes must be a valid key for the scheme; a claim
+    /// that violates either is rejected on chain.
+    pub fn new_unchecked(
+        scheme: SignatureScheme,
+        public_key_raw_bytes: Vec<u8>,
+        build_kind: SmartAccountBuildKind,
+    ) -> Self {
+        Self {
+            public_key_scheme: scheme.to_u8(),
+            public_key_raw_bytes,
+            build_kind,
+        }
+    }
+
+    /// The signature scheme of the claimed public key.
+    ///
+    /// Returns an error if [`Self::public_key_scheme`] is not a known scheme
+    /// flag, which is possible for a claim that was deserialized rather than
+    /// built through one of the constructors.
+    pub fn signature_scheme(&self) -> Result<SignatureScheme, InvalidSignatureScheme> {
+        SignatureScheme::from_byte(self.public_key_scheme)
+    }
 }
 
 /// Whether the account object created by a [`SmartAccountClaim`] can be changed
@@ -1660,4 +1735,79 @@ pub enum SmartAccountBuildKind {
     /// A frozen object: neither the authenticator nor any field can ever
     /// change.
     Immutable,
+}
+
+#[cfg(test)]
+mod tests {
+    #[cfg(target_arch = "wasm32")]
+    use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
+    use crate::{Ed25519PublicKey, PasskeyPublicKey, Secp256r1PublicKey};
+
+    #[test]
+    fn new_from_ed25519_public_key() {
+        let public_key = Ed25519PublicKey::new([1; Ed25519PublicKey::LENGTH]);
+        let claim = SmartAccountClaim::new(
+            &PublicKey::Ed25519(public_key),
+            SmartAccountBuildKind::Mutable,
+        );
+
+        assert_eq!(claim.public_key_scheme, 0x00);
+        assert_eq!(claim.public_key_raw_bytes, public_key.inner().as_slice());
+        assert_eq!(claim.signature_scheme().unwrap(), SignatureScheme::Ed25519);
+    }
+
+    #[test]
+    fn new_from_passkey_public_key() {
+        let secp256r1 = Secp256r1PublicKey::new([2; Secp256r1PublicKey::LENGTH]);
+        let claim = SmartAccountClaim::new(
+            &PublicKey::Passkey(PasskeyPublicKey::new(secp256r1)),
+            SmartAccountBuildKind::Immutable,
+        );
+
+        // A passkey is claimed by the secp256r1 key it wraps, under the
+        // passkey scheme flag, matching `PasskeyPublicKey::derive_address`.
+        assert_eq!(claim.public_key_scheme, 0x06);
+        assert_eq!(claim.public_key_raw_bytes, secp256r1.inner().as_slice());
+        assert_eq!(
+            claim.signature_scheme().unwrap(),
+            SignatureScheme::PasskeyAuthenticator
+        );
+    }
+
+    #[test]
+    fn signature_scheme_rejects_unknown_flag() {
+        let claim = SmartAccountClaim {
+            // `0x05` is the flag of the removed zklogin authenticator.
+            public_key_scheme: 0x05,
+            public_key_raw_bytes: vec![0; 32],
+            build_kind: SmartAccountBuildKind::Mutable,
+        };
+
+        assert!(claim.signature_scheme().is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn new_multisig_encodes_committee() {
+        use crate::{MultisigCommittee, MultisigMember};
+
+        let committee = MultisigCommittee::new(
+            vec![MultisigMember::new(
+                Ed25519PublicKey::new([3; Ed25519PublicKey::LENGTH]),
+                1,
+            )],
+            1,
+        )
+        .unwrap();
+        let claim = SmartAccountClaim::new_multisig(&committee, SmartAccountBuildKind::Mutable);
+
+        assert_eq!(claim.public_key_scheme, 0x03);
+        assert_eq!(claim.signature_scheme().unwrap(), SignatureScheme::Multisig);
+        // The chain decodes the raw bytes as a multisig committee.
+        let decoded = bcs::from_bytes::<MultisigCommittee>(&claim.public_key_raw_bytes).unwrap();
+        assert_eq!(decoded.threshold(), committee.threshold());
+        assert_eq!(decoded.members().len(), committee.members().len());
+    }
 }

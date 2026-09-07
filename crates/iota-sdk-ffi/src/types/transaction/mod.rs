@@ -3,14 +3,14 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::TransactionExpiration;
+use iota_sdk::types::{SignatureScheme, TransactionExpiration};
 
 use crate::{
     error::Result,
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
-        crypto::public_key::PublicKey,
+        crypto::{multisig::MultisigCommittee, public_key::PublicKey},
         digest::Digest,
         events::Event,
         move_core::{Identifier, TypeTag},
@@ -1574,14 +1574,19 @@ impl AccountClaimKind {
         ))
     }
 
+    /// Whether this claims a smart account.
     pub fn is_smart_account(&self) -> bool {
         self.0.is_smart_account()
     }
 
+    /// The smart account claim, or `None` if this is not a smart account
+    /// claim.
     pub fn as_smart_account_opt(&self) -> Option<SmartAccountClaim> {
         self.0.as_smart_account_opt().cloned().map(Into::into)
     }
 
+    /// The smart account claim, panicking if this is not a smart account
+    /// claim.
     pub fn as_smart_account(&self) -> SmartAccountClaim {
         self.0.as_smart_account().clone().into()
     }
@@ -1594,15 +1599,22 @@ impl AccountClaimKind {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// smart-account-claim = public-key                 ; public-key
-///                       smart-account-build-kind   ; build-kind
+/// smart-account-claim = u8      ; public-key-scheme
+///                       bytes   ; public-key-raw-bytes
+///                       smart-account-build-kind
 /// ```
 #[derive(uniffi::Record)]
 pub struct SmartAccountClaim {
-    /// Public key of the address being claimed, and the key the account's
-    /// built-in authenticator verifies signatures against. The transaction is
-    /// rejected unless this key derives the transaction sender's address.
-    pub public_key: Arc<PublicKey>,
+    /// Signature-scheme flag of the public key for the address being claimed:
+    /// `0x00` Ed25519, `0x01` Secp256k1, `0x02` Secp256r1, `0x03` MultiSig or
+    /// `0x06` Passkey.
+    pub public_key_scheme: u8,
+    /// Raw public key bytes, without the scheme flag prefix. For `MultiSig`
+    /// this is a BCS-encoded multisig public key.
+    ///
+    /// The transaction is rejected unless the scheme and these bytes derive
+    /// the transaction sender's address.
+    pub public_key_raw_bytes: Vec<u8>,
     /// Whether the created account object is mutable or immutable.
     pub build_kind: SmartAccountBuildKind,
 }
@@ -1610,7 +1622,8 @@ pub struct SmartAccountClaim {
 impl From<iota_sdk::types::SmartAccountClaim> for SmartAccountClaim {
     fn from(value: iota_sdk::types::SmartAccountClaim) -> Self {
         Self {
-            public_key: Arc::new(value.public_key.into()),
+            public_key_scheme: value.public_key_scheme,
+            public_key_raw_bytes: value.public_key_raw_bytes,
             build_kind: value.build_kind.into(),
         }
     }
@@ -1619,10 +1632,66 @@ impl From<iota_sdk::types::SmartAccountClaim> for SmartAccountClaim {
 impl From<SmartAccountClaim> for iota_sdk::types::SmartAccountClaim {
     fn from(value: SmartAccountClaim) -> Self {
         Self {
-            public_key: value.public_key.0.clone(),
+            public_key_scheme: value.public_key_scheme,
+            public_key_raw_bytes: value.public_key_raw_bytes,
             build_kind: value.build_kind.into(),
         }
     }
+}
+
+/// Create a `SmartAccountClaim` of the address derived from `public_key`, which
+/// is the address a transaction signed by the corresponding private key is sent
+/// from.
+#[uniffi::export]
+pub fn smart_account_claim_new(
+    public_key: &PublicKey,
+    build_kind: SmartAccountBuildKind,
+) -> SmartAccountClaim {
+    iota_sdk::types::SmartAccountClaim::new(&public_key.0, build_kind.into()).into()
+}
+
+/// Create a `SmartAccountClaim` of the address derived from `committee`, which
+/// is the address a transaction signed by that committee is sent from.
+#[uniffi::export]
+pub fn smart_account_claim_new_multisig(
+    committee: &MultisigCommittee,
+    build_kind: SmartAccountBuildKind,
+) -> SmartAccountClaim {
+    iota_sdk::types::SmartAccountClaim::new_multisig(&committee.0, build_kind.into()).into()
+}
+
+/// Create a `SmartAccountClaim` of the address derived from the public key
+/// described by `scheme` and `public_key_raw_bytes`, without checking that the
+/// two describe a key at all.
+///
+/// `smart_account_claim_new` and `smart_account_claim_new_multisig` take the
+/// key itself and so cannot produce a mismatched pair; reach for this only when
+/// the key material is already encoded. Only `Ed25519`, `Secp256k1`,
+/// `Secp256r1`, `Multisig` and `PasskeyAuthenticator` are valid schemes for an
+/// account public key, and the bytes must be a valid key for the scheme; a
+/// claim that violates either is rejected on chain.
+#[uniffi::export]
+pub fn smart_account_claim_new_unchecked(
+    scheme: SignatureScheme,
+    public_key_raw_bytes: Vec<u8>,
+    build_kind: SmartAccountBuildKind,
+) -> SmartAccountClaim {
+    iota_sdk::types::SmartAccountClaim::new_unchecked(
+        scheme,
+        public_key_raw_bytes,
+        build_kind.into(),
+    )
+    .into()
+}
+
+/// The signature scheme of the public key in `claim`.
+///
+/// Fails if the claim's scheme flag is not a known signature scheme, which is
+/// possible for a claim that was decoded rather than built here.
+#[uniffi::export]
+pub fn smart_account_claim_signature_scheme(claim: SmartAccountClaim) -> Result<SignatureScheme> {
+    let claim: iota_sdk::types::SmartAccountClaim = claim.into();
+    Ok(claim.signature_scheme()?)
 }
 
 /// Whether the account object created by a `SmartAccountClaim` can be changed

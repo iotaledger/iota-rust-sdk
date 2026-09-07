@@ -348,7 +348,8 @@ size    = uleb128   ; BCS sequence/string length (ULEB128-encoded)
 smart-account-build-kind = %d00   ; Mutable
                          / %d01   ; Immutable
 
-smart-account-claim = public-key                 ; public-key
+smart-account-claim = u8                         ; public-key-scheme
+                      bytes                      ; public-key-raw-bytes
                       smart-account-build-kind   ; build-kind
 
 split-coins = argument           ; coin
