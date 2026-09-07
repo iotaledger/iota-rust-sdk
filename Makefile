@@ -2,6 +2,10 @@
 .PHONY: all
 all:: ci ## Default target, runs the CI process
 
+# The examples run against the public networks, so a dropped request should not
+# fail CI. See scripts/retry_example.sh.
+RETRY := $(CURDIR)/scripts/retry_example.sh
+
 .PHONY: check-features
 check-features: ## Check feature flags for crates
 	$(MAKE) -C crates/iota-sdk-types check-features
@@ -249,7 +253,7 @@ go-example: ## Run a specific Go example. Usage: make go-example example
 go-example:
 	@printf "\nRunning Go example \"$(word 2,$(MAKECMDGOALS))\"\n"
 	@cd bindings/go/examples; \
-	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run $(word 2,$(MAKECMDGOALS))/main.go || exit $$?; \
+	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" $(RETRY) go run $(word 2,$(MAKECMDGOALS))/main.go || exit $$?; \
 	cd -
 
 .PHONY: go-examples
@@ -274,7 +278,7 @@ kotlin-example:
 	@printf "\nRunning Kotlin example \"$(word 2,$(MAKECMDGOALS))\"\n"
 	@cd bindings/kotlin; \
 	./gradlew build clean || exit $$?; \
-	LD_LIBRARY_PATH=./lib ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q || exit $$?; \
+	LD_LIBRARY_PATH=./lib $(RETRY) ./gradlew example -Pexample=$(word 2,$(MAKECMDGOALS)) -q || exit $$?; \
 	cd -
 
 .PHONY: kotlin-android
@@ -314,7 +318,7 @@ python-example: ## Run a specific Python example. Usage: make python-example exa
 	@true
 python-example:
 	@printf "\nRunning Python example \"$(word 2,$(MAKECMDGOALS))\"\n"
-	@PYTHONPATH=bindings/python python3 bindings/python/examples/$(word 2,$(MAKECMDGOALS)).py|| exit $$?;
+	@PYTHONPATH=bindings/python $(RETRY) python3 bindings/python/examples/$(word 2,$(MAKECMDGOALS)).py|| exit $$?;
 
 .PHONY: python-examples
 python-examples: ## Run all Python bindings examples
@@ -337,7 +341,7 @@ csharp-example: ## Run a specific C# example. Usage: make csharp-example Example
 csharp-example:
 	@printf "\nRunning C# example \"$(word 2,$(MAKECMDGOALS))\"\n"
 	@cd bindings/csharp/examples; \
-	dotnet run --project $(call snake_to_pascal,$(word 2,$(MAKECMDGOALS))) || exit $$?; \
+	$(RETRY) dotnet run --project $(call snake_to_pascal,$(word 2,$(MAKECMDGOALS))) || exit $$?; \
 	cd -
 
 .PHONY: csharp-examples
@@ -371,7 +375,7 @@ swift-example: ## Run a specific Swift example. Usage: make swift-example exampl
 swift-example:
 	@printf "\nRunning Swift example \"$(word 2,$(MAKECMDGOALS))\"\n"
 	@cd bindings/swift; \
-	LD_LIBRARY_PATH="../../target/release" DYLD_LIBRARY_PATH="../../target/release" LIBRARY_PATH="../../target/release" swift run $(call snake_to_pascal,$(word 2,$(MAKECMDGOALS))) || exit $$?; \
+	LD_LIBRARY_PATH="../../target/release" DYLD_LIBRARY_PATH="../../target/release" LIBRARY_PATH="../../target/release" $(RETRY) swift run $(call snake_to_pascal,$(word 2,$(MAKECMDGOALS))) || exit $$?; \
 	cd -
 
 .PHONY: swift-examples
@@ -397,7 +401,7 @@ wasm-example: ## Run a specific WASM example with Node. Usage: make wasm-example
 	@true
 wasm-example:
 	@printf "\nRunning WASM example \"$(word 2,$(MAKECMDGOALS))\"\n"
-	@node bindings/wasm/examples/$(word 2,$(MAKECMDGOALS)).mjs || exit $$?
+	@$(RETRY) node bindings/wasm/examples/$(word 2,$(MAKECMDGOALS)).mjs || exit $$?
 
 .PHONY: wasm-examples
 wasm-examples: ## Run all WASM bindings examples
@@ -425,7 +429,7 @@ example:
 	@printf "\nRunning Rust example \"$(word 2,$(MAKECMDGOALS))\"\n"
 	@# --all-features so examples gated behind non-default features (e.g.
 	@# `move-types`) build and run; extra features are additive.
-	@cargo run --all-features --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
+	@$(RETRY) cargo run --all-features --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
 
 .PHONY: examples
 examples: ## Run all Rust examples
