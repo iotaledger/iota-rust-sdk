@@ -131,7 +131,7 @@ macro_rules! export_iota_types_bcs_conversion {
             impl $name {
                 /// Convert this type to BCS encoded bytes.
                 pub fn to_bcs(&self) -> $crate::error::Result<Vec<u8>> {
-                    let data: iota_sdk::types::$name = self.clone().try_into()?;
+                    let data: iota_sdk::types::$name = self.clone().into();
                     Ok(::bcs::to_bytes(&data)?)
                 }
             }
@@ -195,7 +195,7 @@ macro_rules! export_iota_types_json_conversion {
             impl $name {
                 /// Convert this type to a JSON encoded string.
                 pub fn to_json(&self) -> $crate::error::Result<String> {
-                    let data: iota_sdk::types::$name = self.clone().try_into()?;
+                    let data: iota_sdk::types::$name = self.clone().into();
                     Ok(serde_json::to_string(&data)?)
                 }
             }
