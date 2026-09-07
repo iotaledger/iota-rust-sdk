@@ -14,7 +14,6 @@ async def main():
     to_address = Address.from_hex(
         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
-    # Request funds from faucet
     faucet = FaucetClient.new_localnet()
     await faucet.request_and_wait_for_finalized(from_address, client)
 

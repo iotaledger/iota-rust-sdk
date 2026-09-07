@@ -20,11 +20,9 @@ const client = GraphQlClient.newLocalnet();
 const privateKey = new Ed25519PrivateKey(new Uint8Array(32).fill(9));
 const owner = privateKey.publicKey().deriveAddress();
 
-// Request funds from faucet
 const faucet = FaucetClient.newLocalnet();
 await faucet.requestAndWaitForFinalized(owner, client);
 
-// A fresh localnet has nothing staked, so stake first and unstake that.
 const validators = await client.activeValidators();
 if (validators.data.length === 0) {
   throw new Error("no validators found");
@@ -33,8 +31,6 @@ const stakeBuilder = client.transactionBuilder(owner);
 stakeBuilder.stake(PtbArgument.u64(1000000000n), validators.data[0].address);
 const stakeTx = await stakeBuilder.finish();
 const signature = privateKey.trySignSimple(stakeTx.signingDigest());
-// Wait for finalization: the stake is not queryable until the indexer,
-// which trails execution, has caught up.
 await client.executeTransaction(
   [UserSignature.newSimple(signature)],
   stakeTx,

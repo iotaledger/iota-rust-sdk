@@ -11,7 +11,6 @@ fun main() = runBlocking {
         val privateKey = Ed25519PrivateKey(ByteArray(32) { 9 })
         val sender = privateKey.publicKey().deriveAddress()
 
-        // Request funds from faucet
         val faucet = FaucetClient.newLocalnet()
         faucet.requestAndWaitForFinalized(sender, client)
 

@@ -19,13 +19,11 @@ func main() {
 	}
 	owner := privateKey.PublicKey().DeriveAddress()
 
-	// Request funds from faucet
 	faucet := iota_sdk.FaucetClientNewLocalnet()
 	if _, err := faucet.RequestAndWaitForFinalized(owner, client); err != nil {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
-	// A fresh localnet has nothing staked, so stake first and unstake that.
 	validators, err := client.ActiveValidators(nil, nil)
 	if err != nil {
 		log.Fatalf("Failed to get active validators: %v", err)
@@ -45,8 +43,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	// Wait for finalization: the stake is not queryable until the indexer,
-	// which trails execution, has caught up.
 	waitFor := iota_sdk.WaitForTransactionFinalized
 	if _, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{iota_sdk.UserSignatureNewSimple(signature)}, stakeTx, &waitFor); err != nil {
 		log.Fatalf("Failed to stake: %v", err)

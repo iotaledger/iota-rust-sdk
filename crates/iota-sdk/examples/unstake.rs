@@ -20,7 +20,6 @@ async fn main() -> Result<()> {
         .request_and_wait_for_finalized(owner, &client)
         .await?;
 
-    // A fresh localnet has nothing staked, so stake first and unstake that.
     let validator = client
         .active_validators(None, Default::default())
         .await?
@@ -33,8 +32,6 @@ async fn main() -> Result<()> {
     builder.stake(1_000_000_000u64, validator.address.address);
     let stake_tx = builder.finish().await?;
     let sig = private_key.sign_transaction(&stake_tx)?;
-    // Wait for finalization: the stake is not queryable until the indexer,
-    // which trails execution, has caught up.
     client
         .execute_transaction(&[sig], &stake_tx, WaitForTransaction::Finalized)
         .await?;

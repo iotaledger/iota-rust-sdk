@@ -29,7 +29,6 @@ func main() {
 
 	toAddress := addrFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
-	// Request funds from faucet
 	faucet := iota_sdk.FaucetClientNewLocalnet()
 	if _, err := faucet.RequestAndWaitForFinalized(fromAddress, client); err != nil {
 		log.Fatalf("Failed to request faucet: %v", err)

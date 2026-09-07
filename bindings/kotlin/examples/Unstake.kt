@@ -11,11 +11,9 @@ fun main() = runBlocking {
         val privateKey = Ed25519PrivateKey(ByteArray(32) { 9 })
         val owner = privateKey.publicKey().deriveAddress()
 
-        // Request funds from faucet
         val faucet = FaucetClient.newLocalnet()
         faucet.requestAndWaitForFinalized(owner, client)
 
-        // A fresh localnet has nothing staked, so stake first and unstake that.
         val validators = client.activeValidators()
         if (validators.data.isEmpty()) {
             throw Exception("no validators found")
@@ -24,8 +22,6 @@ fun main() = runBlocking {
         stakeBuilder.stake(PtbArgument.u64(1000000000uL), validators.data[0].address)
         val stakeTx = stakeBuilder.finish()
         val signature = privateKey.trySignSimple(stakeTx.signingDigest())
-        // Wait for finalization: the stake is not queryable until the indexer,
-        // which trails execution, has caught up.
         client.executeTransaction(
             listOf(UserSignature.newSimple(signature)),
             stakeTx,

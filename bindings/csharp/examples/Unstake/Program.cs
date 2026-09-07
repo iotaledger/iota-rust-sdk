@@ -17,7 +17,6 @@ class Program
         var faucet = FaucetClient.NewLocalnet();
         await faucet.RequestAndWaitForFinalized(owner, client);
 
-        // A fresh localnet has nothing staked, so stake first and unstake that.
         var validators = await client.ActiveValidators();
         if (validators.Data.Length == 0)
         {
@@ -27,8 +26,6 @@ class Program
         stakeBuilder.Stake(PtbArgument.U64(1000000000), validators.Data[0].Address);
         var stakeTx = await stakeBuilder.Finish();
         var signature = privateKey.SignTransaction(stakeTx);
-        // Wait for finalization: the stake is not queryable until the indexer,
-        // which trails execution, has caught up.
         await client.ExecuteTransaction(new[] { signature }, stakeTx, WaitForTransaction.Finalized);
 
         var stakedIotas = await client.Objects(new ObjectFilter(TypeTag: StructTag.NewStakedIota().ToString(), Owner: owner));

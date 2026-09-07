@@ -18,7 +18,6 @@ const client = GraphQlClient.newLocalnet();
 const privateKey = new Ed25519PrivateKey(new Uint8Array(32).fill(9));
 const sender = privateKey.publicKey().deriveAddress();
 
-// Request funds from faucet
 const faucet = FaucetClient.newLocalnet();
 await faucet.requestAndWaitForFinalized(sender, client);
 

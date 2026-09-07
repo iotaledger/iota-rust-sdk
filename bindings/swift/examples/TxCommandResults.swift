@@ -12,7 +12,6 @@ struct TxCommandResultsExample {
     let privateKey = try Ed25519PrivateKey(bytes: Data(repeating: 9, count: 32))
     let sender = privateKey.publicKey().deriveAddress()
 
-    // Request funds from faucet
     let faucet = FaucetClient.newLocalnet()
     _ = try await faucet.requestAndWaitForFinalized(address: sender, client: client)
 

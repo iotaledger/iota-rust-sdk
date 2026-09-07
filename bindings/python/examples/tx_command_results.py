@@ -12,7 +12,6 @@ async def main():
     private_key = Ed25519PrivateKey(b"\x09" * 32)
     sender = private_key.public_key().derive_address()
 
-    # Request funds from faucet
     faucet = FaucetClient.new_localnet()
     await faucet.request_and_wait_for_finalized(sender, client)
 

@@ -27,7 +27,6 @@ func main() {
 	}
 	sender := privateKey.PublicKey().DeriveAddress()
 
-	// Request funds from faucet
 	faucet := iota_sdk.FaucetClientNewLocalnet()
 	if _, err := faucet.RequestAndWaitForFinalized(sender, client); err != nil {
 		log.Fatalf("Failed to request faucet: %v", err)

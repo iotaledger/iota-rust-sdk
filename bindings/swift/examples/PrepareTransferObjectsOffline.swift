@@ -14,7 +14,6 @@ struct PrepareTransferObjectsOfflineExample {
     let toAddress = try Address.fromHex(
       hex: "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
-    // Request funds from faucet
     let faucet = FaucetClient.newLocalnet()
     _ = try await faucet.requestAndWaitForFinalized(address: fromAddress, client: client)
 

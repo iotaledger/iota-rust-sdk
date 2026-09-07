@@ -12,11 +12,9 @@ async def main():
     private_key = Ed25519PrivateKey(b"\x09" * 32)
     owner = private_key.public_key().derive_address()
 
-    # Request funds from faucet
     faucet = FaucetClient.new_localnet()
     await faucet.request_and_wait_for_finalized(owner, client)
 
-    # A fresh localnet has nothing staked, so stake first and unstake that.
     validators = await client.active_validators()
     if len(validators.data) == 0:
         raise Exception("no validators found")
@@ -24,8 +22,6 @@ async def main():
     stake_builder.stake(PtbArgument.u64(1000000000), validators.data[0].address)
     stake_tx = await stake_builder.finish()
     sig = private_key.sign_transaction(stake_tx)
-    # Wait for finalization: the stake is not queryable until the indexer,
-    # which trails execution, has caught up.
     await client.execute_transaction([sig], stake_tx,
                                      WaitForTransaction.FINALIZED)
 
