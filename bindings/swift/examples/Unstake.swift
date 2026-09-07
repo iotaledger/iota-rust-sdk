@@ -7,10 +7,31 @@ import IotaSDK
 @main
 struct UnstakeExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
-    let owner = try Address.fromHex(
-      hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+    let privateKey = try Ed25519PrivateKey(bytes: Data(repeating: 9, count: 32))
+    let owner = privateKey.publicKey().deriveAddress()
+
+    // Request funds from faucet
+    let faucet = FaucetClient.newLocalnet()
+    _ = try await faucet.requestAndWaitForFinalized(address: owner, client: client)
+
+    // A fresh localnet has nothing staked, so stake first and unstake that.
+    let validators = try await client.activeValidators()
+    guard let validator = validators.data.first else {
+      throw NSError(
+        domain: "Unstake", code: 1,
+        userInfo: [NSLocalizedDescriptionKey: "no validators found"])
+    }
+    let stakeBuilder = client.transactionBuilder(sender: owner)
+    _ = stakeBuilder.stake(
+      stake: PtbArgument.u64(value: 1_000_000_000), validatorAddress: validator.address)
+    let stakeTx = try await stakeBuilder.finish()
+    let signature = try privateKey.signTransaction(transaction: stakeTx)
+    // Wait for finalization: the stake is not queryable until the indexer,
+    // which trails execution, has caught up.
+    _ = try await client.executeTransaction(
+      signatures: [signature], transaction: stakeTx, waitFor: WaitForTransaction.finalized)
 
     let stakedIotas = try await client.objects(
       filter: ObjectFilter(

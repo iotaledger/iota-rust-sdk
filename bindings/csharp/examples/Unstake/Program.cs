@@ -7,9 +7,29 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
+        var client = GraphQlClient.NewLocalnet();
 
-        var owner = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
+        var privateKeyBytes = new byte[32];
+        Array.Fill(privateKeyBytes, (byte)9);
+        var privateKey = new Ed25519PrivateKey(privateKeyBytes);
+        var owner = privateKey.PublicKey().DeriveAddress();
+
+        var faucet = FaucetClient.NewLocalnet();
+        await faucet.RequestAndWaitForFinalized(owner, client);
+
+        // A fresh localnet has nothing staked, so stake first and unstake that.
+        var validators = await client.ActiveValidators();
+        if (validators.Data.Length == 0)
+        {
+            throw new Exception("no validators found");
+        }
+        var stakeBuilder = client.TransactionBuilder(owner);
+        stakeBuilder.Stake(PtbArgument.U64(1000000000), validators.Data[0].Address);
+        var stakeTx = await stakeBuilder.Finish();
+        var signature = privateKey.SignTransaction(stakeTx);
+        // Wait for finalization: the stake is not queryable until the indexer,
+        // which trails execution, has caught up.
+        await client.ExecuteTransaction(new[] { signature }, stakeTx, WaitForTransaction.Finalized);
 
         var stakedIotas = await client.Objects(new ObjectFilter(TypeTag: StructTag.NewStakedIota().ToString(), Owner: owner));
         if (stakedIotas.Data.Length == 0)

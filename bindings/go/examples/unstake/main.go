@@ -4,17 +4,52 @@
 package main
 
 import (
+	"bytes"
 	"log"
 
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	owner, err := iota_sdk.AddressFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+	privateKey, err := iota_sdk.NewEd25519PrivateKey(bytes.Repeat([]byte{9}, 32))
 	if err != nil {
-		log.Fatalf("Failed to parse address: %v", err)
+		log.Fatalf("Failed to create private key: %v", err)
+	}
+	owner := privateKey.PublicKey().DeriveAddress()
+
+	// Request funds from faucet
+	faucet := iota_sdk.FaucetClientNewLocalnet()
+	if _, err := faucet.RequestAndWaitForFinalized(owner, client); err != nil {
+		log.Fatalf("Failed to request faucet: %v", err)
+	}
+
+	// A fresh localnet has nothing staked, so stake first and unstake that.
+	validators, err := client.ActiveValidators(nil, nil)
+	if err != nil {
+		log.Fatalf("Failed to get active validators: %v", err)
+	}
+	if len(validators.Data) == 0 {
+		log.Fatal("No validators found")
+	}
+	validator := validators.Data[0]
+
+	stakeBuilder := client.TransactionBuilder(owner)
+	stakeBuilder.Stake(iota_sdk.PtbArgumentU64(1000000000), validator.Address)
+	stakeTx, err := stakeBuilder.Finish()
+	if err != nil {
+		log.Fatalf("Failed to create stake transaction: %v", err)
+	}
+	signature, err := privateKey.TrySignSimple(stakeTx.SigningDigest())
+	if err != nil {
+		log.Fatalf("Failed to sign: %v", err)
+	}
+	// Wait for finalization: the stake is not queryable until the indexer,
+	// which trails execution, has caught up.
+	waitFor := iota_sdk.WaitForTransactionFinalized
+	if _, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{iota_sdk.UserSignatureNewSimple(signature)}, stakeTx, &waitFor); err != nil {
+		log.Fatalf("Failed to stake: %v", err)
 	}
 
 	stakedIotaType := iota_sdk.StructTagNewStakedIota().String()

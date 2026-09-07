@@ -7,10 +7,27 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_localnet()
 
-    owner = Address.from_hex(
-        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+    private_key = Ed25519PrivateKey(b"\x09" * 32)
+    owner = private_key.public_key().derive_address()
+
+    # Request funds from faucet
+    faucet = FaucetClient.new_localnet()
+    await faucet.request_and_wait_for_finalized(owner, client)
+
+    # A fresh localnet has nothing staked, so stake first and unstake that.
+    validators = await client.active_validators()
+    if len(validators.data) == 0:
+        raise Exception("no validators found")
+    stake_builder = client.transaction_builder(owner)
+    stake_builder.stake(PtbArgument.u64(1000000000), validators.data[0].address)
+    stake_tx = await stake_builder.finish()
+    sig = private_key.sign_transaction(stake_tx)
+    # Wait for finalization: the stake is not queryable until the indexer,
+    # which trails execution, has caught up.
+    await client.execute_transaction([sig], stake_tx,
+                                     WaitForTransaction.FINALIZED)
 
     staked_iotas = await client.objects(filter=ObjectFilter(
         type_tag=str(StructTag.new_staked_iota()), owner=owner))

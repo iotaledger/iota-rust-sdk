@@ -3,6 +3,8 @@
 
 import {
   Address,
+  Ed25519PrivateKey,
+  FaucetClient,
   GraphQlClient,
   Identifier,
   PtbArgument,
@@ -11,10 +13,14 @@ import {
 
 await initAsync();
 
-const client = GraphQlClient.newTestnet();
-const sender = Address.fromHex(
-  "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151",
-);
+const client = GraphQlClient.newLocalnet();
+
+const privateKey = new Ed25519PrivateKey(new Uint8Array(32).fill(9));
+const sender = privateKey.publicKey().deriveAddress();
+
+// Request funds from faucet
+const faucet = FaucetClient.newLocalnet();
+await faucet.requestAndWaitForFinalized(sender, client);
 
 const builder = client.transactionBuilder(sender);
 

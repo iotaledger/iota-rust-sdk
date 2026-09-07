@@ -6,17 +6,38 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newTestnet()
+        val client = GraphQlClient.newLocalnet()
 
-        val owner =
-            Address.fromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+        val privateKey = Ed25519PrivateKey(ByteArray(32) { 9 })
+        val owner = privateKey.publicKey().deriveAddress()
+
+        // Request funds from faucet
+        val faucet = FaucetClient.newLocalnet()
+        faucet.requestAndWaitForFinalized(owner, client)
+
+        // A fresh localnet has nothing staked, so stake first and unstake that.
+        val validators = client.activeValidators()
+        if (validators.data.isEmpty()) {
+            throw Exception("no validators found")
+        }
+        val stakeBuilder = client.transactionBuilder(owner)
+        stakeBuilder.stake(PtbArgument.u64(1000000000uL), validators.data[0].address)
+        val stakeTx = stakeBuilder.finish()
+        val signature = privateKey.trySignSimple(stakeTx.signingDigest())
+        // Wait for finalization: the stake is not queryable until the indexer,
+        // which trails execution, has caught up.
+        client.executeTransaction(
+            listOf(UserSignature.newSimple(signature)),
+            stakeTx,
+            WaitForTransaction.FINALIZED,
+        )
 
         val stakedIotas =
             client.objects(
                 ObjectFilter(typeTag = StructTag.newStakedIota().toString(), owner = owner)
             )
         if (stakedIotas.data.isEmpty()) {
-            throw Exception("no validators found")
+            throw Exception("no staked iotas found")
         }
         val stakedIota = stakedIotas.data[0]
 

@@ -7,10 +7,14 @@ import IotaSDK
 @main
 struct TxCommandResultsExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
-    let sender = try Address.fromHex(
-      hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+    let privateKey = try Ed25519PrivateKey(bytes: Data(repeating: 9, count: 32))
+    let sender = privateKey.publicKey().deriveAddress()
+
+    // Request funds from faucet
+    let faucet = FaucetClient.newLocalnet()
+    _ = try await faucet.requestAndWaitForFinalized(address: sender, client: client)
 
     let builder = client.transactionBuilder(sender: sender)
 

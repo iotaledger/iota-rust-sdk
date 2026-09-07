@@ -4,9 +4,9 @@
 use eyre::{OptionExt, Result};
 use iota_sdk::{
     crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
-    graphql_client::{Client, faucet::FaucetClient},
+    graphql_client::{Client, faucet::FaucetClient, query_types::ObjectFilter},
     transaction_builder::WaitForTransaction,
-    types::{IdOperation, ObjectOut},
+    types::StructTag,
 };
 
 #[tokio::main]
@@ -29,34 +29,32 @@ async fn main() -> Result<()> {
         .next()
         .ok_or_eyre("no validators found")?;
 
-    println!(
-        "Staking to validator {}",
-        validator.name.as_deref().unwrap_or("with no name")
-    );
-
     let mut builder = client.transaction_builder(owner);
     builder.stake(1_000_000_000u64, validator.address.address);
     let stake_tx = builder.finish().await?;
     let sig = private_key.sign_transaction(&stake_tx)?;
-    let effects = client
+    // Wait for finalization: the stake is not queryable until the indexer,
+    // which trails execution, has caught up.
+    client
         .execute_transaction(&[sig], &stake_tx, WaitForTransaction::Finalized)
         .await?;
 
-    // The stake is in the effects, so no query is needed to find it.
-    let staked_iota = effects
-        .as_v1()
-        .changed_objects
-        .iter()
-        .find(|obj| {
-            obj.id_operation == IdOperation::Created
-                && matches!(obj.output_state, ObjectOut::ObjectWrite { owner: o, .. } if o.into_address() == owner)
-        })
-        .ok_or_eyre("stake transaction created no stake")?
-        .object_id;
+    let staked_iota = client
+        .objects(
+            ObjectFilter::default()
+                .with_type(StructTag::new_staked_iota().to_string())
+                .with_owner(owner),
+            Default::default(),
+        )
+        .await?
+        .data
+        .into_iter()
+        .next()
+        .ok_or_eyre("no staked iota found")?;
 
-    let mut builder = client.transaction_builder(owner);
+    let mut builder = client.transaction_builder(*staked_iota.owner().as_address());
 
-    builder.unstake(staked_iota);
+    builder.unstake(staked_iota.id());
 
     let res = builder.dry_run(false).await?;
 
