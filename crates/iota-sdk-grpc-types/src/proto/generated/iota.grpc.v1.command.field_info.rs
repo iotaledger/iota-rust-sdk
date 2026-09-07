@@ -317,6 +317,63 @@ mod _field_impls {
             self.finish()
         }
     }
+    impl InputArgument {
+        pub const BCS_FIELD: &'static MessageField = &MessageField {
+            name: "bcs",
+            json_name: "bcs",
+            number: 1i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
+        };
+        pub const JSON_FIELD: &'static MessageField = &MessageField {
+            name: "json",
+            json_name: "json",
+            number: 2i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: None,
+        };
+    }
+    impl InputArgument {
+        pub const INPUT_ONEOF: &'static str = "input";
+    }
+    impl MessageFields for InputArgument {
+        const FIELDS: &'static [&'static MessageField] = &[
+            Self::BCS_FIELD,
+            Self::JSON_FIELD,
+        ];
+        const ONEOFS: &'static [&'static str] = &["input"];
+    }
+    impl InputArgument {
+        pub fn path_builder() -> InputArgumentFieldPathBuilder {
+            InputArgumentFieldPathBuilder::new()
+        }
+    }
+    pub struct InputArgumentFieldPathBuilder {
+        path: Vec<&'static str>,
+    }
+    impl InputArgumentFieldPathBuilder {
+        #[allow(clippy::new_without_default)]
+        pub fn new() -> Self {
+            Self { path: Default::default() }
+        }
+        #[doc(hidden)]
+        pub fn new_with_base(base: Vec<&'static str>) -> Self {
+            Self { path: base }
+        }
+        pub fn finish(self) -> String {
+            self.path.join(".")
+        }
+        pub fn bcs(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
+            self.path.push(InputArgument::BCS_FIELD.name);
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn json(mut self) -> String {
+            self.path.push(InputArgument::JSON_FIELD.name);
+            self.finish()
+        }
+    }
     impl CommandOutputs {
         pub const OUTPUTS_FIELD: &'static MessageField = &MessageField {
             name: "outputs",
