@@ -18,11 +18,8 @@ fun main() = runBlocking {
         faucet.requestAndWaitForFinalized(fromAddress, client)
 
         val coins = client.objects(ObjectFilter(owner = fromAddress)).data
-        if (coins.size < 4) {
-            throw Exception("Expected at least 4 coins, got ${coins.size}")
-        }
-        val objsToTransfer = coins.drop(1).take(3).map { PtbArgument.objectRef(it.objectRef()) }
         val gasCoin = coins.first()
+        val objsToTransfer = coins.drop(1).map { PtbArgument.objectRef(it.objectRef()) }
 
         var gasPrice = client.referenceGasPrice()
 
