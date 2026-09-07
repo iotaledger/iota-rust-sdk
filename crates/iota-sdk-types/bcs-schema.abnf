@@ -222,6 +222,8 @@ execution-error = %d00                               ; InsufficientGas
                 / %d38                               ; InvalidLinkage
                 / %d39 execution-error               ; MoveAuthentication
                 / %d40 u64                           ; ExecutionCanceledDueToExecutionWorkerCongestion
+                / %d41 u64 u64                       ; MoveVectorElemTooBig
+                / %d42 u64 u64                       ; MoveRawValueTooBig
 
 execution-status = %d00                                     ; Success
                  / %d01 execution-error (%d00 / %d01 u64)   ; Failure
