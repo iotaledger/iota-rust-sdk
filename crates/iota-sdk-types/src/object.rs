@@ -358,7 +358,7 @@ impl std::str::FromStr for MoveObjectType {
 /// ; The first 32 bytes of the `bytes` contents are the object's object-id.
 /// ```
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MoveStruct {
@@ -1002,6 +1002,33 @@ mod serialization {
         }
     }
 
+    /// Deserialization target mirroring `MoveStruct`'s fields, so that
+    /// `contents` can be validated through `MoveStruct::new` before the value
+    /// reaches the public type, where `id()` relies on that invariant.
+    #[derive(serde::Deserialize)]
+    #[serde(rename = "MoveStruct")]
+    struct RawMoveStruct {
+        object_type: MoveObjectType,
+        version: Version,
+        #[serde(with = "crate::_serde::ReadableBase64Encoded")]
+        contents: Vec<u8>,
+    }
+
+    impl<'de> Deserialize<'de> for MoveStruct {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            let RawMoveStruct {
+                object_type,
+                version,
+                contents,
+            } = RawMoveStruct::deserialize(deserializer)?;
+
+            MoveStruct::new(object_type, version, contents).map_err(serde::de::Error::custom)
+        }
+    }
+
     #[cfg(test)]
     mod tests {
         use std::collections::BTreeMap;
@@ -1011,6 +1038,60 @@ mod serialization {
 
         use super::*;
         use crate::{Identifier, TypeOrigin, UpgradeInfo, object::Object};
+
+        // A `MoveStruct` whose `contents` is shorter than an `ObjectId` used to
+        // deserialize successfully and then panic in `id()`. Both the BCS and
+        // JSON paths must reject it up front.
+        #[test]
+        fn truncated_move_struct_contents_is_rejected() {
+            const SHORT: usize = ObjectId::LENGTH - 1;
+
+            // BCS layout: GasCoin tag (0x01) | version u64 | contents uleb128
+            // length | contents.
+            let mut short_bcs = vec![0x01];
+            short_bcs.extend_from_slice(&[0u8; 8]);
+            short_bcs.push(SHORT as u8);
+            short_bcs.extend_from_slice(&[0u8; SHORT]);
+
+            let err = bcs::from_bytes::<MoveStruct>(&short_bcs).unwrap_err();
+            assert!(
+                err.to_string().contains("MoveStruct contents"),
+                "unexpected BCS error: {err}"
+            );
+
+            // Same layout wrapped in an `Object`: ObjectData::Struct (0x00) |
+            // MoveStruct | Owner::Immutable (0x03) | digest (uleb128 length +
+            // 32 bytes) | storage_rebate u64.
+            let mut short_object = vec![0x00];
+            short_object.extend_from_slice(&short_bcs);
+            short_object.push(0x03);
+            short_object.push(0x20);
+            short_object.extend_from_slice(&[0u8; 32]);
+            short_object.extend_from_slice(&[0u8; 8]);
+            assert!(bcs::from_bytes::<Object>(&short_object).is_err());
+
+            let short_json = format!(
+                r#"{{"object_type":"0x2::coin::Coin<0x2::iota::IOTA>","version":"0","contents":"{}"}}"#,
+                <base64ct::Base64 as base64ct::Encoding>::encode_string(&[0u8; SHORT]),
+            );
+            let err = serde_json::from_str::<MoveStruct>(&short_json).unwrap_err();
+            assert!(
+                err.to_string().contains("MoveStruct contents"),
+                "unexpected JSON error: {err}"
+            );
+
+            // Exactly `ObjectId::LENGTH` bytes is the accepted minimum.
+            let valid = MoveStruct::new(
+                MoveObjectType::new(StructTag::new_gas_coin()),
+                Version::from_u64(0),
+                vec![0u8; ObjectId::LENGTH],
+            )
+            .unwrap();
+            let bcs_bytes = bcs::to_bytes(&valid).unwrap();
+            assert_eq!(bcs::from_bytes::<MoveStruct>(&bcs_bytes).unwrap(), valid);
+            let json = serde_json::to_string(&valid).unwrap();
+            assert_eq!(serde_json::from_str::<MoveStruct>(&json).unwrap(), valid);
+        }
 
         #[test]
         fn package_object_json_snapshot() {
