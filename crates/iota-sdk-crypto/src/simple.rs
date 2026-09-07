@@ -860,4 +860,26 @@ mod tests {
         let result = SimpleKeypair::from_bech32(invalid_data);
         assert!(result.is_err());
     }
+
+    // The CLI, the keystore and this crate all encode with the Bech32
+    // checksum, so a Bech32m checksum over the same payload must not decode.
+    #[cfg(feature = "bech32")]
+    #[test]
+    fn test_bech32_rejects_bech32m_checksum() {
+        use bech32::{Bech32, Bech32m, Hrp};
+        use rand::{SeedableRng, rngs::StdRng};
+
+        let keypair: SimpleKeypair =
+            Ed25519PrivateKey::random_with(StdRng::from_seed([4; 32])).into();
+        let hrp = Hrp::parse(crate::IOTA_PRIV_KEY_PREFIX).unwrap();
+        let payload = keypair.to_bytes();
+
+        let bech32 = bech32::encode::<Bech32>(hrp, &payload).unwrap();
+        assert_eq!(bech32, keypair.to_bech32().unwrap());
+        SimpleKeypair::from_bech32(&bech32).unwrap();
+
+        let bech32m = bech32::encode::<Bech32m>(hrp, &payload).unwrap();
+        assert_ne!(bech32, bech32m);
+        SimpleKeypair::from_bech32(&bech32m).unwrap_err();
+    }
 }

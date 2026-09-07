@@ -214,6 +214,27 @@ impl From<&crate::PasskeyPublicKey> for Address {
     }
 }
 
+impl crate::PasskeyAuthenticator {
+    /// Derive the `Address` of the passkey that produced this authenticator.
+    ///
+    /// See [`PasskeyPublicKey::derive_address`](crate::PasskeyPublicKey::derive_address).
+    pub fn derive_address(&self) -> Address {
+        self.public_key().derive_address()
+    }
+}
+
+impl From<crate::PasskeyAuthenticator> for Address {
+    fn from(authenticator: crate::PasskeyAuthenticator) -> Self {
+        authenticator.derive_address()
+    }
+}
+
+impl From<&crate::PasskeyAuthenticator> for Address {
+    fn from(authenticator: &crate::PasskeyAuthenticator) -> Self {
+        authenticator.derive_address()
+    }
+}
+
 impl crate::PublicKey {
     /// Derive an `Address` from this Public Key
     ///
@@ -242,6 +263,28 @@ impl From<crate::PublicKey> for Address {
 impl From<&crate::PublicKey> for Address {
     fn from(public_key: &crate::PublicKey) -> Self {
         public_key.derive_address()
+    }
+}
+
+impl crate::SimpleSignature {
+    /// Derive the `Address` of the public key that produced this signature.
+    ///
+    /// See the `derive_address` documentation of the concrete key types for
+    /// the scheme-specific hashing rules.
+    pub fn derive_address(&self) -> Address {
+        self.to_public_key().derive_address()
+    }
+}
+
+impl From<crate::SimpleSignature> for Address {
+    fn from(signature: crate::SimpleSignature) -> Self {
+        signature.derive_address()
+    }
+}
+
+impl From<&crate::SimpleSignature> for Address {
+    fn from(signature: &crate::SimpleSignature) -> Self {
+        signature.derive_address()
     }
 }
 
@@ -281,13 +324,34 @@ impl From<&crate::MultisigCommittee> for Address {
     }
 }
 
+impl crate::MultisigAggregatedSignature {
+    /// Derive the `Address` of the committee that produced this signature.
+    ///
+    /// See [`MultisigCommittee::derive_address`](crate::MultisigCommittee::derive_address).
+    pub fn derive_address(&self) -> Address {
+        self.committee().derive_address()
+    }
+}
+
+impl From<crate::MultisigAggregatedSignature> for Address {
+    fn from(signature: crate::MultisigAggregatedSignature) -> Self {
+        signature.derive_address()
+    }
+}
+
+impl From<&crate::MultisigAggregatedSignature> for Address {
+    fn from(signature: &crate::MultisigAggregatedSignature) -> Self {
+        signature.derive_address()
+    }
+}
+
 impl crate::UserSignature {
     /// Derive the `Address` of the signer that this signature authenticates.
     pub fn derive_address(&self) -> Address {
         match self {
-            Self::Simple(simple) => simple.to_public_key().derive_address(),
-            Self::Multisig(multisig) => multisig.committee().derive_address(),
-            Self::PasskeyAuthenticator(passkey) => passkey.public_key().derive_address(),
+            Self::Simple(simple) => simple.derive_address(),
+            Self::Multisig(multisig) => multisig.derive_address(),
+            Self::PasskeyAuthenticator(passkey) => passkey.derive_address(),
             Self::MoveAuthenticator(move_authenticator) => move_authenticator.address(),
         }
     }
@@ -692,6 +756,17 @@ mod serde_tests {
         for (b64, expected) in fixtures {
             let sig = UserSignature::from_base64(b64).unwrap();
             assert_eq!(sig.derive_address().to_string(), expected);
+
+            // The inner signature types must agree with the enum.
+            let inner = match &sig {
+                UserSignature::Simple(simple) => simple.derive_address(),
+                UserSignature::Multisig(multisig) => multisig.derive_address(),
+                UserSignature::PasskeyAuthenticator(passkey) => passkey.derive_address(),
+                UserSignature::MoveAuthenticator(move_authenticator) => {
+                    move_authenticator.address()
+                }
+            };
+            assert_eq!(inner.to_string(), expected);
         }
 
         // zkLogin (flag 0x05) is deprecated: serialized signatures are rejected
