@@ -84,22 +84,19 @@ impl Client {
         &self,
         digests: impl IntoIterator<Item = TransactionDigest>,
     ) -> Result<HashMap<TransactionDigest, SignedTransaction>> {
-        let digest_strings = digests
-            .into_iter()
-            .map(|d| d.to_string())
-            .collect::<Vec<_>>();
-        if digest_strings.is_empty() {
+        let digests = digests.into_iter().collect::<Vec<_>>();
+        if digests.is_empty() {
             return Ok(HashMap::new());
         }
+
         // One page per round trip, so ask for the largest the server allows.
         // Falling back to `None` leaves the page size up to the server.
         let limit = self.max_page_size().await.ok();
 
-        let mut transactions = HashMap::with_capacity(digest_strings.len());
-        // Counts the nodes of every page, misses included, to tell a fully
-        // walked response apart from one whose pages ran out early.
-        let mut nodes_seen = 0;
+        let mut transactions = HashMap::with_capacity(digests.len());
         let mut cursor = None;
+        let mut digest_idx = 0;
+        let digest_strings = digests.iter().map(|d| d.to_string()).collect::<Vec<_>>();
         loop {
             let operation = TransactionsByDigestsQuery::build(TransactionsByDigestsQueryArgs {
                 digests: digest_strings.clone(),
@@ -108,31 +105,31 @@ impl Client {
             });
             let page = self.run_query(&operation).await?.transactions_by_digests;
 
-            // An empty page makes no progress, so stop rather than spin on the
-            // same cursor.
             if page.nodes.is_empty() {
                 break;
             }
-            nodes_seen += page.nodes.len();
-            for node in page.nodes.into_iter().flatten() {
-                let transaction: SignedTransaction = node.try_into()?;
-                transactions.insert(transaction.transaction.digest(), transaction);
+            for node in page.nodes.into_iter() {
+                if let Some(node) = node {
+                    let transaction: SignedTransaction = node.try_into()?;
+                    transactions.insert(digests[digest_idx], transaction);
+                }
+                digest_idx += 1;
             }
 
             cursor = page.end_cursor;
-            if !page.has_next_page || cursor.is_none() || nodes_seen >= digest_strings.len() {
+            if !page.has_next_page || cursor.is_none() || digest_idx >= digests.len() {
                 break;
             }
         }
 
         // The server holds one node per digest, so a short response means the
         // pages could not be walked to the end.
-        if nodes_seen != digest_strings.len() {
+        if digest_idx != digests.len() {
             return Err(Error::from_message(
                 Kind::Query,
                 format!(
-                    "expected one entry per digest, got {nodes_seen} for {} digests",
-                    digest_strings.len()
+                    "expected one entry per digest, got {digest_idx} for {} digests",
+                    digests.len()
                 ),
             ));
         }
