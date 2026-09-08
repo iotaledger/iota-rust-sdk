@@ -199,7 +199,7 @@ impl CheckpointResponse {
     }
 
     /// Build a full
-    /// [`CheckpointData`](iota_types::checkpoint::CheckpointData)
+    /// [`CheckpointData`](iota_types::CheckpointData)
     /// from the response.
     ///
     /// Requires the checkpoint summary, signature, contents, and all
@@ -222,8 +222,8 @@ impl CheckpointResponse {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn checkpoint_data(&self) -> Result<iota_types::checkpoint::CheckpointData> {
-        Ok(iota_types::checkpoint::CheckpointData {
+    pub fn checkpoint_data(&self) -> Result<iota_types::CheckpointData> {
+        Ok(iota_types::CheckpointData {
             checkpoint_contents: self.contents()?.contents()?,
             checkpoint_summary: iota_types::SignedCheckpointSummary {
                 checkpoint: self.summary()?.summary()?,
