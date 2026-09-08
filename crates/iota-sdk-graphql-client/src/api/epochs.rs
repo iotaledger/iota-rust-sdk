@@ -8,21 +8,24 @@ use cynic::QueryBuilder;
 
 use crate::{
     Client,
-    error::Result,
+    error::GraphQLResult,
     query_types::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery},
 };
 
 impl Client {
     /// Internal method for getting the epoch summary that is called in a few
     /// other APIs for convenience.
-    pub(crate) async fn epoch_summary(&self, epoch: Option<u64>) -> Result<EpochSummaryQuery> {
+    pub(crate) async fn epoch_summary(
+        &self,
+        epoch: Option<u64>,
+    ) -> GraphQLResult<EpochSummaryQuery> {
         let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
         self.run_query(&operation).await
     }
 
     /// Return the epoch information for the provided epoch. If no epoch is
     /// provided, it will return the last known epoch.
-    pub async fn epoch(&self, epoch: impl Into<Option<u64>>) -> Result<Option<Epoch>> {
+    pub async fn epoch(&self, epoch: impl Into<Option<u64>>) -> GraphQLResult<Option<Epoch>> {
         let operation = EpochQuery::build(EpochArgs { id: epoch.into() });
         let response = self.run_query(&operation).await?;
 
@@ -35,7 +38,7 @@ impl Client {
     pub async fn epoch_total_checkpoints(
         &self,
         epoch: impl Into<Option<u64>>,
-    ) -> Result<Option<u64>> {
+    ) -> GraphQLResult<Option<u64>> {
         let response = self.epoch_summary(epoch.into()).await?;
 
         Ok(response.epoch.and_then(|e| e.total_checkpoints))
@@ -47,7 +50,7 @@ impl Client {
     pub async fn epoch_total_transaction_blocks(
         &self,
         epoch: impl Into<Option<u64>>,
-    ) -> Result<Option<u64>> {
+    ) -> GraphQLResult<Option<u64>> {
         let response = self.epoch_summary(epoch.into()).await?;
 
         Ok(response.epoch.and_then(|e| e.total_transactions))

@@ -45,9 +45,9 @@ where
     T: Clone + Unpin,
     F: Fn(PaginationFilter) -> Fut,
     F: Unpin,
-    Fut: Future<Output = Result<Page<T>, error::Error>>,
+    Fut: Future<Output = Result<Page<T>, error::GraphQLError>>,
 {
-    type Item = Result<T, error::Error>;
+    type Item = Result<T, error::GraphQLError>;
 
     fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         if self.finished {
@@ -179,7 +179,7 @@ where
 pub fn stream_paginated_query<T, F, Fut>(query_fn: F, direction: Direction) -> PageStream<T, F, Fut>
 where
     F: Fn(PaginationFilter) -> Fut,
-    Fut: Future<Output = Result<Page<T>, error::Error>>,
+    Fut: Future<Output = Result<Page<T>, error::GraphQLError>>,
 {
     PageStream::new(query_fn, direction)
 }

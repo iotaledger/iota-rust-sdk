@@ -10,7 +10,7 @@ use iota_types::{SignedTransaction, Transaction, TransactionEffects, Transaction
 
 use crate::{
     Client, DryRunEffect, DryRunResult,
-    error::Result,
+    error::GraphQLResult,
     query_types::{DryRunArgs, DryRunQuery, ObjectRef, TransactionMetadata},
 };
 
@@ -26,7 +26,7 @@ impl Client {
         &self,
         transaction: &Transaction,
         skip_checks: bool,
-    ) -> Result<DryRunResult> {
+    ) -> GraphQLResult<DryRunResult> {
         let Transaction::V1(v1) = transaction else {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
@@ -68,7 +68,7 @@ impl Client {
         transaction_kind: &TransactionKind,
         skip_checks: bool,
         transaction_metadata: TransactionMetadata,
-    ) -> Result<DryRunResult> {
+    ) -> GraphQLResult<DryRunResult> {
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&transaction_kind)?);
         self.dry_run(tx_bytes, skip_checks, Some(transaction_metadata))
             .await
@@ -80,7 +80,7 @@ impl Client {
         tx_bytes: String,
         skip_checks: bool,
         tx_meta: impl Into<Option<TransactionMetadata>>,
-    ) -> Result<DryRunResult> {
+    ) -> GraphQLResult<DryRunResult> {
         let operation = DryRunQuery::build(DryRunArgs {
             tx_bytes,
             skip_checks,
@@ -95,7 +95,7 @@ impl Client {
             .iter()
             .flatten()
             .map(DryRunEffect::try_from)
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         let txn_block = &response.dry_run_transaction_block.transaction;
 

@@ -1,10 +1,10 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::graphql_client::{Client, error::Result, query_types::ObjectFilter};
+use iota_sdk::graphql_client::{Client, error::GraphQLResult, query_types::ObjectFilter};
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> GraphQLResult<()> {
     let client = Client::new_testnet();
 
     let coins = client
