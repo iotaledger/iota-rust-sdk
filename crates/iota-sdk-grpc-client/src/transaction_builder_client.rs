@@ -148,7 +148,7 @@ impl TransactionBuilderLedgerClient for Client {
             .and_then(|config| config.attributes)
             .map(|attrs| attrs.attributes)
             .unwrap_or_default();
-        Ok(ProtocolConfig { attributes })
+        Ok(ProtocolConfig::new(attributes))
     }
 
     async fn reference_gas_price(
