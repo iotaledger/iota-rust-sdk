@@ -176,7 +176,7 @@ impl Verifier<ValidatorAggregatedSignature> for ValidatorCommitteeSignatureVerif
         }
 
         let mut signed_weight = 0;
-        let mut bitmap = signature.signers();
+        let mut bitmap = signature.signer_indices();
 
         let mut aggregated_public_key = {
             let idx = bitmap.next().ok_or_else(|| {

@@ -218,7 +218,7 @@ impl ValidatorAggregatedSignature {
     }
 
     /// The committee indices of the validators that signed, in ascending order.
-    pub fn signers(&self) -> impl Iterator<Item = u32> + '_ {
+    pub fn signer_indices(&self) -> impl Iterator<Item = u32> + '_ {
         self.bitmap.iter()
     }
 
@@ -410,7 +410,7 @@ mod tests {
             [4, 1, 4, 0],
         );
 
-        assert_eq!(signature.signers().collect::<Vec<_>>(), [0, 1, 4]);
+        assert_eq!(signature.signer_indices().collect::<Vec<_>>(), [0, 1, 4]);
         assert_eq!(signature.signer_count(), 3);
     }
 
