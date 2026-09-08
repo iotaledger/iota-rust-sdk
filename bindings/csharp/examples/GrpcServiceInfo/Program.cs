@@ -14,7 +14,7 @@ class Program
             var info = await client.GetServiceInfo();
             Console.WriteLine($"Chain ID: {info.ChainId}");
             Console.WriteLine($"Epoch: {info.Epoch}");
-            Console.WriteLine($"Checkpoint height: {info.CheckpointHeight}");
+            Console.WriteLine($"Checkpoint height: {info.ExecutedCheckpointHeight}");
 
             var gasPrice = await client.GetReferenceGasPrice();
             Console.WriteLine($"Reference gas price: {gasPrice}");

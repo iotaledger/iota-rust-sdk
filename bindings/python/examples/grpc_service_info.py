@@ -12,7 +12,7 @@ async def main():
     info = await client.get_service_info()
     print("Chain ID:", info.chain_id)
     print("Epoch:", info.epoch)
-    print("Checkpoint height:", info.checkpoint_height)
+    print("Checkpoint height:", info.executed_checkpoint_height)
 
     gas_price = await client.get_reference_gas_price()
     print("Reference gas price:", gas_price)

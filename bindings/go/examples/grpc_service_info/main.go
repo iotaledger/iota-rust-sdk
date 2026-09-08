@@ -26,8 +26,8 @@ func main() {
 	if info.Epoch != nil {
 		fmt.Println("Epoch:", *info.Epoch)
 	}
-	if info.CheckpointHeight != nil {
-		fmt.Println("Checkpoint height:", *info.CheckpointHeight)
+	if info.ExecutedCheckpointHeight != nil {
+		fmt.Println("Checkpoint height:", *info.ExecutedCheckpointHeight)
 	}
 
 	gasPrice, err := client.GetReferenceGasPrice()

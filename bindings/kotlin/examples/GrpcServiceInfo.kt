@@ -11,7 +11,7 @@ fun main() = runBlocking {
         val info = client.getServiceInfo()
         println("Chain ID: ${info.chainId}")
         println("Epoch: ${info.epoch}")
-        println("Checkpoint height: ${info.checkpointHeight}")
+        println("Checkpoint height: ${info.executedCheckpointHeight}")
 
         val gasPrice = client.getReferenceGasPrice()
         println("Reference gas price: $gasPrice")

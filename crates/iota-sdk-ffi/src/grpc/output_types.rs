@@ -32,10 +32,10 @@ pub struct ServiceInfo {
     /// Current epoch of the node based on its highest executed checkpoint.
     pub epoch: Option<u64>,
     /// Checkpoint height of the most recently executed checkpoint.
-    pub checkpoint_height: Option<u64>,
+    pub executed_checkpoint_height: Option<u64>,
     /// Unix timestamp in milliseconds of the most recently executed
     /// checkpoint.
-    pub checkpoint_timestamp_ms: Option<u64>,
+    pub executed_checkpoint_timestamp_ms: Option<u64>,
     /// The lowest checkpoint for which checkpoints and transaction data are
     /// available.
     pub lowest_available_checkpoint: Option<u64>,
@@ -59,8 +59,8 @@ impl TryFrom<&proto::ledger_service::GetServiceInfoResponse> for ServiceInfo {
                 .map(Arc::new),
             chain: value.chain.clone(),
             epoch: value.epoch,
-            checkpoint_height: value.executed_checkpoint_height,
-            checkpoint_timestamp_ms: value
+            executed_checkpoint_height: value.executed_checkpoint_height,
+            executed_checkpoint_timestamp_ms: value
                 .executed_checkpoint_timestamp
                 .map(proto_to_timestamp_ms)
                 .transpose()?,

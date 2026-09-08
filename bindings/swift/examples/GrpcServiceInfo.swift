@@ -15,7 +15,7 @@ struct GrpcServiceInfoExample {
     if let epoch = info.epoch {
       print("Epoch:", epoch)
     }
-    if let checkpointHeight = info.checkpointHeight {
+    if let checkpointHeight = info.executedCheckpointHeight {
       print("Checkpoint height:", checkpointHeight)
     }
 
