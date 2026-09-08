@@ -50,6 +50,7 @@ impl crate::TreeDisplay for TransactionEffects {
 /// transaction was sequenced against, drawn from both the objects it changed
 /// and those it left unchanged.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[non_exhaustive]
 pub enum InputSharedObject {
     /// Taken mutably, and written back by the transaction.
     Mutate(ObjectReference),
@@ -106,6 +107,7 @@ impl crate::TreeDisplay for InputSharedObject {
 /// [`TransactionEffectsV1::all_changed_objects`] with which of the object sets
 /// it came from.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[non_exhaustive]
 pub enum WriteKind {
     /// The object existed already and the transaction changed its contents.
     Mutate,
@@ -133,6 +135,7 @@ impl std::fmt::Display for WriteKind {
 /// [`TransactionEffectsV1::all_removed_objects`] with which of the object sets
 /// it came from.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[non_exhaustive]
 pub enum ObjectRemoveKind {
     /// The transaction deleted the object.
     Delete,

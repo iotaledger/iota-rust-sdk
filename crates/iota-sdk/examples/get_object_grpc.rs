@@ -58,6 +58,7 @@ async fn main() -> Result<()> {
         match obj.object_type() {
             iota_sdk::types::ObjectType::Package => "Package".to_owned(),
             iota_sdk::types::ObjectType::Struct(tag) => format!("{tag}"),
+            other => format!("{other}"),
         }
     );
     println!("BCS bytes: {}", hex::encode(obj.as_struct().contents()));

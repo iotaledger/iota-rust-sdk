@@ -223,6 +223,7 @@ impl std::fmt::Display for Owner {
 #[allow(clippy::large_enum_variant)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[non_exhaustive]
 // TODO think about hiding this type and not exposing it
 pub enum ObjectData {
     /// An object whose governing logic lives in a published Move module
@@ -516,6 +517,7 @@ pub struct MoveStructContentsError {
 
 /// Type of an IOTA object
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+#[non_exhaustive]
 pub enum ObjectType {
     /// Move package containing one or more bytecode modules
     Package,
