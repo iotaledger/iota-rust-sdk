@@ -74,7 +74,7 @@ func main() {
 	log.Printf("Signing Digest: %v", txn.SigningDigestHex())
 	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
-	res, err := client.DryRunTx(txn, false)
+	res, err := client.DryRunTransaction(txn, false)
 	if err != nil {
 		log.Fatalf("Failed to send tx: %v", err)
 	}

@@ -5,8 +5,6 @@
 
 use std::sync::Arc;
 
-use iota_sdk::grpc_client::read_mask_fields::OwnedObjectReadMask;
-
 use crate::{
     error::Result,
     grpc::{
@@ -49,7 +47,6 @@ impl GrpcClient {
             coin_type.map(|coin_type| coin_type.0.clone()),
             page_size,
             page_token.map(Into::into),
-            OwnedObjectReadMask::default(),
         );
         let page = query.await?.into_inner();
         Ok(GrpcCoinPage {
@@ -79,7 +76,6 @@ impl GrpcClient {
             coin_type.map(|coin_type| coin_type.0.clone()),
             None,
             None,
-            OwnedObjectReadMask::default(),
         );
         Ok(query
             .collect(limit)

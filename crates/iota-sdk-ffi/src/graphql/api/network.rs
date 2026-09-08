@@ -3,11 +3,13 @@
 
 //! Network API implementation.
 
-use iota_sdk::graphql_client::{pagination::PaginationFilter, query_types::ProtocolConfigs};
-
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, pagination::ValidatorPage},
+    graphql::{
+        client::GraphQLClient,
+        pagination::ValidatorPage,
+        query_types::{PaginationFilter, ProtocolConfigs},
+    },
 };
 
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
@@ -31,7 +33,7 @@ impl GraphQLClient {
     /// Get the protocol configuration.
     #[uniffi::method(default(version = None))]
     pub async fn protocol_config(&self, version: Option<u64>) -> Result<ProtocolConfigs> {
-        Ok(self.0.read().await.protocol_config(version).await?)
+        Ok(self.0.read().await.protocol_config(version).await?.into())
     }
 
     /// Get the list of active validators for the provided epoch, including
@@ -47,7 +49,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .active_validators(epoch, pagination_filter.unwrap_or_default())
+            .active_validators(epoch, pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())

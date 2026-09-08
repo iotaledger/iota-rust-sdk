@@ -1,0 +1,13 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+// Fixture for `Context` tests: same package tail and same message name as
+// `v1/a.proto`, one version module over.
+
+syntax = "proto3";
+
+package iota.grpc.v2.a;
+
+message Input {
+  uint32 index = 1;
+}

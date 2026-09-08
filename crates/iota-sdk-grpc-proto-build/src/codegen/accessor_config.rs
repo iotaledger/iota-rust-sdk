@@ -122,21 +122,27 @@ impl AccessorTypes {
 
     /// Extract accessor types from a protobuf field's name.
     /// Returns None if the field can't be found in the accessor_map.
+    ///
+    /// `message_full_name` is the fully qualified message name without a
+    /// leading dot, as [`AccessorMap`] is keyed.
     pub fn from_field(
         field: &FieldDescriptorProto,
         accessor_map: &AccessorMap,
-        message_name: &str,
+        message_full_name: &str,
     ) -> Option<Self> {
-        // Build the key as "message_name.field_name"
-        let key = format!("{}.{}", message_name, field.name());
+        let key = format!("{}.{}", message_full_name, field.name());
 
         // Try to find in the map
         accessor_map.get(&key).copied()
     }
 }
 
-/// Map of field names to their accessor configurations
-/// Key is "message_name.field_name", value is the accessor types
+/// Map of fields to their accessor configurations.
+///
+/// Key is the fully qualified field name without a leading dot
+/// (`iota.grpc.v1.filter.EventFilter.negation`), so that messages sharing a
+/// simple name in different packages, or nested under different parents, keep
+/// their own configuration.
 pub type AccessorMap = HashMap<String, AccessorTypes>;
 
 /// Parse proto files to extract message_accessors and field_accessors
@@ -151,7 +157,7 @@ pub fn parse_proto_accessors_from_pool(pool: &prost_reflect::DescriptorPool) -> 
 
     // Iterate all messages (including nested ones)
     for message in pool.all_messages() {
-        let message_name = message.name();
+        let message_full_name = message.full_name();
 
         // Check for message-level accessor annotation
         let message_accessors = if let Some(msg_ext) = &message_ext {
@@ -191,7 +197,7 @@ pub fn parse_proto_accessors_from_pool(pool: &prost_reflect::DescriptorPool) -> 
             };
 
             if let Some(accessor_types) = accessor_types {
-                let key = format!("{message_name}.{field_name}");
+                let key = format!("{message_full_name}.{field_name}");
                 map.insert(key, accessor_types);
             }
         }
@@ -203,6 +209,22 @@ pub fn parse_proto_accessors_from_pool(pool: &prost_reflect::DescriptorPool) -> 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Keys have to carry the package and any enclosing messages, so that two
+    /// messages sharing a simple name cannot share accessor configuration.
+    #[test]
+    fn accessor_keys_are_fully_qualified() {
+        let proto_dir = std::path::PathBuf::from(std::env!("CARGO_MANIFEST_DIR"))
+            .join("../iota-sdk-grpc-types/proto")
+            .canonicalize()
+            .unwrap();
+        let mut compiler = protox::Compiler::new([&proto_dir]).unwrap();
+        compiler.open_files(["iota/grpc/v1/filter.proto"]).unwrap();
+        let map = parse_proto_accessors_from_pool(&compiler.descriptor_pool());
+
+        assert!(map.contains_key("iota.grpc.v1.filter.EventFilter.negation"));
+        assert!(!map.contains_key("EventFilter.negation"));
+    }
 
     #[test]
     fn test_parse_single() {

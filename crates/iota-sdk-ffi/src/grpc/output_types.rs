@@ -150,7 +150,7 @@ pub struct EpochInfo {
     /// The epoch id.
     pub epoch: Option<u64>,
     /// The committee governing the epoch.
-    pub committee: Option<ValidatorCommittee>,
+    pub committee: Option<Arc<ValidatorCommittee>>,
     /// Snapshot of IOTA's `SystemState` as BCS, at the beginning of the epoch
     /// for past epochs, or the current state for the current epoch.
     pub system_state_bcs: Option<Vec<u8>>,
@@ -179,7 +179,7 @@ impl TryFrom<&proto::epoch::Epoch> for EpochInfo {
                 .as_ref()
                 .map(|_| value.committee().map_err(SdkFfiError::new))
                 .transpose()?
-                .map(Into::into),
+                .map(|committee| Arc::new(committee.into())),
             system_state_bcs: value.bcs_system_state.as_ref().map(Vec::from),
             first_checkpoint: value.first_checkpoint,
             last_checkpoint: value.last_checkpoint,

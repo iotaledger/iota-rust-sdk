@@ -66,18 +66,13 @@ impl Digest {
     }
 
     /// Returns a slice to the inner array representation of this digest.
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
     /// Returns the inner array representation of this digest.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
-    }
-
-    /// Returns a slice of bytes representing the digest.
-    pub const fn as_bytes(&self) -> &[u8] {
-        &self.0
     }
 
     /// Decodes a digest from a Base58 encoded string.
@@ -137,7 +132,7 @@ impl AsRef<[u8; Self::LENGTH]> for Digest {
 
 impl From<Digest> for [u8; Digest::LENGTH] {
     fn from(digest: Digest) -> Self {
-        digest.into_inner()
+        digest.into_bytes()
     }
 }
 
@@ -264,11 +259,12 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDiges
         D: serde::Deserializer<'de>,
     {
         let digest: Digest = serde_with::DisplayFromStr::deserialize_as(deserializer)?;
-        Ok(digest.into_inner())
+        Ok(digest.into_bytes())
     }
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
+#[non_exhaustive]
 pub enum DigestParseError {
     #[error("digest must be Base58 string of length 44")]
     Base58(#[from] bs58::decode::Error),
@@ -346,18 +342,13 @@ macro_rules! impl_digest_wrapper {
             }
 
             /// Returns a reference to the inner array representation of this digest.
-            pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-                self.0.inner()
+            pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
+                self.0.bytes()
             }
 
             /// Returns the inner array representation of this digest.
-            pub const fn into_inner(self) -> [u8; Self::LENGTH] {
-                self.0.into_inner()
-            }
-
-            /// Returns a slice of bytes representing the digest.
-            pub const fn as_bytes(&self) -> &[u8] {
-                self.0.as_bytes()
+            pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
+                self.0.into_bytes()
             }
 
             /// Decodes a digest from a Base58 encoded string.
@@ -400,13 +391,13 @@ macro_rules! impl_digest_wrapper {
 
         impl AsRef<[u8]> for $name {
             fn as_ref(&self) -> &[u8] {
-                self.0.as_bytes()
+                self.0.bytes()
             }
         }
 
         impl AsRef<[u8; Self::LENGTH]> for $name {
             fn as_ref(&self) -> &[u8; Self::LENGTH] {
-                self.0.inner()
+                self.0.bytes()
             }
         }
 
@@ -430,7 +421,7 @@ macro_rules! impl_digest_wrapper {
 
         impl From<$name> for [u8; Digest::LENGTH] {
             fn from(digest: $name) -> Self {
-                digest.into_inner()
+                digest.into_bytes()
             }
         }
 
@@ -638,7 +629,7 @@ mod tests {
     fn from_bytes_valid() {
         let bytes = [42u8; 32];
         let digest = Digest::from_bytes(bytes).unwrap();
-        assert_eq!(digest.into_inner(), bytes);
+        assert_eq!(digest.into_bytes(), bytes);
     }
 
     #[test]

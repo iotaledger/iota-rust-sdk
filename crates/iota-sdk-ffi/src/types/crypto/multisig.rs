@@ -3,8 +3,6 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::SignatureScheme;
-
 use crate::{
     error::Result,
     types::{
@@ -13,7 +11,7 @@ use crate::{
             Ed25519Signature, Secp256k1Signature, Secp256r1Signature,
             passkey::PasskeyAuthenticator, public_key::PublicKey,
         },
-        signature::UserSignature,
+        signature::{SignatureScheme, UserSignature},
     },
 };
 
@@ -158,6 +156,13 @@ impl MultisigAggregatedSignature {
         )?))
     }
 
+    /// Derive the `Address` of the committee that produced this signature.
+    ///
+    /// See `MultisigCommittee::derive_address`.
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
+    }
+
     /// The list of signatures from committee members
     pub fn signatures(&self) -> Vec<Arc<MultisigMemberSignature>> {
         self.0
@@ -246,7 +251,7 @@ impl MultisigCommittee {
 
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     /// Checks if the Committee is valid.
@@ -327,6 +332,13 @@ crate::export_iota_types_objects_bcs_conversion!(
     MultisigMember
 );
 crate::export_iota_types_objects_json_conversion!(
+    MultisigMemberSignature,
+    PublicKey,
+    MultisigAggregatedSignature,
+    MultisigCommittee,
+    MultisigMember
+);
+crate::export_iota_types_objects_display!(
     MultisigMemberSignature,
     PublicKey,
     MultisigAggregatedSignature,

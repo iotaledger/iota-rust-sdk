@@ -379,8 +379,8 @@ func resolveUpgradeCapID(client *iota_sdk.GraphQlClient, packageID *iota_sdk.Obj
 
 	for _, effects := range page.Data {
 		effectsV1 := effects.AsV1()
-		writtenVersion := effectsV1.LamportVersion
-		for _, changedObj := range effectsV1.ChangedObjects {
+		writtenVersion := effectsV1.LamportVersion()
+		for _, changedObj := range effectsV1.ChangedObjects() {
 			if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutObjectWrite); !ok {
 				continue
 			}
@@ -395,7 +395,7 @@ func resolveUpgradeCapID(client *iota_sdk.GraphQlClient, packageID *iota_sdk.Obj
 			}
 
 			obj := *objPtr
-			if obj.AsStructOpt() != nil {
+			if obj.AsOptStruct() != nil {
 				upgradeCapType := iota_sdk.StructTagNewUpgradeCap()
 				if obj.AsStruct().StructType.Eq(upgradeCapType) {
 					return changedObj.ObjectId, nil
@@ -412,7 +412,7 @@ func sameObjectID(left string, right string) bool {
 }
 
 func programmableTransactionFromTransaction(tx *iota_sdk.Transaction) (*programmableTransactionJSON, error) {
-	jsonString, err := iota_sdk.TransactionToJson(tx)
+	jsonString, err := tx.ToJson()
 	if err != nil {
 		return nil, err
 	}
@@ -555,7 +555,7 @@ func wasPackagePublishedAsImmutable(client *iota_sdk.GraphQlClient, packageID *i
 		}
 
 		for _, txData := range page.Data {
-			madeImmutable, err := publishesPackageAsImmutable(txData.Tx.Transaction)
+			madeImmutable, err := publishesPackageAsImmutable(txData.SignedTransaction.Transaction)
 			if err != nil {
 				return false, err
 			}
@@ -584,7 +584,7 @@ func wasUpgradeCapUsedForMakeImmutable(client *iota_sdk.GraphQlClient, upgradeCa
 		}
 
 		for _, txData := range page.Data {
-			madeImmutable, err := usesUpgradeCapForMakeImmutable(txData.Tx.Transaction, upgradeCapID)
+			madeImmutable, err := usesUpgradeCapForMakeImmutable(txData.SignedTransaction.Transaction, upgradeCapID)
 			if err != nil {
 				return false, err
 			}

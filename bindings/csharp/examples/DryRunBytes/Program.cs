@@ -12,7 +12,7 @@ class Program
         var txBytesBase64 = "AAABACAAAKSYS9SV1DRvogjd/09dXlrUjCHexjHd68mYCfFpAAEBAQABAADaGCDt9pPuMrVymQe5suyOZJgO6MAIwX6Jz7Tl7NchUQHclW3om5FOan+9g8rr78jskb4SB2Z+pVdjhjkaqCRJzPC6fSAAAAAAILFkUl8sWJyphiT+5+p5Rev6nLCp6DDtMQTNwLSMcOHw2hgg7faT7jK1cpkHubLsjmSYDujACMF+ic+05ezXIVHoAwAAAAAAAICEHgAAAAAAAA==";
         var transaction = Transaction.FromBase64(txBytesBase64);
 
-        var res = await client.DryRunTx(transaction);
+        var res = await client.DryRunTransaction(transaction);
         if (res.Error != null)
         {
             throw new Exception($"Dry run failed: {res.Error}");

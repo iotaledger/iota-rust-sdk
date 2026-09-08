@@ -5,11 +5,13 @@
 
 use std::sync::Arc;
 
-use iota_sdk::graphql_client::pagination::PaginationFilter;
-
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, pagination::ObjectPage, query_types::ObjectFilter},
+    graphql::{
+        client::GraphQLClient,
+        pagination::ObjectPage,
+        query_types::{ObjectFilter, PaginationFilter},
+    },
     types::{
         object::{Object, ObjectId},
         version::Version,
@@ -56,7 +58,7 @@ impl GraphQLClient {
             .await
             .objects(
                 filter.map(Into::into),
-                pagination_filter.unwrap_or_default(),
+                pagination_filter.map(Into::into).unwrap_or_default(),
             )
             .await?
             .map(Into::into)

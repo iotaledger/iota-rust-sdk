@@ -33,7 +33,7 @@ fun main() = runBlocking {
         println("Signing Digest: ${txn.signingDigestHex()}")
         println("Txn Bytes: ${txn.toBase64()}")
 
-        val res = client.dryRunTx(txn, false)
+        val res = client.dryRunTransaction(txn, false)
 
         if (res.error != null) {
             throw Exception("Failed to send gas sponsor tx: ${res.error}")

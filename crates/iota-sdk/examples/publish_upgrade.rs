@@ -26,7 +26,7 @@ use std::env::var;
 use eyre::{Result, bail};
 use iota_sdk::{
     crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
-    graphql_client::{Client, WaitForTx, faucet::FaucetClient},
+    graphql_client::{Client, WaitForTransaction, faucet::FaucetClient},
     transaction_builder::{TransactionBuilder, assigned},
     types::{Address, MovePackageData, ObjectId, ObjectOut, UpgradePolicy},
 };
@@ -75,7 +75,7 @@ async fn main() -> Result<()> {
 
     // Perform a dry-run first to check if everything is correct
     println!("> Publishing package (dry run):");
-    let result = client.dry_run_tx(&tx, false).await?;
+    let result = client.dry_run_transaction(&tx, false).await?;
     if let Some(err) = result.error {
         bail!("Dry run failed: {err}");
     }
@@ -87,7 +87,9 @@ async fn main() -> Result<()> {
     // Sign and execute the transaction (publish the package)
     println!("> Publishing package:");
     let sig = private_key.sign_transaction(&tx)?;
-    let effects = client.execute_tx(&[sig], &tx, WaitForTx::Finalized).await?;
+    let effects = client
+        .execute_transaction(&[sig], &tx, WaitForTransaction::Finalized)
+        .await?;
     println!("{:?}", effects.as_v1().status);
 
     // Resolve UpgradeCap and PackageId via the client
@@ -146,7 +148,7 @@ async fn main() -> Result<()> {
 
     // Perform a dry-run first to check if everything is correct
     println!("> Upgrading package (dry run):");
-    let result = client.dry_run_tx(&tx, false).await?;
+    let result = client.dry_run_transaction(&tx, false).await?;
     if let Some(err) = result.error {
         bail!("Dry run failed: {err}");
     }
@@ -158,7 +160,7 @@ async fn main() -> Result<()> {
     // Sign and execute the transaction (upgrade the package)
     println!("> Upgrading package:");
     let sig = private_key.sign_transaction(&tx)?;
-    let effects = client.execute_tx(&[sig], &tx, None).await?;
+    let effects = client.execute_transaction(&[sig], &tx, None).await?;
     println!("{:?}", effects.as_v1().status);
 
     // Print the new package version (should now be 2)

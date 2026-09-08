@@ -3,12 +3,13 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::SignatureScheme;
-
 use crate::{
     error::Result,
-    types::crypto::{
-        Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, passkey::PasskeyPublicKey,
+    types::{
+        crypto::{
+            Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey, passkey::PasskeyPublicKey,
+        },
+        signature::SignatureScheme,
     },
 };
 
@@ -110,7 +111,7 @@ impl PublicKey {
     }
 
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     /// Encode this public key as a base64 string of its scheme-flagged byte

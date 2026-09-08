@@ -1,9 +1,12 @@
 [package]
 name = "iota-sdk-grpc-types"
-version = "0.0.1-alpha.1"
+version = "1.0.0-beta.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/iotaledger/iota-rust-sdk/"
+description = "gRPC/protobuf types for the IOTA Blockchain"
 
 [lints]
 workspace = true

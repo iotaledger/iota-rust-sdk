@@ -7,18 +7,6 @@ mod _field_impls {
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsData;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsDataFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::Address;
-    #[allow(unused_imports)]
-    use crate::v1::types::AddressFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectId;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectIdFieldPathBuilder;
     impl Event {
         pub const BCS_FIELD: &'static MessageField = &MessageField {
             name: "bcs",
@@ -26,7 +14,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
         pub const PACKAGE_ID_FIELD: &'static MessageField = &MessageField {
             name: "package_id",
@@ -34,7 +22,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectId::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
         pub const MODULE_FIELD: &'static MessageField = &MessageField {
             name: "module",
@@ -50,7 +38,7 @@ mod _field_impls {
             number: 4i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Address::FIELDS),
+            message_fields: Some(crate::v1::types::Address::FIELDS),
         };
         pub const EVENT_TYPE_FIELD: &'static MessageField = &MessageField {
             name: "event_type",
@@ -66,7 +54,7 @@ mod _field_impls {
             number: 6i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
         pub const JSON_CONTENTS_FIELD: &'static MessageField = &MessageField {
             name: "json_contents",
@@ -108,29 +96,29 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn bcs(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(Event::BCS_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn package_id(mut self) -> ObjectIdFieldPathBuilder {
+        pub fn package_id(mut self) -> crate::v1::types::ObjectIdFieldPathBuilder {
             self.path.push(Event::PACKAGE_ID_FIELD.name);
-            ObjectIdFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectIdFieldPathBuilder::new_with_base(self.path)
         }
         pub fn module(mut self) -> String {
             self.path.push(Event::MODULE_FIELD.name);
             self.finish()
         }
-        pub fn sender(mut self) -> AddressFieldPathBuilder {
+        pub fn sender(mut self) -> crate::v1::types::AddressFieldPathBuilder {
             self.path.push(Event::SENDER_FIELD.name);
-            AddressFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::AddressFieldPathBuilder::new_with_base(self.path)
         }
         pub fn event_type(mut self) -> String {
             self.path.push(Event::EVENT_TYPE_FIELD.name);
             self.finish()
         }
-        pub fn bcs_contents(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs_contents(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(Event::BCS_CONTENTS_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
         pub fn json_contents(mut self) -> String {
             self.path.push(Event::JSON_CONTENTS_FIELD.name);

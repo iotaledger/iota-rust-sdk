@@ -185,6 +185,16 @@ impl Address {
         Self::from_hex(hex)
     }
 
+    /// Parses an Address from a full-length hex string (64 hex characters),
+    /// without a `0x` prefix. Will return an error if the string has a `0x`
+    /// prefix or is not exactly 64 hex characters long.
+    pub fn from_raw_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
+        if hex.as_ref().starts_with(b"0x") {
+            return Err(AddressParseError::UnexpectedPrefix);
+        }
+        Self::from_hex(hex)
+    }
+
     /// Parses an Address from a hex string, with or without a `0x` prefix.
     /// The string can be of variable length; if it's shorter than 64 hex
     /// characters, it will be left-padded with `0`s.
@@ -217,6 +227,17 @@ impl Address {
     pub fn from_prefixed_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         if !hex.as_ref().starts_with(b"0x") {
             return Err(AddressParseError::MissingPrefix);
+        }
+        Self::from_short_hex(hex)
+    }
+
+    /// Parses an Address from a hex string without a `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex
+    /// characters, it will be left-padded with `0`s. Will return an error if
+    /// the string has a `0x` prefix.
+    pub fn from_raw_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
+        if hex.as_ref().starts_with(b"0x") {
+            return Err(AddressParseError::UnexpectedPrefix);
         }
         Self::from_short_hex(hex)
     }
@@ -386,6 +407,8 @@ pub enum AddressParseError {
     InvalidByteLength { actual: usize },
     #[error("address hex string missing `0x` prefix")]
     MissingPrefix,
+    #[error("address hex string has unexpected `0x` prefix")]
+    UnexpectedPrefix,
 }
 
 #[cfg(test)]
@@ -488,6 +511,25 @@ mod tests {
                 hex::FromHexError::InvalidStringLength
             ))
         ));
+    }
+
+    #[test]
+    fn parse_raw_hex() {
+        let hex = "02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331";
+        let address = Address::from_raw_hex(hex).unwrap();
+        assert_eq!(address.to_raw_hex(), hex);
+
+        let result = Address::from_raw_hex(format!("0x{hex}"));
+        assert!(matches!(result, Err(AddressParseError::UnexpectedPrefix)));
+    }
+
+    #[test]
+    fn parse_raw_short_hex() {
+        let address = Address::from_raw_short_hex("2").unwrap();
+        assert_eq!(address, Address::FRAMEWORK);
+
+        let result = Address::from_raw_short_hex("0x2");
+        assert!(matches!(result, Err(AddressParseError::UnexpectedPrefix)));
     }
 
     #[test]

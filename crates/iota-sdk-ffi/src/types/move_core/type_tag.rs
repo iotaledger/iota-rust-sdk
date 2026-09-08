@@ -103,9 +103,9 @@ impl TypeTag {
     #[inline]
     /// Converts this type tag into the inner type tag of a vector, if it is
     /// one, or returns `None` otherwise.
-    pub fn as_vector_type_tag_opt(&self) -> Option<Arc<TypeTag>> {
+    pub fn as_opt_vector_type_tag(&self) -> Option<Arc<TypeTag>> {
         self.0
-            .as_vector_type_tag_opt()
+            .as_opt_vector_type_tag()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -127,9 +127,9 @@ impl TypeTag {
     #[inline]
     /// Converts this type tag into a struct tag, if it is one, or returns
     /// `None` otherwise.
-    pub fn as_struct_tag_opt(&self) -> Option<Arc<StructTag>> {
+    pub fn as_opt_struct_tag(&self) -> Option<Arc<StructTag>> {
         self.0
-            .as_struct_tag_opt()
+            .as_opt_struct_tag()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -210,3 +210,4 @@ impl TypeTag {
 
 crate::export_iota_types_objects_bcs_conversion!(TypeTag);
 crate::export_iota_types_objects_json_conversion!(TypeTag);
+crate::export_iota_types_objects_display!(TypeTag);

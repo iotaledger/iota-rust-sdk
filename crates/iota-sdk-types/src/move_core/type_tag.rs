@@ -50,7 +50,7 @@ impl TypeTag {
 
     /// Returns a reference to the inner type tag if this type tag is a vector,
     /// or `None` otherwise.
-    pub fn as_vector_type_tag_opt(&self) -> Option<&TypeTag> {
+    pub fn as_opt_vector_type_tag(&self) -> Option<&TypeTag> {
         if let Self::Vector(inner) = self {
             Some(inner)
         } else {
@@ -61,12 +61,12 @@ impl TypeTag {
     /// Returns a reference to the inner type tag if this type tag is a vector,
     /// or panics otherwise.
     pub fn as_vector_type_tag(&self) -> &TypeTag {
-        self.as_vector_type_tag_opt().expect("not a Vector")
+        self.as_opt_vector_type_tag().expect("not a Vector")
     }
 
     /// Converts this type tag into the inner type tag of a vector, if it is
     /// one, or returns `None` otherwise.
-    pub fn into_vector_type_tag_opt(self) -> Option<TypeTag> {
+    pub fn into_opt_vector_type_tag(self) -> Option<TypeTag> {
         if let Self::Vector(inner) = self {
             Some(*inner)
         } else {
@@ -77,7 +77,7 @@ impl TypeTag {
     /// Converts this type tag into the inner type tag of a vector, if it is
     /// one, or panics otherwise.
     pub fn into_vector_type_tag(self) -> TypeTag {
-        self.into_vector_type_tag_opt().expect("not a Vector")
+        self.into_opt_vector_type_tag().expect("not a Vector")
     }
 
     /// Checks if this type tag is a struct.
@@ -87,7 +87,7 @@ impl TypeTag {
 
     /// Returns a reference to the struct tag if this type tag is a struct, or
     /// `None` otherwise.
-    pub fn as_struct_tag_opt(&self) -> Option<&StructTag> {
+    pub fn as_opt_struct_tag(&self) -> Option<&StructTag> {
         if let Self::Struct(inner) = self {
             Some(inner)
         } else {
@@ -98,12 +98,12 @@ impl TypeTag {
     /// Returns a reference to the struct tag if this type tag is a struct, or
     /// panics otherwise.
     pub fn as_struct_tag(&self) -> &StructTag {
-        self.as_struct_tag_opt().expect("not a Struct")
+        self.as_opt_struct_tag().expect("not a Struct")
     }
 
     /// Converts this type tag into a struct tag, if it is one, or returns
     /// `None` otherwise.
-    pub fn into_struct_tag_opt(self) -> Option<StructTag> {
+    pub fn into_opt_struct_tag(self) -> Option<StructTag> {
         if let Self::Struct(inner) = self {
             Some(*inner)
         } else {
@@ -114,7 +114,7 @@ impl TypeTag {
     /// Converts this type tag into a struct tag, if it is one, or panics
     /// otherwise.
     pub fn into_struct_tag(self) -> StructTag {
-        self.into_struct_tag_opt().expect("not a Struct")
+        self.into_opt_struct_tag().expect("not a Struct")
     }
 
     pub fn u8() -> Self {

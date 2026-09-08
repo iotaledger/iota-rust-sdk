@@ -59,7 +59,7 @@ const txn = builder.finish();
 console.log("Signing Digest:", txn.signingDigestHex());
 console.log("Txn Bytes:", txn.toBase64());
 
-const res = await client.dryRunTx(txn);
+const res = await client.dryRunTransaction(txn);
 if (res.error) {
   throw new Error(`Failed to transfer objects: ${res.error}`);
 }

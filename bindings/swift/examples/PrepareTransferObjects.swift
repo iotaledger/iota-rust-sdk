@@ -36,7 +36,7 @@ struct PrepareTransferObjectsExample {
     print("Signing Digest:", txn.signingDigestHex())
     print("Txn Bytes:", txn.toBase64())
 
-    let res = try await client.dryRunTx(tx: txn)
+    let res = try await client.dryRunTransaction(transaction: txn)
     if res.error != nil {
       throw NSError(
         domain: "PrepareTransferObjects", code: 1,

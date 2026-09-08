@@ -5,12 +5,15 @@
 
 use std::sync::Arc;
 
-use iota_sdk::{graphql_client::pagination::PaginationFilter, types::iota_names::NameFormat};
-
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, pagination::NameRegistrationPage},
-    types::{address::Address, iota_names::Name},
+    graphql::{
+        client::GraphQLClient, pagination::NameRegistrationPage, query_types::PaginationFilter,
+    },
+    types::{
+        address::Address,
+        iota_names::{Name, NameFormat},
+    },
 };
 
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
@@ -38,7 +41,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .iota_names_registrations(**address, pagination_filter)
+            .iota_names_registrations(**address, pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -54,7 +57,7 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .iota_names_default_name(**address, format)
+            .iota_names_default_name(**address, format.map(Into::into))
             .await?
             .map(Into::into)
             .map(Arc::new))

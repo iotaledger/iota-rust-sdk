@@ -15,10 +15,12 @@ import "iota/grpc/v1/bcs.proto";
 import "iota/grpc/v1/command.proto";
 import "iota/grpc/v1/signatures.proto";
 import "iota/grpc/v1/transaction.proto";
+import "iota/grpc/v1/types.proto";
 
 service TransactionExecutionService {
   rpc ExecuteTransactions(ExecuteTransactionsRequest) returns (ExecuteTransactionsResponse);
   rpc SimulateTransactions(SimulateTransactionsRequest) returns (SimulateTransactionsResponse);
+  rpc ViewFunctionCalls(ViewFunctionCallsRequest) returns (ViewFunctionCallsResponse);
 }
 
 // A single transaction to execute, along with its authorizing signatures.
@@ -142,4 +144,63 @@ message SimulateTransactionsResponse {
 
   // Results for each transaction in the request, in the same order.
   repeated SimulateTransactionResult transaction_results = 1;
+}
+
+// A single view function to call.
+message ViewFunctionCallItem {
+  option (iota.grpc.message_accessors) = "with";
+
+  // Fully qualified function name, `<package>::<module>::<function>`.
+  string fq_function_name = 1;
+
+  // Type arguments, in declaration order, for a generic function.
+  repeated iota.grpc.v1.types.TypeTag type_args = 2;
+
+  // Call arguments, in declaration order.
+  repeated iota.grpc.v1.command.InputArgument inputs = 3;
+}
+
+message ViewFunctionCallsRequest {
+  option (iota.grpc.message_accessors) = "with";
+
+  // List of view functions to call. Each call runs in its own transaction, so
+  // one call aborting leaves the others unaffected.
+  // For a single function call, provide a list with one item.
+  repeated ViewFunctionCallItem view_function_calls = 1;
+
+  // Mask specifying which fields to read, applied to each ViewFunctionCallOutputs
+  // in the response. If no mask is specified, defaults to `execution_result`.
+  optional google.protobuf.FieldMask read_mask = 2;
+}
+
+// The outcome of running a single view function call.
+message ViewFunctionCallOutputs {
+  option (iota.grpc.message_accessors) = "with";
+
+  oneof execution_result {
+    // The values the function returned.
+    iota.grpc.v1.command.CommandOutputs return_values = 1;
+
+    // Why the call aborted.
+    ExecutionError execution_error = 2;
+  }
+}
+
+// The result of a single view function call: either the call ran (and returned
+// or aborted), or the server rejected it.
+message ViewFunctionCallResult {
+  option (iota.grpc.message_accessors) = "with";
+
+  oneof result {
+    ViewFunctionCallOutputs call_outputs = 1;
+    google.rpc.Status error = 2;
+  }
+}
+
+// Response message for `TransactionExecutionService.ViewFunctionCalls`.
+message ViewFunctionCallsResponse {
+  option (iota.grpc.message_accessors) = "with";
+
+  // Results for each call in the request, in the same order.
+  repeated ViewFunctionCallResult call_results = 1;
 }

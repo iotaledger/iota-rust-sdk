@@ -54,7 +54,7 @@ async fn main() -> Result<()> {
     builder.send_iota(recipient, amount);
     let tx = builder.finish().await?;
 
-    let dry_run = client.dry_run_tx(&tx, false).await?;
+    let dry_run = client.dry_run_transaction(&tx, false).await?;
     if let Some(err) = dry_run.error {
         eyre::bail!("Dry run failed: {err}");
     }
@@ -71,7 +71,7 @@ async fn main() -> Result<()> {
 
     // 8. Execute
     let user_sig = UserSignature::Multisig(multisig_sig);
-    let effects = client.execute_tx(&[user_sig], &tx, None).await?;
+    let effects = client.execute_transaction(&[user_sig], &tx, None).await?;
     println!("Digest: {}", effects.digest());
     println!("Transaction status: {:?}", effects.as_v1().status);
     println!("Effects: {effects:#?}");

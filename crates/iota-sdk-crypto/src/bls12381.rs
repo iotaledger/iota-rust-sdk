@@ -4,7 +4,8 @@
 
 use blst::min_sig::{PublicKey, SecretKey, Signature};
 use iota_types::{
-    Bls12381PublicKey, Bls12381Signature, CheckpointSummary, SignatureScheme, ValidatorSignature,
+    Address, Bls12381PublicKey, Bls12381Signature, CheckpointSummary, SignatureScheme,
+    ValidatorSignature,
 };
 
 use crate::{SignatureError, Signer, Verifier};
@@ -23,8 +24,16 @@ impl std::fmt::Display for BlstError {
 
 impl std::error::Error for BlstError {}
 
-#[derive(Clone)]
+#[derive(Clone, zeroize::Zeroize, zeroize::ZeroizeOnDrop)]
 pub struct Bls12381PrivateKey(SecretKey);
+
+impl PartialEq for Bls12381PrivateKey {
+    fn eq(&self, other: &Self) -> bool {
+        zeroize::Zeroizing::new(self.0.to_bytes()) == zeroize::Zeroizing::new(other.0.to_bytes())
+    }
+}
+
+impl Eq for Bls12381PrivateKey {}
 
 impl std::fmt::Debug for Bls12381PrivateKey {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -92,6 +101,13 @@ impl Bls12381PrivateKey {
         Self::random_with(rand_core::OsRng)
     }
 
+    /// Sign a proof that this key's holder also controls `address`, which a
+    /// validator submits alongside its public key so the network can check
+    /// that the key is not someone else's.
+    pub fn generate_proof_of_possession(&self, address: Address) -> Bls12381Signature {
+        self.sign(&self.public_key().proof_of_possession_message(address))
+    }
+
     pub fn sign_checkpoint_summary(&self, summary: &CheckpointSummary) -> ValidatorSignature {
         let message = summary.signing_message();
         let signature = self.sign(&message);
@@ -115,7 +131,7 @@ pub struct Bls12381VerifyingKey(pub(crate) PublicKey);
 
 impl Bls12381VerifyingKey {
     pub fn new(public_key: &Bls12381PublicKey) -> Result<Self, SignatureError> {
-        PublicKey::key_validate(public_key.inner())
+        PublicKey::key_validate(public_key.bytes())
             .map(Self)
             .map_err(BlstError)
             .map_err(SignatureError::from_source)
@@ -124,11 +140,24 @@ impl Bls12381VerifyingKey {
     pub fn public_key(&self) -> Bls12381PublicKey {
         Bls12381PublicKey::new(self.0.to_bytes())
     }
+
+    /// Check a proof of possession produced by
+    /// [`Bls12381PrivateKey::generate_proof_of_possession`] for `address`.
+    pub fn verify_proof_of_possession(
+        &self,
+        address: Address,
+        proof: &Bls12381Signature,
+    ) -> Result<(), SignatureError> {
+        self.verify(
+            &self.public_key().proof_of_possession_message(address),
+            proof,
+        )
+    }
 }
 
 impl Verifier<Bls12381Signature> for Bls12381VerifyingKey {
     fn verify(&self, message: &[u8], signature: &Bls12381Signature) -> Result<(), SignatureError> {
-        let signature = Signature::sig_validate(signature.inner(), true)
+        let signature = Signature::sig_validate(signature.bytes(), true)
             .map_err(BlstError)
             .map_err(SignatureError::from_source)?;
 
@@ -151,5 +180,53 @@ mod tests {
     fn basic_signing(signer: Bls12381PrivateKey, message: Vec<u8>) {
         let signature = signer.sign(&message);
         signer.verifying_key().verify(&message, &signature).unwrap();
+    }
+
+    #[proptest]
+    fn proof_of_possession(signer: Bls12381PrivateKey, address: Address, other: Address) {
+        let proof = signer.generate_proof_of_possession(address);
+        signer
+            .verifying_key()
+            .verify_proof_of_possession(address, &proof)
+            .unwrap();
+
+        if address != other {
+            signer
+                .verifying_key()
+                .verify_proof_of_possession(other, &proof)
+                .unwrap_err();
+        }
+    }
+
+    #[proptest]
+    fn proof_of_possession_is_bound_to_its_key(
+        signer: Bls12381PrivateKey,
+        other: Bls12381PrivateKey,
+        address: Address,
+    ) {
+        let proof = signer.generate_proof_of_possession(address);
+        other
+            .verifying_key()
+            .verify_proof_of_possession(address, &proof)
+            .unwrap_err();
+    }
+
+    // Proofs of possession are checked on-chain against what the node
+    // produces, so the message this crate signs has to stay byte-identical to
+    // it. This vector was generated with the node's
+    // `generate_proof_of_possession`.
+    #[test]
+    fn proof_of_possession_matches_the_node() {
+        let signer = Bls12381PrivateKey::new([7; Bls12381PrivateKey::LENGTH]).unwrap();
+        let address = Address::new([3; Address::LENGTH]);
+        let expected = "a717b0fcfc8aab7de211daad6b896659657f93094eab6a284c29710b2abc1abe5f08cb7f4a6dcfc2f44734f8dbcc2eb8";
+
+        let proof = signer.generate_proof_of_possession(address);
+        assert_eq!(hex::encode(proof.bytes()), expected);
+
+        signer
+            .verifying_key()
+            .verify_proof_of_possession(address, &proof)
+            .unwrap();
     }
 }

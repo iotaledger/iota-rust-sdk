@@ -3,12 +3,12 @@
 
 //! Dynamic fields API implementation.
 
-use iota_sdk::graphql_client::pagination::PaginationFilter;
-
 use crate::{
     error::Result,
     graphql::{
-        client::GraphQLClient, pagination::DynamicFieldOutputPage, query_types::DynamicFieldOutput,
+        client::GraphQLClient,
+        pagination::DynamicFieldOutputPage,
+        query_types::{DynamicFieldOutput, PaginationFilter},
     },
     types::{address::Address, move_core::TypeTag},
 };
@@ -76,7 +76,10 @@ impl GraphQLClient {
             .0
             .read()
             .await
-            .dynamic_fields(**address, pagination_filter.unwrap_or_default())
+            .dynamic_fields(
+                **address,
+                pagination_filter.map(Into::into).unwrap_or_default(),
+            )
             .await?
             .map(Into::into)
             .into())

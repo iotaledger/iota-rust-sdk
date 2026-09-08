@@ -15,11 +15,11 @@ def main():
     transaction = Transaction.from_base64(tx_bytes_base64)
 
     # Convert the transaction to JSON
-    json = transaction_to_json(transaction)
+    json = transaction.to_json()
     print(f"Transaction as JSON:\n{json}")
 
     # Convert the JSON back to a transaction
-    parsed_transaction = transaction_from_json(json)
+    parsed_transaction = Transaction.from_json(json)
     print(f"Parsed transaction back from JSON: {parsed_transaction}")
 
 

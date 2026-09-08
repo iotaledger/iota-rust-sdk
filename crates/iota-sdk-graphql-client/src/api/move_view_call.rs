@@ -24,7 +24,7 @@ impl Client {
     /// # Arguments
     /// * `function_name` - The Move function fully qualified name as
     ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x2::hash::blake2b256`
+    ///   `0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4::shop::total_revenue`
     /// * `type_arguments` - The type arguments of the Move function
     /// * `arguments` - The arguments to be passed into the Move function, in
     ///   JSON format
@@ -67,18 +67,23 @@ impl Client {
     /// # Arguments
     /// * `function_name` - The Move function fully qualified name as
     ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x2::hash::blake2b256`
+    ///   `0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4::shop::total_revenue`
     /// * `type_arguments` - The type arguments of the Move function
     /// * `arguments` - The typed arguments to be passed into the Move function
     ///
     /// # Example
     /// ```rust,ignore
+    /// // The `view_demo` package published on testnet, and the shared
+    /// // `view_demo::shop::Shop` created when it was published.
+    /// let package = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4";
+    /// let shop = ObjectId::from_str(
+    ///     "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20",
+    /// )?;
+    ///
     /// // Single argument: wrap in a list or tuple
-    /// let result = client.move_view_call(
-    ///     "0x2::hash::blake2b256",
-    ///     None,
-    ///     [vec![0u8, 1, 2]],
-    /// ).await?;
+    /// let result = client
+    ///     .move_view_call(format!("{package}::shop::total_revenue"), None, (shop,))
+    ///     .await?;
     /// ```
     ///
     /// # Returns

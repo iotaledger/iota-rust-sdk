@@ -1,17 +1,14 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::{
-    crypto::{FromMnemonic, ToFromBech32, ToFromBytes},
-    types::SignatureScheme,
-};
+use iota_sdk::crypto::{FromMnemonic, ToFromBech32, ToFromBytes};
 use rand::rngs::OsRng;
 
 use crate::{
     error::{Result, SdkFfiError},
     types::{
         crypto::{Ed25519PublicKey, Ed25519Signature, intent::PersonalMessage},
-        signature::{SimpleSignature, UserSignature},
+        signature::{SignatureScheme, SimpleSignature, UserSignature},
     },
 };
 
@@ -31,7 +28,7 @@ impl Ed25519PrivateKey {
     }
 
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     pub fn verifying_key(&self) -> Ed25519VerifyingKey {
@@ -223,13 +220,13 @@ impl Ed25519Verifier {
         Self(iota_sdk::crypto::ed25519::Ed25519Verifier::new())
     }
 
-    fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
+    pub fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
         Ok(iota_sdk::crypto::Verifier::<
             iota_sdk::types::SimpleSignature,
         >::verify(&self.0, message, &signature.0)?)
     }
 
-    fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
+    pub fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
         Ok(
             iota_sdk::crypto::Verifier::<iota_sdk::types::UserSignature>::verify(
                 &self.0,

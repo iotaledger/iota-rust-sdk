@@ -60,7 +60,7 @@ const txn = await builder.finish();
 console.log("Signing Digest:", txn.signingDigestHex());
 console.log("Txn Bytes:", txn.toBase64());
 
-const res = await client.dryRunTx(txn, false);
+const res = await client.dryRunTransaction(txn, false);
 if (res.error) {
   throw new Error(`Failed to send tx: ${res.error}`);
 }

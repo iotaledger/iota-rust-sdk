@@ -17,6 +17,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::Address>();
     assert_display::<iota_sdk_types::AddressParseError>();
     assert_display::<iota_sdk_types::Argument>();
+    assert_display::<iota_sdk_types::BalanceChange>();
     assert_display::<iota_sdk_types::Bls12381PublicKey>();
     assert_display::<iota_sdk_types::Bls12381Signature>();
     assert_display::<iota_sdk_types::CanceledTransaction>();
@@ -39,6 +40,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::ConsensusCommitPrologueV1>();
     assert_display::<iota_sdk_types::ConsensusDeterminedVersionAssignments>();
     assert_display::<iota_sdk_types::DenyRuleSet>();
+    assert_display::<iota_sdk_types::DeriveChangesError>();
     assert_display::<iota_sdk_types::Digest>();
     assert_display::<iota_sdk_types::DigestParseError>();
     assert_display::<iota_sdk_types::Ed25519PublicKey>();
@@ -88,6 +90,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::iota_names::registry::NameRecord>();
     assert_display::<iota_sdk_types::iota_names::NameRegistration>();
     assert_display::<iota_sdk_types::Object>();
+    assert_display::<iota_sdk_types::ObjectChange>();
     assert_display::<iota_sdk_types::ObjectData>();
     assert_display::<iota_sdk_types::ObjectId>();
     assert_display::<iota_sdk_types::ObjectIn>();
@@ -95,11 +98,16 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::ObjectReference>();
     assert_display::<iota_sdk_types::ObjectType>();
     assert_display::<iota_sdk_types::Owner>();
+    assert_display::<iota_sdk_types::InputSharedObject>();
+    assert_display::<iota_sdk_types::ObjectRemoveKind>();
+    assert_display::<iota_sdk_types::ObjectVersion>();
+    assert_display::<iota_sdk_types::OwnedObjectReference>();
     assert_display::<iota_sdk_types::PackageUpgradeError>();
     assert_display::<iota_sdk_types::PasskeyAuthenticator>();
     assert_display::<iota_sdk_types::PasskeyPublicKey>();
     assert_display::<iota_sdk_types::ProgrammableTransaction>();
     assert_display::<iota_sdk_types::PublicKey>();
+    assert_display::<iota_sdk_types::PublicKeyError>();
     assert_display::<iota_sdk_types::Publish>();
     assert_display::<iota_sdk_types::RandomnessRound>();
     assert_display::<iota_sdk_types::RandomnessStateUpdate>();
@@ -143,10 +151,12 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::UserSignature>();
     assert_display::<iota_sdk_types::ValidatorAggregatedSignature>();
     assert_display::<iota_sdk_types::ValidatorCommittee>();
+    assert_display::<iota_sdk_types::ValidatorCommitteeError>();
     assert_display::<iota_sdk_types::ValidatorCommitteeMember>();
     assert_display::<iota_sdk_types::ValidatorSignature>();
     assert_display::<iota_sdk_types::VersionAssignment>();
     assert_display::<iota_sdk_types::Version>();
+    assert_display::<iota_sdk_types::WriteKind>();
     assert_display::<iota_sdk_types::version::VersionError>();
 }
 

@@ -85,6 +85,7 @@ pub struct EndOfEpochData {
     pub epoch_commitments: Vec<CheckpointCommitment>,
     /// The number of tokens that were minted (if positive) or burnt (if
     /// negative) in this epoch.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub epoch_supply_change: i64,
 }
 

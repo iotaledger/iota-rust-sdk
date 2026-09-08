@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk"
-version = "3.0.0-alpha.1"
+version = "3.0.0-beta.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
@@ -109,6 +109,10 @@ required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]
 name = "stream_checkpoints_grpc"
+required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+
+[[example]]
+name = "move_view_call_grpc"
 required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]

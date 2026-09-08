@@ -22,8 +22,12 @@ impl Client {
     /// prevent access to objects that are owned by addresses other than the
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks.
-    pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
-        let Transaction::V1(v1) = tx else {
+    pub async fn dry_run_transaction(
+        &self,
+        transaction: &Transaction,
+        skip_checks: bool,
+    ) -> Result<DryRunResult> {
+        let Transaction::V1(v1) = transaction else {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
         let gas_objects = v1
@@ -36,7 +40,7 @@ impl Client {
                 digest: r.digest().to_base58(),
             })
             .collect::<Vec<_>>();
-        self.dry_run_tx_kind(
+        self.dry_run_transaction_kind(
             &v1.kind,
             skip_checks,
             TransactionMetadata {
@@ -58,15 +62,16 @@ impl Client {
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks. Defaults to false.
     ///
-    /// `tx_meta` is the transaction metadata.
-    pub async fn dry_run_tx_kind(
+    /// `transaction_metadata` is the transaction metadata.
+    pub async fn dry_run_transaction_kind(
         &self,
-        tx_kind: &TransactionKind,
+        transaction_kind: &TransactionKind,
         skip_checks: bool,
-        tx_meta: TransactionMetadata,
+        transaction_metadata: TransactionMetadata,
     ) -> Result<DryRunResult> {
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx_kind)?);
-        self.dry_run(tx_bytes, skip_checks, Some(tx_meta)).await
+        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&transaction_kind)?);
+        self.dry_run(tx_bytes, skip_checks, Some(transaction_metadata))
+            .await
     }
 
     /// Internal implementation of the dry run API.
@@ -125,7 +130,7 @@ impl Client {
 mod tests {
     use crate::Client;
 
-    // This needs the tx builder to be able to be tested properly
+    // This needs the transaction builder to be able to be tested properly
     #[tokio::test]
     async fn test_dry_run() {
         let client = Client::new_testnet();

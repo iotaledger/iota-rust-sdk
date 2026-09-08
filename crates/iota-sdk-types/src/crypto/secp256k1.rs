@@ -59,11 +59,11 @@ impl Secp256k1PublicKey {
     }
 
     /// Return the underlying byte array of an Secp256k1PublicKey.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 }
@@ -73,7 +73,7 @@ impl PublicKeyExt for Secp256k1PublicKey {
 
     /// Returns the public key as bytes.
     fn as_bytes(&self) -> &[u8] {
-        &self.0
+        self.bytes()
     }
 
     /// Tries to create a Secp256k1PublicKey from bytes.
@@ -109,7 +109,7 @@ impl AsRef<[u8; Self::LENGTH]> for Secp256k1PublicKey {
 
 impl From<Secp256k1PublicKey> for [u8; Secp256k1PublicKey::LENGTH] {
     fn from(public_key: Secp256k1PublicKey) -> Self {
-        public_key.into_inner()
+        public_key.into_bytes()
     }
 }
 
@@ -186,15 +186,11 @@ impl Secp256k1Signature {
     }
 
     /// Return the underlying byte array of an Secp256k1Signature.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-        &self.0
-    }
-
-    pub const fn as_bytes(&self) -> &[u8] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
@@ -225,7 +221,7 @@ impl AsRef<[u8; Self::LENGTH]> for Secp256k1Signature {
 
 impl From<Secp256k1Signature> for [u8; Secp256k1Signature::LENGTH] {
     fn from(signature: Secp256k1Signature) -> Self {
-        signature.into_inner()
+        signature.into_bytes()
     }
 }
 

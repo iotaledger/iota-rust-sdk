@@ -245,8 +245,8 @@ impl Indexer {
                     continue;
                 }
 
-                let sender = sender_str(&tx_data.tx);
-                let kind = tx_kind_str(&tx_data.tx);
+                let sender = sender_str(&tx_data.signed_transaction);
+                let kind = tx_kind_str(&tx_data.signed_transaction);
                 let success = matches!(tx_data.effects.as_v1().status, ExecutionStatus::Success);
 
                 sqlx::query(
@@ -347,8 +347,8 @@ impl Indexer {
                 }
 
                 let tx_digest = tx_data.effects.as_v1().transaction_digest.to_string();
-                let sender = sender_str(&tx_data.tx);
-                let kind = tx_kind_str(&tx_data.tx);
+                let sender = sender_str(&tx_data.signed_transaction);
+                let kind = tx_kind_str(&tx_data.signed_transaction);
                 let success = matches!(tx_data.effects.as_v1().status, ExecutionStatus::Success);
 
                 sqlx::query(

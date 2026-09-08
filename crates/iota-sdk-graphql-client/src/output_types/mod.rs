@@ -167,7 +167,7 @@ impl TryFrom<&crate::query_types::TransactionArgument> for TransactionArgument {
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct TransactionDataEffects {
-    pub tx: SignedTransaction,
+    pub signed_transaction: SignedTransaction,
     pub effects: TransactionEffects,
 }
 

@@ -1,0 +1,17 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+// Fixture for `Context` tests: references messages of another package whose
+// simple names collide with its own, plus a map field to cover map entries.
+
+syntax = "proto3";
+
+package iota.grpc.v1.b;
+
+import "iota/grpc/v1/a.proto";
+
+message Input {
+  iota.grpc.v1.a.Input from_a = 1;
+  iota.grpc.v1.a.Argument.Input nested_from_a = 2;
+  map<string, uint32> entries = 3;
+}

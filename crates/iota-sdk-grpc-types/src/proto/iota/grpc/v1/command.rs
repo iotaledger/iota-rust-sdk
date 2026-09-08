@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 include!("../../../generated/iota.grpc.v1.command.rs");
+include!("../../../generated/iota.grpc.v1.command.accessors.rs");
 include!("../../../generated/iota.grpc.v1.command.field_info.rs");
 
 use crate::{

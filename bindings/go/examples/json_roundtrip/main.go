@@ -23,7 +23,7 @@ func main() {
 	}
 
 	// Convert the transaction to JSON
-	json, err := iota_sdk.TransactionToJson(transaction)
+	json, err := transaction.ToJson()
 	if err != nil {
 		log.Fatalf("Failed to convert transaction to JSON: %v", err)
 	}
