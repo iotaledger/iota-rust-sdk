@@ -1686,14 +1686,7 @@ impl SmartAccountClaim {
     /// Creates a claim of the address derived from the public key described by
     /// `scheme` and `public_key_raw_bytes`, without checking that the two
     /// describe a key at all.
-    ///
-    /// [`Self::new`] and `Self::new_multisig` take the key itself and so
-    /// cannot produce a mismatched pair; reach for this only when the key
-    /// material is already encoded. Only `Ed25519`, `Secp256k1`, `Secp256r1`,
-    /// `Multisig` and `PasskeyAuthenticator` are valid schemes for an account
-    /// public key, and the bytes must be a valid key for the scheme; a claim
-    /// that violates either is rejected on chain.
-    pub fn new_unchecked(
+    fn new_unchecked(
         scheme: SignatureScheme,
         public_key_raw_bytes: Vec<u8>,
         build_kind: SmartAccountBuildKind,

@@ -1660,30 +1660,6 @@ pub fn smart_account_claim_new_multisig(
     iota_sdk::types::SmartAccountClaim::new_multisig(&committee.0, build_kind.into()).into()
 }
 
-/// Create a `SmartAccountClaim` of the address derived from the public key
-/// described by `scheme` and `public_key_raw_bytes`, without checking that the
-/// two describe a key at all.
-///
-/// `smart_account_claim_new` and `smart_account_claim_new_multisig` take the
-/// key itself and so cannot produce a mismatched pair; reach for this only when
-/// the key material is already encoded. Only `Ed25519`, `Secp256k1`,
-/// `Secp256r1`, `Multisig` and `PasskeyAuthenticator` are valid schemes for an
-/// account public key, and the bytes must be a valid key for the scheme; a
-/// claim that violates either is rejected on chain.
-#[uniffi::export]
-pub fn smart_account_claim_new_unchecked(
-    scheme: SignatureScheme,
-    public_key_raw_bytes: Vec<u8>,
-    build_kind: SmartAccountBuildKind,
-) -> SmartAccountClaim {
-    iota_sdk::types::SmartAccountClaim::new_unchecked(
-        scheme,
-        public_key_raw_bytes,
-        build_kind.into(),
-    )
-    .into()
-}
-
 /// The signature scheme of the public key in `claim`.
 ///
 /// Fails if the claim's scheme flag is not a known signature scheme, which is
