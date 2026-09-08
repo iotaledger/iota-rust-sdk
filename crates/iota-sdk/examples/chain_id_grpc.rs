@@ -3,7 +3,7 @@
 
 //! Same idea as `chain_id.rs`, but over gRPC.
 //!
-//! Demonstrates two ways to get the chain id: the explicit `get_service_info`
+//! Demonstrates two ways to get the chain id: the explicit `service_info`
 //! RPC, and the `ResponseExt` headers that ride along with *every* gRPC
 //! response (so any call already tells you what chain / epoch / checkpoint
 //! you observed).
@@ -16,9 +16,7 @@ async fn main() -> Result<()> {
     let client = Client::new_testnet()?;
 
     // Option 1: explicit service info RPC.
-    let info = client
-        .get_service_info(ServiceInfoReadMask::default())
-        .await?;
+    let info = client.service_info(ServiceInfoReadMask::default()).await?;
     let chain_id = info
         .body()
         .chain_id
