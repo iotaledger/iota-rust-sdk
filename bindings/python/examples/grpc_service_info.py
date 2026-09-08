@@ -9,12 +9,12 @@ import asyncio
 async def main():
     client = GrpcClient.new_testnet()
 
-    info = await client.get_service_info()
+    info = await client.service_info()
     print("Chain ID:", info.chain_id)
     print("Epoch:", info.epoch)
     print("Checkpoint height:", info.executed_checkpoint_height)
 
-    gas_price = await client.get_reference_gas_price()
+    gas_price = await client.reference_gas_price()
     print("Reference gas price:", gas_price)
 
 

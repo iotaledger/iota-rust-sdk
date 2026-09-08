@@ -16,7 +16,7 @@ func main() {
 		log.Fatalf("Failed to create gRPC client: %v", err)
 	}
 
-	info, err := client.GetServiceInfo(nil)
+	info, err := client.ServiceInfo(nil)
 	if err != nil {
 		log.Fatalf("Failed to get service info: %v", err)
 	}
@@ -30,7 +30,7 @@ func main() {
 		fmt.Println("Checkpoint height:", *info.ExecutedCheckpointHeight)
 	}
 
-	gasPrice, err := client.GetReferenceGasPrice()
+	gasPrice, err := client.ReferenceGasPrice()
 	if err != nil {
 		log.Fatalf("Failed to get reference gas price: %v", err)
 	}

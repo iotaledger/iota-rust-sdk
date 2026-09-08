@@ -8,12 +8,12 @@ fun main() = runBlocking {
     try {
         val client = GrpcClient.newTestnet()
 
-        val info = client.getServiceInfo()
+        val info = client.serviceInfo()
         println("Chain ID: ${info.chainId}")
         println("Epoch: ${info.epoch}")
         println("Checkpoint height: ${info.executedCheckpointHeight}")
 
-        val gasPrice = client.getReferenceGasPrice()
+        val gasPrice = client.referenceGasPrice()
         println("Reference gas price: $gasPrice")
     } catch (e: Exception) {
         e.printStackTrace()

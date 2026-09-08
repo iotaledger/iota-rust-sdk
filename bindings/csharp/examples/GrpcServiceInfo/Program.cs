@@ -11,12 +11,12 @@ class Program
         {
             var client = GrpcClient.NewTestnet();
 
-            var info = await client.GetServiceInfo();
+            var info = await client.ServiceInfo();
             Console.WriteLine($"Chain ID: {info.ChainId}");
             Console.WriteLine($"Epoch: {info.Epoch}");
             Console.WriteLine($"Checkpoint height: {info.ExecutedCheckpointHeight}");
 
-            var gasPrice = await client.GetReferenceGasPrice();
+            var gasPrice = await client.ReferenceGasPrice();
             Console.WriteLine($"Reference gas price: {gasPrice}");
         }
         catch (SdkFfiException ex)
