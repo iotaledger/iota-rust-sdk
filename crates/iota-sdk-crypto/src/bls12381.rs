@@ -119,6 +119,25 @@ impl Bls12381PrivateKey {
     }
 }
 
+impl crate::ToFromBytes for Bls12381PrivateKey {
+    type Error = crate::PrivateKeyError;
+    type ByteArray = [u8; Self::LENGTH];
+
+    /// Return the raw 32-byte private key
+    fn to_bytes(&self) -> Self::ByteArray {
+        self.0.to_bytes()
+    }
+
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error> {
+        let bytes = bytes.as_ref();
+        let bytes: [u8; Self::LENGTH] = bytes.try_into().map_err(|_| {
+            crate::PrivateKeyError::InvalidScheme("invalid bls12381 key length".to_string())
+        })?;
+
+        Self::new(bytes).map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
+    }
+}
+
 impl Signer<Bls12381Signature> for Bls12381PrivateKey {
     fn try_sign(&self, msg: &[u8]) -> Result<Bls12381Signature, SignatureError> {
         let signature = self.0.sign(msg, DST_G1, &[]);
@@ -209,6 +228,39 @@ mod tests {
             .verifying_key()
             .verify_proof_of_possession(address, &proof)
             .unwrap_err();
+    }
+
+    #[proptest]
+    fn base64_roundtrip(signer: Bls12381PrivateKey) {
+        use crate::{ToFromBase64 as _, ToFromBytes as _};
+
+        let decoded = Bls12381PrivateKey::from_base64(&signer.to_base64()).unwrap();
+        assert_eq!(decoded.to_bytes(), signer.to_bytes());
+    }
+
+    #[test]
+    fn from_base64_rejects_invalid_input() {
+        use crate::ToFromBase64 as _;
+
+        Bls12381PrivateKey::from_base64("not-base64!").unwrap_err();
+        // Valid base64, wrong length.
+        Bls12381PrivateKey::from_base64("aGVsbG8=").unwrap_err();
+    }
+
+    #[test]
+    fn base64_encodes_the_unflagged_raw_key() {
+        use crate::ToFromBase64 as _;
+
+        let signer = Bls12381PrivateKey::new([
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+            25, 26, 27, 28, 29, 30, 31, 32,
+        ])
+        .unwrap();
+
+        assert_eq!(
+            signer.to_base64(),
+            "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+        );
     }
 
     // Proofs of possession are checked on-chain against what the node
