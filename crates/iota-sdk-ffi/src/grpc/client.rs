@@ -27,16 +27,6 @@ fn tokio_runtime() -> &'static tokio::runtime::Runtime {
 #[derive(uniffi::Object)]
 pub struct GrpcClient(pub(crate) RwLock<iota_sdk::grpc_client::Client>);
 
-impl GrpcClient {
-    pub fn inner(&self) -> &RwLock<iota_sdk::grpc_client::Client> {
-        &self.0
-    }
-
-    pub fn into_inner(self) -> RwLock<iota_sdk::grpc_client::Client> {
-        self.0
-    }
-}
-
 #[uniffi::export(async_runtime = "tokio")]
 impl GrpcClient {
     /// Create a new gRPC client with the provided server URI.
