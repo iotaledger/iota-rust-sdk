@@ -1,7 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Same idea as `chain_id.rs`, but over gRPC.
+//! Same idea as `chain_id.rs`, but over gRPC, mirroring the `grpc_service_info`
+//! binding examples.
 //!
 //! Demonstrates two ways to get the chain id: the explicit `get_service_info`
 //! RPC, and the `ResponseExt` headers that ride along with *every* gRPC

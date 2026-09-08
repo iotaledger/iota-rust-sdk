@@ -94,9 +94,9 @@ tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 iota-graphql-client-build.workspace = true
 
 # gRPC examples: skipped unless the gRPC TLS features are enabled (e.g.
-# `cargo run --example chain_id_grpc --features grpc-tls-native-roots,grpc-tls-ring`).
+# `cargo run --example grpc_service_info --features grpc-tls-native-roots,grpc-tls-ring`).
 [[example]]
-name = "chain_id_grpc"
+name = "grpc_service_info"
 required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]
