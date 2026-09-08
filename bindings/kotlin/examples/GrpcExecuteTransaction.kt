@@ -34,7 +34,7 @@ fun main() = runBlocking {
         val executed = client.executeTransaction(signedTransaction)
 
         println("Digest: ${hexEncode(executed.digest!!.toBytes())}")
-        println("Transaction status: ${executed.effects!!.asV1().status}")
+        println("Transaction status: ${executed.effects!!.asV1().status()}")
     } catch (e: Exception) {
         e.printStackTrace()
         kotlin.system.exitProcess(1)

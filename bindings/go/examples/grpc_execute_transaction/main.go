@@ -60,7 +60,7 @@ func main() {
 	}
 
 	log.Printf("Digest: %s", iota_sdk.HexEncode((*executed.Digest).ToBytes()))
-	switch status := (*executed.Effects).AsV1().Status.(type) {
+	switch status := (*executed.Effects).AsV1().Status().(type) {
 	case iota_sdk.ExecutionStatusSuccess:
 		log.Printf("Transaction status: success")
 	case iota_sdk.ExecutionStatusFailure:

@@ -34,6 +34,6 @@ class Program
         var executed = await client.ExecuteTransaction(signedTransaction);
 
         Console.WriteLine($"Digest: {Iota.HexEncode(executed.Digest!.ToBytes())}");
-        Console.WriteLine($"Transaction status: {executed.Effects!.AsV1().Status}");
+        Console.WriteLine($"Transaction status: {executed.Effects!.AsV1().Status()}");
     }
 }

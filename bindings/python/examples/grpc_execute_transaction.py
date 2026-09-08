@@ -37,7 +37,7 @@ async def main():
     executed = await client.execute_transaction(signed_transaction)
 
     print(f"Digest: {hex_encode(executed.digest.to_bytes())}")
-    print(f"Transaction status: {executed.effects.as_v1().status}")
+    print(f"Transaction status: {executed.effects.as_v1().status()}")
 
 
 if __name__ == "__main__":
