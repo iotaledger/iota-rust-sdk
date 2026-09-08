@@ -31,6 +31,15 @@ use crate::{
     streams::stream_paginated_query,
 };
 
+/// Bytes a digest adds to the `digests` argument of a query payload: a
+/// base58 digest is at most 44 characters, sent quoted and comma-separated.
+const DIGEST_PAYLOAD_SIZE: usize = 44 + 3;
+
+/// Bytes held back for the pagination cursor, which the server hands out with
+/// the first page and every later page of the same request echoes back. A
+/// `transactionsByDigests` cursor is base64 over two `u64`s, well below this.
+const CURSOR_PAYLOAD_RESERVE: usize = 128;
+
 impl Client {
     /// Get a transaction by its digest.
     pub async fn transaction(
@@ -92,7 +101,55 @@ impl Client {
         // One page per round trip, so ask for the largest the server allows.
         // Falling back to `None` leaves the page size up to the server.
         let limit = self.max_page_size().await.ok();
+        let chunk_size = self.digests_per_query(limit).await?;
 
+        let mut transactions = HashMap::with_capacity(digests.len());
+        for chunk in digests.chunks(chunk_size) {
+            transactions.extend(self.request_transactions_by_digest(chunk, limit).await?);
+        }
+
+        Ok(transactions)
+    }
+
+    /// How many digests fit into one `transactionsByDigests` request.
+    ///
+    /// The server measures the whole request body against
+    /// `maxQueryPayloadSize`, so the digest list only gets what the query text
+    /// and the cursor leave over.
+    async fn digests_per_query(&self, limit: Option<i32>) -> Result<usize> {
+        // Measure the payload of a request without digests rather than
+        // predicting how the query is serialized.
+        let empty = TransactionsByDigestsQuery::build(TransactionsByDigestsQueryArgs {
+            digests: Vec::new(),
+            limit,
+            cursor: None,
+        });
+        let overhead = serde_json::to_string(&empty)
+            .map_err(|e| Error::from_error(Kind::Query, e))?
+            .len()
+            + CURSOR_PAYLOAD_RESERVE;
+
+        let budget = self.max_query_payload_size().await? as usize;
+        let chunk_size = budget.saturating_sub(overhead) / DIGEST_PAYLOAD_SIZE;
+
+        if chunk_size == 0 {
+            return Err(Error::from_message(
+                Kind::Query,
+                format!(
+                    "a single digest exceeds the server's query payload limit of {budget} bytes"
+                ),
+            ));
+        }
+
+        Ok(chunk_size)
+    }
+
+    /// Walk the pages of one `transactionsByDigests` request to the end.
+    async fn request_transactions_by_digest(
+        &self,
+        digests: &[TransactionDigest],
+        limit: Option<i32>,
+    ) -> Result<HashMap<TransactionDigest, SignedTransaction>> {
         let mut transactions = HashMap::with_capacity(digests.len());
         let mut cursor = None;
         let mut digest_idx = 0;
