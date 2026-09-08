@@ -14,6 +14,7 @@ fun main() = runBlocking {
         val faucet = FaucetClient.newLocalnet()
         faucet.requestAndWaitForFinalized(owner, client)
 
+        // Stake to get a StakedIota object that can be unstaked
         val validators = client.activeValidators()
         if (validators.data.isEmpty()) {
             throw Exception("no validators found")
@@ -28,6 +29,7 @@ fun main() = runBlocking {
             WaitForTransaction.FINALIZED,
         )
 
+        // Unstake
         val stakedIotas =
             client.objects(
                 ObjectFilter(typeTag = StructTag.newStakedIota().toString(), owner = owner)

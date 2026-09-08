@@ -20,6 +20,7 @@ async fn main() -> Result<()> {
         .request_and_wait_for_finalized(owner, &client)
         .await?;
 
+    // Stake to get a StakedIota object that can be unstaked
     let validator = client
         .active_validators(None, Default::default())
         .await?
@@ -36,6 +37,7 @@ async fn main() -> Result<()> {
         .execute_transaction(&[sig], &stake_tx, WaitForTransaction::Finalized)
         .await?;
 
+    // Unstake
     let staked_iota = client
         .objects(
             ObjectFilter::default()

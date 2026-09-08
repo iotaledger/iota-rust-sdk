@@ -15,6 +15,7 @@ struct UnstakeExample {
     let faucet = FaucetClient.newLocalnet()
     _ = try await faucet.requestAndWaitForFinalized(address: owner, client: client)
 
+    // Stake to get a StakedIota object that can be unstaked
     let validators = try await client.activeValidators()
     guard let validator = validators.data.first else {
       throw NSError(
@@ -29,6 +30,7 @@ struct UnstakeExample {
     _ = try await client.executeTransaction(
       signatures: [signature], transaction: stakeTx, waitFor: WaitForTransaction.finalized)
 
+    // Unstake
     let stakedIotas = try await client.objects(
       filter: ObjectFilter(
         typeTag: String(describing: StructTag.newStakedIota()), owner: owner))

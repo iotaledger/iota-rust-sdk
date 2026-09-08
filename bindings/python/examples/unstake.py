@@ -15,6 +15,7 @@ async def main():
     faucet = FaucetClient.new_localnet()
     await faucet.request_and_wait_for_finalized(owner, client)
 
+    # Stake to get a StakedIota object that can be unstaked
     validators = await client.active_validators()
     if len(validators.data) == 0:
         raise Exception("no validators found")
@@ -25,6 +26,7 @@ async def main():
     await client.execute_transaction([sig], stake_tx,
                                      WaitForTransaction.FINALIZED)
 
+    # Unstake
     staked_iotas = await client.objects(filter=ObjectFilter(
         type_tag=str(StructTag.new_staked_iota()), owner=owner))
     if len(staked_iotas.data) == 0:

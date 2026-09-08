@@ -15,6 +15,7 @@ class Program
         var faucet = FaucetClient.NewLocalnet();
         await faucet.RequestAndWaitForFinalized(owner, client);
 
+        // Stake to get a StakedIota object that can be unstaked
         var validators = await client.ActiveValidators();
         if (validators.Data.Length == 0)
         {
@@ -26,6 +27,7 @@ class Program
         var signature = privateKey.SignTransaction(stakeTx);
         await client.ExecuteTransaction(new[] { signature }, stakeTx, WaitForTransaction.Finalized);
 
+        // Unstake
         var stakedIotas = await client.Objects(new ObjectFilter(TypeTag: StructTag.NewStakedIota().ToString(), Owner: owner));
         if (stakedIotas.Data.Length == 0)
         {

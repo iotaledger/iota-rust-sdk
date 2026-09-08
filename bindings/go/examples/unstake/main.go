@@ -20,6 +20,7 @@ func main() {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
+	// Stake to get a StakedIota object that can be unstaked
 	validators, err := client.ActiveValidators(nil, nil)
 	if err != nil {
 		log.Fatalf("Failed to get active validators: %v", err)
@@ -44,6 +45,7 @@ func main() {
 		log.Fatalf("Failed to stake: %v", err)
 	}
 
+	// Unstake
 	stakedIotaType := iota_sdk.StructTagNewStakedIota().String()
 	stakedIotas, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType, Owner: &owner}, nil)
 	if err != nil {

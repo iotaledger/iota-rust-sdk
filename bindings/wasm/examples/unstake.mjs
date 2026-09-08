@@ -23,6 +23,7 @@ const owner = privateKey.publicKey().deriveAddress();
 const faucet = FaucetClient.newLocalnet();
 await faucet.requestAndWaitForFinalized(owner, client);
 
+// Stake to get a StakedIota object that can be unstaked
 const validators = await client.activeValidators();
 if (validators.data.length === 0) {
   throw new Error("no validators found");
@@ -37,6 +38,7 @@ await client.executeTransaction(
   WaitForTransaction.Finalized,
 );
 
+// Unstake
 const stakedIotas = await client.objects(
   ObjectFilter.new({ typeTag: String(StructTag.newStakedIota()), owner }),
 );
