@@ -617,8 +617,8 @@ pub struct OwnedObjectReference {
 impl From<iota_sdk::types::OwnedObjectReference> for OwnedObjectReference {
     fn from(value: iota_sdk::types::OwnedObjectReference) -> Self {
         Self {
-            reference: value.reference.into(),
-            owner: Arc::new(value.owner.into()),
+            reference: (*value.reference()).into(),
+            owner: Arc::new((*value.owner()).into()),
         }
     }
 }
@@ -633,8 +633,8 @@ pub struct ObjectVersion {
 impl From<iota_sdk::types::ObjectVersion> for ObjectVersion {
     fn from(value: iota_sdk::types::ObjectVersion) -> Self {
         Self {
-            object_id: Arc::new(value.object_id.into()),
-            version: Arc::new(value.version.into()),
+            object_id: Arc::new((*value.object_id()).into()),
+            version: Arc::new(value.version().into()),
         }
     }
 }

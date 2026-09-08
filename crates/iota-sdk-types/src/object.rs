@@ -86,16 +86,24 @@ impl crate::TreeDisplay for ObjectReference {
 /// touched, since a reference alone does not say who owns it.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct OwnedObjectReference {
-    /// The object's reference.
-    pub reference: ObjectReference,
-    /// The owner the object has at that version.
-    pub owner: Owner,
+    pub(crate) reference: ObjectReference,
+    pub(crate) owner: Owner,
 }
 
 impl OwnedObjectReference {
     /// Pairs a reference with the owner the object has at that version.
     pub const fn new(reference: ObjectReference, owner: Owner) -> Self {
         Self { reference, owner }
+    }
+
+    /// The object's reference.
+    pub const fn reference(&self) -> &ObjectReference {
+        &self.reference
+    }
+
+    /// The owner the object has at that version.
+    pub const fn owner(&self) -> &Owner {
+        &self.owner
     }
 }
 
@@ -113,16 +121,24 @@ impl crate::TreeDisplay for OwnedObjectReference {
 /// object was at before the transaction changed it.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct ObjectVersion {
-    /// The object's id.
-    pub object_id: ObjectId,
-    /// The version the object is at.
-    pub version: Version,
+    pub(crate) object_id: ObjectId,
+    pub(crate) version: Version,
 }
 
 impl ObjectVersion {
     /// Pairs an object id with one of that object's versions.
     pub const fn new(object_id: ObjectId, version: Version) -> Self {
         Self { object_id, version }
+    }
+
+    /// The object's id.
+    pub const fn object_id(&self) -> &ObjectId {
+        &self.object_id
+    }
+
+    /// The version the object is at.
+    pub const fn version(&self) -> Version {
+        self.version
     }
 }
 
