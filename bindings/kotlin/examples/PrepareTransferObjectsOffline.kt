@@ -17,7 +17,10 @@ fun main() = runBlocking {
         faucet.requestAndWaitForFinalized(fromAddress, client)
 
         val coins = client.objects(ObjectFilter(owner = fromAddress)).data
-        val gasCoin = coins.first()
+        if (coins.isEmpty()) {
+            throw Exception("No coins found")
+        }
+        val gasCoin = coins[0]
         val objsToTransfer = coins.drop(1).map { PtbArgument.objectRef(it.objectRef()) }
 
         var gasPrice = client.referenceGasPrice()

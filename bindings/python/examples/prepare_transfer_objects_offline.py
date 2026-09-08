@@ -18,6 +18,8 @@ async def main():
     await faucet.request_and_wait_for_finalized(from_address, client)
 
     coins = (await client.objects(ObjectFilter(owner=from_address))).data
+    if len(coins) == 0:
+        raise Exception("No coins found")
     gas_coin = coins[0]
     objs_to_transfer = [
         PtbArgument.object_ref(coin.object_ref()) for coin in coins[1:]

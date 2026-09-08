@@ -27,6 +27,9 @@ await faucet.requestAndWaitForFinalized(fromAddress, client);
 
 const coins = (await client.objects(ObjectFilter.new({ owner: fromAddress })))
   .data;
+if (coins.length === 0) {
+  throw new Error("No coins found");
+}
 const [gasCoin, ...toTransfer] = coins;
 const objsToTransfer = toTransfer.map((coin) =>
   PtbArgument.objectRef(coin.objectRef()),
