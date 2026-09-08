@@ -111,3 +111,7 @@ required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 [[example]]
 name = "decode_staked_iota"
 required-features = ["graphql", "move-types"]
+
+[[example]]
+name = "move_objects"
+required-features = ["graphql", "move-types"]
