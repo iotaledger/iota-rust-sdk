@@ -10,7 +10,7 @@ use iota_types::{SignedTransaction, TransactionEffects, TypeTag};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 use crate::{
-    error::{Error, Kind, Result},
+    error::{Error, Result},
     query_types::{
         DryRunEffect as GraphQLDryRunEffect, DryRunMutation as GraphQLDryRunMutation,
         DryRunReturn as GraphQLDryRunReturn,
@@ -157,10 +157,9 @@ impl TryFrom<&crate::query_types::TransactionArgument> for TransactionArgument {
                     index: result.ix.map(|ix| ix as u32),
                 })
             }
-            crate::query_types::TransactionArgument::Unknown => Err(Error::from_error(
-                Kind::Deserialization,
-                "Unknown transaction argument type",
-            )),
+            crate::query_types::TransactionArgument::Unknown => {
+                Err(Error::UnknownVariant("transaction argument"))
+            }
         }
     }
 }
@@ -225,11 +224,12 @@ impl From<BcsName> for NameValue {
 impl DynamicFieldOutput {
     /// Deserialize the name of the dynamic field into the specified type.
     pub fn deserialize_name<T: DeserializeOwned>(&self, expected_type: &TypeTag) -> Result<T> {
-        assert_eq!(
-            expected_type, &self.name.type_tag,
-            "Expected type {expected_type}, but got {}",
-            self.name.type_tag
-        );
+        if expected_type != &self.name.type_tag {
+            return Err(Error::TypeMismatch {
+                expected: expected_type.clone(),
+                actual: self.name.type_tag.clone(),
+            });
+        }
 
         let bcs = &self.name.bcs;
         bcs::from_bytes::<T>(bcs).map_err(Into::into)
@@ -237,17 +237,16 @@ impl DynamicFieldOutput {
 
     /// Deserialize the value of the dynamic field into the specified type.
     pub fn deserialize_value<T: DeserializeOwned>(&self, expected_type: &TypeTag) -> Result<T> {
-        let typetag = self.value.as_ref().map(|dfv| &dfv.type_tag);
-        assert_eq!(
-            Some(&expected_type),
-            typetag.as_ref(),
-            "Expected type {expected_type}, but got {typetag:?}"
-        );
-
-        if let Some(dfv) = &self.value {
-            bcs::from_bytes::<T>(&dfv.bcs).map_err(Into::into)
-        } else {
-            Err(Error::from_error(Kind::Deserialization, "Value is missing"))
+        let Some(dfv) = &self.value else {
+            return Err(Error::EmptyResponseField("dynamic field value"));
+        };
+        if expected_type != &dfv.type_tag {
+            return Err(Error::TypeMismatch {
+                expected: expected_type.clone(),
+                actual: dfv.type_tag.clone(),
+            });
         }
+
+        bcs::from_bytes::<T>(&dfv.bcs).map_err(Into::into)
     }
 }

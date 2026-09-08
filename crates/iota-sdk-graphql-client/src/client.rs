@@ -21,7 +21,7 @@ pub(crate) const LOCAL_HOST: &str = "http://localhost:9125/graphql";
 pub(crate) static USER_AGENT: &str =
     concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
-/// Helper function to convert a GraphQL response to a Result.
+/// Helper function to convert a GraphQL response to a `Result`.
 ///
 /// A GraphQL response may carry `errors` together with (possibly partial)
 /// `data` — for example when a request exceeds the server's max page size, the
@@ -30,11 +30,11 @@ pub(crate) static USER_AGENT: &str =
 /// list is surfaced as a query error rather than being treated as a
 /// success. A response with neither `data` nor `errors` is reported as an empty
 /// response error instead of panicking.
-pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T, Error> {
+pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T> {
     match (response.data, response.errors) {
-        (_, Some(errors)) if !errors.is_empty() => Err(Error::graphql_error(errors)),
+        (_, Some(errors)) if !errors.is_empty() => Err(Error::Query(errors)),
         (Some(data), _) => Ok(data),
-        (None, _) => Err(Error::empty_response_error()),
+        (None, _) => Err(Error::EmptyResponse),
     }
 }
 
@@ -147,10 +147,10 @@ impl Client {
         let bytes = resp.bytes().await?;
         let target_type = std::any::type_name::<R>();
         if !status.is_success() {
-            return Err(Error::http(url, status, &bytes).while_decoding(target_type));
+            return Err(Error::http(url, status, &bytes, target_type));
         }
         serde_json::from_slice::<R>(&bytes)
-            .map_err(|e| Error::decode(url, status, &bytes, e).while_decoding(target_type))
+            .map_err(|e| Error::json(url, status, &bytes, target_type, e))
     }
 
     /// Run a JSON query on the GraphQL server and return the response.
@@ -227,8 +227,14 @@ mod tests {
         }))
         .unwrap();
 
-        let err = response_to_err(response).unwrap_err();
-        assert!(err.graphql_errors().is_some());
+        let Error::Query(errors) = response_to_err(response).unwrap_err() else {
+            panic!("expected Error::Query");
+        };
+        assert_eq!(errors.len(), 1);
+        assert_eq!(
+            errors[0].message,
+            "Page size 75 exceeds the max page size of 50"
+        );
     }
 
     #[test]
@@ -248,8 +254,11 @@ mod tests {
         }))
         .unwrap();
 
-        let err = response_to_err(response).unwrap_err();
-        assert!(err.graphql_errors().is_some());
+        let Error::Query(errors) = response_to_err(response).unwrap_err() else {
+            panic!("expected Error::Query");
+        };
+        assert_eq!(errors.len(), 1);
+        assert_eq!(errors[0].message, "boom");
     }
 
     #[tokio::test]
