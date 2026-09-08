@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct GrpcServiceInfoExample {
   static func main() async throws {
-    let client = try GrpcClient.newTestnet()
+    let client = try GrpcClient.newLocalnet()
 
     let info = try await client.serviceInfo()
     if let chainId = info.chainId {

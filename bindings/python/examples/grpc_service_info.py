@@ -7,7 +7,7 @@ import asyncio
 
 
 async def main():
-    client = GrpcClient.new_testnet()
+    client = GrpcClient.new_localnet()
 
     info = await client.service_info()
     print("Chain ID:", info.chain_id)

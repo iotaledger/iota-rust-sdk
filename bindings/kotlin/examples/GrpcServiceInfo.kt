@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GrpcClient.newTestnet()
+        val client = GrpcClient.newLocalnet()
 
         val info = client.serviceInfo()
         println("Chain ID: ${info.chainId}")

@@ -9,7 +9,7 @@ class Program
     {
         try
         {
-            var client = GrpcClient.NewTestnet();
+            var client = GrpcClient.NewLocalnet();
 
             var info = await client.ServiceInfo();
             Console.WriteLine($"Chain ID: {info.ChainId}");

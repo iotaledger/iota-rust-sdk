@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	client, err := iota_sdk.GrpcClientNewTestnet()
+	client, err := iota_sdk.GrpcClientNewLocalnet()
 	if err != nil {
 		log.Fatalf("Failed to create gRPC client: %v", err)
 	}

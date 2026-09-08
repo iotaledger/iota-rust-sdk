@@ -13,7 +13,7 @@ use iota_sdk::grpc_client::{Client, ResponseExt, read_mask_fields::ServiceInfoRe
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet()?;
+    let client = Client::new_localnet()?;
 
     // Option 1: explicit service info RPC, plus the reference gas price.
     let info = client.service_info(ServiceInfoReadMask::default()).await?;
