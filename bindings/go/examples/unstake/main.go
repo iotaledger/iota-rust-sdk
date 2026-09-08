@@ -36,12 +36,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to create stake transaction: %v", err)
 	}
-	signature, err := privateKey.TrySignSimple(stakeTx.SigningDigest())
+	signature, err := privateKey.SignTransaction(stakeTx)
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
 	waitFor := iota_sdk.WaitForTransactionFinalized
-	if _, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{iota_sdk.UserSignatureNewSimple(signature)}, stakeTx, &waitFor); err != nil {
+	if _, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{signature}, stakeTx, &waitFor); err != nil {
 		log.Fatalf("Failed to stake: %v", err)
 	}
 

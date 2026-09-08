@@ -8,7 +8,6 @@ import {
   ObjectFilter,
   PtbArgument,
   StructTag,
-  UserSignature,
   WaitForTransaction,
   initAsync,
 } from "@iota/sdk-wasm";
@@ -31,9 +30,9 @@ if (validators.data.length === 0) {
 const stakeBuilder = client.transactionBuilder(owner);
 stakeBuilder.stake(PtbArgument.u64(1000000000n), validators.data[0].address);
 const stakeTx = await stakeBuilder.finish();
-const signature = privateKey.trySignSimple(stakeTx.signingDigest());
+const signature = privateKey.signTransaction(stakeTx);
 await client.executeTransaction(
-  [UserSignature.newSimple(signature)],
+  [signature],
   stakeTx,
   WaitForTransaction.Finalized,
 );
