@@ -11,6 +11,7 @@ pub mod objects;
 pub mod owned_objects;
 pub mod package_versions;
 pub mod transactions;
+pub mod view;
 
 /// Convert an optional list of field paths into an endpoint read mask,
 /// falling back to the endpoint's default mask when no paths are given.

@@ -116,7 +116,7 @@ impl MoveViewArg {
 
 impl MoveViewArg {
     /// Convert this argument to a JSON value.
-    fn to_json(&self) -> serde_json::Value {
+    pub(crate) fn to_json(&self) -> serde_json::Value {
         match self {
             MoveViewArg::Bool(value) => serde_json::Value::Bool(*value),
             MoveViewArg::U8(value) => serde_json::Value::Number((*value).into()),

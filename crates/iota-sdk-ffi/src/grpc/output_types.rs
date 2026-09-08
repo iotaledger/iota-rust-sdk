@@ -18,8 +18,11 @@ use iota_sdk::grpc_types::{proto::proto_to_timestamp_ms, v1 as proto};
 
 use crate::{
     error::{Result, SdkFfiError},
-    graphql::output_types::{
-        DryRunEffect, DryRunMutation, DryRunResult, DryRunReturn, TransactionArgument,
+    graphql::{
+        api::move_view_call::MoveViewArg,
+        output_types::{
+            DryRunEffect, DryRunMutation, DryRunResult, DryRunReturn, TransactionArgument,
+        },
     },
     types::{
         checkpoint::{CheckpointContents, CheckpointSummary},
@@ -477,6 +480,67 @@ impl TryFrom<&proto::transaction_execution_service::SimulatedTransaction> for Si
             execution_error: value.execution_error().map(TryInto::try_into).transpose()?,
         })
     }
+}
+
+/// The outputs of a Move view function call.
+///
+/// Exactly one of `return_values` and `execution_error` is populated when the
+/// read mask includes `execution_result`: the first if the call returned, the
+/// second if it aborted.
+#[derive(uniffi::Record)]
+pub struct ViewFunctionCallOutputs {
+    /// The values the function returned.
+    pub return_values: Option<Vec<CommandOutput>>,
+    /// Why the call aborted.
+    pub execution_error: Option<SimulatedExecutionError>,
+}
+
+impl TryFrom<&proto::transaction_execution_service::ViewFunctionCallOutputs>
+    for ViewFunctionCallOutputs
+{
+    type Error = SdkFfiError;
+
+    fn try_from(
+        value: &proto::transaction_execution_service::ViewFunctionCallOutputs,
+    ) -> Result<Self> {
+        Ok(Self {
+            return_values: value
+                .return_values()
+                .map(|outputs| {
+                    outputs
+                        .outputs
+                        .iter()
+                        .map(TryInto::try_into)
+                        .collect::<Result<Vec<_>>>()
+                })
+                .transpose()?,
+            execution_error: value.execution_error().map(TryInto::try_into).transpose()?,
+        })
+    }
+}
+
+/// The result of a single call in a batch of Move view function calls: either
+/// the outputs of the call or the error the node returned for it.
+#[derive(uniffi::Record)]
+pub struct ViewFunctionCallResult {
+    /// The outputs of the call, if the node ran it. A call that ran and
+    /// aborted still has outputs, with the abort in `execution_error`.
+    pub outputs: Option<ViewFunctionCallOutputs>,
+    /// The error message, if the node refused to run the call.
+    pub error: Option<String>,
+}
+
+/// A Move view function to call with `view_function_calls`.
+#[derive(uniffi::Record)]
+pub struct ViewFunctionCallInput {
+    /// The fully qualified function name, `<package>::<module>::<function>`.
+    pub fq_function_name: String,
+    /// The type arguments, in declaration order.
+    #[uniffi(default = [])]
+    pub type_args: Vec<Arc<TypeTag>>,
+    /// The call arguments, in declaration order.
+    #[uniffi(default = [])]
+    pub call_args: Vec<Arc<MoveViewArg>>,
 }
 
 /// The result of simulating a single transaction in a batch: either the
@@ -1133,5 +1197,68 @@ fn transaction_argument(value: iota_sdk::types::Argument) -> TransactionArgument
             index: Some(index.into()),
         },
         _ => unimplemented!("a new enum variant was added and needs to be handled"),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use iota_sdk::grpc_types::{
+        proto::json_to_prost_stringify_numbers,
+        v1::{
+            command::{CommandOutput as ProtoCommandOutput, CommandOutputs},
+            transaction_execution_service::{
+                ExecutionError as ProtoExecutionError,
+                ViewFunctionCallOutputs as ProtoViewFunctionCallOutputs,
+                view_function_call_outputs::ExecutionResult,
+            },
+        },
+    };
+
+    use super::ViewFunctionCallOutputs;
+
+    #[test]
+    fn view_function_call_outputs_returned() {
+        let mut output = ProtoCommandOutput::default();
+        output.json = Some(json_to_prost_stringify_numbers(&serde_json::json!(75)));
+        let mut outputs = CommandOutputs::default();
+        outputs.outputs = vec![output];
+        let mut proto = ProtoViewFunctionCallOutputs::default();
+        proto.execution_result = Some(ExecutionResult::ReturnValues(outputs));
+
+        let converted = ViewFunctionCallOutputs::try_from(&proto).unwrap();
+
+        let return_values = converted.return_values.unwrap();
+        assert_eq!(return_values.len(), 1);
+        assert_eq!(return_values[0].json, Some(serde_json::json!("75")));
+        assert!(converted.execution_error.is_none());
+    }
+
+    #[test]
+    fn view_function_call_outputs_aborted() {
+        let mut error = ProtoExecutionError::default();
+        error.source = Some("discount over 100%".to_owned());
+        error.command_index = Some(0);
+        let mut proto = ProtoViewFunctionCallOutputs::default();
+        proto.execution_result = Some(ExecutionResult::ExecutionError(error));
+
+        let converted = ViewFunctionCallOutputs::try_from(&proto).unwrap();
+
+        assert!(converted.return_values.is_none());
+        let execution_error = converted.execution_error.unwrap();
+        assert_eq!(
+            execution_error.source.as_deref(),
+            Some("discount over 100%")
+        );
+        assert_eq!(execution_error.command_index, Some(0));
+        assert!(execution_error.error.is_none());
+    }
+
+    #[test]
+    fn view_function_call_outputs_masked_out() {
+        let converted =
+            ViewFunctionCallOutputs::try_from(&ProtoViewFunctionCallOutputs::default()).unwrap();
+
+        assert!(converted.return_values.is_none());
+        assert!(converted.execution_error.is_none());
     }
 }
