@@ -76,7 +76,7 @@ impl GrpcClient {
     }
 
     /// Create a new gRPC client connected to a `localnet` gRPC server:
-    /// <http://localhost:9000>.
+    /// <http://localhost:50051>.
     #[uniffi::constructor]
     pub fn new_localnet() -> Result<Self> {
         let _guard = tokio_runtime().enter();
