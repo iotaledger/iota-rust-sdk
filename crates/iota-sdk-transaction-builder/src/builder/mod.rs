@@ -37,10 +37,10 @@ use crate::{
 mod assigned_results;
 pub(crate) mod client;
 pub(crate) mod gas_station;
-pub mod move_authenticator;
+pub(crate) mod move_authenticator;
 /// Argument types for PTBs
-pub mod ptb_arguments;
-pub mod signer;
+pub(crate) mod ptb_arguments;
+pub(crate) mod signer;
 
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
