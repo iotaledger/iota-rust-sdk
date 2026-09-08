@@ -33,14 +33,7 @@ impl GrpcClient {
     /// error when the most recently executed checkpoint is older than the
     /// threshold.
     #[uniffi::method(default(threshold_ms = None))]
-    pub async fn get_health(&self, threshold_ms: Option<u64>) -> Result<HealthInfo> {
-        Ok((&self
-            .0
-            .read()
-            .await
-            .get_health(threshold_ms)
-            .await?
-            .into_inner())
-            .into())
+    pub async fn health(&self, threshold_ms: Option<u64>) -> Result<HealthInfo> {
+        Ok((&self.0.read().await.health(threshold_ms).await?.into_inner()).into())
     }
 }

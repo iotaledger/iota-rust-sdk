@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
         println!("Height:    {height}");
     }
 
-    let gas_price = client.get_reference_gas_price().await?;
+    let gas_price = client.reference_gas_price().await?;
     println!("Gas price: {}", gas_price.body());
 
     // Option 2: the same data piggybacks on response headers via

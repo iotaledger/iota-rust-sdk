@@ -99,7 +99,7 @@ impl GrpcClient {
     ///
     /// The optional `read_mask` controls which fields the server returns.
     #[uniffi::method(default(epoch = None, read_mask = None))]
-    pub async fn get_epoch(
+    pub async fn epoch(
         &self,
         epoch: Option<u64>,
         read_mask: Option<Vec<String>>,
@@ -108,7 +108,7 @@ impl GrpcClient {
             .0
             .read()
             .await
-            .get_epoch(
+            .epoch(
                 epoch,
                 crate::grpc::api::read_mask::<EpochReadMask>(&read_mask),
             )
@@ -119,12 +119,12 @@ impl GrpcClient {
 
     /// Get the reference gas price of the current epoch, denominated in
     /// NANOS.
-    pub async fn get_reference_gas_price(&self) -> Result<u64> {
+    pub async fn reference_gas_price(&self) -> Result<u64> {
         Ok(self
             .0
             .read()
             .await
-            .get_reference_gas_price()
+            .reference_gas_price()
             .await?
             .into_inner())
     }
