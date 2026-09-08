@@ -113,7 +113,7 @@ macro_rules! impl_try_from_object_generic {
             }
         }
     };
-    // A mirror whose Move type parameter is a coin *struct* rather than an
+    // A mirror whose Move type parameter is itself a struct rather than an
     // arbitrary type, so its tag constructor takes a `StructTag`.
     (@struct_param $ty:ident<$param:ident>, $is_fn:ident, $new_fn:ident $(,)?) => {
         impl_try_from_object_generic!(@common $ty<$param>, $is_fn);

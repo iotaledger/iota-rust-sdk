@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Fetch `StakedIota` objects as typed Rust structs using
+//! Decode `StakedIota` objects into typed Rust structs using
 //! `iota-sdk-move-types`.
 //!
 //! The GraphQL client returns each object's `contents` as a raw BCS byte
@@ -11,9 +11,8 @@
 //! principal — and you'd be on the hook for keeping that decoder in sync
 //! with every Move-side change.
 //!
-//! `move_objects` takes the Move type from its type parameter: it derives the
-//! type filter from `StakedIota` and decodes the page, so neither the type
-//! string nor the decode step appears here. That leaves typed, named-field
+//! With the move-types crate, a single `StakedIota::try_from`
+//! validates the on-chain type tag and gives you typed, named-field
 //! access:
 //!
 //! - `staked.id()` — the staked object's [`ObjectId`]
@@ -25,7 +24,7 @@
 
 use eyre::Result;
 use iota_sdk::{
-    graphql_client::{Client, MoveObjectFilter},
+    graphql_client::{Client, query_types::ObjectFilter},
     move_types::iota_system::staking_pool::StakedIota,
     types::Address,
 };
@@ -38,8 +37,10 @@ async fn main() -> Result<()> {
         "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151".parse()?;
 
     let page = client
-        .move_objects::<StakedIota>(
-            MoveObjectFilter::default().with_owner(owner),
+        .objects(
+            ObjectFilter::default()
+                .with_type("0x3::staking_pool::StakedIota".to_owned())
+                .with_owner(owner),
             Default::default(),
         )
         .await?;
@@ -52,7 +53,8 @@ async fn main() -> Result<()> {
     println!("Decoded {} StakedIota object(s):\n", page.data().len());
 
     let mut total_principal: u64 = 0;
-    for staked in page.data() {
+    for object in page.data() {
+        let staked = StakedIota::try_from(object)?;
         total_principal += staked.principal();
 
         println!("- id:               {}", staked.id());
