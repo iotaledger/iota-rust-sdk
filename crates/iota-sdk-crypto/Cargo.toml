@@ -52,7 +52,6 @@ pem = [
 bls12381 = [
   "dep:blst",
   "dep:rand_core",
-  "dep:roaring",
   "dep:zeroize",
   "signature/std",
 ]
@@ -82,7 +81,6 @@ pem-rfc7468 = { version = "0.7", optional = true, features = ["std"] }
 pkcs8 = { version = "0.10", optional = true, features = ["std"] }
 # RNG support
 rand_core = { workspace = true, optional = true }
-roaring = { workspace = true, optional = true }
 # passkey verification support
 sha2 = { version = "0.10.8", optional = true }
 signature = "2.2"
