@@ -4,7 +4,6 @@
 package main
 
 import (
-	"bytes"
 	"log"
 
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
@@ -21,10 +20,7 @@ func identifier(ident string) *iota_sdk.Identifier {
 func main() {
 	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	privateKey, err := iota_sdk.NewEd25519PrivateKey(bytes.Repeat([]byte{9}, 32))
-	if err != nil {
-		log.Fatalf("Failed to create private key: %v", err)
-	}
+	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
 	sender := privateKey.PublicKey().DeriveAddress()
 
 	faucet := iota_sdk.FaucetClientNewLocalnet()

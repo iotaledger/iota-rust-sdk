@@ -9,7 +9,7 @@ struct UnstakeExample {
   static func main() async throws {
     let client = GraphQlClient.newLocalnet()
 
-    let privateKey = try Ed25519PrivateKey(bytes: Data(repeating: 9, count: 32))
+    let privateKey = Ed25519PrivateKey.random()
     let owner = privateKey.publicKey().deriveAddress()
 
     let faucet = FaucetClient.newLocalnet()

@@ -15,7 +15,7 @@ await initAsync();
 
 const client = GraphQlClient.newLocalnet();
 
-const privateKey = new Ed25519PrivateKey(new Uint8Array(32).fill(9));
+const privateKey = Ed25519PrivateKey.random();
 const sender = privateKey.publicKey().deriveAddress();
 
 const faucet = FaucetClient.newLocalnet();

@@ -13,7 +13,7 @@ use iota_sdk::{
 async fn main() -> Result<()> {
     let client = Client::new_localnet();
 
-    let private_key = Ed25519PrivateKey::new([9; Ed25519PrivateKey::LENGTH]);
+    let private_key = Ed25519PrivateKey::random();
     let sender_address = private_key.public_key().derive_address();
 
     FaucetClient::new_localnet()

@@ -9,9 +9,7 @@ class Program
     {
         var client = GraphQlClient.NewLocalnet();
 
-        var privateKeyBytes = new byte[32];
-        Array.Fill(privateKeyBytes, (byte)9);
-        var privateKey = new Ed25519PrivateKey(privateKeyBytes);
+        var privateKey = Ed25519PrivateKey.Random();
         var fromAddress = privateKey.PublicKey().DeriveAddress();
         var toAddress = Address.FromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900");
 

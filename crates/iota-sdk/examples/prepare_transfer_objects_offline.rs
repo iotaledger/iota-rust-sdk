@@ -13,7 +13,7 @@ use iota_sdk::{
 async fn main() -> Result<()> {
     let client = Client::new_localnet();
 
-    let private_key = Ed25519PrivateKey::new([9; Ed25519PrivateKey::LENGTH]);
+    let private_key = Ed25519PrivateKey::random();
     let from_address = private_key.public_key().derive_address();
     let to_address =
         Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;

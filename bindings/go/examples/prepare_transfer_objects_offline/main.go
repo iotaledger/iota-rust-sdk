@@ -4,7 +4,6 @@
 package main
 
 import (
-	"bytes"
 	"log"
 
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
@@ -21,10 +20,7 @@ func addrFromHex(hex string) *iota_sdk.Address {
 func main() {
 	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	privateKey, err := iota_sdk.NewEd25519PrivateKey(bytes.Repeat([]byte{9}, 32))
-	if err != nil {
-		log.Fatalf("Failed to create private key: %v", err)
-	}
+	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
 	fromAddress := privateKey.PublicKey().DeriveAddress()
 
 	toAddress := addrFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")

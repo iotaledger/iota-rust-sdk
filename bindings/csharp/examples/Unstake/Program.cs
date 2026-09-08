@@ -9,9 +9,7 @@ class Program
     {
         var client = GraphQlClient.NewLocalnet();
 
-        var privateKeyBytes = new byte[32];
-        Array.Fill(privateKeyBytes, (byte)9);
-        var privateKey = new Ed25519PrivateKey(privateKeyBytes);
+        var privateKey = Ed25519PrivateKey.Random();
         var owner = privateKey.PublicKey().DeriveAddress();
 
         var faucet = FaucetClient.NewLocalnet();

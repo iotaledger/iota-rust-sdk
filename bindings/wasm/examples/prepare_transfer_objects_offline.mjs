@@ -16,7 +16,7 @@ await initAsync();
 
 const client = GraphQlClient.newLocalnet();
 
-const privateKey = new Ed25519PrivateKey(new Uint8Array(32).fill(9));
+const privateKey = Ed25519PrivateKey.random();
 const fromAddress = privateKey.publicKey().deriveAddress();
 const toAddress = Address.fromHex(
   "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900",

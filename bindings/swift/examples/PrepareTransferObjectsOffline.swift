@@ -9,7 +9,7 @@ struct PrepareTransferObjectsOfflineExample {
   static func main() async throws {
     let client = GraphQlClient.newLocalnet()
 
-    let privateKey = try Ed25519PrivateKey(bytes: Data(repeating: 9, count: 32))
+    let privateKey = Ed25519PrivateKey.random()
     let fromAddress = privateKey.publicKey().deriveAddress()
     let toAddress = try Address.fromHex(
       hex: "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")

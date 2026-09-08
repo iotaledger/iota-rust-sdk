@@ -8,7 +8,7 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newLocalnet()
 
-        val privateKey = Ed25519PrivateKey(ByteArray(32) { 9 })
+        val privateKey = Ed25519PrivateKey.random()
         val fromAddress = privateKey.publicKey().deriveAddress()
         val toAddress =
             Address.fromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")

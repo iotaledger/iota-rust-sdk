@@ -9,7 +9,7 @@ import asyncio
 async def main():
     client = GraphQlClient.new_localnet()
 
-    private_key = Ed25519PrivateKey(b"\x09" * 32)
+    private_key = Ed25519PrivateKey.random()
     from_address = private_key.public_key().derive_address()
     to_address = Address.from_hex(
         "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")

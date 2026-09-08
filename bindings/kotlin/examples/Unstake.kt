@@ -8,7 +8,7 @@ fun main() = runBlocking {
     try {
         val client = GraphQlClient.newLocalnet()
 
-        val privateKey = Ed25519PrivateKey(ByteArray(32) { 9 })
+        val privateKey = Ed25519PrivateKey.random()
         val owner = privateKey.publicKey().deriveAddress()
 
         val faucet = FaucetClient.newLocalnet()

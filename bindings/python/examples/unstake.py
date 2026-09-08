@@ -9,7 +9,7 @@ import asyncio
 async def main():
     client = GraphQlClient.new_localnet()
 
-    private_key = Ed25519PrivateKey(b"\x09" * 32)
+    private_key = Ed25519PrivateKey.random()
     owner = private_key.public_key().derive_address()
 
     faucet = FaucetClient.new_localnet()
