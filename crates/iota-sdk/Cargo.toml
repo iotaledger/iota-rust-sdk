@@ -101,7 +101,7 @@ name = "owned_objects_grpc"
 required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]
-name = "stream_checkpoints_grpc"
+name = "checkpoints_stream_grpc"
 required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]
