@@ -49,3 +49,48 @@ impl<E: std::error::Error> From<E> for SdkFfiError {
         Self::new(e)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// An error whose `Display` omits its cause, the shape `thiserror` produces
+    /// for a `#[source]` field.
+    #[derive(Debug)]
+    struct Wrapping(&'static str, iota_sdk::transaction_builder::error::Error);
+
+    impl fmt::Display for Wrapping {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.write_str(self.0)
+        }
+    }
+
+    impl std::error::Error for Wrapping {
+        fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+            Some(&self.1)
+        }
+    }
+
+    #[test]
+    fn bindings_see_every_cause_exactly_once() {
+        use base64ct::Encoding;
+
+        // `Decoding` renders its own cause inline and also exposes it, so
+        // flattening must not repeat it. The outer error omits its cause, so
+        // flattening must add it.
+        let base64 = base64ct::Base64::decode_vec("!!!").unwrap_err();
+        let decoding = iota_sdk::transaction_builder::error::Error::from(base64);
+        let error = Wrapping("preparing the transaction failed", decoding);
+
+        fn exported(error: Wrapping) -> Result<()> {
+            // `?` goes through `From`, the path every exported method takes.
+            Err(error)?;
+            Ok(())
+        }
+
+        assert_eq!(
+            exported(error).unwrap_err().to_string(),
+            "preparing the transaction failed: Decoding error: invalid Base64 encoding"
+        );
+    }
+}
