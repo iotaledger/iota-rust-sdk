@@ -47,7 +47,7 @@ impl SimulateTransactionInput {
     }
 
     /// Whether the node is asked to relax its Move VM checks.
-    pub fn skips_checks(&self) -> bool {
+    pub fn is_skip_checks_enabled(&self) -> bool {
         self.skip_checks
     }
 }
