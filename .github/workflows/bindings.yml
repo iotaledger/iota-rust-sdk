@@ -169,7 +169,7 @@ jobs:
       - name: Install WASM bindings prerequisites
         run: |
           rustup target add wasm32-unknown-unknown
-          cargo install wasm-bindgen-cli --version 0.2.122
+          cargo install wasm-bindgen-cli --version 0.2.128
           npm install -g pnpm@10
       - name: Build the bindings
         run: make wasm

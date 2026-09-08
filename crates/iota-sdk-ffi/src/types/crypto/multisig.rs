@@ -156,6 +156,13 @@ impl MultisigAggregatedSignature {
         )?))
     }
 
+    /// Derive the `Address` of the committee that produced this signature.
+    ///
+    /// See `MultisigCommittee::derive_address`.
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
+    }
+
     /// The list of signatures from committee members
     pub fn signatures(&self) -> Vec<Arc<MultisigMemberSignature>> {
         self.0

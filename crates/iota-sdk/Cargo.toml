@@ -105,5 +105,9 @@ name = "stream_checkpoints_grpc"
 required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]
+name = "move_view_call_grpc"
+required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+
+[[example]]
 name = "decode_staked_iota"
 required-features = ["move-types"]

@@ -1,21 +1,24 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::str::FromStr;
-
 use eyre::Result;
 use iota_sdk::{
-    graphql_client::Client,
+    crypto::ed25519::Ed25519PrivateKey,
+    graphql_client::{Client, faucet::FaucetClient},
     transaction_builder::{TransactionBuilder, assigned, unresolved::Argument},
     types::Address,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
-    let sender_address =
-        Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    let private_key = Ed25519PrivateKey::random();
+    let sender_address = private_key.public_key().derive_address();
+
+    FaucetClient::new_localnet()
+        .request_and_wait_for_finalized(sender_address, &client)
+        .await?;
 
     let mut builder = TransactionBuilder::new(sender_address).with_client(client.clone());
     builder

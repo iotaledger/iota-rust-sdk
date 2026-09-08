@@ -69,6 +69,13 @@ impl PasskeyAuthenticator {
     pub fn public_key(&self) -> PasskeyPublicKey {
         self.0.public_key().into()
     }
+
+    /// Derive the `Address` of the passkey that produced this authenticator.
+    ///
+    /// See `PasskeyPublicKey::derive_address`.
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
+    }
 }
 
 /// Public key of a `PasskeyAuthenticator`.

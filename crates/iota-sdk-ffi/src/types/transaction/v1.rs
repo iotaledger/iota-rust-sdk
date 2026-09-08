@@ -381,7 +381,9 @@ impl From<iota_sdk::types::UnchangedSharedKind> for UnchangedSharedKind {
                 version: Arc::new(version.into()),
             },
             iota_sdk::types::UnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new UnchangedSharedKind enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -445,7 +447,7 @@ impl From<iota_sdk::types::ObjectIn> for ObjectIn {
                 digest: Arc::new(digest.into()),
                 owner: Arc::new(owner.into()),
             },
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new ObjectIn enum variant was added and needs to be handled"),
         }
     }
 }
@@ -512,7 +514,7 @@ impl From<iota_sdk::types::ObjectOut> for ObjectOut {
                 version: Arc::new(version.into()),
                 digest: Arc::new(digest.into()),
             },
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new ObjectOut enum variant was added and needs to be handled"),
         }
     }
 }
@@ -562,7 +564,7 @@ impl From<iota_sdk::types::IdOperation> for IdOperation {
             iota_sdk::types::IdOperation::None => Self::None,
             iota_sdk::types::IdOperation::Created => Self::Created,
             iota_sdk::types::IdOperation::Deleted => Self::Deleted,
-            _ => unimplemented!("a new IdOperation variant was added and needs to be handled"),
+            _ => unimplemented!("a new IdOperation enum variant was added and needs to be handled"),
         }
     }
 }
