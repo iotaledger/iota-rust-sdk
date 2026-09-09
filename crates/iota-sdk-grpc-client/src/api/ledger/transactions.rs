@@ -73,7 +73,7 @@ impl Client {
     /// pruned, the transaction's result is a `FAILED_PRECONDITION` error
     /// instead of a silently incomplete answer — narrow the read mask, or
     /// fetch objects individually via
-    /// [`get_objects`](Client::get_objects) for best-effort retrieval.
+    /// [`objects`](Client::objects) for best-effort retrieval.
     ///
     /// # Example
     ///
@@ -87,7 +87,7 @@ impl Client {
     ///
     /// // Default mask
     /// let txs = client
-    ///     .get_transactions([digest], TransactionReadMask::default())
+    ///     .transactions([digest], TransactionReadMask::default())
     ///     .await?;
     /// for tx in txs.body() {
     ///     let tx = match tx {
@@ -111,7 +111,7 @@ impl Client {
     ///
     /// // Selected fields
     /// let txs = client
-    ///     .get_transactions(
+    ///     .transactions(
     ///         [digest],
     ///         TransactionReadMask::from([TransactionField::EFFECTS, TransactionField::CHECKPOINT]),
     ///     )
@@ -119,7 +119,7 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_transactions(
+    pub async fn transactions(
         &self,
         digests: impl IntoIterator<Item = TransactionDigest>,
         read_mask: impl IntoReadMask<TransactionReadMask>,

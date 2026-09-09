@@ -19,7 +19,7 @@ type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 pub(crate) const MAINNET_HOST: &str = "https://grpc.mainnet.iota.cafe:443";
 pub(crate) const TESTNET_HOST: &str = "https://grpc.testnet.iota.cafe:443";
 pub(crate) const DEVNET_HOST: &str = "https://grpc.devnet.iota.cafe:443";
-pub(crate) const LOCAL_HOST: &str = "http://localhost:9000";
+pub(crate) const LOCAL_HOST: &str = "http://localhost:50051";
 
 pub type InterceptedChannel =
     tonic::service::interceptor::InterceptedService<tonic::transport::Channel, HeadersInterceptor>;
@@ -107,7 +107,7 @@ impl Client {
     }
 
     /// Create a new client connected to a `localnet` gRPC server:
-    /// <http://localhost:9000>.
+    /// <http://localhost:50051>.
     pub fn new_localnet() -> Result<Self> {
         Self::new(LOCAL_HOST)
     }

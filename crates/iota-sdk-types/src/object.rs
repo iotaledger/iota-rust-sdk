@@ -364,7 +364,7 @@ impl std::str::FromStr for MoveObjectType {
 /// ; The first 32 bytes of the `bytes` contents are the object's object-id.
 /// ```
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MoveStruct {
@@ -858,9 +858,6 @@ mod serialization {
         /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
         /// 0x2::iota::IOTA`)
         Coin(TypeTag),
-        // NOTE: if adding a new type here, and there are existing on-chain objects of that
-        // type with Other(_), that is ok, but you must hand-roll PartialEq/Eq/Ord/maybe Hash
-        // to make sure the new type and Other(_) are interpreted consistently.
     }
 
     /// See `MoveObjectType`
@@ -877,9 +874,6 @@ mod serialization {
         /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
         /// 0x2::iota::IOTA`)
         Coin(&'a TypeTag),
-        // NOTE: if adding a new type here, and there are existing on-chain objects of that
-        // type with Other(_), that is ok, but you must hand-roll PartialEq/Eq/Ord/maybe Hash
-        // to make sure the new type and Other(_) are interpreted consistently.
     }
 
     impl MoveObjectTypeWrapper {
@@ -889,6 +883,17 @@ mod serialization {
                 MoveObjectTypeWrapper::GasCoin => StructTag::new_gas_coin(),
                 MoveObjectTypeWrapper::StakedIota => StructTag::new_staked_iota(),
                 MoveObjectTypeWrapper::Coin(type_tag) => StructTag::new_coin(type_tag),
+            }
+        }
+
+        /// Wire-format variant index, compared against the canonical encoding
+        /// chosen by `MoveObjectTypeRef::from_struct_tag`.
+        fn variant_index(&self) -> u8 {
+            match self {
+                Self::Other(_) => 0,
+                Self::GasCoin => 1,
+                Self::StakedIota => 2,
+                Self::Coin(_) => 3,
             }
         }
     }
@@ -916,6 +921,15 @@ mod serialization {
                 Self::Other(s)
             }
         }
+
+        fn variant_index(&self) -> u8 {
+            match self {
+                Self::Other(_) => 0,
+                Self::GasCoin => 1,
+                Self::StakedIota => 2,
+                Self::Coin(_) => 3,
+            }
+        }
     }
 
     impl Serialize for MoveObjectType {
@@ -939,7 +953,33 @@ mod serialization {
             if deserializer.is_human_readable() {
                 StructTag::deserialize(deserializer).map(Self)
             } else {
-                MoveObjectTypeWrapper::deserialize(deserializer).map(|t| Self(t.into_struct_tag()))
+                // The same `StructTag` is reachable from several wire forms
+                // (e.g. `Other(0x2::coin::Coin<0x2::iota::IOTA>)` and
+                // `GasCoin`), but serialization always emits the specialized
+                // one. Reject the others so BCS round-trips stay byte-faithful
+                // and digests computed over them stay stable. Only the
+                // variants carrying a payload can be non-canonical: `Other`
+                // may wrap any specialized tag and `Coin` may wrap the IOTA
+                // type, while `GasCoin` and `StakedIota` are always canonical.
+                let parsed = MoveObjectTypeWrapper::deserialize(deserializer)?;
+                match parsed {
+                    MoveObjectTypeWrapper::Other(_) | MoveObjectTypeWrapper::Coin(_) => {
+                        let parsed_idx = parsed.variant_index();
+                        let tag = parsed.into_struct_tag();
+                        let canonical_idx =
+                            MoveObjectTypeRef::from_struct_tag(&tag).variant_index();
+                        if parsed_idx != canonical_idx {
+                            return Err(serde::de::Error::custom(format!(
+                                "non-canonical MoveObjectType encoding: variant {parsed_idx} \
+                                 would be re-encoded as variant {canonical_idx}",
+                            )));
+                        }
+                        Ok(Self(tag))
+                    }
+                    MoveObjectTypeWrapper::GasCoin | MoveObjectTypeWrapper::StakedIota => {
+                        Ok(Self(parsed.into_struct_tag()))
+                    }
+                }
             }
         }
     }
@@ -1008,6 +1048,33 @@ mod serialization {
         }
     }
 
+    /// Deserialization target mirroring `MoveStruct`'s fields, so that
+    /// `contents` can be validated through `MoveStruct::new` before the value
+    /// reaches the public type, where `id()` relies on that invariant.
+    #[derive(serde::Deserialize)]
+    #[serde(rename = "MoveStruct")]
+    struct RawMoveStruct {
+        object_type: MoveObjectType,
+        version: Version,
+        #[serde(with = "crate::_serde::ReadableBase64Encoded")]
+        contents: Vec<u8>,
+    }
+
+    impl<'de> Deserialize<'de> for MoveStruct {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            let RawMoveStruct {
+                object_type,
+                version,
+                contents,
+            } = RawMoveStruct::deserialize(deserializer)?;
+
+            MoveStruct::new(object_type, version, contents).map_err(serde::de::Error::custom)
+        }
+    }
+
     #[cfg(test)]
     mod tests {
         use std::collections::BTreeMap;
@@ -1017,6 +1084,108 @@ mod serialization {
 
         use super::*;
         use crate::{Identifier, TypeOrigin, UpgradeInfo, object::Object};
+
+        // A non-canonical `MoveObjectType` wire form such as `Other(<gas coin
+        // tag>)` used to deserialize successfully and then re-serialize as the
+        // specialized variant, so the same logical value had several BCS
+        // encodings. Each must now be rejected at deserialization.
+        #[test]
+        fn non_canonical_move_object_type_is_rejected() {
+            // Variant indices on the wire (uleb128, one byte here):
+            //   0 = Other(StructTag), 1 = GasCoin, 2 = StakedIota, 3 = Coin(TypeTag)
+            fn other(tag: StructTag) -> Vec<u8> {
+                [&[0u8][..], &bcs::to_bytes(&tag).unwrap()].concat()
+            }
+            fn coin(type_tag: TypeTag) -> Vec<u8> {
+                [&[3u8][..], &bcs::to_bytes(&type_tag).unwrap()].concat()
+            }
+
+            let non_canonical = [
+                ("Other(gas coin tag)", other(StructTag::new_gas_coin())),
+                ("Other(StakedIota tag)", other(StructTag::new_staked_iota())),
+                (
+                    "Other(Coin<non-IOTA> tag)",
+                    other(StructTag::new_coin(TypeTag::U64)),
+                ),
+                ("Coin(IOTA type tag)", coin(StructTag::new_gas().into())),
+            ];
+            for (label, bytes) in non_canonical {
+                let err = bcs::from_bytes::<MoveObjectType>(&bytes).unwrap_err();
+                assert!(
+                    err.to_string().contains("non-canonical MoveObjectType"),
+                    "{label}: unexpected error: {err}"
+                );
+            }
+
+            // The canonical forms still round-trip.
+            for tag in [
+                StructTag::new_gas_coin(),
+                StructTag::new_staked_iota(),
+                StructTag::new_coin(TypeTag::U64),
+                StructTag::new_gas(),
+            ] {
+                let object_type = MoveObjectType::new(tag);
+                let bytes = bcs::to_bytes(&object_type).unwrap();
+                assert_eq!(
+                    bcs::from_bytes::<MoveObjectType>(&bytes).unwrap(),
+                    object_type
+                );
+            }
+        }
+
+        // A `MoveStruct` whose `contents` is shorter than an `ObjectId` used to
+        // deserialize successfully and then panic in `id()`. Both the BCS and
+        // JSON paths must reject it up front.
+        #[test]
+        fn truncated_move_struct_contents_is_rejected() {
+            const SHORT: usize = ObjectId::LENGTH - 1;
+
+            // BCS layout: GasCoin tag (0x01) | version u64 | contents uleb128
+            // length | contents.
+            let mut short_bcs = vec![0x01];
+            short_bcs.extend_from_slice(&[0u8; 8]);
+            short_bcs.push(SHORT as u8);
+            short_bcs.extend_from_slice(&[0u8; SHORT]);
+
+            let err = bcs::from_bytes::<MoveStruct>(&short_bcs).unwrap_err();
+            assert!(
+                err.to_string().contains("MoveStruct contents"),
+                "unexpected BCS error: {err}"
+            );
+
+            // Same layout wrapped in an `Object`: ObjectData::Struct (0x00) |
+            // MoveStruct | Owner::Immutable (0x03) | digest (uleb128 length +
+            // 32 bytes) | storage_rebate u64.
+            let mut short_object = vec![0x00];
+            short_object.extend_from_slice(&short_bcs);
+            short_object.push(0x03);
+            short_object.push(0x20);
+            short_object.extend_from_slice(&[0u8; 32]);
+            short_object.extend_from_slice(&[0u8; 8]);
+            assert!(bcs::from_bytes::<Object>(&short_object).is_err());
+
+            let short_json = format!(
+                r#"{{"object_type":"0x2::coin::Coin<0x2::iota::IOTA>","version":"0","contents":"{}"}}"#,
+                <base64ct::Base64 as base64ct::Encoding>::encode_string(&[0u8; SHORT]),
+            );
+            let err = serde_json::from_str::<MoveStruct>(&short_json).unwrap_err();
+            assert!(
+                err.to_string().contains("MoveStruct contents"),
+                "unexpected JSON error: {err}"
+            );
+
+            // Exactly `ObjectId::LENGTH` bytes is the accepted minimum.
+            let valid = MoveStruct::new(
+                MoveObjectType::new(StructTag::new_gas_coin()),
+                Version::from_u64(0),
+                vec![0u8; ObjectId::LENGTH],
+            )
+            .unwrap();
+            let bcs_bytes = bcs::to_bytes(&valid).unwrap();
+            assert_eq!(bcs::from_bytes::<MoveStruct>(&bcs_bytes).unwrap(), valid);
+            let json = serde_json::to_string(&valid).unwrap();
+            assert_eq!(serde_json::from_str::<MoveStruct>(&json).unwrap(), valid);
+        }
 
         #[test]
         fn package_object_json_snapshot() {

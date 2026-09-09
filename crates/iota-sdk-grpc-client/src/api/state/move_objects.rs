@@ -28,7 +28,7 @@ use crate::{
 
 /// Builder for listing owned objects of the Move type `T`.
 ///
-/// Created by [`Client::list_owned_move_objects`]. Await directly for a single
+/// Created by [`Client::owned_move_objects`]. Await directly for a single
 /// page, or call [`.collect(limit)`](Self::collect) to auto-paginate.
 pub struct ListOwnedMoveObjectsQuery<T> {
     inner: ListOwnedObjectsQuery,
@@ -120,7 +120,7 @@ impl Client {
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let page = client
-    ///     .list_owned_move_objects::<StakedIota>(owner, None, None)
+    ///     .owned_move_objects::<StakedIota>(owner, None, None)
     ///     .await?;
     /// for staked in &page.body().items {
     ///     println!("staked {} nanos", staked.principal());
@@ -128,13 +128,13 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn list_owned_move_objects<T: MoveObject>(
+    pub fn owned_move_objects<T: MoveObject>(
         &self,
         owner: Address,
         page_size: impl Into<Option<u32>>,
         page_token: impl Into<Option<prost::bytes::Bytes>>,
     ) -> ListOwnedMoveObjectsQuery<T> {
-        ListOwnedMoveObjectsQuery::new(self.list_owned_objects(
+        ListOwnedMoveObjectsQuery::new(self.owned_objects(
             owner,
             T::struct_tag(),
             page_size,

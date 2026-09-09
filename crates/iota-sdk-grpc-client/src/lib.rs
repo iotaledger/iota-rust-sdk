@@ -24,7 +24,7 @@
 //! // node cannot serve fails only its own slot.
 //! let digest: TransactionDigest = todo!();
 //! let txs = client
-//!     .get_transactions([digest], TransactionReadMask::default())
+//!     .transactions([digest], TransactionReadMask::default())
 //!     .await?;
 //! for tx in txs.body() {
 //!     match tx {
@@ -36,7 +36,7 @@
 //! // Get an object with the default field mask.
 //! let object_id: ObjectId = "0x2".parse()?;
 //! let objects = client
-//!     .get_objects([object_id], ObjectReadMask::default())
+//!     .objects([object_id], ObjectReadMask::default())
 //!     .await?;
 //! for object in objects.body() {
 //!     match object {
@@ -48,7 +48,7 @@
 //! # }
 //! ```
 
-pub mod api;
+mod api;
 mod transaction_builder_client;
 
 // Re-export all read mask constants (per-method fields)
@@ -102,6 +102,8 @@ pub use api::{
     TRANSACTION_EFFECTS_DIGEST,
     TRANSACTION_EVENTS_BCS,
     TRANSACTION_EVENTS_DIGEST,
+    // ViewFunctionCall per-method masks
+    VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT,
 };
 // Re-export types for convenience
 pub use api::{
@@ -120,6 +122,7 @@ pub use api::{
     LIST_DYNAMIC_FIELDS_READ_MASK,
     LIST_OWNED_OBJECTS_READ_MASK,
     SIMULATE_TRANSACTIONS_READ_MASK,
+    VIEW_FUNCTION_CALLS_READ_MASK,
 };
 // Re-export query builders for convenience
 pub use api::{

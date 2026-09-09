@@ -263,7 +263,11 @@ async fn test_upgrade() {
                     }
                 }
             }
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => {
+                unimplemented!(
+                    "a new TransactionEffects enum variant was added and needs to be handled"
+                )
+            }
         }
     }
     check_effects_status_success(effects);
@@ -574,7 +578,11 @@ async fn test_move_view_call() {
                     }
                 }
             }
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => {
+                unimplemented!(
+                    "a new TransactionEffects enum variant was added and needs to be handled"
+                )
+            }
         }
     }
     check_effects_status_success(effects);
