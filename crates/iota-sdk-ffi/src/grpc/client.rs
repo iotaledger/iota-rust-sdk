@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use tokio::sync::RwLock;
+use std::sync::{PoisonError, RwLock};
 
 use crate::error::Result;
 
@@ -25,9 +25,27 @@ fn tokio_runtime() -> &'static tokio::runtime::Runtime {
 
 /// The gRPC client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
-pub struct GrpcClient(pub(crate) RwLock<iota_sdk::grpc_client::Client>);
+pub struct GrpcClient(RwLock<iota_sdk::grpc_client::Client>);
 
-#[uniffi::export(async_runtime = "tokio")]
+impl GrpcClient {
+    /// A handle on the current client configuration.
+    pub(crate) fn client(&self) -> iota_sdk::grpc_client::Client {
+        self.0
+            .read()
+            .unwrap_or_else(PoisonError::into_inner)
+            .clone()
+    }
+
+    fn update(
+        &self,
+        f: impl FnOnce(iota_sdk::grpc_client::Client) -> iota_sdk::grpc_client::Client,
+    ) {
+        let mut client = self.0.write().unwrap_or_else(PoisonError::into_inner);
+        *client = f(client.clone());
+    }
+}
+
+#[uniffi::export]
 impl GrpcClient {
     /// Create a new gRPC client with the provided server URI.
     #[uniffi::constructor]
@@ -77,28 +95,27 @@ impl GrpcClient {
 
     /// Set a basic auth `Authorization` header that is sent with every
     /// request.
-    pub async fn set_basic_auth(&self, username: String, password: Option<String>) {
-        let mut lock = self.0.write().await;
-        let mut headers = lock.headers().clone();
-        headers.basic_auth(username, password);
-        *lock = lock.clone().with_headers(headers);
+    pub fn set_basic_auth(&self, username: String, password: Option<String>) {
+        self.update(|client| {
+            let mut headers = client.headers().clone();
+            headers.basic_auth(username, password);
+            client.with_headers(headers)
+        });
     }
 
     /// Set a bearer auth `Authorization` header that is sent with every
     /// request.
-    pub async fn set_bearer_auth(&self, token: String) -> Result<()> {
-        let mut lock = self.0.write().await;
-        let mut headers = lock.headers().clone();
+    pub fn set_bearer_auth(&self, token: String) -> Result<()> {
+        let mut headers = self.client().headers().clone();
         headers.bearer_auth(token)?;
-        *lock = lock.clone().with_headers(headers);
+        self.update(|client| client.with_headers(headers));
         Ok(())
     }
 
     /// Set the maximum size in bytes that a response message can be.
-    pub async fn set_max_decoding_message_size(&self, limit: u64) {
-        let mut lock = self.0.write().await;
-        *lock = lock
-            .clone()
-            .with_max_decoding_message_size(usize::try_from(limit).unwrap_or(usize::MAX));
+    pub fn set_max_decoding_message_size(&self, limit: u64) {
+        self.update(|client| {
+            client.with_max_decoding_message_size(usize::try_from(limit).unwrap_or(usize::MAX))
+        });
     }
 }

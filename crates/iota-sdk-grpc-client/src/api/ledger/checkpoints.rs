@@ -60,7 +60,10 @@ impl Client {
     /// let checkpoint = client
     ///     .checkpoint_latest(None, None, CheckpointResponseReadMask::default())
     ///     .await?;
-    /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
+    /// println!(
+    ///     "Received checkpoint {}",
+    ///     checkpoint.body().sequence_number()
+    /// );
     /// # Ok(())
     /// # }
     /// ```
@@ -104,7 +107,10 @@ impl Client {
     /// let checkpoint = client
     ///     .checkpoint_by_sequence_number(100, None, None, CheckpointResponseReadMask::default())
     ///     .await?;
-    /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
+    /// println!(
+    ///     "Received checkpoint {}",
+    ///     checkpoint.body().sequence_number()
+    /// );
     /// # Ok(())
     /// # }
     /// ```
@@ -151,7 +157,10 @@ impl Client {
     /// let checkpoint = client
     ///     .checkpoint_by_digest(digest, None, None, CheckpointResponseReadMask::default())
     ///     .await?;
-    /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
+    /// println!(
+    ///     "Received checkpoint {}",
+    ///     checkpoint.body().sequence_number()
+    /// );
     /// # Ok(())
     /// # }
     /// ```
@@ -282,7 +291,7 @@ impl Client {
     ///
     /// while let Some(checkpoint) = stream.body_mut().next().await {
     ///     let checkpoint = checkpoint?;
-    ///     println!("Received checkpoint {}", checkpoint.sequence_number);
+    ///     println!("Received checkpoint {}", checkpoint.sequence_number());
     /// }
     /// # Ok(())
     /// # }
@@ -405,7 +414,7 @@ impl Client {
     /// while let Some(item) = stream.body_mut().next().await {
     ///     match item? {
     ///         CheckpointStreamItem::Checkpoint(cp) => {
-    ///             println!("Matched checkpoint {}", cp.sequence_number);
+    ///             println!("Matched checkpoint {}", cp.sequence_number());
     ///         }
     ///         CheckpointStreamItem::Progress {
     ///             latest_scanned_sequence_number,
