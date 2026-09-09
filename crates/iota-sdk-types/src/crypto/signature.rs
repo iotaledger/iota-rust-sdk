@@ -369,12 +369,12 @@ impl std::fmt::Display for InvalidSignatureScheme {
 /// ```text
 /// user-signature = bytes ; where the contents of the bytes are defined by
 ///                        ; <user-signature-body>
-/// user-signature-body = (%d00 ed25519-signature ed25519-public-key) /
-///                       (%d01 secp256k1-signature secp256k1-public-key) /
-///                       (%d02 secp256r1-signature secp256r1-public-key) /
-///                       (%d03 multisig-aggregated-signature) /
-///                       (%d06 passkey-authenticator) /
-///                       (%d07 move-authenticator)
+/// user-signature-body = %d00 ed25519-signature ed25519-public-key /
+///                       %d01 secp256k1-signature secp256k1-public-key /
+///                       %d02 secp256r1-signature secp256r1-public-key /
+///                       %d03 multisig-aggregated-signature /
+///                       %d06 passkey-authenticator /
+///                       %d07 move-authenticator
 /// ```
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly

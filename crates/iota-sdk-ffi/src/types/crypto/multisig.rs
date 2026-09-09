@@ -30,7 +30,7 @@ use crate::{
 /// ed25519-multisig-member-signature               = %d00 ed25519-signature
 /// secp256k1-multisig-member-signature             = %d01 secp256k1-signature
 /// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
-/// passkey-multisig-member-signature               = %d04 passkey-bcs
+/// passkey-multisig-member-signature               = %d04 passkey-authenticator
 /// ```
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
