@@ -265,9 +265,7 @@ impl GrpcClient {
     /// and regulated metadata.
     pub async fn coin_info(&self, coin_type: &StructTag) -> Result<GrpcCoinInfo> {
         (&self
-            .0
-            .read()
-            .await
+            .client()
             .coin_info(coin_type.0.clone())
             .await?
             .into_inner())
