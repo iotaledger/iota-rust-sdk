@@ -160,7 +160,11 @@ pub struct ValidatorAggregatedSignature(pub iota_sdk::types::ValidatorAggregated
 #[uniffi::export]
 impl ValidatorAggregatedSignature {
     #[uniffi::constructor]
-    pub fn new(epoch: EpochId, signature: &Bls12381Signature, bitmap_bytes: &[u8]) -> Result<Self> {
+    pub fn from_signer_bitmap(
+        epoch: EpochId,
+        signature: &Bls12381Signature,
+        bitmap_bytes: &[u8],
+    ) -> Result<Self> {
         Ok(Self(
             iota_sdk::types::ValidatorAggregatedSignature::from_signer_bitmap(
                 epoch,

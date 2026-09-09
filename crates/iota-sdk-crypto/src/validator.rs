@@ -176,10 +176,10 @@ impl Verifier<ValidatorAggregatedSignature> for ValidatorCommitteeSignatureVerif
         }
 
         let mut signed_weight = 0;
-        let mut bitmap = signature.signer_indices();
+        let mut signer_indices = signature.signer_indices();
 
         let mut aggregated_public_key = {
-            let idx = bitmap.next().ok_or_else(|| {
+            let idx = signer_indices.next().ok_or_else(|| {
                 SignatureError::from_source("signature bitmap must have at least one entry")
             })?;
 
@@ -189,7 +189,7 @@ impl Verifier<ValidatorAggregatedSignature> for ValidatorCommitteeSignatureVerif
             AggregatePublicKey::from_public_key(&member.verifying_key.0)
         };
 
-        for idx in bitmap {
+        for idx in signer_indices {
             let member = self.committee.member_by_idx(idx as usize)?;
 
             signed_weight += member.weight;
