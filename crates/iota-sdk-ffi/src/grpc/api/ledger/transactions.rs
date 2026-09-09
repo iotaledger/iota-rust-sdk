@@ -164,9 +164,7 @@ impl GrpcClient {
         read_mask: Option<Vec<String>>,
     ) -> Result<Vec<ExecutedTransaction>> {
         let digests = digests.iter().map(|digest| ***digest).collect::<Vec<_>>();
-        self.0
-            .read()
-            .await
+        self.client()
             .transactions(
                 digests,
                 crate::grpc::api::read_mask::<TransactionReadMask>(&read_mask),
