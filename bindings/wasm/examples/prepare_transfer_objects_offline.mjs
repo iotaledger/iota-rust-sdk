@@ -3,8 +3,10 @@
 
 import {
   Address,
+  Ed25519PrivateKey,
+  FaucetClient,
   GraphQlClient,
-  ObjectId,
+  ObjectFilter,
   PtbArgument,
   TransactionBuilder,
   initAsync,
@@ -12,42 +14,26 @@ import {
 
 await initAsync();
 
-const client = GraphQlClient.newTestnet();
+const client = GraphQlClient.newLocalnet();
 
-const fromAddress = Address.fromHex(
-  "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151",
-);
+const privateKey = Ed25519PrivateKey.random();
+const fromAddress = privateKey.publicKey().deriveAddress();
 const toAddress = Address.fromHex(
   "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900",
 );
-const objIds = [
-  ObjectId.fromHex(
-    "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
-  ),
-  ObjectId.fromHex(
-    "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc",
-  ),
-  ObjectId.fromHex(
-    "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2",
-  ),
-];
 
-const objsToTransfer = [];
-for (const objId of objIds) {
-  const obj = await client.object(objId);
-  if (obj === null) {
-    throw new Error(`Missing object: ${objId}`);
-  }
-  objsToTransfer.push(PtbArgument.objectRef(obj.objectRef()));
+const faucet = FaucetClient.newLocalnet();
+await faucet.requestAndWaitForFinalized(fromAddress, client);
+
+const coins = (await client.objects(ObjectFilter.new({ owner: fromAddress })))
+  .data;
+if (coins.length === 0) {
+  throw new Error("No coins found");
 }
-
-const gasCoinId = ObjectId.fromHex(
-  "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db",
+const [gasCoin, ...toTransfer] = coins;
+const objsToTransfer = toTransfer.map((coin) =>
+  PtbArgument.objectRef(coin.objectRef()),
 );
-const gasCoin = await client.object(gasCoinId);
-if (gasCoin === null) {
-  throw new Error(`Missing gas coin: ${gasCoinId}`);
-}
 const gasPrice = (await client.referenceGasPrice()) ?? 100n;
 
 const builder = new TransactionBuilder(fromAddress);

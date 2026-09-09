@@ -584,6 +584,29 @@ mod signing_message {
         }
     }
 
+    impl crate::Bls12381PublicKey {
+        /// The message a proof of possession for this key and `address`
+        /// commits to. A validator signs it with the matching private key to
+        /// show that the key it registers is its own.
+        ///
+        /// The proof is not tied to an epoch, so the message always commits
+        /// to epoch 0.
+        pub fn proof_of_possession_message(&self, address: crate::Address) -> Vec<u8> {
+            let mut committed = self.bytes().to_vec();
+            committed.extend_from_slice(address.as_ref());
+
+            let mut message = Vec::new();
+            message.extend(Intent::iota_app(IntentScope::ProofOfPossession).to_bytes());
+            bcs::serialize_into(&mut message, &committed).expect("bcs serialization failed");
+            bcs::serialize_into(&mut message, &0u64).expect("bcs serialization failed");
+            message
+        }
+
+        pub fn proof_of_possession_message_hex(&self, address: crate::Address) -> String {
+            hex::encode(self.proof_of_possession_message(address))
+        }
+    }
+
     impl<T> IntentMessage<T>
     where
         T: serde::Serialize,

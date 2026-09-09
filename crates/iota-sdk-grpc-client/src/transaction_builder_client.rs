@@ -78,7 +78,7 @@ impl TransactionBuilderLedgerClient for Client {
         // Default read mask (`reference` + `bcs`) provides everything needed to
         // reconstruct the SDK object.
         let response = self
-            .get_objects_with_versions([(object_id, version.into())], ObjectReadMask::default())
+            .objects_with_versions([(object_id, version.into())], ObjectReadMask::default())
             .await;
 
         match single_item(response)? {
@@ -95,9 +95,9 @@ impl TransactionBuilderLedgerClient for Client {
             return Ok(Vec::new());
         }
         // Default read mask (`reference` + `bcs`) provides everything needed to
-        // reconstruct the SDK objects, which `get_objects` returns in request
+        // reconstruct the SDK objects, which `objects` returns in request
         // order.
-        self.get_objects_with_versions(object_ids.iter().copied(), ObjectReadMask::default())
+        self.objects_with_versions(object_ids.iter().copied(), ObjectReadMask::default())
             .await?
             .into_inner()
             .into_iter()
@@ -117,7 +117,7 @@ impl TransactionBuilderLedgerClient for Client {
         limit: Option<usize>,
     ) -> Result<ObjectsPage, Self::Error> {
         let page = self
-            .list_owned_objects(
+            .owned_objects(
                 owner,
                 struct_tag,
                 limit.map(saturating_usize_to_u32),
@@ -137,7 +137,7 @@ impl TransactionBuilderLedgerClient for Client {
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
         let epoch = self
-            .get_epoch(
+            .epoch(
                 None,
                 EpochReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES),
             )
@@ -156,7 +156,7 @@ impl TransactionBuilderLedgerClient for Client {
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
         let epoch = self
-            .get_epoch(
+            .epoch(
                 epoch.into(),
                 EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE),
             )
@@ -267,7 +267,7 @@ impl TransactionBuilderExecutionClient for Client {
             let mut interval = tokio::time::interval(WAIT_FOR_TRANSACTION_POLL_INTERVAL);
             loop {
                 interval.tick().await;
-                let response = self.get_transactions([digest], mask.clone()).await;
+                let response = self.transactions([digest], mask.clone()).await;
 
                 // An absent transaction is not indexed yet — keep polling.
                 if let Some(tx) = single_item(response)? {
@@ -298,7 +298,7 @@ impl TransactionBuilderExecutionClient for Client {
         digest: TransactionDigest,
     ) -> Result<Option<TransactionEffects>, Self::Error> {
         let response = self
-            .get_transactions(
+            .transactions(
                 [digest],
                 TransactionReadMask::from(TransactionField::EFFECTS_BCS),
             )

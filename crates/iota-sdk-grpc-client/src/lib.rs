@@ -24,7 +24,7 @@
 //! // node cannot serve fails only its own slot.
 //! let digest: TransactionDigest = todo!();
 //! let txs = client
-//!     .get_transactions([digest], TransactionReadMask::default())
+//!     .transactions([digest], TransactionReadMask::default())
 //!     .await?;
 //! for tx in txs.body() {
 //!     match tx {
@@ -36,7 +36,7 @@
 //! // Get an object with the default field mask.
 //! let object_id: ObjectId = "0x2".parse()?;
 //! let objects = client
-//!     .get_objects([object_id], ObjectReadMask::default())
+//!     .objects([object_id], ObjectReadMask::default())
 //!     .await?;
 //! for object in objects.body() {
 //!     match object {
