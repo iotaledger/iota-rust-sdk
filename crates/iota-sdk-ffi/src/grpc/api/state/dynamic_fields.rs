@@ -142,7 +142,7 @@ impl GrpcClient {
         page_token: Option<Vec<u8>>,
         read_mask: Option<Vec<String>>,
     ) -> Result<DynamicFieldPage> {
-        let query = self.0.read().await.dynamic_fields(
+        let query = self.client().dynamic_fields(
             **parent,
             page_size,
             page_token.map(Into::into),
@@ -171,7 +171,7 @@ impl GrpcClient {
         limit: Option<u32>,
         read_mask: Option<Vec<String>>,
     ) -> Result<Vec<DynamicField>> {
-        let query = self.0.read().await.dynamic_fields(
+        let query = self.client().dynamic_fields(
             **parent,
             None,
             None,

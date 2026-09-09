@@ -69,11 +69,9 @@ impl GrpcClient {
         page_size: Option<u32>,
         page_token: Option<Vec<u8>>,
     ) -> Result<PackageVersionPage> {
-        let query = self.0.read().await.package_versions(
-            **package_id,
-            page_size,
-            page_token.map(Into::into),
-        );
+        let query =
+            self.client()
+                .package_versions(**package_id, page_size, page_token.map(Into::into));
         let page = query.await?.into_inner();
         Ok(PackageVersionPage {
             versions: page
@@ -93,11 +91,7 @@ impl GrpcClient {
         package_id: &ObjectId,
         limit: Option<u32>,
     ) -> Result<Vec<PackageVersion>> {
-        let query = self
-            .0
-            .read()
-            .await
-            .package_versions(**package_id, None, None);
+        let query = self.client().package_versions(**package_id, None, None);
         query
             .collect(limit)
             .await?

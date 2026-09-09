@@ -49,7 +49,7 @@ impl GrpcClient {
         page_size: Option<u32>,
         page_token: Option<Vec<u8>>,
     ) -> Result<OwnedObjectPage> {
-        let query = self.0.read().await.owned_objects(
+        let query = self.client().owned_objects(
             **owner,
             object_type.map(|object_type| object_type.0.clone()),
             page_size,
@@ -73,7 +73,7 @@ impl GrpcClient {
         object_type: Option<Arc<StructTag>>,
         limit: Option<u32>,
     ) -> Result<Vec<Arc<Object>>> {
-        let query = self.0.read().await.owned_objects(
+        let query = self.client().owned_objects(
             **owner,
             object_type.map(|object_type| object_type.0.clone()),
             None,
