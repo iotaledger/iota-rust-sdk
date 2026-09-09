@@ -6,10 +6,13 @@ import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
-        val client = GraphQlClient.newTestnet()
+        val client = GraphQlClient.newLocalnet()
 
-        val sender =
-            Address.fromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+        val privateKey = Ed25519PrivateKey.random()
+        val sender = privateKey.publicKey().deriveAddress()
+
+        val faucet = FaucetClient.newLocalnet()
+        faucet.requestAndWaitForFinalized(sender, client)
 
         val builder = client.transactionBuilder(sender)
 
