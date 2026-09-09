@@ -18,17 +18,17 @@ use crate::types::{
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// effects-v1 = execution-status
-///              u64                                ; epoch
-///              gas-cost-summary
-///              digest                             ; transaction digest
-///              (option u32)                       ; gas object index
-///              (option digest)                    ; events digest
-///              (vector digest)                    ; list of transaction dependencies
-///              u64                                ; lamport version
-///              (vector changed-object)
-///              (vector unchanged-shared-object)
-///              (option digest)                    ; auxiliary data digest
+/// transaction-effects-v1 = execution-status                    ; status
+///                          u64                                 ; epoch
+///                          gas-cost-summary                    ; gas-used
+///                          transaction-digest                  ; transaction-digest
+///                          (option u32)                        ; gas-object-index
+///                          (option transaction-events-digest)  ; events-digest
+///                          (vector transaction-digest)         ; dependencies
+///                          u64                                 ; lamport-version
+///                          (vector changed-object)             ; changed-objects
+///                          (vector unchanged-shared-object)    ; unchanged-shared-objects
+///                          (option effects-aux-data-digest)    ; auxiliary-data-digest
 /// ```
 #[derive(Clone, Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -294,7 +294,8 @@ impl From<ChangedObject> for iota_sdk::types::ChangedObject {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// unchanged-shared-object = object-id unchanged-shared-object-kind
+/// unchanged-shared-object = object-id               ; object-id
+///                           unchanged-shared-kind   ; kind
 /// ```
 #[derive(Clone, uniffi::Record)]
 pub struct UnchangedSharedObject {
@@ -327,11 +328,11 @@ impl From<UnchangedSharedObject> for iota_sdk::types::UnchangedSharedObject {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// unchanged-shared-object-kind =  read-only-root
-///                              =/ mutate-deleted
-///                              =/ read-deleted
-///                              =/ canceled
-///                              =/ per-epoch-config
+/// unchanged-shared-kind =  read-only-root
+///                       =/ mutate-deleted
+///                       =/ read-deleted
+///                       =/ canceled
+///                       =/ per-epoch-config
 ///
 /// read-only-root      = %d00 u64 digest
 /// mutate-deleted      = %d01 u64

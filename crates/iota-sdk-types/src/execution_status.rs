@@ -594,6 +594,7 @@ impl core::fmt::Display for MoveLocation {
 ///                        =/ invalid-object-by-value
 ///                        =/ invalid-object-by-mut-ref
 ///                        =/ shared-object-operation-not-allowed
+///                        =/ invalid-argument-arity
 ///
 /// type-mismatch                               = %d00
 /// invalid-bcs-bytes                           = %d01
@@ -607,6 +608,7 @@ impl core::fmt::Display for MoveLocation {
 /// invalid-object-by-value                     = %d09
 /// invalid-object-by-mut-ref                   = %d10
 /// shared-object-operation-not-allowed         = %d11
+/// invalid-argument-arity                      = %d12
 /// ```
 #[derive(Clone, Debug, Eq, Error, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]

@@ -356,8 +356,8 @@ impl Object {
 /// ```text
 /// object-data = object-data-struct / object-data-package
 ///
-/// object-data-struct  = %d00 object-move-struct
-/// object-data-package = %d01 object-move-package
+/// object-data-struct  = %d00 move-struct
+/// object-data-package = %d01 move-package
 /// ```
 #[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]

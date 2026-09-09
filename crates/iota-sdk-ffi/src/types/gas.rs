@@ -33,6 +33,7 @@
 ///
 /// ```text
 /// gas-cost-summary = u64 ; computation-cost
+///                    u64 ; computation-cost-burned
 ///                    u64 ; storage-cost
 ///                    u64 ; storage-rebate
 ///                    u64 ; non-refundable-storage-fee

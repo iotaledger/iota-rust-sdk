@@ -87,7 +87,7 @@ impl PasskeyAuthenticator {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// passkey-public-key = passkey-flag secp256r1-public-key
+/// passkey-public-key = secp256r1-public-key
 /// ```
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]

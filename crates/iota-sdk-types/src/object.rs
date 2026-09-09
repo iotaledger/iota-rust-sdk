@@ -215,8 +215,8 @@ impl std::fmt::Display for Owner {
 /// ```text
 /// object-data = object-data-struct / object-data-package
 ///
-/// object-data-struct  = %d00 object-move-struct
-/// object-data-package = %d01 object-move-package
+/// object-data-struct  = %d00 move-struct
+/// object-data-package = %d01 move-package
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]

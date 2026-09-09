@@ -1387,7 +1387,8 @@ impl crate::TreeDisplay for SystemPackage {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// genesis-transaction = (vector genesis-object)
+/// genesis-transaction = (vector genesis-object)   ; objects
+///                       (vector event)            ; events
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]

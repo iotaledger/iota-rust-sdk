@@ -121,7 +121,7 @@ impl crate::TreeDisplay for PasskeyAuthenticator {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// passkey-public-key = passkey-flag secp256r1-public-key
+/// passkey-public-key = secp256r1-public-key
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(

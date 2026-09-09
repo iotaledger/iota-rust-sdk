@@ -62,15 +62,8 @@ pub enum MultisigError {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// multisig-member = multisig-member-public-key
+/// multisig-member = public-key
 ///                   u8    ; weight
-/// ```
-///
-/// There is also a legacy encoding for this type defined as:
-///
-/// ```text
-/// legacy-multisig-member = legacy-multisig-member-public-key
-///                          u8     ; weight
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -124,13 +117,6 @@ impl crate::TreeDisplay for MultisigMember {
 /// ```text
 /// multisig-committee = (vector multisig-member)
 ///                      u16    ; threshold
-/// ```
-///
-/// There is also a legacy encoding for this type defined as:
-///
-/// ```text
-/// legacy-multisig-committee = (vector legacy-multisig-member)
-///                             u16     ; threshold
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -278,20 +264,6 @@ impl crate::TreeDisplay for MultisigCommittee {
 ///                                 u16     ; bitmap
 ///                                 multisig-committee
 /// ```
-///
-/// There is also a legacy encoding for this type defined as:
-///
-/// ```text
-/// legacy-multisig-aggregated-signature = (vector multisig-member-signature)
-///                                        roaring-bitmap   ; bitmap
-///                                        legacy-multisig-committee
-/// roaring-bitmap = bytes  ; where the contents of the bytes are valid
-///                         ; according to the serialized spec for
-///                         ; roaring bitmaps
-/// ```
-///
-/// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
-/// serialized format of RoaringBitmaps.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MultisigAggregatedSignature {
@@ -496,7 +468,7 @@ fn as_indices(bitmap: u16) -> Result<Vec<u8>, MultisigError> {
 /// ed25519-multisig-member-signature               = %d00 ed25519-signature
 /// secp256k1-multisig-member-signature             = %d01 secp256k1-signature
 /// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
-/// passkey-multisig-member-signature               = %d04 passkey-authenticator
+/// passkey-multisig-member-signature               = %d04 passkey-bcs
 /// ```
 #[derive(Clone, Debug, derive_more::From, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]

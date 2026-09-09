@@ -920,7 +920,8 @@ impl VersionAssignment {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// genesis-transaction = (vector genesis-object)
+/// genesis-transaction = (vector genesis-object)   ; objects
+///                       (vector event)            ; events
 /// ```
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
@@ -1763,8 +1764,7 @@ impl From<GasPayment> for iota_sdk::types::GasPayment {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// transaction-effects =  %d00 effects-v1
-///                     =/ %d01 effects-v2
+/// transaction-effects = %d00 transaction-effects-v1   ; V1
 /// ```
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
