@@ -1610,7 +1610,7 @@ pub struct SmartAccountClaim {
     /// `0x06` Passkey.
     pub public_key_scheme: u8,
     /// Raw public key bytes, without the scheme flag prefix. For `MultiSig`
-    /// this is a BCS-encoded multisig public key.
+    /// this is a BCS-encoded multisig committee.
     ///
     /// The transaction is rejected unless the scheme and these bytes derive
     /// the transaction sender's address.
