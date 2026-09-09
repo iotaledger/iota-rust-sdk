@@ -66,7 +66,6 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::IntentError>();
     assert_display::<iota_sdk_types::IntentScope>();
     assert_display::<iota_sdk_types::IntentVersion>();
-    assert_display::<iota_sdk_types::InvalidSignatureSchemeError>();
     assert_display::<iota_sdk_types::iota_names::config::IotaNamesConfig>();
     assert_display::<iota_sdk_types::iota_names::error::IotaNamesError>();
     assert_display::<iota_sdk_types::MakeMoveVector>();
@@ -123,6 +122,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::SharedObjectReference>();
     assert_display::<iota_sdk_types::crypto::SignatureFromBytesError>();
     assert_display::<iota_sdk_types::SignatureScheme>();
+    assert_display::<iota_sdk_types::SignatureSchemeError>();
     assert_display::<iota_sdk_types::SignedCheckpointSummary>();
     assert_display::<iota_sdk_types::SignedTransaction>();
     assert_display::<iota_sdk_types::SimpleSignature>();

@@ -322,7 +322,7 @@ impl SignatureScheme {
     );
 
     /// Try constructing from a byte flag
-    pub fn from_byte(flag: u8) -> Result<Self, InvalidSignatureSchemeError> {
+    pub fn from_byte(flag: u8) -> Result<Self, SignatureSchemeError> {
         match flag {
             0x00 => Ok(Self::Ed25519),
             0x01 => Ok(Self::Secp256k1),
@@ -331,7 +331,7 @@ impl SignatureScheme {
             0x04 => Ok(Self::Bls12381),
             0x06 => Ok(Self::PasskeyAuthenticator),
             0x07 => Ok(Self::MoveAuthenticator),
-            invalid => Err(InvalidSignatureSchemeError(invalid)),
+            invalid => Err(SignatureSchemeError(invalid)),
         }
     }
 
@@ -352,7 +352,7 @@ impl super::PasskeyPublicKey {
 /// [`SignatureScheme`] flag.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, thiserror::Error)]
 #[error("invalid signature scheme: {0:02x}")]
-pub struct InvalidSignatureSchemeError(u8);
+pub struct SignatureSchemeError(u8);
 
 /// A signature from a user
 ///
@@ -422,7 +422,7 @@ impl UserSignature {
     }
 
     /// Return the public key for this signature, if the scheme supports it.
-    pub fn to_public_key(&self) -> Result<PublicKey, InvalidSignatureSchemeError> {
+    pub fn to_public_key(&self) -> Result<PublicKey, SignatureSchemeError> {
         match self {
             UserSignature::Simple(simple) => match simple {
                 SimpleSignature::Ed25519 { public_key, .. } => Ok(PublicKey::Ed25519(*public_key)),
@@ -433,13 +433,13 @@ impl UserSignature {
                     Ok(PublicKey::Secp256r1(*public_key))
                 }
             },
-            UserSignature::Multisig(_) => Err(InvalidSignatureSchemeError(
-                SignatureScheme::Multisig.to_u8(),
-            )),
+            UserSignature::Multisig(_) => {
+                Err(SignatureSchemeError(SignatureScheme::Multisig.to_u8()))
+            }
             UserSignature::PasskeyAuthenticator(passkey_authenticator) => {
                 Ok(PublicKey::Passkey(passkey_authenticator.public_key()))
             }
-            UserSignature::MoveAuthenticator(_) => Err(InvalidSignatureSchemeError(
+            UserSignature::MoveAuthenticator(_) => Err(SignatureSchemeError(
                 SignatureScheme::MoveAuthenticator.to_u8(),
             )),
         }
