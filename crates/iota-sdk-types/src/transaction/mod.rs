@@ -3,8 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{
-    Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier, ObjectId,
-    ObjectReference, ProtocolVersion, RandomnessRound, TypeTag, UserSignature, Version,
+    Address, CheckpointTimestamp, Digest, EpochId, Event, GenesisObject, Identifier,
+    InvalidSignatureScheme, ObjectId, ObjectReference, ProtocolVersion, PublicKey, RandomnessRound,
+    SignatureScheme, TypeTag, UserSignature, Version,
 };
 use crate::utils::write_sep;
 
@@ -183,6 +184,7 @@ pub struct RandomnessStateUpdate {
 ///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
 ///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
 ///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
+///                     =/ %d06 claim-account-transaction              ; ClaimAccount
 /// ```
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -206,6 +208,8 @@ pub enum TransactionKind {
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     /// Randomness update
     RandomnessStateUpdate(RandomnessStateUpdate),
+    /// User transaction claiming the sender's address as an account object.
+    ClaimAccount(ClaimAccountTransaction),
 }
 
 impl TransactionKind {
@@ -218,6 +222,7 @@ impl TransactionKind {
         Programmable(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
+        ClaimAccount(ClaimAccountTransaction),
     }
 
     /// Create a [`TransactionKind::Programmable`].
@@ -245,6 +250,11 @@ impl TransactionKind {
         Self::RandomnessStateUpdate(tx)
     }
 
+    /// Create a [`TransactionKind::ClaimAccount`].
+    pub fn new_claim_account(tx: ClaimAccountTransaction) -> Self {
+        Self::ClaimAccount(tx)
+    }
+
     /// Returns `true` if this is a system transaction.
     pub fn is_system(&self) -> bool {
         match self {
@@ -253,7 +263,7 @@ impl TransactionKind {
             | TransactionKind::AuthenticatorStateUpdateV1Deprecated
             | TransactionKind::RandomnessStateUpdate(_)
             | TransactionKind::EndOfEpoch(_) => true,
-            TransactionKind::Programmable(_) => false,
+            TransactionKind::Programmable(_) | TransactionKind::ClaimAccount(_) => false,
         }
     }
 
@@ -302,6 +312,7 @@ impl core::fmt::Display for TransactionKind {
             Self::RandomnessStateUpdate(_) => {
                 writeln!(f, "Transaction Kind : Randomness State Update")
             }
+            Self::ClaimAccount(_) => writeln!(f, "Transaction Kind : Claim Account"),
         }
     }
 }
@@ -1554,4 +1565,242 @@ pub struct MoveCall {
     /// The arguments to the function.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub arguments: Vec<Argument>,
+}
+
+/// A transaction that claims the sender's address, creating an account object
+/// whose id is that address.
+///
+/// The address must be derivable from the public key in the claim, and can be
+/// claimed only once.
+///
+/// # BCS
+///
+/// ```text
+/// claim-account-transaction = account-claim-kind
+/// ```
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub struct ClaimAccountTransaction {
+    /// The type of account to create, and the parameters it is created with.
+    pub kind: AccountClaimKind,
+}
+
+impl ClaimAccountTransaction {
+    /// Creates a [`ClaimAccountTransaction`] that claims a `SmartAccount`.
+    pub fn new_smart_account(claim: SmartAccountClaim) -> Self {
+        Self {
+            kind: AccountClaimKind::SmartAccount(claim),
+        }
+    }
+}
+
+/// The type of account created by a [`ClaimAccountTransaction`].
+///
+/// # BCS
+///
+/// ```text
+/// account-claim-kind = %d00 smart-account-claim ; SmartAccount
+/// ```
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[non_exhaustive]
+pub enum AccountClaimKind {
+    /// Create an `iota::smart_account::SmartAccount` at the claimed address.
+    SmartAccount(SmartAccountClaim),
+}
+
+impl AccountClaimKind {
+    crate::def_is_as_into_opt!(SmartAccount(SmartAccountClaim));
+}
+
+/// Parameters for claiming an `iota::smart_account::SmartAccount`.
+///
+/// The account is authenticated by the built-in authenticator for the claimed
+/// key's signature scheme, so its owner keeps signing transactions with the
+/// same key after the claim.
+///
+/// The key is carried as a scheme flag plus raw bytes rather than as a
+/// [`PublicKey`], so that every scheme the framework accepts can be expressed,
+/// including `MultiSig`. Both are validated on chain.
+///
+/// # BCS
+///
+/// ```text
+/// smart-account-claim = u8      ; public-key-scheme
+///                       bytes   ; public-key-raw-bytes
+///                       smart-account-build-kind
+/// ```
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub struct SmartAccountClaim {
+    /// Signature-scheme flag of the public key for the address being claimed:
+    /// `0x00` Ed25519, `0x01` Secp256k1, `0x02` Secp256r1, `0x03` MultiSig or
+    /// `0x06` Passkey.
+    pub public_key_scheme: u8,
+    /// Raw public key bytes, without the scheme flag prefix. For `MultiSig`
+    /// this is a BCS-encoded multisig committee.
+    ///
+    /// The transaction is rejected unless the scheme and these bytes derive
+    /// the transaction sender's address.
+    pub public_key_raw_bytes: Vec<u8>,
+    /// Whether the created account object is mutable or immutable.
+    pub build_kind: SmartAccountBuildKind,
+}
+
+impl SmartAccountClaim {
+    /// Creates a claim of the address derived from `public_key`, which is the
+    /// address a transaction signed by the corresponding private key is sent
+    /// from.
+    pub fn new(public_key: &PublicKey, build_kind: SmartAccountBuildKind) -> Self {
+        Self::new_unchecked(
+            public_key.scheme(),
+            public_key.as_ref().to_vec(),
+            build_kind,
+        )
+    }
+
+    /// Creates a claim of the address derived from `committee`, which is the
+    /// address a transaction signed by that committee is sent from.
+    ///
+    /// The committee is carried BCS encoded, the form the chain decodes it
+    /// from.
+    #[cfg(feature = "serde")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+    pub fn new_multisig(
+        committee: &crate::MultisigCommittee,
+        build_kind: SmartAccountBuildKind,
+    ) -> Self {
+        Self::new_unchecked(
+            SignatureScheme::Multisig,
+            bcs::to_bytes(committee).expect("bcs serialization failed"),
+            build_kind,
+        )
+    }
+
+    /// Creates a claim of the address derived from the public key described by
+    /// `scheme` and `public_key_raw_bytes`, without checking that the two
+    /// describe a key at all.
+    fn new_unchecked(
+        scheme: SignatureScheme,
+        public_key_raw_bytes: Vec<u8>,
+        build_kind: SmartAccountBuildKind,
+    ) -> Self {
+        Self {
+            public_key_scheme: scheme.to_u8(),
+            public_key_raw_bytes,
+            build_kind,
+        }
+    }
+
+    /// The signature scheme of the claimed public key.
+    ///
+    /// Returns an error if [`Self::public_key_scheme`] is not a known scheme
+    /// flag, which is possible for a claim that was deserialized rather than
+    /// built through one of the constructors.
+    pub fn signature_scheme(&self) -> Result<SignatureScheme, InvalidSignatureScheme> {
+        SignatureScheme::from_byte(self.public_key_scheme)
+    }
+}
+
+/// Whether the account object created by a [`SmartAccountClaim`] can be changed
+/// after the claim.
+///
+/// # BCS
+///
+/// ```text
+/// smart-account-build-kind =  %d00 ; Mutable
+///                          =/ %d01 ; Immutable
+/// ```
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+pub enum SmartAccountBuildKind {
+    /// A shared object: the account can rotate its authenticator and add,
+    /// remove or mutate its fields.
+    Mutable,
+    /// A frozen object: neither the authenticator nor any field can ever
+    /// change.
+    Immutable,
+}
+
+#[cfg(test)]
+mod tests {
+    #[cfg(target_arch = "wasm32")]
+    use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
+    use crate::{Ed25519PublicKey, PasskeyPublicKey, Secp256r1PublicKey};
+
+    #[test]
+    fn new_from_ed25519_public_key() {
+        let public_key = Ed25519PublicKey::new([1; Ed25519PublicKey::LENGTH]);
+        let claim = SmartAccountClaim::new(
+            &PublicKey::Ed25519(public_key),
+            SmartAccountBuildKind::Mutable,
+        );
+
+        assert_eq!(claim.public_key_scheme, 0x00);
+        assert_eq!(claim.public_key_raw_bytes, public_key.inner().as_slice());
+        assert_eq!(claim.signature_scheme().unwrap(), SignatureScheme::Ed25519);
+    }
+
+    #[test]
+    fn new_from_passkey_public_key() {
+        let secp256r1 = Secp256r1PublicKey::new([2; Secp256r1PublicKey::LENGTH]);
+        let claim = SmartAccountClaim::new(
+            &PublicKey::Passkey(PasskeyPublicKey::new(secp256r1)),
+            SmartAccountBuildKind::Immutable,
+        );
+
+        // A passkey is claimed by the secp256r1 key it wraps, under the
+        // passkey scheme flag, matching `PasskeyPublicKey::derive_address`.
+        assert_eq!(claim.public_key_scheme, 0x06);
+        assert_eq!(claim.public_key_raw_bytes, secp256r1.inner().as_slice());
+        assert_eq!(
+            claim.signature_scheme().unwrap(),
+            SignatureScheme::PasskeyAuthenticator
+        );
+    }
+
+    #[test]
+    fn signature_scheme_rejects_unknown_flag() {
+        let claim = SmartAccountClaim {
+            // `0x05` is the flag of the removed zklogin authenticator.
+            public_key_scheme: 0x05,
+            public_key_raw_bytes: vec![0; 32],
+            build_kind: SmartAccountBuildKind::Mutable,
+        };
+
+        assert!(claim.signature_scheme().is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn new_multisig_encodes_committee() {
+        use crate::{MultisigCommittee, MultisigMember};
+
+        let committee = MultisigCommittee::new(
+            vec![MultisigMember::new(
+                Ed25519PublicKey::new([3; Ed25519PublicKey::LENGTH]),
+                1,
+            )],
+            1,
+        )
+        .unwrap();
+        let claim = SmartAccountClaim::new_multisig(&committee, SmartAccountBuildKind::Mutable);
+
+        assert_eq!(claim.public_key_scheme, 0x03);
+        assert_eq!(claim.signature_scheme().unwrap(), SignatureScheme::Multisig);
+        // The chain decodes the raw bytes as a multisig committee.
+        let decoded = bcs::from_bytes::<MultisigCommittee>(&claim.public_key_raw_bytes).unwrap();
+        assert_eq!(decoded.threshold(), committee.threshold());
+        assert_eq!(decoded.members().len(), committee.members().len());
+    }
 }

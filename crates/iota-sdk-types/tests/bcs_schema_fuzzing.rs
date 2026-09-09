@@ -733,6 +733,7 @@ fn grammar_driven_fuzzing() {
 
     let mut test = TestHarness::new();
 
+    test.check_rule::<AccountClaimKind>("account-claim-kind");
     test.check_rule::<Address>("address");
     test.check_rule::<Argument>("argument");
     test.check_rule::<Bls12381PublicKey>("bls12381-public-key");
@@ -745,6 +746,7 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<CheckpointData>("checkpoint-data");
     test.check_rule::<CheckpointSummary>("checkpoint-summary");
     test.check_rule::<CheckpointTransaction>("checkpoint-transaction");
+    test.check_rule::<ClaimAccountTransaction>("claim-account-transaction");
     test.check_rule::<Command>("command");
     test.check_rule::<CommandArgumentError>("command-argument-error");
     test.check_rule::<ConsensusCommitPrologueV1>("consensus-commit-prologue-v1");
@@ -781,6 +783,8 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<RandomnessStateUpdate>("randomness-state-update");
     test.check_rule::<SignedCheckpointSummary>("signed-checkpoint-summary");
     test.check_rule::<SignedTransaction>("signed-transaction");
+    test.check_rule::<SmartAccountBuildKind>("smart-account-build-kind");
+    test.check_rule::<SmartAccountClaim>("smart-account-claim");
     test.check_rule::<SplitCoins>("split-coins");
     test.check_rule::<StructTag>("struct-tag");
     test.check_rule::<SystemPackage>("system-package");
