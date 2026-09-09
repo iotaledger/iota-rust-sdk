@@ -920,8 +920,8 @@ impl VersionAssignment {
 /// The BCS serialized form for this type is defined by the following ABNF:
 ///
 /// ```text
-/// genesis-transaction = vector genesis-object   ; objects
-///                       vector event            ; events
+/// genesis-transaction = (vector genesis-object)   ; objects
+///                       (vector event)            ; events
 /// ```
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
