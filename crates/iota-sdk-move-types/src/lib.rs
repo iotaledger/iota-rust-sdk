@@ -80,15 +80,6 @@ pub trait MoveType {
 /// `Coin<IOTA>` reports `0x2::coin::Coin<0x2::iota::IOTA>` while `Coin<T>` for
 /// a marker of your own reports whatever that marker's [`MoveType`] impl
 /// returns.
-///
-/// # Panics
-///
-/// [`iota_framework::coin::CoinMetadata`],
-/// [`iota_framework::coin::TreasuryCap`]
-/// and [`iota_framework::coin_manager::CoinManager`] are parameterised by a
-/// coin *struct* rather than an arbitrary type, so their `struct_tag` panics if
-/// the parameter's [`MoveType`] impl returns a primitive. Move has no such
-/// type, so this only fires on a hand-written [`MoveType`] impl that is wrong.
 #[cfg(feature = "serde")]
 pub trait MoveObject:
     Sized + for<'a> TryFrom<&'a iota_types::Object, Error = FromObjectError>
@@ -143,12 +134,6 @@ mod tests {
             Coin::<IOTA>::struct_tag().to_string(),
             "0x2::coin::Coin<0x2::iota::IOTA>"
         );
-    }
-
-    /// `CoinMetadata`'s tag constructor takes a `StructTag` rather than a
-    /// `TypeTag`, so it goes through the macro's `@struct_param` arm.
-    #[test]
-    fn struct_parameterised_mirror_composes_its_type_parameter() {
         assert_eq!(
             CoinMetadata::<IOTA>::struct_tag().to_string(),
             "0x2::coin::CoinMetadata<0x2::iota::IOTA>"

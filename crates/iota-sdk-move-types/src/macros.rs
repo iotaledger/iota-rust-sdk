@@ -113,36 +113,6 @@ macro_rules! impl_try_from_object_generic {
             }
         }
     };
-    // A mirror whose Move type parameter is itself a struct rather than an
-    // arbitrary type, so its tag constructor takes a `StructTag`.
-    (@struct_param $ty:ident<$param:ident>, $is_fn:ident, $new_fn:ident $(,)?) => {
-        impl_try_from_object_generic!(@common $ty<$param>, $is_fn);
-
-        #[cfg(feature = "serde")]
-        impl<$param> $crate::MoveObject for $ty<$param>
-        where
-            $param: ::serde::de::DeserializeOwned + $crate::MoveType,
-        {
-            fn struct_tag() -> ::iota_types::StructTag {
-                ::iota_types::StructTag::$new_fn(
-                    <$param as $crate::MoveType>::type_tag()
-                        .into_opt_struct_tag()
-                        .expect(concat!(
-                            "the Move type parameter of ",
-                            stringify!($ty),
-                            " is a struct, so its MoveType impl must return a struct tag"
-                        )),
-                )
-            }
-        }
-    };
-    (@struct_param $ty:ident<$param:ident> $(,)?) => {
-        ::paste::paste! {
-            impl_try_from_object_generic!(
-                @struct_param $ty<$param>, [< is_ $ty:snake >], [< new_ $ty:snake >]
-            );
-        }
-    };
     ($ty:ident<$param:ident>, $is_fn:ident, $new_fn:ident $(,)?) => {
         impl_try_from_object_generic!(@common $ty<$param>, $is_fn);
 
