@@ -518,6 +518,7 @@ fn tx_kind_str(tx: &SignedTransaction) -> String {
             iota_sdk::types::TransactionKind::TransactionDenyRulesUpdate(_) => {
                 "transaction_deny_rules_update".to_owned()
             }
+            iota_sdk::types::TransactionKind::ClaimAccount(_) => "claim_account".to_owned(),
             _ => "unknown".to_owned(),
         },
         _ => "unknown".to_owned(),

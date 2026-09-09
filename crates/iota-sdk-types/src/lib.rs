@@ -87,13 +87,14 @@ pub use rand_core;
 #[cfg(feature = "serde")]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
-    Argument, CanceledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
-    Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, DenyRuleSet,
-    EndOfEpochTransactionKind, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
-    MoveCall, ProgrammableTransaction, Publish, RandomnessRound, RandomnessStateUpdate,
-    SenderSignedTransaction, SharedObjectReference, SignedTransaction, SplitCoins, SystemPackage,
-    Transaction, TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind, TransactionV1,
-    TransferObjects, Upgrade, VersionAssignment,
+    AccountClaimKind, Argument, CanceledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3,
+    ChangeEpochV4, ClaimAccountTransaction, Command, ConsensusCommitPrologueV1,
+    ConsensusDeterminedVersionAssignments, DenyRuleSet, EndOfEpochTransactionKind, GasPayment,
+    GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall, ProgrammableTransaction,
+    Publish, RandomnessRound, RandomnessStateUpdate, SenderSignedTransaction,
+    SharedObjectReference, SignedTransaction, SmartAccountBuildKind, SmartAccountClaim, SplitCoins,
+    SystemPackage, Transaction, TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind,
+    TransactionV1, TransferObjects, Upgrade, VersionAssignment,
 };
 #[cfg(feature = "serde")]
 pub use validator::SignerBitmapError;
