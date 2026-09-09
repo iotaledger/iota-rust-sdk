@@ -37,8 +37,8 @@ pub use signature::{InvalidSignatureSchemeError, SignatureScheme, SimpleSignatur
 #[non_exhaustive]
 pub enum SignatureFromBytesError {
     /// The input is not valid base64.
-    #[error("invalid base64: {0}")]
-    Base64(#[from] base64ct::Error),
+    #[error("invalid base64")]
+    Base64,
     /// The bytes are not a valid encoding of the target type.
     #[error("error deserializing bytes: {0}")]
     Bytes(String),

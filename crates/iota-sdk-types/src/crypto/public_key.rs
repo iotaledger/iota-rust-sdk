@@ -12,8 +12,8 @@ use super::{
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum PublicKeyError {
-    #[error("{0}")]
-    Base64(#[from] base64ct::Error),
+    #[error("invalid base64")]
+    Base64,
     #[error("{0}")]
     TryFromSlice(#[from] std::array::TryFromSliceError),
     #[error("Invalid input")]
@@ -96,7 +96,7 @@ impl PublicKey {
     /// Decode a public key from a base64 string of its scheme-flagged byte
     /// representation
     pub fn from_base64(s: &str) -> Result<Self, PublicKeyError> {
-        let bytes = Base64::decode_vec(s)?;
+        let bytes = Base64::decode_vec(s).map_err(|_| PublicKeyError::Base64)?;
 
         match bytes.split_first() {
             Some((flag, tail)) => match SignatureScheme::from_byte(*flag)? {

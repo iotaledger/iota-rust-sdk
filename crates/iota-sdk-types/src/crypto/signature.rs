@@ -660,7 +660,8 @@ mod serialization {
         pub fn from_base64(s: &str) -> Result<Self, SignatureFromBytesError> {
             use base64ct::Encoding;
 
-            let bytes = base64ct::Base64::decode_vec(s)?;
+            let bytes =
+                base64ct::Base64::decode_vec(s).map_err(|_| SignatureFromBytesError::Base64)?;
             Self::from_bytes(&bytes)
         }
     }
@@ -932,7 +933,8 @@ mod serialization {
         pub fn from_base64(s: &str) -> Result<Self, SignatureFromBytesError> {
             use base64ct::Encoding;
 
-            let bytes = base64ct::Base64::decode_vec(s)?;
+            let bytes =
+                base64ct::Base64::decode_vec(s).map_err(|_| SignatureFromBytesError::Base64)?;
             Self::from_bytes(&bytes)
         }
     }

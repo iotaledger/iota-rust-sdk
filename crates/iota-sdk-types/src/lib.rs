@@ -217,11 +217,11 @@ mod bcs_base64 {
     #[non_exhaustive]
     pub enum FromBase64Error {
         /// The input is not valid base64.
-        #[error("invalid base64: {0}")]
-        Base64(#[from] base64ct::Error),
+        #[error("invalid base64")]
+        Base64,
         /// The decoded bytes are not a valid BCS encoding of the target type.
         #[error("invalid BCS: {0}")]
-        Bcs(#[from] bcs::Error),
+        Bcs(String),
     }
 
     macro_rules! impl_bcs_base64 {
@@ -246,8 +246,10 @@ mod bcs_base64 {
 
                     #[doc = "Deserialize a `" $type "` from a base64-encoded string of its BCS bytes."]
                     pub fn from_base64(bytes: &str) -> Result<Self, FromBase64Error> {
-                        let decoded = base64ct::Base64::decode_vec(bytes)?;
-                        Ok(Self::from_bcs(&decoded)?)
+                        let decoded = base64ct::Base64::decode_vec(bytes)
+                            .map_err(|_| FromBase64Error::Base64)?;
+                        Self::from_bcs(&decoded)
+                            .map_err(|e| FromBase64Error::Bcs(e.to_string()))
                     }
                 }
             }
