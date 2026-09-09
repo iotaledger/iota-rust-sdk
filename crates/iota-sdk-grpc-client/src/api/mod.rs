@@ -87,23 +87,12 @@ impl CheckpointStreamItem {
 /// `response.summary()?.summary()?`, `response.contents()?.contents()?`).
 #[derive(Clone, Debug)]
 pub struct CheckpointResponse {
-    /// The checkpoint sequence number.
-    pub sequence_number: CheckpointSequenceNumber,
-    /// Proto checkpoint summary. Use `response.summary()?.summary()` to convert
-    /// to SDK type.
-    pub summary: Option<iota_grpc_types::v1::checkpoint::CheckpointSummary>,
-    /// Proto validator signature. Use `response.signature()?.signature()` to
-    /// convert to SDK type.
-    pub signature: Option<iota_grpc_types::v1::signatures::ValidatorAggregatedSignature>,
-    /// Proto checkpoint contents. Use `response.contents()?.contents()` to
-    /// convert to SDK type.
-    pub contents: Option<iota_grpc_types::v1::checkpoint::CheckpointContents>,
-    /// Proto executed transactions. Use methods like `tx.effects()?`,
-    /// `tx.transaction()?`, etc.
-    pub executed_transactions: Vec<iota_grpc_types::v1::transaction::ExecutedTransaction>,
-    /// Proto events. Use `event.try_into()` or `event.events()` to convert to
-    /// SDK types.
-    pub events: Vec<iota_grpc_types::v1::event::Event>,
+    pub(crate) sequence_number: CheckpointSequenceNumber,
+    pub(crate) summary: Option<iota_grpc_types::v1::checkpoint::CheckpointSummary>,
+    pub(crate) signature: Option<iota_grpc_types::v1::signatures::ValidatorAggregatedSignature>,
+    pub(crate) contents: Option<iota_grpc_types::v1::checkpoint::CheckpointContents>,
+    pub(crate) executed_transactions: Vec<iota_grpc_types::v1::transaction::ExecutedTransaction>,
+    pub(crate) events: Vec<iota_grpc_types::v1::event::Event>,
 }
 
 impl CheckpointResponse {
@@ -216,7 +205,7 @@ impl CheckpointResponse {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let cp = client
-    ///     .get_checkpoint_latest(None, None, CheckpointResponseReadMask::default())
+    ///     .checkpoint_latest(None, None, CheckpointResponseReadMask::default())
     ///     .await?;
     /// let data = cp.body().checkpoint_data()?;
     /// # Ok(())
