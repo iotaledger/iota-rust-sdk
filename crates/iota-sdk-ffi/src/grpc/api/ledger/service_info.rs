@@ -74,9 +74,7 @@ impl GrpcClient {
     #[uniffi::method(default(read_mask = None))]
     pub async fn service_info(&self, read_mask: Option<Vec<String>>) -> Result<ServiceInfo> {
         (&self
-            .0
-            .read()
-            .await
+            .client()
             .service_info(crate::grpc::api::read_mask::<ServiceInfoReadMask>(
                 &read_mask,
             ))

@@ -21,11 +21,35 @@ use crate::{
 
 /// A single transaction with simulation options for use in batch simulation.
 pub struct SimulateTransactionInput {
+    pub(crate) transaction: Transaction,
+    pub(crate) skip_checks: bool,
+}
+
+impl SimulateTransactionInput {
+    /// Simulate `transaction` with the node's usual Move VM checks.
+    pub fn new(transaction: Transaction) -> Self {
+        Self {
+            transaction,
+            skip_checks: false,
+        }
+    }
+
+    /// Ask for relaxed Move VM checks, which is useful for debugging and
+    /// development.
+    pub fn skip_checks(mut self, skip_checks: bool) -> Self {
+        self.skip_checks = skip_checks;
+        self
+    }
+
     /// The transaction to simulate.
-    pub transaction: Transaction,
-    /// Set to true for relaxed Move VM checks (useful for debugging and
-    /// development).
-    pub skip_checks: bool,
+    pub fn transaction(&self) -> &Transaction {
+        &self.transaction
+    }
+
+    /// Whether the node is asked to relax its Move VM checks.
+    pub fn is_skip_checks_enabled(&self) -> bool {
+        self.skip_checks
+    }
 }
 
 impl Client {
@@ -92,10 +116,7 @@ impl Client {
         read_mask: impl IntoReadMask<SimulateReadMask>,
     ) -> Result<MetadataEnvelope<SimulatedTransaction>> {
         self.simulate_transactions(
-            vec![SimulateTransactionInput {
-                transaction,
-                skip_checks,
-            }],
+            vec![SimulateTransactionInput::new(transaction).skip_checks(skip_checks)],
             read_mask,
         )
         .await?

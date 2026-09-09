@@ -34,6 +34,6 @@ impl GrpcClient {
     /// threshold.
     #[uniffi::method(default(threshold_ms = None))]
     pub async fn health(&self, threshold_ms: Option<u64>) -> Result<HealthInfo> {
-        Ok((&self.0.read().await.health(threshold_ms).await?.into_inner()).into())
+        Ok((&self.client().health(threshold_ms).await?.into_inner()).into())
     }
 }

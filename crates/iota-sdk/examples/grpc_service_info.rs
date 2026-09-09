@@ -1,21 +1,16 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Same idea as `chain_id.rs`, but over gRPC.
-//!
-//! Demonstrates two ways to get the chain id, epoch and checkpoint height: the
-//! explicit `service_info` RPC, and the `ResponseExt` headers that ride
-//! along with *every* gRPC response (so any call already tells you what chain
-//! / epoch / checkpoint you observed).
+//! Reads the chain id, epoch and checkpoint height from the `service_info`
+//! RPC, then the current reference gas price.
 
 use eyre::{OptionExt, Result};
-use iota_sdk::grpc_client::{Client, ResponseExt, read_mask_fields::ServiceInfoReadMask};
+use iota_sdk::grpc_client::{Client, read_mask_fields::ServiceInfoReadMask};
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let client = Client::new_localnet()?;
 
-    // Option 1: explicit service info RPC, plus the reference gas price.
     let info = client.service_info(ServiceInfoReadMask::default()).await?;
     let chain_id = info
         .body()
@@ -33,20 +28,6 @@ async fn main() -> Result<()> {
 
     let gas_price = client.reference_gas_price().await?;
     println!("Gas price: {}", gas_price.body());
-
-    // Option 2: the same data piggybacks on response headers via
-    // `ResponseExt`. Any RPC works — here we reuse the response above.
-    println!("---");
-    println!("From response headers:");
-    if let Some(chain_id) = info.chain_id() {
-        println!("Chain ID:  {chain_id}");
-    }
-    if let Some(epoch) = info.epoch() {
-        println!("Epoch:     {epoch}");
-    }
-    if let Some(height) = info.checkpoint_height() {
-        println!("Height:    {height}");
-    }
 
     Ok(())
 }
