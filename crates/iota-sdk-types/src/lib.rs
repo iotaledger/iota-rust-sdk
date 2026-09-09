@@ -170,13 +170,13 @@ pub use object_id::ObjectId;
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
     AccountClaimKind, Argument, CancelledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3,
-    ChangeEpochV4, ClaimAccountTransaction, ClaimRegistryCreate, Command,
-    ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind,
-    GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall,
-    ProgrammableTransaction, Publish, RandomnessStateUpdate, SenderSignedTransaction,
-    SharedObjectReference, SignedTransaction, SmartAccountBuildKind, SmartAccountClaim, SplitCoins,
-    SystemPackage, Transaction, TransactionExpiration, TransactionKind, TransactionV1,
-    TransferObjects, Upgrade, VersionAssignment,
+    ChangeEpochV4, ClaimAccountTransaction, Command, ConsensusCommitPrologueV1,
+    ConsensusDeterminedVersionAssignments, EndOfEpochTransactionKind, GasPayment,
+    GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall, ProgrammableTransaction,
+    Publish, RandomnessStateUpdate, SenderSignedTransaction, SharedObjectReference,
+    SignedTransaction, SmartAccountBuildKind, SmartAccountClaim, SplitCoins, SystemPackage,
+    Transaction, TransactionExpiration, TransactionKind, TransactionV1, TransferObjects, Upgrade,
+    VersionAssignment,
 };
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeMember, ValidatorSignature,
