@@ -44,9 +44,7 @@ impl GrpcClient {
                 )
             })
             .collect::<Vec<_>>();
-        self.0
-            .read()
-            .await
+        self.client()
             .objects_with_versions(refs, ObjectReadMask::default())
             .await?
             .into_inner()
