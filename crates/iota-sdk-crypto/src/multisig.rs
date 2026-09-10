@@ -403,6 +403,19 @@ mod tests {
         secp256r1::Secp256r1PrivateKey,
     };
 
+    /// `signature::Error`'s `Display` is deliberately opaque, so the message a
+    /// verifier attached is only reachable through the source chain.
+    fn error_chain(error: &crate::SignatureError) -> String {
+        let mut out = error.to_string();
+        let mut source = std::error::Error::source(error);
+        while let Some(cause) = source {
+            out.push_str(": ");
+            out.push_str(&cause.to_string());
+            source = cause.source();
+        }
+        out
+    }
+
     /// Three deterministic private keys, one per supported signature scheme.
     fn test_keys() -> (Ed25519PrivateKey, Secp256k1PrivateKey, Secp256r1PrivateKey) {
         (
@@ -473,8 +486,9 @@ mod tests {
             .verify_personal_message(&msg, &UserSignature::Multisig(aggregated))
             .unwrap_err();
         assert!(
-            error.to_string().contains("Insufficient weight"),
-            "expected an insufficient-weight error, got {error}"
+            error_chain(&error).contains("Insufficient weight"),
+            "expected an insufficient-weight error, got {}",
+            error_chain(&error)
         );
     }
 
@@ -495,10 +509,9 @@ mod tests {
             .verify_personal_message(&msg, &UserSignature::Multisig(aggregated))
             .unwrap_err();
         assert!(
-            error
-                .to_string()
-                .contains("Invalid address derived from pks"),
-            "expected an invalid-address error, got {error}"
+            error_chain(&error).contains("Invalid address derived from pks"),
+            "expected an invalid-address error, got {}",
+            error_chain(&error)
         );
     }
 
@@ -530,8 +543,9 @@ mod tests {
             .verify_personal_message(&msg, &user_signature)
             .unwrap_err();
         assert!(
-            error.to_string().contains("signature/pubkey type mismatch"),
-            "expected an explicit scheme mismatch error, got {error}"
+            error_chain(&error).contains("signature/pubkey type mismatch"),
+            "expected an explicit scheme mismatch error, got {}",
+            error_chain(&error)
         );
 
         let error = MultisigVerifier::new()
@@ -539,8 +553,9 @@ mod tests {
             .verify_personal_message(&msg, &user_signature)
             .unwrap_err();
         assert!(
-            !error.to_string().contains("signature/pubkey type mismatch"),
-            "the scheme mismatch must only be checked with additional checks enabled, got {error}"
+            !error_chain(&error).contains("signature/pubkey type mismatch"),
+            "the scheme mismatch must only be checked with additional checks enabled, got {}",
+            error_chain(&error)
         );
     }
 
@@ -563,8 +578,9 @@ mod tests {
             .add_signature(k0.sign_personal_message(&msg).unwrap())
             .unwrap_err();
         assert!(
-            error.to_string().contains("duplicate signature"),
-            "expected a duplicate-signature error, got {error}"
+            error_chain(&error).contains("duplicate signature"),
+            "expected a duplicate-signature error, got {}",
+            error_chain(&error)
         );
 
         // A signer outside the committee is rejected.
@@ -573,17 +589,17 @@ mod tests {
             .add_signature(outsider.sign_personal_message(&msg).unwrap())
             .unwrap_err();
         assert!(
-            error
-                .to_string()
-                .contains("does not belong to committee member"),
-            "expected a non-member error, got {error}"
+            error_chain(&error).contains("does not belong to committee member"),
+            "expected a non-member error, got {}",
+            error_chain(&error)
         );
 
         // Still one short of the threshold.
         let error = aggregator.finish().unwrap_err();
         assert!(
-            error.to_string().contains("insufficient signature weight"),
-            "expected an insufficient-weight error, got {error}"
+            error_chain(&error).contains("insufficient signature weight"),
+            "expected an insufficient-weight error, got {}",
+            error_chain(&error)
         );
 
         // Reaching the threshold yields a signature that verifies.
@@ -612,8 +628,9 @@ mod tests {
             .verify_personal_message(&msg, &signature)
             .unwrap_err();
         assert!(
-            error.to_string().contains("not a multisig"),
-            "expected a not-a-multisig error, got {error}"
+            error_chain(&error).contains("not a multisig"),
+            "expected a not-a-multisig error, got {}",
+            error_chain(&error)
         );
     }
 
@@ -647,10 +664,9 @@ mod tests {
             .verify_personal_message(&message(), &UserSignature::Multisig(aggregated))
             .unwrap_err();
         assert!(
-            error
-                .to_string()
-                .contains("Passkey sig not supported inside multisig"),
-            "expected a passkey-not-supported error, got {error}"
+            error_chain(&error).contains("Passkey sig not supported inside multisig"),
+            "expected a passkey-not-supported error, got {}",
+            error_chain(&error)
         );
     }
 

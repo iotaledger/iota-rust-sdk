@@ -69,16 +69,19 @@ fn parse_type_tag_impl(
                 TypeParseError::NestingLimitExceeded,
             ));
         }
+        // `alt` takes at most 10 branches, so the primitives are grouped
         alt((
-            "u8".value(TypeTag::U8),
-            "u16".value(TypeTag::U16),
-            "u32".value(TypeTag::U32),
-            "u64".value(TypeTag::U64),
-            "u128".value(TypeTag::U128),
-            "u256".value(TypeTag::U256),
-            "bool".value(TypeTag::Bool),
-            "address".value(TypeTag::Address),
-            "signer".value(TypeTag::Signer),
+            alt((
+                "u8".value(TypeTag::U8),
+                "u16".value(TypeTag::U16),
+                "u32".value(TypeTag::U32),
+                "u64".value(TypeTag::U64),
+                "u128".value(TypeTag::U128),
+                "u256".value(TypeTag::U256),
+                "bool".value(TypeTag::Bool),
+                "address".value(TypeTag::Address),
+                "signer".value(TypeTag::Signer),
+            )),
             delimited(
                 ("vector", multispace0, '<', multispace0),
                 parse_type_tag_impl(depth + 1),

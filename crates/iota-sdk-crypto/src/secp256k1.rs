@@ -78,7 +78,7 @@ impl Secp256k1PrivateKey {
 
     pub fn random_with<R>(mut rng: R) -> Self
     where
-        R: rand_core::RngCore + rand_core::CryptoRng,
+        R: rand_core::CryptoRng,
     {
         // Almost every 32-byte value is a valid secp256k1 private key, but a
         // few (zero, or values at/above the curve order) are not. Draw fresh
@@ -97,7 +97,7 @@ impl Secp256k1PrivateKey {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::random_with(rand_core::OsRng)
+        Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
@@ -317,7 +317,7 @@ impl Secp256k1VerifyingKey {
 
     #[cfg(feature = "pem")]
     pub(crate) fn from_k256(verifying_key: k256::ecdsa::VerifyingKey) -> Self {
-        let compressed = verifying_key.to_encoded_point(true);
+        let compressed = verifying_key.to_sec1_point(true);
         Self(
             FcSecp256k1PublicKey::from_bytes(compressed.as_bytes())
                 .expect("k256 public key is a valid secp256k1 point"),

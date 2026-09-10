@@ -446,6 +446,19 @@ mod tests {
     use super::*;
     use crate::bls12381::Bls12381PrivateKey;
 
+    /// `signature::Error`'s `Display` is deliberately opaque, so the message a
+    /// verifier attached is only reachable through the source chain.
+    fn error_chain(error: &dyn std::error::Error) -> String {
+        let mut out = error.to_string();
+        let mut source = error.source();
+        while let Some(cause) = source {
+            out.push_str(": ");
+            out.push_str(&cause.to_string());
+            source = cause.source();
+        }
+        out
+    }
+
     #[proptest]
     fn basic_aggregation(private_keys: [Bls12381PrivateKey; 4], summary: CheckpointSummary) {
         let committee = ValidatorCommittee {
@@ -757,8 +770,9 @@ mod tests {
         // is what separates the two.
         assert!(matches!(err, CommitteeChainError::Signature(_)), "{err}");
         assert!(
-            err.to_string().contains("insufficient signing weight"),
-            "{err}"
+            error_chain(&err).contains("insufficient signing weight"),
+            "{}",
+            error_chain(&err)
         );
         assert_eq!(verifier.committee(), &committee0);
     }
