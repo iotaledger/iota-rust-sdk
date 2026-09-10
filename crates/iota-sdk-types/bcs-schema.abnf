@@ -558,6 +558,10 @@ validator-committee = u64                                  ; epoch
 validator-committee-member = bls12381-public-key   ; public-key
                              u64                   ; stake
 
+validator-signature = u64                   ; epoch
+                      bls12381-public-key   ; public-key
+                      bls12381-signature    ; signature
+
 version = u64
 
 version-assignment = object-id   ; object-id

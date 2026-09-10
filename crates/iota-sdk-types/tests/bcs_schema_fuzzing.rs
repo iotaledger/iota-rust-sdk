@@ -851,6 +851,7 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<ValidatorAggregatedSignature>("validator-aggregated-signature");
     test.check_rule::<ValidatorCommittee>("validator-committee");
     test.check_rule::<ValidatorCommitteeMember>("validator-committee-member");
+    test.check_rule::<ValidatorSignature>("validator-signature");
     test.check_rule::<VersionAssignment>("version-assignment");
 
     if !test.failures.is_empty() {
