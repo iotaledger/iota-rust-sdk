@@ -62,15 +62,11 @@ impl Bls12381PublicKey {
     }
 
     /// Return the underlying byte array of an Bls12381PublicKey.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-        &self.0
-    }
-
-    pub const fn as_bytes(&self) -> &[u8] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
@@ -101,7 +97,7 @@ impl AsRef<[u8; Self::LENGTH]> for Bls12381PublicKey {
 
 impl From<Bls12381PublicKey> for [u8; Bls12381PublicKey::LENGTH] {
     fn from(public_key: Bls12381PublicKey) -> Self {
-        public_key.into_inner()
+        public_key.into_bytes()
     }
 }
 
@@ -178,15 +174,11 @@ impl Bls12381Signature {
     }
 
     /// Return the underlying byte array of an Bls12381Signature.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-        &self.0
-    }
-
-    pub const fn as_bytes(&self) -> &[u8] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
@@ -217,7 +209,7 @@ impl AsRef<[u8; Self::LENGTH]> for Bls12381Signature {
 
 impl From<Bls12381Signature> for [u8; Bls12381Signature::LENGTH] {
     fn from(signature: Bls12381Signature) -> Self {
-        signature.into_inner()
+        signature.into_bytes()
     }
 }
 

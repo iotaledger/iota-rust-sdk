@@ -2066,7 +2066,7 @@ impl Argument {
 
     /// Get the nested result for this result at the given index. Returns None
     /// if this is not a Result.
-    pub fn get_nested_result(&self, ix: u16) -> Option<Argument> {
+    pub fn nested_result(&self, ix: u16) -> Option<Argument> {
         match self {
             Argument::Result(i) => Some(Argument::NestedResult(*i, ix)),
             _ => None,

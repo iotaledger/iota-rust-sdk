@@ -52,7 +52,7 @@ impl std::io::Write for Hasher {
 fn derive_address_from(write: impl FnOnce(&mut Hasher)) -> Address {
     let mut hasher = Hasher::new();
     write(&mut hasher);
-    Address::new(hasher.finalize().into_inner())
+    Address::new(hasher.finalize().into_bytes())
 }
 
 impl crate::Ed25519PublicKey {
@@ -69,7 +69,7 @@ impl crate::Ed25519PublicKey {
     /// let public_key_bytes = [0; 32];
     /// let mut hasher = Hasher::new();
     /// hasher.update(public_key_bytes);
-    /// let address = Address::new(hasher.finalize().into_inner());
+    /// let address = Address::new(hasher.finalize().into_bytes());
     /// println!("Address: {}", address);
     ///
     /// let public_key = Ed25519PublicKey::new(public_key_bytes);
@@ -80,7 +80,7 @@ impl crate::Ed25519PublicKey {
     }
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
-        hasher.update(self.inner());
+        hasher.update(self.bytes());
     }
 }
 
@@ -112,7 +112,7 @@ impl crate::Secp256k1PublicKey {
     /// let mut hasher = Hasher::new();
     /// hasher.update([0x01]); // The SignatureScheme flag for Secp256k1 is `1`
     /// hasher.update(public_key_bytes);
-    /// let address = Address::new(hasher.finalize().into_inner());
+    /// let address = Address::new(hasher.finalize().into_bytes());
     /// println!("Address: {}", address);
     ///
     /// let public_key = Secp256k1PublicKey::new(public_key_bytes);
@@ -124,7 +124,7 @@ impl crate::Secp256k1PublicKey {
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
         hasher.update([self.scheme().to_u8()]);
-        hasher.update(self.inner());
+        hasher.update(self.bytes());
     }
 }
 
@@ -156,7 +156,7 @@ impl crate::Secp256r1PublicKey {
     /// let mut hasher = Hasher::new();
     /// hasher.update([0x02]); // The SignatureScheme flag for Secp256r1 is `2`
     /// hasher.update(public_key_bytes);
-    /// let address = Address::new(hasher.finalize().into_inner());
+    /// let address = Address::new(hasher.finalize().into_bytes());
     /// println!("Address: {}", address);
     ///
     /// let public_key = Secp256r1PublicKey::new(public_key_bytes);
@@ -168,7 +168,7 @@ impl crate::Secp256r1PublicKey {
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
         hasher.update([self.scheme().to_u8()]);
-        hasher.update(self.inner());
+        hasher.update(self.bytes());
     }
 }
 
@@ -198,7 +198,7 @@ impl crate::PasskeyPublicKey {
 
     fn write_into_hasher(&self, hasher: &mut Hasher) {
         hasher.update([self.scheme().to_u8()]);
-        hasher.update(self.inner().inner());
+        hasher.update(self.inner().bytes());
     }
 }
 
@@ -211,6 +211,27 @@ impl From<crate::PasskeyPublicKey> for Address {
 impl From<&crate::PasskeyPublicKey> for Address {
     fn from(public_key: &crate::PasskeyPublicKey) -> Self {
         public_key.derive_address()
+    }
+}
+
+impl crate::PasskeyAuthenticator {
+    /// Derive the `Address` of the passkey that produced this authenticator.
+    ///
+    /// See [`PasskeyPublicKey::derive_address`](crate::PasskeyPublicKey::derive_address).
+    pub fn derive_address(&self) -> Address {
+        self.public_key().derive_address()
+    }
+}
+
+impl From<crate::PasskeyAuthenticator> for Address {
+    fn from(authenticator: crate::PasskeyAuthenticator) -> Self {
+        authenticator.derive_address()
+    }
+}
+
+impl From<&crate::PasskeyAuthenticator> for Address {
+    fn from(authenticator: &crate::PasskeyAuthenticator) -> Self {
+        authenticator.derive_address()
     }
 }
 
@@ -242,6 +263,28 @@ impl From<crate::PublicKey> for Address {
 impl From<&crate::PublicKey> for Address {
     fn from(public_key: &crate::PublicKey) -> Self {
         public_key.derive_address()
+    }
+}
+
+impl crate::SimpleSignature {
+    /// Derive the `Address` of the public key that produced this signature.
+    ///
+    /// See the `derive_address` documentation of the concrete key types for
+    /// the scheme-specific hashing rules.
+    pub fn derive_address(&self) -> Address {
+        self.to_public_key().derive_address()
+    }
+}
+
+impl From<crate::SimpleSignature> for Address {
+    fn from(signature: crate::SimpleSignature) -> Self {
+        signature.derive_address()
+    }
+}
+
+impl From<&crate::SimpleSignature> for Address {
+    fn from(signature: &crate::SimpleSignature) -> Self {
+        signature.derive_address()
     }
 }
 
@@ -281,13 +324,34 @@ impl From<&crate::MultisigCommittee> for Address {
     }
 }
 
+impl crate::MultisigAggregatedSignature {
+    /// Derive the `Address` of the committee that produced this signature.
+    ///
+    /// See [`MultisigCommittee::derive_address`](crate::MultisigCommittee::derive_address).
+    pub fn derive_address(&self) -> Address {
+        self.committee().derive_address()
+    }
+}
+
+impl From<crate::MultisigAggregatedSignature> for Address {
+    fn from(signature: crate::MultisigAggregatedSignature) -> Self {
+        signature.derive_address()
+    }
+}
+
+impl From<&crate::MultisigAggregatedSignature> for Address {
+    fn from(signature: &crate::MultisigAggregatedSignature) -> Self {
+        signature.derive_address()
+    }
+}
+
 impl crate::UserSignature {
     /// Derive the `Address` of the signer that this signature authenticates.
     pub fn derive_address(&self) -> Address {
         match self {
-            Self::Simple(simple) => simple.to_public_key().derive_address(),
-            Self::Multisig(multisig) => multisig.committee().derive_address(),
-            Self::PasskeyAuthenticator(passkey) => passkey.public_key().derive_address(),
+            Self::Simple(simple) => simple.derive_address(),
+            Self::Multisig(multisig) => multisig.derive_address(),
+            Self::PasskeyAuthenticator(passkey) => passkey.derive_address(),
             Self::MoveAuthenticator(move_authenticator) => move_authenticator.address(),
         }
     }
@@ -520,6 +584,29 @@ mod signing_message {
         }
     }
 
+    impl crate::Bls12381PublicKey {
+        /// The message a proof of possession for this key and `address`
+        /// commits to. A validator signs it with the matching private key to
+        /// show that the key it registers is its own.
+        ///
+        /// The proof is not tied to an epoch, so the message always commits
+        /// to epoch 0.
+        pub fn proof_of_possession_message(&self, address: crate::Address) -> Vec<u8> {
+            let mut committed = self.bytes().to_vec();
+            committed.extend_from_slice(address.as_ref());
+
+            let mut message = Vec::new();
+            message.extend(Intent::iota_app(IntentScope::ProofOfPossession).to_bytes());
+            bcs::serialize_into(&mut message, &committed).expect("bcs serialization failed");
+            bcs::serialize_into(&mut message, &0u64).expect("bcs serialization failed");
+            message
+        }
+
+        pub fn proof_of_possession_message_hex(&self, address: crate::Address) -> String {
+            hex::encode(self.proof_of_possession_message(address))
+        }
+    }
+
     impl<T> IntentMessage<T>
     where
         T: serde::Serialize,
@@ -555,7 +642,7 @@ impl crate::ObjectId {
         hasher.update(digest);
         hasher.update(count.to_le_bytes());
         let digest = hasher.finalize();
-        Self::new(digest.into_inner())
+        Self::new(digest.into_bytes())
     }
 
     /// Derive an ObjectId for a Dynamic Child Object.
@@ -577,7 +664,7 @@ impl crate::ObjectId {
             .expect("bcs serialization of `TypeTag` cannot fail");
         let digest = hasher.finalize();
 
-        Self::new(digest.into_inner())
+        Self::new(digest.into_bytes())
     }
 
     /// Derive the ObjectId of a derived object (`0x2::derived_object`).
@@ -692,6 +779,17 @@ mod serde_tests {
         for (b64, expected) in fixtures {
             let sig = UserSignature::from_base64(b64).unwrap();
             assert_eq!(sig.derive_address().to_string(), expected);
+
+            // The inner signature types must agree with the enum.
+            let inner = match &sig {
+                UserSignature::Simple(simple) => simple.derive_address(),
+                UserSignature::Multisig(multisig) => multisig.derive_address(),
+                UserSignature::PasskeyAuthenticator(passkey) => passkey.derive_address(),
+                UserSignature::MoveAuthenticator(move_authenticator) => {
+                    move_authenticator.address()
+                }
+            };
+            assert_eq!(inner.to_string(), expected);
         }
 
         // zkLogin (flag 0x05) is deprecated: serialized signatures are rejected

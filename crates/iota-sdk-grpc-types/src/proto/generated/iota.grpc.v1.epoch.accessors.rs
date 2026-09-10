@@ -4,6 +4,89 @@
 
 mod _accessor_impls {
     #![allow(clippy::useless_conversion)]
+    impl super::ValidatorCommitteeMember {
+        /// Sets `public_key` with the provided value.
+        pub fn with_public_key<T: Into<::prost::bytes::Bytes>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.public_key = Some(field.into());
+            self
+        }
+        /// Sets `weight` with the provided value.
+        pub fn with_weight(mut self, field: u64) -> Self {
+            self.weight = Some(field);
+            self
+        }
+    }
+    impl super::ValidatorCommitteeMembers {
+        /// Sets `members` with the provided value.
+        pub fn with_members(
+            mut self,
+            field: Vec<super::ValidatorCommitteeMember>,
+        ) -> Self {
+            self.members = field;
+            self
+        }
+    }
+    impl super::ValidatorCommittee {
+        /// Sets `epoch` with the provided value.
+        pub fn with_epoch(mut self, field: u64) -> Self {
+            self.epoch = Some(field);
+            self
+        }
+        /// Sets `members` with the provided value.
+        pub fn with_members<T: Into<super::ValidatorCommitteeMembers>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.members = Some(field.into());
+            self
+        }
+    }
+    impl super::ProtocolFeatureFlags {
+        /// Sets `flags` with the provided value.
+        pub fn with_flags(
+            mut self,
+            field: ::std::collections::BTreeMap<String, bool>,
+        ) -> Self {
+            self.flags = field;
+            self
+        }
+    }
+    impl super::ProtocolAttributes {
+        /// Sets `attributes` with the provided value.
+        pub fn with_attributes(
+            mut self,
+            field: ::std::collections::BTreeMap<String, String>,
+        ) -> Self {
+            self.attributes = field;
+            self
+        }
+    }
+    impl super::ProtocolConfig {
+        /// Sets `protocol_version` with the provided value.
+        pub fn with_protocol_version(mut self, field: u64) -> Self {
+            self.protocol_version = Some(field);
+            self
+        }
+        /// Sets `feature_flags` with the provided value.
+        pub fn with_feature_flags<T: Into<super::ProtocolFeatureFlags>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.feature_flags = Some(field.into());
+            self
+        }
+        /// Sets `attributes` with the provided value.
+        pub fn with_attributes<T: Into<super::ProtocolAttributes>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.attributes = Some(field.into());
+            self
+        }
+    }
     impl super::Epoch {
         /// Sets `epoch` with the provided value.
         pub fn with_epoch(mut self, field: u64) -> Self {
@@ -100,89 +183,6 @@ mod _accessor_impls {
             field: Vec<super::super::bcs::BcsData>,
         ) -> Self {
             self.bcs_next_epoch_system_state_objects = field;
-            self
-        }
-    }
-    impl super::ProtocolAttributes {
-        /// Sets `attributes` with the provided value.
-        pub fn with_attributes(
-            mut self,
-            field: ::std::collections::BTreeMap<String, String>,
-        ) -> Self {
-            self.attributes = field;
-            self
-        }
-    }
-    impl super::ProtocolConfig {
-        /// Sets `protocol_version` with the provided value.
-        pub fn with_protocol_version(mut self, field: u64) -> Self {
-            self.protocol_version = Some(field);
-            self
-        }
-        /// Sets `feature_flags` with the provided value.
-        pub fn with_feature_flags<T: Into<super::ProtocolFeatureFlags>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.feature_flags = Some(field.into());
-            self
-        }
-        /// Sets `attributes` with the provided value.
-        pub fn with_attributes<T: Into<super::ProtocolAttributes>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.attributes = Some(field.into());
-            self
-        }
-    }
-    impl super::ProtocolFeatureFlags {
-        /// Sets `flags` with the provided value.
-        pub fn with_flags(
-            mut self,
-            field: ::std::collections::BTreeMap<String, bool>,
-        ) -> Self {
-            self.flags = field;
-            self
-        }
-    }
-    impl super::ValidatorCommittee {
-        /// Sets `epoch` with the provided value.
-        pub fn with_epoch(mut self, field: u64) -> Self {
-            self.epoch = Some(field);
-            self
-        }
-        /// Sets `members` with the provided value.
-        pub fn with_members<T: Into<super::ValidatorCommitteeMembers>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.members = Some(field.into());
-            self
-        }
-    }
-    impl super::ValidatorCommitteeMember {
-        /// Sets `public_key` with the provided value.
-        pub fn with_public_key<T: Into<::prost::bytes::Bytes>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.public_key = Some(field.into());
-            self
-        }
-        /// Sets `weight` with the provided value.
-        pub fn with_weight(mut self, field: u64) -> Self {
-            self.weight = Some(field);
-            self
-        }
-    }
-    impl super::ValidatorCommitteeMembers {
-        /// Sets `members` with the provided value.
-        pub fn with_members(
-            mut self,
-            field: Vec<super::ValidatorCommitteeMember>,
-        ) -> Self {
-            self.members = field;
             self
         }
     }

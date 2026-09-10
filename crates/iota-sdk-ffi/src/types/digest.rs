@@ -52,7 +52,7 @@ impl Digest {
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
-        self.0.as_bytes().to_vec()
+        self.0.bytes().to_vec()
     }
 
     pub fn to_base58(&self) -> String {
@@ -115,7 +115,7 @@ macro_rules! ffi_digest_wrapper {
             }
 
             pub fn to_bytes(&self) -> Vec<u8> {
-                self.0.as_bytes().to_vec()
+                self.0.bytes().to_vec()
             }
 
             pub fn to_base58(&self) -> String {

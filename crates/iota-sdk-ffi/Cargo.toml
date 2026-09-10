@@ -18,7 +18,17 @@ name = "iota_sdk_ffi"
 crate-type = ["lib", "cdylib"]
 
 [features]
-default = ["crypto", "bls12381"]
+default = ["crypto", "bls12381", "grpc"]
+# TLS is enabled so that the HTTPS constructors (`new_mainnet`,
+# `new_testnet`, ...) work out of the box. The bundled webpki roots are used
+# instead of the platform's native certificate store because the latter is
+# unavailable on mobile targets (Android/iOS bindings); this also matches the
+# behavior of the GraphQL client (reqwest with `rustls-tls`).
+grpc = [
+  "iota-sdk/grpc",
+  "iota-sdk/grpc-tls-ring",
+  "iota-sdk/grpc-tls-webpki-roots",
+]
 crypto = [
   "iota-sdk/bech32",
   "iota-sdk/crypto",
@@ -36,6 +46,7 @@ workspace = true
 
 [dependencies]
 # external dependencies
+async-stream.workspace = true
 async-trait = "0.1.89"
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
@@ -53,13 +64,7 @@ tokio = { workspace = true, features = ["time", "sync"] }
 uniffi = { version = "0.31", features = ["cli", "tokio", "wasm-unstable-single-threaded", "scaffolding-ffi-buffer-fns"] }
 
 # internal dependencies
-iota-sdk = { version = "3.0.0-alpha.1", path = "../iota-sdk", default-features = false, features = ["graphql", "txn-builder", "types", "move-types", "serde", "rand", "hash"] }
-
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-# drives the subscription streams, which only exist off wasm32
-async-stream.workspace = true
-# sync for tokio::sync::RwLock used in the graphql client wrapper
-tokio = { workspace = true, features = ["sync"] }
+iota-sdk = { version = "3.0.0-beta.1", path = "../iota-sdk", default-features = false, features = ["graphql", "txn-builder", "types", "move-types", "serde", "rand", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 # wasm additionally needs macros+rt for async

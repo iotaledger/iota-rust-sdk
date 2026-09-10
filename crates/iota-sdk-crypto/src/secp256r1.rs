@@ -260,7 +260,7 @@ pub struct Secp256r1VerifyingKey(FcSecp256r1PublicKey);
 
 impl Secp256r1VerifyingKey {
     pub fn new(public_key: &Secp256r1PublicKey) -> Result<Self, SignatureError> {
-        FcSecp256r1PublicKey::from_bytes(public_key.inner().as_ref())
+        FcSecp256r1PublicKey::from_bytes(public_key.bytes())
             .map(Self)
             .map_err(SignatureError::from_source)
     }
@@ -336,7 +336,7 @@ impl Secp256r1VerifyingKey {
 
 impl Verifier<Secp256r1Signature> for Secp256r1VerifyingKey {
     fn verify(&self, message: &[u8], signature: &Secp256r1Signature) -> Result<(), SignatureError> {
-        let signature = FcSecp256r1Signature::from_bytes(signature.inner())
+        let signature = FcSecp256r1Signature::from_bytes(signature.bytes())
             .map_err(SignatureError::from_source)?;
         self.0
             .verify(message, &signature)
@@ -354,7 +354,7 @@ impl Verifier<SimpleSignature> for Secp256r1VerifyingKey {
             return Err(SignatureError::from_source("not a secp256r1 signature"));
         };
 
-        if public_key.inner() != self.public_key().inner() {
+        if public_key.bytes() != self.public_key().bytes() {
             return Err(SignatureError::from_source(
                 "public_key in signature does not match",
             ));

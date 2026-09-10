@@ -4,7 +4,8 @@
 
 use blst::min_sig::{PublicKey, SecretKey, Signature};
 use iota_types::{
-    Bls12381PublicKey, Bls12381Signature, CheckpointSummary, SignatureScheme, ValidatorSignature,
+    Address, Bls12381PublicKey, Bls12381Signature, CheckpointSummary, SignatureScheme,
+    ValidatorSignature,
 };
 
 use crate::{SignatureError, Signer, Verifier};
@@ -100,6 +101,13 @@ impl Bls12381PrivateKey {
         Self::random_with(rand_core::OsRng)
     }
 
+    /// Sign a proof that this key's holder also controls `address`, which a
+    /// validator submits alongside its public key so the network can check
+    /// that the key is not someone else's.
+    pub fn generate_proof_of_possession(&self, address: Address) -> Bls12381Signature {
+        self.sign(&self.public_key().proof_of_possession_message(address))
+    }
+
     pub fn sign_checkpoint_summary(&self, summary: &CheckpointSummary) -> ValidatorSignature {
         let message = summary.signing_message();
         let signature = self.sign(&message);
@@ -108,6 +116,25 @@ impl Bls12381PrivateKey {
             public_key: self.public_key(),
             signature,
         }
+    }
+}
+
+impl crate::ToFromBytes for Bls12381PrivateKey {
+    type Error = crate::PrivateKeyError;
+    type ByteArray = [u8; Self::LENGTH];
+
+    /// Return the raw 32-byte private key
+    fn to_bytes(&self) -> Self::ByteArray {
+        self.0.to_bytes()
+    }
+
+    fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error> {
+        let bytes = bytes.as_ref();
+        let bytes: [u8; Self::LENGTH] = bytes.try_into().map_err(|_| {
+            crate::PrivateKeyError::InvalidScheme("invalid bls12381 key length".to_string())
+        })?;
+
+        Self::new(bytes).map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
     }
 }
 
@@ -123,7 +150,7 @@ pub struct Bls12381VerifyingKey(pub(crate) PublicKey);
 
 impl Bls12381VerifyingKey {
     pub fn new(public_key: &Bls12381PublicKey) -> Result<Self, SignatureError> {
-        PublicKey::key_validate(public_key.inner())
+        PublicKey::key_validate(public_key.bytes())
             .map(Self)
             .map_err(BlstError)
             .map_err(SignatureError::from_source)
@@ -132,11 +159,24 @@ impl Bls12381VerifyingKey {
     pub fn public_key(&self) -> Bls12381PublicKey {
         Bls12381PublicKey::new(self.0.to_bytes())
     }
+
+    /// Check a proof of possession produced by
+    /// [`Bls12381PrivateKey::generate_proof_of_possession`] for `address`.
+    pub fn verify_proof_of_possession(
+        &self,
+        address: Address,
+        proof: &Bls12381Signature,
+    ) -> Result<(), SignatureError> {
+        self.verify(
+            &self.public_key().proof_of_possession_message(address),
+            proof,
+        )
+    }
 }
 
 impl Verifier<Bls12381Signature> for Bls12381VerifyingKey {
     fn verify(&self, message: &[u8], signature: &Bls12381Signature) -> Result<(), SignatureError> {
-        let signature = Signature::sig_validate(signature.inner(), true)
+        let signature = Signature::sig_validate(signature.bytes(), true)
             .map_err(BlstError)
             .map_err(SignatureError::from_source)?;
 
@@ -159,5 +199,86 @@ mod tests {
     fn basic_signing(signer: Bls12381PrivateKey, message: Vec<u8>) {
         let signature = signer.sign(&message);
         signer.verifying_key().verify(&message, &signature).unwrap();
+    }
+
+    #[proptest]
+    fn proof_of_possession(signer: Bls12381PrivateKey, address: Address, other: Address) {
+        let proof = signer.generate_proof_of_possession(address);
+        signer
+            .verifying_key()
+            .verify_proof_of_possession(address, &proof)
+            .unwrap();
+
+        if address != other {
+            signer
+                .verifying_key()
+                .verify_proof_of_possession(other, &proof)
+                .unwrap_err();
+        }
+    }
+
+    #[proptest]
+    fn proof_of_possession_is_bound_to_its_key(
+        signer: Bls12381PrivateKey,
+        other: Bls12381PrivateKey,
+        address: Address,
+    ) {
+        let proof = signer.generate_proof_of_possession(address);
+        other
+            .verifying_key()
+            .verify_proof_of_possession(address, &proof)
+            .unwrap_err();
+    }
+
+    #[proptest]
+    fn base64_roundtrip(signer: Bls12381PrivateKey) {
+        use crate::{ToFromBase64 as _, ToFromBytes as _};
+
+        let decoded = Bls12381PrivateKey::from_base64(&signer.to_base64()).unwrap();
+        assert_eq!(decoded.to_bytes(), signer.to_bytes());
+    }
+
+    #[test]
+    fn from_base64_rejects_invalid_input() {
+        use crate::ToFromBase64 as _;
+
+        Bls12381PrivateKey::from_base64("not-base64!").unwrap_err();
+        // Valid base64, wrong length.
+        Bls12381PrivateKey::from_base64("aGVsbG8=").unwrap_err();
+    }
+
+    #[test]
+    fn base64_encodes_the_unflagged_raw_key() {
+        use crate::ToFromBase64 as _;
+
+        let signer = Bls12381PrivateKey::new([
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+            25, 26, 27, 28, 29, 30, 31, 32,
+        ])
+        .unwrap();
+
+        assert_eq!(
+            signer.to_base64(),
+            "AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA="
+        );
+    }
+
+    // Proofs of possession are checked on-chain against what the node
+    // produces, so the message this crate signs has to stay byte-identical to
+    // it. This vector was generated with the node's
+    // `generate_proof_of_possession`.
+    #[test]
+    fn proof_of_possession_matches_the_node() {
+        let signer = Bls12381PrivateKey::new([7; Bls12381PrivateKey::LENGTH]).unwrap();
+        let address = Address::new([3; Address::LENGTH]);
+        let expected = "a717b0fcfc8aab7de211daad6b896659657f93094eab6a284c29710b2abc1abe5f08cb7f4a6dcfc2f44734f8dbcc2eb8";
+
+        let proof = signer.generate_proof_of_possession(address);
+        assert_eq!(hex::encode(proof.bytes()), expected);
+
+        signer
+            .verifying_key()
+            .verify_proof_of_possession(address, &proof)
+            .unwrap();
     }
 }

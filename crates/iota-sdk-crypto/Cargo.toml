@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk-crypto"
-version = "0.0.1-alpha.1"
+version = "1.0.0-beta.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
@@ -50,6 +50,7 @@ pem = [
   "p256?/pkcs8",
 ]
 bls12381 = [
+  "dep:base64ct",
   "dep:blst",
   "dep:rand_core",
   "dep:roaring",

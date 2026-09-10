@@ -45,7 +45,7 @@ impl Transaction {
     pub fn as_v1(&self) -> Arc<TransactionV1> {
         match &self.0 {
             iota_sdk::types::Transaction::V1(tx) => Arc::new(TransactionV1(tx.clone())),
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new Transaction enum variant was added and needs to be handled"),
         }
     }
 
@@ -1820,7 +1820,7 @@ impl From<iota_sdk::types::TransactionExpiration> for TransactionExpiration {
             iota_sdk::types::TransactionExpiration::None => Self::None,
             iota_sdk::types::TransactionExpiration::Epoch(epoch) => Self::Epoch(epoch),
             _ => unimplemented!(
-                "a new TransactionExpiration variant was added and needs to be handled"
+                "a new TransactionExpiration enum variant was added and needs to be handled"
             ),
         }
     }
@@ -1892,8 +1892,8 @@ impl Argument {
 
     /// Get the nested result for this result at the given index. Returns None
     /// if this is not a Result.
-    pub fn get_nested_result(&self, ix: u16) -> Option<Arc<Argument>> {
-        self.0.get_nested_result(ix).map(Self).map(Arc::new)
+    pub fn nested_result(&self, ix: u16) -> Option<Arc<Argument>> {
+        self.0.nested_result(ix).map(Self).map(Arc::new)
     }
 }
 

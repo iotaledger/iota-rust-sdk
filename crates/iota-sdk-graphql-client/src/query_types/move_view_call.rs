@@ -44,7 +44,7 @@ pub struct MoveViewResult {
 ///
 /// The function name should be fully qualified as
 /// `<package_id>::<module_name>::<function_name>`,
-/// e.g., `0x3::iota_system::get_total_iota_supply`.
+/// e.g., `0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4::shop::total_revenue`.
 #[derive(cynic::QueryVariables, Debug)]
 pub struct MoveViewCallArgs {
     /// The Move function fully qualified name as

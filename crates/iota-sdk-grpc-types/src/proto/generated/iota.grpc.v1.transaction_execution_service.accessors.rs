@@ -22,6 +22,29 @@ mod _accessor_impls {
             self
         }
     }
+    impl super::ExecuteTransactionsRequest {
+        /// Sets `transactions` with the provided value.
+        pub fn with_transactions(
+            mut self,
+            field: Vec<super::ExecuteTransactionItem>,
+        ) -> Self {
+            self.transactions = field;
+            self
+        }
+        /// Sets `read_mask` with the provided value.
+        pub fn with_read_mask<T: Into<::prost_types::FieldMask>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.read_mask = Some(field.into());
+            self
+        }
+        /// Sets `checkpoint_inclusion_timeout_ms` with the provided value.
+        pub fn with_checkpoint_inclusion_timeout_ms(mut self, field: u64) -> Self {
+            self.checkpoint_inclusion_timeout_ms = Some(field);
+            self
+        }
+    }
     impl super::ExecuteTransactionResult {
         /// Sets `executed_transaction` with the provided value.
         /// If any other oneof field in the same oneof is set, it will be cleared.
@@ -46,29 +69,6 @@ mod _accessor_impls {
             self
         }
     }
-    impl super::ExecuteTransactionsRequest {
-        /// Sets `transactions` with the provided value.
-        pub fn with_transactions(
-            mut self,
-            field: Vec<super::ExecuteTransactionItem>,
-        ) -> Self {
-            self.transactions = field;
-            self
-        }
-        /// Sets `read_mask` with the provided value.
-        pub fn with_read_mask<T: Into<::prost_types::FieldMask>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.read_mask = Some(field.into());
-            self
-        }
-        /// Sets `checkpoint_inclusion_timeout_ms` with the provided value.
-        pub fn with_checkpoint_inclusion_timeout_ms(mut self, field: u64) -> Self {
-            self.checkpoint_inclusion_timeout_ms = Some(field);
-            self
-        }
-    }
     impl super::ExecuteTransactionsResponse {
         /// Sets `transaction_results` with the provided value.
         pub fn with_transaction_results(
@@ -76,26 +76,6 @@ mod _accessor_impls {
             field: Vec<super::ExecuteTransactionResult>,
         ) -> Self {
             self.transaction_results = field;
-            self
-        }
-    }
-    impl super::ExecutionError {
-        /// Sets `bcs_kind` with the provided value.
-        pub fn with_bcs_kind<T: Into<super::super::bcs::BcsData>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.bcs_kind = Some(field.into());
-            self
-        }
-        /// Sets `source` with the provided value.
-        pub fn with_source<T: Into<String>>(mut self, field: T) -> Self {
-            self.source = Some(field.into());
-            self
-        }
-        /// Sets `command_index` with the provided value.
-        pub fn with_command_index(mut self, field: u64) -> Self {
-            self.command_index = Some(field);
             self
         }
     }
@@ -111,31 +91,6 @@ mod _accessor_impls {
         /// Sets `tx_checks` with the provided value.
         pub fn with_tx_checks(mut self, field: Vec<i32>) -> Self {
             self.tx_checks = field;
-            self
-        }
-    }
-    impl super::SimulateTransactionResult {
-        /// Sets `simulated_transaction` with the provided value.
-        /// If any other oneof field in the same oneof is set, it will be cleared.
-        pub fn with_simulated_transaction<T: Into<super::SimulatedTransaction>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.result = Some(
-                super::simulate_transaction_result::Result::SimulatedTransaction(
-                    field.into(),
-                ),
-            );
-            self
-        }
-        /// Sets `error` with the provided value.
-        /// If any other oneof field in the same oneof is set, it will be cleared.
-        pub fn with_error<
-            T: Into<super::super::super::super::super::google::rpc::Status>,
-        >(mut self, field: T) -> Self {
-            self.result = Some(
-                super::simulate_transaction_result::Result::Error(field.into()),
-            );
             self
         }
     }
@@ -157,13 +112,23 @@ mod _accessor_impls {
             self
         }
     }
-    impl super::SimulateTransactionsResponse {
-        /// Sets `transaction_results` with the provided value.
-        pub fn with_transaction_results(
+    impl super::ExecutionError {
+        /// Sets `bcs_kind` with the provided value.
+        pub fn with_bcs_kind<T: Into<super::super::bcs::BcsData>>(
             mut self,
-            field: Vec<super::SimulateTransactionResult>,
+            field: T,
         ) -> Self {
-            self.transaction_results = field;
+            self.bcs_kind = Some(field.into());
+            self
+        }
+        /// Sets `source` with the provided value.
+        pub fn with_source<T: Into<String>>(mut self, field: T) -> Self {
+            self.source = Some(field.into());
+            self
+        }
+        /// Sets `command_index` with the provided value.
+        pub fn with_command_index(mut self, field: u64) -> Self {
+            self.command_index = Some(field);
             self
         }
     }
@@ -204,6 +169,143 @@ mod _accessor_impls {
                     field.into(),
                 ),
             );
+            self
+        }
+    }
+    impl super::SimulateTransactionResult {
+        /// Sets `simulated_transaction` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_simulated_transaction<T: Into<super::SimulatedTransaction>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.result = Some(
+                super::simulate_transaction_result::Result::SimulatedTransaction(
+                    field.into(),
+                ),
+            );
+            self
+        }
+        /// Sets `error` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_error<
+            T: Into<super::super::super::super::super::google::rpc::Status>,
+        >(mut self, field: T) -> Self {
+            self.result = Some(
+                super::simulate_transaction_result::Result::Error(field.into()),
+            );
+            self
+        }
+    }
+    impl super::SimulateTransactionsResponse {
+        /// Sets `transaction_results` with the provided value.
+        pub fn with_transaction_results(
+            mut self,
+            field: Vec<super::SimulateTransactionResult>,
+        ) -> Self {
+            self.transaction_results = field;
+            self
+        }
+    }
+    impl super::ViewFunctionCallItem {
+        /// Sets `fq_function_name` with the provided value.
+        pub fn with_fq_function_name<T: Into<String>>(mut self, field: T) -> Self {
+            self.fq_function_name = field.into();
+            self
+        }
+        /// Sets `type_args` with the provided value.
+        pub fn with_type_args(
+            mut self,
+            field: Vec<super::super::types::TypeTag>,
+        ) -> Self {
+            self.type_args = field;
+            self
+        }
+        /// Sets `inputs` with the provided value.
+        pub fn with_inputs(
+            mut self,
+            field: Vec<super::super::command::InputArgument>,
+        ) -> Self {
+            self.inputs = field;
+            self
+        }
+    }
+    impl super::ViewFunctionCallsRequest {
+        /// Sets `view_function_calls` with the provided value.
+        pub fn with_view_function_calls(
+            mut self,
+            field: Vec<super::ViewFunctionCallItem>,
+        ) -> Self {
+            self.view_function_calls = field;
+            self
+        }
+        /// Sets `read_mask` with the provided value.
+        pub fn with_read_mask<T: Into<::prost_types::FieldMask>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.read_mask = Some(field.into());
+            self
+        }
+    }
+    impl super::ViewFunctionCallOutputs {
+        /// Sets `return_values` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_return_values<T: Into<super::super::command::CommandOutputs>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.execution_result = Some(
+                super::view_function_call_outputs::ExecutionResult::ReturnValues(
+                    field.into(),
+                ),
+            );
+            self
+        }
+        /// Sets `execution_error` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_execution_error<T: Into<super::ExecutionError>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.execution_result = Some(
+                super::view_function_call_outputs::ExecutionResult::ExecutionError(
+                    field.into(),
+                ),
+            );
+            self
+        }
+    }
+    impl super::ViewFunctionCallResult {
+        /// Sets `call_outputs` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_call_outputs<T: Into<super::ViewFunctionCallOutputs>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.result = Some(
+                super::view_function_call_result::Result::CallOutputs(field.into()),
+            );
+            self
+        }
+        /// Sets `error` with the provided value.
+        /// If any other oneof field in the same oneof is set, it will be cleared.
+        pub fn with_error<
+            T: Into<super::super::super::super::super::google::rpc::Status>,
+        >(mut self, field: T) -> Self {
+            self.result = Some(
+                super::view_function_call_result::Result::Error(field.into()),
+            );
+            self
+        }
+    }
+    impl super::ViewFunctionCallsResponse {
+        /// Sets `call_results` with the provided value.
+        pub fn with_call_results(
+            mut self,
+            field: Vec<super::ViewFunctionCallResult>,
+        ) -> Self {
+            self.call_results = field;
             self
         }
     }

@@ -2,14 +2,16 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+pub mod changes;
 mod v1;
 
+pub use changes::{BalanceChange, DeriveChangesError, ObjectChange};
 pub use v1::{
     ChangedObject, ObjectIn, ObjectOut, TransactionEffectsV1, UnchangedSharedKind,
     UnchangedSharedObject,
 };
 
-use crate::{ObjectDigest, ObjectId, ObjectReference, ObjectVersion, Version};
+use crate::{ObjectDigest, ObjectReference, ObjectVersion};
 
 /// The output or effects of executing a transaction
 ///
@@ -148,41 +150,7 @@ impl std::fmt::Display for ObjectRemoveKind {
     }
 }
 
-/// What an executed transaction did to one object, with the version and digest
-/// each side is at resolved.
-///
-/// Not a wire type: this is [`ChangedObject`] with the versions filled in,
-/// since a written object's version is the transaction's rather than one the
-/// entry carries. A `None` version means the object did not exist on that side.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct ObjectChange {
-    /// The object's id.
-    pub object_id: ObjectId,
-    /// The version the object was at before the transaction, if it existed.
-    pub input_version: Option<Version>,
-    /// The digest the object had before the transaction, if it existed.
-    pub input_digest: Option<ObjectDigest>,
-    /// The version the object is at after the transaction, if it still exists.
-    pub output_version: Option<Version>,
-    /// The digest the object has after the transaction, if it still exists.
-    pub output_digest: Option<ObjectDigest>,
-    /// Whether the transaction created or deleted the object's id.
-    pub id_operation: IdOperation,
-}
-
-impl crate::TreeDisplay for ObjectChange {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Object Change")?;
-        w.leaf("Object ID", &self.object_id, false)?;
-        w.option_leaf("Input Version", &self.input_version, false)?;
-        w.option_leaf("Input Digest", &self.input_digest, false)?;
-        w.option_leaf("Output Version", &self.output_version, false)?;
-        w.option_leaf("Output Digest", &self.output_digest, false)?;
-        w.leaf("ID Operation", &self.id_operation, true)
-    }
-}
-
-crate::impl_tree_display!(TransactionEffects, InputSharedObject, ObjectChange);
+crate::impl_tree_display!(TransactionEffects, InputSharedObject);
 
 /// Defines what happened to an ObjectId during execution
 ///
@@ -220,7 +188,7 @@ mod tests {
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
-    use super::{ObjectOut, TransactionEffects};
+    use super::TransactionEffects;
 
     // The files contain the bas64 encoded raw effects of transactions
     const GENESIS_EFFECTS: &str = include_str!("fixtures/genesis-transaction-effects");
@@ -335,7 +303,7 @@ mod tests {
     /// package keeps the version it was published or upgraded at. The fixtures
     /// cannot tell these apart, since they publish at their lamport version.
     #[test]
-    fn object_changes_keep_a_package_at_its_own_version() {
+    fn the_object_sets_keep_a_package_at_its_own_version() {
         use crate::{
             ChangedObject, IdOperation, ObjectDigest, ObjectId, ObjectIn, ObjectOut, Owner,
             TransactionEffectsV1, Version,
@@ -380,11 +348,6 @@ mod tests {
             auxiliary_data_digest: None,
         };
 
-        let changes = effects.object_changes();
-        assert_eq!(changes[0].output_version, Some(lamport_version));
-        assert_eq!(changes[1].output_version, Some(package_version));
-
-        // The same distinction reaches the object sets.
         assert_eq!(
             effects
                 .created()
@@ -393,49 +356,6 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec![lamport_version, package_version],
         );
-    }
-
-    /// Each changed object is reported once, with the version and digest of
-    /// whichever sides it existed on.
-    #[test]
-    fn object_changes_resolve_each_side() {
-        for fixture in [GENESIS_EFFECTS, SPONSOR_TX_EFFECTS] {
-            let effects: TransactionEffects =
-                bcs::from_bytes(&Base64::decode_vec(fixture.trim()).unwrap()).unwrap();
-            let fx = effects.as_v1();
-
-            let changes = fx.object_changes();
-            assert_eq!(changes.len(), fx.changed_objects.len());
-
-            for (change, changed) in changes.iter().zip(&fx.changed_objects) {
-                assert_eq!(change.object_id, changed.object_id);
-                assert_eq!(change.id_operation, changed.id_operation);
-                assert_eq!(change.input_version, changed.input_state.opt_version());
-                assert_eq!(change.input_digest, changed.input_state.opt_digest());
-                assert_eq!(
-                    change.input_version.is_some(),
-                    change.input_digest.is_some()
-                );
-                assert_eq!(
-                    change.output_version.is_some(),
-                    change.output_digest.is_some()
-                );
-
-                // A written object takes the version this transaction assigned;
-                // a package keeps the version it was published or upgraded at.
-                match changed.output_state {
-                    ObjectOut::ObjectWrite { digest, .. } => {
-                        assert_eq!(change.output_version, Some(fx.lamport_version));
-                        assert_eq!(change.output_digest, Some(digest));
-                    }
-                    ObjectOut::PackageWrite { version, digest } => {
-                        assert_eq!(change.output_version, Some(version));
-                        assert_eq!(change.output_digest, Some(digest));
-                    }
-                    _ => assert_eq!(change.output_version, None),
-                }
-            }
-        }
     }
 
     /// A package write is only ever a create or a mutate: it is not reported as

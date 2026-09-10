@@ -22,8 +22,8 @@ pub const MULTISIG_BITMAP_VALUE_MAX: BitmapUnit = 0b1111111111;
 pub enum MultisigError {
     #[error("{0}")]
     TryFromSlice(#[from] std::array::TryFromSliceError),
-    #[error("{0}")]
-    Base64(#[from] base64ct::Error),
+    #[error("invalid base64")]
+    Base64,
     #[cfg(feature = "serde")]
     #[error("{0}")]
     SignatureFromBytes(#[from] SignatureFromBytesError),
@@ -204,7 +204,7 @@ impl MultisigCommittee {
     }
 
     /// Get the index of a public key in the committee, if it is a member.
-    pub fn get_public_key_index(&self, public_key: &PublicKey) -> Option<u8> {
+    pub fn index(&self, public_key: &PublicKey) -> Option<u8> {
         self.members
             .iter()
             .position(|member| &member.public_key == public_key)
@@ -374,7 +374,7 @@ impl MultisigAggregatedSignature {
                 .to_public_key()
                 .map_err(|_| MultisigError::UnallowedSignatureType)?;
             let index = committee
-                .get_public_key_index(&pk)
+                .index(&pk)
                 .ok_or(MultisigError::NoPublicKeyForSignature(sig_index))?;
             if bitmap & (1 << index) != 0 {
                 return Err(MultisigError::DuplicatePublicKey);
@@ -886,7 +886,7 @@ pub(crate) mod serialization {
         type Err = MultisigError;
 
         fn from_str(s: &str) -> Result<Self, Self::Err> {
-            let bytes = Base64::decode_vec(s)?;
+            let bytes = Base64::decode_vec(s).map_err(|_| MultisigError::Base64)?;
             let sig = MultisigAggregatedSignature::from_bytes(&bytes)?;
 
             Ok(sig)
@@ -919,7 +919,7 @@ pub(crate) mod serialization {
         }
 
         pub fn from_base64(s: &str) -> Result<Self, MultisigError> {
-            let bytes = Base64::decode_vec(s)?;
+            let bytes = Base64::decode_vec(s).map_err(|_| MultisigError::Base64)?;
 
             match bytes.first() {
                 Some(x) => {

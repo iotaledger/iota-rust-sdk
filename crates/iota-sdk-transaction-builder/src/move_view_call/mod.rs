@@ -11,7 +11,7 @@
 use iota_types::{ObjectId, TypeTag};
 
 use crate::{
-    error::Error,
+    error::TransactionBuilderError,
     types::{MoveTypes, MoveViewArg, MoveViewArgList},
 };
 
@@ -147,11 +147,11 @@ impl<C> MoveViewCallBuilder<C> {
 impl<C: MoveViewCallClient> MoveViewCallBuilder<C> {
     /// Execute the call and return the function's return values. The builder is
     /// left as it is, so the same call can be executed again.
-    pub async fn execute(&self) -> Result<Vec<serde_json::Value>, Error> {
+    pub async fn execute(&self) -> Result<Vec<serde_json::Value>, TransactionBuilderError> {
         self.client
             .move_view_call(&self.function_name(), &self.type_arguments, &self.arguments)
             .await
-            .map_err(Error::client)
+            .map_err(TransactionBuilderError::client)
     }
 
     /// Get the client.
@@ -273,7 +273,7 @@ mod tests {
             .execute()
             .await
             .unwrap_err();
-        assert!(matches!(error, Error::Client(_)));
+        assert!(matches!(error, TransactionBuilderError::Client(_)));
         assert!(error.to_string().contains("not a view function"));
     }
 }

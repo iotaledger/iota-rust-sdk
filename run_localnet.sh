@@ -26,7 +26,7 @@ if [ "$1" == "start" ]; then
 
     # Start IOTA network
     echo "Starting IOTA network..."
-    RUST_LOG="info,consensus=warn,starfish_core=warn,iota_core=warn,fastcrypto_tbls=off,iota_indexer=warn,iota_data_ingestion_core=error,iota_graphql_rpc=warn" $IOTA_LOCALNET_BINARY start --force-regenesis --with-faucet --with-indexer --with-graphql $IOTA_START_EXTRA_ARGS >> "$IOTA_LOG" 2>&1 &
+    RUST_LOG="info,consensus=warn,starfish_core=warn,iota_core=warn,fastcrypto_tbls=off,iota_indexer=warn,iota_data_ingestion_core=error,iota_graphql_rpc=warn" $IOTA_LOCALNET_BINARY start --force-regenesis --with-faucet --with-indexer --with-graphql --with-grpc $IOTA_START_EXTRA_ARGS >> "$IOTA_LOG" 2>&1 &
     IOTA_PID=$!
 
     # Use all 9's private key for gas station
@@ -41,7 +41,7 @@ if [ "$1" == "start" ]; then
     # support host networking, so we use bridge networking with host.docker.internal.
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # Bridge networking: Redis is reachable via Docker DNS name, fullnode via host.docker.internal
-        sed -i.bak "s|http://localhost:9000|http://host.docker.internal:9000|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
+        sed -i.bak "s|http://localhost:50051|http://host.docker.internal:50051|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
     else
         # Host networking: everything is on localhost
         sed -i.bak "s|redis://redis:6379|redis://localhost:6379|g" "$CONFIG_PATH" && rm "$CONFIG_PATH.bak"
