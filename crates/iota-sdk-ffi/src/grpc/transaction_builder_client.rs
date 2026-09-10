@@ -1,0 +1,131 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+use iota_sdk::{
+    grpc_client::Client,
+    transaction_builder::{
+        ObjectsPage, ProtocolConfig, TransactionBuilderClientBase,
+        TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
+        TransactionBuilderSimulationClient, WaitForTransaction,
+    },
+    types::{
+        Address, Object, ObjectId, StructTag, Transaction, TransactionDigest, TransactionEffects,
+        Version,
+    },
+};
+
+use crate::grpc::client::GrpcClient;
+
+impl TransactionBuilderClientBase for GrpcClient {
+    type Error = <Client as TransactionBuilderClientBase>::Error;
+}
+
+impl TransactionBuilderLedgerClient for GrpcClient {
+    async fn object(
+        &self,
+        object_id: ObjectId,
+        version: impl Into<Option<Version>>,
+    ) -> Result<Option<Object>, Self::Error> {
+        TransactionBuilderLedgerClient::object(&*self.0.read().await, object_id, version).await
+    }
+
+    async fn objects_by_id(
+        &self,
+        object_ids: &[(ObjectId, Option<Version>)],
+    ) -> Result<Vec<Option<Object>>, Self::Error> {
+        TransactionBuilderLedgerClient::objects_by_id(&*self.0.read().await, object_ids).await
+    }
+
+    async fn objects(
+        &self,
+        struct_tag: Option<StructTag>,
+        owner: Address,
+        cursor: Option<Vec<u8>>,
+        limit: Option<usize>,
+    ) -> Result<ObjectsPage, Self::Error> {
+        TransactionBuilderLedgerClient::objects(
+            &*self.0.read().await,
+            struct_tag,
+            owner,
+            cursor,
+            limit,
+        )
+        .await
+    }
+
+    async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+        TransactionBuilderLedgerClient::protocol_config(&*self.0.read().await).await
+    }
+
+    async fn reference_gas_price(
+        &self,
+        epoch: impl Into<Option<u64>>,
+    ) -> Result<Option<u64>, Self::Error> {
+        TransactionBuilderLedgerClient::reference_gas_price(&*self.0.read().await, epoch).await
+    }
+}
+
+impl TransactionBuilderSimulationClient for GrpcClient {
+    type DryRunResult = <Client as TransactionBuilderSimulationClient>::DryRunResult;
+
+    async fn estimate_transaction_budget(
+        &self,
+        transaction: &Transaction,
+    ) -> Result<Option<u64>, Self::Error> {
+        TransactionBuilderSimulationClient::estimate_transaction_budget(
+            &*self.0.read().await,
+            transaction,
+        )
+        .await
+    }
+
+    async fn dry_run_transaction(
+        &self,
+        transaction: &Transaction,
+        skip_checks: bool,
+    ) -> Result<Self::DryRunResult, Self::Error> {
+        TransactionBuilderSimulationClient::dry_run_transaction(
+            &*self.0.read().await,
+            transaction,
+            skip_checks,
+        )
+        .await
+    }
+}
+
+impl TransactionBuilderExecutionClient for GrpcClient {
+    async fn execute_transaction(
+        &self,
+        signatures: &[iota_sdk::types::UserSignature],
+        transaction: &Transaction,
+        wait_for: impl Into<Option<WaitForTransaction>>,
+    ) -> Result<TransactionEffects, Self::Error> {
+        TransactionBuilderExecutionClient::execute_transaction(
+            &*self.0.read().await,
+            signatures,
+            transaction,
+            wait_for,
+        )
+        .await
+    }
+
+    async fn wait_for_transaction(
+        &self,
+        digest: TransactionDigest,
+        wait_for: WaitForTransaction,
+    ) -> Result<(), Self::Error> {
+        TransactionBuilderExecutionClient::wait_for_transaction(
+            &*self.0.read().await,
+            digest,
+            wait_for,
+        )
+        .await
+    }
+
+    async fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<TransactionEffects>, Self::Error> {
+        TransactionBuilderExecutionClient::transaction_effects(&*self.0.read().await, digest).await
+    }
+}
