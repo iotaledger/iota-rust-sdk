@@ -114,24 +114,23 @@ pub(crate) use tree_display::{TreeDisplay, TreeWriter, impl_tree_display};
 #[cfg_attr(doc_cfg, doc(cfg(feature = "hash")))]
 pub mod hash;
 
-pub mod address;
-pub mod checkpoint;
+mod address;
+mod checkpoint;
 pub mod crypto;
-pub mod digest;
+mod digest;
 pub mod effects;
-pub mod events;
-pub mod execution_status;
+mod events;
+mod execution_status;
 pub mod framework;
-pub mod gas;
+mod gas;
 pub mod iota_names;
-pub mod move_core;
-pub mod move_package;
-pub mod object;
-pub mod object_id;
-pub mod transaction;
-pub mod u256;
-pub mod utils;
-pub mod validator;
+mod move_core;
+mod move_package;
+mod object;
+mod object_id;
+mod transaction;
+mod u256;
+mod validator;
 pub mod version;
 
 pub use address::{Address, AddressParseError};
@@ -193,6 +192,9 @@ pub use transaction::{
     Transaction, TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind, TransactionV1,
     TransferObjects, Upgrade, VersionAssignment,
 };
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+pub use validator::SignerBitmapError;
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeError,
     ValidatorCommitteeMember, ValidatorSignature,
@@ -269,7 +271,7 @@ mod bcs_base64 {
 }
 
 /// Returns the next array in byte-increasing order.
-pub const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8; N] {
+pub(crate) const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8; N] {
     match next_lexicographical_array_opt(array) {
         Some(next) => next,
         None => [0; N],
@@ -278,7 +280,9 @@ pub const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8;
 
 /// Returns the next array in byte-increasing order, or `None` if the result
 /// would overflow.
-pub const fn next_lexicographical_array_opt<const N: usize>(array: &[u8; N]) -> Option<[u8; N]> {
+pub(crate) const fn next_lexicographical_array_opt<const N: usize>(
+    array: &[u8; N],
+) -> Option<[u8; N]> {
     let mut next = *array;
     let mut i = N;
 
@@ -295,7 +299,6 @@ pub const fn next_lexicographical_array_opt<const N: usize>(array: &[u8; N]) -> 
     None
 }
 
-#[macro_export]
 macro_rules! def_is {
     ($($variant:ident),* $(,)?) => {
         paste::paste! {$(
@@ -307,8 +310,8 @@ macro_rules! def_is {
         )*}
     };
 }
+pub(crate) use def_is;
 
-#[macro_export]
 macro_rules! def_is_as_into_opt {
     (@into $variant:ident ($rename:ident) [Box<$inner:ty>]) => {
         paste::paste! {
@@ -441,6 +444,7 @@ macro_rules! def_is_as_into_opt {
         )*
     };
 }
+pub(crate) use def_is_as_into_opt;
 
 #[cfg(feature = "serde")]
 mod _serde {

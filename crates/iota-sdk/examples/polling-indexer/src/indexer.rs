@@ -487,23 +487,19 @@ fn sender_str(tx: &SignedTransaction) -> Option<String> {
 fn tx_kind_str(tx: &SignedTransaction) -> String {
     match &tx.transaction {
         Transaction::V1(v1) => match &v1.kind {
-            iota_sdk::types::transaction::TransactionKind::Programmable(_) => {
-                "programmable".to_owned()
-            }
-            iota_sdk::types::transaction::TransactionKind::Genesis(_) => "genesis".to_owned(),
-            iota_sdk::types::transaction::TransactionKind::ConsensusCommitPrologueV1(_) => {
+            iota_sdk::types::TransactionKind::Programmable(_) => "programmable".to_owned(),
+            iota_sdk::types::TransactionKind::Genesis(_) => "genesis".to_owned(),
+            iota_sdk::types::TransactionKind::ConsensusCommitPrologueV1(_) => {
                 "consensus_commit_prologue_v1".to_owned()
             }
-            iota_sdk::types::transaction::TransactionKind::AuthenticatorStateUpdateV1Deprecated => {
+            iota_sdk::types::TransactionKind::AuthenticatorStateUpdateV1Deprecated => {
                 "authenticator_state_update_v1_deprecated".to_owned()
             }
-            iota_sdk::types::transaction::TransactionKind::EndOfEpoch(_) => {
-                "end_of_epoch".to_owned()
-            }
-            iota_sdk::types::transaction::TransactionKind::RandomnessStateUpdate(_) => {
+            iota_sdk::types::TransactionKind::EndOfEpoch(_) => "end_of_epoch".to_owned(),
+            iota_sdk::types::TransactionKind::RandomnessStateUpdate(_) => {
                 "randomness_state_update".to_owned()
             }
-            iota_sdk::types::transaction::TransactionKind::TransactionDenyRulesUpdate(_) => {
+            iota_sdk::types::TransactionKind::TransactionDenyRulesUpdate(_) => {
                 "transaction_deny_rules_update".to_owned()
             }
             _ => "unknown".to_owned(),
