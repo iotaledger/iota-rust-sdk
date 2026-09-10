@@ -375,6 +375,15 @@ pub enum ExecutionError {
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         max_scaled_size: u64,
     },
+    /// The receiving object at the version the transaction names does not
+    /// match the reference: its digest differs, it is not owned by an
+    /// address, or it is a package.
+    #[error("Receiving object {object_id} does not match its reference at the named version")]
+    ReceivingObjectMismatch { object_id: ObjectId },
+    /// The Move authenticator's account has no usable authenticator function:
+    /// the field is missing or does not decode.
+    #[error("Move authenticator account {account_object_id} has no usable authenticator function")]
+    MoveAuthenticatorAccountUnresolved { account_object_id: ObjectId },
 }
 
 impl ExecutionError {
@@ -422,6 +431,8 @@ impl ExecutionError {
         ExecutionCanceledDueToExecutionWorkerCongestion,
         MoveVectorElemTooBig,
         MoveRawValueTooBig,
+        ReceivingObjectMismatch,
+        MoveAuthenticatorAccountUnresolved,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
