@@ -53,6 +53,7 @@ grpc = [
 # such as the public testnet/mainnet nodes).
 grpc-tls-native-roots = ["grpc", "iota-grpc-client/tls-native-roots"]
 grpc-tls-ring = ["grpc", "iota-grpc-client/tls-ring"]
+grpc-tls-webpki-roots = ["grpc", "iota-grpc-client/tls-webpki-roots"]
 # Transaction Builder
 txn-builder = ["dep:iota-transaction-builder"]
 # Types
@@ -87,10 +88,11 @@ tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 iota-graphql-client-build.workspace = true
 
 # gRPC examples: skipped unless the gRPC TLS features are enabled (e.g.
-# `cargo run --example chain_id_grpc --features grpc-tls-native-roots,grpc-tls-ring`).
+# `cargo run --example get_object_grpc --features grpc-tls-native-roots,grpc-tls-ring`).
+# `service_info_grpc` targets localnet over plain HTTP and only needs `grpc`.
 [[example]]
-name = "chain_id_grpc"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+name = "service_info_grpc"
+required-features = ["grpc"]
 
 [[example]]
 name = "get_object_grpc"

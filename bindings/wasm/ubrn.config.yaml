@@ -13,6 +13,17 @@ web:
   entrypoint: ./src/ts/index.web.ts
   target: bundler
 
+  # The FFI crate's `grpc` default feature pulls in tonic, which does not build
+  # for wasm32-unknown-unknown, so opt out of the defaults and name what the
+  # WASM bindings need. This has to be a Cargo feature rather than a
+  # `cfg(target_arch)` gate in the FFI crate: ubrn generates the wasm glue from
+  # a host build of the FFI library, so the host build must expose exactly the
+  # surface the wasm32 build has, or the glue fails to link.
+  defaultFeatures: false
+  features:
+    - crypto
+    - bls12381
+
   # RUSTFLAGS for the wasm32 compilation.
   rustflags:
     - "-C"
