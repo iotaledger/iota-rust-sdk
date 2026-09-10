@@ -180,6 +180,8 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 ///                 =/ execution-canceled-due-to-execution-worker-congestion
 ///                 =/ move-vector-elem-too-big
 ///                 =/ move-raw-value-too-big
+///                 =/ receiving-object-mismatch
+///                 =/ move-authenticator-account-unresolved
 ///
 /// insufficient-gas                                       = %d00
 /// invalid-gas-object                                     = %d01
@@ -224,6 +226,8 @@ fn display_congested_objects(objects: &[ObjectId]) -> impl core::fmt::Display + 
 /// execution-canceled-due-to-execution-worker-congestion  = %d40 u64
 /// move-vector-elem-too-big                               = %d41 u64 u64
 /// move-raw-value-too-big                                 = %d42 u64 u64
+/// receiving-object-mismatch                              = %d43 object-id
+/// move-authenticator-account-unresolved                  = %d44 object-id
 /// ```
 // WARNING: The variant order of this enum is protocol-significant. Each variant's position
 // determines its BCS discriminant (the integer sent over the wire).
@@ -471,6 +475,15 @@ pub enum ExecutionError {
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         max_scaled_size: u64,
     },
+    /// The receiving object at the version the transaction names does not
+    /// match the reference: its digest differs, it is not owned by an
+    /// address, or it is a package.
+    #[error("Receiving object {object_id} does not match its reference at the named version")]
+    ReceivingObjectMismatch { object_id: ObjectId },
+    /// The Move authenticator's account has no usable authenticator function:
+    /// the field is missing or does not decode.
+    #[error("Move authenticator account {account_object_id} has no usable authenticator function")]
+    MoveAuthenticatorAccountUnresolved { account_object_id: ObjectId },
 }
 
 impl ExecutionError {
@@ -518,6 +531,8 @@ impl ExecutionError {
         ExecutionCanceledDueToExecutionWorkerCongestion,
         MoveVectorElemTooBig,
         MoveRawValueTooBig,
+        ReceivingObjectMismatch,
+        MoveAuthenticatorAccountUnresolved,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {

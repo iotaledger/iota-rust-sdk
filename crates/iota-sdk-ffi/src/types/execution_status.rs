@@ -304,6 +304,13 @@ pub enum ExecutionError {
         value_size: u64,
         max_scaled_size: u64,
     },
+    /// The receiving object at the version the transaction names does not
+    /// match the reference: its digest differs, it is not owned by an
+    /// address, or it is a package.
+    ReceivingObjectMismatch { object_id: Arc<ObjectId> },
+    /// The Move authenticator's account has no usable authenticator function:
+    /// the field is missing or does not decode.
+    MoveAuthenticatorAccountUnresolved { account_object_id: Arc<ObjectId> },
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -485,6 +492,16 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 value_size,
                 max_scaled_size,
             },
+            iota_sdk::types::ExecutionError::ReceivingObjectMismatch { object_id } => {
+                Self::ReceivingObjectMismatch {
+                    object_id: Arc::new(object_id.into()),
+                }
+            }
+            iota_sdk::types::ExecutionError::MoveAuthenticatorAccountUnresolved {
+                account_object_id,
+            } => Self::MoveAuthenticatorAccountUnresolved {
+                account_object_id: Arc::new(account_object_id.into()),
+            },
             _ => unimplemented!(
                 "a new ExecutionError enum variant was added and needs to be handled"
             ),
@@ -629,6 +646,16 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 value_size,
                 max_scaled_size,
             },
+            ExecutionError::ReceivingObjectMismatch { object_id } => {
+                Self::ReceivingObjectMismatch {
+                    object_id: **object_id,
+                }
+            }
+            ExecutionError::MoveAuthenticatorAccountUnresolved { account_object_id } => {
+                Self::MoveAuthenticatorAccountUnresolved {
+                    account_object_id: **account_object_id,
+                }
+            }
         }
     }
 }
