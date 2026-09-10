@@ -256,8 +256,10 @@ where
                                 backoff = INITIAL_BACKOFF;
                                 yield Ok(value);
                             }
+                            // A negative count cannot happen; report 0
+                            // rather than its magnitude.
                             Ok(Outcome::Lagged(count)) => yield Err(Error::Lagged {
-                                count: count.unsigned_abs(),
+                                count: u32::try_from(count).unwrap_or(0),
                             }),
                             Ok(Outcome::Skip) => {}
                             Err(error) => {
