@@ -23,9 +23,9 @@ use crate::{
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct MoveObjectFilter {
     /// Filter by the address owning the object.
-    pub owner: Option<Address>,
+    owner: Option<Address>,
     /// Filter by object ids.
-    pub object_ids: Option<Vec<ObjectId>>,
+    object_ids: Option<Vec<ObjectId>>,
 }
 
 impl MoveObjectFilter {
