@@ -190,7 +190,7 @@ pub use transaction::{
 };
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
-pub use validator::InvalidSignerBitmap;
+pub use validator::SignerBitmapError;
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeError,
     ValidatorCommitteeMember, ValidatorSignature,

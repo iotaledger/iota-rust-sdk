@@ -177,7 +177,7 @@ pub struct ValidatorAggregatedSignature {
 #[derive(Debug, thiserror::Error)]
 #[error("invalid signer bitmap: {0}")]
 #[non_exhaustive]
-pub struct InvalidSignerBitmap(String);
+pub struct SignerBitmapError(String);
 
 impl ValidatorAggregatedSignature {
     /// Construct an aggregated signature from the committee indices of the
@@ -208,12 +208,12 @@ impl ValidatorAggregatedSignature {
         epoch: EpochId,
         signature: Bls12381Signature,
         bitmap: &[u8],
-    ) -> Result<Self, InvalidSignerBitmap> {
+    ) -> Result<Self, SignerBitmapError> {
         Ok(Self {
             epoch,
             signature,
             bitmap: roaring::RoaringBitmap::deserialize_from(bitmap)
-                .map_err(|e| InvalidSignerBitmap(e.to_string()))?,
+                .map_err(|e| SignerBitmapError(e.to_string()))?,
         })
     }
 

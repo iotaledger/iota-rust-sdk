@@ -66,7 +66,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::IntentScope>();
     assert_display::<iota_sdk_types::IntentVersion>();
     assert_display::<iota_sdk_types::InvalidSignatureScheme>();
-    assert_display::<iota_sdk_types::InvalidSignerBitmap>();
+    assert_display::<iota_sdk_types::SignerBitmapError>();
     assert_display::<iota_sdk_types::iota_names::config::IotaNamesConfig>();
     assert_display::<iota_sdk_types::iota_names::error::IotaNamesError>();
     assert_display::<iota_sdk_types::MakeMoveVector>();
