@@ -188,9 +188,16 @@ impl Client {
         }
     }
 
-    /// Lazily fetch the max page size
+    /// Get the maximum page size from the service configuration.
     pub async fn max_page_size(&self) -> Result<i32> {
         self.service_config().await.map(|cfg| cfg.max_page_size)
+    }
+
+    /// Get the maximum query payload size from the service configuration.
+    pub async fn max_query_payload_size(&self) -> Result<i32> {
+        self.service_config()
+            .await
+            .map(|cfg| cfg.max_query_payload_size)
     }
 }
 

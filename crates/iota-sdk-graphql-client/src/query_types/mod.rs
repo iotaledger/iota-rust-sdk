@@ -86,7 +86,8 @@ pub use transaction::{
     TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery, TransactionBlockIndexedQuery,
     TransactionBlockKindInput, TransactionBlockQuery, TransactionBlockWithEffects,
     TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
-    TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery, TransactionsFilter,
+    TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery, TransactionsByDigestsPage,
+    TransactionsByDigestsQuery, TransactionsByDigestsQueryArgs, TransactionsFilter,
 };
 
 use crate::error;

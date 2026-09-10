@@ -4,7 +4,7 @@
 
 //! Transactions API implementation.
 
-use std::time::Duration;
+use std::{collections::HashMap, time::Duration};
 
 use base64ct::Encoding;
 use cynic::{MutationBuilder, QueryBuilder};
@@ -25,10 +25,20 @@ use crate::{
         TransactionBlockArgs, TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery,
         TransactionBlockIndexedQuery, TransactionBlockQuery, TransactionBlockWithEffectsQuery,
         TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
-        TransactionBlocksWithEffectsQuery, TransactionsFilter,
+        TransactionBlocksWithEffectsQuery, TransactionsByDigestsQuery,
+        TransactionsByDigestsQueryArgs, TransactionsFilter,
     },
     streams::stream_paginated_query,
 };
+
+/// Bytes a digest adds to the `digests` argument of a query payload: a
+/// base58 digest is at most 44 characters, sent quoted and comma-separated.
+const DIGEST_PAYLOAD_SIZE: usize = 44 + 3;
+
+/// Bytes held back for the pagination cursor, which the server hands out with
+/// the first page and every later page of the same request echoes back. A
+/// `transactionsByDigests` cursor is base64 over two `u64`s, well below this.
+const CURSOR_PAYLOAD_RESERVE: usize = 128;
 
 impl Client {
     /// Get a transaction by its digest.
@@ -74,6 +84,114 @@ impl Client {
             .map(|n| n.try_into())
             .collect::<Result<Vec<_>>>()?;
         Ok(Page::new(page_info, transactions))
+    }
+
+    /// Get transactions by their digests, including transactions that are not
+    /// checkpointed yet. Digests that were not found are absent from the
+    /// returned map.
+    pub async fn transactions_by_digest(
+        &self,
+        digests: impl IntoIterator<Item = TransactionDigest>,
+    ) -> Result<HashMap<TransactionDigest, SignedTransaction>> {
+        let digests = digests.into_iter().collect::<Vec<_>>();
+        if digests.is_empty() {
+            return Ok(HashMap::new());
+        }
+
+        // One page per round trip, so ask for the largest the server allows.
+        // Falling back to `None` leaves the page size up to the server.
+        let limit = self.max_page_size().await.ok();
+        let chunk_size = self.digests_per_query(limit).await?;
+
+        let mut transactions = HashMap::with_capacity(digests.len());
+        for chunk in digests.chunks(chunk_size) {
+            transactions.extend(self.request_transactions_by_digest(chunk, limit).await?);
+        }
+
+        Ok(transactions)
+    }
+
+    /// How many digests fit into one `transactionsByDigests` request.
+    ///
+    /// The server measures the whole request body against
+    /// `maxQueryPayloadSize`, so the digest list only gets what the query text
+    /// and the cursor leave over.
+    async fn digests_per_query(&self, limit: Option<i32>) -> Result<usize> {
+        // Measure the payload of a request without digests rather than
+        // predicting how the query is serialized.
+        let empty = TransactionsByDigestsQuery::build(TransactionsByDigestsQueryArgs {
+            digests: Vec::new(),
+            limit,
+            cursor: None,
+        });
+        let overhead = serde_json::to_string(&empty)
+            .map_err(|e| Error::from_error(Kind::Query, e))?
+            .len()
+            + CURSOR_PAYLOAD_RESERVE;
+
+        let budget = self.max_query_payload_size().await? as usize;
+        let chunk_size = budget.saturating_sub(overhead) / DIGEST_PAYLOAD_SIZE;
+
+        if chunk_size == 0 {
+            return Err(Error::from_message(
+                Kind::Query,
+                format!(
+                    "a single digest exceeds the server's query payload limit of {budget} bytes"
+                ),
+            ));
+        }
+
+        Ok(chunk_size)
+    }
+
+    /// Walk the pages of one `transactionsByDigests` request to the end.
+    async fn request_transactions_by_digest(
+        &self,
+        digests: &[TransactionDigest],
+        limit: Option<i32>,
+    ) -> Result<HashMap<TransactionDigest, SignedTransaction>> {
+        let mut transactions = HashMap::with_capacity(digests.len());
+        let mut cursor = None;
+        let mut digest_idx = 0;
+        let digest_strings = digests.iter().map(|d| d.to_string()).collect::<Vec<_>>();
+        loop {
+            let operation = TransactionsByDigestsQuery::build(TransactionsByDigestsQueryArgs {
+                digests: digest_strings.clone(),
+                limit,
+                cursor,
+            });
+            let page = self.run_query(&operation).await?.transactions_by_digests;
+
+            if page.nodes.is_empty() {
+                break;
+            }
+            for node in page.nodes.into_iter() {
+                if let Some(node) = node {
+                    let transaction: SignedTransaction = node.try_into()?;
+                    transactions.insert(digests[digest_idx], transaction);
+                }
+                digest_idx += 1;
+            }
+
+            cursor = page.end_cursor;
+            if !page.has_next_page || cursor.is_none() || digest_idx >= digests.len() {
+                break;
+            }
+        }
+
+        // The server holds one node per digest, so a short response means the
+        // pages could not be walked to the end.
+        if digest_idx != digests.len() {
+            return Err(Error::from_message(
+                Kind::Query,
+                format!(
+                    "expected one entry per digest, got {digest_idx} for {} digests",
+                    digests.len()
+                ),
+            ));
+        }
+
+        Ok(transactions)
     }
 
     /// Get a page of transactions related to the given address.
@@ -337,6 +455,8 @@ impl Client {
 
 #[cfg(test)]
 mod tests {
+    use iota_types::TransactionDigest;
+
     use crate::{
         PaginationFilter,
         query_types::{AddressTransactionRelationship, TransactionsFilter},
@@ -392,6 +512,26 @@ mod tests {
             "Transactions query returned no data for {} network",
             client.rpc_server()
         );
+    }
+
+    #[tokio::test]
+    async fn test_transactions_by_digest() {
+        let client = test_client();
+        let transactions = client
+            .transactions(None, PaginationFilter::default())
+            .await
+            .unwrap();
+        let digest = transactions.data()[0].transaction.digest();
+        let missing = TransactionDigest::MAX;
+
+        let transactions = client
+            .transactions_by_digest([digest, missing])
+            .await
+            .unwrap();
+
+        assert_eq!(transactions.len(), 1);
+        assert!(transactions.contains_key(&digest));
+        assert!(!transactions.contains_key(&missing));
     }
 
     #[tokio::test]
