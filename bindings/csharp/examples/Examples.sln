@@ -94,7 +94,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecodeStakedIota", "DecodeStakedIota\DecodeStakedIota.csproj", "{C7A4D1E5-3B82-4F09-A6B7-1E9D5C8F4A23}"
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressTransactions", "AddressTransactions\AddressTransactions.csproj", "{042B80AD-AD76-4608-AFA7-4D65CD70DD93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcServiceInfo", "GrpcServiceInfo\GrpcServiceInfo.csproj", "{ACE4A8DE-278B-4A3B-97ED-CB5E739EA25F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceInfoGrpc", "ServiceInfoGrpc\ServiceInfoGrpc.csproj", "{ACE4A8DE-278B-4A3B-97ED-CB5E739EA25F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

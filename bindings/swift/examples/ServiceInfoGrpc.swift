@@ -4,7 +4,7 @@
 import IotaSDK
 
 @main
-struct GrpcServiceInfoExample {
+struct ServiceInfoGrpcExample {
   static func main() async throws {
     let client = try GrpcClient.newLocalnet()
 

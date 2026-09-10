@@ -89,9 +89,9 @@ iota-graphql-client-build.workspace = true
 
 # gRPC examples: skipped unless the gRPC TLS features are enabled (e.g.
 # `cargo run --example get_object_grpc --features grpc-tls-native-roots,grpc-tls-ring`).
-# `grpc_service_info` targets localnet over plain HTTP and only needs `grpc`.
+# `service_info_grpc` targets localnet over plain HTTP and only needs `grpc`.
 [[example]]
-name = "grpc_service_info"
+name = "service_info_grpc"
 required-features = ["grpc"]
 
 [[example]]
