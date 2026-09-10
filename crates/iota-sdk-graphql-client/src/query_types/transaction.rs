@@ -239,6 +239,8 @@ pub enum TransactionsSelector {
     Kind(TransactionBlockKindInput),
     /// Select transactions that sent an object to the given address.
     RecvAddress(Address),
+    /// Select transactions that affected the given address.
+    AffectedAddress(Address),
     /// Select transactions that used the given object as an input.
     InputObject(ObjectId),
     /// Select transactions that output a version of the given object.
@@ -290,6 +292,17 @@ impl TransactionsFilter {
     /// Replaces the selector already set, if any.
     pub fn with_recv_address(self, recv_address: impl Into<Option<Address>>) -> Self {
         self.with_selector(recv_address.into().map(TransactionsSelector::RecvAddress))
+    }
+
+    /// Select transactions that affected the given address.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_affected_address(self, affected_address: impl Into<Option<Address>>) -> Self {
+        self.with_selector(
+            affected_address
+                .into()
+                .map(TransactionsSelector::AffectedAddress),
+        )
     }
 
     /// Select transactions that used the given object as an input.
@@ -395,6 +408,7 @@ pub struct TransactionBlockFilter {
     at_checkpoint: Option<u64>,
     before_checkpoint: Option<u64>,
     sent_address: Option<Address>,
+    affected_address: Option<Address>,
     recv_address: Option<Address>,
     input_object: Option<ObjectId>,
     changed_object: Option<ObjectId>,
@@ -427,6 +441,9 @@ impl From<TransactionsFilter> for TransactionBlockFilter {
                 TransactionsSelector::Function(function) => input.function = Some(function),
                 TransactionsSelector::Kind(kind) => input.kind = Some(kind),
                 TransactionsSelector::RecvAddress(address) => input.recv_address = Some(address),
+                TransactionsSelector::AffectedAddress(address) => {
+                    input.affected_address = Some(address)
+                }
                 TransactionsSelector::InputObject(object_id) => {
                     input.input_object = Some(object_id)
                 }

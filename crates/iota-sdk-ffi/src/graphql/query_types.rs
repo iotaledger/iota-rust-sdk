@@ -152,6 +152,14 @@ impl TransactionsFilter {
         self
     }
 
+    /// Select transactions that affected the given address.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_affected_address(self: Arc<Self>, affected_address: &Address) -> Arc<Self> {
+        self.update(|filter| filter.with_affected_address(**affected_address));
+        self
+    }
+
     /// Select transactions that used the given object as an input.
     ///
     /// Replaces the selector already set, if any.
