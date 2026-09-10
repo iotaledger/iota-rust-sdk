@@ -235,9 +235,8 @@
 //!   client is provided. This will be assumed immutable or owned.
 //! - [ObjectReference](iota_types::ObjectReference): An object's reference.
 //!   This will be assumed immutable or owned.
-//! - [Assigned](builder::ptb_arguments::Assigned): A reference to the result of
-//!   a previous assigned command, set with
-//!   [assign](TransactionBuilder::assign).
+//! - [Assigned]: A reference to the result of a previous assigned command, set
+//!   with [assign](TransactionBuilder::assign).
 //! - [Shared]: Allows specifying shared immutable move objects.
 //! - [SharedMut]: Allows specifying shared mutable move objects.
 //! - [Receiving]: Allows specifying receiving move objects.
@@ -300,7 +299,7 @@
 #![warn(missing_docs)]
 #![deny(unreachable_pub)]
 
-pub mod builder;
+mod builder;
 pub mod error;
 pub mod types;
 #[allow(missing_docs)]
@@ -310,16 +309,19 @@ pub mod unresolved;
 pub use self::builder::client::test_client::{RecordingClient, TestClient, TestClientError};
 pub use self::{
     builder::{
-        TransactionBuilder,
+        TransactionBuildData, TransactionBuilder,
         client::{
             ObjectsPage, ProtocolConfig, TransactionBuilderClient, TransactionBuilderClientBase,
             TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
             TransactionBuilderSimulationClient, WaitForTransaction,
         },
         move_authenticator::MoveAuthenticatorBuilder,
-        ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
+        ptb_arguments::{
+            Assigned, PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned,
+        },
         signer::TransactionSigner,
     },
+    error::TransactionBuilderError,
     types::PureBytes,
 };
 
@@ -496,7 +498,7 @@ mod tests {
             let builder = super::builder_with(FixedEstimateClient(TestClient, None));
             assert!(matches!(
                 builder.finish().await,
-                Err(crate::error::Error::MissingGasBudget)
+                Err(crate::error::TransactionBuilderError::MissingGasBudget)
             ));
         }
 
@@ -746,7 +748,7 @@ mod tests {
         });
         assert!(matches!(
             TransactionBuilder::try_from(txn),
-            Err(crate::error::Error::UnsupportedTransactionKind)
+            Err(crate::error::TransactionBuilderError::UnsupportedTransactionKind)
         ));
     }
 }
