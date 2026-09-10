@@ -20,11 +20,8 @@ use crate::{
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// event = object-id identifier address struct-tag bytes
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct Event {
     /// Package id of the top-level function invoked by a MoveCall command which
@@ -72,11 +69,8 @@ impl From<iota_sdk::types::Event> for Event {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// transaction-events = vector event
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(derive_more::From, uniffi::Object)]
 pub struct TransactionEvents(pub iota_sdk::types::TransactionEvents);
 

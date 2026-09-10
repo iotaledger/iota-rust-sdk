@@ -51,11 +51,6 @@ impl_crypto_object!(
     ///
     /// # BCS
     ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// bls12381-public-key = %d96 96OCTET
-    /// ```
     ///
     /// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
     /// fixed-length of 96, IOTA's binary representation of a min-sig
@@ -66,13 +61,6 @@ impl_crypto_object!(
 impl_crypto_object!(
     /// An ed25519 public key.
     ///
-    /// # BCS
-    ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// ed25519-public-key = 32OCTET
-    /// ```
     Ed25519PublicKey
 );
 
@@ -102,13 +90,6 @@ impl Ed25519PublicKey {
 impl_crypto_object!(
     /// A secp256k1 public key.
     ///
-    /// # BCS
-    ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// secp256k1-public-key = 33OCTET
-    /// ```
     Secp256k1PublicKey
 );
 
@@ -139,13 +120,6 @@ impl Secp256k1PublicKey {
 impl_crypto_object!(
     /// A secp256r1 public key.
     ///
-    /// # BCS
-    ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// secp256r1-public-key = 33OCTET
-    /// ```
     Secp256r1PublicKey
 );
 
@@ -176,49 +150,21 @@ impl Secp256r1PublicKey {
 impl_crypto_object!(
     /// An ed25519 signature.
     ///
-    /// # BCS
-    ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// ed25519-signature = 64OCTET
-    /// ```
     Ed25519Signature
 );
 impl_crypto_object!(
     /// A bls12381 min-sig signature.
     ///
-    /// # BCS
-    ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// bls12381-signature = 48OCTET
-    /// ```
     Bls12381Signature
 );
 impl_crypto_object!(
     /// A secp256k1 signature.
     ///
-    /// # BCS
-    ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// secp256k1-signature = 64OCTET
-    /// ```
     Secp256k1Signature
 );
 impl_crypto_object!(
     /// A secp256r1 signature.
     ///
-    /// # BCS
-    ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// secp256r1-signature = 64OCTET
-    /// ```
     Secp256r1Signature
 );
 

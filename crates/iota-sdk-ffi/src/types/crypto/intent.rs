@@ -56,11 +56,8 @@ impl From<IntentError> for iota_sdk::types::IntentError {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// intent-scope = u8
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum IntentScope {
     /// Used for a user signature on a transaction data.
@@ -130,11 +127,8 @@ impl From<IntentScope> for iota_sdk::types::IntentScope {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// intent-version = u8
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum IntentVersion {
     V0 = 0,
@@ -169,11 +163,8 @@ impl From<IntentVersion> for iota_sdk::types::IntentVersion {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// intent-app-id = u8
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum IntentAppId {
     Iota = 0,
@@ -213,11 +204,8 @@ impl From<IntentAppId> for iota_sdk::types::IntentAppId {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// intent = intent-scope intent-version intent-app-id
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct Intent(pub iota_sdk::types::Intent);

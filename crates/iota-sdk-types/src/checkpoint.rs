@@ -18,13 +18,8 @@ pub type ProtocolVersion = u64;
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// ; CheckpointCommitment is an enum and each variant is prefixed with its index
-/// checkpoint-commitment = ecmh-live-object-set
-/// ecmh-live-object-set = %d00 digest
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -61,14 +56,8 @@ impl std::fmt::Display for CheckpointCommitment {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// end-of-epoch-data = (vector validator-committee-member)   ; next-epoch-committee
-///                     u64                                   ; next-epoch-protocol-version
-///                     (vector checkpoint-commitment)        ; epoch-commitments
-///                     i64                                   ; epoch-supply-change
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -128,20 +117,8 @@ impl crate::TreeDisplay for EndOfEpochData {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// checkpoint-summary = u64                            ; epoch
-///                      u64                            ; sequence_number
-///                      u64                            ; network_total_transactions
-///                      checkpoint-contents-digest     ; contents_digest
-///                      (option checkpoint-digest)     ; previous_digest
-///                      gas-cost-summary               ; epoch_rolling_gas_cost_summary
-///                      u64                            ; timestamp_ms
-///                      (vector checkpoint-commitment) ; checkpoint_commitments
-///                      (option end-of-epoch-data)     ; end_of_epoch_data
-///                      bytes                          ; version_specific_data
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, derive_more::Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -321,6 +298,10 @@ impl CheckpointSummary {
     }
 }
 
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -346,11 +327,8 @@ impl crate::TreeDisplay for SignedCheckpointSummary {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -404,16 +382,8 @@ impl CheckpointContents {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
-///                          (vector (vector user-signature)) ; set of user signatures for each
-///                                                           ; transaction. MUST be the same
-///                                                           ; length as the vector of digests
-///
-/// execution-digests = transaction-digest transaction-effects-digest   ; transaction, effects
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct CheckpointContentsV1 {
@@ -465,6 +435,11 @@ impl crate::TreeDisplay for CheckpointContentsV1 {
 }
 
 /// Transaction information committed to in a checkpoint
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -484,6 +459,10 @@ impl crate::TreeDisplay for CheckpointTransactionInfo {
     }
 }
 
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -504,6 +483,10 @@ impl crate::TreeDisplay for CheckpointData {
     }
 }
 
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
