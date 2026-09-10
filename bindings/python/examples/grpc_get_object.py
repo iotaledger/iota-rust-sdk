@@ -12,9 +12,9 @@ async def main():
     object_id = ObjectId.from_hex(
         "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
 
-    # `objects` is batched: it takes a list of requests and returns the objects
-    # in the same order.
-    obj = (await client.objects([ObjectRequest(object_id=object_id)]))[0]
+    # `objects` is batched: it takes a list of ids and returns the objects in
+    # the same order.
+    obj = (await client.objects([object_id]))[0]
 
     print("Object ID:", obj.id().to_hex())
     print("Version:", obj.version())

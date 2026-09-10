@@ -3,7 +3,6 @@
 
 import iota_sdk.GrpcClient
 import iota_sdk.ObjectId
-import iota_sdk.ObjectRequest
 import iota_sdk.hexEncode
 import kotlinx.coroutines.runBlocking
 
@@ -14,9 +13,9 @@ fun main() = runBlocking {
         val objectId =
             ObjectId.fromHex("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
 
-        // `objects` is batched: it takes a list of requests and returns the objects
-        // in the same order.
-        val obj = client.objects(listOf(ObjectRequest(objectId)))[0]
+        // `objects` is batched: it takes a list of ids and returns the objects in
+        // the same order.
+        val obj = client.objects(listOf(objectId))[0]
 
         println("Object ID: ${obj.id().toHex()}")
         println("Version: ${obj.version()}")

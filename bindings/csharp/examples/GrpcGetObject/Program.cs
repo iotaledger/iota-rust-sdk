@@ -11,9 +11,9 @@ class Program
 
         var objectId = ObjectId.FromHex("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755");
 
-        // `Objects` is batched: it takes a list of requests and returns the objects
-        // in the same order.
-        var obj = (await client.Objects(new[] { new ObjectRequest(objectId, null) }))[0];
+        // `Objects` is batched: it takes a list of ids and returns the objects in
+        // the same order.
+        var obj = (await client.Objects(new[] { objectId }))[0];
 
         Console.WriteLine($"Object ID: {obj.Id().ToHex()}");
         Console.WriteLine($"Version: {obj.Version()}");

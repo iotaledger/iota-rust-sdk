@@ -11,9 +11,9 @@ struct GrpcGetObjectExample {
     let objectId = try ObjectId.fromHex(
       hex: "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
 
-    // `objects` is batched: it takes a list of requests and returns the objects
-    // in the same order.
-    let obj = try await client.objects(requests: [ObjectRequest(objectId: objectId)])[0]
+    // `objects` is batched: it takes a list of ids and returns the objects in
+    // the same order.
+    let obj = try await client.objects(objectIds: [objectId])[0]
 
     print("Object ID:", obj.id().toHex())
     print("Version:", obj.version())

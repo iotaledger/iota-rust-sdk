@@ -21,9 +21,9 @@ func main() {
 		log.Fatalf("Failed to parse object ID: %v", err)
 	}
 
-	// `Objects` is batched: it takes a list of requests and returns the objects
-	// in the same order.
-	objects, err := client.Objects([]iota_sdk.ObjectRequest{{ObjectId: objectID}})
+	// `Objects` is batched: it takes a list of ids and returns the objects in
+	// the same order.
+	objects, err := client.Objects([]*iota_sdk.ObjectId{objectID})
 	if err != nil {
 		log.Fatalf("Failed to get object: %v", err)
 	}
