@@ -11,7 +11,7 @@ use iota_grpc_types::{
 
 use crate::{
     Client,
-    api::{MetadataEnvelope, Result, TryFromProtoError},
+    api::{GrpcResult, MetadataEnvelope, TryFromProtoError},
 };
 
 impl Client {
@@ -43,12 +43,12 @@ impl Client {
     /// let client = Client::new_localnet()?;
     ///
     /// // Current epoch with the default mask.
-    /// let epoch = client.get_epoch(None, EpochReadMask::default()).await?;
+    /// let epoch = client.epoch(None, EpochReadMask::default()).await?;
     /// println!("Epoch: {:?}", epoch.body().epoch);
     ///
     /// // Specific epoch with selected fields.
     /// let epoch = client
-    ///     .get_epoch(
+    ///     .epoch(
     ///         Some(0),
     ///         EpochReadMask::from([
     ///             EpochField::EPOCH,
@@ -60,7 +60,7 @@ impl Client {
     ///
     /// // All feature flags for the current epoch.
     /// let epoch = client
-    ///     .get_epoch(
+    ///     .epoch(
     ///         None,
     ///         EpochReadMask::from(EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS),
     ///     )
@@ -70,7 +70,7 @@ impl Client {
     ///
     /// // A single named feature flag.
     /// let epoch = client
-    ///     .get_epoch(
+    ///     .epoch(
     ///         None,
     ///         EpochReadMask::from(EpochField::feature_flag("enable_vdf")),
     ///     )
@@ -78,7 +78,7 @@ impl Client {
     ///
     /// // A single named attribute.
     /// let epoch = client
-    ///     .get_epoch(
+    ///     .epoch(
     ///         None,
     ///         EpochReadMask::from(EpochField::attribute("max_tx_gas")),
     ///     )
@@ -86,11 +86,11 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_epoch(
+    pub async fn epoch(
         &self,
         epoch: impl Into<Option<u64>>,
         read_mask: impl IntoReadMask<EpochReadMask>,
-    ) -> Result<MetadataEnvelope<Epoch>> {
+    ) -> GrpcResult<MetadataEnvelope<Epoch>> {
         let read_mask = read_mask.into_read_mask();
         let mut request = GetEpochRequest::default().with_read_mask(read_mask);
 
@@ -115,22 +115,22 @@ impl Client {
     /// # use iota_sdk_grpc_client::Client;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
-    /// let gas_price = client.get_reference_gas_price().await?.into_inner();
+    /// let gas_price = client.reference_gas_price().await?.into_inner();
     /// println!("Reference gas price: {gas_price} NANOS");
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_reference_gas_price(&self) -> Result<MetadataEnvelope<u64>> {
-        self.get_epoch_field("reference_gas_price", |e| e.reference_gas_price)
+    pub async fn reference_gas_price(&self) -> GrpcResult<MetadataEnvelope<u64>> {
+        self.epoch_field("reference_gas_price", |e| e.reference_gas_price)
             .await
     }
 
     /// Internal helper to fetch a single field from the current epoch.
-    async fn get_epoch_field<T>(
+    async fn epoch_field<T>(
         &self,
         field: &str,
         extractor: impl FnOnce(Epoch) -> Option<T>,
-    ) -> Result<MetadataEnvelope<T>> {
+    ) -> GrpcResult<MetadataEnvelope<T>> {
         // Current epoch (no epoch field set)
         let request = GetEpochRequest::default().with_read_mask(FieldMask {
             paths: vec![field.to_string()],

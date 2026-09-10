@@ -10,7 +10,7 @@ use iota_grpc_types::{
 
 use crate::{
     Client,
-    api::{MetadataEnvelope, Result},
+    api::{GrpcResult, MetadataEnvelope},
 };
 
 impl Client {
@@ -32,15 +32,13 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     ///
-    /// let info = client
-    ///     .get_service_info(ServiceInfoReadMask::default())
-    ///     .await?;
+    /// let info = client.service_info(ServiceInfoReadMask::default()).await?;
     /// println!("Chain ID: {:?}", info.body().chain_id);
     /// println!("Epoch: {:?}", info.body().epoch);
     ///
     /// // With a custom mask.
     /// let info = client
-    ///     .get_service_info(ServiceInfoReadMask::from([
+    ///     .service_info(ServiceInfoReadMask::from([
     ///         ServiceInfoField::CHAIN_ID,
     ///         ServiceInfoField::EPOCH,
     ///     ]))
@@ -48,10 +46,10 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_service_info(
+    pub async fn service_info(
         &self,
         read_mask: impl IntoReadMask<ServiceInfoReadMask>,
-    ) -> Result<MetadataEnvelope<GetServiceInfoResponse>> {
+    ) -> GrpcResult<MetadataEnvelope<GetServiceInfoResponse>> {
         let read_mask = read_mask.into_read_mask();
         let request = GetServiceInfoRequest::default().with_read_mask(read_mask);
 

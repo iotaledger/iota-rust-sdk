@@ -8,7 +8,7 @@ use iota_types::StructTag;
 
 use crate::{
     Client,
-    api::{MetadataEnvelope, Result},
+    api::{GrpcResult, MetadataEnvelope},
 };
 
 impl Client {
@@ -30,16 +30,16 @@ impl Client {
     /// let client = Client::new_localnet()?;
     /// let coin_type: StructTag = "0x2::iota::IOTA".parse()?;
     ///
-    /// let response = client.get_coin_info(coin_type).await?;
+    /// let response = client.coin_info(coin_type).await?;
     /// let info = response.body();
     /// println!("Coin info: {:?}", info);
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_coin_info(
+    pub async fn coin_info(
         &self,
         coin_type: StructTag,
-    ) -> Result<MetadataEnvelope<GetCoinInfoResponse>> {
+    ) -> GrpcResult<MetadataEnvelope<GetCoinInfoResponse>> {
         let request = GetCoinInfoRequest::default().with_coin_type(coin_type.to_string());
 
         let mut client = self.state_service_client();

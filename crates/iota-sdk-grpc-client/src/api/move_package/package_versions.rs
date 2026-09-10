@@ -17,7 +17,7 @@ use crate::{
 define_list_query! {
     /// Builder for listing versions of a Move package.
     ///
-    /// Created by [`Client::list_package_versions`]. Await directly for a
+    /// Created by [`Client::package_versions`]. Await directly for a
     /// single page, or call [`.collect(limit)`](Self::collect) to
     /// auto-paginate.
     pub struct ListPackageVersionsQuery {
@@ -52,7 +52,7 @@ impl Client {
     /// let client = Client::new_localnet()?;
     /// let package_id: ObjectId = "0x2".parse()?;
     ///
-    /// let page = client.list_package_versions(package_id, None, None).await?;
+    /// let page = client.package_versions(package_id, None, None).await?;
     /// for version in &page.body().items {
     ///     println!("Package version: {:?}", version);
     /// }
@@ -69,7 +69,7 @@ impl Client {
     /// let package_id: ObjectId = "0x2".parse()?;
     ///
     /// let all = client
-    ///     .list_package_versions(package_id, Some(50), None)
+    ///     .package_versions(package_id, Some(50), None)
     ///     .collect(None)
     ///     .await?;
     /// for version in all.body() {
@@ -78,7 +78,7 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn list_package_versions(
+    pub fn package_versions(
         &self,
         package_id: ObjectId,
         page_size: impl Into<Option<u32>>,

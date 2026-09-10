@@ -15,17 +15,42 @@ use iota_types::Transaction;
 use crate::{
     Client,
     api::{
-        Error, MetadataEnvelope, ProtocolError, Result, build_proto_transaction, into_item_results,
+        GrpcError, GrpcResult, MetadataEnvelope, ProtocolError, build_proto_transaction,
+        into_item_results,
     },
 };
 
 /// A single transaction with simulation options for use in batch simulation.
 pub struct SimulateTransactionInput {
+    pub(crate) transaction: Transaction,
+    pub(crate) skip_checks: bool,
+}
+
+impl SimulateTransactionInput {
+    /// Simulate `transaction` with the node's usual Move VM checks.
+    pub fn new(transaction: Transaction) -> Self {
+        Self {
+            transaction,
+            skip_checks: false,
+        }
+    }
+
+    /// Ask for relaxed Move VM checks, which is useful for debugging and
+    /// development.
+    pub fn skip_checks(mut self, skip_checks: bool) -> Self {
+        self.skip_checks = skip_checks;
+        self
+    }
+
     /// The transaction to simulate.
-    pub transaction: Transaction,
-    /// Set to true for relaxed Move VM checks (useful for debugging and
-    /// development).
-    pub skip_checks: bool,
+    pub fn transaction(&self) -> &Transaction {
+        &self.transaction
+    }
+
+    /// Whether the node is asked to relax its Move VM checks.
+    pub fn is_skip_checks_enabled(&self) -> bool {
+        self.skip_checks
+    }
 }
 
 impl Client {
@@ -90,12 +115,9 @@ impl Client {
         transaction: Transaction,
         skip_checks: bool,
         read_mask: impl IntoReadMask<SimulateReadMask>,
-    ) -> Result<MetadataEnvelope<SimulatedTransaction>> {
+    ) -> GrpcResult<MetadataEnvelope<SimulatedTransaction>> {
         self.simulate_transactions(
-            vec![SimulateTransactionInput {
-                transaction,
-                skip_checks,
-            }],
+            vec![SimulateTransactionInput::new(transaction).skip_checks(skip_checks)],
             read_mask,
         )
         .await?
@@ -107,9 +129,9 @@ impl Client {
     /// Transactions are simulated sequentially on the server. Each transaction
     /// is independent — failure of one does not abort the rest.
     ///
-    /// Returns a `Vec<Result<SimulatedTransaction>>` in the same order as the
-    /// input. Each element is either the successfully simulated transaction or
-    /// the per-item error returned by the server.
+    /// Returns a `Vec<GrpcResult<SimulatedTransaction>>` in the same order as
+    /// the input. Each element is either the successfully simulated
+    /// transaction or the per-item error returned by the server.
     ///
     /// The `read_mask` controls which fields the server returns for each
     /// `SimulatedTransaction`; use `SimulateReadMask::default()` for the
@@ -119,23 +141,23 @@ impl Client {
     ///
     /// # Errors
     ///
-    /// Returns [`Error::EmptyRequest`] if `transactions` is empty.
-    /// Returns a transport-level [`Error::Grpc`] if the entire RPC fails
+    /// Returns [`GrpcError::EmptyRequest`] if `transactions` is empty.
+    /// Returns a transport-level [`GrpcError::Grpc`] if the entire RPC fails
     /// (e.g. batch size exceeded).
     pub async fn simulate_transactions(
         &self,
         transactions: Vec<SimulateTransactionInput>,
         read_mask: impl IntoReadMask<SimulateReadMask>,
-    ) -> Result<MetadataEnvelope<Vec<Result<SimulatedTransaction>>>> {
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<SimulatedTransaction>>>> {
         let read_mask = read_mask.into_read_mask();
         if transactions.is_empty() {
-            return Err(Error::EmptyRequest);
+            return Err(GrpcError::EmptyRequest);
         }
 
         let items = transactions
             .into_iter()
             .map(|input| build_simulate_item(input.transaction, input.skip_checks))
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GrpcResult<Vec<_>>>()?;
 
         let request = SimulateTransactionsRequest::default()
             .with_transactions(items)
@@ -151,19 +173,18 @@ impl Client {
 }
 
 fn extract_single_simulation_result(
-    results: Vec<Result<SimulatedTransaction>>,
-) -> Result<SimulatedTransaction> {
-    results
-        .into_iter()
-        .next()
-        .ok_or_else(|| Error::Protocol(ProtocolError::EmptyResponseField("transaction_results")))?
+    results: Vec<GrpcResult<SimulatedTransaction>>,
+) -> GrpcResult<SimulatedTransaction> {
+    results.into_iter().next().ok_or_else(|| {
+        GrpcError::Protocol(ProtocolError::EmptyResponseField("transaction_results"))
+    })?
 }
 
 /// Convert a transaction and options into a proto `SimulateTransactionItem`.
 fn build_simulate_item(
     transaction: Transaction,
     skip_checks: bool,
-) -> Result<SimulateTransactionItem> {
+) -> GrpcResult<SimulateTransactionItem> {
     let proto_transaction = build_proto_transaction(&transaction, transaction.digest())?;
 
     let tx_checks = if skip_checks {

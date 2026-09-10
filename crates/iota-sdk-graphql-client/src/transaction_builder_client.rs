@@ -82,7 +82,7 @@ impl TransactionBuilderLedgerClient for Client {
             .into_iter()
             .filter_map(|attr| attr.value.map(|v| (attr.key, v)))
             .collect();
-        Ok(ProtocolConfig { attributes })
+        Ok(ProtocolConfig::new(attributes))
     }
 
     async fn reference_gas_price(

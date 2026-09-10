@@ -28,10 +28,10 @@ use iota_grpc_types::{
 use iota_types::{CheckpointDigest, CheckpointSequenceNumber};
 
 use crate::{
-    Client, Error,
+    Client, GrpcError,
     api::{
-        CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, MetadataEnvelope,
-        ProtocolError, Result, TryFromProtoError, saturating_usize_to_u32,
+        CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, GrpcResult,
+        MetadataEnvelope, ProtocolError, TryFromProtoError, saturating_usize_to_u32,
     },
 };
 
@@ -58,19 +58,22 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let checkpoint = client
-    ///     .get_checkpoint_latest(None, None, CheckpointResponseReadMask::default())
+    ///     .checkpoint_latest(None, None, CheckpointResponseReadMask::default())
     ///     .await?;
-    /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
+    /// println!(
+    ///     "Received checkpoint {}",
+    ///     checkpoint.body().sequence_number()
+    /// );
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_checkpoint_latest(
+    pub async fn checkpoint_latest(
         &self,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
         read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-    ) -> Result<MetadataEnvelope<CheckpointResponse>> {
-        self.get_checkpoint_internal(
+    ) -> GrpcResult<MetadataEnvelope<CheckpointResponse>> {
+        self.checkpoint_internal(
             get_checkpoint_request::CheckpointId::Latest(true),
             transactions_filter.into(),
             events_filter.into(),
@@ -102,20 +105,23 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let checkpoint = client
-    ///     .get_checkpoint_by_sequence_number(100, None, None, CheckpointResponseReadMask::default())
+    ///     .checkpoint_by_sequence_number(100, None, None, CheckpointResponseReadMask::default())
     ///     .await?;
-    /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
+    /// println!(
+    ///     "Received checkpoint {}",
+    ///     checkpoint.body().sequence_number()
+    /// );
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_checkpoint_by_sequence_number(
+    pub async fn checkpoint_by_sequence_number(
         &self,
         sequence_number: CheckpointSequenceNumber,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
         read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-    ) -> Result<MetadataEnvelope<CheckpointResponse>> {
-        self.get_checkpoint_internal(
+    ) -> GrpcResult<MetadataEnvelope<CheckpointResponse>> {
+        self.checkpoint_internal(
             get_checkpoint_request::CheckpointId::SequenceNumber(sequence_number),
             transactions_filter.into(),
             events_filter.into(),
@@ -149,20 +155,23 @@ impl Client {
     /// let client = Client::new_localnet()?;
     /// let digest: CheckpointDigest = todo!();
     /// let checkpoint = client
-    ///     .get_checkpoint_by_digest(digest, None, None, CheckpointResponseReadMask::default())
+    ///     .checkpoint_by_digest(digest, None, None, CheckpointResponseReadMask::default())
     ///     .await?;
-    /// println!("Received checkpoint {}", checkpoint.body().sequence_number,);
+    /// println!(
+    ///     "Received checkpoint {}",
+    ///     checkpoint.body().sequence_number()
+    /// );
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_checkpoint_by_digest(
+    pub async fn checkpoint_by_digest(
         &self,
         digest: CheckpointDigest,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
         read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-    ) -> Result<MetadataEnvelope<CheckpointResponse>> {
-        self.get_checkpoint_internal(
+    ) -> GrpcResult<MetadataEnvelope<CheckpointResponse>> {
+        self.checkpoint_internal(
             get_checkpoint_request::CheckpointId::Digest(digest.into()),
             transactions_filter.into(),
             events_filter.into(),
@@ -172,13 +181,13 @@ impl Client {
     }
 
     /// Internal helper to fetch checkpoint by any ID type.
-    async fn get_checkpoint_internal(
+    async fn checkpoint_internal(
         &self,
         checkpoint_id: get_checkpoint_request::CheckpointId,
         transactions_filter: Option<grpc_filter::TransactionFilter>,
         events_filter: Option<grpc_filter::EventFilter>,
         read_mask: CheckpointResponseReadMask,
-    ) -> Result<MetadataEnvelope<CheckpointResponse>> {
+    ) -> GrpcResult<MetadataEnvelope<CheckpointResponse>> {
         let mut request = match checkpoint_id {
             get_checkpoint_request::CheckpointId::Latest(val) => {
                 GetCheckpointRequest::default().with_latest(val)
@@ -190,7 +199,7 @@ impl Client {
                 GetCheckpointRequest::default().with_digest(val)
             }
             _ => {
-                return Err(Error::Protocol(ProtocolError::UnknownVariant(
+                return Err(GrpcError::Protocol(ProtocolError::UnknownVariant(
                     "checkpoint ID",
                 )));
             }
@@ -240,7 +249,7 @@ impl Client {
     /// transactions or events within it.
     ///
     /// To skip non-matching checkpoints entirely, use
-    /// [`stream_checkpoints_filtered`](Self::stream_checkpoints_filtered).
+    /// [`checkpoints_stream_filtered`](Self::checkpoints_stream_filtered).
     ///
     /// The `read_mask` controls which fields the server returns; use
     /// `CheckpointResponseReadMask::default()` for the default field mask.
@@ -271,7 +280,7 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let mut stream = client
-    ///     .stream_checkpoints(
+    ///     .checkpoints_stream(
     ///         Some(0),
     ///         Some(10),
     ///         None,
@@ -282,21 +291,22 @@ impl Client {
     ///
     /// while let Some(checkpoint) = stream.body_mut().next().await {
     ///     let checkpoint = checkpoint?;
-    ///     println!("Received checkpoint {}", checkpoint.sequence_number);
+    ///     println!("Received checkpoint {}", checkpoint.sequence_number());
     /// }
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn stream_checkpoints(
+    pub async fn checkpoints_stream(
         &self,
         start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
         end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
         transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
         read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-    ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointResponse>> + Send>>>>
-    {
-        self.stream_checkpoints_internal(
+    ) -> GrpcResult<
+        MetadataEnvelope<Pin<Box<dyn Stream<Item = GrpcResult<CheckpointResponse>> + Send>>>,
+    > {
+        self.checkpoints_stream_internal(
             start_sequence_number.into(),
             end_sequence_number.into(),
             transactions_filter.into(),
@@ -306,17 +316,18 @@ impl Client {
         .await
     }
 
-    async fn stream_checkpoints_internal(
+    async fn checkpoints_stream_internal(
         &self,
         start_sequence_number: Option<CheckpointSequenceNumber>,
         end_sequence_number: Option<CheckpointSequenceNumber>,
         transactions_filter: Option<grpc_filter::TransactionFilter>,
         events_filter: Option<grpc_filter::EventFilter>,
         read_mask: CheckpointResponseReadMask,
-    ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointResponse>> + Send>>>>
-    {
+    ) -> GrpcResult<
+        MetadataEnvelope<Pin<Box<dyn Stream<Item = GrpcResult<CheckpointResponse>> + Send>>>,
+    > {
         let envelope = self
-            .stream_checkpoints_raw(
+            .checkpoints_stream_raw(
                 start_sequence_number,
                 end_sequence_number,
                 transactions_filter,
@@ -344,7 +355,7 @@ impl Client {
 
     /// Stream checkpoints, skipping those with no matching data.
     ///
-    /// Unlike [`stream_checkpoints`](Self::stream_checkpoints), this method
+    /// Unlike [`checkpoints_stream`](Self::checkpoints_stream), this method
     /// sets `filter_checkpoints = true` on the server, which means checkpoints
     /// without any matching transactions or events are skipped entirely.
     ///
@@ -392,7 +403,7 @@ impl Client {
     /// // At least one filter is required
     /// let tx_filter = grpc_filter::TransactionFilter::default();
     /// let mut stream = client
-    ///     .stream_checkpoints_filtered(
+    ///     .checkpoints_stream_filtered(
     ///         Some(0),
     ///         None,
     ///         Some(tx_filter),
@@ -405,7 +416,7 @@ impl Client {
     /// while let Some(item) = stream.body_mut().next().await {
     ///     match item? {
     ///         CheckpointStreamItem::Checkpoint(cp) => {
-    ///             println!("Matched checkpoint {}", cp.sequence_number);
+    ///             println!("Matched checkpoint {}", cp.sequence_number());
     ///         }
     ///         CheckpointStreamItem::Progress {
     ///             latest_scanned_sequence_number,
@@ -418,7 +429,7 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn stream_checkpoints_filtered(
+    pub async fn checkpoints_stream_filtered(
         &self,
         start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
         end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
@@ -426,9 +437,10 @@ impl Client {
         events_filter: impl Into<Option<grpc_filter::EventFilter>>,
         progress_interval_ms: impl Into<Option<u32>>,
         read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-    ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointStreamItem>> + Send>>>>
-    {
-        self.stream_checkpoints_raw(
+    ) -> GrpcResult<
+        MetadataEnvelope<Pin<Box<dyn Stream<Item = GrpcResult<CheckpointStreamItem>> + Send>>>,
+    > {
+        self.checkpoints_stream_raw(
             start_sequence_number.into(),
             end_sequence_number.into(),
             transactions_filter.into(),
@@ -443,7 +455,7 @@ impl Client {
     /// Internal helper that builds the stream request and returns the raw
     /// [`CheckpointStreamItem`] stream.
     #[expect(clippy::too_many_arguments)]
-    async fn stream_checkpoints_raw(
+    async fn checkpoints_stream_raw(
         &self,
         start_sequence_number: Option<CheckpointSequenceNumber>,
         end_sequence_number: Option<CheckpointSequenceNumber>,
@@ -452,8 +464,9 @@ impl Client {
         filter_checkpoints: bool,
         progress_interval_ms: Option<u32>,
         read_mask: CheckpointResponseReadMask,
-    ) -> Result<MetadataEnvelope<Pin<Box<dyn Stream<Item = Result<CheckpointStreamItem>> + Send>>>>
-    {
+    ) -> GrpcResult<
+        MetadataEnvelope<Pin<Box<dyn Stream<Item = GrpcResult<CheckpointStreamItem>> + Send>>>,
+    > {
         let mut request = StreamCheckpointsRequest::default().with_read_mask(read_mask);
 
         if let Some(start) = start_sequence_number {
@@ -506,12 +519,12 @@ impl Client {
     /// a progress message arrives.
     fn reassemble_checkpoint_data_stream<S, E>(
         stream: S,
-    ) -> impl Stream<Item = Result<CheckpointStreamItem>>
+    ) -> impl Stream<Item = GrpcResult<CheckpointStreamItem>>
     where
         S: Stream<
             Item = std::result::Result<iota_grpc_types::v1::ledger_service::CheckpointData, E>,
         >,
-        E: Into<Error>,
+        E: Into<GrpcError>,
     {
         async_stream::try_stream! {
             futures::pin_mut!(stream);
@@ -535,7 +548,7 @@ impl Client {
 
                         // Start of new checkpoint - throw error if previous checkpoint was incomplete
                         if current_sequence_number.is_some() {
-                            Err(Error::Protocol(CheckpointStreamError::IncompleteCheckpoint.into()))?;
+                            Err(GrpcError::Protocol(CheckpointStreamError::IncompleteCheckpoint.into()))?;
                         }
                         current_sequence_number = checkpoint.sequence_number;
 
@@ -556,7 +569,7 @@ impl Client {
 
                     Some(checkpoint_data::Payload::ExecutedTransactions(txs)) => {
                         if current_sequence_number.is_none() {
-                            Err(Error::Protocol(CheckpointStreamError::DataBeforeHeader { data_kind: "transactions" }.into()))?;
+                            Err(GrpcError::Protocol(CheckpointStreamError::DataBeforeHeader { data_kind: "transactions" }.into()))?;
                         }
 
                         // Accumulate proto transactions (no deserialization)
@@ -565,7 +578,7 @@ impl Client {
 
                     Some(checkpoint_data::Payload::Events(events)) => {
                         if current_sequence_number.is_none() {
-                            Err(Error::Protocol(CheckpointStreamError::DataBeforeHeader { data_kind: "events" }.into()))?;
+                            Err(GrpcError::Protocol(CheckpointStreamError::DataBeforeHeader { data_kind: "events" }.into()))?;
                         }
 
                         // Accumulate proto events (no deserialization)
@@ -576,13 +589,13 @@ impl Client {
                         // End of current checkpoint - assemble the result and yield it
                          let sequence_number = current_sequence_number
                         .take()
-                        .ok_or_else(|| -> Error { Error::Protocol(CheckpointStreamError::DataBeforeHeader { data_kind: "end marker" }.into()) })?;
+                        .ok_or_else(|| -> GrpcError { GrpcError::Protocol(CheckpointStreamError::DataBeforeHeader { data_kind: "end marker" }.into()) })?;
 
                         let marker_sequence_number = marker.sequence_number
-                        .ok_or_else(|| -> Error { TryFromProtoError::missing("end_marker.sequence_number").into() })?;
+                        .ok_or_else(|| -> GrpcError { TryFromProtoError::missing("end_marker.sequence_number").into() })?;
 
                         if marker_sequence_number != sequence_number {
-                            Err(Error::Protocol(CheckpointStreamError::SequenceNumberMismatch {
+                            Err(GrpcError::Protocol(CheckpointStreamError::SequenceNumberMismatch {
                                 expected: sequence_number,
                                 actual: marker_sequence_number,
                             }.into()))?;
@@ -613,14 +626,14 @@ impl Client {
 
                     Some(_) => {
                         // Unknown payload type
-                        Err(Error::Protocol(CheckpointStreamError::UnknownPayload.into()))?;
+                        Err(GrpcError::Protocol(CheckpointStreamError::UnknownPayload.into()))?;
                     }
                 }
             }
 
             // Check if stream ended with incomplete checkpoint data
             if let Some(sequence_number) = current_sequence_number {
-                Err(Error::Protocol(CheckpointStreamError::IncompleteStream { sequence_number }.into()))?;
+                Err(GrpcError::Protocol(CheckpointStreamError::IncompleteStream { sequence_number }.into()))?;
             }
         }
     }
