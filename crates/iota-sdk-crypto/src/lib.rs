@@ -260,10 +260,20 @@ where
 
 /// Defines a type which can be converted to and from a base64 string of its
 /// raw bytes
-#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
+#[cfg(any(
+    feature = "bls12381",
+    feature = "ed25519",
+    feature = "secp256r1",
+    feature = "secp256k1",
+))]
 #[cfg_attr(
     doc_cfg,
-    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
+    doc(cfg(any(
+        feature = "bls12381",
+        feature = "ed25519",
+        feature = "secp256r1",
+        feature = "secp256k1",
+    )))
 )]
 pub trait ToFromBase64 {
     type Error;
@@ -279,7 +289,12 @@ pub trait ToFromBase64 {
         Self: Sized;
 }
 
-#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
+#[cfg(any(
+    feature = "bls12381",
+    feature = "ed25519",
+    feature = "secp256r1",
+    feature = "secp256k1",
+))]
 impl<T: ToFromBytes<Error = PrivateKeyError>> ToFromBase64 for T
 where
     T::ByteArray: AsRef<[u8]>,

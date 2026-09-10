@@ -50,6 +50,7 @@ pem = [
   "p256?/pkcs8",
 ]
 bls12381 = [
+  "dep:base64ct",
   "dep:blst",
   "dep:rand_core",
   "dep:zeroize",
