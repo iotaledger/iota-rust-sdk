@@ -320,6 +320,7 @@ pub use self::{
         ptb_arguments::{PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned},
         signer::TransactionSigner,
     },
+    error::TransactionBuilderError,
     types::PureBytes,
 };
 
@@ -496,7 +497,7 @@ mod tests {
             let builder = super::builder_with(FixedEstimateClient(TestClient, None));
             assert!(matches!(
                 builder.finish().await,
-                Err(crate::error::Error::MissingGasBudget)
+                Err(crate::error::TransactionBuilderError::MissingGasBudget)
             ));
         }
 
@@ -746,7 +747,7 @@ mod tests {
         });
         assert!(matches!(
             TransactionBuilder::try_from(txn),
-            Err(crate::error::Error::UnsupportedTransactionKind)
+            Err(crate::error::TransactionBuilderError::UnsupportedTransactionKind)
         ));
     }
 }
