@@ -48,10 +48,39 @@ pub enum DeriveChangesError {
 /// the objects they name.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct BalanceChange {
-    pub owner: Owner,
-    pub coin_type: TypeTag,
-    /// Negative amount means the net flow of value is away from the owner.
-    pub amount: i128,
+    pub(crate) owner: Owner,
+    pub(crate) coin_type: TypeTag,
+    pub(crate) amount: i128,
+}
+
+impl BalanceChange {
+    /// Records the net change in balance of `coin_type` for `owner`.
+    ///
+    /// A negative `amount` means the net flow of value is away from the owner.
+    pub const fn new(owner: Owner, coin_type: TypeTag, amount: i128) -> Self {
+        Self {
+            owner,
+            coin_type,
+            amount,
+        }
+    }
+
+    /// The owner whose balance changed.
+    pub const fn owner(&self) -> &Owner {
+        &self.owner
+    }
+
+    /// The coin type whose balance changed.
+    pub const fn coin_type(&self) -> &TypeTag {
+        &self.coin_type
+    }
+
+    /// The net change in balance.
+    ///
+    /// Negative means the net flow of value is away from the owner.
+    pub const fn amount(&self) -> i128 {
+        self.amount
+    }
 }
 
 impl crate::TreeDisplay for BalanceChange {

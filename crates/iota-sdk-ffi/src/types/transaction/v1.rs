@@ -617,8 +617,8 @@ pub struct OwnedObjectReference {
 impl From<iota_sdk::types::OwnedObjectReference> for OwnedObjectReference {
     fn from(value: iota_sdk::types::OwnedObjectReference) -> Self {
         Self {
-            reference: value.reference.into(),
-            owner: Arc::new(value.owner.into()),
+            reference: (*value.reference()).into(),
+            owner: Arc::new((*value.owner()).into()),
         }
     }
 }
@@ -633,8 +633,8 @@ pub struct ObjectVersion {
 impl From<iota_sdk::types::ObjectVersion> for ObjectVersion {
     fn from(value: iota_sdk::types::ObjectVersion) -> Self {
         Self {
-            object_id: Arc::new(value.object_id.into()),
-            version: Arc::new(value.version.into()),
+            object_id: Arc::new((*value.object_id()).into()),
+            version: Arc::new(value.version().into()),
         }
     }
 }
@@ -672,6 +672,9 @@ impl From<iota_sdk::types::InputSharedObject> for InputSharedObject {
             iota_sdk::types::InputSharedObject::Canceled(object) => Self::Canceled {
                 object: object.into(),
             },
+            _ => unimplemented!(
+                "a new InputSharedObject enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -694,6 +697,7 @@ impl From<iota_sdk::types::WriteKind> for WriteKind {
             iota_sdk::types::WriteKind::Mutate => Self::Mutate,
             iota_sdk::types::WriteKind::Create => Self::Create,
             iota_sdk::types::WriteKind::Unwrap => Self::Unwrap,
+            _ => unimplemented!("a new WriteKind enum variant was added and needs to be handled"),
         }
     }
 }
@@ -712,6 +716,9 @@ impl From<iota_sdk::types::ObjectRemoveKind> for ObjectRemoveKind {
         match value {
             iota_sdk::types::ObjectRemoveKind::Delete => Self::Delete,
             iota_sdk::types::ObjectRemoveKind::Wrap => Self::Wrap,
+            _ => unimplemented!(
+                "a new ObjectRemoveKind enum variant was added and needs to be handled"
+            ),
         }
     }
 }
