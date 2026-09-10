@@ -19,7 +19,7 @@
 use eyre::Result;
 use futures::StreamExt;
 use iota_sdk::{
-    graphql_client::{Client, Direction, MoveObjectFilter},
+    graphql_client::{Client, MoveObjectFilter},
     move_types::{
         iota_framework::{coin::Coin, iota::IOTA},
         iota_system::staking_pool::StakedIota,
@@ -55,7 +55,7 @@ async fn main() -> Result<()> {
     println!("---");
     let mut staked = Box::pin(client.move_objects_stream::<StakedIota>(
         MoveObjectFilter::default().with_owner(owner),
-        Direction::Forward,
+        Default::default(),
     ));
     while let Some(stake) = staked.next().await {
         let stake = stake?;
