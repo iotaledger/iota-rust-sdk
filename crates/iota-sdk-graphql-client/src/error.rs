@@ -351,6 +351,38 @@ mod tests {
         );
     }
 
+    /// Rendering the message inline and exposing the same error through
+    /// `source` means a cause-chain formatter (`anyhow`/`eyre` `{:#}`, `{:?}`)
+    /// prints the wrapped message twice. That is the accepted cost of a
+    /// self-contained `Display`: a consumer that reads only the top frame,
+    /// such as the FFI layer, still sees the whole failure.
+    #[test]
+    fn chain_formatters_repeat_the_wrapped_message() {
+        use std::error::Error as _;
+
+        let error = Error::from(bcs::from_bytes::<u64>(&[]).unwrap_err());
+
+        assert_eq!(
+            error.to_string(),
+            "deserialization error: unexpected end of input"
+        );
+
+        let mut chain = vec![error.to_string()];
+        let mut next = error.source();
+        while let Some(error) = next {
+            chain.push(error.to_string());
+            next = error.source();
+        }
+
+        assert_eq!(
+            chain,
+            [
+                "deserialization error: unexpected end of input",
+                "unexpected end of input",
+            ]
+        );
+    }
+
     #[test]
     fn body_is_truncated() {
         let body = vec![b'a'; MAX_ERROR_BODY_BYTES + 100];
