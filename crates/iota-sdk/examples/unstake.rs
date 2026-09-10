@@ -3,18 +3,41 @@
 
 use eyre::{OptionExt, Result};
 use iota_sdk::{
-    graphql_client::{Client, query_types::ObjectFilter},
-    transaction_builder::TransactionBuilder,
-    types::{Address, StructTag},
+    crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
+    graphql_client::{Client, faucet::FaucetClient, query_types::ObjectFilter},
+    transaction_builder::WaitForTransaction,
+    types::StructTag,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = Client::new_localnet();
 
-    let owner: Address =
-        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151".parse()?;
+    let private_key = Ed25519PrivateKey::random();
+    let owner = private_key.public_key().derive_address();
 
+    FaucetClient::new_localnet()
+        .request_and_wait_for_finalized(owner, &client)
+        .await?;
+
+    // Stake to get a StakedIota object that can be unstaked
+    let validator = client
+        .active_validators(None, Default::default())
+        .await?
+        .data
+        .into_iter()
+        .next()
+        .ok_or_eyre("no validators found")?;
+
+    let mut builder = client.transaction_builder(owner);
+    builder.stake(1_000_000_000u64, validator.address.address);
+    let stake_tx = builder.finish().await?;
+    let sig = private_key.sign_transaction(&stake_tx)?;
+    client
+        .execute_transaction(&[sig], &stake_tx, WaitForTransaction::Finalized)
+        .await?;
+
+    // Unstake
     let staked_iota = client
         .objects(
             ObjectFilter::default()
@@ -28,8 +51,7 @@ async fn main() -> Result<()> {
         .next()
         .ok_or_eyre("no staked iota found")?;
 
-    let mut builder =
-        TransactionBuilder::new(*staked_iota.owner().as_address()).with_client(client);
+    let mut builder = client.transaction_builder(*staked_iota.owner().as_address());
 
     builder.unstake(staked_iota.id());
 

@@ -25,7 +25,7 @@ use crate::{Client, InterceptedChannel, api::define_list_query};
 define_list_query! {
     /// Builder for listing objects owned by an address.
     ///
-    /// Created by [`Client::list_owned_objects`]. Await directly for a
+    /// Created by [`Client::owned_objects`]. Await directly for a
     /// single page, or call [`.collect(limit)`](Self::collect) to
     /// auto-paginate.
     pub struct ListOwnedObjectsQuery {
@@ -71,7 +71,7 @@ impl Client {
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let page = client
-    ///     .list_owned_objects(owner, None, None, None, OwnedObjectReadMask::default())
+    ///     .owned_objects(owner, None, None, None, OwnedObjectReadMask::default())
     ///     .await?;
     /// for obj in &page.body().items {
     ///     println!("Owned object: {:?}", obj);
@@ -90,7 +90,7 @@ impl Client {
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let all = client
-    ///     .list_owned_objects(owner, None, Some(50), None, OwnedObjectReadMask::default())
+    ///     .owned_objects(owner, None, Some(50), None, OwnedObjectReadMask::default())
     ///     .collect(Some(500))
     ///     .await?;
     /// for obj in all.body() {
@@ -99,7 +99,7 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn list_owned_objects(
+    pub fn owned_objects(
         &self,
         owner: Address,
         object_type: impl Into<Option<StructTag>>,
@@ -107,7 +107,7 @@ impl Client {
         page_token: impl Into<Option<prost::bytes::Bytes>>,
         read_mask: impl IntoReadMask<OwnedObjectReadMask>,
     ) -> ListOwnedObjectsQuery {
-        self.list_owned_objects_internal(
+        self.owned_objects_internal(
             owner,
             object_type.into(),
             page_size.into(),
@@ -116,7 +116,7 @@ impl Client {
         )
     }
 
-    fn list_owned_objects_internal(
+    fn owned_objects_internal(
         &self,
         owner: Address,
         object_type: Option<StructTag>,

@@ -5,7 +5,8 @@ use std::sync::Arc;
 
 use base64ct::Encoding;
 use iota_sdk::graphql_client::query_types::{
-    Base64, BigInt, TransactionBlockKindInput as GraphQLTransactionBlockKindInput,
+    AddressTransactionRelationship as GraphQLAddressTransactionRelationship, Base64, BigInt,
+    TransactionBlockKindInput as GraphQLTransactionBlockKindInput,
 };
 
 use crate::{
@@ -114,6 +115,8 @@ pub struct TransactionsFilter {
     pub transaction_ids: Option<Vec<String>>,
     #[uniffi(default = None)]
     pub wrapped_or_deleted_object: Option<Arc<ObjectId>>,
+    #[uniffi(default = None)]
+    pub affected_address: Option<Arc<Address>>,
 }
 
 impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for TransactionsFilter {
@@ -133,6 +136,7 @@ impl From<iota_sdk::graphql_client::query_types::TransactionsFilter> for Transac
                 .wrapped_or_deleted_object
                 .map(Into::into)
                 .map(Arc::new),
+            affected_address: value.affected_address.map(Into::into).map(Arc::new),
         }
     }
 }
@@ -151,6 +155,7 @@ impl From<TransactionsFilter> for iota_sdk::graphql_client::query_types::Transac
             .with_changed_object(value.changed_object.map(|v| **v))
             .with_transaction_ids(value.transaction_ids)
             .with_wrapped_or_deleted_object(value.wrapped_or_deleted_object.map(|v| **v))
+            .with_affected_address(value.affected_address.map(|v| **v))
     }
 }
 
@@ -852,7 +857,7 @@ impl From<GraphQLTransactionBlockKindInput> for TransactionBlockKindInput {
             GraphQLTransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
             GraphQLTransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
             _ => unimplemented!(
-                "a new GraphQLTransactionBlockKindInput variant was added and needs to be handled"
+                "a new TransactionBlockKindInput enum variant was added and needs to be handled"
             ),
         }
     }
@@ -867,6 +872,41 @@ impl From<TransactionBlockKindInput> for GraphQLTransactionBlockKindInput {
             TransactionBlockKindInput::ConsensusCommitPrologueV1 => Self::ConsensusCommitPrologueV1,
             TransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
             TransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
+        }
+    }
+}
+
+/// The relationship between an address and a transaction.
+#[derive(uniffi::Enum)]
+pub enum AddressTransactionRelationship {
+    /// Transactions the address has sent.
+    Sent,
+    /// Transactions that sent objects to the address.
+    Recv,
+    /// Transactions that affected the address: it is the sender, a recipient,
+    /// or the owner of the gas payment.
+    Affected,
+}
+
+impl From<GraphQLAddressTransactionRelationship> for AddressTransactionRelationship {
+    fn from(value: GraphQLAddressTransactionRelationship) -> Self {
+        match value {
+            GraphQLAddressTransactionRelationship::Sent => Self::Sent,
+            GraphQLAddressTransactionRelationship::Recv => Self::Recv,
+            GraphQLAddressTransactionRelationship::Affected => Self::Affected,
+            _ => unimplemented!(
+                "a new GraphQLAddressTransactionRelationship enum variant was added and needs to be handled"
+            ),
+        }
+    }
+}
+
+impl From<AddressTransactionRelationship> for GraphQLAddressTransactionRelationship {
+    fn from(value: AddressTransactionRelationship) -> Self {
+        match value {
+            AddressTransactionRelationship::Sent => Self::Sent,
+            AddressTransactionRelationship::Recv => Self::Recv,
+            AddressTransactionRelationship::Affected => Self::Affected,
         }
     }
 }
@@ -1222,7 +1262,9 @@ impl From<iota_sdk::graphql_client::query_types::MoveVisibility> for MoveVisibil
             iota_sdk::graphql_client::query_types::MoveVisibility::Public => Self::Public,
             iota_sdk::graphql_client::query_types::MoveVisibility::Private => Self::Private,
             iota_sdk::graphql_client::query_types::MoveVisibility::Friend => Self::Friend,
-            _ => unimplemented!("a new MoveVisibility variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new MoveVisibility enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -1243,7 +1285,7 @@ impl From<iota_sdk::graphql_client::query_types::MoveAbility> for MoveAbility {
             iota_sdk::graphql_client::query_types::MoveAbility::Drop => Self::Drop,
             iota_sdk::graphql_client::query_types::MoveAbility::Key => Self::Key,
             iota_sdk::graphql_client::query_types::MoveAbility::Store => Self::Store,
-            _ => unimplemented!("a new MoveAbility variant was added and needs to be handled"),
+            _ => unimplemented!("a new MoveAbility enum variant was added and needs to be handled"),
         }
     }
 }
@@ -1787,7 +1829,7 @@ impl From<iota_sdk::graphql_client::query_types::Feature> for Feature {
             iota_sdk::graphql_client::query_types::Feature::DynamicFields => Self::DynamicFields,
             iota_sdk::graphql_client::query_types::Feature::Subscriptions => Self::Subscriptions,
             iota_sdk::graphql_client::query_types::Feature::SystemState => Self::SystemState,
-            _ => unimplemented!("a new Feature variant was added and needs to be handled"),
+            _ => unimplemented!("a new Feature enum variant was added and needs to be handled"),
         }
     }
 }

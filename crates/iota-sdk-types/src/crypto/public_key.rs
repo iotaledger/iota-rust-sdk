@@ -6,20 +6,20 @@ use base64ct::{Base64, Encoding};
 use super::{
     Ed25519PublicKey, PublicKeyExt, Secp256k1PublicKey, Secp256r1PublicKey, SignatureScheme,
     passkey::{PasskeyAuthenticator, PasskeyPublicKey},
-    signature::InvalidSignatureScheme,
+    signature::SignatureSchemeError,
 };
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum PublicKeyError {
-    #[error("{0}")]
-    Base64(#[from] base64ct::Error),
+    #[error("invalid base64")]
+    Base64,
     #[error("{0}")]
     TryFromSlice(#[from] std::array::TryFromSliceError),
     #[error("Invalid input")]
     InvalidInput,
     #[error("{0}")]
-    InvalidSignatureScheme(#[from] InvalidSignatureScheme),
+    InvalidSignatureScheme(#[from] SignatureSchemeError),
 }
 
 /// Enum of valid public keys for the signature schemes supported by IOTA.
@@ -96,7 +96,7 @@ impl PublicKey {
     /// Decode a public key from a base64 string of its scheme-flagged byte
     /// representation
     pub fn from_base64(s: &str) -> Result<Self, PublicKeyError> {
-        let bytes = Base64::decode_vec(s)?;
+        let bytes = Base64::decode_vec(s).map_err(|_| PublicKeyError::Base64)?;
 
         match bytes.split_first() {
             Some((flag, tail)) => match SignatureScheme::from_byte(*flag)? {

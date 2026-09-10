@@ -29,17 +29,25 @@ pub use passkey::{PasskeyAuthenticator, PasskeyPublicKey};
 pub use public_key::{PublicKey, PublicKeyError};
 pub use secp256k1::{Secp256k1PublicKey, Secp256k1Signature};
 pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
-pub use signature::{InvalidSignatureScheme, SignatureScheme, SimpleSignature, UserSignature};
+pub use signature::{SignatureScheme, SignatureSchemeError, SimpleSignature, UserSignature};
 
+/// Error returned when decoding a signature or authenticator from its bytes.
 #[cfg(feature = "serde")]
 #[derive(Debug, thiserror::Error)]
-#[error("error deserializing bytes: {0}")]
-pub struct SignatureFromBytesError(String);
+#[non_exhaustive]
+pub enum SignatureFromBytesError {
+    /// The input is not valid base64.
+    #[error("invalid base64")]
+    Base64,
+    /// The bytes are not a valid encoding of the target type.
+    #[error("error deserializing bytes: {0}")]
+    Bytes(String),
+}
 
 #[cfg(feature = "serde")]
 impl SignatureFromBytesError {
     fn new(msg: impl core::fmt::Display) -> Self {
-        Self(msg.to_string())
+        Self::Bytes(msg.to_string())
     }
 }
 
@@ -91,7 +99,9 @@ macro_rules! impl_base64_helper {
             fn from_str(s: &str) -> Result<Self, Self::Err> {
                 let mut buf = [0; $base::LENGTH];
                 let decoded = <base64ct::Base64 as base64ct::Encoding>::decode(s, &mut buf)?;
-                assert_eq!(decoded.len(), $base::LENGTH);
+                if decoded.len() != $base::LENGTH {
+                    return Err(base64ct::Error::InvalidLength);
+                }
                 Ok(Self(buf))
             }
         }
@@ -134,6 +144,24 @@ macro_rules! impl_base64_helper {
                 let s = $display(&array.0).to_string();
                 let a = s.parse::<$fromstr>().unwrap();
                 assert_eq!(array, a);
+            }
+
+            // Fuzz the `FromStr` impl to ensure it never panics on
+            // arbitrary input. The strategy is restricted to the base64
+            // alphabet so that decode often succeeds, which exercises the
+            // length-validation path rather than bailing out early on
+            // invalid characters.
+            #[proptest]
+            fn fromstr_does_not_panic(#[strategy("[A-Za-z0-9+/=]{0,128}")] s: String) {
+                let _ = s.parse::<$fromstr>();
+            }
+
+            #[test]
+            fn short_decode_errors() {
+                assert_eq!(
+                    "AAAA".parse::<$fromstr>().unwrap_err(),
+                    base64ct::Error::InvalidLength
+                );
             }
         }
     };

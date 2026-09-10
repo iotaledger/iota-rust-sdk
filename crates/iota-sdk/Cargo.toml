@@ -53,6 +53,7 @@ grpc = [
 # such as the public testnet/mainnet nodes).
 grpc-tls-aws-lc = ["grpc", "iota-grpc-client/tls-aws-lc"]
 grpc-tls-native-roots = ["grpc", "iota-grpc-client/tls-native-roots"]
+grpc-tls-webpki-roots = ["grpc", "iota-grpc-client/tls-webpki-roots"]
 # Transaction Builder
 txn-builder = ["dep:iota-transaction-builder"]
 # Types
@@ -87,21 +88,26 @@ tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 iota-graphql-client-build.workspace = true
 
 # gRPC examples: skipped unless the gRPC TLS features are enabled (e.g.
-# `cargo run --example chain_id_grpc --features grpc-tls-native-roots,grpc-tls-aws-lc`).
+# `cargo run --example grpc_get_object --features grpc-tls-native-roots,grpc-tls-aws-lc`).
+# `grpc_service_info` targets localnet over plain HTTP and only needs `grpc`.
 [[example]]
-name = "chain_id_grpc"
+name = "grpc_service_info"
+required-features = ["grpc"]
+
+[[example]]
+name = "grpc_get_object"
 required-features = ["grpc-tls-native-roots", "grpc-tls-aws-lc"]
 
 [[example]]
-name = "get_object_grpc"
+name = "grpc_owned_objects"
 required-features = ["grpc-tls-native-roots", "grpc-tls-aws-lc"]
 
 [[example]]
-name = "owned_objects_grpc"
+name = "grpc_checkpoints_stream"
 required-features = ["grpc-tls-native-roots", "grpc-tls-aws-lc"]
 
 [[example]]
-name = "stream_checkpoints_grpc"
+name = "grpc_move_view_call"
 required-features = ["grpc-tls-native-roots", "grpc-tls-aws-lc"]
 
 [[example]]
