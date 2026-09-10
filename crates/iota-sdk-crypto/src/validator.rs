@@ -180,7 +180,7 @@ impl Verifier<ValidatorAggregatedSignature> for ValidatorCommitteeSignatureVerif
 
         let mut aggregated_public_key = {
             let idx = signer_indices.next().ok_or_else(|| {
-                SignatureError::from_source("signature bitmap must have at least one entry")
+                SignatureError::from_source("signer indices must have at least one entry")
             })?;
 
             let member = self.committee.member_by_idx(idx as usize)?;
