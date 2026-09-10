@@ -96,7 +96,7 @@ impl Client {
     /// List objects of the Move type `T` owned by an address, decoded into `T`.
     ///
     /// The type filter is derived from `T`, so unlike
-    /// [`Client::list_owned_objects`] this needs neither a type argument nor a
+    /// [`Client::owned_objects`] this needs neither a type argument nor a
     /// separate decode step.
     ///
     /// Returns a query builder. Await it directly for a single page (with
