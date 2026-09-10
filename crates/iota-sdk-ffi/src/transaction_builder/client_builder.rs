@@ -295,13 +295,13 @@ impl ClientTransactionBuilder {
     ) -> Arc<Self> {
         use iota_sdk::transaction_builder::unresolved::{Command, MakeMoveVector};
         self.write(|builder| {
-            let cmd = Command::MakeMoveVector(MakeMoveVector {
-                type_tag: Some(type_tag.0.clone()),
-                elements: elements
+            let cmd = Command::MakeMoveVector(MakeMoveVector::new(
+                Some(type_tag.0.clone()),
+                elements
                     .iter()
                     .map(|e| builder.apply_argument(e.as_ref()))
                     .collect(),
-            });
+            ));
             builder.assigned_command(cmd, name);
         });
         self

@@ -11,8 +11,8 @@ use iota_types::{
 };
 
 use crate::{
-    PTBArgumentList, TransactionBuilderLedgerClient, error::Error, types::MoveTypes,
-    unresolved::InputKind,
+    PTBArgumentList, TransactionBuilderLedgerClient, error::TransactionBuilderError,
+    types::MoveTypes, unresolved::InputKind,
 };
 
 /// A function call to authorize a transaction via move.
@@ -60,12 +60,14 @@ impl MoveAuthenticatorBuilder {
     pub async fn finish(
         self,
         client: impl TransactionBuilderLedgerClient,
-    ) -> Result<MoveAuthenticator, Error> {
+    ) -> Result<MoveAuthenticator, TransactionBuilderError> {
         let account = client
             .object(self.account_id, None)
             .await
-            .map_err(Error::client)?
-            .ok_or_else(|| Error::Input(format!("missing account {}", self.account_id)))?;
+            .map_err(TransactionBuilderError::client)?
+            .ok_or_else(|| {
+                TransactionBuilderError::Input(format!("missing account {}", self.account_id))
+            })?;
 
         let mut call_args = Vec::new();
         for input in self.call_args {
@@ -77,12 +79,14 @@ impl MoveAuthenticatorBuilder {
                     let obj = client
                         .object(object_id, None)
                         .await
-                        .map_err(Error::client)?
+                        .map_err(TransactionBuilderError::client)?
                         .ok_or_else(|| {
-                            Error::InvalidMoveAuthArg(format!("missing object {object_id}"))
+                            TransactionBuilderError::InvalidMoveAuthArg(format!(
+                                "missing object {object_id}"
+                            ))
                         })?;
                     if !obj.owner().is_immutable() {
-                        return Err(Error::InvalidMoveAuthArg(
+                        return Err(TransactionBuilderError::InvalidMoveAuthArg(
                             "call arguments must not be owned".to_owned(),
                         ));
                     }
@@ -97,13 +101,15 @@ impl MoveAuthenticatorBuilder {
                     let obj = client
                         .object(object_id, None)
                         .await
-                        .map_err(Error::client)?
+                        .map_err(TransactionBuilderError::client)?
                         .ok_or_else(|| {
-                            Error::InvalidMoveAuthArg(format!("missing object {object_id}"))
+                            TransactionBuilderError::InvalidMoveAuthArg(format!(
+                                "missing object {object_id}"
+                            ))
                         })?;
 
                     let Owner::Shared(version) = obj.owner() else {
-                        return Err(Error::InvalidMoveAuthArg(format!(
+                        return Err(TransactionBuilderError::InvalidMoveAuthArg(format!(
                             "object {object_id} was passed as shared, but is not"
                         )));
                     };
@@ -115,7 +121,7 @@ impl MoveAuthenticatorBuilder {
                     })
                 }
                 InputKind::Receiving(_) | InputKind::Input(Input::Receiving(_)) => {
-                    return Err(Error::InvalidMoveAuthArg(
+                    return Err(TransactionBuilderError::InvalidMoveAuthArg(
                         "call arguments must not be receiving".to_owned(),
                     ));
                 }
@@ -142,7 +148,7 @@ impl MoveAuthenticatorBuilder {
                 ))
             }
             _ => {
-                return Err(Error::InvalidMoveAuthAccount(
+                return Err(TransactionBuilderError::InvalidMoveAuthAccount(
                     "account must be immutable or shared".to_owned(),
                 ));
             }
