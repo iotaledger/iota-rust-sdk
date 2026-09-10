@@ -3,7 +3,7 @@
 
 //! High-level API for listing owned objects of a known Move type.
 //!
-//! Wraps [`Client::list_owned_objects`] with the type filter taken from the
+//! Wraps [`Client::owned_objects`] with the type filter taken from the
 //! type parameter, and decodes each returned proto `Object` into the mirror.
 //!
 //! # Read Mask
