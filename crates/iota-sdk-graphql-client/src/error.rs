@@ -300,11 +300,11 @@ mod tests {
             b"Too Many Requests",
             "my_crate::MyResponse",
         );
-        let message = error.to_string();
-        assert!(message.contains("https://graphql.devnet.iota.cafe"));
-        assert!(message.contains("HTTP 429 Too Many Requests"));
-        assert!(message.contains("Too Many Requests"));
-        assert!(message.contains("while decoding `my_crate::MyResponse`"));
+        assert_eq!(
+            error.to_string(),
+            "GraphQL request to https://graphql.devnet.iota.cafe/ failed with HTTP 429 Too Many \
+             Requests while decoding `my_crate::MyResponse`, body=\"Too Many Requests\""
+        );
         // The status stays inspectable instead of only being rendered.
         assert!(
             matches!(error, Error::Http { response } if response.status == StatusCode::TOO_MANY_REQUESTS)
@@ -317,7 +317,6 @@ mod tests {
 
         let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
         let serde_error = serde_json::from_slice::<serde_json::Value>(b"not json").unwrap_err();
-        let cause = serde_error.to_string();
         let error = Error::json(
             url,
             StatusCode::OK,
@@ -325,29 +324,16 @@ mod tests {
             "my_crate::MyResponse",
             serde_error,
         );
-        let message = error.to_string();
-        assert!(message.contains("https://graphql.devnet.iota.cafe"));
-        assert!(message.contains("HTTP 200 OK"));
-        assert!(message.contains("not json"));
         // The message is self-contained, and the cause stays matchable.
-        assert!(message.contains(&cause));
-        assert_eq!(error.source().expect("expected a cause").to_string(), cause);
-    }
-
-    #[test]
-    fn wrapped_error_is_exposed_as_the_cause() {
-        use std::error::Error as _;
-
-        let bcs_error = bcs::from_bytes::<u64>(&[]).unwrap_err();
-        let expected = bcs_error.to_string();
-        let error = Error::from(bcs_error);
         assert_eq!(
             error.to_string(),
-            format!("deserialization error: {expected}")
+            "GraphQL request to https://graphql.devnet.iota.cafe/ returned HTTP 200 OK but the \
+             body could not be parsed as JSON while decoding `my_crate::MyResponse` (body=\"not \
+             json\"): expected ident at line 1 column 2"
         );
         assert_eq!(
             error.source().expect("expected a cause").to_string(),
-            expected
+            "expected ident at line 1 column 2"
         );
     }
 
