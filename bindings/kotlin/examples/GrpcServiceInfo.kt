@@ -1,0 +1,22 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+import iota_sdk.GrpcClient
+import kotlinx.coroutines.runBlocking
+
+fun main() = runBlocking {
+    try {
+        val client = GrpcClient.newLocalnet()
+
+        val info = client.serviceInfo()
+        println("Chain ID: ${info.chainId}")
+        println("Epoch: ${info.epoch}")
+        println("Checkpoint height: ${info.executedCheckpointHeight}")
+
+        val gasPrice = client.referenceGasPrice()
+        println("Reference gas price: $gasPrice")
+    } catch (e: Exception) {
+        e.printStackTrace()
+        kotlin.system.exitProcess(1)
+    }
+}

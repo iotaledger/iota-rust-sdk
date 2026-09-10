@@ -3,9 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_sdk::transaction_builder::{
-    PureBytes, Receiving, Shared, SharedMut, assigned, builder::ptb_arguments::Assigned,
-};
+use iota_sdk::transaction_builder::{Assigned, PureBytes, Receiving, Shared, SharedMut, assigned};
 use primitive_types::U256;
 
 use crate::{
@@ -416,7 +414,7 @@ impl PTBArgument {
 impl iota_sdk::transaction_builder::PTBArgument for &PTBArgument {
     fn arg(
         self,
-        ptb: &mut iota_sdk::transaction_builder::builder::TransactionBuildData,
+        ptb: &mut iota_sdk::transaction_builder::TransactionBuildData,
     ) -> iota_sdk::transaction_builder::unresolved::Argument {
         match self {
             PTBArgument::ObjectId(object_id) => object_id.arg(ptb),
