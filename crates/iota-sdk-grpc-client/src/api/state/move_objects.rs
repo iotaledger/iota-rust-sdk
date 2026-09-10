@@ -19,9 +19,9 @@ use iota_move_types::MoveObject;
 use iota_types::Address;
 
 use crate::{
-    Client,
+    Client, GrpcError,
     api::{
-        Error, MetadataEnvelope, Page, Result, TryFromProtoError,
+        GrpcResult, MetadataEnvelope, Page, TryFromProtoError,
         state::owned_objects::ListOwnedObjectsQuery,
     },
 };
@@ -53,18 +53,21 @@ impl<T: MoveObject> ListOwnedMoveObjectsQuery<T> {
     /// `T`'s exact type, so a failure means the on-chain type has moved out
     /// from under the mirror rather than that one object is odd — yielding the
     /// rest would hide that.
-    pub async fn collect(self, limit: impl Into<Option<u32>>) -> Result<MetadataEnvelope<Vec<T>>> {
+    pub async fn collect(
+        self,
+        limit: impl Into<Option<u32>>,
+    ) -> GrpcResult<MetadataEnvelope<Vec<T>>> {
         let (objects, metadata) = self.inner.collect(limit).await?.into_parts();
         let decoded = objects
             .iter()
             .map(decode::<T>)
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GrpcResult<Vec<_>>>()?;
         Ok(MetadataEnvelope::new(decoded, metadata))
     }
 }
 
 impl<T: MoveObject + Send + 'static> IntoFuture for ListOwnedMoveObjectsQuery<T> {
-    type Output = Result<MetadataEnvelope<Page<T>>>;
+    type Output = GrpcResult<MetadataEnvelope<Page<T>>>;
     type IntoFuture = Pin<Box<dyn Future<Output = Self::Output> + Send>>;
 
     fn into_future(self) -> Self::IntoFuture {
@@ -74,7 +77,7 @@ impl<T: MoveObject + Send + 'static> IntoFuture for ListOwnedMoveObjectsQuery<T>
                 .items
                 .iter()
                 .map(decode::<T>)
-                .collect::<Result<Vec<_>>>()?;
+                .collect::<GrpcResult<Vec<_>>>()?;
             Ok(MetadataEnvelope::new(
                 Page {
                     items,
@@ -87,9 +90,9 @@ impl<T: MoveObject + Send + 'static> IntoFuture for ListOwnedMoveObjectsQuery<T>
 }
 
 /// Decode a proto `Object` into the mirror `T`, by way of the SDK `Object`.
-fn decode<T: MoveObject>(object: &iota_grpc_types::v1::object::Object) -> Result<T> {
+fn decode<T: MoveObject>(object: &iota_grpc_types::v1::object::Object) -> GrpcResult<T> {
     let object = object.object()?;
-    T::try_from(&object).map_err(|e| Error::from(TryFromProtoError::invalid("move object", e)))
+    T::try_from(&object).map_err(|e| GrpcError::from(TryFromProtoError::invalid("move object", e)))
 }
 
 impl Client {
