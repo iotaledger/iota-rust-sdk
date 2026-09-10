@@ -29,17 +29,25 @@ pub use passkey::{PasskeyAuthenticator, PasskeyPublicKey};
 pub use public_key::{PublicKey, PublicKeyError};
 pub use secp256k1::{Secp256k1PublicKey, Secp256k1Signature};
 pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
-pub use signature::{InvalidSignatureScheme, SignatureScheme, SimpleSignature, UserSignature};
+pub use signature::{SignatureScheme, SignatureSchemeError, SimpleSignature, UserSignature};
 
+/// Error returned when decoding a signature or authenticator from its bytes.
 #[cfg(feature = "serde")]
 #[derive(Debug, thiserror::Error)]
-#[error("error deserializing bytes: {0}")]
-pub struct SignatureFromBytesError(String);
+#[non_exhaustive]
+pub enum SignatureFromBytesError {
+    /// The input is not valid base64.
+    #[error("invalid base64")]
+    Base64,
+    /// The bytes are not a valid encoding of the target type.
+    #[error("error deserializing bytes: {0}")]
+    Bytes(String),
+}
 
 #[cfg(feature = "serde")]
 impl SignatureFromBytesError {
     fn new(msg: impl core::fmt::Display) -> Self {
-        Self(msg.to_string())
+        Self::Bytes(msg.to_string())
     }
 }
 
