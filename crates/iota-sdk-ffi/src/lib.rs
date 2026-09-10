@@ -15,6 +15,8 @@ mod macros;
 pub mod crypto;
 pub mod error;
 pub mod graphql;
+#[cfg(feature = "grpc")]
+pub mod grpc;
 pub mod move_types;
 pub mod transaction_builder;
 pub mod types;

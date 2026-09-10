@@ -22,8 +22,8 @@ pub const MULTISIG_BITMAP_VALUE_MAX: BitmapUnit = 0b1111111111;
 pub enum MultisigError {
     #[error("{0}")]
     TryFromSlice(#[from] std::array::TryFromSliceError),
-    #[error("{0}")]
-    Base64(#[from] base64ct::Error),
+    #[error("invalid base64")]
+    Base64,
     #[cfg(feature = "serde")]
     #[error("{0}")]
     SignatureFromBytes(#[from] SignatureFromBytesError),
@@ -834,7 +834,7 @@ pub(crate) mod serialization {
         type Err = MultisigError;
 
         fn from_str(s: &str) -> Result<Self, Self::Err> {
-            let bytes = Base64::decode_vec(s)?;
+            let bytes = Base64::decode_vec(s).map_err(|_| MultisigError::Base64)?;
             let sig = MultisigAggregatedSignature::from_bytes(&bytes)?;
 
             Ok(sig)
@@ -867,7 +867,7 @@ pub(crate) mod serialization {
         }
 
         pub fn from_base64(s: &str) -> Result<Self, MultisigError> {
-            let bytes = Base64::decode_vec(s)?;
+            let bytes = Base64::decode_vec(s).map_err(|_| MultisigError::Base64)?;
 
             match bytes.first() {
                 Some(x) => {
