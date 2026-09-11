@@ -53,6 +53,55 @@ package_%.json: crates/integration-tests/%/Move.toml crates/integration-tests/%/
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
 	cargo nextest run -p iota-sdk-graphql-client -p integration-tests
 
+# Mutation-test the diff against develop, or the whole mutation scope with
+# MUTANTS_ALL=1 (exactly "1"; any other value is an error, so nothing
+# off-looking like MUTANTS_ALL=0 can silently pick a mode). Scope and
+# invocation defaults live in .cargo/mutants.toml; missed mutants are
+# reconciled against scripts/mutants-allowlist.txt, timeouts always stay red.
+# MUTANTS_BASE overrides the diff base, MUTANTS_SHARD=k/n runs one shard.
+# MUTANTS_JOBS defaults to 1: a mutant job is a full build plus test run, and
+# parallel jobs overwhelm a developer machine; CI raises it to the core count.
+# The raw cargo-mutants status lands in target/mutants-exit for CI: make
+# flattens every recipe failure to its own exit 2.
+MUTANTS_JOBS ?= 1
+.PHONY: mutants
+mutants: fetch-compiled-packages mutants-guard ## Mutation-test the diff against develop (MUTANTS_ALL=1 for the whole scope)
+	@if [ -z "$$TMPDIR" ] && [ -d "$$HOME/tmp" ]; then TMPDIR="$$HOME/tmp"; export TMPDIR; fi; \
+	case "$(MUTANTS_ALL)" in \
+		"") ;; \
+		1) [ -z "$(MUTANTS_BASE)" ] || { echo "mutants: MUTANTS_ALL=1 and MUTANTS_BASE contradict; drop one"; exit 1; };; \
+		*) echo "mutants: MUTANTS_ALL must be 1 or unset (got '$(MUTANTS_ALL)')"; exit 1;; \
+	esac; \
+	shard=""; [ -z "$(MUTANTS_SHARD)" ] || shard="--shard $(MUTANTS_SHARD)"; \
+	mkdir -p target; rm -f target/mutants-exit; \
+	if [ "$(MUTANTS_ALL)" = "1" ]; then \
+		echo "mutants: whole scope (TMPDIR=$${TMPDIR:-system default})$${shard:+ $$shard}"; \
+		cargo mutants $$shard --jobs $(MUTANTS_JOBS); \
+	else \
+		base="$(MUTANTS_BASE)"; \
+		if [ -z "$$base" ]; then \
+			for ref in upstream/develop origin/develop develop; do \
+				git rev-parse -q --verify "$$ref" > /dev/null || continue; \
+				base=$$(git merge-base "$$ref" HEAD) && [ -n "$$base" ] && break; \
+			done; \
+		fi; \
+		[ -n "$$base" ] || { echo "mutants: no develop ref found; set MUTANTS_BASE"; exit 1; }; \
+		echo "mutants: diffing against $$base (TMPDIR=$${TMPDIR:-system default})$${shard:+ $$shard}"; \
+		git -c diff.noprefix=false -c diff.mnemonicPrefix=false -c diff.srcPrefix=a/ -c diff.dstPrefix=b/ \
+			diff --no-ext-diff "$$base" > target/mutants.diff || exit 1; \
+		cargo mutants --in-diff target/mutants.diff $$shard --jobs $(MUTANTS_JOBS); \
+	fi; status=$$?; \
+	echo $$status > target/mutants-exit; \
+	if [ $$status -eq 2 ] || [ $$status -eq 3 ]; then \
+		python3 scripts/mutants_allowed.py mutants.out scripts/mutants-allowlist.txt || exit $$status; \
+	elif [ $$status -ne 0 ]; then \
+		exit $$status; \
+	fi
+
+.PHONY: mutants-guard
+mutants-guard:
+	@! pgrep -x cargo-mutants > /dev/null || { echo "a cargo-mutants run is already active on this machine; wait for it or stop it first"; exit 1; }
+
 # Verify that individual SDK crates compile to wasm32-unknown-unknown.
 # This is a quick compatibility check, not the full WASM bindings build.
 .PHONY: wasm32

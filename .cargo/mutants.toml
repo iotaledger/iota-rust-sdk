@@ -1,0 +1,42 @@
+# Mutation-testing scope and invocation, shared by `make mutants` and the
+# mutation CI workflows.
+
+# Each mutant runs only the mutated package's own tests (the cargo-mutants
+# default), so a kill living in another package's suite does not count: the
+# gate deliberately demands an in-package test. nextest does not run
+# doctests, so a mutant only a doctest would catch is reported missed; kill
+# it with a unit test.
+test_tool = "nextest"
+additional_cargo_args = ["--all-features"]
+
+# Mutant builds cap lints to warn, overriding any inherited RUSTFLAGS:
+# mutants routinely introduce warnings, and an environment with -Dwarnings
+# (the tests.yml convention) turns caught mutants into unviable ones
+# (measured 2026-08-24), a green run that asserts nothing.
+cap_lints = true
+
+# A mutant's test run rebuilds little but may hit slow proptest cases; a hang
+# is reported as a timeout, so the multiplier only needs to beat variance.
+timeout_multiplier = 12.0
+
+# Mutate only code whose tests can run here. Excluded, with the blocker:
+# - iota-sdk-ffi, bindings/: tested through the language bindings, which
+#   cargo-mutants cannot run (1 Rust test vs 1,733 mutants, measured 2026-08-23)
+# - iota-sdk-bcs-schema: asserted through iota-sdk-types' bcs-schema feature
+#   tests, which in-package test runs cannot count (2 in-package tests)
+# - iota-sdk-grpc-types: generated build output
+# - iota-sdk-grpc-proto-build, iota-sdk-graphql-client-build: codegen tooling
+# - iota-sdk-graphql-client, integration-tests: tests need a localnet
+# - examples are demos, not APIs under test
+exclude_globs = [
+  "crates/iota-sdk-ffi/**",
+  "crates/iota-sdk-bcs-schema/**",
+  "crates/iota-sdk-grpc-types/**",
+  "crates/iota-sdk-grpc-proto-build/**",
+  "crates/iota-sdk-graphql-client/**",
+  "crates/iota-sdk-graphql-client-build/**",
+  "crates/integration-tests/**",
+  "crates/iota-sdk-move-types/examples/**",
+  "crates/iota-sdk/examples/**",
+  "bindings/**",
+]

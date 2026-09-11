@@ -1,0 +1,32 @@
+# Mutation-survivor allowlist. scripts/mutants_allowed.py reconciles
+# cargo-mutants MISSES against this file: a run stays red unless every
+# missed mutant matches an entry here. The mutants still run every time,
+# so red means NEW information.
+#
+# Timeouts are never allowlistable: a mutant that hangs the suite needs a
+# test that fails fast (assert the mutated step's effect directly, without
+# driving the loop that hangs). If a genuinely unkillable timeout ever
+# appears, extend the reconciler then.
+#
+# An entry is one line, copied verbatim from mutants.out/missed.txt, or with
+# the column (or line and column) dropped to survive unrelated line drift:
+#   crates/x/src/y.rs:123:5: replace foo -> bool with true
+#   crates/x/src/y.rs:123: replace foo -> bool with true
+#   crates/x/src/y.rs: replace foo -> bool with true
+# One entry may justify at most one survivor per run: identical mutants at
+# different sites turn the run red until each has its own line-anchored
+# entry.
+#
+# An entry documents an argued residual: a mutant that survives because the
+# mutation is genuinely undetectable, not because a test is missing. Argue
+# it in a comment above the entry, by one of:
+#
+#   EQUIVALENT    output identical for every input, provably.
+#   UNREACHABLE   the branch cannot be entered; kept as a loud guard.
+#   UNOBSERVABLE  the value has no consumer on this path.
+#   IO-LEAF       nothing but a syscall remains; the logic it feeds is
+#                 tested through a seam.
+#
+# "No test covers this yet" is not an entry. That is a missing test. A kill
+# that exists only in another package's suite also does not count: mutants
+# run each package's own tests, so write the in-package test.
