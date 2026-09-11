@@ -499,6 +499,18 @@ impl std::fmt::Display for StructTag {
     }
 }
 
+impl From<StructTag> for String {
+    fn from(value: StructTag) -> Self {
+        value.to_string()
+    }
+}
+
+impl From<&StructTag> for String {
+    fn from(value: &StructTag) -> Self {
+        value.to_string()
+    }
+}
+
 impl std::str::FromStr for StructTag {
     type Err = TypeParseError;
 
