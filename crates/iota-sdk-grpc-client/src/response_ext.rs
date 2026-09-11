@@ -17,6 +17,8 @@ pub trait ResponseExt: sealed::Sealed {
     fn lowest_available_checkpoint(&self) -> Option<u64>;
     fn lowest_available_checkpoint_objects(&self) -> Option<u64>;
     fn server_version(&self) -> Option<&str>;
+    /// Lowest `iota-sdk-grpc-client` version the server supports.
+    fn min_sdk_version(&self) -> Option<&str>;
 }
 
 impl ResponseExt for http::header::HeaderMap {
@@ -70,6 +72,11 @@ impl ResponseExt for http::header::HeaderMap {
         self.get(headers::X_IOTA_SERVER)
             .and_then(|h| h.to_str().ok())
     }
+
+    fn min_sdk_version(&self) -> Option<&str> {
+        self.get(headers::X_IOTA_MIN_SDK_VERSION)
+            .and_then(|h| h.to_str().ok())
+    }
 }
 
 impl ResponseExt for tonic::metadata::MetadataMap {
@@ -107,6 +114,10 @@ impl ResponseExt for tonic::metadata::MetadataMap {
 
     fn server_version(&self) -> Option<&str> {
         self.as_ref().server_version()
+    }
+
+    fn min_sdk_version(&self) -> Option<&str> {
+        self.as_ref().min_sdk_version()
     }
 }
 
@@ -146,6 +157,10 @@ impl<T> ResponseExt for tonic::Response<T> {
     fn server_version(&self) -> Option<&str> {
         self.metadata().server_version()
     }
+
+    fn min_sdk_version(&self) -> Option<&str> {
+        self.metadata().min_sdk_version()
+    }
 }
 
 impl ResponseExt for tonic::Status {
@@ -183,6 +198,10 @@ impl ResponseExt for tonic::Status {
 
     fn server_version(&self) -> Option<&str> {
         self.metadata().server_version()
+    }
+
+    fn min_sdk_version(&self) -> Option<&str> {
+        self.metadata().min_sdk_version()
     }
 }
 

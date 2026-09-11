@@ -43,3 +43,8 @@ pub const X_IOTA_TIMESTAMP: &str = "x-iota-timestamp";
 
 /// Server version string
 pub const X_IOTA_SERVER: &str = "x-iota-server";
+
+/// Lowest `iota-sdk-grpc-client` version able to decode the server's
+/// responses, as a semantic version. Clients below it fail their calls
+/// instead of decoding wire values they do not know.
+pub const X_IOTA_MIN_SDK_VERSION: &str = "x-iota-min-sdk-version";
