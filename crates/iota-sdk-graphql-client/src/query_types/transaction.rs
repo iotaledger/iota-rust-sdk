@@ -3,7 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use base64ct::Encoding;
-use iota_types::{ObjectId, SenderSignedTransaction, SignedTransaction, TransactionEffects};
+use iota_types::{
+    ObjectId, SenderSignedTransaction, SignedTransaction, TransactionDigest, TransactionEffects,
+};
 
 use crate::{
     error::{self, Error, Kind},
@@ -276,94 +278,89 @@ impl TransactionsFilter {
     /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
     ///
     /// Replaces the selector already set, if any.
-    pub fn with_function(self, function: impl Into<Option<String>>) -> Self {
-        self.with_selector(function.into().map(TransactionsSelector::Function))
+    pub fn with_function(self, function: String) -> Self {
+        self.with_selector(TransactionsSelector::Function(function))
     }
 
     /// Select by transaction kind.
     ///
     /// Replaces the selector already set, if any.
-    pub fn with_kind(self, kind: impl Into<Option<TransactionBlockKindInput>>) -> Self {
-        self.with_selector(kind.into().map(TransactionsSelector::Kind))
+    pub fn with_kind(self, kind: TransactionBlockKindInput) -> Self {
+        self.with_selector(TransactionsSelector::Kind(kind))
     }
 
     /// Select transactions that sent an object to the given address.
     ///
     /// Replaces the selector already set, if any.
-    pub fn with_recv_address(self, recv_address: impl Into<Option<Address>>) -> Self {
-        self.with_selector(recv_address.into().map(TransactionsSelector::RecvAddress))
+    pub fn with_recv_address(self, recv_address: Address) -> Self {
+        self.with_selector(TransactionsSelector::RecvAddress(recv_address))
     }
 
     /// Select transactions that affected the given address.
     ///
     /// Replaces the selector already set, if any.
-    pub fn with_affected_address(self, affected_address: impl Into<Option<Address>>) -> Self {
-        self.with_selector(
-            affected_address
-                .into()
-                .map(TransactionsSelector::AffectedAddress),
-        )
+    pub fn with_affected_address(self, affected_address: Address) -> Self {
+        self.with_selector(TransactionsSelector::AffectedAddress(affected_address))
     }
 
     /// Select transactions that used the given object as an input.
     ///
     /// Replaces the selector already set, if any.
-    pub fn with_input_object(self, input_object: impl Into<Option<ObjectId>>) -> Self {
-        self.with_selector(input_object.into().map(TransactionsSelector::InputObject))
+    pub fn with_input_object(self, input_object: ObjectId) -> Self {
+        self.with_selector(TransactionsSelector::InputObject(input_object))
     }
 
     /// Select transactions that output a version of the given object.
     ///
     /// Replaces the selector already set, if any.
-    pub fn with_changed_object(self, changed_object: impl Into<Option<ObjectId>>) -> Self {
-        self.with_selector(
-            changed_object
-                .into()
-                .map(TransactionsSelector::ChangedObject),
-        )
+    pub fn with_changed_object(self, changed_object: ObjectId) -> Self {
+        self.with_selector(TransactionsSelector::ChangedObject(changed_object))
     }
 
     /// Select transactions that wrapped or deleted the given object.
     ///
     /// Replaces the selector already set, if any.
-    pub fn with_wrapped_or_deleted_object(
-        self,
-        wrapped_or_deleted_object: impl Into<Option<ObjectId>>,
-    ) -> Self {
-        self.with_selector(
-            wrapped_or_deleted_object
-                .into()
-                .map(TransactionsSelector::WrappedOrDeletedObject),
-        )
+    pub fn with_wrapped_or_deleted_object(self, wrapped_or_deleted_object: ObjectId) -> Self {
+        self.with_selector(TransactionsSelector::WrappedOrDeletedObject(
+            wrapped_or_deleted_object,
+        ))
     }
 
     /// Filter by sender address.
-    pub fn with_sent_address(mut self, sent_address: impl Into<Option<Address>>) -> Self {
-        self.sent_address = sent_address.into();
+    pub fn with_sent_address(mut self, sent_address: Address) -> Self {
+        self.sent_address = Some(sent_address);
         self
     }
 
     /// Limit to transactions executed after the given checkpoint, exclusive.
-    pub fn with_after_checkpoint(mut self, after_checkpoint: impl Into<Option<u64>>) -> Self {
-        self.after_checkpoint = after_checkpoint.into();
+    pub fn with_after_checkpoint(mut self, after_checkpoint: u64) -> Self {
+        self.after_checkpoint = Some(after_checkpoint);
         self
     }
 
     /// Limit to transactions executed in the given checkpoint.
-    pub fn with_at_checkpoint(mut self, at_checkpoint: impl Into<Option<u64>>) -> Self {
-        self.at_checkpoint = at_checkpoint.into();
+    pub fn with_at_checkpoint(mut self, at_checkpoint: u64) -> Self {
+        self.at_checkpoint = Some(at_checkpoint);
         self
     }
 
     /// Limit to transactions executed before the given checkpoint, exclusive.
-    pub fn with_before_checkpoint(mut self, before_checkpoint: impl Into<Option<u64>>) -> Self {
-        self.before_checkpoint = before_checkpoint.into();
+    pub fn with_before_checkpoint(mut self, before_checkpoint: u64) -> Self {
+        self.before_checkpoint = Some(before_checkpoint);
         self
     }
 
     /// Select by transaction digests.
-    pub fn with_transaction_ids(mut self, transaction_ids: impl Into<Option<Vec<String>>>) -> Self {
-        self.transaction_ids = transaction_ids.into();
+    pub fn with_transaction_ids(
+        mut self,
+        transaction_ids: impl IntoIterator<Item = TransactionDigest>,
+    ) -> Self {
+        self.transaction_ids = Some(
+            transaction_ids
+                .into_iter()
+                .map(|id| id.to_string())
+                .collect(),
+        );
         self
     }
 

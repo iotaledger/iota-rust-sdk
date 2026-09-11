@@ -13,6 +13,7 @@ use crate::{
     error::SdkFfiError,
     types::{
         address::Address,
+        digest::TransactionDigest,
         move_core::TypeTag,
         object::ObjectId,
         transaction::{SignedTransaction, TransactionEffects},
@@ -212,8 +213,13 @@ impl TransactionsFilter {
     }
 
     /// Select by transaction digests.
-    pub fn with_transaction_ids(self: Arc<Self>, transaction_ids: Vec<String>) -> Arc<Self> {
-        self.update(|filter| filter.with_transaction_ids(transaction_ids));
+    pub fn with_transaction_ids(
+        self: Arc<Self>,
+        transaction_ids: Vec<Arc<TransactionDigest>>,
+    ) -> Arc<Self> {
+        self.update(|filter| {
+            filter.with_transaction_ids(transaction_ids.into_iter().map(|id| **id))
+        });
         self
     }
 }

@@ -458,7 +458,7 @@ mod tests {
 
         client
             .transactions_data_effects(
-                TransactionsFilter::default().with_transaction_ids(vec![digest.to_string()]),
+                TransactionsFilter::default().with_transaction_ids([digest]),
                 PaginationFilter::default(),
             )
             .await
