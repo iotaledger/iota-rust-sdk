@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["move_package_service_client","move_package_service_server"],"struct":["ListPackageVersionsRequest","ListPackageVersionsRequestFieldPathBuilder","ListPackageVersionsResponse","ListPackageVersionsResponseFieldPathBuilder","PackageVersion","PackageVersionFieldPathBuilder"]};

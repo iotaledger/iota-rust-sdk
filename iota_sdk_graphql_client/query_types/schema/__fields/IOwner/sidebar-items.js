@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["_balance_arguments","_balances_arguments","_coins_arguments","_iota_names_default_name_arguments","_iota_names_registrations_arguments","_objects_arguments","_staked_iotas_arguments"],"struct":["__typename","address","balance","balances","coins","iotaNamesDefaultName","iotaNamesRegistrations","objects","stakedIotas"]};

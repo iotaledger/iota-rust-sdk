@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["BatchSendStatusType"],"struct":["BatchSendStatus","CoinInfo","FaucetClient","FaucetReceipt"]};

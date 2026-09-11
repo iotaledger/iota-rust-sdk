@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["uniffi_iota_sdk_ffi_fn_init_callback_vtable_transactionsignerfn"],"struct":["TransactionSigner","TransactionSignerError","TransactionSignerFnOutput","UniFfiTraitVtableTransactionSignerFn"],"trait":["ThreadSafety","TransactionSignerFn"]};

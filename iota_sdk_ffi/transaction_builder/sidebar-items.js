@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["builder","client_builder","move_authenticator","ptb_arg","signer"],"struct":["Payment"]};

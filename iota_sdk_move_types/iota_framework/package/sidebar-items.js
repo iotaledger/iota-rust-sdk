@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["Publisher","UpgradeCap","UpgradeReceipt","UpgradeTicket"]};

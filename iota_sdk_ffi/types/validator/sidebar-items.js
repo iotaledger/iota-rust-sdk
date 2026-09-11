@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["validator_committee_member_from_bcs","validator_committee_member_from_json"],"struct":["ValidatorAggregatedSignature","ValidatorCommittee","ValidatorCommitteeMember","ValidatorSignature"]};

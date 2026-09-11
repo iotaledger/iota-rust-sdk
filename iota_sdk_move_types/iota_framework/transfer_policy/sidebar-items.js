@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["RuleKey","TransferPolicy","TransferPolicyCap","TransferPolicyCreated","TransferPolicyDestroyed","TransferRequest"]};

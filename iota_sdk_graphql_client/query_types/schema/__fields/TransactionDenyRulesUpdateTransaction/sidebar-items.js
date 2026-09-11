@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["__typename","addedAddresses","addedObjects","addedPackages","denyRulesObjInitialSharedVersion","epoch","moveAuthenticatorDisabled","packagePublishDisabled","packageUpgradeDisabled","receivingObjectsDisabled","removedAddresses","removedObjects","removedPackages","round","sharedObjectDisabled","userTransactionDisabled"]};
