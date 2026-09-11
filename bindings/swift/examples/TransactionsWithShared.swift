@@ -12,7 +12,7 @@ struct TransactionsWithSharedExample {
       hex: "0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")
 
     let transactions = try await client.transactions(
-      filter: TransactionsFilter(inputObject: sharedObjId))
+      filter: TransactionsFilter().withInputObject(inputObject: sharedObjId))
 
     for transaction in transactions.data {
       print("Digest:", transaction.transaction.digest().toBase58())

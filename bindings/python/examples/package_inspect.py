@@ -223,7 +223,7 @@ def extract_policy(contents):
 
 async def resolve_upgrade_cap_id(client, package_id):
     page = await client.transactions_effects(
-        TransactionsFilter(changed_object=package_id),
+        TransactionsFilter().with_changed_object(package_id),
         PaginationFilter(direction=Direction.FORWARD, limit=1),
     )
 
@@ -343,7 +343,7 @@ async def was_package_published_as_immutable(client, package_id):
 
     while True:
         page = await client.transactions_data_effects(
-            TransactionsFilter(changed_object=package_id),
+            TransactionsFilter().with_changed_object(package_id),
             forward_page(cursor),
         )
 
@@ -363,7 +363,7 @@ async def was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id):
 
     while True:
         page = await client.transactions_data_effects(
-            TransactionsFilter(input_object=upgrade_cap_id),
+            TransactionsFilter().with_input_object(upgrade_cap_id),
             forward_page(cursor),
         )
 

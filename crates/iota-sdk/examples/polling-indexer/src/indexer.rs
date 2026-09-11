@@ -191,11 +191,19 @@ impl Indexer {
     async fn process_batch(&self, range_start: u64, range_end: u64) -> anyhow::Result<()> {
         info!(range_start, range_end, "processing batch");
 
-        let tx_filter = TransactionsFilter::default()
-            .with_function(self.config.filters.derived_tx_function())
-            .with_sent_address(self.config.filters.tx_sender)
-            .with_after_checkpoint(range_start.checked_sub(1))
-            .with_before_checkpoint(range_end.saturating_add(1));
+        let mut tx_filter = TransactionsFilter::default();
+        if let Some(function) = self.config.filters.derived_tx_function() {
+            tx_filter = tx_filter.with_function(function);
+        }
+        if let Some(sender) = self.config.filters.tx_sender {
+            tx_filter = tx_filter.with_sent_address(sender);
+        }
+        if let Some(after_checkpoint) = range_start.checked_sub(1) {
+            tx_filter = tx_filter.with_after_checkpoint(after_checkpoint);
+        }
+        if let Some(before_checkpoint) = range_end.checked_add(1) {
+            tx_filter = tx_filter.with_before_checkpoint(before_checkpoint);
+        }
 
         let mut tx_cursor: Option<String> = None;
         let mut tx_count = 0_u64;
@@ -319,11 +327,19 @@ impl Indexer {
         .execute(&self.pool)
         .await?;
 
-        let tx_filter = TransactionsFilter::default()
-            .with_function(self.config.filters.tx_function.clone())
-            .with_sent_address(self.config.filters.tx_sender)
-            .with_after_checkpoint(sequence.checked_sub(1))
-            .with_before_checkpoint(sequence.saturating_add(1));
+        let mut tx_filter = TransactionsFilter::default();
+        if let Some(function) = self.config.filters.derived_tx_function() {
+            tx_filter = tx_filter.with_function(function);
+        }
+        if let Some(sender) = self.config.filters.tx_sender {
+            tx_filter = tx_filter.with_sent_address(sender);
+        }
+        if let Some(after_checkpoint) = sequence.checked_sub(1) {
+            tx_filter = tx_filter.with_after_checkpoint(after_checkpoint);
+        }
+        if let Some(before_checkpoint) = sequence.checked_add(1) {
+            tx_filter = tx_filter.with_before_checkpoint(before_checkpoint);
+        }
 
         let mut tx_cursor: Option<String> = None;
         loop {
