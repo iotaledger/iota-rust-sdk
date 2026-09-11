@@ -269,8 +269,8 @@ pub struct TransactionsFilter {
 impl TransactionsFilter {
     /// Select on a function, kind, address or object, replacing the selector
     /// already set, if any.
-    pub fn with_selector(mut self, selector: impl Into<Option<TransactionsSelector>>) -> Self {
-        self.selector = selector.into();
+    pub fn with_selector(mut self, selector: TransactionsSelector) -> Self {
+        self.selector = Some(selector);
         self
     }
 
