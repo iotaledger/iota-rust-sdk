@@ -337,6 +337,12 @@ impl From<MoveObjectType> for StructTag {
     }
 }
 
+impl From<MoveObjectType> for TypeTag {
+    fn from(obj_type: MoveObjectType) -> Self {
+        Self::Struct(Box::new(obj_type.0))
+    }
+}
+
 impl PartialEq<StructTag> for MoveObjectType {
     fn eq(&self, other: &StructTag) -> bool {
         &self.0 == other
