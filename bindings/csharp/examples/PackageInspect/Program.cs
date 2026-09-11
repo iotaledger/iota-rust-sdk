@@ -328,7 +328,7 @@ class Program
     static async Task<ObjectId?> ResolveUpgradeCapId(GraphQlClient client, ObjectId packageId)
     {
         var page = await client.TransactionsEffects(
-            new TransactionsFilter(ChangedObject: packageId),
+            new TransactionsFilter().WithChangedObject(packageId),
             new PaginationFilter(Direction.Forward, Limit: 1)
         );
 
@@ -528,7 +528,7 @@ class Program
         while (true)
         {
             var page = await client.TransactionsDataEffects(
-                new TransactionsFilter(ChangedObject: packageId),
+                new TransactionsFilter().WithChangedObject(packageId),
                 ForwardPage(cursor)
             );
 
@@ -559,7 +559,7 @@ class Program
         while (true)
         {
             var page = await client.TransactionsDataEffects(
-                new TransactionsFilter(InputObject: upgradeCapId),
+                new TransactionsFilter().WithInputObject(upgradeCapId),
                 ForwardPage(cursor)
             );
 

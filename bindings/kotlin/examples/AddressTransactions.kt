@@ -18,8 +18,8 @@ fun main() = runBlocking {
         val address =
             Address.fromHex("0xa7c2cf9d8f8d95ff69d7a598c49c77acc36253f496f064a533ad306879b40bfa")
 
-        val outgoing = client.transactions(TransactionsFilter(sentAddress = address))
-        val incoming = client.transactions(TransactionsFilter(recvAddress = address))
+        val outgoing = client.transactions(TransactionsFilter().withSentAddress(address))
+        val incoming = client.transactions(TransactionsFilter().withRecvAddress(address))
 
         println("Transactions for ${address.toHex()}")
 

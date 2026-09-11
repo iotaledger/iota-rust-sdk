@@ -3,7 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use base64ct::Encoding;
-use iota_types::{ObjectId, SenderSignedTransaction, SignedTransaction, TransactionEffects};
+use iota_types::{
+    ObjectId, SenderSignedTransaction, SignedTransaction, TransactionDigest, TransactionEffects,
+};
 
 use crate::{
     error::{self, Error, Kind},
@@ -140,7 +142,7 @@ pub struct AddressTransactionsQueryArgs {
     pub last: Option<i32>,
     pub before: Option<String>,
     pub relation: Option<AddressTransactionRelationship>,
-    pub filter: Option<TransactionsFilter>,
+    pub filter: Option<TransactionBlockFilter>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
@@ -149,7 +151,7 @@ pub struct TransactionBlocksQueryArgs {
     pub after: Option<String>,
     pub last: Option<i32>,
     pub before: Option<String>,
-    pub filter: Option<TransactionsFilter>,
+    pub filter: Option<TransactionBlockFilter>,
 }
 
 // ===========================================================================
@@ -228,100 +230,230 @@ pub enum AddressTransactionRelationship {
     Affected,
 }
 
-#[derive(Clone, cynic::InputObject, Debug, Default)]
-#[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
+/// Selection criteria for querying transactions.
+#[derive(Clone, Debug)]
 #[non_exhaustive]
+pub enum TransactionsSelector {
+    /// Select by package, module, or function name, e.g. `"0x03"`,
+    /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
+    Function(String),
+    /// Select by transaction kind.
+    Kind(TransactionBlockKindInput),
+    /// Select transactions that sent an object to the given address.
+    RecvAddress(Address),
+    /// Select transactions that affected the given address.
+    AffectedAddress(Address),
+    /// Select transactions that used the given object as an input.
+    InputObject(ObjectId),
+    /// Select transactions that output a version of the given object.
+    ChangedObject(ObjectId),
+    /// Select transactions that wrapped or deleted the given object.
+    WrappedOrDeletedObject(ObjectId),
+}
+
+/// Filter for transaction queries.
+///
+/// Holds at most one [`TransactionsSelector`], so each of the setters that
+/// picks one replaces whichever was set before; the sender, checkpoint and
+/// digest filters can be combined with it and with each other freely.
+#[derive(Clone, Debug, Default)]
 pub struct TransactionsFilter {
-    pub function: Option<String>,
-    pub kind: Option<TransactionBlockKindInput>,
-    pub after_checkpoint: Option<u64>,
-    pub at_checkpoint: Option<u64>,
-    pub before_checkpoint: Option<u64>,
-    pub sent_address: Option<Address>,
-    pub recv_address: Option<Address>,
-    pub affected_address: Option<Address>,
-    pub input_object: Option<ObjectId>,
-    pub changed_object: Option<ObjectId>,
-    pub wrapped_or_deleted_object: Option<ObjectId>,
-    pub transaction_ids: Option<Vec<String>>,
+    selector: Option<TransactionsSelector>,
+    sent_address: Option<Address>,
+    after_checkpoint: Option<u64>,
+    at_checkpoint: Option<u64>,
+    before_checkpoint: Option<u64>,
+    transaction_ids: Option<Vec<String>>,
 }
 
 impl TransactionsFilter {
-    /// Filter by package, module, or function name, e.g. `"0x03"`,
-    /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
-    pub fn with_function(mut self, function: impl Into<Option<String>>) -> Self {
-        self.function = function.into();
+    /// Select on a function, kind, address or object, replacing the selector
+    /// already set, if any.
+    pub fn with_selector(mut self, selector: TransactionsSelector) -> Self {
+        self.selector = Some(selector);
         self
     }
 
-    /// Filter by transaction kind.
-    pub fn with_kind(mut self, kind: impl Into<Option<TransactionBlockKindInput>>) -> Self {
-        self.kind = kind.into();
+    /// Select by package, module, or function name, e.g. `"0x03"`,
+    /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_function(self, function: String) -> Self {
+        self.with_selector(TransactionsSelector::Function(function))
+    }
+
+    /// Select by transaction kind.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_kind(self, kind: TransactionBlockKindInput) -> Self {
+        self.with_selector(TransactionsSelector::Kind(kind))
+    }
+
+    /// Select transactions that sent an object to the given address.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_recv_address(self, recv_address: Address) -> Self {
+        self.with_selector(TransactionsSelector::RecvAddress(recv_address))
+    }
+
+    /// Select transactions that affected the given address.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_affected_address(self, affected_address: Address) -> Self {
+        self.with_selector(TransactionsSelector::AffectedAddress(affected_address))
+    }
+
+    /// Select transactions that used the given object as an input.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_input_object(self, input_object: ObjectId) -> Self {
+        self.with_selector(TransactionsSelector::InputObject(input_object))
+    }
+
+    /// Select transactions that output a version of the given object.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_changed_object(self, changed_object: ObjectId) -> Self {
+        self.with_selector(TransactionsSelector::ChangedObject(changed_object))
+    }
+
+    /// Select transactions that wrapped or deleted the given object.
+    ///
+    /// Replaces the selector already set, if any.
+    pub fn with_wrapped_or_deleted_object(self, wrapped_or_deleted_object: ObjectId) -> Self {
+        self.with_selector(TransactionsSelector::WrappedOrDeletedObject(
+            wrapped_or_deleted_object,
+        ))
+    }
+
+    /// Filter by sender address.
+    pub fn with_sent_address(mut self, sent_address: Address) -> Self {
+        self.sent_address = Some(sent_address);
         self
     }
 
     /// Limit to transactions executed after the given checkpoint, exclusive.
-    pub fn with_after_checkpoint(mut self, after_checkpoint: impl Into<Option<u64>>) -> Self {
-        self.after_checkpoint = after_checkpoint.into();
+    pub fn with_after_checkpoint(mut self, after_checkpoint: u64) -> Self {
+        self.after_checkpoint = Some(after_checkpoint);
         self
     }
 
     /// Limit to transactions executed in the given checkpoint.
-    pub fn with_at_checkpoint(mut self, at_checkpoint: impl Into<Option<u64>>) -> Self {
-        self.at_checkpoint = at_checkpoint.into();
+    pub fn with_at_checkpoint(mut self, at_checkpoint: u64) -> Self {
+        self.at_checkpoint = Some(at_checkpoint);
         self
     }
 
     /// Limit to transactions executed before the given checkpoint, exclusive.
-    pub fn with_before_checkpoint(mut self, before_checkpoint: impl Into<Option<u64>>) -> Self {
-        self.before_checkpoint = before_checkpoint.into();
+    pub fn with_before_checkpoint(mut self, before_checkpoint: u64) -> Self {
+        self.before_checkpoint = Some(before_checkpoint);
         self
     }
 
-    /// Filter by sender address.
-    pub fn with_sent_address(mut self, sent_address: impl Into<Option<Address>>) -> Self {
-        self.sent_address = sent_address.into();
-        self
-    }
-
-    /// Filter by the address receiving an object from the transaction.
-    pub fn with_recv_address(mut self, recv_address: impl Into<Option<Address>>) -> Self {
-        self.recv_address = recv_address.into();
-        self
-    }
-
-    /// Filter by an address the transaction affected: the sender, a
-    /// recipient, or the owner of the gas payment.
-    pub fn with_affected_address(mut self, affected_address: impl Into<Option<Address>>) -> Self {
-        self.affected_address = affected_address.into();
-        self
-    }
-
-    /// Filter by an object used as input to the transaction.
-    pub fn with_input_object(mut self, input_object: impl Into<Option<ObjectId>>) -> Self {
-        self.input_object = input_object.into();
-        self
-    }
-
-    /// Filter by an object changed by the transaction.
-    pub fn with_changed_object(mut self, changed_object: impl Into<Option<ObjectId>>) -> Self {
-        self.changed_object = changed_object.into();
-        self
-    }
-
-    /// Filter by an object wrapped or deleted by the transaction.
-    pub fn with_wrapped_or_deleted_object(
+    /// Select by transaction digests.
+    pub fn with_transaction_ids(
         mut self,
-        wrapped_or_deleted_object: impl Into<Option<ObjectId>>,
+        transaction_ids: impl IntoIterator<Item = TransactionDigest>,
     ) -> Self {
-        self.wrapped_or_deleted_object = wrapped_or_deleted_object.into();
+        self.transaction_ids = Some(
+            transaction_ids
+                .into_iter()
+                .map(|id| id.to_string())
+                .collect(),
+        );
         self
     }
 
-    /// Filter by transaction digests.
-    pub fn with_transaction_ids(mut self, transaction_ids: impl Into<Option<Vec<String>>>) -> Self {
-        self.transaction_ids = transaction_ids.into();
-        self
+    /// The selector this filter selects on, if any.
+    pub fn selector(&self) -> Option<&TransactionsSelector> {
+        self.selector.as_ref()
+    }
+
+    /// The sender address this filter is limited to, if any.
+    pub fn sent_address(&self) -> Option<Address> {
+        self.sent_address
+    }
+
+    /// The exclusive lower checkpoint bound of this filter, if any.
+    pub fn after_checkpoint(&self) -> Option<u64> {
+        self.after_checkpoint
+    }
+
+    /// The checkpoint this filter is limited to, if any.
+    pub fn at_checkpoint(&self) -> Option<u64> {
+        self.at_checkpoint
+    }
+
+    /// The exclusive upper checkpoint bound of this filter, if any.
+    pub fn before_checkpoint(&self) -> Option<u64> {
+        self.before_checkpoint
+    }
+
+    /// The transaction digests this filter is limited to, if any.
+    pub fn transaction_ids(&self) -> Option<&[String]> {
+        self.transaction_ids.as_deref()
+    }
+}
+
+/// The GraphQL input object, built from a [`TransactionsFilter`].
+#[derive(Clone, cynic::InputObject, Debug, Default)]
+#[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
+pub struct TransactionBlockFilter {
+    function: Option<String>,
+    kind: Option<TransactionBlockKindInput>,
+    after_checkpoint: Option<u64>,
+    at_checkpoint: Option<u64>,
+    before_checkpoint: Option<u64>,
+    sent_address: Option<Address>,
+    affected_address: Option<Address>,
+    recv_address: Option<Address>,
+    input_object: Option<ObjectId>,
+    changed_object: Option<ObjectId>,
+    wrapped_or_deleted_object: Option<ObjectId>,
+    transaction_ids: Option<Vec<String>>,
+}
+
+impl From<TransactionsFilter> for TransactionBlockFilter {
+    fn from(filter: TransactionsFilter) -> Self {
+        let TransactionsFilter {
+            selector,
+            sent_address,
+            after_checkpoint,
+            at_checkpoint,
+            before_checkpoint,
+            transaction_ids,
+        } = filter;
+
+        let mut input = Self {
+            sent_address,
+            after_checkpoint,
+            at_checkpoint,
+            before_checkpoint,
+            transaction_ids,
+            ..Default::default()
+        };
+
+        if let Some(selector) = selector {
+            match selector {
+                TransactionsSelector::Function(function) => input.function = Some(function),
+                TransactionsSelector::Kind(kind) => input.kind = Some(kind),
+                TransactionsSelector::RecvAddress(address) => input.recv_address = Some(address),
+                TransactionsSelector::AffectedAddress(address) => {
+                    input.affected_address = Some(address)
+                }
+                TransactionsSelector::InputObject(object_id) => {
+                    input.input_object = Some(object_id)
+                }
+                TransactionsSelector::ChangedObject(object_id) => {
+                    input.changed_object = Some(object_id)
+                }
+                TransactionsSelector::WrappedOrDeletedObject(object_id) => {
+                    input.wrapped_or_deleted_object = Some(object_id)
+                }
+            }
+        }
+
+        input
     }
 }
 

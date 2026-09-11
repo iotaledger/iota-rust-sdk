@@ -139,12 +139,18 @@ pub struct ValidatorAggregatedSignature(pub iota_sdk::types::ValidatorAggregated
 #[uniffi::export]
 impl ValidatorAggregatedSignature {
     #[uniffi::constructor]
-    pub fn new(epoch: EpochId, signature: &Bls12381Signature, bitmap_bytes: &[u8]) -> Result<Self> {
-        Ok(Self(iota_sdk::types::ValidatorAggregatedSignature {
-            epoch,
-            signature: **signature,
-            bitmap: roaring::RoaringBitmap::deserialize_from(bitmap_bytes)?,
-        }))
+    pub fn from_signer_bitmap(
+        epoch: EpochId,
+        signature: &Bls12381Signature,
+        bitmap_bytes: &[u8],
+    ) -> Result<Self> {
+        Ok(Self(
+            iota_sdk::types::ValidatorAggregatedSignature::from_signer_bitmap(
+                epoch,
+                **signature,
+                bitmap_bytes,
+            )?,
+        ))
     }
 
     pub fn epoch(&self) -> EpochId {
@@ -155,10 +161,8 @@ impl ValidatorAggregatedSignature {
         self.0.signature.into()
     }
 
-    pub fn bitmap_bytes(&self) -> Result<Vec<u8>> {
-        let mut bytes = Vec::new();
-        self.0.bitmap.serialize_into(&mut bytes)?;
-        Ok(bytes)
+    pub fn bitmap_bytes(&self) -> Vec<u8> {
+        self.0.signer_bitmap()
     }
 }
 

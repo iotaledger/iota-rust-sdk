@@ -152,7 +152,78 @@ pub struct ValidatorAggregatedSignature {
         strategy(proptest::strategy::Just(roaring::RoaringBitmap::default()))
     )]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "bytes"))]
-    pub bitmap: roaring::RoaringBitmap,
+    bitmap: roaring::RoaringBitmap,
+}
+
+/// Error returned when a signer bitmap cannot be read.
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+#[derive(Debug, thiserror::Error)]
+#[error("invalid signer bitmap: {0}")]
+#[non_exhaustive]
+pub struct SignerBitmapError(String);
+
+impl ValidatorAggregatedSignature {
+    /// Construct an aggregated signature from the committee indices of the
+    /// validators that signed.
+    ///
+    /// Indices are deduplicated and stored in ascending order regardless of
+    /// the order they are supplied in.
+    pub fn new(
+        epoch: EpochId,
+        signature: Bls12381Signature,
+        signers: impl IntoIterator<Item = u32>,
+    ) -> Self {
+        Self {
+            epoch,
+            signature,
+            bitmap: signers.into_iter().collect(),
+        }
+    }
+
+    /// Construct an aggregated signature from a signer set in the
+    /// [RoaringBitmap serialized form], as it appears in the BCS encoding
+    /// of this type.
+    ///
+    /// [RoaringBitmap serialized form]: https://github.com/RoaringBitmap/RoaringFormatSpec
+    #[cfg(feature = "serde")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+    pub fn from_signer_bitmap(
+        epoch: EpochId,
+        signature: Bls12381Signature,
+        bitmap: &[u8],
+    ) -> Result<Self, SignerBitmapError> {
+        Ok(Self {
+            epoch,
+            signature,
+            bitmap: roaring::RoaringBitmap::deserialize_from(bitmap)
+                .map_err(|e| SignerBitmapError(e.to_string()))?,
+        })
+    }
+
+    /// The committee indices of the validators that signed, in ascending order.
+    pub fn signer_indices(&self) -> impl Iterator<Item = u32> + '_ {
+        self.bitmap.iter()
+    }
+
+    /// The number of validators that signed.
+    pub fn signer_count(&self) -> u64 {
+        self.bitmap.len()
+    }
+
+    /// The signer set in the [RoaringBitmap serialized form], as it appears in
+    /// the BCS encoding of this type.
+    ///
+    /// [RoaringBitmap serialized form]: https://github.com/RoaringBitmap/RoaringFormatSpec
+    #[cfg(feature = "serde")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+    pub fn signer_bitmap(&self) -> Vec<u8> {
+        let mut bytes = Vec::with_capacity(self.bitmap.serialized_size());
+        self.bitmap
+            .serialize_into(&mut bytes)
+            .expect("writing to a Vec cannot fail");
+        bytes
+    }
 }
 
 impl crate::TreeDisplay for ValidatorAggregatedSignature {
@@ -310,5 +381,52 @@ mod tests {
         let signature: ValidatorAggregatedSignature = bcs::from_bytes(&bcs).unwrap();
         let bytes = bcs::to_bytes(&signature).unwrap();
         assert_eq!(bcs, bytes);
+    }
+
+    #[test]
+    fn signers_are_sorted_and_deduplicated() {
+        let signature = ValidatorAggregatedSignature::new(
+            7,
+            Bls12381Signature::new([0; Bls12381Signature::LENGTH]),
+            [4, 1, 4, 0],
+        );
+
+        assert_eq!(signature.signer_indices().collect::<Vec<_>>(), [0, 1, 4]);
+        assert_eq!(signature.signer_count(), 3);
+    }
+
+    #[test]
+    fn signer_bitmap_round_trips() {
+        let signature = ValidatorAggregatedSignature::new(
+            7,
+            Bls12381Signature::new([0; Bls12381Signature::LENGTH]),
+            [0, 3, 9],
+        );
+
+        let back = ValidatorAggregatedSignature::from_signer_bitmap(
+            signature.epoch,
+            signature.signature,
+            &signature.signer_bitmap(),
+        )
+        .unwrap();
+
+        assert_eq!(signature, back);
+    }
+
+    #[test]
+    fn a_truncated_signer_bitmap_is_rejected() {
+        let signature = ValidatorAggregatedSignature::new(
+            7,
+            Bls12381Signature::new([0; Bls12381Signature::LENGTH]),
+            [0, 3, 9],
+        );
+        let bitmap = signature.signer_bitmap();
+
+        ValidatorAggregatedSignature::from_signer_bitmap(
+            signature.epoch,
+            signature.signature,
+            &bitmap[..bitmap.len() - 1],
+        )
+        .unwrap_err();
     }
 }
