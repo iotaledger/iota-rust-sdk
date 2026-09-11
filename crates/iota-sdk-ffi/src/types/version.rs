@@ -5,6 +5,10 @@ use std::sync::Arc;
 
 use crate::error::Result;
 
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(derive_more::Deref, derive_more::From, uniffi::Object)]
 pub struct Version(iota_sdk::types::Version);
 

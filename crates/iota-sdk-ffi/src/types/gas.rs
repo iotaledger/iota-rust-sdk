@@ -29,14 +29,8 @@
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// gas-cost-summary = u64 ; computation-cost
-///                    u64 ; storage-cost
-///                    u64 ; storage-rebate
-///                    u64 ; non-refundable-storage-fee
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct GasCostSummary {
     /// Cost of computation/execution

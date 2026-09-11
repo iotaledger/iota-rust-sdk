@@ -9,12 +9,8 @@ use crate::checkpoint::{EpochId, StakeUnit};
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// validator-committee = u64 ; epoch
-///                       (vector validator-committee-member)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -111,12 +107,8 @@ impl crate::TreeDisplay for ValidatorCommittee {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// validator-committee-member = bls12381-public-key
-///                              u64 ; stake
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -141,18 +133,10 @@ impl crate::TreeDisplay for ValidatorCommitteeMember {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// ```text
-/// validator-aggregated-signature = u64                  ; epoch
-///                                  bls12381-signature   ; signature
-///                                  bytes                ; bitmap — contents of the bytes are
-///                                                       ; valid according to the serialized
-///                                                       ; spec for roaring bitmaps
-/// ```
-///
-/// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
-/// serialized format of RoaringBitmaps.
+/// The `bitmap` bytes follow the [RoaringBitmap serialized format](https://github.com/RoaringBitmap/RoaringFormatSpec).
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -295,18 +279,15 @@ impl<'de> serde_with::DeserializeAs<'de, Bls12381PublicKey> for BinaryValidatorP
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// validator-signature = u64                  ; epoch
-///                       bls12381-public-key
-///                       bls12381-signature
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ValidatorSignature {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     #[cfg_attr(feature = "serde", serde(with = "ValidatorPublicKeySerialization"))]
     pub public_key: Bls12381PublicKey,

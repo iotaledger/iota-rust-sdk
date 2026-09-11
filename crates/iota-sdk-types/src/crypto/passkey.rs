@@ -9,18 +9,8 @@ use crate::SigningDigest;
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// passkey-bcs = bytes               ; where the contents of the bytes are
-///                                   ; defined by <passkey>
-/// passkey     = passkey-flag
-///               bytes               ; passkey authenticator data
-///               client-data-json    ; valid json
-///               simple-signature    ; required to be a secp256r1 signature
-///
-/// client-data-json = string ; valid json
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
 /// the required json-schema for the `client-data-json` rule. In addition, IOTA
@@ -118,11 +108,8 @@ impl crate::TreeDisplay for PasskeyAuthenticator {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// passkey-public-key = passkey-flag secp256r1-public-key
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(
     feature = "serde",

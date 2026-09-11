@@ -10,15 +10,8 @@ use crate::{TypeParseError, move_core::parse::MAX_IDENTIFIER_LENGTH};
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// identifier = %d1-128    ; length of the identifier
-///              (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
-///              (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
-///
-/// UNDERSCORE = %x95
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(

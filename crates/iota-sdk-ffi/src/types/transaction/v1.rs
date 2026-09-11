@@ -15,21 +15,8 @@ use crate::types::{
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// effects-v1 = execution-status
-///              u64                                ; epoch
-///              gas-cost-summary
-///              digest                             ; transaction digest
-///              (option u32)                       ; gas object index
-///              (option digest)                    ; events digest
-///              (vector digest)                    ; list of transaction dependencies
-///              u64                                ; lamport version
-///              (vector changed-object)
-///              (vector unchanged-shared-object)
-///              (option digest)                    ; auxiliary data digest
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct TransactionEffectsV1(pub iota_sdk::types::TransactionEffectsV1);
@@ -246,11 +233,8 @@ impl TransactionEffectsV1 {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// changed-object = object-id object-in object-out id-operation
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct ChangedObject {
     /// Id of the object
@@ -291,11 +275,8 @@ impl From<ChangedObject> for iota_sdk::types::ChangedObject {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// unchanged-shared-object = object-id unchanged-shared-object-kind
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct UnchangedSharedObject {
     pub object_id: Arc<ObjectId>,
@@ -324,21 +305,8 @@ impl From<UnchangedSharedObject> for iota_sdk::types::UnchangedSharedObject {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// unchanged-shared-object-kind =  read-only-root
-///                              =/ mutate-deleted
-///                              =/ read-deleted
-///                              =/ canceled
-///                              =/ per-epoch-config
-///
-/// read-only-root      = %d00 u64 digest
-/// mutate-deleted      = %d01 u64
-/// read-deleted        = %d02 u64
-/// canceled           = %d03 u64
-/// per-epoch-config    = %d04
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
@@ -415,14 +383,8 @@ impl From<UnchangedSharedKind> for iota_sdk::types::UnchangedSharedKind {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object-in = object-in-missing / object-in-data
-///
-/// object-in-missing = %d00
-/// object-in-data    = %d01 u64 digest owner
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 pub enum ObjectIn {
     Missing,
@@ -473,18 +435,8 @@ impl From<ObjectIn> for iota_sdk::types::ObjectIn {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object-out  =  object-out-missing
-///             =/ object-out-object-write
-///             =/ object-out-package-write
-///
-///
-/// object-out-missing        = %d00
-/// object-out-object-write   = %d01 digest owner
-/// object-out-package-write  = %d02 version digest
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
@@ -539,17 +491,8 @@ impl From<ObjectOut> for iota_sdk::types::ObjectOut {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// id-operation =  id-operation-none
-///              =/ id-operation-created
-///              =/ id-operation-deleted
-///
-/// id-operation-none       = %d00
-/// id-operation-created    = %d01
-/// id-operation-deleted    = %d02
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 #[repr(u8)]
 pub enum IdOperation {
