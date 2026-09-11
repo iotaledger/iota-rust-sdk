@@ -100,6 +100,21 @@ fun main() = runBlocking {
         } else {
             println("No shop JSON results")
         }
+
+        // ===========================================================================
+        // Example 5: Using moveViewCallBuilder() to assemble the call
+        // ===========================================================================
+        println()
+        println("=== Example 5: moveViewCallBuilder() ===")
+        println()
+
+        val builderResults =
+            client
+                .moveViewCallBuilder(ObjectId.fromHex(VIEW_DEMO_PACKAGE), "shop", "sale_at")
+                .arguments(listOf(MoveViewArg.objectId(objectId), MoveViewArg.u64(1uL)))
+                .execute()
+
+        println("Builder Results: $builderResults")
     } catch (e: Exception) {
         e.printStackTrace()
         kotlin.system.exitProcess(1)

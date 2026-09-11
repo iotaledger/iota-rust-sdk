@@ -4,6 +4,8 @@
 pub mod builder;
 pub mod client_builder;
 pub mod move_authenticator;
+pub mod move_view_arg;
+pub mod move_view_call_builder;
 pub mod ptb_arg;
 pub mod signer;
 
