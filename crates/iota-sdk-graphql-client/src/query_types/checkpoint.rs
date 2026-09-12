@@ -25,12 +25,12 @@ pub struct CheckpointQuery {
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointArgs")]
 pub struct CheckpointTotalTxQuery {
     #[arguments(id: $id)]
-    pub checkpoint: Option<CheckpointTotalTx>,
+    pub checkpoint: Option<CheckpointNetworkTotalTransactions>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Checkpoint")]
-pub struct CheckpointTotalTx {
+pub struct CheckpointNetworkTotalTransactions {
     pub network_total_transactions: Option<u64>,
 }
 

@@ -14,7 +14,7 @@ use crate::query_types::{
 )]
 pub struct NormalizedMoveModuleQuery {
     #[arguments(address: $package, version: $version)]
-    pub package: Option<MovePackage>,
+    pub package: Option<MovePackageModule>,
 }
 
 #[derive(Clone, cynic::QueryVariables, Debug)]
@@ -46,7 +46,7 @@ pub struct NormalizedMoveModuleQueryArgs<'a> {
     graphql_type = "MovePackage",
     variables = "NormalizedMoveModuleQueryArgs"
 )]
-pub struct MovePackage {
+pub struct MovePackageModule {
     #[arguments(name: $module)]
     pub module: Option<MoveModule>,
 }
