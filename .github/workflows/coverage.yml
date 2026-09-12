@@ -57,18 +57,7 @@ jobs:
         with:
           size: 256G
 
-      - name: Get the IOTA alphanet binary
-        shell: bash
-        env:
-          IOTA_BINARY_VERSION: "v1.16.2"
-        run: |
-          ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
-          download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
-
-          echo "Downloading alphanet binary from $download_url"
-          wget -q $download_url -O iota.tgz
-          tar -zxvf iota.tgz ./iota
-          chmod +x ./iota
+      - uses: ./.github/actions/start-local-network
 
       - name: Install llvm-tools
         run: |
@@ -84,17 +73,21 @@ jobs:
             exit 1
           fi
 
+      - name: Build the test fixtures
+        run: |
+          make package_test_example_v1.json package_test_example_v2.json
+          make fetch-compiled-packages
+
       - name: Run code coverage
         run: |
           set +e
 
-          ./run_localnet.sh start ./iota
-
-          make package_test_example_v1.json package_test_example_v2.json
-          make fetch-compiled-packages
-
           echo "Generating coverage data (.profraw files)."
-          cargo llvm-cov --ignore-run-fail --no-report nextest --workspace --exclude iota-sdk-ffi --exclude iota-sdk-graphql-client-build
+          # Same test selection as `make test`, plus the network-dependent crates
+          # the local network makes runnable here.
+          cargo llvm-cov --ignore-run-fail --no-report nextest --all-features --workspace \
+            --exclude iota-sdk-ffi --exclude iota-sdk-graphql-client-build --exclude iota-sdk-grpc-client
+          cargo llvm-cov --ignore-run-fail --no-report nextest --no-default-features -p iota-sdk-grpc-client
 
           echo "Merging .profraw files."
           find target/llvm-cov-target -name '*.profraw' -print0 | xargs -0 $LLVM_PROFDATA merge \
@@ -102,7 +95,7 @@ jobs:
             --sparse \
             --output target/nextest.profdata
 
-          ./run_localnet.sh stop ./iota
+          ./run_localnet.sh stop ./iota-localnet
 
       - name: Create report
         run: |
@@ -123,3 +116,9 @@ jobs:
           path-to-lcov: target/lcov.info
           flag-name: nextest
           fail-on-error: true
+
+      - name: Keep the report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lcov
+          path: target/lcov.info
