@@ -19,6 +19,7 @@ pub struct NameRegistration {
     id: ObjectId,
     name: Name,
     name_str: String,
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     expiration_timestamp_ms: u64,
 }
 
@@ -136,5 +137,26 @@ impl IotaNamesNft for SubnameRegistration {
 
     fn id(&self) -> ObjectId {
         self.id
+    }
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod tests {
+    use std::str::FromStr;
+
+    use super::*;
+
+    #[test]
+    fn registration_expiration_serializes_as_string_in_json() {
+        let registration = NameRegistration::new(
+            ObjectId::ZERO,
+            Name::from_str("example.iota").unwrap(),
+            "example.iota".to_owned(),
+            1234,
+        );
+        let json = serde_json::to_value(&registration).unwrap();
+        assert_eq!(json["expiration_timestamp_ms"], "1234");
+        let restored: NameRegistration = serde_json::from_value(json).unwrap();
+        assert_eq!(restored, registration);
     }
 }
