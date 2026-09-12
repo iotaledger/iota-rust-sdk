@@ -34,7 +34,34 @@ impl ExecuteTransactionResult {
 
 // ExecutionError
 
+impl TryFrom<&ExecutionError> for iota_types::ExecutionFailure {
+    type Error = TryFromProtoError;
+
+    fn try_from(error: &ExecutionError) -> Result<Self, Self::Error> {
+        Ok(Self::new(
+            error.error_kind()?,
+            error.source.clone(),
+            error.command_index,
+        ))
+    }
+}
+
 impl ExecutionError {
+    /// Convert into the native
+    /// [`ExecutionFailure`](iota_types::ExecutionFailure), deserializing
+    /// the BCS-encoded error kind.
+    ///
+    /// Requires the `bcs_kind` field; `source` and `command_index` are carried
+    /// over as-is when present.
+    ///
+    /// **Read mask:** `"execution_result.execution_error"` (see
+    /// [`SIMULATED_TRANSACTION_EXECUTION_RESULT`]).
+    ///
+    /// [`SIMULATED_TRANSACTION_EXECUTION_RESULT`]: crate::read_masks::SIMULATED_TRANSACTION_EXECUTION_RESULT
+    pub fn execution_failure(&self) -> Result<iota_types::ExecutionFailure, TryFromProtoError> {
+        self.try_into()
+    }
+
     /// Deserialize the execution error kind from BCS.
     ///
     /// **Read mask:** `"execution_result.execution_error.bcs_kind"` (see
