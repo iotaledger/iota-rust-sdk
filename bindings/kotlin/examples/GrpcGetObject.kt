@@ -14,8 +14,13 @@ fun main() = runBlocking {
             ObjectId.fromHex("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
 
         // `objects` is batched: it takes a list of ids and returns the objects in
-        // the same order.
-        val obj = client.objects(listOf(objectId))[0]
+        // the same order. The default read mask returns the reference and the
+        // BCS-decoded object; pass `readMask = listOf("reference")` to skip the
+        // object.
+        val obj =
+            checkNotNull(client.objects(listOf(objectId))[0].`object`) {
+                "Object not included in the response"
+            }
 
         println("Object ID: ${obj.id().toHex()}")
         println("Version: ${obj.version()}")
