@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{collections::HashMap, sync::Arc};
+use std::sync::Arc;
 
 use crate::{
     error::Result,
@@ -458,6 +458,14 @@ impl From<UpgradeInfo> for iota_sdk::types::UpgradeInfo {
     }
 }
 
+crate::ffi_map! {
+    ModuleMap<Identifier, Vec<u8>>
+}
+
+crate::ffi_map! {
+    LinkageMap<ObjectId, UpgradeInfo>
+}
+
 /// A move package
 ///
 /// # BCS
@@ -474,21 +482,24 @@ impl MovePackage {
     pub fn new(
         id: &ObjectId,
         version: &Version,
-        modules: HashMap<Arc<Identifier>, Vec<u8>>,
+        modules: &ModuleMap,
         type_origin_table: Vec<TypeOrigin>,
-        linkage_table: HashMap<Arc<ObjectId>, UpgradeInfo>,
+        linkage_table: &LinkageMap,
     ) -> Result<Self> {
         Ok(Self(iota_sdk::types::MovePackage {
             id: **id,
             version: **version,
-            modules: modules.into_iter().map(|(k, v)| (k.0.clone(), v)).collect(),
+            modules: modules
+                .iter()
+                .map(|(k, v)| (k.0.clone(), v.clone()))
+                .collect(),
             type_origin_table: type_origin_table
                 .into_iter()
                 .map(TryInto::try_into)
                 .collect::<Result<Vec<_>, _>>()?,
             linkage_table: linkage_table
-                .into_iter()
-                .map(|(k, v)| (**k, v.into()))
+                .iter()
+                .map(|(k, v)| (***k, v.clone().into()))
                 .collect(),
         }))
     }
@@ -501,7 +512,7 @@ impl MovePackage {
         self.0.version.into()
     }
 
-    pub fn modules(&self) -> HashMap<Arc<Identifier>, Vec<u8>> {
+    pub fn modules(&self) -> ModuleMap {
         self.0
             .modules
             .iter()
@@ -518,7 +529,7 @@ impl MovePackage {
             .collect()
     }
 
-    pub fn linkage_table(&self) -> HashMap<Arc<ObjectId>, UpgradeInfo> {
+    pub fn linkage_table(&self) -> LinkageMap {
         self.0
             .linkage_table
             .iter()

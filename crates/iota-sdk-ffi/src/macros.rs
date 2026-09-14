@@ -305,3 +305,104 @@ macro_rules! export_iota_types_objects_display {
         )+
     }
 }
+
+#[macro_export]
+macro_rules! ffi_map {
+    (@map-objects $(#[$meta:meta])* $name:ident<$key:ty, $value:ty>) => {
+        paste::paste! {
+            $(#[$meta])*
+            #[derive(uniffi::Object)]
+            pub struct $name(::std::collections::HashMap<::std::sync::Arc<$key>, $value>);
+
+            #[doc = "An entry in the " $name " map."]
+            #[derive(Clone, uniffi::Record)]
+            pub struct [<$name Entry>] {
+                /// The entry's key.
+                pub key: ::std::sync::Arc<$key>,
+                /// The value stored under it.
+                pub value: $value,
+            }
+
+            #[uniffi::export]
+            impl $name {
+                /// Collect entries into a map. A key repeated across entries keeps
+                /// the value of the last one.
+                #[uniffi::constructor]
+                pub fn from_entries(entries: Vec<[<$name Entry>]>) -> Self {
+                    let mut map = ::std::collections::HashMap::new();
+                    for entry in entries {
+                        map.insert(entry.key, entry.value);
+                    }
+                    Self(map)
+                }
+
+                /// The value stored under `key`, or `None` if there is none.
+                pub fn get(&self, key: &$key) -> Option<$value> {
+                    self.0.get(key).cloned()
+                }
+
+                /// Whether a value is stored under `key`.
+                pub fn contains_key(&self, key: &$key) -> bool {
+                    self.0.contains_key(key)
+                }
+
+                /// The number of entries.
+                pub fn len(&self) -> u64 {
+                    self.0.len() as _
+                }
+
+                /// Whether the map holds no entries.
+                pub fn is_empty(&self) -> bool {
+                    self.0.is_empty()
+                }
+
+                /// Every key, in no particular order.
+                pub fn keys(&self) -> Vec<::std::sync::Arc<$key>> {
+                    self.0.keys().cloned().collect()
+                }
+
+                /// Every value, in no particular order.
+                pub fn values(&self) -> Vec<$value> {
+                    self.0.values().cloned().collect()
+                }
+
+                /// Every entry, in no particular order.
+                pub fn entries(&self) -> Vec<[<$name Entry>]> {
+                    self.0
+                        .iter()
+                        .map(|(key, value)| [<$name Entry>] {
+                            key: key.clone(),
+                            value: value.clone(),
+                        })
+                        .collect()
+                }
+            }
+
+            impl $name {
+                /// Borrow the entries, the way the native map this stands in
+                /// for is read.
+                pub fn iter(&self) -> impl Iterator<Item = (&::std::sync::Arc<$key>, &$value)> {
+                    self.0.iter()
+                }
+            }
+
+            impl FromIterator<(::std::sync::Arc<$key>, $value)> for $name {
+                fn from_iter<I: IntoIterator<Item = (::std::sync::Arc<$key>, $value)>>(iter: I) -> Self {
+                    Self(iter.into_iter().collect())
+                }
+            }
+        }
+    };
+    (@hashmap $(#[$meta:meta])* $name:ident<$key:ty, $value:ty>) => {
+        $(#[$meta])*
+        pub(crate) type $name = ::std::collections::HashMap<::std::sync::Arc<$key>, $value>;
+    };
+    ($(#[$meta:meta])* $name:ident<$key:ty, $value:ty>) => {
+        #[cfg(feature = "map-objects")]
+        $crate::ffi_map!(@map-objects $(#[$meta])* $name<$key, $value>);
+
+        #[cfg(not(feature = "map-objects"))]
+        $crate::ffi_map!(@hashmap $(#[$meta])* $name<$key, $value>);
+
+    };
+}
