@@ -3,7 +3,7 @@
 
 //! Transactions API implementation.
 
-use std::{collections::HashMap, sync::Arc, time::Duration};
+use std::{sync::Arc, time::Duration};
 
 use crate::{
     error::Result,
@@ -76,20 +76,24 @@ impl GraphQLClient {
     }
 
     /// Get transactions by their digests, including transactions that are not
-    /// checkpointed yet. Digests that were not found are absent from the
-    /// returned map.
+    /// checkpointed yet. The result has one entry per requested digest, in the
+    /// same order; a digest that was not found is `None`.
     pub async fn transactions_by_digest(
         &self,
         digests: Vec<Arc<TransactionDigest>>,
-    ) -> Result<HashMap<Arc<TransactionDigest>, SignedTransaction>> {
-        Ok(self
+    ) -> Result<Vec<Option<SignedTransaction>>> {
+        let digests = digests.into_iter().map(|d| **d).collect::<Vec<_>>();
+        let transactions = self
             .0
             .read()
             .await
-            .transactions_by_digest(digests.into_iter().map(|d| **d))
-            .await?
-            .into_iter()
-            .map(|(digest, transaction)| (Arc::new(digest.into()), transaction.into()))
+            .transactions_by_digest(digests.iter().copied())
+            .await?;
+
+        // Cloned rather than removed so a digest listed twice resolves twice.
+        Ok(digests
+            .iter()
+            .map(|digest| transactions.get(digest).cloned().map(Into::into))
             .collect())
     }
 
