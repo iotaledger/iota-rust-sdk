@@ -67,7 +67,7 @@ class Program
         Console.WriteLine("Dependencies:");
         var dependencies = package
             .LinkageTable()
-            .Select(entry => entry.Value)
+            .Values()
             .OrderBy(upgrade => upgrade.UpgradedId.ToHex())
             .ToArray();
         if (dependencies.Length == 0)
@@ -89,7 +89,7 @@ class Program
         Console.WriteLine("Package contents:");
         var moduleNames = package
             .Modules()
-            .Keys
+            .Keys()
             .Select(moduleId => moduleId.AsStr())
             .OrderBy(moduleName => moduleName);
 

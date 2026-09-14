@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{collections::HashMap, sync::Arc};
+use std::sync::Arc;
 
 use crate::{
     error::Result,
@@ -458,6 +458,23 @@ impl From<UpgradeInfo> for iota_sdk::types::UpgradeInfo {
     }
 }
 
+crate::ffi_map! {
+    /// The modules of a [`MovePackage`], keyed by module name.
+    PackageModules {
+        /// A module name and its bytecode.
+        ModuleEntry(Identifier => Vec<u8>)
+    }
+}
+
+crate::ffi_map! {
+    /// The packages a [`MovePackage`] links against, keyed by the dependency's
+    /// ID as it was first published.
+    LinkageTable {
+        /// A dependency and the version of it that is linked against.
+        LinkageEntry(ObjectId => UpgradeInfo)
+    }
+}
+
 /// A move package
 ///
 /// # BCS
@@ -474,21 +491,26 @@ impl MovePackage {
     pub fn new(
         id: &ObjectId,
         version: &Version,
-        modules: HashMap<Arc<Identifier>, Vec<u8>>,
+        modules: &PackageModules,
         type_origin_table: Vec<TypeOrigin>,
-        linkage_table: HashMap<Arc<ObjectId>, UpgradeInfo>,
+        linkage_table: &LinkageTable,
     ) -> Result<Self> {
         Ok(Self(iota_sdk::types::MovePackage {
             id: **id,
             version: **version,
-            modules: modules.into_iter().map(|(k, v)| (k.0.clone(), v)).collect(),
+            modules: modules
+                .entries()
+                .into_iter()
+                .map(|entry| (entry.key.0.clone(), entry.value))
+                .collect(),
             type_origin_table: type_origin_table
                 .into_iter()
                 .map(TryInto::try_into)
                 .collect::<Result<Vec<_>, _>>()?,
             linkage_table: linkage_table
+                .entries()
                 .into_iter()
-                .map(|(k, v)| (**k, v.into()))
+                .map(|entry| (**entry.key, entry.value.into()))
                 .collect(),
         }))
     }
@@ -501,11 +523,12 @@ impl MovePackage {
         self.0.version.into()
     }
 
-    pub fn modules(&self) -> HashMap<Arc<Identifier>, Vec<u8>> {
+    /// The modules in this package, keyed by module name.
+    pub fn modules(&self) -> PackageModules {
         self.0
             .modules
             .iter()
-            .map(|(k, v)| (Arc::new(k.clone().into()), v.clone()))
+            .map(|(name, bytes)| (Identifier(name.clone()), bytes.clone()))
             .collect()
     }
 
@@ -518,11 +541,12 @@ impl MovePackage {
             .collect()
     }
 
-    pub fn linkage_table(&self) -> HashMap<Arc<ObjectId>, UpgradeInfo> {
+    /// The packages this one links against.
+    pub fn linkage_table(&self) -> LinkageTable {
         self.0
             .linkage_table
             .iter()
-            .map(|(k, v)| (Arc::new((*k).into()), v.clone().into()))
+            .map(|(original_id, upgrade_info)| ((*original_id).into(), upgrade_info.clone().into()))
             .collect()
     }
 

@@ -57,7 +57,7 @@ async def main():
     # Print package dependencies and their linked versions.
     print("Dependencies:")
     linkage_table = package.linkage_table()
-    if len(linkage_table) == 0:
+    if linkage_table.is_empty():
         print("- none")
     else:
         for upgrade in sorted(linkage_table.values(),

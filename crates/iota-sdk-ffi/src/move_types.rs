@@ -66,6 +66,23 @@ fn url_to_string(u: &iota_sdk::move_types::iota_framework::url::Url) -> String {
     ascii_to_string(&u.url)
 }
 
+crate::ffi_map! {
+    /// The validators reporting each reported validator.
+    ValidatorReportRecords {
+        /// A reported validator and the validators reporting it.
+        ValidatorReportRecord(Address => Vec<Arc<Address>>)
+    }
+}
+
+crate::ffi_map! {
+    /// Number of epochs each at-risk validator has had stake below the
+    /// low-stake threshold.
+    AtRiskValidators {
+        /// An at-risk validator and its epoch count.
+        AtRiskValidator(Address => u64)
+    }
+}
+
 // =====================================================================
 // 0x3 — IOTA system
 // =====================================================================
@@ -200,14 +217,14 @@ impl IotaSystemStateV2 {
 
     /// Validator report records: each reported validator's address mapped to
     /// the addresses of the validators reporting it.
-    pub fn validator_report_records(&self) -> HashMap<Arc<Address>, Vec<Arc<Address>>> {
+    pub fn validator_report_records(&self) -> ValidatorReportRecords {
         self.0
             .validator_report_records
             .contents
             .iter()
             .map(|e| {
                 (
-                    Arc::new(Address(e.key)),
+                    Address(e.key),
                     e.value
                         .contents
                         .iter()
@@ -327,14 +344,14 @@ impl IotaSystemStateV1 {
 
     /// Validator report records: each reported validator's address mapped to
     /// the addresses of the validators reporting it.
-    pub fn validator_report_records(&self) -> HashMap<Arc<Address>, Vec<Arc<Address>>> {
+    pub fn validator_report_records(&self) -> ValidatorReportRecords {
         self.0
             .validator_report_records
             .contents
             .iter()
             .map(|e| {
                 (
-                    Arc::new(Address(e.key)),
+                    Address(e.key),
                     e.value
                         .contents
                         .iter()
@@ -414,12 +431,12 @@ impl ValidatorSetV2 {
 
     /// Number of epochs each at-risk validator has had stake below the
     /// low-stake threshold.
-    pub fn at_risk_validators(&self) -> HashMap<Arc<Address>, u64> {
+    pub fn at_risk_validators(&self) -> AtRiskValidators {
         self.0
             .at_risk_validators
             .contents
             .iter()
-            .map(|e| (Arc::new(Address(e.key)), e.value))
+            .map(|e| (Address(e.key), e.value))
             .collect()
     }
 
@@ -493,12 +510,12 @@ impl ValidatorSetV1 {
 
     /// Number of epochs each at-risk validator has had stake below the
     /// low-stake threshold.
-    pub fn at_risk_validators(&self) -> HashMap<Arc<Address>, u64> {
+    pub fn at_risk_validators(&self) -> AtRiskValidators {
         self.0
             .at_risk_validators
             .contents
             .iter()
-            .map(|e| (Arc::new(Address(e.key)), e.value))
+            .map(|e| (Address(e.key), e.value))
             .collect()
     }
 

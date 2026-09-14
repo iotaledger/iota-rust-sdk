@@ -305,3 +305,110 @@ macro_rules! export_iota_types_objects_display {
         )+
     }
 }
+
+/// Define an FFI map: a `uniffi::Object` wrapping a `HashMap` keyed by another
+/// object type, plus the entry record its listing methods hand back.
+///
+/// Bindings cannot key a native map by an object — Go and TypeScript compare
+/// such keys by pointer or reference identity, so a lookup with the caller's
+/// own key never matches. Keeping the map on this side of the boundary means
+/// lookups run against the key type's Rust `Eq`/`Hash`, which every language
+/// gets the same answer from.
+///
+/// The value type must be `Clone`, and the key type must derive `Eq` and
+/// `Hash` (which also requires exporting them, so bindings can compare keys
+/// they hold).
+#[macro_export]
+macro_rules! ffi_map {
+    (
+        $(#[$meta:meta])*
+        $name:ident {
+            $(#[$entry_meta:meta])*
+            $entry:ident($key:ty => $value:ty)
+        }
+    ) => {
+        $(#[$meta])*
+        #[derive(uniffi::Object)]
+        pub struct $name(::std::collections::HashMap<::std::sync::Arc<$key>, $value>);
+
+        $(#[$entry_meta])*
+        #[derive(Clone, uniffi::Record)]
+        pub struct $entry {
+            /// The entry's key.
+            pub key: ::std::sync::Arc<$key>,
+            /// The value stored under it.
+            pub value: $value,
+        }
+
+        #[uniffi::export]
+        impl $name {
+            /// Collect entries into a map. A key repeated across entries keeps
+            /// the value of the last one.
+            #[uniffi::constructor]
+            pub fn new(entries: Vec<$entry>) -> Self {
+                entries.into_iter().collect()
+            }
+
+            /// The value stored under `key`, or `None` if there is none.
+            pub fn get(&self, key: &$key) -> Option<$value> {
+                self.0.get(key).cloned()
+            }
+
+            /// Whether a value is stored under `key`.
+            pub fn contains_key(&self, key: &$key) -> bool {
+                self.0.contains_key(key)
+            }
+
+            /// The number of entries.
+            pub fn len(&self) -> u64 {
+                self.0.len() as _
+            }
+
+            /// Whether the map holds no entries.
+            pub fn is_empty(&self) -> bool {
+                self.0.is_empty()
+            }
+
+            /// Every key, in no particular order.
+            pub fn keys(&self) -> Vec<::std::sync::Arc<$key>> {
+                self.0.keys().cloned().collect()
+            }
+
+            /// Every value, in no particular order.
+            pub fn values(&self) -> Vec<$value> {
+                self.0.values().cloned().collect()
+            }
+
+            /// Every entry, in no particular order.
+            pub fn entries(&self) -> Vec<$entry> {
+                self.0
+                    .iter()
+                    .map(|(key, value)| $entry {
+                        key: key.clone(),
+                        value: value.clone(),
+                    })
+                    .collect()
+            }
+        }
+
+        impl ::std::iter::FromIterator<($key, $value)> for $name {
+            fn from_iter<I: ::std::iter::IntoIterator<Item = ($key, $value)>>(iter: I) -> Self {
+                Self(
+                    iter.into_iter()
+                        .map(|(key, value)| (::std::sync::Arc::new(key), value))
+                        .collect(),
+                )
+            }
+        }
+
+        impl ::std::iter::FromIterator<$entry> for $name {
+            fn from_iter<I: ::std::iter::IntoIterator<Item = $entry>>(iter: I) -> Self {
+                Self(
+                    iter.into_iter()
+                        .map(|entry| (entry.key, entry.value))
+                        .collect(),
+                )
+            }
+        }
+    };
+}
