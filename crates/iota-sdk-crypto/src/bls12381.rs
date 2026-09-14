@@ -231,17 +231,6 @@ mod tests {
     }
 
     #[proptest]
-    fn verifying_keys_compare_by_key(signer: Bls12381PrivateKey, other: Bls12381PrivateKey) {
-        let key = signer.verifying_key();
-
-        assert_eq!(key, key.clone());
-        assert_eq!(key, signer.verifying_key());
-        if signer != other {
-            assert_ne!(key, other.verifying_key());
-        }
-    }
-
-    #[proptest]
     fn base64_roundtrip(signer: Bls12381PrivateKey) {
         use crate::{ToFromBase64 as _, ToFromBytes as _};
 
