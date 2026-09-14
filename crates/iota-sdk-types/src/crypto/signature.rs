@@ -16,15 +16,8 @@ use crate::crypto::move_authenticator::MoveAuthenticator;
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// simple-signature = bytes ; where the contents of the bytes are defined by
-///                          ; <simple-signature-body>
-/// simple-signature-body = (ed25519-flag ed25519-signature ed25519-public-key) /
-///                         (secp256k1-flag secp256k1-signature secp256k1-public-key) /
-///                         (secp256r1-flag secp256r1-signature secp256r1-public-key)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
 /// different from the majority of the types in IOTA. In particular if a
@@ -268,21 +261,6 @@ impl crate::TreeDisplay for SimpleSignature {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
-///                    multisig-flag / bls-flag / passkey-auth-flag /
-///                    move-auth-flag
-/// ed25519-flag                    = %d00
-/// secp256k1-flag                  = %d01
-/// secp256r1-flag                  = %d02
-/// multisig-flag                   = %d03
-/// bls-flag                        = %d04
-/// passkey-auth-flag               = %d06
-/// move-auth-flag                  = %d07
-/// ```
-///
 /// Flag `%d05` is reserved: it was formerly used for the now-removed zklogin
 /// authenticator (which was never enabled on chain) and is intentionally
 /// skipped.
@@ -361,13 +339,8 @@ pub struct SignatureSchemeError(u8);
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// user-signature = bytes ; where the contents of the bytes are defined by
-///                        ; <user-signature-body>
-/// user-signature-body = simple-signature-body / multisig / passkey / move-authenticator
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
 /// different from the majority of the types in IOTA. In particular if a

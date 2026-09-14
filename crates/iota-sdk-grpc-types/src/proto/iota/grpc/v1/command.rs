@@ -11,24 +11,20 @@ use crate::{
     v1::bcs::BcsData,
 };
 
-impl TryFrom<iota_types::transaction::Argument> for Argument {
+impl TryFrom<iota_types::Argument> for Argument {
     type Error = GrpcConversionError;
 
-    fn try_from(arg: iota_types::transaction::Argument) -> Result<Self, Self::Error> {
+    fn try_from(arg: iota_types::Argument) -> Result<Self, Self::Error> {
         let kind = match arg {
-            iota_types::transaction::Argument::Gas => argument::Kind::GasCoin(argument::GasCoin {}),
-            iota_types::transaction::Argument::Input(idx) => {
-                argument::Kind::Input(argument::Input {
-                    index: Some(idx as u32),
-                })
-            }
-            iota_types::transaction::Argument::Result(idx) => {
-                argument::Kind::Result(argument::Result {
-                    index: Some(idx as u32),
-                    nested_result_index: None,
-                })
-            }
-            iota_types::transaction::Argument::NestedResult(idx, nested_idx) => {
+            iota_types::Argument::Gas => argument::Kind::GasCoin(argument::GasCoin {}),
+            iota_types::Argument::Input(idx) => argument::Kind::Input(argument::Input {
+                index: Some(idx as u32),
+            }),
+            iota_types::Argument::Result(idx) => argument::Kind::Result(argument::Result {
+                index: Some(idx as u32),
+                nested_result_index: None,
+            }),
+            iota_types::Argument::NestedResult(idx, nested_idx) => {
                 argument::Kind::Result(argument::Result {
                     index: Some(idx as u32),
                     nested_result_index: Some(nested_idx as u32),
@@ -45,28 +41,28 @@ impl TryFrom<iota_types::transaction::Argument> for Argument {
     }
 }
 
-impl TryFrom<&Argument> for iota_types::transaction::Argument {
+impl TryFrom<&Argument> for iota_types::Argument {
     type Error = TryFromProtoError;
 
     fn try_from(value: &Argument) -> Result<Self, Self::Error> {
         match &value.kind {
-            Some(argument::Kind::GasCoin(_)) => Ok(iota_types::transaction::Argument::Gas),
+            Some(argument::Kind::GasCoin(_)) => Ok(iota_types::Argument::Gas),
             Some(argument::Kind::Input(input)) => {
                 let index = input
                     .index
                     .ok_or_else(|| TryFromProtoError::missing("argument.input.index"))?;
-                Ok(iota_types::transaction::Argument::Input(index as u16))
+                Ok(iota_types::Argument::Input(index as u16))
             }
             Some(argument::Kind::Result(result)) => {
                 let index = result
                     .index
                     .ok_or_else(|| TryFromProtoError::missing("argument.result.index"))?;
                 match result.nested_result_index {
-                    Some(nested_idx) => Ok(iota_types::transaction::Argument::NestedResult(
+                    Some(nested_idx) => Ok(iota_types::Argument::NestedResult(
                         index as u16,
                         nested_idx as u16,
                     )),
-                    None => Ok(iota_types::transaction::Argument::Result(index as u16)),
+                    None => Ok(iota_types::Argument::Result(index as u16)),
                 }
             }
             Some(argument::Kind::Unknown(_)) => Err(TryFromProtoError::invalid(
@@ -82,7 +78,7 @@ impl TryFrom<&Argument> for iota_types::transaction::Argument {
 
 impl Argument {
     /// Deserialize the argument to SDK type.
-    pub fn argument(&self) -> Result<iota_types::transaction::Argument, TryFromProtoError> {
+    pub fn argument(&self) -> Result<iota_types::Argument, TryFromProtoError> {
         self.try_into()
     }
 }
@@ -93,7 +89,7 @@ impl CommandOutput {
     /// Deserialize the argument to SDK type.
     ///
     /// Requires `argument` in the read_mask.
-    pub fn argument(&self) -> Result<iota_types::transaction::Argument, TryFromProtoError> {
+    pub fn argument(&self) -> Result<iota_types::Argument, TryFromProtoError> {
         get_inner_field!(self.argument, Self::ARGUMENT_FIELD, argument)
     }
 

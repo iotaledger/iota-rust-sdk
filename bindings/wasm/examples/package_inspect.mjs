@@ -125,7 +125,7 @@ function extractPolicy(contents) {
 
 async function resolveUpgradeCapId(client, packageId) {
   const page = await client.transactionsEffects(
-    TransactionsFilter.new({ changedObject: packageId }),
+    new TransactionsFilter().withChangedObject(packageId),
     PaginationFilter.new({ direction: Direction.Forward, limit: 1 }),
   );
   for (const effects of page.data) {
@@ -246,7 +246,7 @@ async function wasPackagePublishedAsImmutable(client, packageId) {
   let cursor = undefined;
   while (true) {
     const page = await client.transactionsDataEffects(
-      TransactionsFilter.new({ changedObject: packageId }),
+      new TransactionsFilter().withChangedObject(packageId),
       forwardPage(cursor),
     );
     for (const txData of page.data) {
@@ -262,7 +262,7 @@ async function wasUpgradeCapUsedForMakeImmutable(client, upgradeCapId) {
   let cursor = undefined;
   while (true) {
     const page = await client.transactionsDataEffects(
-      TransactionsFilter.new({ inputObject: upgradeCapId }),
+      new TransactionsFilter().withInputObject(upgradeCapId),
       forwardPage(cursor),
     );
     for (const txData of page.data) {

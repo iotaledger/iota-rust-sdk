@@ -11,13 +11,8 @@ use crate::types::{address::Address, digest::Digest, object::ObjectId};
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// execution-status = success / failure
-/// success = %d00
-/// failure = %d01 execution-error (option u64)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
@@ -67,98 +62,8 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// 
-/// execution-error =  insufficient-gas
-///                 =/ invalid-gas-object
-///                 =/ invariant-violation
-///                 =/ feature-not-yet-supported
-///                 =/ object-too-big
-///                 =/ package-too-big
-///                 =/ circular-object-ownership
-///                 =/ insufficient-coin-balance
-///                 =/ coin-balance-overflow
-///                 =/ publish-error-non-zero-address
-///                 =/ iota-move-verification-error
-///                 =/ move-primitive-runtime-error
-///                 =/ move-abort
-///                 =/ vm-verification-or-deserialization-error
-///                 =/ vm-invariant-violation
-///                 =/ function-not-found
-///                 =/ arity-mismatch
-///                 =/ type-arity-mismatch
-///                 =/ non-entry-function-invoked
-///                 =/ command-argument-error
-///                 =/ type-argument-error
-///                 =/ unused-value-without-drop
-///                 =/ invalid-public-function-return-type
-///                 =/ invalid-transfer-object
-///                 =/ effects-too-large
-///                 =/ publish-upgrade-missing-dependency
-///                 =/ publish-upgrade-dependency-downgrade
-///                 =/ package-upgrade-error
-///                 =/ written-objects-too-large
-///                 =/ certificate-denied
-///                 =/ iota-move-verification-timeout
-///                 =/ shared-object-operation-not-allowed
-///                 =/ input-object-deleted
-///                 =/ execution-canceled-due-to-shared-object-congestion
-///                 =/ address-denied-for-coin
-///                 =/ coin-type-global-pause
-///                 =/ execution-canceled-due-to-randomness-unavailable
-///                 =/ execution-canceled-due-to-shared-object-congestion-v2
-///                 =/ invalid-linkage
-///                 =/ move-authentication-error
-///                 =/ execution-canceled-due-to-execution-worker-congestion
-///                 =/ move-vector-elem-too-big
-///                 =/ move-raw-value-too-big
-///
-/// insufficient-gas                                       = %d00
-/// invalid-gas-object                                     = %d01
-/// invariant-violation                                    = %d02
-/// feature-not-yet-supported                              = %d03
-/// object-too-big                                         = %d04 u64 u64
-/// package-too-big                                        = %d05 u64 u64
-/// circular-object-ownership                              = %d06 object-id
-/// insufficient-coin-balance                              = %d07
-/// coin-balance-overflow                                  = %d08
-/// publish-error-non-zero-address                         = %d09
-/// iota-move-verification-error                           = %d10
-/// move-primitive-runtime-error                           = %d11 (option move-location)
-/// move-abort                                             = %d12 move-location u64
-/// vm-verification-or-deserialization-error               = %d13
-/// vm-invariant-violation                                 = %d14
-/// function-not-found                                     = %d15
-/// arity-mismatch                                         = %d16
-/// type-arity-mismatch                                    = %d17
-/// non-entry-function-invoked                             = %d18
-/// command-argument-error                                 = %d19 u16 command-argument-error
-/// type-argument-error                                    = %d20 u16 type-argument-error
-/// unused-value-without-drop                              = %d21 u16 u16
-/// invalid-public-function-return-type                    = %d22 u16
-/// invalid-transfer-object                                = %d23
-/// effects-too-large                                      = %d24 u64 u64
-/// publish-upgrade-missing-dependency                     = %d25
-/// publish-upgrade-dependency-downgrade                   = %d26
-/// package-upgrade-error                                  = %d27 package-upgrade-error
-/// written-objects-too-large                              = %d28 u64 u64
-/// certificate-denied                                     = %d29
-/// iota-move-verification-timeout                         = %d30
-/// shared-object-operation-not-allowed                    = %d31
-/// input-object-deleted                                   = %d32
-/// execution-canceled-due-to-shared-object-congestion    = %d33 (vector object-id)
-/// address-denied-for-coin                                = %d34 address string
-/// coin-type-global-pause                                 = %d35 string
-/// execution-canceled-due-to-randomness-unavailable      = %d36
-/// execution-canceled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
-/// invalid-linkage                                        = %d38
-/// move-authentication-error                              = %d39 execution-error
-/// execution-canceled-due-to-execution-worker-congestion  = %d40 u64
-/// move-vector-elem-too-big                               = %d41 u64 u64
-/// move-raw-value-too-big                                 = %d42 u64 u64
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 pub enum ExecutionError {
     // General transaction errors
@@ -637,11 +542,8 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// move-location = object-id identifier u16 u16 (option identifier)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct MoveLocation {
     /// The package id
@@ -686,35 +588,8 @@ impl From<MoveLocation> for iota_sdk::types::MoveLocation {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// command-argument-error =  type-mismatch
-///                        =/ invalid-bcs-bytes
-///                        =/ invalid-usage-of-pure-argument
-///                        =/ invalid-argument-to-private-entry-function
-///                        =/ index-out-of-bounds
-///                        =/ secondary-index-out-of-bound
-///                        =/ invalid-result-arity
-///                        =/ invalid-gas-coin-usage
-///                        =/ invalid-value-usage
-///                        =/ invalid-object-by-value
-///                        =/ invalid-object-by-mut-ref
-///                        =/ shared-object-operation-not-allowed
-///
-/// type-mismatch                               = %d00
-/// invalid-bcs-bytes                           = %d01
-/// invalid-usage-of-pure-argument              = %d02
-/// invalid-argument-to-private-entry-function  = %d03
-/// index-out-of-bounds                         = %d04 u16
-/// secondary-index-out-of-bound                = %d05 u16 u16
-/// invalid-result-arity                        = %d06 u16
-/// invalid-gas-coin-usage                      = %d07
-/// invalid-value-usage                         = %d08
-/// invalid-object-by-value                     = %d09
-/// invalid-object-by-mut-ref                   = %d10
-/// shared-object-operation-not-allowed         = %d11
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
@@ -827,23 +702,8 @@ impl From<CommandArgumentError> for iota_sdk::types::CommandArgumentError {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// package-upgrade-error = unable-to-fetch-package /
-///                         not-a-package           /
-///                         incompatible-upgrade    /
-///                         digest-does-not-match   /
-///                         unknown-upgrade-policy  /
-///                         package-id-does-not-match
-///
-/// unable-to-fetch-package     = %d00 object-id
-/// not-a-package               = %d01 object-id
-/// incompatible-upgrade        = %d02
-/// digest-does-not-match       = %d03 digest
-/// unknown-upgrade-policy      = %d04 u8
-/// package-id-does-not-match   = %d05 object-id object-id
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
@@ -930,13 +790,8 @@ impl From<PackageUpgradeError> for iota_sdk::types::PackageUpgradeError {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// type-argument-error = type-not-found / constraint-not-satisfied
-/// type-not-found = %d00
-/// constraint-not-satisfied = %d01
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 #[repr(u8)]
 pub enum TypeArgumentError {

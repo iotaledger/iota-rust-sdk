@@ -98,11 +98,8 @@ impl crate::TreeDisplay for MovePackageData {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// upgrade-info = object-id version
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -128,11 +125,8 @@ impl crate::TreeDisplay for UpgradeInfo {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// type-origin = identifier identifier object-id
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -160,15 +154,8 @@ impl crate::TreeDisplay for TypeOrigin {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// move-package = object-id                          ; id
-///                version                            ; version
-///                (vector (identifier bytes))        ; modules
-///                (vector type-origin)               ; type-origin-table
-///                (vector (object-id upgrade-info))  ; linkage-table
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
