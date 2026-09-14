@@ -145,8 +145,16 @@ impl Signer<Bls12381Signature> for Bls12381PrivateKey {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Bls12381VerifyingKey(pub(crate) PublicKey);
+
+impl PartialEq for Bls12381VerifyingKey {
+    fn eq(&self, other: &Self) -> bool {
+        self.0.to_bytes() == other.0.to_bytes()
+    }
+}
+
+impl Eq for Bls12381VerifyingKey {}
 
 impl Bls12381VerifyingKey {
     pub fn new(public_key: &Bls12381PublicKey) -> Result<Self, SignatureError> {
@@ -228,6 +236,17 @@ mod tests {
             .verifying_key()
             .verify_proof_of_possession(address, &proof)
             .unwrap_err();
+    }
+
+    #[proptest]
+    fn verifying_keys_compare_by_key(signer: Bls12381PrivateKey, other: Bls12381PrivateKey) {
+        let key = signer.verifying_key();
+
+        assert_eq!(key, key.clone());
+        assert_eq!(key, signer.verifying_key());
+        if signer != other {
+            assert_ne!(key, other.verifying_key());
+        }
     }
 
     #[proptest]
