@@ -145,16 +145,8 @@ impl Signer<Bls12381Signature> for Bls12381PrivateKey {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Bls12381VerifyingKey(pub(crate) PublicKey);
-
-impl PartialEq for Bls12381VerifyingKey {
-    fn eq(&self, other: &Self) -> bool {
-        self.0.to_bytes() == other.0.to_bytes()
-    }
-}
-
-impl Eq for Bls12381VerifyingKey {}
 
 impl Bls12381VerifyingKey {
     pub fn new(public_key: &Bls12381PublicKey) -> Result<Self, SignatureError> {
