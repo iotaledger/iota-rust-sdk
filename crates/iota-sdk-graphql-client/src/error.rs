@@ -143,17 +143,11 @@ pub enum Error {
 /// The HTTP response a [`Error::Http`] or [`Error::Json`] was
 /// raised for.
 #[derive(Debug)]
-#[non_exhaustive]
 pub struct HttpResponse {
-    /// URL the request was sent to.
-    pub url: Url,
-    /// HTTP status the server answered with.
-    pub status: StatusCode,
-    /// Truncated, UTF-8-lossy snapshot of the response body.
-    pub body: String,
-    /// Name of the type the response was being decoded into. A bare status or
-    /// `serde_json` error does not reveal what the client was decoding.
-    pub target_type: &'static str,
+    url: Url,
+    status: StatusCode,
+    body: String,
+    target_type: &'static str,
 }
 
 impl HttpResponse {
@@ -164,6 +158,27 @@ impl HttpResponse {
             body: truncated_body(body),
             target_type,
         })
+    }
+
+    /// URL the request was sent to.
+    pub fn url(&self) -> &Url {
+        &self.url
+    }
+
+    /// HTTP status the server answered with.
+    pub fn status(&self) -> StatusCode {
+        self.status
+    }
+
+    /// Truncated, UTF-8-lossy snapshot of the response body.
+    pub fn body(&self) -> &str {
+        &self.body
+    }
+
+    /// Name of the type the response was being decoded into. A bare status or
+    /// `serde_json` error does not reveal what the client was decoding.
+    pub fn target_type(&self) -> &'static str {
+        self.target_type
     }
 }
 
