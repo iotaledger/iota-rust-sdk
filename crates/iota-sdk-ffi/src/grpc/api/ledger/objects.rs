@@ -29,7 +29,7 @@ pub struct ObjectRequest {
 }
 
 fn convert_objects(
-    objects: Vec<iota_sdk::grpc_client::Result<iota_sdk::grpc_types::v1::object::Object>>,
+    objects: Vec<iota_sdk::grpc_client::GrpcResult<iota_sdk::grpc_types::v1::object::Object>>,
 ) -> Result<Vec<Arc<Object>>> {
     objects
         .into_iter()
