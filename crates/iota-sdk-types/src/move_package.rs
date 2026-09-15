@@ -52,6 +52,12 @@ impl TryFrom<u8> for UpgradePolicy {
 
 /// Type corresponding to the output of `iota move build
 /// --dump-bytecode-as-base64`
+///
+/// The serde shape mirrors that output verbatim (base64-string modules,
+/// digest as a byte array) in every format, BCS included, and the FFI
+/// publishes the BCS form to all language bindings through
+/// `from_base64`/`to_base64`. Both encodings deliberately diverge from the
+/// crate's serde conventions; do not normalize them.
 #[derive(Clone, derive_more::Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct MovePackageData {
