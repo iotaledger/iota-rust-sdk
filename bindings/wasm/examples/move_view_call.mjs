@@ -100,3 +100,15 @@ if (shopJsonResult.error) {
 } else {
   console.log("No shop JSON results");
 }
+
+// === Example 5: moveViewCallBuilder() ===
+console.log("\n=== Example 5: moveViewCallBuilder() ===\n");
+
+const builder = client
+  .moveViewCallBuilder(ObjectId.fromHex(PACKAGE), "shop", "sale_at")
+  .arguments([
+    MoveViewArg.objectId(ObjectId.fromHex(SHOP)),
+    MoveViewArg.u64(1n),
+  ]);
+
+console.log("Builder Results:", await builder.execute());

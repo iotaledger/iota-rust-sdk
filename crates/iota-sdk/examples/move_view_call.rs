@@ -3,10 +3,8 @@
 
 use std::str::FromStr;
 
-use iota_sdk::{
-    graphql_client::{Client, error::Result},
-    types::ObjectId,
-};
+use eyre::Result;
+use iota_sdk::{graphql_client::Client, types::ObjectId};
 
 /// The `view_demo` package published on testnet.
 const PACKAGE: &str = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4";
@@ -100,6 +98,21 @@ async fn main() -> Result<()> {
         println!("Shop JSON Results: {results:?}");
     } else {
         println!("No shop JSON results");
+    }
+
+    // ===========================================================================
+    // Example 5: Using the MoveViewCallBuilder to assemble the call
+    // ===========================================================================
+    println!("\n=== Example 5: MoveViewCallBuilder ===\n");
+
+    match client
+        .move_view_call_builder(ObjectId::from_str(PACKAGE)?, "shop", "sale_at")
+        .arguments((ObjectId::from_str(SHOP)?, 1u64))
+        .execute()
+        .await
+    {
+        Ok(results) => println!("Builder Results: {results:?}"),
+        Err(error) => println!("Builder Error: {error}"),
     }
 
     Ok(())
