@@ -2,6 +2,25 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+//! Query, mutation and subscription types for the IOTA GraphQL RPC, derived
+//! with `cynic`.
+//!
+//! Names follow the GraphQL schema:
+//!
+//! - A root selection is named `<Stem>Query` (or `<Stem>Subscription`) and its
+//!   variables `<Stem>Args`: [`CheckpointsQuery`] takes [`CheckpointsArgs`].
+//! - A fragment selecting the fields of a GraphQL type is named after that type
+//!   ([`Validator`], [`Event`]), as are enums and input objects
+//!   ([`TransactionBlockKindInput`], [`EventFilter`]).
+//! - A fragment that only descends through one field to reach a nested fragment
+//!   is named `<GraphqlType><Field>`: `OwnerDynamicField` selects
+//!   `Owner.dynamicField`, `TransactionBlockEffectsCheckpoint` selects
+//!   `TransactionBlockEffects.checkpoint`.
+//! - When one GraphQL type has several fragments, a suffix says what sets each
+//!   apart ([`TransactionBlockWithEffects`], `EpochSummary`).
+//!
+//! Abbreviations such as `Tx` are spelled out.
+
 mod active_validators;
 mod balance;
 mod chain;

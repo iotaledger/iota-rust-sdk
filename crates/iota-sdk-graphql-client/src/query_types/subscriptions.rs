@@ -173,7 +173,7 @@ pub struct Lagged {
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Event")]
 pub struct SubscriptionEvent {
-    pub transaction_block: Option<TxBlockDigest>,
+    pub transaction_block: Option<TransactionBlockDigest>,
     pub sending_module: Option<MoveModuleQuery>,
     pub sender: Option<GraphQLAddress>,
     #[cynic(rename = "type")]
@@ -241,6 +241,6 @@ impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TxBlockDigest {
+pub struct TransactionBlockDigest {
     pub digest: Option<String>,
 }
