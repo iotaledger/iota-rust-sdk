@@ -84,6 +84,9 @@ make grpc   # Pull/refresh protos and regenerate types
 # BCS schema
 make bcs-schema      # Regenerate bcs-schema.abnf
 
+# Mutation testing (scope/exclusions in .cargo/mutants.toml)
+make mutants         # Mutation-test your diff against develop (MUTANTS_ALL=1 for the whole scope)
+
 # Examples
 make examples                    # Run all Rust examples
 make bindings-examples           # Run all binding examples
