@@ -20,8 +20,9 @@ transactions. Ready-made implementations ship with the
 [`iota-sdk-grpc-client`](https://crates.io/crates/iota-sdk-grpc-client) crates.
 
 To write your own, pick an `Error` and `DryRunResult` type and implement the required methods;
-`objects_by_id` (per-object loop) and `protocol_config` (defaults) have default implementations
-worth overriding when your transport can batch requests or fetch the real protocol configuration.
+`objects_by_id` (per-object loop), `object_refs_by_id` (whole objects, then their references) and
+`protocol_config` (defaults) have default implementations worth overriding when your transport can
+batch requests, return references without contents, or fetch the real protocol configuration.
 
 ## Example
 
