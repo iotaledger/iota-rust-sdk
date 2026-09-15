@@ -277,7 +277,7 @@ private func resolveUpgradeCapId(
   packageId: ObjectId
 ) async throws -> ObjectId? {
   let page = try await client.transactionsEffects(
-    filter: TransactionsFilter(changedObject: packageId),
+    filter: TransactionsFilter().withChangedObject(changedObject: packageId),
     paginationFilter: PaginationFilter(direction: .forward, limit: 1)
   )
 
@@ -421,7 +421,7 @@ private func wasPackagePublishedAsImmutable(
 
   while true {
     let page = try await client.transactionsDataEffects(
-      filter: TransactionsFilter(changedObject: packageId),
+      filter: TransactionsFilter().withChangedObject(changedObject: packageId),
       paginationFilter: forwardPage(cursor: cursor)
     )
 
@@ -447,7 +447,7 @@ private func wasUpgradeCapUsedForMakeImmutable(
 
   while true {
     let page = try await client.transactionsDataEffects(
-      filter: TransactionsFilter(inputObject: upgradeCapId),
+      filter: TransactionsFilter().withInputObject(inputObject: upgradeCapId),
       paginationFilter: forwardPage(cursor: cursor)
     )
 

@@ -145,7 +145,7 @@ impl Signer<Bls12381Signature> for Bls12381PrivateKey {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Bls12381VerifyingKey(pub(crate) PublicKey);
 
 impl Bls12381VerifyingKey {

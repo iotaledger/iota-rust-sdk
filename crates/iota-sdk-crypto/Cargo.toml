@@ -53,7 +53,6 @@ bls12381 = [
   "dep:base64ct",
   "dep:blst",
   "dep:rand_core",
-  "dep:roaring",
   "dep:zeroize",
 ]
 mnemonic = ["dep:bip32", "dep:bip39", "dep:slip10_ed25519"]
@@ -84,7 +83,6 @@ pem-rfc7468 = { version = "1.0", optional = true, features = ["std"] }
 pkcs8 = { version = "0.11", optional = true, features = ["std"] }
 # RNG support
 rand_core = { workspace = true, optional = true }
-roaring = { workspace = true, optional = true }
 # passkey verification support
 sha2 = { version = "0.11.0", optional = true }
 signature = { version = "3.0", features = ["alloc"] }

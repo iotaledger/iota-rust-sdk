@@ -598,6 +598,11 @@ impl ValidatorV1 {
 }
 
 /// A typed view of a `0x3::validator::ValidatorMetadataV1`.
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct ValidatorMetadataV1(
@@ -783,6 +788,11 @@ impl StakingPoolV1 {
 
 /// A typed view of the `0x3::iota_system_state_inner::SystemParametersV1`
 /// embedded in the system state.
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct SystemParametersV1(
@@ -1023,6 +1033,11 @@ crate::ffi_move_object! {
 
 /// A typed view of a `0x2::kiosk_extension::Extension` held in a dynamic field
 /// of a [`Kiosk`] object.
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct KioskExtension(pub iota_sdk::move_types::iota_framework::kiosk_extension::Extension);
@@ -1084,6 +1099,11 @@ crate::ffi_move_object! {
 
 /// A typed view of the `0x2::random::RandomInner` state held in the dynamic
 /// field of the [`Random`] singleton.
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct RandomInner(pub iota_sdk::move_types::iota_framework::random::RandomInner);
@@ -1123,6 +1143,11 @@ impl RandomInner {
 
 /// Metadata of a single module of a package
 /// (`0x2::package_metadata::ModuleMetadataV1`).
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
 #[derive(uniffi::Record)]
 pub struct ModuleMetadataV1 {
     /// The authenticator functions the module declares.
@@ -1141,6 +1166,11 @@ impl From<&iota_sdk::move_types::iota_framework::package_metadata::ModuleMetadat
 
 /// An authenticator function declared by a module
 /// (`0x2::package_metadata::AuthenticatorMetadataV1`).
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
 #[derive(uniffi::Record)]
 pub struct AuthenticatorMetadataV1 {
     /// Name of the authenticator function.
@@ -1695,6 +1725,11 @@ crate::ffi_move_object! {
 
 /// A typed view of
 /// `0x107a::timelock_unlock_condition::TimelockUnlockCondition`.
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct TimelockUnlockCondition(
@@ -1712,6 +1747,11 @@ impl TimelockUnlockCondition {
 
 /// A typed view of
 /// `0x107a::expiration_unlock_condition::ExpirationUnlockCondition`.
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct ExpirationUnlockCondition(
@@ -1735,6 +1775,11 @@ impl ExpirationUnlockCondition {
 
 /// A typed view of
 /// `0x107a::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition`.
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct StorageDepositReturnUnlockCondition(
@@ -1793,6 +1838,11 @@ impl<Account>
 
 /// A validator's pool-token exchange rate at an epoch boundary
 /// (`0x3::staking_pool::PoolTokenExchangeRate`).
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
 #[derive(uniffi::Record)]
 pub struct PoolTokenExchangeRate {
     pub iota_amount: u64,
@@ -1812,6 +1862,11 @@ impl From<&iota_sdk::move_types::iota_system::staking_pool::PoolTokenExchangeRat
 
 /// Key identifying a per-type deny-list config
 /// (`0x2::deny_list::ConfigKey`).
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
 #[derive(uniffi::Record)]
 pub struct ConfigKey {
     pub per_type_index: u64,

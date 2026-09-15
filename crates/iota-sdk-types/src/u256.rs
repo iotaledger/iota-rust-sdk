@@ -8,15 +8,13 @@ pub(crate) type U256 = bnum::types::U256;
 
 // This is a constant time assert to ensure that the backing storage for U256 is
 // 32 bytes long
-#[allow(unused)]
-const ASSERT_32_BYTES: () = {
+const _: () = {
     assert!(core::mem::size_of::<U256>() == 32);
 };
 
 // This is a constant time assert to ensure endianness of the underlying storage
 // is as expected
-#[allow(unused)]
-const ASSERT_ENDIANNESS: () = {
+const _: () = {
     const fn const_bytes_equal(lhs: &[u8], rhs: &[u8]) -> bool {
         if lhs.len() != rhs.len() {
             return false;

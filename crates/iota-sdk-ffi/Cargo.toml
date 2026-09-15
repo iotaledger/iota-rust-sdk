@@ -55,7 +55,6 @@ futures.workspace = true
 hex.workspace = true
 paste.workspace = true
 primitive-types.workspace = true
-roaring.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 tokio = { workspace = true, features = ["time", "sync"] }

@@ -249,7 +249,7 @@ private fun extractPolicy(contents: Value): Int? = runCatching {
 private suspend fun resolveUpgradeCapId(client: GraphQlClient, packageId: ObjectId): ObjectId? {
     val page =
         client.transactionsEffects(
-            TransactionsFilter(changedObject = packageId),
+            TransactionsFilter().withChangedObject(packageId),
             PaginationFilter(direction = Direction.FORWARD, limit = 1),
         )
 
@@ -367,7 +367,7 @@ private suspend fun wasPackagePublishedAsImmutable(
     while (true) {
         val page =
             client.transactionsDataEffects(
-                TransactionsFilter(changedObject = packageId),
+                TransactionsFilter().withChangedObject(packageId),
                 forwardPage(cursor),
             )
 
@@ -394,7 +394,7 @@ private suspend fun wasUpgradeCapUsedForMakeImmutable(
     while (true) {
         val page =
             client.transactionsDataEffects(
-                TransactionsFilter(inputObject = upgradeCapId),
+                TransactionsFilter().withInputObject(upgradeCapId),
                 forwardPage(cursor),
             )
 
