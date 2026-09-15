@@ -35,8 +35,6 @@ default = ["tls-ring", "tls-native-roots"]
 tls-ring = ["tonic/tls-ring"]
 tls-native-roots = ["tonic/tls-native-roots"]
 tls-webpki-roots = ["tonic/tls-webpki-roots"]
-# Typed `list_owned_move_objects` queries, decoding each object into a
-# Move-type mirror.
 move-types = ["dep:iota-move-types"]
 
 [dev-dependencies]

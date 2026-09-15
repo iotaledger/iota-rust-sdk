@@ -12,7 +12,6 @@ description = "GraphQL RPC Client for the IOTA Blockchain"
 workspace = true
 
 [features]
-# Typed `move_objects` queries, decoding each object into a Move-type mirror.
 move-types = ["dep:iota-move-types"]
 
 [dependencies]
