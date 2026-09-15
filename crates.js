@@ -1,0 +1,2 @@
+window.ALL_CRATES = ["capture_move_type_fixtures","integration_tests","iota_sdk","iota_sdk_bcs_schema","iota_sdk_crypto","iota_sdk_ffi","iota_sdk_graphql_client","iota_sdk_graphql_client_build","iota_sdk_grpc_client","iota_sdk_grpc_proto_build","iota_sdk_grpc_types","iota_sdk_move_types","iota_sdk_transaction_builder","iota_sdk_types","iota_sdk_wasm","polling_indexer","uniffi_bindgen"];
+//{"start":21,"fragment_lengths":[28,20,11,22,18,15,26,32,23,28,22,22,31,17,16,18,17]}

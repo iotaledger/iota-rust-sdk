@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["generate_service_method_paths","service_const_name"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["accessor_config","accessors","generate_fields","generate_service_methods"]};

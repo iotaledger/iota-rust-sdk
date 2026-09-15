@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["TransactionArgument"],"struct":["DryRunEffect","DryRunMutation","DryRunResult","DryRunReturn"]};

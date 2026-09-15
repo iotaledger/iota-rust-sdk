@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["__typename","bcs","digest","effects","expiration","gasInput","indexedOnNode","kind","sender","signatures"]};

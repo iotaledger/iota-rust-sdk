@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["bcs","checkpoint","coin","command","dynamic_field","epoch","error_reason","event","filter","ledger_service","move_package_service","object","service_methods","signatures","state_service","transaction","transaction_execution_service","types","versioned"]};
