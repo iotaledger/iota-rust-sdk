@@ -11,6 +11,9 @@ description = "GraphQL RPC Client for the IOTA Blockchain"
 [lints]
 workspace = true
 
+[features]
+move-types = ["dep:iota-move-types"]
+
 [dependencies]
 # external dependencies
 async-stream.workspace = true
@@ -31,6 +34,7 @@ url = "2.5.3"
 variadics_please.workspace = true
 
 # internal dependencies
+iota-move-types = { workspace = true, features = ["serde"], optional = true }
 iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
