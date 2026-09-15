@@ -168,7 +168,7 @@ impl Client {
             "https" => url.set_scheme("wss"),
             "http" => url.set_scheme("ws"),
             "ws" | "wss" => Ok(()),
-            other => return Err(Error::UnsupportedScheme(other.to_owned())),
+            other => return Err(Error::UnsupportedSubscriptionScheme(other.to_owned())),
         }
         .map_err(|_| Error::subscription("failed to derive the WebSocket URL"))?;
         url.set_path("/subscriptions");

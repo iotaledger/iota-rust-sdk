@@ -123,7 +123,7 @@ pub enum Error {
     InvalidArgument(&'static str),
     /// The RPC URL scheme is not usable for subscriptions.
     #[error("unsupported RPC scheme `{0}` for subscriptions, expected http, https, ws or wss")]
-    UnsupportedScheme(String),
+    UnsupportedSubscriptionScheme(String),
     /// The operation did not complete within its deadline.
     #[error("timed out")]
     Timeout,
