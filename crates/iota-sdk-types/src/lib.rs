@@ -125,8 +125,8 @@ pub use effects::{
 };
 pub use events::{Event, TransactionEvents};
 pub use execution_status::{
-    CommandArgumentError, ExecutionError, ExecutionStatus, MoveLocation, PackageUpgradeError,
-    TypeArgumentError,
+    CommandArgumentError, ExecutionError, ExecutionFailure, ExecutionStatus, MoveLocation,
+    PackageUpgradeError, TypeArgumentError,
 };
 pub use framework::{Coin, CoinFromObjectError};
 pub use gas::GasCostSummary;
