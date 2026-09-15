@@ -23,7 +23,7 @@ web:
   features:
     - crypto
     - bls12381
-    # TypeScript cannot key a native map by an object either.
+    # TypeScript cannot key a native map by an object.
     - map-objects
 
   # RUSTFLAGS for the wasm32 compilation.
