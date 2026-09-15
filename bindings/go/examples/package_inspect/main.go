@@ -89,13 +89,10 @@ func main() {
 	// Print package dependencies and their linked versions.
 	fmt.Println("Dependencies:")
 	linkageTable := pkg.LinkageTable()
-	if len(linkageTable) == 0 {
+	if linkageTable.IsEmpty() {
 		fmt.Println("- none")
 	} else {
-		upgrades := make([]iota_sdk.UpgradeInfo, 0, len(linkageTable))
-		for _, upgrade := range linkageTable {
-			upgrades = append(upgrades, upgrade)
-		}
+		upgrades := linkageTable.Values()
 		sort.Slice(upgrades, func(i, j int) bool {
 			return upgrades[i].UpgradedId.ToHex() < upgrades[j].UpgradedId.ToHex()
 		})
@@ -112,8 +109,8 @@ func main() {
 
 	// Inspect normalized modules, functions, types, and sample key objects.
 	fmt.Println("Package contents:")
-	moduleNames := make([]string, 0, len(pkg.Modules()))
-	for moduleID := range pkg.Modules() {
+	moduleNames := make([]string, 0, pkg.Modules().Len())
+	for _, moduleID := range pkg.Modules().Keys() {
 		moduleNames = append(moduleNames, moduleID.AsStr())
 	}
 	sort.Strings(moduleNames)
