@@ -4,8 +4,8 @@
 use std::collections::BTreeMap;
 
 use iota_types::{
-    Address, Object, ObjectId, StructTag, Transaction, TransactionDigest, TransactionEffects,
-    UserSignature, Version,
+    Address, Object, ObjectId, ObjectReference, StructTag, Transaction, TransactionDigest,
+    TransactionEffects, UserSignature, Version,
 };
 
 /// Determines what to wait for after executing a transaction.
@@ -108,6 +108,28 @@ pub trait TransactionBuilderLedgerClient: TransactionBuilderClientBase {
                 objects.push(self.object(*object_id, *version).await?);
             }
             Ok(objects)
+        }
+    }
+
+    /// Resolve object ids to their references, returning them in the order
+    /// they were requested with `None` in place of any object that does not
+    /// exist.
+    ///
+    /// The default impl fetches the whole objects through
+    /// [`objects_by_id`](Self::objects_by_id). Clients whose transport can
+    /// return a reference without the object's contents (such as gRPC with a
+    /// `reference` read mask) should override it.
+    fn object_refs_by_id(
+        &self,
+        object_ids: &[(ObjectId, Option<Version>)],
+    ) -> impl std::future::Future<Output = Result<Vec<Option<ObjectReference>>, Self::Error>> {
+        async move {
+            Ok(self
+                .objects_by_id(object_ids)
+                .await?
+                .into_iter()
+                .map(|object| object.map(|object| object.object_ref()))
+                .collect())
         }
     }
 
@@ -232,6 +254,13 @@ impl<T: TransactionBuilderLedgerClient> TransactionBuilderLedgerClient for &T {
         (*self).objects_by_id(object_ids)
     }
 
+    fn object_refs_by_id(
+        &self,
+        object_ids: &[(ObjectId, Option<Version>)],
+    ) -> impl std::future::Future<Output = Result<Vec<Option<ObjectReference>>, Self::Error>> {
+        (*self).object_refs_by_id(object_ids)
+    }
+
     fn objects(
         &self,
         struct_tag: Option<StructTag>,
@@ -319,6 +348,13 @@ impl<T: TransactionBuilderLedgerClient> TransactionBuilderLedgerClient for std::
         object_ids: &[(ObjectId, Option<Version>)],
     ) -> impl std::future::Future<Output = Result<Vec<Option<Object>>, Self::Error>> {
         self.as_ref().objects_by_id(object_ids)
+    }
+
+    fn object_refs_by_id(
+        &self,
+        object_ids: &[(ObjectId, Option<Version>)],
+    ) -> impl std::future::Future<Output = Result<Vec<Option<ObjectReference>>, Self::Error>> {
+        self.as_ref().object_refs_by_id(object_ids)
     }
 
     fn objects(
@@ -486,9 +522,10 @@ pub(crate) mod test_client {
             _cursor: Option<Vec<u8>>,
             _limit: Option<usize>,
         ) -> Result<ObjectsPage, Self::Error> {
-            // A single funded gas coin owned by the requested owner is enough for
-            // the builder's automatic gas selection. Its id is a fixed sentinel
-            // that won't collide with the object ids used in examples.
+            // A single funded gas coin owned by the requested owner is enough
+            // for the builder's automatic gas selection. Its id is
+            // a fixed sentinel that won't collide with the object
+            // ids used in examples.
             let gas_coin_id = ObjectId::from_bytes([0xee; ObjectId::LENGTH])
                 .expect("32 bytes is a valid object id");
             let owner = Owner::Address(owner);
