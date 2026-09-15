@@ -51,8 +51,8 @@ grpc = [
 ]
 # TLS support for the gRPC client (required to reach `https://` endpoints
 # such as the public testnet/mainnet nodes).
+grpc-tls-aws-lc = ["grpc", "iota-grpc-client/tls-aws-lc"]
 grpc-tls-native-roots = ["grpc", "iota-grpc-client/tls-native-roots"]
-grpc-tls-ring = ["grpc", "iota-grpc-client/tls-ring"]
 grpc-tls-webpki-roots = ["grpc", "iota-grpc-client/tls-webpki-roots"]
 # Transaction Builder
 txn-builder = ["dep:iota-transaction-builder"]
@@ -80,7 +80,7 @@ eyre.workspace = true
 futures.workspace = true
 hex.workspace = true
 rand.workspace = true
-reqwest = { workspace = true, features = ["rustls-tls", "json"] }
+reqwest = { workspace = true, features = ["rustls", "json"] }
 serde_json.workspace = true
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 
@@ -88,7 +88,7 @@ tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 iota-graphql-client-build.workspace = true
 
 # gRPC examples: skipped unless the gRPC TLS features are enabled (e.g.
-# `cargo run --example grpc_get_object --features grpc-tls-native-roots,grpc-tls-ring`).
+# `cargo run --example grpc_get_object --features grpc-tls-native-roots,grpc-tls-aws-lc`).
 # `grpc_service_info` targets localnet over plain HTTP and only needs `grpc`.
 [[example]]
 name = "grpc_service_info"
@@ -96,19 +96,19 @@ required-features = ["grpc"]
 
 [[example]]
 name = "grpc_get_object"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+required-features = ["grpc-tls-native-roots", "grpc-tls-aws-lc"]
 
 [[example]]
 name = "grpc_owned_objects"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+required-features = ["grpc-tls-native-roots", "grpc-tls-aws-lc"]
 
 [[example]]
 name = "grpc_checkpoints_stream"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+required-features = ["grpc-tls-native-roots", "grpc-tls-aws-lc"]
 
 [[example]]
 name = "grpc_move_view_call"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+required-features = ["grpc-tls-native-roots", "grpc-tls-aws-lc"]
 
 [[example]]
 name = "decode_staked_iota"
