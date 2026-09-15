@@ -17,7 +17,7 @@ class Program
         Console.WriteLine($"First page: {page.Objects.Length} objects");
         foreach (var obj in page.Objects)
         {
-            Console.WriteLine($"  {obj.Id().ToHex()}");
+            Console.WriteLine($"  {obj.ObjectId?.ToHex()}");
         }
         if (page.NextPageToken != null)
         {
@@ -30,7 +30,7 @@ class Program
         Console.WriteLine($"Up to 50 IOTA coin objects ({coins.Length} returned):");
         foreach (var obj in coins)
         {
-            Console.WriteLine($"  {obj.Id().ToHex()}");
+            Console.WriteLine($"  {obj.ObjectId?.ToHex()}");
         }
     }
 }

@@ -17,7 +17,7 @@ async def main():
     page = await client.owned_objects(owner, None, 10)
     print(f"First page: {len(page.objects)} objects")
     for obj in page.objects:
-        print(" ", obj.id().to_hex())
+        print(" ", obj.object_id.to_hex())
     if page.next_page_token is not None:
         print("  ...more pages available")
 
@@ -26,7 +26,7 @@ async def main():
     print("---")
     print(f"Up to 50 IOTA coin objects ({len(coins)} returned):")
     for obj in coins:
-        print(" ", obj.id().to_hex())
+        print(" ", obj.object_id.to_hex())
 
 
 if __name__ == "__main__":
