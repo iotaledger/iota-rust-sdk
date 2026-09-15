@@ -10,7 +10,7 @@ use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};
 
 use crate::{
     Client,
-    error::{Error, Kind, Result},
+    error::{Error, Result},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
         CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsArgs,
@@ -18,6 +18,9 @@ use crate::{
     },
     streams::stream_paginated_query,
 };
+
+const CONFLICTING_CHECKPOINT_ID: &str =
+    "either digest or sequence_number can be provided, but not both";
 
 impl Client {
     /// Get a stream of [`CheckpointSummary`]. Note that this will fetch all
@@ -40,10 +43,7 @@ impl Client {
         let digest = digest.into();
         let sequence_number = sequence_number.into();
         if digest.is_some() && sequence_number.is_some() {
-            return Err(Error::from_error(
-                Kind::Other,
-                "either digest or sequence_number must be provided",
-            ));
+            return Err(Error::InvalidArgument(CONFLICTING_CHECKPOINT_ID));
         }
 
         let operation = CheckpointQuery::build(CheckpointArgs {
@@ -78,7 +78,7 @@ impl Client {
             .nodes
             .into_iter()
             .map(|c| c.try_into())
-            .collect::<Result<Vec<CheckpointSummary>, _>>()?;
+            .collect::<Result<Vec<_>>>()?;
 
         Ok(Page::new(page_info, nodes))
     }
@@ -128,10 +128,7 @@ impl Client {
         sequence_number: Option<u64>,
     ) -> Result<Option<u64>> {
         if digest.is_some() && sequence_number.is_some() {
-            return Err(Error::from_error(
-                Kind::Other,
-                "Conflicting arguments: either digest or sequence_number can be provided, but not both.",
-            ));
+            return Err(Error::InvalidArgument(CONFLICTING_CHECKPOINT_ID));
         }
 
         let operation = CheckpointTotalTxQuery::build(CheckpointArgs {
