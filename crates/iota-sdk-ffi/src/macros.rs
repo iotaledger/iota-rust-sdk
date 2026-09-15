@@ -329,11 +329,7 @@ macro_rules! ffi_map {
                 /// the value of the last one.
                 #[uniffi::constructor]
                 pub fn from_entries(entries: Vec<[<$name Entry>]>) -> Self {
-                    let mut map = ::std::collections::HashMap::new();
-                    for entry in entries {
-                        map.insert(entry.key, entry.value);
-                    }
-                    Self(map)
+                    Self::from_iter(entries.into_iter().map(|entry| (entry.key, entry.value)))
                 }
 
                 /// The value stored under `key`, or `None` if there is none.

@@ -499,7 +499,7 @@ impl MovePackage {
                 .collect::<Result<Vec<_>, _>>()?,
             linkage_table: linkage_table
                 .iter()
-                .map(|(k, v)| (***k, v.clone().into()))
+                .map(|(k, v)| (k.0, v.clone().into()))
                 .collect(),
         }))
     }
