@@ -29,8 +29,8 @@ use crate::{
     error::TransactionBuilderError,
     types::{MoveType, MoveTypes},
     unresolved::{
-        Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, MoveCall,
-        Publish, SplitCoins, TransferObjects, Upgrade,
+        Argument, Command, DivideCoin, Input, InputId, InputKind, MakeMoveVector, MergeCoins,
+        MoveCall, Publish, SplitCoins, TransferObjects, Upgrade,
     },
 };
 
@@ -983,6 +983,64 @@ impl<C, L> TransactionBuilder<C, L> {
         let coin = self.apply_argument(coin);
         let amounts = self.apply_arguments(split_amounts);
         self.cmd_state_change(SplitCoins { coin, amounts })
+    }
+
+    /// Divide a coin into `count` coins of equal value, all kept by the
+    /// sender.
+    ///
+    /// Unlike [`split_coins`](Self::split_coins), the new coins are
+    /// transferred to the sender by `0x2::pay::divide_and_keep` itself, so no
+    /// transfer command is needed for them. In exchange they are not
+    /// available as command results and cannot be used by later commands in
+    /// the same transaction.
+    ///
+    /// The coin type must be set on the returned builder, with
+    /// [`coin_type`](TransactionBuilder::coin_type) or
+    /// [`coin_type_tag`](TransactionBuilder::coin_type_tag).
+    ///
+    /// `count - 1` new coins are created, each holding `value / count`, and
+    /// the divided coin keeps its own share plus the remainder of the
+    /// division. The transaction aborts if `count` is zero or larger than the
+    /// coin's value.
+    ///
+    /// The coin is passed by reference, so the gas coin
+    /// ([`unresolved::Argument::Gas`](Argument::Gas)) can be divided as well,
+    /// as long as it retains enough balance to pay for the transaction.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::{TransactionBuilder, types::MoveType};
+    /// use iota_types::{Address, ObjectId, StructTag, TypeTag};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let coin =
+    ///     ObjectId::from_hex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// // Two new coins of a third of the balance each, plus the remainder
+    /// // left in `coin` — all owned by the sender once executed.
+    /// builder
+    ///     .divide_coin(coin, 3)
+    ///     .coin_type_tag(StructTag::new_gas().into());
+    /// let txn = builder.finish().await?;
+    /// #    Ok(())
+    /// # }
+    /// ```
+    pub fn divide_coin<T: PTBArgument>(
+        &mut self,
+        coin: T,
+        count: u64,
+    ) -> &mut TransactionBuilder<C, DivideCoin> {
+        self.move_call(Address::FRAMEWORK, "pay", "divide_and_keep")
+            .arguments((coin, count))
+            .type_tags([StructTag::new_gas().into()])
+            .state_change()
     }
 
     /// Publish a move package.
@@ -2038,6 +2096,25 @@ impl<C> TransactionBuilder<C, GasStationData> {
             data.add_header(name, value);
         }
         self
+    }
+}
+
+impl<C> TransactionBuilder<C, DivideCoin> {
+    /// Set the type of the coin being divided: the `T` of
+    /// `0x2::coin::Coin<T>`, not the coin type itself. Required.
+    ///
+    /// Use [`coin_type_tag`](Self::coin_type_tag) for a type only known at
+    /// runtime.
+    pub fn coin_type<G: MoveType>(&mut self) -> &mut TransactionBuilder<C> {
+        self.state_change::<MoveCall>().generics::<G>().reset()
+    }
+
+    /// Set the type of the coin being divided from a [`TypeTag`]: the `T` of
+    /// `0x2::coin::Coin<T>`, not the coin type itself. Required.
+    pub fn coin_type_tag(&mut self, type_tag: TypeTag) -> &mut TransactionBuilder<C> {
+        self.state_change::<MoveCall>()
+            .type_tags([type_tag])
+            .reset()
     }
 }
 
