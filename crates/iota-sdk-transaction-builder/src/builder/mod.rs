@@ -994,7 +994,8 @@ impl<C, L> TransactionBuilder<C, L> {
     /// available as command results and cannot be used by later commands in
     /// the same transaction.
     ///
-    /// The coin type must be set on the returned builder, with
+    /// The coin is taken to be an IOTA coin. For any other coin type, set it
+    /// on the returned builder with
     /// [`coin_type`](TransactionBuilder::coin_type) or
     /// [`coin_type_tag`](TransactionBuilder::coin_type_tag).
     ///
@@ -1011,8 +1012,8 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// ```
     /// # use iota_sdk_transaction_builder::TestClient;
-    /// use iota_sdk_transaction_builder::{TransactionBuilder, types::MoveType};
-    /// use iota_types::{Address, ObjectId, StructTag, TypeTag};
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId};
     ///
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
@@ -1025,9 +1026,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// // Two new coins of a third of the balance each, plus the remainder
     /// // left in `coin` — all owned by the sender once executed.
-    /// builder
-    ///     .divide_coin(coin, 3)
-    ///     .coin_type_tag(StructTag::new_gas().into());
+    /// builder.divide_coin(coin, 3);
     /// let txn = builder.finish().await?;
     /// #    Ok(())
     /// # }
@@ -2101,7 +2100,8 @@ impl<C> TransactionBuilder<C, GasStationData> {
 
 impl<C> TransactionBuilder<C, DivideCoin> {
     /// Set the type of the coin being divided: the `T` of
-    /// `0x2::coin::Coin<T>`, not the coin type itself. Required.
+    /// `0x2::coin::Coin<T>`, not the coin type itself. Defaults to
+    /// `0x2::iota::IOTA`.
     ///
     /// Use [`coin_type_tag`](Self::coin_type_tag) for a type only known at
     /// runtime.
@@ -2110,7 +2110,8 @@ impl<C> TransactionBuilder<C, DivideCoin> {
     }
 
     /// Set the type of the coin being divided from a [`TypeTag`]: the `T` of
-    /// `0x2::coin::Coin<T>`, not the coin type itself. Required.
+    /// `0x2::coin::Coin<T>`, not the coin type itself. Defaults to
+    /// `0x2::iota::IOTA`.
     pub fn coin_type_tag(&mut self, type_tag: TypeTag) -> &mut TransactionBuilder<C> {
         self.state_change::<MoveCall>()
             .type_tags([type_tag])
@@ -2123,6 +2124,42 @@ mod tests {
     use iota_types::{ObjectDigest, Version};
 
     use super::*;
+
+    /// `divide_coin` calls for IOTA unless a coin type is set on it.
+    #[test]
+    fn divide_coin_defaults_to_iota() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let coin = ObjectId::new([1; 32]);
+        let other_coin_type = StructTag::new(
+            Address::FRAMEWORK,
+            Identifier::new("cert").unwrap(),
+            Identifier::new("CERT").unwrap(),
+            Vec::new(),
+        );
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.divide_coin(coin, 3);
+        builder
+            .divide_coin(coin, 3)
+            .coin_type_tag(other_coin_type.clone().into());
+
+        let [iota_call, overridden] = builder
+            .data
+            .commands
+            .iter()
+            .map(|command| match command {
+                Command::MoveCall(move_call) => move_call.type_arguments.as_slice(),
+                _ => panic!("expected two move calls"),
+            })
+            .collect::<Vec<_>>()[..]
+        else {
+            panic!("expected two commands");
+        };
+        assert_eq!(iota_call, [TypeTag::Struct(Box::new(StructTag::new_gas()))]);
+        assert_eq!(overridden, [TypeTag::Struct(Box::new(other_coin_type))]);
+    }
 
     /// Verify that `TryFrom<Transaction>` preserves input ordering: non-gas
     /// inputs occupy `BTreeMap` keys `0..n` matching their original positions,

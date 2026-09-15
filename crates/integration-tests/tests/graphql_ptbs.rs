@@ -13,11 +13,11 @@ use iota_graphql_client::{
 };
 use iota_transaction_builder::{
     TransactionBuilder, WaitForTransaction, assigned, error::TransactionBuilderError,
-    types::MoveType, unresolved::Argument,
+    unresolved::Argument,
 };
 use iota_types::{
-    Address, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectType, StructTag,
-    Transaction, TransactionEffects, TypeTag, UpgradePolicy,
+    Address, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectType, Transaction,
+    TransactionEffects, UpgradePolicy,
 };
 
 /// This is used to read the json file that contains the modules/deps/digest
@@ -37,15 +37,6 @@ fn move_package_data(file: &str) -> MovePackageData {
         })
         .unwrap();
     serde_json::from_str(&data).unwrap()
-}
-
-/// The `0x2::iota::IOTA` coin type, for calls generic over a coin type.
-struct Iota;
-
-impl MoveType for Iota {
-    fn type_tag() -> TypeTag {
-        TypeTag::Struct(Box::new(StructTag::new_gas()))
-    }
 }
 
 /// Generate a random private key and its corresponding address
@@ -233,7 +224,7 @@ async fn test_divide_coins() {
     let coin = coins.first().unwrap();
     let share = coin.amount / PARTS;
 
-    tx.divide_coin(coin.id, PARTS).coin_type::<Iota>();
+    tx.divide_coin(coin.id, PARTS);
 
     let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
