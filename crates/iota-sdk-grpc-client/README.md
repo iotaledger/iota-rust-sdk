@@ -52,6 +52,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
+## Node compatibility
+
+Every node response names the lowest `iota-sdk-grpc-client` version able to decode it. An older client fails the call with `GrpcError::IncompatibleSdkVersion` before decoding any data; upgrade the crate to resolve it.
+
 ## Service examples
 
 Each service client exposes methods corresponding to the gRPC service definition. See the crate documentation for the full list of available methods.
