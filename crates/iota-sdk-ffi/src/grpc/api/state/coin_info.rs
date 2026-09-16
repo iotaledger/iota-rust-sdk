@@ -118,7 +118,7 @@ impl From<proto::coin::coin_treasury::SupplyState> for SupplyState {
 
 /// The treasury of a coin type.
 #[derive(uniffi::Record)]
-pub struct GrpcCoinTreasury {
+pub struct CoinTreasury {
     /// The id of the `0x2::coin::TreasuryCap` object.
     pub id: Option<Arc<ObjectId>>,
     /// Total available supply for the coin type.
@@ -127,7 +127,7 @@ pub struct GrpcCoinTreasury {
     pub supply_state: Option<SupplyState>,
 }
 
-impl TryFrom<&proto::coin::CoinTreasury> for GrpcCoinTreasury {
+impl TryFrom<&proto::coin::CoinTreasury> for CoinTreasury {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::coin::CoinTreasury) -> Result<Self> {
@@ -173,7 +173,7 @@ impl From<proto::coin::regulated_coin_metadata::CoinRegulatedState> for CoinRegu
 
 /// The regulated metadata of a coin type.
 #[derive(uniffi::Record)]
-pub struct GrpcRegulatedCoinMetadata {
+pub struct RegulatedCoinMetadata {
     /// The id of the `0x2::coin::RegulatedCoinMetadata` object.
     pub id: Option<Arc<ObjectId>>,
     /// The id of the coin's `CoinMetadata` or `CoinData` object.
@@ -188,7 +188,7 @@ pub struct GrpcRegulatedCoinMetadata {
     pub coin_regulated_state: Option<CoinRegulatedState>,
 }
 
-impl TryFrom<&proto::coin::RegulatedCoinMetadata> for GrpcRegulatedCoinMetadata {
+impl TryFrom<&proto::coin::RegulatedCoinMetadata> for RegulatedCoinMetadata {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::coin::RegulatedCoinMetadata) -> Result<Self> {
@@ -236,10 +236,10 @@ pub struct GrpcCoinInfo {
     pub metadata: Option<GrpcCoinMetadata>,
     /// Information about the coin type's `0x2::coin::TreasuryCap`, if it
     /// exists and has not been wrapped.
-    pub treasury: Option<GrpcCoinTreasury>,
+    pub treasury: Option<CoinTreasury>,
     /// Information about the coin type's regulated metadata, if the coin is
     /// regulated.
-    pub regulated_metadata: Option<GrpcRegulatedCoinMetadata>,
+    pub regulated_metadata: Option<RegulatedCoinMetadata>,
 }
 
 impl TryFrom<&proto::state_service::GetCoinInfoResponse> for GrpcCoinInfo {
