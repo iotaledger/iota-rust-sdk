@@ -12,6 +12,7 @@ use crate::{
     graphql::{
         api::transactions::WaitForTransaction, client::GraphQLClient, output_types::DryRunResult,
     },
+    http::HttpClientOptions,
     transaction_builder::{
         Payment,
         ptb_arg::{MoveArg, PTBArgument},
@@ -100,11 +101,15 @@ impl ClientTransactionBuilder {
     pub fn gas_station_sponsor(
         self: Arc<Self>,
         url: String,
+        options: HttpClientOptions,
         duration: Option<Duration>,
         headers: Option<HashMap<String, Vec<String>>>,
-    ) -> Arc<Self> {
+    ) -> Result<Arc<Self>> {
+        // A `reqwest::Client` cannot cross the FFI boundary, so the caller
+        // describes the one they want and it is built here.
+        let client = options.build()?;
         self.write(|builder| {
-            let b = builder.gas_station_sponsor(url.parse().expect("invalid URL"));
+            let b = builder.gas_station_sponsor(url.parse().expect("invalid URL"), client);
             if let Some(duration) = duration {
                 b.gas_reservation_duration(duration);
             }
@@ -119,7 +124,7 @@ impl ClientTransactionBuilder {
                 }
             }
         });
-        self
+        Ok(self)
     }
 
     /// Set the expiration of the transaction to be a specific epoch.

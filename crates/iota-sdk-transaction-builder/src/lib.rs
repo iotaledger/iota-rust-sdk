@@ -149,7 +149,8 @@
 //! - [gas_price](TransactionBuilder::gas_price): Set the gas price.
 //! - [sponsor](TransactionBuilder::sponsor): Set the gas sponsor address.
 //! - [gas_station_sponsor](TransactionBuilder::gas_station_sponsor): Set the
-//!   gas station URL. See [Gas Station](crate#gas-station) for more info.
+//!   gas station URL and the HTTP client to reach it with. See [Gas
+//!   Station](crate#gas-station) for more info.
 //! - [expiration](TransactionBuilder::expiration): Set the transaction
 //!   expiration epoch.
 //!
@@ -207,8 +208,10 @@
 //!
 //! The Transaction Builder supports executing via a
 //! [Gas Station](https://github.com/iotaledger/gas-station). To do so, the URL
-//! must be provided via
-//! [gas_station_sponsor](TransactionBuilder::gas_station_sponsor). Additional
+//! and a [`reqwest::Client`] must be provided via
+//! [gas_station_sponsor](TransactionBuilder::gas_station_sponsor). This crate
+//! builds no HTTP client of its own, so that client alone decides the TLS
+//! backend and trust anchors used to reach the gas station. Additional
 //! configuration can then be provided via
 //! [gas_reservation_duration](TransactionBuilder::gas_reservation_duration) and
 //! [add_gas_station_header](TransactionBuilder::add_gas_station_header).

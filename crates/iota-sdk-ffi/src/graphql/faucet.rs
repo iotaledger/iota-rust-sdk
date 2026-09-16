@@ -5,7 +5,8 @@ use std::sync::Arc;
 
 use crate::{
     error::{Result, SdkFfiError},
-    graphql::{client::GraphQLClient, http::HttpClientOptions},
+    graphql::client::GraphQLClient,
+    http::HttpClientOptions,
     types::{address::Address, digest::TransactionDigest, object::ObjectId},
 };
 

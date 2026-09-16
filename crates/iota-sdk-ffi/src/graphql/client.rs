@@ -5,7 +5,8 @@ use tokio::sync::RwLock;
 
 use crate::{
     error::{Result, SdkFfiError},
-    graphql::{http::HttpClientOptions, query_types::ServiceConfig},
+    graphql::query_types::ServiceConfig,
+    http::HttpClientOptions,
 };
 
 /// The GraphQL client for interacting with the IOTA blockchain.

@@ -1,11 +1,11 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Foreign-language equivalent of `Client::with_http_client`.
+//! Foreign-language equivalent of the Rust APIs that take a `reqwest::Client`.
 //!
-//! The Rust API lets callers hand over a fully built `reqwest::Client`. uniffi
-//! has no way to carry one across the boundary, so the bindings describe what
-//! they want instead and the client is built on this side.
+//! The Rust APIs let callers hand over a fully built `reqwest::Client`.
+//! uniffi has no way to carry one across the boundary, so the bindings
+//! describe what they want instead and the client is built on this side.
 
 use crate::error::{Result, SdkFfiError};
 
@@ -30,7 +30,7 @@ pub struct HttpClientOptions {
 
 impl HttpClientOptions {
     /// Build the described client.
-    pub(crate) fn build(self) -> Result<reqwest::Client> {
+    pub(crate) fn build(&self) -> Result<reqwest::Client> {
         // `default_http_client_builder` has already merged the bundled roots,
         // so replacing them means starting from a bare builder rather than
         // layering `tls_certs_only` on top.

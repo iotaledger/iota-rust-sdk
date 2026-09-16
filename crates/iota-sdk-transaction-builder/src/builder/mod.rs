@@ -41,7 +41,6 @@ pub(crate) mod move_authenticator;
 /// Argument types for PTBs
 pub(crate) mod ptb_arguments;
 pub(crate) mod signer;
-mod tls;
 
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
@@ -478,8 +477,16 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Set the gas station sponsor. Optional.
-    pub fn gas_station_sponsor(&mut self, url: Url) -> &mut TransactionBuilder<C, GasStationData> {
-        self.data.gas_station_data = Some(GasStationData::new(url));
+    ///
+    /// The `client` is used for every request to the gas station, so it decides
+    /// the TLS backend and trust anchors. This crate deliberately builds no
+    /// HTTP client of its own.
+    pub fn gas_station_sponsor(
+        &mut self,
+        url: Url,
+        client: reqwest::Client,
+    ) -> &mut TransactionBuilder<C, GasStationData> {
+        self.data.gas_station_data = Some(GasStationData::new(url, client));
         self.state_change()
     }
 
