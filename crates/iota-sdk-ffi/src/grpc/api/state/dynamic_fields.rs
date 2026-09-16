@@ -67,12 +67,10 @@ impl TryFrom<&proto::dynamic_field::DynamicField> for DynamicField {
 
     fn try_from(value: &proto::dynamic_field::DynamicField) -> Result<Self> {
         Ok(Self {
-            kind: value
-                .kind
-                .and_then(|kind| {
-                    proto::dynamic_field::dynamic_field::DynamicFieldKind::try_from(kind).ok()
-                })
-                .map(Into::into),
+            kind: value.kind.map(|kind| {
+                proto::dynamic_field::dynamic_field::DynamicFieldKind::try_from(kind)
+                    .map_or(DynamicFieldKind::Unknown, Into::into)
+            }),
             parent: value
                 .parent
                 .as_ref()

@@ -83,12 +83,10 @@ impl TryFrom<&proto::coin::CoinMetadata> for GrpcCoinMetadata {
                 .transpose()?
                 .map(Into::into)
                 .map(Arc::new),
-            metadata_cap_state: value
-                .metadata_cap_state
-                .and_then(|state| {
-                    proto::coin::coin_metadata::MetadataCapState::try_from(state).ok()
-                })
-                .map(Into::into),
+            metadata_cap_state: value.metadata_cap_state.map(|state| {
+                proto::coin::coin_metadata::MetadataCapState::try_from(state)
+                    .map_or(MetadataCapState::Unknown, Into::into)
+            }),
         })
     }
 }
@@ -140,10 +138,10 @@ impl TryFrom<&proto::coin::CoinTreasury> for CoinTreasury {
                 .map(Into::into)
                 .map(Arc::new),
             total_supply: value.total_supply,
-            supply_state: value
-                .supply_state
-                .and_then(|state| proto::coin::coin_treasury::SupplyState::try_from(state).ok())
-                .map(Into::into),
+            supply_state: value.supply_state.map(|state| {
+                proto::coin::coin_treasury::SupplyState::try_from(state)
+                    .map_or(SupplyState::Unknown, Into::into)
+            }),
         })
     }
 }
@@ -216,12 +214,10 @@ impl TryFrom<&proto::coin::RegulatedCoinMetadata> for RegulatedCoinMetadata {
                 .map(Arc::new),
             allow_global_pause: value.allow_global_pause,
             variant: value.variant,
-            coin_regulated_state: value
-                .coin_regulated_state
-                .and_then(|state| {
-                    proto::coin::regulated_coin_metadata::CoinRegulatedState::try_from(state).ok()
-                })
-                .map(Into::into),
+            coin_regulated_state: value.coin_regulated_state.map(|state| {
+                proto::coin::regulated_coin_metadata::CoinRegulatedState::try_from(state)
+                    .map_or(CoinRegulatedState::Unknown, Into::into)
+            }),
         })
     }
 }
@@ -273,5 +269,29 @@ impl GrpcClient {
             .await?
             .into_inner())
             .try_into()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use iota_sdk::grpc_types::v1 as proto;
+
+    use super::{CoinTreasury, SupplyState};
+
+    #[test]
+    fn unrecognized_enum_value_is_unknown_not_absent() {
+        let mut treasury = proto::coin::CoinTreasury::default();
+        treasury.supply_state = Some(i32::MAX);
+
+        let converted = CoinTreasury::try_from(&treasury).unwrap();
+
+        assert!(matches!(converted.supply_state, Some(SupplyState::Unknown)));
+    }
+
+    #[test]
+    fn absent_enum_value_stays_absent() {
+        let converted = CoinTreasury::try_from(&proto::coin::CoinTreasury::default()).unwrap();
+
+        assert!(converted.supply_state.is_none());
     }
 }
