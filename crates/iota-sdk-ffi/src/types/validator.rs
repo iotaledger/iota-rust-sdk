@@ -15,12 +15,8 @@ use crate::{
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// validator-committee = u64 ; epoch
-///                       (vector validator-committee-member)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct ValidatorCommittee(pub iota_sdk::types::ValidatorCommittee);
@@ -64,12 +60,8 @@ impl ValidatorCommittee {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// validator-committee-member = bls12381-public-key
-///                              u64 ; stake
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct ValidatorCommitteeMember {
     pub public_key: Arc<Bls12381PublicKey>,
@@ -98,13 +90,8 @@ impl From<ValidatorCommitteeMember> for iota_sdk::types::ValidatorCommitteeMembe
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// validator-signature = u64                  ; epoch
-///                       bls12381-public-key
-///                       bls12381-signature
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct ValidatorSignature(pub iota_sdk::types::ValidatorSignature);
@@ -141,18 +128,10 @@ impl ValidatorSignature {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// ```text
-/// validator-aggregated-signature = u64                  ; epoch
-///                                  bls12381-signature   ; signature
-///                                  bytes                ; bitmap — contents of the bytes are
-///                                                       ; valid according to the serialized
-///                                                       ; spec for roaring bitmaps
-/// ```
-///
-/// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
-/// serialized format of RoaringBitmaps.
+/// The `bitmap` bytes follow the [RoaringBitmap serialized format](https://github.com/RoaringBitmap/RoaringFormatSpec).
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct ValidatorAggregatedSignature(pub iota_sdk::types::ValidatorAggregatedSignature);

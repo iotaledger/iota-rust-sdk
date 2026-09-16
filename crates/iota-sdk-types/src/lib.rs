@@ -54,56 +54,16 @@
 //! library will support new variants and types as they are released to IOTA's
 //! `testnet` network.
 //!
-//! See the documentation for the various types defined by this crate for a
-//! specification of their BCS serialized representation which will be defined
-//! using ABNF notation as described by [RFC-5234]. In addition to the format
-//! itself, some types have an extra layer of verification and may impose
-//! additional restrictions on valid byte representations above and beyond those
-//! already provided by BCS. In these instances the documentation for those
-//! types will clearly specify these additional restrictions.
-//!
-//! Here are some common rules:
-//!
-//! ```text
-//! ; --- BCS Value ---
-//! bcs-value           = bcs-struct / bcs-enum / bcs-length-prefixed / bcs-fixed-length
-//! bcs-length-prefixed = bytes / string / vector / option
-//! bcs-fixed-length    = u8 / u16 / u32 / u64 / u128 /
-//!                       i8 / i16 / i32 / i64 / i128 /
-//!                       bool
-//! bcs-struct          = *bcs-value          ; Sequence of serialized fields
-//! bcs-enum            = uleb128 bcs-value   ; Variant index (ULEB128) + associated value
-//!
-//! ; --- Named primitives ---
-//! uleb128 = *(%x80-FF) %x00-7F   ; Variable-length unsigned integer
-//! size    = uleb128               ; BCS sequence / string length
-//! opt     = %d00                  ; None — no value follows
-//!         / %d01                  ; Some — value follows
-//!
-//! ; --- Length-prefixed types ---
-//! bytes   = size *OCTET          ; Raw bytes
-//! string  = size *OCTET          ; UTF-8 string
-//! vector  = size *bcs-value      ; Length-prefixed list of values
-//! option  = %d00 / (%d01 bcs-value)  ; Optional value
-//!
-//! ; --- Fixed-length types ---
-//! u8      = 1OCTET               ; 1-byte unsigned integer
-//! u16     = 2OCTET               ; 2-byte unsigned integer, little-endian
-//! u32     = 4OCTET               ; 4-byte unsigned integer, little-endian
-//! u64     = 8OCTET               ; 8-byte unsigned integer, little-endian
-//! u128    = 16OCTET              ; 16-byte unsigned integer, little-endian
-//! i8      = 1OCTET               ; 1-byte signed integer
-//! i16     = 2OCTET               ; 2-byte signed integer, little-endian
-//! i32     = 4OCTET               ; 4-byte signed integer, little-endian
-//! i64     = 8OCTET               ; 8-byte signed integer, little-endian
-//! i128    = 16OCTET              ; 16-byte signed integer, little-endian
-//! bool    = %d00                 ; false
-//!         / %d01                 ; true
-//! array   = *(bcs-value)         ; Fixed-length array (no length prefix)
-//! ```
+//! The BCS serialized form of every type in this crate is specified in ABNF
+//! notation, as described by [RFC-5234], in [`bcs-schema.abnf`]. In addition to
+//! the format itself, some types have an extra layer of verification and may
+//! impose additional restrictions on valid byte representations above and
+//! beyond those already provided by BCS. In these instances the documentation
+//! for those types will clearly specify these additional restrictions.
 //!
 //! [BCS]: https://docs.rs/bcs
 //! [RFC-5234]: https://datatracker.ietf.org/doc/html/rfc5234
+//! [`bcs-schema.abnf`]: https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf
 
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
