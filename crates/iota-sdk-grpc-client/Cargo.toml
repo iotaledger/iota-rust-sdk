@@ -30,11 +30,12 @@ iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
 [features]
-default = ["tls-aws-lc", "tls-native-roots"]
-# rustls refuses to choose when several crypto providers are compiled in, and
-# `reqwest` 0.13 offers aws-lc-rs only, so ring is not selectable for a build that
-# also uses the GraphQL client.
+default = ["tls-ring", "tls-native-roots"]
+# rustls refuses to choose when several crypto providers are compiled in, so the
+# provider has to agree with the one the GraphQL client's `reqwest` uses. Both
+# are on ring; pick `tls-aws-lc` only if the rest of the graph moves too.
 tls-aws-lc = ["tonic/tls-aws-lc"]
+tls-ring = ["tonic/tls-ring"]
 tls-native-roots = ["tonic/tls-native-roots"]
 tls-webpki-roots = ["tonic/tls-webpki-roots"]
 

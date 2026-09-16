@@ -21,6 +21,11 @@
 /// handshake the SDK cannot perform. The bundled roots are used alone instead.
 #[cfg(not(target_arch = "wasm32"))]
 pub(crate) fn client() -> Result<reqwest::Client, reqwest::Error> {
+    // `reqwest` is built with `rustls-no-provider` to keep the aws-lc-rs C
+    // library out of the graph, so a provider has to be installed first. The
+    // first caller wins, so an application that chose its own keeps it.
+    let _ = rustls::crypto::ring::default_provider().install_default();
+
     let builder = reqwest::Client::builder();
     let roots = webpki_root_certs::TLS_SERVER_ROOT_CERTS
         .iter()

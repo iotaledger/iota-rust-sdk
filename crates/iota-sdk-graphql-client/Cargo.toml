@@ -20,7 +20,7 @@ chrono = "0.4.45"
 cynic.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 futures.workspace = true
-reqwest = { workspace = true, features = ["rustls", "json"] }
+reqwest = { workspace = true, features = ["rustls-no-provider", "json"] }
 serde.workspace = true
 serde_json.workspace = true
 strum = { workspace = true, features = ["derive"] }
@@ -37,6 +37,10 @@ iota-types = { workspace = true, features = ["serde", "hash"] }
 # Subscriptions are delivered over a WebSocket. The transport differs per
 # target, so `graphql-ws-client` picks up a different integration on each.
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+# Selects ring as the rustls crypto provider. reqwest's `rustls` feature would
+# hard-wire aws-lc-rs and its C build; `rustls-no-provider` leaves the choice to
+# us, but then something must install a process default before a client is built.
+rustls = { version = "0.23", default-features = false, features = ["ring"] }
 graphql-ws-client = { workspace = true, features = ["tungstenite-0.28"] }
 tokio-tungstenite.workspace = true
 webpki-root-certs.workspace = true

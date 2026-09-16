@@ -37,6 +37,8 @@
 /// ```
 #[cfg(not(target_arch = "wasm32"))]
 pub fn default_http_client_builder() -> reqwest::ClientBuilder {
+    install_default_crypto_provider();
+
     let builder = reqwest::Client::builder().user_agent(crate::client::USER_AGENT);
     let roots = webpki_root_certs::TLS_SERVER_ROOT_CERTS
         .iter()
@@ -62,4 +64,22 @@ pub fn default_http_client_builder() -> reqwest::ClientBuilder {
 #[cfg(target_arch = "wasm32")]
 pub fn default_http_client_builder() -> reqwest::ClientBuilder {
     reqwest::Client::builder().user_agent(crate::client::USER_AGENT)
+}
+
+/// Select ring as the process-wide rustls crypto provider, if nothing has
+/// chosen one already.
+///
+/// `reqwest` is built with `rustls-no-provider` so that the aws-lc-rs C library
+/// stays out of the dependency graph; in exchange, a provider has to be
+/// installed before any client is built. Installing is a once-per-process
+/// operation and the first caller wins, so an application that has already
+/// chosen a provider keeps it and this becomes a no-op.
+///
+/// Callers who build their own [`reqwest::Client`] for
+/// [`crate::Client::with_http_client`] should call this first.
+#[cfg(not(target_arch = "wasm32"))]
+pub fn install_default_crypto_provider() {
+    // Err means another provider is already installed, which is the caller's
+    // prerogative.
+    let _ = rustls::crypto::ring::default_provider().install_default();
 }

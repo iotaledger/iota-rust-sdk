@@ -66,6 +66,11 @@ impl Client {
     /// This is the way to choose your own trust anchors, TLS backend, proxies
     /// or timeouts.
     ///
+    /// Building a `reqwest::Client` panics unless a rustls crypto provider has
+    /// been installed for the process, because this SDK selects the provider
+    /// itself rather than letting reqwest hard-wire aws-lc-rs. Call
+    /// [`crate::install_default_crypto_provider`] first, or install your own.
+    ///
     /// The client is used as given: the SDK does not set its user agent, so
     /// callers who want to be identifiable should apply [`USER_AGENT`]
     /// themselves. [`crate::default_http_client_builder`] returns a builder

@@ -35,6 +35,10 @@ impl HttpClientOptions {
         // so replacing them means starting from a bare builder rather than
         // layering `tls_certs_only` on top.
         let mut builder = if self.only_provided_roots {
+            // This branch bypasses `default_http_client_builder`, which is what
+            // normally selects the rustls provider.
+            #[cfg(not(target_arch = "wasm32"))]
+            iota_sdk::graphql_client::install_default_crypto_provider();
             reqwest::Client::builder().user_agent(iota_sdk::graphql_client::USER_AGENT)
         } else {
             iota_sdk::graphql_client::default_http_client_builder()

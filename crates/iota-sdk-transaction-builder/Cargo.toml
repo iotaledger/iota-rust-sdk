@@ -22,7 +22,7 @@ bcs.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 http = "1"
 primitive-types.workspace = true
-reqwest = { workspace = true, features = ["rustls", "json"] }
+reqwest = { workspace = true, features = ["rustls-no-provider", "json"] }
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
@@ -37,6 +37,10 @@ iota-types = { workspace = true, features = ["serde", "hash"] }
 tokio = { workspace = true, features = ["macros", "rt"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+# Selects ring as the rustls crypto provider. reqwest's `rustls` feature would
+# hard-wire aws-lc-rs and its C build; `rustls-no-provider` leaves the choice to
+# us, but then something must install a process default before a client is built.
+rustls = { version = "0.23", default-features = false, features = ["ring"] }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 webpki-root-certs.workspace = true
 
