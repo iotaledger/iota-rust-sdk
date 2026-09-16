@@ -263,6 +263,9 @@ impl TryFrom<&proto::state_service::GetCoinInfoResponse> for GrpcCoinInfo {
 impl GrpcClient {
     /// Get information about a coin type, including its metadata, treasury,
     /// and regulated metadata.
+    ///
+    /// `coin_type` is the inner type `T` of `Coin<T>`, e.g. `0x2::iota::IOTA`,
+    /// not the `Coin<T>` wrapper.
     pub async fn coin_info(&self, coin_type: &StructTag) -> Result<GrpcCoinInfo> {
         (&self
             .client()
