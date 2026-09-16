@@ -89,13 +89,10 @@ func main() {
 	// Print package dependencies and their linked versions.
 	fmt.Println("Dependencies:")
 	linkageTable := pkg.LinkageTable()
-	if len(linkageTable) == 0 {
+	if linkageTable.IsEmpty() {
 		fmt.Println("- none")
 	} else {
-		upgrades := make([]iota_sdk.UpgradeInfo, 0, len(linkageTable))
-		for _, upgrade := range linkageTable {
-			upgrades = append(upgrades, upgrade)
-		}
+		upgrades := linkageTable.Values()
 		sort.Slice(upgrades, func(i, j int) bool {
 			return upgrades[i].UpgradedId.ToHex() < upgrades[j].UpgradedId.ToHex()
 		})
@@ -112,8 +109,8 @@ func main() {
 
 	// Inspect normalized modules, functions, types, and sample key objects.
 	fmt.Println("Package contents:")
-	moduleNames := make([]string, 0, len(pkg.Modules()))
-	for moduleID := range pkg.Modules() {
+	moduleNames := make([]string, 0, pkg.Modules().Len())
+	for _, moduleID := range pkg.Modules().Keys() {
 		moduleNames = append(moduleNames, moduleID.AsStr())
 	}
 	sort.Strings(moduleNames)
@@ -369,8 +366,9 @@ func extractPolicy(contents string) (uint8, bool) {
 
 func resolveUpgradeCapID(client *iota_sdk.GraphQlClient, packageID *iota_sdk.ObjectId) (*iota_sdk.ObjectId, error) {
 	limit := int32(1)
+	filter := iota_sdk.NewTransactionsFilter().WithChangedObject(packageID)
 	page, err := client.TransactionsEffects(
-		&iota_sdk.TransactionsFilter{ChangedObject: &packageID},
+		&filter,
 		&iota_sdk.PaginationFilter{Direction: iota_sdk.DirectionForward, Limit: &limit},
 	)
 	if err != nil {
@@ -544,10 +542,11 @@ func usesUpgradeCapForMakeImmutable(tx *iota_sdk.Transaction, upgradeCapID *iota
 
 func wasPackagePublishedAsImmutable(client *iota_sdk.GraphQlClient, packageID *iota_sdk.ObjectId) (bool, error) {
 	var cursor *string
+	filter := iota_sdk.NewTransactionsFilter().WithChangedObject(packageID)
 
 	for {
 		page, err := client.TransactionsDataEffects(
-			&iota_sdk.TransactionsFilter{ChangedObject: &packageID},
+			&filter,
 			forwardPage(cursor),
 		)
 		if err != nil {
@@ -573,10 +572,11 @@ func wasPackagePublishedAsImmutable(client *iota_sdk.GraphQlClient, packageID *i
 
 func wasUpgradeCapUsedForMakeImmutable(client *iota_sdk.GraphQlClient, upgradeCapID *iota_sdk.ObjectId) (bool, error) {
 	var cursor *string
+	filter := iota_sdk.NewTransactionsFilter().WithInputObject(upgradeCapID)
 
 	for {
 		page, err := client.TransactionsDataEffects(
-			&iota_sdk.TransactionsFilter{InputObject: &upgradeCapID},
+			&filter,
 			forwardPage(cursor),
 		)
 		if err != nil {

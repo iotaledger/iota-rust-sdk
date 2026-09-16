@@ -17,17 +17,11 @@ use crate::{
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// ```text
-/// public-key = %d00 ed25519-public-key /
-///              %d01 secp256k1-public-key /
-///              %d02 secp256r1-public-key /
-///              %d04 passkey-public-key
-/// ```
-///
-/// The gap in the flag values is intentional, as not all signature scheme
-/// support public keys.
+/// The gap in the flag values of the `public-key` rule is intentional, as not
+/// all signature schemes support public keys.
 ///
 /// There is also a base64 encoding for this type defined as:
 ///

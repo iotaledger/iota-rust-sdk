@@ -17,7 +17,7 @@ use iota_types::{
 
 use crate::{
     Client, TransactionDataEffects,
-    error::{Error, Kind, Result},
+    error::{Error, Result},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
         AddressTransactionBlocksQuery, AddressTransactionRelationship, AddressTransactionsQuery,
@@ -58,7 +58,7 @@ impl Client {
         let operation = TransactionBlocksQuery::build(TransactionBlocksQueryArgs {
             after: pagination.after,
             before: pagination.before,
-            filter: filter.into(),
+            filter: filter.into().map(Into::into),
             first: pagination.first,
             last: pagination.last,
         });
@@ -95,7 +95,7 @@ impl Client {
             first: pagination.first,
             last: pagination.last,
             relation: relation.into(),
-            filter: filter.into(),
+            filter: filter.into().map(Into::into),
         });
 
         let response = self.run_query(&operation).await?;
@@ -140,7 +140,7 @@ impl Client {
         let operation = TransactionBlocksEffectsQuery::build(TransactionBlocksQueryArgs {
             after: pagination.after,
             before: pagination.before,
-            filter: filter.into(),
+            filter: filter.into().map(Into::into),
             first: pagination.first,
             last: pagination.last,
         });
@@ -196,7 +196,7 @@ impl Client {
         let operation = TransactionBlocksWithEffectsQuery::build(TransactionBlocksQueryArgs {
             after: pagination.after,
             before: pagination.before,
-            filter: filter.into(),
+            filter: filter.into().map(Into::into),
             first: pagination.first,
             last: pagination.last,
         });
@@ -211,7 +211,7 @@ impl Client {
                 .into_iter()
                 .map(|node| {
                     let (Some(bcs), Some(effects)) = (node.bcs, node.effects) else {
-                        return Err(Error::empty_response_error());
+                        return Err(Error::EmptyResponseField("transaction bcs or effects"));
                     };
                     let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
                     let effects =
@@ -331,7 +331,7 @@ impl Client {
             },
         )
         .await
-        .map_err(|e| Error::from_error(Kind::Other, e))?
+        .map_err(|_| Error::Timeout)?
     }
 }
 
@@ -458,10 +458,7 @@ mod tests {
 
         client
             .transactions_data_effects(
-                TransactionsFilter {
-                    transaction_ids: Some(vec![digest.to_string()]),
-                    ..Default::default()
-                },
+                TransactionsFilter::default().with_transaction_ids([digest]),
                 PaginationFilter::default(),
             )
             .await

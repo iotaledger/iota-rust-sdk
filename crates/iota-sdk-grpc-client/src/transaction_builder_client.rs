@@ -25,7 +25,7 @@ use iota_types::{
 
 use crate::{
     Client,
-    api::{Error, MetadataEnvelope, check_result_count, saturating_usize_to_u32},
+    api::{GrpcError, GrpcResult, MetadataEnvelope, check_result_count, saturating_usize_to_u32},
 };
 
 /// How long [`TransactionBuilderExecutionClient::wait_for_transaction`] polls
@@ -46,8 +46,8 @@ const WAIT_FOR_TRANSACTION_POLL_INTERVAL: Duration = Duration::from_millis(100);
 /// item: the batched reads answer every request, so an empty batch says the
 /// server broke that promise rather than that the item is missing.
 fn single_item<T>(
-    response: Result<MetadataEnvelope<Vec<Result<T, Error>>>, Error>,
-) -> Result<Option<T>, Error> {
+    response: GrpcResult<MetadataEnvelope<Vec<GrpcResult<T>>>>,
+) -> GrpcResult<Option<T>> {
     let mut items = response?.into_inner();
     check_result_count(&items, 1)?;
 
@@ -66,7 +66,7 @@ impl Client {
 }
 
 impl TransactionBuilderClientBase for Client {
-    type Error = crate::api::Error;
+    type Error = crate::api::GrpcError;
 }
 
 impl TransactionBuilderLedgerClient for Client {
@@ -102,7 +102,7 @@ impl TransactionBuilderLedgerClient for Client {
             .into_inner()
             .into_iter()
             .map(|result| match result {
-                Ok(obj) => obj.object().map(Some).map_err(Error::from),
+                Ok(obj) => obj.object().map(Some).map_err(GrpcError::from),
                 Err(e) if e.is_not_found() => Ok(None),
                 Err(e) => Err(e),
             })
@@ -129,7 +129,7 @@ impl TransactionBuilderLedgerClient for Client {
         let data = page
             .items
             .iter()
-            .map(|obj| obj.object().map_err(Error::from))
+            .map(|obj| obj.object().map_err(GrpcError::from))
             .collect::<Result<Vec<_>, _>>()?;
         let next_cursor = page.next_page_token.map(|token| token.to_vec());
         Ok(ObjectsPage { data, next_cursor })
@@ -286,7 +286,7 @@ impl TransactionBuilderExecutionClient for Client {
         tokio::time::timeout(WAIT_FOR_TRANSACTION_TIMEOUT, poll)
             .await
             .map_err(|_| {
-                Error::from(tonic::Status::deadline_exceeded(format!(
+                GrpcError::from(tonic::Status::deadline_exceeded(format!(
                     "timed out waiting for transaction {digest} after {}s",
                     WAIT_FOR_TRANSACTION_TIMEOUT.as_secs()
                 )))
@@ -315,7 +315,7 @@ impl TransactionBuilderExecutionClient for Client {
 mod tests {
     use tonic::metadata::MetadataMap;
 
-    use super::{Error, MetadataEnvelope, single_item};
+    use super::{GrpcError, GrpcResult, MetadataEnvelope, single_item};
     use crate::api::{ProtocolError, RpcStatus};
 
     fn not_found_status() -> RpcStatus {
@@ -328,8 +328,8 @@ mod tests {
 
     #[test]
     fn a_not_found_for_the_call_itself_is_not_an_absent_item() {
-        let response: Result<MetadataEnvelope<Vec<Result<u32, Error>>>, Error> =
-            Err(Error::from(tonic::Status::not_found("no such route")));
+        let response: GrpcResult<MetadataEnvelope<Vec<GrpcResult<u32>>>> =
+            Err(GrpcError::from(tonic::Status::not_found("no such route")));
 
         assert!(
             single_item(response).is_err(),
@@ -339,7 +339,7 @@ mod tests {
 
     #[test]
     fn a_not_found_for_the_item_is_an_absent_item() {
-        let items: Vec<Result<u32, Error>> = vec![Err(Error::Server(not_found_status()))];
+        let items: Vec<GrpcResult<u32>> = vec![Err(GrpcError::Server(not_found_status()))];
         let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
 
         assert!(
@@ -351,13 +351,13 @@ mod tests {
 
     #[test]
     fn an_empty_batch_is_not_an_absent_item() {
-        let items: Vec<Result<u32, Error>> = Vec::new();
+        let items: Vec<GrpcResult<u32>> = Vec::new();
         let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
 
         assert!(
             matches!(
                 single_item(response),
-                Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+                Err(GrpcError::Protocol(ProtocolError::UnexpectedResultCount {
                     expected: 1,
                     actual: 0
                 }))
@@ -368,13 +368,13 @@ mod tests {
 
     #[test]
     fn a_batch_with_more_results_than_requested_is_an_error() {
-        let items: Vec<Result<u32, Error>> = vec![Ok(1), Ok(2)];
+        let items: Vec<GrpcResult<u32>> = vec![Ok(1), Ok(2)];
         let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
 
         assert!(
             matches!(
                 single_item(response),
-                Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+                Err(GrpcError::Protocol(ProtocolError::UnexpectedResultCount {
                     expected: 1,
                     actual: 2
                 }))

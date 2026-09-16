@@ -16,8 +16,8 @@ class Program
         var client = GraphQlClient.NewLocalnet();
         var address = Address.FromHex("0xa7c2cf9d8f8d95ff69d7a598c49c77acc36253f496f064a533ad306879b40bfa");
 
-        var outgoing = await client.Transactions(filter: new TransactionsFilter(SentAddress: address));
-        var incoming = await client.Transactions(filter: new TransactionsFilter(RecvAddress: address));
+        var outgoing = await client.Transactions(filter: new TransactionsFilter().WithSentAddress(address));
+        var incoming = await client.Transactions(filter: new TransactionsFilter().WithRecvAddress(address));
 
         Console.WriteLine($"Transactions for {address.ToHex()}");
 
