@@ -41,6 +41,7 @@ pub(crate) mod move_authenticator;
 /// Argument types for PTBs
 pub(crate) mod ptb_arguments;
 pub(crate) mod signer;
+mod tls;
 
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";

@@ -13,6 +13,7 @@ pub mod pagination;
 pub mod query_types;
 pub mod streams;
 mod subscription;
+pub mod tls;
 mod transaction_builder_client;
 mod wait;
 
@@ -20,8 +21,9 @@ mod wait;
 mod test_utils;
 
 // Re-export types used by query_types module internally
-pub use client::Client;
+pub use client::{Client, USER_AGENT};
 pub use iota_transaction_builder::WaitForTransaction;
 pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
+pub use tls::default_http_client_builder;

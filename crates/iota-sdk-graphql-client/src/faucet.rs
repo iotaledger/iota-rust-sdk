@@ -21,6 +21,8 @@ const FAUCET_POLL_INTERVAL: Duration = Duration::from_secs(2);
 pub enum FaucetError {
     #[error("Cannot fetch request status due to a bad gateway.")]
     BadGateway,
+    #[error("Invalid faucet URL: {0}")]
+    InvalidUrl(#[from] url::ParseError),
     #[error("Faucet request was unsuccessful: {0}")]
     Request(String),
     #[error("Reqwest error: {0}")]
@@ -91,15 +93,35 @@ impl FaucetClient {
     ///
     /// - /v1/gas is used to request gas
     /// - /v1/status/task-uuid is used to check the status of the request
-    pub fn new(faucet_url: &str) -> Self {
-        let inner = reqwest::Client::new();
-        let faucet_url = Url::parse(faucet_url).expect("Invalid faucet URL");
-        FaucetClient { faucet_url, inner }
+    ///
+    /// The HTTP client is built for you by
+    /// [`crate::default_http_client_builder`], which trusts the platform store
+    /// plus the bundled Mozilla roots. Use [`Self::with_http_client`] to
+    /// supply your own.
+    pub fn new(faucet_url: &str) -> Result<Self, FaucetError> {
+        Self::with_http_client(
+            faucet_url,
+            crate::tls::default_http_client_builder().build()?,
+        )
+    }
+
+    /// Construct a new `FaucetClient` that issues its requests through the
+    /// supplied [`reqwest::Client`].
+    ///
+    /// This is the way to choose your own trust anchors or TLS backend.
+    pub fn with_http_client(
+        faucet_url: &str,
+        client: reqwest::Client,
+    ) -> Result<Self, FaucetError> {
+        Ok(FaucetClient {
+            faucet_url: Url::parse(faucet_url)?,
+            inner: client,
+        })
     }
 
     /// Create a new Faucet client connected to a `localnet` faucet.
     pub fn new_localnet() -> Self {
-        Self::new(FAUCET_LOCAL_HOST)
+        Self::new(FAUCET_LOCAL_HOST).expect("Invalid localnet faucet URL")
     }
 
     /// Request gas from the faucet. Note that this will return the UUID of the

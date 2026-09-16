@@ -66,6 +66,7 @@ variadics_please = "2.0"
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
 wasm-bindgen-test = "0.3"
+webpki-root-certs = "1"
 ws_stream_wasm = "0.7"
 
 # internal dependencies

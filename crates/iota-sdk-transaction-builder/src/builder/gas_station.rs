@@ -391,7 +391,11 @@ impl GasStationData {
         txn: &mut Transaction,
         signer: &impl TransactionSigner,
     ) -> Result<serde_json::Value, TransactionBuilderError> {
-        let client = reqwest::Client::new();
+        let client =
+            super::tls::client().map_err(|source| TransactionBuilderError::GasStationRequest {
+                source,
+                gas_station_url: url.clone(),
+            })?;
         let reservation_id = match txn {
             Transaction::V1(inner_txn) => {
                 let reservation = self

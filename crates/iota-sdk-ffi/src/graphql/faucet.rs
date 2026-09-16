@@ -23,9 +23,10 @@ impl FaucetClient {
     /// - /v1/gas is used to request gas
     /// - /v1/status/task-uuid is used to check the status of the request
     #[uniffi::constructor]
-    pub fn new(faucet_url: String) -> Self {
-        Self(iota_sdk::graphql_client::faucet::FaucetClient::new(
-            &faucet_url,
+    pub fn new(faucet_url: String) -> Result<Self> {
+        Ok(Self(
+            iota_sdk::graphql_client::faucet::FaucetClient::new(&faucet_url)
+                .map_err(SdkFfiError::new)?,
         ))
     }
 
