@@ -416,34 +416,6 @@ mod tests {
             };
             assert_eq!(txn.gas_payment.budget, 1);
         }
-
-        #[tokio::test]
-        async fn object_refs_by_id_defaults_to_one_batch_and_keeps_gaps_in_place() {
-            use crate::RecordingClient;
-
-            let present = ObjectId::from_bytes([1; ObjectId::LENGTH]).unwrap();
-            let missing = ObjectId::from_bytes([2; ObjectId::LENGTH]).unwrap();
-            let client = RecordingClient {
-                missing: vec![missing],
-                ..Default::default()
-            };
-
-            let refs = client
-                .object_refs_by_id(&[(present, None), (missing, None), (present, None)])
-                .await
-                .unwrap();
-
-            assert_eq!(refs.len(), 3);
-            assert_eq!(refs[0].as_ref().map(|r| r.object_id), Some(present));
-            assert_eq!(
-                refs[0].as_ref().map(|r| r.version),
-                Some(Version::from_u64(1))
-            );
-            assert!(refs[1].is_none());
-            assert_eq!(refs[2].as_ref().map(|r| r.object_id), Some(present));
-            assert_eq!(client.batches(), vec![vec![present, missing, present]]);
-            assert!(client.singles().is_empty());
-        }
     }
 
     #[cfg(feature = "test-client")]

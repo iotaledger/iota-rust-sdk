@@ -8,9 +8,8 @@ use std::time::Duration;
 
 use iota_grpc_types::{
     read_mask_fields::{
-        EpochField, EpochReadMask, ExecuteTransactionReadMask, ObjectField, ObjectReadMask,
-        OwnedObjectReadMask, SimulateField, SimulateReadMask, TransactionField,
-        TransactionReadMask,
+        EpochField, EpochReadMask, ExecuteTransactionReadMask, ObjectReadMask, OwnedObjectReadMask,
+        SimulateField, SimulateReadMask, TransactionField, TransactionReadMask,
     },
     v1::transaction_execution_service::SimulatedTransaction,
 };
@@ -20,8 +19,8 @@ use iota_transaction_builder::{
     TransactionBuilderSimulationClient, WaitForTransaction,
 };
 use iota_types::{
-    Address, Object, ObjectId, ObjectReference, SignedTransaction, StructTag, Transaction,
-    TransactionDigest, TransactionEffects, UserSignature, Version,
+    Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
+    TransactionEffects, UserSignature, Version,
 };
 
 use crate::{
@@ -104,25 +103,6 @@ impl TransactionBuilderLedgerClient for Client {
             .into_iter()
             .map(|result| match result {
                 Ok(obj) => obj.object().map(Some).map_err(GrpcError::from),
-                Err(e) if e.is_not_found() => Ok(None),
-                Err(e) => Err(e),
-            })
-            .collect()
-    }
-
-    async fn object_refs_by_id(
-        &self,
-        object_ids: &[(ObjectId, Option<Version>)],
-    ) -> Result<Vec<Option<ObjectReference>>, Self::Error> {
-        if object_ids.is_empty() {
-            return Ok(Vec::new());
-        }
-        self.objects_with_versions(object_ids.iter().copied(), [ObjectField::REFERENCE])
-            .await?
-            .into_inner()
-            .into_iter()
-            .map(|result| match result {
-                Ok(obj) => obj.object_reference().map(Some).map_err(GrpcError::from),
                 Err(e) if e.is_not_found() => Ok(None),
                 Err(e) => Err(e),
             })
