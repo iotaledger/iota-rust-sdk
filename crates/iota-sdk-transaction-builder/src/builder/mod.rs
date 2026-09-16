@@ -14,8 +14,8 @@ use iota_types::{
     Owner, ProgrammableTransaction, SharedObjectReference, StructTag, Transaction,
     TransactionEffects, TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
 };
-use reqwest::Url;
 use serde::Serialize;
+use url::Url;
 
 use crate::{
     PTBArgument, SharedMut, TransactionBuilderClient, TransactionBuilderLedgerClient,
@@ -2032,8 +2032,8 @@ impl<C> TransactionBuilder<C, GasStationData> {
     /// Add a header that will be passed to the gas station sponsor request.
     pub fn add_gas_station_header(
         &mut self,
-        name: reqwest::header::HeaderName,
-        value: reqwest::header::HeaderValue,
+        name: http::header::HeaderName,
+        value: http::header::HeaderValue,
     ) -> &mut Self {
         if let Some(data) = &mut self.data.gas_station_data {
             data.add_header(name, value);

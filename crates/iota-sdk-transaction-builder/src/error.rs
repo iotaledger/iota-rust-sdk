@@ -65,11 +65,11 @@ pub enum TransactionBuilderError {
     #[error("Invalid argument for move authenticator: {0}")]
     InvalidMoveAuthArg(String),
     #[error(transparent)]
-    InvalidUrl(<reqwest::Url as std::str::FromStr>::Err),
+    InvalidUrl(url::ParseError),
     #[error("Request to gas station `{gas_station_url}` failed: {source}")]
     GasStationRequest {
-        source: reqwest::Error,
-        gas_station_url: reqwest::Url,
+        source: GasStationTransportError,
+        gas_station_url: url::Url,
     },
     #[
         error("Invalid gas station response from {gas_station_url}{}", 
@@ -77,7 +77,7 @@ pub enum TransactionBuilderError {
     ]
     GasStationResponse {
         message: Option<String>,
-        gas_station_url: reqwest::Url,
+        gas_station_url: url::Url,
     },
     #[error(
         "invalid gas-station version: got version `{version}`, but at least version `{min_required_version}` is required"
@@ -107,5 +107,20 @@ impl TransactionBuilderError {
     /// Create a signature error
     pub fn signature<E: 'static + std::error::Error + Send + Sync>(e: E) -> Self {
         Self::Signature(Box::new(e))
+    }
+}
+
+/// Transport failure while talking to a gas station.
+///
+/// Wraps the underlying HTTP client's error without naming its type, so that
+/// the client stays an implementation detail and its releases are not a
+/// breaking change for this crate.
+#[derive(Debug, thiserror::Error)]
+#[error(transparent)]
+pub struct GasStationTransportError(Box<dyn std::error::Error + Send + Sync + 'static>);
+
+impl GasStationTransportError {
+    pub(crate) fn new(source: impl std::error::Error + Send + Sync + 'static) -> Self {
+        Self(Box::new(source))
     }
 }

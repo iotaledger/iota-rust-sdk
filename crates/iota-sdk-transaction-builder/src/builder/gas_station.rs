@@ -4,16 +4,17 @@
 use std::{str::FromStr, time::Duration};
 
 use base64ct::Encoding;
+use http::header::{HeaderMap, HeaderName, HeaderValue};
 use iota_types::{
     Address, ObjectDigest, ObjectId, ObjectReference, Transaction, TransactionDigest, Version,
 };
-use reqwest::{
-    Url,
-    header::{HeaderMap, HeaderName, HeaderValue},
-};
 use serde::{Deserialize, Serialize};
+use url::Url;
 
-use crate::{builder::signer::TransactionSigner, error::TransactionBuilderError};
+use crate::{
+    builder::signer::TransactionSigner,
+    error::{GasStationTransportError, TransactionBuilderError},
+};
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
@@ -250,12 +251,12 @@ impl GasStationData {
             .send()
             .await
             .map_err(|e| TransactionBuilderError::GasStationRequest {
-                source: e,
+                source: GasStationTransportError::new(e),
                 gas_station_url: url.clone(),
             })?
             .error_for_status()
             .map_err(|e| TransactionBuilderError::GasStationRequest {
-                source: e,
+                source: GasStationTransportError::new(e),
                 gas_station_url: url.clone(),
             })?;
 
@@ -326,12 +327,12 @@ impl GasStationData {
             .send()
             .await
             .map_err(|e| TransactionBuilderError::GasStationRequest {
-                source: e,
+                source: GasStationTransportError::new(e),
                 gas_station_url: url.clone(),
             })?
             .error_for_status()
             .map_err(|e| TransactionBuilderError::GasStationRequest {
-                source: e,
+                source: GasStationTransportError::new(e),
                 gas_station_url: url.clone(),
             })?;
 
@@ -340,7 +341,7 @@ impl GasStationData {
                 .json()
                 .await
                 .map_err(|e| TransactionBuilderError::GasStationRequest {
-                    source: e,
+                    source: GasStationTransportError::new(e),
                     gas_station_url: url.clone(),
                 })?;
 
@@ -393,7 +394,7 @@ impl GasStationData {
     ) -> Result<serde_json::Value, TransactionBuilderError> {
         let client =
             super::tls::client().map_err(|source| TransactionBuilderError::GasStationRequest {
-                source,
+                source: GasStationTransportError::new(source),
                 gas_station_url: url.clone(),
             })?;
         let reservation_id = match txn {
@@ -443,12 +444,12 @@ impl GasStationData {
             .send()
             .await
             .map_err(|e| TransactionBuilderError::GasStationRequest {
-                source: e,
+                source: GasStationTransportError::new(e),
                 gas_station_url: url.clone(),
             })?
             .error_for_status()
             .map_err(|e| TransactionBuilderError::GasStationRequest {
-                source: e,
+                source: GasStationTransportError::new(e),
                 gas_station_url: url.clone(),
             })?;
 
@@ -457,7 +458,7 @@ impl GasStationData {
                 .json()
                 .await
                 .map_err(|e| TransactionBuilderError::GasStationRequest {
-                    source: e,
+                    source: GasStationTransportError::new(e),
                     gas_station_url: url.clone(),
                 })?;
 
