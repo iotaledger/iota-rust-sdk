@@ -171,7 +171,7 @@ impl From<proto::coin::regulated_coin_metadata::CoinRegulatedState> for CoinRegu
 
 /// The regulated metadata of a coin type.
 #[derive(uniffi::Record)]
-pub struct RegulatedCoinMetadata {
+pub struct GrpcRegulatedCoinMetadata {
     /// The id of the `0x2::coin::RegulatedCoinMetadata` object.
     pub id: Option<Arc<ObjectId>>,
     /// The id of the coin's `CoinMetadata` or `CoinData` object.
@@ -186,7 +186,7 @@ pub struct RegulatedCoinMetadata {
     pub coin_regulated_state: Option<CoinRegulatedState>,
 }
 
-impl TryFrom<&proto::coin::RegulatedCoinMetadata> for RegulatedCoinMetadata {
+impl TryFrom<&proto::coin::RegulatedCoinMetadata> for GrpcRegulatedCoinMetadata {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::coin::RegulatedCoinMetadata) -> Result<Self> {
@@ -235,7 +235,7 @@ pub struct GrpcCoinInfo {
     pub treasury: Option<CoinTreasury>,
     /// Information about the coin type's regulated metadata, if the coin is
     /// regulated.
-    pub regulated_metadata: Option<RegulatedCoinMetadata>,
+    pub regulated_metadata: Option<GrpcRegulatedCoinMetadata>,
 }
 
 impl TryFrom<&proto::state_service::GetCoinInfoResponse> for GrpcCoinInfo {
