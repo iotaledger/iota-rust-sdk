@@ -52,7 +52,6 @@ ws_stream_wasm.workspace = true
 [dev-dependencies]
 # external dependencies
 eyre.workspace = true
-rand.workspace = true
 
 # internal dependencies
 iota-types = { workspace = true, features = ["serde", "rand", "hash"] }

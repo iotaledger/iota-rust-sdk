@@ -43,7 +43,6 @@ webpki-root-certs.workspace = true
 [dev-dependencies]
 # external dependencies
 eyre.workspace = true
-rand.workspace = true
 serde_json.workspace = true
 
 # internal dependencies
