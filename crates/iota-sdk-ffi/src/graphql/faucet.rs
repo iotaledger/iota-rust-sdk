@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::{
     error::{Result, SdkFfiError},
-    graphql::client::GraphQLClient,
+    graphql::{client::GraphQLClient, http::HttpClientOptions},
     types::{address::Address, digest::TransactionDigest, object::ObjectId},
 };
 
@@ -27,6 +27,23 @@ impl FaucetClient {
         Ok(Self(
             iota_sdk::graphql_client::faucet::FaucetClient::new(&faucet_url)
                 .map_err(SdkFfiError::new)?,
+        ))
+    }
+
+    /// Construct a new `FaucetClient` using an HTTP client built to the given
+    /// options.
+    ///
+    /// The Rust API accepts a caller-built `reqwest::Client`; this is the
+    /// equivalent for the bindings, where such an object cannot cross the FFI
+    /// boundary.
+    #[uniffi::constructor]
+    pub fn with_http_options(faucet_url: String, options: HttpClientOptions) -> Result<Self> {
+        Ok(Self(
+            iota_sdk::graphql_client::faucet::FaucetClient::with_http_client(
+                &faucet_url,
+                options.build()?,
+            )
+            .map_err(SdkFfiError::new)?,
         ))
     }
 
