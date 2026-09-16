@@ -8,6 +8,14 @@ readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "GraphQL RPC Client for the IOTA Blockchain"
 
+[features]
+# TLS crypto provider and trust anchors; see README.md.
+default = ["tls-native-roots", "tls-ring", "tls-webpki-roots"]
+tls-aws-lc = ["dep:rustls", "rustls/aws-lc-rs"]
+tls-native-roots = []
+tls-ring = ["dep:rustls", "rustls/ring"]
+tls-webpki-roots = ["dep:webpki-root-certs"]
+
 [lints]
 workspace = true
 
@@ -37,13 +45,10 @@ iota-types = { workspace = true, features = ["serde", "hash"] }
 # Subscriptions are delivered over a WebSocket. The transport differs per
 # target, so `graphql-ws-client` picks up a different integration on each.
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-# Selects ring as the rustls crypto provider. reqwest's `rustls` feature would
-# hard-wire aws-lc-rs and its C build; `rustls-no-provider` leaves the choice to
-# us, but then something must install a process default before a client is built.
-rustls = { version = "0.23", default-features = false, features = ["ring"] }
+rustls = { version = "0.23", default-features = false, optional = true }
 graphql-ws-client = { workspace = true, features = ["tungstenite-0.28"] }
 tokio-tungstenite.workspace = true
-webpki-root-certs.workspace = true
+webpki-root-certs = { workspace = true, optional = true }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom_2.workspace = true

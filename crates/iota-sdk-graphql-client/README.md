@@ -14,6 +14,58 @@ executing transactions and more.
 1. **Convenience**: The client provides a set of APIs for common queries such as chain identifier, reference gas price, protocol configuration, service configuration, checkpoint, epoch, executing transactions and more.
 1. **Custom Queries**: The client provides a way to run custom queries using the `cynic` library.
 
+# TLS
+
+HTTPS connections are verified with `rustls`. Two feature axes decide how, and
+both have defaults, so nothing needs configuring to reach the public networks.
+
+**Crypto provider** — `tls-ring` (default) or `tls-aws-lc`. `aws-lc-rs` builds a
+C library and needs a working C toolchain, and `libclang` on targets without
+prebuilt bindings; `ring` avoids that. Enabling both is not an error, but
+`rustls` cannot be asked to choose between them, so `tls-ring` wins.
+
+**Trust anchors** — `tls-native-roots` and `tls-webpki-roots`, both on by
+default:
+
+| Features enabled        | Trusted                                                             |
+| ----------------------- | ------------------------------------------------------------------- |
+| both (default)          | the platform trust store, with the bundled Mozilla roots as a floor |
+| `tls-webpki-roots` only | the bundled Mozilla roots                                           |
+| `tls-native-roots` only | the platform trust store                                            |
+
+Keeping both is usually right. The bundled roots are what let the client be
+built at all on an image with no system trust store — `reqwest` constructs its
+verifier eagerly, so on Linux an empty store fails even for plain-HTTP use. Note
+that trusting both is a union: a CA the platform has deliberately distrusted is
+still accepted if the bundled set carries it. Drop `tls-native-roots` if the
+bundled set should be authoritative.
+
+Android always uses the bundled roots alone. It cannot merge the two, and its
+platform verifier aborts the process unless the application performs a JNI
+handshake this crate cannot do on its behalf.
+
+On wasm32 none of this applies: the browser owns certificate verification.
+
+## Bringing your own client
+
+`Client::with_http_client` takes a `reqwest::Client` you built yourself, for
+pinning a certificate set, choosing a different TLS backend, or setting proxies
+and timeouts. `default_http_client_builder` returns a builder that already has
+this crate's user agent and trust anchors, if you only want to override one
+thing.
+
+Because the provider is this crate's choice rather than `reqwest`'s, building a
+`reqwest::Client` panics unless one is installed for the process. Call
+`install_default_crypto_provider` first, or install your own.
+
+```rust, ignore
+use iota_graphql_client::{install_default_crypto_provider, Client};
+
+install_default_crypto_provider();
+let http = reqwest::Client::builder().build()?;
+let client = Client::with_http_client("https://graphql.testnet.iota.cafe", http)?;
+```
+
 # Usage
 
 ## Connecting to a GraphQL server

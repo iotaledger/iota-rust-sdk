@@ -19,12 +19,8 @@ crate-type = ["lib", "cdylib"]
 
 [features]
 default = ["crypto", "bls12381", "grpc"]
-# TLS is enabled so that the HTTPS constructors (`new_mainnet`,
-# `new_testnet`, ...) work out of the box. The bundled webpki roots are used
-# instead of the platform's native certificate store, which is not reachable on
-# Android without a JNI handshake these bindings cannot perform. The GraphQL
-# and gas station clients pin the same roots, so every HTTPS path in this
-# library shares its trust anchors.
+# TLS so the HTTPS constructors work out of the box; webpki roots because
+# Android cannot reach the platform store without a JNI handshake.
 grpc = [
   "iota-sdk/grpc",
   "iota-sdk/grpc-tls-aws-lc",

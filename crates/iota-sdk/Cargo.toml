@@ -20,6 +20,9 @@ default = [
   "crypto",
   "ed25519",
   "graphql",
+  "graphql-tls-native-roots",
+  "graphql-tls-ring",
+  "graphql-tls-webpki-roots",
   "hash",
   "mnemonic",
   "passkey",
@@ -44,6 +47,12 @@ mnemonic = ["crypto", "iota-crypto/mnemonic"]
 move-types = ["dep:iota-move-types"]
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
+# TLS for the GraphQL client (the workspace dependency disables default
+# features, so these are not inherited).
+graphql-tls-aws-lc = ["graphql", "iota-graphql-client/tls-aws-lc"]
+graphql-tls-native-roots = ["graphql", "iota-graphql-client/tls-native-roots"]
+graphql-tls-ring = ["graphql", "iota-graphql-client/tls-ring"]
+graphql-tls-webpki-roots = ["graphql", "iota-graphql-client/tls-webpki-roots"]
 # gRPC
 grpc = [
   "dep:iota-grpc-client",
