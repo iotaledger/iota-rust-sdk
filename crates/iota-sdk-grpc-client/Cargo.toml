@@ -18,13 +18,13 @@ base64 = "0.22"
 futures.workspace = true
 http = "1.4"
 prost.workspace = true
-semver.workspace = true
+semver = "1.0"
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
 tokio = { workspace = true, features = ["time"] }
 tonic = { workspace = true, features = ["zstd"] }
-tower-service.workspace = true
+tower-service = "0.3"
 
 # internal dependencies
 iota-grpc-types.workspace = true

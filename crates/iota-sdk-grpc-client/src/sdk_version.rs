@@ -32,7 +32,7 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 ///
 /// Attached as the source of the `FAILED_PRECONDITION` status a failed check
 /// produces, so the high-level API can surface it as its own error variant.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub(crate) struct IncompatibleSdkVersion {
     pub(crate) minimum: Version,
     pub(crate) current: Version,
