@@ -216,12 +216,12 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let gas: ObjectId = "0x2".parse()?;
-    /// let refs = client.object_refs([gas]).await?.into_inner();
+    /// let refs = client.object_references([gas]).await?.into_inner();
     /// println!("gas version: {:?}", refs[0].version());
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn object_refs(
+    pub async fn object_references(
         &self,
         ids: impl IntoIterator<Item = ObjectId>,
     ) -> GrpcResult<MetadataEnvelope<Vec<iota_types::ObjectReference>>> {
