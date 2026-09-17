@@ -218,7 +218,7 @@ fn dry_run_effect(value: &proto::command::CommandResult) -> FfiResult<DryRunEffe
 
 fn dry_run_mutation(value: &proto::command::CommandOutput) -> FfiResult<DryRunMutation> {
     Ok(DryRunMutation {
-        input: transaction_argument(value.argument()?),
+        input: transaction_argument(value.argument()?)?,
         type_tag: Arc::new(value.type_tag()?.into()),
         bcs: value.output_bcs()?.to_vec(),
     })
@@ -231,8 +231,8 @@ fn dry_run_return(value: &proto::command::CommandOutput) -> FfiResult<DryRunRetu
     })
 }
 
-fn transaction_argument(value: iota_sdk::types::Argument) -> TransactionArgument {
-    match value {
+fn transaction_argument(value: iota_sdk::types::Argument) -> FfiResult<TransactionArgument> {
+    Ok(match value {
         iota_sdk::types::Argument::Gas => TransactionArgument::GasCoin,
         iota_sdk::types::Argument::Input(index) => TransactionArgument::Input {
             index: index.into(),
@@ -245,6 +245,10 @@ fn transaction_argument(value: iota_sdk::types::Argument) -> TransactionArgument
             cmd: cmd.into(),
             index: Some(index.into()),
         },
-        _ => unimplemented!("a new enum variant was added and needs to be handled"),
-    }
+        other => {
+            return Err(SdkFfiError::custom(format!(
+                "unsupported transaction argument in dry run result: {other:?}"
+            )));
+        }
+    })
 }
