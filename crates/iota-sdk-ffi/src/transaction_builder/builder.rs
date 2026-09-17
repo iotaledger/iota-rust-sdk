@@ -330,7 +330,7 @@ impl TransactionBuilder {
     /// cannot be used by later commands in the same transaction.
     ///
     /// The coin defaults an IOTA coin. For any other coin type, set it
-    /// with `coin_type`.
+    /// with `coin_type`, which is the `T` of `0x2::coin::Coin<T>`.
     ///
     /// `count - 1` new coins are created, each holding `value / count`, and
     /// the divided coin keeps its own share plus the remainder of the
