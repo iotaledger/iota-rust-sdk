@@ -46,7 +46,6 @@ base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs = { workspace = true, optional = true }
 # Hash support
 blake2 = { version = "0.10.6", optional = true }
-bnum = "0.14.4"
 bs58 = "0.5.1"
 bytestring = "1.5.1"
 derive_more = { workspace = true, features = ["full"] }
