@@ -7,6 +7,11 @@ use reqwest::header::HeaderValue;
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    // The SDK selects its own rustls provider, so `reqwest` has none to fall
+    // back on and building a client below would panic without this. It is a
+    // no-op once anything in the process has installed one.
+    iota_sdk::graphql_client::install_default_crypto_provider();
+
     let client = Client::new_localnet();
     let gas_station_url = reqwest::Url::parse("http://0.0.0.0:9527")?;
     let gas_station_auth_token = "test";
