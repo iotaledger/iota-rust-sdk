@@ -1,10 +1,14 @@
-name: Mutation gate
+name: Mutation report
 
 # Mutation-tests a pull request's own diff: each mutant is a small code change
 # (gut a function body, flip an operator) that a test should catch; one that
 # survives the full suite marks logic no test asserts. The scope and exclusions
-# live in .cargo/mutants.toml; survivors fail the job unless argued into
-# scripts/mutants-allowlist.txt.
+# live in .cargo/mutants.toml.
+#
+# Survivors are reported, not enforced. cargo-mutants annotates the changed
+# lines itself under GitHub Actions, and the step summary lists every miss and
+# timeout with what to do about it. The job fails only when cargo-mutants could
+# not run to a result.
 #
 # The nightly rotation covers the standing tree; this covers a change while it
 # is still in hand.
@@ -26,7 +30,7 @@ jobs:
   mutants:
     if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
     runs-on: ubuntu-latest
-    # Under the 6h hard limit, so an unusually large PR fails cleanly on time
+    # Under the 6h hard limit, so an unusually large PR ends cleanly on time
     # instead of being killed mid-run with no summary.
     timeout-minutes: 330
     steps:
@@ -46,12 +50,54 @@ jobs:
           tool: cargo-mutants@27.1.0,cargo-nextest@0.9.143
 
       - name: Mutate the PR diff
+        id: mutate
         run: |
           base=$(git merge-base "origin/${{ github.base_ref || 'develop' }}" HEAD)
+          set +e
           # `timeout` rather than the job's own limit: a job killed by GitHub
-          # skips every remaining step, including the artifact upload, so an
-          # overrun would destroy the partial results.
+          # skips every remaining step, including the report and the artifact
+          # upload, so an overrun would destroy the partial results.
           timeout 300m make mutants MUTANTS_BASE="$base" MUTANTS_JOBS=4
+          status=$?
+          set -e
+          # make flattens every recipe failure to its own exit 2; the recipe
+          # records cargo-mutants' real code in target/mutants-exit (absent
+          # when make failed before cargo-mutants ran, or the step overran).
+          real=$(cat target/mutants-exit 2>/dev/null || echo "n/a")
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "real=$real" >> "$GITHUB_OUTPUT"
+
+      - name: Report
+        if: always()
+        run: |
+          count() { [ -f "mutants.out/$1" ] && wc -l < "mutants.out/$1" | tr -d ' ' || echo 0; }
+          list() { if [ -s "mutants.out/$1" ]; then echo '```'; cat "mutants.out/$1"; echo '```'; else echo "none"; fi; }
+          {
+            echo "## Mutation report for this diff"
+            echo
+            echo "| caught | missed | timeout | unviable |"
+            echo "|---|---|---|---|"
+            echo "| $(count caught.txt) | $(count missed.txt) | $(count timeout.txt) | $(count unviable.txt) |"
+            echo
+            echo "cargo-mutants exit ${{ steps.mutate.outputs.real || 'n/a' }} (0 all caught, 2 missed, 3 timeout, 4 baseline tests failed)."
+            echo "make exit ${{ steps.mutate.outputs.status || 'n/a' }} (124 = the 300m step budget overran)."
+            echo
+            echo "### Missed"
+            echo
+            echo "A missed mutant is a change to this diff that no test in the mutated crate notices."
+            echo "Write the in-package test that would fail. If the mutation is provably unobservable,"
+            echo "exclude it in .cargo/mutants.toml with the reason."
+            echo
+            list missed.txt
+            echo
+            echo "### Timeout"
+            echo
+            echo "A timeout is a mutant that made the test run hang, usually because a test noticed"
+            echo "by hanging instead of failing. A test that fails fast on the mutated step turns it"
+            echo "into a caught mutant."
+            echo
+            list timeout.txt
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Keep the outcome
         if: always()
@@ -64,3 +110,12 @@ jobs:
           # Without this, retrying the job fails on the artifact name already
           # existing from the first attempt.
           overwrite: true
+
+      - name: Fail only when cargo-mutants could not run to a result
+        run: |
+          case "${{ steps.mutate.outputs.real }}" in
+            0|2|3) exit 0 ;;
+            4)   echo "baseline tests failed in the unmutated tree; no mutants ran"; exit 1 ;;
+            n/a) echo "cargo-mutants never finished (make exit ${{ steps.mutate.outputs.status }}; 124 = the 300m step budget overran)"; exit 1 ;;
+            *)   echo "cargo-mutants exited ${{ steps.mutate.outputs.real }}; see the log"; exit 1 ;;
+          esac

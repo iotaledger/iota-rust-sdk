@@ -3,7 +3,7 @@
 
 # Each mutant runs only the mutated package's own tests (the cargo-mutants
 # default), so a kill living in another package's suite does not count: the
-# gate deliberately demands an in-package test. nextest does not run
+# run deliberately demands an in-package test. nextest does not run
 # doctests, so a mutant only a doctest would catch is reported missed; kill
 # it with a unit test.
 test_tool = "nextest"

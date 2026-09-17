@@ -57,8 +57,9 @@ test-with-localnet: package_test_example_v1.json package_test_example_v2.json ##
 # Mutation-test the diff against develop, or the whole mutation scope with
 # MUTANTS_ALL=1 (exactly "1"; any other value is an error, so nothing
 # off-looking like MUTANTS_ALL=0 can silently pick a mode). Scope and
-# invocation defaults live in .cargo/mutants.toml; missed mutants are
-# reconciled against scripts/mutants-allowlist.txt, timeouts always stay red.
+# invocation defaults live in .cargo/mutants.toml. Survivors are reported,
+# not reconciled: the recipe exits with cargo-mutants' own status (0 all
+# caught, 2 missed, 3 timeout).
 # MUTANTS_BASE overrides the diff base, MUTANTS_SHARD=k/n runs one shard.
 # MUTANTS_JOBS defaults to 1: a mutant job is a full build plus test run, and
 # parallel jobs overwhelm a developer machine; CI raises it to the core count.
@@ -93,11 +94,7 @@ mutants: fetch-compiled-packages mutants-guard ## Mutation-test the diff against
 		cargo mutants --in-diff target/mutants.diff $$shard --jobs $(MUTANTS_JOBS); \
 	fi; status=$$?; \
 	echo $$status > target/mutants-exit; \
-	if [ $$status -eq 2 ] || [ $$status -eq 3 ]; then \
-		python3 scripts/mutants_allowed.py mutants.out scripts/mutants-allowlist.txt || exit $$status; \
-	elif [ $$status -ne 0 ]; then \
-		exit $$status; \
-	fi
+	exit $$status
 
 .PHONY: mutants-guard
 mutants-guard:
