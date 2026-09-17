@@ -85,7 +85,7 @@ impl TransactionBuilder {
     }
 
     /// Use a GraphQL client to automatically resolve the transaction inputs.
-    pub fn with_client(&self, client: Arc<GraphQLClient>) -> ClientTransactionBuilder {
+    pub fn with_graphql_client(&self, client: Arc<GraphQLClient>) -> ClientTransactionBuilder {
         ClientTransactionBuilder(
             InnerClientTransactionBuilder::from(
                 self.read(|builder| builder.clone().with_client(client)),

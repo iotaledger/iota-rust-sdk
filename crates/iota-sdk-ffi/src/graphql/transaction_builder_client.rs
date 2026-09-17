@@ -28,7 +28,7 @@ impl GraphQLClient {
         self: Arc<GraphQLClient>,
         sender: &crate::types::address::Address,
     ) -> ClientTransactionBuilder {
-        TransactionBuilder::new(sender).with_client(self)
+        TransactionBuilder::new(sender).with_graphql_client(self)
     }
 }
 
