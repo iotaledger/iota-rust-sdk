@@ -19,4 +19,4 @@ tracing.workspace = true
 tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
 
 # internal dependencies
-iota-sdk = { workspace = true, features = ["graphql", "types", "serde", "hash"] }
+iota-sdk = { workspace = true, features = ["graphql", "graphql-tls-native-roots", "graphql-tls-ring", "graphql-tls-webpki-roots", "types", "serde", "hash"] }
