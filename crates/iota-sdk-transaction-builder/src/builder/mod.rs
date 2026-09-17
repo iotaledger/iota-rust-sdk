@@ -1969,7 +1969,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// # #[tokio::main(flavor = "current_thread")]
     /// # async fn main() -> eyre::Result<()> {
     /// # let client = TestClient;
-    /// # let keypair = Ed25519PrivateKey::random();
+    /// # let keypair = Ed25519PrivateKey::new([9; 32]);
     /// let station = GasStation::new("http://0.0.0.0:9527".parse()?);
     ///
     /// let mut builder =
