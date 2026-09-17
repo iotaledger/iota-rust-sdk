@@ -3,3 +3,4 @@
 
 pub mod api;
 pub mod client;
+pub mod transaction_builder_client;
