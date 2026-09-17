@@ -11,13 +11,13 @@
 
 use eyre::{Result, bail};
 use iota_sdk::{
-    grpc_client::{Client, read_mask_fields::ObjectReadMask},
+    grpc_client::{GrpcClient, read_mask_fields::ObjectReadMask},
     types::{ObjectId, Owner},
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet()?;
+    let client = GrpcClient::new_testnet()?;
 
     let object_id: ObjectId =
         "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755".parse()?;

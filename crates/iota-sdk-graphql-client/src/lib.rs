@@ -20,9 +20,12 @@ mod wait;
 mod test_utils;
 
 // Re-export types used by query_types module internally
-pub use client::Client;
+pub use client::GraphQLClient;
 pub use error::{Error, Result};
 pub use iota_transaction_builder::WaitForTransaction;
 pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
+
+#[deprecated(since = "1.0.0-beta.2", note = "renamed to `GraphQLClient`")]
+pub type Client = GraphQLClient;

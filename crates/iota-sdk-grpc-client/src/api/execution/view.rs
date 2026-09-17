@@ -16,14 +16,14 @@ use iota_grpc_types::{
 use iota_types::TypeTag;
 
 use crate::{
-    Client,
+    GrpcClient,
     api::{
         GrpcError, GrpcResult, MetadataEnvelope, ProtocolError, check_result_count,
         into_item_results,
     },
 };
 
-impl Client {
+impl GrpcClient {
     /// Call a Move view function and read back what it returns, without
     /// submitting a transaction.
     ///
@@ -45,10 +45,10 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::ViewFunctionCallReadMask;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     ///
     /// // `discounted_price` has to be declared `#[view]` in the package.
     /// let outputs = client

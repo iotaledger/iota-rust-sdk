@@ -7,13 +7,13 @@
 use cynic::QueryBuilder;
 
 use crate::{
-    Client,
+    GraphQLClient,
     error::Result,
     pagination::{Page, PaginationFilter},
     query_types::{Event, EventFilter, EventsQuery, EventsQueryArgs},
 };
 
-impl Client {
+impl GraphQLClient {
     /// Return a page of events based on the (optional) event filter.
     pub async fn events(
         &self,

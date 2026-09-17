@@ -16,7 +16,7 @@ use iota_types::{
 };
 
 use crate::{
-    Client, TransactionDataEffects,
+    GraphQLClient, TransactionDataEffects,
     error::{Error, Result},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
@@ -30,7 +30,7 @@ use crate::{
     streams::stream_paginated_query,
 };
 
-impl Client {
+impl GraphQLClient {
     /// Get a transaction by its digest.
     pub async fn transaction(
         &self,

@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use eyre::Result;
-use iota_sdk::{crypto::ed25519::Ed25519PrivateKey, graphql_client::Client, types::Address};
+use iota_sdk::{crypto::ed25519::Ed25519PrivateKey, graphql_client::GraphQLClient, types::Address};
 use reqwest::header::HeaderValue;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_localnet();
+    let client = GraphQLClient::new_localnet();
     let gas_station_url = reqwest::Url::parse("http://0.0.0.0:9527")?;
     let gas_station_auth_token = "test";
     let keypair = Ed25519PrivateKey::random();

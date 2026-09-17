@@ -4,7 +4,7 @@
 use std::str::FromStr;
 
 use iota_sdk::{
-    graphql_client::{Client, error::Result},
+    graphql_client::{GraphQLClient, error::Result},
     types::ObjectId,
 };
 
@@ -15,7 +15,7 @@ const SHOP: &str = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     // ===========================================================================
     // Example 1: Using move_view_call() with typed arguments (primitives)
