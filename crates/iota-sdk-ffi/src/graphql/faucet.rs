@@ -33,10 +33,6 @@ impl FaucetClient {
 
     /// Construct a new `FaucetClient` using an HTTP client built to the given
     /// options.
-    ///
-    /// The Rust API accepts a caller-built `reqwest::Client`; this is the
-    /// equivalent for the bindings, where such an object cannot cross the FFI
-    /// boundary.
     #[uniffi::constructor]
     pub fn with_http_options(faucet_url: String, options: HttpClientOptions) -> Result<Self> {
         Ok(Self(

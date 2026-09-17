@@ -23,7 +23,7 @@ default = ["crypto", "bls12381", "grpc"]
 # Android cannot reach the platform store without a JNI handshake.
 grpc = [
   "iota-sdk/grpc",
-  "iota-sdk/grpc-tls-aws-lc",
+  "iota-sdk/grpc-tls-ring",
   "iota-sdk/grpc-tls-webpki-roots",
 ]
 crypto = [
