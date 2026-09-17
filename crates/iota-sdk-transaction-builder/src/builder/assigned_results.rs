@@ -7,7 +7,7 @@ use crate::{builder::TransactionBuildData, unresolved::Argument};
 pub trait AssignedResult {
     /// Get the assigned result argument.
     fn assigned_result(&self, ptb: &mut TransactionBuildData) -> Argument {
-        Argument::Result((ptb.commands.len() - 1) as _)
+        Argument::Result(ptb.state_command())
     }
 
     /// Push the assigned result to the PTB.
@@ -46,7 +46,7 @@ pub trait AssignedResults {
 
 impl<T: AssignedResult> AssignedResults for T {
     fn push_assigned_results(self, ptb: &mut TransactionBuildData) {
-        let arg = Argument::Result((ptb.commands.len() - 1) as _);
+        let arg = Argument::Result(ptb.state_command());
         self.push_assigned_result(arg, ptb)
     }
 }
@@ -54,7 +54,7 @@ impl<T: AssignedResult> AssignedResults for T {
 impl<T: AssignedResult> AssignedResults for Vec<T> {
     fn push_assigned_results(self, ptb: &mut TransactionBuildData) {
         for (i, v) in self.into_iter().enumerate() {
-            let arg = Argument::NestedResult((ptb.commands.len() - 1) as _, i as _);
+            let arg = Argument::NestedResult(ptb.state_command(), i as _);
             v.push_assigned_result(arg, ptb);
         }
     }
@@ -67,7 +67,7 @@ macro_rules! impl_assigned_result_tuple {
         {
             fn push_assigned_results(self, ptb: &mut TransactionBuildData) {
                 $(
-                    let arg = Argument::NestedResult((ptb.commands.len() - 1) as _, $n);
+                    let arg = Argument::NestedResult(ptb.state_command(), $n);
                     self.$n.push_assigned_result(arg, ptb);
                 )+
             }
