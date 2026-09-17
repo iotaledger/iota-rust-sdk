@@ -137,9 +137,6 @@ pub use iota_grpc_types::read_mask_fields;
 mod client;
 pub use client::{GrpcClient, InterceptedChannel};
 
-#[deprecated(since = "1.0.0-beta.2", note = "renamed to `GrpcClient`")]
-pub type Client = GrpcClient;
-
 mod response_ext;
 pub use response_ext::ResponseExt;
 
