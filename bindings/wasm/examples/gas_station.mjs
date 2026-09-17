@@ -4,6 +4,7 @@
 import {
   Address,
   Ed25519PrivateKey,
+  GasStation,
   GraphQlClient,
   Identifier,
   PtbArgument,
@@ -20,19 +21,21 @@ const keypair = Ed25519PrivateKey.random();
 const sender = keypair.publicKey().deriveAddress();
 const signer = TransactionSigner.fromEd25519(keypair);
 
+// A gas station is configured once and reused for any number of
+// transactions.
+const gasStation = new GasStation(
+  gasStationUrl,
+  undefined,
+  new Map([["Authorization", [`Bearer ${gasStationAuthToken}`]]]),
+);
+
 const builder = client.transactionBuilder(sender);
 
 builder.moveCall(Address.std(), new Identifier("u64"), new Identifier("sqrt"), [
   PtbArgument.u64(64n),
 ]);
 
-builder.gasStationSponsor(
-  gasStationUrl,
-  undefined,
-  new Map([["Authorization", [`Bearer ${gasStationAuthToken}`]]]),
-);
-
-const res = await builder.execute(signer);
+const res = await builder.executeWithGasSponsor(gasStation, signer);
 
 console.log(res);
 console.log("Sponsored transaction was successful!");
