@@ -28,7 +28,8 @@ class Program
             { "Authorization", new[] { $"Bearer {gasStationAuthToken}" } }
         };
 
-        builder.GasStationSponsor(gasStationUrl, null, headers);
+        // The default options build the same HTTP client the SDK uses elsewhere.
+        builder.GasStationSponsor(gasStationUrl, new HttpClientOptions(), null, headers);
 
         var res = await builder.Execute(signer);
 

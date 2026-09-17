@@ -23,8 +23,10 @@ async def main():
         [PtbArgument.u64(64)],
     )
 
+    # The default options build the same HTTP client the SDK uses elsewhere.
     builder.gas_station_sponsor(
         gas_station_url,
+        HttpClientOptions(),
         headers={"Authorization": [f"Bearer {gas_station_auth_token}"]})
 
     res = await builder.execute(signer)

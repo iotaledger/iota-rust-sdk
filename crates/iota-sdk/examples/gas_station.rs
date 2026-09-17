@@ -15,13 +15,12 @@ async fn main() -> Result<()> {
 
     let mut builder = client.transaction_builder(sender);
 
+    let gas_station_client = reqwest::Client::new();
+
     builder
         .move_call(Address::STD, "u64", "sqrt")
         .arguments([64_u64])
-        .gas_station_sponsor(
-            gas_station_url,
-            iota_sdk::graphql_client::default_http_client_builder().build()?,
-        )
+        .gas_station_sponsor(gas_station_url, gas_station_client)
         .add_gas_station_header(
             reqwest::header::AUTHORIZATION,
             HeaderValue::from_str(&format!("Bearer {gas_station_auth_token}"))?,
