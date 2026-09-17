@@ -2100,8 +2100,7 @@ impl<C> TransactionBuilder<C, GasStationData> {
 
 impl<C> TransactionBuilder<C, DivideCoin> {
     /// Set the type of the coin being divided: the `T` of
-    /// `0x2::coin::Coin<T>`, not the coin type itself. Defaults to
-    /// `0x2::iota::IOTA`.
+    /// `0x2::coin::Coin<T>`, not the coin type itself.
     ///
     /// Use [`coin_type_tag`](Self::coin_type_tag) for a type only known at
     /// runtime.
@@ -2110,8 +2109,7 @@ impl<C> TransactionBuilder<C, DivideCoin> {
     }
 
     /// Set the type of the coin being divided from a [`TypeTag`]: the `T` of
-    /// `0x2::coin::Coin<T>`, not the coin type itself. Defaults to
-    /// `0x2::iota::IOTA`.
+    /// `0x2::coin::Coin<T>`, not the coin type itself.
     pub fn coin_type_tag(&mut self, type_tag: TypeTag) -> &mut TransactionBuilder<C> {
         self.state_change::<MoveCall>()
             .type_tags([type_tag])

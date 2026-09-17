@@ -288,14 +288,13 @@ impl ClientTransactionBuilder {
     /// Divide a coin into `count` coins of equal value, all kept by the
     /// sender.
     ///
-    /// Unlike `split_coins`, the new coins are
-    /// transferred to the sender by `0x2::pay::divide_and_keep` itself, so no
-    /// transfer command is needed for them. In exchange they are not
-    /// available as command results and cannot be used by later commands in
-    /// the same transaction.
+    /// Unlike `split_coins`, the new coins are transferred to the sender by
+    /// `0x2::pay::divide_and_keep` itself, so no transfer command is needed
+    /// for them. In exchange they are not available as command results and
+    /// cannot be used by later commands in the same transaction.
     ///
-    /// The coin is taken to be an IOTA coin. For any other coin type, set it
-    /// on the returned builder with `coin_type` or `coin_type_tag`.
+    /// The coin defaults an IOTA coin. For any other coin type, set it
+    /// with `coin_type`.
     ///
     /// `count - 1` new coins are created, each holding `value / count`, and
     /// the divided coin keeps its own share plus the remainder of the
