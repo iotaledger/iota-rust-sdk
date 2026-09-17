@@ -89,6 +89,10 @@ pub struct TransactionBuildData {
     assigned_results: HashMap<String, Argument>,
     /// The data used for gas station sponsorship.
     gas_station_data: Option<GasStationData>,
+    /// The index of the command the builder's type state refers to. Set when
+    /// a command is entered, and left alone by any command added afterwards,
+    /// so that the state's methods keep addressing their own command.
+    state_command: Option<u16>,
 }
 
 impl TransactionBuildData {
@@ -272,9 +276,21 @@ impl TransactionBuildData {
         Argument::Result(i as u16)
     }
 
+    /// Add a new command and make it the one the builder state refers to.
+    fn enter_command(&mut self, command: Command) -> Argument {
+        self.state_command = Some(self.commands.len() as u16);
+        self.command(command)
+    }
+
+    /// The index of the command the builder state refers to.
+    fn state_command(&self) -> u16 {
+        self.state_command
+            .expect("a command state is only reachable once a command was added")
+    }
+
     /// Manually set a command with an optional name
     pub fn assigned_command(&mut self, cmd: Command, name: impl AssignedResults) {
-        self.command(cmd);
+        self.enter_command(cmd);
         name.push_assigned_results(self);
     }
 
@@ -298,6 +314,7 @@ impl TransactionBuilder {
                 expiration: Default::default(),
                 assigned_results: Default::default(),
                 gas_station_data: Default::default(),
+                state_command: Default::default(),
             },
             client: (),
             last_command: PhantomData,
@@ -358,6 +375,7 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
                 expiration: Default::default(),
                 assigned_results: Default::default(),
                 gas_station_data: Default::default(),
+                state_command: Default::default(),
             },
             client: (),
             last_command: PhantomData,
@@ -449,7 +467,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     fn cmd_state_change<U: Into<Command>>(&mut self, command: U) -> &mut TransactionBuilder<C, U> {
-        self.command(command.into());
+        self.data.enter_command(command.into());
         self.state_change()
     }
 
@@ -2013,13 +2031,19 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
 }
 
 impl<C> TransactionBuilder<C, MoveCall> {
+    /// The move call this builder state refers to.
+    fn move_call_mut(&mut self) -> &mut MoveCall {
+        let command = self.data.state_command() as usize;
+        let Command::MoveCall(move_call) = &mut self.data.commands[command] else {
+            unreachable!("the move call state is only reachable through a move call command");
+        };
+        move_call
+    }
+
     /// Set the call params. Optional.
     pub fn arguments<U: PTBArgumentList>(&mut self, params: U) -> &mut Self {
         let args = self.apply_arguments(params);
-        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
-            unreachable!();
-        };
-        last_command.arguments = args;
+        self.move_call_mut().arguments = args;
         self
     }
 }
@@ -2027,19 +2051,13 @@ impl<C> TransactionBuilder<C, MoveCall> {
 impl<C> TransactionBuilder<C, MoveCall> {
     /// Set the generic type arguments. Optional.
     pub fn generics<G: MoveTypes>(&mut self) -> &mut Self {
-        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
-            unreachable!();
-        };
-        last_command.type_arguments = G::type_tags();
+        self.move_call_mut().type_arguments = G::type_tags();
         self
     }
 
     /// Set the type arguments manually. Optional.
     pub fn type_tags(&mut self, tags: impl IntoIterator<Item = TypeTag>) -> &mut Self {
-        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
-            unreachable!();
-        };
-        last_command.type_arguments = tags.into_iter().collect();
+        self.move_call_mut().type_arguments = tags.into_iter().collect();
         self
     }
 }
@@ -2064,15 +2082,16 @@ impl<C> TransactionBuilder<C, Publish> {
 }
 
 impl<C, L: Into<Command>> TransactionBuilder<C, L> {
-    /// Assign a name to the last command's result.
+    /// Assign a name to the result of the command this builder state refers
+    /// to.
     pub fn assign(&mut self, name: impl AssignedResults) -> &mut Self {
         name.push_assigned_results(&mut self.data);
         self
     }
 
-    /// Get the argument representing the last command.
+    /// Get the argument representing the command this builder state refers to.
     pub fn result(&mut self) -> Argument {
-        Argument::Result((self.data.commands.len() - 1) as _)
+        Argument::Result(self.data.state_command())
     }
 }
 
@@ -2157,6 +2176,33 @@ mod tests {
         };
         assert_eq!(iota_call, [TypeTag::Struct(Box::new(StructTag::new_gas()))]);
         assert_eq!(overridden, [TypeTag::Struct(Box::new(other_coin_type))]);
+    }
+
+    /// A command state addresses the command it was entered with, even when
+    /// another command is added before the state's setters are called.
+    #[test]
+    fn state_setters_target_their_own_command() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+
+        let mut builder = TransactionBuilder::new(sender);
+        let call = builder.move_call(Address::FRAMEWORK, "pay", "divide_and_keep");
+        // Added while the move call state is still held, so it, not the move
+        // call, is the last command from here on.
+        call.transfer_objects(sender, [ObjectId::new([1; 32])]);
+        call.generics::<u64>().assign("divided");
+
+        let [Command::MoveCall(move_call), Command::TransferObjects(_)] =
+            &builder.data.commands[..]
+        else {
+            panic!("expected a move call followed by a transfer");
+        };
+        assert_eq!(move_call.type_arguments, vec![TypeTag::U64]);
+        assert!(matches!(
+            builder.data.assigned_results.get("divided"),
+            Some(Argument::Result(0))
+        ));
     }
 
     /// Verify that `TryFrom<Transaction>` preserves input ordering: non-gas

@@ -66,6 +66,17 @@ fn url_to_string(u: &iota_sdk::move_types::iota_framework::url::Url) -> String {
     ascii_to_string(&u.url)
 }
 
+crate::ffi_map! {
+    /// The validators reporting each reported validator.
+    ReportRecordMap<Address, Vec<Arc<Address>>>
+}
+
+crate::ffi_map! {
+    /// Number of epochs each at-risk validator has had stake below the
+    /// low-stake threshold.
+    AtRiskMap<Address, u64>
+}
+
 // =====================================================================
 // 0x3 — IOTA system
 // =====================================================================
@@ -200,7 +211,7 @@ impl IotaSystemStateV2 {
 
     /// Validator report records: each reported validator's address mapped to
     /// the addresses of the validators reporting it.
-    pub fn validator_report_records(&self) -> HashMap<Arc<Address>, Vec<Arc<Address>>> {
+    pub fn validator_report_records(&self) -> ReportRecordMap {
         self.0
             .validator_report_records
             .contents
@@ -327,7 +338,7 @@ impl IotaSystemStateV1 {
 
     /// Validator report records: each reported validator's address mapped to
     /// the addresses of the validators reporting it.
-    pub fn validator_report_records(&self) -> HashMap<Arc<Address>, Vec<Arc<Address>>> {
+    pub fn validator_report_records(&self) -> ReportRecordMap {
         self.0
             .validator_report_records
             .contents
@@ -414,7 +425,7 @@ impl ValidatorSetV2 {
 
     /// Number of epochs each at-risk validator has had stake below the
     /// low-stake threshold.
-    pub fn at_risk_validators(&self) -> HashMap<Arc<Address>, u64> {
+    pub fn at_risk_validators(&self) -> AtRiskMap {
         self.0
             .at_risk_validators
             .contents
@@ -493,7 +504,7 @@ impl ValidatorSetV1 {
 
     /// Number of epochs each at-risk validator has had stake below the
     /// low-stake threshold.
-    pub fn at_risk_validators(&self) -> HashMap<Arc<Address>, u64> {
+    pub fn at_risk_validators(&self) -> AtRiskMap {
         self.0
             .at_risk_validators
             .contents

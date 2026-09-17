@@ -40,6 +40,10 @@ crypto = [
   "iota-sdk/secp256r1",
 ]
 bls12381 = ["iota-sdk/bls12381"]
+# Return maps keyed by an object as an FFI map object instead of a native map.
+# Enable for bindings whose language compares map keys by identity: Go, and the
+# WASM/TypeScript bindings. See `ffi_map!` in `src/macros.rs`.
+map-objects = []
 
 [lints]
 workspace = true
