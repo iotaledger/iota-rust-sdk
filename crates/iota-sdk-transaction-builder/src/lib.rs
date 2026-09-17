@@ -209,9 +209,9 @@
 //! The Transaction Builder supports executing via a
 //! [Gas Station](https://github.com/iotaledger/gas-station). To do so, the URL
 //! and a [`reqwest::Client`] must be provided via
-//! [gas_station_sponsor](TransactionBuilder::gas_station_sponsor). This crate
-//! builds no HTTP client of its own, so that client alone decides the TLS
-//! backend and trust anchors used to reach the gas station. Additional
+//! [gas_station_sponsor](TransactionBuilder::gas_station_sponsor). That client
+//! decides the TLS backend and trust anchors used to reach the gas station.
+//! Additional
 //! configuration can then be provided via
 //! [gas_reservation_duration](TransactionBuilder::gas_reservation_duration) and
 //! [add_gas_station_header](TransactionBuilder::add_gas_station_header).

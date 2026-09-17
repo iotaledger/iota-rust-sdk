@@ -105,8 +105,6 @@ impl ClientTransactionBuilder {
         duration: Option<Duration>,
         headers: Option<HashMap<String, Vec<String>>>,
     ) -> Result<Arc<Self>> {
-        // A `reqwest::Client` cannot cross the FFI boundary, so the caller
-        // describes the one they want and it is built here.
         let client = options.build()?;
         self.write(|builder| {
             let b = builder.gas_station_sponsor(url.parse().expect("invalid URL"), client);
