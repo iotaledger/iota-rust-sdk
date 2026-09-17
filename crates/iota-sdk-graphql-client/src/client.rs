@@ -52,10 +52,9 @@ pub struct Client {
 impl Client {
     /// Create a new GraphQL client with the provided server address.
     ///
-    /// The HTTP client is built for you by
-    /// [`crate::default_http_client_builder`], which trusts the platform store
-    /// plus the bundled Mozilla roots. Use [`Self::with_http_client`] to
-    /// supply your own.
+    /// The HTTP client is built for you, trusting the platform store plus the
+    /// bundled Mozilla roots. Use [`Self::with_http_client`] to supply your
+    /// own.
     pub fn new(server: &str) -> Result<Self> {
         Self::with_http_client(server, crate::tls::default_http_client_builder().build()?)
     }
@@ -66,16 +65,14 @@ impl Client {
     /// This is the way to choose your own trust anchors, TLS backend, proxies
     /// or timeouts.
     ///
-    /// Note that this SDK selects the rustls crypto provider itself rather
-    /// than letting reqwest hard-wire aws-lc-rs, so building a
-    /// `reqwest::Client` from scratch panics unless a provider has been
-    /// installed for the process. Starting from
-    /// [`crate::default_http_client_builder`] avoids that.
+    /// Note that this crate selects the rustls crypto provider itself rather
+    /// than letting reqwest hard-wire aws-lc-rs, so `reqwest` has no default to
+    /// fall back on: install one for the process before building a client, or
+    /// it will panic. See the crate README.
     ///
     /// The client is used as given: the SDK does not set its user agent, so
     /// callers who want to be identifiable should apply [`USER_AGENT`]
-    /// themselves. [`crate::default_http_client_builder`] returns a builder
-    /// that has it, along with the SDK's roots.
+    /// themselves.
     pub fn with_http_client(server: &str, client: reqwest::Client) -> Result<Self> {
         Ok(Client {
             rpc: reqwest::Url::parse(server)?,

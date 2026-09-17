@@ -479,8 +479,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// Set the gas station sponsor. Optional.
     ///
     /// The `client` is used for every request to the gas station, so it decides
-    /// the TLS backend and trust anchors. This crate deliberately builds no
-    /// HTTP client of its own.
+    /// the TLS backend and trust anchors.
     pub fn gas_station_sponsor(
         &mut self,
         url: Url,

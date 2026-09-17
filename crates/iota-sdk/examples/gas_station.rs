@@ -15,10 +15,12 @@ async fn main() -> Result<()> {
 
     let mut builder = client.transaction_builder(sender);
 
-    // Starting from the SDK's builder rather than `reqwest::Client::new()`: it
-    // carries the SDK's trust anchors and selects the rustls crypto provider,
-    // which reqwest has no default for here.
-    let gas_station_client = iota_sdk::graphql_client::default_http_client_builder().build()?;
+    // The SDK selects its own rustls provider, so `reqwest` has no default to
+    // fall back on and building a client would panic without this.
+    rustls::crypto::ring::default_provider()
+        .install_default()
+        .ok();
+    let gas_station_client = reqwest::Client::new();
 
     builder
         .move_call(Address::STD, "u64", "sqrt")

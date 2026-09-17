@@ -13,7 +13,7 @@ pub mod pagination;
 pub mod query_types;
 pub mod streams;
 mod subscription;
-pub mod tls;
+mod tls;
 mod transaction_builder_client;
 mod wait;
 
@@ -26,4 +26,3 @@ pub use iota_transaction_builder::WaitForTransaction;
 pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
-pub use tls::default_http_client_builder;

@@ -50,28 +50,28 @@ On wasm32 none of this applies: the browser owns certificate verification.
 
 `Client::with_http_client` takes a `reqwest::Client` you built yourself, for
 pinning a certificate set, choosing a different TLS backend, or setting proxies
-and timeouts. `default_http_client_builder` returns a builder that already has
-this crate's user agent and trust anchors, if you only want to override one
-thing.
+and timeouts.
+
+Because this crate selects the rustls crypto provider itself rather than letting
+`reqwest` hard-wire aws-lc-rs, `reqwest` has no default to fall back on and
+building a client panics unless a provider has been installed for the process.
+Install one first — the first caller wins, so this is a no-op if the application
+has already chosen:
 
 ```rust, ignore
-use iota_graphql_client::{default_http_client_builder, Client};
+use iota_graphql_client::Client;
 
-let http = default_http_client_builder()
+rustls::crypto::ring::default_provider().install_default().ok();
+
+let http = reqwest::Client::builder()
     .timeout(std::time::Duration::from_secs(5))
     .build()?;
 let client = Client::with_http_client("https://graphql.testnet.iota.cafe", http)?;
 ```
 
-Starting from that builder also settles the crypto provider. Because the
-provider is this crate's choice rather than `reqwest`'s, a `reqwest::Client`
-built from scratch panics unless one has been installed for the process — so if
-you do build your own, install a provider first:
-
-```rust, ignore
-rustls::crypto::ring::default_provider().install_default().ok();
-let http = reqwest::Client::builder().build()?;
-```
+Note that a client built this way has none of this crate's own defaults: no user
+agent (`USER_AGENT` is exported if you want it) and no bundled roots, so it
+trusts whatever your `reqwest` features chose.
 
 # Usage
 

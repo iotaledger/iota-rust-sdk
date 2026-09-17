@@ -28,19 +28,8 @@
 /// attempt, and its platform verifier aborts the process unless the hosting
 /// application performs a JNI handshake the SDK cannot do on its behalf. The
 /// bundled roots are used on their own instead, whenever they are available.
-///
-/// Useful for keeping the SDK's trust anchors while overriding something else:
-///
-/// ```no_run
-/// # use iota_sdk_graphql_client::{Client, default_http_client_builder};
-/// let http = default_http_client_builder()
-///     .timeout(std::time::Duration::from_secs(5))
-///     .build()?;
-/// let client = Client::with_http_client("https://graphql.testnet.iota.cafe", http)?;
-/// # Ok::<_, Box<dyn std::error::Error>>(())
-/// ```
 #[cfg(not(target_arch = "wasm32"))]
-pub fn default_http_client_builder() -> reqwest::ClientBuilder {
+pub(crate) fn default_http_client_builder() -> reqwest::ClientBuilder {
     install_default_crypto_provider();
     apply_roots(reqwest::Client::builder().user_agent(crate::client::USER_AGENT))
 }
@@ -50,7 +39,7 @@ pub fn default_http_client_builder() -> reqwest::ClientBuilder {
 /// On wasm32 the browser owns certificate verification, so there are no trust
 /// anchors and no crypto provider to configure.
 #[cfg(target_arch = "wasm32")]
-pub fn default_http_client_builder() -> reqwest::ClientBuilder {
+pub(crate) fn default_http_client_builder() -> reqwest::ClientBuilder {
     reqwest::Client::builder().user_agent(crate::client::USER_AGENT)
 }
 

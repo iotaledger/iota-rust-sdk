@@ -94,10 +94,9 @@ impl FaucetClient {
     /// - /v1/gas is used to request gas
     /// - /v1/status/task-uuid is used to check the status of the request
     ///
-    /// The HTTP client is built for you by
-    /// [`crate::default_http_client_builder`], which trusts the platform store
-    /// plus the bundled Mozilla roots. Use [`Self::with_http_client`] to
-    /// supply your own.
+    /// The HTTP client is built for you, trusting the platform store plus the
+    /// bundled Mozilla roots. Use [`Self::with_http_client`] to supply your
+    /// own.
     pub fn new(faucet_url: &str) -> Result<Self, FaucetError> {
         Self::with_http_client(
             faucet_url,
@@ -110,9 +109,8 @@ impl FaucetClient {
     ///
     /// This is the way to choose your own trust anchors or TLS backend.
     ///
-    /// Note that building a `reqwest::Client` from scratch panics unless a
-    /// rustls crypto provider has been installed for the process; starting from
-    /// [`crate::default_http_client_builder`] avoids that.
+    /// Note that building a `reqwest::Client` panics unless a rustls crypto
+    /// provider has been installed for the process. See the crate README.
     pub fn with_http_client(
         faucet_url: &str,
         client: reqwest::Client,
