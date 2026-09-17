@@ -67,7 +67,7 @@ class Program
         Console.WriteLine("Dependencies:");
         var dependencies = package
             .LinkageTable()
-            .Select(entry => entry.Value)
+            .Values()
             .OrderBy(upgrade => upgrade.UpgradedId.ToHex())
             .ToArray();
         if (dependencies.Length == 0)
@@ -87,11 +87,7 @@ class Program
 
         // Inspect normalized modules, functions, types, and sample key objects.
         Console.WriteLine("Package contents:");
-        var moduleNames = package
-            .Modules()
-            .Keys
-            .Select(moduleId => moduleId.AsStr())
-            .OrderBy(moduleName => moduleName);
+        var moduleNames = package.Modules().Keys().Select(moduleId => moduleId.AsStr());
 
         foreach (var moduleName in moduleNames)
         {

@@ -402,3 +402,103 @@ macro_rules! ffi_map {
 
     };
 }
+
+/// Declares an FFI map object backed by a [`std::collections::BTreeMap`], for
+/// maps read out of an ordered Rust map.
+///
+/// Unlike [`ffi_map!`], which hands the bindings a native map unless
+/// `map-objects` is enabled, this one is always an object: a native map keeps
+/// the key order in some binding languages and drops it in others.
+///
+/// The key type is written as it is stored — `Arc<ObjectId>`, `String` — and
+/// lookups take its [`Deref`](std::ops::Deref) target.
+#[macro_export]
+macro_rules! ffi_btree_map {
+    ($(#[$meta:meta])* $name:ident<$key:ty, $value:ty>) => {
+        paste::paste! {
+            $(#[$meta])*
+            #[derive(uniffi::Object)]
+            pub struct $name(::std::collections::BTreeMap<$key, $value>);
+
+            #[doc = "An entry in the " $name " map."]
+            #[derive(Clone, uniffi::Record)]
+            pub struct [<$name Entry>] {
+                /// The entry's key.
+                pub key: $key,
+                /// The value stored under it.
+                pub value: $value,
+            }
+
+            #[uniffi::export]
+            impl $name {
+                /// Collect entries into a map. A key repeated across entries keeps
+                /// the value of the last one.
+                #[uniffi::constructor]
+                pub fn from_entries(entries: Vec<[<$name Entry>]>) -> Self {
+                    Self::from_iter(entries.into_iter().map(|entry| (entry.key, entry.value)))
+                }
+
+                /// The value stored under `key`, or `None` if there is none.
+                pub fn get(&self, key: &<$key as ::std::ops::Deref>::Target) -> Option<$value> {
+                    self.0.get(key).cloned()
+                }
+
+                /// Whether a value is stored under `key`.
+                pub fn contains_key(&self, key: &<$key as ::std::ops::Deref>::Target) -> bool {
+                    self.0.contains_key(key)
+                }
+
+                /// The number of entries.
+                pub fn len(&self) -> u64 {
+                    self.0.len() as _
+                }
+
+                /// Whether the map holds no entries.
+                pub fn is_empty(&self) -> bool {
+                    self.0.is_empty()
+                }
+
+                /// Every key, in key order.
+                pub fn keys(&self) -> Vec<$key> {
+                    self.0.keys().cloned().collect()
+                }
+
+                /// Every value, ordered by the key it is stored under.
+                pub fn values(&self) -> Vec<$value> {
+                    self.0.values().cloned().collect()
+                }
+
+                /// Every entry, in key order.
+                pub fn entries(&self) -> Vec<[<$name Entry>]> {
+                    self.0
+                        .iter()
+                        .map(|(key, value)| [<$name Entry>] {
+                            key: key.clone(),
+                            value: value.clone(),
+                        })
+                        .collect()
+                }
+            }
+
+            impl $name {
+                /// Borrow the entries, the way the native map this stands in
+                /// for is read.
+                pub fn iter(&self) -> impl Iterator<Item = (&$key, &$value)> {
+                    self.0.iter()
+                }
+            }
+
+            impl FromIterator<($key, $value)> for $name {
+                fn from_iter<I: IntoIterator<Item = ($key, $value)>>(iter: I) -> Self {
+                    Self(iter.into_iter().collect())
+                }
+            }
+
+            impl Default for $name {
+                fn default() -> Self {
+                    Self(::std::collections::BTreeMap::new())
+                }
+            }
+        }
+    };
+}
