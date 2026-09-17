@@ -1768,6 +1768,9 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                     }
                 }
                 InputKind::Receiving(object_id) => {
+                    if input.is_gas {
+                        return Err(TransactionBuilderError::WrongGasObject);
+                    }
                     let obj = object(object_id)?;
 
                     let Owner::Address(_) = obj.owner() else {
@@ -1776,11 +1779,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                         )));
                     };
                     let idx = inputs.len();
-                    inputs.push(iota_types::Input::Receiving(ObjectReference::new(
-                        object_id,
-                        obj.version(),
-                        obj.digest(),
-                    )));
+                    inputs.push(iota_types::Input::Receiving(obj.object_ref()));
                     input_map.insert(id, idx as u16);
                 }
                 InputKind::Shared { object_id, mutable } => {
@@ -2803,6 +2802,28 @@ mod tests {
             assert!(
                 message.contains("passed as receiving, but is not address-owned"),
                 "unexpected message: {message}"
+            );
+        }
+
+        /// An object cannot be received and spent as gas in the same
+        /// transaction. A move call with a gas coin as argument is rejected
+        /// earlier by `resolve_gas_arguments`; the transfer of a gas coin is
+        /// the one command allowed to consume it, so that is the path on which
+        /// a receiving input can still carry the gas flag.
+        #[tokio::test]
+        async fn a_receiving_id_flagged_as_gas_is_rejected() {
+            let sender = Address::random_with(rand::thread_rng());
+            let receivable = object_id(3);
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(RecordingClient::default());
+            builder.transfer_objects(sender, [crate::Receiving(receivable)]);
+            builder.gas([receivable]);
+
+            let err = builder.finish_kind().await.unwrap_err();
+            assert!(
+                matches!(err, TransactionBuilderError::WrongGasObject),
+                "expected WrongGasObject, got {err}"
             );
         }
 
