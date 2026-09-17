@@ -86,9 +86,9 @@ impl TryInto<CheckpointSummary> for Checkpoint {
     type Error = error::Error;
 
     fn try_into(self) -> Result<CheckpointSummary, Self::Error> {
-        let bcs = self.bcs.ok_or_else(|| {
-            error::Error::from_error(error::Kind::Other, "checkpoint bcs is not available")
-        })?;
+        let bcs = self
+            .bcs
+            .ok_or(error::Error::EmptyResponseField("checkpoint bcs"))?;
         let bytes = base64ct::Base64::decode_vec(&bcs.0)?;
         Ok(bcs::from_bytes::<CheckpointSummary>(&bytes)?)
     }
