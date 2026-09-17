@@ -75,11 +75,9 @@ impl GraphQLClient {
                     });
                     let subscription = self.open_subscription(operation).await?;
 
-                    // Events from a single transaction arrive contiguously, so
-                    // a transaction is only fully received
-                    // once an event from the next one shows
-                    // up. Advance the resume cursor to the
-                    // previous transaction's digest only when the digest
+                    // Events from a single transaction arrive contiguously, so a transaction is
+                    // only fully received once an event from the next one shows up. Advance the
+                    // resume cursor to the previous transaction's digest only when the digest
                     // changes.
                     let mut current_tx: Option<String> = None;
                     let mapped = subscription.map(move |item| -> Result<Outcome<Event>> {
