@@ -30,7 +30,7 @@ use crate::{
 /// The client-backed transaction builders the FFI supports.
 #[derive(Clone, derive_more::From)]
 pub enum InnerClientTransactionBuilder {
-    GraphQl(iota_sdk::transaction_builder::TransactionBuilder<Arc<GraphQLClient>>),
+    GraphQL(iota_sdk::transaction_builder::TransactionBuilder<Arc<GraphQLClient>>),
     #[cfg(feature = "grpc")]
     Grpc(iota_sdk::transaction_builder::TransactionBuilder<Arc<crate::grpc::client::GrpcClient>>),
 }
@@ -39,7 +39,7 @@ pub enum InnerClientTransactionBuilder {
 macro_rules! with_builder {
     ($inner:expr, |$builder:ident| $body:expr) => {
         match $inner {
-            InnerClientTransactionBuilder::GraphQl($builder) => $body,
+            InnerClientTransactionBuilder::GraphQL($builder) => $body,
             #[cfg(feature = "grpc")]
             InnerClientTransactionBuilder::Grpc($builder) => $body,
         }
@@ -533,7 +533,7 @@ impl ClientTransactionBuilder {
     #[uniffi::method(default(skip_checks = false))]
     pub async fn dry_run(&self, skip_checks: bool) -> Result<DryRunResult> {
         match self.clone_inner() {
-            InnerClientTransactionBuilder::GraphQl(builder) => {
+            InnerClientTransactionBuilder::GraphQL(builder) => {
                 Ok(builder.dry_run(skip_checks).await?.into())
             }
             #[cfg(feature = "grpc")]
