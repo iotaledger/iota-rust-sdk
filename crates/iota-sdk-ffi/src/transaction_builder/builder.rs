@@ -1,11 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{
-    collections::HashMap,
-    sync::{Arc, RwLock},
-    time::Duration,
-};
+use std::sync::{Arc, RwLock};
 
 use super::client_builder::ClientTransactionBuilder;
 use crate::{
@@ -13,12 +9,13 @@ use crate::{
     graphql::client::GraphQLClient,
     transaction_builder::{
         Payment,
+        gas_station::GasStation,
         ptb_arg::{MoveArg, PTBArgument},
         signer::TransactionSigner,
     },
     types::{
         address::Address,
-        digest::Digest,
+        digest::{Digest, TransactionDigest},
         move_core::{Identifier, TypeTag},
         move_package::{MovePackageData, UpgradePolicy},
         object::{ObjectId, ObjectReference},
@@ -127,33 +124,6 @@ impl TransactionBuilder {
     pub fn sponsor(self: Arc<Self>, sponsor: &Address) -> Arc<Self> {
         self.write(|builder| {
             builder.sponsor(**sponsor);
-        });
-        self
-    }
-
-    /// Set the gas station sponsor.
-    #[uniffi::method(default(duration = None, headers = None))]
-    pub fn gas_station_sponsor(
-        self: Arc<Self>,
-        url: String,
-        duration: Option<Duration>,
-        headers: Option<HashMap<String, Vec<String>>>,
-    ) -> Arc<Self> {
-        self.write(|builder| {
-            let b = builder.gas_station_sponsor(url.parse().expect("invalid URL"));
-            if let Some(duration) = duration {
-                b.gas_reservation_duration(duration);
-            }
-            if let Some(headers) = headers {
-                for (name, values) in headers {
-                    for value in values {
-                        b.add_gas_station_header(
-                            name.parse().expect("invalid header name"),
-                            value.parse().expect("invalid header value"),
-                        );
-                    }
-                }
-            }
         });
         self
     }
@@ -484,18 +454,20 @@ impl TransactionBuilder {
         Ok(Transaction(self.read(|builder| builder.clone().finish())?))
     }
 
-    /// Execute the transaction using the gas station and return the JSON
-    /// transaction effects. This will fail unless data is set with the
-    /// `gas_station_sponsor` function.
-    ///
-    /// NOTE: These effects are not necessarily compatible with
-    /// `TransactionEffects`
-    pub async fn execute_with_gas_station(
+    /// Execute the transaction with its gas paid by `gas_station`, returning
+    /// the transaction digest.
+    pub async fn execute_with_gas_sponsor(
         &self,
+        gas_station: &GasStation,
         signer: &TransactionSigner,
-    ) -> Result<serde_json::Value> {
+    ) -> Result<TransactionDigest> {
         Ok(self
-            .read(|builder| builder.clone().execute_with_gas_station(signer))
-            .await?)
+            .read(|builder| {
+                builder
+                    .clone()
+                    .execute_with_gas_sponsor(&gas_station.0, signer)
+            })
+            .await?
+            .into())
     }
 }

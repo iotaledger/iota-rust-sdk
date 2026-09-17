@@ -14,6 +14,12 @@ async def main():
     sender = keypair.public_key().derive_address()
     signer = TransactionSigner.from_ed25519(keypair)
 
+    # A gas station is configured once and reused for any number of
+    # transactions.
+    gas_station = GasStation(
+        gas_station_url,
+        headers={"Authorization": [f"Bearer {gas_station_auth_token}"]})
+
     builder = client.transaction_builder(sender)
 
     builder.move_call(
@@ -23,11 +29,7 @@ async def main():
         [PtbArgument.u64(64)],
     )
 
-    builder.gas_station_sponsor(
-        gas_station_url,
-        headers={"Authorization": [f"Bearer {gas_station_auth_token}"]})
-
-    res = await builder.execute(signer)
+    res = await builder.execute_with_gas_sponsor(gas_station, signer)
 
     print(res)
 

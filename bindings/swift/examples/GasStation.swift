@@ -15,6 +15,12 @@ struct GasStationExample {
       let sender = keypair.publicKey().deriveAddress()
       let signer = TransactionSigner.fromEd25519(key: keypair)
 
+      // A gas station is configured once and reused for any number of
+      // transactions.
+      let gasStation = try GasStation(
+        url: gasStationUrl,
+        headers: ["Authorization": ["Bearer \(gasStationAuthToken)"]])
+
       let builder = client.transactionBuilder(sender: sender)
 
       _ = try builder.moveCall(
@@ -24,11 +30,7 @@ struct GasStationExample {
         arguments: [PtbArgument.u64(value: 64)]
       )
 
-      _ = builder.gasStationSponsor(
-        url: gasStationUrl,
-        headers: ["Authorization": ["Bearer \(gasStationAuthToken)"]])
-
-      let res = try await builder.execute(signer: signer)
+      let res = try await builder.executeWithGasSponsor(gasStation: gasStation, signer: signer)
 
       print(res)
 

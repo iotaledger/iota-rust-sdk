@@ -14,6 +14,15 @@ class Program
         var sender = keypair.PublicKey().DeriveAddress();
         var signer = TransactionSigner.FromEd25519(keypair);
 
+        var headers = new Dictionary<string, string[]>
+        {
+            { "Authorization", new[] { $"Bearer {gasStationAuthToken}" } }
+        };
+
+        // A gas station is configured once and reused for any number of
+        // transactions.
+        var gasStation = new GasStation(gasStationUrl, null, headers);
+
         var builder = client.TransactionBuilder(sender);
 
         builder.MoveCall(
@@ -23,14 +32,7 @@ class Program
             new[] { PtbArgument.U64(64) }
         );
 
-        var headers = new Dictionary<string, string[]>
-        {
-            { "Authorization", new[] { $"Bearer {gasStationAuthToken}" } }
-        };
-
-        builder.GasStationSponsor(gasStationUrl, null, headers);
-
-        var res = await builder.Execute(signer);
+        var res = await builder.ExecuteWithGasSponsor(gasStation, signer);
 
         Console.WriteLine(res);
         Console.WriteLine("Sponsored transaction was successful!");
