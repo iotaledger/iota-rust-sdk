@@ -110,9 +110,9 @@ impl FaucetClient {
     ///
     /// This is the way to choose your own trust anchors or TLS backend.
     ///
-    /// Building a `reqwest::Client` panics unless a rustls crypto provider has
-    /// been installed for the process; call
-    /// [`crate::install_default_crypto_provider`] first, or install your own.
+    /// Note that building a `reqwest::Client` from scratch panics unless a
+    /// rustls crypto provider has been installed for the process; starting from
+    /// [`crate::default_http_client_builder`] avoids that.
     pub fn with_http_client(
         faucet_url: &str,
         client: reqwest::Client,

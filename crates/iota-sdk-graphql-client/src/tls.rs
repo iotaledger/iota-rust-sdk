@@ -59,17 +59,12 @@ pub fn default_http_client_builder() -> reqwest::ClientBuilder {
 ///
 /// `reqwest` is built with `rustls-no-provider` so that the provider is a
 /// feature of this crate rather than aws-lc-rs by fiat, and in exchange one has
-/// to be installed before any client is built. Installing is a once-per-process
-/// operation and the first caller wins, so an application that has already
-/// chosen a provider keeps it and this is a no-op.
-///
-/// Callers who build their own [`reqwest::Client`] for
-/// [`crate::Client::with_http_client`] should call this first; reqwest panics
-/// when it finds no provider installed.
+/// to be installed before any client is built. The first caller wins, so an
+/// application that has already chosen a provider keeps it.
 ///
 /// Does nothing when neither `tls-ring` nor `tls-aws-lc` is enabled.
 #[cfg(not(target_arch = "wasm32"))]
-pub fn install_default_crypto_provider() {
+fn install_default_crypto_provider() {
     // `install_default` returns `Err` when a provider is already installed,
     // which is the application's prerogative rather than our problem.
     #[cfg(feature = "tls-ring")]

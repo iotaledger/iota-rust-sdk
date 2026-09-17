@@ -16,10 +16,10 @@ pub struct HttpClientOptions {
     /// trust store and the bundled roots.
     #[uniffi(default = [])]
     pub extra_root_certificates: Vec<Vec<u8>>,
-    /// Trust `extra_root_certificates` and nothing else, ignoring both the
-    /// platform trust store and the bundled roots.
+    /// Ignore the platform trust store, trusting only the SDK's bundled roots
+    /// and `extra_root_certificates`.
     #[uniffi(default = false)]
-    pub only_provided_roots: bool,
+    pub exclude_platform_roots: bool,
     /// Total request timeout in milliseconds. `None` leaves it unbounded.
     #[uniffi(default = None)]
     pub timeout_ms: Option<u64>,
@@ -31,18 +31,7 @@ pub struct HttpClientOptions {
 impl HttpClientOptions {
     /// Build the described client.
     pub(crate) fn build(&self) -> Result<reqwest::Client> {
-        // `default_http_client_builder` has already merged the bundled roots,
-        // so replacing them means starting from a bare builder rather than
-        // layering `tls_certs_only` on top.
-        let mut builder = if self.only_provided_roots {
-            // This branch bypasses `default_http_client_builder`, which is what
-            // normally selects the rustls provider.
-            #[cfg(not(target_arch = "wasm32"))]
-            iota_sdk::graphql_client::install_default_crypto_provider();
-            reqwest::Client::builder().user_agent(iota_sdk::graphql_client::USER_AGENT)
-        } else {
-            iota_sdk::graphql_client::default_http_client_builder()
-        };
+        let mut builder = iota_sdk::graphql_client::default_http_client_builder();
 
         if let Some(user_agent) = &self.user_agent {
             builder = builder.user_agent(user_agent.clone());
@@ -68,7 +57,9 @@ impl HttpClientOptions {
             .map(|der| reqwest::Certificate::from_der(der).map_err(SdkFfiError::new))
             .collect::<Result<Vec<_>>>()?;
 
-        Ok(if self.only_provided_roots {
+        Ok(if self.exclude_platform_roots {
+            // The SDK's builder has already added the bundled roots, so this
+            // drops the platform store and keeps those plus any supplied here.
             builder.tls_certs_only(certificates)
         } else if certificates.is_empty() {
             builder
@@ -83,7 +74,7 @@ impl HttpClientOptions {
     /// it has pinned a root or bounded a request when it has not.
     #[cfg(target_arch = "wasm32")]
     fn apply_transport(&self, builder: reqwest::ClientBuilder) -> Result<reqwest::ClientBuilder> {
-        if self.only_provided_roots || !self.extra_root_certificates.is_empty() {
+        if self.exclude_platform_roots || !self.extra_root_certificates.is_empty() {
             return Err(SdkFfiError::custom(
                 "custom root certificates are not supported on wasm32: \
                  the browser controls certificate verification",

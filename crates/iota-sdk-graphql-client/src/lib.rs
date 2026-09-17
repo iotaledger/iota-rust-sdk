@@ -27,5 +27,3 @@ pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
 pub use tls::default_http_client_builder;
-#[cfg(not(target_arch = "wasm32"))]
-pub use tls::install_default_crypto_provider;

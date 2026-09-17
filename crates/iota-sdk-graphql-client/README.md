@@ -54,16 +54,23 @@ and timeouts. `default_http_client_builder` returns a builder that already has
 this crate's user agent and trust anchors, if you only want to override one
 thing.
 
-Because the provider is this crate's choice rather than `reqwest`'s, building a
-`reqwest::Client` panics unless one is installed for the process. Call
-`install_default_crypto_provider` first, or install your own.
+```rust, ignore
+use iota_graphql_client::{default_http_client_builder, Client};
+
+let http = default_http_client_builder()
+    .timeout(std::time::Duration::from_secs(5))
+    .build()?;
+let client = Client::with_http_client("https://graphql.testnet.iota.cafe", http)?;
+```
+
+Starting from that builder also settles the crypto provider. Because the
+provider is this crate's choice rather than `reqwest`'s, a `reqwest::Client`
+built from scratch panics unless one has been installed for the process — so if
+you do build your own, install a provider first:
 
 ```rust, ignore
-use iota_graphql_client::{install_default_crypto_provider, Client};
-
-install_default_crypto_provider();
+rustls::crypto::ring::default_provider().install_default().ok();
 let http = reqwest::Client::builder().build()?;
-let client = Client::with_http_client("https://graphql.testnet.iota.cafe", http)?;
 ```
 
 # Usage
