@@ -1,5 +1,5 @@
 # Mutation-testing scope and invocation, shared by `make mutants` and the
-# mutation CI workflows.
+# weekly sweep (.github/workflows/mutants_weekly.yml).
 
 # Each mutant runs only the mutated package's own tests (the cargo-mutants
 # default), so a kill living in another package's suite does not count: the
