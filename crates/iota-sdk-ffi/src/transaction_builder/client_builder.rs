@@ -515,26 +515,18 @@ impl ClientTransactionBuilder {
 
     /// Convert this builder into a transaction.
     pub async fn finish(&self) -> Result<Transaction> {
-        Ok(Transaction(match self.clone_inner() {
-            InnerClientTransactionBuilder::GraphQl(builder) => builder.finish().await?,
-            #[cfg(feature = "grpc")]
-            InnerClientTransactionBuilder::Grpc(builder) => builder.finish().await?,
-        }))
+        Ok(Transaction(with_builder!(self.clone_inner(), |builder| {
+            builder.finish().await?
+        })))
     }
 
     /// Convert this builder into a transaction with the given gas budget,
     /// used as-is (no estimation or minimum clamp) and overriding any budget
     /// set via `gas_budget`.
     pub async fn finish_with_budget(&self, gas_budget: u64) -> Result<Transaction> {
-        Ok(Transaction(match self.clone_inner() {
-            InnerClientTransactionBuilder::GraphQl(builder) => {
-                builder.finish_with_budget(gas_budget).await?
-            }
-            #[cfg(feature = "grpc")]
-            InnerClientTransactionBuilder::Grpc(builder) => {
-                builder.finish_with_budget(gas_budget).await?
-            }
-        }))
+        Ok(Transaction(with_builder!(self.clone_inner(), |builder| {
+            builder.finish_with_budget(gas_budget).await?
+        })))
     }
 
     /// Dry run the transaction.
@@ -561,15 +553,9 @@ impl ClientTransactionBuilder {
         wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         let wait_for = wait_for.map(Into::into);
-        Ok(match self.clone_inner() {
-            InnerClientTransactionBuilder::GraphQl(builder) => {
-                builder.execute(signer, wait_for).await?
-            }
-            #[cfg(feature = "grpc")]
-            InnerClientTransactionBuilder::Grpc(builder) => {
-                builder.execute(signer, wait_for).await?
-            }
-        }
+        Ok(with_builder!(self.clone_inner(), |builder| {
+            builder.execute(signer, wait_for).await?
+        })
         .into())
     }
 
@@ -582,19 +568,11 @@ impl ClientTransactionBuilder {
         wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         let wait_for = wait_for.map(Into::into);
-        Ok(match self.clone_inner() {
-            InnerClientTransactionBuilder::GraphQl(builder) => {
-                builder
-                    .execute_with_sponsor(signer, sponsor_signer, wait_for)
-                    .await?
-            }
-            #[cfg(feature = "grpc")]
-            InnerClientTransactionBuilder::Grpc(builder) => {
-                builder
-                    .execute_with_sponsor(signer, sponsor_signer, wait_for)
-                    .await?
-            }
-        }
+        Ok(with_builder!(self.clone_inner(), |builder| {
+            builder
+                .execute_with_sponsor(signer, sponsor_signer, wait_for)
+                .await?
+        })
         .into())
     }
 }
