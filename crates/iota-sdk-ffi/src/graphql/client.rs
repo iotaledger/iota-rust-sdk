@@ -1,11 +1,15 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::sync::Arc;
+
 use tokio::sync::RwLock;
 
 use crate::{
     error::{Result, SdkFfiError},
     graphql::query_types::ServiceConfig,
+    transaction_builder::{builder::TransactionBuilder, client_builder::GraphQLTransactionBuilder},
+    types::address::Address,
 };
 
 /// The GraphQL client for interacting with the IOTA blockchain.
@@ -110,5 +114,11 @@ impl GraphQLClient {
             .await?
             .data
             .ok_or_else(|| SdkFfiError::custom("query yielded no data"))
+    }
+
+    /// Create a new transaction builder with the given sender address, backed
+    /// by this client.
+    pub fn transaction_builder(self: Arc<Self>, sender: &Address) -> GraphQLTransactionBuilder {
+        TransactionBuilder::new(sender).with_graphql_client(self)
     }
 }

@@ -18,7 +18,7 @@ fun main() = runBlocking {
             return@runBlocking
         }
 
-        for ((moduleId, _) in pkg.modules()) {
+        for (moduleId in pkg.modules().keys()) {
             var module = client.normalizedMoveModule(packageAddress, moduleId.asStr())
             if (module == null) {
                 println("module `${moduleId.asStr()}` not found")

@@ -7,7 +7,7 @@ use iota_types::TypeTag;
 
 use crate::{
     GraphQLClient,
-    error::Result,
+    error::GraphQLResult,
     query_types::{MoveViewCallArgs, MoveViewCallQuery, MoveViewResult},
 };
 
@@ -38,7 +38,7 @@ impl GraphQLClient {
         function_name: impl Into<String>,
         type_arguments: impl Into<Option<Vec<String>>>,
         arguments: impl Into<Option<Vec<serde_json::Value>>>,
-    ) -> Result<MoveViewResult> {
+    ) -> GraphQLResult<MoveViewResult> {
         let operation = MoveViewCallQuery::build(MoveViewCallArgs {
             function_name: function_name.into(),
             type_arguments: type_arguments.into(),
@@ -98,7 +98,7 @@ impl GraphQLClient {
         function_name: impl Into<String>,
         type_arguments: impl Into<Option<Vec<TypeTag>>>,
         arguments: A,
-    ) -> Result<MoveViewResult> {
+    ) -> GraphQLResult<MoveViewResult> {
         let type_args_strings = type_arguments
             .into()
             .map(|tags| tags.into_iter().map(|t| t.to_string()).collect());

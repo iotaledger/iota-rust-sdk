@@ -6,7 +6,7 @@
 use iota_transaction_builder::{MoveViewCallBuilder, MoveViewCallClient};
 use iota_types::{ObjectId, TypeTag};
 
-use crate::{GraphQLClient, error::Error};
+use crate::{GraphQLClient, error::GraphQLError};
 
 impl GraphQLClient {
     /// Create a new [`MoveViewCallBuilder`] with the given package, module, and
@@ -22,7 +22,7 @@ impl GraphQLClient {
 }
 
 impl MoveViewCallClient for GraphQLClient {
-    type Error = crate::error::Error;
+    type Error = crate::error::GraphQLError;
 
     async fn move_view_call(
         &self,
@@ -40,9 +40,9 @@ impl MoveViewCallClient for GraphQLClient {
             .await?;
 
         match (result.error, result.results) {
-            (Some(error), _) => Err(Error::MoveViewCall(error)),
+            (Some(error), _) => Err(GraphQLError::MoveViewCall(error)),
             (None, Some(results)) => Ok(results),
-            (None, None) => Err(Error::EmptyResponse),
+            (None, None) => Err(GraphQLError::EmptyResponse),
         }
     }
 }
