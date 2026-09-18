@@ -211,6 +211,50 @@ async fn test_merge_coins() {
     assert_eq!(coins_after.data().len(), 2);
 }
 
+/// The counterpart to `test_split_without_transfer_should_fail`: the coins
+/// `divide_coins` produces are transferred to the sender by the framework, so
+/// the transaction succeeds without a transfer command.
+#[tokio::test]
+async fn test_divide_coins() {
+    const PARTS: u64 = 4;
+
+    let (mut tx, address, pk, coins) = helper_setup().await;
+    let client = tx.get_client().clone();
+
+    let coin = coins.first().unwrap();
+    let share = coin.amount / PARTS;
+
+    tx.divide_coin(coin.id, PARTS);
+
+    let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
+    check_effects_status_success(effects);
+
+    let owned = client
+        .coins(address, None, PaginationFilter::default())
+        .await
+        .unwrap();
+
+    // PARTS - 1 coins that the sender did not have before, of an equal share
+    // each, and none of them transferred by the transaction itself.
+    let new_coins = owned
+        .data()
+        .iter()
+        .filter(|c| !coins.iter().any(|faucet_coin| faucet_coin.id == *c.id()))
+        .collect::<Vec<_>>();
+    assert_eq!(new_coins.len(), PARTS as usize - 1);
+    for new_coin in new_coins {
+        assert_eq!(new_coin.balance(), share);
+    }
+
+    // The divided coin keeps its own share plus the remainder of the division.
+    let divided = owned
+        .data()
+        .iter()
+        .find(|c| *c.id() == coin.id)
+        .expect("the divided coin is still owned by the sender");
+    assert_eq!(divided.balance(), coin.amount - share * (PARTS - 1));
+}
+
 #[tokio::test]
 async fn test_make_move_vec() {
     let (mut tx, _, pk, _) = helper_setup().await;
