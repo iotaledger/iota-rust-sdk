@@ -434,7 +434,7 @@ impl From<TypeOrigin> for iota_sdk::types::TypeOrigin {
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
-#[derive(Debug, Clone, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct UpgradeInfo {
     /// ID of the upgraded package
     pub upgraded_id: Arc<ObjectId>,
