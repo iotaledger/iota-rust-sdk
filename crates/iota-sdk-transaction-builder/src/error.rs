@@ -67,7 +67,7 @@ pub enum TransactionBuilderError {
     )]
     SponsorAddressConflict { sponsor: Address },
     #[error(transparent)]
-    Sponsor(Box<dyn std::error::Error + Send + Sync>),
+    GasSponsor(Box<dyn std::error::Error + Send + Sync>),
     #[error(transparent)]
     Signature(Box<dyn std::error::Error + Send + Sync>),
     #[error(transparent)]
@@ -89,6 +89,6 @@ impl TransactionBuilderError {
 
     /// Create a gas sponsor error
     pub fn sponsor<E: 'static + std::error::Error + Send + Sync>(e: E) -> Self {
-        Self::Sponsor(Box::new(e))
+        Self::GasSponsor(Box::new(e))
     }
 }

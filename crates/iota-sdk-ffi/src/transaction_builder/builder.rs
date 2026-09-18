@@ -491,7 +491,7 @@ impl TransactionBuilder {
 
     /// Execute the transaction with its gas paid by `gas_station`, returning
     /// the transaction digest.
-    pub async fn execute_with_gas_sponsor(
+    pub async fn execute_with_gas_station(
         &self,
         gas_station: &GasStation,
         signer: &TransactionSigner,
