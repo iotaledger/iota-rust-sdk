@@ -149,7 +149,7 @@ mod tests {
     }
 
     #[test]
-    fn unparseable_url_is_left_to_the_caller() {
+    fn unparsable_url_is_left_to_the_caller() {
         assert_eq!(unsupported_scheme("not a url"), None);
     }
 
