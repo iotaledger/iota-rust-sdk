@@ -15,6 +15,8 @@
 use iota_sdk::grpc_types::field_mask_normalize;
 
 pub mod ledger;
+pub mod move_package;
+pub mod state;
 
 /// Convert an optional list of field paths into an endpoint read mask.
 ///

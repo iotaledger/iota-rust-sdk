@@ -8,7 +8,7 @@ use iota_move_types::MoveObject;
 use iota_types::{Address, ObjectId};
 
 use crate::{
-    Client,
+    GraphQLClient,
     error::Result,
     pagination::{Direction, Page, PaginationFilter},
     query_types::ObjectFilter,
@@ -51,11 +51,12 @@ impl MoveObjectFilter {
     }
 }
 
-impl Client {
+impl GraphQLClient {
     /// Return a page of objects of the Move type `T`, decoded into `T`.
     ///
-    /// The type filter is derived from `T`, so unlike [`Client::objects`] this
-    /// needs no type string and no separate decode step.
+    /// The type filter is derived from `T`, so unlike
+    /// [`GraphQLClient::objects`] this needs no type string and no separate
+    /// decode step.
     ///
     /// # Errors
     ///
@@ -88,8 +89,8 @@ impl Client {
 
     /// Return a stream of objects of the Move type `T`, decoded into `T`.
     ///
-    /// Page-by-page equivalent of [`Client::move_objects`]; the same decode
-    /// failure ends the stream with an error.
+    /// Page-by-page equivalent of [`GraphQLClient::move_objects`]; the same
+    /// decode failure ends the stream with an error.
     pub fn move_objects_stream<'a, T>(
         &'a self,
         filter: impl Into<Option<MoveObjectFilter>>,

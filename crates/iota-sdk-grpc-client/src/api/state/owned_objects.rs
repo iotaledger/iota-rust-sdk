@@ -20,12 +20,12 @@ use iota_grpc_types::{
 };
 use iota_types::{Address, StructTag};
 
-use crate::{Client, InterceptedChannel, api::define_list_query};
+use crate::{GrpcClient, InterceptedChannel, api::define_list_query};
 
 define_list_query! {
     /// Builder for listing objects owned by an address.
     ///
-    /// Created by [`Client::owned_objects`]. Await directly for a
+    /// Created by [`GrpcClient::owned_objects`]. Await directly for a
     /// single page, or call [`.collect(limit)`](Self::collect) to
     /// auto-paginate.
     pub struct ListOwnedObjectsQuery {
@@ -37,7 +37,7 @@ define_list_query! {
     }
 }
 
-impl Client {
+impl GrpcClient {
     /// List objects owned by an address.
     ///
     /// Returns a query builder. Await it directly for a single page
@@ -63,11 +63,11 @@ impl Client {
     ///
     /// Single page:
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::OwnedObjectReadMask;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let page = client
@@ -82,11 +82,11 @@ impl Client {
     ///
     /// Auto-paginate:
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::OwnedObjectReadMask;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let all = client

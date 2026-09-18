@@ -14,14 +14,14 @@ use iota_grpc_types::{
 use iota_types::{ObjectId, Version};
 
 use crate::{
-    Client,
+    GrpcClient,
     api::{
         GrpcError, GrpcResult, MetadataEnvelope, check_object_identity, check_result_count,
         collect_stream, into_item_results, proto_object_id, saturating_usize_to_u32,
     },
 };
 
-impl Client {
+impl GrpcClient {
     /// Get objects by their IDs.
     ///
     /// Returns proto `Object` types. Use `obj.object()` to convert to SDK
@@ -61,11 +61,11 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::{ObjectField, ObjectReadMask};
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let object_id: ObjectId = "0x2".parse()?;
     /// let ids = [object_id];
     ///
@@ -134,7 +134,7 @@ impl Client {
     /// Returns [`GrpcError::EmptyRequest`] if `refs` is empty.
     ///
     /// Each ref gets its own result, with the same meaning as in
-    /// [`objects`](Client::objects): a requested version the serving
+    /// [`objects`](GrpcClient::objects): a requested version the serving
     /// node does not have fails only its own slot.
     ///
     /// # Read Mask
@@ -149,11 +149,11 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::{ObjectField, ObjectReadMask};
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let object_id: ObjectId = "0x2".parse()?;
     ///
     /// // Default mask

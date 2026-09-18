@@ -19,7 +19,7 @@
 use eyre::Result;
 use futures::StreamExt;
 use iota_sdk::{
-    graphql_client::{Client, MoveObjectFilter},
+    graphql_client::{GraphQLClient, MoveObjectFilter},
     move_types::{
         iota_framework::{coin::Coin, iota::IOTA},
         iota_system::staking_pool::StakedIota,
@@ -29,7 +29,7 @@ use iota_sdk::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     let owner: Address =
         "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151".parse()?;

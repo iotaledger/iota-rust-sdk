@@ -14,7 +14,7 @@ use std::time::Duration;
 use eyre::Result;
 use futures::StreamExt;
 use iota_sdk::graphql_client::{
-    Client,
+    GraphQLClient,
     query_types::{Feature, SubscriptionTransactionFilter, TransactionBlockKindInput},
 };
 
@@ -25,7 +25,7 @@ const PATIENCE: Duration = Duration::from_secs(60);
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     // Subscriptions are served over a WebSocket that the node has to have
     // enabled

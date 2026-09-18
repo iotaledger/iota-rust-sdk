@@ -10,14 +10,14 @@
 
 use eyre::Result;
 use iota_sdk::{
-    grpc_client::{Client, read_mask_fields::OwnedObjectReadMask},
+    grpc_client::{GrpcClient, read_mask_fields::OwnedObjectReadMask},
     move_types::iota_system::staking_pool::StakedIota,
     types::{Address, StructTag},
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet()?;
+    let client = GrpcClient::new_testnet()?;
 
     let owner: Address =
         "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151".parse()?;

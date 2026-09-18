@@ -11,13 +11,13 @@
 //!
 //! ```no_run
 //! use iota_sdk_grpc_client::{
-//!     Client,
+//!     GrpcClient,
 //!     read_mask_fields::{ObjectReadMask, TransactionReadMask},
 //! };
 //! use iota_types::{ObjectId, TransactionDigest};
 //!
 //! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-//! let client = Client::new_localnet()?;
+//! let client = GrpcClient::new_localnet()?;
 //!
 //! // Get a transaction with the default field mask.
 //! // The batched reads return one result per request, so a transaction the
@@ -137,7 +137,7 @@ pub use api::{
 pub use iota_grpc_types::read_mask_fields;
 
 mod client;
-pub use client::{Client, InterceptedChannel};
+pub use client::{GrpcClient, InterceptedChannel};
 
 mod response_ext;
 pub use response_ext::ResponseExt;

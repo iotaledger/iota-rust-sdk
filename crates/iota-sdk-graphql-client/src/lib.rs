@@ -22,7 +22,7 @@ mod test_utils;
 // Re-export types used by query_types module internally
 #[cfg(feature = "move-types")]
 pub use api::move_objects::MoveObjectFilter;
-pub use client::Client;
+pub use client::GraphQLClient;
 pub use iota_transaction_builder::WaitForTransaction;
 pub(crate) use iota_types::Address;
 pub use output_types::*;

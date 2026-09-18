@@ -4,7 +4,7 @@
 use eyre::Result;
 use iota_sdk::{
     crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
-    graphql_client::{Client, faucet::FaucetClient},
+    graphql_client::{GraphQLClient, faucet::FaucetClient},
     types::Address,
 };
 
@@ -20,7 +20,7 @@ async fn main() -> Result<()> {
     let sender_address = public_key.derive_address();
     println!("Sender address: {sender_address}");
 
-    let client = Client::new_localnet();
+    let client = GraphQLClient::new_localnet();
 
     // Request funds from faucet
     FaucetClient::new_localnet()

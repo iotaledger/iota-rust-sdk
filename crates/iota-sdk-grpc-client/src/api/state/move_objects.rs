@@ -19,7 +19,7 @@ use iota_move_types::MoveObject;
 use iota_types::Address;
 
 use crate::{
-    Client, GrpcError,
+    GrpcClient, GrpcError,
     api::{
         GrpcResult, MetadataEnvelope, Page, TryFromProtoError,
         state::owned_objects::ListOwnedObjectsQuery,
@@ -28,7 +28,7 @@ use crate::{
 
 /// Builder for listing owned objects of the Move type `T`.
 ///
-/// Created by [`Client::owned_move_objects`]. Await directly for a single
+/// Created by [`GrpcClient::owned_move_objects`]. Await directly for a single
 /// page, or call [`.collect(limit)`](Self::collect) to auto-paginate.
 pub struct ListOwnedMoveObjectsQuery<T> {
     inner: ListOwnedObjectsQuery,
@@ -95,11 +95,11 @@ fn decode<T: MoveObject>(object: &iota_grpc_types::v1::object::Object) -> GrpcRe
     T::try_from(&object).map_err(|e| GrpcError::from(TryFromProtoError::invalid("move object", e)))
 }
 
-impl Client {
+impl GrpcClient {
     /// List objects of the Move type `T` owned by an address, decoded into `T`.
     ///
     /// The type filter is derived from `T`, so unlike
-    /// [`Client::owned_objects`] this needs neither a type argument nor a
+    /// [`GrpcClient::owned_objects`] this needs neither a type argument nor a
     /// separate decode step.
     ///
     /// Returns a query builder. Await it directly for a single page (with
@@ -115,11 +115,11 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_move_types::iota_system::staking_pool::StakedIota;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let page = client

@@ -17,8 +17,8 @@ use iota_types::SignedTransaction;
 use reqwest::Url;
 
 use crate::{
-    Client,
-    error::{Error, Kind, Result},
+    GraphQLClient,
+    error::{Error, Result},
     query_types::{
         Event, EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs,
         SubscriptionEventFilter, SubscriptionTransactionFilter,
@@ -48,7 +48,7 @@ enum Outcome<T> {
     Skip,
 }
 
-impl Client {
+impl GraphQLClient {
     /// Subscribe to a live stream of events matching the (optional) filter.
     ///
     /// The stream yields events as they arrive and reconnects automatically on
@@ -75,10 +75,10 @@ impl Client {
                     });
                     let subscription = self.open_subscription(operation).await?;
 
-                    // Events from a single transaction arrive contiguously, so a
-                    // transaction is only fully received once an event from the
-                    // next one shows up. Advance the resume cursor to the
-                    // previous transaction's digest only when the digest changes.
+                    // Events from a single transaction arrive contiguously, so a transaction is
+                    // only fully received once an event from the next one shows up. Advance the
+                    // resume cursor to the previous transaction's digest only when the digest
+                    // changes.
                     let mut current_tx: Option<String> = None;
                     let mapped = subscription.map(move |item| -> Result<Outcome<Event>> {
                         let data = decode_data(item?)?;
@@ -168,19 +168,9 @@ impl Client {
             "https" => url.set_scheme("wss"),
             "http" => url.set_scheme("ws"),
             "ws" | "wss" => Ok(()),
-            other => {
-                return Err(Error::from_message(
-                    Kind::Subscription,
-                    format!("unsupported RPC scheme for subscriptions: {other}"),
-                ));
-            }
+            other => return Err(Error::UnsupportedSubscriptionScheme(other.to_owned())),
         }
-        .map_err(|_| {
-            Error::from_message(
-                Kind::Subscription,
-                "failed to derive the WebSocket URL".to_string(),
-            )
-        })?;
+        .map_err(|_| Error::subscription("failed to derive the WebSocket URL"))?;
         url.set_path("/subscriptions");
         Ok(url)
     }
@@ -230,8 +220,8 @@ async fn connect(url: &Url) -> Result<impl graphql_ws_client::Connection + Send 
 fn decode_data<T>(response: cynic::GraphQlResponse<T>) -> Result<T> {
     match (response.data, response.errors) {
         (Some(data), _) => Ok(data),
-        (None, Some(errors)) => Err(Error::graphql_error(errors)),
-        (None, None) => Err(Error::empty_response_error()),
+        (None, Some(errors)) => Err(Error::Query(errors)),
+        (None, None) => Err(Error::EmptyResponse),
     }
 }
 
@@ -266,7 +256,11 @@ where
                                 backoff = INITIAL_BACKOFF;
                                 yield Ok(value);
                             }
-                            Ok(Outcome::Lagged(count)) => yield Err(Error::lagged(count)),
+                            // A negative count cannot happen; report 0
+                            // rather than its magnitude.
+                            Ok(Outcome::Lagged(count)) => yield Err(Error::Lagged {
+                                count: u32::try_from(count).unwrap_or(0),
+                            }),
                             Ok(Outcome::Skip) => {}
                             Err(error) => {
                                 yield Err(error);
