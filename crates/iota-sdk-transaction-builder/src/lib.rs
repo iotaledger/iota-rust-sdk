@@ -149,7 +149,8 @@
 //! - [gas_price](TransactionBuilder::gas_price): Set the gas price.
 //! - [sponsor](TransactionBuilder::sponsor): Set the gas sponsor address.
 //! - [gas_station_sponsor](TransactionBuilder::gas_station_sponsor): Set the
-//!   gas station URL. See [Gas Station](crate#gas-station) for more info.
+//!   gas station URL and the HTTP client to reach it with. See [Gas
+//!   Station](crate#gas-station) for more info.
 //! - [expiration](TransactionBuilder::expiration): Set the transaction
 //!   expiration epoch.
 //!
@@ -207,8 +208,10 @@
 //!
 //! The Transaction Builder supports executing via a
 //! [Gas Station](https://github.com/iotaledger/gas-station). To do so, the URL
-//! must be provided via
-//! [gas_station_sponsor](TransactionBuilder::gas_station_sponsor). Additional
+//! and a [`reqwest::Client`] must be provided via
+//! [gas_station_sponsor](TransactionBuilder::gas_station_sponsor). That client
+//! decides the TLS backend and trust anchors used to reach the gas station.
+//! Additional
 //! configuration can then be provided via
 //! [gas_reservation_duration](TransactionBuilder::gas_reservation_duration) and
 //! [add_gas_station_header](TransactionBuilder::add_gas_station_header).
@@ -665,7 +668,7 @@ mod tests {
             coin_digest.parse().unwrap(),
         );
 
-        let recipient = Address::random_with(rand::thread_rng());
+        let recipient = Address::random();
 
         let result = tx.clone().finish();
         assert!(result.is_err());
@@ -693,7 +696,7 @@ mod tests {
         let sponsor: Address = "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
             .parse()
             .unwrap();
-        let recipient = Address::random_with(rand::thread_rng());
+        let recipient = Address::random();
         let coin = ObjectReference::new(
             "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4"
                 .parse()
@@ -737,10 +740,10 @@ mod tests {
         // A non-programmable Transaction kind should not be accepted.
         let txn = Transaction::V1(iota_types::TransactionV1 {
             kind: iota_types::TransactionKind::AuthenticatorStateUpdateV1Deprecated,
-            sender: Address::random_with(rand::thread_rng()),
+            sender: Address::random(),
             gas_payment: iota_types::GasPayment {
                 objects: vec![],
-                owner: Address::random_with(rand::thread_rng()),
+                owner: Address::random(),
                 price: 0,
                 budget: 0,
             },

@@ -24,8 +24,10 @@ struct GasStationExample {
         arguments: [PtbArgument.u64(value: 64)]
       )
 
-      _ = builder.gasStationSponsor(
+      // The default options build the same HTTP client the SDK uses elsewhere.
+      _ = try builder.gasStationSponsor(
         url: gasStationUrl,
+        options: HttpClientOptions(),
         headers: ["Authorization": ["Bearer \(gasStationAuthToken)"]])
 
       let res = try await builder.execute(signer: signer)

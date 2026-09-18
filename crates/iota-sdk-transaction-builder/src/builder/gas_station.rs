@@ -4,16 +4,17 @@
 use std::{str::FromStr, time::Duration};
 
 use base64ct::Encoding;
+use http::header::{HeaderMap, HeaderName, HeaderValue};
 use iota_types::{
     Address, ObjectDigest, ObjectId, ObjectReference, Transaction, TransactionDigest, Version,
 };
-use reqwest::{
-    Url,
-    header::{HeaderMap, HeaderName, HeaderValue},
-};
 use serde::{Deserialize, Serialize};
+use url::Url;
 
-use crate::{builder::signer::TransactionSigner, error::TransactionBuilderError};
+use crate::{
+    builder::signer::TransactionSigner,
+    error::{GasStationTransportError, TransactionBuilderError},
+};
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
@@ -57,14 +58,19 @@ pub struct GasStationData {
     gas_reservation_duration: Duration,
     /// Headers to be included in all requests to the gas station.
     headers: HeaderMap<HeaderValue>,
+    /// HTTP client used for every gas station request.
+    client: reqwest::Client,
 }
 
 impl GasStationData {
-    pub fn new(url: Url) -> Self {
+    /// The `client` decides the TLS backend and trust anchors for every
+    /// request to this gas station; see its documentation for how to build one.
+    pub fn new(url: Url, client: reqwest::Client) -> Self {
         Self {
             url,
             gas_reservation_duration: Duration::from_secs(60),
             headers: Default::default(),
+            client,
         }
     }
 
@@ -236,26 +242,24 @@ struct ExecuteTxResponse {
 }
 
 impl GasStationData {
-    async fn gas_station_version(
-        &self,
-        client: &reqwest::Client,
-    ) -> Result<GasStationVersion, TransactionBuilderError> {
+    async fn gas_station_version(&self) -> Result<GasStationVersion, TransactionBuilderError> {
         let url = self
             .url
             .join(GasStationRequestKind::Version.as_path())
             .map_err(TransactionBuilderError::InvalidUrl)?;
-        let response = client
+        let response = self
+            .client
             .request(reqwest::Method::GET, url.clone())
             .headers(self.headers.clone())
             .send()
             .await
             .map_err(|e| TransactionBuilderError::GasStationRequest {
-                source: e,
+                source: GasStationTransportError::new(e),
                 gas_station_url: url.clone(),
             })?
             .error_for_status()
             .map_err(|e| TransactionBuilderError::GasStationRequest {
-                source: e,
+                source: GasStationTransportError::new(e),
                 gas_station_url: url.clone(),
             })?;
 
@@ -297,13 +301,12 @@ impl GasStationData {
     async fn reserve_gas(
         &mut self,
         gas_budget: u64,
-        client: &reqwest::Client,
     ) -> Result<GasReservation, TransactionBuilderError> {
         self.headers
             .entry(reqwest::header::CONTENT_TYPE)
             .or_insert_with(|| HeaderValue::from_static("application/json"));
 
-        let version = self.gas_station_version(client).await?;
+        let version = self.gas_station_version().await?;
         if version < GasStationVersion::MIN {
             return Err(TransactionBuilderError::InvalidGasStationVersion {
                 min_required_version: GasStationVersion::MIN,
@@ -316,7 +319,8 @@ impl GasStationData {
             .join(GasStationRequestKind::ReserveGas.as_path())
             .map_err(TransactionBuilderError::InvalidUrl)?;
 
-        let response = client
+        let response = self
+            .client
             .request(reqwest::Method::POST, url.clone())
             .json(&ReserveGasRequest {
                 gas_budget,
@@ -326,12 +330,12 @@ impl GasStationData {
             .send()
             .await
             .map_err(|e| TransactionBuilderError::GasStationRequest {
-                source: e,
+                source: GasStationTransportError::new(e),
                 gas_station_url: url.clone(),
             })?
             .error_for_status()
             .map_err(|e| TransactionBuilderError::GasStationRequest {
-                source: e,
+                source: GasStationTransportError::new(e),
                 gas_station_url: url.clone(),
             })?;
 
@@ -340,7 +344,7 @@ impl GasStationData {
                 .json()
                 .await
                 .map_err(|e| TransactionBuilderError::GasStationRequest {
-                    source: e,
+                    source: GasStationTransportError::new(e),
                     gas_station_url: url.clone(),
                 })?;
 
@@ -391,12 +395,9 @@ impl GasStationData {
         txn: &mut Transaction,
         signer: &impl TransactionSigner,
     ) -> Result<serde_json::Value, TransactionBuilderError> {
-        let client = reqwest::Client::new();
         let reservation_id = match txn {
             Transaction::V1(inner_txn) => {
-                let reservation = self
-                    .reserve_gas(inner_txn.gas_payment.budget, &client)
-                    .await?;
+                let reservation = self.reserve_gas(inner_txn.gas_payment.budget).await?;
                 let GasReservation {
                     sponsor_address,
                     reservation_id,
@@ -427,9 +428,12 @@ impl GasStationData {
             .map_err(TransactionBuilderError::signature)?
             .to_base64();
 
+        let Self {
+            client, headers, ..
+        } = self;
         let response = client
             .request(reqwest::Method::POST, url.clone())
-            .headers(self.headers)
+            .headers(headers)
             .json(&ExecuteTxRequest {
                 reservation_id,
                 tx_bytes,
@@ -439,12 +443,12 @@ impl GasStationData {
             .send()
             .await
             .map_err(|e| TransactionBuilderError::GasStationRequest {
-                source: e,
+                source: GasStationTransportError::new(e),
                 gas_station_url: url.clone(),
             })?
             .error_for_status()
             .map_err(|e| TransactionBuilderError::GasStationRequest {
-                source: e,
+                source: GasStationTransportError::new(e),
                 gas_station_url: url.clone(),
             })?;
 
@@ -453,7 +457,7 @@ impl GasStationData {
                 .json()
                 .await
                 .map_err(|e| TransactionBuilderError::GasStationRequest {
-                    source: e,
+                    source: GasStationTransportError::new(e),
                     gas_station_url: url.clone(),
                 })?;
 

@@ -15,10 +15,17 @@ async fn main() -> Result<()> {
 
     let mut builder = client.transaction_builder(sender);
 
+    // The SDK selects its own rustls provider, so `reqwest` has no default to
+    // fall back on and building a client would panic without this.
+    rustls::crypto::ring::default_provider()
+        .install_default()
+        .ok();
+    let gas_station_client = reqwest::Client::new();
+
     builder
         .move_call(Address::STD, "u64", "sqrt")
         .arguments([64_u64])
-        .gas_station_sponsor(gas_station_url)
+        .gas_station_sponsor(gas_station_url, gas_station_client)
         .add_gas_station_header(
             reqwest::header::AUTHORIZATION,
             HeaderValue::from_str(&format!("Bearer {gas_station_auth_token}"))?,

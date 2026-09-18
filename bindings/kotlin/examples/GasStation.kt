@@ -22,8 +22,10 @@ fun main() = runBlocking {
             listOf(PtbArgument.u64(64uL)),
         )
 
+        // The default options build the same HTTP client the SDK uses elsewhere.
         builder.gasStationSponsor(
             gasStationUrl,
+            HttpClientOptions(),
             headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken")),
         )
 

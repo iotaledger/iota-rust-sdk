@@ -19,11 +19,8 @@ crate-type = ["lib", "cdylib"]
 
 [features]
 default = ["crypto", "bls12381", "grpc"]
-# TLS is enabled so that the HTTPS constructors (`new_mainnet`,
-# `new_testnet`, ...) work out of the box. The bundled webpki roots are used
-# instead of the platform's native certificate store because the latter is
-# unavailable on mobile targets (Android/iOS bindings); this also matches the
-# behavior of the GraphQL client (reqwest with `rustls-tls`).
+# TLS so the HTTPS constructors work out of the box; webpki roots because
+# Android cannot reach the platform store without a JNI handshake.
 grpc = [
   "iota-sdk/grpc",
   "iota-sdk/grpc-tls-ring",
@@ -51,7 +48,7 @@ workspace = true
 [dependencies]
 # external dependencies
 async-stream.workspace = true
-async-trait = "0.1.89"
+async-trait = "0.1.92"
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from", "deref", "display"] }
@@ -59,7 +56,7 @@ futures.workspace = true
 hex.workspace = true
 paste.workspace = true
 primitive-types.workspace = true
-rand.workspace = true
+reqwest = { workspace = true, features = ["rustls-no-provider", "json"] }
 serde.workspace = true
 serde_json.workspace = true
 tokio = { workspace = true, features = ["time", "sync"] }
@@ -67,7 +64,11 @@ tokio = { workspace = true, features = ["time", "sync"] }
 uniffi = { version = "0.31", features = ["cli", "tokio", "wasm-unstable-single-threaded", "scaffolding-ffi-buffer-fns"] }
 
 # internal dependencies
-iota-sdk = { version = "3.0.0-beta.1", path = "../iota-sdk", default-features = false, features = ["graphql", "txn-builder", "types", "move-types", "serde", "rand", "hash"] }
+iota-sdk = { version = "3.0.0-beta.1", path = "../iota-sdk", default-features = false, features = ["graphql", "graphql-tls-native-roots", "graphql-tls-ring", "graphql-tls-webpki-roots", "txn-builder", "types", "move-types", "serde", "rand", "hash"] }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+rustls = { version = "0.23", default-features = false, features = ["ring"] }
+webpki-root-certs.workspace = true
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 # wasm additionally needs macros+rt for async

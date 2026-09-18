@@ -11,6 +11,7 @@ use super::client_builder::GraphQLTransactionBuilder;
 use crate::{
     error::Result,
     graphql::client::GraphQLClient,
+    http::HttpClientOptions,
     transaction_builder::{
         Payment,
         ptb_arg::{MoveArg, PTBArgument},
@@ -137,11 +138,13 @@ impl TransactionBuilder {
     pub fn gas_station_sponsor(
         self: Arc<Self>,
         url: String,
+        options: HttpClientOptions,
         duration: Option<Duration>,
         headers: Option<HashMap<String, Vec<String>>>,
-    ) -> Arc<Self> {
+    ) -> Result<Arc<Self>> {
+        let client = options.build()?;
         self.write(|builder| {
-            let b = builder.gas_station_sponsor(url.parse().expect("invalid URL"));
+            let b = builder.gas_station_sponsor(url.parse().expect("invalid URL"), client);
             if let Some(duration) = duration {
                 b.gas_reservation_duration(duration);
             }
@@ -156,7 +159,7 @@ impl TransactionBuilder {
                 }
             }
         });
-        self
+        Ok(self)
     }
 
     /// Set the expiration of the transaction to be a specific epoch.

@@ -5,6 +5,7 @@ import {
   Address,
   Ed25519PrivateKey,
   GraphQlClient,
+  HttpClientOptions,
   Identifier,
   PtbArgument,
   TransactionSigner,
@@ -28,6 +29,7 @@ builder.moveCall(Address.std(), new Identifier("u64"), new Identifier("sqrt"), [
 
 builder.gasStationSponsor(
   gasStationUrl,
+  HttpClientOptions.create({}),
   undefined,
   new Map([["Authorization", [`Bearer ${gasStationAuthToken}`]]]),
 );
