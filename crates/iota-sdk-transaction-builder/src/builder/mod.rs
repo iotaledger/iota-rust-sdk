@@ -1730,7 +1730,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
         let mut input_map = HashMap::new();
         for (id, input) in taken_inputs {
             match input.kind {
-                InputKind::ImmutableOrOwned(object_id) | InputKind::Receiving(object_id) => {
+                InputKind::ImmutableOrOwned(object_id) => {
                     let obj = object(object_id)?;
 
                     if input.is_gas {
@@ -1766,6 +1766,21 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                         inputs.push(input);
                         input_map.insert(id, idx as u16);
                     }
+                }
+                InputKind::Receiving(object_id) => {
+                    if input.is_gas {
+                        return Err(TransactionBuilderError::WrongGasObject);
+                    }
+                    let obj = object(object_id)?;
+
+                    let Owner::Address(_) = obj.owner() else {
+                        return Err(TransactionBuilderError::Input(format!(
+                            "object {object_id} was passed as receiving, but is not address-owned"
+                        )));
+                    };
+                    let idx = inputs.len();
+                    inputs.push(iota_types::Input::Receiving(obj.object_ref()));
+                    input_map.insert(id, idx as u16);
                 }
                 InputKind::Shared { object_id, mutable } => {
                     let obj = object(object_id)?;
@@ -2744,6 +2759,72 @@ mod tests {
                 panic!("expected the coin to resolve as an owned input");
             };
             assert_eq!(owned.object_id, coin);
+        }
+
+        /// A receiving input given by id reaches the transaction as a
+        /// receiving input, not as an owned one.
+        #[tokio::test]
+        async fn a_receiving_id_resolves_to_a_receiving_input() {
+            let sender = Address::random_with(rand::thread_rng());
+            let receivable = object_id(3);
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(RecordingClient::default());
+            builder
+                .move_call(Address::FRAMEWORK, "transfer", "public_receive")
+                .arguments((object_id(1), crate::Receiving(receivable)));
+
+            let TransactionKind::Programmable(ptb) = builder.finish_kind().await.unwrap() else {
+                panic!("expected a programmable transaction");
+            };
+            let iota_types::Input::Receiving(reference) = &ptb.inputs[1] else {
+                panic!("expected the receivable to resolve as a receiving input");
+            };
+            assert_eq!(reference.object_id, receivable);
+            assert_eq!(reference.version, Version::from_u64(1));
+        }
+
+        /// Only an address-owned object can be received.
+        #[tokio::test]
+        async fn a_receiving_id_that_is_not_address_owned_is_rejected() {
+            let sender = Address::random_with(rand::thread_rng());
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(RecordingClient::default());
+            builder
+                .move_call(Address::FRAMEWORK, "transfer", "public_receive")
+                .arguments((object_id(1), crate::Receiving(ObjectId::CLOCK)));
+
+            let err = builder.finish_kind().await.unwrap_err();
+            let TransactionBuilderError::Input(message) = &err else {
+                panic!("expected an input error, got {err}");
+            };
+            assert!(
+                message.contains("passed as receiving, but is not address-owned"),
+                "unexpected message: {message}"
+            );
+        }
+
+        /// An object cannot be received and spent as gas in the same
+        /// transaction. A move call with a gas coin as argument is rejected
+        /// earlier by `resolve_gas_arguments`; the transfer of a gas coin is
+        /// the one command allowed to consume it, so that is the path on which
+        /// a receiving input can still carry the gas flag.
+        #[tokio::test]
+        async fn a_receiving_id_flagged_as_gas_is_rejected() {
+            let sender = Address::random_with(rand::thread_rng());
+            let receivable = object_id(3);
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(RecordingClient::default());
+            builder.transfer_objects(sender, [crate::Receiving(receivable)]);
+            builder.gas([receivable]);
+
+            let err = builder.finish_kind().await.unwrap_err();
+            assert!(
+                matches!(err, TransactionBuilderError::WrongGasObject),
+                "expected WrongGasObject, got {err}"
+            );
         }
 
         /// A missing object is still reported by its own id.
