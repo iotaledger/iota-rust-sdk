@@ -55,7 +55,13 @@ impl Client {
     /// The HTTP client is built for you, trusting the platform store plus the
     /// bundled Mozilla roots. Use [`Self::with_http_client`] to supply your
     /// own.
+    ///
+    /// An `https` or `wss` address is rejected on a build without a crypto
+    /// provider, since no request to it could succeed. See the crate README.
     pub fn new(server: &str) -> Result<Self> {
+        if let Some(scheme) = crate::tls::unsupported_scheme(server) {
+            return Err(Error::TlsUnavailable(scheme));
+        }
         Self::with_http_client(server, crate::tls::default_http_client_builder().build()?)
     }
 
@@ -65,9 +71,9 @@ impl Client {
     /// This is the way to choose your own trust anchors, TLS backend, proxies
     /// or timeouts.
     ///
-    /// Note that `reqwest` has no crypto provider to fall back on here, so
-    /// building a client panics unless one has been installed for the process.
-    /// See the crate README.
+    /// Note that on a build with `tls-ring` or `tls-aws-lc`, `reqwest` has no
+    /// crypto provider to fall back on, so building the client panics unless
+    /// one has been installed for the process. See the crate README.
     ///
     /// The client is used as given: the SDK does not set its user agent, so
     /// callers who want to be identifiable should apply [`USER_AGENT`]
@@ -83,19 +89,19 @@ impl Client {
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
     /// {MAINNET_HOST}.
     pub fn new_mainnet() -> Self {
-        Self::new(MAINNET_HOST).expect("Invalid mainnet URL")
+        Self::new(MAINNET_HOST).expect("cannot build mainnet client")
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
     /// {TESTNET_HOST}.
     pub fn new_testnet() -> Self {
-        Self::new(TESTNET_HOST).expect("Invalid testnet URL")
+        Self::new(TESTNET_HOST).expect("cannot build testnet client")
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
     /// {DEVNET_HOST}.
     pub fn new_devnet() -> Self {
-        Self::new(DEVNET_HOST).expect("Invalid devnet URL")
+        Self::new(DEVNET_HOST).expect("cannot build devnet client")
     }
 
     /// Create a new GraphQL client connected to a `localnet` GraphQL server:

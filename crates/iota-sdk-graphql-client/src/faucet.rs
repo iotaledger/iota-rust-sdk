@@ -33,6 +33,11 @@ pub enum FaucetError {
     #[error("Faucet request timed out")]
     TimedOut,
     #[error(
+        "Faucet URL scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass \
+         your own client to `with_http_client`"
+    )]
+    TlsUnavailable(String),
+    #[error(
         "Faucet service received too many requests from this IP address. Please try again later."
     )]
     TooManyRequests,
@@ -98,7 +103,13 @@ impl FaucetClient {
     /// The HTTP client is built for you, trusting the platform store plus the
     /// bundled Mozilla roots. Use [`Self::with_http_client`] to supply your
     /// own.
+    ///
+    /// An `https` URL is rejected on a build without a crypto provider, since
+    /// no request to it could succeed. See the crate README.
     pub fn new(faucet_url: &str) -> Result<Self, FaucetError> {
+        if let Some(scheme) = crate::tls::unsupported_scheme(faucet_url) {
+            return Err(FaucetError::TlsUnavailable(scheme));
+        }
         Self::with_http_client(
             faucet_url,
             crate::tls::default_http_client_builder().build()?,
@@ -110,8 +121,9 @@ impl FaucetClient {
     ///
     /// This is the way to choose your own trust anchors or TLS backend.
     ///
-    /// Note that building a `reqwest::Client` panics unless a rustls crypto
-    /// provider has been installed for the process. See the crate README.
+    /// Note that on a build with `tls-ring` or `tls-aws-lc`, `reqwest` has no
+    /// crypto provider to fall back on, so building a `reqwest::Client` panics
+    /// unless one has been installed for the process. See the crate README.
     pub fn with_http_client(
         faucet_url: &str,
         client: reqwest::Client,
