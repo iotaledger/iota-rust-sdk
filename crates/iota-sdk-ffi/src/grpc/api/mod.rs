@@ -14,6 +14,7 @@
 
 use iota_sdk::grpc_types::field_mask_normalize;
 
+pub mod execution;
 pub mod ledger;
 pub mod move_package;
 pub mod state;
