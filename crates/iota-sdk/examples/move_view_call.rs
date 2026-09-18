@@ -4,7 +4,7 @@
 use std::str::FromStr;
 
 use eyre::Result;
-use iota_sdk::{graphql_client::Client, types::ObjectId};
+use iota_sdk::{graphql_client::GraphQLClient, types::ObjectId};
 
 /// The `view_demo` package published on testnet.
 const PACKAGE: &str = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4";
@@ -13,7 +13,7 @@ const SHOP: &str = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     // ===========================================================================
     // Example 1: Using move_view_call() with typed arguments (primitives)

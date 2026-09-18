@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //! Implementation of the transaction builder client traits for the GraphQL
-//! [`Client`].
+//! [`GraphQLClient`].
 
 use iota_transaction_builder::{
     ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClientBase,
@@ -15,23 +15,23 @@ use iota_types::{
 };
 
 use crate::{
-    Client, DryRunResult,
+    DryRunResult, GraphQLClient,
     pagination::{Direction, PaginationFilter},
     query_types::ObjectFilter,
 };
 
-impl Client {
+impl GraphQLClient {
     /// Create a new [`TransactionBuilder`] with the given sender address.
     pub fn transaction_builder(&self, sender: Address) -> TransactionBuilder<&Self> {
         TransactionBuilder::new(sender).with_client(self)
     }
 }
 
-impl TransactionBuilderClientBase for Client {
+impl TransactionBuilderClientBase for GraphQLClient {
     type Error = crate::error::Error;
 }
 
-impl TransactionBuilderLedgerClient for Client {
+impl TransactionBuilderLedgerClient for GraphQLClient {
     async fn object(
         &self,
         object_id: ObjectId,
@@ -51,10 +51,7 @@ impl TransactionBuilderLedgerClient for Client {
         // Vec<u8> is lossless. Caller-supplied cursors must come from a
         // prior call to this method; anything else is rejected here
         // rather than panicked on.
-        let cursor = cursor
-            .map(String::from_utf8)
-            .transpose()
-            .map_err(|e| crate::error::Error::from_error(crate::error::Kind::Parse, e))?;
+        let cursor = cursor.map(String::from_utf8).transpose()?;
         let page = self
             .objects(
                 ObjectFilter {
@@ -79,7 +76,7 @@ impl TransactionBuilderLedgerClient for Client {
     }
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
-        let cfg = crate::Client::protocol_config(self, None).await?;
+        let cfg = crate::GraphQLClient::protocol_config(self, None).await?;
         let attributes = cfg
             .configs
             .into_iter()
@@ -96,7 +93,7 @@ impl TransactionBuilderLedgerClient for Client {
     }
 }
 
-impl TransactionBuilderSimulationClient for Client {
+impl TransactionBuilderSimulationClient for GraphQLClient {
     type DryRunResult = DryRunResult;
 
     async fn estimate_transaction_budget(
@@ -121,7 +118,7 @@ impl TransactionBuilderSimulationClient for Client {
     }
 }
 
-impl TransactionBuilderExecutionClient for Client {
+impl TransactionBuilderExecutionClient for GraphQLClient {
     async fn execute_transaction(
         &self,
         signatures: &[UserSignature],

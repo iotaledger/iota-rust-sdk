@@ -5,7 +5,7 @@
 
 use std::sync::Arc;
 
-use iota_sdk::{graphql_client::Client, transaction_builder::MoveViewCallClient};
+use iota_sdk::transaction_builder::MoveViewCallClient;
 
 use crate::{
     graphql::client::GraphQLClient,
@@ -28,7 +28,7 @@ impl GraphQLClient {
 }
 
 impl MoveViewCallClient for GraphQLClient {
-    type Error = <Client as MoveViewCallClient>::Error;
+    type Error = <iota_sdk::graphql_client::GraphQLClient as MoveViewCallClient>::Error;
 
     async fn move_view_call(
         &self,

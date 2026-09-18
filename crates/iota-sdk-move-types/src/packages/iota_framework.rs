@@ -10,6 +10,11 @@ pub mod object {
     use iota_types::ObjectId;
 
     /// Rust version of the Move `iota::object::ID` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "serde", serde(transparent))]
@@ -47,6 +52,11 @@ pub mod object {
     }
 
     /// Rust version of the Move `iota::object::UID` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -94,6 +104,10 @@ pub mod iota {
     /// wire format (1 byte, always `false`).
     // The MoveShape derive lets `Balance<IOTA>` references in mirrors like
     // `Kiosk` resolve `<IOTA as MoveShape>::NAME` at macro time.
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -141,6 +155,11 @@ pub mod system_admin_cap {
     /// Capability allowing the bearer to perform privileged IOTA system
     /// operations. The Move struct is empty; the Rust mirror carries a
     /// `dummy_field` to preserve the BCS wire format.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -235,6 +254,11 @@ pub mod bag {
     /// A heterogeneous map-like collection. Keys and values are stored as
     /// dynamic fields off the bag's UID; the struct itself just carries the
     /// handle and an entry count.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -496,6 +520,11 @@ pub mod url {
     /// A standard URL string. The Move type stores ASCII bytes only; this
     /// Rust mirror does **not** enforce that invariant on construction. Use
     /// [`Url::try_from_ascii`] for a validating constructor.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -671,6 +700,11 @@ pub mod versioned {
     /// A wrapper that supports versioning of an inner type stored as a
     /// dynamic field keyed by `version`. Consumers load the inner object
     /// using the type corresponding to the current `version`.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -693,6 +727,11 @@ pub mod versioned {
     ///
     /// A hot-potato object generated when the inner dynamic field is taken
     /// out, ensuring a new value is always put back.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -721,6 +760,11 @@ pub mod bcs {
     ///
     /// A helper struct used by the Move-side BCS deserializer; stores
     /// reversed bytes so `vector::pop_back` can be used efficiently.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -748,6 +792,11 @@ pub mod clock {
     /// Singleton shared object at `0x6` that exposes the current time to
     /// Move calls. Entry functions can only accept it by immutable
     /// reference.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -789,6 +838,11 @@ pub mod tx_context {
     /// Information about the transaction currently being executed. Not
     /// constructible from user code — created by the VM and passed to the
     /// transaction entrypoint as `&mut TxContext`.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -817,6 +871,11 @@ pub mod intent {
     ///
     /// Compact 3-byte struct prepended to a message before signing as a
     /// domain separator.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Copy, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -847,6 +906,10 @@ pub mod ecdsa_k1 {
     // The Move-side `KeyPair` struct is `#[test_only]`, so it's absent
     // from the compiled package and cannot participate in the
     // `move_shape_compare` cross-check. No `MoveShape` derive here.
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -868,6 +931,11 @@ pub mod zklogin_verified_id {
     ///
     /// Possession proves that the user's address was created using zkLogin
     /// with the given parameters.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -899,6 +967,11 @@ pub mod zklogin_verified_issuer {
 
     /// Rust version of the Move
     /// `iota::zklogin_verified_issuer::VerifiedIssuer` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1033,6 +1106,11 @@ pub mod borrow {
     /// A hot potato making sure the object is put back once borrowed. The
     /// Move field name `ref` is a Rust keyword, so it is stored on the
     /// raw identifier `r#ref`.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1050,6 +1128,11 @@ pub mod borrow {
     /// The Move-side `Test` struct is `#[test_only]`, so it doesn't ship
     /// in the compiled package and can't participate in the
     /// `move_shape_compare` cross-check. No `MoveShape` derive here.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1248,6 +1331,11 @@ pub mod object_bag {
     use super::object::UID;
 
     /// Rust version of the Move `iota::object_bag::ObjectBag` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1331,6 +1419,11 @@ pub mod authenticator_state {
 
     /// Rust version of the Move
     /// `iota::authenticator_state::AuthenticatorState` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1345,6 +1438,11 @@ pub mod authenticator_state {
 
     /// Rust version of the Move
     /// `iota::authenticator_state::AuthenticatorStateInner` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1361,6 +1459,11 @@ pub mod authenticator_state {
     /// Rust version of the Move `iota::authenticator_state::JWK` type.
     ///
     /// Must match the `JWK` struct in fastcrypto-zkp.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1378,6 +1481,11 @@ pub mod authenticator_state {
     /// Rust version of the Move `iota::authenticator_state::JwkId` type.
     ///
     /// Must match the `JwkId` struct in fastcrypto-zkp.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1392,6 +1500,11 @@ pub mod authenticator_state {
 
     /// Rust version of the Move `iota::authenticator_state::ActiveJwk`
     /// type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1520,6 +1633,11 @@ pub mod package {
     /// Can only be created in the transaction that creates a module, by
     /// consuming its one-time witness, so it can be used to identify the
     /// publishing address.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1547,6 +1665,11 @@ pub mod package {
     /// Rust version of the Move `iota::package::UpgradeCap` type.
     ///
     /// Capability controlling the ability to upgrade a package.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1580,6 +1703,11 @@ pub mod package {
     ///
     /// Permission to perform a particular upgrade. An `UpgradeCap` can
     /// only issue one ticket at a time — the ticket is a hot potato.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1601,6 +1729,11 @@ pub mod package {
     /// Issued as a result of a successful upgrade, containing info to be
     /// used to update the `UpgradeCap`. A hot potato to ensure that the
     /// upgrade is recorded before the transaction ends.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1620,6 +1753,11 @@ pub mod package {
 /// `dummy_field` to preserve the BCS wire format (1 byte).
 pub mod bls12381 {
     /// Rust version of the Move `iota::bls12381::Scalar` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1632,6 +1770,11 @@ pub mod bls12381 {
     }
 
     /// Rust version of the Move `iota::bls12381::G1` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1644,6 +1787,11 @@ pub mod bls12381 {
     }
 
     /// Rust version of the Move `iota::bls12381::G2` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1656,6 +1804,11 @@ pub mod bls12381 {
     }
 
     /// Rust version of the Move `iota::bls12381::GT` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1668,6 +1821,11 @@ pub mod bls12381 {
     }
 
     /// Rust version of the Move `iota::bls12381::UncompressedG1` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1686,6 +1844,11 @@ pub mod groth16 {
     ///
     /// Represents an elliptic-curve construction to be used in the
     /// verifier. Currently BLS12-381 and BN254 are supported.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Copy, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1698,6 +1861,11 @@ pub mod groth16 {
     }
 
     /// Rust version of the Move `iota::groth16::PreparedVerifyingKey` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1713,6 +1881,11 @@ pub mod groth16 {
     }
 
     /// Rust version of the Move `iota::groth16::PublicProofInputs` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1725,6 +1898,11 @@ pub mod groth16 {
     }
 
     /// Rust version of the Move `iota::groth16::ProofPoints` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1856,6 +2034,11 @@ pub mod account {
     /// Dynamic-field key used to locate a potential authenticate function.
     /// The Move struct is empty; the Rust mirror carries a `dummy_field`
     /// to preserve the BCS wire format.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -1998,6 +2181,11 @@ pub mod coin_manager {
     }
 
     /// Rust version of the Move `iota::coin_manager::CoinManaged` event.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2011,6 +2199,11 @@ pub mod coin_manager {
 
     /// Rust version of the Move
     /// `iota::coin_manager::TreasuryOwnershipRenounced` event.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2024,6 +2217,11 @@ pub mod coin_manager {
 
     /// Rust version of the Move
     /// `iota::coin_manager::MetadataOwnershipRenounced` event.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2218,6 +2416,11 @@ pub mod test_scenario {
     ///
     /// Mocks a multi-transaction IOTA execution in a single Move test
     /// procedure.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2227,6 +2430,11 @@ pub mod test_scenario {
     }
 
     /// Rust version of the Move `iota::test_scenario::TxContextBuilder` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2269,6 +2477,11 @@ pub mod module_metadata {
     /// [`PackageMetadataV1`](super::package_metadata::PackageMetadataV1)
     /// object. Like the other dynamic-field containers, the mirror carries
     /// only the handle and an entry count.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2290,6 +2503,11 @@ pub mod module_metadata {
     ///
     /// Key used to derive the address of a [`ModuleMetadata`] object from
     /// the owning package ID and the module name.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2305,6 +2523,11 @@ pub mod module_metadata {
     /// Dynamic-field key for the list of view function names of the module.
     /// The Move struct is empty; the Rust mirror carries a `dummy_field` to
     /// preserve the BCS wire format.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2330,6 +2553,11 @@ pub mod package_metadata {
     ///
     /// Key type for deriving the package metadata object address. Empty in
     /// Move; the Rust mirror carries a `dummy_field` for BCS shape.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2346,6 +2574,11 @@ pub mod package_metadata {
     ///
     /// Dynamic-field key for the package metadata version. Empty in Move;
     /// the Rust mirror carries a `dummy_field` for BCS shape.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2362,6 +2595,11 @@ pub mod package_metadata {
     ///
     /// Dynamic-field key for a module's [`ModuleMetadataV1`]. Empty in Move;
     /// the Rust mirror carries a `dummy_field` for BCS shape.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2379,6 +2617,11 @@ pub mod package_metadata {
     /// Dynamic-field key for the map from module names to
     /// [`ModuleMetadata`](super::module_metadata::ModuleMetadata) objects.
     /// Empty in Move; the Rust mirror carries a `dummy_field` for BCS shape.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2391,6 +2634,11 @@ pub mod package_metadata {
     }
 
     /// Rust version of the Move `iota::package_metadata::ModuleName` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2433,6 +2681,11 @@ pub mod package_metadata {
     /// V1 includes only the authenticator function information. Deprecated
     /// upstream in favor of
     /// [`ModuleMetadata`](super::module_metadata::ModuleMetadata).
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2446,6 +2699,11 @@ pub mod package_metadata {
 
     /// Rust version of the Move
     /// `iota::package_metadata::AuthenticatorMetadataV1` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2471,6 +2729,11 @@ pub mod deny_list {
     /// Rust version of the Move `iota::deny_list::DenyList` type.
     ///
     /// Shared object storing addresses blocked for a given core type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2492,6 +2755,11 @@ pub mod deny_list {
     /// the compiler injects a `dummy_field: bool` into the bytecode, so
     /// the Rust mirror carries the same named field to preserve the BCS
     /// wire format.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2504,6 +2772,11 @@ pub mod deny_list {
     }
 
     /// Rust version of the Move `iota::deny_list::ConfigKey` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2517,6 +2790,11 @@ pub mod deny_list {
     }
 
     /// Rust version of the Move `iota::deny_list::AddressKey` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2530,6 +2808,11 @@ pub mod deny_list {
     ///
     /// Move's source declares `GlobalPauseKey()` (positional empty) but
     /// the compiler injects a `dummy_field: bool` into the bytecode.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2543,6 +2826,11 @@ pub mod deny_list {
 
     /// Rust version of the Move `iota::deny_list::PerTypeConfigCreated`
     /// event.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2571,6 +2859,11 @@ pub mod transaction_deny_rules {
     ///
     /// Singleton shared object storing the active transaction deny rules.
     /// The actual state lives in a versioned inner field.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2625,6 +2918,11 @@ pub mod transaction_deny_rules {
     ///
     /// Emitted on every update; the event stream is the audit history of
     /// the network's deny rules.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2673,6 +2971,11 @@ pub mod random {
     ///
     /// Singleton shared object storing the global randomness state. The
     /// actual state lives in a versioned inner field.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2688,6 +2991,11 @@ pub mod random {
     impl_try_from_object!(Random);
 
     /// Rust version of the Move `iota::random::RandomInner` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2705,6 +3013,11 @@ pub mod random {
     /// Rust version of the Move `iota::random::RandomGenerator` type.
     ///
     /// Unique randomness generator derived from the global randomness.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2998,6 +3311,11 @@ pub mod auth_context {
     ///
     /// Identifies the `authenticate` function used by a `MoveAuthenticator`
     /// signature, without binding to a specific account type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -3057,6 +3375,11 @@ pub mod kiosk {
     impl_try_from_object!(Kiosk);
 
     /// Rust version of the Move `iota::kiosk::KioskOwnerCap` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -3115,6 +3438,11 @@ pub mod kiosk {
     /// Hot potato ensuring an item was returned after being taken with
     /// `borrow_val`. Schema named `kiosk-borrow` to disambiguate from
     /// [`super::borrow::Borrow`].
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -3134,6 +3462,11 @@ pub mod kiosk {
     /// Rust version of the Move `iota::kiosk::Item` type.
     ///
     /// Dynamic-field key for an item placed into the kiosk.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -3146,6 +3479,11 @@ pub mod kiosk {
     }
 
     /// Rust version of the Move `iota::kiosk::Listing` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -3159,6 +3497,11 @@ pub mod kiosk {
     }
 
     /// Rust version of the Move `iota::kiosk::Lock` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -3257,6 +3600,11 @@ pub mod kiosk_extension {
     ///
     /// Configuration and storage for a kiosk extension; stored under the
     /// [`ExtensionKey`] dynamic field.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]

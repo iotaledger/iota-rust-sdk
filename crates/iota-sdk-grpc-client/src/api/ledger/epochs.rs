@@ -10,11 +10,11 @@ use iota_grpc_types::{
 };
 
 use crate::{
-    Client,
-    api::{MetadataEnvelope, Result, TryFromProtoError},
+    GrpcClient,
+    api::{GrpcResult, MetadataEnvelope, TryFromProtoError},
 };
 
-impl Client {
+impl GrpcClient {
     /// Get epoch information.
     ///
     /// Returns the [`Epoch`] proto type with fields populated according to the
@@ -37,10 +37,10 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::{EpochField, EpochReadMask};
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     ///
     /// // Current epoch with the default mask.
     /// let epoch = client.epoch(None, EpochReadMask::default()).await?;
@@ -90,7 +90,7 @@ impl Client {
         &self,
         epoch: impl Into<Option<u64>>,
         read_mask: impl IntoReadMask<EpochReadMask>,
-    ) -> Result<MetadataEnvelope<Epoch>> {
+    ) -> GrpcResult<MetadataEnvelope<Epoch>> {
         let read_mask = read_mask.into_read_mask();
         let mut request = GetEpochRequest::default().with_read_mask(read_mask);
 
@@ -112,15 +112,15 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let gas_price = client.reference_gas_price().await?.into_inner();
     /// println!("Reference gas price: {gas_price} NANOS");
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn reference_gas_price(&self) -> Result<MetadataEnvelope<u64>> {
+    pub async fn reference_gas_price(&self) -> GrpcResult<MetadataEnvelope<u64>> {
         self.epoch_field("reference_gas_price", |e| e.reference_gas_price)
             .await
     }
@@ -130,7 +130,7 @@ impl Client {
         &self,
         field: &str,
         extractor: impl FnOnce(Epoch) -> Option<T>,
-    ) -> Result<MetadataEnvelope<T>> {
+    ) -> GrpcResult<MetadataEnvelope<T>> {
         // Current epoch (no epoch field set)
         let request = GetEpochRequest::default().with_read_mask(FieldMask {
             paths: vec![field.to_string()],

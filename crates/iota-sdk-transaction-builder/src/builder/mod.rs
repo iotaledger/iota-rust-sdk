@@ -29,8 +29,8 @@ use crate::{
     error::TransactionBuilderError,
     types::{MoveType, MoveTypes},
     unresolved::{
-        Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, MoveCall,
-        Publish, SplitCoins, TransferObjects, Upgrade,
+        Argument, Command, DivideCoin, Input, InputId, InputKind, MakeMoveVector, MergeCoins,
+        MoveCall, Publish, SplitCoins, TransferObjects, Upgrade,
     },
 };
 
@@ -89,6 +89,10 @@ pub struct TransactionBuildData {
     assigned_results: HashMap<String, Argument>,
     /// The data used for gas station sponsorship.
     gas_station_data: Option<GasStationData>,
+    /// The index of the command the builder's type state refers to. Set when
+    /// a command is entered, and left alone by any command added afterwards,
+    /// so that the state's methods keep addressing their own command.
+    state_command: Option<u16>,
 }
 
 impl TransactionBuildData {
@@ -272,9 +276,21 @@ impl TransactionBuildData {
         Argument::Result(i as u16)
     }
 
+    /// Add a new command and make it the one the builder state refers to.
+    fn enter_command(&mut self, command: Command) -> Argument {
+        self.state_command = Some(self.commands.len() as u16);
+        self.command(command)
+    }
+
+    /// The index of the command the builder state refers to.
+    fn state_command(&self) -> u16 {
+        self.state_command
+            .expect("a command state is only reachable once a command was added")
+    }
+
     /// Manually set a command with an optional name
     pub fn assigned_command(&mut self, cmd: Command, name: impl AssignedResults) {
-        self.command(cmd);
+        self.enter_command(cmd);
         name.push_assigned_results(self);
     }
 
@@ -298,6 +314,7 @@ impl TransactionBuilder {
                 expiration: Default::default(),
                 assigned_results: Default::default(),
                 gas_station_data: Default::default(),
+                state_command: Default::default(),
             },
             client: (),
             last_command: PhantomData,
@@ -358,6 +375,7 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
                 expiration: Default::default(),
                 assigned_results: Default::default(),
                 gas_station_data: Default::default(),
+                state_command: Default::default(),
             },
             client: (),
             last_command: PhantomData,
@@ -449,7 +467,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     fn cmd_state_change<U: Into<Command>>(&mut self, command: U) -> &mut TransactionBuilder<C, U> {
-        self.command(command.into());
+        self.data.enter_command(command.into());
         self.state_change()
     }
 
@@ -983,6 +1001,63 @@ impl<C, L> TransactionBuilder<C, L> {
         let coin = self.apply_argument(coin);
         let amounts = self.apply_arguments(split_amounts);
         self.cmd_state_change(SplitCoins { coin, amounts })
+    }
+
+    /// Divide a coin into `count` coins of equal value, all kept by the
+    /// sender.
+    ///
+    /// Unlike [`split_coins`](Self::split_coins), the new coins are
+    /// transferred to the sender by `0x2::pay::divide_and_keep` itself, so no
+    /// transfer command is needed for them. In exchange they are not
+    /// available as command results and cannot be used by later commands in
+    /// the same transaction.
+    ///
+    /// The coin is taken to be an IOTA coin. For any other coin type, set it
+    /// on the returned builder with
+    /// [`coin_type`](TransactionBuilder::coin_type) or
+    /// [`coin_type_tag`](TransactionBuilder::coin_type_tag).
+    ///
+    /// `count - 1` new coins are created, each holding `value / count`, and
+    /// the divided coin keeps its own share plus the remainder of the
+    /// division. The transaction aborts if `count` is zero or larger than the
+    /// coin's value.
+    ///
+    /// The coin is passed by reference, so the gas coin
+    /// ([`unresolved::Argument::Gas`](Argument::Gas)) can be divided as well,
+    /// as long as it retains enough balance to pay for the transaction.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let coin =
+    ///     ObjectId::from_hex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// // Two new coins of a third of the balance each, plus the remainder
+    /// // left in `coin` — all owned by the sender once executed.
+    /// builder.divide_coin(coin, 3);
+    /// let txn = builder.finish().await?;
+    /// #    Ok(())
+    /// # }
+    /// ```
+    pub fn divide_coin<T: PTBArgument>(
+        &mut self,
+        coin: T,
+        count: u64,
+    ) -> &mut TransactionBuilder<C, DivideCoin> {
+        self.move_call(Address::FRAMEWORK, "pay", "divide_and_keep")
+            .arguments((coin, count))
+            .type_tags([StructTag::new_gas().into()])
+            .state_change()
     }
 
     /// Publish a move package.
@@ -1956,13 +2031,19 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
 }
 
 impl<C> TransactionBuilder<C, MoveCall> {
+    /// The move call this builder state refers to.
+    fn move_call_mut(&mut self) -> &mut MoveCall {
+        let command = self.data.state_command() as usize;
+        let Command::MoveCall(move_call) = &mut self.data.commands[command] else {
+            unreachable!("the move call state is only reachable through a move call command");
+        };
+        move_call
+    }
+
     /// Set the call params. Optional.
     pub fn arguments<U: PTBArgumentList>(&mut self, params: U) -> &mut Self {
         let args = self.apply_arguments(params);
-        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
-            unreachable!();
-        };
-        last_command.arguments = args;
+        self.move_call_mut().arguments = args;
         self
     }
 }
@@ -1970,19 +2051,13 @@ impl<C> TransactionBuilder<C, MoveCall> {
 impl<C> TransactionBuilder<C, MoveCall> {
     /// Set the generic type arguments. Optional.
     pub fn generics<G: MoveTypes>(&mut self) -> &mut Self {
-        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
-            unreachable!();
-        };
-        last_command.type_arguments = G::type_tags();
+        self.move_call_mut().type_arguments = G::type_tags();
         self
     }
 
     /// Set the type arguments manually. Optional.
     pub fn type_tags(&mut self, tags: impl IntoIterator<Item = TypeTag>) -> &mut Self {
-        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
-            unreachable!();
-        };
-        last_command.type_arguments = tags.into_iter().collect();
+        self.move_call_mut().type_arguments = tags.into_iter().collect();
         self
     }
 }
@@ -2007,15 +2082,16 @@ impl<C> TransactionBuilder<C, Publish> {
 }
 
 impl<C, L: Into<Command>> TransactionBuilder<C, L> {
-    /// Assign a name to the last command's result.
+    /// Assign a name to the result of the command this builder state refers
+    /// to.
     pub fn assign(&mut self, name: impl AssignedResults) -> &mut Self {
         name.push_assigned_results(&mut self.data);
         self
     }
 
-    /// Get the argument representing the last command.
+    /// Get the argument representing the command this builder state refers to.
     pub fn result(&mut self) -> Argument {
-        Argument::Result((self.data.commands.len() - 1) as _)
+        Argument::Result(self.data.state_command())
     }
 }
 
@@ -2041,11 +2117,93 @@ impl<C> TransactionBuilder<C, GasStationData> {
     }
 }
 
+impl<C> TransactionBuilder<C, DivideCoin> {
+    /// Set the type of the coin being divided: the `T` of
+    /// `0x2::coin::Coin<T>`, not the coin type itself.
+    ///
+    /// Use [`coin_type_tag`](Self::coin_type_tag) for a type only known at
+    /// runtime.
+    pub fn coin_type<G: MoveType>(&mut self) -> &mut TransactionBuilder<C> {
+        self.state_change::<MoveCall>().generics::<G>().reset()
+    }
+
+    /// Set the type of the coin being divided from a [`TypeTag`]: the `T` of
+    /// `0x2::coin::Coin<T>`, not the coin type itself.
+    pub fn coin_type_tag(&mut self, type_tag: TypeTag) -> &mut TransactionBuilder<C> {
+        self.state_change::<MoveCall>()
+            .type_tags([type_tag])
+            .reset()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use iota_types::{ObjectDigest, Version};
 
     use super::*;
+
+    /// `divide_coin` calls for IOTA unless a coin type is set on it.
+    #[test]
+    fn divide_coin_defaults_to_iota() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let coin = ObjectId::new([1; 32]);
+        let other_coin_type = StructTag::new(
+            Address::FRAMEWORK,
+            Identifier::new("cert").unwrap(),
+            Identifier::new("CERT").unwrap(),
+            Vec::new(),
+        );
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.divide_coin(coin, 3);
+        builder
+            .divide_coin(coin, 3)
+            .coin_type_tag(other_coin_type.clone().into());
+
+        let [iota_call, overridden] = builder
+            .data
+            .commands
+            .iter()
+            .map(|command| match command {
+                Command::MoveCall(move_call) => move_call.type_arguments.as_slice(),
+                _ => panic!("expected two move calls"),
+            })
+            .collect::<Vec<_>>()[..]
+        else {
+            panic!("expected two commands");
+        };
+        assert_eq!(iota_call, [TypeTag::Struct(Box::new(StructTag::new_gas()))]);
+        assert_eq!(overridden, [TypeTag::Struct(Box::new(other_coin_type))]);
+    }
+
+    /// A command state addresses the command it was entered with, even when
+    /// another command is added before the state's setters are called.
+    #[test]
+    fn state_setters_target_their_own_command() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+
+        let mut builder = TransactionBuilder::new(sender);
+        let call = builder.move_call(Address::FRAMEWORK, "pay", "divide_and_keep");
+        // Added while the move call state is still held, so it, not the move
+        // call, is the last command from here on.
+        call.transfer_objects(sender, [ObjectId::new([1; 32])]);
+        call.generics::<u64>().assign("divided");
+
+        let [Command::MoveCall(move_call), Command::TransferObjects(_)] =
+            &builder.data.commands[..]
+        else {
+            panic!("expected a move call followed by a transfer");
+        };
+        assert_eq!(move_call.type_arguments, vec![TypeTag::U64]);
+        assert!(matches!(
+            builder.data.assigned_results.get("divided"),
+            Some(Argument::Result(0))
+        ));
+    }
 
     /// Verify that `TryFrom<Transaction>` preserves input ordering: non-gas
     /// inputs occupy `BTreeMap` keys `0..n` matching their original positions,

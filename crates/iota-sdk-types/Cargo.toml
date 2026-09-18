@@ -56,7 +56,7 @@ paste.workspace = true
 proptest = { workspace = true, features = ["std"], optional = true }
 # RNG support
 rand_core = { workspace = true, optional = true }
-roaring.workspace = true
+roaring = { version = "0.11.2", default-features = false }
 serde = { workspace = true, features = ["derive"], optional = true }
 serde_json = { workspace = true, optional = true }
 serde_repr = { version = "0.1", optional = true }

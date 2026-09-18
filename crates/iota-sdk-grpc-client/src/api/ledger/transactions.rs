@@ -13,14 +13,14 @@ use iota_grpc_types::{
 use iota_types::TransactionDigest;
 
 use crate::{
-    Client,
+    GrpcClient,
     api::{
-        Error, MetadataEnvelope, Result, check_result_count, check_transaction_identity,
+        GrpcError, GrpcResult, MetadataEnvelope, check_result_count, check_transaction_identity,
         collect_stream, into_item_results, saturating_usize_to_u32,
     },
 };
 
-impl Client {
+impl GrpcClient {
     /// Get transactions by their digests.
     ///
     /// Returns proto `ExecutedTransaction` for each transaction. Use the lazy
@@ -38,14 +38,14 @@ impl Client {
     ///
     /// # Errors
     ///
-    /// Returns [`Error::EmptyRequest`] if `digests` is empty.
+    /// Returns [`GrpcError::EmptyRequest`] if `digests` is empty.
     ///
     /// Each digest gets its own result: a transaction the node does not have
-    /// (never executed, or pruned) yields [`Error::Server`] with code
+    /// (never executed, or pruned) yields [`GrpcError::Server`] with code
     /// `NOT_FOUND` in that slot only, leaving the other transactions intact. A
     /// slot can also carry `FAILED_PRECONDITION` when the transaction itself is
     /// present but an object a requested field needs is gone, as described
-    /// under Read Mask below. The outer `Result` is reserved for failures
+    /// under Read Mask below. The outer `GrpcResult` is reserved for failures
     /// of the call itself, such as a transport error, and for a server that
     /// answered with a different number of results than digests requested
     /// ([`UnexpectedResultCount`]), which leaves no way to tell which digest
@@ -73,16 +73,16 @@ impl Client {
     /// pruned, the transaction's result is a `FAILED_PRECONDITION` error
     /// instead of a silently incomplete answer — narrow the read mask, or
     /// fetch objects individually via
-    /// [`objects`](Client::objects) for best-effort retrieval.
+    /// [`objects`](GrpcClient::objects) for best-effort retrieval.
     ///
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::{TransactionField, TransactionReadMask};
     /// # use iota_types::TransactionDigest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let digest: TransactionDigest = TransactionDigest::ZERO;
     ///
     /// // Default mask
@@ -123,10 +123,10 @@ impl Client {
         &self,
         digests: impl IntoIterator<Item = TransactionDigest>,
         read_mask: impl IntoReadMask<TransactionReadMask>,
-    ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ExecutedTransaction>>>> {
         let digests = digests.into_iter().collect::<Vec<_>>();
         if digests.is_empty() {
-            return Err(Error::EmptyRequest);
+            return Err(GrpcError::EmptyRequest);
         }
 
         let requests = TransactionRequests::default().with_requests(

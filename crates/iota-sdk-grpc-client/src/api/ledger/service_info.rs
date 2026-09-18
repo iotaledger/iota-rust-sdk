@@ -9,11 +9,11 @@ use iota_grpc_types::{
 };
 
 use crate::{
-    Client,
-    api::{MetadataEnvelope, Result},
+    GrpcClient,
+    api::{GrpcResult, MetadataEnvelope},
 };
 
-impl Client {
+impl GrpcClient {
     /// Get service info from the node.
     ///
     /// Returns the [`GetServiceInfoResponse`] proto type with fields populated
@@ -27,10 +27,10 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::{ServiceInfoField, ServiceInfoReadMask};
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     ///
     /// let info = client.service_info(ServiceInfoReadMask::default()).await?;
     /// println!("Chain ID: {:?}", info.body().chain_id);
@@ -49,7 +49,7 @@ impl Client {
     pub async fn service_info(
         &self,
         read_mask: impl IntoReadMask<ServiceInfoReadMask>,
-    ) -> Result<MetadataEnvelope<GetServiceInfoResponse>> {
+    ) -> GrpcResult<MetadataEnvelope<GetServiceInfoResponse>> {
         let read_mask = read_mask.into_read_mask();
         let request = GetServiceInfoRequest::default().with_read_mask(read_mask);
 

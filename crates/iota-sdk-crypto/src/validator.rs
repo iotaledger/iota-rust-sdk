@@ -176,11 +176,11 @@ impl Verifier<ValidatorAggregatedSignature> for ValidatorCommitteeSignatureVerif
         }
 
         let mut signed_weight = 0;
-        let mut bitmap = signature.bitmap.iter();
+        let mut signer_indices = signature.signer_indices();
 
         let mut aggregated_public_key = {
-            let idx = bitmap.next().ok_or_else(|| {
-                SignatureError::from_source("signature bitmap must have at least one entry")
+            let idx = signer_indices.next().ok_or_else(|| {
+                SignatureError::from_source("signer indices must have at least one entry")
             })?;
 
             let member = self.committee.member_by_idx(idx as usize)?;
@@ -189,7 +189,7 @@ impl Verifier<ValidatorAggregatedSignature> for ValidatorCommitteeSignatureVerif
             AggregatePublicKey::from_public_key(&member.verifying_key.0)
         };
 
-        for idx in bitmap {
+        for idx in signer_indices {
             let member = self.committee.member_by_idx(idx as usize)?;
 
             signed_weight += member.weight;
@@ -403,17 +403,16 @@ impl ValidatorCommitteeSignatureAggregator {
             SignatureError::from_source("signature map must have at least one entry")
         })?;
 
-        let mut bitmap = roaring::RoaringBitmap::new();
-        bitmap.insert(*member_idx as u32);
+        let signers = vec![*member_idx as u32];
         let agg_sig = AggregateSignature::from_signature(
             &Signature::from_bytes(signature.signature.bytes())
                 .expect("signature was already verified"),
         );
 
-        let (agg_sig, bitmap) = iter.fold(
-            (agg_sig, bitmap),
-            |(mut agg_sig, mut bitmap), (member_idx, signature)| {
-                bitmap.insert(*member_idx as u32);
+        let (agg_sig, signers) = iter.fold(
+            (agg_sig, signers),
+            |(mut agg_sig, mut signers), (member_idx, signature)| {
+                signers.push(*member_idx as u32);
                 agg_sig
                     .add_signature(
                         &Signature::from_bytes(signature.signature.bytes())
@@ -421,15 +420,15 @@ impl ValidatorCommitteeSignatureAggregator {
                         false,
                     )
                     .expect("signature was already verified");
-                (agg_sig, bitmap)
+                (agg_sig, signers)
             },
         );
 
-        let aggregated_signature = ValidatorAggregatedSignature {
-            epoch: self.verifier.committee().epoch,
-            signature: Bls12381Signature::new(agg_sig.to_signature().to_bytes()),
-            bitmap,
-        };
+        let aggregated_signature = ValidatorAggregatedSignature::new(
+            self.verifier.committee().epoch,
+            Bls12381Signature::new(agg_sig.to_signature().to_bytes()),
+            signers,
+        );
 
         // Double check that the aggregated sig still verifies
         self.verifier.verify(&self.message, &aggregated_signature)?;
@@ -741,15 +740,9 @@ mod tests {
         let checkpoint = close_epoch(summary, 0, &next);
         // One of four equal stakes: weight 1 against a threshold of 3.
         let lone = keys[0].sign_checkpoint_summary(&checkpoint);
-        let mut bitmap = roaring::RoaringBitmap::new();
-        bitmap.insert(0);
         let signed = SignedCheckpointSummary {
             checkpoint,
-            signature: ValidatorAggregatedSignature {
-                epoch: lone.epoch,
-                signature: lone.signature,
-                bitmap,
-            },
+            signature: ValidatorAggregatedSignature::new(lone.epoch, lone.signature, [0]),
         };
 
         let err = verifier.verify_epoch_close(&signed).unwrap_err();

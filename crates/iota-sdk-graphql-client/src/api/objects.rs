@@ -10,14 +10,14 @@ use futures::Stream;
 use iota_types::{Object, ObjectId, Version};
 
 use crate::{
-    Client,
+    GraphQLClient,
     error::Result,
     pagination::{Direction, Page, PaginationFilter},
     query_types::{ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs},
     streams::stream_paginated_query,
 };
 
-impl Client {
+impl GraphQLClient {
     /// Return a stream of objects based on the (optional) object filter.
     pub fn objects_stream(
         &self,
