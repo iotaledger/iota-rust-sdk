@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CoinRegulatedState","MetadataCapState","SupplyState"],"struct":["CoinTreasury","GrpcCoinInfo","GrpcCoinMetadata","GrpcRegulatedCoinMetadata"]};
