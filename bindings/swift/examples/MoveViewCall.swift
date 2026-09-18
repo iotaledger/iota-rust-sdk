@@ -96,5 +96,23 @@ struct MoveViewCallExample {
     } else {
       print("No shop JSON results")
     }
+
+    // ===========================================================================
+    // Example 5: Using moveViewCallBuilder() to assemble the call
+    // ===========================================================================
+    print()
+    print("=== Example 5: moveViewCallBuilder() ===")
+    print()
+
+    let packageId = try ObjectId.fromHex(hex: package)
+
+    let builder = client.moveViewCallBuilder(
+      package: packageId, module: "shop", function: "sale_at"
+    ).arguments(arguments: [
+      MoveViewArg.objectId(value: objectId),
+      MoveViewArg.u64(value: 1),
+    ])
+
+    print("Builder Results:", try await builder.execute())
   }
 }
