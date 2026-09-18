@@ -3,7 +3,7 @@
 
 //! High-level API for listing coins owned by an address.
 //!
-//! Wraps [`Client::list_owned_objects`](crate::Client::list_owned_objects)
+//! Wraps [`GrpcClient::owned_objects`](crate::GrpcClient::owned_objects)
 //! with a coin type filter and converts each returned proto `Object` into an
 //! [`iota_types::framework::Coin`].
 
@@ -17,14 +17,14 @@ use iota_grpc_types::{
 use iota_types::{Address, Identifier, StructTag, framework::Coin};
 
 use crate::{
-    Client, InterceptedChannel,
-    api::{Error, Result, TryFromProtoError, define_list_query},
+    GrpcClient, InterceptedChannel,
+    api::{GrpcError, GrpcResult, TryFromProtoError, define_list_query},
 };
 
 define_list_query! {
     /// Builder for listing coins owned by an address.
     ///
-    /// Created by [`Client::get_coins`]. Await directly for a single page
+    /// Created by [`GrpcClient::coins`]. Await directly for a single page
     /// (with access to `next_page_token`), or call
     /// [`.collect(limit)`](Self::collect) to auto-paginate.
     pub struct GetCoinsQuery {
@@ -37,12 +37,13 @@ define_list_query! {
     }
 }
 
-fn object_to_coin(obj: &iota_grpc_types::v1::object::Object) -> Result<Coin> {
+fn object_to_coin(obj: &iota_grpc_types::v1::object::Object) -> GrpcResult<Coin> {
     let sdk_obj = obj.object()?;
-    Coin::try_from_object(&sdk_obj).map_err(|e| Error::from(TryFromProtoError::invalid("coin", e)))
+    Coin::try_from_object(&sdk_obj)
+        .map_err(|e| GrpcError::from(TryFromProtoError::invalid("coin", e)))
 }
 
-impl Client {
+impl GrpcClient {
     /// List coins owned by an address.
     ///
     /// Returns a query builder. Await it directly for a single page (with
@@ -65,13 +66,13 @@ impl Client {
     ///
     /// Single page:
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
-    /// let page = client.get_coins(owner, None, None, None).await?;
+    /// let page = client.coins(owner, None, None, None).await?;
     /// for coin in &page.body().items {
     ///     println!("Coin {}: {}", coin.id(), coin.balance());
     /// }
@@ -81,14 +82,14 @@ impl Client {
     ///
     /// Auto-paginate:
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let all = client
-    ///     .get_coins(owner, None, Some(50), None)
+    ///     .coins(owner, None, Some(50), None)
     ///     .collect(Some(500))
     ///     .await?;
     /// for coin in all.body() {
@@ -97,17 +98,17 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn get_coins(
+    pub fn coins(
         &self,
         owner: Address,
         coin_type: impl Into<Option<StructTag>>,
         page_size: impl Into<Option<u32>>,
         page_token: impl Into<Option<prost::bytes::Bytes>>,
     ) -> GetCoinsQuery {
-        self.get_coins_internal(owner, coin_type.into(), page_size.into(), page_token.into())
+        self.coins_internal(owner, coin_type.into(), page_size.into(), page_token.into())
     }
 
-    fn get_coins_internal(
+    fn coins_internal(
         &self,
         owner: Address,
         coin_type: Option<StructTag>,

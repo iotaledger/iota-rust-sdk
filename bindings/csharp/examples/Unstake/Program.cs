@@ -7,10 +7,27 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
+        var client = GraphQlClient.NewLocalnet();
 
-        var owner = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
+        var privateKey = Ed25519PrivateKey.Random();
+        var owner = privateKey.PublicKey().DeriveAddress();
 
+        var faucet = FaucetClient.NewLocalnet();
+        await faucet.RequestAndWaitForFinalized(owner, client);
+
+        // Stake to get a StakedIota object that can be unstaked
+        var validators = await client.ActiveValidators();
+        if (validators.Data.Length == 0)
+        {
+            throw new Exception("no validators found");
+        }
+        var stakeBuilder = client.TransactionBuilder(owner);
+        stakeBuilder.Stake(PtbArgument.U64(1000000000), validators.Data[0].Address);
+        var stakeTx = await stakeBuilder.Finish();
+        var signature = privateKey.SignTransaction(stakeTx);
+        await client.ExecuteTransaction(new[] { signature }, stakeTx, WaitForTransaction.Finalized);
+
+        // Unstake
         var stakedIotas = await client.Objects(new ObjectFilter(TypeTag: StructTag.NewStakedIota().ToString(), Owner: owner));
         if (stakedIotas.Data.Length == 0)
         {

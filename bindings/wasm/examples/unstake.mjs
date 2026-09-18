@@ -2,22 +2,42 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-  Address,
+  Ed25519PrivateKey,
+  FaucetClient,
   GraphQlClient,
   ObjectFilter,
   PtbArgument,
   StructTag,
+  WaitForTransaction,
   initAsync,
 } from "@iota/sdk-wasm";
 
 await initAsync();
 
-const client = GraphQlClient.newTestnet();
+const client = GraphQlClient.newLocalnet();
 
-const owner = Address.fromHex(
-  "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151",
+const privateKey = Ed25519PrivateKey.random();
+const owner = privateKey.publicKey().deriveAddress();
+
+const faucet = FaucetClient.newLocalnet();
+await faucet.requestAndWaitForFinalized(owner, client);
+
+// Stake to get a StakedIota object that can be unstaked
+const validators = await client.activeValidators();
+if (validators.data.length === 0) {
+  throw new Error("no validators found");
+}
+const stakeBuilder = client.transactionBuilder(owner);
+stakeBuilder.stake(PtbArgument.u64(1000000000n), validators.data[0].address);
+const stakeTx = await stakeBuilder.finish();
+const signature = privateKey.signTransaction(stakeTx);
+await client.executeTransaction(
+  [signature],
+  stakeTx,
+  WaitForTransaction.Finalized,
 );
 
+// Unstake
 const stakedIotas = await client.objects(
   ObjectFilter.new({ typeTag: String(StructTag.newStakedIota()), owner }),
 );

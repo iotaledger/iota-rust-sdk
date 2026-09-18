@@ -38,11 +38,8 @@ pub enum IntentError {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// intent = intent-scope intent-version intent-app-id
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -153,11 +150,8 @@ impl FromStr for Intent {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// intent-scope = u8
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",
@@ -213,11 +207,8 @@ impl TryFrom<u8> for IntentScope {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// intent-version = u8
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",
@@ -253,11 +244,8 @@ impl TryFrom<u8> for IntentVersion {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// intent-app-id = u8
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",

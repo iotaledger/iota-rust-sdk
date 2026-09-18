@@ -18,6 +18,7 @@ const FAUCET_REQUEST_TIMEOUT: Duration = Duration::from_secs(120);
 const FAUCET_POLL_INTERVAL: Duration = Duration::from_secs(2);
 
 #[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
 pub enum FaucetError {
     #[error("Cannot fetch request status due to a bad gateway.")]
     BadGateway,
@@ -221,17 +222,13 @@ impl FaucetClient {
     ///
     /// This is a convenience method that combines `request_and_wait` and
     /// waiting for the funding transactions to be finalized using the provided
-    /// GraphQL `Client`.
+    /// GraphQL `GraphQLClient`.
     pub async fn request_and_wait_for_finalized(
         &self,
         address: Address,
-        client: &crate::Client,
-    ) -> Result<Option<FaucetReceipt>, crate::error::Error> {
-        let Some(receipt) = self
-            .request_and_wait(address)
-            .await
-            .map_err(|e| crate::error::Error::from_error(crate::error::Kind::Other, e))?
-        else {
+        client: &crate::GraphQLClient,
+    ) -> Result<Option<FaucetReceipt>, crate::error::GraphQLError> {
+        let Some(receipt) = self.request_and_wait(address).await? else {
             return Ok(None);
         };
 

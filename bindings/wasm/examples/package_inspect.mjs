@@ -125,7 +125,7 @@ function extractPolicy(contents) {
 
 async function resolveUpgradeCapId(client, packageId) {
   const page = await client.transactionsEffects(
-    TransactionsFilter.new({ changedObject: packageId }),
+    new TransactionsFilter().withChangedObject(packageId),
     PaginationFilter.new({ direction: Direction.Forward, limit: 1 }),
   );
   for (const effects of page.data) {
@@ -246,7 +246,7 @@ async function wasPackagePublishedAsImmutable(client, packageId) {
   let cursor = undefined;
   while (true) {
     const page = await client.transactionsDataEffects(
-      TransactionsFilter.new({ changedObject: packageId }),
+      new TransactionsFilter().withChangedObject(packageId),
       forwardPage(cursor),
     );
     for (const txData of page.data) {
@@ -262,7 +262,7 @@ async function wasUpgradeCapUsedForMakeImmutable(client, upgradeCapId) {
   let cursor = undefined;
   while (true) {
     const page = await client.transactionsDataEffects(
-      TransactionsFilter.new({ inputObject: upgradeCapId }),
+      new TransactionsFilter().withInputObject(upgradeCapId),
       forwardPage(cursor),
     );
     for (const txData of page.data) {
@@ -333,12 +333,12 @@ console.log();
 // Print package dependencies and their linked versions.
 console.log("Dependencies:");
 const linkageTable = pkg.linkageTable();
-if (linkageTable.size === 0) {
+if (linkageTable.isEmpty()) {
   console.log("- none");
 } else {
-  const upgrades = [...linkageTable.values()].sort((a, b) =>
-    a.upgradedId.toHex() < b.upgradedId.toHex() ? -1 : 1,
-  );
+  const upgrades = linkageTable
+    .values()
+    .sort((a, b) => (a.upgradedId.toHex() < b.upgradedId.toHex() ? -1 : 1));
   for (const upgrade of upgrades) {
     console.log(
       `- ${upgrade.upgradedId.toHex()} @ v${upgrade.upgradedVersion.asU64()}`,
@@ -349,7 +349,11 @@ console.log();
 
 // Inspect normalized modules, functions, types, and sample key objects.
 console.log("Package contents:");
-const moduleNames = [...pkg.modules().keys()].map((m) => m.asStr()).sort();
+const moduleNames = pkg
+  .modules()
+  .keys()
+  .map((m) => m.asStr())
+  .sort();
 
 for (const moduleName of moduleNames) {
   console.log(`Module: ${moduleName}`);

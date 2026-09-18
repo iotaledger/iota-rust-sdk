@@ -11,20 +11,20 @@
 //!
 //! ```no_run
 //! use iota_sdk_grpc_client::{
-//!     Client,
+//!     GrpcClient,
 //!     read_mask_fields::{ObjectReadMask, TransactionReadMask},
 //! };
 //! use iota_types::{ObjectId, TransactionDigest};
 //!
 //! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-//! let client = Client::new_localnet()?;
+//! let client = GrpcClient::new_localnet()?;
 //!
 //! // Get a transaction with the default field mask.
 //! // The batched reads return one result per request, so a transaction the
 //! // node cannot serve fails only its own slot.
 //! let digest: TransactionDigest = todo!();
 //! let txs = client
-//!     .get_transactions([digest], TransactionReadMask::default())
+//!     .transactions([digest], TransactionReadMask::default())
 //!     .await?;
 //! for tx in txs.body() {
 //!     match tx {
@@ -36,7 +36,7 @@
 //! // Get an object with the default field mask.
 //! let object_id: ObjectId = "0x2".parse()?;
 //! let objects = client
-//!     .get_objects([object_id], ObjectReadMask::default())
+//!     .objects([object_id], ObjectReadMask::default())
 //!     .await?;
 //! for object in objects.body() {
 //!     match object {
@@ -48,7 +48,7 @@
 //! # }
 //! ```
 
-pub mod api;
+mod api;
 mod transaction_builder_client;
 
 // Re-export all read mask constants (per-method fields)
@@ -105,8 +105,9 @@ pub use api::{
 };
 // Re-export types for convenience
 pub use api::{
-    CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, Error, MetadataEnvelope, Page,
-    ProtocolError, ReadMask, Result, RpcStatus, execution::simulate::SimulateTransactionInput,
+    CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, GrpcError, GrpcResult,
+    MetadataEnvelope, Page, ProtocolError, ReadMask, RpcStatus,
+    execution::simulate::SimulateTransactionInput,
 };
 // Re-export all read mask constants (endpoint defaults)
 pub use api::{
@@ -134,7 +135,7 @@ pub use api::{
 pub use iota_grpc_types::read_mask_fields;
 
 mod client;
-pub use client::{Client, InterceptedChannel};
+pub use client::{GrpcClient, InterceptedChannel};
 
 mod response_ext;
 pub use response_ext::ResponseExt;

@@ -285,6 +285,41 @@ impl ClientTransactionBuilder {
         self
     }
 
+    /// Divide a coin into `count` coins of equal value, all kept by the
+    /// sender.
+    ///
+    /// Unlike `split_coins`, the new coins are transferred to the sender by
+    /// `0x2::pay::divide_and_keep` itself, so no transfer command is needed
+    /// for them. In exchange they are not available as command results and
+    /// cannot be used by later commands in the same transaction.
+    ///
+    /// The coin defaults an IOTA coin. For any other coin type, set it
+    /// with `coin_type`, which is the `T` of `0x2::coin::Coin<T>`.
+    ///
+    /// `count - 1` new coins are created, each holding `value / count`, and
+    /// the divided coin keeps its own share plus the remainder of the
+    /// division. The transaction aborts if `count` is zero or larger than the
+    /// coin's value.
+    ///
+    /// The coin is passed by reference, so the gas coin
+    /// (`PTBArgument::Gas`) can be divided as well, as long as it retains
+    /// enough balance to pay for the transaction.
+    #[uniffi::method(default(coin_type = None))]
+    pub fn divide_coin(
+        self: Arc<Self>,
+        coin: &PTBArgument,
+        count: u64,
+        coin_type: Option<Arc<TypeTag>>,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            let builder = builder.divide_coin(coin, count);
+            if let Some(coin_type) = coin_type {
+                builder.coin_type_tag(coin_type.0.clone());
+            }
+        });
+        self
+    }
+
     /// Make a move vector from a list of elements. The elements must all be of
     /// the type indicated by `type_tag`.
     pub fn make_move_vec(
@@ -295,13 +330,13 @@ impl ClientTransactionBuilder {
     ) -> Arc<Self> {
         use iota_sdk::transaction_builder::unresolved::{Command, MakeMoveVector};
         self.write(|builder| {
-            let cmd = Command::MakeMoveVector(MakeMoveVector {
-                type_tag: Some(type_tag.0.clone()),
-                elements: elements
+            let cmd = Command::MakeMoveVector(MakeMoveVector::new(
+                Some(type_tag.0.clone()),
+                elements
                     .iter()
                     .map(|e| builder.apply_argument(e.as_ref()))
                     .collect(),
-            });
+            ));
             builder.assigned_command(cmd, name);
         });
         self

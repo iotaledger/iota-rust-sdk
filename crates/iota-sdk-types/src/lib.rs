@@ -54,56 +54,16 @@
 //! library will support new variants and types as they are released to IOTA's
 //! `testnet` network.
 //!
-//! See the documentation for the various types defined by this crate for a
-//! specification of their BCS serialized representation which will be defined
-//! using ABNF notation as described by [RFC-5234]. In addition to the format
-//! itself, some types have an extra layer of verification and may impose
-//! additional restrictions on valid byte representations above and beyond those
-//! already provided by BCS. In these instances the documentation for those
-//! types will clearly specify these additional restrictions.
-//!
-//! Here are some common rules:
-//!
-//! ```text
-//! ; --- BCS Value ---
-//! bcs-value           = bcs-struct / bcs-enum / bcs-length-prefixed / bcs-fixed-length
-//! bcs-length-prefixed = bytes / string / vector / option
-//! bcs-fixed-length    = u8 / u16 / u32 / u64 / u128 /
-//!                       i8 / i16 / i32 / i64 / i128 /
-//!                       bool
-//! bcs-struct          = *bcs-value          ; Sequence of serialized fields
-//! bcs-enum            = uleb128 bcs-value   ; Variant index (ULEB128) + associated value
-//!
-//! ; --- Named primitives ---
-//! uleb128 = *(%x80-FF) %x00-7F   ; Variable-length unsigned integer
-//! size    = uleb128               ; BCS sequence / string length
-//! opt     = %d00                  ; None — no value follows
-//!         / %d01                  ; Some — value follows
-//!
-//! ; --- Length-prefixed types ---
-//! bytes   = size *OCTET          ; Raw bytes
-//! string  = size *OCTET          ; UTF-8 string
-//! vector  = size *bcs-value      ; Length-prefixed list of values
-//! option  = %d00 / (%d01 bcs-value)  ; Optional value
-//!
-//! ; --- Fixed-length types ---
-//! u8      = 1OCTET               ; 1-byte unsigned integer
-//! u16     = 2OCTET               ; 2-byte unsigned integer, little-endian
-//! u32     = 4OCTET               ; 4-byte unsigned integer, little-endian
-//! u64     = 8OCTET               ; 8-byte unsigned integer, little-endian
-//! u128    = 16OCTET              ; 16-byte unsigned integer, little-endian
-//! i8      = 1OCTET               ; 1-byte signed integer
-//! i16     = 2OCTET               ; 2-byte signed integer, little-endian
-//! i32     = 4OCTET               ; 4-byte signed integer, little-endian
-//! i64     = 8OCTET               ; 8-byte signed integer, little-endian
-//! i128    = 16OCTET              ; 16-byte signed integer, little-endian
-//! bool    = %d00                 ; false
-//!         / %d01                 ; true
-//! array   = *(bcs-value)         ; Fixed-length array (no length prefix)
-//! ```
+//! The BCS serialized form of every type in this crate is specified in ABNF
+//! notation, as described by [RFC-5234], in [`bcs-schema.abnf`]. In addition to
+//! the format itself, some types have an extra layer of verification and may
+//! impose additional restrictions on valid byte representations above and
+//! beyond those already provided by BCS. In these instances the documentation
+//! for those types will clearly specify these additional restrictions.
 //!
 //! [BCS]: https://docs.rs/bcs
 //! [RFC-5234]: https://datatracker.ietf.org/doc/html/rfc5234
+//! [`bcs-schema.abnf`]: https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf
 
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
@@ -114,24 +74,23 @@ pub(crate) use tree_display::{TreeDisplay, TreeWriter, impl_tree_display};
 #[cfg_attr(doc_cfg, doc(cfg(feature = "hash")))]
 pub mod hash;
 
-pub mod address;
-pub mod checkpoint;
+mod address;
+mod checkpoint;
 pub mod crypto;
-pub mod digest;
+mod digest;
 pub mod effects;
-pub mod events;
-pub mod execution_status;
+mod events;
+mod execution_status;
 pub mod framework;
-pub mod gas;
+mod gas;
 pub mod iota_names;
-pub mod move_core;
-pub mod move_package;
-pub mod object;
-pub mod object_id;
-pub mod transaction;
-pub mod u256;
-pub mod utils;
-pub mod validator;
+mod move_core;
+mod move_package;
+mod object;
+mod object_id;
+mod transaction;
+mod u256;
+mod validator;
 pub mod version;
 
 pub use address::{Address, AddressParseError};
@@ -141,14 +100,17 @@ pub use checkpoint::{
     CheckpointTransactionInfo, EndOfEpochData, EpochId, ProtocolVersion, SignedCheckpointSummary,
     StakeUnit,
 };
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+pub use crypto::SignatureFromBytesError;
 pub use crypto::{
     Bls12381PublicKey, Bls12381Signature, Ed25519PublicKey, Ed25519Signature, HashingIntentScope,
     INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError, IntentMessage, IntentScope,
-    IntentVersion, InvalidSignatureScheme, MoveAuthenticator, MoveAuthenticatorV1,
-    MultisigAggregatedSignature, MultisigCommittee, MultisigMember, MultisigMemberSignature,
+    IntentVersion, MoveAuthenticator, MoveAuthenticatorV1, MultisigAggregatedSignature,
+    MultisigCommittee, MultisigError, MultisigMember, MultisigMemberSignature,
     PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey, PublicKeyError,
     PublicKeyExt, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
-    SignatureScheme, SimpleSignature, UserSignature,
+    SignatureScheme, SignatureSchemeError, SimpleSignature, UserSignature,
 };
 pub use digest::{
     CertificateDigest, CheckpointContentsDigest, CheckpointDigest, ConsensusCommitDigest, Digest,
@@ -166,8 +128,9 @@ pub use execution_status::{
     CommandArgumentError, ExecutionError, ExecutionStatus, MoveLocation, PackageUpgradeError,
     TypeArgumentError,
 };
-pub use framework::Coin;
+pub use framework::{Coin, CoinFromObjectError};
 pub use gas::GasCostSummary;
+pub use iota_names::error::IotaNamesError;
 pub use move_core::{
     Identifier, MAX_IDENTIFIER_LENGTH, MAX_TYPE_TAG_NESTING, StructTag, TypeParseError, TypeTag,
 };
@@ -189,19 +152,39 @@ pub use transaction::{
     Transaction, TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind, TransactionV1,
     TransferObjects, Upgrade, VersionAssignment,
 };
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+pub use validator::SignerBitmapError;
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeError,
     ValidatorCommitteeMember, ValidatorSignature,
 };
-pub use version::Version;
+pub use version::{Version, VersionError};
 
 #[cfg(all(test, feature = "serde", feature = "proptest"))]
 mod serialization_proptests;
 
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+pub use bcs_base64::FromBase64Error;
+
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod bcs_base64 {
     use base64ct::Encoding;
+
+    /// Error returned when decoding a type from a base64-encoded string of its
+    /// BCS bytes.
+    #[derive(Debug, thiserror::Error)]
+    #[non_exhaustive]
+    pub enum FromBase64Error {
+        /// The input is not valid base64.
+        #[error("invalid base64")]
+        Base64,
+        /// The decoded bytes are not a valid BCS encoding of the target type.
+        #[error("invalid BCS: {0}")]
+        Bcs(String),
+    }
 
     macro_rules! impl_bcs_base64 {
         ($($type:ident),* $(,)?) => {
@@ -224,10 +207,11 @@ mod bcs_base64 {
                     }
 
                     #[doc = "Deserialize a `" $type "` from a base64-encoded string of its BCS bytes."]
-                    pub fn from_base64(bytes: &str) -> Result<Self, bcs::Error> {
+                    pub fn from_base64(bytes: &str) -> Result<Self, FromBase64Error> {
                         let decoded = base64ct::Base64::decode_vec(bytes)
-                            .map_err(|e| bcs::Error::Custom(e.to_string()))?;
+                            .map_err(|_| FromBase64Error::Base64)?;
                         Self::from_bcs(&decoded)
+                            .map_err(|e| FromBase64Error::Bcs(e.to_string()))
                     }
                 }
             }
@@ -236,6 +220,7 @@ mod bcs_base64 {
     }
 
     impl_bcs_base64!(
+        MovePackageData,
         Object,
         SenderSignedTransaction,
         Transaction,
@@ -246,7 +231,7 @@ mod bcs_base64 {
 }
 
 /// Returns the next array in byte-increasing order.
-pub const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8; N] {
+pub(crate) const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8; N] {
     match next_lexicographical_array_opt(array) {
         Some(next) => next,
         None => [0; N],
@@ -255,7 +240,9 @@ pub const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) -> [u8;
 
 /// Returns the next array in byte-increasing order, or `None` if the result
 /// would overflow.
-pub const fn next_lexicographical_array_opt<const N: usize>(array: &[u8; N]) -> Option<[u8; N]> {
+pub(crate) const fn next_lexicographical_array_opt<const N: usize>(
+    array: &[u8; N],
+) -> Option<[u8; N]> {
     let mut next = *array;
     let mut i = N;
 
@@ -272,7 +259,6 @@ pub const fn next_lexicographical_array_opt<const N: usize>(array: &[u8; N]) -> 
     None
 }
 
-#[macro_export]
 macro_rules! def_is {
     ($($variant:ident),* $(,)?) => {
         paste::paste! {$(
@@ -284,8 +270,8 @@ macro_rules! def_is {
         )*}
     };
 }
+pub(crate) use def_is;
 
-#[macro_export]
 macro_rules! def_is_as_into_opt {
     (@into $variant:ident ($rename:ident) [Box<$inner:ty>]) => {
         paste::paste! {
@@ -418,6 +404,7 @@ macro_rules! def_is_as_into_opt {
         )*
     };
 }
+pub(crate) use def_is_as_into_opt;
 
 #[cfg(feature = "serde")]
 mod _serde {

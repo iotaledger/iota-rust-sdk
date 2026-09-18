@@ -4,26 +4,26 @@
 //! gRPC counterpart to `get_object.rs`.
 //!
 //! Highlights two things about the gRPC API:
-//! - `get_objects` is batched (it takes an iterable of ids and streams the
-//!   matched objects back), so we just hand it one id.
+//! - `objects` is batched (it takes an iterable of ids and streams the matched
+//!   objects back), so we just hand it one id.
 //! - The returned proto `Object` is *lazy* — you convert into the SDK type only
 //!   when you need the deserialized fields.
 
 use eyre::{Result, bail};
 use iota_sdk::{
-    grpc_client::{Client, read_mask_fields::ObjectReadMask},
+    grpc_client::{GrpcClient, read_mask_fields::ObjectReadMask},
     types::{ObjectId, Owner},
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet()?;
+    let client = GrpcClient::new_testnet()?;
 
     let object_id: ObjectId =
         "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755".parse()?;
 
     let response = client
-        .get_objects([object_id], ObjectReadMask::default())
+        .objects([object_id], ObjectReadMask::default())
         .await?;
     // Each requested id gets its own result, so a failure here concerns only
     // this object.
@@ -58,6 +58,7 @@ async fn main() -> Result<()> {
         match obj.object_type() {
             iota_sdk::types::ObjectType::Package => "Package".to_owned(),
             iota_sdk::types::ObjectType::Struct(tag) => format!("{tag}"),
+            other => format!("{other}"),
         }
     );
     println!("BCS bytes: {}", hex::encode(obj.as_struct().contents()));

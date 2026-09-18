@@ -16,8 +16,8 @@ use iota_types::{
 };
 
 use crate::{
-    Client, TransactionDataEffects,
-    error::{Error, Kind, Result},
+    GraphQLClient, TransactionDataEffects,
+    error::{GraphQLError, GraphQLResult},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
         AddressTransactionBlocksQuery, AddressTransactionRelationship, AddressTransactionsQuery,
@@ -40,12 +40,12 @@ const DIGEST_PAYLOAD_SIZE: usize = 44 + 3;
 /// `transactionsByDigests` cursor is base64 over two `u64`s, well below this.
 const CURSOR_PAYLOAD_RESERVE: usize = 128;
 
-impl Client {
+impl GraphQLClient {
     /// Get a transaction by its digest.
     pub async fn transaction(
         &self,
         digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>> {
+    ) -> GraphQLResult<Option<SignedTransaction>> {
         let operation = TransactionBlockQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -62,13 +62,13 @@ impl Client {
         &self,
         filter: impl Into<Option<TransactionsFilter>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<SignedTransaction>> {
+    ) -> GraphQLResult<Page<SignedTransaction>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = TransactionBlocksQuery::build(TransactionBlocksQueryArgs {
             after: pagination.after,
             before: pagination.before,
-            filter: filter.into(),
+            filter: filter.into().map(Into::into),
             first: pagination.first,
             last: pagination.last,
         });
@@ -82,7 +82,7 @@ impl Client {
             .nodes
             .into_iter()
             .map(|n| n.try_into())
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GraphQLResult<Vec<_>>>()?;
         Ok(Page::new(page_info, transactions))
     }
 
@@ -92,7 +92,7 @@ impl Client {
     pub async fn transactions_by_digest(
         &self,
         digests: impl IntoIterator<Item = TransactionDigest>,
-    ) -> Result<HashMap<TransactionDigest, SignedTransaction>> {
+    ) -> GraphQLResult<HashMap<TransactionDigest, SignedTransaction>> {
         let digests = digests.into_iter().collect::<Vec<_>>();
         if digests.is_empty() {
             return Ok(HashMap::new());
@@ -116,7 +116,7 @@ impl Client {
     /// The server measures the whole request body against
     /// `maxQueryPayloadSize`, so the digest list only gets what the query text
     /// and the cursor leave over.
-    async fn digests_per_query(&self, limit: Option<i32>) -> Result<usize> {
+    async fn digests_per_query(&self, limit: Option<i32>) -> GraphQLResult<usize> {
         // Measure the payload of a request without digests rather than
         // predicting how the query is serialized.
         let empty = TransactionsByDigestsQuery::build(TransactionsByDigestsQueryArgs {
@@ -125,7 +125,11 @@ impl Client {
             cursor: None,
         });
         let overhead = serde_json::to_string(&empty)
-            .map_err(|e| Error::from_error(Kind::Query, e))?
+            .map_err(|e| {
+                GraphQLError::Other(
+                    format!("failed to determine the overhead of an empty transactionsByDigests request: {e}").into(),
+                )
+            })?
             .len()
             + CURSOR_PAYLOAD_RESERVE;
 
@@ -133,11 +137,11 @@ impl Client {
         let chunk_size = budget.saturating_sub(overhead) / DIGEST_PAYLOAD_SIZE;
 
         if chunk_size == 0 {
-            return Err(Error::from_message(
-                Kind::Query,
+            return Err(GraphQLError::Other(
                 format!(
                     "a single digest exceeds the server's query payload limit of {budget} bytes"
-                ),
+                )
+                .into(),
             ));
         }
 
@@ -149,7 +153,7 @@ impl Client {
         &self,
         digests: &[TransactionDigest],
         limit: Option<i32>,
-    ) -> Result<HashMap<TransactionDigest, SignedTransaction>> {
+    ) -> GraphQLResult<HashMap<TransactionDigest, SignedTransaction>> {
         let mut transactions = HashMap::with_capacity(digests.len());
         let mut cursor = None;
         let mut digest_idx = 0;
@@ -182,12 +186,12 @@ impl Client {
         // The server holds one node per digest, so a short response means the
         // pages could not be walked to the end.
         if digest_idx != digests.len() {
-            return Err(Error::from_message(
-                Kind::Query,
+            return Err(GraphQLError::Other(
                 format!(
                     "expected one entry per digest, got {digest_idx} for {} digests",
                     digests.len()
-                ),
+                )
+                .into(),
             ));
         }
 
@@ -203,7 +207,7 @@ impl Client {
         relation: impl Into<Option<AddressTransactionRelationship>>,
         filter: impl Into<Option<TransactionsFilter>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<SignedTransaction>> {
+    ) -> GraphQLResult<Page<SignedTransaction>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = AddressTransactionsQuery::build(AddressTransactionsQueryArgs {
@@ -213,7 +217,7 @@ impl Client {
             first: pagination.first,
             last: pagination.last,
             relation: relation.into(),
-            filter: filter.into(),
+            filter: filter.into().map(Into::into),
         });
 
         let response = self.run_query(&operation).await?;
@@ -226,7 +230,7 @@ impl Client {
             .nodes
             .into_iter()
             .map(|n| n.try_into())
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         Ok(Page::new(transaction_blocks.page_info, transactions))
     }
@@ -235,7 +239,7 @@ impl Client {
     pub async fn transaction_effects(
         &self,
         digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>> {
+    ) -> GraphQLResult<Option<TransactionEffects>> {
         let operation = TransactionBlockEffectsQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -252,13 +256,13 @@ impl Client {
         &self,
         filter: impl Into<Option<TransactionsFilter>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<TransactionEffects>> {
+    ) -> GraphQLResult<Page<TransactionEffects>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = TransactionBlocksEffectsQuery::build(TransactionBlocksQueryArgs {
             after: pagination.after,
             before: pagination.before,
-            filter: filter.into(),
+            filter: filter.into().map(Into::into),
             first: pagination.first,
             last: pagination.last,
         });
@@ -272,7 +276,7 @@ impl Client {
             .nodes
             .into_iter()
             .map(|n| n.try_into())
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GraphQLResult<Vec<_>>>()?;
         Ok(Page::new(page_info, transactions))
     }
 
@@ -280,7 +284,7 @@ impl Client {
     pub async fn transaction_data_effects(
         &self,
         digest: TransactionDigest,
-    ) -> Result<Option<TransactionDataEffects>> {
+    ) -> GraphQLResult<Option<TransactionDataEffects>> {
         let operation = TransactionBlockWithEffectsQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -308,13 +312,13 @@ impl Client {
         &self,
         filter: impl Into<Option<TransactionsFilter>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<TransactionDataEffects>> {
+    ) -> GraphQLResult<Page<TransactionDataEffects>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = TransactionBlocksWithEffectsQuery::build(TransactionBlocksQueryArgs {
             after: pagination.after,
             before: pagination.before,
-            filter: filter.into(),
+            filter: filter.into().map(Into::into),
             first: pagination.first,
             last: pagination.last,
         });
@@ -329,7 +333,9 @@ impl Client {
                 .into_iter()
                 .map(|node| {
                     let (Some(bcs), Some(effects)) = (node.bcs, node.effects) else {
-                        return Err(Error::empty_response_error());
+                        return Err(GraphQLError::EmptyResponseField(
+                            "transaction bcs or effects",
+                        ));
                     };
                     let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
                     let effects =
@@ -342,7 +348,7 @@ impl Client {
                         effects,
                     })
                 })
-                .collect::<Result<Vec<_>>>()?
+                .collect::<GraphQLResult<Vec<_>>>()?
         };
 
         Ok(Page::new(page_info, transactions))
@@ -354,7 +360,7 @@ impl Client {
         &self,
         filter: impl Into<Option<TransactionsFilter>>,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<TransactionEffects>> + '_ {
+    ) -> impl Stream<Item = GraphQLResult<TransactionEffects>> + '_ {
         let filter = filter.into();
         stream_paginated_query(
             move |pag_filter| self.transactions_effects(filter.clone(), pag_filter),
@@ -368,7 +374,7 @@ impl Client {
         signatures: &[UserSignature],
         transaction: &Transaction,
         wait_for: impl Into<Option<WaitForTransaction>>,
-    ) -> Result<TransactionEffects> {
+    ) -> GraphQLResult<TransactionEffects> {
         let wait_for = wait_for.into();
         let operation = ExecuteTransactionQuery::build(ExecuteTransactionArgs {
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
@@ -393,7 +399,10 @@ impl Client {
     /// on the node. This means that it can be queried by its digest and its
     /// effects will be usable for subsequent transactions. To check for
     /// full finalization, use [`Self::is_transaction_finalized`].
-    pub async fn is_transaction_indexed_on_node(&self, digest: TransactionDigest) -> Result<bool> {
+    pub async fn is_transaction_indexed_on_node(
+        &self,
+        digest: TransactionDigest,
+    ) -> GraphQLResult<bool> {
         let operation = TransactionBlockIndexedQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -405,7 +414,7 @@ impl Client {
 
     /// Returns whether the transaction for the given digest has been included
     /// in a checkpoint (finalized).
-    pub async fn is_transaction_finalized(&self, digest: TransactionDigest) -> Result<bool> {
+    pub async fn is_transaction_finalized(&self, digest: TransactionDigest) -> GraphQLResult<bool> {
         let operation = TransactionBlockCheckpointQuery::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
@@ -430,7 +439,7 @@ impl Client {
         digest: TransactionDigest,
         wait_for: WaitForTransaction,
         timeout: impl Into<Option<Duration>>,
-    ) -> Result<()> {
+    ) -> GraphQLResult<()> {
         crate::wait::timeout(
             timeout.into().unwrap_or_else(|| Duration::from_secs(60)),
             async {
@@ -449,7 +458,7 @@ impl Client {
             },
         )
         .await
-        .map_err(|e| Error::from_error(Kind::Other, e))?
+        .map_err(|_| GraphQLError::Timeout)?
     }
 }
 
@@ -598,10 +607,7 @@ mod tests {
 
         client
             .transactions_data_effects(
-                TransactionsFilter {
-                    transaction_ids: Some(vec![digest.to_string()]),
-                    ..Default::default()
-                },
+                TransactionsFilter::default().with_transaction_ids([digest]),
                 PaginationFilter::default(),
             )
             .await

@@ -26,21 +26,21 @@ use crate::{
         ptb_arguments::PTBArgumentList,
         signer::TransactionSigner,
     },
-    error::Error,
+    error::TransactionBuilderError,
     types::{MoveType, MoveTypes},
     unresolved::{
-        Argument, Command, Input, InputId, InputKind, MakeMoveVector, MergeCoins, MoveCall,
-        Publish, SplitCoins, TransferObjects, Upgrade,
+        Argument, Command, DivideCoin, Input, InputId, InputKind, MakeMoveVector, MergeCoins,
+        MoveCall, Publish, SplitCoins, TransferObjects, Upgrade,
     },
 };
 
 mod assigned_results;
 pub(crate) mod client;
 pub(crate) mod gas_station;
-pub mod move_authenticator;
+pub(crate) mod move_authenticator;
 /// Argument types for PTBs
-pub mod ptb_arguments;
-pub mod signer;
+pub(crate) mod ptb_arguments;
+pub(crate) mod signer;
 
 const REQUEST_ADD_STAKE_FN: &str = "request_add_stake";
 const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
@@ -89,6 +89,10 @@ pub struct TransactionBuildData {
     assigned_results: HashMap<String, Argument>,
     /// The data used for gas station sponsorship.
     gas_station_data: Option<GasStationData>,
+    /// The index of the command the builder's type state refers to. Set when
+    /// a command is entered, and left alone by any command added afterwards,
+    /// so that the state's methods keep addressing their own command.
+    state_command: Option<u16>,
 }
 
 impl TransactionBuildData {
@@ -140,7 +144,7 @@ impl TransactionBuildData {
 
     /// Settle the command arguments that name a gas coin, before the gas coins
     /// are taken out of the inputs and paid as gas.
-    fn resolve_gas_arguments(&mut self) -> Result<(), Error> {
+    fn resolve_gas_arguments(&mut self) -> Result<(), TransactionBuilderError> {
         // Keyed by input id so the coin named in an error is stable.
         let gas_coins: BTreeMap<InputId, ObjectId> = self
             .inputs
@@ -161,7 +165,9 @@ impl TransactionBuildData {
                     if let Argument::Input(id) = argument
                         && let Some(coin) = gas_coins.get(id)
                     {
-                        return Err(Error::GasCoinAsArgument { object_id: *coin });
+                        return Err(TransactionBuilderError::GasCoinAsArgument {
+                            object_id: *coin,
+                        });
                     }
                 }
                 continue;
@@ -183,7 +189,7 @@ impl TransactionBuildData {
                 continue;
             }
             if transfer.is_some() {
-                return Err(Error::GasCoinTransferredMoreThanOnce);
+                return Err(TransactionBuilderError::GasCoinTransferredMoreThanOnce);
             }
             // An explicit `Argument::Gas` already asks for the whole gas
             // payment; only a transfer naming individual coins has to name all
@@ -192,7 +198,7 @@ impl TransactionBuildData {
                 && let Some((_, missing)) =
                     gas_coins.iter().find(|(id, _)| !transferred.contains(id))
             {
-                return Err(Error::IncompleteGasTransfer {
+                return Err(TransactionBuilderError::IncompleteGasTransfer {
                     transferred: gas_coins[first],
                     missing: *missing,
                 });
@@ -270,9 +276,21 @@ impl TransactionBuildData {
         Argument::Result(i as u16)
     }
 
+    /// Add a new command and make it the one the builder state refers to.
+    fn enter_command(&mut self, command: Command) -> Argument {
+        self.state_command = Some(self.commands.len() as u16);
+        self.command(command)
+    }
+
+    /// The index of the command the builder state refers to.
+    fn state_command(&self) -> u16 {
+        self.state_command
+            .expect("a command state is only reachable once a command was added")
+    }
+
     /// Manually set a command with an optional name
     pub fn assigned_command(&mut self, cmd: Command, name: impl AssignedResults) {
-        self.command(cmd);
+        self.enter_command(cmd);
         name.push_assigned_results(self);
     }
 
@@ -296,6 +314,7 @@ impl TransactionBuilder {
                 expiration: Default::default(),
                 assigned_results: Default::default(),
                 gas_station_data: Default::default(),
+                state_command: Default::default(),
             },
             client: (),
             last_command: PhantomData,
@@ -356,6 +375,7 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
                 expiration: Default::default(),
                 assigned_results: Default::default(),
                 gas_station_data: Default::default(),
+                state_command: Default::default(),
             },
             client: (),
             last_command: PhantomData,
@@ -364,7 +384,7 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
 }
 
 impl TryFrom<Transaction> for TransactionBuilder {
-    type Error = Error;
+    type Error = TransactionBuilderError;
 
     /// Reconstruct a [`TransactionBuilder`] from a finalized [`Transaction`].
     ///
@@ -384,7 +404,7 @@ impl TryFrom<Transaction> for TransactionBuilder {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
         let TransactionKind::Programmable(ptb) = kind else {
-            return Err(Error::UnsupportedTransactionKind);
+            return Err(TransactionBuilderError::UnsupportedTransactionKind);
         };
 
         let mut builder = TransactionBuilder::from(ptb);
@@ -447,7 +467,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     fn cmd_state_change<U: Into<Command>>(&mut self, command: U) -> &mut TransactionBuilder<C, U> {
-        self.command(command.into());
+        self.data.enter_command(command.into());
         self.state_change()
     }
 
@@ -983,6 +1003,63 @@ impl<C, L> TransactionBuilder<C, L> {
         self.cmd_state_change(SplitCoins { coin, amounts })
     }
 
+    /// Divide a coin into `count` coins of equal value, all kept by the
+    /// sender.
+    ///
+    /// Unlike [`split_coins`](Self::split_coins), the new coins are
+    /// transferred to the sender by `0x2::pay::divide_and_keep` itself, so no
+    /// transfer command is needed for them. In exchange they are not
+    /// available as command results and cannot be used by later commands in
+    /// the same transaction.
+    ///
+    /// The coin is taken to be an IOTA coin. For any other coin type, set it
+    /// on the returned builder with
+    /// [`coin_type`](TransactionBuilder::coin_type) or
+    /// [`coin_type_tag`](TransactionBuilder::coin_type_tag).
+    ///
+    /// `count - 1` new coins are created, each holding `value / count`, and
+    /// the divided coin keeps its own share plus the remainder of the
+    /// division. The transaction aborts if `count` is zero or larger than the
+    /// coin's value.
+    ///
+    /// The coin is passed by reference, so the gas coin
+    /// ([`unresolved::Argument::Gas`](Argument::Gas)) can be divided as well,
+    /// as long as it retains enough balance to pay for the transaction.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let sender =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let coin =
+    ///     ObjectId::from_hex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
+    ///
+    /// let mut builder = TransactionBuilder::new(sender).with_client(client);
+    /// // Two new coins of a third of the balance each, plus the remainder
+    /// // left in `coin` — all owned by the sender once executed.
+    /// builder.divide_coin(coin, 3);
+    /// let txn = builder.finish().await?;
+    /// #    Ok(())
+    /// # }
+    /// ```
+    pub fn divide_coin<T: PTBArgument>(
+        &mut self,
+        coin: T,
+        count: u64,
+    ) -> &mut TransactionBuilder<C, DivideCoin> {
+        self.move_call(Address::FRAMEWORK, "pay", "divide_and_keep")
+            .arguments((coin, count))
+            .type_tags([StructTag::new_gas().into()])
+            .state_change()
+    }
+
     /// Publish a move package.
     pub fn publish_package(
         &mut self,
@@ -1321,9 +1398,9 @@ impl<L> TransactionBuilder<(), L> {
     }
 
     /// Convert this builder into a transaction.
-    pub fn finish(mut self) -> Result<Transaction, Error> {
+    pub fn finish(mut self) -> Result<Transaction, TransactionBuilderError> {
         let Some(price) = self.data.gas_price else {
-            return Err(Error::MissingGasPrice);
+            return Err(TransactionBuilderError::MissingGasPrice);
         };
         self.data.resolve_gas_arguments()?;
         let mut inputs = Vec::new();
@@ -1335,7 +1412,7 @@ impl<L> TransactionBuilder<(), L> {
                     if input.is_gas {
                         match inp {
                             iota_types::Input::ImmutableOrOwned(obj_ref) => gas.push(obj_ref),
-                            _ => return Err(Error::WrongGasObject),
+                            _ => return Err(TransactionBuilderError::WrongGasObject),
                         }
                     } else {
                         let idx = inputs.len();
@@ -1346,7 +1423,7 @@ impl<L> TransactionBuilder<(), L> {
                 InputKind::ImmutableOrOwned(object_id)
                 | InputKind::Shared { object_id, .. }
                 | InputKind::Receiving(object_id) => {
-                    return Err(Error::Input(format!(
+                    return Err(TransactionBuilderError::Input(format!(
                         "object {object_id} cannot be resolved without a client"
                     )));
                 }
@@ -1385,14 +1462,14 @@ impl<L> TransactionBuilder<(), L> {
     pub async fn execute_with_gas_station(
         mut self,
         signer: &impl TransactionSigner,
-    ) -> Result<serde_json::Value, Error> {
+    ) -> Result<serde_json::Value, TransactionBuilderError> {
         let gas_station_data = self.data.gas_station_data.take();
 
         Ok(if let Some(gas_station_data) = gas_station_data {
             let mut txn = self.finish()?;
             gas_station_data.execute_txn_json(&mut txn, signer).await?
         } else {
-            return Err(Error::MissingGasStationData);
+            return Err(TransactionBuilderError::MissingGasStationData);
         })
     }
 }
@@ -1514,7 +1591,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// Pick gas coins owned by the sponsor (or the sender) unless the caller
     /// already set some with [`gas`](Self::gas) or
     /// [`gas_refs`](Self::gas_refs).
-    async fn select_default_gas(&mut self) -> Result<(), Error> {
+    async fn select_default_gas(&mut self) -> Result<(), TransactionBuilderError> {
         if !self.data.inputs.values().any(|i| i.is_gas) {
             // Some commands have arguments which cannot safely be replaced by
             // `Argument::Gas`, so we need to find any instances of
@@ -1558,7 +1635,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                     .client
                     .objects(Some(StructTag::new_gas_coin()), owner, cursor, None)
                     .await
-                    .map_err(Error::client)?;
+                    .map_err(TransactionBuilderError::client)?;
                 for obj in page.data {
                     if unusable_object_ids.contains(&obj.id()) {
                         continue;
@@ -1602,7 +1679,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     async fn fetch_input_objects(
         &self,
         inputs: &[(InputId, Input)],
-    ) -> Result<HashMap<ObjectId, Object>, Error> {
+    ) -> Result<HashMap<ObjectId, Object>, TransactionBuilderError> {
         let mut requests = Vec::new();
         for (_, input) in inputs {
             if let InputKind::ImmutableOrOwned(object_id)
@@ -1622,28 +1699,30 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             .client
             .objects_by_id(&requests)
             .await
-            .map_err(Error::client)?;
+            .map_err(TransactionBuilderError::client)?;
         requests
             .into_iter()
             .zip(fetched)
             .map(|((object_id, _), object)| {
-                object
-                    .map(|object| (object_id, object))
-                    .ok_or_else(|| Error::Input(format!("missing object {object_id}")))
+                object.map(|object| (object_id, object)).ok_or_else(|| {
+                    TransactionBuilderError::Input(format!("missing object {object_id}"))
+                })
             })
             .collect()
     }
 
     /// Resolve the inputs and commands into a [`TransactionKind`], returning it
     /// together with the gas coins currently set on the builder.
-    async fn resolve_kind(&mut self) -> Result<(TransactionKind, Vec<ObjectReference>), Error> {
+    async fn resolve_kind(
+        &mut self,
+    ) -> Result<(TransactionKind, Vec<ObjectReference>), TransactionBuilderError> {
         self.data.resolve_gas_arguments()?;
         let taken_inputs: Vec<_> = std::mem::take(&mut self.data.inputs).into_iter().collect();
         let objects = self.fetch_input_objects(&taken_inputs).await?;
         let object = |object_id: ObjectId| {
-            objects
-                .get(&object_id)
-                .ok_or_else(|| Error::Input(format!("missing object {object_id}")))
+            objects.get(&object_id).ok_or_else(|| {
+                TransactionBuilderError::Input(format!("missing object {object_id}"))
+            })
         };
 
         let mut inputs = Vec::new();
@@ -1660,7 +1739,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                                 ObjectReference::new(object_id, obj.version(), obj.digest())
                             }
                             _ => {
-                                return Err(Error::WrongGasObject);
+                                return Err(TransactionBuilderError::WrongGasObject);
                             }
                         };
 
@@ -1700,7 +1779,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                             })
                         }
                         _ => {
-                            return Err(Error::Input(format!(
+                            return Err(TransactionBuilderError::Input(format!(
                                 "object {object_id} was passed as shared, but is not"
                             )));
                         }
@@ -1713,7 +1792,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                     if input.is_gas {
                         match inp {
                             iota_types::Input::ImmutableOrOwned(obj_ref) => gas.push(obj_ref),
-                            _ => return Err(Error::WrongGasObject),
+                            _ => return Err(TransactionBuilderError::WrongGasObject),
                         }
                     } else {
                         let idx = inputs.len();
@@ -1735,7 +1814,10 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
         Ok((kind, gas))
     }
 
-    async fn resolve_ptb(&mut self, default_gas: bool) -> Result<Transaction, Error> {
+    async fn resolve_ptb(
+        &mut self,
+        default_gas: bool,
+    ) -> Result<Transaction, TransactionBuilderError> {
         if default_gas {
             self.select_default_gas().await?;
         }
@@ -1746,8 +1828,8 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                 .client
                 .reference_gas_price(None)
                 .await
-                .map_err(Error::client)?
-                .ok_or_else(|| Error::MissingGasPrice)?,
+                .map_err(TransactionBuilderError::client)?
+                .ok_or_else(|| TransactionBuilderError::MissingGasPrice)?,
         };
         Ok(TransactionV1 {
             kind,
@@ -1766,7 +1848,10 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// Convert this builder into a transaction with the given gas budget,
     /// used as-is (no estimation or minimum clamp) and overriding any budget
     /// set via [`gas_budget`](Self::gas_budget).
-    pub async fn finish_with_budget(mut self, gas_budget: u64) -> Result<Transaction, Error> {
+    pub async fn finish_with_budget(
+        mut self,
+        gas_budget: u64,
+    ) -> Result<Transaction, TransactionBuilderError> {
         self.data.gas_budget = Some(gas_budget);
         self.resolve_ptb(true).await
     }
@@ -1809,7 +1894,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn finish_kind(mut self) -> Result<TransactionKind, Error> {
+    pub async fn finish_kind(mut self) -> Result<TransactionKind, TransactionBuilderError> {
         let (kind, _gas) = self.resolve_kind().await?;
         Ok(kind)
     }
@@ -1818,15 +1903,15 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
 impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
     TransactionBuilder<C, L>
 {
-    async fn finish_internal(&mut self) -> Result<Transaction, Error> {
+    async fn finish_internal(&mut self) -> Result<Transaction, TransactionBuilderError> {
         let mut txn = self.resolve_ptb(true).await?;
         if self.data.gas_budget.is_none() {
             let budget = self
                 .client
                 .estimate_transaction_budget(&txn)
                 .await
-                .map_err(Error::client)?
-                .ok_or(Error::MissingGasBudget)?;
+                .map_err(TransactionBuilderError::client)?
+                .ok_or(TransactionBuilderError::MissingGasBudget)?;
             let Transaction::V1(txn) = &mut txn else {
                 unimplemented!("a new Transaction enum variant was added and needs to be handled")
             };
@@ -1848,19 +1933,22 @@ impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
     /// To build with an explicit budget on a client without simulation
     /// support, use
     /// [`finish_with_budget`](TransactionBuilder::finish_with_budget).
-    pub async fn finish(mut self) -> Result<Transaction, Error> {
+    pub async fn finish(mut self) -> Result<Transaction, TransactionBuilderError> {
         self.finish_internal().await
     }
 
     /// Dry run the transaction.
-    pub async fn dry_run(mut self, skip_checks: bool) -> Result<C::DryRunResult, Error> {
+    pub async fn dry_run(
+        mut self,
+        skip_checks: bool,
+    ) -> Result<C::DryRunResult, TransactionBuilderError> {
         let txn = self.resolve_ptb(false).await?;
         {
             let Transaction::V1(txn) = &txn else {
                 unimplemented!("a new Transaction enum variant was added and needs to be handled")
             };
             if !txn.gas_payment.objects.is_empty() && txn.gas_payment.budget == 0 {
-                return Err(Error::DryRun(
+                return Err(TransactionBuilderError::DryRun(
                     "gas coins were provided without a gas budget".to_owned(),
                 ));
             }
@@ -1869,7 +1957,7 @@ impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
             .client
             .dry_run_transaction(&txn, skip_checks)
             .await
-            .map_err(Error::client)?;
+            .map_err(TransactionBuilderError::client)?;
         Ok(res)
     }
 }
@@ -1882,7 +1970,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         mut self,
         signer: &impl TransactionSigner,
         wait_for: impl Into<Option<WaitForTransaction>>,
-    ) -> Result<TransactionEffects, Error> {
+    ) -> Result<TransactionEffects, TransactionBuilderError> {
         let wait_for = wait_for.into();
         let gas_station_data = self.data.gas_station_data.take();
         let mut txn = self.finish_internal().await?;
@@ -1892,21 +1980,24 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
             self.client
                 .wait_for_transaction(digest, WaitForTransaction::Finalized)
                 .await
-                .map_err(Error::client)?;
+                .map_err(TransactionBuilderError::client)?;
             self.client
                 .transaction_effects(digest)
                 .await
-                .map_err(Error::client)?
-                .ok_or_else(|| Error::MissingTransaction(digest))?
+                .map_err(TransactionBuilderError::client)?
+                .ok_or_else(|| TransactionBuilderError::MissingTransaction(digest))?
         } else {
             self.client
                 .execute_transaction(
-                    &[signer.sign(&txn).await.map_err(Error::signature)?],
+                    &[signer
+                        .sign(&txn)
+                        .await
+                        .map_err(TransactionBuilderError::signature)?],
                     &txn,
                     wait_for,
                 )
                 .await
-                .map_err(Error::client)?
+                .map_err(TransactionBuilderError::client)?
         })
     }
 
@@ -1917,30 +2008,42 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         signer: &impl TransactionSigner,
         sponsor_signer: &impl TransactionSigner,
         wait_for: impl Into<Option<WaitForTransaction>>,
-    ) -> Result<TransactionEffects, Error> {
+    ) -> Result<TransactionEffects, TransactionBuilderError> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
 
         let signatures = vec![
-            signer.sign(&txn).await.map_err(Error::signature)?,
-            sponsor_signer.sign(&txn).await.map_err(Error::signature)?,
+            signer
+                .sign(&txn)
+                .await
+                .map_err(TransactionBuilderError::signature)?,
+            sponsor_signer
+                .sign(&txn)
+                .await
+                .map_err(TransactionBuilderError::signature)?,
         ];
 
         self.client
             .execute_transaction(&signatures, &txn, wait_for)
             .await
-            .map_err(Error::client)
+            .map_err(TransactionBuilderError::client)
     }
 }
 
 impl<C> TransactionBuilder<C, MoveCall> {
+    /// The move call this builder state refers to.
+    fn move_call_mut(&mut self) -> &mut MoveCall {
+        let command = self.data.state_command() as usize;
+        let Command::MoveCall(move_call) = &mut self.data.commands[command] else {
+            unreachable!("the move call state is only reachable through a move call command");
+        };
+        move_call
+    }
+
     /// Set the call params. Optional.
     pub fn arguments<U: PTBArgumentList>(&mut self, params: U) -> &mut Self {
         let args = self.apply_arguments(params);
-        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
-            unreachable!();
-        };
-        last_command.arguments = args;
+        self.move_call_mut().arguments = args;
         self
     }
 }
@@ -1948,19 +2051,13 @@ impl<C> TransactionBuilder<C, MoveCall> {
 impl<C> TransactionBuilder<C, MoveCall> {
     /// Set the generic type arguments. Optional.
     pub fn generics<G: MoveTypes>(&mut self) -> &mut Self {
-        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
-            unreachable!();
-        };
-        last_command.type_arguments = G::type_tags();
+        self.move_call_mut().type_arguments = G::type_tags();
         self
     }
 
     /// Set the type arguments manually. Optional.
     pub fn type_tags(&mut self, tags: impl IntoIterator<Item = TypeTag>) -> &mut Self {
-        let Command::MoveCall(last_command) = self.data.commands.last_mut().unwrap() else {
-            unreachable!();
-        };
-        last_command.type_arguments = tags.into_iter().collect();
+        self.move_call_mut().type_arguments = tags.into_iter().collect();
         self
     }
 }
@@ -1985,15 +2082,16 @@ impl<C> TransactionBuilder<C, Publish> {
 }
 
 impl<C, L: Into<Command>> TransactionBuilder<C, L> {
-    /// Assign a name to the last command's result.
+    /// Assign a name to the result of the command this builder state refers
+    /// to.
     pub fn assign(&mut self, name: impl AssignedResults) -> &mut Self {
         name.push_assigned_results(&mut self.data);
         self
     }
 
-    /// Get the argument representing the last command.
+    /// Get the argument representing the command this builder state refers to.
     pub fn result(&mut self) -> Argument {
-        Argument::Result((self.data.commands.len() - 1) as _)
+        Argument::Result(self.data.state_command())
     }
 }
 
@@ -2019,11 +2117,93 @@ impl<C> TransactionBuilder<C, GasStationData> {
     }
 }
 
+impl<C> TransactionBuilder<C, DivideCoin> {
+    /// Set the type of the coin being divided: the `T` of
+    /// `0x2::coin::Coin<T>`, not the coin type itself.
+    ///
+    /// Use [`coin_type_tag`](Self::coin_type_tag) for a type only known at
+    /// runtime.
+    pub fn coin_type<G: MoveType>(&mut self) -> &mut TransactionBuilder<C> {
+        self.state_change::<MoveCall>().generics::<G>().reset()
+    }
+
+    /// Set the type of the coin being divided from a [`TypeTag`]: the `T` of
+    /// `0x2::coin::Coin<T>`, not the coin type itself.
+    pub fn coin_type_tag(&mut self, type_tag: TypeTag) -> &mut TransactionBuilder<C> {
+        self.state_change::<MoveCall>()
+            .type_tags([type_tag])
+            .reset()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use iota_types::{ObjectDigest, Version};
 
     use super::*;
+
+    /// `divide_coin` calls for IOTA unless a coin type is set on it.
+    #[test]
+    fn divide_coin_defaults_to_iota() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let coin = ObjectId::new([1; 32]);
+        let other_coin_type = StructTag::new(
+            Address::FRAMEWORK,
+            Identifier::new("cert").unwrap(),
+            Identifier::new("CERT").unwrap(),
+            Vec::new(),
+        );
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.divide_coin(coin, 3);
+        builder
+            .divide_coin(coin, 3)
+            .coin_type_tag(other_coin_type.clone().into());
+
+        let [iota_call, overridden] = builder
+            .data
+            .commands
+            .iter()
+            .map(|command| match command {
+                Command::MoveCall(move_call) => move_call.type_arguments.as_slice(),
+                _ => panic!("expected two move calls"),
+            })
+            .collect::<Vec<_>>()[..]
+        else {
+            panic!("expected two commands");
+        };
+        assert_eq!(iota_call, [TypeTag::Struct(Box::new(StructTag::new_gas()))]);
+        assert_eq!(overridden, [TypeTag::Struct(Box::new(other_coin_type))]);
+    }
+
+    /// A command state addresses the command it was entered with, even when
+    /// another command is added before the state's setters are called.
+    #[test]
+    fn state_setters_target_their_own_command() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+
+        let mut builder = TransactionBuilder::new(sender);
+        let call = builder.move_call(Address::FRAMEWORK, "pay", "divide_and_keep");
+        // Added while the move call state is still held, so it, not the move
+        // call, is the last command from here on.
+        call.transfer_objects(sender, [ObjectId::new([1; 32])]);
+        call.generics::<u64>().assign("divided");
+
+        let [Command::MoveCall(move_call), Command::TransferObjects(_)] =
+            &builder.data.commands[..]
+        else {
+            panic!("expected a move call followed by a transfer");
+        };
+        assert_eq!(move_call.type_arguments, vec![TypeTag::U64]);
+        assert!(matches!(
+            builder.data.assigned_results.get("divided"),
+            Some(Argument::Result(0))
+        ));
+    }
 
     /// Verify that `TryFrom<Transaction>` preserves input ordering: non-gas
     /// inputs occupy `BTreeMap` keys `0..n` matching their original positions,
@@ -2341,7 +2521,7 @@ mod tests {
             builder.gas_price(1000);
 
             let error = builder.finish().unwrap_err();
-            let Error::IncompleteGasTransfer {
+            let TransactionBuilderError::IncompleteGasTransfer {
                 transferred,
                 missing,
             } = error
@@ -2412,7 +2592,7 @@ mod tests {
 
             assert!(matches!(
                 builder.finish(),
-                Err(Error::GasCoinTransferredMoreThanOnce)
+                Err(TransactionBuilderError::GasCoinTransferredMoreThanOnce)
             ));
         }
 
@@ -2433,7 +2613,7 @@ mod tests {
             builder.gas_price(1000);
 
             let error = builder.finish().unwrap_err();
-            let Error::GasCoinAsArgument { object_id } = error else {
+            let TransactionBuilderError::GasCoinAsArgument { object_id } = error else {
                 panic!("expected GasCoinAsArgument, got {error}");
             };
             assert_eq!(object_id, coin(10).object_id);
@@ -2454,7 +2634,7 @@ mod tests {
 
             assert!(matches!(
                 builder.finish(),
-                Err(Error::GasCoinAsArgument { .. })
+                Err(TransactionBuilderError::GasCoinAsArgument { .. })
             ));
         }
 

@@ -179,10 +179,17 @@ bindings-examples-format: ## Format all bindings examples
 	@$(MAKE) swift-examples-format
 	@$(MAKE) wasm-examples-format
 
+# The Go bindings are generated from a build with `map-objects` enabled, since
+# Go cannot key a native map by an object. Its own target directory keeps the
+# other bindings' build from replacing the library the Go examples link against.
+GO_TARGET_DIR := target/go
+GO_LIB_DIR := $(GO_TARGET_DIR)/release
+
 # Build the FFI crate (release) and detect the shared library extension
-# (sets LIB_EXT, used to locate libiota_sdk_ffi).
+# (sets LIB_EXT, used to locate libiota_sdk_ffi). Set FFI_BUILD_ARGS to pass
+# extra cargo arguments.
 define build_binding
-cargo build -p iota-sdk-ffi --lib --release; \
+cargo build -p iota-sdk-ffi --lib --release $(FFI_BUILD_ARGS); \
 case "$$(uname -s)" in \
 	Darwin)   LIB_EXT=".dylib" ;; \
 	Linux)    LIB_EXT=".so" ;; \
@@ -198,10 +205,11 @@ endef
 snake_to_pascal = $(shell printf '%s' "$(1)" | awk -F_ '{ s=""; for (i=1; i<=NF; i++) s = s toupper(substr($$i,1,1)) substr($$i,2); print s }')
 
 .PHONY: go
+go: FFI_BUILD_ARGS := --features map-objects --target-dir $(GO_TARGET_DIR)
 go: ## Build Go bindings
 	@printf "Building Go bindings...\n"
 	@$(build_binding) \
-	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format --config bindings/go/uniffi.toml || exit $$?
+	uniffi-bindgen-go --library $(GO_LIB_DIR)/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format --config bindings/go/uniffi.toml || exit $$?
 	@# TODO: For some reason only the .h file is renamed, not the .go file
 	@mv bindings/go/iota_sdk/iota_sdk_ffi.go bindings/go/iota_sdk/iota_sdk.go
 	@sed -i.bak "s/^package iota_sdk_ffi$$/package iota_sdk/" bindings/go/iota_sdk/iota_sdk.go && rm bindings/go/iota_sdk/iota_sdk.go.bak
@@ -249,7 +257,7 @@ go-example: ## Run a specific Go example. Usage: make go-example example
 go-example:
 	@printf "\nRunning Go example \"$(word 2,$(MAKECMDGOALS))\"\n"
 	@cd bindings/go/examples; \
-	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run $(word 2,$(MAKECMDGOALS))/main.go || exit $$?; \
+	LD_LIBRARY_PATH="../../../$(GO_LIB_DIR)" CGO_LDFLAGS="-liota_sdk_ffi -L../../../$(GO_LIB_DIR)" go run $(word 2,$(MAKECMDGOALS))/main.go || exit $$?; \
 	cd -
 
 .PHONY: go-examples
@@ -432,7 +440,7 @@ examples: ## Run all Rust examples
 	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer
 	@# that require external services (e.g. PostgreSQL). Run those separately.
 	@# TODO(#1363): Re-enable Move View call over gRPC examples
-	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -not -name "move_view_call_grpc.rs" -exec basename {} .rs \;); do \
+	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -not -name "grpc_move_view_call.rs" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 

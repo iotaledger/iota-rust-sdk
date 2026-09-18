@@ -52,9 +52,26 @@ pub struct ObjectsPage {
 /// map of attribute name to value, parsed by callers as needed.
 #[derive(Clone, Debug, Default)]
 pub struct ProtocolConfig {
+    pub(crate) attributes: BTreeMap<String, String>,
+}
+
+impl ProtocolConfig {
+    /// Builds a config from attributes keyed by their canonical protocol name
+    /// (e.g. `"max_gas_payment_objects"`).
+    pub fn new(attributes: BTreeMap<String, String>) -> Self {
+        Self { attributes }
+    }
+
     /// All available configuration attributes, keyed by their canonical
     /// protocol name (e.g. `"max_gas_payment_objects"`).
-    pub attributes: BTreeMap<String, String>,
+    pub fn attributes(&self) -> &BTreeMap<String, String> {
+        &self.attributes
+    }
+
+    /// Looks up one attribute by its canonical protocol name.
+    pub fn attribute(&self, name: &str) -> Option<&str> {
+        self.attributes.get(name).map(String::as_str)
+    }
 }
 
 /// Base trait shared by the transaction builder client traits, carrying the

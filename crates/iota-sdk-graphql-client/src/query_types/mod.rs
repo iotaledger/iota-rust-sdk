@@ -83,11 +83,12 @@ pub use subscriptions::{
 pub use transaction::{
     AddressTransactionBlocksQuery, AddressTransactionRelationship, AddressTransactionsQuery,
     AddressTransactionsQueryArgs, TransactionBlock, TransactionBlockArgs,
-    TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery, TransactionBlockIndexedQuery,
-    TransactionBlockKindInput, TransactionBlockQuery, TransactionBlockWithEffects,
-    TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery, TransactionBlocksQuery,
-    TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery, TransactionsByDigestsPage,
-    TransactionsByDigestsQuery, TransactionsByDigestsQueryArgs, TransactionsFilter,
+    TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery, TransactionBlockFilter,
+    TransactionBlockIndexedQuery, TransactionBlockKindInput, TransactionBlockQuery,
+    TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
+    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
+    TransactionsByDigestsPage, TransactionsByDigestsQuery, TransactionsByDigestsQueryArgs,
+    TransactionsFilter, TransactionsSelector,
 };
 
 use crate::error;
@@ -176,7 +177,7 @@ pub struct PageInfo {
 }
 
 impl TryFrom<BigInt> for u64 {
-    type Error = error::Error;
+    type Error = error::GraphQLError;
 
     fn try_from(value: BigInt) -> Result<Self, Self::Error> {
         Ok(value.0.parse::<u64>()?)

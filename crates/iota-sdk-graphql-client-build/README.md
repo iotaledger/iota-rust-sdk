@@ -45,7 +45,7 @@ iota-sdk-graphql-client-build = { git = "https://github.com/iotaledger/iota-rust
 // lib.rs
 // Custom query
 use cynic::QueryBuilder;
-use iota_graphql_client::{query_types::schema, Client};
+use iota_graphql_client::{query_types::schema, GraphQLClient};
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "MYSCHEMA", graphql_type = "Query")]
@@ -55,7 +55,7 @@ pub struct MyQuery {
 
 #[tokio::main]
 async fn main() {
-    let client = Client::new_mainnet();
+    let client = GraphQLClient::new_mainnet();
     let operation = MyQuery::build(());
     let q = client.run_query(&operation).await.unwrap();
     println!("{:?}", q);

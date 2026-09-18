@@ -7,19 +7,19 @@
 use cynic::QueryBuilder;
 
 use crate::{
-    Client,
-    error::Result,
+    GraphQLClient,
+    error::GraphQLResult,
     pagination::{Page, PaginationFilter},
     query_types::{Event, EventFilter, EventsQuery, EventsQueryArgs},
 };
 
-impl Client {
+impl GraphQLClient {
     /// Return a page of events based on the (optional) event filter.
     pub async fn events(
         &self,
         filter: impl Into<Option<EventFilter>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<Event>> {
+    ) -> GraphQLResult<Page<Event>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = EventsQuery::build(EventsQueryArgs {

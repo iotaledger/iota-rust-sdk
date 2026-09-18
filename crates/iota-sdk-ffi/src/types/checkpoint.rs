@@ -44,20 +44,8 @@ pub type ProtocolVersion = u64;
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// checkpoint-summary = u64                            ; epoch
-///                      u64                            ; sequence_number
-///                      u64                            ; network_total_transactions
-///                      digest                         ; contents_digest
-///                      (option digest)                ; previous_digest
-///                      gas-cost-summary               ; epoch_rolling_gas_cost_summary
-///                      u64                            ; timestamp_ms
-///                      (vector checkpoint-commitment) ; checkpoint_commitments
-///                      (option end-of-epoch-data)     ; end_of_epoch_data
-///                      bytes                          ; version_specific_data
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(derive_more::From, uniffi::Object)]
 pub struct CheckpointSummary(pub iota_sdk::types::CheckpointSummary);
 
@@ -176,6 +164,11 @@ impl CheckpointSummary {
 
 /// A [`CheckpointSummary`] together with an aggregated signature certifying it
 /// under its epoch's validator committee.
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(derive_more::From, uniffi::Object)]
 pub struct SignedCheckpointSummary(pub iota_sdk::types::SignedCheckpointSummary);
 
@@ -206,11 +199,8 @@ impl SignedCheckpointSummary {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// checkpoint-contents = %d00 checkpoint-contents-v1 ; variant 0
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(derive_more::From, uniffi::Object)]
 pub struct CheckpointContents(pub iota_sdk::types::CheckpointContents);
 
@@ -263,16 +253,8 @@ impl CheckpointContents {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// checkpoint-contents-v1 = (vector execution-digests)      ; transaction and effect digests
-///                          (vector (vector user-signature)) ; set of user signatures for each
-///                                                           ; transaction. MUST be the same
-///                                                           ; length as the vector of digests
-///
-/// execution-digests = transaction-digest transaction-effects-digest   ; transaction, effects
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(derive_more::From, uniffi::Object)]
 pub struct CheckpointContentsV1(pub iota_sdk::types::CheckpointContentsV1);
 
@@ -307,6 +289,11 @@ impl CheckpointContentsV1 {
 }
 
 /// Transaction information committed to in a checkpoint
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(derive_more::From, uniffi::Object)]
 pub struct CheckpointTransactionInfo(pub iota_sdk::types::CheckpointTransactionInfo);
 
@@ -348,13 +335,8 @@ impl CheckpointTransactionInfo {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// ; CheckpointCommitment is an enum and each variant is prefixed with its index
-/// checkpoint-commitment = ecmh-live-object-set
-/// ecmh-live-object-set = %d00 digest
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(derive_more::From, uniffi::Object)]
 pub struct CheckpointCommitment(pub iota_sdk::types::CheckpointCommitment);
 
@@ -374,14 +356,8 @@ impl CheckpointCommitment {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// end-of-epoch-data = (vector validator-committee-member) ; next_epoch_committee
-///                     u64                                 ; next_epoch_protocol_version
-///                     (vector checkpoint-commitment)      ; epoch_commitments
-///                     i64                                 ; epoch_supply_change
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct EndOfEpochData {
     pub next_epoch_committee: Vec<ValidatorCommitteeMember>,
