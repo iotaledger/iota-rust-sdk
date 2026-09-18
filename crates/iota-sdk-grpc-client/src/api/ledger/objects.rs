@@ -4,7 +4,7 @@
 //! High-level API for object queries.
 
 use iota_grpc_types::{
-    read_mask_fields::{IntoReadMask, ObjectReadMask},
+    read_mask_fields::{IntoReadMask, ObjectField, ObjectReadMask},
     v1::{
         ledger_service::{GetObjectsRequest, ObjectRequest, ObjectRequests},
         object::Object,
@@ -195,6 +195,47 @@ impl GrpcClient {
     ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<Object>>>> {
         self.objects_internal(refs.into_iter().collect(), read_mask.into_read_mask())
             .await
+    }
+
+    /// Get the current references of objects by their IDs.
+    ///
+    /// Requests the `reference` field only, so no object contents travel.
+    /// Results are returned in the same order as the input IDs, one per ID.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`GrpcError::EmptyRequest`] if `ids` is empty. As for
+    /// [`objects`](Self::objects), an ID that is not found yields
+    /// [`GrpcError::Server`] with code `NOT_FOUND` in its slot only; the outer
+    /// `GrpcResult` is reserved for failures of the call itself.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_types::ObjectId;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = Client::new_localnet()?;
+    /// let gas: ObjectId = "0x2".parse()?;
+    /// let mut refs = client.object_references([gas]).await?.into_inner();
+    /// let gas_ref = refs.remove(0)?;
+    /// println!("gas version: {:?}", gas_ref.version());
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn object_references(
+        &self,
+        ids: impl IntoIterator<Item = ObjectId>,
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<iota_types::ObjectReference>>>> {
+        let (objects, metadata) = self
+            .objects(ids, [ObjectField::REFERENCE])
+            .await?
+            .into_parts();
+        let refs = objects
+            .into_iter()
+            .map(|object| Ok(object?.object_reference()?))
+            .collect();
+        Ok(MetadataEnvelope::new(refs, metadata))
     }
 
     async fn objects_internal(
