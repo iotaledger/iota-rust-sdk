@@ -70,7 +70,7 @@ fun main() = runBlocking {
 
         // Print package dependencies and their linked versions.
         println("Dependencies:")
-        val linkageTable = pkg.linkageTable().values.sortedBy { it.upgradedId.toHex() }
+        val linkageTable = pkg.linkageTable().values().sortedBy { it.upgradedId.toHex() }
         if (linkageTable.isEmpty()) {
             println("- none")
         } else {
@@ -82,7 +82,7 @@ fun main() = runBlocking {
 
         // Inspect normalized modules, functions, types, and sample key objects.
         println("Package contents:")
-        val moduleNames = pkg.modules().keys.map { it.asStr() }.sorted()
+        val moduleNames = pkg.modules().keys().map { it.asStr() }
         for (moduleName in moduleNames) {
             println("Module: $moduleName")
 

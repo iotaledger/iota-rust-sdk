@@ -17,7 +17,7 @@ use crate::faucet::FaucetError;
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
-pub type Result<T, E = Error> = std::result::Result<T, E>;
+pub type GraphQLResult<T> = std::result::Result<T, GraphQLError>;
 
 /// Maximum number of body bytes retained in an HTTP/decode error. Load
 /// balancer and gateway pages can be hundreds of KB, so the body is truncated
@@ -54,7 +54,7 @@ fn display_graphql_errors(errors: &[GraphQlError]) -> String {
 /// self-contained and the cause stays matchable.
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
-pub enum Error {
+pub enum GraphQLError {
     /// The request could not be sent, or the response could not be read.
     #[error("request error: {0}")]
     Request(#[from] reqwest::Error),
@@ -146,7 +146,7 @@ pub enum Error {
     Lagged { count: u32 },
 }
 
-/// The HTTP response a [`Error::Http`] or [`Error::Json`] was
+/// The HTTP response a [`GraphQLError::Http`] or [`GraphQLError::Json`] was
 /// raised for.
 #[derive(Debug)]
 pub struct HttpResponse {
@@ -188,8 +188,8 @@ impl HttpResponse {
     }
 }
 
-impl Error {
-    /// Build a [`Error::Http`] from a non-success response, retaining a
+impl GraphQLError {
+    /// Build a [`GraphQLError::Http`] from a non-success response, retaining a
     /// truncated, UTF-8-lossy snapshot of the body.
     pub(crate) fn http(
         url: Url,
@@ -202,7 +202,7 @@ impl Error {
         }
     }
 
-    /// Build a [`Error::Json`] from a response whose body is not valid
+    /// Build a [`GraphQLError::Json`] from a response whose body is not valid
     /// JSON, retaining a truncated, UTF-8-lossy snapshot of the body.
     pub(crate) fn json(
         url: Url,
@@ -228,81 +228,81 @@ impl Error {
     }
 }
 
-impl From<bcs::Error> for Error {
+impl From<bcs::Error> for GraphQLError {
     fn from(error: bcs::Error) -> Self {
         Self::Deserialization(error.into())
     }
 }
 
-impl From<url::ParseError> for Error {
+impl From<url::ParseError> for GraphQLError {
     fn from(error: url::ParseError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<ParseIntError> for Error {
+impl From<ParseIntError> for GraphQLError {
     fn from(error: ParseIntError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<AddressParseError> for Error {
+impl From<AddressParseError> for GraphQLError {
     fn from(error: AddressParseError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<base64ct::Error> for Error {
+impl From<base64ct::Error> for GraphQLError {
     fn from(error: base64ct::Error) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<chrono::ParseError> for Error {
+impl From<chrono::ParseError> for GraphQLError {
     fn from(error: chrono::ParseError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<DigestParseError> for Error {
+impl From<DigestParseError> for GraphQLError {
     fn from(error: DigestParseError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<TryFromIntError> for Error {
+impl From<TryFromIntError> for GraphQLError {
     fn from(error: TryFromIntError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<TypeParseError> for Error {
+impl From<TypeParseError> for GraphQLError {
     fn from(error: TypeParseError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<FromUtf8Error> for Error {
+impl From<FromUtf8Error> for GraphQLError {
     fn from(error: FromUtf8Error) -> Self {
         Self::Parse(error.into())
     }
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-impl From<tokio_tungstenite::tungstenite::Error> for Error {
+impl From<tokio_tungstenite::tungstenite::Error> for GraphQLError {
     fn from(error: tokio_tungstenite::tungstenite::Error) -> Self {
         Self::Subscription(error.into())
     }
 }
 
-impl From<graphql_ws_client::Error> for Error {
+impl From<graphql_ws_client::Error> for GraphQLError {
     fn from(error: graphql_ws_client::Error) -> Self {
         Self::Subscription(error.into())
     }
 }
 
 #[cfg(target_arch = "wasm32")]
-impl From<ws_stream_wasm::WsErr> for Error {
+impl From<ws_stream_wasm::WsErr> for GraphQLError {
     fn from(error: ws_stream_wasm::WsErr) -> Self {
         Self::Subscription(error.into())
     }
@@ -315,7 +315,7 @@ mod tests {
     #[test]
     fn http_error_surfaces_status_body_and_decode_target() {
         let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
-        let error = Error::http(
+        let error = GraphQLError::http(
             url,
             StatusCode::TOO_MANY_REQUESTS,
             b"Too Many Requests",
@@ -328,7 +328,7 @@ mod tests {
         );
         // The status stays inspectable instead of only being rendered.
         assert!(
-            matches!(error, Error::Http { response } if response.status == StatusCode::TOO_MANY_REQUESTS)
+            matches!(error, GraphQLError::Http { response } if response.status == StatusCode::TOO_MANY_REQUESTS)
         );
     }
 
@@ -338,7 +338,7 @@ mod tests {
 
         let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
         let serde_error = serde_json::from_slice::<serde_json::Value>(b"not json").unwrap_err();
-        let error = Error::json(
+        let error = GraphQLError::json(
             url,
             StatusCode::OK,
             b"not json",
@@ -367,7 +367,7 @@ mod tests {
     fn chain_formatters_repeat_the_wrapped_message() {
         use std::error::Error as _;
 
-        let error = Error::from(bcs::from_bytes::<u64>(&[]).unwrap_err());
+        let error = GraphQLError::from(bcs::from_bytes::<u64>(&[]).unwrap_err());
 
         assert_eq!(
             error.to_string(),

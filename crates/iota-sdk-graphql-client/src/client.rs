@@ -8,7 +8,7 @@ use cynic::{GraphQlResponse, Operation, QueryBuilder, serde};
 use reqwest::Url;
 
 use crate::{
-    error::{Error, Result},
+    error::{GraphQLError, GraphQLResult},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
     query_types::{ServiceConfig, ServiceConfigQuery},
 };
@@ -30,11 +30,11 @@ pub static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_P
 /// list is surfaced as a query error rather than being treated as a
 /// success. A response with neither `data` nor `errors` is reported as an empty
 /// response error instead of panicking.
-pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T> {
+pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> GraphQLResult<T> {
     match (response.data, response.errors) {
-        (_, Some(errors)) if !errors.is_empty() => Err(Error::Query(errors)),
+        (_, Some(errors)) if !errors.is_empty() => Err(GraphQLError::Query(errors)),
         (Some(data), _) => Ok(data),
-        (None, _) => Err(Error::EmptyResponse),
+        (None, _) => Err(GraphQLError::EmptyResponse),
     }
 }
 
@@ -58,9 +58,9 @@ impl GraphQLClient {
     ///
     /// An `https` or `wss` address is rejected on a build without a crypto
     /// provider, since no request to it could succeed. See the crate README.
-    pub fn new(server: &str) -> Result<Self> {
+    pub fn new(server: &str) -> GraphQLResult<Self> {
         if let Some(scheme) = crate::tls::unsupported_scheme(server) {
-            return Err(Error::TlsUnavailable(scheme));
+            return Err(GraphQLError::TlsUnavailable(scheme));
         }
         Self::with_http_client(server, crate::tls::default_http_client_builder().build()?)
     }
@@ -78,7 +78,7 @@ impl GraphQLClient {
     /// The client is used as given: the SDK does not set its user agent, so
     /// callers who want to be identifiable should apply [`USER_AGENT`]
     /// themselves.
-    pub fn with_http_client(server: &str, client: reqwest::Client) -> Result<Self> {
+    pub fn with_http_client(server: &str, client: reqwest::Client) -> GraphQLResult<Self> {
         Ok(Self {
             rpc: reqwest::Url::parse(server)?,
             inner: client,
@@ -117,7 +117,7 @@ impl GraphQLClient {
 
     /// Set the server address for the GraphQL client. It should be a
     /// valid URL with a host and optionally a port number.
-    pub fn set_rpc_server(&mut self, server: &str) -> Result<()> {
+    pub fn set_rpc_server(&mut self, server: &str) -> GraphQLResult<()> {
         let rpc = reqwest::Url::parse(server)?;
         self.rpc = rpc;
         Ok(())
@@ -125,7 +125,7 @@ impl GraphQLClient {
 
     /// Get the GraphQL service configuration, including complexity limits, read
     /// and mutation limits, supported versions, and others.
-    pub async fn service_config(&self) -> Result<&ServiceConfig> {
+    pub async fn service_config(&self) -> GraphQLResult<&ServiceConfig> {
         // If the value is already initialized, return it
         if let Some(service_config) = self.service_config.get() {
             return Ok(service_config);
@@ -145,7 +145,7 @@ impl GraphQLClient {
     /// Run a query on the GraphQL server and return the response.
     /// This method returns [`cynic::GraphQlResponse`]  over the query type `T`,
     /// and it is intended to be used with custom queries.
-    pub async fn run_query<T, V>(&self, operation: &Operation<T, V>) -> Result<T>
+    pub async fn run_query<T, V>(&self, operation: &Operation<T, V>) -> GraphQLResult<T>
     where
         T: serde::de::DeserializeOwned,
         V: serde::Serialize,
@@ -156,7 +156,7 @@ impl GraphQLClient {
     /// POST a JSON-serializable GraphQL request body and decode the JSON
     /// response, surfacing the HTTP status and a truncated body on any non-2xx
     /// response or on a decode failure.
-    async fn post_query<R>(&self, body: &impl serde::Serialize) -> Result<R>
+    async fn post_query<R>(&self, body: &impl serde::Serialize) -> GraphQLResult<R>
     where
         R: serde::de::DeserializeOwned,
     {
@@ -171,10 +171,10 @@ impl GraphQLClient {
         let bytes = resp.bytes().await?;
         let target_type = std::any::type_name::<R>();
         if !status.is_success() {
-            return Err(Error::http(url, status, &bytes, target_type));
+            return Err(GraphQLError::http(url, status, &bytes, target_type));
         }
         serde_json::from_slice::<R>(&bytes)
-            .map_err(|e| Error::json(url, status, &bytes, target_type, e))
+            .map_err(|e| GraphQLError::json(url, status, &bytes, target_type, e))
     }
 
     /// Run a JSON query on the GraphQL server and return the response.
@@ -186,7 +186,7 @@ impl GraphQLClient {
     pub async fn run_query_from_json(
         &self,
         json: serde_json::Map<String, serde_json::Value>,
-    ) -> Result<GraphQlResponse<serde_json::Value>> {
+    ) -> GraphQLResult<GraphQlResponse<serde_json::Value>> {
         self.post_query(&json).await
     }
 
@@ -213,7 +213,7 @@ impl GraphQLClient {
     }
 
     /// Lazily fetch the max page size
-    pub async fn max_page_size(&self) -> Result<i32> {
+    pub async fn max_page_size(&self) -> GraphQLResult<i32> {
         self.service_config().await.map(|cfg| cfg.max_page_size)
     }
 }
@@ -251,8 +251,8 @@ mod tests {
         }))
         .unwrap();
 
-        let Error::Query(errors) = response_to_err(response).unwrap_err() else {
-            panic!("expected Error::Query");
+        let GraphQLError::Query(errors) = response_to_err(response).unwrap_err() else {
+            panic!("expected GraphQLError::Query");
         };
         assert_eq!(errors.len(), 1);
         assert_eq!(
@@ -278,8 +278,8 @@ mod tests {
         }))
         .unwrap();
 
-        let Error::Query(errors) = response_to_err(response).unwrap_err() else {
-            panic!("expected Error::Query");
+        let GraphQLError::Query(errors) = response_to_err(response).unwrap_err() else {
+            panic!("expected GraphQLError::Query");
         };
         assert_eq!(errors.len(), 1);
         assert_eq!(errors[0].message, "boom");

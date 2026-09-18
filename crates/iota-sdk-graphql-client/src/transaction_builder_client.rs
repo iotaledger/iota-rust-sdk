@@ -28,7 +28,7 @@ impl GraphQLClient {
 }
 
 impl TransactionBuilderClientBase for GraphQLClient {
-    type Error = crate::error::Error;
+    type Error = crate::error::GraphQLError;
 }
 
 impl TransactionBuilderLedgerClient for GraphQLClient {
