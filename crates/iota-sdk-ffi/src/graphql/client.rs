@@ -49,7 +49,7 @@ impl GraphQLClient {
     #[uniffi::constructor]
     pub fn with_http_options(server: String, options: HttpClientOptions) -> Result<Self> {
         Ok(Self(RwLock::new(
-            iota_sdk::graphql_client::Client::with_http_client(&server, options.build()?)?,
+            iota_sdk::graphql_client::GraphQLClient::with_http_client(&server, options.build()?)?,
         )))
     }
 
