@@ -1,11 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{
-    collections::HashMap,
-    sync::{Arc, RwLock},
-    time::Duration,
-};
+use std::sync::{Arc, RwLock};
 
 use crate::{
     error::Result,
@@ -14,6 +10,7 @@ use crate::{
     },
     transaction_builder::{
         Payment,
+        gas_station::GasStation,
         ptb_arg::{MoveArg, PTBArgument},
         signer::TransactionSigner,
     },
@@ -102,32 +99,6 @@ macro_rules! client_transaction_builder {
                 self
             }
 
-            /// Set the gas station sponsor.
-            #[uniffi::method(default(duration = None, headers = None))]
-            pub fn gas_station_sponsor(
-                self: Arc<Self>,
-                url: String,
-                duration: Option<Duration>,
-                headers: Option<HashMap<String, Vec<String>>>,
-            ) -> Arc<Self> {
-                self.write(|builder| {
-                    let b = builder.gas_station_sponsor(url.parse().expect("invalid URL"));
-                    if let Some(duration) = duration {
-                        b.gas_reservation_duration(duration);
-                    }
-                    if let Some(headers) = headers {
-                        for (name, values) in headers {
-                            for value in values {
-                                b.add_gas_station_header(
-                                    name.parse().expect("invalid header name"),
-                                    value.parse().expect("invalid header value"),
-                                );
-                            }
-                        }
-                    }
-                });
-                self
-            }
 
             /// Set the expiration of the transaction to be a specific epoch.
             pub fn expiration(self: Arc<Self>, epoch: u64) -> Arc<Self> {
@@ -523,17 +494,45 @@ macro_rules! client_transaction_builder {
                     .into())
             }
 
-            /// Execute the transaction and optionally wait for finalization.
+            /// Execute the transaction with its gas paid by `gas_station`, and wait
+            /// for finalization.
+            pub async fn execute_with_gas_station(
+                &self,
+                gas_station: &GasStation,
+                signer: &TransactionSigner,
+            ) -> Result<TransactionEffects> {
+                Ok(self
+                    .read(|builder| {
+                        builder
+                            .clone()
+                            .execute_with_gas_sponsor(&gas_station.0, signer)
+                    })
+                    .await?
+                    .into())
+            }
+
+            /// Execute the transaction with both the sender's and the sponsor's
+            /// signature, and optionally wait for finalization.
+            ///
+            /// Use this when you hold the sponsor's key. The sponsor's address must be
+            /// set with `sponsor`, which is also where the gas coins are drawn from.
+            /// When the sponsor is a service that keeps its own key and submits for
+            /// you, use `execute_with_gas_sponsor` instead.
             #[uniffi::method(default(wait_for = None))]
-            pub async fn execute_with_sponsor(
+            pub async fn execute_with_sponsor_signer(
                 &self,
                 signer: &TransactionSigner,
                 sponsor_signer: &TransactionSigner,
                 wait_for: Option<WaitForTransaction>,
             ) -> Result<TransactionEffects> {
                 Ok(self
-                    .read(|builder| builder.clone())
-                    .execute_with_sponsor(signer, sponsor_signer, wait_for.map(Into::into))
+                    .read(|builder| {
+                        builder.clone().execute_with_sponsor_signer(
+                            signer,
+                            sponsor_signer,
+                            wait_for.map(Into::into),
+                        )
+                    })
                     .await?
                     .into())
             }

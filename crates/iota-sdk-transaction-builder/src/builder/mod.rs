@@ -6,15 +6,14 @@
 use std::{
     collections::{BTreeMap, BTreeSet, HashMap, HashSet},
     marker::PhantomData,
-    time::Duration,
 };
 
 use iota_types::{
     Address, Coin, GasPayment, Identifier, MovePackageData, Object, ObjectId, ObjectReference,
     Owner, ProgrammableTransaction, SharedObjectReference, StructTag, Transaction,
-    TransactionEffects, TransactionExpiration, TransactionKind, TransactionV1, TypeTag,
+    TransactionDigest, TransactionEffects, TransactionExpiration, TransactionKind, TransactionV1,
+    TypeTag,
 };
-use reqwest::Url;
 use serde::Serialize;
 
 use crate::{
@@ -22,7 +21,7 @@ use crate::{
     TransactionBuilderSimulationClient, WaitForTransaction,
     builder::{
         assigned_results::{AssignedResult, AssignedResults},
-        gas_station::GasStationData,
+        gas_sponsor::{GasSponsor, SponsoredGas},
         ptb_arguments::PTBArgumentList,
         signer::TransactionSigner,
     },
@@ -36,6 +35,8 @@ use crate::{
 
 mod assigned_results;
 pub(crate) mod client;
+pub(crate) mod gas_sponsor;
+#[cfg(feature = "gas-station")]
 pub(crate) mod gas_station;
 pub(crate) mod move_authenticator;
 /// Argument types for PTBs
@@ -87,8 +88,6 @@ pub struct TransactionBuildData {
     expiration: TransactionExpiration,
     /// The map of user-defined names that map to a particular command's result.
     assigned_results: HashMap<String, Argument>,
-    /// The data used for gas station sponsorship.
-    gas_station_data: Option<GasStationData>,
     /// The index of the command the builder's type state refers to. Set when
     /// a command is entered, and left alone by any command added afterwards,
     /// so that the state's methods keep addressing their own command.
@@ -313,7 +312,6 @@ impl TransactionBuilder {
                 sponsor: Default::default(),
                 expiration: Default::default(),
                 assigned_results: Default::default(),
-                gas_station_data: Default::default(),
                 state_command: Default::default(),
             },
             client: (),
@@ -374,7 +372,6 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
                 sponsor: Default::default(),
                 expiration: Default::default(),
                 assigned_results: Default::default(),
-                gas_station_data: Default::default(),
                 state_command: Default::default(),
             },
             client: (),
@@ -492,12 +489,6 @@ impl<C, L> TransactionBuilder<C, L> {
     pub fn sponsor(&mut self, sponsor: Address) -> &mut Self {
         self.data.sponsor(sponsor);
         self
-    }
-
-    /// Set the gas station sponsor. Optional.
-    pub fn gas_station_sponsor(&mut self, url: Url) -> &mut TransactionBuilder<C, GasStationData> {
-        self.data.gas_station_data = Some(GasStationData::new(url));
-        self.state_change()
     }
 
     /// Set the expiration. Optional.
@@ -1453,24 +1444,54 @@ impl<L> TransactionBuilder<(), L> {
         .into())
     }
 
-    /// Execute the transaction using the gas station and return the JSON
-    /// transaction effects. This will fail unless data is set with
-    /// [`Self::gas_station_sponsor`].
-    ///
-    /// NOTE: These effects are not necessarily compatible with
-    /// [`TransactionEffects`]
-    pub async fn execute_with_gas_station(
-        mut self,
+    /// Execute the transaction with its gas paid by `sponsor`, returning the
+    /// transaction digest.
+    pub async fn execute_with_gas_sponsor(
+        self,
+        sponsor: &impl GasSponsor,
         signer: &impl TransactionSigner,
-    ) -> Result<serde_json::Value, TransactionBuilderError> {
-        let gas_station_data = self.data.gas_station_data.take();
+    ) -> Result<TransactionDigest, TransactionBuilderError> {
+        if let Some(sponsor_address) = self.data.sponsor {
+            return Err(TransactionBuilderError::SponsorAddressConflict {
+                sponsor: sponsor_address,
+            });
+        }
 
-        Ok(if let Some(gas_station_data) = gas_station_data {
-            let mut txn = self.finish()?;
-            gas_station_data.execute_txn_json(&mut txn, signer).await?
-        } else {
-            return Err(TransactionBuilderError::MissingGasStationData);
-        })
+        let mut txn = self.finish()?;
+        let budget = {
+            let Transaction::V1(v1) = &txn else {
+                unimplemented!("a new Transaction enum variant was added and needs to be handled")
+            };
+            if !v1.gas_payment.objects.is_empty() {
+                return Err(TransactionBuilderError::SponsorGasConflict);
+            }
+            if v1.gas_payment.budget == 0 {
+                return Err(TransactionBuilderError::MissingGasBudget);
+            }
+            v1.gas_payment.budget
+        };
+
+        let (reservation, SponsoredGas { owner, objects }) = sponsor
+            .reserve_gas(&txn, budget)
+            .await
+            .map_err(TransactionBuilderError::sponsor)?;
+        {
+            let Transaction::V1(v1) = &mut txn else {
+                unimplemented!("a new Transaction enum variant was added and needs to be handled")
+            };
+            v1.gas_payment.owner = owner;
+            v1.gas_payment.objects = objects;
+        }
+
+        let signature = signer
+            .sign(&txn)
+            .await
+            .map_err(TransactionBuilderError::signature)?;
+
+        sponsor
+            .execute_reserved(reservation, &txn, &signature)
+            .await
+            .map_err(TransactionBuilderError::sponsor)
     }
 }
 
@@ -1963,47 +1984,147 @@ impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
 }
 
 impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
-    /// Execute the transaction and optionally wait for finalization. The
-    /// client will be used unless a gas station was configured, in
-    /// which case the transaction will be sent to the endpoint for execution.
+    /// Execute the transaction and optionally wait for finalization.
     pub async fn execute(
         mut self,
         signer: &impl TransactionSigner,
         wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, TransactionBuilderError> {
         let wait_for = wait_for.into();
-        let gas_station_data = self.data.gas_station_data.take();
-        let mut txn = self.finish_internal().await?;
+        let txn = self.finish_internal().await?;
+        let signature = signer
+            .sign(&txn)
+            .await
+            .map_err(TransactionBuilderError::signature)?;
 
-        Ok(if let Some(gas_station_data) = gas_station_data {
-            let digest = gas_station_data.execute_txn(&mut txn, signer).await?;
-            self.client
-                .wait_for_transaction(digest, WaitForTransaction::Finalized)
-                .await
-                .map_err(TransactionBuilderError::client)?;
-            self.client
-                .transaction_effects(digest)
-                .await
-                .map_err(TransactionBuilderError::client)?
-                .ok_or_else(|| TransactionBuilderError::MissingTransaction(digest))?
-        } else {
-            self.client
-                .execute_transaction(
-                    &[signer
-                        .sign(&txn)
-                        .await
-                        .map_err(TransactionBuilderError::signature)?],
-                    &txn,
-                    wait_for,
-                )
-                .await
-                .map_err(TransactionBuilderError::client)?
-        })
+        self.client
+            .execute_transaction(&[signature], &txn, wait_for)
+            .await
+            .map_err(TransactionBuilderError::client)
     }
 
-    /// Execute the transaction with a sponsor signer and optionally wait for
+    /// Execute the transaction with its gas paid by `sponsor`, and wait for
     /// finalization.
-    pub async fn execute_with_sponsor(
+    ///
+    /// The sponsor keeps its own key and submits the transaction itself; when
+    /// you hold the sponsor's key instead, use
+    /// [`execute_with_sponsor_signer`](Self::execute_with_sponsor_signer).
+    ///
+    /// The sponsor supplies the whole gas payment, so the builder does not
+    /// look up the sender's coins; setting gas coins with [`gas`](Self::gas)
+    /// or an address with [`sponsor`](Self::sponsor) conflicts with that and
+    /// is rejected. When no budget was set with
+    /// [`gas_budget`](Self::gas_budget) it is estimated by simulating the
+    /// transaction before the gas is reserved.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_transaction_builder::{GasStation, TestClient, TransactionBuilder};
+    /// # use iota_crypto::ed25519::Ed25519PrivateKey;
+    /// # use iota_types::Address;
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// # let keypair = Ed25519PrivateKey::new([9; 32]);
+    /// let station = GasStation::new("http://0.0.0.0:9527".parse()?);
+    ///
+    /// let mut builder =
+    ///     TransactionBuilder::new(keypair.public_key().derive_address()).with_client(client);
+    /// builder
+    ///     .move_call(Address::STD, "u64", "sqrt")
+    ///     .arguments([64u64]);
+    ///
+    /// let effects = builder.execute_with_gas_sponsor(&station, &keypair).await?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn execute_with_gas_sponsor(
+        mut self,
+        sponsor: &impl GasSponsor,
+        signer: &impl TransactionSigner,
+    ) -> Result<TransactionEffects, TransactionBuilderError> {
+        if let Some(sponsor_address) = self.data.sponsor {
+            return Err(TransactionBuilderError::SponsorAddressConflict {
+                sponsor: sponsor_address,
+            });
+        }
+
+        // Build without picking the sender's gas coins; the sponsor pays.
+        let mut txn = self.resolve_ptb(false).await?;
+        {
+            let Transaction::V1(v1) = &txn else {
+                unimplemented!("a new Transaction enum variant was added and needs to be handled")
+            };
+            if !v1.gas_payment.objects.is_empty() {
+                return Err(TransactionBuilderError::SponsorGasConflict);
+            }
+        }
+
+        let budget = match self.data.gas_budget {
+            Some(budget) => budget,
+            None => {
+                let estimate = self
+                    .client
+                    .estimate_transaction_budget(&txn)
+                    .await
+                    .map_err(TransactionBuilderError::client)?
+                    .ok_or(TransactionBuilderError::MissingGasBudget)?;
+                let Transaction::V1(v1) = &txn else {
+                    unimplemented!(
+                        "a new Transaction enum variant was added and needs to be handled"
+                    )
+                };
+                // The network enforces a minimum gas budget of base_tx_cost_fixed
+                // (1000) * gas_price. The dry-run estimate can return a value below
+                // this minimum, so we clamp it.
+                estimate.max(v1.gas_payment.price.saturating_mul(1000))
+            }
+        };
+
+        let (reservation, SponsoredGas { owner, objects }) = sponsor
+            .reserve_gas(&txn, budget)
+            .await
+            .map_err(TransactionBuilderError::sponsor)?;
+        {
+            let Transaction::V1(v1) = &mut txn else {
+                unimplemented!("a new Transaction enum variant was added and needs to be handled")
+            };
+            v1.gas_payment.owner = owner;
+            v1.gas_payment.objects = objects;
+            v1.gas_payment.budget = budget;
+        }
+
+        let signature = signer
+            .sign(&txn)
+            .await
+            .map_err(TransactionBuilderError::signature)?;
+        let digest = sponsor
+            .execute_reserved(reservation, &txn, &signature)
+            .await
+            .map_err(TransactionBuilderError::sponsor)?;
+
+        self.client
+            .wait_for_transaction(digest, WaitForTransaction::Finalized)
+            .await
+            .map_err(TransactionBuilderError::client)?;
+        self.client
+            .transaction_effects(digest)
+            .await
+            .map_err(TransactionBuilderError::client)?
+            .ok_or(TransactionBuilderError::MissingTransaction(digest))
+    }
+
+    /// Execute the transaction with both the sender's and the sponsor's
+    /// signature, and optionally wait for finalization.
+    ///
+    /// Use this when you hold the sponsor's key: both signatures are produced
+    /// here and the transaction goes out through the client. The sponsor's
+    /// address must be set with [`sponsor`](Self::sponsor), which is also
+    /// where the gas coins are drawn from. When the sponsor is a service that
+    /// keeps its own key and submits for you, use
+    /// [`execute_with_gas_sponsor`](Self::execute_with_gas_sponsor) instead.
+    pub async fn execute_with_sponsor_signer(
         mut self,
         signer: &impl TransactionSigner,
         sponsor_signer: &impl TransactionSigner,
@@ -2092,28 +2213,6 @@ impl<C, L: Into<Command>> TransactionBuilder<C, L> {
     /// Get the argument representing the command this builder state refers to.
     pub fn result(&mut self) -> Argument {
         Argument::Result(self.data.state_command())
-    }
-}
-
-impl<C> TransactionBuilder<C, GasStationData> {
-    /// Set the gas reservation duration for a gas station sponsor.
-    pub fn gas_reservation_duration(&mut self, duration: Duration) -> &mut Self {
-        if let Some(data) = &mut self.data.gas_station_data {
-            data.set_gas_reservation_duration(duration);
-        }
-        self
-    }
-
-    /// Add a header that will be passed to the gas station sponsor request.
-    pub fn add_gas_station_header(
-        &mut self,
-        name: reqwest::header::HeaderName,
-        value: reqwest::header::HeaderValue,
-    ) -> &mut Self {
-        if let Some(data) = &mut self.data.gas_station_data {
-            data.add_header(name, value);
-        }
-        self
     }
 }
 
