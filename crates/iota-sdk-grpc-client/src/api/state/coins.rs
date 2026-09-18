@@ -3,7 +3,7 @@
 
 //! High-level API for listing coins owned by an address.
 //!
-//! Wraps [`Client::owned_objects`](crate::Client::owned_objects)
+//! Wraps [`GrpcClient::owned_objects`](crate::GrpcClient::owned_objects)
 //! with a coin type filter and converts each returned proto `Object` into an
 //! [`iota_types::framework::Coin`].
 
@@ -17,14 +17,14 @@ use iota_grpc_types::{
 use iota_types::{Address, Identifier, StructTag, framework::Coin};
 
 use crate::{
-    Client, InterceptedChannel,
+    GrpcClient, InterceptedChannel,
     api::{GrpcError, GrpcResult, TryFromProtoError, define_list_query},
 };
 
 define_list_query! {
     /// Builder for listing coins owned by an address.
     ///
-    /// Created by [`Client::coins`]. Await directly for a single page
+    /// Created by [`GrpcClient::coins`]. Await directly for a single page
     /// (with access to `next_page_token`), or call
     /// [`.collect(limit)`](Self::collect) to auto-paginate.
     pub struct GetCoinsQuery {
@@ -43,7 +43,7 @@ fn object_to_coin(obj: &iota_grpc_types::v1::object::Object) -> GrpcResult<Coin>
         .map_err(|e| GrpcError::from(TryFromProtoError::invalid("coin", e)))
 }
 
-impl Client {
+impl GrpcClient {
     /// List coins owned by an address.
     ///
     /// Returns a query builder. Await it directly for a single page (with
@@ -66,10 +66,10 @@ impl Client {
     ///
     /// Single page:
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let page = client.coins(owner, None, None, None).await?;
@@ -82,10 +82,10 @@ impl Client {
     ///
     /// Auto-paginate:
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_types::Address;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
     /// let all = client

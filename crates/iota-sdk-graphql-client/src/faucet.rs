@@ -222,11 +222,11 @@ impl FaucetClient {
     ///
     /// This is a convenience method that combines `request_and_wait` and
     /// waiting for the funding transactions to be finalized using the provided
-    /// GraphQL `Client`.
+    /// GraphQL `GraphQLClient`.
     pub async fn request_and_wait_for_finalized(
         &self,
         address: Address,
-        client: &crate::Client,
+        client: &crate::GraphQLClient,
     ) -> Result<Option<FaucetReceipt>, crate::error::Error> {
         let Some(receipt) = self.request_and_wait(address).await? else {
             return Ok(None);
