@@ -417,11 +417,11 @@ macro_rules! ffi_btree_map {
     ($(#[$meta:meta])* $name:ident<$key:ty, $value:ty>) => {
         paste::paste! {
             $(#[$meta])*
-            #[derive(uniffi::Object)]
+            #[derive(Debug, Clone, uniffi::Object)]
             pub struct $name(::std::collections::BTreeMap<$key, $value>);
 
             #[doc = "An entry in the " $name " map."]
-            #[derive(Clone, uniffi::Record)]
+            #[derive(Debug, Clone, uniffi::Record)]
             pub struct [<$name Entry>] {
                 /// The entry's key.
                 pub key: $key,
