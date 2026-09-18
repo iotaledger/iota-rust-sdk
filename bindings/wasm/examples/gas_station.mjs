@@ -21,8 +21,6 @@ const keypair = Ed25519PrivateKey.random();
 const sender = keypair.publicKey().deriveAddress();
 const signer = TransactionSigner.fromEd25519(keypair);
 
-// A gas station is configured once and reused for any number of
-// transactions.
 const gasStation = new GasStation(
   gasStationUrl,
   undefined,

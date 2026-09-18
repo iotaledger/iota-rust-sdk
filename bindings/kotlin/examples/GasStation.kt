@@ -13,8 +13,6 @@ fun main() = runBlocking {
         var sender = keypair.publicKey().deriveAddress()
         var signer = TransactionSigner.fromEd25519(keypair)
 
-        // A gas station is configured once and reused for any number of
-        // transactions.
         val gasStation =
             GasStation(
                 gasStationUrl,

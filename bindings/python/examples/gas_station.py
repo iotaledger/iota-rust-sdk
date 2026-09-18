@@ -14,8 +14,6 @@ async def main():
     sender = keypair.public_key().derive_address()
     signer = TransactionSigner.from_ed25519(keypair)
 
-    # A gas station is configured once and reused for any number of
-    # transactions.
     gas_station = GasStation(
         gas_station_url,
         headers={"Authorization": [f"Bearer {gas_station_auth_token}"]})

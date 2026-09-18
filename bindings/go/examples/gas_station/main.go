@@ -29,8 +29,6 @@ func main() {
 	headers := make(map[string][]string)
 	headers["Authorization"] = []string{fmt.Sprintf("Bearer %v", gasStationAuthToken)}
 
-	// A gas station is configured once and reused for any number of
-	// transactions.
 	gasStation, err := iota_sdk.NewGasStation(gasStationUrl, nil, &headers)
 	if err != nil {
 		log.Fatalf("Failed to create gas station: %v", err)

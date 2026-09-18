@@ -17,9 +17,6 @@ async fn main() -> Result<()> {
     let keypair = Ed25519PrivateKey::random();
     let sender = keypair.public_key().derive_address();
 
-    // A gas station is configured once and reused for any number of
-    // transactions. Pass `.http_client(..)` to control timeouts, proxies or
-    // TLS roots.
     let station = GasStation::builder("http://0.0.0.0:9527".parse()?)
         .header(
             AUTHORIZATION,

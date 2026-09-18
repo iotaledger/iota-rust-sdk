@@ -19,8 +19,6 @@ class Program
             { "Authorization", new[] { $"Bearer {gasStationAuthToken}" } }
         };
 
-        // A gas station is configured once and reused for any number of
-        // transactions.
         var gasStation = new GasStation(gasStationUrl, null, headers);
 
         var builder = client.TransactionBuilder(sender);
