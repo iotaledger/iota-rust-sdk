@@ -216,40 +216,30 @@ impl MovePackage {
     /// type origin and linkage tables) already supplied.
     ///
     /// It does not perform any type of validation. Ensure that the supplied
-    /// parts are semantically valid. A package that is about to be written
-    /// on-chain is additionally held to a size limit, which
-    /// [`MovePackage::check_size`] applies.
+    /// parts are semantically valid.
     pub fn new(
         id: ObjectId,
         version: Version,
         modules: BTreeMap<Identifier, Vec<u8>>,
+        max_move_package_size: u64,
         type_origin_table: Vec<TypeOrigin>,
         linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
-    ) -> Self {
-        Self {
+    ) -> Result<Self, ExecutionError> {
+        let pkg = Self {
             id,
             version,
             modules,
             type_origin_table,
             linkage_table,
-        }
-    }
-
-    /// Check the package against `max_package_size`, the number of bytes a
-    /// package may occupy on-chain.
-    ///
-    /// Only a package that is about to be written needs this. One that was read
-    /// back from the network was already held to the limit of the protocol
-    /// version that accepted it, and that limit is not knowable from here.
-    pub fn check_size(&self, max_package_size: u64) -> Result<(), ExecutionError> {
-        let object_size = self.size() as u64;
-        if object_size > max_package_size {
+        };
+        let object_size = pkg.size() as u64;
+        if object_size > max_move_package_size {
             return Err(ExecutionError::PackageTooBig {
                 object_size,
-                max_object_size: max_package_size,
+                max_object_size: max_move_package_size,
             });
         }
-        Ok(())
+        Ok(pkg)
     }
 
     /// Calculate the digest of the [MovePackage].
@@ -510,10 +500,19 @@ mod tests {
     }
 
     #[test]
-    fn check_size_rejects_a_package_over_the_limit() {
-        let pkg = package([module("m", &[0; 100])], vec![], []);
+    fn new_exceeding_max_size_fails() {
+        let modules = [module("m", &[0; 100])];
         let max = 10_u64;
-        match pkg.check_size(max).unwrap_err() {
+        let err = MovePackage::new(
+            ObjectId::ZERO,
+            Version::OBJECT_START,
+            modules.into_iter().collect(),
+            max,
+            vec![],
+            BTreeMap::new(),
+        )
+        .unwrap_err();
+        match err {
             ExecutionError::PackageTooBig {
                 object_size,
                 max_object_size,
@@ -523,12 +522,6 @@ mod tests {
             }
             other => panic!("expected PackageTooBig, got {other:?}"),
         }
-    }
-
-    #[test]
-    fn check_size_accepts_a_package_at_the_limit() {
-        let pkg = package([module("m", &[0; 100])], vec![], []);
-        pkg.check_size(pkg.size() as u64).unwrap();
     }
 
     #[cfg(feature = "hash")]
