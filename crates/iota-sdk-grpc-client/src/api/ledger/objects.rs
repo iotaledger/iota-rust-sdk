@@ -204,9 +204,10 @@ impl Client {
     ///
     /// # Errors
     ///
-    /// Returns [`GrpcError::EmptyRequest`] if `ids` is empty. Unlike
-    /// [`objects`](Self::objects), an ID that is not found fails the whole
-    /// call with that ID's `NOT_FOUND` error.
+    /// Returns [`GrpcError::EmptyRequest`] if `ids` is empty. As for
+    /// [`objects`](Self::objects), an ID that is not found yields
+    /// [`GrpcError::Server`] with code `NOT_FOUND` in its slot only; the outer
+    /// `GrpcResult` is reserved for failures of the call itself.
     ///
     /// # Example
     ///
@@ -216,15 +217,16 @@ impl Client {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new_localnet()?;
     /// let gas: ObjectId = "0x2".parse()?;
-    /// let refs = client.object_references([gas]).await?.into_inner();
-    /// println!("gas version: {:?}", refs[0].version());
+    /// let mut refs = client.object_references([gas]).await?.into_inner();
+    /// let gas_ref = refs.remove(0)?;
+    /// println!("gas version: {:?}", gas_ref.version());
     /// # Ok(())
     /// # }
     /// ```
     pub async fn object_references(
         &self,
         ids: impl IntoIterator<Item = ObjectId>,
-    ) -> GrpcResult<MetadataEnvelope<Vec<iota_types::ObjectReference>>> {
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<iota_types::ObjectReference>>>> {
         let (objects, metadata) = self
             .objects(ids, [ObjectField::REFERENCE])
             .await?
@@ -232,7 +234,7 @@ impl Client {
         let refs = objects
             .into_iter()
             .map(|object| Ok(object?.object_reference()?))
-            .collect::<GrpcResult<Vec<_>>>()?;
+            .collect();
         Ok(MetadataEnvelope::new(refs, metadata))
     }
 
