@@ -4,7 +4,7 @@
 use std::sync::Arc;
 
 use iota_sdk::{
-    grpc_client::Client,
+    grpc_client::GrpcClient as SdkGrpcClient,
     grpc_types::v1 as proto,
     transaction_builder::{
         ObjectsPage, ProtocolConfig, TransactionBuilderClientBase,
@@ -26,7 +26,7 @@ use crate::{
 };
 
 impl TransactionBuilderClientBase for GrpcClient {
-    type Error = <Client as TransactionBuilderClientBase>::Error;
+    type Error = <SdkGrpcClient as TransactionBuilderClientBase>::Error;
 }
 
 impl TransactionBuilderLedgerClient for GrpcClient {
@@ -69,7 +69,7 @@ impl TransactionBuilderLedgerClient for GrpcClient {
 }
 
 impl TransactionBuilderSimulationClient for GrpcClient {
-    type DryRunResult = <Client as TransactionBuilderSimulationClient>::DryRunResult;
+    type DryRunResult = <SdkGrpcClient as TransactionBuilderSimulationClient>::DryRunResult;
 
     async fn estimate_transaction_budget(
         &self,

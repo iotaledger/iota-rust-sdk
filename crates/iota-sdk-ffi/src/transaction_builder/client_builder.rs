@@ -364,11 +364,13 @@ impl ClientTransactionBuilder {
         count: u64,
         coin_type: Option<Arc<TypeTag>>,
     ) -> Arc<Self> {
-        self.write(|builder| {
-            let builder = builder.divide_coin(coin, count);
-            if let Some(coin_type) = coin_type {
-                builder.coin_type_tag(coin_type.0.clone());
-            }
+        self.write(|inner| {
+            with_builder!(inner, |builder| {
+                let builder = builder.divide_coin(coin, count);
+                if let Some(coin_type) = coin_type {
+                    builder.coin_type_tag(coin_type.0.clone());
+                }
+            })
         });
         self
     }
