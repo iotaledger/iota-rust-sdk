@@ -136,4 +136,8 @@ impl<T> ResponseExt for MetadataEnvelope<T> {
     fn server_version(&self) -> Option<&str> {
         self.metadata.server_version()
     }
+
+    fn min_sdk_version(&self) -> Option<&str> {
+        self.metadata.min_sdk_version()
+    }
 }

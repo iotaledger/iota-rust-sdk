@@ -12,7 +12,7 @@ use iota_grpc_types::v1::{
 };
 use tonic::codec::CompressionEncoding;
 
-use crate::{api::GrpcResult, interceptors::HeadersInterceptor};
+use crate::{api::GrpcResult, interceptors::HeadersInterceptor, sdk_version::SdkVersionCheck};
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
@@ -21,8 +21,13 @@ pub(crate) const TESTNET_HOST: &str = "https://grpc.testnet.iota.cafe:443";
 pub(crate) const DEVNET_HOST: &str = "https://grpc.devnet.iota.cafe:443";
 pub(crate) const LOCAL_HOST: &str = "http://localhost:50051";
 
-pub type InterceptedChannel =
-    tonic::service::interceptor::InterceptedService<tonic::transport::Channel, HeadersInterceptor>;
+/// Channel handed to the service clients: the shared transport channel,
+/// checked against the node's minimum SDK version and carrying the configured
+/// headers.
+pub type InterceptedChannel = tonic::service::interceptor::InterceptedService<
+    SdkVersionCheck<tonic::transport::Channel>,
+    HeadersInterceptor,
+>;
 
 /// gRPC client factory for IOTA gRPC operations.
 #[derive(Clone)]
@@ -116,14 +121,6 @@ impl Client {
         &self.uri
     }
 
-    /// Get a reference to the underlying channel.
-    ///
-    /// This can be useful for creating additional service clients that aren't
-    /// yet integrated into Client.
-    pub fn channel(&self) -> &tonic::transport::Channel {
-        &self.channel
-    }
-
     pub fn headers(&self) -> &HeadersInterceptor {
         &self.headers
     }
@@ -145,7 +142,7 @@ impl Client {
     /// Get a ledger service client.
     pub fn ledger_service_client(&self) -> LedgerServiceClient<InterceptedChannel> {
         self.configure_client(LedgerServiceClient::with_interceptor(
-            self.channel.clone(),
+            self.channel(),
             self.headers.clone(),
         ))
     }
@@ -155,7 +152,7 @@ impl Client {
         &self,
     ) -> TransactionExecutionServiceClient<InterceptedChannel> {
         self.configure_client(TransactionExecutionServiceClient::with_interceptor(
-            self.channel.clone(),
+            self.channel(),
             self.headers.clone(),
         ))
     }
@@ -163,7 +160,7 @@ impl Client {
     /// Get a state service client.
     pub fn state_service_client(&self) -> StateServiceClient<InterceptedChannel> {
         self.configure_client(StateServiceClient::with_interceptor(
-            self.channel.clone(),
+            self.channel(),
             self.headers.clone(),
         ))
     }
@@ -171,9 +168,22 @@ impl Client {
     /// Get a move package service client.
     pub fn move_package_service_client(&self) -> MovePackageServiceClient<InterceptedChannel> {
         self.configure_client(MovePackageServiceClient::with_interceptor(
-            self.channel.clone(),
+            self.channel(),
             self.headers.clone(),
         ))
+    }
+
+    /// Get the underlying channel, checked against the node's minimum SDK
+    /// version.
+    ///
+    /// This can be useful for creating additional service clients that aren't
+    /// yet integrated into Client. Wrap it with the client's [`headers`] via
+    /// the service client's `with_interceptor` to also send the configured
+    /// headers.
+    ///
+    /// [`headers`]: Client::headers
+    pub fn channel(&self) -> SdkVersionCheck<tonic::transport::Channel> {
+        SdkVersionCheck::new(self.channel.clone())
     }
 
     /// Apply common client configuration (compression, message size limits).
