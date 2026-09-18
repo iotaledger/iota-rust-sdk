@@ -9,7 +9,7 @@ use iota_types::{Address, ObjectId};
 
 use crate::{
     GraphQLClient,
-    error::Result,
+    error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter},
     query_types::ObjectFilter,
     streams::stream_paginated_query,
@@ -76,7 +76,7 @@ impl GraphQLClient {
         &self,
         filter: impl Into<Option<MoveObjectFilter>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<T>> {
+    ) -> GraphQLResult<Page<T>> {
         let filter = filter.into().unwrap_or_default().into_object_filter::<T>();
         let page = self.objects(filter, pagination_filter).await?;
         let (page_info, objects) = page.into_parts();
@@ -95,7 +95,7 @@ impl GraphQLClient {
         &'a self,
         filter: impl Into<Option<MoveObjectFilter>>,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<T>> + 'a
+    ) -> impl Stream<Item = GraphQLResult<T>> + 'a
     where
         T: MoveObject + Clone + Unpin + 'a,
     {
