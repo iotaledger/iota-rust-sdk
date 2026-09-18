@@ -20,6 +20,8 @@ mod wait;
 mod test_utils;
 
 // Re-export types used by query_types module internally
+#[cfg(feature = "move-types")]
+pub use api::move_objects::MoveObjectFilter;
 pub use client::GraphQLClient;
 pub use error::{GraphQLError, GraphQLResult};
 pub use iota_transaction_builder::WaitForTransaction;
