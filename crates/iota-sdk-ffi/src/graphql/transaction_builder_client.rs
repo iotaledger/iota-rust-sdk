@@ -1,8 +1,6 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::Arc;
-
 use iota_sdk::{
     graphql_client::{DryRunResult, GraphQLClient as SdkGraphQLClient, WaitForTransaction},
     transaction_builder::{
@@ -16,21 +14,7 @@ use iota_sdk::{
     },
 };
 
-use crate::{
-    graphql::client::GraphQLClient,
-    transaction_builder::{builder::TransactionBuilder, client_builder::ClientTransactionBuilder},
-};
-
-#[uniffi::export]
-impl GraphQLClient {
-    /// Create a new `TransactionBuilder` with the given sender address.
-    pub fn transaction_builder(
-        self: Arc<GraphQLClient>,
-        sender: &crate::types::address::Address,
-    ) -> ClientTransactionBuilder {
-        TransactionBuilder::new(sender).with_graphql_client(self)
-    }
-}
+use crate::graphql::client::GraphQLClient;
 
 impl TransactionBuilderClientBase for GraphQLClient {
     type Error = <SdkGraphQLClient as TransactionBuilderClientBase>::Error;
