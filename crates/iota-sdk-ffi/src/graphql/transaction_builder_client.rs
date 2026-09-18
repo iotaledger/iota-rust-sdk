@@ -4,7 +4,7 @@
 use std::sync::Arc;
 
 use iota_sdk::{
-    graphql_client::{Client, DryRunResult, WaitForTransaction},
+    graphql_client::{DryRunResult, GraphQLClient as SdkGraphQLClient, WaitForTransaction},
     transaction_builder::{
         ObjectsPage, ProtocolConfig, TransactionBuilderClientBase,
         TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
@@ -33,7 +33,7 @@ impl GraphQLClient {
 }
 
 impl TransactionBuilderClientBase for GraphQLClient {
-    type Error = <Client as TransactionBuilderClientBase>::Error;
+    type Error = <SdkGraphQLClient as TransactionBuilderClientBase>::Error;
 }
 
 impl TransactionBuilderLedgerClient for GraphQLClient {

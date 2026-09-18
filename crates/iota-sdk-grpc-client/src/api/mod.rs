@@ -202,10 +202,10 @@ impl CheckpointResponse {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let cp = client
     ///     .checkpoint_latest(None, None, CheckpointResponseReadMask::default())
     ///     .await?;

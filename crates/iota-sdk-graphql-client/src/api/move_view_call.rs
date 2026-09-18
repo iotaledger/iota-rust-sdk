@@ -5,16 +5,16 @@ use cynic::QueryBuilder;
 use iota_types::{Address, ObjectId, ObjectReference, TypeTag};
 
 use crate::{
-    Client,
+    GraphQLClient,
     error::Result,
     query_types::{MoveViewCallArgs, MoveViewCallQuery, MoveViewResult},
 };
 
-impl Client {
+impl GraphQLClient {
     /// Execute a Move View Function with raw JSON arguments.
     ///
-    /// This is an alternative to [`Client::move_view_call`] that accepts raw
-    /// JSON values instead of typed arguments.
+    /// This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+    /// raw JSON values instead of typed arguments.
     ///
     /// A View Function is a function in a Move module with a return type that
     /// does not alter the state of the ledger. When using this interface,

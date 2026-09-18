@@ -26,7 +26,7 @@ pub type InterceptedChannel =
 
 /// gRPC client factory for IOTA gRPC operations.
 #[derive(Clone)]
-pub struct Client {
+pub struct GrpcClient {
     /// Target URI of the gRPC server
     uri: http::Uri,
     /// Shared gRPC channel for all service clients
@@ -37,8 +37,8 @@ pub struct Client {
     max_decoding_message_size: Option<usize>,
 }
 
-impl Client {
-    /// Create a new Client instance for the given gRPC server URI.
+impl GrpcClient {
+    /// Create a new GrpcClient instance for the given gRPC server URI.
     pub fn new<T>(uri: T) -> GrpcResult<Self>
     where
         T: TryInto<http::Uri>,
@@ -119,7 +119,7 @@ impl Client {
     /// Get a reference to the underlying channel.
     ///
     /// This can be useful for creating additional service clients that aren't
-    /// yet integrated into Client.
+    /// yet integrated into GrpcClient.
     pub fn channel(&self) -> &tonic::transport::Channel {
         &self.channel
     }
@@ -225,9 +225,9 @@ mod tests {
     #[cfg(not(feature = "tls-ring"))]
     #[test]
     fn https_without_tls_ring_returns_failed_precondition() {
-        use super::Client;
+        use super::GrpcClient;
 
-        let status = match Client::new("https://example.com") {
+        let status = match GrpcClient::new("https://example.com") {
             Err(crate::api::GrpcError::Grpc(status)) => status,
             Err(other) => panic!("expected GrpcError::Grpc, got: {other:?}"),
             Ok(_) => panic!("new should fail without tls-ring"),
