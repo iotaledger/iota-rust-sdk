@@ -5,7 +5,7 @@ edition = "2024"
 license = "Apache-2.0"
 publish = false
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
-description = "Polling-based custom indexer example using iota_sdk::graphql_client::Client"
+description = "Polling-based custom indexer example using iota_sdk::graphql_client::GraphQLClient"
 
 [dependencies]
 # external dependencies

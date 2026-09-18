@@ -25,11 +25,11 @@ fn tokio_runtime() -> &'static tokio::runtime::Runtime {
 
 /// The gRPC client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
-pub struct GrpcClient(RwLock<iota_sdk::grpc_client::Client>);
+pub struct GrpcClient(RwLock<iota_sdk::grpc_client::GrpcClient>);
 
 impl GrpcClient {
     /// A handle on the current client configuration.
-    pub(crate) fn client(&self) -> iota_sdk::grpc_client::Client {
+    pub(crate) fn client(&self) -> iota_sdk::grpc_client::GrpcClient {
         self.0
             .read()
             .unwrap_or_else(PoisonError::into_inner)
@@ -38,7 +38,7 @@ impl GrpcClient {
 
     fn update(
         &self,
-        f: impl FnOnce(iota_sdk::grpc_client::Client) -> iota_sdk::grpc_client::Client,
+        f: impl FnOnce(iota_sdk::grpc_client::GrpcClient) -> iota_sdk::grpc_client::GrpcClient,
     ) {
         let mut client = self.0.write().unwrap_or_else(PoisonError::into_inner);
         *client = f(client.clone());
@@ -51,7 +51,7 @@ impl GrpcClient {
     #[uniffi::constructor]
     pub fn new(uri: String) -> Result<Self> {
         let _guard = tokio_runtime().enter();
-        Ok(Self(RwLock::new(iota_sdk::grpc_client::Client::new(
+        Ok(Self(RwLock::new(iota_sdk::grpc_client::GrpcClient::new(
             uri.as_str(),
         )?)))
     }
@@ -61,7 +61,7 @@ impl GrpcClient {
     pub fn new_mainnet() -> Result<Self> {
         let _guard = tokio_runtime().enter();
         Ok(Self(RwLock::new(
-            iota_sdk::grpc_client::Client::new_mainnet()?,
+            iota_sdk::grpc_client::GrpcClient::new_mainnet()?,
         )))
     }
 
@@ -70,7 +70,7 @@ impl GrpcClient {
     pub fn new_testnet() -> Result<Self> {
         let _guard = tokio_runtime().enter();
         Ok(Self(RwLock::new(
-            iota_sdk::grpc_client::Client::new_testnet()?,
+            iota_sdk::grpc_client::GrpcClient::new_testnet()?,
         )))
     }
 
@@ -79,7 +79,7 @@ impl GrpcClient {
     pub fn new_devnet() -> Result<Self> {
         let _guard = tokio_runtime().enter();
         Ok(Self(RwLock::new(
-            iota_sdk::grpc_client::Client::new_devnet()?,
+            iota_sdk::grpc_client::GrpcClient::new_devnet()?,
         )))
     }
 
@@ -89,7 +89,7 @@ impl GrpcClient {
     pub fn new_localnet() -> Result<Self> {
         let _guard = tokio_runtime().enter();
         Ok(Self(RwLock::new(
-            iota_sdk::grpc_client::Client::new_localnet()?,
+            iota_sdk::grpc_client::GrpcClient::new_localnet()?,
         )))
     }
 

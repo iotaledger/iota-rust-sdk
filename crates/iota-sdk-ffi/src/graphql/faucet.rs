@@ -84,7 +84,7 @@ impl FaucetClient {
     ///
     /// This is a convenience method that combines `request_and_wait` and
     /// waiting for the funding transactions to be finalized using the provided
-    /// GraphQL `Client`.
+    /// GraphQL `GraphQLClient`.
     pub async fn request_and_wait_for_finalized(
         &self,
         address: &Address,

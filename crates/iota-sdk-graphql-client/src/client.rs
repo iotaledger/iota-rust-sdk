@@ -41,7 +41,7 @@ pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T> {
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
 #[derive(Clone, Debug)]
-pub struct Client {
+pub struct GraphQLClient {
     /// The URL of the GraphQL server.
     pub(crate) rpc: Url,
     /// The reqwest client.
@@ -49,7 +49,7 @@ pub struct Client {
     pub(crate) service_config: std::sync::OnceLock<ServiceConfig>,
 }
 
-impl Client {
+impl GraphQLClient {
     /// Create a new GraphQL client with the provided server address.
     ///
     /// The HTTP client is built for you, trusting the platform store plus the
@@ -79,7 +79,7 @@ impl Client {
     /// callers who want to be identifiable should apply [`USER_AGENT`]
     /// themselves.
     pub fn with_http_client(server: &str, client: reqwest::Client) -> Result<Self> {
-        Ok(Client {
+        Ok(Self {
             rpc: reqwest::Url::parse(server)?,
             inner: client,
             service_config: Default::default(),
@@ -227,7 +227,7 @@ mod tests {
 
     #[test]
     fn test_rpc_server() {
-        let mut client = Client::new_mainnet();
+        let mut client = GraphQLClient::new_mainnet();
         assert_eq!(client.rpc_server(), &MAINNET_HOST.parse().unwrap());
         client.set_rpc_server(TESTNET_HOST).unwrap();
         assert_eq!(client.rpc_server(), &TESTNET_HOST.parse().unwrap());

@@ -9,14 +9,14 @@ use futures::Stream;
 use iota_types::{Address, Identifier, StructTag, framework::Coin};
 
 use crate::{
-    Client,
+    GraphQLClient,
     error::Result,
     pagination::{Direction, Page, PaginationFilter},
     query_types::{CoinMetadata, CoinMetadataArgs, CoinMetadataQuery, ObjectFilter},
     streams::stream_paginated_query,
 };
 
-impl Client {
+impl GraphQLClient {
     /// Get the list of coins for the specified address as a stream.
     ///
     /// If `coin_type` is not provided, all coins will be returned. For IOTA

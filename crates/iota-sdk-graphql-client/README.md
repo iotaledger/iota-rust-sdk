@@ -89,17 +89,17 @@ provider feature here, or turning on `reqwest`'s TLS in your own manifest.
 
 ## Connecting to a GraphQL server
 
-Instantiate a client with [`Client::new(server: &str)`] or use one of the predefined functions for different networks [`Client`].
+Instantiate a client with [`GraphQLClient::new(server: &str)`] or use one of the predefined functions for different networks [`GraphQLClient`].
 
 ```rust, ignore
-use iota_graphql_client::Client;
+use iota_graphql_client::GraphQLClient;
 use eyre::Result;
 
 #[tokio::main]
 async fn main() -> Result<()> {
 
    // Connect to the mainnet GraphQL server
-   let client = Client::new_mainnet();
+   let client = GraphQLClient::new_mainnet();
    let chain_id = client.chain_id().await?;
    println!("{:?}", chain_id);
 
@@ -230,7 +230,7 @@ use cynic::QueryBuilder;
 
 use iota_graphql_client::{
     query_types::{schema, BigInt},
-    Client,
+    GraphQLClient,
 };
 use iota_types::Address;
 
@@ -270,7 +270,7 @@ pub struct ChainIdQuery {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let mut client = Client::new_devnet();
+    let mut client = GraphQLClient::new_devnet();
 
     // Query the data for the last known epoch. Note that id variable is None, so last epoch data
     // will be returned.

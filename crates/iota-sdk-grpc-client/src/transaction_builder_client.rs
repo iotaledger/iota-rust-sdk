@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //! Implementation of the transaction builder client traits for the GRPC
-//! [`Client`].
+//! [`GrpcClient`].
 
 use std::time::Duration;
 
@@ -24,7 +24,7 @@ use iota_types::{
 };
 
 use crate::{
-    Client,
+    GrpcClient,
     api::{GrpcError, GrpcResult, MetadataEnvelope, check_result_count, saturating_usize_to_u32},
 };
 
@@ -58,18 +58,18 @@ fn single_item<T>(
     }
 }
 
-impl Client {
+impl GrpcClient {
     /// Create a new [`TransactionBuilder`] with the given sender address.
     pub fn transaction_builder(&self, sender: Address) -> TransactionBuilder<&Self> {
         TransactionBuilder::new(sender).with_client(self)
     }
 }
 
-impl TransactionBuilderClientBase for Client {
+impl TransactionBuilderClientBase for GrpcClient {
     type Error = crate::api::GrpcError;
 }
 
-impl TransactionBuilderLedgerClient for Client {
+impl TransactionBuilderLedgerClient for GrpcClient {
     async fn object(
         &self,
         object_id: ObjectId,
@@ -166,7 +166,7 @@ impl TransactionBuilderLedgerClient for Client {
     }
 }
 
-impl TransactionBuilderSimulationClient for Client {
+impl TransactionBuilderSimulationClient for GrpcClient {
     type DryRunResult = SimulatedTransaction;
 
     async fn estimate_transaction_budget(
@@ -211,7 +211,7 @@ impl TransactionBuilderSimulationClient for Client {
     }
 }
 
-impl TransactionBuilderExecutionClient for Client {
+impl TransactionBuilderExecutionClient for GrpcClient {
     async fn execute_transaction(
         &self,
         signatures: &[UserSignature],
@@ -223,7 +223,7 @@ impl TransactionBuilderExecutionClient for Client {
             transaction: transaction.clone(),
             signatures: signatures.to_vec(),
         };
-        let result = Client::execute_transaction(
+        let result = GrpcClient::execute_transaction(
             self,
             signed_transaction,
             None,

@@ -17,7 +17,7 @@ use iota_types::SignedTransaction;
 use reqwest::Url;
 
 use crate::{
-    Client,
+    GraphQLClient,
     error::{Error, Result},
     query_types::{
         Event, EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs,
@@ -48,7 +48,7 @@ enum Outcome<T> {
     Skip,
 }
 
-impl Client {
+impl GraphQLClient {
     /// Subscribe to a live stream of events matching the (optional) filter.
     ///
     /// The stream yields events as they arrive and reconnects automatically on
@@ -75,10 +75,10 @@ impl Client {
                     });
                     let subscription = self.open_subscription(operation).await?;
 
-                    // Events from a single transaction arrive contiguously, so a
-                    // transaction is only fully received once an event from the
-                    // next one shows up. Advance the resume cursor to the
-                    // previous transaction's digest only when the digest changes.
+                    // Events from a single transaction arrive contiguously, so a transaction is
+                    // only fully received once an event from the next one shows up. Advance the
+                    // resume cursor to the previous transaction's digest only when the digest
+                    // changes.
                     let mut current_tx: Option<String> = None;
                     let mapped = subscription.map(move |item| -> Result<Outcome<Event>> {
                         let data = decode_data(item?)?;
