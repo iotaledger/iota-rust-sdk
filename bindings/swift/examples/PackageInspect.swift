@@ -56,7 +56,7 @@ struct PackageInspectExample {
 
     // Print package dependencies and their linked versions.
     print("Dependencies:")
-    let dependencies = package.linkageTable().values.sorted {
+    let dependencies = package.linkageTable().values().sorted {
       $0.upgradedId.toHex() < $1.upgradedId.toHex()
     }
     if dependencies.isEmpty {
@@ -70,7 +70,7 @@ struct PackageInspectExample {
 
     // Inspect normalized modules, functions, types, and sample key objects.
     print("Package contents:")
-    let moduleNames = package.modules().keys.map { $0.asStr() }.sorted()
+    let moduleNames = package.modules().keys().map { $0.asStr() }
     for moduleName in moduleNames {
       print("Module: \(moduleName)")
 
