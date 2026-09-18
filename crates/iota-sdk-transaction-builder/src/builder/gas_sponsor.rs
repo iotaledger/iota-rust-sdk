@@ -37,6 +37,7 @@ pub trait GasSponsor {
     /// Reserve gas covering `gas_budget`.
     fn reserve_gas(
         &self,
+        transaction: &Transaction,
         gas_budget: u64,
     ) -> impl Future<Output = Result<(Self::Reservation, SponsoredGas), Self::Error>>;
 

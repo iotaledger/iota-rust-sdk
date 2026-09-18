@@ -840,6 +840,7 @@ mod tests {
 
             async fn reserve_gas(
                 &self,
+                _transaction: &Transaction,
                 gas_budget: u64,
             ) -> Result<(Self::Reservation, SponsoredGas), Self::Error> {
                 *self.reserved_budget.lock().unwrap() = Some(gas_budget);

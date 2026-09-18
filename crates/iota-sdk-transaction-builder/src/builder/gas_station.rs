@@ -558,6 +558,7 @@ impl GasSponsor for GasStation {
 
     async fn reserve_gas(
         &self,
+        _transaction: &Transaction,
         gas_budget: u64,
     ) -> Result<(Self::Reservation, SponsoredGas), Self::Error> {
         let GasReservation {

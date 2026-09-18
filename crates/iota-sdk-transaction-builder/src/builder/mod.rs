@@ -1472,7 +1472,7 @@ impl<L> TransactionBuilder<(), L> {
         };
 
         let (reservation, SponsoredGas { owner, objects }) = sponsor
-            .reserve_gas(budget)
+            .reserve_gas(&txn, budget)
             .await
             .map_err(TransactionBuilderError::sponsor)?;
         {
@@ -2083,7 +2083,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         };
 
         let (reservation, SponsoredGas { owner, objects }) = sponsor
-            .reserve_gas(budget)
+            .reserve_gas(&txn, budget)
             .await
             .map_err(TransactionBuilderError::sponsor)?;
         {
