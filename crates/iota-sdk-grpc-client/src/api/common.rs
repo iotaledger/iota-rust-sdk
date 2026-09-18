@@ -42,7 +42,7 @@ pub enum GrpcError {
     #[error("server error (code {code}): {msg}", code = .0.code, msg = .0.message)]
     Server(RpcStatus),
 
-    /// Client-side protocol error (e.g. checkpoint stream reassembly).
+    /// GrpcClient-side protocol error (e.g. checkpoint stream reassembly).
     #[error("protocol error: {0}")]
     Protocol(ProtocolError),
 

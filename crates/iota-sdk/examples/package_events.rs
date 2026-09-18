@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_sdk::graphql_client::{
-    Client, error::Result, pagination::PaginationFilter, query_types::EventFilter,
+    GraphQLClient, error::Result, pagination::PaginationFilter, query_types::EventFilter,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     let events = client
         .events(

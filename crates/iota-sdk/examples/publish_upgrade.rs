@@ -26,7 +26,7 @@ use std::env::var;
 use eyre::{Result, bail};
 use iota_sdk::{
     crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
-    graphql_client::{Client, WaitForTransaction, faucet::FaucetClient},
+    graphql_client::{GraphQLClient, WaitForTransaction, faucet::FaucetClient},
     transaction_builder::{TransactionBuilder, assigned},
     types::{Address, MovePackageData, ObjectId, ObjectOut, UpgradePolicy},
 };
@@ -50,7 +50,7 @@ async fn main() -> Result<()> {
     let private_key = Ed25519PrivateKey::random();
     let sender = private_key.public_key().derive_address();
     println!("Sender: {sender}");
-    let client = Client::new_localnet();
+    let client = GraphQLClient::new_localnet();
 
     // Fund the sender address for gas payment
     let faucet = FaucetClient::new_localnet();

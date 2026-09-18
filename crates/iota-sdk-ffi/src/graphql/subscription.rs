@@ -290,7 +290,7 @@ fn is_recoverable(error: &iota_sdk::graphql_client::error::Error) -> bool {
 
 /// Open the event stream a subscription handle reads from.
 fn open_events(
-    client: iota_sdk::graphql_client::Client,
+    client: iota_sdk::graphql_client::GraphQLClient,
     filter: Option<SubscriptionEventFilter>,
     start_after: Option<String>,
 ) -> SubscriptionStream<iota_sdk::graphql_client::query_types::Event> {
@@ -306,7 +306,7 @@ fn open_events(
 
 /// Open the transaction stream a subscription handle reads from.
 fn open_transactions(
-    client: iota_sdk::graphql_client::Client,
+    client: iota_sdk::graphql_client::GraphQLClient,
     filter: Option<SubscriptionTransactionFilter>,
     start_after: Option<String>,
 ) -> SubscriptionStream<iota_sdk::types::SignedTransaction> {
