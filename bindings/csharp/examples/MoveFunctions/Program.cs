@@ -17,17 +17,17 @@ class Program
             throw new Exception("missing package");
         }
 
-        foreach (var moduleId in package.Modules())
+        foreach (var moduleId in package.Modules().Keys())
         {
-            var module = await client.NormalizedMoveModule(packageAddress, moduleId.Key.AsStr());
+            var module = await client.NormalizedMoveModule(packageAddress, moduleId.AsStr());
             if (module == null)
             {
-                Console.WriteLine($"module `{moduleId.Key.AsStr()}` not found");
+                Console.WriteLine($"module `{moduleId.AsStr()}` not found");
                 return;
             }
             if (module.Functions != null)
             {
-                Console.WriteLine($"Module: {moduleId.Key.AsStr()}");
+                Console.WriteLine($"Module: {moduleId.AsStr()}");
                 foreach (var fun in module.Functions.Nodes)
                 {
                     Console.WriteLine($"- {fun.ToString()}");

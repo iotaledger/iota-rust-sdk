@@ -352,8 +352,7 @@ console.log("Package contents:");
 const moduleNames = pkg
   .modules()
   .keys()
-  .map((m) => m.asStr())
-  .sort();
+  .map((m) => m.asStr());
 
 for (const moduleName of moduleNames) {
   console.log(`Module: ${moduleName}`);
