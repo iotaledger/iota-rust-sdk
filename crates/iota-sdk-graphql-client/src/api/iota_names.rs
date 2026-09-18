@@ -13,7 +13,7 @@ use iota_types::{
 };
 
 use crate::{
-    Client,
+    GraphQLClient,
     error::{GraphQLError, GraphQLResult},
     pagination::{Page, PaginationFilter},
     query_types::{
@@ -23,7 +23,7 @@ use crate::{
     },
 };
 
-impl Client {
+impl GraphQLClient {
     /// Return the resolved address for the given name.
     pub async fn iota_names_lookup(&self, name: &str) -> GraphQLResult<Option<Address>> {
         let operation = ResolveIotaNamesAddressQuery::build(ResolveIotaNamesAddressArgs {

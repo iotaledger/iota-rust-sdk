@@ -7,12 +7,12 @@
 use cynic::QueryBuilder;
 
 use crate::{
-    Client,
+    GraphQLClient,
     error::GraphQLResult,
     query_types::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery},
 };
 
-impl Client {
+impl GraphQLClient {
     /// Internal method for getting the epoch summary that is called in a few
     /// other APIs for convenience.
     pub(crate) async fn epoch_summary(

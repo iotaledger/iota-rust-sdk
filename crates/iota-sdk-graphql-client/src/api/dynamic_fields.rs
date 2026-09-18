@@ -10,7 +10,7 @@ use futures::Stream;
 use iota_types::{Address, TypeTag};
 
 use crate::{
-    Client, DynamicFieldOutput, NameValue,
+    DynamicFieldOutput, GraphQLClient, NameValue,
     error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
@@ -20,7 +20,7 @@ use crate::{
     streams::stream_paginated_query,
 };
 
-impl Client {
+impl GraphQLClient {
     /// Get a stream of dynamic fields for the provided address. Note that this
     /// will also fetch dynamic fields on wrapped objects.
     pub fn dynamic_fields_stream(
@@ -47,7 +47,7 @@ impl Client {
     /// # Example
     /// ```rust,ignore
     /// 
-    /// let client = iota_graphql_client::Client::new_testnet();
+    /// let client = iota_graphql_client::GraphQLClient::new_testnet();
     /// let address = ObjectId::system().into();
     /// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
     ///

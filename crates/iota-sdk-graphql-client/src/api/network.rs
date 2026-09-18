@@ -7,7 +7,7 @@
 use cynic::QueryBuilder;
 
 use crate::{
-    Client,
+    GraphQLClient,
     error::GraphQLResult,
     pagination::{Page, PaginationFilter},
     query_types::{
@@ -16,7 +16,7 @@ use crate::{
     },
 };
 
-impl Client {
+impl GraphQLClient {
     /// Get the chain identifier.
     pub async fn chain_id(&self) -> GraphQLResult<String> {
         let operation = ChainIdentifierQuery::build(());

@@ -8,12 +8,12 @@ use cynic::QueryBuilder;
 use iota_types::Address;
 
 use crate::{
-    Client,
+    GraphQLClient,
     error::GraphQLResult,
     query_types::{BalanceArgs, BalanceQuery},
 };
 
-impl Client {
+impl GraphQLClient {
     /// Get the balance of all the coins owned by address for the provided coin
     /// type. Coin type will default to `0x2::coin::Coin<0x2::iota::IOTA>`
     /// if not provided.

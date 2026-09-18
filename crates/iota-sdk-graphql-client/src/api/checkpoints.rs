@@ -9,7 +9,7 @@ use futures::Stream;
 use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};
 
 use crate::{
-    Client,
+    GraphQLClient,
     error::{GraphQLError, GraphQLResult},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
@@ -22,7 +22,7 @@ use crate::{
 const CONFLICTING_CHECKPOINT_ID: &str =
     "either digest or sequence_number can be provided, but not both";
 
-impl Client {
+impl GraphQLClient {
     /// Get a stream of [`CheckpointSummary`]. Note that this will fetch all
     /// checkpoints which may trigger a lot of requests.
     pub fn checkpoints_stream(

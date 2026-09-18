@@ -57,7 +57,7 @@
 use std::path::PathBuf;
 
 use iota_sdk::{
-    graphql_client::Client,
+    graphql_client::GraphQLClient,
     types::{Address, ObjectId, TypeTag},
 };
 
@@ -524,9 +524,9 @@ const FIXTURES: &[Fixture] = &[
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
     let network = std::env::var("IOTA_NETWORK").unwrap_or_else(|_| "mainnet".to_string());
     let client = match network.as_str() {
-        "testnet" => Client::new_testnet(),
-        "devnet" => Client::new_devnet(),
-        "mainnet" => Client::new_mainnet(),
+        "testnet" => GraphQLClient::new_testnet(),
+        "devnet" => GraphQLClient::new_devnet(),
+        "mainnet" => GraphQLClient::new_mainnet(),
         other => {
             return Err(format!(
                 "unknown IOTA_NETWORK={other}; expected one of: testnet, devnet, mainnet"
@@ -597,7 +597,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
 /// Resolve a [`Source`] into the raw BCS bytes of the Move struct
 /// contents.
 async fn capture(
-    client: &Client,
+    client: &GraphQLClient,
     source: &Source,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error + Send + Sync + 'static>> {
     match source {

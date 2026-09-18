@@ -9,7 +9,7 @@ use cynic::QueryBuilder;
 use iota_types::{Address, MovePackage, Object, Version};
 
 use crate::{
-    Client, Page,
+    GraphQLClient, Page,
     error::GraphQLResult,
     pagination::PaginationFilter,
     query_types::{
@@ -20,7 +20,7 @@ use crate::{
     },
 };
 
-impl Client {
+impl GraphQLClient {
     /// The package corresponding to the given address (at the optionally given
     /// version). When no version is given, the package is loaded directly
     /// from the address given. Otherwise, the address is translated before
