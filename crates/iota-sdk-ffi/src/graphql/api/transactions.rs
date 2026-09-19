@@ -75,6 +75,28 @@ impl GraphQLClient {
             .map(Into::into))
     }
 
+    /// Get transactions by their digests, including transactions that are not
+    /// checkpointed yet. The result has one entry per requested digest, in the
+    /// same order; a digest that was not found is `None`.
+    pub async fn transactions_by_digest(
+        &self,
+        digests: Vec<Arc<TransactionDigest>>,
+    ) -> Result<Vec<Option<SignedTransaction>>> {
+        let digests = digests.into_iter().map(|d| **d).collect::<Vec<_>>();
+        let transactions = self
+            .0
+            .read()
+            .await
+            .transactions_by_digest(digests.iter().copied())
+            .await?;
+
+        // Cloned rather than removed so a digest listed twice resolves twice.
+        Ok(digests
+            .iter()
+            .map(|digest| transactions.get(digest).cloned().map(Into::into))
+            .collect())
+    }
+
     /// Get a transaction's effects by its digest.
     pub async fn transaction_effects(
         &self,
