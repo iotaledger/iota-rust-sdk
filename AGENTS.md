@@ -84,6 +84,10 @@ make grpc   # Pull/refresh protos and regenerate types
 # BCS schema
 make bcs-schema      # Regenerate bcs-schema.abnf
 
+# Mutation testing (scope/exclusions in .cargo/mutants.toml; guidance, not a gate)
+make mutants         # Behaviours in your diff that the crate's own tests do not pin
+make mutants MUTANTS_PACKAGE=<crate>   # The same for one whole crate
+
 # Examples
 make examples                    # Run all Rust examples
 make bindings-examples           # Run all binding examples
@@ -101,6 +105,8 @@ make ci              # check-features + check-fmt + check-sort-derives + test + 
 cargo nextest run                # Direct nextest invocation
 cargo test --doc                 # Direct doc test invocation
 ```
+
+`make mutants` runs [cargo-mutants](https://mutants.rs) over your diff (or one crate): each mutant is a small change to the code, and one that survives the mutated crate's own tests marks a behaviour those tests do not pin. Read the survivors as guidance: mutants run against in-package tests only, so check whether the localnet integration test or an example already exercises the behaviour before calling it untested, then write the fast in-package test, or exclude a provably unobservable mutation in `.cargo/mutants.toml` with the reason. A weekly sweep of the whole scope files the same list as a tracking issue.
 
 ## Code Conventions
 

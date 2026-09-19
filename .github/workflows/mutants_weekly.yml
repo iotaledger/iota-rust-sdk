@@ -1,0 +1,202 @@
+name: Mutation sweep
+
+# Once a week, mutation-tests the whole configured scope (.cargo/mutants.toml)
+# and files the survivors as guidance: each mutant is a small code change (gut
+# a function body, flip an operator) that a test should catch, and one that
+# survives the mutated crate's own suite marks a behaviour that suite does not
+# pin. Nothing here fails on survivors. The report job leads with what is new
+# since the previous run, so the tracking issue stays readable, and a shard
+# fails only when cargo-mutants could not run to a result, which the develop
+# failure reporter forwards to Slack like any other failed workflow.
+#
+# Authors run the same thing on their diff with `make mutants`.
+on:
+  schedule:
+    # 04:23 UTC on Sundays, clear of the other nightlies (00:00-03:00).
+    - cron: "23 4 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SHARDS: 8
+
+# No `RUSTFLAGS: -Dwarnings` here (unlike tests.yml): mutant builds cap lints
+# to warn anyway (cap_lints in .cargo/mutants.toml, with the rationale).
+jobs:
+  sweep:
+    name: mutants shard ${{ matrix.shard }}
+    runs-on: ubuntu-latest
+    # Under GitHub's 6h ceiling. A killed job yields nothing at all.
+    timeout-minutes: 330
+    strategy:
+      # Every shard reports its own survivors; stopping at the first failure
+      # would hide the rest of the sweep.
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # cargo-mutants and nextest are pinned: a new release can change the
+      # generated mutant set or the test exit codes that classify outcomes,
+      # and results must not shift without a code change. The runner's rustc
+      # still floats (as in tests.yml); that drift is accepted.
+      - uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
+        with:
+          tool: cargo-mutants@27.1.0,cargo-nextest@0.9.143
+
+      - name: Mutate this shard of the scope
+        id: sweep
+        run: |
+          set +e
+          # `timeout` rather than the job's own limit: a job killed by GitHub
+          # skips every remaining step, including the artifact upload, so an
+          # overrun would destroy exactly the measurement this run exists to
+          # produce. Overrunning here ends the STEP (124) and the rest runs.
+          timeout 300m make mutants MUTANTS_ALL=1 MUTANTS_SHARD=${{ matrix.shard }}/${{ env.SHARDS }} MUTANTS_JOBS=4
+          status=$?
+          set -e
+          # make flattens every recipe failure to its own exit 2; the recipe
+          # records cargo-mutants' real code in target/mutants-exit (absent
+          # when make failed before cargo-mutants ran, or the step overran).
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "real=$(cat target/mutants-exit 2>/dev/null || echo n/a)" >> "$GITHUB_OUTPUT"
+
+      - name: Keep the outcome
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mutants-shard-${{ matrix.shard }}
+          path: mutants.out/
+          retention-days: 14
+          if-no-files-found: ignore
+          # Without this, retrying a shard fails on the artifact name already
+          # existing from the first attempt.
+          overwrite: true
+
+      - name: Fail only when cargo-mutants could not run to a result
+        run: |
+          case "${{ steps.sweep.outputs.real }}" in
+            0|2|3) exit 0 ;;
+            4)   echo "baseline tests failed in the unmutated tree; no mutants ran"; exit 1 ;;
+            n/a) echo "cargo-mutants never finished (make exit ${{ steps.sweep.outputs.status }}; 124 = the 300m step budget overran)"; exit 1 ;;
+            *)   echo "cargo-mutants exited ${{ steps.sweep.outputs.real }}; see the log"; exit 1 ;;
+          esac
+
+  report:
+    name: file the survivors
+    needs: sweep
+    # Runs even when a shard failed, so the shards that did finish are still
+    # reported; the job then fails at the end to keep breakage visible.
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      actions: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: mutants-shard-*
+          path: shards
+
+      - name: Collect this run's survivors
+        run: |
+          cat shards/*/missed.txt 2>/dev/null | sort -u > missed.txt || true
+          cat shards/*/timeout.txt 2>/dev/null | sort -u > timeout.txt || true
+          cat missed.txt timeout.txt | sort -u > survivors.txt
+          echo "$(wc -l < survivors.txt | tr -d ' ') survivors ($(wc -l < missed.txt | tr -d ' ') missed, $(wc -l < timeout.txt | tr -d ' ') timeout)"
+
+      # The previous run's list is what makes the issue readable: the report
+      # leads with survivors that are new since then and names the ones that
+      # disappeared. Kept longer than the shard outputs so a skipped week
+      # does not lose the baseline.
+      - name: Keep this run's list for the next run
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mutants-survivors
+          path: survivors.txt
+          retention-days: 35
+          overwrite: true
+
+      - name: Fetch the previous run's list
+        run: |
+          : > previous.txt
+          for run in $(gh run list --workflow "${{ github.workflow }}" --status success --json databaseId --jq '.[].databaseId' --limit 6); do
+            [ "$run" = "${{ github.run_id }}" ] && continue
+            if gh run download "$run" -n mutants-survivors -D previous 2>/dev/null; then
+              sort -u previous/survivors.txt > previous.txt
+              echo "baseline: run $run ($(wc -l < previous.txt | tr -d ' ') survivors)"
+              break
+            fi
+          done
+          [ -s previous.txt ] || echo "no previous list found; every survivor counts as new"
+
+      - name: File or update the tracking issue
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ ! -s survivors.txt ]; then
+            echo "no survivors this week"
+            exit 0
+          fi
+          comm -13 previous.txt survivors.txt > new.txt
+          comm -23 previous.txt survivors.txt > gone.txt
+          list() { if [ -s "$1" ]; then echo '```'; cat "$1"; echo '```'; else echo "none"; fi; }
+          {
+            echo "### Sweep of $(date -u +%F), [run]($RUN_URL)"
+            echo
+            echo "| survivors | new since last run | gone since last run | missed | timeout |"
+            echo "|---|---|---|---|---|"
+            echo "| $(wc -l < survivors.txt | tr -d ' ') | $(wc -l < new.txt | tr -d ' ') | $(wc -l < gone.txt | tr -d ' ') | $(wc -l < missed.txt | tr -d ' ') | $(wc -l < timeout.txt | tr -d ' ') |"
+            echo
+            echo "Per crate:"
+            echo
+            sed -E 's|^crates/([^/]+)/.*|\1|' survivors.txt | sort | uniq -c | sort -rn | awk '{print "- " $2 ": " $1}'
+            echo
+            echo "#### How to read this"
+            echo
+            echo "A survivor is a mutant that the mutated crate's own tests did not notice. Mutants run against"
+            echo "in-package tests only, so before calling a behaviour untested, check whether the localnet"
+            echo "integration test (crates/integration-tests) or an example CI runs already exercises it."
+            echo "This is guidance, not a gate: a survivor is a behaviour worth pinning with a fast test, not a bug."
+            echo "Write the in-package test, or exclude a provably unobservable mutation in .cargo/mutants.toml"
+            echo "with the reason. A timeout is a mutant that made the test run hang, usually a test that noticed"
+            echo "by hanging instead of failing; a test that fails fast on the mutated step turns it into a catch."
+            echo
+            echo "#### New since the previous run"
+            echo
+            list new.txt
+            echo
+            echo "#### Gone since the previous run"
+            echo
+            list gone.txt
+            echo
+            echo "<details><summary>All survivors this week</summary>"
+            echo
+            list survivors.txt
+            echo
+            echo "</details>"
+            echo
+            echo "Full output per shard is in the run's artifacts (14 days)."
+          } > body.md
+          title="Mutation sweep: surviving mutants"
+          number=$(gh issue list --state open --search "\"$title\" in:title" --json number,title --jq "[.[] | select(.title == \"$title\")][0].number // empty")
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body-file body.md
+            echo "commented on #$number"
+          else
+            gh issue create --title "$title" --body-file body.md
+          fi
+
+      - name: Keep breakage visible
+        if: needs.sweep.result == 'failure'
+        run: |
+          echo "a shard could not run to a result; see the sweep jobs"
+          exit 1
