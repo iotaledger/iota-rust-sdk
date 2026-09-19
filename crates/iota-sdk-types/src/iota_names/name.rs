@@ -16,7 +16,6 @@ use crate::{
 };
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct Name {
     // Labels of the name, in reverse order
     labels: Vec<String>,
@@ -172,6 +171,60 @@ impl Name {
 pub enum NameFormat {
     At,
     Dot,
+}
+
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+mod serialization {
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use serde_with::{DeserializeAs, SerializeAs};
+
+    use super::*;
+
+    /// Binary shape: the historical derived struct encoding, which on-chain
+    /// `Field<Name, _>` object contents are deserialized with.
+    #[derive(serde::Serialize)]
+    #[serde(rename = "Name")]
+    struct BinaryNameRef<'a> {
+        labels: &'a Vec<String>,
+    }
+
+    #[derive(serde::Deserialize)]
+    #[serde(rename = "Name")]
+    struct BinaryName {
+        labels: Vec<String>,
+    }
+
+    impl Serialize for Name {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                serde_with::DisplayFromStr::serialize_as(self, serializer)
+            } else {
+                BinaryNameRef {
+                    labels: &self.labels,
+                }
+                .serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for Name {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                serde_with::DisplayFromStr::deserialize_as(deserializer)
+            } else {
+                BinaryName::deserialize(deserializer).map(|name| Name {
+                    labels: name.labels,
+                })
+            }
+        }
+    }
 }
 
 /// Converts @label ending to label{separator}iota ending.
@@ -335,5 +388,33 @@ mod tests {
         name = "test.test.test.test.iota".parse::<Name>().unwrap();
         assert!(name.format(NameFormat::Dot) == "test.test.test.test.iota");
         assert!(name.format(NameFormat::At) == "test.test.test@test");
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn serializes_as_display_string_in_json() {
+        let name = "example.iota".parse::<Name>().unwrap();
+
+        let json = serde_json::to_value(&name).unwrap();
+        assert_eq!(json, "example.iota");
+        let restored: Name = serde_json::from_value(json).unwrap();
+        assert_eq!(restored, name);
+
+        // JSON deserialization now validates: not enough labels.
+        assert!(serde_json::from_value::<Name>(serde_json::json!("iota")).is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn bcs_shape_is_the_bare_labels_vector() {
+        let name = "example.iota".parse::<Name>().unwrap();
+
+        let bcs = bcs::to_bytes(&name).unwrap();
+        assert_eq!(
+            bcs,
+            bcs::to_bytes(&vec!["iota".to_owned(), "example".to_owned()]).unwrap()
+        );
+        let restored: Name = bcs::from_bytes(&bcs).unwrap();
+        assert_eq!(restored, name);
     }
 }
