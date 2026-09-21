@@ -25,19 +25,20 @@ pub struct ExecutedTransactionResult {
 impl GrpcClient {
     /// Execute a signed transaction.
     ///
+    /// If `checkpoint_inclusion_timeout_ms` is provided, the server waits up
+    /// to that long for the transaction to be included in a checkpoint
+    /// before responding. Include `checkpoint` and `timestamp` in the
+    /// `read_mask` to receive that data.
+    ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the transaction digest, effects, events, and input/output
     /// objects are returned.
-    ///
-    /// If `checkpoint_inclusion_timeout_ms` is provided, the server waits up
-    /// to that long for the transaction to be included in a checkpoint
-    /// before responding.
-    #[uniffi::method(default(read_mask = None, checkpoint_inclusion_timeout_ms = None))]
+    #[uniffi::method(default(checkpoint_inclusion_timeout_ms = None, read_mask = None))]
     pub async fn execute_transaction(
         &self,
         signed_transaction: SignedTransaction,
-        read_mask: Option<Vec<String>>,
         checkpoint_inclusion_timeout_ms: Option<u64>,
+        read_mask: Option<Vec<String>>,
     ) -> Result<ExecutedTransaction> {
         (&self
             .client()
@@ -56,19 +57,20 @@ impl GrpcClient {
     /// A per-transaction error does not abort the rest of the batch; each
     /// result carries either the executed transaction or an error message.
     ///
+    /// If `checkpoint_inclusion_timeout_ms` is provided, the server waits up
+    /// to that long for the transactions to be included in a checkpoint
+    /// before responding. Include `checkpoint` and `timestamp` in the
+    /// `read_mask` to receive that data.
+    ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the transaction digest, effects, events, and input/output
     /// objects are returned.
-    ///
-    /// If `checkpoint_inclusion_timeout_ms` is provided, the server waits up
-    /// to that long for the transactions to be included in a checkpoint
-    /// before responding.
-    #[uniffi::method(default(read_mask = None, checkpoint_inclusion_timeout_ms = None))]
+    #[uniffi::method(default(checkpoint_inclusion_timeout_ms = None, read_mask = None))]
     pub async fn execute_transactions(
         &self,
         transactions: Vec<SignedTransaction>,
-        read_mask: Option<Vec<String>>,
         checkpoint_inclusion_timeout_ms: Option<u64>,
+        read_mask: Option<Vec<String>>,
     ) -> Result<Vec<ExecutedTransactionResult>> {
         self.client()
             .execute_transactions(
