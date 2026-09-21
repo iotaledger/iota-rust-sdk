@@ -3,13 +3,14 @@
 
 //! Checkpoints API implementation.
 
-use std::{pin::Pin, sync::Arc};
+use std::sync::Arc;
 
-use futures::{Stream, StreamExt};
-use iota_sdk::grpc_client::read_mask_fields::CheckpointResponseReadMask;
+use futures::{StreamExt, stream::BoxStream};
+use iota_sdk::grpc_client::{GrpcResult, read_mask_fields::CheckpointResponseReadMask};
 use tokio::sync::Mutex;
 
 use crate::{
+    cancel::Cancel,
     error::{Result, SdkFfiError},
     grpc::{
         api::ledger::transactions::ExecutedTransaction,
@@ -111,39 +112,92 @@ impl TryFrom<&iota_sdk::grpc_client::CheckpointResponse> for CheckpointResponse 
     }
 }
 
-/// A stream of checkpoints returned by [`GrpcClient::checkpoints_stream`].
-#[derive(uniffi::Object)]
-pub struct CheckpointStream(
-    Mutex<
-        Pin<
-            Box<
-                dyn Stream<
-                        Item = iota_sdk::grpc_client::GrpcResult<
-                            iota_sdk::grpc_client::CheckpointResponse,
-                        >,
-                    > + Send,
-            >,
-        >,
-    >,
-);
+/// Define a handle object over a server-streaming checkpoint RPC.
+///
+/// The Rust API exposes these as a `Stream`, which has no uniffi equivalent,
+/// so the handle is pulled one item at a time with `next` and closed with
+/// `cancel`.
+macro_rules! define_checkpoint_stream {
+    ($(#[$meta:meta])* $name:ident, $item:ty, $ffi_item:ty, $convert:expr) => {
+        $(#[$meta])*
+        ///
+        /// Call `next` in a loop to receive items; it returns `None` once the
+        /// stream is exhausted or `cancel` has been called.
+        #[derive(uniffi::Object)]
+        pub struct $name {
+            stream: Mutex<BoxStream<'static, GrpcResult<$item>>>,
+            cancel: Cancel,
+        }
 
-#[uniffi::export(async_runtime = "tokio")]
-impl CheckpointStream {
-    /// Get the next checkpoint from the stream.
-    ///
-    /// Returns `None` once the stream is exhausted.
-    pub async fn next(&self) -> Result<Option<CheckpointResponse>> {
-        self.0
-            .lock()
-            .await
-            .next()
-            .await
-            .transpose()?
-            .as_ref()
-            .map(TryInto::try_into)
-            .transpose()
-    }
+        #[uniffi::export(async_runtime = "tokio")]
+        impl $name {
+            /// Get the next item from the stream.
+            ///
+            /// Returns `None` once the stream is exhausted or has been
+            /// canceled. Concurrent calls are serialized; there is no ordering
+            /// guarantee between them.
+            pub async fn next(&self) -> Result<Option<$ffi_item>> {
+                if self.cancel.is_canceled() {
+                    return Ok(None);
+                }
+                let mut stream = self.stream.lock().await;
+                let canceled = std::pin::pin!(self.cancel.wait());
+                let item = match futures::future::select(canceled, stream.next()).await {
+                    futures::future::Either::Left(((), _)) => {
+                        *stream = Self::drained();
+                        None
+                    }
+                    futures::future::Either::Right((item, _)) => item,
+                };
+                item.transpose()?.map($convert).transpose()
+            }
+
+            /// Cancel the stream, dropping the connection and unblocking a
+            /// pending `next`.
+            ///
+            /// Idempotent, and safe to call while `next` is pending — the
+            /// pending call drops the connection on its way out.
+            ///
+            /// Named `cancel` rather than `close` because a `close` method
+            /// collides with the disposal method uniffi generates for objects
+            /// in some languages.
+            pub fn cancel(&self) {
+                self.cancel.cancel();
+                if let Ok(mut stream) = self.stream.try_lock() {
+                    *stream = Self::drained();
+                }
+            }
+
+            /// Whether the stream has been canceled.
+            pub fn is_canceled(&self) -> bool {
+                self.cancel.is_canceled()
+            }
+        }
+
+        impl $name {
+            fn new(stream: BoxStream<'static, GrpcResult<$item>>) -> Self {
+                Self {
+                    stream: Mutex::new(stream),
+                    cancel: Cancel::default(),
+                }
+            }
+
+            /// The stream a canceled handle is left with, so that canceling
+            /// drops the RPC instead of holding it until the handle is freed.
+            fn drained() -> BoxStream<'static, GrpcResult<$item>> {
+                futures::stream::empty().boxed()
+            }
+        }
+    };
 }
+
+define_checkpoint_stream!(
+    /// A stream of checkpoints returned by [`GrpcClient::checkpoints_stream`].
+    CheckpointStream,
+    iota_sdk::grpc_client::CheckpointResponse,
+    CheckpointResponse,
+    |checkpoint| CheckpointResponse::try_from(&checkpoint)
+);
 
 /// An item yielded by a filtered checkpoint stream: either a checkpoint with
 /// matching data, or a progress indicator emitted while the server scans
@@ -181,39 +235,14 @@ impl TryFrom<iota_sdk::grpc_client::CheckpointStreamItem> for CheckpointStreamIt
     }
 }
 
-/// A stream of filtered checkpoints returned by
-/// [`GrpcClient::checkpoints_stream_filtered`].
-#[derive(uniffi::Object)]
-pub struct FilteredCheckpointStream(
-    Mutex<
-        Pin<
-            Box<
-                dyn Stream<
-                        Item = iota_sdk::grpc_client::GrpcResult<
-                            iota_sdk::grpc_client::CheckpointStreamItem,
-                        >,
-                    > + Send,
-            >,
-        >,
-    >,
+define_checkpoint_stream!(
+    /// A stream of filtered checkpoints returned by
+    /// [`GrpcClient::checkpoints_stream_filtered`].
+    FilteredCheckpointStream,
+    iota_sdk::grpc_client::CheckpointStreamItem,
+    CheckpointStreamItem,
+    CheckpointStreamItem::try_from
 );
-
-#[uniffi::export(async_runtime = "tokio")]
-impl FilteredCheckpointStream {
-    /// Get the next item from the stream.
-    ///
-    /// Returns `None` once the stream is exhausted.
-    pub async fn next(&self) -> Result<Option<CheckpointStreamItem>> {
-        self.0
-            .lock()
-            .await
-            .next()
-            .await
-            .transpose()?
-            .map(TryInto::try_into)
-            .transpose()
-    }
-}
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GrpcClient {
@@ -339,7 +368,7 @@ impl GrpcClient {
             )
             .await?
             .into_inner();
-        Ok(CheckpointStream(Mutex::new(stream)))
+        Ok(CheckpointStream::new(stream))
     }
 
     /// Stream checkpoints across a range of sequence numbers, skipping
@@ -389,6 +418,6 @@ impl GrpcClient {
             )
             .await?
             .into_inner();
-        Ok(FilteredCheckpointStream(Mutex::new(stream)))
+        Ok(FilteredCheckpointStream::new(stream))
     }
 }
