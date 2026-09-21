@@ -227,15 +227,15 @@ impl GrpcClient {
         &self,
         ids: impl IntoIterator<Item = ObjectId>,
     ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<iota_types::ObjectReference>>>> {
-        let (objects, metadata) = self
+        Ok(self
             .objects(ids, [ObjectField::REFERENCE])
             .await?
-            .into_parts();
-        let refs = objects
-            .into_iter()
-            .map(|object| Ok(object?.object_reference()?))
-            .collect();
-        Ok(MetadataEnvelope::new(refs, metadata))
+            .map(|objects| {
+                objects
+                    .into_iter()
+                    .map(|object| Ok(object?.object_reference()?))
+                    .collect()
+            }))
     }
 
     async fn objects_internal(
