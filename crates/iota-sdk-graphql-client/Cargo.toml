@@ -35,7 +35,7 @@ strum = { workspace = true, features = ["derive"] }
 thiserror.workspace = true
 tokio = { workspace = true, features = ["time"] }
 tracing.workspace = true
-url.workspace = true
+url = "2.5.8"
 variadics_please.workspace = true
 
 # internal dependencies
