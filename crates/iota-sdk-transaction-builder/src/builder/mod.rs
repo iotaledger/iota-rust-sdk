@@ -1458,40 +1458,36 @@ impl<L> TransactionBuilder<(), L> {
         }
 
         let mut txn = self.finish()?;
-        let budget = {
-            let Transaction::V1(v1) = &txn else {
-                unimplemented!("a new Transaction enum variant was added and needs to be handled")
-            };
-            if !v1.gas_payment.objects.is_empty() {
-                return Err(TransactionBuilderError::SponsorGasConflict);
-            }
-            if v1.gas_payment.budget == 0 {
-                return Err(TransactionBuilderError::MissingGasBudget);
-            }
-            v1.gas_payment.budget
-        };
+        match &txn {
+            Transaction::V1(txn_v1) => {
+                if !txn_v1.gas_payment.objects.is_empty() {
+                    return Err(TransactionBuilderError::SponsorGasConflict);
+                }
+                if txn_v1.gas_payment.budget == 0 {
+                    return Err(TransactionBuilderError::MissingGasBudget);
+                }
 
-        let (reservation, SponsoredGas { owner, objects }) = sponsor
-            .reserve_gas(&txn, budget)
-            .await
-            .map_err(TransactionBuilderError::gas_sponsor)?;
-        {
-            let Transaction::V1(v1) = &mut txn else {
-                unimplemented!("a new Transaction enum variant was added and needs to be handled")
-            };
-            v1.gas_payment.owner = owner;
-            v1.gas_payment.objects = objects;
+                let (reservation, SponsoredGas { owner, objects }) = sponsor
+                    .reserve_gas(&txn)
+                    .await
+                    .map_err(TransactionBuilderError::gas_sponsor)?;
+                {
+                    txn.as_mut_v1().gas_payment.owner = owner;
+                    txn.as_mut_v1().gas_payment.objects = objects;
+                }
+
+                let signature = signer
+                    .sign(&txn)
+                    .await
+                    .map_err(TransactionBuilderError::signature)?;
+
+                sponsor
+                    .execute_reserved(reservation, &txn, &signature)
+                    .await
+                    .map_err(TransactionBuilderError::gas_sponsor)
+            }
+            _ => unimplemented!("a new Transaction enum variant was added and needs to be handled"),
         }
-
-        let signature = signer
-            .sign(&txn)
-            .await
-            .map_err(TransactionBuilderError::signature)?;
-
-        sponsor
-            .execute_reserved(reservation, &txn, &signature)
-            .await
-            .map_err(TransactionBuilderError::gas_sponsor)
     }
 }
 
@@ -2058,30 +2054,27 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                     return Err(TransactionBuilderError::SponsorGasConflict);
                 }
 
-                let budget = match self.data.gas_budget {
-                    Some(budget) => budget,
-                    None => {
-                        let estimate = self
-                            .client
-                            .estimate_transaction_budget(&txn)
-                            .await
-                            .map_err(TransactionBuilderError::client)?
-                            .ok_or(TransactionBuilderError::MissingGasBudget)?;
-                        // The network enforces a minimum gas budget of base_tx_cost_fixed
-                        // (1000) * gas_price. The dry-run estimate can return a value below
-                        // this minimum, so we clamp it.
-                        estimate.max(txn_v1.gas_payment.price.saturating_mul(1000))
-                    }
+                if self.data.gas_budget.is_none() {
+                    let estimate = self
+                        .client
+                        .estimate_transaction_budget(&txn)
+                        .await
+                        .map_err(TransactionBuilderError::client)?
+                        .ok_or(TransactionBuilderError::MissingGasBudget)?;
+                    // The network enforces a minimum gas budget of base_tx_cost_fixed
+                    // (1000) * gas_price. The dry-run estimate can return a value below
+                    // this minimum, so we clamp it.
+                    let budget = estimate.max(txn_v1.gas_payment.price.saturating_mul(1000));
+                    txn.as_mut_v1().gas_payment.budget = budget;
                 };
 
                 let (reservation, SponsoredGas { owner, objects }) = sponsor
-                    .reserve_gas(&txn, budget)
+                    .reserve_gas(&txn)
                     .await
                     .map_err(TransactionBuilderError::gas_sponsor)?;
                 {
                     txn.as_mut_v1().gas_payment.owner = owner;
                     txn.as_mut_v1().gas_payment.objects = objects;
-                    txn.as_mut_v1().gas_payment.budget = budget;
                 }
 
                 let signature = signer

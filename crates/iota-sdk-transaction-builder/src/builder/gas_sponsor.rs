@@ -34,11 +34,10 @@ pub trait GasSponsor {
     /// The builder passes it back untouched and never interprets it.
     type Reservation;
 
-    /// Reserve gas covering `gas_budget`.
+    /// Reserve gas covering the transaction's gas needs.
     fn reserve_gas(
         &self,
         transaction: &Transaction,
-        gas_budget: u64,
     ) -> impl Future<Output = Result<(Self::Reservation, SponsoredGas), Self::Error>>;
 
     /// Execute a transaction against gas reserved by

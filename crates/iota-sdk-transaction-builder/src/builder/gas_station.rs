@@ -558,14 +558,16 @@ impl GasSponsor for GasStation {
 
     async fn reserve_gas(
         &self,
-        _transaction: &Transaction,
-        gas_budget: u64,
+        transaction: &Transaction,
     ) -> Result<(Self::Reservation, SponsoredGas), Self::Error> {
+        let Transaction::V1(v1) = transaction else {
+            unimplemented!("a new Transaction enum variant was added and needs to be handled")
+        };
         let GasReservation {
             sponsor_address,
             reservation_id,
             gas_coins,
-        } = self.reserve(gas_budget).await?;
+        } = self.reserve(v1.gas_payment.budget).await?;
 
         let gas = SponsoredGas {
             owner: sponsor_address,
