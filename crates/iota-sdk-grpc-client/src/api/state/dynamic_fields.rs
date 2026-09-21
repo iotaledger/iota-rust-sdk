@@ -20,14 +20,14 @@ use iota_grpc_types::{
 use iota_types::ObjectId;
 
 use crate::{
-    Client, InterceptedChannel,
+    GrpcClient, InterceptedChannel,
     api::{define_list_query, proto_object_id},
 };
 
 define_list_query! {
     /// Builder for listing dynamic fields of a parent object.
     ///
-    /// Created by [`Client::dynamic_fields`]. Await directly for a
+    /// Created by [`GrpcClient::dynamic_fields`]. Await directly for a
     /// single page, or call [`.collect(limit)`](Self::collect) to
     /// auto-paginate.
     pub struct ListDynamicFieldsQuery {
@@ -39,7 +39,7 @@ define_list_query! {
     }
 }
 
-impl Client {
+impl GrpcClient {
     /// List dynamic fields owned by a parent object.
     ///
     /// Returns a query builder. Await it directly for a single page
@@ -64,11 +64,11 @@ impl Client {
     ///
     /// Single page:
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::DynamicFieldReadMask;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let parent: ObjectId = "0x2".parse()?;
     ///
     /// let page = client
@@ -83,11 +83,11 @@ impl Client {
     ///
     /// Auto-paginate:
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::DynamicFieldReadMask;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let parent: ObjectId = "0x2".parse()?;
     ///
     /// let all = client

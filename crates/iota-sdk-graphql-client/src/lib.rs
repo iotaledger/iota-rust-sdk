@@ -20,8 +20,8 @@ mod wait;
 mod test_utils;
 
 // Re-export types used by query_types module internally
-pub use client::Client;
-pub use error::{Error, Result};
+pub use client::GraphQLClient;
+pub use error::{GraphQLError, GraphQLResult};
 pub use iota_transaction_builder::WaitForTransaction;
 pub(crate) use iota_types::Address;
 pub use output_types::*;

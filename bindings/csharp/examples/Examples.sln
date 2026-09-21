@@ -98,6 +98,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcServiceInfo", "GrpcServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGetObject", "GrpcGetObject\GrpcGetObject.csproj", "{EB5B6358-3D1A-42DC-9CC6-9B923C020D77}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcOwnedObjects", "GrpcOwnedObjects\GrpcOwnedObjects.csproj", "{AAB6ED47-615F-4A3B-B814-495DBE5D22D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcExecuteTransaction", "GrpcExecuteTransaction\GrpcExecuteTransaction.csproj", "{93EA3698-5CC7-42BF-80AE-2765A48EEA71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -299,5 +303,13 @@ Global
 		{EB5B6358-3D1A-42DC-9CC6-9B923C020D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB5B6358-3D1A-42DC-9CC6-9B923C020D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB5B6358-3D1A-42DC-9CC6-9B923C020D77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAB6ED47-615F-4A3B-B814-495DBE5D22D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAB6ED47-615F-4A3B-B814-495DBE5D22D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAB6ED47-615F-4A3B-B814-495DBE5D22D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAB6ED47-615F-4A3B-B814-495DBE5D22D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93EA3698-5CC7-42BF-80AE-2765A48EEA71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93EA3698-5CC7-42BF-80AE-2765A48EEA71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93EA3698-5CC7-42BF-80AE-2765A48EEA71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93EA3698-5CC7-42BF-80AE-2765A48EEA71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

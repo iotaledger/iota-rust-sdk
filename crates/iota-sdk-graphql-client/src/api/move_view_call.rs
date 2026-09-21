@@ -5,16 +5,16 @@ use cynic::QueryBuilder;
 use iota_types::{Address, ObjectId, ObjectReference, TypeTag};
 
 use crate::{
-    Client,
-    error::Result,
+    GraphQLClient,
+    error::GraphQLResult,
     query_types::{MoveViewCallArgs, MoveViewCallQuery, MoveViewResult},
 };
 
-impl Client {
+impl GraphQLClient {
     /// Execute a Move View Function with raw JSON arguments.
     ///
-    /// This is an alternative to [`Client::move_view_call`] that accepts raw
-    /// JSON values instead of typed arguments.
+    /// This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+    /// raw JSON values instead of typed arguments.
     ///
     /// A View Function is a function in a Move module with a return type that
     /// does not alter the state of the ledger. When using this interface,
@@ -37,7 +37,7 @@ impl Client {
         function_name: impl Into<String>,
         type_arguments: impl Into<Option<Vec<String>>>,
         arguments: impl Into<Option<Vec<serde_json::Value>>>,
-    ) -> Result<MoveViewResult> {
+    ) -> GraphQLResult<MoveViewResult> {
         let operation = MoveViewCallQuery::build(MoveViewCallArgs {
             function_name: function_name.into(),
             type_arguments: type_arguments.into(),
@@ -94,7 +94,7 @@ impl Client {
         function_name: impl Into<String>,
         type_arguments: impl Into<Option<Vec<TypeTag>>>,
         arguments: A,
-    ) -> Result<MoveViewResult> {
+    ) -> GraphQLResult<MoveViewResult> {
         let type_args_strings = type_arguments
             .into()
             .map(|tags| tags.into_iter().map(|t| t.to_string()).collect());

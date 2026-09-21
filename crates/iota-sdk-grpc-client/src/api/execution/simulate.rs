@@ -13,7 +13,7 @@ use iota_grpc_types::{
 use iota_types::Transaction;
 
 use crate::{
-    Client,
+    GrpcClient,
     api::{
         GrpcError, GrpcResult, MetadataEnvelope, ProtocolError, build_proto_transaction,
         into_item_results,
@@ -53,7 +53,7 @@ impl SimulateTransactionInput {
     }
 }
 
-impl Client {
+impl GrpcClient {
     /// Simulate a transaction without executing it.
     ///
     /// This allows you to preview the effects of a transaction before
@@ -85,11 +85,11 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::SimulateReadMask;
     /// # use iota_types::Transaction;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     ///
     /// let tx: Transaction = todo!();
     /// let result = client

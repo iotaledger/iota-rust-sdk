@@ -7,7 +7,7 @@ use std::{
     time::Duration,
 };
 
-use super::client_builder::ClientTransactionBuilder;
+use super::client_builder::GraphQLTransactionBuilder;
 use crate::{
     error::Result,
     graphql::client::GraphQLClient,
@@ -84,8 +84,9 @@ impl TransactionBuilder {
         Self(iota_sdk::transaction_builder::TransactionBuilder::from(ptb.0.clone()).into())
     }
 
-    pub fn with_client(&self, client: Arc<GraphQLClient>) -> ClientTransactionBuilder {
-        ClientTransactionBuilder(
+    /// Use a GraphQL client to automatically resolve the transaction inputs.
+    pub fn with_graphql_client(&self, client: Arc<GraphQLClient>) -> GraphQLTransactionBuilder {
+        GraphQLTransactionBuilder(
             self.read(|builder| builder.clone().with_client(client))
                 .into(),
         )
@@ -321,6 +322,41 @@ impl TransactionBuilder {
         self
     }
 
+    /// Divide a coin into `count` coins of equal value, all kept by the
+    /// sender.
+    ///
+    /// Unlike `split_coins`, the new coins are transferred to the sender by
+    /// `0x2::pay::divide_and_keep` itself, so no transfer command is needed
+    /// for them. In exchange they are not available as command results and
+    /// cannot be used by later commands in the same transaction.
+    ///
+    /// The coin defaults an IOTA coin. For any other coin type, set it
+    /// with `coin_type`, which is the `T` of `0x2::coin::Coin<T>`.
+    ///
+    /// `count - 1` new coins are created, each holding `value / count`, and
+    /// the divided coin keeps its own share plus the remainder of the
+    /// division. The transaction aborts if `count` is zero or larger than the
+    /// coin's value.
+    ///
+    /// The coin is passed by reference, so the gas coin
+    /// (`PTBArgument::Gas`) can be divided as well,
+    /// as long as it retains enough balance to pay for the transaction.
+    #[uniffi::method(default(coin_type = None))]
+    pub fn divide_coin(
+        self: Arc<Self>,
+        coin: &PTBArgument,
+        count: u64,
+        coin_type: Option<Arc<TypeTag>>,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            let builder = builder.divide_coin(coin, count);
+            if let Some(coin_type) = coin_type {
+                builder.coin_type_tag(coin_type.0.clone());
+            }
+        });
+        self
+    }
+
     /// Make a move vector from a list of elements. The elements must all be of
     /// the type indicated by `type_tag`.
     pub fn make_move_vec(
@@ -497,5 +533,23 @@ impl TransactionBuilder {
         Ok(self
             .read(|builder| builder.clone().execute_with_gas_station(signer))
             .await?)
+    }
+}
+
+#[cfg(feature = "grpc")]
+#[uniffi::export]
+impl TransactionBuilder {
+    /// Use a gRPC client to automatically resolve the transaction inputs.
+    ///
+    /// The builder takes a snapshot of the client's configuration; `set_*`
+    /// calls made on the client afterwards do not affect it.
+    pub fn with_grpc_client(
+        &self,
+        client: Arc<crate::grpc::client::GrpcClient>,
+    ) -> super::client_builder::GrpcTransactionBuilder {
+        super::client_builder::GrpcTransactionBuilder(
+            self.read(|builder| builder.clone().with_client(Arc::new(client.client())))
+                .into(),
+        )
     }
 }

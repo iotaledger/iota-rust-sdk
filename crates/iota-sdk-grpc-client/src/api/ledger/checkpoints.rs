@@ -28,14 +28,14 @@ use iota_grpc_types::{
 use iota_types::{CheckpointDigest, CheckpointSequenceNumber};
 
 use crate::{
-    Client, GrpcError,
+    GrpcClient, GrpcError,
     api::{
         CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, GrpcResult,
         MetadataEnvelope, ProtocolError, TryFromProtoError, saturating_usize_to_u32,
     },
 };
 
-impl Client {
+impl GrpcClient {
     /// Get the latest checkpoint.
     ///
     /// Returns the checkpoint with fields populated according to the
@@ -53,10 +53,10 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let checkpoint = client
     ///     .checkpoint_latest(None, None, CheckpointResponseReadMask::default())
     ///     .await?;
@@ -100,10 +100,10 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let checkpoint = client
     ///     .checkpoint_by_sequence_number(100, None, None, CheckpointResponseReadMask::default())
     ///     .await?;
@@ -148,11 +148,11 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # use iota_types::CheckpointDigest;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let digest: CheckpointDigest = todo!();
     /// let checkpoint = client
     ///     .checkpoint_by_digest(digest, None, None, CheckpointResponseReadMask::default())
@@ -274,11 +274,11 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let mut stream = client
     ///     .checkpoints_stream(
     ///         Some(0),
@@ -341,7 +341,8 @@ impl Client {
         let (stream, metadata) = envelope.into_parts();
 
         // remove the wrapping CheckpointStreamItem layer since we know
-        // filter_checkpoints is false and thus only Checkpoint items will be produced
+        // filter_checkpoints is false and thus only Checkpoint items will be
+        // produced
         let filtered = stream.filter_map(|item| async {
             match item {
                 Ok(CheckpointStreamItem::Checkpoint(cp)) => Some(Ok(*cp)),
@@ -394,12 +395,12 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::{Client, CheckpointStreamItem};
+    /// # use iota_sdk_grpc_client::{GrpcClient, CheckpointStreamItem};
     /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # use iota_grpc_types::v1::filter as grpc_filter;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// // At least one filter is required
     /// let tx_filter = grpc_filter::TransactionFilter::default();
     /// let mut stream = client

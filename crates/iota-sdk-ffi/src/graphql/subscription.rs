@@ -19,7 +19,7 @@ use futures::stream::BoxStream;
 #[cfg(target_arch = "wasm32")]
 use futures::stream::LocalBoxStream;
 use futures::{Stream, StreamExt};
-use iota_sdk::graphql_client::error::Result as GraphQLResult;
+use iota_sdk::graphql_client::error::GraphQLResult;
 use tokio::sync::{Mutex, Notify};
 
 use crate::{
@@ -280,17 +280,17 @@ define_subscription!(
 /// These are exactly the transport-level failures the reconnect loop handles —
 /// a dropped WebSocket, a failed handshake, or the server dropping payloads for
 /// a client that fell behind.
-fn is_recoverable(error: &iota_sdk::graphql_client::error::Error) -> bool {
+fn is_recoverable(error: &iota_sdk::graphql_client::error::GraphQLError) -> bool {
     matches!(
         error,
-        iota_sdk::graphql_client::error::Error::Subscription(_)
-            | iota_sdk::graphql_client::error::Error::Lagged { .. }
+        iota_sdk::graphql_client::error::GraphQLError::Subscription(_)
+            | iota_sdk::graphql_client::error::GraphQLError::Lagged { .. }
     )
 }
 
 /// Open the event stream a subscription handle reads from.
 fn open_events(
-    client: iota_sdk::graphql_client::Client,
+    client: iota_sdk::graphql_client::GraphQLClient,
     filter: Option<SubscriptionEventFilter>,
     start_after: Option<String>,
 ) -> SubscriptionStream<iota_sdk::graphql_client::query_types::Event> {
@@ -306,7 +306,7 @@ fn open_events(
 
 /// Open the transaction stream a subscription handle reads from.
 fn open_transactions(
-    client: iota_sdk::graphql_client::Client,
+    client: iota_sdk::graphql_client::GraphQLClient,
     filter: Option<SubscriptionTransactionFilter>,
     start_after: Option<String>,
 ) -> SubscriptionStream<iota_sdk::types::SignedTransaction> {
