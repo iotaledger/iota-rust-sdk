@@ -16,32 +16,16 @@ executing transactions and more.
 
 # TLS
 
-HTTPS is verified with `rustls`, configured by two feature axes that both have
-defaults, so reaching the public networks needs no setup.
+HTTPS is verified with `rustls`. Every axis has a default, so reaching the public networks needs no setup.
 
-**Crypto provider** — `tls-ring` (default) or `tls-aws-lc`; enabling both is not
-an error, but `rustls` cannot be asked to choose, so `tls-ring` wins. `aws-lc-rs`
-builds a C library and needs a working C toolchain, plus `libclang` on targets
-without prebuilt bindings. A provider feature is also what compiles TLS into
-`reqwest` at all: with neither, the client is HTTP-only, nothing verifies
-certificates, and `Client::new` rejects an `https` or `wss` address rather than
-letting the request fail later. This is the build to use against a localnet over
-plain HTTP.
-
-**Trust anchors** — `tls-native-roots` and `tls-webpki-roots`, both on by
-default, both ignored on an HTTP-only build.
-
-| Features enabled        | Trusted                                                             |
-| ----------------------- | ------------------------------------------------------------------- |
-| both (default)          | the platform trust store, with the bundled Mozilla roots as a floor |
-| `tls-webpki-roots` only | the bundled Mozilla roots                                           |
-| `tls-native-roots` only | the platform trust store                                            |
-
-Keeping both is usually right: `reqwest` constructs its verifier eagerly, so on
-an image with no system trust store the bundled roots are what let the client be
-built at all, even for plain-HTTP use. But trusting both is a union — a CA the
-platform has deliberately distrusted is still accepted if the bundled set
-carries it. Drop `tls-native-roots` if the bundled set should be authoritative.
+| Feature            | Default | Effect                                                                                                                                                                                                                                                                                                       |
+| ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `tls-ring`         | on      | `ring` as the `rustls` crypto provider                                                                                                                                                                                                                                                                       |
+| `tls-aws-lc`       | off     | `aws-lc-rs` instead; builds a C library, so it needs a C toolchain and `libclang` on targets without prebuilt bindings. `tls-ring` wins if both are on — `rustls` cannot be asked to choose.                                                                                                                 |
+| neither provider   | —       | HTTP-only: `reqwest` is built without TLS, nothing verifies certificates, the root features below are ignored, and `Client::new` rejects an `https` or `wss` address rather than letting the request fail later. The build to use against a localnet.                                                        |
+| `tls-native-roots` | on      | trust the platform store. Alone it changes nothing, since that is already `reqwest`'s default; its effect is to merge rather than replace when `tls-webpki-roots` is also on.                                                                                                                                |
+| `tls-webpki-roots` | on      | add the bundled Mozilla roots, merged into the platform store when `tls-native-roots` is also on. Merging is a union, not a fallback: a CA the platform has deliberately distrusted is still accepted if the bundled set carries it. Turn off `tls-native-roots` if the bundled set should be authoritative. |
+| neither roots      | —       | the platform store alone. `reqwest` constructs its verifier eagerly, before it knows whether a request uses TLS, so on Linux an empty system store fails the build even for plain-HTTP use — which is what the bundled roots otherwise prevent.                                                              |
 
 Android always uses the bundled roots alone: it cannot merge the two, and its
 platform verifier aborts the process unless the application performs a JNI
