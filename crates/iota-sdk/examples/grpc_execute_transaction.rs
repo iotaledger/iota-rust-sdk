@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Build, sign, and execute a transaction over gRPC.
+//! Build, simulate, sign, and execute a transaction over gRPC.
 
 use eyre::Result;
 use iota_sdk::{
