@@ -400,21 +400,8 @@ mod tests {
     use super::{MultisigAggregator, MultisigVerifier, UserSignatureVerifier};
     use crate::{
         IotaSigner, IotaVerifier, ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey,
-        secp256r1::Secp256r1PrivateKey,
+        secp256r1::Secp256r1PrivateKey, tests::error_chain,
     };
-
-    /// `signature::Error`'s `Display` is deliberately opaque, so the message a
-    /// verifier attached is only reachable through the source chain.
-    fn error_chain(error: &crate::SignatureError) -> String {
-        let mut out = error.to_string();
-        let mut source = std::error::Error::source(error);
-        while let Some(cause) = source {
-            out.push_str(": ");
-            out.push_str(&cause.to_string());
-            source = cause.source();
-        }
-        out
-    }
 
     /// Three deterministic private keys, one per supported signature scheme.
     fn test_keys() -> (Ed25519PrivateKey, Secp256k1PrivateKey, Secp256r1PrivateKey) {
