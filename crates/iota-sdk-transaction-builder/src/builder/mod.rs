@@ -49,6 +49,9 @@ const REQUEST_WITHDRAW_STAKE_FN: &str = "request_withdraw_stake";
 /// Protocol-config key for the (exclusive) cap on `gas_payment.objects.len()`.
 const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
 
+/// Protocol-config key for the fixed base transaction cost.
+const BASE_TX_COST_FIXED_KEY: &str = "base_tx_cost_fixed";
+
 /// Fallback cap on `gas_payment.objects.len()` used when the protocol-config
 /// value is unavailable (`max_gas_payment_objects` is 256 exclusive at the
 /// time of writing, so 255 inclusive). Auto gas selection fetches the live
@@ -2062,9 +2065,18 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                         .map_err(TransactionBuilderError::client)?
                         .ok_or(TransactionBuilderError::MissingGasBudget)?;
                     // The network enforces a minimum gas budget of base_tx_cost_fixed
-                    // (1000) * gas_price. The dry-run estimate can return a value below
+                    // * gas_price. The dry-run estimate can return a value below
                     // this minimum, so we clamp it.
-                    let budget = estimate.max(txn_v1.gas_payment.price.saturating_mul(1000));
+                    let min_gas_budget = self
+                        .client
+                        .protocol_config()
+                        .await
+                        .map_err(TransactionBuilderError::client)?
+                        .attribute(BASE_TX_COST_FIXED_KEY)
+                        .and_then(|base_tx_cost_str| base_tx_cost_str.parse::<u64>().ok())
+                        .ok_or(TransactionBuilderError::MissingGasBudget)?;
+                    let budget =
+                        estimate.max(txn_v1.gas_payment.price.saturating_mul(min_gas_budget));
                     txn.as_mut_v1().gas_payment.budget = budget;
                 };
 
