@@ -142,6 +142,11 @@ macro_rules! define_checkpoint_stream {
             /// Returns `None` once the stream is exhausted or has been
             /// canceled. Concurrent calls are serialized; there is no ordering
             /// guarantee between them.
+            ///
+            /// An error ends the stream: there is no reconnect, so after
+            /// `next` has raised, every later call returns `None`. A caller
+            /// that wants to resume must open a new stream from the last
+            /// sequence number it received.
             pub async fn next(&self) -> Result<Option<$ffi_item>> {
                 if self.cancel.is_canceled() {
                     return Ok(None);
