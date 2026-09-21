@@ -26,6 +26,14 @@ func main() {
 	sender := keypair.PublicKey().DeriveAddress()
 	signer := iota_sdk.TransactionSignerFromEd25519(keypair)
 
+	headers := make(map[string][]string)
+	headers["Authorization"] = []string{fmt.Sprintf("Bearer %v", gasStationAuthToken)}
+
+	gasStation, err := iota_sdk.NewGasStation(gasStationUrl, nil, &headers, nil)
+	if err != nil {
+		log.Fatalf("Failed to create gas station: %v", err)
+	}
+
 	builder := client.TransactionBuilder(sender)
 
 	package_id := iota_sdk.AddressStd()
@@ -41,15 +49,7 @@ func main() {
 		nil,
 	)
 
-	headers := make(map[string][]string)
-	headers["Authorization"] = []string{fmt.Sprintf("Bearer %v", gasStationAuthToken)}
-
-	// The default options build the same HTTP client the SDK uses elsewhere.
-	if _, err := builder.GasStationSponsor(gasStationUrl, iota_sdk.HttpClientOptions{}, nil, &headers); err != nil {
-		log.Fatalf("Failed to set the gas station sponsor: %v", err)
-	}
-
-	res, err := builder.Execute(signer, nil)
+	res, err := builder.ExecuteWithGasStation(gasStation, signer)
 	if err != nil {
 		log.Fatalf("Failed to sponsor transaction: %v", err)
 	}

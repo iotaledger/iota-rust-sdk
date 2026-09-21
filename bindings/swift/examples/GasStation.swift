@@ -15,6 +15,10 @@ struct GasStationExample {
       let sender = keypair.publicKey().deriveAddress()
       let signer = TransactionSigner.fromEd25519(key: keypair)
 
+      let gasStation = try GasStation(
+        url: gasStationUrl,
+        headers: ["Authorization": ["Bearer \(gasStationAuthToken)"]])
+
       let builder = client.transactionBuilder(sender: sender)
 
       _ = try builder.moveCall(
@@ -24,13 +28,7 @@ struct GasStationExample {
         arguments: [PtbArgument.u64(value: 64)]
       )
 
-      // The default options build the same HTTP client the SDK uses elsewhere.
-      _ = try builder.gasStationSponsor(
-        url: gasStationUrl,
-        options: HttpClientOptions(),
-        headers: ["Authorization": ["Bearer \(gasStationAuthToken)"]])
-
-      let res = try await builder.execute(signer: signer)
+      let res = try await builder.executeWithGasStation(gasStation: gasStation, signer: signer)
 
       print(res)
 

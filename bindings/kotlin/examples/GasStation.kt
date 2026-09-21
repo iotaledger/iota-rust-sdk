@@ -13,6 +13,12 @@ fun main() = runBlocking {
         var sender = keypair.publicKey().deriveAddress()
         var signer = TransactionSigner.fromEd25519(keypair)
 
+        val gasStation =
+            GasStation(
+                gasStationUrl,
+                headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken")),
+            )
+
         val builder = client.transactionBuilder(sender)
 
         builder.moveCall(
@@ -22,14 +28,7 @@ fun main() = runBlocking {
             listOf(PtbArgument.u64(64uL)),
         )
 
-        // The default options build the same HTTP client the SDK uses elsewhere.
-        builder.gasStationSponsor(
-            gasStationUrl,
-            HttpClientOptions(),
-            headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken")),
-        )
-
-        val res = builder.execute(signer)
+        val res = builder.executeWithGasStation(gasStation, signer)
 
         println("$res")
 

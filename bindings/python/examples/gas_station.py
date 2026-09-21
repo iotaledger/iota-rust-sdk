@@ -14,6 +14,10 @@ async def main():
     sender = keypair.public_key().derive_address()
     signer = TransactionSigner.from_ed25519(keypair)
 
+    gas_station = GasStation(
+        gas_station_url,
+        headers={"Authorization": [f"Bearer {gas_station_auth_token}"]})
+
     builder = client.transaction_builder(sender)
 
     builder.move_call(
@@ -23,13 +27,7 @@ async def main():
         [PtbArgument.u64(64)],
     )
 
-    # The default options build the same HTTP client the SDK uses elsewhere.
-    builder.gas_station_sponsor(
-        gas_station_url,
-        HttpClientOptions(),
-        headers={"Authorization": [f"Bearer {gas_station_auth_token}"]})
-
-    res = await builder.execute(signer)
+    res = await builder.execute_with_gas_station(gas_station, signer)
 
     print(res)
 

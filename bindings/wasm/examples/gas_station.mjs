@@ -4,8 +4,8 @@
 import {
   Address,
   Ed25519PrivateKey,
+  GasStation,
   GraphQlClient,
-  HttpClientOptions,
   Identifier,
   PtbArgument,
   TransactionSigner,
@@ -21,20 +21,19 @@ const keypair = Ed25519PrivateKey.random();
 const sender = keypair.publicKey().deriveAddress();
 const signer = TransactionSigner.fromEd25519(keypair);
 
+const gasStation = new GasStation(
+  gasStationUrl,
+  undefined,
+  new Map([["Authorization", [`Bearer ${gasStationAuthToken}`]]]),
+);
+
 const builder = client.transactionBuilder(sender);
 
 builder.moveCall(Address.std(), new Identifier("u64"), new Identifier("sqrt"), [
   PtbArgument.u64(64n),
 ]);
 
-builder.gasStationSponsor(
-  gasStationUrl,
-  HttpClientOptions.create({}),
-  undefined,
-  new Map([["Authorization", [`Bearer ${gasStationAuthToken}`]]]),
-);
-
-const res = await builder.execute(signer);
+const res = await builder.executeWithGasStation(gasStation, signer);
 
 console.log(res);
 console.log("Sponsored transaction was successful!");
