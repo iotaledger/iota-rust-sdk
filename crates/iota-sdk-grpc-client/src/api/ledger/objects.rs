@@ -212,10 +212,10 @@ impl GrpcClient {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let gas: ObjectId = "0x2".parse()?;
     /// let mut refs = client.object_references([gas]).await?.into_inner();
     /// let gas_ref = refs.remove(0)?;
