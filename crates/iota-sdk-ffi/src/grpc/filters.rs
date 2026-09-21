@@ -59,9 +59,8 @@ impl GrpcEventFilter {
     #[uniffi::constructor]
     pub fn all(filters: Vec<Arc<GrpcEventFilter>>) -> Self {
         Self(
-            proto::EventFilter::default().with_all(
-                proto::AllEventFilter::default().with_filters(inner_event_filters(&filters)),
-            ),
+            proto::EventFilter::default()
+                .with_all(proto::AllEventFilter::default().with_filters(to_proto(&filters))),
         )
     }
 
@@ -69,9 +68,8 @@ impl GrpcEventFilter {
     #[uniffi::constructor]
     pub fn any(filters: Vec<Arc<GrpcEventFilter>>) -> Self {
         Self(
-            proto::EventFilter::default().with_any(
-                proto::AnyEventFilter::default().with_filters(inner_event_filters(&filters)),
-            ),
+            proto::EventFilter::default()
+                .with_any(proto::AnyEventFilter::default().with_filters(to_proto(&filters))),
         )
     }
 
@@ -222,10 +220,8 @@ impl GrpcTransactionFilter {
     #[uniffi::constructor]
     pub fn all(filters: Vec<Arc<GrpcTransactionFilter>>) -> Self {
         Self(
-            proto::TransactionFilter::default().with_all(
-                proto::AllTransactionFilter::default()
-                    .with_filters(inner_transaction_filters(&filters)),
-            ),
+            proto::TransactionFilter::default()
+                .with_all(proto::AllTransactionFilter::default().with_filters(to_proto(&filters))),
         )
     }
 
@@ -233,10 +229,8 @@ impl GrpcTransactionFilter {
     #[uniffi::constructor]
     pub fn any(filters: Vec<Arc<GrpcTransactionFilter>>) -> Self {
         Self(
-            proto::TransactionFilter::default().with_any(
-                proto::AnyTransactionFilter::default()
-                    .with_filters(inner_transaction_filters(&filters)),
-            ),
+            proto::TransactionFilter::default()
+                .with_any(proto::AnyTransactionFilter::default().with_filters(to_proto(&filters))),
         )
     }
 
@@ -319,20 +313,9 @@ impl GrpcTransactionFilter {
     }
 }
 
-fn inner_event_filters(filters: &[Arc<GrpcEventFilter>]) -> Vec<proto::EventFilter> {
-    filters
-        .iter()
-        .map(|filter| filter.as_ref().into())
-        .collect()
-}
-
-fn inner_transaction_filters(
-    filters: &[Arc<GrpcTransactionFilter>],
-) -> Vec<proto::TransactionFilter> {
-    filters
-        .iter()
-        .map(|filter| filter.as_ref().into())
-        .collect()
+/// Convert a list of FFI filters into their proto counterparts.
+fn to_proto<T, P: for<'a> From<&'a T>>(filters: &[Arc<T>]) -> Vec<P> {
+    filters.iter().map(Arc::as_ref).map(P::from).collect()
 }
 
 fn move_package_and_module(
