@@ -239,10 +239,6 @@ impl TryFrom<iota_sdk::grpc_client::CheckpointStreamItem> for CheckpointStreamIt
             } => Self::Progress {
                 latest_scanned_sequence_number,
             },
-            // TODO: the base enum is non-exhaustive, so a variant added there
-            // makes `next` raise once for each such item until the FFI catches
-            // up. Decide whether unknown items should be skipped inside the
-            // stream instead.
             _ => {
                 return Err(SdkFfiError::custom(
                     "unsupported checkpoint stream item variant",
