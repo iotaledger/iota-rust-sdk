@@ -50,9 +50,10 @@ pub struct CheckpointResponse {
     pub contents: Option<Arc<CheckpointContents>>,
     /// The transactions executed in the checkpoint.
     pub transactions: Vec<ExecutedTransaction>,
-    /// The events emitted in the checkpoint. Only events whose BCS
-    /// representation was requested are included.
-    pub events: Vec<Event>,
+    /// The events emitted in the checkpoint. `None` unless the BCS
+    /// representation of every event was requested; a checkpoint with no
+    /// events yields an empty list.
+    pub events: Option<Vec<Event>>,
 }
 
 impl TryFrom<&iota_sdk::grpc_client::CheckpointResponse> for CheckpointResponse {
@@ -102,12 +103,15 @@ impl TryFrom<&iota_sdk::grpc_client::CheckpointResponse> for CheckpointResponse 
             events: value
                 .events()
                 .iter()
-                .filter(|event| event.bcs.is_some())
-                .map(|event| event.event().map_err(SdkFfiError::new))
-                .collect::<std::result::Result<Vec<_>, _>>()?
-                .into_iter()
-                .map(Into::into)
-                .collect(),
+                .all(|event| event.bcs.is_some())
+                .then(|| {
+                    value
+                        .events()
+                        .iter()
+                        .map(|event| event.event().map(Into::into).map_err(SdkFfiError::new))
+                        .collect::<Result<Vec<_>>>()
+                })
+                .transpose()?,
         })
     }
 }
