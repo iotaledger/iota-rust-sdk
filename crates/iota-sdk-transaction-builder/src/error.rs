@@ -111,10 +111,6 @@ impl TransactionBuilderError {
 }
 
 /// Transport failure while talking to a gas station.
-///
-/// Wraps the underlying HTTP client's error without naming its type, so that
-/// the client stays an implementation detail and its releases are not a
-/// breaking change for this crate.
 #[derive(Debug, thiserror::Error)]
 #[error(transparent)]
 pub struct GasStationTransportError(Box<dyn std::error::Error + Send + Sync + 'static>);
