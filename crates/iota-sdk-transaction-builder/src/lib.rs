@@ -393,7 +393,7 @@ mod tests {
         use iota_types::{Object, ObjectId, StructTag, Version};
 
         use crate::{
-            ObjectsPage, TestClient, TestClientError, TransactionBuilderClientBase,
+            ObjectsPage, ProtocolConfig, TestClient, TestClientError, TransactionBuilderClientBase,
             TransactionBuilderLedgerClient,
         };
 
@@ -431,6 +431,10 @@ mod tests {
             ) -> Result<Option<u64>, Self::Error> {
                 self.0.reference_gas_price(epoch).await
             }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                self.0.protocol_config().await
+            }
         }
 
         #[tokio::test]
@@ -462,7 +466,7 @@ mod tests {
         use iota_types::{Object, ObjectId, StructTag, Transaction, Version};
 
         use crate::{
-            ObjectsPage, TestClient, TestClientError, TransactionBuilderClientBase,
+            ObjectsPage, ProtocolConfig, TestClient, TestClientError, TransactionBuilderClientBase,
             TransactionBuilderLedgerClient, TransactionBuilderSimulationClient,
         };
 
@@ -498,6 +502,10 @@ mod tests {
                 epoch: impl Into<Option<u64>>,
             ) -> Result<Option<u64>, Self::Error> {
                 self.0.reference_gas_price(epoch).await
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                self.0.protocol_config().await
             }
         }
 
@@ -575,7 +583,7 @@ mod tests {
         use iota_types::{Object, ObjectId, StructTag, Transaction, Version};
 
         use crate::{
-            ObjectsPage, TestClient, TestClientError, TransactionBuilderClientBase,
+            ObjectsPage, ProtocolConfig, TestClient, TestClientError, TransactionBuilderClientBase,
             TransactionBuilderLedgerClient, TransactionBuilderSimulationClient,
         };
 
@@ -620,6 +628,10 @@ mod tests {
                 epoch: impl Into<Option<u64>>,
             ) -> Result<Option<u64>, Self::Error> {
                 TestClient.reference_gas_price(epoch).await
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                TestClient.protocol_config().await
             }
         }
 
@@ -805,7 +817,7 @@ mod tests {
         };
 
         use crate::{
-            GasSponsor, ObjectsPage, SponsoredGas, TestClient, TestClientError,
+            GasSponsor, ObjectsPage, ProtocolConfig, SponsoredGas, TestClient, TestClientError,
             TransactionBuilderClientBase, TransactionBuilderExecutionClient,
             TransactionBuilderLedgerClient, TransactionBuilderSimulationClient,
             error::TransactionBuilderError,
@@ -893,6 +905,10 @@ mod tests {
                 epoch: impl Into<Option<u64>>,
             ) -> Result<Option<u64>, Self::Error> {
                 TestClient.reference_gas_price(epoch).await
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                TestClient.protocol_config().await
             }
         }
 

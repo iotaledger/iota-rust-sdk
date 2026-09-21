@@ -17,8 +17,8 @@ use iota_types::{
 use serde::Serialize;
 
 use crate::{
-    PTBArgument, SharedMut, TransactionBuilderClient, TransactionBuilderLedgerClient,
-    TransactionBuilderSimulationClient, WaitForTransaction,
+    PTBArgument, ProtocolConfig, SharedMut, TransactionBuilderClient,
+    TransactionBuilderLedgerClient, TransactionBuilderSimulationClient, WaitForTransaction,
     builder::{
         assigned_results::{AssignedResult, AssignedResults},
         gas_sponsor::{GasSponsor, SponsoredGas},
@@ -52,20 +52,13 @@ const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
 /// Protocol-config key for the fixed base transaction cost.
 const BASE_TX_COST_FIXED_KEY: &str = "base_tx_cost_fixed";
 
-/// Fallback cap on `gas_payment.objects.len()` used when the protocol-config
-/// value is unavailable (`max_gas_payment_objects` is 256 exclusive at the
-/// time of writing, so 255 inclusive). Auto gas selection fetches the live
-/// value via [`TransactionBuilderLedgerClient::protocol_config`] and falls
-/// back to this if the implementation does not expose protocol config or the
-/// value cannot be parsed.
-const DEFAULT_MAX_GAS_PAYMENT_OBJECTS: usize = 255;
-
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Clone, Debug)]
 #[repr(C)]
 pub struct TransactionBuilder<C = (), L = ()> {
     data: TransactionBuildData,
     client: C,
+    protocol_config: Option<ProtocolConfig>,
     last_command: PhantomData<L>,
 }
 
@@ -318,6 +311,7 @@ impl TransactionBuilder {
                 state_command: Default::default(),
             },
             client: (),
+            protocol_config: None,
             last_command: PhantomData,
         }
     }
@@ -327,6 +321,7 @@ impl TransactionBuilder {
         TransactionBuilder {
             data: self.data,
             client,
+            protocol_config: self.protocol_config,
             last_command: self.last_command,
         }
     }
@@ -378,6 +373,7 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
                 state_command: Default::default(),
             },
             client: (),
+            protocol_config: None,
             last_command: PhantomData,
         }
     }
@@ -1635,17 +1631,13 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             // the cap, so the whole set is pinned — and gas smashing during
             // execution consolidates the balances into a single coin.
             let max_gas_payment_objects = self
-                .client
-                .protocol_config()
-                .await
-                .ok()
-                .and_then(|cfg| {
-                    cfg.attributes
-                        .get(MAX_GAS_PAYMENT_OBJECTS_KEY)
-                        .and_then(|v| v.parse::<usize>().ok())
-                })
-                .and_then(|v| v.checked_sub(1))
-                .unwrap_or(DEFAULT_MAX_GAS_PAYMENT_OBJECTS);
+                .protocol_config_attribute::<usize>(MAX_GAS_PAYMENT_OBJECTS_KEY)
+                .await?
+                .checked_sub(1)
+                .ok_or_else(|| TransactionBuilderError::InvalidProtocolValue {
+                    name: MAX_GAS_PAYMENT_OBJECTS_KEY.to_owned(),
+                    value: "0".to_owned(),
+                })?;
             let owner = self.data.sponsor.unwrap_or(self.data.sender);
             let target_budget = self.data.gas_budget;
             let mut selected: Vec<(u64, ObjectReference)> = Vec::new();
@@ -1918,6 +1910,37 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
         let (kind, _gas) = self.resolve_kind().await?;
         Ok(kind)
     }
+
+    /// Read one protocol-config attribute, fetching the config from the
+    /// client on first use and reusing it for the rest of the build.
+    async fn protocol_config_attribute<T: std::str::FromStr>(
+        &mut self,
+        key: &str,
+    ) -> Result<T, TransactionBuilderError> {
+        if self.protocol_config.is_none() {
+            self.protocol_config = Some(
+                self.client
+                    .protocol_config()
+                    .await
+                    .map_err(TransactionBuilderError::client)?,
+            );
+        }
+        self.protocol_config
+            .as_ref()
+            .unwrap()
+            .attribute(key)
+            .ok_or_else(|| TransactionBuilderError::MissingProtocolValue {
+                name: key.to_owned(),
+            })
+            .and_then(|value| {
+                value
+                    .parse::<T>()
+                    .map_err(|_| TransactionBuilderError::InvalidProtocolValue {
+                        name: key.to_owned(),
+                        value: value.to_owned(),
+                    })
+            })
+    }
 }
 
 impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
@@ -1939,13 +1962,8 @@ impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
             // * gas_price. The dry-run estimate can return a value below
             // this minimum, so we clamp it.
             let min_gas_budget = self
-                .client
-                .protocol_config()
-                .await
-                .map_err(TransactionBuilderError::client)?
-                .attribute(BASE_TX_COST_FIXED_KEY)
-                .and_then(|base_tx_cost_str| base_tx_cost_str.parse::<u64>().ok())
-                .ok_or(TransactionBuilderError::MissingGasBudget)?;
+                .protocol_config_attribute::<u64>(BASE_TX_COST_FIXED_KEY)
+                .await?;
             let min_budget = txn.gas_payment.price.saturating_mul(min_gas_budget);
             txn.gas_payment.budget = budget.max(min_budget);
         }
@@ -2076,13 +2094,8 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                     // * gas_price. The dry-run estimate can return a value below
                     // this minimum, so we clamp it.
                     let min_gas_budget = self
-                        .client
-                        .protocol_config()
-                        .await
-                        .map_err(TransactionBuilderError::client)?
-                        .attribute(BASE_TX_COST_FIXED_KEY)
-                        .and_then(|base_tx_cost_str| base_tx_cost_str.parse::<u64>().ok())
-                        .ok_or(TransactionBuilderError::MissingGasBudget)?;
+                        .protocol_config_attribute::<u64>(BASE_TX_COST_FIXED_KEY)
+                        .await?;
                     let budget =
                         estimate.max(txn_v1.gas_payment.price.saturating_mul(min_gas_budget));
                     txn.as_mut_v1().gas_payment.budget = budget;

@@ -50,6 +50,10 @@ pub enum TransactionBuilderError {
     MissingInitialSharedVersion(ObjectId),
     #[error("Missing pure value")]
     MissingPureValue,
+    #[error("Missing protocol value: {name}")]
+    MissingProtocolValue { name: String },
+    #[error("Invalid protocol value: {name} = {value}")]
+    InvalidProtocolValue { name: String, value: String },
     #[error("Unknown shared object mutability for object {0}")]
     SharedObjectMutability(ObjectId),
     #[error("Unsupported literal")]
