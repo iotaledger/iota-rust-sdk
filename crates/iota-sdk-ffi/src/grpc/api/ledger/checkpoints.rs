@@ -30,9 +30,10 @@ use crate::{
 /// Which fields are populated depends on the read mask used for the query;
 /// the default read mask only includes the checkpoint summary.
 ///
-/// The `summary`, `contents`, and `events` fields are deserialized from BCS,
-/// so the read mask must include the corresponding `bcs` sub-fields for them
-/// to be populated; digest-only read masks populate only the digest fields.
+/// The `summary`, `signature`, `contents`, and `events` fields are
+/// deserialized from BCS, so the read mask must include the corresponding
+/// `bcs` sub-fields for them to be populated; digest-only read masks populate
+/// only the digest fields.
 #[derive(uniffi::Record)]
 pub struct CheckpointResponse {
     /// The checkpoint sequence number. Always available regardless of the
@@ -79,6 +80,7 @@ impl TryFrom<&iota_sdk::grpc_client::CheckpointResponse> for CheckpointResponse 
             signature: value
                 .signature()
                 .ok()
+                .filter(|signature| signature.bcs.is_some())
                 .map(|signature| signature.signature().map_err(SdkFfiError::new))
                 .transpose()?
                 .map(Into::into)
