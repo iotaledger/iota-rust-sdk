@@ -1,16 +1,20 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Records for simulated transactions.
+//! Transaction simulation API implementation.
 
 use std::sync::Arc;
 
-use iota_sdk::grpc_types::v1 as proto;
+use iota_sdk::{grpc_client::read_mask_fields::SimulateReadMask, grpc_types::v1 as proto};
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::api::ledger::transactions::ExecutedTransaction,
-    types::{execution_status::ExecutionError, move_core::TypeTag, transaction::Argument},
+    grpc::{api::ledger::transactions::ExecutedTransaction, client::GrpcClient},
+    types::{
+        execution_status::ExecutionError,
+        move_core::TypeTag,
+        transaction::{Argument, Transaction},
+    },
 };
 
 /// An intermediate result/output from the execution of a single command.
@@ -164,6 +168,95 @@ impl TryFrom<&proto::transaction_execution_service::SimulatedTransaction> for Si
                 .transpose()?,
             execution_error: value.execution_error().map(TryInto::try_into).transpose()?,
         })
+    }
+}
+
+/// The result of simulating a single transaction in a batch: either the
+/// simulated transaction or an error.
+#[derive(uniffi::Record)]
+pub struct SimulatedTransactionResult {
+    /// The simulated transaction, if the simulation succeeded.
+    pub transaction: Option<SimulatedTransaction>,
+    /// The error message, if the simulation failed.
+    pub error: Option<String>,
+}
+
+/// A transaction to simulate with `simulate_transactions`.
+#[derive(uniffi::Record)]
+pub struct SimulateTransactionInput {
+    /// The transaction to simulate.
+    pub transaction: Arc<Transaction>,
+    /// Whether to skip the VM checks during the simulation.
+    #[uniffi(default = false)]
+    pub skip_checks: bool,
+}
+
+#[uniffi::export(async_runtime = "tokio")]
+impl GrpcClient {
+    /// Simulate a transaction.
+    ///
+    /// If `skip_checks` is `true`, the VM checks are skipped during the
+    /// simulation.
+    ///
+    /// The optional `read_mask` controls which fields the server returns.
+    #[uniffi::method(default(skip_checks = false, read_mask = None))]
+    pub async fn simulate_transaction(
+        &self,
+        transaction: &Transaction,
+        skip_checks: bool,
+        read_mask: Option<Vec<String>>,
+    ) -> Result<SimulatedTransaction> {
+        (&self
+            .client()
+            .simulate_transaction(
+                transaction.0.clone(),
+                skip_checks,
+                crate::grpc::api::read_mask::<SimulateReadMask>(&read_mask),
+            )
+            .await?
+            .into_inner())
+            .try_into()
+    }
+
+    /// Simulate a batch of transactions.
+    ///
+    /// A per-transaction error does not abort the rest of the batch; each
+    /// result carries either the simulated transaction or an error message.
+    #[uniffi::method(default(read_mask = None))]
+    pub async fn simulate_transactions(
+        &self,
+        transactions: Vec<SimulateTransactionInput>,
+        read_mask: Option<Vec<String>>,
+    ) -> Result<Vec<SimulatedTransactionResult>> {
+        self.client()
+            .simulate_transactions(
+                transactions
+                    .into_iter()
+                    .map(|input| {
+                        iota_sdk::grpc_client::SimulateTransactionInput::new(
+                            input.transaction.0.clone(),
+                        )
+                        .skip_checks(input.skip_checks)
+                    })
+                    .collect(),
+                crate::grpc::api::read_mask::<SimulateReadMask>(&read_mask),
+            )
+            .await?
+            .into_inner()
+            .into_iter()
+            .map(|result| {
+                Ok(match result {
+                    Ok(transaction) => SimulatedTransactionResult {
+                        transaction: Some((&transaction).try_into()?),
+                        error: None,
+                    },
+                    Err(error) => SimulatedTransactionResult {
+                        transaction: None,
+                        error: Some(error.to_string()),
+                    },
+                })
+            })
+            .collect()
     }
 }
 
