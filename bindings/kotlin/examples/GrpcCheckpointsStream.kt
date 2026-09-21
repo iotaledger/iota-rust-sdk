@@ -18,7 +18,7 @@ fun main() = runBlocking {
 
         // Only ask for the summary — keeps the message small. Pass null (or
         // compose more fields) to pull more data per checkpoint.
-        val stream = client.checkpointsStream(start, end, listOf("checkpoint.summary"))
+        val stream = client.checkpointsStream(start, end, readMask = listOf("checkpoint.summary"))
 
         println("Streaming checkpoints $start..=$end")
         while (true) {

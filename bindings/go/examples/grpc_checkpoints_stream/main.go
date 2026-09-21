@@ -34,7 +34,7 @@ func main() {
 	// Only ask for the summary — keeps the message small. Pass nil (or
 	// compose more fields) to pull more data per checkpoint.
 	readMask := []string{"checkpoint.summary"}
-	stream, err := client.CheckpointsStream(&start, &end, &readMask, nil, nil)
+	stream, err := client.CheckpointsStream(&start, &end, nil, nil, &readMask)
 	if err != nil {
 		log.Fatalf("Failed to open checkpoint stream: %v", err)
 	}

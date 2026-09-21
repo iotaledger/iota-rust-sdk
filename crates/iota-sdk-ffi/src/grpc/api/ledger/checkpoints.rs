@@ -233,17 +233,17 @@ impl FilteredCheckpointStream {
 impl GrpcClient {
     /// Get the latest checkpoint.
     ///
-    /// The optional `read_mask` controls which fields the server returns.
-    /// If `None`, only the checkpoint summary is returned.
-    ///
     /// The optional `transactions_filter` and `events_filter` narrow the
     /// transactions and events returned for the checkpoint.
-    #[uniffi::method(default(read_mask = None, transactions_filter = None, events_filter = None))]
+    ///
+    /// The optional `read_mask` controls which fields the server returns.
+    /// If `None`, only the checkpoint summary is returned.
+    #[uniffi::method(default(transactions_filter = None, events_filter = None, read_mask = None))]
     pub async fn checkpoint_latest(
         &self,
-        read_mask: Option<Vec<String>>,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
+        read_mask: Option<Vec<String>>,
     ) -> Result<CheckpointResponse> {
         (&self
             .client()
@@ -259,18 +259,18 @@ impl GrpcClient {
 
     /// Get a checkpoint by its sequence number.
     ///
-    /// The optional `read_mask` controls which fields the server returns.
-    /// If `None`, only the checkpoint summary is returned.
-    ///
     /// The optional `transactions_filter` and `events_filter` narrow the
     /// transactions and events returned for the checkpoint.
-    #[uniffi::method(default(read_mask = None, transactions_filter = None, events_filter = None))]
+    ///
+    /// The optional `read_mask` controls which fields the server returns.
+    /// If `None`, only the checkpoint summary is returned.
+    #[uniffi::method(default(transactions_filter = None, events_filter = None, read_mask = None))]
     pub async fn checkpoint_by_sequence_number(
         &self,
         sequence_number: u64,
-        read_mask: Option<Vec<String>>,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
+        read_mask: Option<Vec<String>>,
     ) -> Result<CheckpointResponse> {
         (&self
             .client()
@@ -287,18 +287,18 @@ impl GrpcClient {
 
     /// Get a checkpoint by its digest.
     ///
-    /// The optional `read_mask` controls which fields the server returns.
-    /// If `None`, only the checkpoint summary is returned.
-    ///
     /// The optional `transactions_filter` and `events_filter` narrow the
     /// transactions and events returned for the checkpoint.
-    #[uniffi::method(default(read_mask = None, transactions_filter = None, events_filter = None))]
+    ///
+    /// The optional `read_mask` controls which fields the server returns.
+    /// If `None`, only the checkpoint summary is returned.
+    #[uniffi::method(default(transactions_filter = None, events_filter = None, read_mask = None))]
     pub async fn checkpoint_by_digest(
         &self,
         digest: &CheckpointDigest,
-        read_mask: Option<Vec<String>>,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
+        read_mask: Option<Vec<String>>,
     ) -> Result<CheckpointResponse> {
         (&self
             .client()
@@ -322,25 +322,25 @@ impl GrpcClient {
     /// checkpoint. If `end_sequence_number` is `None`, the stream continues
     /// indefinitely.
     ///
-    /// The optional `read_mask` controls which fields the server returns for
-    /// each checkpoint. If `None`, only the checkpoint summary is returned.
-    ///
     /// The optional `transactions_filter` and `events_filter` narrow the
     /// transactions and events returned for each checkpoint.
+    ///
+    /// The optional `read_mask` controls which fields the server returns for
+    /// each checkpoint. If `None`, only the checkpoint summary is returned.
     #[uniffi::method(default(
         start_sequence_number = None,
         end_sequence_number = None,
-        read_mask = None,
         transactions_filter = None,
-        events_filter = None
+        events_filter = None,
+        read_mask = None
     ))]
     pub async fn checkpoints_stream(
         &self,
         start_sequence_number: Option<u64>,
         end_sequence_number: Option<u64>,
-        read_mask: Option<Vec<String>>,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
+        read_mask: Option<Vec<String>>,
     ) -> Result<CheckpointStream> {
         let stream = self
             .client()
@@ -377,19 +377,19 @@ impl GrpcClient {
     #[uniffi::method(default(
         start_sequence_number = None,
         end_sequence_number = None,
-        read_mask = None,
         transactions_filter = None,
         events_filter = None,
-        progress_interval_ms = None
+        progress_interval_ms = None,
+        read_mask = None
     ))]
     pub async fn checkpoints_stream_filtered(
         &self,
         start_sequence_number: Option<u64>,
         end_sequence_number: Option<u64>,
-        read_mask: Option<Vec<String>>,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
         progress_interval_ms: Option<u32>,
+        read_mask: Option<Vec<String>>,
     ) -> Result<FilteredCheckpointStream> {
         let stream = self
             .client()
