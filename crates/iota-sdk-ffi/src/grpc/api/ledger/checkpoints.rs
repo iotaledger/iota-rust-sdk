@@ -19,7 +19,7 @@ use crate::{
     },
     types::{
         checkpoint::{CheckpointContents, CheckpointSummary},
-        digest::{CheckpointDigest, Digest},
+        digest::{CheckpointContentsDigest, CheckpointDigest},
         events::Event,
         validator::ValidatorAggregatedSignature,
     },
@@ -40,13 +40,13 @@ pub struct CheckpointResponse {
     /// read mask.
     pub sequence_number: u64,
     /// The digest of the checkpoint summary.
-    pub summary_digest: Option<Arc<Digest>>,
+    pub summary_digest: Option<Arc<CheckpointDigest>>,
     /// The checkpoint summary.
     pub summary: Option<Arc<CheckpointSummary>>,
     /// The aggregated validator signature of the checkpoint.
     pub signature: Option<Arc<ValidatorAggregatedSignature>>,
     /// The digest of the checkpoint contents.
-    pub contents_digest: Option<Arc<Digest>>,
+    pub contents_digest: Option<Arc<CheckpointContentsDigest>>,
     /// The checkpoint contents.
     pub contents: Option<Arc<CheckpointContents>>,
     /// The transactions executed in the checkpoint.
@@ -67,7 +67,7 @@ impl TryFrom<&iota_sdk::grpc_client::CheckpointResponse> for CheckpointResponse 
             sequence_number: value.sequence_number(),
             summary_digest: summary
                 .and_then(|summary| summary.digest.as_ref())
-                .map(iota_sdk::types::Digest::try_from)
+                .map(iota_sdk::types::CheckpointDigest::try_from)
                 .transpose()?
                 .map(Into::into)
                 .map(Arc::new),
@@ -87,7 +87,7 @@ impl TryFrom<&iota_sdk::grpc_client::CheckpointResponse> for CheckpointResponse 
                 .map(Arc::new),
             contents_digest: contents
                 .and_then(|contents| contents.digest.as_ref())
-                .map(iota_sdk::types::Digest::try_from)
+                .map(iota_sdk::types::CheckpointContentsDigest::try_from)
                 .transpose()?
                 .map(Into::into)
                 .map(Arc::new),
