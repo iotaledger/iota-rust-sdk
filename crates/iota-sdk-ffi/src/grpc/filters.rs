@@ -47,6 +47,12 @@ impl From<GrpcTransactionKind> for proto::TransactionKind {
 #[derive(Clone, Debug, uniffi::Object)]
 pub struct GrpcEventFilter(pub(crate) proto::EventFilter);
 
+impl From<&GrpcEventFilter> for proto::EventFilter {
+    fn from(filter: &GrpcEventFilter) -> Self {
+        filter.0.clone()
+    }
+}
+
 #[uniffi::export]
 impl GrpcEventFilter {
     /// Matches events that satisfy every one of the given filters.
@@ -72,10 +78,9 @@ impl GrpcEventFilter {
     /// Matches events that do not satisfy the given filter.
     #[uniffi::constructor]
     pub fn negation(filter: &GrpcEventFilter) -> Self {
-        Self(
-            proto::EventFilter::default()
-                .with_negation(proto::NotEventFilter::default().with_filter(filter.0.clone())),
-        )
+        Self(proto::EventFilter::default().with_negation(
+            proto::NotEventFilter::default().with_filter(proto::EventFilter::from(filter)),
+        ))
     }
 
     /// Matches events emitted by transactions sent from the given address.
@@ -119,6 +124,12 @@ impl GrpcEventFilter {
 /// A filter over the commands of a programmable transaction.
 #[derive(Clone, Debug, uniffi::Object)]
 pub struct GrpcCommandFilter(pub(crate) proto::CommandFilter);
+
+impl From<&GrpcCommandFilter> for proto::CommandFilter {
+    fn from(filter: &GrpcCommandFilter) -> Self {
+        filter.0.clone()
+    }
+}
 
 #[uniffi::export]
 impl GrpcCommandFilter {
@@ -199,6 +210,12 @@ impl GrpcCommandFilter {
 #[derive(Clone, Debug, uniffi::Object)]
 pub struct GrpcTransactionFilter(pub(crate) proto::TransactionFilter);
 
+impl From<&GrpcTransactionFilter> for proto::TransactionFilter {
+    fn from(filter: &GrpcTransactionFilter) -> Self {
+        filter.0.clone()
+    }
+}
+
 #[uniffi::export]
 impl GrpcTransactionFilter {
     /// Matches transactions that satisfy every one of the given filters.
@@ -228,7 +245,8 @@ impl GrpcTransactionFilter {
     pub fn negation(filter: &GrpcTransactionFilter) -> Self {
         Self(
             proto::TransactionFilter::default().with_negation(
-                proto::NotTransactionFilter::default().with_filter(filter.0.clone()),
+                proto::NotTransactionFilter::default()
+                    .with_filter(proto::TransactionFilter::from(filter)),
             ),
         )
     }
@@ -290,25 +308,31 @@ impl GrpcTransactionFilter {
     /// command filter.
     #[uniffi::constructor]
     pub fn command(command: &GrpcCommandFilter) -> Self {
-        Self(proto::TransactionFilter::default().with_command(command.0.clone()))
+        Self(proto::TransactionFilter::default().with_command(proto::CommandFilter::from(command)))
     }
 
     /// Matches transactions that emit an event satisfying the given event
     /// filter.
     #[uniffi::constructor]
     pub fn event(filter: &GrpcEventFilter) -> Self {
-        Self(proto::TransactionFilter::default().with_event(filter.0.clone()))
+        Self(proto::TransactionFilter::default().with_event(proto::EventFilter::from(filter)))
     }
 }
 
 fn inner_event_filters(filters: &[Arc<GrpcEventFilter>]) -> Vec<proto::EventFilter> {
-    filters.iter().map(|filter| filter.0.clone()).collect()
+    filters
+        .iter()
+        .map(|filter| filter.as_ref().into())
+        .collect()
 }
 
 fn inner_transaction_filters(
     filters: &[Arc<GrpcTransactionFilter>],
 ) -> Vec<proto::TransactionFilter> {
-    filters.iter().map(|filter| filter.0.clone()).collect()
+    filters
+        .iter()
+        .map(|filter| filter.as_ref().into())
+        .collect()
 }
 
 fn move_package_and_module(

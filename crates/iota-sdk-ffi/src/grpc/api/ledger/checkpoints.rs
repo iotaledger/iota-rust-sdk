@@ -24,20 +24,6 @@ use crate::{
     },
 };
 
-/// Extract the inner proto transaction filter from an optional FFI filter.
-fn to_proto_transactions_filter(
-    filter: &Option<Arc<GrpcTransactionFilter>>,
-) -> Option<iota_sdk::grpc_types::v1::filter::TransactionFilter> {
-    filter.as_ref().map(|filter| filter.0.clone())
-}
-
-/// Extract the inner proto event filter from an optional FFI filter.
-fn to_proto_events_filter(
-    filter: &Option<Arc<GrpcEventFilter>>,
-) -> Option<iota_sdk::grpc_types::v1::filter::EventFilter> {
-    filter.as_ref().map(|filter| filter.0.clone())
-}
-
 /// Response for a checkpoint query.
 ///
 /// Which fields are populated depends on the read mask used for the query;
@@ -248,8 +234,8 @@ impl GrpcClient {
         (&self
             .client()
             .checkpoint_latest(
-                to_proto_transactions_filter(&transactions_filter),
-                to_proto_events_filter(&events_filter),
+                transactions_filter.as_deref().map(Into::into),
+                events_filter.as_deref().map(Into::into),
                 crate::grpc::api::read_mask::<CheckpointResponseReadMask>(&read_mask),
             )
             .await?
@@ -276,8 +262,8 @@ impl GrpcClient {
             .client()
             .checkpoint_by_sequence_number(
                 sequence_number,
-                to_proto_transactions_filter(&transactions_filter),
-                to_proto_events_filter(&events_filter),
+                transactions_filter.as_deref().map(Into::into),
+                events_filter.as_deref().map(Into::into),
                 crate::grpc::api::read_mask::<CheckpointResponseReadMask>(&read_mask),
             )
             .await?
@@ -304,8 +290,8 @@ impl GrpcClient {
             .client()
             .checkpoint_by_digest(
                 **digest,
-                to_proto_transactions_filter(&transactions_filter),
-                to_proto_events_filter(&events_filter),
+                transactions_filter.as_deref().map(Into::into),
+                events_filter.as_deref().map(Into::into),
                 crate::grpc::api::read_mask::<CheckpointResponseReadMask>(&read_mask),
             )
             .await?
@@ -347,8 +333,8 @@ impl GrpcClient {
             .checkpoints_stream(
                 start_sequence_number,
                 end_sequence_number,
-                to_proto_transactions_filter(&transactions_filter),
-                to_proto_events_filter(&events_filter),
+                transactions_filter.as_deref().map(Into::into),
+                events_filter.as_deref().map(Into::into),
                 crate::grpc::api::read_mask::<CheckpointResponseReadMask>(&read_mask),
             )
             .await?
@@ -396,8 +382,8 @@ impl GrpcClient {
             .checkpoints_stream_filtered(
                 start_sequence_number,
                 end_sequence_number,
-                to_proto_transactions_filter(&transactions_filter),
-                to_proto_events_filter(&events_filter),
+                transactions_filter.as_deref().map(Into::into),
+                events_filter.as_deref().map(Into::into),
                 progress_interval_ms,
                 crate::grpc::api::read_mask::<CheckpointResponseReadMask>(&read_mask),
             )
