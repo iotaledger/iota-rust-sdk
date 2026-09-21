@@ -12,12 +12,6 @@ use reqwest::header::{AUTHORIZATION, HeaderValue};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    // The SDK selects its own rustls provider, so `reqwest` has no default to
-    // fall back on and the clients built below would panic without this.
-    rustls::crypto::ring::default_provider()
-        .install_default()
-        .ok();
-
     let client = GraphQLClient::new_localnet();
     let gas_station_auth_token = "test";
     let keypair = Ed25519PrivateKey::random();
