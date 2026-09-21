@@ -1936,9 +1936,17 @@ impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
                 unimplemented!("a new Transaction enum variant was added and needs to be handled")
             };
             // The network enforces a minimum gas budget of base_tx_cost_fixed
-            // (1000) * gas_price. The dry-run estimate can return a value below
+            // * gas_price. The dry-run estimate can return a value below
             // this minimum, so we clamp it.
-            let min_budget = txn.gas_payment.price.saturating_mul(1000);
+            let min_gas_budget = self
+                .client
+                .protocol_config()
+                .await
+                .map_err(TransactionBuilderError::client)?
+                .attribute(BASE_TX_COST_FIXED_KEY)
+                .and_then(|base_tx_cost_str| base_tx_cost_str.parse::<u64>().ok())
+                .ok_or(TransactionBuilderError::MissingGasBudget)?;
+            let min_budget = txn.gas_payment.price.saturating_mul(min_gas_budget);
             txn.gas_payment.budget = budget.max(min_budget);
         }
 
