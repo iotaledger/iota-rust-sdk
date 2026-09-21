@@ -68,9 +68,11 @@ async fn main() -> Result<()> {
         .await?
         .into_inner();
 
-    let effects = executed.effects()?.effects()?;
-    println!("Digest: {}", effects.digest());
-    println!("Transaction status: {:?}", effects.as_v1().status);
+    println!("Digest: {}", executed.transaction()?.digest()?);
+    println!(
+        "Transaction status: {:?}",
+        executed.effects()?.effects()?.as_v1().status
+    );
 
     Ok(())
 }
