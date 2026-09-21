@@ -58,9 +58,6 @@ func main() {
 		}
 		log.Printf("Simulation succeeded: %d command result(s), suggested gas price %d", results, *simulated.SuggestedGasPrice)
 	}
-	if err != nil {
-		log.Fatalf("Failed to create transaction: %v", err)
-	}
 
 	signature, err := privateKey.TrySignSimple(txn.SigningDigest())
 	if err != nil {
