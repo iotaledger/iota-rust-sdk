@@ -3,6 +3,7 @@
 
 pub mod builder;
 pub mod client_builder;
+pub mod gas_station;
 pub mod move_authenticator;
 pub mod move_view_arg;
 pub mod move_view_call_builder;

@@ -56,6 +56,8 @@ grpc-tls-ring = ["grpc", "iota-grpc-client/tls-ring"]
 grpc-tls-webpki-roots = ["grpc", "iota-grpc-client/tls-webpki-roots"]
 # Transaction Builder
 txn-builder = ["dep:iota-transaction-builder"]
+# Sponsorship through the IOTA gas station.
+gas-station = ["txn-builder", "iota-transaction-builder/gas-station"]
 # Types
 types = ["dep:iota-types"]
 serde = ["types", "iota-types/serde"]
@@ -95,6 +97,10 @@ name = "grpc_service_info"
 required-features = ["grpc"]
 
 [[example]]
+name = "grpc_execute_transaction"
+required-features = ["grpc"]
+
+[[example]]
 name = "grpc_get_object"
 required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
@@ -113,3 +119,7 @@ required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 [[example]]
 name = "decode_staked_iota"
 required-features = ["move-types"]
+
+[[example]]
+name = "gas_station"
+required-features = ["gas-station"]
