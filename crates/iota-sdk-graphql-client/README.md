@@ -16,23 +16,20 @@ executing transactions and more.
 
 # TLS
 
-HTTPS connections are verified with `rustls`. Two feature axes decide how, and
-both have defaults, so nothing needs configuring to reach the public networks.
+HTTPS is verified with `rustls`, configured by two feature axes that both have
+defaults, so reaching the public networks needs no setup.
 
-**Crypto provider** — `tls-ring` (default) or `tls-aws-lc`. `aws-lc-rs` builds a
-C library and needs a working C toolchain, and `libclang` on targets without
-prebuilt bindings; `ring` avoids that. Enabling both is not an error, but
-`rustls` cannot be asked to choose between them, so `tls-ring` wins.
-
-Either one is also what compiles TLS into `reqwest` at all. With neither, the
-client is HTTP-only: no provider has to be installed, nothing verifies
+**Crypto provider** — `tls-ring` (default) or `tls-aws-lc`; enabling both is not
+an error, but `rustls` cannot be asked to choose, so `tls-ring` wins. `aws-lc-rs`
+builds a C library and needs a working C toolchain, plus `libclang` on targets
+without prebuilt bindings. A provider feature is also what compiles TLS into
+`reqwest` at all: with neither, the client is HTTP-only, nothing verifies
 certificates, and `Client::new` rejects an `https` or `wss` address rather than
 letting the request fail later. This is the build to use against a localnet over
 plain HTTP.
 
 **Trust anchors** — `tls-native-roots` and `tls-webpki-roots`, both on by
-default. Both need a provider feature; on an HTTP-only build there is nothing
-for them to configure and they are ignored.
+default, both ignored on an HTTP-only build.
 
 | Features enabled        | Trusted                                                             |
 | ----------------------- | ------------------------------------------------------------------- |
@@ -40,31 +37,26 @@ for them to configure and they are ignored.
 | `tls-webpki-roots` only | the bundled Mozilla roots                                           |
 | `tls-native-roots` only | the platform trust store                                            |
 
-Keeping both is usually right. The bundled roots are what let the client be
-built at all on an image with no system trust store — `reqwest` constructs its
-verifier eagerly, so on Linux an empty store fails even for plain-HTTP use on a
-build that has TLS compiled in. Note
-that trusting both is a union: a CA the platform has deliberately distrusted is
-still accepted if the bundled set carries it. Drop `tls-native-roots` if the
-bundled set should be authoritative.
+Keeping both is usually right: `reqwest` constructs its verifier eagerly, so on
+an image with no system trust store the bundled roots are what let the client be
+built at all, even for plain-HTTP use. But trusting both is a union — a CA the
+platform has deliberately distrusted is still accepted if the bundled set
+carries it. Drop `tls-native-roots` if the bundled set should be authoritative.
 
-Android always uses the bundled roots alone. It cannot merge the two, and its
+Android always uses the bundled roots alone: it cannot merge the two, and its
 platform verifier aborts the process unless the application performs a JNI
-handshake this crate cannot do on its behalf.
-
-On wasm32 none of this applies: the browser owns certificate verification.
+handshake this crate cannot do on its behalf. On wasm32 none of this applies —
+the browser owns certificate verification.
 
 ## Bringing your own client
 
 `Client::with_http_client` takes a `reqwest::Client` you built yourself, for
 pinning a certificate set, choosing a different TLS backend, or setting proxies
-and timeouts.
-
-Because this crate selects the rustls crypto provider itself rather than letting
-`reqwest` hard-wire aws-lc-rs, `reqwest` has no default to fall back on and, on
-a build with a provider feature, building a client panics unless a provider has
-been installed for the process. Install one first — the first caller wins, so this is a no-op if the application
-has already chosen:
+and timeouts. Because this crate selects the rustls crypto provider itself
+rather than letting `reqwest` hard-wire aws-lc-rs, a build with a provider
+feature panics unless a provider has been installed for the process. Install one
+first — the first caller wins, so this is a no-op if the application has already
+chosen:
 
 ```rust, ignore
 use iota_graphql_client::Client;
@@ -77,13 +69,12 @@ let http = reqwest::Client::builder()
 let client = Client::with_http_client("https://graphql.testnet.iota.cafe", http)?;
 ```
 
-Note that a client built this way has none of this crate's own defaults: no user
-agent (`USER_AGENT` is exported if you want it) and no bundled roots, so it
-trusts whatever your `reqwest` features chose.
-
-An HTTP-only build has nothing to install, since `reqwest` is built without TLS
-and its builder needs no provider. Reaching `https://` from one means enabling a
-provider feature here, or turning on `reqwest`'s TLS in your own manifest.
+Such a client has none of this crate's own defaults: no user agent (`USER_AGENT`
+is exported if you want it) and no bundled roots, so it trusts whatever your
+`reqwest` features chose. An HTTP-only build has nothing to install, since
+`reqwest` is built without TLS and its builder needs no provider; reaching
+`https://` from one means enabling a provider feature here, or turning on
+`reqwest`'s TLS in your own manifest.
 
 # Usage
 
