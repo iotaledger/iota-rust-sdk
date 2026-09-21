@@ -27,7 +27,7 @@ async def main():
         [PtbArgument.u64(64)],
     )
 
-    res = await builder.execute_with_gas_sponsor(gas_station, signer)
+    res = await builder.execute_with_gas_station(gas_station, signer)
 
     print(res)
 

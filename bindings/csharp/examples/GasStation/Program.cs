@@ -30,7 +30,7 @@ class Program
             new[] { PtbArgument.U64(64) }
         );
 
-        var res = await builder.ExecuteWithGasSponsor(gasStation, signer);
+        var res = await builder.ExecuteWithGasStation(gasStation, signer);
 
         Console.WriteLine(res);
         Console.WriteLine("Sponsored transaction was successful!");

@@ -49,7 +49,7 @@ func main() {
 		nil,
 	)
 
-	res, err := builder.ExecuteWithGasSponsor(gasStation, signer)
+	res, err := builder.ExecuteWithGasStation(gasStation, signer)
 	if err != nil {
 		log.Fatalf("Failed to sponsor transaction: %v", err)
 	}

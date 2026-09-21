@@ -28,7 +28,7 @@ fun main() = runBlocking {
             listOf(PtbArgument.u64(64uL)),
         )
 
-        val res = builder.executeWithGasSponsor(gasStation, signer)
+        val res = builder.executeWithGasStation(gasStation, signer)
 
         println("$res")
 

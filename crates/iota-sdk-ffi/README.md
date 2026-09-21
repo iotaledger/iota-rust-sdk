@@ -109,7 +109,7 @@ following are the default behaviors for each metadata value.
 
 ### Gas Station
 
-A transaction's gas can be paid by a [Gas Station](https://github.com/iotaledger/gas-station). Construct a `GasStation` with its URL, and optionally a reservation duration and the headers each request should carry (typically an authorization token), then pass it to `TransactionBuilder::execute_with_gas_sponsor`. One `GasStation` can be reused for any number of transactions. Requests carry `Content-Type: application/json` unless the headers override it.
+A transaction's gas can be paid by a [Gas Station](https://github.com/iotaledger/gas-station). Construct a `GasStation` with its URL, and optionally a reservation duration and the headers each request should carry (typically an authorization token), then pass it to `TransactionBuilder::execute_with_gas_station`. One `GasStation` can be reused for any number of transactions. Requests carry `Content-Type: application/json` unless the headers override it.
 
 The gas station supplies the whole gas payment, so setting gas coins or a sponsor address on the same builder is rejected. On a builder with a client, the effects are read back from the client after execution, because the station's own effects are reported in a shape that cannot be converted to `TransactionEffects`; on a builder without a client only the transaction digest is returned.
 

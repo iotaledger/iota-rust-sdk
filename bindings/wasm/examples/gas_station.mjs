@@ -33,7 +33,7 @@ builder.moveCall(Address.std(), new Identifier("u64"), new Identifier("sqrt"), [
   PtbArgument.u64(64n),
 ]);
 
-const res = await builder.executeWithGasSponsor(gasStation, signer);
+const res = await builder.executeWithGasStation(gasStation, signer);
 
 console.log(res);
 console.log("Sponsored transaction was successful!");

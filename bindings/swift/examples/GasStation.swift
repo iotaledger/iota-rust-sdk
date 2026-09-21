@@ -28,7 +28,7 @@ struct GasStationExample {
         arguments: [PtbArgument.u64(value: 64)]
       )
 
-      let res = try await builder.executeWithGasSponsor(gasStation: gasStation, signer: signer)
+      let res = try await builder.executeWithGasStation(gasStation: gasStation, signer: signer)
 
       print(res)
 
