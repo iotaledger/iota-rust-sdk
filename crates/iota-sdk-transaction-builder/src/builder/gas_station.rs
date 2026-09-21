@@ -594,12 +594,18 @@ impl GasSponsor for GasStation {
             .execute_reserved_json(reservation, transaction, signature)
             .await?;
 
-        TransactionDigest::deserialize(&effects["transactionDigest"]).map_err(|e| {
-            GasStationError::Response {
-                message: Some(e.to_string()),
+        effects
+            .get("transactionDigest")
+            .ok_or_else(|| GasStationError::Response {
+                message: Some("Missing transaction digest".to_owned()),
                 gas_station_url: self.url.clone(),
-            }
-        })
+            })
+            .and_then(|v| {
+                TransactionDigest::deserialize(v).map_err(|e| GasStationError::Response {
+                    message: Some(e.to_string()),
+                    gas_station_url: self.url.clone(),
+                })
+            })
     }
 }
 
