@@ -1474,7 +1474,7 @@ impl<L> TransactionBuilder<(), L> {
         let (reservation, SponsoredGas { owner, objects }) = sponsor
             .reserve_gas(&txn, budget)
             .await
-            .map_err(TransactionBuilderError::sponsor)?;
+            .map_err(TransactionBuilderError::gas_sponsor)?;
         {
             let Transaction::V1(v1) = &mut txn else {
                 unimplemented!("a new Transaction enum variant was added and needs to be handled")
@@ -1491,7 +1491,7 @@ impl<L> TransactionBuilder<(), L> {
         sponsor
             .execute_reserved(reservation, &txn, &signature)
             .await
-            .map_err(TransactionBuilderError::sponsor)
+            .map_err(TransactionBuilderError::gas_sponsor)
     }
 }
 
@@ -2085,7 +2085,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         let (reservation, SponsoredGas { owner, objects }) = sponsor
             .reserve_gas(&txn, budget)
             .await
-            .map_err(TransactionBuilderError::sponsor)?;
+            .map_err(TransactionBuilderError::gas_sponsor)?;
         {
             let Transaction::V1(v1) = &mut txn else {
                 unimplemented!("a new Transaction enum variant was added and needs to be handled")
@@ -2102,7 +2102,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         let digest = sponsor
             .execute_reserved(reservation, &txn, &signature)
             .await
-            .map_err(TransactionBuilderError::sponsor)?;
+            .map_err(TransactionBuilderError::gas_sponsor)?;
 
         self.client
             .wait_for_transaction(digest, WaitForTransaction::Finalized)

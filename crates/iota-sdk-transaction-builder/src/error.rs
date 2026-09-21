@@ -88,7 +88,7 @@ impl TransactionBuilderError {
     }
 
     /// Create a gas sponsor error
-    pub fn sponsor<E: 'static + std::error::Error + Send + Sync>(e: E) -> Self {
+    pub fn gas_sponsor<E: 'static + std::error::Error + Send + Sync>(e: E) -> Self {
         Self::GasSponsor(Box::new(e))
     }
 }
