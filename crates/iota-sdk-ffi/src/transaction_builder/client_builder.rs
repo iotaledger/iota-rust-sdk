@@ -517,7 +517,7 @@ macro_rules! client_transaction_builder {
             /// Use this when you hold the sponsor's key. The sponsor's address must be
             /// set with `sponsor`, which is also where the gas coins are drawn from.
             /// When the sponsor is a service that keeps its own key and submits for
-            /// you, use `execute_with_gas_sponsor` instead.
+            /// you, use `execute_with_gas_station` instead.
             #[uniffi::method(default(wait_for = None))]
             pub async fn execute_with_sponsor_signer(
                 &self,

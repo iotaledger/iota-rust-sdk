@@ -2052,67 +2052,59 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
 
         // Build without picking the sender's gas coins; the sponsor pays.
         let mut txn = self.resolve_ptb(false).await?;
-        {
-            let Transaction::V1(v1) = &txn else {
-                unimplemented!("a new Transaction enum variant was added and needs to be handled")
-            };
-            if !v1.gas_payment.objects.is_empty() {
-                return Err(TransactionBuilderError::SponsorGasConflict);
-            }
-        }
+        match &txn {
+            Transaction::V1(txn_v1) => {
+                if !txn_v1.gas_payment.objects.is_empty() {
+                    return Err(TransactionBuilderError::SponsorGasConflict);
+                }
 
-        let budget = match self.data.gas_budget {
-            Some(budget) => budget,
-            None => {
-                let estimate = self
-                    .client
-                    .estimate_transaction_budget(&txn)
+                let budget = match self.data.gas_budget {
+                    Some(budget) => budget,
+                    None => {
+                        let estimate = self
+                            .client
+                            .estimate_transaction_budget(&txn)
+                            .await
+                            .map_err(TransactionBuilderError::client)?
+                            .ok_or(TransactionBuilderError::MissingGasBudget)?;
+                        // The network enforces a minimum gas budget of base_tx_cost_fixed
+                        // (1000) * gas_price. The dry-run estimate can return a value below
+                        // this minimum, so we clamp it.
+                        estimate.max(txn_v1.gas_payment.price.saturating_mul(1000))
+                    }
+                };
+
+                let (reservation, SponsoredGas { owner, objects }) = sponsor
+                    .reserve_gas(&txn, budget)
+                    .await
+                    .map_err(TransactionBuilderError::gas_sponsor)?;
+                {
+                    txn.as_mut_v1().gas_payment.owner = owner;
+                    txn.as_mut_v1().gas_payment.objects = objects;
+                    txn.as_mut_v1().gas_payment.budget = budget;
+                }
+
+                let signature = signer
+                    .sign(&txn)
+                    .await
+                    .map_err(TransactionBuilderError::signature)?;
+                let digest = sponsor
+                    .execute_reserved(reservation, &txn, &signature)
+                    .await
+                    .map_err(TransactionBuilderError::gas_sponsor)?;
+
+                self.client
+                    .wait_for_transaction(digest, WaitForTransaction::Finalized)
+                    .await
+                    .map_err(TransactionBuilderError::client)?;
+                self.client
+                    .transaction_effects(digest)
                     .await
                     .map_err(TransactionBuilderError::client)?
-                    .ok_or(TransactionBuilderError::MissingGasBudget)?;
-                let Transaction::V1(v1) = &txn else {
-                    unimplemented!(
-                        "a new Transaction enum variant was added and needs to be handled"
-                    )
-                };
-                // The network enforces a minimum gas budget of base_tx_cost_fixed
-                // (1000) * gas_price. The dry-run estimate can return a value below
-                // this minimum, so we clamp it.
-                estimate.max(v1.gas_payment.price.saturating_mul(1000))
+                    .ok_or(TransactionBuilderError::MissingTransaction(digest))
             }
-        };
-
-        let (reservation, SponsoredGas { owner, objects }) = sponsor
-            .reserve_gas(&txn, budget)
-            .await
-            .map_err(TransactionBuilderError::gas_sponsor)?;
-        {
-            let Transaction::V1(v1) = &mut txn else {
-                unimplemented!("a new Transaction enum variant was added and needs to be handled")
-            };
-            v1.gas_payment.owner = owner;
-            v1.gas_payment.objects = objects;
-            v1.gas_payment.budget = budget;
+            _ => unimplemented!("a new Transaction enum variant was added and needs to be handled"),
         }
-
-        let signature = signer
-            .sign(&txn)
-            .await
-            .map_err(TransactionBuilderError::signature)?;
-        let digest = sponsor
-            .execute_reserved(reservation, &txn, &signature)
-            .await
-            .map_err(TransactionBuilderError::gas_sponsor)?;
-
-        self.client
-            .wait_for_transaction(digest, WaitForTransaction::Finalized)
-            .await
-            .map_err(TransactionBuilderError::client)?;
-        self.client
-            .transaction_effects(digest)
-            .await
-            .map_err(TransactionBuilderError::client)?
-            .ok_or(TransactionBuilderError::MissingTransaction(digest))
     }
 
     /// Execute the transaction with both the sender's and the sponsor's

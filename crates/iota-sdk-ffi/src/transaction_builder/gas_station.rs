@@ -7,7 +7,7 @@ use crate::error::{Result, SdkFfiError};
 
 /// The IOTA gas station, sponsoring transactions over its HTTP API.
 ///
-/// Build one and pass it to a transaction builder's `execute_with_gas_sponsor`.
+/// Build one and pass it to a transaction builder's `execute_with_gas_station`.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct GasStation(pub(crate) iota_sdk::transaction_builder::GasStation);
