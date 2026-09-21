@@ -39,9 +39,8 @@ fun main() = runBlocking {
             )
         }
 
-        val signature = privateKey.trySignSimple(txn.signingDigest())
-        val userSignature = UserSignature.newSimple(signature)
-        val signedTransaction = SignedTransaction(txn, listOf(userSignature))
+        val signature = privateKey.signTransaction(txn)
+        val signedTransaction = SignedTransaction(txn, listOf(signature))
 
         val executed = client.executeTransaction(signedTransaction)
 

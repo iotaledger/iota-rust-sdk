@@ -59,14 +59,13 @@ func main() {
 		log.Printf("Simulation succeeded: %d command result(s), suggested gas price %d", results, *simulated.SuggestedGasPrice)
 	}
 
-	signature, err := privateKey.TrySignSimple(txn.SigningDigest())
+	signature, err := privateKey.SignTransaction(txn)
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	userSignature := iota_sdk.UserSignatureNewSimple(signature)
 	signedTransaction := iota_sdk.SignedTransaction{
 		Transaction: txn,
-		Signatures:  []*iota_sdk.UserSignature{userSignature},
+		Signatures:  []*iota_sdk.UserSignature{signature},
 	}
 
 	executed, err := client.ExecuteTransaction(signedTransaction, nil, nil)

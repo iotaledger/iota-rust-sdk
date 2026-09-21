@@ -37,10 +37,9 @@ async def main():
         print(f"Simulation succeeded: {len(simulated.command_results)} command "
               f"result(s), suggested gas price {simulated.suggested_gas_price}")
 
-    signature = private_key.try_sign_simple(txn.signing_digest())
-    user_signature = UserSignature.new_simple(signature)
+    signature = private_key.sign_transaction(txn)
     signed_transaction = SignedTransaction(transaction=txn,
-                                           signatures=[user_signature])
+                                           signatures=[signature])
 
     executed = await client.execute_transaction(signed_transaction)
 

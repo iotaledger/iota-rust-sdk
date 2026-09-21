@@ -38,9 +38,8 @@ class Program
             Console.WriteLine($"Simulation succeeded: {simulated.CommandResults?.Length ?? 0} command result(s), suggested gas price {simulated.SuggestedGasPrice}");
         }
 
-        var signature = privateKey.TrySignSimple(txn.SigningDigest());
-        var userSignature = UserSignature.NewSimple(signature);
-        var signedTransaction = new SignedTransaction(txn, new[] { userSignature });
+        var signature = privateKey.SignTransaction(txn);
+        var signedTransaction = new SignedTransaction(txn, new[] { signature });
 
         var executed = await client.ExecuteTransaction(signedTransaction);
 

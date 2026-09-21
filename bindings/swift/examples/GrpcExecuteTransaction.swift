@@ -40,9 +40,8 @@ struct GrpcExecuteTransactionExample {
           + "suggested gas price \(simulated.suggestedGasPrice.map(String.init) ?? "none")")
     }
 
-    let signature = try privateKey.trySignSimple(message: txn.signingDigest())
-    let userSignature = UserSignature.newSimple(signature: signature)
-    let signedTransaction = SignedTransaction(transaction: txn, signatures: [userSignature])
+    let signature = try privateKey.signTransaction(transaction: txn)
+    let signedTransaction = SignedTransaction(transaction: txn, signatures: [signature])
 
     let executed = try await client.executeTransaction(signedTransaction: signedTransaction)
 
