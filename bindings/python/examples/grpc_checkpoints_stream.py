@@ -26,6 +26,9 @@ async def main():
     print(f"Streaming checkpoints {start}..={end}")
     while (checkpoint := await stream.next()) is not None:
         summary = checkpoint.summary
+        if summary is None:
+            raise SystemExit(
+                f"Checkpoint {checkpoint.sequence_number} has no summary")
         print(f"  cp {checkpoint.sequence_number:>6}  "
               f"epoch {summary.epoch():>3}  "
               f"txs {summary.network_total_transactions():>4}  "
