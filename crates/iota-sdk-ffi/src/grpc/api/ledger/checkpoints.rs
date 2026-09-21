@@ -143,10 +143,12 @@ macro_rules! define_checkpoint_stream {
             /// canceled. Concurrent calls are serialized; there is no ordering
             /// guarantee between them.
             ///
-            /// An error ends the stream: there is no reconnect, so after
-            /// `next` has raised, every later call returns `None`. A caller
-            /// that wants to resume must open a new stream from the last
-            /// sequence number it received.
+            /// An error from the connection or the server ends the stream:
+            /// there is no reconnect, so every later call returns `None`, and
+            /// a caller that wants to resume must open a new stream from the
+            /// last sequence number it received. An error converting a single
+            /// item, such as a BCS decode failure, only affects that item; the
+            /// next call continues with the following one.
             pub async fn next(&self) -> Result<Option<$ffi_item>> {
                 if self.cancel.is_canceled() {
                     return Ok(None);
@@ -238,9 +240,9 @@ impl TryFrom<iota_sdk::grpc_client::CheckpointStreamItem> for CheckpointStreamIt
                 latest_scanned_sequence_number,
             },
             // TODO: the base enum is non-exhaustive, so a variant added there
-            // makes every filtered stream raise from `next` until the FFI
-            // catches up. Decide whether unknown items should be skipped
-            // inside the stream instead.
+            // makes `next` raise once for each such item until the FFI catches
+            // up. Decide whether unknown items should be skipped inside the
+            // stream instead.
             _ => {
                 return Err(SdkFfiError::custom(
                     "unsupported checkpoint stream item variant",
