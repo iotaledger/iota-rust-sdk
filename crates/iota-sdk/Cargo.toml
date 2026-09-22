@@ -28,7 +28,7 @@ default = [
   "secp256k1",
   "secp256r1",
   "serde",
-  "txn-builder",
+  "transaction-builder",
   "types",
 ]
 # Crypto
@@ -45,19 +45,16 @@ move-types = ["dep:iota-move-types"]
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
 # gRPC
-grpc = [
-  "dep:iota-grpc-client",
-  "dep:iota-grpc-types",
-]
+grpc = ["dep:iota-grpc-client", "dep:iota-grpc-types"]
 # TLS support for the gRPC client (required to reach `https://` endpoints
 # such as the public testnet/mainnet nodes).
 grpc-tls-native-roots = ["grpc", "iota-grpc-client/tls-native-roots"]
 grpc-tls-ring = ["grpc", "iota-grpc-client/tls-ring"]
 grpc-tls-webpki-roots = ["grpc", "iota-grpc-client/tls-webpki-roots"]
 # Transaction Builder
-txn-builder = ["dep:iota-transaction-builder"]
+transaction-builder = ["dep:iota-transaction-builder"]
 # Sponsorship through the IOTA gas station.
-gas-station = ["txn-builder", "iota-transaction-builder/gas-station"]
+gas-station = ["transaction-builder", "iota-transaction-builder/gas-station"]
 # Types
 types = ["dep:iota-types"]
 serde = ["types", "iota-types/serde"]
