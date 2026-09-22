@@ -43,7 +43,7 @@ first — the first caller wins, so this is a no-op if the application has alrea
 chosen:
 
 ```rust, ignore
-use iota_graphql_client::Client;
+use iota_graphql_client::GraphQLClient;
 
 rustls::crypto::ring::default_provider().install_default().ok();
 
