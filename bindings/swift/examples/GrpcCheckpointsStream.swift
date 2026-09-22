@@ -8,7 +8,7 @@ let howMany: UInt64 = 5
 @main
 struct GrpcCheckpointsStreamExample {
   static func main() async throws {
-    let client = try GrpcClient.newTestnet()
+    let client = try GrpcClient.newLocalnet()
 
     // Pick a starting point a few checkpoints behind head so the example
     // returns promptly instead of waiting on new blocks.

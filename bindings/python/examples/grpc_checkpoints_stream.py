@@ -9,7 +9,7 @@ HOW_MANY = 5
 
 
 async def main():
-    client = GrpcClient.new_testnet()
+    client = GrpcClient.new_localnet()
 
     # Pick a starting point a few checkpoints behind head so the example
     # returns promptly instead of waiting on new blocks.

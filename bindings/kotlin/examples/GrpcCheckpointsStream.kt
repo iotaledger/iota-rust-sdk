@@ -8,7 +8,7 @@ const val HOW_MANY = 5uL
 
 fun main() = runBlocking {
     try {
-        val client = GrpcClient.newTestnet()
+        val client = GrpcClient.newLocalnet()
 
         // Pick a starting point a few checkpoints behind head so the example
         // returns promptly instead of waiting on new blocks.

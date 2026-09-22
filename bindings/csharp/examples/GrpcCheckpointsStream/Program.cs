@@ -9,7 +9,7 @@ class Program
 
     static async Task Main(string[] args)
     {
-        var client = GrpcClient.NewTestnet();
+        var client = GrpcClient.NewLocalnet();
 
         // Pick a starting point a few checkpoints behind head so the example
         // returns promptly instead of waiting on new blocks.
