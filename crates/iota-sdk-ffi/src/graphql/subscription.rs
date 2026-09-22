@@ -9,10 +9,7 @@
 //! [`GraphQLClient::set_rpc_server`] do not affect a subscription already
 //! opened.
 
-use std::sync::{
-    Arc,
-    atomic::{AtomicBool, Ordering},
-};
+use std::sync::Arc;
 
 #[cfg(not(target_arch = "wasm32"))]
 use futures::stream::BoxStream;
@@ -20,9 +17,10 @@ use futures::stream::BoxStream;
 use futures::stream::LocalBoxStream;
 use futures::{Stream, StreamExt};
 use iota_sdk::graphql_client::error::GraphQLResult;
-use tokio::sync::{Mutex, Notify};
+use tokio::sync::Mutex;
 
 use crate::{
+    cancel::Cancel,
     error::Result,
     graphql::{
         client::GraphQLClient,
@@ -77,42 +75,6 @@ impl From<SubscriptionTransactionFilter>
             .with_kind(value.kind.map(Into::into))
             .with_signing_address(value.signing_address.map(|a| a.0))
             .with_function(value.function)
-    }
-}
-
-/// A cancellation flag that a pending `next` can wait on.
-///
-/// Foreign async support is uneven — Kotlin, Swift and Python can cancel a
-/// pending call, Go and C# cannot — so cancellation has to be something the
-/// subscription itself understands rather than something the caller's runtime
-/// does to it.
-#[derive(Default)]
-struct Cancel {
-    canceled: AtomicBool,
-    notify: Notify,
-}
-
-impl Cancel {
-    fn cancel(&self) {
-        self.canceled.store(true, Ordering::Release);
-        self.notify.notify_waiters();
-    }
-
-    fn is_canceled(&self) -> bool {
-        self.canceled.load(Ordering::Acquire)
-    }
-
-    /// Resolve once [`Cancel::cancel`] has been called.
-    async fn wait(&self) {
-        loop {
-            // Register for a wake-up before reading the flag, so a `cancel`
-            // racing with this call cannot be missed.
-            let notified = self.notify.notified();
-            if self.is_canceled() {
-                return;
-            }
-            notified.await;
-        }
     }
 }
 
