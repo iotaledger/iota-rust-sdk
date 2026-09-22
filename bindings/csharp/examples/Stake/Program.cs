@@ -20,7 +20,7 @@ class Program
 
         Console.WriteLine($"Staking to validator {validator.Name ?? "with no name"}");
 
-        var builder = new TransactionBuilder(myAddress).WithClient(client);
+        var builder = client.TransactionBuilder(myAddress);
 
         builder.Stake(PtbArgument.U64(1000000000), validator.Address);
 

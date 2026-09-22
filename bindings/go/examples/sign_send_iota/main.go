@@ -32,14 +32,14 @@ func main() {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
-	builder := iota_sdk.NewTransactionBuilder(senderAddress).WithClient(client)
+	builder := client.TransactionBuilder(senderAddress)
 	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))
 	txn, err := builder.Finish()
 	if err != nil {
 		log.Fatalf("Failed to create transaction: %v", err)
 	}
 
-	dryRunResult, err := client.DryRunTx(txn, false)
+	dryRunResult, err := client.DryRunTransaction(txn, false)
 	if err != nil {
 		log.Fatalf("Failed to dry run: %v", err)
 	}
@@ -53,11 +53,11 @@ func main() {
 	}
 	userSignature := iota_sdk.UserSignatureNewSimple(signature)
 
-	effects, err := client.ExecuteTx([]*iota_sdk.UserSignature{userSignature}, txn, nil)
+	effects, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{userSignature}, txn, nil)
 	if err != nil {
 		log.Fatalf("Failed to execute: %v", err)
 	}
 	log.Printf("Digest: %s", iota_sdk.HexEncode((*effects).Digest().ToBytes()))
-	log.Printf("Transaction status: %v", (*effects).AsV1().Status)
+	log.Printf("Transaction status: %v", (*effects).AsV1().Status())
 	log.Printf("Effects: %+v", (*effects).AsV1())
 }

@@ -18,7 +18,6 @@ import iota_sdk.StructTag
 import iota_sdk.Transaction
 import iota_sdk.TransactionsFilter
 import iota_sdk.Value
-import iota_sdk.transactionToJson
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -71,7 +70,7 @@ fun main() = runBlocking {
 
         // Print package dependencies and their linked versions.
         println("Dependencies:")
-        val linkageTable = pkg.linkageTable().values.sortedBy { it.upgradedId.toHex() }
+        val linkageTable = pkg.linkageTable().values().sortedBy { it.upgradedId.toHex() }
         if (linkageTable.isEmpty()) {
             println("- none")
         } else {
@@ -83,7 +82,7 @@ fun main() = runBlocking {
 
         // Inspect normalized modules, functions, types, and sample key objects.
         println("Package contents:")
-        val moduleNames = pkg.modules().keys.map { it.asStr() }.sorted()
+        val moduleNames = pkg.modules().keys().map { it.asStr() }
         for (moduleName in moduleNames) {
             println("Module: $moduleName")
 
@@ -249,19 +248,19 @@ private fun extractPolicy(contents: Value): Int? =
 private suspend fun resolveUpgradeCapId(client: GraphQlClient, packageId: ObjectId): ObjectId? {
     val page =
         client.transactionsEffects(
-            TransactionsFilter(changedObject = packageId),
+            TransactionsFilter().withChangedObject(packageId),
             PaginationFilter(direction = Direction.FORWARD, limit = 1),
         )
 
     for (effects in page.data) {
         val effectsV1 = effects.asV1()
-        for (changedObj in effectsV1.changedObjects) {
+        for (changedObj in effectsV1.changedObjects()) {
             if (changedObj.outputState !is ObjectOut.ObjectWrite) {
                 continue
             }
 
-            val obj = client.`object`(changedObj.objectId, effectsV1.lamportVersion) ?: continue
-            if (obj.asStructOpt()?.structType == StructTag.newUpgradeCap()) {
+            val obj = client.`object`(changedObj.objectId, effectsV1.lamportVersion()) ?: continue
+            if (obj.asOptStruct()?.structType == StructTag.newUpgradeCap()) {
                 return changedObj.objectId
             }
         }
@@ -274,7 +273,7 @@ private fun sameObjectId(left: String?, right: String?): Boolean =
     left != null && right != null && left.equals(right, ignoreCase = true)
 
 private fun programmableTransactionJson(tx: Transaction): JsonObject? {
-    val root = jsonParser.parseToJsonElement(transactionToJson(tx)).jsonObject
+    val root = jsonParser.parseToJsonElement(tx.toJson()).jsonObject
     val txV1 = root["1"]?.jsonObject ?: return null
     val kind = txV1["kind"]?.jsonObject ?: return null
     return kind.takeIf { it["kind"]?.jsonPrimitive?.contentOrNull == "programmable_transaction" }
@@ -369,12 +368,12 @@ private suspend fun wasPackagePublishedAsImmutable(
     while (true) {
         val page =
             client.transactionsDataEffects(
-                TransactionsFilter(changedObject = packageId),
+                TransactionsFilter().withChangedObject(packageId),
                 forwardPage(cursor),
             )
 
         for (txData in page.data) {
-            if (publishesPackageAsImmutable(txData.tx.transaction)) {
+            if (publishesPackageAsImmutable(txData.signedTransaction.transaction)) {
                 return true
             }
         }
@@ -396,12 +395,14 @@ private suspend fun wasUpgradeCapUsedForMakeImmutable(
     while (true) {
         val page =
             client.transactionsDataEffects(
-                TransactionsFilter(inputObject = upgradeCapId),
+                TransactionsFilter().withInputObject(upgradeCapId),
                 forwardPage(cursor),
             )
 
         for (txData in page.data) {
-            if (usesUpgradeCapForMakeImmutable(txData.tx.transaction, upgradeCapId)) {
+            if (
+                usesUpgradeCapForMakeImmutable(txData.signedTransaction.transaction, upgradeCapId)
+            ) {
                 return true
             }
         }

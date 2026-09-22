@@ -6,11 +6,8 @@
 ///
 /// # BCS
 ///
-/// A `Digest`'s BCS serialized form is defined by the following:
-///
-/// ```text
-/// digest = %d32 32OCTET
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// Due to historical reasons, even though a `Digest` has a fixed-length of 32,
 /// IOTA's binary representation of a `Digest` is prefixed with its length
@@ -50,7 +47,7 @@ impl Digest {
     /// Generates a new digest from the provided random number generator.
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -62,22 +59,17 @@ impl Digest {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::generate(rand_core::OsRng)
+        Self::random_with(rand_core::OsRng)
     }
 
     /// Returns a slice to the inner array representation of this digest.
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
     /// Returns the inner array representation of this digest.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
-    }
-
-    /// Returns a slice of bytes representing the digest.
-    pub const fn as_bytes(&self) -> &[u8] {
-        &self.0
     }
 
     /// Decodes a digest from a Base58 encoded string.
@@ -137,7 +129,7 @@ impl AsRef<[u8; Self::LENGTH]> for Digest {
 
 impl From<Digest> for [u8; Digest::LENGTH] {
     fn from(digest: Digest) -> Self {
-        digest.into_inner()
+        digest.into_bytes()
     }
 }
 
@@ -276,11 +268,12 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDiges
         D: serde::Deserializer<'de>,
     {
         let digest: Digest = serde_with::DisplayFromStr::deserialize_as(deserializer)?;
-        Ok(digest.into_inner())
+        Ok(digest.into_bytes())
     }
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
+#[non_exhaustive]
 pub enum DigestParseError {
     #[error("digest must be Base58 string of length 44")]
     Base58(#[from] bs58::decode::Error),
@@ -301,11 +294,15 @@ pub type SigningDigest = [u8; Digest::LENGTH];
 /// [`Digest`] (it is a transparent newtype), but is a distinct type so that,
 /// for example, a [`TransactionDigest`] can't be mixed up with an
 /// [`ObjectDigest`]. The shared, domain-agnostic surface (construction,
-/// encoding, ordering) is generated here; domain-specific behaviour is added in
+/// encoding, ordering) is generated here; domain-specific behavior is added in
 /// separate `impl` blocks.
 macro_rules! impl_digest_wrapper {
     ($(#[$meta:meta])* $name:ident) => {
         $(#[$meta])*
+        /// # BCS
+        ///
+        /// The BCS serialized form of this type is specified in
+        /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
         #[derive(Clone, Copy, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
         #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
         #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -333,11 +330,11 @@ macro_rules! impl_digest_wrapper {
             /// Generates a new digest from the provided random number generator.
             #[cfg(feature = "rand")]
             #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-            pub fn generate<R>(rng: R) -> Self
+            pub fn random_with<R>(rng: R) -> Self
             where
                 R: rand_core::RngCore + rand_core::CryptoRng,
             {
-                Self(Digest::generate(rng))
+                Self(Digest::random_with(rng))
             }
 
             /// Generates a new random digest.
@@ -358,18 +355,13 @@ macro_rules! impl_digest_wrapper {
             }
 
             /// Returns a reference to the inner array representation of this digest.
-            pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-                self.0.inner()
+            pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
+                self.0.bytes()
             }
 
             /// Returns the inner array representation of this digest.
-            pub const fn into_inner(self) -> [u8; Self::LENGTH] {
-                self.0.into_inner()
-            }
-
-            /// Returns a slice of bytes representing the digest.
-            pub const fn as_bytes(&self) -> &[u8] {
-                self.0.as_bytes()
+            pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
+                self.0.into_bytes()
             }
 
             /// Decodes a digest from a Base58 encoded string.
@@ -412,13 +404,13 @@ macro_rules! impl_digest_wrapper {
 
         impl AsRef<[u8]> for $name {
             fn as_ref(&self) -> &[u8] {
-                self.0.as_bytes()
+                self.0.bytes()
             }
         }
 
         impl AsRef<[u8; Self::LENGTH]> for $name {
             fn as_ref(&self) -> &[u8; Self::LENGTH] {
-                self.0.inner()
+                self.0.bytes()
             }
         }
 
@@ -442,7 +434,7 @@ macro_rules! impl_digest_wrapper {
 
         impl From<$name> for [u8; Digest::LENGTH] {
             fn from(digest: $name) -> Self {
-                digest.into_inner()
+                digest.into_bytes()
             }
         }
 
@@ -536,7 +528,7 @@ impl_digest_wrapper! {
 
 const OBJECT_DIGEST_DELETED_BYTE_VAL: u8 = 99;
 const OBJECT_DIGEST_WRAPPED_BYTE_VAL: u8 = 88;
-const OBJECT_DIGEST_CANCELLED_BYTE_VAL: u8 = 77;
+const OBJECT_DIGEST_CANCELED_BYTE_VAL: u8 = 77;
 
 impl ObjectDigest {
     /// A marker that signifies the object is deleted.
@@ -545,8 +537,8 @@ impl ObjectDigest {
     /// A marker that signifies the object is wrapped into another object.
     pub const OBJECT_WRAPPED: Self = Self(Digest::new([OBJECT_DIGEST_WRAPPED_BYTE_VAL; 32]));
 
-    /// A marker that signifies the object is cancelled.
-    pub const OBJECT_CANCELLED: Self = Self(Digest::new([OBJECT_DIGEST_CANCELLED_BYTE_VAL; 32]));
+    /// A marker that signifies the object is canceled.
+    pub const OBJECT_CANCELED: Self = Self(Digest::new([OBJECT_DIGEST_CANCELED_BYTE_VAL; 32]));
 
     /// Returns whether the digest represents an object that is neither deleted
     /// nor wrapped.
@@ -650,7 +642,7 @@ mod tests {
     fn from_bytes_valid() {
         let bytes = [42u8; 32];
         let digest = Digest::from_bytes(bytes).unwrap();
-        assert_eq!(digest.into_inner(), bytes);
+        assert_eq!(digest.into_bytes(), bytes);
     }
 
     #[test]
@@ -750,9 +742,9 @@ mod tests {
         assert!(ObjectDigest::OBJECT_WRAPPED.is_wrapped());
         assert!(!ObjectDigest::OBJECT_WRAPPED.is_alive());
         assert!(ObjectDigest::ZERO.is_alive());
-        // `is_alive` only accounts for deleted/wrapped objects, so a cancelled
+        // `is_alive` only accounts for deleted/wrapped objects, so a canceled
         // marker is still considered alive.
-        assert!(ObjectDigest::OBJECT_CANCELLED.is_alive());
+        assert!(ObjectDigest::OBJECT_CANCELED.is_alive());
     }
 
     #[test]

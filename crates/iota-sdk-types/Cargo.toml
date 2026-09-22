@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk-types"
-version = "0.0.1-alpha.1"
+version = "1.0.0-beta.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
@@ -56,7 +56,7 @@ paste.workspace = true
 proptest = { workspace = true, features = ["std"], optional = true }
 # RNG support
 rand_core = { workspace = true, optional = true }
-roaring.workspace = true
+roaring = { version = "0.11.2", default-features = false }
 serde = { workspace = true, features = ["derive"], optional = true }
 serde_json = { workspace = true, optional = true }
 serde_repr = { version = "0.1", optional = true }

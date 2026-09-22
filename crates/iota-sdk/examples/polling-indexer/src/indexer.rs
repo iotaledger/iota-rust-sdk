@@ -5,7 +5,7 @@ use std::{cmp, collections::HashMap, time::Duration};
 
 use iota_sdk::{
     graphql_client::{
-        Client, PaginationFilter,
+        GraphQLClient, PaginationFilter,
         query_types::{EventFilter, TransactionsFilter},
     },
     types::{ExecutionStatus, SignedTransaction, Transaction},
@@ -67,13 +67,13 @@ impl RetryState {
 // ------------------------------------------------------------------
 
 pub struct Indexer {
-    client: Client,
+    client: GraphQLClient,
     pool: PgPool,
     config: AppConfig,
 }
 
 impl Indexer {
-    pub fn new(client: Client, pool: PgPool, config: AppConfig) -> Self {
+    pub fn new(client: GraphQLClient, pool: PgPool, config: AppConfig) -> Self {
         Self {
             client,
             pool,
@@ -191,13 +191,19 @@ impl Indexer {
     async fn process_batch(&self, range_start: u64, range_end: u64) -> anyhow::Result<()> {
         info!(range_start, range_end, "processing batch");
 
-        let tx_filter = TransactionsFilter {
-            function: self.config.filters.derived_tx_function(),
-            sent_address: self.config.filters.tx_sender,
-            after_checkpoint: range_start.checked_sub(1),
-            before_checkpoint: Some(range_end.saturating_add(1)),
-            ..Default::default()
-        };
+        let mut tx_filter = TransactionsFilter::default();
+        if let Some(function) = self.config.filters.derived_tx_function() {
+            tx_filter = tx_filter.with_function(function);
+        }
+        if let Some(sender) = self.config.filters.tx_sender {
+            tx_filter = tx_filter.with_sent_address(sender);
+        }
+        if let Some(after_checkpoint) = range_start.checked_sub(1) {
+            tx_filter = tx_filter.with_after_checkpoint(after_checkpoint);
+        }
+        if let Some(before_checkpoint) = range_end.checked_add(1) {
+            tx_filter = tx_filter.with_before_checkpoint(before_checkpoint);
+        }
 
         let mut tx_cursor: Option<String> = None;
         let mut tx_count = 0_u64;
@@ -247,8 +253,8 @@ impl Indexer {
                     continue;
                 }
 
-                let sender = sender_str(&tx_data.tx);
-                let kind = tx_kind_str(&tx_data.tx);
+                let sender = sender_str(&tx_data.signed_transaction);
+                let kind = tx_kind_str(&tx_data.signed_transaction);
                 let success = matches!(tx_data.effects.as_v1().status, ExecutionStatus::Success);
 
                 sqlx::query(
@@ -321,13 +327,19 @@ impl Indexer {
         .execute(&self.pool)
         .await?;
 
-        let tx_filter = TransactionsFilter {
-            function: self.config.filters.tx_function.clone(),
-            sent_address: self.config.filters.tx_sender,
-            after_checkpoint: sequence.checked_sub(1),
-            before_checkpoint: Some(sequence.saturating_add(1)),
-            ..Default::default()
-        };
+        let mut tx_filter = TransactionsFilter::default();
+        if let Some(function) = self.config.filters.derived_tx_function() {
+            tx_filter = tx_filter.with_function(function);
+        }
+        if let Some(sender) = self.config.filters.tx_sender {
+            tx_filter = tx_filter.with_sent_address(sender);
+        }
+        if let Some(after_checkpoint) = sequence.checked_sub(1) {
+            tx_filter = tx_filter.with_after_checkpoint(after_checkpoint);
+        }
+        if let Some(before_checkpoint) = sequence.checked_add(1) {
+            tx_filter = tx_filter.with_before_checkpoint(before_checkpoint);
+        }
 
         let mut tx_cursor: Option<String> = None;
         loop {
@@ -351,8 +363,8 @@ impl Indexer {
                 }
 
                 let tx_digest = tx_data.effects.as_v1().transaction_digest.to_string();
-                let sender = sender_str(&tx_data.tx);
-                let kind = tx_kind_str(&tx_data.tx);
+                let sender = sender_str(&tx_data.signed_transaction);
+                let kind = tx_kind_str(&tx_data.signed_transaction);
                 let success = matches!(tx_data.effects.as_v1().status, ExecutionStatus::Success);
 
                 sqlx::query(
@@ -412,11 +424,9 @@ impl Indexer {
             let event_page = self
                 .client
                 .events(
-                    EventFilter {
-                        transaction_digest: Some(transaction_digest.to_owned()),
-                        event_type: self.config.filters.event_type.clone(),
-                        ..Default::default()
-                    },
+                    EventFilter::default()
+                        .with_transaction_digest(transaction_digest.to_owned())
+                        .with_event_type(self.config.filters.event_type.clone()),
                     PaginationFilter {
                         limit: Some(self.config.page_size),
                         cursor: cursor.clone(),
@@ -436,7 +446,7 @@ impl Indexer {
                     .map(|m| m.package.address.to_string());
                 let module = event.sending_module.as_ref().map(|m| m.name.clone());
                 let sender = event.sender.as_ref().map(|s| s.address.to_string());
-                let event_type = event.type_.repr.clone();
+                let event_type = event.move_type.repr.clone();
                 let event_name = extract_event_name(&event_type);
 
                 let raw_json = json!({
@@ -493,23 +503,19 @@ fn sender_str(tx: &SignedTransaction) -> Option<String> {
 fn tx_kind_str(tx: &SignedTransaction) -> String {
     match &tx.transaction {
         Transaction::V1(v1) => match &v1.kind {
-            iota_sdk::types::transaction::TransactionKind::Programmable(_) => {
-                "programmable".to_owned()
-            }
-            iota_sdk::types::transaction::TransactionKind::Genesis(_) => "genesis".to_owned(),
-            iota_sdk::types::transaction::TransactionKind::ConsensusCommitPrologueV1(_) => {
+            iota_sdk::types::TransactionKind::Programmable(_) => "programmable".to_owned(),
+            iota_sdk::types::TransactionKind::Genesis(_) => "genesis".to_owned(),
+            iota_sdk::types::TransactionKind::ConsensusCommitPrologueV1(_) => {
                 "consensus_commit_prologue_v1".to_owned()
             }
-            iota_sdk::types::transaction::TransactionKind::AuthenticatorStateUpdateV1Deprecated => {
+            iota_sdk::types::TransactionKind::AuthenticatorStateUpdateV1Deprecated => {
                 "authenticator_state_update_v1_deprecated".to_owned()
             }
-            iota_sdk::types::transaction::TransactionKind::EndOfEpoch(_) => {
-                "end_of_epoch".to_owned()
-            }
-            iota_sdk::types::transaction::TransactionKind::RandomnessStateUpdate(_) => {
+            iota_sdk::types::TransactionKind::EndOfEpoch(_) => "end_of_epoch".to_owned(),
+            iota_sdk::types::TransactionKind::RandomnessStateUpdate(_) => {
                 "randomness_state_update".to_owned()
             }
-            iota_sdk::types::transaction::TransactionKind::TransactionDenyRulesUpdate(_) => {
+            iota_sdk::types::TransactionKind::TransactionDenyRulesUpdate(_) => {
                 "transaction_deny_rules_update".to_owned()
             }
             _ => "unknown".to_owned(),
@@ -539,7 +545,7 @@ fn extract_event_name(event_type: &str) -> String {
 /// aliased GraphQL queries, avoiding per-transaction round-trips. Digests are
 /// processed in chunks to stay within GraphQL query complexity limits.
 async fn batch_lookup_tx_checkpoints(
-    client: &Client,
+    client: &GraphQLClient,
     digests: &[String],
 ) -> anyhow::Result<HashMap<String, Option<u64>>> {
     const CHUNK_SIZE: usize = 50;

@@ -27,7 +27,7 @@ async def main():
     amounts = [PtbArgument.u64(r[1]) for r in recipients]
     labels = [f"coin{i}" for i in range(len(recipients))]
 
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
 
     builder.split_coins(PtbArgument.object_id(coin_id), amounts, labels)
     for i, r in enumerate(recipients):
@@ -39,7 +39,7 @@ async def main():
     print("Signing Digest:", txn.signing_digest_hex())
     print("Txn Bytes:", txn.to_base64())
 
-    res = await client.dry_run_tx(txn)
+    res = await client.dry_run_transaction(txn)
 
     if res.error is not None:
         raise Exception(f"Failed to send IOTA: {res.error}")

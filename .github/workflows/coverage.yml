@@ -46,14 +46,14 @@ jobs:
       CARGO_NET_RETRY: 10
       RUSTUP_MAX_RETRIES: 10
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.inputs.branch-or-commit || github.ref }}
 
       - uses: bmwill/rust-cache@cb2cf0cc7c5198d3364b9630e2c3d457f160790c # v1.4.0
 
       - name: Set Swap Space
-        uses: actionhippie/swap-space@73376950a0019f8e1f6a3d3d2673fe2aed74ae17 # v1.0.2
+        uses: actionhippie/swap-space@0cffa893f224708cfb6b011690d8ba819d69c10f # v1.1.0
         with:
           size: 256G
 
@@ -117,7 +117,7 @@ jobs:
           sed --in-place "s#${{ github.workspace }}#.#g" lcov.info
 
       - name: Upload coverage to Coveralls
-        uses: coverallsapp/github-action@cfd0633edbd2411b532b808ba7a8b5e04f76d2c8 # v2.3.4
+        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2.3.8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: target/lcov.info

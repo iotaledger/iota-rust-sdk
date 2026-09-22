@@ -1,8 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-mod builder;
-mod client_builder;
+pub mod builder;
+pub mod client_builder;
+pub mod gas_station;
 pub mod move_authenticator;
 pub mod ptb_arg;
 pub mod signer;

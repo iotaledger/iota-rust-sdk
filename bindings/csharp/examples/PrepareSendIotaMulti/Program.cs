@@ -26,7 +26,7 @@ class Program
             labels.Add($"coin{i}");
         }
 
-        var builder = new TransactionBuilder(sender).WithClient(client);
+        var builder = client.TransactionBuilder(sender);
 
         builder.SplitCoins(PtbArgument.ObjectId(coinId), amounts.ToArray(), labels.ToArray());
 
@@ -40,7 +40,7 @@ class Program
         Console.WriteLine($"Signing Digest: {txn.SigningDigestHex()}");
         Console.WriteLine($"Txn Bytes: {txn.ToBase64()}");
 
-        var res = await client.DryRunTx(txn);
+        var res = await client.DryRunTransaction(txn);
 
         if (res.Error != null)
         {

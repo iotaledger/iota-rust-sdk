@@ -67,7 +67,7 @@ class Program
         Console.WriteLine("Dependencies:");
         var dependencies = package
             .LinkageTable()
-            .Select(entry => entry.Value)
+            .Values()
             .OrderBy(upgrade => upgrade.UpgradedId.ToHex())
             .ToArray();
         if (dependencies.Length == 0)
@@ -87,11 +87,7 @@ class Program
 
         // Inspect normalized modules, functions, types, and sample key objects.
         Console.WriteLine("Package contents:");
-        var moduleNames = package
-            .Modules()
-            .Keys
-            .Select(moduleId => moduleId.AsStr())
-            .OrderBy(moduleName => moduleName);
+        var moduleNames = package.Modules().Keys().Select(moduleId => moduleId.AsStr());
 
         foreach (var moduleName in moduleNames)
         {
@@ -328,23 +324,23 @@ class Program
     static async Task<ObjectId?> ResolveUpgradeCapId(GraphQlClient client, ObjectId packageId)
     {
         var page = await client.TransactionsEffects(
-            new TransactionsFilter(ChangedObject: packageId),
+            new TransactionsFilter().WithChangedObject(packageId),
             new PaginationFilter(Direction.Forward, Limit: 1)
         );
 
         foreach (var effects in page.Data)
         {
             var effectsV1 = effects.AsV1();
-            foreach (var changedObj in effectsV1.ChangedObjects)
+            foreach (var changedObj in effectsV1.ChangedObjects())
             {
                 if (changedObj.OutputState is not ObjectOut.ObjectWrite)
                 {
                     continue;
                 }
 
-                var obj = await client.Object(changedObj.ObjectId, effectsV1.LamportVersion);
+                var obj = await client.Object(changedObj.ObjectId, effectsV1.LamportVersion());
                 if (
-                    obj?.AsStructOpt()?.StructType?.Equals(StructTag.NewUpgradeCap()) == true
+                    obj?.AsOptStruct()?.StructType?.Equals(StructTag.NewUpgradeCap()) == true
                 )
                 {
                     return changedObj.ObjectId;
@@ -362,7 +358,7 @@ class Program
 
     static bool TryGetProgrammableTransaction(Transaction tx, out JsonElement programmableTx)
     {
-        using var json = JsonDocument.Parse(Iota.TransactionToJson(tx));
+        using var json = JsonDocument.Parse(tx.ToJson());
         programmableTx = default;
 
         if (
@@ -528,13 +524,13 @@ class Program
         while (true)
         {
             var page = await client.TransactionsDataEffects(
-                new TransactionsFilter(ChangedObject: packageId),
+                new TransactionsFilter().WithChangedObject(packageId),
                 ForwardPage(cursor)
             );
 
             foreach (var txData in page.Data)
             {
-                if (PublishesPackageAsImmutable(txData.Tx.Transaction))
+                if (PublishesPackageAsImmutable(txData.SignedTransaction.Transaction))
                 {
                     return true;
                 }
@@ -559,13 +555,13 @@ class Program
         while (true)
         {
             var page = await client.TransactionsDataEffects(
-                new TransactionsFilter(InputObject: upgradeCapId),
+                new TransactionsFilter().WithInputObject(upgradeCapId),
                 ForwardPage(cursor)
             );
 
             foreach (var txData in page.Data)
             {
-                if (UsesUpgradeCapForMakeImmutable(txData.Tx.Transaction, upgradeCapId))
+                if (UsesUpgradeCapForMakeImmutable(txData.SignedTransaction.Transaction, upgradeCapId))
                 {
                     return true;
                 }

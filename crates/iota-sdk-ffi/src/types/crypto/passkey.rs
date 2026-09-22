@@ -7,18 +7,8 @@ use crate::types::{address::Address, crypto::Secp256r1PublicKey, signature::Simp
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// passkey-bcs = bytes               ; where the contents of the bytes are
-///                                   ; defined by <passkey>
-/// passkey     = passkey-flag
-///               bytes               ; passkey authenticator data
-///               client-data-json    ; valid json
-///               simple-signature    ; required to be a secp256r1 signature
-///
-/// client-data-json = string ; valid json
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for
 /// the required json-schema for the `client-data-json` rule. In addition, IOTA
@@ -69,6 +59,13 @@ impl PasskeyAuthenticator {
     pub fn public_key(&self) -> PasskeyPublicKey {
         self.0.public_key().into()
     }
+
+    /// Derive the `Address` of the passkey that produced this authenticator.
+    ///
+    /// See `PasskeyPublicKey::derive_address`.
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
+    }
 }
 
 /// Public key of a `PasskeyAuthenticator`.
@@ -77,11 +74,8 @@ impl PasskeyAuthenticator {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// passkey-public-key = passkey-flag secp256r1-public-key
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct PasskeyPublicKey(iota_sdk::types::PasskeyPublicKey);
@@ -111,3 +105,4 @@ impl PasskeyPublicKey {
 
 crate::export_iota_types_objects_bcs_conversion!(PasskeyAuthenticator);
 crate::export_iota_types_objects_json_conversion!(PasskeyAuthenticator);
+crate::export_iota_types_objects_display!(PasskeyAuthenticator, PasskeyPublicKey);

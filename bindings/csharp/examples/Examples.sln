@@ -57,11 +57,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignSendIota", "SignSendIot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonRoundtrip", "JsonRoundtrip\JsonRoundtrip.csproj", "{30466BFD-5822-49FF-A33C-DECCFF7F3B7A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisplayTransaction", "DisplayTransaction\DisplayTransaction.csproj", "{6F3C1A94-77E5-4A62-9D3B-2C8B5E4D1F70}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectsByType", "ObjectsByType\ObjectsByType.csproj", "{A3043894-A5BD-481D-9561-22A95173772E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetTransaction", "GetTransaction\GetTransaction.csproj", "{314853E9-13DD-40BB-BE30-AA406EF7B470}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faucet", "Faucet\Faucet.csproj", "{4505C5A2-7755-4643-9EFE-C6F0FEBB65B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscribeTransactionsGraphQL", "SubscribeTransactionsGraphQL\SubscribeTransactionsGraphQL.csproj", "{E18D4EE2-A13D-496C-8203-8787F864334E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DryRunBytes", "DryRunBytes\DryRunBytes.csproj", "{F4F415AC-365B-472B-8659-C62028B2C4E9}"
 EndProject
@@ -89,6 +93,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multisig", "Multisig\Multis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecodeStakedIota", "DecodeStakedIota\DecodeStakedIota.csproj", "{C7A4D1E5-3B82-4F09-A6B7-1E9D5C8F4A23}"
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressTransactions", "AddressTransactions\AddressTransactions.csproj", "{042B80AD-AD76-4608-AFA7-4D65CD70DD93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcServiceInfo", "GrpcServiceInfo\GrpcServiceInfo.csproj", "{ACE4A8DE-278B-4A3B-97ED-CB5E739EA25F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGetObject", "GrpcGetObject\GrpcGetObject.csproj", "{EB5B6358-3D1A-42DC-9CC6-9B923C020D77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcOwnedObjects", "GrpcOwnedObjects\GrpcOwnedObjects.csproj", "{AAB6ED47-615F-4A3B-B814-495DBE5D22D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcExecuteTransaction", "GrpcExecuteTransaction\GrpcExecuteTransaction.csproj", "{93EA3698-5CC7-42BF-80AE-2765A48EEA71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -219,6 +231,10 @@ Global
 		{4505C5A2-7755-4643-9EFE-C6F0FEBB65B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4505C5A2-7755-4643-9EFE-C6F0FEBB65B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4505C5A2-7755-4643-9EFE-C6F0FEBB65B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E18D4EE2-A13D-496C-8203-8787F864334E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E18D4EE2-A13D-496C-8203-8787F864334E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E18D4EE2-A13D-496C-8203-8787F864334E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E18D4EE2-A13D-496C-8203-8787F864334E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4F415AC-365B-472B-8659-C62028B2C4E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F4F415AC-365B-472B-8659-C62028B2C4E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4F415AC-365B-472B-8659-C62028B2C4E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -275,5 +291,25 @@ Global
 		{042B80AD-AD76-4608-AFA7-4D65CD70DD93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{042B80AD-AD76-4608-AFA7-4D65CD70DD93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{042B80AD-AD76-4608-AFA7-4D65CD70DD93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F3C1A94-77E5-4A62-9D3B-2C8B5E4D1F70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F3C1A94-77E5-4A62-9D3B-2C8B5E4D1F70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F3C1A94-77E5-4A62-9D3B-2C8B5E4D1F70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F3C1A94-77E5-4A62-9D3B-2C8B5E4D1F70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACE4A8DE-278B-4A3B-97ED-CB5E739EA25F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACE4A8DE-278B-4A3B-97ED-CB5E739EA25F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACE4A8DE-278B-4A3B-97ED-CB5E739EA25F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACE4A8DE-278B-4A3B-97ED-CB5E739EA25F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB5B6358-3D1A-42DC-9CC6-9B923C020D77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB5B6358-3D1A-42DC-9CC6-9B923C020D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB5B6358-3D1A-42DC-9CC6-9B923C020D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB5B6358-3D1A-42DC-9CC6-9B923C020D77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAB6ED47-615F-4A3B-B814-495DBE5D22D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAB6ED47-615F-4A3B-B814-495DBE5D22D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAB6ED47-615F-4A3B-B814-495DBE5D22D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAB6ED47-615F-4A3B-B814-495DBE5D22D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93EA3698-5CC7-42BF-80AE-2765A48EEA71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93EA3698-5CC7-42BF-80AE-2765A48EEA71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93EA3698-5CC7-42BF-80AE-2765A48EEA71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93EA3698-5CC7-42BF-80AE-2765A48EEA71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

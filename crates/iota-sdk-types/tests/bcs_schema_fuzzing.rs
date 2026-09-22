@@ -783,7 +783,7 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<Argument>("argument");
     test.check_rule::<Bls12381PublicKey>("bls12381-public-key");
     test.check_rule::<Bls12381Signature>("bls12381-signature");
-    test.check_rule::<CancelledTransaction>("cancelled-transaction");
+    test.check_rule::<CanceledTransaction>("canceled-transaction");
     test.check_rule::<ChangeEpoch>("change-epoch");
     test.check_rule::<ChangedObject>("changed-object");
     test.check_rule::<CheckpointCommitment>("checkpoint-commitment");
@@ -851,6 +851,7 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<ValidatorAggregatedSignature>("validator-aggregated-signature");
     test.check_rule::<ValidatorCommittee>("validator-committee");
     test.check_rule::<ValidatorCommitteeMember>("validator-committee-member");
+    test.check_rule::<ValidatorSignature>("validator-signature");
     test.check_rule::<VersionAssignment>("version-assignment");
 
     if !test.failures.is_empty() {

@@ -1,27 +1,29 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1000
-
 import Foundation
 import IotaSDK
+
+/// The `view_demo` package published on testnet.
+let package = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4"
+/// A shared `view_demo::shop::Shop` created when the package was published.
+let shop = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20"
 
 @main
 struct MoveViewCallExample {
   static func main() async throws {
-    let client = GraphQlClient.newDevnet()
+    let client = GraphQlClient.newTestnet()
 
     // ===========================================================================
-    // Example 1: Using moveViewCall() with typed arguments (blake2b256)
+    // Example 1: Using moveViewCall() with typed arguments (primitives)
     // ===========================================================================
-    print("=== Example 1: moveViewCall() with typed arguments (blake2b256) ===")
+    print("=== Example 1: moveViewCall() with typed arguments (primitives) ===")
     print()
 
-    // Using typed arguments: an array of u8 values using the u8Vec constructor
-    let hashArgs = [MoveViewArg.u8Vec(values: Data([0, 1, 2]))]
+    let priceArgs = [MoveViewArg.u64(value: 100), MoveViewArg.u64(value: 25)]
 
     let result = try await client.moveViewCall(
-      functionName: "0x2::hash::blake2b256", typeArguments: nil, arguments: hashArgs)
+      functionName: "\(package)::shop::discounted_price", typeArguments: nil, arguments: priceArgs)
 
     if result.error != nil {
       print("Error:", result.error!)
@@ -32,14 +34,16 @@ struct MoveViewCallExample {
     }
 
     // ===========================================================================
-    // Example 2: Using moveViewCallJson() with JSON values (blake2b256)
+    // Example 2: Using moveViewCallJson() with JSON values (primitives)
     // ===========================================================================
     print()
-    print("=== Example 2: moveViewCallJson() with JSON values (blake2b256) ===")
+    print("=== Example 2: moveViewCallJson() with JSON values (primitives) ===")
     print()
 
+    // `u64` is passed as a string so large values survive JSON.
     let jsonResult = try await client.moveViewCallJson(
-      functionName: "0x2::hash::blake2b256", typeArguments: nil, arguments: ["[0, 1, 2]"])
+      functionName: "\(package)::shop::discounted_price", typeArguments: nil,
+      arguments: ["\"100\"", "\"25\""])
 
     if jsonResult.error != nil {
       print("JSON Error:", jsonResult.error!)
@@ -50,55 +54,47 @@ struct MoveViewCallExample {
     }
 
     // ===========================================================================
-    // Example 3: Using moveViewCall() with typed arguments (auction)
+    // Example 3: Using moveViewCall() with typed arguments (shared object)
     // ===========================================================================
-    // print()
-    // print("=== Example 3: moveViewCall() with typed arguments (auction) ===")
-    // print()
+    print()
+    print("=== Example 3: moveViewCall() with typed arguments (shared object) ===")
+    print()
 
-    // let objectId = try ObjectId.fromHex(
-    //   hex: "0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050")
+    let objectId = try ObjectId.fromHex(hex: shop)
 
-    // let auctionArgs = [
-    //   MoveViewArg.objectId(value: objectId),
-    //   MoveViewArg.string(value: "auc.iota"),
-    // ]
+    let shopArgs = [
+      MoveViewArg.objectId(value: objectId),
+      MoveViewArg.u64(value: 1),
+    ]
 
-    // let auctionResult = try await client.moveViewCall(
-    //   functionName:
-    //     "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
-    //   typeArguments: nil, arguments: auctionArgs)
+    let shopResult = try await client.moveViewCall(
+      functionName: "\(package)::shop::sale_at", typeArguments: nil, arguments: shopArgs)
 
-    // if auctionResult.error != nil {
-    //   print("Auction Error:", auctionResult.error!)
-    // } else if auctionResult.results != nil {
-    //   print("Auction Results:", auctionResult.results!)
-    // } else {
-    //   print("No auction results")
-    // }
+    if shopResult.error != nil {
+      print("Shop Error:", shopResult.error!)
+    } else if shopResult.results != nil {
+      print("Shop Results:", shopResult.results!)
+    } else {
+      print("No shop results")
+    }
 
     // ===========================================================================
-    // Example 4: Using moveViewCallJson() with JSON values (auction)
+    // Example 4: Using moveViewCallJson() with JSON values (shared object)
     // ===========================================================================
-    // print()
-    // print("=== Example 4: moveViewCallJson() with JSON values (auction) ===")
-    // print()
+    print()
+    print("=== Example 4: moveViewCallJson() with JSON values (shared object) ===")
+    print()
 
-    // let auctionJsonResult = try await client.moveViewCallJson(
-    //   functionName:
-    //     "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d::auction::get_auction_metadata",
-    //   typeArguments: nil,
-    //   arguments: [
-    //     "\"0x2292ea885039babe8c320f19e0b7546ebdef2b2f6cf2be600bf994cdb51e0050\"",
-    //     "\"auc.iota\"",
-    //   ])
+    let shopJsonResult = try await client.moveViewCallJson(
+      functionName: "\(package)::shop::sale_at", typeArguments: nil,
+      arguments: ["\"\(shop)\"", "\"1\""])
 
-    // if auctionJsonResult.error != nil {
-    //   print("Auction JSON Error:", auctionJsonResult.error!)
-    // } else if auctionJsonResult.results != nil {
-    //   print("Auction JSON Results:", auctionJsonResult.results!)
-    // } else {
-    //   print("No auction JSON results")
-    // }
+    if shopJsonResult.error != nil {
+      print("Shop JSON Error:", shopJsonResult.error!)
+    } else if shopJsonResult.results != nil {
+      print("Shop JSON Results:", shopJsonResult.results!)
+    } else {
+      print("No shop JSON results")
+    }
   }
 }

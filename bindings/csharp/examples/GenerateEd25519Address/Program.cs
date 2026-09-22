@@ -7,7 +7,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        var privateKey = Ed25519PrivateKey.Generate();
+        var privateKey = Ed25519PrivateKey.Random();
         var privateKeyBech32 = privateKey.ToBech32();
         var publicKey = privateKey.PublicKey();
         var flaggedPublicKey = publicKey.ToFlaggedBytes();

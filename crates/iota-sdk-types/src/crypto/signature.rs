@@ -16,15 +16,8 @@ use crate::crypto::move_authenticator::MoveAuthenticator;
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// simple-signature = bytes ; where the contents of the bytes are defined by
-///                          ; <simple-signature-body>
-/// simple-signature-body = (ed25519-flag ed25519-signature ed25519-public-key) /
-///                         (secp256k1-flag secp256k1-signature secp256k1-public-key) /
-///                         (secp256r1-flag secp256r1-signature secp256r1-public-key)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
 /// different from the majority of the types in IOTA. In particular if a
@@ -78,7 +71,7 @@ impl SimpleSignature {
 
     crate::def_is!(Ed25519, Secp256k1, Secp256r1);
 
-    pub fn as_ed25519_sig_opt(&self) -> Option<&Ed25519Signature> {
+    pub fn as_opt_ed25519_signature(&self) -> Option<&Ed25519Signature> {
         if let Self::Ed25519 { signature, .. } = self {
             Some(signature)
         } else {
@@ -86,11 +79,12 @@ impl SimpleSignature {
         }
     }
 
-    pub fn as_ed25519_sig(&self) -> &Ed25519Signature {
-        self.as_ed25519_sig_opt().expect("not an ed25519 signature")
+    pub fn as_ed25519_signature(&self) -> &Ed25519Signature {
+        self.as_opt_ed25519_signature()
+            .expect("not an ed25519 signature")
     }
 
-    pub fn as_ed25519_pub_key_opt(&self) -> Option<&Ed25519PublicKey> {
+    pub fn as_opt_ed25519_public_key(&self) -> Option<&Ed25519PublicKey> {
         if let Self::Ed25519 { public_key, .. } = self {
             Some(public_key)
         } else {
@@ -98,12 +92,12 @@ impl SimpleSignature {
         }
     }
 
-    pub fn as_ed25519_pub_key(&self) -> &Ed25519PublicKey {
-        self.as_ed25519_pub_key_opt()
+    pub fn as_ed25519_public_key(&self) -> &Ed25519PublicKey {
+        self.as_opt_ed25519_public_key()
             .expect("not an ed25519 public key")
     }
 
-    pub fn into_ed25519_opt(self) -> Option<(Ed25519Signature, Ed25519PublicKey)> {
+    pub fn into_opt_ed25519(self) -> Option<(Ed25519Signature, Ed25519PublicKey)> {
         if let Self::Ed25519 {
             signature,
             public_key,
@@ -117,10 +111,10 @@ impl SimpleSignature {
     }
 
     pub fn into_ed25519(self) -> (Ed25519Signature, Ed25519PublicKey) {
-        self.into_ed25519_opt().expect("not an ed25519 signature")
+        self.into_opt_ed25519().expect("not an ed25519 signature")
     }
 
-    pub fn as_secp256k1_sig_opt(&self) -> Option<&Secp256k1Signature> {
+    pub fn as_opt_secp256k1_signature(&self) -> Option<&Secp256k1Signature> {
         if let Self::Secp256k1 { signature, .. } = self {
             Some(signature)
         } else {
@@ -128,12 +122,12 @@ impl SimpleSignature {
         }
     }
 
-    pub fn as_secp256k1_sig(&self) -> &Secp256k1Signature {
-        self.as_secp256k1_sig_opt()
+    pub fn as_secp256k1_signature(&self) -> &Secp256k1Signature {
+        self.as_opt_secp256k1_signature()
             .expect("not an secp256k1 signature")
     }
 
-    pub fn as_secp256k1_pub_key_opt(&self) -> Option<&Secp256k1PublicKey> {
+    pub fn as_opt_secp256k1_public_key(&self) -> Option<&Secp256k1PublicKey> {
         if let Self::Secp256k1 { public_key, .. } = self {
             Some(public_key)
         } else {
@@ -141,12 +135,12 @@ impl SimpleSignature {
         }
     }
 
-    pub fn as_secp256k1_pub_key(&self) -> &Secp256k1PublicKey {
-        self.as_secp256k1_pub_key_opt()
+    pub fn as_secp256k1_public_key(&self) -> &Secp256k1PublicKey {
+        self.as_opt_secp256k1_public_key()
             .expect("not an secp256k1 public key")
     }
 
-    pub fn into_secp256k1_opt(self) -> Option<(Secp256k1Signature, Secp256k1PublicKey)> {
+    pub fn into_opt_secp256k1(self) -> Option<(Secp256k1Signature, Secp256k1PublicKey)> {
         if let Self::Secp256k1 {
             signature,
             public_key,
@@ -160,11 +154,11 @@ impl SimpleSignature {
     }
 
     pub fn into_secp256k1(self) -> (Secp256k1Signature, Secp256k1PublicKey) {
-        self.into_secp256k1_opt()
+        self.into_opt_secp256k1()
             .expect("not an secp256k1 signature")
     }
 
-    pub fn as_secp256r1_sig_opt(&self) -> Option<&Secp256r1Signature> {
+    pub fn as_opt_secp256r1_signature(&self) -> Option<&Secp256r1Signature> {
         if let Self::Secp256r1 { signature, .. } = self {
             Some(signature)
         } else {
@@ -172,12 +166,12 @@ impl SimpleSignature {
         }
     }
 
-    pub fn as_secp256r1_sig(&self) -> &Secp256r1Signature {
-        self.as_secp256r1_sig_opt()
+    pub fn as_secp256r1_signature(&self) -> &Secp256r1Signature {
+        self.as_opt_secp256r1_signature()
             .expect("not an secp256r1 signature")
     }
 
-    pub fn as_secp256r1_pub_key_opt(&self) -> Option<&Secp256r1PublicKey> {
+    pub fn as_opt_secp256r1_public_key(&self) -> Option<&Secp256r1PublicKey> {
         if let Self::Secp256r1 { public_key, .. } = self {
             Some(public_key)
         } else {
@@ -185,12 +179,12 @@ impl SimpleSignature {
         }
     }
 
-    pub fn as_secp256r1_pub_key(&self) -> &Secp256r1PublicKey {
-        self.as_secp256r1_pub_key_opt()
+    pub fn as_secp256r1_public_key(&self) -> &Secp256r1PublicKey {
+        self.as_opt_secp256r1_public_key()
             .expect("not an secp256r1 public key")
     }
 
-    pub fn into_secp256r1_opt(self) -> Option<(Secp256r1Signature, Secp256r1PublicKey)> {
+    pub fn into_opt_secp256r1(self) -> Option<(Secp256r1Signature, Secp256r1PublicKey)> {
         if let Self::Secp256r1 {
             signature,
             public_key,
@@ -204,7 +198,7 @@ impl SimpleSignature {
     }
 
     pub fn into_secp256r1(self) -> (Secp256r1Signature, Secp256r1PublicKey) {
-        self.into_secp256r1_opt()
+        self.into_opt_secp256r1()
             .expect("not an secp256r1 signature")
     }
 
@@ -267,21 +261,6 @@ impl crate::TreeDisplay for SimpleSignature {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
-///                    multisig-flag / bls-flag / passkey-auth-flag /
-///                    move-auth-flag
-/// ed25519-flag                    = %d00
-/// secp256k1-flag                  = %d01
-/// secp256r1-flag                  = %d02
-/// multisig-flag                   = %d03
-/// bls-flag                        = %d04
-/// passkey-auth-flag               = %d06
-/// move-auth-flag                  = %d07
-/// ```
-///
 /// Flag `%d05` is reserved: it was formerly used for the now-removed zklogin
 /// authenticator (which was never enabled on chain) and is intentionally
 /// skipped.
@@ -321,7 +300,7 @@ impl SignatureScheme {
     );
 
     /// Try constructing from a byte flag
-    pub fn from_byte(flag: u8) -> Result<Self, InvalidSignatureScheme> {
+    pub fn from_byte(flag: u8) -> Result<Self, SignatureSchemeError> {
         match flag {
             0x00 => Ok(Self::Ed25519),
             0x01 => Ok(Self::Secp256k1),
@@ -330,7 +309,7 @@ impl SignatureScheme {
             0x04 => Ok(Self::Bls12381),
             0x06 => Ok(Self::PasskeyAuthenticator),
             0x07 => Ok(Self::MoveAuthenticator),
-            invalid => Err(InvalidSignatureScheme(invalid)),
+            invalid => Err(SignatureSchemeError(invalid)),
         }
     }
 
@@ -347,14 +326,11 @@ impl super::PasskeyPublicKey {
     }
 }
 
+/// Error returned when a byte does not correspond to a known
+/// [`SignatureScheme`] flag.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, thiserror::Error)]
-pub struct InvalidSignatureScheme(u8);
-
-impl std::fmt::Display for InvalidSignatureScheme {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "invalid signature scheme: {:02x}", self.0)
-    }
-}
+#[error("invalid signature scheme: {0:02x}")]
+pub struct SignatureSchemeError(u8);
 
 /// A signature from a user
 ///
@@ -363,13 +339,8 @@ impl std::fmt::Display for InvalidSignatureScheme {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// user-signature = bytes ; where the contents of the bytes are defined by
-///                        ; <user-signature-body>
-/// user-signature-body = simple-signature-body / multisig / passkey / move-authenticator
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
 /// different from the majority of the types in IOTA. In particular if a
@@ -424,7 +395,7 @@ impl UserSignature {
     }
 
     /// Return the public key for this signature, if the scheme supports it.
-    pub fn to_public_key(&self) -> Result<PublicKey, InvalidSignatureScheme> {
+    pub fn to_public_key(&self) -> Result<PublicKey, SignatureSchemeError> {
         match self {
             UserSignature::Simple(simple) => match simple {
                 SimpleSignature::Ed25519 { public_key, .. } => Ok(PublicKey::Ed25519(*public_key)),
@@ -436,12 +407,12 @@ impl UserSignature {
                 }
             },
             UserSignature::Multisig(_) => {
-                Err(InvalidSignatureScheme(SignatureScheme::Multisig.to_u8()))
+                Err(SignatureSchemeError(SignatureScheme::Multisig.to_u8()))
             }
             UserSignature::PasskeyAuthenticator(passkey_authenticator) => {
                 Ok(PublicKey::Passkey(passkey_authenticator.public_key()))
             }
-            UserSignature::MoveAuthenticator(_) => Err(InvalidSignatureScheme(
+            UserSignature::MoveAuthenticator(_) => Err(SignatureSchemeError(
                 SignatureScheme::MoveAuthenticator.to_u8(),
             )),
         }
@@ -659,12 +630,12 @@ mod serialization {
         /// Decode a signature from the Base64 form produced by
         /// [`to_base64`](Self::to_base64), i.e. base64 over the
         /// `flag || sig || pubkey` bytes.
-        pub fn from_base64(s: &str) -> Result<Self, bcs::Error> {
+        pub fn from_base64(s: &str) -> Result<Self, SignatureFromBytesError> {
             use base64ct::Encoding;
-            use serde::de::Error;
 
-            let bytes = base64ct::Base64::decode_vec(s).map_err(bcs::Error::custom)?;
-            Self::from_bytes(&bytes).map_err(serde::de::Error::custom)
+            let bytes =
+                base64ct::Base64::decode_vec(s).map_err(|_| SignatureFromBytesError::Base64)?;
+            Self::from_bytes(&bytes)
         }
     }
 
@@ -932,12 +903,12 @@ mod serialization {
             body.try_into()
         }
 
-        pub fn from_base64(s: &str) -> Result<Self, bcs::Error> {
+        pub fn from_base64(s: &str) -> Result<Self, SignatureFromBytesError> {
             use base64ct::Encoding;
-            use serde::de::Error;
 
-            let bytes = base64ct::Base64::decode_vec(s).map_err(bcs::Error::custom)?;
-            Self::from_bytes(&bytes).map_err(serde::de::Error::custom)
+            let bytes =
+                base64ct::Base64::decode_vec(s).map_err(|_| SignatureFromBytesError::Base64)?;
+            Self::from_bytes(&bytes)
         }
     }
 
@@ -969,7 +940,7 @@ mod serialization {
     }
 
     impl FromStr for UserSignature {
-        type Err = bcs::Error;
+        type Err = SignatureFromBytesError;
 
         fn from_str(s: &str) -> Result<Self, Self::Err> {
             Self::from_base64(s)

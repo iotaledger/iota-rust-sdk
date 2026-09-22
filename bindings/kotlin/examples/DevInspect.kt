@@ -20,7 +20,7 @@ fun main() = runBlocking {
         val name = "name.iota"
         println("Looking up name: $name")
 
-        val builder = TransactionBuilder(sender).withClient(client)
+        val builder = client.transactionBuilder(sender)
 
         // 1. Get the registry
         builder.moveCall(

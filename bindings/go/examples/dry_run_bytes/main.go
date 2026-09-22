@@ -18,7 +18,7 @@ func main() {
 		log.Fatalf("Failed to parse transaction: %v", err)
 	}
 
-	res, err := client.DryRunTx(transaction, false)
+	res, err := client.DryRunTransaction(transaction, false)
 	if err != nil {
 		log.Fatalf("Failed to dry run transaction: %v", err)
 	}

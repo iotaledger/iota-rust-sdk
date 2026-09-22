@@ -12,7 +12,9 @@ use winnow::{
 
 use crate::{Address, Identifier, StructTag, TypeParseError, TypeTag};
 
+/// Maximum length in bytes of a Move [`Identifier`].
 pub const MAX_IDENTIFIER_LENGTH: usize = 128;
+/// Maximum nesting depth allowed when parsing a [`TypeTag`].
 pub const MAX_TYPE_TAG_NESTING: usize = 16;
 
 /// ALLOWED_IDENTIFIERS = r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";

@@ -1,13 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  Address,
-  GraphQlClient,
-  PtbArgument,
-  TransactionBuilder,
-  initAsync,
-} from "@iota/sdk-wasm";
+import { Address, GraphQlClient, PtbArgument, initAsync } from "@iota/sdk-wasm";
 
 await initAsync();
 
@@ -31,14 +25,14 @@ const objsToTransfer = [
   ),
 ];
 
-const builder = new TransactionBuilder(fromAddress).withClient(client);
+const builder = client.transactionBuilder(fromAddress);
 builder.transferObjects(toAddress, objsToTransfer);
 
 const txn = await builder.finish();
 console.log("Signing Digest:", txn.signingDigestHex());
 console.log("Txn Bytes:", txn.toBase64());
 
-const res = await client.dryRunTx(txn);
+const res = await client.dryRunTransaction(txn);
 if (res.error) {
   throw new Error(`Failed to transfer objects: ${res.error}`);
 }

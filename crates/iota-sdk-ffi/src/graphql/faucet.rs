@@ -69,7 +69,7 @@ impl FaucetClient {
     ///
     /// This is a convenience method that combines `request_and_wait` and
     /// waiting for the funding transactions to be finalized using the provided
-    /// GraphQL `Client`.
+    /// GraphQL `GraphQLClient`.
     pub async fn request_and_wait_for_finalized(
         &self,
         address: &Address,
@@ -110,7 +110,9 @@ impl From<iota_sdk::graphql_client::faucet::BatchSendStatusType> for BatchSendSt
             iota_sdk::graphql_client::faucet::BatchSendStatusType::InProgress => Self::InProgress,
             iota_sdk::graphql_client::faucet::BatchSendStatusType::Succeeded => Self::Succeeded,
             iota_sdk::graphql_client::faucet::BatchSendStatusType::Discarded => Self::Discarded,
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new BatchSendStatusType enum variant was added and needs to be handled"
+            ),
         }
     }
 }

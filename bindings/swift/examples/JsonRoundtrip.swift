@@ -17,11 +17,11 @@ struct JsonRoundtripExample {
     let transaction = try Transaction.fromBase64(base64: txBytesBase64)
 
     // Convert the transaction to JSON
-    let json = try transactionToJson(data: transaction)
+    let json = try transaction.toJson()
     print("Transaction as JSON:\n\(json)")
 
     // Convert the JSON back to a transaction
-    let parsedTransaction = try transactionFromJson(json: json)
+    let parsedTransaction = try Transaction.fromJson(json: json)
     print("Parsed transaction back from JSON: \(parsedTransaction)")
   }
 }

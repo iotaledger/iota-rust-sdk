@@ -19,7 +19,7 @@ fun main() = runBlocking {
 
         println("Staking to validator ${validator.name ?: "with no name"}")
 
-        val builder = TransactionBuilder(myAddress).withClient(client)
+        val builder = client.transactionBuilder(myAddress)
 
         builder.stake(PtbArgument.u64(1000000000uL), validator.address)
 

@@ -7,12 +7,15 @@ import IotaSDK
 @main
 struct TxCommandResultsExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = GraphQlClient.newLocalnet()
 
-    let sender = try Address.fromHex(
-      hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+    let privateKey = Ed25519PrivateKey.random()
+    let sender = privateKey.publicKey().deriveAddress()
 
-    let builder = TransactionBuilder(sender: sender).withClient(client: client)
+    let faucet = FaucetClient.newLocalnet()
+    _ = try await faucet.requestAndWaitForFinalized(address: sender, client: client)
+
+    let builder = client.transactionBuilder(sender: sender)
 
     let packageAddr = Address.std()
     let moduleName = try Identifier(identifier: "u64")
@@ -54,7 +57,7 @@ struct TxCommandResultsExample {
     print("Signing Digest:", txn.signingDigestHex())
     print("Txn Bytes:", txn.toBase64())
 
-    let res = try await client.dryRunTx(tx: txn, skipChecks: false)
+    let res = try await client.dryRunTransaction(transaction: txn, skipChecks: false)
     if res.error != nil {
       throw NSError(
         domain: "TxCommandResults", code: 1,

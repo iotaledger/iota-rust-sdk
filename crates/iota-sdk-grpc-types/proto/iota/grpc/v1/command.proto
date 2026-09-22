@@ -51,6 +51,22 @@ message CommandOutput {
   optional google.protobuf.Value json = 4;
 }
 
+// A value passed to a Move function, in either encoding. The input counterpart
+// of `CommandOutput`.
+message InputArgument {
+  option (iota.grpc.message_accessors) = "with";
+
+  oneof input {
+    // The argument as BCS-encoded bytes.
+    iota.grpc.v1.bcs.BcsData bcs = 1;
+
+    // The argument as JSON, for the node to encode against the parameter's Move
+    // type. `Value` holds numbers as doubles, which cannot represent every
+    // integer, so numbers must go as strings.
+    google.protobuf.Value json = 2;
+  }
+}
+
 message CommandOutputs {
   option (iota.grpc.field_mask_transparent) = true;
 

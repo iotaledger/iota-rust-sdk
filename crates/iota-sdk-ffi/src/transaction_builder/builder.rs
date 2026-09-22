@@ -1,25 +1,23 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{
-    collections::HashMap,
-    sync::{Arc, RwLock},
-    time::Duration,
-};
+use std::sync::{Arc, RwLock};
 
-use super::client_builder::ClientTransactionBuilder;
+use super::client_builder::GraphQLTransactionBuilder;
 use crate::{
     error::Result,
     graphql::client::GraphQLClient,
     transaction_builder::{
         Payment,
+        gas_station::GasStation,
         ptb_arg::{MoveArg, PTBArgument},
         signer::TransactionSigner,
     },
     types::{
         address::Address,
+        digest::{Digest, TransactionDigest},
         move_core::{Identifier, TypeTag},
-        move_package::MovePackageData,
+        move_package::{MovePackageData, UpgradePolicy},
         object::{ObjectId, ObjectReference},
         transaction::{ProgrammableTransaction, Transaction},
     },
@@ -76,25 +74,27 @@ impl TransactionBuilder {
     ///
     /// The returned builder has the original inputs and commands but no
     /// sender, gas payment, sponsor, or expiration; the sender defaults to
-    /// the zero address and must be set via `set_sender` before `finish`
+    /// the zero address and must be set via `sender` before `finish`
     /// is called.
     #[uniffi::constructor]
     pub fn from_programmable_transaction(ptb: &ProgrammableTransaction) -> Self {
         Self(iota_sdk::transaction_builder::TransactionBuilder::from(ptb.0.clone()).into())
     }
 
-    pub fn with_client(&self, client: Arc<GraphQLClient>) -> ClientTransactionBuilder {
-        ClientTransactionBuilder(
+    /// Use a GraphQL client to automatically resolve the transaction inputs.
+    pub fn with_graphql_client(&self, client: Arc<GraphQLClient>) -> GraphQLTransactionBuilder {
+        GraphQLTransactionBuilder(
             self.read(|builder| builder.clone().with_client(client))
                 .into(),
         )
     }
 
     /// Set the sender address.
-    pub fn set_sender(self: Arc<Self>, sender: &Address) {
+    pub fn sender(self: Arc<Self>, sender: &Address) -> Arc<Self> {
         self.write(|builder| {
-            builder.set_sender(**sender);
+            builder.sender(**sender);
         });
+        self
     }
 
     /// Add gas coins that will be consumed. Optional.
@@ -125,33 +125,6 @@ impl TransactionBuilder {
     pub fn sponsor(self: Arc<Self>, sponsor: &Address) -> Arc<Self> {
         self.write(|builder| {
             builder.sponsor(**sponsor);
-        });
-        self
-    }
-
-    /// Set the gas station sponsor.
-    #[uniffi::method(default(duration = None, headers = None))]
-    pub fn gas_station_sponsor(
-        self: Arc<Self>,
-        url: String,
-        duration: Option<Duration>,
-        headers: Option<HashMap<String, Vec<String>>>,
-    ) -> Arc<Self> {
-        self.write(|builder| {
-            let b = builder.gas_station_sponsor(url.parse().expect("invalid URL"));
-            if let Some(duration) = duration {
-                b.gas_reservation_duration(duration);
-            }
-            if let Some(headers) = headers {
-                for (name, values) in headers {
-                    for value in values {
-                        b.add_gas_station_header(
-                            name.parse().expect("invalid header name"),
-                            value.parse().expect("invalid header value"),
-                        );
-                    }
-                }
-            }
         });
         self
     }
@@ -319,6 +292,41 @@ impl TransactionBuilder {
         self
     }
 
+    /// Divide a coin into `count` coins of equal value, all kept by the
+    /// sender.
+    ///
+    /// Unlike `split_coins`, the new coins are transferred to the sender by
+    /// `0x2::pay::divide_and_keep` itself, so no transfer command is needed
+    /// for them. In exchange they are not available as command results and
+    /// cannot be used by later commands in the same transaction.
+    ///
+    /// The coin defaults an IOTA coin. For any other coin type, set it
+    /// with `coin_type`, which is the `T` of `0x2::coin::Coin<T>`.
+    ///
+    /// `count - 1` new coins are created, each holding `value / count`, and
+    /// the divided coin keeps its own share plus the remainder of the
+    /// division. The transaction aborts if `count` is zero or larger than the
+    /// coin's value.
+    ///
+    /// The coin is passed by reference, so the gas coin
+    /// (`PTBArgument::Gas`) can be divided as well,
+    /// as long as it retains enough balance to pay for the transaction.
+    #[uniffi::method(default(coin_type = None))]
+    pub fn divide_coin(
+        self: Arc<Self>,
+        coin: &PTBArgument,
+        count: u64,
+        coin_type: Option<Arc<TypeTag>>,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            let builder = builder.divide_coin(coin, count);
+            if let Some(coin_type) = coin_type {
+                builder.coin_type_tag(coin_type.0.clone());
+            }
+        });
+        self
+    }
+
     /// Make a move vector from a list of elements. The elements must all be of
     /// the type indicated by `type_tag`.
     pub fn make_move_vec(
@@ -329,13 +337,13 @@ impl TransactionBuilder {
     ) -> Arc<Self> {
         use iota_sdk::transaction_builder::unresolved::{Command, MakeMoveVector};
         self.write(|builder| {
-            let cmd = Command::MakeMoveVector(MakeMoveVector {
-                type_: Some(type_tag.0.clone()),
-                elements: elements
+            let cmd = Command::MakeMoveVector(MakeMoveVector::new(
+                Some(type_tag.0.clone()),
+                elements
                     .iter()
                     .map(|e| builder.apply_argument(e.as_ref()))
                     .collect(),
-            });
+            ));
             builder.assigned_command(cmd, name);
         });
         self
@@ -354,15 +362,39 @@ impl TransactionBuilder {
     ///  - `modules`: is the modules' bytecode to be published
     ///  - `dependencies`: is the list of IDs of the transitive dependencies of
     ///    the package
-    pub fn publish(
+    pub fn publish_package(
         self: Arc<Self>,
         package_data: &MovePackageData,
         upgrade_cap_name: String,
     ) -> Arc<Self> {
         self.write(|builder| {
             builder
-                .publish(package_data.0.clone())
+                .publish_package(package_data.0.clone())
                 .upgrade_cap(upgrade_cap_name);
+        });
+        self
+    }
+
+    /// Authorize a package upgrade by calling
+    /// `0x2::package::authorize_upgrade`.
+    ///
+    /// The result assigned to `upgrade_ticket_name` is the `UpgradeTicket`
+    /// expected by `TransactionBuilder::upgrade()`. The digest is the digest
+    /// of the package being upgraded to (`MovePackageData::digest()`).
+    ///
+    /// For the standard upgrade flow, use
+    /// `TransactionBuilder::upgrade_package()` instead.
+    pub fn authorize_upgrade(
+        self: Arc<Self>,
+        upgrade_capability: &PTBArgument,
+        upgrade_policy: &UpgradePolicy,
+        digest: &Digest,
+        upgrade_ticket_name: String,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            builder
+                .authorize_upgrade(upgrade_capability, upgrade_policy.as_u8(), **digest)
+                .assign(upgrade_ticket_name);
         });
         self
     }
@@ -375,9 +407,9 @@ impl TransactionBuilder {
     ///  - `package`: is the ID of the current package being upgraded
     ///  - `ticket`: is the upgrade ticket
     ///
-    ///  To get the ticket, you have to call the
-    /// `0x2::package::authorize_upgrade` function, and pass the package
-    /// ID, the upgrade policy, and package digest.
+    /// To get the ticket, use `TransactionBuilder::authorize_upgrade()`. The
+    /// result assigned to `name` is the `UpgradeReceipt` expected by
+    /// `TransactionBuilder::commit_upgrade()`.
     #[uniffi::method(default(name = None))]
     pub fn upgrade(
         self: Arc<Self>,
@@ -390,6 +422,46 @@ impl TransactionBuilder {
             builder
                 .upgrade(**package_id, package_data.0.clone(), upgrade_ticket)
                 .assign(name);
+        });
+        self
+    }
+
+    /// Commit a package upgrade by calling `0x2::package::commit_upgrade`,
+    /// consuming the `UpgradeReceipt` returned by
+    /// `TransactionBuilder::upgrade()`.
+    pub fn commit_upgrade(
+        self: Arc<Self>,
+        upgrade_capability: &PTBArgument,
+        upgrade_receipt: &PTBArgument,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            builder.commit_upgrade(upgrade_capability, upgrade_receipt);
+        });
+        self
+    }
+
+    /// Upgrade a Move package.
+    ///
+    /// This is a high-level function which chains
+    /// `TransactionBuilder::authorize_upgrade()`,
+    /// `TransactionBuilder::upgrade()` and
+    /// `TransactionBuilder::commit_upgrade()` using the digest from the
+    /// provided `MovePackageData`. Use the individual functions for custom
+    /// upgrade flows.
+    pub fn upgrade_package(
+        self: Arc<Self>,
+        package_id: &ObjectId,
+        package_data: &MovePackageData,
+        upgrade_capability: &PTBArgument,
+        upgrade_policy: &UpgradePolicy,
+    ) -> Arc<Self> {
+        self.write(|builder| {
+            builder.upgrade_package(
+                **package_id,
+                package_data.0.clone(),
+                upgrade_capability,
+                upgrade_policy.as_u8(),
+            );
         });
         self
     }
@@ -418,18 +490,38 @@ impl TransactionBuilder {
         Ok(Transaction(self.read(|builder| builder.clone().finish())?))
     }
 
-    /// Execute the transaction using the gas station and return the JSON
-    /// transaction effects. This will fail unless data is set with the
-    /// `gas_station_sponsor` function.
-    ///
-    /// NOTE: These effects are not necessarily compatible with
-    /// `TransactionEffects`
+    /// Execute the transaction with its gas paid by `gas_station`, returning
+    /// the transaction digest.
     pub async fn execute_with_gas_station(
         &self,
+        gas_station: &GasStation,
         signer: &TransactionSigner,
-    ) -> Result<serde_json::Value> {
+    ) -> Result<TransactionDigest> {
         Ok(self
-            .read(|builder| builder.clone().execute_with_gas_station(signer))
-            .await?)
+            .read(|builder| {
+                builder
+                    .clone()
+                    .execute_with_gas_sponsor(&gas_station.0, signer)
+            })
+            .await?
+            .into())
+    }
+}
+
+#[cfg(feature = "grpc")]
+#[uniffi::export]
+impl TransactionBuilder {
+    /// Use a gRPC client to automatically resolve the transaction inputs.
+    ///
+    /// The builder takes a snapshot of the client's configuration; `set_*`
+    /// calls made on the client afterwards do not affect it.
+    pub fn with_grpc_client(
+        &self,
+        client: Arc<crate::grpc::client::GrpcClient>,
+    ) -> super::client_builder::GrpcTransactionBuilder {
+        super::client_builder::GrpcTransactionBuilder(
+            self.read(|builder| builder.clone().with_client(Arc::new(client.client())))
+                .into(),
+        )
     }
 }

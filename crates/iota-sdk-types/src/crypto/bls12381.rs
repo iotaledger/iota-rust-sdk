@@ -8,11 +8,8 @@
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// bls12381-public-key = %d96 96OCTET
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
 /// fixed-length of 96, IOTA's binary representation of a min-sig
@@ -46,7 +43,7 @@ impl Bls12381PublicKey {
 
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -55,16 +52,18 @@ impl Bls12381PublicKey {
         Self::new(buf)
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::random_with(rand_core::OsRng)
+    }
+
     /// Return the underlying byte array of an Bls12381PublicKey.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-        &self.0
-    }
-
-    pub const fn as_bytes(&self) -> &[u8] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
@@ -95,7 +94,7 @@ impl AsRef<[u8; Self::LENGTH]> for Bls12381PublicKey {
 
 impl From<Bls12381PublicKey> for [u8; Bls12381PublicKey::LENGTH] {
     fn from(public_key: Bls12381PublicKey) -> Self {
-        public_key.into_inner()
+        public_key.into_bytes()
     }
 }
 
@@ -123,11 +122,8 @@ impl std::fmt::Debug for Bls12381PublicKey {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// bls12381-signature = 48OCTET
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -156,7 +152,7 @@ impl Bls12381Signature {
 
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -165,16 +161,18 @@ impl Bls12381Signature {
         Self::new(buf)
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::random_with(rand_core::OsRng)
+    }
+
     /// Return the underlying byte array of an Bls12381Signature.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-        &self.0
-    }
-
-    pub const fn as_bytes(&self) -> &[u8] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
@@ -205,7 +203,7 @@ impl AsRef<[u8; Self::LENGTH]> for Bls12381Signature {
 
 impl From<Bls12381Signature> for [u8; Bls12381Signature::LENGTH] {
     fn from(signature: Bls12381Signature) -> Self {
-        signature.into_inner()
+        signature.into_bytes()
     }
 }
 

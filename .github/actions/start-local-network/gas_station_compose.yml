@@ -11,7 +11,7 @@ services:
       - default
   iota-gas-station:
     platform: linux/amd64
-    image: "${DOCKER_IMAGE:-iotaledger/gas-station:latest}"
+    image: "${DOCKER_IMAGE:-iotaledger/gas-station:0.6}"
     build:
       context: ..
       args:

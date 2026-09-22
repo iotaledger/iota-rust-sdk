@@ -25,7 +25,7 @@ async def main():
         ),
     ]
 
-    builder = TransactionBuilder(from_address).with_client(client)
+    builder = client.transaction_builder(from_address)
     builder.transfer_objects(
         to_address,
         objs_to_transfer,
@@ -36,7 +36,7 @@ async def main():
     print("Signing Digest:", txn.signing_digest_hex())
     print("Txn Bytes:", txn.to_base64())
 
-    res = await client.dry_run_tx(txn)
+    res = await client.dry_run_transaction(txn)
     if res.error is not None:
         raise Exception("Failed to transfer objects:", res.error)
 

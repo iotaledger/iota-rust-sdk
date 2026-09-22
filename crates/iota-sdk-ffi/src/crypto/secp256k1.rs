@@ -1,17 +1,14 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_sdk::{
-    crypto::{FromMnemonic, ToFromBech32, ToFromBytes},
-    types::SignatureScheme,
-};
+use iota_sdk::crypto::{FromMnemonic, ToFromBech32, ToFromBytes};
 use rand::rngs::OsRng;
 
 use crate::{
     error::{Result, SdkFfiError},
     types::{
         crypto::{Secp256k1PublicKey, Secp256k1Signature, intent::PersonalMessage},
-        signature::{SimpleSignature, UserSignature},
+        signature::{SignatureScheme, SimpleSignature, UserSignature},
     },
 };
 
@@ -31,7 +28,7 @@ impl Secp256k1PrivateKey {
     }
 
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     pub fn verifying_key(&self) -> Secp256k1VerifyingKey {
@@ -43,10 +40,8 @@ impl Secp256k1PrivateKey {
     }
 
     #[uniffi::constructor]
-    pub fn generate() -> Self {
-        Self(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::generate(
-            OsRng,
-        ))
+    pub fn random() -> Self {
+        Self(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::random_with(OsRng))
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
@@ -225,13 +220,13 @@ impl Secp256k1Verifier {
         Self(iota_sdk::crypto::secp256k1::Secp256k1Verifier::new())
     }
 
-    fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
+    pub fn verify_simple(&self, message: &[u8], signature: &SimpleSignature) -> Result<()> {
         Ok(iota_sdk::crypto::Verifier::<
             iota_sdk::types::SimpleSignature,
         >::verify(&self.0, message, &signature.0)?)
     }
 
-    fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
+    pub fn verify_user(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
         Ok(
             iota_sdk::crypto::Verifier::<iota_sdk::types::UserSignature>::verify(
                 &self.0,

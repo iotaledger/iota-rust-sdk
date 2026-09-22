@@ -24,13 +24,8 @@ pub(crate) use serialization::SignedTransactionWithIntentMessage;
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// transaction = %d00 transaction-v1
-///
-/// transaction-v1 = transaction-kind address gas-payment transaction-expiration
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -67,6 +62,10 @@ impl crate::TreeDisplay for Transaction {
     }
 }
 
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -89,14 +88,6 @@ impl crate::TreeDisplay for TransactionV1 {
 }
 
 /// A [`SignedTransaction`] in its intent-message serialized form.
-///
-/// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// sender-signed-transaction = %d01 intent-signed-transaction
-/// ```
 #[derive(Clone, Debug, derive_more::Deref, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -105,7 +96,7 @@ pub struct SenderSignedTransaction(
         feature = "serde",
         serde(with = "::serde_with::As::<crate::_serde::SignedTransactionWithIntentMessage>")
     )]
-    pub SignedTransaction,
+    SignedTransaction,
 );
 
 impl SenderSignedTransaction {
@@ -114,6 +105,22 @@ impl SenderSignedTransaction {
             transaction,
             signatures,
         })
+    }
+
+    /// The signed transaction carried by this intent message.
+    pub fn signed_transaction(&self) -> &SignedTransaction {
+        &self.0
+    }
+
+    /// Access the signed transaction carried by this intent message mutably.
+    pub fn signed_transaction_mut(&mut self) -> &mut SignedTransaction {
+        &mut self.0
+    }
+
+    /// Consume this intent message and return the signed transaction it
+    /// carries.
+    pub fn into_signed_transaction(self) -> SignedTransaction {
+        self.0
     }
 }
 
@@ -129,6 +136,10 @@ impl std::fmt::Display for SenderSignedTransaction {
     }
 }
 
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -204,12 +215,8 @@ impl crate::TreeDisplay for SignedTransaction {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// transaction-expiration =  %d00      ; none
-///                        =/ %d01 u64  ; epoch
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -247,14 +254,8 @@ impl std::fmt::Display for TransactionExpiration {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// gas-payment = (vector object-reference) ; gas coin objects
-///               address                   ; owner
-///               u64                       ; price
-///               u64                       ; budget
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -288,11 +289,8 @@ impl crate::TreeDisplay for GasPayment {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// randomness-state-update = u64 randomness-round bytes version
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -338,19 +336,8 @@ impl crate::TreeDisplay for RandomnessStateUpdate {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// deny-rule-set = (vector address)   ; denied addresses
-///                 (vector object-id) ; denied objects
-///                 (vector object-id) ; denied packages
-///                 bool               ; package publish disabled
-///                 bool               ; package upgrade disabled
-///                 bool               ; shared object disabled
-///                 bool               ; user transaction disabled
-///                 bool               ; receiving objects disabled
-///                 bool               ; move authenticator disabled
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Default, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -388,25 +375,8 @@ pub struct DenyRuleSet {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// transaction-deny-rules-update = u64               ; epoch
-///                                 u64               ; round
-///                                 (vector address)  ; added addresses
-///                                 (vector address)  ; removed addresses
-///                                 (vector object-id) ; added objects
-///                                 (vector object-id) ; removed objects
-///                                 (vector object-id) ; added packages
-///                                 (vector object-id) ; removed packages
-///                                 bool              ; package publish disabled
-///                                 bool              ; package upgrade disabled
-///                                 bool              ; shared object disabled
-///                                 bool              ; user transaction disabled
-///                                 bool              ; receiving objects disabled
-///                                 bool              ; move authenticator disabled
-///                                 version           ; initial shared version
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -538,17 +508,8 @@ impl crate::TreeDisplay for TransactionDenyRulesUpdate {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// transaction-kind    =  %d00 programmable-transaction               ; Programmable
-///                     =/ %d01 genesis-transaction                    ; Genesis
-///                     =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
-///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
-///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
-///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
-///                     =/ %d06 transaction-deny-rules-update          ; TransactionDenyRulesUpdate
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -589,33 +550,33 @@ impl TransactionKind {
     }
 
     /// Create a [`TransactionKind::Programmable`].
-    pub fn new_programmable(tx: ProgrammableTransaction) -> Self {
-        Self::Programmable(tx)
+    pub fn new_programmable(transaction: ProgrammableTransaction) -> Self {
+        Self::Programmable(transaction)
     }
 
     /// Create a [`TransactionKind::Genesis`].
-    pub fn new_genesis(tx: GenesisTransaction) -> Self {
-        Self::Genesis(tx)
+    pub fn new_genesis(transaction: GenesisTransaction) -> Self {
+        Self::Genesis(transaction)
     }
 
     /// Create a [`TransactionKind::ConsensusCommitPrologueV1`].
-    pub fn new_consensus_commit_prologue_v1(tx: ConsensusCommitPrologueV1) -> Self {
-        Self::ConsensusCommitPrologueV1(tx)
+    pub fn new_consensus_commit_prologue_v1(transaction: ConsensusCommitPrologueV1) -> Self {
+        Self::ConsensusCommitPrologueV1(transaction)
     }
 
     /// Create a [`TransactionKind::EndOfEpoch`].
-    pub fn new_end_of_epoch(tx: Vec<EndOfEpochTransactionKind>) -> Self {
-        Self::EndOfEpoch(tx)
+    pub fn new_end_of_epoch(transaction: Vec<EndOfEpochTransactionKind>) -> Self {
+        Self::EndOfEpoch(transaction)
     }
 
     /// Create a [`TransactionKind::RandomnessStateUpdate`].
-    pub fn new_randomness_state_update(tx: RandomnessStateUpdate) -> Self {
-        Self::RandomnessStateUpdate(tx)
+    pub fn new_randomness_state_update(transaction: RandomnessStateUpdate) -> Self {
+        Self::RandomnessStateUpdate(transaction)
     }
 
     /// Create a [`TransactionKind::TransactionDenyRulesUpdate`].
-    pub fn new_transaction_deny_rules_update(tx: TransactionDenyRulesUpdate) -> Self {
-        Self::TransactionDenyRulesUpdate(tx)
+    pub fn new_transaction_deny_rules_update(transaction: TransactionDenyRulesUpdate) -> Self {
+        Self::TransactionDenyRulesUpdate(transaction)
     }
 
     /// Returns `true` if this is a system transaction.
@@ -672,15 +633,8 @@ impl crate::TreeDisplay for TransactionKind {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// end-of-epoch-transaction-kind =  %d00 change-epoch     ; ChangeEpoch
-///                               =/ %d01 change-epoch-v2  ; ChangeEpochV2
-///                               =/ %d02 change-epoch-v3  ; ChangeEpochV3
-///                               =/ %d03 change-epoch-v4  ; ChangeEpochV4
-///                               =/ %d04                  ; TransactionDenyRulesCreate
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -850,27 +804,31 @@ impl crate::TreeDisplay for EndOfEpochTransactionKind {
     }
 }
 
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum ConsensusDeterminedVersionAssignments {
-    /// Cancelled transaction version assignment.
-    CancelledTransactions {
+    /// Canceled transaction version assignment.
+    CanceledTransactions {
         #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
-        cancelled_transactions: Vec<CancelledTransaction>,
+        canceled_transactions: Vec<CanceledTransaction>,
     },
 }
 
 impl ConsensusDeterminedVersionAssignments {
-    crate::def_is!(CancelledTransactions);
+    crate::def_is!(CanceledTransactions);
 
-    pub fn as_cancelled_transactions(&self) -> &[CancelledTransaction] {
-        let Self::CancelledTransactions {
-            cancelled_transactions,
+    pub fn as_canceled_transactions(&self) -> &[CanceledTransaction] {
+        let Self::CanceledTransactions {
+            canceled_transactions,
         } = self;
-        cancelled_transactions
+        canceled_transactions
     }
 }
 
@@ -878,38 +836,35 @@ impl crate::TreeDisplay for ConsensusDeterminedVersionAssignments {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.enum_name("Consensus Determined Version Assignments");
         match self {
-            ConsensusDeterminedVersionAssignments::CancelledTransactions {
-                cancelled_transactions,
+            ConsensusDeterminedVersionAssignments::CanceledTransactions {
+                canceled_transactions,
             } => {
-                w.header("Cancelled Transactions")?;
-                w.children("Transactions", cancelled_transactions, true)
+                w.header("Canceled Transactions")?;
+                w.children("Transactions", canceled_transactions, true)
             }
         }
     }
 }
 
-/// A transaction that was cancelled
+/// A transaction that was canceled
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// cancelled-transaction = transaction-digest (vector version-assignment)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-pub struct CancelledTransaction {
+pub struct CanceledTransaction {
     pub digest: TransactionDigest,
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub version_assignments: Vec<VersionAssignment>,
 }
 
-impl crate::TreeDisplay for CancelledTransaction {
+impl crate::TreeDisplay for CanceledTransaction {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.header("Cancelled Transaction")?;
+        w.header("Canceled Transaction")?;
         w.leaf("Digest", &self.digest, false)?;
         w.children("Version Assignments", &self.version_assignments, true)
     }
@@ -919,12 +874,8 @@ impl crate::TreeDisplay for CancelledTransaction {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the
-/// following ABNF:
-///
-/// ```text
-/// version-assignment = object-id u64
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -953,12 +904,8 @@ impl crate::TreeDisplay for VersionAssignment {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// consensus-commit-prologue-v1 = u64 u64 (option u64) u64 consensus-commit-digest
-///                                consensus-determined-version-assignments
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1011,18 +958,8 @@ impl crate::TreeDisplay for ConsensusCommitPrologueV1 {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// change-epoch = u64  ; next epoch
-///                u64  ; protocol version
-///                u64  ; storage charge
-///                u64  ; computation charge
-///                u64  ; storage rebate
-///                u64  ; non-refundable storage fee
-///                u64  ; epoch start timestamp
-///                (vector system-package)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1087,19 +1024,8 @@ impl crate::TreeDisplay for ChangeEpoch {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// change-epoch-v2 = u64  ; next epoch
-///                   u64  ; protocol version
-///                   u64  ; storage charge
-///                   u64  ; computation charge
-///                   u64  ; computation charge burned
-///                   u64  ; storage rebate
-///                   u64  ; non-refundable storage fee
-///                   u64  ; epoch start timestamp
-///                   (vector system-package)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1168,6 +1094,10 @@ impl crate::TreeDisplay for ChangeEpochV2 {
     }
 }
 
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1244,6 +1174,10 @@ impl crate::TreeDisplay for ChangeEpochV3 {
     }
 }
 
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1331,6 +1265,10 @@ impl crate::TreeDisplay for ChangeEpochV4 {
     }
 }
 
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1368,11 +1306,8 @@ impl crate::TreeDisplay for SystemPackage {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// genesis-transaction = (vector genesis-object)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1399,11 +1334,8 @@ impl crate::TreeDisplay for GenesisTransaction {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// ptb = (vector input) (vector command)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1429,18 +1361,8 @@ impl crate::TreeDisplay for ProgrammableTransaction {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// input = call-arg
-///
-/// call-arg   =  %d00 bytes        ; Pure
-///            =/ %d01 object-arg   ; Object
-///
-/// object-arg =  %d00 object-reference     ; ImmutableOrOwned
-///            =/ %d01 object-id u64 bool   ; Shared
-///            =/ %d02 object-reference     ; Receiving
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
@@ -1503,7 +1425,7 @@ impl Input {
     /// Returns the object id referenced by this input, if any.
     ///
     /// Returns `None` for `Pure` inputs.
-    pub fn object_id_opt(&self) -> Option<&ObjectId> {
+    pub fn opt_object_id(&self) -> Option<&ObjectId> {
         match self {
             Self::Pure { .. } => None,
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(&obj_ref.object_id),
@@ -1521,17 +1443,9 @@ impl Input {
 
     /// Returns the [`ObjectReference`] if this is an `ImmutableOrOwned` or
     /// `Receiving` input.
-    pub fn as_object_ref_opt(&self) -> Option<&ObjectReference> {
+    pub fn as_opt_object_ref(&self) -> Option<&ObjectReference> {
         match self {
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(obj_ref),
-            _ => None,
-        }
-    }
-
-    /// Returns the pure value bytes if this is a `Pure` input.
-    pub fn as_pure_value_opt(&self) -> Option<&[u8]> {
-        match self {
-            Self::Pure(value) => Some(value),
             _ => None,
         }
     }
@@ -1608,25 +1522,8 @@ impl crate::TreeDisplay for SharedObjectReference {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// command =  command-move-call
-///         =/ command-transfer-objects
-///         =/ command-split-coins
-///         =/ command-merge-coins
-///         =/ command-publish
-///         =/ command-make-move-vector
-///         =/ command-upgrade
-///
-/// command-move-call           = %d00 move-call
-/// command-transfer-objects    = %d01 transfer-objects
-/// command-split-coins         = %d02 split-coins
-/// command-merge-coins         = %d03 merge-coins
-/// command-publish             = %d04 publish
-/// command-make-move-vector    = %d05 make-move-vector
-/// command-upgrade             = %d06 upgrade
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1719,8 +1616,8 @@ impl Command {
     }
 
     /// Create a command to construct a Move vector from elements.
-    pub fn new_make_move_vector(type_: Option<TypeTag>, elements: Vec<Argument>) -> Self {
-        Command::MakeMoveVector(MakeMoveVector { type_, elements })
+    pub fn new_make_move_vector(type_tag: Option<TypeTag>, elements: Vec<Argument>) -> Self {
+        Command::MakeMoveVector(MakeMoveVector { type_tag, elements })
     }
 
     /// Create a command to upgrade an existing Move package.
@@ -1758,11 +1655,8 @@ impl crate::TreeDisplay for Command {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// transfer-objects = (vector argument) argument
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1787,11 +1681,8 @@ impl crate::TreeDisplay for TransferObjects {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// split-coins = argument (vector argument)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1816,11 +1707,8 @@ impl crate::TreeDisplay for SplitCoins {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// merge-coins = argument (vector argument)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1847,12 +1735,8 @@ impl crate::TreeDisplay for MergeCoins {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// publish = (vector bytes)        ; the serialized move modules
-///           (vector object-id)    ; the set of package dependencies
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1889,11 +1773,8 @@ impl crate::TreeDisplay for Publish {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// make-move-vector = (option type-tag) (vector argument)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1904,7 +1785,7 @@ pub struct MakeMoveVector {
     /// This is required to be set when the type can't be inferred, for example
     /// when the set of provided arguments are all pure input values.
     #[cfg_attr(feature = "serde", serde(rename = "type"))]
-    pub type_: Option<TypeTag>,
+    pub type_tag: Option<TypeTag>,
     /// The set individual elements to build the vector with
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub elements: Vec<Argument>,
@@ -1913,7 +1794,7 @@ pub struct MakeMoveVector {
 impl crate::TreeDisplay for MakeMoveVector {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Make Move Vector")?;
-        w.option_leaf("Type", &self.type_, false)?;
+        w.option_leaf("Type Tag", &self.type_tag, false)?;
         w.leaves("Elements", &self.elements, true)
     }
 }
@@ -1922,14 +1803,8 @@ impl crate::TreeDisplay for MakeMoveVector {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// upgrade = (vector bytes)        ; move modules
-///           (vector object-id)    ; dependencies
-///           object-id             ; package-id of the package
-///           argument              ; upgrade ticket
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -1972,19 +1847,8 @@ impl crate::TreeDisplay for Upgrade {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// argument    =  argument-gas
-///             =/ argument-input
-///             =/ argument-result
-///             =/ argument-nested-result
-///
-/// argument-gas            = %d00
-/// argument-input          = %d01 u16
-/// argument-result         = %d02 u16
-/// argument-nested-result  = %d03 u16 u16
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -2020,7 +1884,7 @@ impl std::fmt::Display for Argument {
 impl Argument {
     crate::def_is!(Gas, Input, Result, NestedResult);
 
-    pub fn as_input_opt(&self) -> Option<u16> {
+    pub fn as_opt_input(&self) -> Option<u16> {
         if let Self::Input(idx) = self {
             Some(*idx)
         } else {
@@ -2029,10 +1893,10 @@ impl Argument {
     }
 
     pub fn as_input(&self) -> u16 {
-        self.as_input_opt().expect("not an input")
+        self.as_opt_input().expect("not an input")
     }
 
-    pub fn as_result_opt(&self) -> Option<u16> {
+    pub fn as_opt_result(&self) -> Option<u16> {
         if let Self::Result(idx) = self {
             Some(*idx)
         } else {
@@ -2041,10 +1905,10 @@ impl Argument {
     }
 
     pub fn as_result(&self) -> u16 {
-        self.as_result_opt().expect("not a result")
+        self.as_opt_result().expect("not a result")
     }
 
-    pub fn as_nested_result_opt(&self) -> Option<(u16, u16)> {
+    pub fn as_opt_nested_result(&self) -> Option<(u16, u16)> {
         if let Self::NestedResult(idx0, idx1) = self {
             Some((*idx0, *idx1))
         } else {
@@ -2053,12 +1917,12 @@ impl Argument {
     }
 
     pub fn as_nested_result(&self) -> (u16, u16) {
-        self.as_nested_result_opt().expect("not a nested result")
+        self.as_opt_nested_result().expect("not a nested result")
     }
 
     /// Get the nested result for this result at the given index. Returns None
     /// if this is not a Result.
-    pub fn get_nested_result(&self, ix: u16) -> Option<Argument> {
+    pub fn nested_result(&self, ix: u16) -> Option<Argument> {
         match self {
             Argument::Result(i) => Some(Argument::NestedResult(*i, ix)),
             _ => None,
@@ -2074,15 +1938,8 @@ impl Argument {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// move-call = object-id           ; package id
-///             identifier          ; module name
-///             identifier          ; function name
-///             (vector type-tag)   ; type arguments, if any
-///             (vector argument)   ; input arguments
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -2128,7 +1985,7 @@ crate::impl_tree_display!(
     TransactionKind,
     EndOfEpochTransactionKind,
     ConsensusDeterminedVersionAssignments,
-    CancelledTransaction,
+    CanceledTransaction,
     VersionAssignment,
     ConsensusCommitPrologueV1,
     ChangeEpoch,

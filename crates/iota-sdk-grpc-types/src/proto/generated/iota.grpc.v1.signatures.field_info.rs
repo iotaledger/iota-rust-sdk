@@ -7,10 +7,6 @@ mod _field_impls {
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsData;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsDataFieldPathBuilder;
     impl UserSignature {
         pub const BCS_FIELD: &'static MessageField = &MessageField {
             name: "bcs",
@@ -18,7 +14,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
     impl MessageFields for UserSignature {
@@ -44,9 +40,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn bcs(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(UserSignature::BCS_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
     }
     impl UserSignatures {
@@ -94,7 +90,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
     impl MessageFields for ValidatorAggregatedSignature {
@@ -120,9 +116,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn bcs(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(ValidatorAggregatedSignature::BCS_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
     }
 }

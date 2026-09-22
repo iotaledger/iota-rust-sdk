@@ -119,16 +119,18 @@ impl<T: Signer<UserSignature>> IotaSigner for T {
 ///
 /// # Note
 ///
-/// There is a blanket implementation of `IotaVerifier` for all `T` where `T:
-/// `[`Verifier`]`<`[`UserSignature`]`>` so it is generally recommended for a
-/// signer to implement `Verifier<UserSignature>` and rely on the blanket
-/// implementation which handles the proper construction of the signing message.
+/// This trait is implemented by the verifier and verifying key types of this
+/// crate as well as directly by the public key types of `iota-sdk-types`. The
+/// public key implementations validate the key bytes on every call, so when
+/// verifying many signatures with the same key it is cheaper to construct the
+/// corresponding verifying key once and verify with that instead.
 pub trait IotaVerifier {
     fn verify_transaction(
         &self,
         transaction: &Transaction,
         signature: &UserSignature,
     ) -> Result<(), SignatureError>;
+
     fn verify_personal_message(
         &self,
         message: &PersonalMessage<'_>,
@@ -136,25 +138,35 @@ pub trait IotaVerifier {
     ) -> Result<(), SignatureError>;
 }
 
-impl<T: Verifier<UserSignature>> IotaVerifier for T {
-    fn verify_transaction(
-        &self,
-        transaction: &Transaction,
-        signature: &UserSignature,
-    ) -> Result<(), SignatureError> {
-        let message = transaction.signing_digest();
-        self.verify(&message, signature)
-    }
+// Implements `IotaVerifier` for types implementing `Verifier<UserSignature>`,
+// handling the proper construction of the signing message.
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1"))]
+macro_rules! impl_iota_verifier {
+    ($($type:ty),+ $(,)?) => {
+        $(
+            impl $crate::IotaVerifier for $type {
+                fn verify_transaction(
+                    &self,
+                    transaction: &iota_types::Transaction,
+                    signature: &iota_types::UserSignature,
+                ) -> Result<(), $crate::SignatureError> {
+                    $crate::Verifier::verify(self, &transaction.signing_digest(), signature)
+                }
 
-    fn verify_personal_message(
-        &self,
-        message: &PersonalMessage<'_>,
-        signature: &UserSignature,
-    ) -> Result<(), SignatureError> {
-        let message = message.signing_digest();
-        self.verify(&message, signature)
-    }
+                fn verify_personal_message(
+                    &self,
+                    message: &iota_types::PersonalMessage<'_>,
+                    signature: &iota_types::UserSignature,
+                ) -> Result<(), $crate::SignatureError> {
+                    $crate::Verifier::verify(self, &message.signing_digest(), signature)
+                }
+            }
+        )+
+    };
 }
+
+#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
+pub(crate) use impl_iota_verifier;
 
 /// Bech32 prefix for IOTA private keys
 #[cfg(feature = "bech32")]
@@ -248,10 +260,20 @@ where
 
 /// Defines a type which can be converted to and from a base64 string of its
 /// raw bytes
-#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
+#[cfg(any(
+    feature = "bls12381",
+    feature = "ed25519",
+    feature = "secp256r1",
+    feature = "secp256k1",
+))]
 #[cfg_attr(
     doc_cfg,
-    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
+    doc(cfg(any(
+        feature = "bls12381",
+        feature = "ed25519",
+        feature = "secp256r1",
+        feature = "secp256k1",
+    )))
 )]
 pub trait ToFromBase64 {
     type Error;
@@ -267,7 +289,12 @@ pub trait ToFromBase64 {
         Self: Sized;
 }
 
-#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
+#[cfg(any(
+    feature = "bls12381",
+    feature = "ed25519",
+    feature = "secp256r1",
+    feature = "secp256k1",
+))]
 impl<T: ToFromBytes<Error = PrivateKeyError>> ToFromBase64 for T
 where
     T::ByteArray: AsRef<[u8]>,
@@ -323,19 +350,24 @@ impl<T: ToFromFlaggedBytes<Error = PrivateKeyError>> ToFromBech32 for T {
 
     #[cfg(feature = "bech32")]
     fn from_bech32(value: &str) -> Result<Self, Self::Error> {
-        use bech32::Hrp;
+        use bech32::{Hrp, primitives::decode::CheckedHrpstring};
 
         let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
             .map_err(|e| PrivateKeyError::Bech32Hrp(format!("{e}")))?;
 
-        let (hrp, data) = bech32::decode(value)
+        // Only the Bech32 checksum is valid for this encoding; `bech32::decode`
+        // would also accept a Bech32m checksum.
+        let parsed = CheckedHrpstring::new::<bech32::Bech32>(value)
             .map_err(|e| PrivateKeyError::Bech32(format!("decoding failed: {e}")))?;
 
+        let hrp = parsed.hrp();
         if hrp != expected_hrp {
             return Err(PrivateKeyError::Bech32Hrp(format!(
                 "expected {IOTA_PRIV_KEY_PREFIX}, got {hrp}"
             )));
         }
+
+        let data: Vec<u8> = parsed.byte_iter().collect();
 
         if data.is_empty() {
             return Err(PrivateKeyError::EmptyData("bech32 data".to_string()));

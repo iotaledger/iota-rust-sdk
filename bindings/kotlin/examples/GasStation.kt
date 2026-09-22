@@ -9,11 +9,17 @@ fun main() = runBlocking {
         val client = GraphQlClient.newLocalnet()
         var gasStationUrl = "http://0.0.0.0:9527"
         var gasStationAuthToken = "test"
-        var keypair = Ed25519PrivateKey.generate()
+        var keypair = Ed25519PrivateKey.random()
         var sender = keypair.publicKey().deriveAddress()
         var signer = TransactionSigner.fromEd25519(keypair)
 
-        val builder = TransactionBuilder(sender).withClient(client)
+        val gasStation =
+            GasStation(
+                gasStationUrl,
+                headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken")),
+            )
+
+        val builder = client.transactionBuilder(sender)
 
         builder.moveCall(
             Address.std(),
@@ -22,12 +28,7 @@ fun main() = runBlocking {
             listOf(PtbArgument.u64(64uL)),
         )
 
-        builder.gasStationSponsor(
-            gasStationUrl,
-            headers = mapOf("Authorization" to listOf("Bearer $gasStationAuthToken")),
-        )
-
-        val res = builder.execute(signer)
+        val res = builder.executeWithGasStation(gasStation, signer)
 
         println("$res")
 

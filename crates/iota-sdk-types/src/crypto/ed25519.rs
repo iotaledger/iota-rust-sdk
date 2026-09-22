@@ -10,11 +10,8 @@ use crate::crypto::{PublicKeyExt, SignatureScheme};
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// ed25519-public-key = 32OCTET
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -41,7 +38,7 @@ impl Ed25519PublicKey {
 
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -50,12 +47,18 @@ impl Ed25519PublicKey {
         Self::new(buf)
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::random_with(rand_core::OsRng)
+    }
+
     /// Return the underlying byte array of an Ed25519PublicKey.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 }
@@ -65,7 +68,7 @@ impl PublicKeyExt for Ed25519PublicKey {
 
     /// Returns the public key as bytes.
     fn as_bytes(&self) -> &[u8] {
-        &self.0
+        self.bytes()
     }
 
     /// Tries to create an Ed25519PublicKey from bytes.
@@ -101,7 +104,7 @@ impl AsRef<[u8; Self::LENGTH]> for Ed25519PublicKey {
 
 impl From<Ed25519PublicKey> for [u8; Ed25519PublicKey::LENGTH] {
     fn from(public_key: Ed25519PublicKey) -> Self {
-        public_key.into_inner()
+        public_key.into_bytes()
     }
 }
 
@@ -129,11 +132,8 @@ impl std::fmt::Debug for Ed25519PublicKey {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// ed25519-signature = 64OCTET
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -162,7 +162,7 @@ impl Ed25519Signature {
 
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -171,16 +171,18 @@ impl Ed25519Signature {
         Self::new(buf)
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::random_with(rand_core::OsRng)
+    }
+
     /// Return the underlying byte array of an Ed25519Signature.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-        &self.0
-    }
-
-    pub const fn as_bytes(&self) -> &[u8] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
@@ -211,7 +213,7 @@ impl AsRef<[u8; Self::LENGTH]> for Ed25519Signature {
 
 impl From<Ed25519Signature> for [u8; Ed25519Signature::LENGTH] {
     fn from(signature: Ed25519Signature) -> Self {
-        signature.into_inner()
+        signature.into_bytes()
     }
 }
 

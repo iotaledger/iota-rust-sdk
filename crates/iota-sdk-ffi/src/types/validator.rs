@@ -15,33 +15,44 @@ use crate::{
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// validator-committee = u64 ; epoch
-///                       (vector validator-committee-member)
-/// ```
-#[derive(uniffi::Record)]
-pub struct ValidatorCommittee {
-    pub epoch: EpochId,
-    pub members: Vec<ValidatorCommitteeMember>,
-}
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
+#[uniffi::export(Debug, Eq)]
+pub struct ValidatorCommittee(pub iota_sdk::types::ValidatorCommittee);
 
-impl From<iota_sdk::types::ValidatorCommittee> for ValidatorCommittee {
-    fn from(value: iota_sdk::types::ValidatorCommittee) -> Self {
-        Self {
-            epoch: value.epoch,
-            members: value.members.into_iter().map(Into::into).collect(),
-        }
+#[uniffi::export]
+impl ValidatorCommittee {
+    /// Construct a `ValidatorCommittee` and verify it via `validate`.
+    #[uniffi::constructor]
+    pub fn new(epoch: EpochId, members: Vec<ValidatorCommitteeMember>) -> Result<Self> {
+        Ok(Self(iota_sdk::types::ValidatorCommittee::new(
+            epoch,
+            members.into_iter().map(Into::into).collect(),
+        )?))
     }
-}
 
-impl From<ValidatorCommittee> for iota_sdk::types::ValidatorCommittee {
-    fn from(value: ValidatorCommittee) -> Self {
-        Self {
-            epoch: value.epoch,
-            members: value.members.into_iter().map(Into::into).collect(),
-        }
+    pub fn epoch(&self) -> EpochId {
+        self.0.epoch
+    }
+
+    pub fn members(&self) -> Vec<ValidatorCommitteeMember> {
+        self.0.members.iter().cloned().map(Into::into).collect()
+    }
+
+    /// The combined stake of all members.
+    pub fn total_stake(&self) -> Result<u64> {
+        Ok(self.0.total_stake()?)
+    }
+
+    /// Checks if the committee is valid.
+    ///
+    /// A valid committee is one that:
+    ///  - Has at least one member
+    ///  - Has a nonzero total stake that fits in a `u64`
+    ///  - Contains no duplicate public keys
+    pub fn validate(&self) -> Result<()> {
+        Ok(self.0.validate()?)
     }
 }
 
@@ -49,12 +60,8 @@ impl From<ValidatorCommittee> for iota_sdk::types::ValidatorCommittee {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// validator-committee-member = bls12381-public-key
-///                              u64 ; stake
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct ValidatorCommitteeMember {
     pub public_key: Arc<Bls12381PublicKey>,
@@ -83,13 +90,8 @@ impl From<ValidatorCommitteeMember> for iota_sdk::types::ValidatorCommitteeMembe
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// validator-signature = u64                  ; epoch
-///                       bls12381-public-key
-///                       bls12381-signature
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct ValidatorSignature(pub iota_sdk::types::ValidatorSignature);
@@ -126,18 +128,10 @@ impl ValidatorSignature {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// ```text
-/// validator-aggregated-signature = u64                  ; epoch
-///                                  bls12381-signature   ; signature
-///                                  bytes                ; bitmap — contents of the bytes are
-///                                                       ; valid according to the serialized
-///                                                       ; spec for roaring bitmaps
-/// ```
-///
-/// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
-/// serialized format of RoaringBitmaps.
+/// The `bitmap` bytes follow the [RoaringBitmap serialized format](https://github.com/RoaringBitmap/RoaringFormatSpec).
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct ValidatorAggregatedSignature(pub iota_sdk::types::ValidatorAggregatedSignature);
@@ -145,12 +139,18 @@ pub struct ValidatorAggregatedSignature(pub iota_sdk::types::ValidatorAggregated
 #[uniffi::export]
 impl ValidatorAggregatedSignature {
     #[uniffi::constructor]
-    pub fn new(epoch: EpochId, signature: &Bls12381Signature, bitmap_bytes: &[u8]) -> Result<Self> {
-        Ok(Self(iota_sdk::types::ValidatorAggregatedSignature {
-            epoch,
-            signature: **signature,
-            bitmap: roaring::RoaringBitmap::deserialize_from(bitmap_bytes)?,
-        }))
+    pub fn from_signer_bitmap(
+        epoch: EpochId,
+        signature: &Bls12381Signature,
+        bitmap_bytes: &[u8],
+    ) -> Result<Self> {
+        Ok(Self(
+            iota_sdk::types::ValidatorAggregatedSignature::from_signer_bitmap(
+                epoch,
+                **signature,
+                bitmap_bytes,
+            )?,
+        ))
     }
 
     pub fn epoch(&self) -> EpochId {
@@ -161,14 +161,26 @@ impl ValidatorAggregatedSignature {
         self.0.signature.into()
     }
 
-    pub fn bitmap_bytes(&self) -> Result<Vec<u8>> {
-        let mut bytes = Vec::new();
-        self.0.bitmap.serialize_into(&mut bytes)?;
-        Ok(bytes)
+    pub fn bitmap_bytes(&self) -> Vec<u8> {
+        self.0.signer_bitmap()
     }
 }
 
-crate::export_iota_types_bcs_conversion!(ValidatorCommittee, ValidatorCommitteeMember);
-crate::export_iota_types_objects_bcs_conversion!(ValidatorSignature, ValidatorAggregatedSignature);
-crate::export_iota_types_json_conversion!(ValidatorCommittee, ValidatorCommitteeMember);
-crate::export_iota_types_objects_json_conversion!(ValidatorSignature, ValidatorAggregatedSignature);
+crate::export_iota_types_bcs_conversion!(ValidatorCommitteeMember);
+crate::export_iota_types_objects_bcs_conversion!(
+    ValidatorCommittee,
+    ValidatorSignature,
+    ValidatorAggregatedSignature
+);
+crate::export_iota_types_json_conversion!(ValidatorCommitteeMember);
+crate::export_iota_types_objects_json_conversion!(
+    ValidatorCommittee,
+    ValidatorSignature,
+    ValidatorAggregatedSignature
+);
+crate::export_iota_types_display!(ValidatorCommitteeMember);
+crate::export_iota_types_objects_display!(
+    ValidatorCommittee,
+    ValidatorSignature,
+    ValidatorAggregatedSignature
+);

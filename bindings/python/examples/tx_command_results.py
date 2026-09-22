@@ -7,12 +7,15 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_localnet()
 
-    sender = Address.from_hex(
-        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+    private_key = Ed25519PrivateKey.random()
+    sender = private_key.public_key().derive_address()
 
-    builder = TransactionBuilder(sender).with_client(client)
+    faucet = FaucetClient.new_localnet()
+    await faucet.request_and_wait_for_finalized(sender, client)
+
+    builder = client.transaction_builder(sender)
 
     package_addr = Address.std()
     module_name = Identifier("u64")
@@ -55,7 +58,7 @@ async def main():
     print("Signing Digest:", txn.signing_digest_hex())
     print("Txn Bytes:", txn.to_base64())
 
-    res = await client.dry_run_tx(txn, False)
+    res = await client.dry_run_transaction(txn, False)
     if res.error is not None:
         raise Exception("Failed to send tx:", res.error)
 

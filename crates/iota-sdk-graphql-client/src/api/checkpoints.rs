@@ -9,8 +9,8 @@ use futures::Stream;
 use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};
 
 use crate::{
-    Client,
-    error::{Error, Kind, Result},
+    GraphQLClient,
+    error::{GraphQLError, GraphQLResult},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
         CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsArgs,
@@ -19,13 +19,16 @@ use crate::{
     streams::stream_paginated_query,
 };
 
-impl Client {
+const CONFLICTING_CHECKPOINT_ID: &str =
+    "either digest or sequence_number can be provided, but not both";
+
+impl GraphQLClient {
     /// Get a stream of [`CheckpointSummary`]. Note that this will fetch all
     /// checkpoints which may trigger a lot of requests.
     pub fn checkpoints_stream(
         &self,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<CheckpointSummary>> + '_ {
+    ) -> impl Stream<Item = GraphQLResult<CheckpointSummary>> + '_ {
         stream_paginated_query(move |filter| self.checkpoints(filter), streaming_direction)
     }
 
@@ -35,21 +38,18 @@ impl Client {
     pub async fn checkpoint(
         &self,
         digest: impl Into<Option<CheckpointDigest>>,
-        seq_num: impl Into<Option<u64>>,
-    ) -> Result<Option<CheckpointSummary>> {
+        sequence_number: impl Into<Option<u64>>,
+    ) -> GraphQLResult<Option<CheckpointSummary>> {
         let digest = digest.into();
-        let seq_num = seq_num.into();
-        if digest.is_some() && seq_num.is_some() {
-            return Err(Error::from_error(
-                Kind::Other,
-                "either digest or seq_num must be provided",
-            ));
+        let sequence_number = sequence_number.into();
+        if digest.is_some() && sequence_number.is_some() {
+            return Err(GraphQLError::InvalidArgument(CONFLICTING_CHECKPOINT_ID));
         }
 
         let operation = CheckpointQuery::build(CheckpointArgs {
             id: CheckpointId {
                 digest: digest.map(|d| d.to_string()),
-                sequence_number: seq_num,
+                sequence_number,
             },
         });
         let response = self.run_query(&operation).await?;
@@ -61,7 +61,7 @@ impl Client {
     pub async fn checkpoints(
         &self,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<CheckpointSummary>> {
+    ) -> GraphQLResult<Page<CheckpointSummary>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = CheckpointsQuery::build(CheckpointsArgs {
@@ -78,7 +78,7 @@ impl Client {
             .nodes
             .into_iter()
             .map(|c| c.try_into())
-            .collect::<Result<Vec<CheckpointSummary>, _>>()?;
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         Ok(Page::new(page_info, nodes))
     }
@@ -87,7 +87,7 @@ impl Client {
     /// executed.
     pub async fn latest_checkpoint_sequence_number(
         &self,
-    ) -> Result<Option<CheckpointSequenceNumber>> {
+    ) -> GraphQLResult<Option<CheckpointSequenceNumber>> {
         Ok(self
             .checkpoint(None, None)
             .await?
@@ -99,21 +99,24 @@ impl Client {
     pub async fn total_transaction_blocks_by_digest(
         &self,
         digest: CheckpointDigest,
-    ) -> Result<Option<u64>> {
+    ) -> GraphQLResult<Option<u64>> {
         self.internal_total_transaction_blocks(Some(digest.to_string()), None)
             .await
     }
 
     /// The total number of transaction blocks in the network by the end of the
     /// provided checkpoint sequence number.
-    pub async fn total_transaction_blocks_by_seq_num(&self, seq_num: u64) -> Result<Option<u64>> {
-        self.internal_total_transaction_blocks(None, Some(seq_num))
+    pub async fn total_transaction_blocks_by_sequence_number(
+        &self,
+        sequence_number: u64,
+    ) -> GraphQLResult<Option<u64>> {
+        self.internal_total_transaction_blocks(None, Some(sequence_number))
             .await
     }
 
     /// The total number of transaction blocks in the network by the end of the
     /// last known checkpoint.
-    pub async fn total_transaction_blocks(&self) -> Result<Option<u64>> {
+    pub async fn total_transaction_blocks(&self) -> GraphQLResult<Option<u64>> {
         self.internal_total_transaction_blocks(None, None).await
     }
 
@@ -122,19 +125,16 @@ impl Client {
     async fn internal_total_transaction_blocks(
         &self,
         digest: Option<String>,
-        seq_num: Option<u64>,
-    ) -> Result<Option<u64>> {
-        if digest.is_some() && seq_num.is_some() {
-            return Err(Error::from_error(
-                Kind::Other,
-                "Conflicting arguments: either digest or seq_num can be provided, but not both.",
-            ));
+        sequence_number: Option<u64>,
+    ) -> GraphQLResult<Option<u64>> {
+        if digest.is_some() && sequence_number.is_some() {
+            return Err(GraphQLError::InvalidArgument(CONFLICTING_CHECKPOINT_ID));
         }
 
         let operation = CheckpointTotalTxQuery::build(CheckpointArgs {
             id: CheckpointId {
                 digest,
-                sequence_number: seq_num,
+                sequence_number,
             },
         });
         let response = self.run_query(&operation).await?;
@@ -239,7 +239,7 @@ mod tests {
             .unwrap();
         assert!(total_transaction_blocks > 0);
 
-        let chckp_id = client
+        let checkpoint_sequence_number = client
             .latest_checkpoint_sequence_number()
             .await
             .map_err(|e| {
@@ -250,31 +250,29 @@ mod tests {
             })
             .unwrap()
             .unwrap();
-        let total_transaction_blocks_by_seq_num = client
-            .total_transaction_blocks_by_seq_num(chckp_id)
+        let total_transaction_blocks_by_sequence_number = client
+            .total_transaction_blocks_by_sequence_number(checkpoint_sequence_number)
             .await
             .unwrap()
             .unwrap();
         assert!(
-            total_transaction_blocks_by_seq_num >= total_transaction_blocks,
-            "expected at least {total_transaction_blocks} transaction blocks, found {total_transaction_blocks_by_seq_num}"
+            total_transaction_blocks_by_sequence_number >= total_transaction_blocks,
+            "expected at least {total_transaction_blocks} transaction blocks, found {total_transaction_blocks_by_sequence_number}"
         );
 
-        let chckp = client
-            .checkpoint(None, Some(chckp_id))
+        let checkpoint = client
+            .checkpoint(None, Some(checkpoint_sequence_number))
             .await
             .unwrap()
             .unwrap();
 
-        // TODO: https://github.com/iotaledger/iota-rust-sdk/issues/1211
-        let digest = chckp.contents_digest.into_inner().into();
         let total_transaction_blocks_by_digest = client
-            .total_transaction_blocks_by_digest(digest)
+            .total_transaction_blocks_by_digest(checkpoint.digest())
             .await
             .unwrap()
             .unwrap();
         assert_eq!(
-            total_transaction_blocks_by_seq_num,
+            total_transaction_blocks_by_sequence_number,
             total_transaction_blocks_by_digest
         );
     }

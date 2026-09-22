@@ -1,0 +1,33 @@
+// Copyright (c) 2026 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
+// Fixture for `Context` tests. The package deliberately mirrors the real
+// `iota.grpc.v*` layout, so path resolution takes the same branch here as it
+// does in production.
+//
+// Contents: a message whose name collides with one in another package, a nested
+// message whose name collides with a top-level one, and a reference cycle.
+
+syntax = "proto3";
+
+package iota.grpc.v1.a;
+
+message Argument {
+  message Input {
+    uint32 index = 1;
+  }
+
+  Input input = 1;
+}
+
+message Input {
+  uint32 index = 1;
+}
+
+message Loop {
+  Step step = 1;
+}
+
+message Step {
+  Loop back = 1;
+}

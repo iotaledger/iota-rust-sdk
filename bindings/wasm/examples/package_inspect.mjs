@@ -13,7 +13,6 @@ import {
   ObjectFilter,
   PaginationFilter,
   StructTag,
-  transactionToJson,
   TransactionsFilter,
   initAsync,
 } from "@iota/sdk-wasm";
@@ -126,18 +125,18 @@ function extractPolicy(contents) {
 
 async function resolveUpgradeCapId(client, packageId) {
   const page = await client.transactionsEffects(
-    TransactionsFilter.new({ changedObject: packageId }),
+    new TransactionsFilter().withChangedObject(packageId),
     PaginationFilter.new({ direction: Direction.Forward, limit: 1 }),
   );
   for (const effects of page.data) {
     const effectsV1 = effects.asV1();
-    for (const changedObj of effectsV1.changedObjects) {
+    for (const changedObj of effectsV1.changedObjects()) {
       if (!changedObj.outputState.isObjectWrite()) continue;
       const obj = await client.object(
         changedObj.objectId,
-        effectsV1.lamportVersion,
+        effectsV1.lamportVersion(),
       );
-      if (obj !== null && obj.asStructOpt() !== null) {
+      if (obj !== null && obj.asOptStruct() !== null) {
         if (
           obj.asStruct().structType.eq?.(StructTag.newUpgradeCap()) ??
           false
@@ -157,7 +156,7 @@ function sameObjectId(left, right) {
 function programmableTransactionJson(tx) {
   let parsed;
   try {
-    parsed = JSON.parse(transactionToJson(tx));
+    parsed = JSON.parse(tx.toJson());
   } catch {
     return null;
   }
@@ -247,11 +246,12 @@ async function wasPackagePublishedAsImmutable(client, packageId) {
   let cursor = undefined;
   while (true) {
     const page = await client.transactionsDataEffects(
-      TransactionsFilter.new({ changedObject: packageId }),
+      new TransactionsFilter().withChangedObject(packageId),
       forwardPage(cursor),
     );
     for (const txData of page.data) {
-      if (publishesPackageAsImmutable(txData.tx.transaction)) return true;
+      if (publishesPackageAsImmutable(txData.signedTransaction.transaction))
+        return true;
     }
     if (page.pageInfo.hasNextPage) cursor = page.pageInfo.endCursor;
     else return false;
@@ -262,11 +262,16 @@ async function wasUpgradeCapUsedForMakeImmutable(client, upgradeCapId) {
   let cursor = undefined;
   while (true) {
     const page = await client.transactionsDataEffects(
-      TransactionsFilter.new({ inputObject: upgradeCapId }),
+      new TransactionsFilter().withInputObject(upgradeCapId),
       forwardPage(cursor),
     );
     for (const txData of page.data) {
-      if (usesUpgradeCapForMakeImmutable(txData.tx.transaction, upgradeCapId))
+      if (
+        usesUpgradeCapForMakeImmutable(
+          txData.signedTransaction.transaction,
+          upgradeCapId,
+        )
+      )
         return true;
     }
     if (page.pageInfo.hasNextPage) cursor = page.pageInfo.endCursor;
@@ -328,12 +333,12 @@ console.log();
 // Print package dependencies and their linked versions.
 console.log("Dependencies:");
 const linkageTable = pkg.linkageTable();
-if (linkageTable.size === 0) {
+if (linkageTable.isEmpty()) {
   console.log("- none");
 } else {
-  const upgrades = [...linkageTable.values()].sort((a, b) =>
-    a.upgradedId.toHex() < b.upgradedId.toHex() ? -1 : 1,
-  );
+  const upgrades = linkageTable
+    .values()
+    .sort((a, b) => (a.upgradedId.toHex() < b.upgradedId.toHex() ? -1 : 1));
   for (const upgrade of upgrades) {
     console.log(
       `- ${upgrade.upgradedId.toHex()} @ v${upgrade.upgradedVersion.asU64()}`,
@@ -344,7 +349,10 @@ console.log();
 
 // Inspect normalized modules, functions, types, and sample key objects.
 console.log("Package contents:");
-const moduleNames = [...pkg.modules().keys()].map((m) => m.asStr()).sort();
+const moduleNames = pkg
+  .modules()
+  .keys()
+  .map((m) => m.asStr());
 
 for (const moduleName of moduleNames) {
   console.log(`Module: ${moduleName}`);

@@ -118,44 +118,53 @@ macro_rules! ffi_move_object_generic {
     };
 }
 
+/// Export BCS conversions for a `uniffi::Record` or `uniffi::Enum` mirrored
+/// from `iota_sdk::types`.
+///
+/// `from_bcs` is a free function because no language backend renders
+/// `Record::constructors`.
 #[macro_export]
 macro_rules! export_iota_types_bcs_conversion {
-    ($($name:ty),+ $(,)?) => {
+    ($($name:ident),+ $(,)?) => {
         paste::paste! {$(
+            #[uniffi::export]
+            impl $name {
+                /// Convert this type to BCS encoded bytes.
+                pub fn to_bcs(&self) -> $crate::error::Result<Vec<u8>> {
+                    let data: iota_sdk::types::$name = self.clone().try_into()?;
+                    Ok(::bcs::to_bytes(&data)?)
+                }
+            }
+
             /// Create this type from BCS encoded bytes.
             #[uniffi::export]
             pub fn [< $name:snake _from_bcs >](bcs: Vec<u8>) -> $crate::error::Result<$name> {
-                let data = bcs::from_bytes::<iota_sdk::types::$name>(&bcs)?;
+                let data = ::bcs::from_bytes::<iota_sdk::types::$name>(&bcs)?;
                 Ok(data.into())
-            }
-
-            /// Convert this type to BCS encoded bytes.
-            #[uniffi::export]
-            pub fn [< $name:snake _to_bcs >](data: $name) -> $crate::error::Result<Vec<u8>> {
-                let data: iota_sdk::types::$name = data.into();
-                Ok(bcs::to_bytes(&data)?)
             }
         )+}
     }
 }
 
+/// Export BCS conversions for a `uniffi::Object` newtype wrapping a type from
+/// `iota_sdk::types`.
 #[macro_export]
 macro_rules! export_iota_types_objects_bcs_conversion {
-    ($($name:ty),+ $(,)?) => {
-        paste::paste! {$(
+    ($($name:ident),+ $(,)?) => {$(
+        #[uniffi::export]
+        impl $name {
             /// Create this type from BCS encoded bytes.
-            #[uniffi::export]
-            pub fn [< $name:snake _from_bcs >](bcs: Vec<u8>) -> $crate::error::Result<$name> {
-                Ok($name(bcs::from_bytes::<iota_sdk::types::$name>(&bcs)?))
+            #[uniffi::constructor]
+            pub fn from_bcs(bcs: Vec<u8>) -> $crate::error::Result<Self> {
+                Ok($name(::bcs::from_bytes::<iota_sdk::types::$name>(&bcs)?))
             }
 
             /// Convert this type to BCS encoded bytes.
-            #[uniffi::export]
-            pub fn [< $name:snake _to_bcs >](data: std::sync::Arc<$name>) -> $crate::error::Result<Vec<u8>> {
-                Ok(bcs::to_bytes(&data.0)?)
+            pub fn to_bcs(&self) -> $crate::error::Result<Vec<u8>> {
+                Ok(::bcs::to_bytes(&self.0)?)
             }
-        )+}
-    }
+        }
+    )+}
 }
 
 #[macro_export]
@@ -177,44 +186,48 @@ macro_rules! export_primitive_types_bcs_conversion {
     };
 }
 
+/// JSON counterpart of [`crate::export_iota_types_bcs_conversion`].
 #[macro_export]
 macro_rules! export_iota_types_json_conversion {
-    ($($name:ty),+ $(,)?) => {
+    ($($name:ident),+ $(,)?) => {
         paste::paste! {$(
-            /// Create this type from JSON encoded string.
+            #[uniffi::export]
+            impl $name {
+                /// Convert this type to a JSON encoded string.
+                pub fn to_json(&self) -> $crate::error::Result<String> {
+                    let data: iota_sdk::types::$name = self.clone().try_into()?;
+                    Ok(serde_json::to_string(&data)?)
+                }
+            }
+
+            /// Create this type from a JSON encoded string.
             #[uniffi::export]
             pub fn [< $name:snake _from_json >](json: &str) -> $crate::error::Result<$name> {
                 let data = serde_json::from_str::<iota_sdk::types::$name>(json)?;
                 Ok(data.into())
             }
-
-            /// Convert this type to JSON encoded string.
-            #[uniffi::export]
-            pub fn [< $name:snake _to_json >](data: $name) -> $crate::error::Result<String> {
-                let data: iota_sdk::types::$name = data.into();
-                Ok(serde_json::to_string(&data)?)
-            }
         )+}
     }
 }
 
+/// JSON counterpart of [`crate::export_iota_types_objects_bcs_conversion`].
 #[macro_export]
 macro_rules! export_iota_types_objects_json_conversion {
-    ($($name:ty),+ $(,)?) => {
-        paste::paste! {$(
-            /// Create this type from JSON encoded string.
-            #[uniffi::export]
-            pub fn [< $name:snake _from_json >](json: &str) -> $crate::error::Result<$name> {
+    ($($name:ident),+ $(,)?) => {$(
+        #[uniffi::export]
+        impl $name {
+            /// Create this type from a JSON encoded string.
+            #[uniffi::constructor]
+            pub fn from_json(json: &str) -> $crate::error::Result<Self> {
                 Ok($name(serde_json::from_str::<iota_sdk::types::$name>(json)?))
             }
 
-            /// Convert this type to JSON encoded string.
-            #[uniffi::export]
-            pub fn [< $name:snake _to_json >](data: std::sync::Arc<$name>) -> $crate::error::Result<String> {
-                Ok(serde_json::to_string(&data.0)?)
+            /// Convert this type to a JSON encoded string.
+            pub fn to_json(&self) -> $crate::error::Result<String> {
+                Ok(serde_json::to_string(&self.0)?)
             }
-        )+}
-    }
+        }
+    )+}
 }
 
 #[macro_export]
@@ -233,5 +246,259 @@ macro_rules! export_primitive_types_json_conversion {
             Ok(serde_json::to_string(&input)?)
         }
         )+}
+    };
+}
+
+#[macro_export]
+macro_rules! export_iota_types_display {
+    ($($core:ty => $name:ident),+ $(,)?) => {
+        $(
+            #[uniffi::export]
+            impl $name {
+                /// Render this type as human-readable text.
+                ///
+                /// The layout is meant for reading and can change between
+                /// releases. Use the JSON or BCS conversions for output that
+                /// gets parsed.
+                pub fn to_display_string(&self) -> String {
+                    <$core>::from(self.clone()).to_string()
+                }
+            }
+        )+
+    };
+    ($($name:ident),+ $(,)?) => {
+        $(
+            #[uniffi::export]
+            impl $name {
+                /// Render this type as human-readable text.
+                ///
+                /// The layout is meant for reading and can change between
+                /// releases. Use the JSON or BCS conversions for output that
+                /// gets parsed.
+                pub fn to_display_string(&self) -> String {
+                    iota_sdk::types::$name::from(self.clone()).to_string()
+                }
+            }
+        )+
+    };
+}
+
+#[macro_export]
+macro_rules! export_iota_types_objects_display {
+    ($($name:ident),+ $(,)?) => {
+        $(
+            #[uniffi::export]
+            impl $name {
+                /// Render this type as human-readable text.
+                ///
+                /// Some types also print this through the binding's native
+                /// string conversion; this method is the spelling every object
+                /// type has.
+                ///
+                /// The layout is meant for reading and can change between
+                /// releases. Use the JSON or BCS conversions for output that
+                /// gets parsed.
+                pub fn to_display_string(&self) -> String {
+                    self.0.to_string()
+                }
+            }
+        )+
+    }
+}
+
+#[macro_export]
+macro_rules! ffi_map {
+    (@map-objects $(#[$meta:meta])* $name:ident<$key:ty, $value:ty>) => {
+        paste::paste! {
+            $(#[$meta])*
+            #[derive(uniffi::Object)]
+            pub struct $name(::std::collections::HashMap<::std::sync::Arc<$key>, $value>);
+
+            #[doc = "An entry in the " $name " map."]
+            #[derive(Clone, uniffi::Record)]
+            pub struct [<$name Entry>] {
+                /// The entry's key.
+                pub key: ::std::sync::Arc<$key>,
+                /// The value stored under it.
+                pub value: $value,
+            }
+
+            #[uniffi::export]
+            impl $name {
+                /// Collect entries into a map. A key repeated across entries keeps
+                /// the value of the last one.
+                #[uniffi::constructor]
+                pub fn from_entries(entries: Vec<[<$name Entry>]>) -> Self {
+                    Self::from_iter(entries.into_iter().map(|entry| (entry.key, entry.value)))
+                }
+
+                /// The value stored under `key`, or `None` if there is none.
+                pub fn get(&self, key: &$key) -> Option<$value> {
+                    self.0.get(key).cloned()
+                }
+
+                /// Whether a value is stored under `key`.
+                pub fn contains_key(&self, key: &$key) -> bool {
+                    self.0.contains_key(key)
+                }
+
+                /// The number of entries.
+                pub fn len(&self) -> u64 {
+                    self.0.len() as _
+                }
+
+                /// Whether the map holds no entries.
+                pub fn is_empty(&self) -> bool {
+                    self.0.is_empty()
+                }
+
+                /// Every key, in no particular order.
+                pub fn keys(&self) -> Vec<::std::sync::Arc<$key>> {
+                    self.0.keys().cloned().collect()
+                }
+
+                /// Every value, in no particular order.
+                pub fn values(&self) -> Vec<$value> {
+                    self.0.values().cloned().collect()
+                }
+
+                /// Every entry, in no particular order.
+                pub fn entries(&self) -> Vec<[<$name Entry>]> {
+                    self.0
+                        .iter()
+                        .map(|(key, value)| [<$name Entry>] {
+                            key: key.clone(),
+                            value: value.clone(),
+                        })
+                        .collect()
+                }
+            }
+
+            impl $name {
+                /// Borrow the entries, the way the native map this stands in
+                /// for is read.
+                pub fn iter(&self) -> impl Iterator<Item = (&::std::sync::Arc<$key>, &$value)> {
+                    self.0.iter()
+                }
+            }
+
+            impl FromIterator<(::std::sync::Arc<$key>, $value)> for $name {
+                fn from_iter<I: IntoIterator<Item = (::std::sync::Arc<$key>, $value)>>(iter: I) -> Self {
+                    Self(iter.into_iter().collect())
+                }
+            }
+        }
+    };
+    (@hashmap $(#[$meta:meta])* $name:ident<$key:ty, $value:ty>) => {
+        $(#[$meta])*
+        pub(crate) type $name = ::std::collections::HashMap<::std::sync::Arc<$key>, $value>;
+    };
+    ($(#[$meta:meta])* $name:ident<$key:ty, $value:ty>) => {
+        #[cfg(feature = "map-objects")]
+        $crate::ffi_map!(@map-objects $(#[$meta])* $name<$key, $value>);
+
+        #[cfg(not(feature = "map-objects"))]
+        $crate::ffi_map!(@hashmap $(#[$meta])* $name<$key, $value>);
+
+    };
+}
+
+/// Declares an FFI map object backed by a [`std::collections::BTreeMap`], for
+/// maps read out of an ordered Rust map.
+///
+/// Unlike [`ffi_map!`], which hands the bindings a native map unless
+/// `map-objects` is enabled, this one is always an object: a native map keeps
+/// the key order in some binding languages and drops it in others.
+///
+/// The key type is written as it is stored — `Arc<ObjectId>`, `String` — and
+/// lookups take its [`Deref`](std::ops::Deref) target.
+#[macro_export]
+macro_rules! ffi_btree_map {
+    ($(#[$meta:meta])* $name:ident<$key:ty, $value:ty>) => {
+        paste::paste! {
+            $(#[$meta])*
+            #[derive(Clone, Debug, uniffi::Object)]
+            pub struct $name(::std::collections::BTreeMap<$key, $value>);
+
+            #[doc = "An entry in the " $name " map."]
+            #[derive(Clone, Debug, uniffi::Record)]
+            pub struct [<$name Entry>] {
+                /// The entry's key.
+                pub key: $key,
+                /// The value stored under it.
+                pub value: $value,
+            }
+
+            #[uniffi::export]
+            impl $name {
+                /// Collect entries into a map. A key repeated across entries keeps
+                /// the value of the last one.
+                #[uniffi::constructor]
+                pub fn from_entries(entries: Vec<[<$name Entry>]>) -> Self {
+                    Self::from_iter(entries.into_iter().map(|entry| (entry.key, entry.value)))
+                }
+
+                /// The value stored under `key`, or `None` if there is none.
+                pub fn get(&self, key: &<$key as ::std::ops::Deref>::Target) -> Option<$value> {
+                    self.0.get(key).cloned()
+                }
+
+                /// Whether a value is stored under `key`.
+                pub fn contains_key(&self, key: &<$key as ::std::ops::Deref>::Target) -> bool {
+                    self.0.contains_key(key)
+                }
+
+                /// The number of entries.
+                pub fn len(&self) -> u64 {
+                    self.0.len() as _
+                }
+
+                /// Whether the map holds no entries.
+                pub fn is_empty(&self) -> bool {
+                    self.0.is_empty()
+                }
+
+                /// Every key, in key order.
+                pub fn keys(&self) -> Vec<$key> {
+                    self.0.keys().cloned().collect()
+                }
+
+                /// Every value, ordered by the key it is stored under.
+                pub fn values(&self) -> Vec<$value> {
+                    self.0.values().cloned().collect()
+                }
+
+                /// Every entry, in key order.
+                pub fn entries(&self) -> Vec<[<$name Entry>]> {
+                    self.0
+                        .iter()
+                        .map(|(key, value)| [<$name Entry>] {
+                            key: key.clone(),
+                            value: value.clone(),
+                        })
+                        .collect()
+                }
+            }
+
+            impl $name {
+                /// Borrow the entries, the way the native map this stands in
+                /// for is read.
+                pub fn iter(&self) -> impl Iterator<Item = (&$key, &$value)> {
+                    self.0.iter()
+                }
+            }
+
+            impl FromIterator<($key, $value)> for $name {
+                fn from_iter<I: IntoIterator<Item = ($key, $value)>>(iter: I) -> Self {
+                    Self(iter.into_iter().collect())
+                }
+            }
+
+            impl Default for $name {
+                fn default() -> Self {
+                    Self(::std::collections::BTreeMap::new())
+                }
+            }
+        }
     };
 }

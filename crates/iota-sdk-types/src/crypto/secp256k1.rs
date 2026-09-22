@@ -10,11 +10,8 @@ use crate::crypto::{PublicKeyExt, SignatureScheme};
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// secp256k1-public-key = 33OCTET
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -43,7 +40,7 @@ impl Secp256k1PublicKey {
 
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -52,12 +49,18 @@ impl Secp256k1PublicKey {
         Self::new(buf)
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::random_with(rand_core::OsRng)
+    }
+
     /// Return the underlying byte array of an Secp256k1PublicKey.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 }
@@ -67,7 +70,7 @@ impl PublicKeyExt for Secp256k1PublicKey {
 
     /// Returns the public key as bytes.
     fn as_bytes(&self) -> &[u8] {
-        &self.0
+        self.bytes()
     }
 
     /// Tries to create a Secp256k1PublicKey from bytes.
@@ -103,7 +106,7 @@ impl AsRef<[u8; Self::LENGTH]> for Secp256k1PublicKey {
 
 impl From<Secp256k1PublicKey> for [u8; Secp256k1PublicKey::LENGTH] {
     fn from(public_key: Secp256k1PublicKey) -> Self {
-        public_key.into_inner()
+        public_key.into_bytes()
     }
 }
 
@@ -131,11 +134,8 @@ impl std::fmt::Debug for Secp256k1PublicKey {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// secp256k1-signature = 64OCTET
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -164,7 +164,7 @@ impl Secp256k1Signature {
 
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -173,16 +173,18 @@ impl Secp256k1Signature {
         Self::new(buf)
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+    pub fn random() -> Self {
+        Self::random_with(rand_core::OsRng)
+    }
+
     /// Return the underlying byte array of an Secp256k1Signature.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
     }
 
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-        &self.0
-    }
-
-    pub const fn as_bytes(&self) -> &[u8] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
@@ -213,7 +215,7 @@ impl AsRef<[u8; Self::LENGTH]> for Secp256k1Signature {
 
 impl From<Secp256k1Signature> for [u8; Secp256k1Signature::LENGTH] {
     fn from(signature: Secp256k1Signature) -> Self {
-        signature.into_inner()
+        signature.into_bytes()
     }
 }
 

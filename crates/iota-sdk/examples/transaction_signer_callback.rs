@@ -4,8 +4,8 @@
 use eyre::Result;
 use iota_sdk::{
     crypto::{IotaSigner, SignatureError, ed25519::Ed25519PrivateKey},
-    graphql_client::{Client, WaitForTx, faucet::FaucetClient},
-    transaction_builder::{TransactionBuilder, TransactionSigner},
+    graphql_client::{GraphQLClient, WaitForTransaction, faucet::FaucetClient},
+    transaction_builder::TransactionSigner,
     types::{Address, Transaction, UserSignature},
 };
 
@@ -30,18 +30,20 @@ async fn main() -> Result<()> {
     let sender_address = public_key.derive_address();
     println!("Sender address: {sender_address}");
 
-    let client = Client::new_localnet();
+    let client = GraphQLClient::new_localnet();
 
     // Request funds from faucet
     FaucetClient::new_localnet()
         .request_and_wait_for_finalized(sender_address, &client)
         .await?;
 
-    let mut builder = TransactionBuilder::new(sender_address).with_client(&client);
+    let mut builder = client.transaction_builder(sender_address);
     builder.send_iota(recipient_address, amount);
 
     let signer = AsyncSigner(private_key);
-    let effects = builder.execute(&signer, WaitForTx::Finalized).await?;
+    let effects = builder
+        .execute(&signer, WaitForTransaction::Finalized)
+        .await?;
     println!("Digest: {}", effects.digest());
     println!("Transaction status: {:?}", effects.as_v1().status);
     println!("Effects: {effects:#?}");

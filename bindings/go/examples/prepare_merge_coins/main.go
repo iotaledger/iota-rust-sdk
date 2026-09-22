@@ -33,7 +33,7 @@ func main() {
 	coin0 := objIdFromHex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")
 	coin1 := objIdFromHex("0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")
 
-	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder := client.TransactionBuilder(sender)
 	builder.MergeCoins(coin0, []*iota_sdk.PtbArgument{coin1})
 
 	txn, err := builder.Finish()

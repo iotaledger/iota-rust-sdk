@@ -4,33 +4,57 @@
 
 mod _accessor_impls {
     #![allow(clippy::useless_conversion)]
-    impl super::BalanceChange {
-        /// Sets `owner` with the provided value.
-        pub fn with_owner<T: Into<super::super::types::Owner>>(
+    impl super::Transaction {
+        /// Sets `digest` with the provided value.
+        pub fn with_digest<T: Into<super::super::types::Digest>>(
             mut self,
             field: T,
         ) -> Self {
-            self.owner = Some(field.into());
+            self.digest = Some(field.into());
             self
         }
-        /// Sets `coin_type` with the provided value.
-        pub fn with_coin_type<T: Into<super::super::types::TypeTag>>(
+        /// Sets `bcs` with the provided value.
+        pub fn with_bcs<T: Into<super::super::bcs::BcsData>>(
             mut self,
             field: T,
         ) -> Self {
-            self.coin_type = Some(field.into());
-            self
-        }
-        /// Sets `amount` with the provided value.
-        pub fn with_amount<T: Into<::prost::bytes::Bytes>>(mut self, field: T) -> Self {
-            self.amount = Some(field.into());
+            self.bcs = Some(field.into());
             self
         }
     }
-    impl super::BalanceChanges {
-        /// Sets `balance_changes` with the provided value.
-        pub fn with_balance_changes(mut self, field: Vec<super::BalanceChange>) -> Self {
-            self.balance_changes = field;
+    impl super::TransactionEffects {
+        /// Sets `digest` with the provided value.
+        pub fn with_digest<T: Into<super::super::types::Digest>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.digest = Some(field.into());
+            self
+        }
+        /// Sets `bcs` with the provided value.
+        pub fn with_bcs<T: Into<super::super::bcs::BcsData>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.bcs = Some(field.into());
+            self
+        }
+    }
+    impl super::TransactionEvents {
+        /// Sets `digest` with the provided value.
+        pub fn with_digest<T: Into<super::super::types::Digest>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.digest = Some(field.into());
+            self
+        }
+        /// Sets `events` with the provided value.
+        pub fn with_events<T: Into<super::super::event::Events>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.events = Some(field.into());
             self
         }
     }
@@ -113,13 +137,269 @@ mod _accessor_impls {
             self
         }
     }
-    impl super::ExecutedTransactions {
-        /// Sets `executed_transactions` with the provided value.
-        pub fn with_executed_transactions(
+    impl super::BalanceChange {
+        /// Sets `owner` with the provided value.
+        pub fn with_owner<T: Into<super::super::types::Owner>>(
             mut self,
-            field: Vec<super::ExecutedTransaction>,
+            field: T,
         ) -> Self {
-            self.executed_transactions = field;
+            self.owner = Some(field.into());
+            self
+        }
+        /// Sets `coin_type` with the provided value.
+        pub fn with_coin_type<T: Into<super::super::types::TypeTag>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.coin_type = Some(field.into());
+            self
+        }
+        /// Sets `amount` with the provided value.
+        pub fn with_amount<T: Into<::prost::bytes::Bytes>>(mut self, field: T) -> Self {
+            self.amount = Some(field.into());
+            self
+        }
+    }
+    impl super::BalanceChanges {
+        /// Sets `balance_changes` with the provided value.
+        pub fn with_balance_changes(mut self, field: Vec<super::BalanceChange>) -> Self {
+            self.balance_changes = field;
+            self
+        }
+    }
+    impl super::ObjectChangePublished {
+        /// Sets `package_id` with the provided value.
+        pub fn with_package_id<T: Into<super::super::types::ObjectId>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.package_id = Some(field.into());
+            self
+        }
+        /// Sets `version` with the provided value.
+        pub fn with_version(mut self, field: u64) -> Self {
+            self.version = Some(field);
+            self
+        }
+        /// Sets `digest` with the provided value.
+        pub fn with_digest<T: Into<super::super::types::Digest>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.digest = Some(field.into());
+            self
+        }
+        /// Sets `modules` with the provided value.
+        pub fn with_modules(mut self, field: Vec<String>) -> Self {
+            self.modules = field;
+            self
+        }
+    }
+    impl super::ObjectChangeMutated {
+        /// Sets `sender` with the provided value.
+        pub fn with_sender<T: Into<super::super::types::Address>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.sender = Some(field.into());
+            self
+        }
+        /// Sets `owner` with the provided value.
+        pub fn with_owner<T: Into<super::super::types::Owner>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.owner = Some(field.into());
+            self
+        }
+        /// Sets `object_type` with the provided value.
+        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.object_type = Some(field.into());
+            self
+        }
+        /// Sets `object_id` with the provided value.
+        pub fn with_object_id<T: Into<super::super::types::ObjectId>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.object_id = Some(field.into());
+            self
+        }
+        /// Sets `version` with the provided value.
+        pub fn with_version(mut self, field: u64) -> Self {
+            self.version = Some(field);
+            self
+        }
+        /// Sets `previous_version` with the provided value.
+        pub fn with_previous_version(mut self, field: u64) -> Self {
+            self.previous_version = Some(field);
+            self
+        }
+        /// Sets `digest` with the provided value.
+        pub fn with_digest<T: Into<super::super::types::Digest>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.digest = Some(field.into());
+            self
+        }
+    }
+    impl super::ObjectChangeDeleted {
+        /// Sets `sender` with the provided value.
+        pub fn with_sender<T: Into<super::super::types::Address>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.sender = Some(field.into());
+            self
+        }
+        /// Sets `object_type` with the provided value.
+        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.object_type = Some(field.into());
+            self
+        }
+        /// Sets `object_id` with the provided value.
+        pub fn with_object_id<T: Into<super::super::types::ObjectId>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.object_id = Some(field.into());
+            self
+        }
+        /// Sets `version` with the provided value.
+        pub fn with_version(mut self, field: u64) -> Self {
+            self.version = Some(field);
+            self
+        }
+    }
+    impl super::ObjectChangeWrapped {
+        /// Sets `sender` with the provided value.
+        pub fn with_sender<T: Into<super::super::types::Address>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.sender = Some(field.into());
+            self
+        }
+        /// Sets `object_type` with the provided value.
+        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.object_type = Some(field.into());
+            self
+        }
+        /// Sets `object_id` with the provided value.
+        pub fn with_object_id<T: Into<super::super::types::ObjectId>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.object_id = Some(field.into());
+            self
+        }
+        /// Sets `version` with the provided value.
+        pub fn with_version(mut self, field: u64) -> Self {
+            self.version = Some(field);
+            self
+        }
+    }
+    impl super::ObjectChangeUnwrapped {
+        /// Sets `sender` with the provided value.
+        pub fn with_sender<T: Into<super::super::types::Address>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.sender = Some(field.into());
+            self
+        }
+        /// Sets `owner` with the provided value.
+        pub fn with_owner<T: Into<super::super::types::Owner>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.owner = Some(field.into());
+            self
+        }
+        /// Sets `object_type` with the provided value.
+        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.object_type = Some(field.into());
+            self
+        }
+        /// Sets `object_id` with the provided value.
+        pub fn with_object_id<T: Into<super::super::types::ObjectId>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.object_id = Some(field.into());
+            self
+        }
+        /// Sets `version` with the provided value.
+        pub fn with_version(mut self, field: u64) -> Self {
+            self.version = Some(field);
+            self
+        }
+        /// Sets `digest` with the provided value.
+        pub fn with_digest<T: Into<super::super::types::Digest>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.digest = Some(field.into());
+            self
+        }
+    }
+    impl super::ObjectChangeCreated {
+        /// Sets `sender` with the provided value.
+        pub fn with_sender<T: Into<super::super::types::Address>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.sender = Some(field.into());
+            self
+        }
+        /// Sets `owner` with the provided value.
+        pub fn with_owner<T: Into<super::super::types::Owner>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.owner = Some(field.into());
+            self
+        }
+        /// Sets `object_type` with the provided value.
+        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.object_type = Some(field.into());
+            self
+        }
+        /// Sets `object_id` with the provided value.
+        pub fn with_object_id<T: Into<super::super::types::ObjectId>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.object_id = Some(field.into());
+            self
+        }
+        /// Sets `version` with the provided value.
+        pub fn with_version(mut self, field: u64) -> Self {
+            self.version = Some(field);
+            self
+        }
+        /// Sets `digest` with the provided value.
+        pub fn with_digest<T: Into<super::super::types::Digest>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.digest = Some(field.into());
             self
         }
     }
@@ -179,242 +459,6 @@ mod _accessor_impls {
             self
         }
     }
-    impl super::ObjectChangeCreated {
-        /// Sets `sender` with the provided value.
-        pub fn with_sender<T: Into<super::super::types::Address>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.sender = Some(field.into());
-            self
-        }
-        /// Sets `owner` with the provided value.
-        pub fn with_owner<T: Into<super::super::types::Owner>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.owner = Some(field.into());
-            self
-        }
-        /// Sets `object_type` with the provided value.
-        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.object_type = Some(field.into());
-            self
-        }
-        /// Sets `object_id` with the provided value.
-        pub fn with_object_id<T: Into<super::super::types::ObjectId>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.object_id = Some(field.into());
-            self
-        }
-        /// Sets `version` with the provided value.
-        pub fn with_version(mut self, field: u64) -> Self {
-            self.version = Some(field);
-            self
-        }
-        /// Sets `digest` with the provided value.
-        pub fn with_digest<T: Into<super::super::types::Digest>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.digest = Some(field.into());
-            self
-        }
-    }
-    impl super::ObjectChangeDeleted {
-        /// Sets `sender` with the provided value.
-        pub fn with_sender<T: Into<super::super::types::Address>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.sender = Some(field.into());
-            self
-        }
-        /// Sets `object_type` with the provided value.
-        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.object_type = Some(field.into());
-            self
-        }
-        /// Sets `object_id` with the provided value.
-        pub fn with_object_id<T: Into<super::super::types::ObjectId>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.object_id = Some(field.into());
-            self
-        }
-        /// Sets `version` with the provided value.
-        pub fn with_version(mut self, field: u64) -> Self {
-            self.version = Some(field);
-            self
-        }
-    }
-    impl super::ObjectChangeMutated {
-        /// Sets `sender` with the provided value.
-        pub fn with_sender<T: Into<super::super::types::Address>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.sender = Some(field.into());
-            self
-        }
-        /// Sets `owner` with the provided value.
-        pub fn with_owner<T: Into<super::super::types::Owner>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.owner = Some(field.into());
-            self
-        }
-        /// Sets `object_type` with the provided value.
-        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.object_type = Some(field.into());
-            self
-        }
-        /// Sets `object_id` with the provided value.
-        pub fn with_object_id<T: Into<super::super::types::ObjectId>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.object_id = Some(field.into());
-            self
-        }
-        /// Sets `version` with the provided value.
-        pub fn with_version(mut self, field: u64) -> Self {
-            self.version = Some(field);
-            self
-        }
-        /// Sets `previous_version` with the provided value.
-        pub fn with_previous_version(mut self, field: u64) -> Self {
-            self.previous_version = Some(field);
-            self
-        }
-        /// Sets `digest` with the provided value.
-        pub fn with_digest<T: Into<super::super::types::Digest>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.digest = Some(field.into());
-            self
-        }
-    }
-    impl super::ObjectChangePublished {
-        /// Sets `package_id` with the provided value.
-        pub fn with_package_id<T: Into<super::super::types::ObjectId>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.package_id = Some(field.into());
-            self
-        }
-        /// Sets `version` with the provided value.
-        pub fn with_version(mut self, field: u64) -> Self {
-            self.version = Some(field);
-            self
-        }
-        /// Sets `digest` with the provided value.
-        pub fn with_digest<T: Into<super::super::types::Digest>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.digest = Some(field.into());
-            self
-        }
-        /// Sets `modules` with the provided value.
-        pub fn with_modules(mut self, field: Vec<String>) -> Self {
-            self.modules = field;
-            self
-        }
-    }
-    impl super::ObjectChangeUnwrapped {
-        /// Sets `sender` with the provided value.
-        pub fn with_sender<T: Into<super::super::types::Address>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.sender = Some(field.into());
-            self
-        }
-        /// Sets `owner` with the provided value.
-        pub fn with_owner<T: Into<super::super::types::Owner>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.owner = Some(field.into());
-            self
-        }
-        /// Sets `object_type` with the provided value.
-        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.object_type = Some(field.into());
-            self
-        }
-        /// Sets `object_id` with the provided value.
-        pub fn with_object_id<T: Into<super::super::types::ObjectId>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.object_id = Some(field.into());
-            self
-        }
-        /// Sets `version` with the provided value.
-        pub fn with_version(mut self, field: u64) -> Self {
-            self.version = Some(field);
-            self
-        }
-        /// Sets `digest` with the provided value.
-        pub fn with_digest<T: Into<super::super::types::Digest>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.digest = Some(field.into());
-            self
-        }
-    }
-    impl super::ObjectChangeWrapped {
-        /// Sets `sender` with the provided value.
-        pub fn with_sender<T: Into<super::super::types::Address>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.sender = Some(field.into());
-            self
-        }
-        /// Sets `object_type` with the provided value.
-        pub fn with_object_type<T: Into<super::super::types::TypeTag>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.object_type = Some(field.into());
-            self
-        }
-        /// Sets `object_id` with the provided value.
-        pub fn with_object_id<T: Into<super::super::types::ObjectId>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.object_id = Some(field.into());
-            self
-        }
-        /// Sets `version` with the provided value.
-        pub fn with_version(mut self, field: u64) -> Self {
-            self.version = Some(field);
-            self
-        }
-    }
     impl super::ObjectChanges {
         /// Sets `object_changes` with the provided value.
         pub fn with_object_changes(mut self, field: Vec<super::ObjectChange>) -> Self {
@@ -422,57 +466,13 @@ mod _accessor_impls {
             self
         }
     }
-    impl super::Transaction {
-        /// Sets `digest` with the provided value.
-        pub fn with_digest<T: Into<super::super::types::Digest>>(
+    impl super::ExecutedTransactions {
+        /// Sets `executed_transactions` with the provided value.
+        pub fn with_executed_transactions(
             mut self,
-            field: T,
+            field: Vec<super::ExecutedTransaction>,
         ) -> Self {
-            self.digest = Some(field.into());
-            self
-        }
-        /// Sets `bcs` with the provided value.
-        pub fn with_bcs<T: Into<super::super::bcs::BcsData>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.bcs = Some(field.into());
-            self
-        }
-    }
-    impl super::TransactionEffects {
-        /// Sets `digest` with the provided value.
-        pub fn with_digest<T: Into<super::super::types::Digest>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.digest = Some(field.into());
-            self
-        }
-        /// Sets `bcs` with the provided value.
-        pub fn with_bcs<T: Into<super::super::bcs::BcsData>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.bcs = Some(field.into());
-            self
-        }
-    }
-    impl super::TransactionEvents {
-        /// Sets `digest` with the provided value.
-        pub fn with_digest<T: Into<super::super::types::Digest>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.digest = Some(field.into());
-            self
-        }
-        /// Sets `events` with the provided value.
-        pub fn with_events<T: Into<super::super::event::Events>>(
-            mut self,
-            field: T,
-        ) -> Self {
-            self.events = Some(field.into());
+            self.executed_transactions = field;
             self
         }
     }

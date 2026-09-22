@@ -32,7 +32,7 @@ func main() {
 
 	coinObjId := objIdFromHex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")
 
-	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder := client.TransactionBuilder(sender)
 	builder.SplitCoins(
 		iota_sdk.PtbArgumentObjectId(coinObjId),
 		[]*iota_sdk.PtbArgument{

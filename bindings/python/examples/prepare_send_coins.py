@@ -19,7 +19,7 @@ async def main():
     coin_id = PtbArgument.object_id_from_hex(
         "0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")
 
-    builder = TransactionBuilder(from_address).with_client(client)
+    builder = client.transaction_builder(from_address)
     builder.send_coins(
         [coin_id],
         to_address,

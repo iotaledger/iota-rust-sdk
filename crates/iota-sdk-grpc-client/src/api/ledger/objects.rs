@@ -4,7 +4,7 @@
 //! High-level API for object queries.
 
 use iota_grpc_types::{
-    read_mask_fields::{IntoReadMask, ObjectReadMask},
+    read_mask_fields::{IntoReadMask, ObjectField, ObjectReadMask},
     v1::{
         ledger_service::{GetObjectsRequest, ObjectRequest, ObjectRequests},
         object::Object,
@@ -14,14 +14,14 @@ use iota_grpc_types::{
 use iota_types::{ObjectId, Version};
 
 use crate::{
-    Client,
+    GrpcClient,
     api::{
-        Error, MetadataEnvelope, Result, check_object_identity, check_result_count, collect_stream,
-        into_item_results, proto_object_id, saturating_usize_to_u32,
+        GrpcError, GrpcResult, MetadataEnvelope, check_object_identity, check_result_count,
+        collect_stream, into_item_results, proto_object_id, saturating_usize_to_u32,
     },
 };
 
-impl Client {
+impl GrpcClient {
     /// Get objects by their IDs.
     ///
     /// Returns proto `Object` types. Use `obj.object()` to convert to SDK
@@ -31,19 +31,20 @@ impl Client {
     ///
     /// # Errors
     ///
-    /// Returns [`Error::EmptyRequest`] if `refs` is empty.
+    /// Returns [`GrpcError::EmptyRequest`] if `refs` is empty.
     ///
     /// Each ID gets its own result: an object that is not found (never
     /// existed, was deleted, or has been pruned by the serving node) yields
-    /// [`Error::Server`] with code `NOT_FOUND` in that slot only, leaving the
-    /// other objects intact. The outer `Result` is reserved for failures of the
-    /// call itself, such as a transport error, and for a server that answered
-    /// with a different number of results than IDs requested
-    /// ([`UnexpectedResultCount`]), which leaves no way to tell which ID each
-    /// result belongs to, or answered a position with a different object than
-    /// the one requested there ([`UnexpectedObject`]). The answered id is read
-    /// from the object reference or its BCS, so a read mask that includes
-    /// neither leaves nothing to check.
+    /// [`GrpcError::Server`] with code `NOT_FOUND` in that slot only, leaving
+    /// the other objects intact. The outer `GrpcResult` is reserved for
+    /// failures of the call itself, such as a transport error, and for a
+    /// server that answered with a different number of results than IDs
+    /// requested ([`UnexpectedResultCount`]), which leaves no way to tell
+    /// which ID each result belongs to, or answered a position with a
+    /// different object than the one requested there
+    /// ([`UnexpectedObject`]). The answered id is read from the object
+    /// reference or its BCS, so a read mask that includes neither leaves
+    /// nothing to check.
     ///
     /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
     /// [`UnexpectedObject`]: crate::ProtocolError::UnexpectedObject
@@ -60,20 +61,20 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::{ObjectField, ObjectReadMask};
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let object_id: ObjectId = "0x2".parse()?;
     /// let ids = [object_id];
     ///
     /// // Default mask
-    /// let objs = client.get_objects(ids, ObjectReadMask::default()).await?;
+    /// let objs = client.objects(ids, ObjectReadMask::default()).await?;
     ///
     /// // Selected fields
     /// let objs = client
-    ///     .get_objects(
+    ///     .objects(
     ///         ids,
     ///         ObjectReadMask::from([ObjectField::REFERENCE, ObjectField::BCS]),
     ///     )
@@ -110,14 +111,14 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_objects(
+    pub async fn objects(
         &self,
         refs: impl IntoIterator<Item = ObjectId>,
         read_mask: impl IntoReadMask<ObjectReadMask>,
-    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<Object>>>> {
         let refs = refs.into_iter().map(|id| (id, None)).collect::<Vec<_>>();
 
-        self.get_objects_internal(refs, read_mask.into_read_mask())
+        self.objects_internal(refs, read_mask.into_read_mask())
             .await
     }
 
@@ -130,10 +131,10 @@ impl Client {
     ///
     /// # Errors
     ///
-    /// Returns [`Error::EmptyRequest`] if `refs` is empty.
+    /// Returns [`GrpcError::EmptyRequest`] if `refs` is empty.
     ///
     /// Each ref gets its own result, with the same meaning as in
-    /// [`get_objects`](Client::get_objects): a requested version the serving
+    /// [`objects`](GrpcClient::objects): a requested version the serving
     /// node does not have fails only its own slot.
     ///
     /// # Read Mask
@@ -148,21 +149,21 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::{ObjectField, ObjectReadMask};
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let object_id: ObjectId = "0x2".parse()?;
     ///
     /// // Default mask
     /// let objs = client
-    ///     .get_objects_with_versions([(object_id, None)], ObjectReadMask::default())
+    ///     .objects_with_versions([(object_id, None)], ObjectReadMask::default())
     ///     .await?;
     ///
     /// // Selected fields
     /// let objs = client
-    ///     .get_objects_with_versions(
+    ///     .objects_with_versions(
     ///         [(object_id, None)],
     ///         ObjectReadMask::from(ObjectField::REFERENCE_OBJECT_ID),
     ///     )
@@ -187,22 +188,63 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn get_objects_with_versions(
+    pub async fn objects_with_versions(
         &self,
         refs: impl IntoIterator<Item = (ObjectId, Option<Version>)>,
         read_mask: impl IntoReadMask<ObjectReadMask>,
-    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
-        self.get_objects_internal(refs.into_iter().collect(), read_mask.into_read_mask())
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<Object>>>> {
+        self.objects_internal(refs.into_iter().collect(), read_mask.into_read_mask())
             .await
     }
 
-    async fn get_objects_internal(
+    /// Get the current references of objects by their IDs.
+    ///
+    /// Requests the `reference` field only, so no object contents travel.
+    /// Results are returned in the same order as the input IDs, one per ID.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`GrpcError::EmptyRequest`] if `ids` is empty. As for
+    /// [`objects`](Self::objects), an ID that is not found yields
+    /// [`GrpcError::Server`] with code `NOT_FOUND` in its slot only; the outer
+    /// `GrpcResult` is reserved for failures of the call itself.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::GrpcClient;
+    /// # use iota_types::ObjectId;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = GrpcClient::new_localnet()?;
+    /// let gas: ObjectId = "0x2".parse()?;
+    /// let mut refs = client.object_references([gas]).await?.into_inner();
+    /// let gas_ref = refs.remove(0)?;
+    /// println!("gas version: {:?}", gas_ref.version());
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn object_references(
+        &self,
+        ids: impl IntoIterator<Item = ObjectId>,
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<iota_types::ObjectReference>>>> {
+        Ok(self
+            .objects(ids, [ObjectField::REFERENCE])
+            .await?
+            .map(|objects| {
+                objects
+                    .into_iter()
+                    .map(|object| Ok(object?.object_reference()?))
+                    .collect()
+            }))
+    }
+
+    async fn objects_internal(
         &self,
         refs: Vec<(ObjectId, Option<Version>)>,
         read_mask: ObjectReadMask,
-    ) -> Result<MetadataEnvelope<Vec<Result<Object>>>> {
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<Object>>>> {
         if refs.is_empty() {
-            return Err(Error::EmptyRequest);
+            return Err(GrpcError::EmptyRequest);
         }
 
         let requests = ObjectRequests::default().with_requests(

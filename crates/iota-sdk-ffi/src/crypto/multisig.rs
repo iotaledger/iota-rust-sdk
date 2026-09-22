@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::borrow::Cow;
+use std::{borrow::Cow, sync::RwLock};
 
 use iota_sdk::crypto::Verifier;
 
@@ -49,7 +49,7 @@ impl UserSignatureVerifier {
 
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct MultisigAggregator(pub iota_sdk::crypto::multisig::MultisigAggregator);
+pub struct MultisigAggregator(pub RwLock<iota_sdk::crypto::multisig::MultisigAggregator>);
 
 #[uniffi::export]
 impl MultisigAggregator {
@@ -59,7 +59,8 @@ impl MultisigAggregator {
             iota_sdk::crypto::multisig::MultisigAggregator::new_with_transaction(
                 committee.0.clone(),
                 &transaction.0,
-            ),
+            )
+            .into(),
         )
     }
 
@@ -69,28 +70,42 @@ impl MultisigAggregator {
             iota_sdk::crypto::multisig::MultisigAggregator::new_with_message(
                 committee.0.clone(),
                 &iota_sdk::types::PersonalMessage(Cow::Borrowed(message)),
-            ),
+            )
+            .into(),
         )
     }
 
     pub fn verifier(&self) -> MultisigVerifier {
-        self.0.verifier().clone().into()
+        self.0
+            .read()
+            .expect("failed to read multisig aggregator")
+            .verifier()
+            .clone()
+            .into()
     }
 
-    pub fn with_verifier(&self, verifier: &MultisigVerifier) -> Self {
-        let mut aggregator = self.0.clone();
-        *aggregator.verifier_mut() = verifier.0.clone();
-        Self(aggregator)
+    pub fn set_verifier(&self, verifier: &MultisigVerifier) {
+        *self
+            .0
+            .write()
+            .expect("failed to write multisig aggregator")
+            .verifier_mut() = verifier.0.clone();
     }
 
-    pub fn with_signature(&self, signature: &UserSignature) -> Result<Self> {
-        let mut aggregator = self.0.clone();
-        aggregator.add_signature(signature.0.clone())?;
-        Ok(Self(aggregator))
+    pub fn add_signature(&self, signature: &UserSignature) -> Result<()> {
+        Ok(self
+            .0
+            .write()
+            .expect("failed to write multisig aggregator")
+            .add_signature(signature.0.clone())?)
     }
 
     pub fn finish(&self) -> Result<MultisigAggregatedSignature> {
-        let aggregator = self.0.clone();
-        Ok(aggregator.finish()?.into())
+        Ok(self
+            .0
+            .read()
+            .expect("failed to read multisig aggregator")
+            .finish()?
+            .into())
     }
 }

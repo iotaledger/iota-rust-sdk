@@ -3,8 +3,6 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::SignatureScheme;
-
 use crate::{
     error::Result,
     types::{
@@ -13,7 +11,7 @@ use crate::{
             Ed25519Signature, Secp256k1Signature, Secp256r1Signature,
             passkey::PasskeyAuthenticator, public_key::PublicKey,
         },
-        signature::UserSignature,
+        signature::{SignatureScheme, UserSignature},
     },
 };
 
@@ -21,19 +19,8 @@ use crate::{
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// multisig-member-signature = ed25519-multisig-member-signature /
-///                             secp256k1-multisig-member-signature /
-///                             secp256r1-multisig-member-signature /
-///                             passkey-multisig-member-signature
-///
-/// ed25519-multisig-member-signature               = %d00 ed25519-signature
-/// secp256k1-multisig-member-signature             = %d01 secp256k1-signature
-/// secp256r1-multisig-member-signature             = %d02 secp256r1-signature
-/// passkey-multisig-member-signature               = %d04 passkey-authenticator
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigMemberSignature(pub iota_sdk::types::MultisigMemberSignature);
@@ -109,27 +96,8 @@ impl MultisigMemberSignature {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// multisig-aggregated-signature = (vector multisig-member-signature)
-///                                 u16     ; bitmap
-///                                 multisig-committee
-/// ```
-///
-/// There is also a legacy encoding for this type defined as:
-///
-/// ```text
-/// legacy-multisig-aggregated-signature = (vector multisig-member-signature)
-///                                        roaring-bitmap   ; bitmap
-///                                        legacy-multisig-committee
-/// roaring-bitmap = bytes  ; where the contents of the bytes are valid
-///                         ; according to the serialized spec for
-///                         ; roaring bitmaps
-/// ```
-///
-/// See <https://github.com/RoaringBitmap/RoaringFormatSpec> for the specification for the
-/// serialized format of RoaringBitmaps.
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigAggregatedSignature(pub iota_sdk::types::MultisigAggregatedSignature);
@@ -156,6 +124,13 @@ impl MultisigAggregatedSignature {
             signatures.into_iter().map(|s| s.0.clone()).collect(),
             committee.0.clone(),
         )?))
+    }
+
+    /// Derive the `Address` of the committee that produced this signature.
+    ///
+    /// See `MultisigCommittee::derive_address`.
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
     }
 
     /// The list of signatures from committee members
@@ -189,19 +164,8 @@ impl MultisigAggregatedSignature {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// multisig-committee = (vector multisig-member)
-///                      u16    ; threshold
-/// ```
-///
-/// There is also a legacy encoding for this type defined as:
-///
-/// ```text
-/// legacy-multisig-committee = (vector legacy-multisig-member)
-///                             u16     ; threshold
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigCommittee(pub iota_sdk::types::MultisigCommittee);
@@ -246,7 +210,7 @@ impl MultisigCommittee {
 
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
-        self.0.scheme()
+        self.0.scheme().into()
     }
 
     /// Checks if the Committee is valid.
@@ -280,19 +244,8 @@ impl MultisigCommittee {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// multisig-member = multisig-member-public-key
-///                   u8    ; weight
-/// ```
-///
-/// There is also a legacy encoding for this type defined as:
-///
-/// ```text
-/// legacy-multisig-member = legacy-multisig-member-public-key
-///                          u8     ; weight
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct MultisigMember(pub iota_sdk::types::MultisigMember);
@@ -327,6 +280,13 @@ crate::export_iota_types_objects_bcs_conversion!(
     MultisigMember
 );
 crate::export_iota_types_objects_json_conversion!(
+    MultisigMemberSignature,
+    PublicKey,
+    MultisigAggregatedSignature,
+    MultisigCommittee,
+    MultisigMember
+);
+crate::export_iota_types_objects_display!(
     MultisigMemberSignature,
     PublicKey,
     MultisigAggregatedSignature,

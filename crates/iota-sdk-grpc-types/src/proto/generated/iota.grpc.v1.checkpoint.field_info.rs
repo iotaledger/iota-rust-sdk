@@ -7,18 +7,6 @@ mod _field_impls {
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsData;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsDataFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::signatures::ValidatorAggregatedSignature;
-    #[allow(unused_imports)]
-    use crate::v1::signatures::ValidatorAggregatedSignatureFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::Digest;
-    #[allow(unused_imports)]
-    use crate::v1::types::DigestFieldPathBuilder;
     impl CheckpointSummary {
         pub const DIGEST_FIELD: &'static MessageField = &MessageField {
             name: "digest",
@@ -26,7 +14,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Digest::FIELDS),
+            message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
         pub const BCS_FIELD: &'static MessageField = &MessageField {
             name: "bcs",
@@ -34,7 +22,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
     impl MessageFields for CheckpointSummary {
@@ -63,13 +51,13 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn digest(mut self) -> DigestFieldPathBuilder {
+        pub fn digest(mut self) -> crate::v1::types::DigestFieldPathBuilder {
             self.path.push(CheckpointSummary::DIGEST_FIELD.name);
-            DigestFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::DigestFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn bcs(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(CheckpointSummary::BCS_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
     }
     impl CheckpointContents {
@@ -79,7 +67,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Digest::FIELDS),
+            message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
         pub const BCS_FIELD: &'static MessageField = &MessageField {
             name: "bcs",
@@ -87,7 +75,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
     impl MessageFields for CheckpointContents {
@@ -116,13 +104,13 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn digest(mut self) -> DigestFieldPathBuilder {
+        pub fn digest(mut self) -> crate::v1::types::DigestFieldPathBuilder {
             self.path.push(CheckpointContents::DIGEST_FIELD.name);
-            DigestFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::DigestFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn bcs(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(CheckpointContents::BCS_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
     }
     impl Checkpoint {
@@ -156,7 +144,9 @@ mod _field_impls {
             number: 4i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ValidatorAggregatedSignature::FIELDS),
+            message_fields: Some(
+                crate::v1::signatures::ValidatorAggregatedSignature::FIELDS,
+            ),
         };
     }
     impl MessageFields for Checkpoint {
@@ -199,9 +189,13 @@ mod _field_impls {
             self.path.push(Checkpoint::CONTENTS_FIELD.name);
             CheckpointContentsFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn signature(mut self) -> ValidatorAggregatedSignatureFieldPathBuilder {
+        pub fn signature(
+            mut self,
+        ) -> crate::v1::signatures::ValidatorAggregatedSignatureFieldPathBuilder {
             self.path.push(Checkpoint::SIGNATURE_FIELD.name);
-            ValidatorAggregatedSignatureFieldPathBuilder::new_with_base(self.path)
+            crate::v1::signatures::ValidatorAggregatedSignatureFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
     }
 }

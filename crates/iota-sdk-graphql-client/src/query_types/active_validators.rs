@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::query_types::{Base64, BigInt, GQLAddress, MoveObject, ObjectId, PageInfo, schema};
+use crate::query_types::{Base64, BigInt, GraphQLAddress, MoveObject, ObjectId, PageInfo, schema};
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(
@@ -60,7 +60,7 @@ pub struct Validator {
     /// To get the APY in percentage, divide by 100.
     pub apy: Option<i32>,
     /// The validator's address.
-    pub address: GQLAddress,
+    pub address: GraphQLAddress,
     /// The fee charged by the validator for staking services.
     pub commission_rate: Option<i32>,
     /// Validator's credentials.

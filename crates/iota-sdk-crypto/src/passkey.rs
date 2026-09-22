@@ -2,10 +2,13 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_types::{Address, PasskeyAuthenticator, SimpleSignature, UserSignature};
+use iota_types::{
+    Address, PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, SimpleSignature, Transaction,
+    UserSignature,
+};
 use signature::Verifier;
 
-use crate::{SignatureError, secp256r1::Secp256r1VerifyingKey};
+use crate::{IotaVerifier, SignatureError, secp256r1::Secp256r1VerifyingKey};
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct PasskeyVerifier {
@@ -75,9 +78,49 @@ impl Verifier<UserSignature> for PasskeyVerifier {
     }
 }
 
+crate::impl_iota_verifier!(PasskeyVerifier);
+
+impl IotaVerifier for PasskeyPublicKey {
+    fn verify_transaction(
+        &self,
+        transaction: &Transaction,
+        signature: &UserSignature,
+    ) -> Result<(), SignatureError> {
+        check_public_key(self, signature)?;
+        PasskeyVerifier::new().verify_transaction(transaction, signature)
+    }
+
+    fn verify_personal_message(
+        &self,
+        message: &PersonalMessage<'_>,
+        signature: &UserSignature,
+    ) -> Result<(), SignatureError> {
+        check_public_key(self, signature)?;
+        PasskeyVerifier::new().verify_personal_message(message, signature)
+    }
+}
+
+/// Errors unless `signature` is a passkey authenticator carrying `public_key`.
+fn check_public_key(
+    public_key: &PasskeyPublicKey,
+    signature: &UserSignature,
+) -> Result<(), SignatureError> {
+    let UserSignature::PasskeyAuthenticator(authenticator) = signature else {
+        return Err(SignatureError::from_source("not a passkey authenticator"));
+    };
+
+    if authenticator.public_key() != *public_key {
+        return Err(SignatureError::from_source(
+            "public_key in signature does not match",
+        ));
+    }
+
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
-    use iota_types::Transaction;
+    use iota_types::{PublicKey, Secp256r1PublicKey, Transaction};
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
@@ -100,5 +143,22 @@ mod tests {
         verifier
             .verify_transaction(&transaction, &signature)
             .unwrap();
+
+        let UserSignature::PasskeyAuthenticator(authenticator) = &signature else {
+            panic!("expected a passkey authenticator");
+        };
+        let public_key = authenticator.public_key();
+        public_key
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+        PublicKey::Passkey(public_key)
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+
+        // a different public key must not verify the signature
+        let other_public_key = PasskeyPublicKey::new(Secp256r1PublicKey::new([2; 33]));
+        other_public_key
+            .verify_transaction(&transaction, &signature)
+            .unwrap_err();
     }
 }

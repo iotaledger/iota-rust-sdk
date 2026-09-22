@@ -15,7 +15,6 @@
 use iota_sdk_move_types::{
     FromObjectError, MoveType,
     iota_framework::{
-        authenticator_state::AuthenticatorState,
         balance::Balance,
         clock::Clock,
         coin::{Coin, CoinMetadata, DenyCapV1, RegulatedCoinMetadata, TreasuryCap},
@@ -472,25 +471,6 @@ mod synthetic {
                 &object,
                 &<Balance<Foo> as MoveType>::type_tag(),
             ),
-            Err(FromObjectError::WrongType)
-        ));
-    }
-
-    #[test]
-    fn authenticator_state_roundtrip_and_tag_check() {
-        let value = AuthenticatorState {
-            id: UID::new(ObjectId::ZERO),
-            version: 1,
-        };
-        let object = synthetic_object("0x2::authenticator_state::AuthenticatorState", &value);
-        let decoded = AuthenticatorState::try_from(&object).expect("tag matches");
-        assert_eq!(decoded, value);
-
-        // Same byte shape (`UID` + `u64`) as `Clock`, so only the tag
-        // distinguishes them.
-        let object = synthetic_object("0x2::clock::Clock", &value);
-        assert!(matches!(
-            AuthenticatorState::try_from(&object),
             Err(FromObjectError::WrongType)
         ));
     }

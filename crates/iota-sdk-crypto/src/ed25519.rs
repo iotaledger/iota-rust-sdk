@@ -10,10 +10,11 @@ use fastcrypto::{
     traits::{KeyPair as _, Signer as _, ToFromBytes as _, VerifyingKey as _},
 };
 use iota_types::{
-    Ed25519PublicKey, Ed25519Signature, SignatureScheme, SimpleSignature, UserSignature,
+    Ed25519PublicKey, Ed25519Signature, PersonalMessage, SignatureScheme, SimpleSignature,
+    Transaction, UserSignature,
 };
 
-use crate::{SignatureError, Signer, Verifier};
+use crate::{IotaVerifier, SignatureError, Signer, Verifier};
 
 #[derive(Clone, Eq, PartialEq, zeroize::Zeroize, zeroize::ZeroizeOnDrop)]
 pub struct Ed25519PrivateKey([u8; Self::LENGTH]);
@@ -64,7 +65,7 @@ impl Ed25519PrivateKey {
         self.verifying_key().public_key()
     }
 
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -78,7 +79,7 @@ impl Ed25519PrivateKey {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::generate(rand_core::OsRng)
+        Self::random_with(rand_core::OsRng)
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
@@ -132,7 +133,7 @@ impl Ed25519PrivateKey {
     ) -> Result<Self, SignatureError> {
         let private_key = Self::new(keypair_bytes.secret_key);
         if let Some(public_key) = &keypair_bytes.public_key
-            && public_key.as_ref() != private_key.public_key().inner()
+            && public_key.as_ref() != private_key.public_key().bytes()
         {
             return Err(SignatureError::from_source(
                 "PKCS#8 embedded public key does not match the private key",
@@ -147,7 +148,7 @@ impl Ed25519PrivateKey {
     fn to_pkcs8(&self) -> ed25519::pkcs8::KeypairBytes {
         ed25519::pkcs8::KeypairBytes {
             secret_key: self.0,
-            public_key: Some(ed25519::pkcs8::PublicKeyBytes(*self.public_key().inner())),
+            public_key: Some(ed25519::pkcs8::PublicKeyBytes(*self.public_key().bytes())),
         }
     }
 }
@@ -264,7 +265,7 @@ impl std::fmt::Debug for Ed25519VerifyingKey {
 
 impl Ed25519VerifyingKey {
     pub fn new(public_key: &Ed25519PublicKey) -> Result<Self, SignatureError> {
-        FcEd25519PublicKey::from_bytes(public_key.inner())
+        FcEd25519PublicKey::from_bytes(public_key.bytes())
             .map(Self)
             .map_err(SignatureError::from_source)
     }
@@ -344,7 +345,7 @@ impl Ed25519VerifyingKey {
 
 impl Verifier<Ed25519Signature> for Ed25519VerifyingKey {
     fn verify(&self, message: &[u8], signature: &Ed25519Signature) -> Result<(), SignatureError> {
-        let signature = FcEd25519Signature::from_bytes(signature.inner())
+        let signature = FcEd25519Signature::from_bytes(signature.bytes())
             .map_err(SignatureError::from_source)?;
         self.0
             .verify(message, &signature)
@@ -362,7 +363,7 @@ impl Verifier<SimpleSignature> for Ed25519VerifyingKey {
             return Err(SignatureError::from_source("not an ed25519 signature"));
         };
 
-        if public_key.inner().as_slice() != self.0.as_ref() {
+        if public_key.bytes() != self.0.as_ref() {
             return Err(SignatureError::from_source(
                 "public_key in signature does not match",
             ));
@@ -379,6 +380,26 @@ impl Verifier<UserSignature> for Ed25519VerifyingKey {
         };
 
         <Self as Verifier<SimpleSignature>>::verify(self, message, signature)
+    }
+}
+
+crate::impl_iota_verifier!(Ed25519VerifyingKey);
+
+impl IotaVerifier for Ed25519PublicKey {
+    fn verify_transaction(
+        &self,
+        transaction: &Transaction,
+        signature: &UserSignature,
+    ) -> Result<(), SignatureError> {
+        Ed25519VerifyingKey::new(self)?.verify_transaction(transaction, signature)
+    }
+
+    fn verify_personal_message(
+        &self,
+        message: &PersonalMessage<'_>,
+        signature: &UserSignature,
+    ) -> Result<(), SignatureError> {
+        Ed25519VerifyingKey::new(self)?.verify_personal_message(message, signature)
     }
 }
 
@@ -417,9 +438,11 @@ impl Verifier<UserSignature> for Ed25519Verifier {
     }
 }
 
+crate::impl_iota_verifier!(Ed25519Verifier);
+
 #[cfg(test)]
 mod tests {
-    use iota_types::{PersonalMessage, Transaction};
+    use iota_types::{PersonalMessage, PublicKey, Transaction};
     use test_strategy::proptest;
 
     use super::*;
@@ -432,6 +455,20 @@ mod tests {
         verifier
             .verify_transaction(&transaction, &signature)
             .unwrap();
+
+        let public_key = signer.public_key();
+        public_key
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+        PublicKey::Ed25519(public_key)
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+
+        // a different public key must not verify the signature
+        Ed25519PrivateKey::new([7; 32])
+            .public_key()
+            .verify_transaction(&transaction, &signature)
+            .unwrap_err();
     }
 
     #[proptest]
@@ -447,6 +484,20 @@ mod tests {
         verifier
             .verify_personal_message(&message, &signature)
             .unwrap();
+
+        let public_key = signer.public_key();
+        public_key
+            .verify_personal_message(&message, &signature)
+            .unwrap();
+        PublicKey::Ed25519(public_key)
+            .verify_personal_message(&message, &signature)
+            .unwrap();
+
+        // a different public key must not verify the signature
+        Ed25519PrivateKey::new([7; 32])
+            .public_key()
+            .verify_personal_message(&message, &signature)
+            .unwrap_err();
     }
 
     #[proptest]

@@ -7,53 +7,9 @@ mod _field_impls {
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::checkpoint::Checkpoint;
-    #[allow(unused_imports)]
-    use crate::v1::checkpoint::CheckpointFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::epoch::Epoch;
-    #[allow(unused_imports)]
-    use crate::v1::epoch::EpochFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::event::Event;
-    #[allow(unused_imports)]
-    use crate::v1::event::EventFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::filter::EventFilter;
-    #[allow(unused_imports)]
-    use crate::v1::filter::EventFilterFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::filter::TransactionFilter;
-    #[allow(unused_imports)]
-    use crate::v1::filter::TransactionFilterFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::object::Object;
-    #[allow(unused_imports)]
-    use crate::v1::object::ObjectFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::transaction::ExecutedTransaction;
-    #[allow(unused_imports)]
-    use crate::v1::transaction::ExecutedTransactionFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::transaction::ExecutedTransactions;
-    #[allow(unused_imports)]
-    use crate::v1::transaction::ExecutedTransactionsFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::Digest;
-    #[allow(unused_imports)]
-    use crate::v1::types::DigestFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectReference;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectReferenceFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::ledger_service::checkpoint_data::Progress;
-    #[allow(unused_imports)]
-    use crate::v1::ledger_service::checkpoint_data::EndMarker;
     pub mod checkpoint_data {
         use super::*;
-        impl Progress {
+        impl crate::v1::ledger_service::checkpoint_data::Progress {
             pub const LATEST_SCANNED_SEQUENCE_NUMBER_FIELD: &'static MessageField = &MessageField {
                 name: "latest_scanned_sequence_number",
                 json_name: "latestScannedSequenceNumber",
@@ -63,12 +19,12 @@ mod _field_impls {
                 message_fields: None,
             };
         }
-        impl MessageFields for Progress {
+        impl MessageFields for crate::v1::ledger_service::checkpoint_data::Progress {
             const FIELDS: &'static [&'static MessageField] = &[
                 Self::LATEST_SCANNED_SEQUENCE_NUMBER_FIELD,
             ];
         }
-        impl Progress {
+        impl crate::v1::ledger_service::checkpoint_data::Progress {
             pub fn path_builder() -> ProgressFieldPathBuilder {
                 ProgressFieldPathBuilder::new()
             }
@@ -89,11 +45,15 @@ mod _field_impls {
                 self.path.join(".")
             }
             pub fn latest_scanned_sequence_number(mut self) -> String {
-                self.path.push(Progress::LATEST_SCANNED_SEQUENCE_NUMBER_FIELD.name);
+                self.path
+                    .push(
+                        crate::v1::ledger_service::checkpoint_data::Progress::LATEST_SCANNED_SEQUENCE_NUMBER_FIELD
+                            .name,
+                    );
                 self.finish()
             }
         }
-        impl EndMarker {
+        impl crate::v1::ledger_service::checkpoint_data::EndMarker {
             pub const SEQUENCE_NUMBER_FIELD: &'static MessageField = &MessageField {
                 name: "sequence_number",
                 json_name: "sequenceNumber",
@@ -103,12 +63,12 @@ mod _field_impls {
                 message_fields: None,
             };
         }
-        impl MessageFields for EndMarker {
+        impl MessageFields for crate::v1::ledger_service::checkpoint_data::EndMarker {
             const FIELDS: &'static [&'static MessageField] = &[
                 Self::SEQUENCE_NUMBER_FIELD,
             ];
         }
-        impl EndMarker {
+        impl crate::v1::ledger_service::checkpoint_data::EndMarker {
             pub fn path_builder() -> EndMarkerFieldPathBuilder {
                 EndMarkerFieldPathBuilder::new()
             }
@@ -129,7 +89,11 @@ mod _field_impls {
                 self.path.join(".")
             }
             pub fn sequence_number(mut self) -> String {
-                self.path.push(EndMarker::SEQUENCE_NUMBER_FIELD.name);
+                self.path
+                    .push(
+                        crate::v1::ledger_service::checkpoint_data::EndMarker::SEQUENCE_NUMBER_FIELD
+                            .name,
+                    );
                 self.finish()
             }
         }
@@ -270,7 +234,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Digest::FIELDS),
+            message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
         pub const CHAIN_FIELD: &'static MessageField = &MessageField {
             name: "chain",
@@ -361,9 +325,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn chain_id(mut self) -> DigestFieldPathBuilder {
+        pub fn chain_id(mut self) -> crate::v1::types::DigestFieldPathBuilder {
             self.path.push(GetServiceInfoResponse::CHAIN_ID_FIELD.name);
-            DigestFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::DigestFieldPathBuilder::new_with_base(self.path)
         }
         pub fn chain(mut self) -> String {
             self.path.push(GetServiceInfoResponse::CHAIN_FIELD.name);
@@ -408,7 +372,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectReference::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectReference::FIELDS),
         };
     }
     impl MessageFields for ObjectRequest {
@@ -434,9 +398,11 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn object_ref(mut self) -> ObjectReferenceFieldPathBuilder {
+        pub fn object_ref(
+            mut self,
+        ) -> crate::v1::types::ObjectReferenceFieldPathBuilder {
             self.path.push(ObjectRequest::OBJECT_REF_FIELD.name);
-            ObjectReferenceFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectReferenceFieldPathBuilder::new_with_base(self.path)
         }
     }
     impl ObjectRequests {
@@ -550,7 +516,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(Object::FIELDS),
+            message_fields: Some(crate::v1::object::Object::FIELDS),
         };
         pub const ERROR_FIELD: &'static MessageField = &MessageField {
             name: "error",
@@ -591,9 +557,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn object(mut self) -> ObjectFieldPathBuilder {
+        pub fn object(mut self) -> crate::v1::object::ObjectFieldPathBuilder {
             self.path.push(ObjectResult::OBJECT_FIELD.name);
-            ObjectFieldPathBuilder::new_with_base(self.path)
+            crate::v1::object::ObjectFieldPathBuilder::new_with_base(self.path)
         }
         pub fn error(mut self) -> String {
             self.path.push(ObjectResult::ERROR_FIELD.name);
@@ -660,7 +626,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Digest::FIELDS),
+            message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
     }
     impl MessageFields for TransactionRequest {
@@ -686,9 +652,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn digest(mut self) -> DigestFieldPathBuilder {
+        pub fn digest(mut self) -> crate::v1::types::DigestFieldPathBuilder {
             self.path.push(TransactionRequest::DIGEST_FIELD.name);
-            DigestFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::DigestFieldPathBuilder::new_with_base(self.path)
         }
     }
     impl TransactionRequests {
@@ -802,7 +768,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(ExecutedTransaction::FIELDS),
+            message_fields: Some(crate::v1::transaction::ExecutedTransaction::FIELDS),
         };
         pub const ERROR_FIELD: &'static MessageField = &MessageField {
             name: "error",
@@ -843,9 +809,13 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn executed_transaction(mut self) -> ExecutedTransactionFieldPathBuilder {
+        pub fn executed_transaction(
+            mut self,
+        ) -> crate::v1::transaction::ExecutedTransactionFieldPathBuilder {
             self.path.push(TransactionResult::EXECUTED_TRANSACTION_FIELD.name);
-            ExecutedTransactionFieldPathBuilder::new_with_base(self.path)
+            crate::v1::transaction::ExecutedTransactionFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
         pub fn error(mut self) -> String {
             self.path.push(TransactionResult::ERROR_FIELD.name);
@@ -928,7 +898,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(Digest::FIELDS),
+            message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
         pub const READ_MASK_FIELD: &'static MessageField = &MessageField {
             name: "read_mask",
@@ -944,7 +914,7 @@ mod _field_impls {
             number: 5i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(TransactionFilter::FIELDS),
+            message_fields: Some(crate::v1::filter::TransactionFilter::FIELDS),
         };
         pub const EVENTS_FILTER_FIELD: &'static MessageField = &MessageField {
             name: "events_filter",
@@ -952,7 +922,7 @@ mod _field_impls {
             number: 6i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(EventFilter::FIELDS),
+            message_fields: Some(crate::v1::filter::EventFilter::FIELDS),
         };
         pub const MAX_MESSAGE_SIZE_BYTES_FIELD: &'static MessageField = &MessageField {
             name: "max_message_size_bytes",
@@ -1006,21 +976,27 @@ mod _field_impls {
             self.path.push(GetCheckpointRequest::SEQUENCE_NUMBER_FIELD.name);
             self.finish()
         }
-        pub fn digest(mut self) -> DigestFieldPathBuilder {
+        pub fn digest(mut self) -> crate::v1::types::DigestFieldPathBuilder {
             self.path.push(GetCheckpointRequest::DIGEST_FIELD.name);
-            DigestFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::DigestFieldPathBuilder::new_with_base(self.path)
         }
         pub fn read_mask(mut self) -> String {
             self.path.push(GetCheckpointRequest::READ_MASK_FIELD.name);
             self.finish()
         }
-        pub fn transactions_filter(mut self) -> TransactionFilterFieldPathBuilder {
+        pub fn transactions_filter(
+            mut self,
+        ) -> crate::v1::filter::TransactionFilterFieldPathBuilder {
             self.path.push(GetCheckpointRequest::TRANSACTIONS_FILTER_FIELD.name);
-            TransactionFilterFieldPathBuilder::new_with_base(self.path)
+            crate::v1::filter::TransactionFilterFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
-        pub fn events_filter(mut self) -> EventFilterFieldPathBuilder {
+        pub fn events_filter(
+            mut self,
+        ) -> crate::v1::filter::EventFilterFieldPathBuilder {
             self.path.push(GetCheckpointRequest::EVENTS_FILTER_FIELD.name);
-            EventFilterFieldPathBuilder::new_with_base(self.path)
+            crate::v1::filter::EventFilterFieldPathBuilder::new_with_base(self.path)
         }
         pub fn max_message_size_bytes(mut self) -> String {
             self.path.push(GetCheckpointRequest::MAX_MESSAGE_SIZE_BYTES_FIELD.name);
@@ -1058,7 +1034,7 @@ mod _field_impls {
             number: 4i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(TransactionFilter::FIELDS),
+            message_fields: Some(crate::v1::filter::TransactionFilter::FIELDS),
         };
         pub const EVENTS_FILTER_FIELD: &'static MessageField = &MessageField {
             name: "events_filter",
@@ -1066,7 +1042,7 @@ mod _field_impls {
             number: 5i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(EventFilter::FIELDS),
+            message_fields: Some(crate::v1::filter::EventFilter::FIELDS),
         };
         pub const FILTER_CHECKPOINTS_FIELD: &'static MessageField = &MessageField {
             name: "filter_checkpoints",
@@ -1137,13 +1113,19 @@ mod _field_impls {
             self.path.push(StreamCheckpointsRequest::READ_MASK_FIELD.name);
             self.finish()
         }
-        pub fn transactions_filter(mut self) -> TransactionFilterFieldPathBuilder {
+        pub fn transactions_filter(
+            mut self,
+        ) -> crate::v1::filter::TransactionFilterFieldPathBuilder {
             self.path.push(StreamCheckpointsRequest::TRANSACTIONS_FILTER_FIELD.name);
-            TransactionFilterFieldPathBuilder::new_with_base(self.path)
+            crate::v1::filter::TransactionFilterFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
-        pub fn events_filter(mut self) -> EventFilterFieldPathBuilder {
+        pub fn events_filter(
+            mut self,
+        ) -> crate::v1::filter::EventFilterFieldPathBuilder {
             self.path.push(StreamCheckpointsRequest::EVENTS_FILTER_FIELD.name);
-            EventFilterFieldPathBuilder::new_with_base(self.path)
+            crate::v1::filter::EventFilterFieldPathBuilder::new_with_base(self.path)
         }
         pub fn filter_checkpoints(mut self) -> String {
             self.path.push(StreamCheckpointsRequest::FILTER_CHECKPOINTS_FIELD.name);
@@ -1165,7 +1147,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(Checkpoint::FIELDS),
+            message_fields: Some(crate::v1::checkpoint::Checkpoint::FIELDS),
         };
         pub const EXECUTED_TRANSACTIONS_FIELD: &'static MessageField = &MessageField {
             name: "executed_transactions",
@@ -1173,7 +1155,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(ExecutedTransactions::FIELDS),
+            message_fields: Some(crate::v1::transaction::ExecutedTransactions::FIELDS),
         };
         pub const EVENTS_FIELD: &'static MessageField = &MessageField {
             name: "events",
@@ -1181,7 +1163,7 @@ mod _field_impls {
             number: 3i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(Event::FIELDS),
+            message_fields: Some(crate::v1::event::Event::FIELDS),
         };
         pub const PROGRESS_FIELD: &'static MessageField = &MessageField {
             name: "progress",
@@ -1189,7 +1171,9 @@ mod _field_impls {
             number: 4i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(Progress::FIELDS),
+            message_fields: Some(
+                crate::v1::ledger_service::checkpoint_data::Progress::FIELDS,
+            ),
         };
         pub const END_MARKER_FIELD: &'static MessageField = &MessageField {
             name: "end_marker",
@@ -1197,7 +1181,9 @@ mod _field_impls {
             number: 5i32,
             is_optional: false,
             is_map: false,
-            message_fields: Some(EndMarker::FIELDS),
+            message_fields: Some(
+                crate::v1::ledger_service::checkpoint_data::EndMarker::FIELDS,
+            ),
         };
     }
     impl CheckpointData {
@@ -1233,17 +1219,23 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn checkpoint(mut self) -> CheckpointFieldPathBuilder {
+        pub fn checkpoint(
+            mut self,
+        ) -> crate::v1::checkpoint::CheckpointFieldPathBuilder {
             self.path.push(CheckpointData::CHECKPOINT_FIELD.name);
-            CheckpointFieldPathBuilder::new_with_base(self.path)
+            crate::v1::checkpoint::CheckpointFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn executed_transactions(mut self) -> ExecutedTransactionsFieldPathBuilder {
+        pub fn executed_transactions(
+            mut self,
+        ) -> crate::v1::transaction::ExecutedTransactionsFieldPathBuilder {
             self.path.push(CheckpointData::EXECUTED_TRANSACTIONS_FIELD.name);
-            ExecutedTransactionsFieldPathBuilder::new_with_base(self.path)
+            crate::v1::transaction::ExecutedTransactionsFieldPathBuilder::new_with_base(
+                self.path,
+            )
         }
-        pub fn events(mut self) -> EventFieldPathBuilder {
+        pub fn events(mut self) -> crate::v1::event::EventFieldPathBuilder {
             self.path.push(CheckpointData::EVENTS_FIELD.name);
-            EventFieldPathBuilder::new_with_base(self.path)
+            crate::v1::event::EventFieldPathBuilder::new_with_base(self.path)
         }
         pub fn progress(mut self) -> checkpoint_data::ProgressFieldPathBuilder {
             self.path.push(CheckpointData::PROGRESS_FIELD.name);
@@ -1314,7 +1306,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(Epoch::FIELDS),
+            message_fields: Some(crate::v1::epoch::Epoch::FIELDS),
         };
     }
     impl MessageFields for GetEpochResponse {
@@ -1340,9 +1332,9 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn epoch(mut self) -> EpochFieldPathBuilder {
+        pub fn epoch(mut self) -> crate::v1::epoch::EpochFieldPathBuilder {
             self.path.push(GetEpochResponse::EPOCH_FIELD.name);
-            EpochFieldPathBuilder::new_with_base(self.path)
+            crate::v1::epoch::EpochFieldPathBuilder::new_with_base(self.path)
         }
     }
 }

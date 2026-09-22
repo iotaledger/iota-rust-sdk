@@ -5,14 +5,12 @@
 //! Transaction Builder errors.
 
 use base64ct::Error as Base64Error;
-use iota_types::{ObjectId, TransactionDigest};
-
-use crate::builder::gas_station::{GasStationVersion, VersionParsingError};
+use iota_types::{Address, ObjectId, TransactionDigest};
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 #[allow(missing_docs)]
-pub enum Error {
+pub enum TransactionBuilderError {
     #[error("Conversion error due to input issue: {0}")]
     Input(String),
     #[error("Gas object should be an immutable or owned object")]
@@ -52,8 +50,10 @@ pub enum Error {
     MissingInitialSharedVersion(ObjectId),
     #[error("Missing pure value")]
     MissingPureValue,
-    #[error("Missing gas station data")]
-    MissingGasStationData,
+    #[error("Missing protocol value: {name}")]
+    MissingProtocolValue { name: String },
+    #[error("Invalid protocol value: {name} = {value}")]
+    InvalidProtocolValue { name: String, value: String },
     #[error("Unknown shared object mutability for object {0}")]
     SharedObjectMutability(ObjectId),
     #[error("Unsupported literal")]
@@ -64,32 +64,14 @@ pub enum Error {
     InvalidMoveAuthAccount(String),
     #[error("Invalid argument for move authenticator: {0}")]
     InvalidMoveAuthArg(String),
-    #[error(transparent)]
-    InvalidUrl(<reqwest::Url as std::str::FromStr>::Err),
-    #[error("Request to gas station `{gas_station_url}` failed: {source}")]
-    GasStationRequest {
-        source: reqwest::Error,
-        gas_station_url: reqwest::Url,
-    },
-    #[
-        error("Invalid gas station response from {gas_station_url}{}", 
-        .message.as_deref().map(|msg| format!(": {msg}")).unwrap_or_default())
-    ]
-    GasStationResponse {
-        message: Option<String>,
-        gas_station_url: reqwest::Url,
-    },
+    #[error("gas coins were set on the transaction, but the gas sponsor supplies the gas payment")]
+    SponsorGasConflict,
     #[error(
-        "invalid gas-station version: got version `{version}`, but at least version `{min_required_version}` is required"
+        "sponsor {sponsor} was set on the transaction, but the gas sponsor supplies the gas payment"
     )]
-    InvalidGasStationVersion {
-        /// The minimum IOTA gas-station version needed for this operation.
-        min_required_version: GasStationVersion,
-        /// The actual IOTA gas-station's version.
-        version: GasStationVersion,
-    },
+    SponsorAddressConflict { sponsor: Address },
     #[error(transparent)]
-    VersionParsing(VersionParsingError),
+    GasSponsor(Box<dyn std::error::Error + Send + Sync>),
     #[error(transparent)]
     Signature(Box<dyn std::error::Error + Send + Sync>),
     #[error(transparent)]
@@ -98,7 +80,7 @@ pub enum Error {
     DryRun(String),
 }
 
-impl Error {
+impl TransactionBuilderError {
     /// Create a client error
     pub fn client<E: 'static + std::error::Error + Send + Sync>(e: E) -> Self {
         Self::Client(Box::new(e))
@@ -107,5 +89,10 @@ impl Error {
     /// Create a signature error
     pub fn signature<E: 'static + std::error::Error + Send + Sync>(e: E) -> Self {
         Self::Signature(Box::new(e))
+    }
+
+    /// Create a gas sponsor error
+    pub fn gas_sponsor<E: 'static + std::error::Error + Send + Sync>(e: E) -> Self {
+        Self::GasSponsor(Box::new(e))
     }
 }

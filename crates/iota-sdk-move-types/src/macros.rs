@@ -38,7 +38,7 @@ macro_rules! impl_try_from_object {
 
             fn try_from(object: &::iota_types::Object) -> Result<Self, Self::Error> {
                 let move_struct = object
-                    .as_struct_opt()
+                    .as_opt_struct()
                     .ok_or($crate::FromObjectError::NotAMoveStruct)?;
                 if !move_struct.object_type().$is_fn() {
                     return Err($crate::FromObjectError::WrongType);
@@ -79,7 +79,7 @@ macro_rules! impl_try_from_object_generic {
                 type_param: &::iota_types::TypeTag,
             ) -> Result<Self, $crate::FromObjectError> {
                 let move_struct = object
-                    .as_struct_opt()
+                    .as_opt_struct()
                     .ok_or($crate::FromObjectError::NotAMoveStruct)?;
                 let tag = move_struct.struct_tag();
                 if !tag.$is_fn() || tag.type_params() != ::core::slice::from_ref(type_param) {

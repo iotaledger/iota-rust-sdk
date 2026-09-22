@@ -5,36 +5,21 @@
 //! Events API implementation.
 
 use cynic::QueryBuilder;
-use futures::Stream;
 
 use crate::{
-    Client,
-    error::Result,
-    pagination::{Direction, Page, PaginationFilter},
+    GraphQLClient,
+    error::GraphQLResult,
+    pagination::{Page, PaginationFilter},
     query_types::{Event, EventFilter, EventsQuery, EventsQueryArgs},
-    streams::stream_paginated_query,
 };
 
-impl Client {
-    /// Return a stream of events based on the (optional) event filter.
-    pub fn events_stream(
-        &self,
-        filter: impl Into<Option<EventFilter>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<Event>> + '_ {
-        let filter = filter.into();
-        stream_paginated_query(
-            move |pag_filter| self.events(filter.clone(), pag_filter),
-            streaming_direction,
-        )
-    }
-
+impl GraphQLClient {
     /// Return a page of events based on the (optional) event filter.
     pub async fn events(
         &self,
         filter: impl Into<Option<EventFilter>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<Event>> {
+    ) -> GraphQLResult<Page<Event>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
         let operation = EventsQuery::build(EventsQueryArgs {

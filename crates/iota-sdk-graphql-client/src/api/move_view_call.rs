@@ -5,16 +5,16 @@ use cynic::QueryBuilder;
 use iota_types::{Address, ObjectId, ObjectReference, TypeTag};
 
 use crate::{
-    Client,
-    error::Result,
+    GraphQLClient,
+    error::GraphQLResult,
     query_types::{MoveViewCallArgs, MoveViewCallQuery, MoveViewResult},
 };
 
-impl Client {
+impl GraphQLClient {
     /// Execute a Move View Function with raw JSON arguments.
     ///
-    /// This is an alternative to [`Client::move_view_call`] that accepts raw
-    /// JSON values instead of typed arguments.
+    /// This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+    /// raw JSON values instead of typed arguments.
     ///
     /// A View Function is a function in a Move module with a return type that
     /// does not alter the state of the ledger. When using this interface,
@@ -24,7 +24,7 @@ impl Client {
     /// # Arguments
     /// * `function_name` - The Move function fully qualified name as
     ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x2::hash::blake2b256`
+    ///   `0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4::shop::total_revenue`
     /// * `type_arguments` - The type arguments of the Move function
     /// * `arguments` - The arguments to be passed into the Move function, in
     ///   JSON format
@@ -37,7 +37,7 @@ impl Client {
         function_name: impl Into<String>,
         type_arguments: impl Into<Option<Vec<String>>>,
         arguments: impl Into<Option<Vec<serde_json::Value>>>,
-    ) -> Result<MoveViewResult> {
+    ) -> GraphQLResult<MoveViewResult> {
         let operation = MoveViewCallQuery::build(MoveViewCallArgs {
             function_name: function_name.into(),
             type_arguments: type_arguments.into(),
@@ -67,18 +67,23 @@ impl Client {
     /// # Arguments
     /// * `function_name` - The Move function fully qualified name as
     ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x2::hash::blake2b256`
+    ///   `0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4::shop::total_revenue`
     /// * `type_arguments` - The type arguments of the Move function
     /// * `arguments` - The typed arguments to be passed into the Move function
     ///
     /// # Example
     /// ```rust,ignore
+    /// // The `view_demo` package published on testnet, and the shared
+    /// // `view_demo::shop::Shop` created when it was published.
+    /// let package = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4";
+    /// let shop = ObjectId::from_str(
+    ///     "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20",
+    /// )?;
+    ///
     /// // Single argument: wrap in a list or tuple
-    /// let result = client.move_view_call(
-    ///     "0x2::hash::blake2b256",
-    ///     None,
-    ///     [vec![0u8, 1, 2]],
-    /// ).await?;
+    /// let result = client
+    ///     .move_view_call(format!("{package}::shop::total_revenue"), None, (shop,))
+    ///     .await?;
     /// ```
     ///
     /// # Returns
@@ -89,7 +94,7 @@ impl Client {
         function_name: impl Into<String>,
         type_arguments: impl Into<Option<Vec<TypeTag>>>,
         arguments: A,
-    ) -> Result<MoveViewResult> {
+    ) -> GraphQLResult<MoveViewResult> {
         let type_args_strings = type_arguments
             .into()
             .map(|tags| tags.into_iter().map(|t| t.to_string()).collect());
@@ -307,160 +312,3 @@ macro_rules! impl_move_view_args_tuple {
 }
 
 variadics_please::all_tuples_enumerated!(impl_move_view_args_tuple, 2, 15, T);
-
-#[cfg(test)]
-mod tests {
-    use iota_types::TypeTag;
-
-    use crate::test_utils::test_client;
-
-    #[tokio::test]
-    async fn test_move_view_call() {
-        let client = test_client();
-
-        // Test blake2b256 hash function with typed arguments
-        let result = client
-            .move_view_call("0x2::hash::blake2b256", None, (vec![0u8, 1, 2],))
-            .await
-            .map_err(|e| {
-                format!(
-                    "Move view call query failed for {} network: Error: {e}",
-                    client.rpc_server()
-                )
-            })
-            .unwrap();
-
-        assert_eq!(
-            result.error, None,
-            "Move view call should not return an error"
-        );
-        assert!(
-            result.results.is_some(),
-            "Move view call should return results"
-        );
-        let results = result.results.unwrap();
-        assert_eq!(
-            results.len(),
-            1,
-            "Move view call should return exactly one result"
-        );
-        let expected_hash: Vec<u8> = vec![
-            61, 140, 61, 89, 73, 40, 39, 31, 68, 170, 215, 160, 75, 23, 113, 84, 128, 104, 103,
-            188, 249, 24, 225, 84, 156, 11, 193, 111, 157, 162, 176, 155,
-        ];
-        let actual_hash: Vec<u8> = results[0]
-            .as_array()
-            .expect("First result should be a JSON array")
-            .iter()
-            .map(|v| v.as_u64().expect("Each element should be a number") as u8)
-            .collect();
-        assert_eq!(actual_hash, expected_hash);
-
-        // Test option::some with type argument
-        let result = client
-            .move_view_call("0x1::option::some", Some(vec![TypeTag::U8]), (2u8,))
-            .await
-            .map_err(|e| {
-                format!(
-                    "Move view call query failed for {} network: Error: {e}",
-                    client.rpc_server()
-                )
-            })
-            .unwrap();
-        assert_eq!(
-            result.error, None,
-            "Move view call should not return an error"
-        );
-        assert!(
-            result.results.is_some(),
-            "Move view call should return results"
-        );
-        let results = result.results.unwrap();
-        assert_eq!(
-            results.len(),
-            1,
-            "Move view call should return exactly one result"
-        );
-        // option::some returns the wrapped value directly
-        assert_eq!(results[0], serde_json::json!(2));
-    }
-
-    #[tokio::test]
-    async fn test_move_view_call_json() {
-        let client = test_client();
-
-        // Test blake2b256 hash function with JSON arguments
-        let result = client
-            .move_view_call_json(
-                "0x2::hash::blake2b256",
-                None,
-                Some(vec![serde_json::json!([0, 1, 2])]),
-            )
-            .await
-            .map_err(|e| {
-                format!(
-                    "Move view call JSON query failed for {} network: Error: {e}",
-                    client.rpc_server()
-                )
-            })
-            .unwrap();
-
-        assert_eq!(
-            result.error, None,
-            "Move view call JSON should not return an error"
-        );
-        assert!(
-            result.results.is_some(),
-            "Move view call JSON should return results"
-        );
-        let results = result.results.unwrap();
-        assert_eq!(
-            results.len(),
-            1,
-            "Move view call JSON should return exactly one result"
-        );
-        let expected_hash: Vec<u8> = vec![
-            61, 140, 61, 89, 73, 40, 39, 31, 68, 170, 215, 160, 75, 23, 113, 84, 128, 104, 103,
-            188, 249, 24, 225, 84, 156, 11, 193, 111, 157, 162, 176, 155,
-        ];
-        let actual_hash: Vec<u8> = results[0]
-            .as_array()
-            .expect("First result should be a JSON array")
-            .iter()
-            .map(|v| v.as_u64().expect("Each element should be a number") as u8)
-            .collect();
-        assert_eq!(actual_hash, expected_hash);
-
-        // Test option::some with type argument
-        let result = client
-            .move_view_call_json(
-                "0x1::option::some",
-                Some(vec!["u8".to_string()]),
-                Some(vec![serde_json::json!(2u8)]),
-            )
-            .await
-            .map_err(|e| {
-                format!(
-                    "Move view call JSON query failed for {} network: Error: {e}",
-                    client.rpc_server()
-                )
-            })
-            .unwrap();
-        assert_eq!(
-            result.error, None,
-            "Move view call JSON should not return an error"
-        );
-        assert!(
-            result.results.is_some(),
-            "Move view call JSON should return results"
-        );
-        let results = result.results.unwrap();
-        assert_eq!(
-            results.len(),
-            1,
-            "Move view call JSON should return exactly one result"
-        );
-        // option::some returns the wrapped value directly
-        assert_eq!(results[0], serde_json::json!(2));
-    }
-}

@@ -12,14 +12,8 @@ use crate::types::{
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// struct-tag = address            ; address of the package
-///              identifier         ; name of the module
-///              identifier         ; name of the type
-///              (vector type-tag)  ; type parameters
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct StructTag(pub iota_sdk::types::StructTag);
@@ -76,9 +70,9 @@ impl StructTag {
     }
 
     /// Returns the coin type part of a `StructTag`, if this is a Coin type
-    pub fn coin_type_opt(&self) -> Option<Arc<TypeTag>> {
+    pub fn opt_coin_type(&self) -> Option<Arc<TypeTag>> {
         self.0
-            .coin_type_opt()
+            .opt_coin_type()
             .cloned()
             .map(Into::into)
             .map(Arc::new)
@@ -203,7 +197,6 @@ macro_rules! export_struct_tag_from_struct_tag_ctors {
 
 export_struct_tag_ctors!(
     AsciiString,
-    AuthenticatorState,
     Clock,
     DenyListAddressKey,
     DenyListConfigKey,
@@ -232,7 +225,9 @@ export_struct_tag_ctors!(
     Irc27Metadata,
     Kiosk,
     KioskOwnerCap,
-    Publisher
+    Publisher,
+    PackageMetadataKey,
+    AuthenticatorFunctionRefV1Key
 );
 export_struct_tag_from_type_tag_ctors!(
     Balance,
@@ -259,3 +254,4 @@ export_struct_tag_from_struct_tag_ctors!(
 
 crate::export_iota_types_objects_bcs_conversion!(Identifier, StructTag);
 crate::export_iota_types_objects_json_conversion!(Identifier, StructTag);
+crate::export_iota_types_objects_display!(Identifier, StructTag);

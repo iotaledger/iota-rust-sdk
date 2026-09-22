@@ -10,11 +10,18 @@ class Program
         var client = GraphQlClient.NewLocalnet();
         var gasStationUrl = "http://0.0.0.0:9527";
         var gasStationAuthToken = "test";
-        var keypair = Ed25519PrivateKey.Generate();
+        var keypair = Ed25519PrivateKey.Random();
         var sender = keypair.PublicKey().DeriveAddress();
         var signer = TransactionSigner.FromEd25519(keypair);
 
-        var builder = new TransactionBuilder(sender).WithClient(client);
+        var headers = new Dictionary<string, string[]>
+        {
+            { "Authorization", new[] { $"Bearer {gasStationAuthToken}" } }
+        };
+
+        var gasStation = new GasStation(gasStationUrl, null, headers);
+
+        var builder = client.TransactionBuilder(sender);
 
         builder.MoveCall(
             Address.Std(),
@@ -23,14 +30,7 @@ class Program
             new[] { PtbArgument.U64(64) }
         );
 
-        var headers = new Dictionary<string, string[]>
-        {
-            { "Authorization", new[] { $"Bearer {gasStationAuthToken}" } }
-        };
-
-        builder.GasStationSponsor(gasStationUrl, null, headers);
-
-        var res = await builder.Execute(signer);
+        var res = await builder.ExecuteWithGasStation(gasStation, signer);
 
         Console.WriteLine(res);
         Console.WriteLine("Sponsored transaction was successful!");

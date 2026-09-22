@@ -2,10 +2,10 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_types::{SimpleSignature, UserSignature};
+use iota_types::{PersonalMessage, PublicKey, SimpleSignature, Transaction, UserSignature};
 use signature::Verifier;
 
-use crate::SignatureError;
+use crate::{IotaVerifier, SignatureError};
 
 pub struct SimpleVerifier;
 
@@ -63,6 +63,64 @@ impl Verifier<UserSignature> for SimpleVerifier {
         <Self as Verifier<SimpleSignature>>::verify(self, message, signature)
     }
 }
+
+crate::impl_iota_verifier!(SimpleVerifier);
+
+// Implements `IotaVerifier` for `PublicKey`: schemes whose feature is
+// enabled delegate to the inner public key, disabled ones report the missing
+// feature.
+macro_rules! impl_iota_verifier_for_public_key {
+    ($($variant:ident = $feature:literal),+ $(,)?) => {
+        impl IotaVerifier for PublicKey {
+            fn verify_transaction(
+                &self,
+                transaction: &Transaction,
+                signature: &UserSignature,
+            ) -> Result<(), SignatureError> {
+                match self {
+                    $(
+                        #[cfg(feature = $feature)]
+                        PublicKey::$variant(public_key) => {
+                            public_key.verify_transaction(transaction, signature)
+                        }
+                        #[cfg(not(feature = $feature))]
+                        PublicKey::$variant(_) => Err(SignatureError::from_source(
+                            concat!("support for ", $feature, " is not enabled"),
+                        )),
+                    )+
+                    _ => Err(SignatureError::from_source("unknown signature scheme")),
+                }
+            }
+
+            fn verify_personal_message(
+                &self,
+                message: &PersonalMessage<'_>,
+                signature: &UserSignature,
+            ) -> Result<(), SignatureError> {
+                match self {
+                    $(
+                        #[cfg(feature = $feature)]
+                        PublicKey::$variant(public_key) => {
+                            public_key.verify_personal_message(message, signature)
+                        }
+                        #[cfg(not(feature = $feature))]
+                        PublicKey::$variant(_) => Err(SignatureError::from_source(
+                            concat!("support for ", $feature, " is not enabled"),
+                        )),
+                    )+
+                    _ => Err(SignatureError::from_source("unknown signature scheme")),
+                }
+            }
+        }
+    };
+}
+
+impl_iota_verifier_for_public_key!(
+    Ed25519 = "ed25519",
+    Secp256k1 = "secp256k1",
+    Secp256r1 = "secp256r1",
+    Passkey = "passkey",
+);
 
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
@@ -138,6 +196,77 @@ mod keypair {
 
         pub fn public_key(&self) -> PublicKey {
             self.verifying_key().public_key()
+        }
+
+        /// Returns the inner ed25519 private key, or `None` if this keypair
+        /// uses another scheme.
+        #[cfg(feature = "ed25519")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
+        pub fn as_opt_ed25519(&self) -> Option<&crate::ed25519::Ed25519PrivateKey> {
+            match &self.inner {
+                InnerKeypair::Ed25519(private_key) => Some(private_key),
+                #[cfg(any(feature = "secp256k1", feature = "secp256r1"))]
+                _ => None,
+            }
+        }
+
+        /// Returns the inner ed25519 private key.
+        ///
+        /// # Panics
+        ///
+        /// Panics if this keypair uses another scheme.
+        #[cfg(feature = "ed25519")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
+        pub fn as_ed25519(&self) -> &crate::ed25519::Ed25519PrivateKey {
+            self.as_opt_ed25519().expect("not an ed25519 private key")
+        }
+
+        /// Returns the inner secp256k1 private key, or `None` if this keypair
+        /// uses another scheme.
+        #[cfg(feature = "secp256k1")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]
+        pub fn as_opt_secp256k1(&self) -> Option<&crate::secp256k1::Secp256k1PrivateKey> {
+            match &self.inner {
+                InnerKeypair::Secp256k1(private_key) => Some(private_key),
+                #[cfg(any(feature = "ed25519", feature = "secp256r1"))]
+                _ => None,
+            }
+        }
+
+        /// Returns the inner secp256k1 private key.
+        ///
+        /// # Panics
+        ///
+        /// Panics if this keypair uses another scheme.
+        #[cfg(feature = "secp256k1")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]
+        pub fn as_secp256k1(&self) -> &crate::secp256k1::Secp256k1PrivateKey {
+            self.as_opt_secp256k1()
+                .expect("not a secp256k1 private key")
+        }
+
+        /// Returns the inner secp256r1 private key, or `None` if this keypair
+        /// uses another scheme.
+        #[cfg(feature = "secp256r1")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256r1")))]
+        pub fn as_opt_secp256r1(&self) -> Option<&crate::secp256r1::Secp256r1PrivateKey> {
+            match &self.inner {
+                InnerKeypair::Secp256r1(private_key) => Some(private_key),
+                #[cfg(any(feature = "ed25519", feature = "secp256k1"))]
+                _ => None,
+            }
+        }
+
+        /// Returns the inner secp256r1 private key.
+        ///
+        /// # Panics
+        ///
+        /// Panics if this keypair uses another scheme.
+        #[cfg(feature = "secp256r1")]
+        #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256r1")))]
+        pub fn as_secp256r1(&self) -> &crate::secp256r1::Secp256r1PrivateKey {
+            self.as_opt_secp256r1()
+                .expect("not a secp256r1 private key")
         }
 
         /// Encode a SimpleKeypair as `flag || privkey` in bytes
@@ -518,6 +647,8 @@ mod keypair {
         }
     }
 
+    crate::impl_iota_verifier!(SimpleVerifyingKey);
+
     #[cfg(feature = "ed25519")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
     impl From<crate::ed25519::Ed25519VerifyingKey> for SimpleVerifyingKey {
@@ -741,7 +872,8 @@ mod tests {
     fn test_bech32_roundtrip_ed25519() {
         use rand::{SeedableRng, rngs::StdRng};
 
-        let keypair: SimpleKeypair = Ed25519PrivateKey::generate(StdRng::from_seed([1; 32])).into();
+        let keypair: SimpleKeypair =
+            Ed25519PrivateKey::random_with(StdRng::from_seed([1; 32])).into();
         let encoded = keypair.to_bech32().unwrap();
         let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
         assert_eq!(keypair.public_key(), decoded.public_key());
@@ -757,7 +889,7 @@ mod tests {
         use rand::{SeedableRng, rngs::StdRng};
 
         let keypair: SimpleKeypair =
-            Secp256k1PrivateKey::generate(StdRng::from_seed([2; 32])).into();
+            Secp256k1PrivateKey::random_with(StdRng::from_seed([2; 32])).into();
         let encoded = keypair.to_bech32().unwrap();
         let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
         assert_eq!(keypair.public_key(), decoded.public_key());
@@ -773,7 +905,7 @@ mod tests {
         use rand::{SeedableRng, rngs::StdRng};
 
         let keypair: SimpleKeypair =
-            Secp256r1PrivateKey::generate(StdRng::from_seed([3; 32])).into();
+            Secp256r1PrivateKey::random_with(StdRng::from_seed([3; 32])).into();
         let encoded = keypair.to_bech32().unwrap();
         let decoded = SimpleKeypair::from_bech32(&encoded).unwrap();
         assert_eq!(keypair.public_key(), decoded.public_key());
@@ -798,5 +930,59 @@ mod tests {
         let invalid_data = "iotaprivkey1invalid";
         let result = SimpleKeypair::from_bech32(invalid_data);
         assert!(result.is_err());
+    }
+
+    // The CLI, the keystore and this crate all encode with the Bech32
+    // checksum, so a Bech32m checksum over the same payload must not decode.
+    #[cfg(feature = "bech32")]
+    #[test]
+    fn test_bech32_rejects_bech32m_checksum() {
+        use bech32::{Bech32, Bech32m, Hrp};
+        use rand::{SeedableRng, rngs::StdRng};
+
+        let keypair: SimpleKeypair =
+            Ed25519PrivateKey::random_with(StdRng::from_seed([4; 32])).into();
+        let hrp = Hrp::parse(crate::IOTA_PRIV_KEY_PREFIX).unwrap();
+        let payload = keypair.to_bytes();
+
+        let bech32 = bech32::encode::<Bech32>(hrp, &payload).unwrap();
+        assert_eq!(bech32, keypair.to_bech32().unwrap());
+        SimpleKeypair::from_bech32(&bech32).unwrap();
+
+        let bech32m = bech32::encode::<Bech32m>(hrp, &payload).unwrap();
+        assert_ne!(bech32, bech32m);
+        SimpleKeypair::from_bech32(&bech32m).unwrap_err();
+    }
+
+    #[proptest]
+    fn scheme_accessors(
+        ed25519: Ed25519PrivateKey,
+        secp256k1: Secp256k1PrivateKey,
+        secp256r1: Secp256r1PrivateKey,
+    ) {
+        let keypair = SimpleKeypair::from(ed25519.clone());
+        assert_eq!(keypair.as_opt_ed25519(), Some(&ed25519));
+        assert_eq!(keypair.as_ed25519(), &ed25519);
+        assert_eq!(keypair.as_opt_secp256k1(), None);
+        assert_eq!(keypair.as_opt_secp256r1(), None);
+
+        let keypair = SimpleKeypair::from(secp256k1.clone());
+        assert_eq!(keypair.as_opt_secp256k1(), Some(&secp256k1));
+        assert_eq!(keypair.as_secp256k1(), &secp256k1);
+        assert_eq!(keypair.as_opt_ed25519(), None);
+        assert_eq!(keypair.as_opt_secp256r1(), None);
+
+        let keypair = SimpleKeypair::from(secp256r1.clone());
+        assert_eq!(keypair.as_opt_secp256r1(), Some(&secp256r1));
+        assert_eq!(keypair.as_secp256r1(), &secp256r1);
+        assert_eq!(keypair.as_opt_ed25519(), None);
+        assert_eq!(keypair.as_opt_secp256k1(), None);
+    }
+
+    #[test]
+    #[should_panic = "not an ed25519 private key"]
+    fn as_ed25519_panics_on_other_scheme() {
+        let keypair = SimpleKeypair::from(Secp256k1PrivateKey::random());
+        keypair.as_ed25519();
     }
 }

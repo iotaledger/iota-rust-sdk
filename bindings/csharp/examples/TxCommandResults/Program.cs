@@ -7,11 +7,15 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var client = GraphQlClient.NewTestnet();
+        var client = GraphQlClient.NewLocalnet();
 
-        var sender = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
+        var privateKey = Ed25519PrivateKey.Random();
+        var sender = privateKey.PublicKey().DeriveAddress();
 
-        var builder = new TransactionBuilder(sender).WithClient(client);
+        var faucet = FaucetClient.NewLocalnet();
+        await faucet.RequestAndWaitForFinalized(sender, client);
+
+        var builder = client.TransactionBuilder(sender);
 
         var packageAddr = Address.Std();
         var moduleName = new Identifier("u64");
@@ -51,7 +55,7 @@ class Program
         Console.WriteLine($"Signing Digest: {txn.SigningDigestHex()}");
         Console.WriteLine($"Txn Bytes: {txn.ToBase64()}");
 
-        var res = await client.DryRunTx(txn);
+        var res = await client.DryRunTransaction(txn);
 
         if (res.Error != null)
         {

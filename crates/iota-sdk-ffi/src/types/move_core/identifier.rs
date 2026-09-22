@@ -7,16 +7,19 @@ use crate::error::Result;
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// identifier = %d1-128    ; length of the identifier
-///              (ALPHA *127(ALPHA / DIGIT / UNDERSCORE)) /
-///              (UNDERSCORE 1*127(ALPHA / DIGIT / UNDERSCORE))
-///
-/// UNDERSCORE = %x95
-/// ```
-#[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[derive(
+    Debug,
+    derive_more::Display,
+    derive_more::From,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    uniffi::Object,
+)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct Identifier(pub iota_sdk::types::Identifier);
 
@@ -47,7 +50,6 @@ macro_rules! export_identifier_consts {
 export_identifier_consts!(
     // Module name constants
     ASCII_MODULE,
-    AUTHENTICATOR_STATE_MODULE,
     BAG_MODULE,
     BALANCE_MODULE,
     CLOCK_MODULE,

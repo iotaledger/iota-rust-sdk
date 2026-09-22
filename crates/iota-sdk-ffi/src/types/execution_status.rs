@@ -3,7 +3,7 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::{CommandArgumentError, Identifier, TypeArgumentError};
+use iota_sdk::types::Identifier;
 
 use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
@@ -11,14 +11,9 @@ use crate::types::{address::Address, digest::Digest, object::ObjectId};
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// execution-status = success / failure
-/// success = %d00
-/// failure = %d01 execution-error (option u64)
-/// ```
-#[derive(uniffi::Enum)]
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[derive(Clone, uniffi::Enum)]
 pub enum ExecutionStatus {
     /// The Transaction successfully executed.
     Success,
@@ -44,7 +39,9 @@ impl From<iota_sdk::types::ExecutionStatus> for ExecutionStatus {
                 error: error.into(),
                 command,
             },
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new ExecutionStatus enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -65,93 +62,9 @@ impl From<ExecutionStatus> for iota_sdk::types::ExecutionStatus {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// 
-/// execution-error =  insufficient-gas
-///                 =/ invalid-gas-object
-///                 =/ invariant-violation
-///                 =/ feature-not-yet-supported
-///                 =/ object-too-big
-///                 =/ package-too-big
-///                 =/ circular-object-ownership
-///                 =/ insufficient-coin-balance
-///                 =/ coin-balance-overflow
-///                 =/ publish-error-non-zero-address
-///                 =/ iota-move-verification-error
-///                 =/ move-primitive-runtime-error
-///                 =/ move-abort
-///                 =/ vm-verification-or-deserialization-error
-///                 =/ vm-invariant-violation
-///                 =/ function-not-found
-///                 =/ arity-mismatch
-///                 =/ type-arity-mismatch
-///                 =/ non-entry-function-invoked
-///                 =/ command-argument-error
-///                 =/ type-argument-error
-///                 =/ unused-value-without-drop
-///                 =/ invalid-public-function-return-type
-///                 =/ invalid-transfer-object
-///                 =/ effects-too-large
-///                 =/ publish-upgrade-missing-dependency
-///                 =/ publish-upgrade-dependency-downgrade
-///                 =/ package-upgrade-error
-///                 =/ written-objects-too-large
-///                 =/ certificate-denied
-///                 =/ iota-move-verification-timeout
-///                 =/ shared-object-operation-not-allowed
-///                 =/ input-object-deleted
-///                 =/ execution-cancelled-due-to-shared-object-congestion
-///                 =/ address-denied-for-coin
-///                 =/ coin-type-global-pause
-///                 =/ execution-cancelled-due-to-randomness-unavailable
-///                 =/ execution-cancelled-due-to-shared-object-congestion-v2
-///                 =/ invalid-linkage
-///                 =/ move-authentication-error
-///
-/// insufficient-gas                                       = %d00
-/// invalid-gas-object                                     = %d01
-/// invariant-violation                                    = %d02
-/// feature-not-yet-supported                              = %d03
-/// object-too-big                                         = %d04 u64 u64
-/// package-too-big                                        = %d05 u64 u64
-/// circular-object-ownership                              = %d06 object-id
-/// insufficient-coin-balance                              = %d07
-/// coin-balance-overflow                                  = %d08
-/// publish-error-non-zero-address                         = %d09
-/// iota-move-verification-error                           = %d10
-/// move-primitive-runtime-error                           = %d11 (option move-location)
-/// move-abort                                             = %d12 move-location u64
-/// vm-verification-or-deserialization-error               = %d13
-/// vm-invariant-violation                                 = %d14
-/// function-not-found                                     = %d15
-/// arity-mismatch                                         = %d16
-/// type-arity-mismatch                                    = %d17
-/// non-entry-function-invoked                             = %d18
-/// command-argument-error                                 = %d19 u16 command-argument-error
-/// type-argument-error                                    = %d20 u16 type-argument-error
-/// unused-value-without-drop                              = %d21 u16 u16
-/// invalid-public-function-return-type                    = %d22 u16
-/// invalid-transfer-object                                = %d23
-/// effects-too-large                                      = %d24 u64 u64
-/// publish-upgrade-missing-dependency                     = %d25
-/// publish-upgrade-dependency-downgrade                   = %d26
-/// package-upgrade-error                                  = %d27 package-upgrade-error
-/// written-objects-too-large                              = %d28 u64 u64
-/// certificate-denied                                     = %d29
-/// iota-move-verification-timeout                         = %d30
-/// shared-object-operation-not-allowed                    = %d31
-/// input-object-deleted                                   = %d32
-/// execution-cancelled-due-to-shared-object-congestion    = %d33 (vector object-id)
-/// address-denied-for-coin                                = %d34 address string
-/// coin-type-global-pause                                 = %d35 string
-/// execution-cancelled-due-to-randomness-unavailable      = %d36
-/// execution-cancelled-due-to-shared-object-congestion-v2 = %d37 (vector object-id) u64
-/// invalid-linkage                                        = %d38
-/// move-authentication-error                              = %d39 execution-error
-/// ```
-#[derive(uniffi::Enum)]
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[derive(Clone, uniffi::Enum)]
 pub enum ExecutionError {
     // General transaction errors
     /// Insufficient Gas
@@ -251,13 +164,13 @@ pub enum ExecutionError {
     SharedObjectOperationNotAllowed,
     /// Requested shared object has been deleted
     InputObjectDeleted,
-    /// Certificate is cancelled due to congestion on shared objects
-    ExecutionCancelledDueToSharedObjectCongestion {
+    /// Certificate is canceled due to congestion on shared objects
+    ExecutionCanceledDueToSharedObjectCongestion {
         congested_objects: Vec<Arc<ObjectId>>,
     },
-    /// Certificate is cancelled due to congestion on shared objects;
+    /// Certificate is canceled due to congestion on shared objects;
     /// suggested gas price can be used to give this certificate more priority.
-    ExecutionCancelledDueToSharedObjectCongestionV2 {
+    ExecutionCanceledDueToSharedObjectCongestionV2 {
         congested_objects: Vec<Arc<ObjectId>>,
         suggested_gas_price: u64,
     },
@@ -268,9 +181,9 @@ pub enum ExecutionError {
     },
     /// Coin type is globally paused for use
     CoinTypeGlobalPause { coin_type: String },
-    /// Certificate is cancelled because randomness could not be generated this
+    /// Certificate is canceled because randomness could not be generated this
     /// epoch
-    ExecutionCancelledDueToRandomnessUnavailable,
+    ExecutionCanceledDueToRandomnessUnavailable,
     /// A valid linkage was unable to be determined for the transaction or one
     /// of its commands.
     InvalidLinkage,
@@ -279,6 +192,23 @@ pub enum ExecutionError {
     /// wrapped error is the failure produced by the authenticator's
     /// execution.
     MoveAuthentication { error: Arc<ExecutionErrorWrapper> },
+    /// Certificate is canceled because the execution workers are congested;
+    /// suggested gas price can be used to give this certificate more priority.
+    /// No individual object is responsible, so none is reported.
+    ExecutionCanceledDueToExecutionWorkerCongestion { suggested_gas_price: u64 },
+    /// Move vector element (passed to MakeMoveVec) is larger than the maximum
+    /// size. The maximum is scaled based on the type of the vector element.
+    MoveVectorElemTooBig {
+        value_size: u64,
+        max_scaled_size: u64,
+    },
+    /// Move value (possibly an upgrade ticket or a dev-inspect value) is larger
+    /// than the maximum size. The maximum is scaled based on the type of the
+    /// value.
+    MoveRawValueTooBig {
+        value_size: u64,
+        max_scaled_size: u64,
+    },
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -353,14 +283,17 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 Self::NonEntryFunctionInvoked
             }
             iota_sdk::types::ExecutionError::CommandArgumentError { argument, kind } => {
-                Self::CommandArgument { argument, kind }
+                Self::CommandArgument {
+                    argument,
+                    kind: kind.into(),
+                }
             }
             iota_sdk::types::ExecutionError::TypeArgumentError {
                 type_argument,
                 kind,
             } => Self::TypeArgument {
                 type_argument,
-                kind,
+                kind: kind.into(),
             },
             iota_sdk::types::ExecutionError::UnusedValueWithoutDrop { result, subresult } => {
                 Self::UnusedValueWithoutDrop { result, subresult }
@@ -400,19 +333,19 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 Self::SharedObjectOperationNotAllowed
             }
             iota_sdk::types::ExecutionError::InputObjectDeleted => Self::InputObjectDeleted,
-            iota_sdk::types::ExecutionError::ExecutionCancelledDueToSharedObjectCongestion {
+            iota_sdk::types::ExecutionError::ExecutionCanceledDueToSharedObjectCongestion {
                 congested_objects,
-            } => Self::ExecutionCancelledDueToSharedObjectCongestion {
+            } => Self::ExecutionCanceledDueToSharedObjectCongestion {
                 congested_objects: congested_objects
                     .into_iter()
                     .map(Into::into)
                     .map(Arc::new)
                     .collect(),
             },
-            iota_sdk::types::ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+            iota_sdk::types::ExecutionError::ExecutionCanceledDueToSharedObjectCongestionV2 {
                 congested_objects,
                 suggested_gas_price,
-            } => Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
+            } => Self::ExecutionCanceledDueToSharedObjectCongestionV2 {
                 congested_objects: congested_objects
                     .into_iter()
                     .map(Into::into)
@@ -429,8 +362,8 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
             iota_sdk::types::ExecutionError::CoinTypeGlobalPause { coin_type } => {
                 Self::CoinTypeGlobalPause { coin_type }
             }
-            iota_sdk::types::ExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
-                Self::ExecutionCancelledDueToRandomnessUnavailable
+            iota_sdk::types::ExecutionError::ExecutionCanceledDueToRandomnessUnavailable => {
+                Self::ExecutionCanceledDueToRandomnessUnavailable
             }
             iota_sdk::types::ExecutionError::InvalidLinkage => Self::InvalidLinkage,
             iota_sdk::types::ExecutionError::MoveAuthentication { error } => {
@@ -438,7 +371,28 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                     error: Arc::new(ExecutionErrorWrapper(*error)),
                 }
             }
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            iota_sdk::types::ExecutionError::ExecutionCanceledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            } => Self::ExecutionCanceledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            },
+            iota_sdk::types::ExecutionError::MoveVectorElemTooBig {
+                value_size,
+                max_scaled_size,
+            } => Self::MoveVectorElemTooBig {
+                value_size,
+                max_scaled_size,
+            },
+            iota_sdk::types::ExecutionError::MoveRawValueTooBig {
+                value_size,
+                max_scaled_size,
+            } => Self::MoveRawValueTooBig {
+                value_size,
+                max_scaled_size,
+            },
+            _ => unimplemented!(
+                "a new ExecutionError enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -486,15 +440,16 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             ExecutionError::ArityMismatch => Self::ArityMismatch,
             ExecutionError::TypeArityMismatch => Self::TypeArityMismatch,
             ExecutionError::NonEntryFunctionInvoked => Self::NonEntryFunctionInvoked,
-            ExecutionError::CommandArgument { argument, kind } => {
-                Self::CommandArgumentError { argument, kind }
-            }
+            ExecutionError::CommandArgument { argument, kind } => Self::CommandArgumentError {
+                argument,
+                kind: kind.into(),
+            },
             ExecutionError::TypeArgument {
                 type_argument,
                 kind,
             } => Self::TypeArgumentError {
                 type_argument,
-                kind,
+                kind: kind.into(),
             },
             ExecutionError::UnusedValueWithoutDrop { result, subresult } => {
                 Self::UnusedValueWithoutDrop { result, subresult }
@@ -532,15 +487,15 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 Self::SharedObjectOperationNotAllowed
             }
             ExecutionError::InputObjectDeleted => Self::InputObjectDeleted,
-            ExecutionError::ExecutionCancelledDueToSharedObjectCongestion { congested_objects } => {
-                Self::ExecutionCancelledDueToSharedObjectCongestion {
+            ExecutionError::ExecutionCanceledDueToSharedObjectCongestion { congested_objects } => {
+                Self::ExecutionCanceledDueToSharedObjectCongestion {
                     congested_objects: congested_objects.into_iter().map(|v| **v).collect(),
                 }
             }
-            ExecutionError::ExecutionCancelledDueToSharedObjectCongestionV2 {
+            ExecutionError::ExecutionCanceledDueToSharedObjectCongestionV2 {
                 congested_objects,
                 suggested_gas_price,
-            } => Self::ExecutionCancelledDueToSharedObjectCongestionV2 {
+            } => Self::ExecutionCanceledDueToSharedObjectCongestionV2 {
                 congested_objects: congested_objects.into_iter().map(|v| **v).collect(),
                 suggested_gas_price,
             },
@@ -553,12 +508,31 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             ExecutionError::CoinTypeGlobalPause { coin_type } => {
                 Self::CoinTypeGlobalPause { coin_type }
             }
-            ExecutionError::ExecutionCancelledDueToRandomnessUnavailable => {
-                Self::ExecutionCancelledDueToRandomnessUnavailable
+            ExecutionError::ExecutionCanceledDueToRandomnessUnavailable => {
+                Self::ExecutionCanceledDueToRandomnessUnavailable
             }
             ExecutionError::InvalidLinkage => Self::InvalidLinkage,
             ExecutionError::MoveAuthentication { error } => Self::MoveAuthentication {
                 error: Box::new(error.0.clone()),
+            },
+            ExecutionError::ExecutionCanceledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            } => Self::ExecutionCanceledDueToExecutionWorkerCongestion {
+                suggested_gas_price,
+            },
+            ExecutionError::MoveVectorElemTooBig {
+                value_size,
+                max_scaled_size,
+            } => Self::MoveVectorElemTooBig {
+                value_size,
+                max_scaled_size,
+            },
+            ExecutionError::MoveRawValueTooBig {
+                value_size,
+                max_scaled_size,
+            } => Self::MoveRawValueTooBig {
+                value_size,
+                max_scaled_size,
             },
         }
     }
@@ -568,12 +542,9 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// move-location = object-id identifier u16 u16 (option identifier)
-/// ```
-#[derive(uniffi::Record)]
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[derive(Clone, uniffi::Record)]
 pub struct MoveLocation {
     /// The package id
     pub package: Arc<ObjectId>,
@@ -617,37 +588,9 @@ impl From<MoveLocation> for iota_sdk::types::MoveLocation {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// command-argument-error =  type-mismatch
-///                        =/ invalid-bcs-bytes
-///                        =/ invalid-usage-of-pure-argument
-///                        =/ invalid-argument-to-private-entry-function
-///                        =/ index-out-of-bounds
-///                        =/ secondary-index-out-of-bound
-///                        =/ invalid-result-arity
-///                        =/ invalid-gas-coin-usage
-///                        =/ invalid-value-usage
-///                        =/ invalid-object-by-value
-///                        =/ invalid-object-by-mut-ref
-///                        =/ shared-object-operation-not-allowed
-///
-/// type-mismatch                               = %d00
-/// invalid-bcs-bytes                           = %d01
-/// invalid-usage-of-pure-argument              = %d02
-/// invalid-argument-to-private-entry-function  = %d03
-/// index-out-of-bounds                         = %d04 u16
-/// secondary-index-out-of-bound                = %d05 u16 u16
-/// invalid-result-arity                        = %d06 u16
-/// invalid-gas-coin-usage                      = %d07
-/// invalid-value-usage                         = %d08
-/// invalid-object-by-value                     = %d09
-/// invalid-object-by-mut-ref                   = %d10
-/// shared-object-operation-not-allowed         = %d11
-/// ```
-#[uniffi::remote(Enum)]
-#[non_exhaustive]
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[derive(Clone, uniffi::Enum)]
 pub enum CommandArgumentError {
     /// The type of the value does not match the expected type
     TypeMismatch,
@@ -685,28 +628,83 @@ pub enum CommandArgumentError {
     InvalidArgumentArity,
 }
 
+impl From<iota_sdk::types::CommandArgumentError> for CommandArgumentError {
+    fn from(value: iota_sdk::types::CommandArgumentError) -> Self {
+        match value {
+            iota_sdk::types::CommandArgumentError::TypeMismatch => Self::TypeMismatch,
+            iota_sdk::types::CommandArgumentError::InvalidBcsBytes => Self::InvalidBcsBytes,
+            iota_sdk::types::CommandArgumentError::InvalidUsageOfPureArgument => {
+                Self::InvalidUsageOfPureArgument
+            }
+            iota_sdk::types::CommandArgumentError::InvalidArgumentToPrivateEntryFunction => {
+                Self::InvalidArgumentToPrivateEntryFunction
+            }
+            iota_sdk::types::CommandArgumentError::IndexOutOfBounds { index } => {
+                Self::IndexOutOfBounds { index }
+            }
+            iota_sdk::types::CommandArgumentError::SecondaryIndexOutOfBounds {
+                result,
+                subresult,
+            } => Self::SecondaryIndexOutOfBounds { result, subresult },
+            iota_sdk::types::CommandArgumentError::InvalidResultArity { result } => {
+                Self::InvalidResultArity { result }
+            }
+            iota_sdk::types::CommandArgumentError::InvalidGasCoinUsage => Self::InvalidGasCoinUsage,
+            iota_sdk::types::CommandArgumentError::InvalidValueUsage => Self::InvalidValueUsage,
+            iota_sdk::types::CommandArgumentError::InvalidObjectByValue => {
+                Self::InvalidObjectByValue
+            }
+            iota_sdk::types::CommandArgumentError::InvalidObjectByMutRef => {
+                Self::InvalidObjectByMutRef
+            }
+            iota_sdk::types::CommandArgumentError::SharedObjectOperationNotAllowed => {
+                Self::SharedObjectOperationNotAllowed
+            }
+            iota_sdk::types::CommandArgumentError::InvalidArgumentArity => {
+                Self::InvalidArgumentArity
+            }
+            _ => unimplemented!(
+                "a new CommandArgumentError enum variant was added and needs to be handled"
+            ),
+        }
+    }
+}
+
+impl From<CommandArgumentError> for iota_sdk::types::CommandArgumentError {
+    fn from(value: CommandArgumentError) -> Self {
+        match value {
+            CommandArgumentError::TypeMismatch => Self::TypeMismatch,
+            CommandArgumentError::InvalidBcsBytes => Self::InvalidBcsBytes,
+            CommandArgumentError::InvalidUsageOfPureArgument => Self::InvalidUsageOfPureArgument,
+            CommandArgumentError::InvalidArgumentToPrivateEntryFunction => {
+                Self::InvalidArgumentToPrivateEntryFunction
+            }
+            CommandArgumentError::IndexOutOfBounds { index } => Self::IndexOutOfBounds { index },
+            CommandArgumentError::SecondaryIndexOutOfBounds { result, subresult } => {
+                Self::SecondaryIndexOutOfBounds { result, subresult }
+            }
+            CommandArgumentError::InvalidResultArity { result } => {
+                Self::InvalidResultArity { result }
+            }
+            CommandArgumentError::InvalidGasCoinUsage => Self::InvalidGasCoinUsage,
+            CommandArgumentError::InvalidValueUsage => Self::InvalidValueUsage,
+            CommandArgumentError::InvalidObjectByValue => Self::InvalidObjectByValue,
+            CommandArgumentError::InvalidObjectByMutRef => Self::InvalidObjectByMutRef,
+            CommandArgumentError::SharedObjectOperationNotAllowed => {
+                Self::SharedObjectOperationNotAllowed
+            }
+            CommandArgumentError::InvalidArgumentArity => Self::InvalidArgumentArity,
+        }
+    }
+}
+
 /// An error with a upgrading a package
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// package-upgrade-error = unable-to-fetch-package /
-///                         not-a-package           /
-///                         incompatible-upgrade    /
-///                         digest-does-not-match   /
-///                         unknown-upgrade-policy  /
-///                         package-id-does-not-match
-///
-/// unable-to-fetch-package     = %d00 object-id
-/// not-a-package               = %d01 object-id
-/// incompatible-upgrade        = %d02
-/// digest-does-not-match       = %d03 digest
-/// unknown-upgrade-policy      = %d04 u8
-/// package-id-does-not-match   = %d05 object-id object-id
-/// ```
-#[derive(uniffi::Enum)]
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[derive(Clone, uniffi::Enum)]
 pub enum PackageUpgradeError {
     /// Unable to fetch package
     UnableToFetchPackage { package_id: Arc<ObjectId> },
@@ -752,7 +750,9 @@ impl From<iota_sdk::types::PackageUpgradeError> for PackageUpgradeError {
                 package_id: Arc::new(package_id.into()),
                 ticket_id: Arc::new(ticket_id.into()),
             },
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new PackageUpgradeError enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -790,16 +790,10 @@ impl From<PackageUpgradeError> for iota_sdk::types::PackageUpgradeError {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// type-argument-error = type-not-found / constraint-not-satisfied
-/// type-not-found = %d00
-/// constraint-not-satisfied = %d01
-/// ```
-#[uniffi::remote(Enum)]
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[derive(Clone, uniffi::Enum)]
 #[repr(u8)]
-#[non_exhaustive]
 pub enum TypeArgumentError {
     /// A type was not found in the module specified
     TypeNotFound,
@@ -807,19 +801,53 @@ pub enum TypeArgumentError {
     ConstraintNotSatisfied,
 }
 
+impl From<iota_sdk::types::TypeArgumentError> for TypeArgumentError {
+    fn from(value: iota_sdk::types::TypeArgumentError) -> Self {
+        match value {
+            iota_sdk::types::TypeArgumentError::TypeNotFound => Self::TypeNotFound,
+            iota_sdk::types::TypeArgumentError::ConstraintNotSatisfied => {
+                Self::ConstraintNotSatisfied
+            }
+            _ => {
+                unimplemented!(
+                    "a new TypeArgumentError enum variant was added and needs to be handled"
+                )
+            }
+        }
+    }
+}
+
+impl From<TypeArgumentError> for iota_sdk::types::TypeArgumentError {
+    fn from(value: TypeArgumentError) -> Self {
+        match value {
+            TypeArgumentError::TypeNotFound => Self::TypeNotFound,
+            TypeArgumentError::ConstraintNotSatisfied => Self::ConstraintNotSatisfied,
+        }
+    }
+}
+
 crate::export_iota_types_bcs_conversion!(
     ExecutionStatus,
     ExecutionError,
     MoveLocation,
-    CommandArgumentError,
     PackageUpgradeError,
+    CommandArgumentError,
     TypeArgumentError
 );
 crate::export_iota_types_json_conversion!(
     ExecutionStatus,
     ExecutionError,
     MoveLocation,
-    CommandArgumentError,
     PackageUpgradeError,
+    CommandArgumentError,
     TypeArgumentError
 );
+crate::export_iota_types_display!(
+    ExecutionStatus,
+    ExecutionError,
+    MoveLocation,
+    PackageUpgradeError,
+    CommandArgumentError,
+    TypeArgumentError
+);
+crate::export_iota_types_objects_display!(ExecutionErrorWrapper);

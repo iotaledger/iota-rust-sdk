@@ -3,12 +3,7 @@
 //
 // Demonstrates converting a Transaction to and from JSON.
 
-import {
-  Transaction,
-  transactionFromJson,
-  transactionToJson,
-  initAsync,
-} from "@iota/sdk-wasm";
+import { Transaction, initAsync } from "@iota/sdk-wasm";
 
 await initAsync();
 
@@ -20,9 +15,9 @@ const txBytesBase64 =
 const transaction = Transaction.fromBase64(txBytesBase64);
 
 // Convert the transaction to JSON
-const json = transactionToJson(transaction);
+const json = transaction.toJson();
 console.log(`Transaction as JSON:\n${json}`);
 
 // Convert the JSON back to a transaction
-const parsedTransaction = transactionFromJson(json);
+const parsedTransaction = Transaction.fromJson(json);
 console.log(`Parsed transaction back from JSON: ${parsedTransaction}`);

@@ -14,10 +14,10 @@ class Program
 
         var transaction = Transaction.FromBase64(txBytesBase64);
 
-        var json = Iota.TransactionToJson(transaction);
+        var json = transaction.ToJson();
         Console.WriteLine($"Transaction as JSON:\n{json}");
 
-        var parsedTransaction = Iota.TransactionFromJson(json);
+        var parsedTransaction = Transaction.FromJson(json);
         Console.WriteLine($"Parsed transaction back from JSON: {parsedTransaction}");
     }
 }

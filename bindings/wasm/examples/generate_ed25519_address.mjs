@@ -5,7 +5,7 @@ import { base64Encode, Ed25519PrivateKey, initAsync } from "@iota/sdk-wasm";
 
 await initAsync();
 
-const privateKey = Ed25519PrivateKey.generate();
+const privateKey = Ed25519PrivateKey.random();
 const privateKeyBech32 = privateKey.toBech32();
 const publicKey = privateKey.publicKey();
 const flaggedPublicKey = publicKey.toFlaggedBytes();

@@ -1,0 +1,17 @@
+# Renders the generated Python bindings (bindings/python/lib/iota_sdk.py,
+# produced by `make python`) as Docusaurus markdown.
+# Run from the repository root: pydoc-markdown scripts/reference-docs/pydoc-markdown.yml
+loaders:
+  - type: python
+    search_path: [../../bindings/python/lib]
+    modules: [iota_sdk]
+processors:
+  - type: filter # drops private (underscore-prefixed) UniFFI plumbing
+    expression: not name.startswith('_') and default()
+  - type: smart
+  - type: crossref
+renderer:
+  type: docusaurus
+  docs_base_path: dist/reference-docs/python/docs
+  relative_output_path: python
+  sidebar_top_level_label: Reference

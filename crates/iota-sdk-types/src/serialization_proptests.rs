@@ -127,7 +127,7 @@ serialization_test!(ChangeEpochV3);
 serialization_test!(ChangeEpochV4);
 serialization_test!(Command);
 serialization_test!(ConsensusCommitPrologueV1);
-serialization_test!(CancelledTransaction);
+serialization_test!(CanceledTransaction);
 serialization_test!(ConsensusDeterminedVersionAssignments);
 serialization_test!(VersionAssignment);
 serialization_test!(DenyRuleSet);

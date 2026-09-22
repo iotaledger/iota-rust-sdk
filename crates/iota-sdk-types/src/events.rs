@@ -8,11 +8,8 @@ use super::{Address, Identifier, ObjectId, StructTag};
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// transaction-events = vector event
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Default, derive_more::Deref, derive_more::DerefMut, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -30,11 +27,8 @@ impl crate::TreeDisplay for TransactionEvents {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// event = object-id identifier address struct-tag bytes
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -51,7 +45,7 @@ pub struct Event {
     pub sender: Address,
     /// The type of the event emitted
     #[cfg_attr(feature = "serde", serde(rename = "type"))]
-    pub type_: StructTag,
+    pub struct_tag: StructTag,
     /// BCS serialized bytes of the event
     #[cfg_attr(
         feature = "serde",
@@ -63,9 +57,9 @@ pub struct Event {
 
 impl Event {
     fn is_system_epoch_info_event_type(&self, name: Identifier) -> bool {
-        self.type_.address() == Address::SYSTEM
-            && *self.type_.module() == Identifier::IOTA_SYSTEM_STATE_INNER_MODULE
-            && *self.type_.name() == name
+        self.struct_tag.address() == Address::SYSTEM
+            && *self.struct_tag.module() == Identifier::IOTA_SYSTEM_STATE_INNER_MODULE
+            && *self.struct_tag.name() == name
     }
 
     /// Checks if this is a `SystemEpochInfoEvent` of any version (V1 or V2).
@@ -92,7 +86,7 @@ impl crate::TreeDisplay for Event {
         w.leaf("Package ID", &self.package_id, false)?;
         w.leaf("Module", &self.module, false)?;
         w.leaf("Sender", &self.sender, false)?;
-        w.leaf("Type", &self.type_, false)?;
+        w.leaf("Struct Tag", &self.struct_tag, false)?;
         w.leaf("Contents", &hex::encode(&self.contents), true)
     }
 }

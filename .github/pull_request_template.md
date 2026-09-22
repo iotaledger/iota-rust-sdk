@@ -16,7 +16,7 @@ the diff, delete it. Repeat until a pass deletes nothing.
 
 ## What changes
 
-<!-- The change at the level of concepts: behaviour that differs, invariants that now hold,
+<!-- The change at the level of concepts: behavior that differs, invariants that now hold,
      the new shape. Not the symbols that moved. -->
 
 ## Test plan

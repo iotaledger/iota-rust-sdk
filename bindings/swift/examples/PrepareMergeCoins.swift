@@ -17,7 +17,7 @@ struct PrepareMergeCoinsExample {
     let coin1 = try PtbArgument.objectIdFromHex(
       hex: "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")
 
-    let builder = TransactionBuilder(sender: sender).withClient(client: client)
+    let builder = client.transactionBuilder(sender: sender)
 
     _ = builder.mergeCoins(primaryCoin: coin0, consumedCoins: [coin1])
 

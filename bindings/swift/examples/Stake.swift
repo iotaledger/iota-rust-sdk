@@ -22,7 +22,7 @@ struct StakeExample {
 
     print("Staking to validator", validator.name ?? "with no name")
 
-    let builder = TransactionBuilder(sender: myAddress).withClient(client: client)
+    let builder = client.transactionBuilder(sender: myAddress)
 
     _ = builder.stake(
       stake: PtbArgument.u64(value: 1_000_000_000), validatorAddress: validator.address)

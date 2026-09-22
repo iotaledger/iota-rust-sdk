@@ -5,14 +5,14 @@ use std::str::FromStr;
 
 use eyre::Result;
 use iota_sdk::{
-    graphql_client::Client,
-    transaction_builder::{TransactionBuilder, assigned},
+    graphql_client::GraphQLClient,
+    transaction_builder::assigned,
     types::{Address, ObjectId},
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     let coin =
         ObjectId::from_str("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;
@@ -32,7 +32,7 @@ async fn main() -> Result<()> {
         ),
     ];
 
-    let mut builder = TransactionBuilder::new(sender).with_client(&client);
+    let mut builder = client.transaction_builder(sender);
 
     // Extract amounts from recipients
     let amounts: Vec<u64> = recipients.iter().map(|(_, amt)| *amt).collect();
@@ -51,7 +51,7 @@ async fn main() -> Result<()> {
     println!("Signing Digest: {}", txn.signing_digest_hex());
     println!("Txn Bytes: {}", txn.to_base64());
 
-    let res = client.dry_run_tx(&txn, false).await?;
+    let res = client.dry_run_transaction(&txn, false).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to send IOTA: {err}");

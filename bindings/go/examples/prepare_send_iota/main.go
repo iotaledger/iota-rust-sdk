@@ -24,7 +24,7 @@ func main() {
 
 	toAddress := addrFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 
-	builder := iota_sdk.NewTransactionBuilder(fromAddress).WithClient(client)
+	builder := client.TransactionBuilder(fromAddress)
 	builder.SendIota(toAddress, iota_sdk.PtbArgumentU64(5000000000))
 
 	txn, err := builder.Finish()
@@ -35,7 +35,7 @@ func main() {
 	log.Printf("Signing Digest: %v", txn.SigningDigestHex())
 	log.Printf("Txn Bytes: %v", txn.ToBase64())
 
-	res, err := client.DryRunTx(txn, false)
+	res, err := client.DryRunTransaction(txn, false)
 	if err != nil {
 		log.Fatalf("Failed to send IOTA: %v", err)
 	}

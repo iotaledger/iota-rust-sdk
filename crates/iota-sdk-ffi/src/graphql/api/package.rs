@@ -5,14 +5,12 @@
 
 use std::sync::Arc;
 
-use iota_sdk::graphql_client::pagination::PaginationFilter;
-
 use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
         pagination::MovePackagePage,
-        query_types::{MoveFunction, MoveModule},
+        query_types::{MoveFunction, MoveModule, PaginationFilter},
     },
     types::{address::Address, object::MovePackage, version::Version},
 };
@@ -64,7 +62,7 @@ impl GraphQLClient {
             .await
             .package_versions(
                 **address,
-                pagination_filter.unwrap_or_default(),
+                pagination_filter.map(Into::into).unwrap_or_default(),
                 after_version.map(|v| **v),
                 before_version.map(|v| **v),
             )
@@ -106,7 +104,7 @@ impl GraphQLClient {
             .read()
             .await
             .packages(
-                pagination_filter.unwrap_or_default(),
+                pagination_filter.map(Into::into).unwrap_or_default(),
                 after_checkpoint,
                 before_checkpoint,
             )
@@ -164,10 +162,16 @@ impl GraphQLClient {
                 **package,
                 module,
                 version.map(|v| **v),
-                pagination_filter_enums.unwrap_or_default(),
-                pagination_filter_friends.unwrap_or_default(),
-                pagination_filter_functions.unwrap_or_default(),
-                pagination_filter_structs.unwrap_or_default(),
+                pagination_filter_enums.map(Into::into).unwrap_or_default(),
+                pagination_filter_friends
+                    .map(Into::into)
+                    .unwrap_or_default(),
+                pagination_filter_functions
+                    .map(Into::into)
+                    .unwrap_or_default(),
+                pagination_filter_structs
+                    .map(Into::into)
+                    .unwrap_or_default(),
             )
             .await?
             .map(Into::into))

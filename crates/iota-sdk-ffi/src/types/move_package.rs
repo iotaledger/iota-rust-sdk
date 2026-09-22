@@ -99,3 +99,5 @@ impl MovePackageData {
         self.0.digest.into()
     }
 }
+
+crate::export_iota_types_objects_display!(UpgradePolicy, MovePackageData);

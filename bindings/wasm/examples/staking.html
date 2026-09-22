@@ -297,13 +297,12 @@
       import {
         initAsync,
         GraphQlClient,
-        TransactionBuilder,
         PtbArgument,
         MoveArg,
         Address,
         UserSignature,
-        transactionFromBcs,
-        WaitForTx,
+        Transaction,
+        WaitForTransaction,
       } from "../dist/iota-sdk.js";
 
       // The IOTA wallet extension calls .toJSON() on the transaction object
@@ -664,8 +663,8 @@
           // The .stake() method is a high-level helper that splits the
           // requested amount from the gas coin and stakes it.
           const stakeArg = PtbArgument.moveArg(MoveArg.u64(amountNanos));
-          const builder = new TransactionBuilder(senderAddr)
-            .withClient(client)
+          const builder = client
+            .transactionBuilder(senderAddr)
             .stake(stakeArg, validatorAddr);
 
           // Finalize the transaction (resolves gas, etc.)
@@ -758,14 +757,14 @@
           // The wallet returns { bytes, signature } — we need to submit
           // the transaction + signature to the network via our SDK client.
           const signedBytes = fromBase64(signed.bytes);
-          const signedTx = transactionFromBcs(signedBytes.buffer);
+          const signedTx = Transaction.fromBcs(signedBytes.buffer);
 
           const sigBytes = fromBase64(signed.signature);
           const userSig = UserSignature.fromBytes(sigBytes.buffer);
-          const effects = await client.executeTx(
+          const effects = await client.executeTransaction(
             [userSig],
             signedTx,
-            WaitForTx.Finalized,
+            WaitForTransaction.Finalized,
           );
           return effects.digest().toBase58();
         }

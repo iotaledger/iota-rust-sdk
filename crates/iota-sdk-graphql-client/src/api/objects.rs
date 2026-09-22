@@ -10,20 +10,20 @@ use futures::Stream;
 use iota_types::{Object, ObjectId, Version};
 
 use crate::{
-    Client,
-    error::Result,
+    GraphQLClient,
+    error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter},
     query_types::{ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs},
     streams::stream_paginated_query,
 };
 
-impl Client {
+impl GraphQLClient {
     /// Return a stream of objects based on the (optional) object filter.
     pub fn objects_stream(
         &self,
         filter: impl Into<Option<ObjectFilter>>,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<Object>> + '_ {
+    ) -> impl Stream<Item = GraphQLResult<Object>> + '_ {
         let filter = filter.into();
         stream_paginated_query(
             move |pag_filter| self.objects(filter.clone(), pag_filter),
@@ -40,7 +40,7 @@ impl Client {
         &self,
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
-    ) -> Result<Option<Object>> {
+    ) -> GraphQLResult<Option<Object>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
             version: version.into().map(|v| v.as_u64()),
@@ -63,25 +63,21 @@ impl Client {
 
     /// Return a page of objects based on the provided parameters.
     ///
-    /// Use this function together with the [`ObjectFilter::owner`] to get the
-    /// objects owned by an address.
+    /// Use this function together with
+    /// [`ObjectFilter::with_owner`] to get the objects owned by an address.
     ///
     /// # Example
     ///
     /// ```rust,ignore
-    /// let filter = ObjectFilter {
-    ///     type_: None,
-    ///     owner: Some(Address::from_str("test").unwrap().into()),
-    ///     object_ids: None,
-    /// };
+    /// let filter = ObjectFilter::default().with_owner(Address::from_str("test").unwrap());
     ///
-    /// let owned_objects = client.objects(None, None, Some(filter), None, None).await;
+    /// let owned_objects = client.objects(filter, PaginationFilter::default()).await;
     /// ```
     pub async fn objects(
         &self,
         filter: impl Into<Option<ObjectFilter>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<Object>> {
+    ) -> GraphQLResult<Page<Object>> {
         let pagination = self.pagination_filter(pagination_filter).await;
         let operation = ObjectsQuery::build(ObjectsQueryArgs {
             after: pagination.after,
@@ -114,7 +110,7 @@ impl Client {
 
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
     /// [`Address`](iota_types::Address).
-    pub async fn object_bcs(&self, object_id: ObjectId) -> Result<Option<Vec<u8>>> {
+    pub async fn object_bcs(&self, object_id: ObjectId) -> GraphQLResult<Option<Vec<u8>>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
             version: None,
@@ -140,7 +136,7 @@ impl Client {
         &self,
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
-    ) -> Result<Option<serde_json::Value>> {
+    ) -> GraphQLResult<Option<serde_json::Value>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
             version: version.into().map(|v| v.as_u64()),
@@ -164,7 +160,7 @@ impl Client {
         &self,
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
-    ) -> Result<Option<Vec<u8>>> {
+    ) -> GraphQLResult<Option<Vec<u8>>> {
         let operation = ObjectQuery::build(ObjectQueryArgs {
             object_id,
             version: version.into().map(|v| v.as_u64()),

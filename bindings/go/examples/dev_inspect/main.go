@@ -48,7 +48,7 @@ func main() {
 	name := "name.iota"
 	fmt.Printf("Looking up name: %s\n", name)
 
-	builder := iota_sdk.NewTransactionBuilder(sender).WithClient(client)
+	builder := client.TransactionBuilder(sender)
 
 	// Create identifiers
 	iotaNamesModule := identifier("iota_names")

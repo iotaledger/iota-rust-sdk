@@ -6,38 +6,115 @@ use std::{path::Path, str::FromStr};
 
 use heck::ToPascalCase;
 use proc_macro2::TokenStream;
-use prost_types::field_descriptor_proto::Type;
+use prost_reflect::{FieldDescriptor, MessageDescriptor, OneofDescriptor};
+use prost_types::{
+    FieldDescriptorProto,
+    field_descriptor_proto::{Label, Type},
+};
 use quote::quote;
 
 use crate::{
     codegen::accessor_config::{AccessorMap, AccessorTypes},
     context::Context,
-    message_graph::{Field, Message, OneofField},
+    ident::sanitize_identifier,
 };
+
+/// The fields prost stores directly on the generated struct: everything that is
+/// not a member of a real `oneof`. A synthetic proto3-optional oneof is not a
+/// oneof as far as prost is concerned, so its field belongs here.
+fn struct_fields(message: &MessageDescriptor) -> impl Iterator<Item = FieldDescriptor> {
+    message.fields().filter(|field| {
+        field
+            .containing_oneof()
+            .is_none_or(|oneof| oneof.is_synthetic())
+    })
+}
+
+/// The `oneof` declarations prost turns into an enum, in declaration order.
+fn real_oneofs(message: &MessageDescriptor) -> impl Iterator<Item = OneofDescriptor> {
+    message.oneofs().filter(|oneof| !oneof.is_synthetic())
+}
+
+/// Key and value fields of the entry message backing a map field, or `None`
+/// when the field is not a map.
+fn map_entry_fields(
+    field: &FieldDescriptor,
+) -> Option<(FieldDescriptorProto, FieldDescriptorProto)> {
+    if !field.is_map() {
+        return None;
+    }
+    let entry = field.kind().as_message()?.clone();
+    Some((
+        entry.map_entry_key_field().field_descriptor_proto().clone(),
+        entry
+            .map_entry_value_field()
+            .field_descriptor_proto()
+            .clone(),
+    ))
+}
+
+/// Whether prost wrapped the field in `Option`, which decides the shape of
+/// every accessor generated for it.
+///
+/// Deliberately not [`FieldDescriptor::supports_presence`], which is also true
+/// for scalar members of a oneof — prost keeps those in the oneof enum rather
+/// than an `Option`.
+fn is_optional(field: &FieldDescriptorProto) -> bool {
+    if field.proto3_optional.unwrap_or(false) {
+        return true;
+    }
+
+    if field.label() != Label::Optional {
+        return false;
+    }
+
+    matches!(field.r#type(), Type::Message)
+}
+
+fn is_repeated(field: &FieldDescriptorProto) -> bool {
+    field.label() == Label::Repeated
+}
+
+fn is_message(field: &FieldDescriptorProto) -> bool {
+    matches!(field.r#type(), Type::Message)
+}
+
+fn is_enum(field: &FieldDescriptorProto) -> bool {
+    matches!(field.r#type(), Type::Enum)
+}
+
+fn is_well_known_type(field: &FieldDescriptorProto) -> bool {
+    field.type_name().starts_with(".google.protobuf")
+}
+
+/// Fully qualified name with the leading dot protobuf paths carry and the
+/// descriptor pool omits.
+fn qualified(name: &str) -> String {
+    format!(".{name}")
+}
 
 pub(crate) fn generate_accessors(
     context: &Context,
     out_dir: &Path,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
-    accessor_map: &AccessorMap,
 ) {
-    for package in context.graph().packages.iter() {
-        let mut buf = String::new();
+    for package in context.packages() {
         let mut stream = TokenStream::new();
 
-        for message in context
-            .graph()
-            .messages
-            .values()
-            .filter(|m| &m.package == package && !context.is_extern(&m.type_name))
-        {
+        // Emit in the order the protos declare their messages, so a generated
+        // file reads like the `.proto` it comes from.
+        let messages = context
+            .all_messages_in_declaration_order(&package)
+            .into_iter()
+            .filter(|message| !context.is_extern(message.full_name()));
+
+        for message in messages {
             stream.extend(generate_accessors_for_message(
                 context,
-                message,
+                &message,
                 boxed_types_prost,
                 boxed_types_accessor,
-                accessor_map,
             ));
         }
 
@@ -55,13 +132,14 @@ pub(crate) fn generate_accessors(
             let code = prettyplease::unparse(&ast);
 
             // Add IOTA license header
+            let mut buf = String::new();
             buf.push_str("// Copyright (c) Mysten Labs, Inc.\n");
             buf.push_str("// Modifications Copyright (c) 2026 IOTA Stiftung\n");
             buf.push_str("// SPDX-License-Identifier: Apache-2.0\n");
             buf.push('\n');
             buf.push_str(&code);
 
-            let file_name = format!("{}.accessors.rs", package.trim_start_matches('.'));
+            let file_name = format!("{package}.accessors.rs");
             std::fs::write(out_dir.join(file_name), &buf).unwrap();
         }
     }
@@ -69,14 +147,15 @@ pub(crate) fn generate_accessors(
 
 fn generate_accessors_for_message(
     context: &Context,
-    message: &Message,
+    message: &MessageDescriptor,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
-    accessor_map: &AccessorMap,
 ) -> TokenStream {
-    let package = format!("{}.__accessors", message.package);
-    let message_rust_path =
-        TokenStream::from_str(&context.resolve_ident(&package, &message.type_name)).unwrap();
+    let package = format!("{}.__accessors", qualified(message.package_name()));
+    let message_rust_path = TokenStream::from_str(
+        &context.accessor_type_path(&package, &qualified(message.full_name())),
+    )
+    .unwrap();
 
     let mut functions = TokenStream::new();
 
@@ -84,11 +163,10 @@ fn generate_accessors_for_message(
     // generate it if so. We do this at the message level (instead of per-field)
     // to avoid generating multiple default_instance functions for the same message
     // if multiple fields need it.
-    let needs_default_instance = message_needs_default_instance(message, accessor_map);
+    let needs_default_instance = message_needs_default_instance(message, context.accessor_map());
 
     if needs_default_instance {
         functions.extend(generate_const_default_functions(
-            context,
             message,
             &message_rust_path,
         ));
@@ -99,7 +177,6 @@ fn generate_accessors_for_message(
         message,
         boxed_types_prost,
         boxed_types_accessor,
-        accessor_map,
     ));
 
     // Only generate the impl block if there are any functions
@@ -119,17 +196,14 @@ fn generate_accessors_for_message(
 /// This is needed when:
 /// 1. DEFAULT is explicitly requested, OR
 /// 2. GETTER is requested AND a getter method will actually be generated
-fn message_needs_default_instance(message: &Message, accessor_map: &AccessorMap) -> bool {
-    let message_name = message
-        .type_name
-        .rsplit('.')
-        .next()
-        .unwrap_or(&message.type_name);
+fn message_needs_default_instance(message: &MessageDescriptor, accessor_map: &AccessorMap) -> bool {
+    let message_full_name = message.full_name();
 
     // Check regular fields
-    for field in &message.fields {
+    for field in struct_fields(message) {
+        let descriptor = field.field_descriptor_proto();
         if let Some(accessor_types) =
-            AccessorTypes::from_field(&field.inner, accessor_map, message_name)
+            AccessorTypes::from_field(descriptor, accessor_map, message_full_name)
         {
             // Always generate if DEFAULT is explicitly set
             if accessor_types.contains(AccessorTypes::DEFAULT) {
@@ -139,11 +213,14 @@ fn message_needs_default_instance(message: &Message, accessor_map: &AccessorMap)
             // Check if GETTER is set AND will actually generate a getter method
             if accessor_types.contains(AccessorTypes::GETTER) {
                 // Maps and repeated fields always generate getters
-                if field.is_map() || field.is_repeated() {
+                if field.is_map() || is_repeated(descriptor) {
                     return true;
                 }
                 // Optional fields only generate getters for message types (non-well-known)
-                if field.is_optional() && field.is_message() && !field.is_well_known_type() {
+                if is_optional(descriptor)
+                    && is_message(descriptor)
+                    && !is_well_known_type(descriptor)
+                {
                     return true;
                 }
                 // Required/implicit optional fields don't generate getters, so
@@ -153,11 +230,13 @@ fn message_needs_default_instance(message: &Message, accessor_map: &AccessorMap)
     }
 
     // Check oneof fields - these always generate getters if GETTER is set
-    for oneof_field in &message.oneof_fields {
-        for field in &oneof_field.fields {
-            if let Some(accessor_types) =
-                AccessorTypes::from_field(&field.inner, accessor_map, message_name)
-            {
+    for oneof in real_oneofs(message) {
+        for field in oneof.fields() {
+            if let Some(accessor_types) = AccessorTypes::from_field(
+                field.field_descriptor_proto(),
+                accessor_map,
+                message_full_name,
+            ) {
                 if accessor_types.contains(AccessorTypes::DEFAULT) {
                     return true;
                 }
@@ -174,35 +253,32 @@ fn message_needs_default_instance(message: &Message, accessor_map: &AccessorMap)
 
 fn generate_accessors_functions(
     context: &Context,
-    message: &Message,
+    message: &MessageDescriptor,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
-    accessor_map: &AccessorMap,
 ) -> TokenStream {
     let mut accessors = TokenStream::new();
 
-    for field in &message.fields {
+    for field in struct_fields(message) {
         accessors.extend(generate_accessors_functions_for_field(
             context,
             message,
-            field,
+            &field,
             None,
             boxed_types_prost,
             boxed_types_accessor,
-            accessor_map,
         ));
     }
 
-    for oneof_field in &message.oneof_fields {
-        for field in &oneof_field.fields {
+    for oneof in real_oneofs(message) {
+        for field in oneof.fields() {
             accessors.extend(generate_accessors_functions_for_field(
                 context,
                 message,
-                field,
-                Some(oneof_field),
+                &field,
+                Some(&oneof),
                 boxed_types_prost,
                 boxed_types_accessor,
-                accessor_map,
             ));
         }
     }
@@ -210,9 +286,13 @@ fn generate_accessors_functions(
     accessors
 }
 
-fn is_field_boxed_from_config(message: &Message, field: &Field, boxed_types: &[String]) -> bool {
+fn is_field_boxed_from_config(
+    message: &MessageDescriptor,
+    field: &FieldDescriptor,
+    boxed_types: &[String],
+) -> bool {
     // Create the field path pattern and check against boxed_types config
-    let field_path = format!("{}.{}", message.type_name, field.inner.name());
+    let field_path = format!("{}.{}", qualified(message.full_name()), field.name());
 
     boxed_types
         .iter()
@@ -221,23 +301,18 @@ fn is_field_boxed_from_config(message: &Message, field: &Field, boxed_types: &[S
 
 fn generate_accessors_functions_for_field(
     context: &Context,
-    message: &Message,
-    field: &Field,
-    oneof: Option<&OneofField>,
+    message: &MessageDescriptor,
+    field: &FieldDescriptor,
+    oneof: Option<&OneofDescriptor>,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
-    accessor_map: &AccessorMap,
 ) -> TokenStream {
-    // Extract the simple message name from the fully qualified type name
-    // e.g., ".iota.grpc.v1.ledger_service.ObjectRequest" -> "ObjectRequest"
-    let message_name = message
-        .type_name
-        .rsplit('.')
-        .next()
-        .unwrap_or(&message.type_name);
-
     // Check if this field has the accessors custom option
-    let accessor_types = match AccessorTypes::from_field(&field.inner, accessor_map, message_name) {
+    let accessor_types = match AccessorTypes::from_field(
+        field.field_descriptor_proto(),
+        context.accessor_map(),
+        message.full_name(),
+    ) {
         Some(types) => types,
         None => return TokenStream::new(), // No option, skip this field
     };
@@ -256,20 +331,21 @@ fn generate_accessors_functions_for_field(
 
 fn generate_selective_accessors_for_field(
     context: &Context,
-    message: &Message,
-    field: &Field,
-    oneof: Option<&OneofField>,
+    message: &MessageDescriptor,
+    field: &FieldDescriptor,
+    oneof: Option<&OneofDescriptor>,
     boxed_types_prost: &[String],
     boxed_types_accessor: &[String],
     accessor_types: AccessorTypes,
 ) -> TokenStream {
-    let package = format!("{}.__accessors", message.package);
-    let name = quote::format_ident!("{}", field.rust_struct_field_name());
-    let name_opt = quote::format_ident!("{}_opt", field.inner.name());
-    let set_name = quote::format_ident!("set_{}", field.inner.name());
-    let name_mut = quote::format_ident!("{}_mut", field.inner.name());
-    let name_opt_mut = quote::format_ident!("{}_opt_mut", field.inner.name());
-    let with_name = quote::format_ident!("with_{}", field.inner.name());
+    let descriptor = field.field_descriptor_proto();
+    let package = format!("{}.__accessors", qualified(message.package_name()));
+    let name = quote::format_ident!("{}", sanitize_identifier(field.name()));
+    let name_opt = quote::format_ident!("{}_opt", field.name());
+    let set_name = quote::format_ident!("set_{}", field.name());
+    let name_mut = quote::format_ident!("{}_mut", field.name());
+    let name_opt_mut = quote::format_ident!("{}_opt_mut", field.name());
+    let with_name = quote::format_ident!("with_{}", field.name());
 
     // doc comments
 
@@ -290,7 +366,7 @@ fn generate_selective_accessors_for_field(
 
     let is_boxed_in_accessor = is_field_boxed_from_config(message, field, boxed_types_accessor);
     let is_boxed_in_prost = is_field_boxed_from_config(message, field, boxed_types_prost);
-    let base_field_type_path = field.resolve_rust_type_path(context, &package);
+    let base_field_type_path = field_type_path(descriptor, context, &package);
     let field_type_path = if is_boxed_in_accessor {
         TokenStream::from_str(&format!(
             "::prost::alloc::boxed::Box<{base_field_type_path}>"
@@ -314,39 +390,39 @@ fn generate_selective_accessors_for_field(
         quote! { field.into() }
     };
 
-    let setter_assignment_value = if use_into_for_setter(field) {
+    let setter_assignment_value = if use_into_for_setter(descriptor) {
         quote! { #into_conversion }
     } else {
         quote! { field }
     };
 
-    let set_param_type = if use_into_for_setter(field) {
+    let set_param_type = if use_into_for_setter(descriptor) {
         quote! { <T: Into<#field_type_path>>(&mut self, field: T) }
     } else {
         quote! { (&mut self, field: #field_type_path) }
     };
 
-    let with_param_type = if use_into_for_setter(field) {
+    let with_param_type = if use_into_for_setter(descriptor) {
         quote! { <T: Into<#field_type_path>>(mut self, field: T) }
     } else {
         quote! { (mut self, field: #field_type_path) }
     };
 
-    let default_instance = TokenStream::from_str(&type_default(field, context, &package)).unwrap();
+    let default_instance =
+        TokenStream::from_str(&type_default(descriptor, context, &package)).unwrap();
     let ref_return_type =
-        TokenStream::from_str(&ref_return_type(field, context, &package)).unwrap();
-    let field_as = if is_ref_return(field) {
+        TokenStream::from_str(&ref_return_type(descriptor, context, &package)).unwrap();
+    let field_as = if is_ref_return(descriptor) {
         quote! {field as _}
     } else {
         quote! {*field}
     };
 
-    if let Some((key, value)) = &field.map {
+    if let Some((key, value)) = &map_entry_fields(field) {
         // Map Types
-        let key_type =
-            TokenStream::from_str(&resolve_rust_type_path(key, context, &package)).unwrap();
+        let key_type = TokenStream::from_str(&map_entry_type_path(key, context, &package)).unwrap();
         let value_type =
-            TokenStream::from_str(&resolve_rust_type_path(value, context, &package)).unwrap();
+            TokenStream::from_str(&map_entry_type_path(value, context, &package)).unwrap();
 
         let mut accessors = TokenStream::new();
 
@@ -388,11 +464,11 @@ fn generate_selective_accessors_for_field(
         }
 
         accessors
-    } else if field.is_repeated() {
+    } else if is_repeated(descriptor) {
         let mut accessors = TokenStream::new();
 
         // For repeated enum fields, prost stores them as Vec<i32>
-        let is_enum = field.is_enum();
+        let is_enum = is_enum(descriptor);
         let storage_type = if is_enum {
             TokenStream::from_str("i32").unwrap()
         } else {
@@ -438,21 +514,21 @@ fn generate_selective_accessors_for_field(
 
         accessors
     } else if let Some(oneof) = oneof {
-        if field.inner.type_name() == ".google.protobuf.Empty" {
+        if descriptor.type_name() == ".google.protobuf.Empty" {
             return TokenStream::new();
         }
 
-        let oneof_field = quote::format_ident!("{}", oneof.rust_struct_field_name());
-        let oneof_type_path = TokenStream::from_str(&context.resolve_ident(
+        let oneof_field = quote::format_ident!("{}", sanitize_identifier(oneof.name()));
+        let oneof_type_path = TokenStream::from_str(&context.accessor_type_path(
             &package,
             &format!(
                 "{}.{}",
-                message.type_name,
-                oneof.descriptor.name().to_pascal_case()
+                qualified(message.full_name()),
+                oneof.name().to_pascal_case()
             ),
         ))
         .unwrap();
-        let variant = quote::format_ident!("{}", field.inner.name().to_pascal_case());
+        let variant = quote::format_ident!("{}", field.name().to_pascal_case());
 
         name_mut_comments.push(
             " If any other oneof field in the same oneof is set, it will be cleared.".to_owned(),
@@ -549,13 +625,13 @@ fn generate_selective_accessors_for_field(
         }
 
         accessors
-    } else if field.is_optional() {
+    } else if is_optional(descriptor) {
         let mut accessors = TokenStream::new();
 
         // only include "bare getter" for message types
         if accessor_types.contains(AccessorTypes::GETTER)
-            && field.is_message()
-            && !field.is_well_known_type()
+            && is_message(descriptor)
+            && !is_well_known_type(descriptor)
         {
             accessors.extend(quote! {
                 #( #[doc = #name_comments] )*
@@ -569,7 +645,7 @@ fn generate_selective_accessors_for_field(
         }
 
         // Only include mut getters for non bytes/enum types
-        if !matches!(field.inner.r#type(), Type::Bytes | Type::Enum) {
+        if !matches!(descriptor.r#type(), Type::Bytes | Type::Enum) {
             if accessor_types.contains(AccessorTypes::MUT_OPT) {
                 accessors.extend(quote! {
                     #( #[doc = #name_opt_mut_comments] )*
@@ -594,7 +670,7 @@ fn generate_selective_accessors_for_field(
 
         // only include _opt and set for non enums (as this already exists for enums
         // from prost)
-        if !matches!(field.inner.r#type(), Type::Enum)
+        if !matches!(descriptor.r#type(), Type::Enum)
             && accessor_types.contains(AccessorTypes::GETTER_OPT)
         {
             accessors.extend(quote! {
@@ -607,8 +683,7 @@ fn generate_selective_accessors_for_field(
             });
         }
 
-        if !matches!(field.inner.r#type(), Type::Enum)
-            && accessor_types.contains(AccessorTypes::SET)
+        if !matches!(descriptor.r#type(), Type::Enum) && accessor_types.contains(AccessorTypes::SET)
         {
             accessors.extend(quote! {
                 #( #[doc = #set_name_comments] )*
@@ -621,7 +696,7 @@ fn generate_selective_accessors_for_field(
         if accessor_types.contains(AccessorTypes::WITH) {
             // For optional enum fields, prost stores as Option<i32>.
             // Take the enum type and convert via .into().
-            if field.is_enum() {
+            if is_enum(descriptor) {
                 accessors.extend(quote! {
                     #( #[doc = #set_name_comments] )*
                     pub fn #with_name(mut self, field: #field_type_path) -> Self {
@@ -650,7 +725,7 @@ fn generate_selective_accessors_for_field(
         // field_type_path resolves to the enum type. We need special
         // handling: take the enum type as parameter and convert via
         // .into() for assignment.
-        if field.is_enum() {
+        if is_enum(descriptor) {
             if accessor_types.contains(AccessorTypes::SET) {
                 accessors.extend(quote! {
                     #( #[doc = #set_name_comments] )*
@@ -673,7 +748,7 @@ fn generate_selective_accessors_for_field(
             return accessors;
         }
 
-        if field.inner.r#type() != Type::Bytes && accessor_types.contains(AccessorTypes::MUT) {
+        if descriptor.r#type() != Type::Bytes && accessor_types.contains(AccessorTypes::MUT) {
             accessors.extend(quote! {
             #( #[doc = #name_mut_comments] )*
                 pub fn #name_mut(&mut self) -> &mut #field_type_path {
@@ -706,30 +781,30 @@ fn generate_selective_accessors_for_field(
 }
 
 fn generate_const_default_functions(
-    _context: &Context,
-    message: &Message,
+    message: &MessageDescriptor,
     message_rust_path: &TokenStream,
 ) -> TokenStream {
     let mut const_default_fields = TokenStream::new();
 
-    for field in &message.fields {
-        let field_name = quote::format_ident!("{}", field.rust_struct_field_name());
+    for field in struct_fields(message) {
+        let descriptor = field.field_descriptor_proto();
+        let field_name = quote::format_ident!("{}", sanitize_identifier(field.name()));
 
         let field_default = if field.is_map() {
             quote! {
                 #field_name: std::collections::BTreeMap::new(),
             }
-        } else if field.is_repeated() {
+        } else if is_repeated(descriptor) {
             quote! {
                 #field_name: Vec::new(),
             }
-        } else if field.is_optional() {
+        } else if is_optional(descriptor) {
             quote! {
                 #field_name: None,
             }
         } else {
             // maybe required or implicit optional
-            match field.inner.r#type() {
+            match descriptor.r#type() {
                 Type::Double
                 | Type::Float
                 | Type::Int64
@@ -772,8 +847,8 @@ fn generate_const_default_functions(
         const_default_fields.extend(field_default);
     }
 
-    for oneof in &message.oneof_fields {
-        let oneof_field = quote::format_ident!("{}", oneof.rust_struct_field_name());
+    for oneof in real_oneofs(message) {
+        let oneof_field = quote::format_ident!("{}", sanitize_identifier(oneof.name()));
         const_default_fields.extend(quote! {
             #oneof_field: None,
         });
@@ -794,8 +869,8 @@ fn generate_const_default_functions(
     }
 }
 
-fn type_default(field: &Field, context: &Context, package: &str) -> String {
-    match field.inner.r#type() {
+fn type_default(field: &FieldDescriptorProto, context: &Context, package: &str) -> String {
+    match field.r#type() {
         Type::Float => String::from("0.0f32"),
         Type::Double => String::from("0.0f64"),
         Type::Uint32 | Type::Fixed32 => String::from("0u32"),
@@ -806,14 +881,14 @@ fn type_default(field: &Field, context: &Context, package: &str) -> String {
         Type::String => String::from("\"\""),
         Type::Bytes => String::from("&[]"),
         Type::Group | Type::Message => {
-            let ty = context.resolve_ident(package, field.inner.type_name());
+            let ty = context.accessor_type_path(package, field.type_name());
             format!("{ty}::default_instance() as _")
         }
     }
 }
 
-fn ref_return_type(field: &Field, context: &Context, package: &str) -> String {
-    match field.inner.r#type() {
+fn ref_return_type(field: &FieldDescriptorProto, context: &Context, package: &str) -> String {
+    match field.r#type() {
         Type::Float => String::from("f32"),
         Type::Double => String::from("f64"),
         Type::Uint32 | Type::Fixed32 => String::from("u32"),
@@ -824,14 +899,14 @@ fn ref_return_type(field: &Field, context: &Context, package: &str) -> String {
         Type::String => String::from("&str"),
         Type::Bytes => String::from("&[u8]"),
         Type::Group | Type::Message => {
-            let ty = context.resolve_ident(package, field.inner.type_name());
+            let ty = context.accessor_type_path(package, field.type_name());
             format!("&{ty}")
         }
     }
 }
 
-fn is_ref_return(field: &Field) -> bool {
-    match field.inner.r#type() {
+fn is_ref_return(field: &FieldDescriptorProto) -> bool {
+    match field.r#type() {
         Type::Float => false,
         Type::Double => false,
         Type::Uint32 | Type::Fixed32 => false,
@@ -845,8 +920,8 @@ fn is_ref_return(field: &Field) -> bool {
     }
 }
 
-fn use_into_for_setter(field: &Field) -> bool {
-    match field.inner.r#type() {
+fn use_into_for_setter(field: &FieldDescriptorProto) -> bool {
+    match field.r#type() {
         Type::Float => false,
         Type::Double => false,
         Type::Uint32 | Type::Fixed32 => false,
@@ -861,11 +936,32 @@ fn use_into_for_setter(field: &Field) -> bool {
     }
 }
 
-pub fn resolve_rust_type_path(
-    field: &prost_types::FieldDescriptorProto,
-    context: &crate::context::Context,
-    package: &str,
-) -> String {
+/// The type an accessor takes and returns for the field, as a path relative to
+/// `package`.
+///
+/// Enums resolve to the generated enum type, not to the `i32` prost stores them
+/// in: the accessors convert with `.into()` at the assignment. Contrast
+/// [`map_entry_type_path`], which has to name the storage type.
+fn field_type_path(field: &FieldDescriptorProto, context: &Context, package: &str) -> String {
+    match field.r#type() {
+        Type::Float => String::from("f32"),
+        Type::Double => String::from("f64"),
+        Type::Uint32 | Type::Fixed32 => String::from("u32"),
+        Type::Uint64 | Type::Fixed64 => String::from("u64"),
+        Type::Int32 | Type::Sfixed32 | Type::Sint32 => String::from("i32"),
+        Type::Int64 | Type::Sfixed64 | Type::Sint64 => String::from("i64"),
+        Type::Bool => String::from("bool"),
+        Type::String => String::from("String"),
+        Type::Bytes => String::from("::prost::bytes::Bytes"),
+        Type::Group | Type::Message | Type::Enum => {
+            context.accessor_type_path(package, field.type_name())
+        }
+    }
+}
+
+/// The Rust type prost stores a map key or value in, as a path relative to
+/// `package`. Enum values are stored as `i32`.
+fn map_entry_type_path(field: &FieldDescriptorProto, context: &Context, package: &str) -> String {
     match field.r#type() {
         Type::Float => String::from("f32"),
         Type::Double => String::from("f64"),
@@ -876,6 +972,6 @@ pub fn resolve_rust_type_path(
         Type::Bool => String::from("bool"),
         Type::String => String::from("String"),
         Type::Bytes => String::from("::prost::bytes::Bytes"),
-        Type::Group | Type::Message => context.resolve_ident(package, field.type_name()),
+        Type::Group | Type::Message => context.accessor_type_path(package, field.type_name()),
     }
 }

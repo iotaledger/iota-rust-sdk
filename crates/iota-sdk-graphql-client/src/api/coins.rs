@@ -9,14 +9,14 @@ use futures::Stream;
 use iota_types::{Address, Identifier, StructTag, framework::Coin};
 
 use crate::{
-    Client,
-    error::Result,
+    GraphQLClient,
+    error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter},
     query_types::{CoinMetadata, CoinMetadataArgs, CoinMetadataQuery, ObjectFilter},
     streams::stream_paginated_query,
 };
 
-impl Client {
+impl GraphQLClient {
     /// Get the list of coins for the specified address as a stream.
     ///
     /// If `coin_type` is not provided, all coins will be returned. For IOTA
@@ -26,7 +26,7 @@ impl Client {
         address: Address,
         coin_type: impl Into<Option<StructTag>>,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<Coin>> + '_ {
+    ) -> impl Stream<Item = GraphQLResult<Coin>> + '_ {
         let coin_type = coin_type.into();
         stream_paginated_query(
             move |filter| self.coins(address, coin_type.clone(), filter),
@@ -39,7 +39,7 @@ impl Client {
         &self,
         address: Address,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<Coin>> + '_ {
+    ) -> impl Stream<Item = GraphQLResult<Coin>> + '_ {
         stream_paginated_query(
             move |filter| self.gas_coins(address, filter),
             streaming_direction,
@@ -55,9 +55,9 @@ impl Client {
         owner: Address,
         coin_type: impl Into<Option<StructTag>>,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<Coin>> {
+    ) -> GraphQLResult<Page<Coin>> {
         let filter = ObjectFilter {
-            type_: Some(
+            type_tag: Some(
                 coin_type
                     .into()
                     .map(StructTag::new_coin)
@@ -91,13 +91,13 @@ impl Client {
         &self,
         owner: Address,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<Coin>> {
+    ) -> GraphQLResult<Page<Coin>> {
         self.coins(owner, StructTag::new_gas(), pagination_filter)
             .await
     }
 
     /// Get the coin metadata for the coin type.
-    pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<CoinMetadata>> {
+    pub async fn coin_metadata(&self, coin_type: &str) -> GraphQLResult<Option<CoinMetadata>> {
         let operation = CoinMetadataQuery::build(CoinMetadataArgs { coin_type });
         let response = self.run_query(&operation).await?;
 
@@ -105,7 +105,7 @@ impl Client {
     }
 
     /// Get total supply for the coin type.
-    pub async fn total_supply(&self, coin_type: &str) -> Result<Option<u64>> {
+    pub async fn total_supply(&self, coin_type: &str) -> GraphQLResult<Option<u64>> {
         let coin_metadata = self.coin_metadata(coin_type).await?;
 
         coin_metadata
@@ -153,7 +153,7 @@ mod tests {
             // address on localnet.
             _ => return,
         };
-        let key = Ed25519PublicKey::generate(rand::thread_rng());
+        let key = Ed25519PublicKey::random_with(rand::thread_rng());
         let address = key.derive_address();
         faucet
             .request_and_wait_for_finalized(address, &client)

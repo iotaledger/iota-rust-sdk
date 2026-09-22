@@ -56,7 +56,7 @@ struct PackageInspectExample {
 
     // Print package dependencies and their linked versions.
     print("Dependencies:")
-    let dependencies = package.linkageTable().values.sorted {
+    let dependencies = package.linkageTable().values().sorted {
       $0.upgradedId.toHex() < $1.upgradedId.toHex()
     }
     if dependencies.isEmpty {
@@ -70,7 +70,7 @@ struct PackageInspectExample {
 
     // Inspect normalized modules, functions, types, and sample key objects.
     print("Package contents:")
-    let moduleNames = package.modules().keys.map { $0.asStr() }.sorted()
+    let moduleNames = package.modules().keys().map { $0.asStr() }
     for moduleName in moduleNames {
       print("Module: \(moduleName)")
 
@@ -277,22 +277,22 @@ private func resolveUpgradeCapId(
   packageId: ObjectId
 ) async throws -> ObjectId? {
   let page = try await client.transactionsEffects(
-    filter: TransactionsFilter(changedObject: packageId),
+    filter: TransactionsFilter().withChangedObject(changedObject: packageId),
     paginationFilter: PaginationFilter(direction: .forward, limit: 1)
   )
 
   for effects in page.data {
     let effectsV1 = effects.asV1()
-    for changedObj in effectsV1.changedObjects {
+    for changedObj in effectsV1.changedObjects() {
       guard case .objectWrite = changedObj.outputState else {
         continue
       }
 
       if let object = try await client.object(
         objectId: changedObj.objectId,
-        version: effectsV1.lamportVersion
+        version: effectsV1.lamportVersion()
       ),
-        object.asStructOpt()?.structType == StructTag.newUpgradeCap()
+        object.asOptStruct()?.structType == StructTag.newUpgradeCap()
       {
         return changedObj.objectId
       }
@@ -312,7 +312,7 @@ private func sameObjectId(_ left: String?, _ right: String?) -> Bool {
 
 private func programmableTransactionJson(_ tx: Transaction) throws -> [String: Any]? {
   guard
-    let data = try transactionToJson(data: tx).data(using: .utf8),
+    let data = try tx.toJson().data(using: .utf8),
     let rawJson = try JSONSerialization.jsonObject(with: data) as? [String: Any],
     let txV1 = rawJson["1"] as? [String: Any],
     let kind = txV1["kind"] as? [String: Any],
@@ -421,12 +421,12 @@ private func wasPackagePublishedAsImmutable(
 
   while true {
     let page = try await client.transactionsDataEffects(
-      filter: TransactionsFilter(changedObject: packageId),
+      filter: TransactionsFilter().withChangedObject(changedObject: packageId),
       paginationFilter: forwardPage(cursor: cursor)
     )
 
     for txData in page.data {
-      if try publishesPackageAsImmutable(txData.tx.transaction) {
+      if try publishesPackageAsImmutable(txData.signedTransaction.transaction) {
         return true
       }
     }
@@ -447,13 +447,13 @@ private func wasUpgradeCapUsedForMakeImmutable(
 
   while true {
     let page = try await client.transactionsDataEffects(
-      filter: TransactionsFilter(inputObject: upgradeCapId),
+      filter: TransactionsFilter().withInputObject(inputObject: upgradeCapId),
       paginationFilter: forwardPage(cursor: cursor)
     )
 
     for txData in page.data {
       if try usesUpgradeCapForMakeImmutable(
-        txData.tx.transaction,
+        txData.signedTransaction.transaction,
         upgradeCapId: upgradeCapId
       ) {
         return true

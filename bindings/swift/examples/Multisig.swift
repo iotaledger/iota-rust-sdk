@@ -8,7 +8,7 @@
 // a send_iota transaction, signs with only 2 of the 3 keys, aggregates,
 // and executes.
 //
-// Requires a running localnet (`iota start --force-regenesis`).
+// Requires a running localnet (`iota-localnet start --force-regenesis`).
 
 import Foundation
 import IotaSDK
@@ -53,11 +53,11 @@ struct MultisigExample {
     _ = try await faucet.requestAndWaitForFinalized(address: multisigAddress, client: client)
 
     // 6. Build a send_iota transaction
-    let builder = TransactionBuilder(sender: multisigAddress).withClient(client: client)
+    let builder = client.transactionBuilder(sender: multisigAddress)
     _ = builder.sendIota(recipient: recipientAddress, amount: PtbArgument.u64(value: amount))
     let txn = try await builder.finish()
 
-    let dryRunResult = try await client.dryRunTx(tx: txn)
+    let dryRunResult = try await client.dryRunTransaction(transaction: txn)
     if dryRunResult.error != nil {
       throw NSError(
         domain: "Multisig", code: 1,
@@ -69,17 +69,17 @@ struct MultisigExample {
     let sig1 = try kp1.signTransaction(transaction: txn)
 
     // 8. Aggregate signatures
-    var aggregator = MultisigAggregator.newWithTransaction(committee: committee, transaction: txn)
-    aggregator = try aggregator.withSignature(signature: sig0)
-    aggregator = try aggregator.withSignature(signature: sig1)
+    let aggregator = MultisigAggregator.newWithTransaction(committee: committee, transaction: txn)
+    try aggregator.addSignature(signature: sig0)
+    try aggregator.addSignature(signature: sig1)
     let aggSig = try aggregator.finish()
 
     // 9. Execute
     let userSignature = UserSignature.newMultisig(signature: aggSig)
-    let effects = try await client.executeTx(signatures: [userSignature], tx: txn)
+    let effects = try await client.executeTransaction(signatures: [userSignature], transaction: txn)
 
     print("Digest: \(hexEncode(input: effects.digest().toBytes()))")
-    print("Transaction status: \(effects.asV1().status)")
+    print("Transaction status: \(effects.asV1().status())")
     print("Effects: \(effects.asV1())")
   }
 }

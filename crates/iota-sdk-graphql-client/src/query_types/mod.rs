@@ -11,7 +11,7 @@ mod dry_run;
 mod dynamic_fields;
 mod epoch;
 mod events;
-mod execute_tx;
+mod execute_transaction;
 mod iota_names;
 mod move_view_call;
 mod normalized_move;
@@ -19,6 +19,7 @@ mod object;
 mod packages;
 mod protocol_config;
 mod service_config;
+mod subscriptions;
 mod transaction;
 
 pub use active_validators::{
@@ -43,7 +44,7 @@ pub use dynamic_fields::{
 };
 pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, ValidatorSet};
 pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
-pub use execute_tx::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
+pub use execute_transaction::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
 pub use iota_names::{
     IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs,
     IotaNamesDefaultNameQuery, IotaNamesRegistrationsArgs, IotaNamesRegistrationsQuery,
@@ -73,12 +74,20 @@ pub use protocol_config::{
 };
 use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
+pub use subscriptions::{
+    EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs, Lagged,
+    SubscriptionEvent, SubscriptionEventFilter, SubscriptionTransactionBlock,
+    SubscriptionTransactionFilter, TransactionBlockSubscriptionPayload, TransactionsSubscription,
+    TransactionsSubscriptionArgs,
+};
 pub use transaction::{
-    TransactionBlock, TransactionBlockArgs, TransactionBlockCheckpointQuery,
-    TransactionBlockEffectsQuery, TransactionBlockIndexedQuery, TransactionBlockKindInput,
-    TransactionBlockQuery, TransactionBlockWithEffects, TransactionBlockWithEffectsQuery,
-    TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
-    TransactionBlocksWithEffectsQuery, TransactionsFilter,
+    AddressTransactionBlocksQuery, AddressTransactionRelationship, AddressTransactionsQuery,
+    AddressTransactionsQueryArgs, TransactionBlock, TransactionBlockArgs,
+    TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery, TransactionBlockFilter,
+    TransactionBlockIndexedQuery, TransactionBlockKindInput, TransactionBlockQuery,
+    TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
+    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
+    TransactionsFilter, TransactionsSelector,
 };
 
 use crate::error;
@@ -117,7 +126,7 @@ pub struct MoveData(pub serde_json::Value);
 
 #[derive(Clone, Copy, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Address")]
-pub struct GQLAddress {
+pub struct GraphQLAddress {
     pub address: Address,
 }
 
@@ -136,7 +145,8 @@ pub struct MoveObjectContents {
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveValue")]
 pub struct MoveValue {
-    pub type_: MoveType,
+    #[cynic(rename = "type")]
+    pub move_type: MoveType,
     pub bcs: Base64,
     pub json: Option<JsonValue>,
 }
@@ -166,7 +176,7 @@ pub struct PageInfo {
 }
 
 impl TryFrom<BigInt> for u64 {
-    type Error = error::Error;
+    type Error = error::GraphQLError;
 
     fn try_from(value: BigInt) -> Result<Self, Self::Error> {
         Ok(value.0.parse::<u64>()?)

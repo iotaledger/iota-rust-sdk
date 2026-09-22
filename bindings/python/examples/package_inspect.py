@@ -57,7 +57,7 @@ async def main():
     # Print package dependencies and their linked versions.
     print("Dependencies:")
     linkage_table = package.linkage_table()
-    if len(linkage_table) == 0:
+    if linkage_table.is_empty():
         print("- none")
     else:
         for upgrade in sorted(linkage_table.values(),
@@ -69,8 +69,9 @@ async def main():
 
     # Inspect normalized modules, functions, types, and sample key objects.
     print("Package contents:")
-    module_names = sorted(
-        module_id.as_str() for module_id in package.modules().keys())
+    module_names = [
+        module_id.as_str() for module_id in package.modules().keys()
+    ]
 
     for module_name in module_names:
         print(f"Module: {module_name}")
@@ -223,19 +224,19 @@ def extract_policy(contents):
 
 async def resolve_upgrade_cap_id(client, package_id):
     page = await client.transactions_effects(
-        TransactionsFilter(changed_object=package_id),
+        TransactionsFilter().with_changed_object(package_id),
         PaginationFilter(direction=Direction.FORWARD, limit=1),
     )
 
     for effects in page.data:
         effects_v1 = effects.as_v1()
-        for changed_obj in effects_v1.changed_objects:
+        for changed_obj in effects_v1.changed_objects():
             if not changed_obj.output_state.is_object_write():
                 continue
 
             obj = await client.object(changed_obj.object_id,
-                                      effects_v1.lamport_version)
-            if obj is not None and obj.as_struct_opt() is not None:
+                                      effects_v1.lamport_version())
+            if obj is not None and obj.as_opt_struct() is not None:
                 if obj.as_struct().struct_type == StructTag.new_upgrade_cap():
                     return changed_obj.object_id
 
@@ -247,7 +248,7 @@ def same_object_id(left, right):
 
 
 def programmable_transaction_json(tx):
-    tx_v1 = json.loads(transaction_to_json(tx)).get("1")
+    tx_v1 = json.loads(tx.to_json()).get("1")
     if not isinstance(tx_v1, dict):
         return None
 
@@ -343,12 +344,13 @@ async def was_package_published_as_immutable(client, package_id):
 
     while True:
         page = await client.transactions_data_effects(
-            TransactionsFilter(changed_object=package_id),
+            TransactionsFilter().with_changed_object(package_id),
             forward_page(cursor),
         )
 
         for tx_data in page.data:
-            if publishes_package_as_immutable(tx_data.tx.transaction):
+            if publishes_package_as_immutable(
+                    tx_data.signed_transaction.transaction):
                 return True
 
         if page.page_info.has_next_page:
@@ -362,13 +364,13 @@ async def was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id):
 
     while True:
         page = await client.transactions_data_effects(
-            TransactionsFilter(input_object=upgrade_cap_id),
+            TransactionsFilter().with_input_object(upgrade_cap_id),
             forward_page(cursor),
         )
 
         for tx_data in page.data:
-            if uses_upgrade_cap_for_make_immutable(tx_data.tx.transaction,
-                                                   upgrade_cap_id):
+            if uses_upgrade_cap_for_make_immutable(
+                    tx_data.signed_transaction.transaction, upgrade_cap_id):
                 return True
 
         if page.page_info.has_next_page:

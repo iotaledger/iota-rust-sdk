@@ -21,5 +21,10 @@ use std::string::{Self, String};
             name: default,
         }
     }
+
+    #[view]
+    public fun double(value: u64): u64 {
+        2 * value
+    }
 }
 

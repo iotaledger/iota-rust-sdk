@@ -13,7 +13,7 @@ class Program
 
         var coinId = ObjectId.FromHex("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc");
 
-        var builder = new TransactionBuilder(sender).WithClient(client);
+        var builder = client.TransactionBuilder(sender);
 
         builder.SplitCoins(
             PtbArgument.ObjectId(coinId),

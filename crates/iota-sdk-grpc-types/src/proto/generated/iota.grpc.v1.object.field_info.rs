@@ -7,14 +7,6 @@ mod _field_impls {
     use super::*;
     use crate::field::MessageFields;
     use crate::field::MessageField;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsData;
-    #[allow(unused_imports)]
-    use crate::v1::bcs::BcsDataFieldPathBuilder;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectReference;
-    #[allow(unused_imports)]
-    use crate::v1::types::ObjectReferenceFieldPathBuilder;
     impl Object {
         pub const REFERENCE_FIELD: &'static MessageField = &MessageField {
             name: "reference",
@@ -22,7 +14,7 @@ mod _field_impls {
             number: 1i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(ObjectReference::FIELDS),
+            message_fields: Some(crate::v1::types::ObjectReference::FIELDS),
         };
         pub const BCS_FIELD: &'static MessageField = &MessageField {
             name: "bcs",
@@ -30,7 +22,7 @@ mod _field_impls {
             number: 2i32,
             is_optional: true,
             is_map: false,
-            message_fields: Some(BcsData::FIELDS),
+            message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
     impl MessageFields for Object {
@@ -59,13 +51,13 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn reference(mut self) -> ObjectReferenceFieldPathBuilder {
+        pub fn reference(mut self) -> crate::v1::types::ObjectReferenceFieldPathBuilder {
             self.path.push(Object::REFERENCE_FIELD.name);
-            ObjectReferenceFieldPathBuilder::new_with_base(self.path)
+            crate::v1::types::ObjectReferenceFieldPathBuilder::new_with_base(self.path)
         }
-        pub fn bcs(mut self) -> BcsDataFieldPathBuilder {
+        pub fn bcs(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(Object::BCS_FIELD.name);
-            BcsDataFieldPathBuilder::new_with_base(self.path)
+            crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
         }
     }
     impl Objects {

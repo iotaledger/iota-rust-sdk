@@ -9,12 +9,12 @@ use cynic::QueryBuilder;
 use iota_types::{SignedTransaction, Transaction, TransactionEffects, TransactionKind};
 
 use crate::{
-    Client, DryRunEffect, DryRunResult,
-    error::Result,
+    DryRunEffect, DryRunResult, GraphQLClient,
+    error::GraphQLResult,
     query_types::{DryRunArgs, DryRunQuery, ObjectRef, TransactionMetadata},
 };
 
-impl Client {
+impl GraphQLClient {
     /// Dry run a [`Transaction`] and return the transaction effects and dry
     /// run error (if any).
     ///
@@ -22,8 +22,12 @@ impl Client {
     /// prevent access to objects that are owned by addresses other than the
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks.
-    pub async fn dry_run_tx(&self, tx: &Transaction, skip_checks: bool) -> Result<DryRunResult> {
-        let Transaction::V1(v1) = tx else {
+    pub async fn dry_run_transaction(
+        &self,
+        transaction: &Transaction,
+        skip_checks: bool,
+    ) -> GraphQLResult<DryRunResult> {
+        let Transaction::V1(v1) = transaction else {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
         let gas_objects = v1
@@ -36,11 +40,11 @@ impl Client {
                 digest: r.digest().to_base58(),
             })
             .collect::<Vec<_>>();
-        self.dry_run_tx_kind(
+        self.dry_run_transaction_kind(
             &v1.kind,
             skip_checks,
             TransactionMetadata {
-                gas_budget: (v1.gas_payment.budget > 0).then_some(v1.gas_payment.budget),
+                gas_budget: Some(v1.gas_payment.budget),
                 gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
                 gas_price: Some(v1.gas_payment.price),
                 gas_sponsor: Some(v1.gas_payment.owner),
@@ -58,15 +62,16 @@ impl Client {
     /// sender, and calling non-public, non-entry functions, and some other
     /// checks. Defaults to false.
     ///
-    /// `tx_meta` is the transaction metadata.
-    pub async fn dry_run_tx_kind(
+    /// `transaction_metadata` is the transaction metadata.
+    pub async fn dry_run_transaction_kind(
         &self,
-        tx_kind: &TransactionKind,
+        transaction_kind: &TransactionKind,
         skip_checks: bool,
-        tx_meta: TransactionMetadata,
-    ) -> Result<DryRunResult> {
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&tx_kind)?);
-        self.dry_run(tx_bytes, skip_checks, Some(tx_meta)).await
+        transaction_metadata: TransactionMetadata,
+    ) -> GraphQLResult<DryRunResult> {
+        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&transaction_kind)?);
+        self.dry_run(tx_bytes, skip_checks, Some(transaction_metadata))
+            .await
     }
 
     /// Internal implementation of the dry run API.
@@ -75,7 +80,7 @@ impl Client {
         tx_bytes: String,
         skip_checks: bool,
         tx_meta: impl Into<Option<TransactionMetadata>>,
-    ) -> Result<DryRunResult> {
+    ) -> GraphQLResult<DryRunResult> {
         let operation = DryRunQuery::build(DryRunArgs {
             tx_bytes,
             skip_checks,
@@ -90,7 +95,7 @@ impl Client {
             .iter()
             .flatten()
             .map(DryRunEffect::try_from)
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         let txn_block = &response.dry_run_transaction_block.transaction;
 
@@ -123,12 +128,12 @@ impl Client {
 
 #[cfg(test)]
 mod tests {
-    use crate::Client;
+    use crate::GraphQLClient;
 
-    // This needs the tx builder to be able to be tested properly
+    // This needs the transaction builder to be able to be tested properly
     #[tokio::test]
     async fn test_dry_run() {
-        let client = Client::new_testnet();
+        let client = GraphQLClient::new_testnet();
         let tx_bytes = "AAACAAgAypo7AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgABAQAAAQEDAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACg9WqbvnpQmublI1+/dnonzEvhVPHnGEX++ianEHLIZmoiqRAAAAAAAgmrviNLnSJMjhRUZ8il2SFFjZ60cdJWv9v3M7pTsTQaA0FjZwX1JlYTftfc/+nF7J1QTfVacG+5wc2teKJoJHBDf/BgAAAAAAIOFdV7nQyvw+7AJpDmJFifAa4SqrI5qqXqAq1IKZsSxKVTI1Cd7yJVFzIqi4nnPX1ShmHEJWweFl5BId7OSkHXViNQ0AAAAAACA4U7t1jiQwTs87xenAvOkQWAAMWbElg0Exz1annhowtXPQJaMX5mcenWnm/aFAXhUM2rGsvqqa2zM2OOQyEKqbNP8GAAAAAAAg7pHVs4Z58mP71Y53cDuY3X/TbTgfmBHkDWe16J+kBOqhnfl+yRNiYZ3fpWvyc4rB2u+a2qjUGqcw7yFnlhJAj1w00w8AAAAAIDEjW30S0iN4lnDXpigCjEmOA0tUYKf339ZayYUU9PG6s1wmB/dndlMUdTZGe5MOz1baxXMESHbVd5L7XTObgECAQpEAAAAAACBCkCOAwD6Dl2DkdXj/eFRBTsNPWg3XYATTPxeThLuhzrTmcYf4XqT8ceMAoKbQBjtzyaTv+xb0K0MzHfvJR1NFgUKRAAAAAAAgxUVPvQUU/R1jcC2+AxZ7uC3ls+09G7xAk0xusdBSUkXPNNWDsV8xzw6ipjnf5pk9W3R9P0RD6iORRe+0JKaLtmE1DQAAAAAAIPhsUoriBlzhLc4SHds72JTbjeI37VhyjlFVtQurLY+26e+jqKb2TsdARpYEvxPl31WAelj2RMuUyK8S5NeluEWjKpEAAAAAACCR/0nc3l5UIXpl6I6SEpWABP/vJewHhZ5iMDpIDXdMqf0VCu+y2k/TZIpRFMDRiBO0oUW+L8+06uAi3pZkwpbFNf8GAAAAAAAgyIfExjdHxdt7+eiOLRh4N4/iSMZCrHf2t5iYI+Kl8ysAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOgDAAAAAAAA4G88AAAAAAAA";
 
         client

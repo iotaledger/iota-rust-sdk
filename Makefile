@@ -24,9 +24,18 @@ fetch-compiled-packages: ## Fetch the compiled Move packages if missing or out o
 clippy: ## Run Clippy linter
 	cargo clippy --all-features --all-targets
 
+# `iota-sdk` is left out of `cargo semver-checks`, which diffs against the
+# latest crates.io release: its latest stable one is the unrelated legacy SDK
+# that previously held the name, so it stays excluded until 3.0.0 is published.
+.PHONY: semver-checks
+semver-checks: ## Check the published crates for breaking API changes
+	cargo semver-checks --workspace --exclude iota-sdk
+
 .PHONY: test
 test: fetch-compiled-packages ## Run unit tests
-	cargo nextest run --all-features -p iota-sdk-types -p iota-sdk-crypto -p iota-sdk-transaction-builder -p iota-sdk-move-types
+	cargo nextest run --all-features --workspace \
+		--exclude iota-sdk-ffi --exclude iota-sdk-graphql-client --exclude integration-tests \
+		--exclude iota-sdk-grpc-client --exclude polling-indexer --exclude capture-move-type-fixtures
 	cargo nextest run --no-default-features -p iota-sdk-grpc-client
 
 .PHONY: test-docs
@@ -38,7 +47,7 @@ build-docs: ## Build docs
 	cargo doc --all-features --workspace --no-deps
 
 package_%.json: crates/integration-tests/%/Move.toml crates/integration-tests/%/sources/*.move ## Generate JSON files for tests
-	cd crates/integration-tests/$(*F) && iota move build --ignore-chain --dump-bytecode-as-base64 > ../../$@
+	cd crates/integration-tests/$(*F) && iota move build --ignore-chain --allow-view-function true --dump-bytecode-as-base64 | grep '^{' > ../../$@
 
 .PHONY: test-with-localnet
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
@@ -170,10 +179,17 @@ bindings-examples-format: ## Format all bindings examples
 	@$(MAKE) swift-examples-format
 	@$(MAKE) wasm-examples-format
 
+# The Go bindings are generated from a build with `map-objects` enabled, since
+# Go cannot key a native map by an object. Its own target directory keeps the
+# other bindings' build from replacing the library the Go examples link against.
+GO_TARGET_DIR := target/go
+GO_LIB_DIR := $(GO_TARGET_DIR)/release
+
 # Build the FFI crate (release) and detect the shared library extension
-# (sets LIB_EXT, used to locate libiota_sdk_ffi).
+# (sets LIB_EXT, used to locate libiota_sdk_ffi). Set FFI_BUILD_ARGS to pass
+# extra cargo arguments.
 define build_binding
-cargo build -p iota-sdk-ffi --lib --release; \
+cargo build -p iota-sdk-ffi --lib --release $(FFI_BUILD_ARGS); \
 case "$$(uname -s)" in \
 	Darwin)   LIB_EXT=".dylib" ;; \
 	Linux)    LIB_EXT=".so" ;; \
@@ -189,10 +205,11 @@ endef
 snake_to_pascal = $(shell printf '%s' "$(1)" | awk -F_ '{ s=""; for (i=1; i<=NF; i++) s = s toupper(substr($$i,1,1)) substr($$i,2); print s }')
 
 .PHONY: go
+go: FFI_BUILD_ARGS := --features map-objects --target-dir $(GO_TARGET_DIR)
 go: ## Build Go bindings
 	@printf "Building Go bindings...\n"
 	@$(build_binding) \
-	uniffi-bindgen-go --library target/release/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format --config bindings/go/uniffi.toml || exit $$?
+	uniffi-bindgen-go --library $(GO_LIB_DIR)/libiota_sdk_ffi$${LIB_EXT} --out-dir bindings/go --no-format --config bindings/go/uniffi.toml || exit $$?
 	@# TODO: For some reason only the .h file is renamed, not the .go file
 	@mv bindings/go/iota_sdk/iota_sdk_ffi.go bindings/go/iota_sdk/iota_sdk.go
 	@sed -i.bak "s/^package iota_sdk_ffi$$/package iota_sdk/" bindings/go/iota_sdk/iota_sdk.go && rm bindings/go/iota_sdk/iota_sdk.go.bak
@@ -240,13 +257,12 @@ go-example: ## Run a specific Go example. Usage: make go-example example
 go-example:
 	@printf "\nRunning Go example \"$(word 2,$(MAKECMDGOALS))\"\n"
 	@cd bindings/go/examples; \
-	LD_LIBRARY_PATH="../../../target/release" CGO_LDFLAGS="-liota_sdk_ffi -L../../../target/release" go run $(word 2,$(MAKECMDGOALS))/main.go || exit $$?; \
+	LD_LIBRARY_PATH="../../../$(GO_LIB_DIR)" CGO_LDFLAGS="-liota_sdk_ffi -L../../../$(GO_LIB_DIR)" go run $(word 2,$(MAKECMDGOALS))/main.go || exit $$?; \
 	cd -
 
 .PHONY: go-examples
 go-examples: ## Run all Go bindings examples
-	@# TODO(#1000): re-enable move_view_call once devnet accepts view calls to these functions again
-	@for example in $$(find bindings/go/examples/* -type d -not -name release -not -name move_view_call -exec basename {} \;); do \
+	@for example in $$(find bindings/go/examples/* -type d -not -name release -exec basename {} \;); do \
 		$(MAKE) go-example "$$example" || exit $$?; \
 	done
 
@@ -284,8 +300,7 @@ kotlin-android: ## Build Android native libraries for all ABIs
 
 .PHONY: kotlin-examples
 kotlin-examples: ## Run all Kotlin bindings examples
-	@# TODO(#1000): re-enable MoveViewCall once devnet accepts view calls to these functions again
-	@for example in $$(find bindings/kotlin/examples -name "*.kt" -not -path "*/release/*" -not -path "*/android-demo/*" -not -name "MoveViewCall.kt" -exec basename {} .kt \;); do \
+	@for example in $$(find bindings/kotlin/examples -name "*.kt" -not -path "*/release/*" -not -path "*/android-demo/*" -exec basename {} .kt \;); do \
 		$(MAKE) kotlin-example "$$example" || exit $$?; \
 	done
 
@@ -311,8 +326,7 @@ python-example:
 
 .PHONY: python-examples
 python-examples: ## Run all Python bindings examples
-	@# TODO(#1000): re-enable move_view_call once devnet accepts view calls to these functions again
-	@for example in $$(find bindings/python/examples -name "*.py" -not -path "*/release/*" -not -name "move_view_call.py" -exec basename {} .py \;); do \
+	@for example in $$(find bindings/python/examples -name "*.py" -not -path "*/release/*" -exec basename {} .py \;); do \
 		$(MAKE) python-example "$$example" || exit $$?; \
 	done
 
@@ -336,8 +350,7 @@ csharp-example:
 
 .PHONY: csharp-examples
 csharp-examples: ## Run all C# bindings examples
-	@# TODO(#1000): re-enable MoveViewCall once devnet accepts view calls to these functions again
-	@for example in $$(find bindings/csharp/examples -name "*.csproj" -not -path "*/Release/*" -not -path "*/MoveViewCall/*" -exec dirname {} \; | xargs -n 1 basename); do \
+	@for example in $$(find bindings/csharp/examples -name "*.csproj" -not -path "*/Release/*" -exec dirname {} \; | xargs -n 1 basename); do \
 		$(MAKE) csharp-example "$$example" || exit $$?; \
 	done
 
@@ -371,8 +384,7 @@ swift-example:
 
 .PHONY: swift-examples
 swift-examples: ## Run all Swift bindings examples
-	@# TODO(#1000): re-enable MoveViewCall once devnet accepts view calls to these functions again
-	@for example in $$(find bindings/swift/examples -name "*.swift" -not -path "*/release/*" -not -name "MoveViewCall.swift" -exec basename {} .swift \;); do \
+	@for example in $$(find bindings/swift/examples -name "*.swift" -not -path "*/release/*" -exec basename {} .swift \;); do \
 		$(MAKE) swift-example "$$example" || exit $$?; \
 	done
 
@@ -397,8 +409,7 @@ wasm-example:
 
 .PHONY: wasm-examples
 wasm-examples: ## Run all WASM bindings examples
-	@# TODO(#1000): re-enable move_view_call once devnet accepts view calls to these functions again
-	@for example in $$(find bindings/wasm/examples -name "*.mjs" -not -name "_*" -not -path "*/release/*" -not -name "move_view_call.mjs" -exec basename {} .mjs \;); do \
+	@for example in $$(find bindings/wasm/examples -name "*.mjs" -not -name "_*" -not -path "*/release/*" -exec basename {} .mjs \;); do \
 		$(MAKE) wasm-example "$$example" || exit $$?; \
 	done
 
@@ -428,8 +439,8 @@ example:
 examples: ## Run all Rust examples
 	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer
 	@# that require external services (e.g. PostgreSQL). Run those separately.
-	@# TODO(#1000): re-enable move_view_call once devnet accepts view calls to these functions again
-	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -not -name "move_view_call.rs" -exec basename {} .rs \;); do \
+	@# TODO(#1363): Re-enable Move View call over gRPC examples
+	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -not -name "grpc_move_view_call.rs" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 

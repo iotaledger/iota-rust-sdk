@@ -6,7 +6,6 @@ import {
   GraphQlClient,
   ObjectId,
   PtbArgument,
-  TransactionBuilder,
   initAsync,
 } from "@iota/sdk-wasm";
 
@@ -20,7 +19,7 @@ const coinId = ObjectId.fromHex(
   "0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc",
 );
 
-const builder = new TransactionBuilder(sender).withClient(client);
+const builder = client.transactionBuilder(sender);
 
 builder
   .splitCoins(

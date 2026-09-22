@@ -3,21 +3,25 @@
 
 import {
   Address,
+  Ed25519PrivateKey,
+  FaucetClient,
   GraphQlClient,
   Identifier,
   PtbArgument,
-  TransactionBuilder,
   initAsync,
 } from "@iota/sdk-wasm";
 
 await initAsync();
 
-const client = GraphQlClient.newTestnet();
-const sender = Address.fromHex(
-  "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151",
-);
+const client = GraphQlClient.newLocalnet();
 
-const builder = new TransactionBuilder(sender).withClient(client);
+const privateKey = Ed25519PrivateKey.random();
+const sender = privateKey.publicKey().deriveAddress();
+
+const faucet = FaucetClient.newLocalnet();
+await faucet.requestAndWaitForFinalized(sender, client);
+
+const builder = client.transactionBuilder(sender);
 
 const packageAddr = Address.std();
 const moduleName = new Identifier("u64");
@@ -61,7 +65,7 @@ const txn = await builder.finish();
 console.log("Signing Digest:", txn.signingDigestHex());
 console.log("Txn Bytes:", txn.toBase64());
 
-const res = await client.dryRunTx(txn, false);
+const res = await client.dryRunTransaction(txn, false);
 if (res.error) {
   throw new Error(`Failed to send tx: ${res.error}`);
 }

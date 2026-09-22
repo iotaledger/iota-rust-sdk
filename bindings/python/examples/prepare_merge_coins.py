@@ -17,7 +17,7 @@ async def main():
     coin_1 = PtbArgument.object_id_from_hex(
         "0x65beb18e282d1f33a39bffa84ff92ec4d2fec0350ba6f7e5a568afff72d651db")
 
-    builder = TransactionBuilder(sender).with_client(client)
+    builder = client.transaction_builder(sender)
 
     builder.merge_coins(coin_0, [coin_1])
 

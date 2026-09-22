@@ -134,7 +134,7 @@ pub struct MoveEnumVariant {
 pub struct MoveField {
     pub name: String,
     #[cynic(rename = "type")]
-    pub type_: Option<OpenMoveType>,
+    pub move_type: Option<OpenMoveType>,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]

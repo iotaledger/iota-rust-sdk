@@ -57,7 +57,7 @@
 use std::path::PathBuf;
 
 use iota_sdk::{
-    graphql_client::Client,
+    graphql_client::GraphQLClient,
     types::{Address, ObjectId, TypeTag},
 };
 
@@ -524,9 +524,9 @@ const FIXTURES: &[Fixture] = &[
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
     let network = std::env::var("IOTA_NETWORK").unwrap_or_else(|_| "mainnet".to_string());
     let client = match network.as_str() {
-        "testnet" => Client::new_testnet(),
-        "devnet" => Client::new_devnet(),
-        "mainnet" => Client::new_mainnet(),
+        "testnet" => GraphQLClient::new_testnet(),
+        "devnet" => GraphQLClient::new_devnet(),
+        "mainnet" => GraphQLClient::new_mainnet(),
         other => {
             return Err(format!(
                 "unknown IOTA_NETWORK={other}; expected one of: testnet, devnet, mainnet"
@@ -597,16 +597,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
 /// Resolve a [`Source`] into the raw BCS bytes of the Move struct
 /// contents.
 async fn capture(
-    client: &Client,
+    client: &GraphQLClient,
     source: &Source,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error + Send + Sync + 'static>> {
     match source {
         Source::TypeFilter(type_str) => {
-            let filter = iota_sdk::graphql_client::query_types::ObjectFilter {
-                type_: Some((*type_str).to_string()),
-                owner: None,
-                object_ids: None,
-            };
+            let filter = iota_sdk::graphql_client::query_types::ObjectFilter::default()
+                .with_type((*type_str).to_string());
             let page = client
                 .objects(
                     filter,
@@ -621,7 +618,7 @@ async fn capture(
             // into FIXTURES as a `Source::ObjectId` pin.
             eprintln!("    └─ discovered: {}", object.id());
             let move_struct = object
-                .as_struct_opt()
+                .as_opt_struct()
                 .ok_or("object is not a Move struct")?;
             Ok(move_struct.contents().to_vec())
         }
@@ -632,7 +629,7 @@ async fn capture(
                 .await?
                 .ok_or_else(|| format!("object `{id_str}` not found on this network"))?;
             let move_struct = object
-                .as_struct_opt()
+                .as_opt_struct()
                 .ok_or("object is not a Move struct")?;
             Ok(move_struct.contents().to_vec())
         }
@@ -641,11 +638,9 @@ async fn capture(
             tx_digest,
         } => {
             use base64ct::Encoding as _;
-            let filter = iota_sdk::graphql_client::query_types::EventFilter {
-                event_type: Some((*event_type).to_string()),
-                transaction_digest: Some((*tx_digest).to_string()),
-                ..Default::default()
-            };
+            let filter = iota_sdk::graphql_client::query_types::EventFilter::default()
+                .with_event_type((*event_type).to_string())
+                .with_transaction_digest((*tx_digest).to_string());
             let page = client
                 .events(
                     filter,
@@ -690,7 +685,7 @@ async fn capture(
             let df = page
                 .data()
                 .iter()
-                .find(|df| df.name.type_ == want)
+                .find(|df| df.name.type_tag == want)
                 .ok_or_else(|| {
                     format!("no dynamic field of name type `{name_type}` on `{parent}`")
                 })?;

@@ -65,6 +65,29 @@ pub struct CommandOutput {
     #[prost(message, optional, tag = "4")]
     pub json: ::core::option::Option<::prost_types::Value>,
 }
+/// A value passed to a Move function, in either encoding. The input counterpart
+/// of `CommandOutput`.
+#[non_exhaustive]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InputArgument {
+    #[prost(oneof = "input_argument::Input", tags = "1, 2")]
+    pub input: ::core::option::Option<input_argument::Input>,
+}
+/// Nested message and enum types in `InputArgument`.
+pub mod input_argument {
+    #[non_exhaustive]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Input {
+        /// The argument as BCS-encoded bytes.
+        #[prost(message, tag = "1")]
+        Bcs(super::super::bcs::BcsData),
+        /// The argument as JSON, for the node to encode against the parameter's Move
+        /// type. `Value` holds numbers as doubles, which cannot represent every
+        /// integer, so numbers must go as strings.
+        #[prost(message, tag = "2")]
+        Json(::prost_types::Value),
+    }
+}
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct CommandOutputs {

@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	privateKey := iota_sdk.Ed25519PrivateKeyGenerate()
+	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
 	privateKeyBech32, err := privateKey.ToBech32()
 	if err != nil {
 		panic(err)

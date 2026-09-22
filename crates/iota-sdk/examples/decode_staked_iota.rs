@@ -24,25 +24,23 @@
 
 use eyre::Result;
 use iota_sdk::{
-    graphql_client::{Client, query_types::ObjectFilter},
+    graphql_client::{GraphQLClient, query_types::ObjectFilter},
     move_types::iota_system::staking_pool::StakedIota,
     types::Address,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     let owner: Address =
         "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151".parse()?;
 
     let page = client
         .objects(
-            ObjectFilter {
-                type_: Some("0x3::staking_pool::StakedIota".to_owned()),
-                owner: Some(owner),
-                ..Default::default()
-            },
+            ObjectFilter::default()
+                .with_type("0x3::staking_pool::StakedIota".to_owned())
+                .with_owner(owner),
             Default::default(),
         )
         .await?;

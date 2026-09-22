@@ -24,7 +24,7 @@ fun main() = runBlocking {
         for (event in events.data) {
             // Sender and module are optional: some events (such as system- or
             // genesis-emitted ones) carry neither.
-            println("Type: ${event.type}")
+            println("Type: ${event.moveType}")
             println("Sender: ${event.sender?.toHex() ?: "none"}")
             println("Module: ${event.module ?: "none"}")
             println("JSON: ${event.json}")

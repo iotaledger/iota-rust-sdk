@@ -12,11 +12,8 @@ use super::{
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object-reference = object-id u64 object-digest
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -80,20 +77,82 @@ impl crate::TreeDisplay for ObjectReference {
     }
 }
 
+/// An [`ObjectReference`] paired with the owner the object has at that version.
+///
+/// Not a wire type: this is how transaction effects report an object they
+/// touched, since a reference alone does not say who owns it.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct OwnedObjectReference {
+    pub(crate) reference: ObjectReference,
+    pub(crate) owner: Owner,
+}
+
+impl OwnedObjectReference {
+    /// Pairs a reference with the owner the object has at that version.
+    pub const fn new(reference: ObjectReference, owner: Owner) -> Self {
+        Self { reference, owner }
+    }
+
+    /// The object's reference.
+    pub const fn reference(&self) -> &ObjectReference {
+        &self.reference
+    }
+
+    /// The owner the object has at that version.
+    pub const fn owner(&self) -> &Owner {
+        &self.owner
+    }
+}
+
+impl crate::TreeDisplay for OwnedObjectReference {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Owned Object Reference")?;
+        w.child("Reference", &self.reference, false)?;
+        w.leaf("Owner", &self.owner, true)
+    }
+}
+
+/// An [`ObjectId`] paired with one of that object's versions.
+///
+/// Not a wire type: this is how transaction effects report the version an
+/// object was at before the transaction changed it.
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct ObjectVersion {
+    pub(crate) object_id: ObjectId,
+    pub(crate) version: Version,
+}
+
+impl ObjectVersion {
+    /// Pairs an object id with one of that object's versions.
+    pub const fn new(object_id: ObjectId, version: Version) -> Self {
+        Self { object_id, version }
+    }
+
+    /// The object's id.
+    pub const fn object_id(&self) -> &ObjectId {
+        &self.object_id
+    }
+
+    /// The version the object is at.
+    pub const fn version(&self) -> Version {
+        self.version
+    }
+}
+
+impl crate::TreeDisplay for ObjectVersion {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Object Version")?;
+        w.leaf("Object ID", &self.object_id, false)?;
+        w.leaf("Version", &self.version, true)
+    }
+}
+
 /// Enum of different types of ownership for an object.
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// owner = owner-address / owner-object / owner-shared / owner-immutable
-///
-/// owner-address   = %d00 address
-/// owner-object    = %d01 object-id
-/// owner-shared    = %d02 u64
-/// owner-immutable = %d03
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -156,19 +215,14 @@ impl std::fmt::Display for Owner {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object-data = object-data-struct / object-data-package
-///
-/// object-data-struct  = %d00 object-move-struct
-/// object-data-package = %d01 object-move-package
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[allow(clippy::large_enum_variant)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[non_exhaustive]
 // TODO think about hiding this type and not exposing it
 pub enum ObjectData {
     /// An object whose governing logic lives in a published Move module
@@ -221,13 +275,8 @@ impl crate::TreeDisplay for ObjectData {
 ///
 /// # BCS
 ///
-/// ```text
-/// compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
-/// other-struct-type     = %x00 struct-tag
-/// gas-coin-type         = %x01
-/// staked-iota-type      = %x02
-/// coin-type             = %x03 type-tag
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveObjectType(StructTag);
@@ -237,7 +286,11 @@ impl MoveObjectType {
         Self(tag)
     }
 
-    pub fn into_inner(self) -> StructTag {
+    pub fn struct_tag(&self) -> &StructTag {
+        &self.0
+    }
+
+    pub fn into_struct_tag(self) -> StructTag {
         self.0
     }
 }
@@ -286,21 +339,10 @@ impl std::str::FromStr for MoveObjectType {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// move-struct = compressed-struct-tag u64 bytes
-///
-/// compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
-/// other-struct-type     = %d00 struct-tag
-/// gas-coin-type         = %d01
-/// staked-iota-type      = %d02
-/// coin-type             = %d03 type-tag
-///
-/// ; The first 32 bytes of the `bytes` contents are the object's object-id.
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct MoveStruct {
@@ -339,7 +381,7 @@ impl MoveStruct {
     ) -> Result<Self, MoveStructContentsError> {
         if contents.len() < ObjectId::LENGTH {
             return Err(MoveStructContentsError {
-                actual: contents.len(),
+                contents_len: contents.len(),
             });
         }
         Ok(Self {
@@ -407,7 +449,7 @@ impl MoveStruct {
     pub fn set_contents(&mut self, contents: Vec<u8>) -> Result<(), MoveStructContentsError> {
         if contents.len() < ObjectId::LENGTH {
             return Err(MoveStructContentsError {
-                actual: contents.len(),
+                contents_len: contents.len(),
             });
         }
         self.contents = contents;
@@ -449,15 +491,23 @@ impl crate::TreeDisplay for MoveStruct {
 /// [`ObjectId`].
 #[derive(Clone, Debug, thiserror::Error)]
 #[error(
-    "MoveStruct contents must be at least {} bytes to contain an ObjectId, got {actual}",
+    "MoveStruct contents must be at least {} bytes to contain an ObjectId, got {contents_len}",
     ObjectId::LENGTH
 )]
 pub struct MoveStructContentsError {
-    actual: usize,
+    contents_len: usize,
+}
+
+impl MoveStructContentsError {
+    /// Length, in bytes, of the contents that were rejected.
+    pub fn contents_len(&self) -> usize {
+        self.contents_len
+    }
 }
 
 /// Type of an IOTA object
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+#[non_exhaustive]
 pub enum ObjectType {
     /// Move package containing one or more bytecode modules
     Package,
@@ -484,11 +534,8 @@ impl std::fmt::Display for ObjectType {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object = object-data owner digest u64
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -558,7 +605,7 @@ impl Object {
     }
 
     /// Try to interpret this object as a move struct
-    pub fn as_struct_opt(&self) -> Option<&MoveStruct> {
+    pub fn as_opt_struct(&self) -> Option<&MoveStruct> {
         match &self.data {
             ObjectData::Struct(struct_) => Some(struct_),
             _ => None,
@@ -567,11 +614,11 @@ impl Object {
 
     /// Interpret this object as a move struct
     pub fn as_struct(&self) -> &MoveStruct {
-        self.as_struct_opt().expect("not a move struct")
+        self.as_opt_struct().expect("not a move struct")
     }
 
     /// Try to interpret this object as a move package
-    pub fn as_package_opt(&self) -> Option<&MovePackage> {
+    pub fn as_opt_package(&self) -> Option<&MovePackage> {
         match &self.data {
             ObjectData::Package(package) => Some(package),
             _ => None,
@@ -580,7 +627,7 @@ impl Object {
 
     /// Interpret this object as a move package
     pub fn as_package(&self) -> &MovePackage {
-        self.as_package_opt().expect("not a move package")
+        self.as_opt_package().expect("not a move package")
     }
 
     /// Return this object's owner
@@ -610,7 +657,7 @@ impl Object {
     pub fn to_rust<'de, T: serde::Deserialize<'de>>(
         &'de self,
     ) -> Result<T, Box<dyn std::error::Error + Send + Sync>> {
-        let contents = self.as_struct_opt().ok_or("not a struct")?.contents();
+        let contents = self.as_opt_struct().ok_or("not a struct")?.contents();
         Ok(bcs::from_bytes::<T>(contents)?)
     }
 
@@ -651,14 +698,14 @@ impl Object {
 
     /// Returns true if this object is a gas coin.
     pub fn is_gas_coin(&self) -> bool {
-        self.as_struct_opt()
+        self.as_opt_struct()
             .is_some_and(|move_object| move_object.struct_tag().is_gas_coin())
     }
 
     /// Returns the coin's type parameter if this object is a coin.
-    pub fn coin_type_opt(&self) -> Option<&TypeTag> {
-        self.as_struct_opt()
-            .and_then(|move_object| move_object.struct_tag().coin_type_opt())
+    pub fn opt_coin_type(&self) -> Option<&TypeTag> {
+        self.as_opt_struct()
+            .and_then(|move_object| move_object.struct_tag().opt_coin_type())
     }
 
     /// Returns the address of the single owner of this object (address- or
@@ -691,11 +738,8 @@ impl crate::TreeDisplay for Object {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// genesis-object = %d00 object-data owner   ; RawObject
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct GenesisObject {
@@ -753,6 +797,8 @@ impl crate::TreeDisplay for GenesisObject {
 
 crate::impl_tree_display!(
     ObjectReference,
+    OwnedObjectReference,
+    ObjectVersion,
     ObjectData,
     MoveStruct,
     Object,
@@ -792,9 +838,6 @@ mod serialization {
         /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
         /// 0x2::iota::IOTA`)
         Coin(TypeTag),
-        // NOTE: if adding a new type here, and there are existing on-chain objects of that
-        // type with Other(_), that is ok, but you must hand-roll PartialEq/Eq/Ord/maybe Hash
-        // to make sure the new type and Other(_) are interpreted consistently.
     }
 
     /// See `MoveObjectType`
@@ -811,9 +854,6 @@ mod serialization {
         /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
         /// 0x2::iota::IOTA`)
         Coin(&'a TypeTag),
-        // NOTE: if adding a new type here, and there are existing on-chain objects of that
-        // type with Other(_), that is ok, but you must hand-roll PartialEq/Eq/Ord/maybe Hash
-        // to make sure the new type and Other(_) are interpreted consistently.
     }
 
     impl MoveObjectTypeWrapper {
@@ -825,11 +865,22 @@ mod serialization {
                 MoveObjectTypeWrapper::Coin(type_tag) => StructTag::new_coin(type_tag),
             }
         }
+
+        /// Wire-format variant index, compared against the canonical encoding
+        /// chosen by `MoveObjectTypeRef::from_struct_tag`.
+        fn variant_index(&self) -> u8 {
+            match self {
+                Self::Other(_) => 0,
+                Self::GasCoin => 1,
+                Self::StakedIota => 2,
+                Self::Coin(_) => 3,
+            }
+        }
     }
 
     impl<'a> MoveObjectTypeRef<'a> {
         fn from_struct_tag(s: &'a StructTag) -> Self {
-            if let Some(coin_type) = s.coin_type_opt() {
+            if let Some(coin_type) = s.opt_coin_type() {
                 if let TypeTag::Struct(s_inner) = coin_type
                     && s_inner.address() == Address::FRAMEWORK
                     && s_inner.module() == "iota"
@@ -848,6 +899,15 @@ mod serialization {
                 Self::StakedIota
             } else {
                 Self::Other(s)
+            }
+        }
+
+        fn variant_index(&self) -> u8 {
+            match self {
+                Self::Other(_) => 0,
+                Self::GasCoin => 1,
+                Self::StakedIota => 2,
+                Self::Coin(_) => 3,
             }
         }
     }
@@ -873,7 +933,33 @@ mod serialization {
             if deserializer.is_human_readable() {
                 StructTag::deserialize(deserializer).map(Self)
             } else {
-                MoveObjectTypeWrapper::deserialize(deserializer).map(|t| Self(t.into_struct_tag()))
+                // The same `StructTag` is reachable from several wire forms
+                // (e.g. `Other(0x2::coin::Coin<0x2::iota::IOTA>)` and
+                // `GasCoin`), but serialization always emits the specialized
+                // one. Reject the others so BCS round-trips stay byte-faithful
+                // and digests computed over them stay stable. Only the
+                // variants carrying a payload can be non-canonical: `Other`
+                // may wrap any specialized tag and `Coin` may wrap the IOTA
+                // type, while `GasCoin` and `StakedIota` are always canonical.
+                let parsed = MoveObjectTypeWrapper::deserialize(deserializer)?;
+                match parsed {
+                    MoveObjectTypeWrapper::Other(_) | MoveObjectTypeWrapper::Coin(_) => {
+                        let parsed_idx = parsed.variant_index();
+                        let tag = parsed.into_struct_tag();
+                        let canonical_idx =
+                            MoveObjectTypeRef::from_struct_tag(&tag).variant_index();
+                        if parsed_idx != canonical_idx {
+                            return Err(serde::de::Error::custom(format!(
+                                "non-canonical MoveObjectType encoding: variant {parsed_idx} \
+                                 would be re-encoded as variant {canonical_idx}",
+                            )));
+                        }
+                        Ok(Self(tag))
+                    }
+                    MoveObjectTypeWrapper::GasCoin | MoveObjectTypeWrapper::StakedIota => {
+                        Ok(Self(parsed.into_struct_tag()))
+                    }
+                }
             }
         }
     }
@@ -942,6 +1028,33 @@ mod serialization {
         }
     }
 
+    /// Deserialization target mirroring `MoveStruct`'s fields, so that
+    /// `contents` can be validated through `MoveStruct::new` before the value
+    /// reaches the public type, where `id()` relies on that invariant.
+    #[derive(serde::Deserialize)]
+    #[serde(rename = "MoveStruct")]
+    struct RawMoveStruct {
+        object_type: MoveObjectType,
+        version: Version,
+        #[serde(with = "crate::_serde::ReadableBase64Encoded")]
+        contents: Vec<u8>,
+    }
+
+    impl<'de> Deserialize<'de> for MoveStruct {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            let RawMoveStruct {
+                object_type,
+                version,
+                contents,
+            } = RawMoveStruct::deserialize(deserializer)?;
+
+            MoveStruct::new(object_type, version, contents).map_err(serde::de::Error::custom)
+        }
+    }
+
     #[cfg(test)]
     mod tests {
         use std::collections::BTreeMap;
@@ -951,6 +1064,108 @@ mod serialization {
 
         use super::*;
         use crate::{Identifier, TypeOrigin, UpgradeInfo, object::Object};
+
+        // A non-canonical `MoveObjectType` wire form such as `Other(<gas coin
+        // tag>)` used to deserialize successfully and then re-serialize as the
+        // specialized variant, so the same logical value had several BCS
+        // encodings. Each must now be rejected at deserialization.
+        #[test]
+        fn non_canonical_move_object_type_is_rejected() {
+            // Variant indices on the wire (uleb128, one byte here):
+            //   0 = Other(StructTag), 1 = GasCoin, 2 = StakedIota, 3 = Coin(TypeTag)
+            fn other(tag: StructTag) -> Vec<u8> {
+                [&[0u8][..], &bcs::to_bytes(&tag).unwrap()].concat()
+            }
+            fn coin(type_tag: TypeTag) -> Vec<u8> {
+                [&[3u8][..], &bcs::to_bytes(&type_tag).unwrap()].concat()
+            }
+
+            let non_canonical = [
+                ("Other(gas coin tag)", other(StructTag::new_gas_coin())),
+                ("Other(StakedIota tag)", other(StructTag::new_staked_iota())),
+                (
+                    "Other(Coin<non-IOTA> tag)",
+                    other(StructTag::new_coin(TypeTag::U64)),
+                ),
+                ("Coin(IOTA type tag)", coin(StructTag::new_gas().into())),
+            ];
+            for (label, bytes) in non_canonical {
+                let err = bcs::from_bytes::<MoveObjectType>(&bytes).unwrap_err();
+                assert!(
+                    err.to_string().contains("non-canonical MoveObjectType"),
+                    "{label}: unexpected error: {err}"
+                );
+            }
+
+            // The canonical forms still round-trip.
+            for tag in [
+                StructTag::new_gas_coin(),
+                StructTag::new_staked_iota(),
+                StructTag::new_coin(TypeTag::U64),
+                StructTag::new_gas(),
+            ] {
+                let object_type = MoveObjectType::new(tag);
+                let bytes = bcs::to_bytes(&object_type).unwrap();
+                assert_eq!(
+                    bcs::from_bytes::<MoveObjectType>(&bytes).unwrap(),
+                    object_type
+                );
+            }
+        }
+
+        // A `MoveStruct` whose `contents` is shorter than an `ObjectId` used to
+        // deserialize successfully and then panic in `id()`. Both the BCS and
+        // JSON paths must reject it up front.
+        #[test]
+        fn truncated_move_struct_contents_is_rejected() {
+            const SHORT: usize = ObjectId::LENGTH - 1;
+
+            // BCS layout: GasCoin tag (0x01) | version u64 | contents uleb128
+            // length | contents.
+            let mut short_bcs = vec![0x01];
+            short_bcs.extend_from_slice(&[0u8; 8]);
+            short_bcs.push(SHORT as u8);
+            short_bcs.extend_from_slice(&[0u8; SHORT]);
+
+            let err = bcs::from_bytes::<MoveStruct>(&short_bcs).unwrap_err();
+            assert!(
+                err.to_string().contains("MoveStruct contents"),
+                "unexpected BCS error: {err}"
+            );
+
+            // Same layout wrapped in an `Object`: ObjectData::Struct (0x00) |
+            // MoveStruct | Owner::Immutable (0x03) | digest (uleb128 length +
+            // 32 bytes) | storage_rebate u64.
+            let mut short_object = vec![0x00];
+            short_object.extend_from_slice(&short_bcs);
+            short_object.push(0x03);
+            short_object.push(0x20);
+            short_object.extend_from_slice(&[0u8; 32]);
+            short_object.extend_from_slice(&[0u8; 8]);
+            assert!(bcs::from_bytes::<Object>(&short_object).is_err());
+
+            let short_json = format!(
+                r#"{{"object_type":"0x2::coin::Coin<0x2::iota::IOTA>","version":"0","contents":"{}"}}"#,
+                <base64ct::Base64 as base64ct::Encoding>::encode_string(&[0u8; SHORT]),
+            );
+            let err = serde_json::from_str::<MoveStruct>(&short_json).unwrap_err();
+            assert!(
+                err.to_string().contains("MoveStruct contents"),
+                "unexpected JSON error: {err}"
+            );
+
+            // Exactly `ObjectId::LENGTH` bytes is the accepted minimum.
+            let valid = MoveStruct::new(
+                MoveObjectType::new(StructTag::new_gas_coin()),
+                Version::from_u64(0),
+                vec![0u8; ObjectId::LENGTH],
+            )
+            .unwrap();
+            let bcs_bytes = bcs::to_bytes(&valid).unwrap();
+            assert_eq!(bcs::from_bytes::<MoveStruct>(&bcs_bytes).unwrap(), valid);
+            let json = serde_json::to_string(&valid).unwrap();
+            assert_eq!(serde_json::from_str::<MoveStruct>(&json).unwrap(), valid);
+        }
 
         #[test]
         fn package_object_json_snapshot() {

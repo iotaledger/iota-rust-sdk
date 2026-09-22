@@ -1,24 +1,37 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`TransactionBuilderClient`] for the GraphQL [`Client`].
+//! Implementation of the transaction builder client traits for the GraphQL
+//! [`GraphQLClient`].
 
-use iota_transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx};
+use iota_transaction_builder::{
+    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClientBase,
+    TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
+    TransactionBuilderSimulationClient, WaitForTransaction,
+};
 use iota_types::{
-    Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
-    TransactionEffects, UserSignature, Version,
+    Address, Object, ObjectId, StructTag, Transaction, TransactionDigest, TransactionEffects,
+    UserSignature, Version,
 };
 
 use crate::{
-    Client, DryRunResult,
+    DryRunResult, GraphQLClient,
     pagination::{Direction, PaginationFilter},
     query_types::ObjectFilter,
 };
 
-impl TransactionBuilderClient for Client {
-    type Error = crate::error::Error;
-    type DryRunResult = DryRunResult;
+impl GraphQLClient {
+    /// Create a new [`TransactionBuilder`] with the given sender address.
+    pub fn transaction_builder(&self, sender: Address) -> TransactionBuilder<&Self> {
+        TransactionBuilder::new(sender).with_client(self)
+    }
+}
 
+impl TransactionBuilderClientBase for GraphQLClient {
+    type Error = crate::error::GraphQLError;
+}
+
+impl TransactionBuilderLedgerClient for GraphQLClient {
     async fn object(
         &self,
         object_id: ObjectId,
@@ -38,14 +51,11 @@ impl TransactionBuilderClient for Client {
         // Vec<u8> is lossless. Caller-supplied cursors must come from a
         // prior call to this method; anything else is rejected here
         // rather than panicked on.
-        let cursor = cursor
-            .map(String::from_utf8)
-            .transpose()
-            .map_err(|e| crate::error::Error::from_error(crate::error::Kind::Parse, e))?;
+        let cursor = cursor.map(String::from_utf8).transpose()?;
         let page = self
             .objects(
                 ObjectFilter {
-                    type_: struct_tag.map(|tag| tag.to_string()),
+                    type_tag: struct_tag.map(|tag| tag.to_string()),
                     owner: Some(owner),
                     object_ids: None,
                 },
@@ -66,27 +76,13 @@ impl TransactionBuilderClient for Client {
     }
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
-        let cfg = crate::Client::protocol_config(self, None).await?;
+        let cfg = crate::GraphQLClient::protocol_config(self, None).await?;
         let attributes = cfg
             .configs
             .into_iter()
             .filter_map(|attr| attr.value.map(|v| (attr.key, v)))
             .collect();
-        Ok(ProtocolConfig { attributes })
-    }
-
-    async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>, Self::Error> {
-        self.transaction(digest).await
-    }
-
-    async fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>, Self::Error> {
-        self.transaction_effects(digest).await
+        Ok(ProtocolConfig::new(attributes))
     }
 
     async fn reference_gas_price(
@@ -95,9 +91,16 @@ impl TransactionBuilderClient for Client {
     ) -> Result<Option<u64>, Self::Error> {
         self.reference_gas_price(epoch).await
     }
+}
 
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
-        let res = self.dry_run_tx(tx, true).await?;
+impl TransactionBuilderSimulationClient for GraphQLClient {
+    type DryRunResult = DryRunResult;
+
+    async fn estimate_transaction_budget(
+        &self,
+        transaction: &Transaction,
+    ) -> Result<Option<u64>, Self::Error> {
+        let res = self.dry_run_transaction(transaction, true).await?;
         Ok(res.effects.map(|effects| match effects {
             TransactionEffects::V1(v1) => v1.gas_cost_summary.gas_used(),
             _ => unimplemented!(
@@ -106,28 +109,38 @@ impl TransactionBuilderClient for Client {
         }))
     }
 
-    async fn dry_run_tx(
+    async fn dry_run_transaction(
         &self,
-        tx: &Transaction,
+        transaction: &Transaction,
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
-        (*self).dry_run_tx(tx, skip_checks).await
+        (*self).dry_run_transaction(transaction, skip_checks).await
     }
+}
 
-    async fn execute_tx(
+impl TransactionBuilderExecutionClient for GraphQLClient {
+    async fn execute_transaction(
         &self,
         signatures: &[UserSignature],
-        tx: &Transaction,
-        wait_for: impl Into<Option<WaitForTx>>,
+        transaction: &Transaction,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Self::Error> {
-        self.execute_tx(signatures, tx, wait_for).await
+        self.execute_transaction(signatures, transaction, wait_for)
+            .await
     }
 
-    async fn wait_for_tx(
+    async fn wait_for_transaction(
         &self,
         digest: TransactionDigest,
-        wait_for: WaitForTx,
+        wait_for: WaitForTransaction,
     ) -> Result<(), Self::Error> {
-        self.wait_for_tx(digest, wait_for, None).await
+        self.wait_for_transaction(digest, wait_for, None).await
+    }
+
+    async fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<TransactionEffects>, Self::Error> {
+        self.transaction_effects(digest).await
     }
 }

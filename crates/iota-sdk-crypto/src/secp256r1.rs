@@ -10,11 +10,12 @@ use fastcrypto::{
     traits::{KeyPair as _, Signer as _, ToFromBytes as _, VerifyingKey as _},
 };
 use iota_types::{
-    Secp256r1PublicKey, Secp256r1Signature, SignatureScheme, SimpleSignature, UserSignature,
+    PersonalMessage, Secp256r1PublicKey, Secp256r1Signature, SignatureScheme, SimpleSignature,
+    Transaction, UserSignature,
 };
 use signature::{Signer, Verifier};
 
-use crate::SignatureError;
+use crate::{IotaVerifier, SignatureError};
 
 #[derive(Clone, Eq, PartialEq, zeroize::Zeroize, zeroize::ZeroizeOnDrop)]
 pub struct Secp256r1PrivateKey([u8; Self::LENGTH]);
@@ -75,7 +76,7 @@ impl Secp256r1PrivateKey {
         )
     }
 
-    pub fn generate<R>(mut rng: R) -> Self
+    pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::RngCore + rand_core::CryptoRng,
     {
@@ -96,7 +97,7 @@ impl Secp256r1PrivateKey {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::generate(rand_core::OsRng)
+        Self::random_with(rand_core::OsRng)
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
@@ -259,7 +260,7 @@ pub struct Secp256r1VerifyingKey(FcSecp256r1PublicKey);
 
 impl Secp256r1VerifyingKey {
     pub fn new(public_key: &Secp256r1PublicKey) -> Result<Self, SignatureError> {
-        FcSecp256r1PublicKey::from_bytes(public_key.inner().as_ref())
+        FcSecp256r1PublicKey::from_bytes(public_key.bytes())
             .map(Self)
             .map_err(SignatureError::from_source)
     }
@@ -335,7 +336,7 @@ impl Secp256r1VerifyingKey {
 
 impl Verifier<Secp256r1Signature> for Secp256r1VerifyingKey {
     fn verify(&self, message: &[u8], signature: &Secp256r1Signature) -> Result<(), SignatureError> {
-        let signature = FcSecp256r1Signature::from_bytes(signature.inner())
+        let signature = FcSecp256r1Signature::from_bytes(signature.bytes())
             .map_err(SignatureError::from_source)?;
         self.0
             .verify(message, &signature)
@@ -353,7 +354,7 @@ impl Verifier<SimpleSignature> for Secp256r1VerifyingKey {
             return Err(SignatureError::from_source("not a secp256r1 signature"));
         };
 
-        if public_key.inner() != self.public_key().inner() {
+        if public_key.bytes() != self.public_key().bytes() {
             return Err(SignatureError::from_source(
                 "public_key in signature does not match",
             ));
@@ -370,6 +371,26 @@ impl Verifier<UserSignature> for Secp256r1VerifyingKey {
         };
 
         <Self as Verifier<SimpleSignature>>::verify(self, message, signature)
+    }
+}
+
+crate::impl_iota_verifier!(Secp256r1VerifyingKey);
+
+impl IotaVerifier for Secp256r1PublicKey {
+    fn verify_transaction(
+        &self,
+        transaction: &Transaction,
+        signature: &UserSignature,
+    ) -> Result<(), SignatureError> {
+        Secp256r1VerifyingKey::new(self)?.verify_transaction(transaction, signature)
+    }
+
+    fn verify_personal_message(
+        &self,
+        message: &PersonalMessage<'_>,
+        signature: &UserSignature,
+    ) -> Result<(), SignatureError> {
+        Secp256r1VerifyingKey::new(self)?.verify_personal_message(message, signature)
     }
 }
 
@@ -408,9 +429,11 @@ impl Verifier<UserSignature> for Secp256r1Verifier {
     }
 }
 
+crate::impl_iota_verifier!(Secp256r1Verifier);
+
 #[cfg(test)]
 mod tests {
-    use iota_types::PersonalMessage;
+    use iota_types::{PersonalMessage, PublicKey};
     use test_strategy::proptest;
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
@@ -418,15 +441,29 @@ mod tests {
     use super::*;
     use crate::{IotaSigner, IotaVerifier};
 
-    // TODO need to export proptest impl from core crate
-    // #[proptest]
-    // fn transaction_signing(signer: Secp256r1PrivateKey, transaction: Transaction)
-    // {     let signature = signer.sign_transaction(&transaction).unwrap();
-    //     let verifier = signer.public_key();
-    //     verifier
-    //         .verify_transaction(&transaction, &signature)
-    //         .unwrap();
-    // }
+    #[proptest]
+    fn transaction_signing(signer: Secp256r1PrivateKey, transaction: Transaction) {
+        let signature = signer.sign_transaction(&transaction).unwrap();
+        let verifier = signer.verifying_key();
+        verifier
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+
+        let public_key = signer.public_key();
+        public_key
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+        PublicKey::Secp256r1(public_key)
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+
+        // a different public key must not verify the signature
+        Secp256r1PrivateKey::new([7; 32])
+            .unwrap()
+            .public_key()
+            .verify_transaction(&transaction, &signature)
+            .unwrap_err();
+    }
 
     #[proptest]
     fn personal_message_signing(signer: Secp256r1PrivateKey, message: Vec<u8>) {
@@ -441,6 +478,21 @@ mod tests {
         verifier
             .verify_personal_message(&message, &signature)
             .unwrap();
+
+        let public_key = signer.public_key();
+        public_key
+            .verify_personal_message(&message, &signature)
+            .unwrap();
+        PublicKey::Secp256r1(public_key)
+            .verify_personal_message(&message, &signature)
+            .unwrap();
+
+        // a different public key must not verify the signature
+        Secp256r1PrivateKey::new([7; 32])
+            .unwrap()
+            .public_key()
+            .verify_personal_message(&message, &signature)
+            .unwrap_err();
     }
 
     #[test]

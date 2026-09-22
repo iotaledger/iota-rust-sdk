@@ -20,14 +20,14 @@ use iota_grpc_types::{
 use iota_types::ObjectId;
 
 use crate::{
-    Client, InterceptedChannel,
+    GrpcClient, InterceptedChannel,
     api::{define_list_query, proto_object_id},
 };
 
 define_list_query! {
     /// Builder for listing dynamic fields of a parent object.
     ///
-    /// Created by [`Client::list_dynamic_fields`]. Await directly for a
+    /// Created by [`GrpcClient::dynamic_fields`]. Await directly for a
     /// single page, or call [`.collect(limit)`](Self::collect) to
     /// auto-paginate.
     pub struct ListDynamicFieldsQuery {
@@ -39,7 +39,7 @@ define_list_query! {
     }
 }
 
-impl Client {
+impl GrpcClient {
     /// List dynamic fields owned by a parent object.
     ///
     /// Returns a query builder. Await it directly for a single page
@@ -64,15 +64,15 @@ impl Client {
     ///
     /// Single page:
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::DynamicFieldReadMask;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let parent: ObjectId = "0x2".parse()?;
     ///
     /// let page = client
-    ///     .list_dynamic_fields(parent, None, None, DynamicFieldReadMask::default())
+    ///     .dynamic_fields(parent, None, None, DynamicFieldReadMask::default())
     ///     .await?;
     /// for field in &page.body().items {
     ///     println!("Dynamic field: {:?}", field);
@@ -83,15 +83,15 @@ impl Client {
     ///
     /// Auto-paginate:
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::DynamicFieldReadMask;
     /// # use iota_types::ObjectId;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let parent: ObjectId = "0x2".parse()?;
     ///
     /// let all = client
-    ///     .list_dynamic_fields(parent, Some(50), None, DynamicFieldReadMask::default())
+    ///     .dynamic_fields(parent, Some(50), None, DynamicFieldReadMask::default())
     ///     .collect(None)
     ///     .await?;
     /// for field in all.body() {
@@ -100,14 +100,14 @@ impl Client {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn list_dynamic_fields(
+    pub fn dynamic_fields(
         &self,
         parent: ObjectId,
         page_size: impl Into<Option<u32>>,
         page_token: impl Into<Option<prost::bytes::Bytes>>,
         read_mask: impl IntoReadMask<DynamicFieldReadMask>,
     ) -> ListDynamicFieldsQuery {
-        self.list_dynamic_fields_internal(
+        self.dynamic_fields_internal(
             parent,
             page_size.into(),
             page_token.into(),
@@ -115,7 +115,7 @@ impl Client {
         )
     }
 
-    fn list_dynamic_fields_internal(
+    fn dynamic_fields_internal(
         &self,
         parent: ObjectId,
         page_size: Option<u32>,

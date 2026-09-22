@@ -1,32 +1,39 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of [`TransactionBuilderClient`] for the GRPC [`Client`].
+//! Implementation of the transaction builder client traits for the GRPC
+//! [`GrpcClient`].
 
 use std::time::Duration;
 
 use iota_grpc_types::{
     read_mask_fields::{
         EpochField, EpochReadMask, ExecuteTransactionReadMask, ObjectReadMask, OwnedObjectReadMask,
-        SimulateReadMask, TransactionField, TransactionReadMask,
+        SimulateField, SimulateReadMask, TransactionField, TransactionReadMask,
     },
     v1::transaction_execution_service::SimulatedTransaction,
 };
-use iota_transaction_builder::{ObjectsPage, ProtocolConfig, TransactionBuilderClient, WaitForTx};
+use iota_transaction_builder::{
+    ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClientBase,
+    TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
+    TransactionBuilderSimulationClient, WaitForTransaction,
+};
 use iota_types::{
     Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
     TransactionEffects, UserSignature, Version,
 };
 
 use crate::{
-    Client,
-    api::{Error, MetadataEnvelope, check_result_count, saturating_usize_to_u32},
+    GrpcClient,
+    api::{GrpcError, GrpcResult, MetadataEnvelope, check_result_count, saturating_usize_to_u32},
 };
 
-/// How long [`TransactionBuilderClient::wait_for_tx`] polls before giving up.
-const WAIT_FOR_TX_TIMEOUT: Duration = Duration::from_secs(60);
-/// Interval between polls in [`TransactionBuilderClient::wait_for_tx`].
-const WAIT_FOR_TX_POLL_INTERVAL: Duration = Duration::from_millis(100);
+/// How long [`TransactionBuilderExecutionClient::wait_for_transaction`] polls
+/// before giving up.
+const WAIT_FOR_TRANSACTION_TIMEOUT: Duration = Duration::from_secs(60);
+/// Interval between polls in
+/// [`TransactionBuilderExecutionClient::wait_for_transaction`].
+const WAIT_FOR_TRANSACTION_POLL_INTERVAL: Duration = Duration::from_millis(100);
 
 /// Extract the result for the single item of a one-item batch request.
 ///
@@ -39,8 +46,8 @@ const WAIT_FOR_TX_POLL_INTERVAL: Duration = Duration::from_millis(100);
 /// item: the batched reads answer every request, so an empty batch says the
 /// server broke that promise rather than that the item is missing.
 fn single_item<T>(
-    response: Result<MetadataEnvelope<Vec<Result<T, Error>>>, Error>,
-) -> Result<Option<T>, Error> {
+    response: GrpcResult<MetadataEnvelope<Vec<GrpcResult<T>>>>,
+) -> GrpcResult<Option<T>> {
     let mut items = response?.into_inner();
     check_result_count(&items, 1)?;
 
@@ -51,10 +58,18 @@ fn single_item<T>(
     }
 }
 
-impl TransactionBuilderClient for Client {
-    type Error = crate::api::Error;
-    type DryRunResult = SimulatedTransaction;
+impl GrpcClient {
+    /// Create a new [`TransactionBuilder`] with the given sender address.
+    pub fn transaction_builder(&self, sender: Address) -> TransactionBuilder<&Self> {
+        TransactionBuilder::new(sender).with_client(self)
+    }
+}
 
+impl TransactionBuilderClientBase for GrpcClient {
+    type Error = crate::api::GrpcError;
+}
+
+impl TransactionBuilderLedgerClient for GrpcClient {
     async fn object(
         &self,
         object_id: ObjectId,
@@ -63,7 +78,7 @@ impl TransactionBuilderClient for Client {
         // Default read mask (`reference` + `bcs`) provides everything needed to
         // reconstruct the SDK object.
         let response = self
-            .get_objects_with_versions([(object_id, version.into())], ObjectReadMask::default())
+            .objects_with_versions([(object_id, version.into())], ObjectReadMask::default())
             .await;
 
         match single_item(response)? {
@@ -80,14 +95,14 @@ impl TransactionBuilderClient for Client {
             return Ok(Vec::new());
         }
         // Default read mask (`reference` + `bcs`) provides everything needed to
-        // reconstruct the SDK objects, which `get_objects` returns in request
+        // reconstruct the SDK objects, which `objects` returns in request
         // order.
-        self.get_objects_with_versions(object_ids.iter().copied(), ObjectReadMask::default())
+        self.objects_with_versions(object_ids.iter().copied(), ObjectReadMask::default())
             .await?
             .into_inner()
             .into_iter()
             .map(|result| match result {
-                Ok(obj) => obj.object().map(Some).map_err(Error::from),
+                Ok(obj) => obj.object().map(Some).map_err(GrpcError::from),
                 Err(e) if e.is_not_found() => Ok(None),
                 Err(e) => Err(e),
             })
@@ -102,7 +117,7 @@ impl TransactionBuilderClient for Client {
         limit: Option<usize>,
     ) -> Result<ObjectsPage, Self::Error> {
         let page = self
-            .list_owned_objects(
+            .owned_objects(
                 owner,
                 struct_tag,
                 limit.map(saturating_usize_to_u32),
@@ -114,7 +129,7 @@ impl TransactionBuilderClient for Client {
         let data = page
             .items
             .iter()
-            .map(|obj| obj.object().map_err(Error::from))
+            .map(|obj| obj.object().map_err(GrpcError::from))
             .collect::<Result<Vec<_>, _>>()?;
         let next_cursor = page.next_page_token.map(|token| token.to_vec());
         Ok(ObjectsPage { data, next_cursor })
@@ -122,7 +137,7 @@ impl TransactionBuilderClient for Client {
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
         let epoch = self
-            .get_epoch(
+            .epoch(
                 None,
                 EpochReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES),
             )
@@ -133,51 +148,7 @@ impl TransactionBuilderClient for Client {
             .and_then(|config| config.attributes)
             .map(|attrs| attrs.attributes)
             .unwrap_or_default();
-        Ok(ProtocolConfig { attributes })
-    }
-
-    async fn transaction(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<SignedTransaction>, Self::Error> {
-        let response = self
-            .get_transactions(
-                [digest],
-                TransactionReadMask::from([
-                    TransactionField::TRANSACTION,
-                    TransactionField::SIGNATURES,
-                ]),
-            )
-            .await;
-
-        match single_item(response)? {
-            Some(tx) => {
-                let transaction = tx.transaction()?.transaction()?;
-                let signatures = Vec::<UserSignature>::try_from(tx.signatures()?)?;
-                Ok(Some(SignedTransaction {
-                    transaction,
-                    signatures,
-                }))
-            }
-            None => Ok(None),
-        }
-    }
-
-    async fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> Result<Option<TransactionEffects>, Self::Error> {
-        let response = self
-            .get_transactions(
-                [digest],
-                TransactionReadMask::from(TransactionField::EFFECTS_BCS),
-            )
-            .await;
-
-        match single_item(response)? {
-            Some(tx) => Ok(Some(tx.effects()?.effects()?)),
-            None => Ok(None),
-        }
+        Ok(ProtocolConfig::new(attributes))
     }
 
     async fn reference_gas_price(
@@ -185,7 +156,7 @@ impl TransactionBuilderClient for Client {
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
         let epoch = self
-            .get_epoch(
+            .epoch(
                 epoch.into(),
                 EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE),
             )
@@ -193,12 +164,23 @@ impl TransactionBuilderClient for Client {
             .into_inner();
         Ok(epoch.reference_gas_price)
     }
+}
 
-    async fn estimate_tx_budget(&self, tx: &Transaction) -> Result<Option<u64>, Self::Error> {
+impl TransactionBuilderSimulationClient for GrpcClient {
+    type DryRunResult = SimulatedTransaction;
+
+    async fn estimate_transaction_budget(
+        &self,
+        transaction: &Transaction,
+    ) -> Result<Option<u64>, Self::Error> {
         // Simulate with relaxed checks and read the gas used from the resulting
         // effects.
         let simulated = self
-            .simulate_transaction(tx.clone(), true, SimulateReadMask::default())
+            .simulate_transaction(
+                transaction.clone(),
+                true,
+                SimulateField::EXECUTED_TRANSACTION_EFFECTS_BCS,
+            )
             .await?;
         let effects = simulated
             .into_inner()
@@ -213,75 +195,85 @@ impl TransactionBuilderClient for Client {
         })
     }
 
-    async fn dry_run_tx(
+    async fn dry_run_transaction(
         &self,
-        tx: &Transaction,
+        transaction: &Transaction,
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
         Ok(self
-            .simulate_transaction(tx.clone(), skip_checks, SimulateReadMask::default())
+            .simulate_transaction(
+                transaction.clone(),
+                skip_checks,
+                SimulateReadMask::default(),
+            )
             .await?
             .into_inner())
     }
+}
 
-    async fn execute_tx(
+impl TransactionBuilderExecutionClient for GrpcClient {
+    async fn execute_transaction(
         &self,
         signatures: &[UserSignature],
-        tx: &Transaction,
-        wait_for: impl Into<Option<WaitForTx>>,
+        transaction: &Transaction,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Self::Error> {
         let wait_for = wait_for.into();
         let signed_transaction = SignedTransaction {
-            transaction: tx.clone(),
+            transaction: transaction.clone(),
             signatures: signatures.to_vec(),
         };
-        // The default execute read mask includes `effects`.
-        let result = self
-            .execute_transaction(
-                signed_transaction,
-                None,
-                ExecuteTransactionReadMask::default(),
-            )
-            .await?
-            .into_inner();
+        let result = GrpcClient::execute_transaction(
+            self,
+            signed_transaction,
+            None,
+            ExecuteTransactionReadMask::default(),
+        )
+        .await?
+        .into_inner();
         let effects = result.effects()?.effects()?;
 
         if let Some(wait_for) = wait_for {
-            self.wait_for_tx(tx.digest(), wait_for).await?;
+            self.wait_for_transaction(transaction.digest(), wait_for)
+                .await?;
         }
 
         Ok(effects)
     }
 
-    async fn wait_for_tx(
+    async fn wait_for_transaction(
         &self,
         digest: TransactionDigest,
-        wait_for: WaitForTx,
+        wait_for: WaitForTransaction,
     ) -> Result<(), Self::Error> {
         // Request only the field that proves the desired condition: any
         // transaction field confirms it is indexed on the node, while
         // `checkpoint` is only populated once it has been finalized.
         let mask = match wait_for {
-            WaitForTx::IndexedOnNode => {
+            WaitForTransaction::IndexedOnNode => {
                 TransactionReadMask::from(TransactionField::TRANSACTION_DIGEST)
             }
-            WaitForTx::Finalized => TransactionReadMask::from(TransactionField::CHECKPOINT),
+            WaitForTransaction::Finalized => {
+                TransactionReadMask::from(TransactionField::CHECKPOINT)
+            }
             _ => {
-                unimplemented!("a new WaitForTx enum variant was added and needs to be handled")
+                unimplemented!(
+                    "a new WaitForTransaction enum variant was added and needs to be handled"
+                )
             }
         };
 
         let poll = async {
-            let mut interval = tokio::time::interval(WAIT_FOR_TX_POLL_INTERVAL);
+            let mut interval = tokio::time::interval(WAIT_FOR_TRANSACTION_POLL_INTERVAL);
             loop {
                 interval.tick().await;
-                let response = self.get_transactions([digest], mask.clone()).await;
+                let response = self.transactions([digest], mask.clone()).await;
 
                 // An absent transaction is not indexed yet — keep polling.
                 if let Some(tx) = single_item(response)? {
                     let ready = match wait_for {
-                        WaitForTx::IndexedOnNode => true,
-                        WaitForTx::Finalized => tx.checkpoint_sequence_number().is_ok(),
+                        WaitForTransaction::IndexedOnNode => true,
+                        WaitForTransaction::Finalized => tx.checkpoint_sequence_number().is_ok(),
                         _ => unreachable!("checked above"),
                     };
                     if ready {
@@ -291,14 +283,31 @@ impl TransactionBuilderClient for Client {
             }
         };
 
-        tokio::time::timeout(WAIT_FOR_TX_TIMEOUT, poll)
+        tokio::time::timeout(WAIT_FOR_TRANSACTION_TIMEOUT, poll)
             .await
             .map_err(|_| {
-                Error::from(tonic::Status::deadline_exceeded(format!(
+                GrpcError::from(tonic::Status::deadline_exceeded(format!(
                     "timed out waiting for transaction {digest} after {}s",
-                    WAIT_FOR_TX_TIMEOUT.as_secs()
+                    WAIT_FOR_TRANSACTION_TIMEOUT.as_secs()
                 )))
             })?
+    }
+
+    async fn transaction_effects(
+        &self,
+        digest: TransactionDigest,
+    ) -> Result<Option<TransactionEffects>, Self::Error> {
+        let response = self
+            .transactions(
+                [digest],
+                TransactionReadMask::from(TransactionField::EFFECTS_BCS),
+            )
+            .await;
+
+        match single_item(response)? {
+            Some(tx) => Ok(Some(tx.effects()?.effects()?)),
+            None => Ok(None),
+        }
     }
 }
 
@@ -306,7 +315,7 @@ impl TransactionBuilderClient for Client {
 mod tests {
     use tonic::metadata::MetadataMap;
 
-    use super::{Error, MetadataEnvelope, single_item};
+    use super::{GrpcError, GrpcResult, MetadataEnvelope, single_item};
     use crate::api::{ProtocolError, RpcStatus};
 
     fn not_found_status() -> RpcStatus {
@@ -319,8 +328,8 @@ mod tests {
 
     #[test]
     fn a_not_found_for_the_call_itself_is_not_an_absent_item() {
-        let response: Result<MetadataEnvelope<Vec<Result<u32, Error>>>, Error> =
-            Err(Error::from(tonic::Status::not_found("no such route")));
+        let response: GrpcResult<MetadataEnvelope<Vec<GrpcResult<u32>>>> =
+            Err(GrpcError::from(tonic::Status::not_found("no such route")));
 
         assert!(
             single_item(response).is_err(),
@@ -330,7 +339,7 @@ mod tests {
 
     #[test]
     fn a_not_found_for_the_item_is_an_absent_item() {
-        let items: Vec<Result<u32, Error>> = vec![Err(Error::Server(not_found_status()))];
+        let items: Vec<GrpcResult<u32>> = vec![Err(GrpcError::Server(not_found_status()))];
         let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
 
         assert!(
@@ -342,13 +351,13 @@ mod tests {
 
     #[test]
     fn an_empty_batch_is_not_an_absent_item() {
-        let items: Vec<Result<u32, Error>> = Vec::new();
+        let items: Vec<GrpcResult<u32>> = Vec::new();
         let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
 
         assert!(
             matches!(
                 single_item(response),
-                Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+                Err(GrpcError::Protocol(ProtocolError::UnexpectedResultCount {
                     expected: 1,
                     actual: 0
                 }))
@@ -359,13 +368,13 @@ mod tests {
 
     #[test]
     fn a_batch_with_more_results_than_requested_is_an_error() {
-        let items: Vec<Result<u32, Error>> = vec![Ok(1), Ok(2)];
+        let items: Vec<GrpcResult<u32>> = vec![Ok(1), Ok(2)];
         let response = Ok(MetadataEnvelope::new(items, MetadataMap::new()));
 
         assert!(
             matches!(
                 single_item(response),
-                Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+                Err(GrpcError::Protocol(ProtocolError::UnexpectedResultCount {
                     expected: 1,
                     actual: 2
                 }))
