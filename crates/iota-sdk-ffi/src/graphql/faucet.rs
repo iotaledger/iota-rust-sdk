@@ -34,9 +34,9 @@ impl FaucetClient {
     /// Construct a new `FaucetClient` using an HTTP client built to the given
     /// options.
     #[uniffi::constructor]
-    pub fn with_http_options(faucet_url: String, options: HttpClientOptions) -> Result<Self> {
+    pub fn new_with_http_options(faucet_url: String, options: HttpClientOptions) -> Result<Self> {
         Ok(Self(
-            iota_sdk::graphql_client::faucet::FaucetClient::with_http_client(
+            iota_sdk::graphql_client::faucet::FaucetClient::new_with_reqwest_client(
                 &faucet_url,
                 options.build()?,
             )

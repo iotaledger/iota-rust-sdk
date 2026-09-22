@@ -53,8 +53,8 @@ impl GraphQLClient {
     /// Create a new GraphQL client with the provided server address.
     ///
     /// The HTTP client is built for you, trusting the platform store plus the
-    /// bundled Mozilla roots. Use [`Self::with_http_client`] to supply your
-    /// own.
+    /// bundled Mozilla roots. Use [`Self::new_with_reqwest_client`] to supply
+    /// your own.
     ///
     /// An `https` or `wss` address is rejected on a build without a crypto
     /// provider, since no request to it could succeed. See the crate README.
@@ -62,7 +62,7 @@ impl GraphQLClient {
         if let Some(scheme) = crate::tls::unsupported_scheme(server) {
             return Err(GraphQLError::TlsUnavailable(scheme));
         }
-        Self::with_http_client(server, crate::tls::default_http_client_builder().build()?)
+        Self::new_with_reqwest_client(server, crate::tls::default_http_client_builder().build()?)
     }
 
     /// Create a new GraphQL client that issues its requests through the
@@ -78,7 +78,7 @@ impl GraphQLClient {
     /// The client is used as given: the SDK does not set its user agent, so
     /// callers who want to be identifiable should apply [`USER_AGENT`]
     /// themselves.
-    pub fn with_http_client(server: &str, client: reqwest::Client) -> GraphQLResult<Self> {
+    pub fn new_with_reqwest_client(server: &str, client: reqwest::Client) -> GraphQLResult<Self> {
         Ok(Self {
             rpc: reqwest::Url::parse(server)?,
             inner: client,

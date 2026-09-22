@@ -34,7 +34,7 @@ the browser owns certificate verification.
 
 ## Bringing your own client
 
-`Client::with_http_client` takes a `reqwest::Client` you built yourself, for
+`Client::new_with_reqwest_client` takes a `reqwest::Client` you built yourself, for
 pinning a certificate set, choosing a different TLS backend, or setting proxies
 and timeouts. Because this crate selects the rustls crypto provider itself
 rather than letting `reqwest` hard-wire aws-lc-rs, a build with a provider
@@ -50,7 +50,7 @@ rustls::crypto::ring::default_provider().install_default().ok();
 let http = reqwest::Client::builder()
     .timeout(std::time::Duration::from_secs(5))
     .build()?;
-let client = Client::with_http_client("https://graphql.testnet.iota.cafe", http)?;
+let client = Client::new_with_reqwest_client("https://graphql.testnet.iota.cafe", http)?;
 ```
 
 Such a client has none of this crate's own defaults: no user agent (`USER_AGENT`

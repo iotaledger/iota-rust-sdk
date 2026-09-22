@@ -127,7 +127,7 @@ pub enum GraphQLError {
     /// The RPC URL needs TLS, which this build does not have.
     #[error(
         "scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass your own \
-         client to `with_http_client`"
+         client to `new_with_reqwest_client`"
     )]
     TlsUnavailable(String),
     /// The operation did not complete within its deadline.

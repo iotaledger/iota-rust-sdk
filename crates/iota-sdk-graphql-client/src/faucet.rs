@@ -34,7 +34,7 @@ pub enum FaucetError {
     TimedOut,
     #[error(
         "Faucet URL scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass \
-         your own client to `with_http_client`"
+         your own client to `new_with_reqwest_client`"
     )]
     TlsUnavailable(String),
     #[error(
@@ -101,8 +101,8 @@ impl FaucetClient {
     /// - /v1/status/task-uuid is used to check the status of the request
     ///
     /// The HTTP client is built for you, trusting the platform store plus the
-    /// bundled Mozilla roots. Use [`Self::with_http_client`] to supply your
-    /// own.
+    /// bundled Mozilla roots. Use [`Self::new_with_reqwest_client`] to supply
+    /// your own.
     ///
     /// An `https` URL is rejected on a build without a crypto provider, since
     /// no request to it could succeed. See the crate README.
@@ -110,7 +110,7 @@ impl FaucetClient {
         if let Some(scheme) = crate::tls::unsupported_scheme(faucet_url) {
             return Err(FaucetError::TlsUnavailable(scheme));
         }
-        Self::with_http_client(
+        Self::new_with_reqwest_client(
             faucet_url,
             crate::tls::default_http_client_builder().build()?,
         )
@@ -124,7 +124,7 @@ impl FaucetClient {
     /// Note that on a build with `tls-ring` or `tls-aws-lc`, `reqwest` has no
     /// crypto provider to fall back on, so building a `reqwest::Client` panics
     /// unless one has been installed for the process. See the crate README.
-    pub fn with_http_client(
+    pub fn new_with_reqwest_client(
         faucet_url: &str,
         client: reqwest::Client,
     ) -> Result<Self, FaucetError> {
@@ -136,7 +136,7 @@ impl FaucetClient {
 
     /// Create a new Faucet client connected to a `localnet` faucet.
     pub fn new_localnet() -> Self {
-        Self::new(FAUCET_LOCAL_HOST).expect("Invalid localnet faucet URL")
+        Self::new(FAUCET_LOCAL_HOST).expect("cannot build localnet faucet client")
     }
 
     /// Request gas from the faucet. Note that this will return the UUID of the
