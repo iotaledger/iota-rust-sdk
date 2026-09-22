@@ -295,6 +295,13 @@ impl From<graphql_ws_client::Error> for GraphQLError {
     }
 }
 
+#[cfg(feature = "move-types")]
+impl From<iota_move_types::FromObjectError> for GraphQLError {
+    fn from(error: iota_move_types::FromObjectError) -> Self {
+        Self::Deserialization(error.into())
+    }
+}
+
 #[cfg(target_arch = "wasm32")]
 impl From<ws_stream_wasm::WsErr> for GraphQLError {
     fn from(error: ws_stream_wasm::WsErr) -> Self {
