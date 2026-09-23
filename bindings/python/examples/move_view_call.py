@@ -96,6 +96,21 @@ async def main():
     else:
         print("No shop JSON results")
 
+    # ===========================================================================
+    # Example 5: Using move_view_call_builder() to assemble the call
+    # ===========================================================================
+    print()
+    print("=== Example 5: move_view_call_builder() ===")
+    print()
+
+    builder = client.move_view_call_builder(ObjectId.from_hex(PACKAGE), "shop",
+                                            "sale_at")
+    builder = builder.arguments(
+        [MoveViewArg.object_id(ObjectId.from_hex(SHOP)),
+         MoveViewArg.u64(1)])
+
+    print("Builder Results:", await builder.execute())
+
 
 if __name__ == "__main__":
     asyncio.run(main())

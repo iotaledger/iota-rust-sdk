@@ -102,5 +102,20 @@ async fn main() -> GraphQLResult<()> {
         println!("No shop JSON results");
     }
 
+    // ===========================================================================
+    // Example 5: Using the MoveViewCallBuilder to assemble the call
+    // ===========================================================================
+    println!("\n=== Example 5: MoveViewCallBuilder ===\n");
+
+    match client
+        .move_view_call_builder(ObjectId::from_str(PACKAGE)?, "shop", "sale_at")
+        .arguments((ObjectId::from_str(SHOP)?, 1u64))
+        .execute()
+        .await
+    {
+        Ok(results) => println!("Builder Results: {results:?}"),
+        Err(error) => println!("Builder Error: {error}"),
+    }
+
     Ok(())
 }
