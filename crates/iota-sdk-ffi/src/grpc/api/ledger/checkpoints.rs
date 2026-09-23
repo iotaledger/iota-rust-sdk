@@ -5,15 +5,14 @@
 
 use std::sync::Arc;
 
-use futures::{StreamExt, stream::BoxStream};
+use futures::stream::BoxStream;
 use iota_sdk::grpc_client::{
     GrpcResult,
     read_mask_fields::{CheckpointResponseField, CheckpointResponseReadMask},
 };
-use tokio::sync::Mutex;
 
 use crate::{
-    cancel::Cancel,
+    cancel::StreamHandle,
     error::{Result, SdkFfiError},
     grpc::{
         api::{ledger::transactions::ExecutedTransaction, read_mask_requests},
@@ -142,9 +141,8 @@ macro_rules! define_checkpoint_stream {
         /// stream is exhausted or `cancel` has been called.
         #[derive(uniffi::Object)]
         pub struct $name {
-            stream: Mutex<BoxStream<'static, GrpcResult<$item>>>,
+            stream: StreamHandle<BoxStream<'static, GrpcResult<$item>>>,
             read_mask: CheckpointResponseReadMask,
-            cancel: Cancel,
         }
 
         #[uniffi::export(async_runtime = "tokio")]
@@ -162,19 +160,10 @@ macro_rules! define_checkpoint_stream {
             /// item, such as a BCS decode failure, only affects that item; the
             /// next call continues with the following one.
             pub async fn next(&self) -> Result<Option<$ffi_item>> {
-                if self.cancel.is_canceled() {
-                    return Ok(None);
-                }
-                let mut stream = self.stream.lock().await;
-                let canceled = std::pin::pin!(self.cancel.wait());
-                let item = match futures::future::select(canceled, stream.next()).await {
-                    futures::future::Either::Left(((), _)) => {
-                        *stream = Self::drained();
-                        None
-                    }
-                    futures::future::Either::Right((item, _)) => item,
-                };
-                item.transpose()?
+                self.stream
+                    .next()
+                    .await
+                    .transpose()?
                     .map(|item| ($convert)(item, &self.read_mask))
                     .transpose()
             }
@@ -189,15 +178,12 @@ macro_rules! define_checkpoint_stream {
             /// collides with the disposal method uniffi generates for objects
             /// in some languages.
             pub fn cancel(&self) {
-                self.cancel.cancel();
-                if let Ok(mut stream) = self.stream.try_lock() {
-                    *stream = Self::drained();
-                }
+                self.stream.cancel();
             }
 
             /// Whether the stream has been canceled.
             pub fn is_canceled(&self) -> bool {
-                self.cancel.is_canceled()
+                self.stream.is_canceled()
             }
         }
 
@@ -207,16 +193,9 @@ macro_rules! define_checkpoint_stream {
                 read_mask: CheckpointResponseReadMask,
             ) -> Self {
                 Self {
-                    stream: Mutex::new(stream),
+                    stream: StreamHandle::new(stream),
                     read_mask,
-                    cancel: Cancel::default(),
                 }
-            }
-
-            /// The stream a canceled handle is left with, so that canceling
-            /// drops the RPC instead of holding it until the handle is freed.
-            fn drained() -> BoxStream<'static, GrpcResult<$item>> {
-                futures::stream::empty().boxed()
             }
         }
     };
