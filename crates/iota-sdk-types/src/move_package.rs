@@ -52,11 +52,16 @@ impl TryFrom<u8> for UpgradePolicy {
 
 /// Type corresponding to the output of `iota move build
 /// --dump-bytecode-as-base64`
-#[derive(Clone, derive_more::Debug)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MovePackageData {
     /// The package modules as a series of bytes
     #[cfg_attr(feature = "serde", serde(with = "serialization::modules"))]
+    #[cfg_attr(
+        feature = "proptest",
+        strategy(proptest::collection::vec(proptest::collection::vec(proptest::arbitrary::any::<u8>(), 0..=1024), 0..=5))
+    )]
     #[debug(
         "{:?}",
         modules
@@ -405,7 +410,7 @@ mod serialization {
         use super::*;
 
         pub fn serialize<S: Serializer>(value: &Digest, serializer: S) -> Result<S::Ok, S::Error> {
-            value.bytes().serialize(serializer)
+            value.bytes().as_slice().serialize(serializer)
         }
 
         pub fn deserialize<'de, D>(deserializer: D) -> Result<Digest, D::Error>
