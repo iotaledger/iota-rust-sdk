@@ -104,6 +104,20 @@ mod tests {
     }
 
     #[test]
+    fn an_error_item_leaves_the_stream_in_place() {
+        let (sender, receiver) = mpsc::unbounded::<Result<u8, ()>>();
+        let handle = StreamHandle::new(receiver);
+        sender.unbounded_send(Err(())).unwrap();
+        sender.unbounded_send(Ok(1)).unwrap();
+
+        block_on(async {
+            assert_eq!(handle.next().await, Some(Err(())));
+            assert!(!sender.is_closed());
+            assert_eq!(handle.next().await, Some(Ok(1)));
+        });
+    }
+
+    #[test]
     fn cancel_drops_the_stream_and_ends_the_handle() {
         let (sender, receiver) = mpsc::unbounded::<u8>();
         let handle = StreamHandle::new(receiver);
