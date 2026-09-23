@@ -11,7 +11,7 @@ mod dynamic_fields;
 mod epochs;
 mod events;
 mod iota_names;
-pub mod move_view_call;
+mod move_view_call;
 mod network;
 mod objects;
 mod package;

@@ -18,11 +18,11 @@ use iota_sdk::{
 
 use crate::{
     error::{Result, SdkFfiError},
-    graphql::api::move_view_call::MoveViewArg,
     grpc::{
         api::execution::simulate::{CommandOutput, SimulatedExecutionError},
         client::GrpcClient,
     },
+    move_view_call::MoveViewArg,
     types::move_core::TypeTag,
 };
 
@@ -203,7 +203,7 @@ mod tests {
     };
 
     use super::{ViewFunctionCallInput, ViewFunctionCallOutputs};
-    use crate::graphql::api::move_view_call::MoveViewArg;
+    use crate::move_view_call::MoveViewArg;
 
     #[test]
     fn view_function_call_outputs_returned() {
