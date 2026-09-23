@@ -20,6 +20,9 @@ default = [
   "crypto",
   "ed25519",
   "graphql",
+  "graphql-tls-native-roots",
+  "graphql-tls-ring",
+  "graphql-tls-webpki-roots",
   "hash",
   "mnemonic",
   "passkey",
@@ -44,12 +47,19 @@ mnemonic = ["crypto", "iota-crypto/mnemonic"]
 move-types = ["dep:iota-move-types"]
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
+# TLS for the GraphQL client (the workspace dependency disables default
+# features, so these are not inherited).
+graphql-tls-aws-lc = ["graphql", "iota-graphql-client/tls-aws-lc"]
+graphql-tls-native-roots = ["graphql", "iota-graphql-client/tls-native-roots"]
+graphql-tls-ring = ["graphql", "iota-graphql-client/tls-ring"]
+graphql-tls-webpki-roots = ["graphql", "iota-graphql-client/tls-webpki-roots"]
 # gRPC
 grpc = ["dep:iota-grpc-client", "dep:iota-grpc-types"]
 # TLS support for the gRPC client (required to reach `https://` endpoints
 # such as the public testnet/mainnet nodes).
-grpc-tls-native-roots = ["grpc", "iota-grpc-client/tls-native-roots"]
+grpc-tls-aws-lc = ["grpc", "iota-grpc-client/tls-aws-lc"]
 grpc-tls-ring = ["grpc", "iota-grpc-client/tls-ring"]
+grpc-tls-native-roots = ["grpc", "iota-grpc-client/tls-native-roots"]
 grpc-tls-webpki-roots = ["grpc", "iota-grpc-client/tls-webpki-roots"]
 # Transaction Builder
 transaction-builder = ["dep:iota-transaction-builder"]
@@ -78,8 +88,7 @@ cynic.workspace = true
 eyre.workspace = true
 futures.workspace = true
 hex.workspace = true
-rand.workspace = true
-reqwest = { workspace = true, features = ["rustls-tls", "json"] }
+reqwest = { workspace = true, features = ["rustls-no-provider", "json"] }
 serde_json.workspace = true
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 

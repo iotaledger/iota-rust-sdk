@@ -8,6 +8,14 @@ readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "GraphQL RPC Client for the IOTA Blockchain"
 
+[features]
+# TLS crypto provider and trust anchors; see README.md.
+default = ["tls-native-roots", "tls-ring", "tls-webpki-roots"]
+tls-aws-lc = ["dep:rustls", "reqwest/rustls-no-provider", "rustls/aws-lc-rs"]
+tls-native-roots = []
+tls-ring = ["dep:rustls", "reqwest/rustls-no-provider", "rustls/ring"]
+tls-webpki-roots = ["dep:webpki-root-certs"]
+
 [lints]
 workspace = true
 
@@ -16,18 +24,18 @@ workspace = true
 async-stream.workspace = true
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
-chrono = "0.4.26"
+chrono = "0.4.45"
 cynic.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 futures.workspace = true
-reqwest = { workspace = true, features = ["rustls-tls", "json"] }
+reqwest = { workspace = true, features = ["json"] }
 serde.workspace = true
 serde_json.workspace = true
 strum = { workspace = true, features = ["derive"] }
 thiserror.workspace = true
 tokio = { workspace = true, features = ["time"] }
 tracing.workspace = true
-url = "2.5.3"
+url = "2.5.8"
 variadics_please.workspace = true
 
 # internal dependencies
@@ -38,7 +46,9 @@ iota-types = { workspace = true, features = ["serde", "hash"] }
 # target, so `graphql-ws-client` picks up a different integration on each.
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 graphql-ws-client = { workspace = true, features = ["tungstenite-0.28"] }
+rustls = { version = "0.23", default-features = false, optional = true }
 tokio-tungstenite.workspace = true
+webpki-root-certs = { workspace = true, optional = true }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom_2.workspace = true
@@ -51,7 +61,6 @@ ws_stream_wasm.workspace = true
 [dev-dependencies]
 # external dependencies
 eyre.workspace = true
-rand.workspace = true
 
 # internal dependencies
 iota-types = { workspace = true, features = ["serde", "rand", "hash"] }

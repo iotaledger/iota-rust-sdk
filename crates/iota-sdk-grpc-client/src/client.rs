@@ -52,7 +52,7 @@ impl GrpcClient {
         let endpoint = tonic::transport::Endpoint::from(uri.clone());
 
         #[cfg(all(
-            feature = "tls-ring",
+            any(feature = "tls-ring", feature = "tls-aws-lc"),
             any(feature = "tls-native-roots", feature = "tls-webpki-roots")
         ))]
         let endpoint = if uri.scheme() == Some(&http::uri::Scheme::HTTPS) {
@@ -65,12 +65,12 @@ impl GrpcClient {
         };
 
         #[cfg(not(all(
-            feature = "tls-ring",
+            any(feature = "tls-ring", feature = "tls-aws-lc"),
             any(feature = "tls-native-roots", feature = "tls-webpki-roots")
         )))]
         if uri.scheme() == Some(&http::uri::Scheme::HTTPS) {
             return Err(tonic::Status::failed_precondition(
-                "HTTPS requires the `tls-ring` feature and either `tls-native-roots` or `tls-webpki-roots` to be enabled",
+                "HTTPS requires the `tls-ring` or `tls-aws-lc` feature and either `tls-native-roots` or `tls-webpki-roots` to be enabled",
             )
             .into());
         }
@@ -240,7 +240,7 @@ mod tests {
         );
         assert!(
             status.message().contains("tls-ring"),
-            "error should mention `tls-ring` feature, got: {}",
+            "error should mention the `tls-ring` feature, got: {}",
             status.message()
         );
     }

@@ -444,6 +444,8 @@ mod tests {
 
     use super::*;
     use crate::bls12381::Bls12381PrivateKey;
+    #[cfg(test)]
+    use crate::tests::error_chain;
 
     #[proptest]
     fn basic_aggregation(private_keys: [Bls12381PrivateKey; 4], summary: CheckpointSummary) {
@@ -750,8 +752,9 @@ mod tests {
         // is what separates the two.
         assert!(matches!(err, CommitteeChainError::Signature(_)), "{err}");
         assert!(
-            err.to_string().contains("insufficient signing weight"),
-            "{err}"
+            error_chain(&err).contains("insufficient signing weight"),
+            "{}",
+            error_chain(&err)
         );
         assert_eq!(verifier.committee(), &committee0);
     }

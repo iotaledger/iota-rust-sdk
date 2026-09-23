@@ -3,7 +3,10 @@
 
 use std::{collections::HashMap, sync::Arc, time::Duration};
 
-use crate::error::{Result, SdkFfiError};
+use crate::{
+    error::{Result, SdkFfiError},
+    http::HttpClientOptions,
+};
 
 /// The IOTA gas station, sponsoring transactions over its HTTP API.
 ///
@@ -18,12 +21,14 @@ impl GasStation {
     ///
     /// `reservation_duration` is how long the station holds the gas it
     /// reserves, defaulting to 60 seconds. `headers` are sent with every
-    /// request, typically to carry an authorization token.
-    #[uniffi::constructor(default(reservation_duration = None, headers = None))]
+    /// request, typically to carry an authorization token. `http_options`
+    /// describes the HTTP client the requests go out on.
+    #[uniffi::constructor(default(reservation_duration = None, headers = None, http_options = None))]
     pub fn new(
         url: String,
         reservation_duration: Option<Duration>,
         headers: Option<HashMap<String, Vec<String>>>,
+        http_options: Option<HttpClientOptions>,
     ) -> Result<Arc<Self>> {
         let mut builder = iota_sdk::transaction_builder::GasStation::builder(
             url.parse().map_err(SdkFfiError::new)?,
@@ -31,6 +36,9 @@ impl GasStation {
 
         if let Some(duration) = reservation_duration {
             builder = builder.reservation_duration(duration);
+        }
+        if let Some(options) = http_options {
+            builder = builder.http_client(options.build()?);
         }
         for (name, values) in headers.into_iter().flatten() {
             let name: iota_sdk::transaction_builder::HeaderName =

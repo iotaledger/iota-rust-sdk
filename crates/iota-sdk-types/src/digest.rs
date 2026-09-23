@@ -49,7 +49,7 @@ impl Digest {
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
-        R: rand_core::RngCore + rand_core::CryptoRng,
+        R: rand_core::CryptoRng,
     {
         let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
         rng.fill_bytes(&mut buf);
@@ -59,7 +59,7 @@ impl Digest {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::random_with(rand_core::OsRng)
+        Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
     /// Returns a slice to the inner array representation of this digest.
@@ -332,7 +332,7 @@ macro_rules! impl_digest_wrapper {
             #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
             pub fn random_with<R>(rng: R) -> Self
             where
-                R: rand_core::RngCore + rand_core::CryptoRng,
+                R: rand_core::CryptoRng,
             {
                 Self(Digest::random_with(rng))
             }
