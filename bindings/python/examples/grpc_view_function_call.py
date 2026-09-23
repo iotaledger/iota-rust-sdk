@@ -14,7 +14,8 @@ SHOP = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20"
 def describe(outputs):
     if outputs.return_values is not None:
         return f"returned {[value.json for value in outputs.return_values]}"
-    return f"aborted ({outputs.execution_error.source})"
+    error = outputs.execution_error
+    return f"aborted ({error.source if error is not None else ''})"
 
 
 async def main():
