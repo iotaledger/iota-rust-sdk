@@ -72,9 +72,10 @@ impl<S: Stream + Unpin> StreamHandle<S> {
     /// canceled. Concurrent calls are serialized; there is no ordering
     /// guarantee between them.
     pub(crate) async fn next(&self) -> Option<S::Item> {
-        if self.cancel.is_canceled() {
-            return None;
-        }
+        // No early return on the cancellation flag: a `next` that was dropped
+        // by the caller's runtime while `cancel` lost the `try_lock` race
+        // leaves the stream in place, and only reaching the `select` below
+        // (which polls `canceled` first) drops it.
         let mut stream = self.stream.lock().await;
         let canceled = std::pin::pin!(self.cancel.wait());
         let next = stream.as_mut()?.next();
@@ -107,7 +108,9 @@ impl<S: Stream + Unpin> StreamHandle<S> {
 
 #[cfg(test)]
 mod tests {
-    use futures::{channel::mpsc, executor::block_on, future::join};
+    use std::task::Context;
+
+    use futures::{channel::mpsc, executor::block_on, future::join, task::noop_waker_ref};
 
     use super::*;
 
@@ -153,6 +156,25 @@ mod tests {
 
         assert_eq!(item, None);
         assert!(handle.is_canceled());
+        assert!(sender.is_closed());
+    }
+
+    #[test]
+    fn next_after_a_dropped_pending_next_drops_the_stream() {
+        let (sender, receiver) = mpsc::unbounded::<u8>();
+        let handle = StreamHandle::new(receiver);
+
+        // Poll `next` once so it holds the mutex and is pending on the empty
+        // channel, then drop it the way a foreign runtime does when it cancels
+        // the call, after `cancel` lost the `try_lock` race against it.
+        let mut cx = Context::from_waker(noop_waker_ref());
+        let mut pending = Box::pin(handle.next());
+        assert!(pending.as_mut().poll(&mut cx).is_pending());
+        handle.cancel();
+        assert!(!sender.is_closed());
+        drop(pending);
+
+        assert_eq!(block_on(handle.next()), None);
         assert!(sender.is_closed());
     }
 }
