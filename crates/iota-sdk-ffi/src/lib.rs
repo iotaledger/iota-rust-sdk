@@ -9,6 +9,7 @@
 
 use base64ct::Encoding;
 
+mod cancel;
 mod macros;
 
 #[cfg(feature = "crypto")]
