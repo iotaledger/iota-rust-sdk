@@ -19,12 +19,12 @@ use futures::{Stream, StreamExt};
 use iota_sdk::graphql_client::error::GraphQLResult;
 
 use crate::{
-    cancel::StreamHandle,
     error::Result,
     graphql::{
         client::GraphQLClient,
         query_types::{GraphQLEvent, TransactionBlockKindInput},
     },
+    stream::StreamHandle,
     types::{address::Address, transaction::SignedTransaction},
 };
 

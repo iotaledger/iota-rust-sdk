@@ -12,13 +12,13 @@ use iota_sdk::grpc_client::{
 };
 
 use crate::{
-    cancel::StreamHandle,
     error::{Result, SdkFfiError},
     grpc::{
         api::{ledger::transactions::ExecutedTransaction, read_mask_requests},
         client::GrpcClient,
         filters::{GrpcEventFilter, GrpcTransactionFilter},
     },
+    stream::StreamHandle,
     types::{
         checkpoint::{CheckpointContents, CheckpointSummary},
         digest::{CheckpointContentsDigest, CheckpointDigest},
