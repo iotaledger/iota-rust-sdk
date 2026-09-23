@@ -3,46 +3,11 @@
 
 //! Cancelable handle objects over streams that are pulled with `next`.
 
-use std::sync::atomic::{AtomicBool, Ordering};
-
-use futures::{Stream, StreamExt, future::Either};
-use tokio::sync::{Mutex, Notify};
-
-/// A cancellation flag that a pending `next` can wait on.
-///
-/// Foreign async support is uneven — Kotlin, Swift and Python can cancel a
-/// pending call, Go and C# cannot — so cancellation has to be something the
-/// handle itself understands rather than something the caller's runtime does
-/// to it.
-#[derive(Default)]
-struct Cancel {
-    canceled: AtomicBool,
-    notify: Notify,
-}
-
-impl Cancel {
-    fn cancel(&self) {
-        self.canceled.store(true, Ordering::Release);
-        self.notify.notify_waiters();
-    }
-
-    fn is_canceled(&self) -> bool {
-        self.canceled.load(Ordering::Acquire)
-    }
-
-    /// Resolve once [`Cancel::cancel`] has been called.
-    async fn wait(&self) {
-        loop {
-            // Register for a wake-up before reading the flag, so a `cancel`
-            // racing with this call cannot be missed.
-            let notified = self.notify.notified();
-            if self.is_canceled() {
-                return;
-            }
-            notified.await;
-        }
-    }
-}
+use futures::{
+    Stream, StreamExt,
+    stream::{AbortHandle, Abortable},
+};
+use tokio::sync::Mutex;
 
 /// A stream exposed to foreign code as a handle object.
 ///
@@ -50,22 +15,47 @@ impl Cancel {
 /// time with [`StreamHandle::next`] and closed with [`StreamHandle::cancel`].
 /// The uniffi object wrapping this handle only maps items to their foreign
 /// representation.
+///
+/// Foreign async support is uneven — Kotlin, Swift and Python can cancel a
+/// pending call, Go and C# cannot — so cancellation has to be something the
+/// handle itself understands rather than something the caller's runtime does
+/// to it. [`Abortable`] provides that: aborting wakes a pending poll and makes
+/// every later poll return `None`.
 pub(crate) struct StreamHandle<S> {
     /// `None` once the stream has been canceled or exhausted, so that the
     /// connection behind it is dropped right away instead of being held until
     /// the handle is freed.
-    stream: Mutex<Option<S>>,
-    cancel: Cancel,
+    stream: Mutex<Option<Abortable<S>>>,
+    abort: AbortHandle,
 }
 
-impl<S: Stream + Unpin> StreamHandle<S> {
+impl<S> StreamHandle<S> {
     pub(crate) fn new(stream: S) -> Self {
+        let (abort, registration) = AbortHandle::new_pair();
         Self {
-            stream: Mutex::new(Some(stream)),
-            cancel: Cancel::default(),
+            stream: Mutex::new(Some(Abortable::new(stream, registration))),
+            abort,
         }
     }
 
+    /// Cancel the handle, dropping the stream and unblocking a pending `next`.
+    ///
+    /// Idempotent, and safe to call while `next` is pending — the pending call
+    /// drops the stream on its way out.
+    pub(crate) fn cancel(&self) {
+        self.abort.abort();
+        if let Ok(mut stream) = self.stream.try_lock() {
+            *stream = None;
+        }
+    }
+
+    /// Whether the handle has been canceled.
+    pub(crate) fn is_canceled(&self) -> bool {
+        self.abort.is_aborted()
+    }
+}
+
+impl<S: Stream + Unpin> StreamHandle<S> {
     /// Wait for the next item.
     ///
     /// Returns `None` once the stream is exhausted or the handle has been
@@ -74,35 +64,14 @@ impl<S: Stream + Unpin> StreamHandle<S> {
     pub(crate) async fn next(&self) -> Option<S::Item> {
         // No early return on the cancellation flag: a `next` that was dropped
         // by the caller's runtime while `cancel` lost the `try_lock` race
-        // leaves the stream in place, and only reaching the `select` below
-        // (which polls `canceled` first) drops it.
+        // leaves the stream in place, and only polling it (which yields `None`
+        // once aborted) drops it.
         let mut stream = self.stream.lock().await;
-        let canceled = std::pin::pin!(self.cancel.wait());
-        let next = stream.as_mut()?.next();
-        let item = match futures::future::select(canceled, next).await {
-            Either::Left(((), _)) => None,
-            Either::Right((item, _)) => item,
-        };
+        let item = stream.as_mut()?.next().await;
         if item.is_none() {
             *stream = None;
         }
         item
-    }
-
-    /// Cancel the handle, dropping the stream and unblocking a pending `next`.
-    ///
-    /// Idempotent, and safe to call while `next` is pending — the pending call
-    /// drops the stream on its way out.
-    pub(crate) fn cancel(&self) {
-        self.cancel.cancel();
-        if let Ok(mut stream) = self.stream.try_lock() {
-            *stream = None;
-        }
-    }
-
-    /// Whether the handle has been canceled.
-    pub(crate) fn is_canceled(&self) -> bool {
-        self.cancel.is_canceled()
     }
 }
 
@@ -117,15 +86,18 @@ mod tests {
     #[test]
     fn yields_items_until_exhausted() {
         let (sender, receiver) = mpsc::unbounded();
-        let handle = StreamHandle::new(receiver);
+        // `take` ends the stream while the sender is still alive, so dropping
+        // the exhausted stream is observable as the channel closing.
+        let handle = StreamHandle::new(receiver.take(2));
         sender.unbounded_send(1).unwrap();
         sender.unbounded_send(2).unwrap();
-        drop(sender);
 
         block_on(async {
             assert_eq!(handle.next().await, Some(1));
             assert_eq!(handle.next().await, Some(2));
+            assert!(!sender.is_closed());
             assert_eq!(handle.next().await, None);
+            assert!(sender.is_closed());
             assert_eq!(handle.next().await, None);
         });
         assert!(!handle.is_canceled());
