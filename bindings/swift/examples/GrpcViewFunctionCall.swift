@@ -11,7 +11,7 @@ func describe(_ outputs: ViewFunctionCallOutputs) -> String {
 }
 
 @main
-struct GrpcMoveViewCallExample {
+struct GrpcViewFunctionCallExample {
   /// The `view_demo` package published on testnet.
   static let package = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4"
   /// A shared `view_demo::shop::Shop` created when the package was published.

@@ -104,7 +104,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcExecuteTransaction", "G
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcCheckpointsStream", "GrpcCheckpointsStream\GrpcCheckpointsStream.csproj", "{FB5FAAA4-8822-4A29-8027-12AE1F131ABB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcMoveViewCall", "GrpcMoveViewCall\GrpcMoveViewCall.csproj", "{740032E5-4FFB-41B6-A55D-403F589C5AE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcViewFunctionCall", "GrpcViewFunctionCall\GrpcViewFunctionCall.csproj", "{740032E5-4FFB-41B6-A55D-403F589C5AE7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

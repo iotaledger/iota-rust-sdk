@@ -119,7 +119,7 @@ name = "grpc_checkpoints_stream"
 required-features = ["grpc"]
 
 [[example]]
-name = "grpc_move_view_call"
+name = "grpc_view_function_call"
 required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]

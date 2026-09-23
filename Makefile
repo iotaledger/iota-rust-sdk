@@ -440,7 +440,7 @@ examples: ## Run all Rust examples
 	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer
 	@# that require external services (e.g. PostgreSQL). Run those separately.
 	@# TODO(#1363): Re-enable Move View call over gRPC examples
-	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -not -name "grpc_move_view_call.rs" -exec basename {} .rs \;); do \
+	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -not -name "grpc_view_function_call.rs" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 
