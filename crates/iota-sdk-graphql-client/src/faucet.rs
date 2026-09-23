@@ -22,6 +22,8 @@ const FAUCET_POLL_INTERVAL: Duration = Duration::from_secs(2);
 pub enum FaucetError {
     #[error("Cannot fetch request status due to a bad gateway.")]
     BadGateway,
+    #[error("Invalid faucet URL: {0}")]
+    InvalidUrl(#[from] url::ParseError),
     #[error("Faucet request was unsuccessful: {0}")]
     Request(String),
     #[error("Reqwest error: {0}")]
@@ -30,6 +32,11 @@ pub enum FaucetError {
     StatusCode(StatusCode),
     #[error("Faucet request timed out")]
     TimedOut,
+    #[error(
+        "Faucet URL scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass \
+         your own client to `new_with_reqwest_client`"
+    )]
+    TlsUnavailable(String),
     #[error(
         "Faucet service received too many requests from this IP address. Please try again later."
     )]
@@ -92,15 +99,44 @@ impl FaucetClient {
     ///
     /// - /v1/gas is used to request gas
     /// - /v1/status/task-uuid is used to check the status of the request
-    pub fn new(faucet_url: &str) -> Self {
-        let inner = reqwest::Client::new();
-        let faucet_url = Url::parse(faucet_url).expect("Invalid faucet URL");
-        FaucetClient { faucet_url, inner }
+    ///
+    /// The HTTP client is built for you, trusting the platform store plus the
+    /// bundled Mozilla roots. Use [`Self::new_with_reqwest_client`] to supply
+    /// your own.
+    ///
+    /// An `https` URL is rejected on a build without a crypto provider, since
+    /// no request to it could succeed. See the crate README.
+    pub fn new(faucet_url: &str) -> Result<Self, FaucetError> {
+        if let Some(scheme) = crate::tls::unsupported_scheme(faucet_url) {
+            return Err(FaucetError::TlsUnavailable(scheme));
+        }
+        Self::new_with_reqwest_client(
+            faucet_url,
+            crate::tls::default_http_client_builder().build()?,
+        )
+    }
+
+    /// Construct a new `FaucetClient` that issues its requests through the
+    /// supplied [`reqwest::Client`].
+    ///
+    /// This is the way to choose your own trust anchors or TLS backend.
+    ///
+    /// Note that on a build with `tls-ring` or `tls-aws-lc`, `reqwest` has no
+    /// crypto provider to fall back on, so building a `reqwest::Client` panics
+    /// unless one has been installed for the process. See the crate README.
+    pub fn new_with_reqwest_client(
+        faucet_url: &str,
+        client: reqwest::Client,
+    ) -> Result<Self, FaucetError> {
+        Ok(FaucetClient {
+            faucet_url: Url::parse(faucet_url)?,
+            inner: client,
+        })
     }
 
     /// Create a new Faucet client connected to a `localnet` faucet.
     pub fn new_localnet() -> Self {
-        Self::new(FAUCET_LOCAL_HOST)
+        Self::new(FAUCET_LOCAL_HOST).expect("cannot build localnet faucet client")
     }
 
     /// Request gas from the faucet. Note that this will return the UUID of the

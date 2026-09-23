@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_sdk::crypto::{FromMnemonic, ToFromBech32, ToFromBytes, Verifier};
-use rand::rngs::OsRng;
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -84,7 +83,7 @@ impl Secp256r1PrivateKey {
     /// Generate a new random Secp256r1PrivateKey
     #[uniffi::constructor]
     pub fn random() -> Self {
-        Self(iota_sdk::crypto::secp256r1::Secp256r1PrivateKey::random_with(OsRng))
+        Self(iota_sdk::crypto::secp256r1::Secp256r1PrivateKey::random())
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
