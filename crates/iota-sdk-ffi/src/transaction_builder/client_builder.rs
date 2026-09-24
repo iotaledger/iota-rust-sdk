@@ -5,11 +5,9 @@ use std::sync::{Arc, RwLock};
 
 use crate::{
     error::Result,
-    graphql::{
-        api::transactions::WaitForTransaction, client::GraphQLClient, output_types::DryRunResult,
-    },
+    graphql::{client::GraphQLClient, output_types::DryRunResult},
     transaction_builder::{
-        Payment,
+        Payment, WaitForTransaction,
         gas_station::GasStation,
         ptb_arg::{MoveArg, PTBArgument},
         signer::TransactionSigner,
