@@ -19,7 +19,7 @@ class Program
 
         // Only ask for the summary — keeps the message small. Pass null (or
         // compose more fields) to pull more data per checkpoint.
-        var stream = await client.CheckpointsStream(start, end, readMask: new[] { "checkpoint.summary" });
+        var stream = await client.CheckpointsStream(start, end, readMask: new[] { CheckpointResponseField.CheckpointSummary });
 
         Console.WriteLine($"Streaming checkpoints {start}..={end}");
         CheckpointResponse? checkpoint;

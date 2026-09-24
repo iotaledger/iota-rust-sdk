@@ -9,7 +9,7 @@ use iota_sdk::{grpc_client::read_mask_fields::ObjectReadMask, grpc_types::v1 as 
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::client::GrpcClient,
+    grpc::{client::GrpcClient, read_mask_fields::ObjectField},
     types::{
         digest::ObjectDigest,
         object::{Object, ObjectId},
@@ -102,14 +102,14 @@ impl GrpcClient {
     pub async fn objects(
         &self,
         object_ids: Vec<Arc<ObjectId>>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<ObjectField>>,
     ) -> Result<Vec<GrpcObject>> {
         let ids = object_ids.iter().map(|id| ***id).collect::<Vec<_>>();
         convert_objects(
             self.client()
                 .objects(
                     ids,
-                    crate::grpc::api::read_mask::<ObjectReadMask>(&read_mask),
+                    crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask),
                 )
                 .await?
                 .into_inner(),
@@ -128,7 +128,7 @@ impl GrpcClient {
     pub async fn objects_with_versions(
         &self,
         requests: Vec<ObjectRequest>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<ObjectField>>,
     ) -> Result<Vec<GrpcObject>> {
         let refs = requests
             .iter()
@@ -143,7 +143,7 @@ impl GrpcClient {
             self.client()
                 .objects_with_versions(
                     refs,
-                    crate::grpc::api::read_mask::<ObjectReadMask>(&read_mask),
+                    crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask),
                 )
                 .await?
                 .into_inner(),

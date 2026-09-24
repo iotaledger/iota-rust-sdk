@@ -8,7 +8,9 @@ use std::sync::Arc;
 use futures::stream::BoxStream;
 use iota_sdk::grpc_client::{
     GrpcResult,
-    read_mask_fields::{CheckpointResponseField, CheckpointResponseReadMask},
+    read_mask_fields::{
+        CheckpointResponseField as SdkCheckpointResponseField, CheckpointResponseReadMask,
+    },
 };
 
 use crate::{
@@ -17,6 +19,7 @@ use crate::{
         api::{ledger::transactions::ExecutedTransaction, read_mask_requests},
         client::GrpcClient,
         filters::{GrpcEventFilter, GrpcTransactionFilter},
+        read_mask_fields::CheckpointResponseField,
     },
     stream::StreamHandle,
     types::{
@@ -105,7 +108,7 @@ impl CheckpointResponse {
                 .transpose()?
                 .map(Into::into)
                 .map(Arc::new),
-            transactions: read_mask_requests(read_mask, CheckpointResponseField::TRANSACTIONS)
+            transactions: read_mask_requests(read_mask, SdkCheckpointResponseField::TRANSACTIONS)
                 .then(|| {
                     value
                         .executed_transactions()
@@ -114,7 +117,7 @@ impl CheckpointResponse {
                         .collect::<Result<Vec<_>>>()
                 })
                 .transpose()?,
-            events: read_mask_requests(read_mask, CheckpointResponseField::EVENTS_BCS)
+            events: read_mask_requests(read_mask, SdkCheckpointResponseField::EVENTS_BCS)
                 .then(|| {
                     value
                         .events()
@@ -269,9 +272,9 @@ impl GrpcClient {
         &self,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<CheckpointResponseField>>,
     ) -> Result<CheckpointResponse> {
-        let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask>(&read_mask);
+        let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let response = self
             .client()
             .checkpoint_latest(
@@ -297,9 +300,9 @@ impl GrpcClient {
         sequence_number: u64,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<CheckpointResponseField>>,
     ) -> Result<CheckpointResponse> {
-        let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask>(&read_mask);
+        let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let response = self
             .client()
             .checkpoint_by_sequence_number(
@@ -326,9 +329,9 @@ impl GrpcClient {
         digest: &CheckpointDigest,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<CheckpointResponseField>>,
     ) -> Result<CheckpointResponse> {
-        let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask>(&read_mask);
+        let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let response = self
             .client()
             .checkpoint_by_digest(
@@ -369,9 +372,9 @@ impl GrpcClient {
         end_sequence_number: Option<u64>,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<CheckpointResponseField>>,
     ) -> Result<CheckpointStream> {
-        let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask>(&read_mask);
+        let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let stream = self
             .client()
             .checkpoints_stream(
@@ -419,9 +422,9 @@ impl GrpcClient {
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
         progress_interval_ms: Option<u32>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<CheckpointResponseField>>,
     ) -> Result<FilteredCheckpointStream> {
-        let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask>(&read_mask);
+        let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let stream = self
             .client()
             .checkpoints_stream_filtered(

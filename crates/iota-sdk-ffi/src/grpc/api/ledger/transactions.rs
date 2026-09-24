@@ -12,7 +12,7 @@ use iota_sdk::{
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::client::GrpcClient,
+    grpc::{client::GrpcClient, read_mask_fields::TransactionField},
     types::{
         digest::{Digest, TransactionDigest},
         events::TransactionEvents,
@@ -161,13 +161,13 @@ impl GrpcClient {
     pub async fn transactions(
         &self,
         digests: Vec<Arc<TransactionDigest>>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<TransactionField>>,
     ) -> Result<Vec<ExecutedTransaction>> {
         let digests = digests.iter().map(|digest| ***digest).collect::<Vec<_>>();
         self.client()
             .transactions(
                 digests,
-                crate::grpc::api::read_mask::<TransactionReadMask>(&read_mask),
+                crate::grpc::api::read_mask::<TransactionReadMask, _>(read_mask),
             )
             .await?
             .into_inner()
