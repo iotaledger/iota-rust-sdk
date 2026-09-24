@@ -1,6 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+import iota_sdk.CheckpointResponseField
 import iota_sdk.GrpcClient
 import kotlinx.coroutines.runBlocking
 
@@ -18,7 +19,12 @@ fun main() = runBlocking {
 
         // Only ask for the summary — keeps the message small. Pass null (or
         // compose more fields) to pull more data per checkpoint.
-        val stream = client.checkpointsStream(start, end, readMask = listOf("checkpoint.summary"))
+        val stream =
+            client.checkpointsStream(
+                start,
+                end,
+                readMask = listOf(CheckpointResponseField.CHECKPOINT_SUMMARY),
+            )
 
         println("Streaming checkpoints $start..=$end")
         while (true) {

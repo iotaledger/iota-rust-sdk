@@ -4,37 +4,38 @@
 //! High-level API for gRPC client operations.
 //!
 //! The gRPC API lets callers control which fields the server returns via read
-//! masks. Fields that were not requested (or that the server did not populate)
-//! are `None` in the corresponding record.
+//! masks, given as a list of the typed fields of the endpoint (see
+//! [`read_mask_fields`](crate::grpc::read_mask_fields)). Fields that were not
+//! requested (or that the server did not populate) are `None` in the
+//! corresponding record.
 //!
 //! Complex types (transactions, effects, events, objects, ...) are eagerly
 //! deserialized from their BCS representation, so the read mask must include
 //! the corresponding `bcs` sub-fields for those record fields to be
 //! populated.
 
-use iota_sdk::grpc_types::field_mask_normalize;
+use crate::grpc::read_mask_fields::ReadMaskField;
 
 pub mod execution;
 pub mod ledger;
 pub mod move_package;
 pub mod state;
 
-/// Convert an optional list of field paths into an endpoint read mask.
+/// Convert an optional list of typed fields into an endpoint read mask.
 ///
 /// The paths are normalized like the typed field lists of the Rust client
-/// (duplicates and subsumed paths dropped). When nothing is left, or no paths
-/// were given at all, the endpoint's default mask is used.
-pub(crate) fn read_mask<M: Default + From<String>>(paths: &Option<Vec<String>>) -> M {
-    match paths {
-        Some(paths) => {
-            let mask = field_mask_normalize(&paths.join(","));
-            if mask.is_empty() {
-                M::default()
-            } else {
-                M::from(mask)
-            }
+/// (duplicates and subsumed paths dropped). When no fields were given, or the
+/// list is empty, the endpoint's default mask is used.
+pub(crate) fn read_mask<M, F>(fields: Option<Vec<F>>) -> M
+where
+    M: Default + From<Vec<F::Field>>,
+    F: ReadMaskField,
+{
+    match fields {
+        Some(fields) if !fields.is_empty() => {
+            M::from(fields.into_iter().map(F::Field::from).collect::<Vec<_>>())
         }
-        None => M::default(),
+        _ => M::default(),
     }
 }
 
@@ -60,9 +61,12 @@ pub(crate) fn read_mask_requests(mask: impl AsRef<str>, field: impl AsRef<str>) 
 
 #[cfg(test)]
 mod tests {
-    use iota_sdk::grpc_client::read_mask_fields::EpochReadMask;
+    use iota_sdk::grpc_client::read_mask_fields::{
+        EpochReadMask, ExecuteTransactionReadMask, TransactionReadMask,
+    };
 
     use super::{read_mask, read_mask_requests};
+    use crate::grpc::read_mask_fields::{EpochField, TransactionField};
 
     #[test]
     fn read_mask_requests_matches_the_field_its_ancestors_and_sub_paths() {
@@ -83,36 +87,53 @@ mod tests {
     }
 
     #[test]
-    fn read_mask_falls_back_to_the_default_without_paths() {
+    fn read_mask_falls_back_to_the_default_without_fields() {
         let default = EpochReadMask::default();
-        assert_eq!(read_mask::<EpochReadMask>(&None).as_str(), default.as_str());
         assert_eq!(
-            read_mask::<EpochReadMask>(&Some(vec![])).as_str(),
+            read_mask::<EpochReadMask, EpochField>(None).as_str(),
             default.as_str()
         );
         assert_eq!(
-            read_mask::<EpochReadMask>(&Some(vec![String::new()])).as_str(),
+            read_mask::<EpochReadMask, EpochField>(Some(vec![])).as_str(),
             default.as_str()
         );
     }
 
     #[test]
-    fn read_mask_normalizes_the_given_paths() {
-        let mask = read_mask::<EpochReadMask>(&Some(vec![
-            "protocol_config.feature_flags".to_owned(),
-            "protocol_config".to_owned(),
-            "epoch".to_owned(),
-            "epoch".to_owned(),
+    fn read_mask_normalizes_the_given_fields() {
+        let mask = read_mask::<EpochReadMask, _>(Some(vec![
+            EpochField::ProtocolConfigFeatureFlags,
+            EpochField::ProtocolConfig,
+            EpochField::Epoch,
+            EpochField::Epoch,
         ]));
         assert_eq!(mask.as_str(), "epoch,protocol_config");
     }
 
     #[test]
-    fn read_mask_joins_the_given_paths() {
-        let mask = read_mask::<EpochReadMask>(&Some(vec![
-            "epoch".to_owned(),
-            "reference_gas_price".to_owned(),
+    fn read_mask_joins_the_given_fields() {
+        let mask = read_mask::<EpochReadMask, _>(Some(vec![
+            EpochField::Epoch,
+            EpochField::ReferenceGasPrice,
         ]));
         assert_eq!(mask.as_str(), "epoch,reference_gas_price");
+    }
+
+    #[test]
+    fn transaction_fields_build_the_mask_of_either_transaction_endpoint() {
+        let fields = || {
+            Some(vec![
+                TransactionField::EffectsBcs,
+                TransactionField::Checkpoint,
+            ])
+        };
+        assert_eq!(
+            read_mask::<TransactionReadMask, _>(fields()).as_str(),
+            "checkpoint,effects.bcs"
+        );
+        assert_eq!(
+            read_mask::<ExecuteTransactionReadMask, _>(fields()).as_str(),
+            "checkpoint,effects.bcs"
+        );
     }
 }
