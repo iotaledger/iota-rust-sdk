@@ -1,0 +1,69 @@
+name: GraphQL Schema Drift Nightly
+
+on:
+  schedule:
+    - cron: "0 4 * * *" # Daily at 4am UTC
+  workflow_dispatch:
+
+concurrency:
+  group: graphql-schema-drift-nightly-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  drift-check:
+    # Compares crates/iota-sdk-graphql-client-build/schema.graphql against
+    # crates/iota-graphql-rpc/schema.graphql at the iota monorepo's `develop`
+    # HEAD. Both are normalized (parsed, sorted, reprinted) first, so only
+    # changes to the schema itself fail the check, not formatting or
+    # definition order.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Fetch schema.graphql at develop HEAD
+        run: |
+          curl --fail --location --silent --show-error --retry 3 \
+            https://raw.githubusercontent.com/iotaledger/iota/develop/crates/iota-graphql-rpc/schema.graphql \
+            > head_schema.graphql
+
+      - name: Normalize both schemas
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install --quiet graphql-core==3.2.6
+          cat > normalize.py <<'EOF'
+          import sys
+          from graphql import build_schema, lexicographic_sort_schema, print_schema
+          with open(sys.argv[1]) as f:
+              schema = lexicographic_sort_schema(build_schema(f.read()))
+          # Upstream descriptions carry stray trailing whitespace.
+          print("\n".join(line.rstrip() for line in print_schema(schema).splitlines()))
+          EOF
+          .venv/bin/python normalize.py crates/iota-sdk-graphql-client-build/schema.graphql > local.normalized.graphql
+          .venv/bin/python normalize.py head_schema.graphql > head.normalized.graphql
+
+      - name: Diff local schema against develop HEAD
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! diff -u local.normalized.graphql head.normalized.graphql; then
+            echo
+            # Best-effort pointer at the drift sources: upstream commits to
+            # the schema since the local copy was last changed.
+            since="$(gh api "repos/${{ github.repository }}/commits?path=crates/iota-sdk-graphql-client-build/schema.graphql&sha=${{ github.sha }}&per_page=1" --jq '.[0].commit.committer.date' || true)"
+            if [ -n "$since" ]; then
+              echo "Upstream commits that touched schema.graphql since the local copy was last updated ($since):"
+              gh api "repos/iotaledger/iota/commits?path=crates/iota-graphql-rpc/schema.graphql&sha=develop&since=${since}&per_page=100" \
+                --jq '.[] | .sha + " " + (.commit.message | split("\n")[0])' \
+                | sed 's|^|  https://github.com/iotaledger/iota/commit/|' || true
+              echo
+            fi
+            echo "::error::GraphQL schema drift detected."
+            echo "Upstream iotaledger/iota@develop changed crates/iota-graphql-rpc/schema.graphql since crates/iota-sdk-graphql-client-build/schema.graphql was last synced."
+            echo "Copy the upstream schema over the local one, update the affected queries in crates/iota-sdk-graphql-client, run 'make test' locally, and open a PR."
+            exit 1
+          fi
