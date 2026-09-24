@@ -2876,7 +2876,7 @@ mod tests {
         /// receiving input, not as an owned one.
         #[tokio::test]
         async fn a_receiving_id_resolves_to_a_receiving_input() {
-            let sender = Address::random_with(rand::thread_rng());
+            let sender = Address::random();
             let receivable = object_id(3);
 
             let mut builder =
@@ -2898,7 +2898,7 @@ mod tests {
         /// Only an address-owned object can be received.
         #[tokio::test]
         async fn a_receiving_id_that_is_not_address_owned_is_rejected() {
-            let sender = Address::random_with(rand::thread_rng());
+            let sender = Address::random();
 
             let mut builder =
                 TransactionBuilder::new(sender).with_client(RecordingClient::default());
@@ -2923,7 +2923,7 @@ mod tests {
         /// a receiving input can still carry the gas flag.
         #[tokio::test]
         async fn a_receiving_id_flagged_as_gas_is_rejected() {
-            let sender = Address::random_with(rand::thread_rng());
+            let sender = Address::random();
             let receivable = object_id(3);
 
             let mut builder =
