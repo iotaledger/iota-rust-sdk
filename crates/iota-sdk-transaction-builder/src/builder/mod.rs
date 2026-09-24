@@ -1747,9 +1747,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
 
                     if input.is_gas {
                         let obj_ref = match obj.owner() {
-                            Owner::Address(_) => {
-                                ObjectReference::new(object_id, obj.version(), obj.digest())
-                            }
+                            Owner::Address(_) => obj.object_ref(),
                             _ => {
                                 return Err(TransactionBuilderError::WrongGasObject);
                             }
@@ -1759,11 +1757,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                     } else {
                         let input = match obj.owner() {
                             Owner::Address(_) | Owner::Object(_) | Owner::Immutable => {
-                                iota_types::Input::ImmutableOrOwned(ObjectReference::new(
-                                    object_id,
-                                    obj.version(),
-                                    obj.digest(),
-                                ))
+                                iota_types::Input::ImmutableOrOwned(obj.object_ref())
                             }
                             Owner::Shared(v) => iota_types::Input::Shared(SharedObjectReference {
                                 object_id,
