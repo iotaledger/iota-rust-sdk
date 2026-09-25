@@ -241,268 +241,9 @@ impl GrpcClient {
         Ok(MetadataEnvelope::new(checkpoint, metadata))
     }
 
-    /// Stream checkpoints across a range of checkpoints.
-    ///
-    /// Returns a stream of [`CheckpointResponse`] objects, each representing
-    /// a complete checkpoint with its transactions and events. Every checkpoint
-    /// in the range is yielded, even if the filters produce no matching
-    /// transactions or events within it.
-    ///
-    /// To skip non-matching checkpoints entirely, use
-    /// [`checkpoints_stream_filtered`](Self::checkpoints_stream_filtered).
-    ///
-    /// The `read_mask` controls which fields the server returns; use
-    /// `CheckpointResponseReadMask::default()` for the default field mask.
-    /// Pass a
-    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields — conversion is automatic.
-    ///
-    /// **Note:** The metadata in the returned [`MetadataEnvelope`] is captured
-    /// from the initial gRPC response headers when the stream is opened. It is
-    /// **not** updated as subsequent checkpoint data arrives.
-    ///
-    /// # Parameters
-    ///
-    /// * `start_sequence_number` - Optional starting checkpoint. If `None`,
-    ///   starts from the latest checkpoint.
-    /// * `end_sequence_number` - Optional ending checkpoint. If `None`, streams
-    ///   indefinitely.
-    /// * `transactions_filter` - Optional filter to apply to transactions
-    /// * `events_filter` - Optional filter to apply to events
-    /// * `read_mask` - Field mask controlling the returned fields
-    ///
-    /// # Example
-    ///
-    /// ```no_run
-    /// # use iota_sdk_grpc_client::GrpcClient;
-    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
-    /// # use futures::StreamExt;
-    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = GrpcClient::new_localnet()?;
-    /// let mut stream = client
-    ///     .checkpoints_stream(
-    ///         Some(0),
-    ///         Some(10),
-    ///         None,
-    ///         None,
-    ///         CheckpointResponseReadMask::default(),
-    ///     )
-    ///     .await?;
-    ///
-    /// while let Some(checkpoint) = stream.body_mut().next().await {
-    ///     let checkpoint = checkpoint?;
-    ///     println!("Received checkpoint {}", checkpoint.sequence_number());
-    /// }
-    /// # Ok(())
-    /// # }
-    /// ```
-    pub async fn checkpoints_stream(
-        &self,
-        start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
-        end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
-        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
-        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
-        read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-    ) -> GrpcResult<
-        MetadataEnvelope<Pin<Box<dyn Stream<Item = GrpcResult<CheckpointResponse>> + Send>>>,
-    > {
-        self.checkpoints_stream_internal(
-            start_sequence_number.into(),
-            end_sequence_number.into(),
-            transactions_filter.into(),
-            events_filter.into(),
-            read_mask.into_read_mask(),
-        )
-        .await
-    }
-
-    async fn checkpoints_stream_internal(
-        &self,
-        start_sequence_number: Option<CheckpointSequenceNumber>,
-        end_sequence_number: Option<CheckpointSequenceNumber>,
-        transactions_filter: Option<grpc_filter::TransactionFilter>,
-        events_filter: Option<grpc_filter::EventFilter>,
-        read_mask: CheckpointResponseReadMask,
-    ) -> GrpcResult<
-        MetadataEnvelope<Pin<Box<dyn Stream<Item = GrpcResult<CheckpointResponse>> + Send>>>,
-    > {
-        let envelope = self
-            .checkpoints_stream_raw(
-                start_sequence_number,
-                end_sequence_number,
-                transactions_filter,
-                events_filter,
-                false,
-                None,
-                read_mask,
-            )
-            .await?;
-
-        let (stream, metadata) = envelope.into_parts();
-
-        // remove the wrapping CheckpointStreamItem layer since we know
-        // filter_checkpoints is false and thus only Checkpoint items will be
-        // produced
-        let filtered = stream.filter_map(|item| async {
-            match item {
-                Ok(CheckpointStreamItem::Checkpoint(cp)) => Some(Ok(*cp)),
-                Ok(CheckpointStreamItem::Progress { .. }) => None,
-                Err(e) => Some(Err(e)),
-            }
-        });
-
-        Ok(MetadataEnvelope::new(Box::pin(filtered), metadata))
-    }
-
-    /// Stream checkpoints, skipping those with no matching data.
-    ///
-    /// Unlike [`checkpoints_stream`](Self::checkpoints_stream), this method
-    /// sets `filter_checkpoints = true` on the server, which means checkpoints
-    /// without any matching transactions or events are skipped entirely.
-    ///
-    /// The returned stream yields [`CheckpointStreamItem`], which is either a
-    /// [`CheckpointStreamItem::Checkpoint`] or a
-    /// [`CheckpointStreamItem::Progress`]. Progress messages are sent
-    /// periodically during scanning to indicate liveness and the current scan
-    /// position (default every 2 seconds, configurable via
-    /// `progress_interval_ms`).
-    ///
-    /// For liveness detection, wrap `stream.next()` in
-    /// `tokio::time::timeout()` — if neither a `Checkpoint` nor a `Progress`
-    /// arrives within your chosen duration plus some buffer for connection
-    /// latency, the connection is likely dead.
-    ///
-    /// At least one of `transactions_filter` or `events_filter` must be set.
-    ///
-    /// The `read_mask` controls which fields the server returns; use
-    /// `CheckpointResponseReadMask::default()` for the default field mask.
-    /// Pass a
-    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields — conversion is automatic.
-    ///
-    /// # Parameters
-    ///
-    /// * `start_sequence_number` - Optional starting checkpoint. If `None`,
-    ///   starts from the latest checkpoint.
-    /// * `end_sequence_number` - Optional ending checkpoint. If `None`, streams
-    ///   indefinitely.
-    /// * `transactions_filter` - Optional filter to apply to transactions
-    /// * `events_filter` - Optional filter to apply to events
-    /// * `progress_interval_ms` - Optional progress message interval in
-    ///   milliseconds. Defaults to 2000ms. Minimum 500ms.
-    /// * `read_mask` - Field mask controlling the returned fields
-    ///
-    /// # Example
-    ///
-    /// ```no_run
-    /// # use iota_sdk_grpc_client::{GrpcClient, CheckpointStreamItem};
-    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
-    /// # use iota_grpc_types::v1::filter as grpc_filter;
-    /// # use futures::StreamExt;
-    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = GrpcClient::new_localnet()?;
-    /// // At least one filter is required
-    /// let tx_filter = grpc_filter::TransactionFilter::default();
-    /// let mut stream = client
-    ///     .checkpoints_stream_filtered(
-    ///         Some(0),
-    ///         None,
-    ///         Some(tx_filter),
-    ///         None,
-    ///         None,
-    ///         CheckpointResponseReadMask::default(),
-    ///     )
-    ///     .await?;
-    ///
-    /// while let Some(item) = stream.body_mut().next().await {
-    ///     match item? {
-    ///         CheckpointStreamItem::Checkpoint(cp) => {
-    ///             println!("Matched checkpoint {}", cp.sequence_number());
-    ///         }
-    ///         CheckpointStreamItem::Progress {
-    ///             latest_scanned_sequence_number,
-    ///         } => {
-    ///             println!("Scanned up to {latest_scanned_sequence_number}");
-    ///         }
-    ///         _ => {}
-    ///     }
-    /// }
-    /// # Ok(())
-    /// # }
-    /// ```
-    pub async fn checkpoints_stream_filtered(
-        &self,
-        start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
-        end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
-        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
-        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
-        progress_interval_ms: impl Into<Option<u32>>,
-        read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-    ) -> GrpcResult<
-        MetadataEnvelope<Pin<Box<dyn Stream<Item = GrpcResult<CheckpointStreamItem>> + Send>>>,
-    > {
-        self.checkpoints_stream_raw(
-            start_sequence_number.into(),
-            end_sequence_number.into(),
-            transactions_filter.into(),
-            events_filter.into(),
-            true,
-            progress_interval_ms.into(),
-            read_mask.into_read_mask(),
-        )
-        .await
-    }
-
-    /// Internal helper that builds the stream request and returns the raw
-    /// [`CheckpointStreamItem`] stream.
-    #[expect(clippy::too_many_arguments)]
-    async fn checkpoints_stream_raw(
-        &self,
-        start_sequence_number: Option<CheckpointSequenceNumber>,
-        end_sequence_number: Option<CheckpointSequenceNumber>,
-        transactions_filter: Option<grpc_filter::TransactionFilter>,
-        events_filter: Option<grpc_filter::EventFilter>,
-        filter_checkpoints: bool,
-        progress_interval_ms: Option<u32>,
-        read_mask: CheckpointResponseReadMask,
-    ) -> GrpcResult<
-        MetadataEnvelope<Pin<Box<dyn Stream<Item = GrpcResult<CheckpointStreamItem>> + Send>>>,
-    > {
-        let mut request = StreamCheckpointsRequest::default().with_read_mask(read_mask);
-
-        if let Some(start) = start_sequence_number {
-            request = request.with_start_sequence_number(start);
-        }
-        if let Some(end) = end_sequence_number {
-            request = request.with_end_sequence_number(end);
-        }
-        if let Some(tf) = transactions_filter {
-            request = request.with_transactions_filter(tf);
-        }
-        if let Some(ef) = events_filter {
-            request = request.with_events_filter(ef);
-        }
-        if filter_checkpoints {
-            request = request.with_filter_checkpoints(true);
-        }
-        if let Some(ms) = progress_interval_ms {
-            request = request.with_progress_interval_ms(ms);
-        }
-        if let Some(max_size) = self
-            .max_decoding_message_size()
-            .map(saturating_usize_to_u32)
-        {
-            request = request.with_max_message_size_bytes(max_size);
-        }
-
-        let mut client = self.ledger_service_client();
-        let response = client.stream_checkpoints(request).await?;
-        let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
-
-        Ok(MetadataEnvelope::new(
-            Box::pin(Self::reassemble_checkpoint_data_stream(stream)),
-            metadata,
-        ))
+    /// Start building a checkpoint stream.
+    pub fn checkpoints_stream_builder(&self) -> CheckpointsStreamBuilder {
+        CheckpointsStreamBuilder::new(self.clone())
     }
 
     /// Reassemble a stream of checkpoint data chunks into complete checkpoints.
@@ -637,5 +378,273 @@ impl GrpcClient {
                 Err(GrpcError::Protocol(CheckpointStreamError::IncompleteStream { sequence_number }.into()))?;
             }
         }
+    }
+}
+
+/// Options for a checkpoint stream, created by
+/// [`GrpcClient::checkpoints_stream_builder`].
+///
+/// With no option set, the stream starts at the latest checkpoint, never
+/// ends, applies no filters and uses `CheckpointResponseReadMask::default()`.
+#[derive(Clone)]
+pub struct CheckpointsStreamBuilder {
+    client: GrpcClient,
+    start_sequence_number: Option<CheckpointSequenceNumber>,
+    end_sequence_number: Option<CheckpointSequenceNumber>,
+    transactions_filter: Option<grpc_filter::TransactionFilter>,
+    events_filter: Option<grpc_filter::EventFilter>,
+    progress_interval_ms: Option<u32>,
+    read_mask: CheckpointResponseReadMask,
+}
+
+impl CheckpointsStreamBuilder {
+    fn new(client: GrpcClient) -> Self {
+        Self {
+            client,
+            start_sequence_number: None,
+            end_sequence_number: None,
+            transactions_filter: None,
+            events_filter: None,
+            progress_interval_ms: None,
+            read_mask: CheckpointResponseReadMask::default(),
+        }
+    }
+
+    /// Starting checkpoint. If unset, the stream starts from the latest
+    /// checkpoint.
+    pub fn start_sequence_number(
+        mut self,
+        start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
+    ) -> Self {
+        self.start_sequence_number = start_sequence_number.into();
+        self
+    }
+
+    /// Ending checkpoint. If unset, the stream continues indefinitely.
+    pub fn end_sequence_number(
+        mut self,
+        end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
+    ) -> Self {
+        self.end_sequence_number = end_sequence_number.into();
+        self
+    }
+
+    /// Narrows the transactions returned for each checkpoint by
+    /// [`stream`](Self::stream); decides which checkpoints are returned at
+    /// all by [`stream_filtered`](Self::stream_filtered).
+    pub fn transactions_filter(
+        mut self,
+        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
+    ) -> Self {
+        self.transactions_filter = transactions_filter.into();
+        self
+    }
+
+    /// Narrows the events returned for each checkpoint by
+    /// [`stream`](Self::stream); decides which checkpoints are returned at
+    /// all by [`stream_filtered`](Self::stream_filtered).
+    pub fn events_filter(
+        mut self,
+        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
+    ) -> Self {
+        self.events_filter = events_filter.into();
+        self
+    }
+
+    /// Interval between progress messages in milliseconds, read only by
+    /// [`stream_filtered`](Self::stream_filtered). Defaults to 2000ms.
+    /// Minimum 500ms.
+    pub fn progress_interval_ms(mut self, progress_interval_ms: impl Into<Option<u32>>) -> Self {
+        self.progress_interval_ms = progress_interval_ms.into();
+        self
+    }
+
+    /// Field mask controlling the returned fields. Pass a
+    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
+    /// or any slice/array/vec of fields.
+    pub fn read_mask(mut self, read_mask: impl IntoReadMask<CheckpointResponseReadMask>) -> Self {
+        self.read_mask = read_mask.into_read_mask();
+        self
+    }
+
+    /// Stream every checkpoint in the range, even those in which the filters
+    /// match no transactions or events.
+    ///
+    /// **Note:** The metadata in the returned [`MetadataEnvelope`] is captured
+    /// from the initial gRPC response headers when the stream is opened. It is
+    /// **not** updated as subsequent checkpoint data arrives.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::GrpcClient;
+    /// # use futures::StreamExt;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = GrpcClient::new_localnet()?;
+    /// let mut stream = client
+    ///     .checkpoints_stream_builder()
+    ///     .start_sequence_number(0)
+    ///     .end_sequence_number(10)
+    ///     .stream()
+    ///     .await?;
+    ///
+    /// while let Some(checkpoint) = stream.body_mut().next().await {
+    ///     let checkpoint = checkpoint?;
+    ///     println!("Received checkpoint {}", checkpoint.sequence_number());
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn stream(
+        self,
+    ) -> GrpcResult<
+        MetadataEnvelope<Pin<Box<dyn Stream<Item = GrpcResult<CheckpointResponse>> + Send>>>,
+    > {
+        let (stream, metadata) = self.open(false).await?.into_parts();
+        let checkpoints = stream.filter_map(|item| async {
+            match item {
+                Ok(CheckpointStreamItem::Checkpoint(cp)) => Some(Ok(*cp)),
+                Ok(CheckpointStreamItem::Progress { .. }) => None,
+                Err(e) => Some(Err(e)),
+            }
+        });
+        Ok(MetadataEnvelope::new(Box::pin(checkpoints), metadata))
+    }
+
+    /// Stream only the checkpoints in which the filters match a transaction
+    /// or an event. At least one filter must be set.
+    ///
+    /// The stream yields [`CheckpointStreamItem::Checkpoint`] for each match
+    /// and [`CheckpointStreamItem::Progress`] periodically while the server
+    /// scans, to indicate liveness and the current scan position.
+    ///
+    /// For liveness detection, wrap `stream.next()` in
+    /// `tokio::time::timeout()`: if neither a `Checkpoint` nor a `Progress`
+    /// arrives within the progress interval plus some buffer for connection
+    /// latency, the connection is likely dead.
+    ///
+    /// **Note:** The metadata in the returned [`MetadataEnvelope`] is captured
+    /// from the initial gRPC response headers when the stream is opened. It is
+    /// **not** updated as subsequent checkpoint data arrives.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::{GrpcClient, CheckpointStreamItem};
+    /// # use iota_grpc_types::v1::filter as grpc_filter;
+    /// # use futures::StreamExt;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = GrpcClient::new_localnet()?;
+    /// let mut stream = client
+    ///     .checkpoints_stream_builder()
+    ///     .start_sequence_number(0)
+    ///     .transactions_filter(grpc_filter::TransactionFilter::default())
+    ///     .stream_filtered()
+    ///     .await?;
+    ///
+    /// while let Some(item) = stream.body_mut().next().await {
+    ///     match item? {
+    ///         CheckpointStreamItem::Checkpoint(cp) => {
+    ///             println!("Matched checkpoint {}", cp.sequence_number());
+    ///         }
+    ///         CheckpointStreamItem::Progress {
+    ///             latest_scanned_sequence_number,
+    ///         } => {
+    ///             println!("Scanned up to {latest_scanned_sequence_number}");
+    ///         }
+    ///         _ => {}
+    ///     }
+    /// }
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn stream_filtered(
+        self,
+    ) -> GrpcResult<
+        MetadataEnvelope<Pin<Box<dyn Stream<Item = GrpcResult<CheckpointStreamItem>> + Send>>>,
+    > {
+        self.open(true).await
+    }
+
+    fn request(&self, filter_checkpoints: bool) -> StreamCheckpointsRequest {
+        let mut request =
+            StreamCheckpointsRequest::default().with_read_mask(self.read_mask.clone());
+
+        if let Some(start) = self.start_sequence_number {
+            request = request.with_start_sequence_number(start);
+        }
+        if let Some(end) = self.end_sequence_number {
+            request = request.with_end_sequence_number(end);
+        }
+        if let Some(tf) = self.transactions_filter.clone() {
+            request = request.with_transactions_filter(tf);
+        }
+        if let Some(ef) = self.events_filter.clone() {
+            request = request.with_events_filter(ef);
+        }
+        if filter_checkpoints {
+            request = request.with_filter_checkpoints(true);
+            if let Some(ms) = self.progress_interval_ms {
+                request = request.with_progress_interval_ms(ms);
+            }
+        }
+        if let Some(max_size) = self
+            .client
+            .max_decoding_message_size()
+            .map(saturating_usize_to_u32)
+        {
+            request = request.with_max_message_size_bytes(max_size);
+        }
+        request
+    }
+
+    async fn open(
+        self,
+        filter_checkpoints: bool,
+    ) -> GrpcResult<
+        MetadataEnvelope<Pin<Box<dyn Stream<Item = GrpcResult<CheckpointStreamItem>> + Send>>>,
+    > {
+        let request = self.request(filter_checkpoints);
+        let mut client = self.client.ledger_service_client();
+        let response = client.stream_checkpoints(request).await?;
+        let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
+
+        Ok(MetadataEnvelope::new(
+            Box::pin(GrpcClient::reassemble_checkpoint_data_stream(stream)),
+            metadata,
+        ))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn builder() -> CheckpointsStreamBuilder {
+        GrpcClient::new_localnet()
+            .unwrap()
+            .checkpoints_stream_builder()
+            .start_sequence_number(3)
+            .end_sequence_number(7)
+            .transactions_filter(grpc_filter::TransactionFilter::default())
+            .progress_interval_ms(900)
+    }
+
+    #[tokio::test]
+    async fn stream_request_leaves_out_filtering_and_progress() {
+        let request = builder().request(false);
+        assert_eq!(request.start_sequence_number, Some(3));
+        assert_eq!(request.end_sequence_number, Some(7));
+        assert!(request.transactions_filter.is_some());
+        assert!(request.events_filter.is_none());
+        assert_ne!(request.filter_checkpoints, Some(true));
+        assert_eq!(request.progress_interval_ms, None);
+    }
+
+    #[tokio::test]
+    async fn stream_filtered_request_carries_filtering_and_progress() {
+        let request = builder().request(true);
+        assert_eq!(request.filter_checkpoints, Some(true));
+        assert_eq!(request.progress_interval_ms, Some(900));
     }
 }

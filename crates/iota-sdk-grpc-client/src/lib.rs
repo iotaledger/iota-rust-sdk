@@ -107,7 +107,7 @@ pub use api::{
 pub use api::{
     CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, GrpcError, GrpcResult,
     MetadataEnvelope, Page, ProtocolError, ReadMask, RpcStatus,
-    execution::simulate::SimulateTransactionInput,
+    execution::simulate::SimulateTransactionInput, ledger::checkpoints::CheckpointsStreamBuilder,
 };
 // Re-export all read mask constants (endpoint defaults)
 pub use api::{

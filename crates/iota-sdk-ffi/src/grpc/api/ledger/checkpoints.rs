@@ -374,13 +374,13 @@ impl GrpcClient {
         let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask>(&read_mask);
         let stream = self
             .client()
-            .checkpoints_stream(
-                start_sequence_number,
-                end_sequence_number,
-                transactions_filter.as_deref().map(Into::into),
-                events_filter.as_deref().map(Into::into),
-                read_mask.clone(),
-            )
+            .checkpoints_stream_builder()
+            .start_sequence_number(start_sequence_number)
+            .end_sequence_number(end_sequence_number)
+            .transactions_filter(transactions_filter.as_deref().map(Into::into))
+            .events_filter(events_filter.as_deref().map(Into::into))
+            .read_mask(read_mask.clone())
+            .stream()
             .await?
             .into_inner();
         Ok(CheckpointStream::new(stream, read_mask))
@@ -424,14 +424,14 @@ impl GrpcClient {
         let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask>(&read_mask);
         let stream = self
             .client()
-            .checkpoints_stream_filtered(
-                start_sequence_number,
-                end_sequence_number,
-                transactions_filter.as_deref().map(Into::into),
-                events_filter.as_deref().map(Into::into),
-                progress_interval_ms,
-                read_mask.clone(),
-            )
+            .checkpoints_stream_builder()
+            .start_sequence_number(start_sequence_number)
+            .end_sequence_number(end_sequence_number)
+            .transactions_filter(transactions_filter.as_deref().map(Into::into))
+            .events_filter(events_filter.as_deref().map(Into::into))
+            .progress_interval_ms(progress_interval_ms)
+            .read_mask(read_mask.clone())
+            .stream_filtered()
             .await?
             .into_inner();
         Ok(FilteredCheckpointStream::new(stream, read_mask))
