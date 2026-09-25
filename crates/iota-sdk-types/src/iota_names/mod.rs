@@ -158,5 +158,10 @@ mod tests {
         assert_eq!(json["expiration_timestamp_ms"], "1234");
         let restored: NameRegistration = serde_json::from_value(json).unwrap();
         assert_eq!(restored, registration);
+
+        let bcs = bcs::to_bytes(&registration).unwrap();
+        assert!(bcs.ends_with(&1234u64.to_le_bytes()));
+        let restored: NameRegistration = bcs::from_bytes(&bcs).unwrap();
+        assert_eq!(restored, registration);
     }
 }

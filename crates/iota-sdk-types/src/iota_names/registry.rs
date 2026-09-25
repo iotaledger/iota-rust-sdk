@@ -273,5 +273,13 @@ mod tests {
         assert_eq!(bcs[ObjectId::LENGTH..], 42u64.to_le_bytes());
         let restored: Table = bcs::from_bytes(&bcs).unwrap();
         assert_eq!(restored, table);
+
+        let bcs = bcs::to_bytes(&record).unwrap();
+        assert_eq!(
+            bcs[ObjectId::LENGTH..ObjectId::LENGTH + 8],
+            record.expiration_timestamp_ms.to_le_bytes()
+        );
+        let restored: NameRecord = bcs::from_bytes(&bcs).unwrap();
+        assert_eq!(restored, record);
     }
 }
