@@ -8,11 +8,13 @@ use std::sync::Arc;
 use iota_sdk::{
     grpc_client::read_mask_fields::TransactionReadMask,
     grpc_types::{proto::proto_to_timestamp_ms, v1 as proto},
+    transaction_builder::TransactionBuilderExecutionClient,
 };
 
 use crate::{
     error::{Result, SdkFfiError},
     grpc::client::GrpcClient,
+    transaction_builder::WaitForTransaction,
     types::{
         digest::{Digest, TransactionDigest},
         events::TransactionEvents,
@@ -174,5 +176,20 @@ impl GrpcClient {
             .into_iter()
             .map(|transaction| ExecutedTransaction::try_from(&transaction?))
             .collect()
+    }
+
+    /// Wait for the indexing (on the node) or finalization of a transaction by
+    /// its digest, polling the node until then. Returns an error after 60s.
+    pub async fn wait_for_transaction(
+        &self,
+        digest: &TransactionDigest,
+        wait_for: WaitForTransaction,
+    ) -> Result<()> {
+        Ok(TransactionBuilderExecutionClient::wait_for_transaction(
+            &self.client(),
+            **digest,
+            wait_for.into(),
+        )
+        .await?)
     }
 }
