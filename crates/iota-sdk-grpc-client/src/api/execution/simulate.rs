@@ -109,7 +109,7 @@ impl GrpcClient {
     /// The `read_mask` controls which fields the server returns; use
     /// `SimulateReadMask::default()` for the default mask. Pass a
     /// [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField) or
-    /// any slice/array/vec of fields — conversion is automatic.
+    /// any slice/array/vec of fields: conversion is automatic.
     pub async fn simulate_transaction(
         &self,
         transaction: Transaction,
@@ -127,7 +127,7 @@ impl GrpcClient {
     /// Simulate a batch of transactions without executing them.
     ///
     /// Transactions are simulated sequentially on the server. Each transaction
-    /// is independent — failure of one does not abort the rest.
+    /// is independent: failure of one does not abort the rest.
     ///
     /// Returns a `Vec<GrpcResult<SimulatedTransaction>>` in the same order as
     /// the input. Each element is either the successfully simulated
@@ -137,7 +137,7 @@ impl GrpcClient {
     /// `SimulatedTransaction`; use `SimulateReadMask::default()` for the
     /// default mask. Pass a
     /// [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField) or
-    /// any slice/array/vec of fields — conversion is automatic.
+    /// any slice/array/vec of fields: conversion is automatic.
     ///
     /// # Errors
     ///

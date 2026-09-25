@@ -17,7 +17,7 @@ class Program
         var start = head >= HowMany - 1 ? head - (HowMany - 1) : 0;
         var end = head;
 
-        // Only ask for the summary — keeps the message small. Pass null (or
+        // Only ask for the summary, which keeps the message small. Pass null (or
         // compose more fields) to pull more data per checkpoint.
         var stream = await client.CheckpointsStream(start, end, readMask: new[] { "checkpoint.summary" });
 

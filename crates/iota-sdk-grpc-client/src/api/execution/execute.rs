@@ -39,7 +39,7 @@ impl GrpcClient {
     /// The `read_mask` controls which fields the server returns; use
     /// `ExecuteTransactionReadMask::default()` for the default mask. Pass a
     /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// or any slice/array/vec of fields — conversion is automatic.
+    /// or any slice/array/vec of fields: conversion is automatic.
     ///
     /// # Checkpoint Inclusion
     ///
@@ -90,7 +90,7 @@ impl GrpcClient {
     /// Execute a batch of signed transactions.
     ///
     /// Transactions are executed sequentially on the server. Each transaction
-    /// is independent — failure of one does not abort the rest.
+    /// is independent: failure of one does not abort the rest.
     ///
     /// Returns a `Vec<GrpcResult<ExecutedTransaction>>` in the same order as
     /// the input. Each element is either the successfully executed
@@ -100,7 +100,7 @@ impl GrpcClient {
     /// `ExecutedTransaction`; use `ExecuteTransactionReadMask::default()` for
     /// the default mask. Pass a
     /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// or any slice/array/vec of fields — conversion is automatic.
+    /// or any slice/array/vec of fields: conversion is automatic.
     ///
     /// # Checkpoint Inclusion
     ///

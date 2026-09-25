@@ -16,7 +16,7 @@ fun main() = runBlocking {
         val start = if (head >= HOW_MANY - 1uL) head - (HOW_MANY - 1uL) else 0uL
         val end = head
 
-        // Only ask for the summary — keeps the message small. Pass null (or
+        // Only ask for the summary, which keeps the message small. Pass null (or
         // compose more fields) to pull more data per checkpoint.
         val stream = client.checkpointsStream(start, end, readMask = listOf("checkpoint.summary"))
 

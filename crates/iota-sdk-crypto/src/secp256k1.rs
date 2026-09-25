@@ -150,7 +150,7 @@ impl Secp256k1PrivateKey {
     }
 
     /// Re-expose the raw private key through k256, used only as a PKCS#8/PEM
-    /// codec. Don't sign with the returned key — use this type's `Signer` impl
+    /// codec. Don't sign with the returned key. Use this type's `Signer` impl
     /// (`try_sign`) instead, so signing goes through fastcrypto.
     #[cfg(feature = "pem")]
     fn to_k256(&self) -> k256::ecdsa::SigningKey {
@@ -325,7 +325,7 @@ impl Secp256k1VerifyingKey {
     }
 
     /// Re-expose the public key through k256, used only as a PKCS#8/PEM codec.
-    /// Don't verify with the returned key — use this type's `Verifier` impl
+    /// Don't verify with the returned key. Use this type's `Verifier` impl
     /// instead, so verification goes through fastcrypto.
     #[cfg(feature = "pem")]
     fn to_k256(&self) -> k256::ecdsa::VerifyingKey {

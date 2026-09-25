@@ -26,7 +26,7 @@ enum Expr {
     Concat(Vec<Expr>),
     Alt(Vec<Expr>),
     Literal(u8),
-    /// Any byte in the inclusive range [lo, hi] — RFC 5234 `%xNN-MM` /
+    /// Any byte in the inclusive range [lo, hi]: RFC 5234 `%xNN-MM` /
     /// `%dNN-MM`.
     ByteRange(u8, u8),
     RuleRef(String),
@@ -211,7 +211,7 @@ fn parse_atomic_seq(tokens: &[String]) -> Vec<Expr> {
             }
             i = j + 1;
         } else if tok == "[" {
-            // RFC 5234 §3.8 optional sequence: [ elements ] — treated as BCS Opt
+            // RFC 5234 §3.8 optional sequence: [ elements ], treated as BCS Opt
             let mut depth = 1usize;
             let mut j = i + 1;
             while j < tokens.len() {
@@ -289,8 +289,8 @@ fn parse_paren_expr(tokens: &[String]) -> Expr {
         return Expr::Map(k.clone(), v.clone());
     }
 
-    // RFC 5234 §3.5: anonymous group — concatenation (or alternation if `Alt` was
-    // produced).
+    // RFC 5234 §3.5: anonymous group: concatenation (or alternation if `Alt`
+    // was produced).
     concat_exprs(exprs)
 }
 
@@ -330,7 +330,7 @@ fn parse_atom(token: &str) -> Expr {
     match token {
         // RFC 5234 Appendix B core rule
         "OCTET" => Expr::ByteRange(0x00, 0xFF),
-        // BCS primitives — handled directly rather than via grammar lookup
+        // BCS primitives: handled directly rather than via grammar lookup
         "u8" => Expr::Prim(PrimKind::U8),
         "u16" => Expr::Prim(PrimKind::U16),
         "u32" => Expr::Prim(PrimKind::U32),
@@ -391,7 +391,7 @@ impl TestHarness {
         let schema_path = concat!(env!("CARGO_MANIFEST_DIR"), "/bcs-schema.abnf");
         let content = std::fs::read_to_string(schema_path).unwrap_or_else(|_| {
             panic!(
-                "failed to read {schema_path} — regenerate it with:\n  \
+                "failed to read {schema_path}; regenerate it with:\n  \
              BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash"
             )
         });
@@ -485,13 +485,13 @@ impl TestHarness {
     fn gen_checkpoint_contents(&mut self) -> Vec<u8> {
         let count = (self.rng.next_u32() as usize) % 6;
         let mut out = vec![0x00]; // V1 enum discriminant
-        // First vector: (digest, digest) pairs — one pair per transaction
+        // First vector: (digest, digest) pairs, one pair per transaction
         out.extend(encode_uleb128(count as u64));
         for _ in 0..count {
             out.extend(self.generate("digest"));
             out.extend(self.generate("digest"));
         }
-        // Second vector: (vector user-signature) — same count
+        // Second vector: (vector user-signature), same count
         out.extend(encode_uleb128(count as u64));
         for _ in 0..count {
             let n_sigs = (self.rng.next_u32() as usize) % 4;

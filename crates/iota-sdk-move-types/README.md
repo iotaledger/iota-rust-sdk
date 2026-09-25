@@ -28,7 +28,7 @@ corresponding Rust mirror's wire layout matches. These tests are native-only
 (no `std::fs` on wasm32, and their checks are target-independent); the BCS
 roundtrip and tag-validation tests still run under wasm.
 
-These artifacts are **not committed** — they are fetched from
+These artifacts are **not committed**: they are fetched from
 `crates/iota-framework/` in the [iota monorepo] into the gitignored
 `src/packages_compiled/` directory, at the monorepo commit pinned by the
 `move-binary-format` dev-dependency rev in this crate's `Cargo.toml` (the
@@ -55,7 +55,7 @@ The `registry_matches_published_api` test enforces that **every** public
 mirror. The nightly drift workflow
 (`.github/workflows/move_types_drift_nightly.yml`) diffs the manifest's type
 surface at the pinned rev against upstream `develop` HEAD; a red nightly
-means _upstream types changed and the mirror set is out of date_ — not
+means _upstream types changed and the mirror set is out of date_, not
 that the crate is broken. Pull requests are deliberately unaffected by
 upstream drift: they keep testing against the pinned rev until the pin
 moves.
@@ -65,9 +65,9 @@ The catch-up workflow when the nightly turns red:
 1. Review the diff in the workflow log.
 2. Add/update the Rust mirrors (and `entry!` registrations) it points at.
 3. Bump the `move-binary-format` rev in this crate's `Cargo.toml` to the
-   new monorepo SHA — this single rev pins both the parser and the
+   new monorepo SHA: this single rev pins both the parser and the
    artifact fetch.
-4. Run `make update-compiled-packages` and `make test`, then open a PR —
+4. Run `make update-compiled-packages` and `make test`, then open a PR:
    its CI validates the new mirrors against the new rev.
 
 System packages change rarely, so the expected cadence is a small
@@ -105,6 +105,6 @@ boundary).
    `Source::TypeFilter("0x…::module::Type")` if you don't have an
    ObjectId yet.
 2. Run the capture binary. For `Source::TypeFilter` entries, it prints
-   the discovered ObjectId — copy it back into the fixture entry as a
+   the discovered ObjectId: copy it back into the fixture entry as a
    `Source::ObjectId(…)` pin so re-runs are stable.
 3. Add a corresponding `#[test]` to `tests/fixture_roundtrip.rs`.

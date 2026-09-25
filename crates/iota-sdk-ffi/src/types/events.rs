@@ -14,8 +14,8 @@ use crate::{
 ///
 /// This mirrors the core chain [`iota_sdk::types::Event`] one-to-one: every
 /// field is required and the type round-trips through BCS/JSON. For events
-/// returned by the GraphQL `events` query — which may originate from system
-/// transactions and therefore lack a sender or emitting module — see
+/// returned by the GraphQL `events` query (which may originate from system
+/// transactions and therefore lack a sender or emitting module), see
 /// [`GraphQLEvent`](crate::graphql::query_types::GraphQLEvent).
 ///
 /// # BCS

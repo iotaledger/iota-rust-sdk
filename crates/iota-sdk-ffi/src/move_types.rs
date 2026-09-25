@@ -78,7 +78,7 @@ crate::ffi_map! {
 }
 
 // =====================================================================
-// 0x3 — IOTA system
+// 0x3: IOTA system
 // =====================================================================
 
 crate::ffi_move_object! {
@@ -885,7 +885,7 @@ crate::ffi_move_object! {
 }
 
 // =====================================================================
-// 0x2 — IOTA framework
+// 0x2: IOTA framework
 // =====================================================================
 
 crate::ffi_move_object! {
@@ -913,7 +913,7 @@ crate::ffi_move_object! {
     }
 }
 
-/// A typed view of a `0x2::coin_manager::ImmutableCoinMetadata<IOTA>` — the
+/// A typed view of a `0x2::coin_manager::ImmutableCoinMetadata<IOTA>`, the
 /// frozen metadata fallback embedded in a `CoinManager`. Reachable only via
 /// `CoinManager::immutable_metadata`; it is not a standalone on-chain object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
@@ -958,7 +958,7 @@ crate::ffi_move_object! {
 
 crate::ffi_move_object! {
     /// A typed view of an on-chain `0x2::timelock::TimeLock<Balance<IOTA>>`
-    /// object — a time-locked IOTA balance, e.g. Stardust vested rewards.
+    /// object (a time-locked IOTA balance, e.g. Stardust vested rewards).
     TimelockedIotaBalance(
         iota_sdk::move_types::iota_framework::timelock::TimeLock<
             iota_sdk::move_types::iota_framework::balance::Balance<IOTA>,
@@ -1214,7 +1214,7 @@ crate::ffi_move_object! {
             self.0.storage_id.bytes.into()
         }
 
-        /// Runtime ID of the package — the storage ID of its first version.
+        /// Runtime ID of the package: the storage ID of its first version.
         pub fn runtime_id(&self) -> ObjectId {
             self.0.runtime_id.bytes.into()
         }
@@ -1429,8 +1429,8 @@ crate::ffi_move_object_generic! {
 }
 
 /// A typed view of a `0x2::config::Setting<bool>` held in a dynamic field of a
-/// [`Config`] object — the shape used by the deny list for its per-address and
-/// global-pause entries.
+/// [`Config`] object (the shape used by the deny list for its per-address and
+/// global-pause entries).
 ///
 /// A setting carries the value for the epoch it was last written in plus the
 /// value that preceded it, so a reader can tell which one applies to the epoch
@@ -1527,7 +1527,7 @@ crate::ffi_move_object_generic! {
 }
 
 // =====================================================================
-// 0x107a — Stardust
+// 0x107a: Stardust
 // =====================================================================
 
 crate::ffi_move_object! {
@@ -1559,7 +1559,7 @@ crate::ffi_move_object! {
 /// [`Nft`]).
 ///
 /// The `royalties`, `attributes`, and `non_standard_fields` `VecMap` fields
-/// are not yet exposed across the FFI boundary — consumers that need them
+/// are not yet exposed across the FFI boundary; consumers that need them
 /// can decode the inner type from BCS in Rust.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]

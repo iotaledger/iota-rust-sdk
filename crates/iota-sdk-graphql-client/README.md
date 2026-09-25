@@ -21,15 +21,15 @@ HTTPS is verified with `rustls`. Every axis has a default, so reaching the publi
 | Feature            | Default | Effect                                                                                                                                                                                                                                                                                                       |
 | ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `tls-ring`         | on      | `ring` as the `rustls` crypto provider                                                                                                                                                                                                                                                                       |
-| `tls-aws-lc`       | off     | `aws-lc-rs` instead; builds a C library, so it needs a C toolchain and `libclang` on targets without prebuilt bindings. `tls-ring` wins if both are on — `rustls` cannot be asked to choose.                                                                                                                 |
-| neither provider   | —       | HTTP-only: `reqwest` is built without TLS, nothing verifies certificates, the root features below are ignored, and `Client::new` rejects an `https` or `wss` address rather than letting the request fail later. The build to use against a localnet.                                                        |
+| `tls-aws-lc`       | off     | `aws-lc-rs` instead; builds a C library, so it needs a C toolchain and `libclang` on targets without prebuilt bindings. `tls-ring` wins if both are on: `rustls` cannot be asked to choose.                                                                                                                  |
+| neither provider   | N/A     | HTTP-only: `reqwest` is built without TLS, nothing verifies certificates, the root features below are ignored, and `Client::new` rejects an `https` or `wss` address rather than letting the request fail later. The build to use against a localnet.                                                        |
 | `tls-native-roots` | on      | trust the platform store. Alone it changes nothing, since that is already `reqwest`'s default; its effect is to merge rather than replace when `tls-webpki-roots` is also on.                                                                                                                                |
 | `tls-webpki-roots` | on      | add the bundled Mozilla roots, merged into the platform store when `tls-native-roots` is also on. Merging is a union, not a fallback: a CA the platform has deliberately distrusted is still accepted if the bundled set carries it. Turn off `tls-native-roots` if the bundled set should be authoritative. |
-| neither roots      | —       | the platform store alone. `reqwest` constructs its verifier eagerly, before it knows whether a request uses TLS, so on Linux an empty system store fails the build even for plain-HTTP use — which is what the bundled roots otherwise prevent.                                                              |
+| neither roots      | N/A     | the platform store alone. `reqwest` constructs its verifier eagerly, before it knows whether a request uses TLS, so on Linux an empty system store fails the build even for plain-HTTP use (which is what the bundled roots otherwise prevent).                                                              |
 
 Android always uses the bundled roots alone: it cannot merge the two, and its
 platform verifier aborts the process unless the application performs a JNI
-handshake this crate cannot do on its behalf. On wasm32 none of this applies —
+handshake this crate cannot do on its behalf. On wasm32 none of this applies:
 the browser owns certificate verification.
 
 ## Bringing your own client
@@ -39,7 +39,7 @@ pinning a certificate set, choosing a different TLS backend, or setting proxies
 and timeouts. Because this crate selects the rustls crypto provider itself
 rather than letting `reqwest` hard-wire aws-lc-rs, a build with a provider
 feature panics unless a provider has been installed for the process. Install one
-first — the first caller wins, so this is a no-op if the application has already
+first. The first caller wins, so this is a no-op if the application has already
 chosen:
 
 ```rust, ignore

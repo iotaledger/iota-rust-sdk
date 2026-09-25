@@ -54,7 +54,7 @@ pub fn parse_transparent_messages_from_pool(
         let fields: Vec<_> = message.fields().collect();
         if fields.len() != 1 {
             eprintln!(
-                "Warning: transparent message {} has {} fields, expected 1 — skipping",
+                "Warning: transparent message {} has {} fields, expected 1; skipping",
                 message.full_name(),
                 fields.len()
             );

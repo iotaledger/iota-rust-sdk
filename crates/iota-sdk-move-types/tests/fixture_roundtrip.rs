@@ -7,7 +7,7 @@
 //! `capture_move_type_fixtures` example in the `iota-sdk` crate, decodes
 //! it into the corresponding hand-curated Move-mirror type, re-encodes,
 //! and asserts the bytes are bit-identical. This confirms the mirror's BCS
-//! wire layout — field types and widths, field count, and enum variants —
+//! wire layout (field types and widths, field count, and enum variants)
 //! matches the real on-chain encoding.
 //!
 //! To refresh the fixtures against current chain state, run:

@@ -93,8 +93,8 @@ impl GrpcClient {
     /// Get the latest version of objects by their ids.
     ///
     /// Results are returned in the same order as the input ids.
-    /// If any object cannot be read — because it is not found, was deleted, or
-    /// has been pruned by the serving node — the whole call fails.
+    /// If any object cannot be read (because it is not found, was deleted, or
+    /// has been pruned by the serving node), the whole call fails.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the reference and the object are returned.
@@ -119,8 +119,8 @@ impl GrpcClient {
     /// Get objects by their ids and optional versions.
     ///
     /// Results are returned in the same order as the input requests.
-    /// If any object cannot be read — because it is not found, was deleted, or
-    /// has been pruned by the serving node — the whole call fails.
+    /// If any object cannot be read (because it is not found, was deleted, or
+    /// has been pruned by the serving node), the whole call fails.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the reference and the object are returned.

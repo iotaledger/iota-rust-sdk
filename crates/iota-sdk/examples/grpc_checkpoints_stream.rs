@@ -3,7 +3,7 @@
 
 //! Tail recent checkpoints over gRPC.
 //!
-//! This is one of gRPC's headline features — there's no equivalent in the
+//! This is one of gRPC's headline features; there's no equivalent in the
 //! GraphQL client. We open a server-streaming RPC and pull a handful of
 //! checkpoint summaries out of it.
 
@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
     let start = head.saturating_sub(HOW_MANY - 1);
     let end = head;
 
-    // Only ask for the summary — keeps the message small. Pass
+    // Only ask for the summary, which keeps the message small. Pass
     // `CheckpointResponseReadMask::default()` (or compose more fields) to
     // pull more data per checkpoint.
     let mut stream = client
