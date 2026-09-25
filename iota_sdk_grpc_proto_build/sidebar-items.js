@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["BOXED_TYPES_ACCESSOR","BOXED_TYPES_FIELD_INFO","PROST_BOXED_FIELDS"],"fn":["add_license_headers","compile_proto_files","discover_proto_files","generate_tonic","main","owned_paths","reset_out_dir","verify_generated_files_committed"],"mod":["codegen","context","extern_paths","ident"]};

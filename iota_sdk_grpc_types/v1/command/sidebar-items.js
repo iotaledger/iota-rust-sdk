@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["argument","input_argument"],"struct":["Argument","ArgumentFieldPathBuilder","CommandOutput","CommandOutputFieldPathBuilder","CommandOutputs","CommandOutputsFieldPathBuilder","CommandResult","CommandResultFieldPathBuilder","CommandResults","CommandResultsFieldPathBuilder","InputArgument","InputArgumentFieldPathBuilder"]};

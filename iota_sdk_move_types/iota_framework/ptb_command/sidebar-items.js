@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Argument","Command"],"struct":["MakeMoveVecData","MergeCoinsData","ProgrammableMoveCall","PublishData","SplitCoinsData","TransferObjectsData","UpgradeData"]};

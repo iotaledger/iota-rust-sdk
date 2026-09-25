@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["PureBytes"],"trait":["MoveArg","MoveArgCollection","MoveType","MoveTypes"]};

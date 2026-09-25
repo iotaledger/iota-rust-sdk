@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["FromObjectError"],"mod":["iota_framework","iota_system","move_stdlib","stardust"],"trait":["MoveType"]};

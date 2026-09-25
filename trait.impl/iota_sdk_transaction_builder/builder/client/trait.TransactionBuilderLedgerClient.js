@@ -1,0 +1,9 @@
+(function() {
+    const implementors = Object.fromEntries([["iota_sdk_ffi",[["impl <a class=\"trait\" href=\"iota_sdk_transaction_builder/builder/client/trait.TransactionBuilderLedgerClient.html\" title=\"trait iota_sdk_transaction_builder::builder::client::TransactionBuilderLedgerClient\">TransactionBuilderLedgerClient</a> for <a class=\"struct\" href=\"iota_sdk_ffi/graphql/client/struct.GraphQLClient.html\" title=\"struct iota_sdk_ffi::graphql::client::GraphQLClient\">GraphQLClient</a>",0]]],["iota_sdk_graphql_client",[["impl <a class=\"trait\" href=\"iota_sdk_transaction_builder/builder/client/trait.TransactionBuilderLedgerClient.html\" title=\"trait iota_sdk_transaction_builder::builder::client::TransactionBuilderLedgerClient\">TransactionBuilderLedgerClient</a> for <a class=\"struct\" href=\"iota_sdk_graphql_client/struct.GraphQLClient.html\" title=\"struct iota_sdk_graphql_client::GraphQLClient\">GraphQLClient</a>",0]]],["iota_sdk_grpc_client",[["impl TransactionBuilderLedgerClient for <a class=\"struct\" href=\"iota_sdk_grpc_client/struct.GrpcClient.html\" title=\"struct iota_sdk_grpc_client::GrpcClient\">GrpcClient</a>",0]]],["iota_sdk_transaction_builder",[]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":59,"fragment_lengths":[439,441,211,36]}
