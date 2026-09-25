@@ -140,8 +140,8 @@ impl ExecutedTransaction {
     /// Get the transaction.
     ///
     /// Returns the proto [`Transaction`] which provides:
-    /// - [`Transaction::digest()`] — the transaction digest
-    /// - [`Transaction::transaction()`] — the deserialized SDK `Transaction`
+    /// - [`Transaction::digest()`]: the transaction digest
+    /// - [`Transaction::transaction()`]: the deserialized SDK `Transaction`
     ///
     /// **Read mask:** `"transaction"` (see
     /// [`EXECUTED_TRANSACTION_TRANSACTION`]). For checkpoint context use
@@ -169,8 +169,8 @@ impl ExecutedTransaction {
     /// Get the transaction effects.
     ///
     /// Returns the proto [`TransactionEffects`] which provides:
-    /// - [`TransactionEffects::digest()`] — the effects digest
-    /// - [`TransactionEffects::effects()`] — the deserialized SDK
+    /// - [`TransactionEffects::digest()`]: the effects digest
+    /// - [`TransactionEffects::effects()`]: the deserialized SDK
     ///   `TransactionEffects`
     ///
     /// **Read mask:** `"effects"` (see [`EXECUTED_TRANSACTION_EFFECTS`]).
@@ -186,8 +186,8 @@ impl ExecutedTransaction {
     /// Get the transaction events.
     ///
     /// Returns the proto [`TransactionEvents`] which provides:
-    /// - [`TransactionEvents::digest()`] — the events digest
-    /// - [`TransactionEvents::events()`] — the deserialized SDK
+    /// - [`TransactionEvents::digest()`]: the events digest
+    /// - [`TransactionEvents::events()`]: the deserialized SDK
     ///   `TransactionEvents`
     ///
     /// **Read mask:** `"events"` (see [`EXECUTED_TRANSACTION_EVENTS`]).

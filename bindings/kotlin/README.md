@@ -60,7 +60,7 @@ dependencies {
 }
 ```
 
-The `@aar` suffix is required for JNA on Android — it packages JNA's Android-specific native libraries. The `exclude` on `iota-sdk` prevents the JNA JAR (pulled as a transitive dependency) from conflicting with the JNA AAR.
+The `@aar` suffix is required for JNA on Android: it packages JNA's Android-specific native libraries. The `exclude` on `iota-sdk` prevents the JNA JAR (pulled as a transitive dependency) from conflicting with the JNA AAR.
 
 ### How Native Loading Works
 

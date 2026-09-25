@@ -54,7 +54,7 @@ pub struct SubscriptionTransactionFilter {
     pub kind: Option<TransactionBlockKindInput>,
     /// Filter incoming transactions by sender address.
     ///
-    /// Only the sender is compared, despite the name — a sponsored transaction
+    /// Only the sender is compared, despite the name: a sponsored transaction
     /// is not matched by its sponsor's (gas owner's) address, even though the
     /// sponsor also signed it.
     #[uniffi(default = None)]
@@ -116,7 +116,7 @@ macro_rules! define_subscription {
             $variant {
                 $field: $ffi_item,
             },
-            /// Delivery was interrupted and has recovered — the connection
+            /// Delivery was interrupted and has recovered: the connection
             /// dropped, or the server dropped payloads because this client
             /// could not keep up. Items in the gap may have been missed.
             Interrupted {
@@ -160,7 +160,7 @@ macro_rules! define_subscription {
             /// Cancel the subscription, dropping the connection and unblocking
             /// a pending `next`.
             ///
-            /// Idempotent, and safe to call while `next` is pending — the
+            /// Idempotent, and safe to call while `next` is pending. The
             /// pending call drops the connection on its way out.
             ///
             /// Named `cancel` rather than `close` because a `close` method
@@ -206,7 +206,7 @@ define_subscription!(
 /// Whether the subscription recovers from `error` on its own, in which case it
 /// is reported as an interruption instead of being raised.
 ///
-/// These are exactly the transport-level failures the reconnect loop handles —
+/// These are exactly the transport-level failures the reconnect loop handles:
 /// a dropped WebSocket, a failed handshake, or the server dropping payloads for
 /// a client that fell behind.
 fn is_recoverable(error: &iota_sdk::graphql_client::error::GraphQLError) -> bool {
@@ -259,8 +259,8 @@ impl GraphQLClient {
     /// tracks its own resume point across reconnects.
     ///
     /// Note: subscriptions are served over a WebSocket, which the node has to
-    /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
-    /// when it is available.
+    /// have enabled (`serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
+    /// when it is available).
     #[uniffi::method(default(filter = None, start_after = None))]
     pub async fn events_subscription(
         &self,
@@ -279,8 +279,8 @@ impl GraphQLClient {
     /// resume point across reconnects.
     ///
     /// Note: subscriptions are served over a WebSocket, which the node has to
-    /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
-    /// when it is available.
+    /// have enabled (`serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
+    /// when it is available).
     #[uniffi::method(default(filter = None, start_after = None))]
     pub async fn transactions_subscription(
         &self,

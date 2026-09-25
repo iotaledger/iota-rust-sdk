@@ -356,7 +356,7 @@ async fn test_upgrade() {
     check_effects_status_success(effects);
 }
 
-/// Fund the sender with ~2044 coins (via repeated `split_coins` — each
+/// Fund the sender with ~2044 coins (via repeated `split_coins`; each
 /// command tops out at 511 amounts, with one slot used by the source
 /// coin), then run a plain `send_iota` and let auto gas selection deal
 /// with the resulting fleet of gas coins.
@@ -472,8 +472,8 @@ async fn test_manual_gas_pin_consolidates_255_coins() {
     );
 }
 
-/// Mint 50 coins of 1 IOTA each — any single one trivially covers the
-/// gas budget — and let auto gas selection resolve a fresh tx without
+/// Mint 50 coins of 1 IOTA each (any single one trivially covers the
+/// gas budget) and let auto gas selection resolve a fresh tx without
 /// pinning gas. It should pin *every* coin from the first page (not just
 /// the one minimally needed), so gas smashing can consolidate them into
 /// a single coin during execution.

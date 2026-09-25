@@ -57,8 +57,8 @@ impl GraphQLClient {
     /// thereafter the stream tracks its own resume point.
     ///
     /// Note: subscriptions are served over a WebSocket, which the node has to
-    /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
-    /// when it is available.
+    /// have enabled (`serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
+    /// when it is available).
     pub fn events_stream(
         &self,
         filter: impl Into<Option<SubscriptionEventFilter>>,
@@ -119,8 +119,8 @@ impl GraphQLClient {
     /// the stream tracks its own resume point.
     ///
     /// Note: subscriptions are served over a WebSocket, which the node has to
-    /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
-    /// when it is available.
+    /// have enabled (`serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
+    /// when it is available).
     pub fn transactions_stream(
         &self,
         filter: impl Into<Option<SubscriptionTransactionFilter>>,

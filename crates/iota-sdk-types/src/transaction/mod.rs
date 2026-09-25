@@ -328,8 +328,8 @@ impl crate::TreeDisplay for RandomnessStateUpdate {
 
 /// A complete set of transaction deny rules.
 ///
-/// The set-typed deny lists encode in canonical form — ascending order
-/// without duplicates — by construction, like BCS map keys. Note that
+/// The set-typed deny lists encode in canonical form (ascending order
+/// without duplicates) by construction, like BCS map keys. Note that
 /// decoding normalizes: a non-canonical sequence encoding (unsorted or
 /// duplicated elements) is accepted and sorted/deduplicated into the set, so
 /// re-encoding it does not reproduce the original bytes.

@@ -82,7 +82,7 @@ iota-sdk = { version = "3.0.0-beta.1", package = "iota-sdk", path = "crates/iota
 iota-transaction-builder = { version = "1.0.0-beta.1", package = "iota-sdk-transaction-builder", path = "crates/iota-sdk-transaction-builder", default-features = false }
 iota-types = { version = "1.0.0-beta.1", package = "iota-sdk-types", path = "crates/iota-sdk-types", default-features = false }
 
-# Custom profile for WASM builds — optimizes for binary size.
+# Custom profile for WASM builds: optimizes for binary size.
 # Usage: cargo build -p iota-sdk-wasm --profile wasm-release --target wasm32-unknown-unknown
 [profile.wasm-release]
 codegen-units = 1

@@ -105,7 +105,7 @@ pub trait TransactionBuilderLedgerClient: TransactionBuilderClientBase {
     /// Fetch one page of objects matching the filter, returning the page
     /// contents and a continuation cursor (when more pages exist).
     ///
-    /// The cursor is opaque to callers — both GraphQL (base64-encoded
+    /// The cursor is opaque to callers: both GraphQL (base64-encoded
     /// JSON/BCS) and gRPC (`prost::bytes::Bytes` page token) formats fit
     /// into `Option<Vec<u8>>`. Pass `None` to start from the beginning;
     /// pass the cursor returned by a previous call to advance.
@@ -181,7 +181,7 @@ pub trait TransactionBuilderExecutionClient: TransactionBuilderClientBase {
 
 /// A full transaction builder client: ledger reads, simulation, and execution.
 ///
-/// This is a blanket alias — do not implement it directly. Implement
+/// This is a blanket alias: do not implement it directly. Implement
 /// [`TransactionBuilderLedgerClient`], [`TransactionBuilderSimulationClient`],
 /// and [`TransactionBuilderExecutionClient`] instead, and this trait is
 /// implemented automatically.
@@ -434,8 +434,8 @@ pub(crate) mod test_client {
     /// such as the system state object resolve as shared), and gas
     /// selection always finds a single funded coin. This is enough to drive
     /// [`finish`](crate::TransactionBuilder::finish) to completion, but the
-    /// resulting transaction references made-up objects and cannot be executed
-    /// — [`execute_transaction`](TransactionBuilderExecutionClient::execute_transaction) returns
+    /// resulting transaction references made-up objects and cannot be executed:
+    /// [`execute_transaction`](TransactionBuilderExecutionClient::execute_transaction) returns
     /// an error.
     #[derive(Clone, Copy, Debug, Default)]
     pub struct TestClient;

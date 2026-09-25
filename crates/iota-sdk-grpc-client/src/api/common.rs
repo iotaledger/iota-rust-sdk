@@ -506,12 +506,12 @@ pub struct Page<T> {
 ///
 /// # Parameters
 ///
-/// - `$query_name` — name of the generated builder struct
-/// - `$service_client_type` — the tonic service client type
-/// - `$item_type` — the item type exposed by the builder
-/// - `$rpc_method` — the RPC method name on the service client
-/// - `$items_field` — the field name on the response containing the items vec
-/// - `map_item` (optional) — a fallible `fn(&ProtoItem) ->
+/// - `$query_name`: name of the generated builder struct
+/// - `$service_client_type`: the tonic service client type
+/// - `$item_type`: the item type exposed by the builder
+/// - `$rpc_method`: the RPC method name on the service client
+/// - `$items_field`: the field name on the response containing the items vec
+/// - `map_item` (optional): a fallible `fn(&ProtoItem) ->
 ///   GrpcResult<$item_type>` applied to each response element. When omitted,
 ///   items are passed through unchanged (so `$item_type` must be the response
 ///   field's element type).

@@ -16,8 +16,8 @@ use tokio::sync::Mutex;
 /// The uniffi object wrapping this handle only maps items to their foreign
 /// representation.
 ///
-/// Foreign async support is uneven — Kotlin, Swift and Python can cancel a
-/// pending call, Go and C# cannot — so cancellation has to be something the
+/// Foreign async support is uneven (Kotlin, Swift and Python can cancel a
+/// pending call, Go and C# cannot), so cancellation has to be something the
 /// handle itself understands rather than something the caller's runtime does
 /// to it. [`Abortable`] provides that: aborting wakes a pending poll and makes
 /// every later poll return `None`.
@@ -40,7 +40,7 @@ impl<S> StreamHandle<S> {
 
     /// Cancel the handle, dropping the stream and unblocking a pending `next`.
     ///
-    /// Idempotent, and safe to call while `next` is pending — the pending call
+    /// Idempotent, and safe to call while `next` is pending. The pending call
     /// drops the stream on its way out.
     pub(crate) fn cancel(&self) {
         self.abort.abort();

@@ -8,8 +8,8 @@ is chainable via mutable references.
 
 The builder works with or without a client implementing `TransactionBuilderClient`. When one is
 provided via `with_client`, the resulting builder uses it to resolve and validate provided IDs
-(e.g. looking up object references and gas data from the network). Without a client, all inputs —
-object references, gas payment, gas price, and budget — must be supplied manually.
+(e.g. looking up object references and gas data from the network). Without a client, all inputs
+(object references, gas payment, gas price, and budget) must be supplied manually.
 
 ## Custom client implementations
 

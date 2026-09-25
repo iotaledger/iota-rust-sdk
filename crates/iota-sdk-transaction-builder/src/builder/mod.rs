@@ -1033,7 +1033,7 @@ impl<C, L> TransactionBuilder<C, L> {
     ///
     /// let mut builder = TransactionBuilder::new(sender).with_client(client);
     /// // Two new coins of a third of the balance each, plus the remainder
-    /// // left in `coin` — all owned by the sender once executed.
+    /// // left in `coin`, all owned by the sender once executed.
     /// builder.divide_coin(coin, 3);
     /// let txn = builder.finish().await?;
     /// #    Ok(())
@@ -1334,7 +1334,7 @@ impl<L> TransactionBuilder<(), L> {
     /// Add gas coins that will be consumed. Optional.
     ///
     /// A gas coin is paid as gas instead of being passed as an input, so it
-    /// cannot also be passed to a command — building the transaction fails if
+    /// cannot also be passed to a command. Building the transaction fails if
     /// one is. The exception is transferring every gas coin to the same
     /// recipient in a single [`transfer_objects`](Self::transfer_objects): the
     /// coins are smashed into one before the commands run, and that coin is
@@ -1502,7 +1502,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// client will set a default list owned by the sender.
     ///
     /// A gas coin is paid as gas instead of being passed as an input, so it
-    /// cannot also be passed to a command — building the transaction fails if
+    /// cannot also be passed to a command. Building the transaction fails if
     /// one is. The exception is transferring every gas coin to the same
     /// recipient in a single [`transfer_objects`](Self::transfer_objects): the
     /// coins are smashed into one before the commands run, and that coin is
@@ -1627,8 +1627,8 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             // running top-K by balance (K = the protocol cap). Stop as soon as
             // the selected coins cover the requested budget, or the pages run
             // out; with no budget set, walk every page. This deliberately
-            // over-includes — in the common case a wallet owns fewer coins than
-            // the cap, so the whole set is pinned — and gas smashing during
+            // over-includes (in the common case a wallet owns fewer coins than
+            // the cap, so the whole set is pinned) and gas smashing during
             // execution consolidates the balances into a single coin.
             let max_gas_payment_objects = self
                 .protocol_config_attribute::<usize>(MAX_GAS_PAYMENT_OBJECTS_KEY)
@@ -1871,7 +1871,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// Convert this builder into a [`TransactionKind`], resolving the inputs
     /// with the client but leaving the gas alone.
     ///
-    /// Use this when the gas payment is decided elsewhere — a wallet that picks
+    /// Use this when the gas payment is decided elsewhere: a wallet that picks
     /// the gas coins itself, or a caller that needs the kind to estimate a
     /// budget before it can pick them. Unlike [`finish`](Self::finish), no gas
     /// coins are selected, no budget is estimated and no gas price is fetched,
@@ -2587,7 +2587,7 @@ mod tests {
     }
 
     /// A gas coin is paid as gas rather than passed as an input, so a command
-    /// argument naming one can only resolve to [`Argument::Gas`] — which stands
+    /// argument naming one can only resolve to [`Argument::Gas`], which stands
     /// for every gas coin smashed together, not the one coin that was named.
     mod gas_arguments {
         use super::*;
@@ -2958,7 +2958,7 @@ mod tests {
             assert_eq!(decorated.finish_kind().await.unwrap(), expected);
         }
 
-        /// `gas_refs` takes the references as given — no object lookup — and
+        /// `gas_refs` takes the references as given (no object lookup) and
         /// stops the builder from picking gas coins of its own.
         #[tokio::test]
         async fn gas_refs_are_used_as_given() {

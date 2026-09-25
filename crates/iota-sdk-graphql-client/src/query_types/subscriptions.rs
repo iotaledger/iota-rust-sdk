@@ -94,7 +94,7 @@ pub struct SubscriptionTransactionFilter {
     pub kind: Option<TransactionBlockKindInput>,
     /// Filter incoming transactions by sender address.
     ///
-    /// Only the sender is compared, despite the name — a sponsored
+    /// Only the sender is compared, despite the name: a sponsored
     /// transaction is not matched by its sponsor's (gas owner's) address,
     /// even though the sponsor also signed it.
     pub signing_address: Option<Address>,
@@ -113,7 +113,7 @@ impl SubscriptionTransactionFilter {
 
     /// Filter incoming transactions by sender address.
     ///
-    /// Only the sender is compared, despite the name — a sponsored transaction
+    /// Only the sender is compared, despite the name: a sponsored transaction
     /// is not matched by its sponsor's (gas owner's) address, even though the
     /// sponsor also signed it.
     pub fn with_signing_address(mut self, signing_address: impl Into<Option<Address>>) -> Self {

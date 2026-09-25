@@ -229,7 +229,7 @@ impl FaucetClient {
                                     transferred_gas_objects: None,
                                 });
                             }
-                            // Still pending — fall through to the poll interval and retry.
+                            // Still pending: fall through to the poll interval and retry.
                             BatchSendStatusType::InProgress => {}
                         }
                     }

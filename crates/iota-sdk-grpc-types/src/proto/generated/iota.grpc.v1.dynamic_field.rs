@@ -33,7 +33,7 @@ pub struct DynamicField {
     /// For regular dynamic fields this is the Move type of the value stored
     /// in the `value` field. For dynamic *object* fields this is the Move type
     /// of the child object itself (e.g. `0x2::coin::Coin<0x2::iota::IOTA>`),
-    /// not `0x2::object::ID` — clients should use `child_object` rather than
+    /// not `0x2::object::ID`; clients should use `child_object` rather than
     /// BCS-decoding `value` with this type.
     #[prost(string, optional, tag = "7")]
     pub value_type: ::core::option::Option<::prost::alloc::string::String>,

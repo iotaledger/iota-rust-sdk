@@ -112,7 +112,7 @@ pub struct EpochCloseProof {
         super::transaction::TransactionEvents,
     >,
     /// Raw BCS bytes of the system-state wrapper object (`0x5`) and its inner
-    /// state object, as written by this epoch boundary — byte-for-byte as
+    /// state object, as written by this epoch boundary: byte-for-byte as
     /// originally written (not wrapped, unlike `Object.bcs` elsewhere in this
     /// API), so their digests can be verified against the written-object
     /// digests in `end_of_epoch_transaction_effects`.
