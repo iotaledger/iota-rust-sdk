@@ -57,7 +57,12 @@ impl TryFrom<u8> for UpgradePolicy {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MovePackageData {
     /// The package modules as a series of bytes
-    #[cfg_attr(feature = "serde", serde(with = "serialization::modules"))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(
+            with = "::serde_with::As::<Vec<::serde_with::IfIsHumanReadable<crate::_serde::Base64Encoded, ::serde_with::Bytes>>>"
+        )
+    )]
     #[cfg_attr(
         feature = "proptest",
         strategy(proptest::collection::vec(proptest::collection::vec(proptest::arbitrary::any::<u8>(), 0..=1024), 0..=5))
@@ -376,35 +381,9 @@ crate::impl_tree_display!(MovePackageData, UpgradeInfo, TypeOrigin, MovePackage)
 
 #[cfg(feature = "serde")]
 mod serialization {
-    use base64ct::Encoding;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
     use super::*;
-
-    pub mod modules {
-        use super::*;
-
-        pub fn serialize<S: Serializer>(
-            value: &[Vec<u8>],
-            serializer: S,
-        ) -> Result<S::Ok, S::Error> {
-            value
-                .iter()
-                .map(|v| base64ct::Base64::encode_string(v))
-                .collect::<Vec<_>>()
-                .serialize(serializer)
-        }
-
-        pub fn deserialize<'de, D>(deserializer: D) -> Result<Vec<Vec<u8>>, D::Error>
-        where
-            D: Deserializer<'de>,
-        {
-            let bcs = Vec::<String>::deserialize(deserializer)?;
-            bcs.into_iter()
-                .map(|s| base64ct::Base64::decode_vec(&s).map_err(serde::de::Error::custom))
-                .collect()
-        }
-    }
 
     pub mod digest {
         use super::*;
@@ -436,6 +415,19 @@ mod tests {
         let package: MovePackageData = serde_json::from_str(PACKAGE).unwrap();
         let new_json = serde_json::to_string(&package).unwrap();
         assert_eq!(new_json, PACKAGE);
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn bcs_is_the_publish_command_followed_by_the_digest() {
+        let package: MovePackageData = serde_json::from_str(PACKAGE).unwrap();
+        let publish = crate::Publish {
+            modules: package.modules.clone(),
+            dependencies: package.dependencies.clone(),
+        };
+        let mut expected = bcs::to_bytes(&publish).unwrap();
+        expected.extend(bcs::to_bytes(&package.digest).unwrap());
+        assert_eq!(bcs::to_bytes(&package).unwrap(), expected);
     }
 
     #[cfg(all(feature = "serde", feature = "hash"))]
