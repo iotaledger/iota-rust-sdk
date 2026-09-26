@@ -87,6 +87,7 @@ pub use transaction::{
     TransactionBlockIndexedQuery, TransactionBlockKindInput, TransactionBlockQuery,
     TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
     TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
+    TransactionsByDigestsPage, TransactionsByDigestsQuery, TransactionsByDigestsQueryArgs,
     TransactionsFilter, TransactionsSelector,
 };
 
