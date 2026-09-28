@@ -23,6 +23,11 @@ pub struct HttpClientOptions {
     /// `extra_root_certificates`.
     #[uniffi(default = false)]
     pub exclude_platform_roots: bool,
+    /// Ignore the bundled Mozilla roots, trusting only the platform trust store
+    /// and `extra_root_certificates`. Combined with `exclude_platform_roots`,
+    /// only `extra_root_certificates` is trusted, which must then be non-empty.
+    #[uniffi(default = false)]
+    pub exclude_bundled_roots: bool,
     /// Total request timeout in milliseconds. `None` leaves it unbounded.
     #[uniffi(default = None)]
     pub timeout_ms: Option<u64>,
@@ -54,12 +59,17 @@ impl HttpClientOptions {
             builder = builder.timeout(std::time::Duration::from_millis(timeout_ms));
         }
 
-        let mut roots = webpki_root_certs::TLS_SERVER_ROOT_CERTS
+        let bundled: &[_] = if self.exclude_bundled_roots {
+            &[]
+        } else {
+            webpki_root_certs::TLS_SERVER_ROOT_CERTS
+        };
+        let mut roots = bundled
             .iter()
             .filter_map(|der| reqwest::Certificate::from_der(der).ok())
             .collect::<Vec<_>>();
         for der in &self.extra_root_certificates {
-            roots.push(reqwest::Certificate::from_der(der).map_err(SdkFfiError::new)?);
+            roots.push(parse_root_certificate(der)?);
         }
 
         // Merging keeps the platform store and adds these as a floor. reqwest
@@ -71,10 +81,19 @@ impl HttpClientOptions {
         #[cfg(not(any(all(unix, not(target_os = "android")), target_os = "windows")))]
         let merge_supported = false;
 
-        Ok(if self.exclude_platform_roots || !merge_supported {
-            builder.tls_certs_only(roots)
+        Ok(if !self.exclude_platform_roots && merge_supported {
+            if roots.is_empty() {
+                builder
+            } else {
+                builder.tls_certs_merge(roots)
+            }
+        } else if roots.is_empty() {
+            return Err(SdkFfiError::custom(
+                "no trusted root certificates: excluding the bundled roots without the \
+                 platform trust store requires at least one extra root certificate",
+            ));
         } else {
-            builder.tls_certs_merge(roots)
+            builder.tls_certs_only(roots)
         })
     }
 
@@ -84,7 +103,10 @@ impl HttpClientOptions {
     /// it has pinned a root or bounded a request when it has not.
     #[cfg(target_arch = "wasm32")]
     fn apply_transport(&self, builder: reqwest::ClientBuilder) -> Result<reqwest::ClientBuilder> {
-        if self.exclude_platform_roots || !self.extra_root_certificates.is_empty() {
+        if self.exclude_platform_roots
+            || self.exclude_bundled_roots
+            || !self.extra_root_certificates.is_empty()
+        {
             return Err(SdkFfiError::custom(
                 "custom root certificates are not supported on wasm32: \
                  the browser controls certificate verification",
@@ -98,6 +120,17 @@ impl HttpClientOptions {
         }
         Ok(builder)
     }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn parse_root_certificate(der: &[u8]) -> Result<reqwest::Certificate> {
+    let cert = rustls::pki_types::CertificateDer::from(der);
+    webpki::anchor_from_trusted_cert(&cert).map_err(|e| {
+        SdkFfiError::custom(format!(
+            "invalid root certificate, expected DER-encoded X.509: {e}"
+        ))
+    })?;
+    reqwest::Certificate::from_der(der).map_err(SdkFfiError::new)
 }
 
 /// `reqwest` is built with `rustls-no-provider` across this workspace, so a
@@ -114,4 +147,52 @@ fn base_builder() -> reqwest::ClientBuilder {
 #[cfg(target_arch = "wasm32")]
 fn base_builder() -> reqwest::ClientBuilder {
     reqwest::Client::builder().user_agent(USER_AGENT)
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use super::*;
+
+    fn some_root() -> Vec<u8> {
+        webpki_root_certs::TLS_SERVER_ROOT_CERTS[0].to_vec()
+    }
+
+    #[test]
+    fn excluding_every_source_requires_extra_roots() {
+        let options = HttpClientOptions {
+            exclude_platform_roots: true,
+            exclude_bundled_roots: true,
+            ..Default::default()
+        };
+        assert!(options.build().is_err());
+    }
+
+    #[test]
+    fn extra_roots_alone_build() {
+        let options = HttpClientOptions {
+            extra_root_certificates: vec![some_root()],
+            exclude_platform_roots: true,
+            exclude_bundled_roots: true,
+            ..Default::default()
+        };
+        options.build().unwrap();
+    }
+
+    #[test]
+    fn platform_roots_alone_build() {
+        let options = HttpClientOptions {
+            exclude_bundled_roots: true,
+            ..Default::default()
+        };
+        options.build().unwrap();
+    }
+
+    #[test]
+    fn pem_root_is_rejected() {
+        let options = HttpClientOptions {
+            extra_root_certificates: vec![b"-----BEGIN CERTIFICATE-----\n".to_vec()],
+            ..Default::default()
+        };
+        assert!(options.build().is_err());
+    }
 }

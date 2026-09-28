@@ -121,6 +121,7 @@ The fields cover the cases a foreign language cannot express by handing over an 
 
 - `extra_root_certificates`: additional DER-encoded CA certificates to trust.
 - `exclude_platform_roots`: ignore the platform store, trusting only the bundled roots and the certificates above.
+- `exclude_bundled_roots`: ignore the bundled roots, trusting only the platform store and the certificates above. With both exclusions set, only `extra_root_certificates` is trusted, which pins the client to them; an empty list is then rejected.
 - `timeout_ms`: total request timeout.
 - `user_agent`: replaces the default.
 

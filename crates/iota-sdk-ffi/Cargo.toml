@@ -68,6 +68,7 @@ iota-sdk = { version = "3.0.0-beta.1", path = "../iota-sdk", default-features = 
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 rustls = { version = "0.23", default-features = false, features = ["ring"] }
+webpki = { package = "rustls-webpki", version = "0.103", default-features = false }
 webpki-root-certs.workspace = true
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
