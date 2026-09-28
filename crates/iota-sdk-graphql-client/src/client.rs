@@ -8,7 +8,7 @@ use cynic::{GraphQlResponse, Operation, QueryBuilder, serde};
 use reqwest::Url;
 
 use crate::{
-    error::{Error, Result},
+    error::{GraphQLError, GraphQLResult},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
     query_types::{ServiceConfig, ServiceConfigQuery},
 };
@@ -18,8 +18,8 @@ pub(crate) const MAINNET_HOST: &str = "https://graphql.mainnet.iota.cafe";
 pub(crate) const TESTNET_HOST: &str = "https://graphql.testnet.iota.cafe";
 pub(crate) const DEVNET_HOST: &str = "https://graphql.devnet.iota.cafe";
 pub(crate) const LOCAL_HOST: &str = "http://localhost:9125/graphql";
-pub(crate) static USER_AGENT: &str =
-    concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
+/// Value this crate sends as the `User-Agent` header.
+pub static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
 /// Helper function to convert a GraphQL response to a `Result`.
 ///
@@ -30,18 +30,18 @@ pub(crate) static USER_AGENT: &str =
 /// list is surfaced as a query error rather than being treated as a
 /// success. A response with neither `data` nor `errors` is reported as an empty
 /// response error instead of panicking.
-pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> Result<T> {
+pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> GraphQLResult<T> {
     match (response.data, response.errors) {
-        (_, Some(errors)) if !errors.is_empty() => Err(Error::Query(errors)),
+        (_, Some(errors)) if !errors.is_empty() => Err(GraphQLError::Query(errors)),
         (Some(data), _) => Ok(data),
-        (None, _) => Err(Error::EmptyResponse),
+        (None, _) => Err(GraphQLError::EmptyResponse),
     }
 }
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
 #[derive(Clone, Debug)]
-pub struct Client {
+pub struct GraphQLClient {
     /// The URL of the GraphQL server.
     pub(crate) rpc: Url,
     /// The reqwest client.
@@ -49,35 +49,59 @@ pub struct Client {
     pub(crate) service_config: std::sync::OnceLock<ServiceConfig>,
 }
 
-impl Client {
+impl GraphQLClient {
     /// Create a new GraphQL client with the provided server address.
-    pub fn new(server: &str) -> Result<Self> {
-        let rpc = reqwest::Url::parse(server)?;
+    ///
+    /// The HTTP client is built for you, trusting the platform store plus the
+    /// bundled Mozilla roots. Use [`Self::new_with_reqwest_client`] to supply
+    /// your own.
+    ///
+    /// An `https` or `wss` address is rejected on a build without a crypto
+    /// provider, since no request to it could succeed. See the crate README.
+    pub fn new(server: &str) -> GraphQLResult<Self> {
+        if let Some(scheme) = crate::tls::unsupported_scheme(server) {
+            return Err(GraphQLError::TlsUnavailable(scheme));
+        }
+        Self::new_with_reqwest_client(server, crate::tls::default_http_client_builder().build()?)
+    }
 
-        let client = Client {
-            rpc,
-            inner: reqwest::Client::builder().user_agent(USER_AGENT).build()?,
+    /// Create a new GraphQL client that issues its requests through the
+    /// supplied [`reqwest::Client`].
+    ///
+    /// This is the way to choose your own trust anchors, TLS backend, proxies
+    /// or timeouts.
+    ///
+    /// Note that on a build with `tls-ring` or `tls-aws-lc`, `reqwest` has no
+    /// crypto provider to fall back on, so building the client panics unless
+    /// one has been installed for the process. See the crate README.
+    ///
+    /// The client is used as given: the SDK does not set its user agent, so
+    /// callers who want to be identifiable should apply [`USER_AGENT`]
+    /// themselves.
+    pub fn new_with_reqwest_client(server: &str, client: reqwest::Client) -> GraphQLResult<Self> {
+        Ok(Self {
+            rpc: reqwest::Url::parse(server)?,
+            inner: client,
             service_config: Default::default(),
-        };
-        Ok(client)
+        })
     }
 
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
     /// {MAINNET_HOST}.
     pub fn new_mainnet() -> Self {
-        Self::new(MAINNET_HOST).expect("Invalid mainnet URL")
+        Self::new(MAINNET_HOST).expect("cannot build mainnet client")
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
     /// {TESTNET_HOST}.
     pub fn new_testnet() -> Self {
-        Self::new(TESTNET_HOST).expect("Invalid testnet URL")
+        Self::new(TESTNET_HOST).expect("cannot build testnet client")
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
     /// {DEVNET_HOST}.
     pub fn new_devnet() -> Self {
-        Self::new(DEVNET_HOST).expect("Invalid devnet URL")
+        Self::new(DEVNET_HOST).expect("cannot build devnet client")
     }
 
     /// Create a new GraphQL client connected to a `localnet` GraphQL server:
@@ -93,7 +117,7 @@ impl Client {
 
     /// Set the server address for the GraphQL client. It should be a
     /// valid URL with a host and optionally a port number.
-    pub fn set_rpc_server(&mut self, server: &str) -> Result<()> {
+    pub fn set_rpc_server(&mut self, server: &str) -> GraphQLResult<()> {
         let rpc = reqwest::Url::parse(server)?;
         self.rpc = rpc;
         Ok(())
@@ -101,7 +125,7 @@ impl Client {
 
     /// Get the GraphQL service configuration, including complexity limits, read
     /// and mutation limits, supported versions, and others.
-    pub async fn service_config(&self) -> Result<&ServiceConfig> {
+    pub async fn service_config(&self) -> GraphQLResult<&ServiceConfig> {
         // If the value is already initialized, return it
         if let Some(service_config) = self.service_config.get() {
             return Ok(service_config);
@@ -121,7 +145,7 @@ impl Client {
     /// Run a query on the GraphQL server and return the response.
     /// This method returns [`cynic::GraphQlResponse`]  over the query type `T`,
     /// and it is intended to be used with custom queries.
-    pub async fn run_query<T, V>(&self, operation: &Operation<T, V>) -> Result<T>
+    pub async fn run_query<T, V>(&self, operation: &Operation<T, V>) -> GraphQLResult<T>
     where
         T: serde::de::DeserializeOwned,
         V: serde::Serialize,
@@ -132,7 +156,7 @@ impl Client {
     /// POST a JSON-serializable GraphQL request body and decode the JSON
     /// response, surfacing the HTTP status and a truncated body on any non-2xx
     /// response or on a decode failure.
-    async fn post_query<R>(&self, body: &impl serde::Serialize) -> Result<R>
+    async fn post_query<R>(&self, body: &impl serde::Serialize) -> GraphQLResult<R>
     where
         R: serde::de::DeserializeOwned,
     {
@@ -147,10 +171,10 @@ impl Client {
         let bytes = resp.bytes().await?;
         let target_type = std::any::type_name::<R>();
         if !status.is_success() {
-            return Err(Error::http(url, status, &bytes, target_type));
+            return Err(GraphQLError::http(url, status, &bytes, target_type));
         }
         serde_json::from_slice::<R>(&bytes)
-            .map_err(|e| Error::json(url, status, &bytes, target_type, e))
+            .map_err(|e| GraphQLError::json(url, status, &bytes, target_type, e))
     }
 
     /// Run a JSON query on the GraphQL server and return the response.
@@ -162,7 +186,7 @@ impl Client {
     pub async fn run_query_from_json(
         &self,
         json: serde_json::Map<String, serde_json::Value>,
-    ) -> Result<GraphQlResponse<serde_json::Value>> {
+    ) -> GraphQLResult<GraphQlResponse<serde_json::Value>> {
         self.post_query(&json).await
     }
 
@@ -189,7 +213,7 @@ impl Client {
     }
 
     /// Lazily fetch the max page size
-    pub async fn max_page_size(&self) -> Result<i32> {
+    pub async fn max_page_size(&self) -> GraphQLResult<i32> {
         self.service_config().await.map(|cfg| cfg.max_page_size)
     }
 }
@@ -203,7 +227,7 @@ mod tests {
 
     #[test]
     fn test_rpc_server() {
-        let mut client = Client::new_mainnet();
+        let mut client = GraphQLClient::new_mainnet();
         assert_eq!(client.rpc_server(), &MAINNET_HOST.parse().unwrap());
         client.set_rpc_server(TESTNET_HOST).unwrap();
         assert_eq!(client.rpc_server(), &TESTNET_HOST.parse().unwrap());
@@ -227,8 +251,8 @@ mod tests {
         }))
         .unwrap();
 
-        let Error::Query(errors) = response_to_err(response).unwrap_err() else {
-            panic!("expected Error::Query");
+        let GraphQLError::Query(errors) = response_to_err(response).unwrap_err() else {
+            panic!("expected GraphQLError::Query");
         };
         assert_eq!(errors.len(), 1);
         assert_eq!(
@@ -254,8 +278,8 @@ mod tests {
         }))
         .unwrap();
 
-        let Error::Query(errors) = response_to_err(response).unwrap_err() else {
-            panic!("expected Error::Query");
+        let GraphQLError::Query(errors) = response_to_err(response).unwrap_err() else {
+            panic!("expected GraphQLError::Query");
         };
         assert_eq!(errors.len(), 1);
         assert_eq!(errors[0].message, "boom");

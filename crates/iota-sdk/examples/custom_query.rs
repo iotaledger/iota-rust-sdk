@@ -5,7 +5,7 @@
 use cynic::QueryBuilder;
 use eyre::Result;
 use iota_sdk::graphql_client::{
-    Client,
+    GraphQLClient,
     query_types::{BigInt, schema},
 };
 
@@ -45,10 +45,10 @@ pub struct ChainIdQuery {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
-    // Query the data for the last known epoch. Note that id variable is None, so
-    // last epoch data will be returned.
+    // Query the data for the last known epoch. Note that id variable is None,
+    // so last epoch data will be returned.
     let operation = CustomQuery::build(CustomVariables { id: None });
     let response = client
         .run_query::<CustomQuery, CustomVariables>(&operation)

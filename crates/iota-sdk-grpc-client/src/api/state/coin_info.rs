@@ -7,11 +7,11 @@ use iota_grpc_types::v1::state_service::{GetCoinInfoRequest, GetCoinInfoResponse
 use iota_types::StructTag;
 
 use crate::{
-    Client,
+    GrpcClient,
     api::{GrpcResult, MetadataEnvelope},
 };
 
-impl Client {
+impl GrpcClient {
     /// Get information about a coin type.
     ///
     /// Returns the [`GetCoinInfoResponse`] proto type with metadata, treasury,
@@ -24,10 +24,10 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_types::StructTag;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let coin_type: StructTag = "0x2::iota::IOTA".parse()?;
     ///
     /// let response = client.coin_info(coin_type).await?;

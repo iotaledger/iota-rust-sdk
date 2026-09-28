@@ -10,8 +10,8 @@ use futures::Stream;
 use iota_types::{Address, TypeTag};
 
 use crate::{
-    Client, DynamicFieldOutput, NameValue,
-    error::Result,
+    DynamicFieldOutput, GraphQLClient, NameValue,
+    error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
         DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
@@ -20,14 +20,14 @@ use crate::{
     streams::stream_paginated_query,
 };
 
-impl Client {
+impl GraphQLClient {
     /// Get a stream of dynamic fields for the provided address. Note that this
     /// will also fetch dynamic fields on wrapped objects.
     pub fn dynamic_fields_stream(
         &self,
         address: Address,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = Result<DynamicFieldOutput>> + '_ {
+    ) -> impl Stream<Item = GraphQLResult<DynamicFieldOutput>> + '_ {
         stream_paginated_query(
             move |filter| self.dynamic_fields(address, filter),
             streaming_direction,
@@ -47,7 +47,7 @@ impl Client {
     /// # Example
     /// ```rust,ignore
     /// 
-    /// let client = iota_graphql_client::Client::new_testnet();
+    /// let client = iota_graphql_client::GraphQLClient::new_testnet();
     /// let address = ObjectId::system().into();
     /// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
     ///
@@ -60,7 +60,7 @@ impl Client {
         address: Address,
         type_tag: TypeTag,
         name: impl Into<NameValue>,
-    ) -> Result<Option<DynamicFieldOutput>> {
+    ) -> GraphQLResult<Option<DynamicFieldOutput>> {
         let bcs = name.into().0;
         let operation = DynamicFieldQuery::build(DynamicFieldArgs {
             address,
@@ -95,7 +95,7 @@ impl Client {
         address: Address,
         type_tag: TypeTag,
         name: impl Into<NameValue>,
-    ) -> Result<Option<DynamicFieldOutput>> {
+    ) -> GraphQLResult<Option<DynamicFieldOutput>> {
         let bcs = name.into().0;
         let operation = DynamicObjectFieldQuery::build(DynamicFieldArgs {
             address,
@@ -123,7 +123,7 @@ impl Client {
         &self,
         address: Address,
         pagination_filter: PaginationFilter,
-    ) -> Result<Page<DynamicFieldOutput>> {
+    ) -> GraphQLResult<Page<DynamicFieldOutput>> {
         let pagination = self.pagination_filter(pagination_filter).await;
         let operation = DynamicFieldsOwnerQuery::build(DynamicFieldConnectionArgs {
             address,
@@ -144,7 +144,7 @@ impl Client {
                 .nodes
                 .into_iter()
                 .map(TryInto::try_into)
-                .collect::<Result<Vec<_>>>()?,
+                .collect::<GraphQLResult<Vec<_>>>()?,
         ))
     }
 }

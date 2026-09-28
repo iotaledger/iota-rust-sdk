@@ -21,7 +21,7 @@
 
 use eyre::Result;
 use iota_sdk::{
-    grpc_client::{Client, read_mask_fields::ViewFunctionCallReadMask},
+    grpc_client::{GrpcClient, read_mask_fields::ViewFunctionCallReadMask},
     grpc_types::{
         proto::json_to_prost_stringify_numbers,
         v1::{command::InputArgument, transaction_execution_service::ViewFunctionCallItem},
@@ -37,7 +37,7 @@ const SHOP: &str = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet()?;
+    let client = GrpcClient::new_testnet()?;
 
     // A single call, with arguments as JSON.
     let outputs = client

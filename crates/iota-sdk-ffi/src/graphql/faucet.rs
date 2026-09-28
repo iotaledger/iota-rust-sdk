@@ -6,6 +6,7 @@ use std::sync::Arc;
 use crate::{
     error::{Result, SdkFfiError},
     graphql::client::GraphQLClient,
+    http::HttpClientOptions,
     types::{address::Address, digest::TransactionDigest, object::ObjectId},
 };
 
@@ -23,9 +24,23 @@ impl FaucetClient {
     /// - /v1/gas is used to request gas
     /// - /v1/status/task-uuid is used to check the status of the request
     #[uniffi::constructor]
-    pub fn new(faucet_url: String) -> Self {
-        Self(iota_sdk::graphql_client::faucet::FaucetClient::new(
-            &faucet_url,
+    pub fn new(faucet_url: String) -> Result<Self> {
+        Ok(Self(
+            iota_sdk::graphql_client::faucet::FaucetClient::new(&faucet_url)
+                .map_err(SdkFfiError::new)?,
+        ))
+    }
+
+    /// Construct a new `FaucetClient` using an HTTP client built to the given
+    /// options.
+    #[uniffi::constructor]
+    pub fn new_with_http_options(faucet_url: String, options: HttpClientOptions) -> Result<Self> {
+        Ok(Self(
+            iota_sdk::graphql_client::faucet::FaucetClient::new_with_reqwest_client(
+                &faucet_url,
+                options.build()?,
+            )
+            .map_err(SdkFfiError::new)?,
         ))
     }
 
@@ -69,16 +84,15 @@ impl FaucetClient {
     ///
     /// This is a convenience method that combines `request_and_wait` and
     /// waiting for the funding transactions to be finalized using the provided
-    /// GraphQL `Client`.
+    /// GraphQL `GraphQLClient`.
     pub async fn request_and_wait_for_finalized(
         &self,
         address: &Address,
         client: &GraphQLClient,
     ) -> Result<Option<FaucetReceipt>> {
-        let client_lock = client.inner().read().await;
         Ok(self
             .0
-            .request_and_wait_for_finalized(**address, &client_lock)
+            .request_and_wait_for_finalized(**address, &client.client())
             .await
             .map_err(SdkFfiError::custom)?
             .map(Into::into))

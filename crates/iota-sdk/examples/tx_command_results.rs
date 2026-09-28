@@ -4,14 +4,14 @@
 use eyre::Result;
 use iota_sdk::{
     crypto::ed25519::Ed25519PrivateKey,
-    graphql_client::{Client, faucet::FaucetClient},
+    graphql_client::{GraphQLClient, faucet::FaucetClient},
     transaction_builder::{TransactionBuilder, assigned, unresolved::Argument},
     types::Address,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_localnet();
+    let client = GraphQLClient::new_localnet();
 
     let private_key = Ed25519PrivateKey::random();
     let sender_address = private_key.public_key().derive_address();

@@ -4,11 +4,11 @@
 use std::str::FromStr;
 
 use eyre::{OptionExt, Result, bail};
-use iota_sdk::{graphql_client::Client, types::ObjectId};
+use iota_sdk::{graphql_client::GraphQLClient, types::ObjectId};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     let object_id =
         ObjectId::from_str("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")?;

@@ -14,14 +14,14 @@ use iota_grpc_types::{
 use iota_types::SignedTransaction;
 
 use crate::{
-    Client,
+    GrpcClient,
     api::{
         GrpcError, GrpcResult, MetadataEnvelope, ProtocolError, build_proto_transaction,
         into_item_results,
     },
 };
 
-impl Client {
+impl GrpcClient {
     /// Execute a signed transaction.
     ///
     /// This submits the transaction to the network for execution and waits for
@@ -51,11 +51,11 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::ExecuteTransactionReadMask;
     /// # use iota_types::SignedTransaction;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     ///
     /// let signed_tx: SignedTransaction = todo!();
     /// let result = client

@@ -18,7 +18,7 @@
 # With this example it is necessary to run a localnet:
 #
 # ```sh
-# iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
+# iota-localnet start --with-faucet --with-graphql --committee-size 1 --force-regenesis
 # ```
 
 from lib.iota_sdk import *

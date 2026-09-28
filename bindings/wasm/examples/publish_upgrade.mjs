@@ -7,7 +7,7 @@
 // the default precompiled package below.
 //
 // Requires a running localnet:
-//   iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
+//   iota-localnet start --with-faucet --with-graphql --committee-size 1 --force-regenesis
 
 import {
   Address,

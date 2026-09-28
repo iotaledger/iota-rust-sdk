@@ -6,11 +6,11 @@
 use iota_grpc_types::v1::ledger_service::{GetHealthRequest, GetHealthResponse};
 
 use crate::{
-    Client,
+    GrpcClient,
     api::{GrpcResult, MetadataEnvelope},
 };
 
-impl Client {
+impl GrpcClient {
     /// Check the health of the node.
     ///
     /// Returns a [`MetadataEnvelope`]`<`[`GetHealthResponse`]`>` with the

@@ -5,7 +5,7 @@ use std::{cmp, collections::HashMap, time::Duration};
 
 use iota_sdk::{
     graphql_client::{
-        Client, PaginationFilter,
+        GraphQLClient, PaginationFilter,
         query_types::{EventFilter, TransactionsFilter},
     },
     types::{ExecutionStatus, SignedTransaction, Transaction},
@@ -67,13 +67,13 @@ impl RetryState {
 // ------------------------------------------------------------------
 
 pub struct Indexer {
-    client: Client,
+    client: GraphQLClient,
     pool: PgPool,
     config: AppConfig,
 }
 
 impl Indexer {
-    pub fn new(client: Client, pool: PgPool, config: AppConfig) -> Self {
+    pub fn new(client: GraphQLClient, pool: PgPool, config: AppConfig) -> Self {
         Self {
             client,
             pool,
@@ -545,7 +545,7 @@ fn extract_event_name(event_type: &str) -> String {
 /// aliased GraphQL queries, avoiding per-transaction round-trips. Digests are
 /// processed in chunks to stay within GraphQL query complexity limits.
 async fn batch_lookup_tx_checkpoints(
-    client: &Client,
+    client: &GraphQLClient,
     digests: &[String],
 ) -> anyhow::Result<HashMap<String, Option<u64>>> {
     const CHUNK_SIZE: usize = 50;

@@ -10,11 +10,11 @@ use iota_grpc_types::{
 };
 
 use crate::{
-    Client,
+    GrpcClient,
     api::{GrpcResult, MetadataEnvelope, TryFromProtoError},
 };
 
-impl Client {
+impl GrpcClient {
     /// Get epoch information.
     ///
     /// Returns the [`Epoch`] proto type with fields populated according to the
@@ -37,10 +37,10 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::{EpochField, EpochReadMask};
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     ///
     /// // Current epoch with the default mask.
     /// let epoch = client.epoch(None, EpochReadMask::default()).await?;
@@ -112,9 +112,9 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     /// let gas_price = client.reference_gas_price().await?.into_inner();
     /// println!("Reference gas price: {gas_price} NANOS");
     /// # Ok(())

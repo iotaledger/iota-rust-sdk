@@ -5,14 +5,14 @@ use std::str::FromStr;
 
 use eyre::Result;
 use iota_sdk::{
-    graphql_client::Client,
+    graphql_client::GraphQLClient,
     transaction_builder::assigned,
     types::{Address, ObjectId},
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     let coin =
         ObjectId::from_str("0xdc956de89b914e6a7fbd83caebefc8ec91be1207667ea5576386391aa82449cc")?;

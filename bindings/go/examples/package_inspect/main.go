@@ -113,7 +113,6 @@ func main() {
 	for _, moduleID := range pkg.Modules().Keys() {
 		moduleNames = append(moduleNames, moduleID.AsStr())
 	}
-	sort.Strings(moduleNames)
 
 	for _, moduleName := range moduleNames {
 		fmt.Println("Module:", moduleName)

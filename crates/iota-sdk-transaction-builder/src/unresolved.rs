@@ -467,6 +467,11 @@ impl Publish {
     }
 }
 
+/// Builder state for a coin division, which is carried out by a
+/// [`Command::MoveCall`] and has no command of its own.
+#[derive(Clone, Debug)]
+pub struct DivideCoin;
+
 #[derive(Clone, Copy, Debug)]
 #[non_exhaustive]
 pub enum Argument {

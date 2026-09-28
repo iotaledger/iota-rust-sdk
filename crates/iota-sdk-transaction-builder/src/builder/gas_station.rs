@@ -1,11 +1,14 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{str::FromStr, time::Duration};
+//! A [`GasSponsor`] implementation for the IOTA gas station.
+
+use std::{str::FromStr, sync::OnceLock, time::Duration};
 
 use base64ct::Encoding;
 use iota_types::{
-    Address, ObjectDigest, ObjectId, ObjectReference, Transaction, TransactionDigest, Version,
+    Address, ObjectDigest, ObjectId, ObjectReference, Transaction, TransactionDigest,
+    UserSignature, Version,
 };
 use reqwest::{
     Url,
@@ -13,7 +16,7 @@ use reqwest::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::{builder::signer::TransactionSigner, error::TransactionBuilderError};
+use crate::builder::gas_sponsor::{GasSponsor, SponsoredGas};
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
@@ -31,7 +34,7 @@ enum VersionParsingErrorKind {
     Empty,
 }
 
-/// Parsing a [Version] out of a string failed.
+/// Parsing a [GasStationVersion] out of a string failed.
 #[derive(Debug, thiserror::Error)]
 #[error("failed to parse a valid SemVer out of `{input}`")]
 pub struct VersionParsingError {
@@ -47,36 +50,176 @@ fn idx_to_segment_name(idx: usize) -> &'static str {
     ["major", "minor", "patch"][idx]
 }
 
-/// Data to configure gas station sponsorship.
-#[derive(Clone, Debug)]
-#[repr(C)]
-pub struct GasStationData {
-    /// The gas station URL.
-    url: Url,
-    /// Duration of the gas allocation. Default value: `60` seconds.
-    gas_reservation_duration: Duration,
-    /// Headers to be included in all requests to the gas station.
-    headers: HeaderMap<HeaderValue>,
+/// Errors returned by the [`GasStation`] sponsor.
+#[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
+pub enum GasStationError {
+    /// A request path could not be joined onto the configured base URL.
+    #[error(transparent)]
+    InvalidUrl(<Url as FromStr>::Err),
+    /// A request to the gas station could not be completed.
+    #[error("request to gas station `{gas_station_url}` failed: {source}")]
+    Request {
+        /// The underlying transport error.
+        source: reqwest::Error,
+        /// The URL that was requested.
+        gas_station_url: Url,
+    },
+    /// The gas station answered with something unusable.
+    #[
+        error("invalid gas station response from {gas_station_url}{}",
+        .message.as_deref().map(|msg| format!(": {msg}")).unwrap_or_default())
+    ]
+    Response {
+        /// The error the gas station reported, when it reported one.
+        message: Option<String>,
+        /// The URL that was requested.
+        gas_station_url: Url,
+    },
+    /// The gas station is too old for this client.
+    #[error(
+        "invalid gas-station version: got version `{version}`, but at least version `{min_required_version}` is required"
+    )]
+    UnsupportedVersion {
+        /// The minimum IOTA gas-station version needed for this operation.
+        min_required_version: GasStationVersion,
+        /// The actual IOTA gas-station's version.
+        version: GasStationVersion,
+    },
+    /// The version the gas station reported could not be parsed.
+    #[error(transparent)]
+    VersionParsing(VersionParsingError),
+    /// The transaction could not be serialized for the gas station.
+    #[error("BCS serialization error: {0}")]
+    Bcs(bcs::Error),
 }
 
-impl GasStationData {
-    pub fn new(url: Url) -> Self {
-        Self {
+/// The IOTA gas station, sponsoring transactions over its HTTP API.
+///
+/// A station is configured once and reused for any number of transactions;
+/// build one with [`GasStation::builder`].
+///
+/// # Example
+///
+/// ```no_run
+/// # use std::time::Duration;
+/// use iota_sdk_transaction_builder::GasStation;
+/// use reqwest::header::{AUTHORIZATION, HeaderValue};
+///
+/// # fn main() -> eyre::Result<()> {
+/// let station = GasStation::builder("http://0.0.0.0:9527".parse()?)
+///     .header(AUTHORIZATION, HeaderValue::from_static("Bearer token"))
+///     .reservation_duration(Duration::from_secs(60))
+///     .build();
+/// # Ok(())
+/// # }
+/// ```
+#[derive(Clone, Debug)]
+pub struct GasStation {
+    url: Url,
+    http_client: reqwest::Client,
+    headers: HeaderMap<HeaderValue>,
+    reservation_duration: Duration,
+    /// The version check result, kept so the station is probed once rather
+    /// than once per reservation. Racing callers may both probe, which is
+    /// harmless.
+    checked_version: OnceLock<GasStationVersion>,
+}
+
+impl GasStation {
+    /// Start configuring a gas station reachable at `url`.
+    pub fn builder(url: Url) -> GasStationBuilder {
+        GasStationBuilder {
             url,
-            gas_reservation_duration: Duration::from_secs(60),
-            headers: Default::default(),
+            http_client: None,
+            headers: HeaderMap::default(),
+            reservation_duration: DEFAULT_RESERVATION_DURATION,
         }
     }
 
-    pub fn set_gas_reservation_duration(&mut self, duration: Duration) {
-        self.gas_reservation_duration = duration;
+    /// A gas station at `url` with no headers and a default HTTP client.
+    pub fn new(url: Url) -> Self {
+        Self::builder(url).build()
     }
 
-    pub fn add_header(&mut self, name: HeaderName, value: HeaderValue) {
-        self.headers.append(name, value);
+    /// The URL this station is reached at.
+    pub fn url(&self) -> &Url {
+        &self.url
+    }
+
+    /// The HTTP client this station sends its requests with.
+    pub fn http_client(&self) -> &reqwest::Client {
+        &self.http_client
     }
 }
 
+/// Duration of the gas allocation when the caller sets none.
+const DEFAULT_RESERVATION_DURATION: Duration = Duration::from_secs(60);
+
+/// Configures a [`GasStation`].
+#[derive(Clone, Debug)]
+pub struct GasStationBuilder {
+    url: Url,
+    http_client: Option<reqwest::Client>,
+    headers: HeaderMap<HeaderValue>,
+    reservation_duration: Duration,
+}
+
+impl GasStationBuilder {
+    /// Send requests with this HTTP client instead of a default one.
+    ///
+    /// Set this to control timeouts, proxies, TLS roots or connection pooling;
+    /// without it the station builds a [`reqwest::Client`] with reqwest's own
+    /// defaults.
+    pub fn http_client(mut self, client: reqwest::Client) -> Self {
+        self.http_client = Some(client);
+        self
+    }
+
+    /// Add a header sent with every request to the gas station.
+    pub fn header(mut self, name: HeaderName, value: HeaderValue) -> Self {
+        self.headers.append(name, value);
+        self
+    }
+
+    /// Add headers sent with every request to the gas station.
+    pub fn headers(mut self, headers: impl IntoIterator<Item = (HeaderName, HeaderValue)>) -> Self {
+        for (name, value) in headers {
+            self.headers.append(name, value);
+        }
+        self
+    }
+
+    /// How long the station should hold the gas it reserves. Defaults to 60
+    /// seconds.
+    pub fn reservation_duration(mut self, duration: Duration) -> Self {
+        self.reservation_duration = duration;
+        self
+    }
+
+    /// Build the gas station.
+    pub fn build(self) -> GasStation {
+        let Self {
+            url,
+            http_client,
+            mut headers,
+            reservation_duration,
+        } = self;
+        headers
+            .entry(reqwest::header::CONTENT_TYPE)
+            .or_insert_with(|| HeaderValue::from_static("application/json"));
+
+        GasStation {
+            url,
+            http_client: http_client.unwrap_or_default(),
+            headers,
+            reservation_duration,
+            checked_version: OnceLock::new(),
+        }
+    }
+}
+
+/// The version of an IOTA gas station.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct GasStationVersion {
     version_core: [u8; 3],
@@ -235,26 +378,27 @@ struct ExecuteTxResponse {
     error: Option<String>,
 }
 
-impl GasStationData {
-    async fn gas_station_version(
-        &self,
-        client: &reqwest::Client,
-    ) -> Result<GasStationVersion, TransactionBuilderError> {
-        let url = self
-            .url
-            .join(GasStationRequestKind::Version.as_path())
-            .map_err(TransactionBuilderError::InvalidUrl)?;
-        let response = client
+impl GasStation {
+    fn endpoint(&self, kind: GasStationRequestKind) -> Result<Url, GasStationError> {
+        self.url
+            .join(kind.as_path())
+            .map_err(GasStationError::InvalidUrl)
+    }
+
+    async fn gas_station_version(&self) -> Result<GasStationVersion, GasStationError> {
+        let url = self.endpoint(GasStationRequestKind::Version)?;
+        let response = self
+            .http_client
             .request(reqwest::Method::GET, url.clone())
             .headers(self.headers.clone())
             .send()
             .await
-            .map_err(|e| TransactionBuilderError::GasStationRequest {
+            .map_err(|e| GasStationError::Request {
                 source: e,
                 gas_station_url: url.clone(),
             })?
             .error_for_status()
-            .map_err(|e| TransactionBuilderError::GasStationRequest {
+            .map_err(|e| GasStationError::Request {
                 source: e,
                 gas_station_url: url.clone(),
             })?;
@@ -264,13 +408,13 @@ impl GasStationData {
             response
                 .bytes()
                 .await
-                .map_err(|_| TransactionBuilderError::GasStationResponse {
+                .map_err(|_| GasStationError::Response {
                     message: None,
                     gas_station_url: url.clone(),
                 })?
                 .to_vec(),
         )
-        .map_err(|_| TransactionBuilderError::GasStationResponse {
+        .map_err(|_| GasStationError::Response {
             message: None,
             gas_station_url: url.clone(),
         })?;
@@ -278,59 +422,59 @@ impl GasStationData {
         // We only care about the version.
         // Using `rfind` instead of `find` because the pkg's version might have a suffix
         // like "-alpha".
-        let separator_idx =
-            version_info
-                .rfind('-')
-                .ok_or_else(|| TransactionBuilderError::GasStationResponse {
-                    message: None,
-                    gas_station_url: url,
-                })?;
+        let separator_idx = version_info
+            .rfind('-')
+            .ok_or_else(|| GasStationError::Response {
+                message: None,
+                gas_station_url: url,
+            })?;
         version_info.truncate(separator_idx);
 
         let version = version_info
             .parse()
-            .map_err(TransactionBuilderError::VersionParsing)?;
+            .map_err(GasStationError::VersionParsing)?;
 
         Ok(version)
     }
 
-    async fn reserve_gas(
-        &mut self,
-        gas_budget: u64,
-        client: &reqwest::Client,
-    ) -> Result<GasReservation, TransactionBuilderError> {
-        self.headers
-            .entry(reqwest::header::CONTENT_TYPE)
-            .or_insert_with(|| HeaderValue::from_static("application/json"));
+    /// Check that the station is new enough, probing it only the first time.
+    async fn check_version(&self) -> Result<(), GasStationError> {
+        if self.checked_version.get().is_some() {
+            return Ok(());
+        }
 
-        let version = self.gas_station_version(client).await?;
+        let version = self.gas_station_version().await?;
         if version < GasStationVersion::MIN {
-            return Err(TransactionBuilderError::InvalidGasStationVersion {
+            return Err(GasStationError::UnsupportedVersion {
                 min_required_version: GasStationVersion::MIN,
                 version,
             });
         }
+        let _ = self.checked_version.set(version);
 
-        let url = self
-            .url
-            .join(GasStationRequestKind::ReserveGas.as_path())
-            .map_err(TransactionBuilderError::InvalidUrl)?;
+        Ok(())
+    }
 
-        let response = client
+    async fn reserve(&self, gas_budget: u64) -> Result<GasReservation, GasStationError> {
+        self.check_version().await?;
+
+        let url = self.endpoint(GasStationRequestKind::ReserveGas)?;
+        let response = self
+            .http_client
             .request(reqwest::Method::POST, url.clone())
             .json(&ReserveGasRequest {
                 gas_budget,
-                reserve_duration_secs: self.gas_reservation_duration.as_secs(),
+                reserve_duration_secs: self.reservation_duration.as_secs(),
             })
             .headers(self.headers.clone())
             .send()
             .await
-            .map_err(|e| TransactionBuilderError::GasStationRequest {
+            .map_err(|e| GasStationError::Request {
                 source: e,
                 gas_station_url: url.clone(),
             })?
             .error_for_status()
-            .map_err(|e| TransactionBuilderError::GasStationRequest {
+            .map_err(|e| GasStationError::Request {
                 source: e,
                 gas_station_url: url.clone(),
             })?;
@@ -339,111 +483,55 @@ impl GasStationData {
             response
                 .json()
                 .await
-                .map_err(|e| TransactionBuilderError::GasStationRequest {
+                .map_err(|e| GasStationError::Request {
                     source: e,
                     gas_station_url: url.clone(),
                 })?;
 
-        let Some(gas_reservation) = res.result else {
-            return Err(TransactionBuilderError::GasStationResponse {
-                message: res.error,
-                gas_station_url: url.clone(),
-            });
-        };
-
-        Ok(gas_reservation)
-    }
-
-    pub(crate) async fn execute_txn(
-        self,
-        txn: &mut Transaction,
-        signer: &impl TransactionSigner,
-    ) -> Result<TransactionDigest, TransactionBuilderError> {
-        let url = self
-            .url
-            .join(GasStationRequestKind::ExecuteTx.as_path())
-            .map_err(TransactionBuilderError::InvalidUrl)?;
-        let effects = self.execute_txn_inner(&url, txn, signer).await?;
-
-        TransactionDigest::deserialize(&effects["transactionDigest"]).map_err(|e| {
-            TransactionBuilderError::GasStationResponse {
-                message: Some(e.to_string()),
-                gas_station_url: url,
-            }
+        res.result.ok_or(GasStationError::Response {
+            message: res.error,
+            gas_station_url: url,
         })
     }
 
-    pub(crate) async fn execute_txn_json(
-        self,
-        txn: &mut Transaction,
-        signer: &impl TransactionSigner,
-    ) -> Result<serde_json::Value, TransactionBuilderError> {
-        let url = self
-            .url
-            .join(GasStationRequestKind::ExecuteTx.as_path())
-            .map_err(TransactionBuilderError::InvalidUrl)?;
-        self.execute_txn_inner(&url, txn, signer).await
-    }
-
-    async fn execute_txn_inner(
-        mut self,
-        url: &Url,
-        txn: &mut Transaction,
-        signer: &impl TransactionSigner,
-    ) -> Result<serde_json::Value, TransactionBuilderError> {
-        let client = reqwest::Client::new();
-        let reservation_id = match txn {
-            Transaction::V1(inner_txn) => {
-                let reservation = self
-                    .reserve_gas(inner_txn.gas_payment.budget, &client)
-                    .await?;
-                let GasReservation {
-                    sponsor_address,
-                    reservation_id,
-                    gas_coins,
-                } = reservation;
-                inner_txn.gas_payment.owner = sponsor_address;
-                let objects: Vec<_> = gas_coins
-                    .into_iter()
-                    .map(|obj_ref| ObjectReference {
-                        object_id: obj_ref.object_id,
-                        version: Version::from_u64(obj_ref.version),
-                        digest: obj_ref.digest,
-                    })
-                    .collect();
-                inner_txn.gas_payment.objects = objects;
-                reservation_id
-            }
-            _ => unimplemented!("a new Transaction enum variant was added and needs to be handled"),
-        };
+    /// Execute a transaction against a reservation and return the gas
+    /// station's own JSON effects.
+    ///
+    /// The station reports effects in a JSON-RPC shape that cannot be turned
+    /// back into [`TransactionEffects`](iota_types::TransactionEffects); use
+    /// this when that JSON is what you want, and
+    /// [`execute_with_gas_sponsor`](crate::TransactionBuilder::execute_with_gas_sponsor)
+    /// when you want typed effects.
+    pub async fn execute_reserved_json(
+        &self,
+        reservation_id: u64,
+        transaction: &Transaction,
+        signature: &UserSignature,
+    ) -> Result<serde_json::Value, GasStationError> {
+        let url = self.endpoint(GasStationRequestKind::ExecuteTx)?;
 
         let tx_bytes = base64ct::Base64::encode_string(
-            &bcs::to_bytes(&txn).map_err(TransactionBuilderError::Bcs)?,
+            &bcs::to_bytes(transaction).map_err(GasStationError::Bcs)?,
         );
 
-        let user_sig = signer
-            .sign(txn)
-            .await
-            .map_err(TransactionBuilderError::signature)?
-            .to_base64();
-
-        let response = client
+        let response = self
+            .http_client
             .request(reqwest::Method::POST, url.clone())
-            .headers(self.headers)
+            .headers(self.headers.clone())
             .json(&ExecuteTxRequest {
                 reservation_id,
                 tx_bytes,
-                user_sig,
+                user_sig: signature.to_base64(),
                 request_type: "waitForLocalExecution".to_owned(),
             })
             .send()
             .await
-            .map_err(|e| TransactionBuilderError::GasStationRequest {
+            .map_err(|e| GasStationError::Request {
                 source: e,
                 gas_station_url: url.clone(),
             })?
             .error_for_status()
-            .map_err(|e| TransactionBuilderError::GasStationRequest {
+            .map_err(|e| GasStationError::Request {
                 source: e,
                 gas_station_url: url.clone(),
             })?;
@@ -452,19 +540,72 @@ impl GasStationData {
             response
                 .json()
                 .await
-                .map_err(|e| TransactionBuilderError::GasStationRequest {
+                .map_err(|e| GasStationError::Request {
                     source: e,
                     gas_station_url: url.clone(),
                 })?;
 
-        let Some(effects) = res.effects else {
-            return Err(TransactionBuilderError::GasStationResponse {
-                message: res.error,
-                gas_station_url: url.clone(),
-            });
+        res.effects.ok_or(GasStationError::Response {
+            message: res.error,
+            gas_station_url: url,
+        })
+    }
+}
+
+impl GasSponsor for GasStation {
+    type Error = GasStationError;
+    type Reservation = u64;
+
+    async fn reserve_gas(
+        &self,
+        transaction: &Transaction,
+    ) -> Result<(Self::Reservation, SponsoredGas), Self::Error> {
+        let Transaction::V1(v1) = transaction else {
+            unimplemented!("a new Transaction enum variant was added and needs to be handled")
+        };
+        let GasReservation {
+            sponsor_address,
+            reservation_id,
+            gas_coins,
+        } = self.reserve(v1.gas_payment.budget).await?;
+
+        let gas = SponsoredGas {
+            owner: sponsor_address,
+            objects: gas_coins
+                .into_iter()
+                .map(|obj_ref| ObjectReference {
+                    object_id: obj_ref.object_id,
+                    version: Version::from_u64(obj_ref.version),
+                    digest: obj_ref.digest,
+                })
+                .collect(),
         };
 
-        Ok(effects)
+        Ok((reservation_id, gas))
+    }
+
+    async fn execute_reserved(
+        &self,
+        reservation: Self::Reservation,
+        transaction: &Transaction,
+        signature: &UserSignature,
+    ) -> Result<TransactionDigest, Self::Error> {
+        let effects = self
+            .execute_reserved_json(reservation, transaction, signature)
+            .await?;
+
+        effects
+            .get("transactionDigest")
+            .ok_or_else(|| GasStationError::Response {
+                message: Some("Missing transaction digest".to_owned()),
+                gas_station_url: self.url.clone(),
+            })
+            .and_then(|v| {
+                TransactionDigest::deserialize(v).map_err(|e| GasStationError::Response {
+                    message: Some(e.to_string()),
+                    gas_station_url: self.url.clone(),
+                })
+            })
     }
 }
 

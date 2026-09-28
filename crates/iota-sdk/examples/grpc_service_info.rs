@@ -5,11 +5,11 @@
 //! RPC, then the current reference gas price.
 
 use eyre::{OptionExt, Result};
-use iota_sdk::grpc_client::{Client, read_mask_fields::ServiceInfoReadMask};
+use iota_sdk::grpc_client::{GrpcClient, read_mask_fields::ServiceInfoReadMask};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_localnet()?;
+    let client = GrpcClient::new_localnet()?;
 
     let info = client.service_info(ServiceInfoReadMask::default()).await?;
     let chain_id = info

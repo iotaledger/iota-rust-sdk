@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use eyre::Result;
-use iota_sdk::graphql_client::Client;
+use iota_sdk::graphql_client::GraphQLClient;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     let parent_object_id =
         "0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec".parse()?;

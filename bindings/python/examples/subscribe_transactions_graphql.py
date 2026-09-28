@@ -26,7 +26,7 @@ async def generate_activity():
 
 async def main():
     client = GraphQlClient.new_localnet()
-    subscription = await client.transactions_subscription(
+    subscription = client.transactions_subscription(
         filter=SubscriptionTransactionFilter(
             kind=TransactionBlockKindInput.PROGRAMMABLE_TX))
 
