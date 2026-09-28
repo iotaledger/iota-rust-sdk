@@ -13,17 +13,17 @@ description = "Build-time codegen of the gRPC/protobuf types for the IOTA Rust S
 workspace = true
 
 [dependencies]
-bitflags = "2.11"
+bitflags = "2.13"
 heck = { version = ">=0.4, <=0.5" }
-itertools = "0.14.0"
-prettyplease = "0.2"
+itertools = "0.15.0"
+prettyplease = "0.3"
 proc-macro2.workspace = true
 prost.workspace = true
 prost-reflect = "0.16"
 prost-types.workspace = true
 protox = "0.9"
 quote.workspace = true
-regex = "1.12"
+regex = "1.13"
 syn.workspace = true
 tonic-prost-build = "0.14"
 walkdir = "2.5"

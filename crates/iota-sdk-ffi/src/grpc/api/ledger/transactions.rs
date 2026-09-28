@@ -8,13 +8,15 @@ use std::sync::Arc;
 use iota_sdk::{
     grpc_client::read_mask_fields::TransactionReadMask,
     grpc_types::{proto::proto_to_timestamp_ms, v1 as proto},
+    transaction_builder::TransactionBuilderExecutionClient,
 };
 
 use crate::{
     error::{Result, SdkFfiError},
     grpc::client::GrpcClient,
+    transaction_builder::WaitForTransaction,
     types::{
-        digest::{Digest, TransactionDigest},
+        digest::{TransactionDigest, TransactionEffectsDigest, TransactionEventsDigest},
         events::TransactionEvents,
         object::Object,
         signature::UserSignature,
@@ -32,17 +34,17 @@ use crate::{
 #[derive(uniffi::Record)]
 pub struct ExecutedTransaction {
     /// The digest of the transaction.
-    pub digest: Option<Arc<Digest>>,
+    pub digest: Option<Arc<TransactionDigest>>,
     /// The transaction itself.
     pub transaction: Option<Arc<Transaction>>,
     /// The user signatures that authorized the execution of the transaction.
     pub signatures: Option<Vec<Arc<UserSignature>>>,
     /// The digest of the transaction effects.
-    pub effects_digest: Option<Arc<Digest>>,
+    pub effects_digest: Option<Arc<TransactionEffectsDigest>>,
     /// The effects of the transaction.
     pub effects: Option<Arc<TransactionEffects>>,
     /// The digest of the transaction events.
-    pub events_digest: Option<Arc<Digest>>,
+    pub events_digest: Option<Arc<TransactionEventsDigest>>,
     /// The events emitted by the transaction, if any.
     pub events: Option<Arc<TransactionEvents>>,
     /// The sequence number of the checkpoint that includes the transaction.
@@ -65,7 +67,7 @@ impl TryFrom<&proto::transaction::ExecutedTransaction> for ExecutedTransaction {
                 .transaction
                 .as_ref()
                 .and_then(|transaction| transaction.digest.as_ref())
-                .map(iota_sdk::types::Digest::try_from)
+                .map(iota_sdk::types::TransactionDigest::try_from)
                 .transpose()?
                 .map(Into::into)
                 .map(Arc::new),
@@ -93,7 +95,7 @@ impl TryFrom<&proto::transaction::ExecutedTransaction> for ExecutedTransaction {
                 .effects
                 .as_ref()
                 .and_then(|effects| effects.digest.as_ref())
-                .map(iota_sdk::types::Digest::try_from)
+                .map(iota_sdk::types::TransactionEffectsDigest::try_from)
                 .transpose()?
                 .map(Into::into)
                 .map(Arc::new),
@@ -109,7 +111,7 @@ impl TryFrom<&proto::transaction::ExecutedTransaction> for ExecutedTransaction {
                 .events
                 .as_ref()
                 .and_then(|events| events.digest.as_ref())
-                .map(iota_sdk::types::Digest::try_from)
+                .map(iota_sdk::types::TransactionEventsDigest::try_from)
                 .transpose()?
                 .map(Into::into)
                 .map(Arc::new),
@@ -174,5 +176,58 @@ impl GrpcClient {
             .into_iter()
             .map(|transaction| ExecutedTransaction::try_from(&transaction?))
             .collect()
+    }
+
+    /// Wait for the indexing (on the node) or finalization of a transaction by
+    /// its digest, polling the node until then. Returns an error after 60s.
+    pub async fn wait_for_transaction(
+        &self,
+        digest: &TransactionDigest,
+        wait_for: WaitForTransaction,
+    ) -> Result<()> {
+        Ok(TransactionBuilderExecutionClient::wait_for_transaction(
+            &self.client(),
+            **digest,
+            wait_for.into(),
+        )
+        .await?)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use iota_sdk::{
+        grpc_types::v1 as proto,
+        types::{TransactionDigest, TransactionEffectsDigest, TransactionEventsDigest},
+    };
+
+    use super::ExecutedTransaction;
+
+    #[test]
+    fn digest_only_mask_populates_the_typed_digests() {
+        let transaction_digest = TransactionDigest::from([1; 32]);
+        let effects_digest = TransactionEffectsDigest::from([2; 32]);
+        let events_digest = TransactionEventsDigest::from([3; 32]);
+
+        let mut transaction = proto::transaction::Transaction::default();
+        transaction.digest = Some(transaction_digest.into());
+        let mut effects = proto::transaction::TransactionEffects::default();
+        effects.digest = Some(effects_digest.into());
+        let mut events = proto::transaction::TransactionEvents::default();
+        events.digest = Some(events_digest.into());
+
+        let mut value = proto::transaction::ExecutedTransaction::default();
+        value.transaction = Some(transaction);
+        value.effects = Some(effects);
+        value.events = Some(events);
+
+        let converted = ExecutedTransaction::try_from(&value).unwrap();
+
+        assert_eq!(converted.digest.unwrap().0, transaction_digest);
+        assert_eq!(converted.effects_digest.unwrap().0, effects_digest);
+        assert_eq!(converted.events_digest.unwrap().0, events_digest);
+        assert!(converted.transaction.is_none());
+        assert!(converted.effects.is_none());
+        assert!(converted.events.is_none());
     }
 }

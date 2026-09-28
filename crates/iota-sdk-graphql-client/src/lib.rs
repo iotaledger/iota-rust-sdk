@@ -14,6 +14,7 @@ pub mod pagination;
 pub mod query_types;
 pub mod streams;
 mod subscription;
+mod tls;
 mod transaction_builder_client;
 mod wait;
 
@@ -21,7 +22,7 @@ mod wait;
 mod test_utils;
 
 // Re-export types used by query_types module internally
-pub use client::GraphQLClient;
+pub use client::{GraphQLClient, USER_AGENT};
 pub use error::{GraphQLError, GraphQLResult};
 pub use iota_transaction_builder::WaitForTransaction;
 pub(crate) use iota_types::Address;

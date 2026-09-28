@@ -41,7 +41,6 @@ tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 [dev-dependencies]
 # external dependencies
 eyre.workspace = true
-rand.workspace = true
 serde_json.workspace = true
 
 # internal dependencies

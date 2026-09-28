@@ -109,9 +109,22 @@ following are the default behaviors for each metadata value.
 
 ### Gas Station
 
-A transaction's gas can be paid by a [Gas Station](https://github.com/iotaledger/gas-station). Construct a `GasStation` with its URL, and optionally a reservation duration and the headers each request should carry (typically an authorization token), then pass it to `TransactionBuilder::execute_with_gas_station`. One `GasStation` can be reused for any number of transactions. Requests carry `Content-Type: application/json` unless the headers override it.
+A transaction's gas can be paid by a [Gas Station](https://github.com/iotaledger/gas-station). Construct a `GasStation` with its URL, and optionally a reservation duration, the headers each request should carry (typically an authorization token), and the HTTP client options to reach it with, then pass it to `TransactionBuilder::execute_with_gas_station`. One `GasStation` can be reused for any number of transactions. Requests carry `Content-Type: application/json` unless the headers override it.
 
 The gas station supplies the whole gas payment, so setting gas coins or a sponsor address on the same builder is rejected. On a builder with a client, the effects are read back from the client after execution, because the station's own effects are reported in a shape that cannot be converted to `TransactionEffects`; on a builder without a client only the transaction digest is returned.
+
+### HTTP client options
+
+Constructors that open a connection — the GraphQL and faucet clients, and the gas station above — take an `HttpClientOptions`. The defaults trust the platform certificate store plus a bundled copy of the Mozilla roots, send the bindings' own user agent, and apply no timeout.
+
+The fields cover the cases a foreign language cannot express by handing over an HTTP client of its own:
+
+- `extra_root_certificates`: additional DER-encoded CA certificates to trust.
+- `exclude_platform_roots`: ignore the platform store, trusting only the bundled roots and the certificates above.
+- `timeout_ms`: total request timeout.
+- `user_agent`: replaces the default.
+
+On wasm32 the browser controls certificate verification and request deadlines, so every field other than `user_agent` is rejected rather than silently ignored.
 
 ## Supported languages
 

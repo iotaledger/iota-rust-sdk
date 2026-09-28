@@ -18,7 +18,7 @@ const HOW_MANY: u64 = 5;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GrpcClient::new_testnet()?;
+    let client = GrpcClient::new_localnet()?;
 
     // Pick a starting point a few checkpoints behind head so the example
     // returns promptly instead of waiting on new blocks.

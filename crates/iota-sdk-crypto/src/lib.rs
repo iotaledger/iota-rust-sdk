@@ -406,6 +406,19 @@ pub trait FromMnemonic {
 
 #[cfg(test)]
 mod tests {
+    /// `signature::Error`'s `Display` is deliberately opaque, so the message a
+    /// verifier attached is only reachable through the source chain.
+    pub fn error_chain(error: &dyn std::error::Error) -> String {
+        let mut out = error.to_string();
+        let mut source = error.source();
+        while let Some(cause) = source {
+            out.push_str(": ");
+            out.push_str(&cause.to_string());
+            source = cause.source();
+        }
+        out
+    }
+
     #[cfg(all(feature = "mnemonic", feature = "ed25519", feature = "bech32"))]
     #[test]
     fn test_mnemonics_ed25519() {

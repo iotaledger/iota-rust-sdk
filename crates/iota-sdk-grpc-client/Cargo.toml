@@ -14,9 +14,9 @@ workspace = true
 [dependencies]
 # external dependencies
 async-stream.workspace = true
-base64 = "0.22"
+base64 = "0.23"
 futures.workspace = true
-http = "1.4"
+http = "1.5"
 prost.workspace = true
 serde.workspace = true
 serde_json.workspace = true
@@ -31,6 +31,7 @@ iota-types = { workspace = true, features = ["serde", "hash"] }
 
 [features]
 default = ["tls-ring", "tls-native-roots"]
+tls-aws-lc = ["tonic/tls-aws-lc"]
 tls-ring = ["tonic/tls-ring"]
 tls-native-roots = ["tonic/tls-native-roots"]
 tls-webpki-roots = ["tonic/tls-webpki-roots"]
