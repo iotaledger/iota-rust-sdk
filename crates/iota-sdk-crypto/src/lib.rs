@@ -8,7 +8,8 @@ use iota_types::{PersonalMessage, Transaction, UserSignature};
 
 /// Error returned when signing or verifying fails, or when a key cannot be
 /// decoded. Its `Display` output states the reason.
-#[derive(Debug)]
+#[derive(Debug, thiserror::Error)]
+#[error(transparent)]
 pub struct SignatureError(Box<dyn std::error::Error + Send + Sync + 'static>);
 
 impl SignatureError {
@@ -17,18 +18,6 @@ impl SignatureError {
         source: impl Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
     ) -> Self {
         Self(source.into())
-    }
-}
-
-impl std::fmt::Display for SignatureError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-impl std::error::Error for SignatureError {
-    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        self.0.source()
     }
 }
 
