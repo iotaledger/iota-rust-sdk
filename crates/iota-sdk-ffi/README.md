@@ -125,7 +125,7 @@ The fields cover the cases a foreign language cannot express by handing over an 
 - `timeout_ms`: total request timeout.
 - `user_agent`: replaces the default.
 
-On wasm32 the browser controls certificate verification and request deadlines, so every field other than `user_agent` is rejected rather than silently ignored.
+On wasm32 the browser controls certificate verification and request deadlines, so every field other than `user_agent` and `exclude_bundled_roots` is rejected rather than silently ignored. `exclude_bundled_roots` is accepted because the browser only verifies against its own store.
 
 ## Supported languages
 

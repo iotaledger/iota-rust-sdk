@@ -103,10 +103,13 @@ impl HttpClientOptions {
     /// it has pinned a root or bounded a request when it has not.
     #[cfg(target_arch = "wasm32")]
     fn apply_transport(&self, builder: reqwest::ClientBuilder) -> Result<reqwest::ClientBuilder> {
-        if self.exclude_platform_roots
-            || self.exclude_bundled_roots
-            || !self.extra_root_certificates.is_empty()
-        {
+        if self.exclude_platform_roots {
+            return Err(SdkFfiError::custom(
+                "excluding the platform trust store is not supported on wasm32: \
+                 the browser always verifies against its own store",
+            ));
+        }
+        if !self.extra_root_certificates.is_empty() {
             return Err(SdkFfiError::custom(
                 "custom root certificates are not supported on wasm32: \
                  the browser controls certificate verification",
