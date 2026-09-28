@@ -110,6 +110,7 @@ serialization_test!(TypeArgumentError);
 serialization_test!(GasCostSummary);
 serialization_test!(GenesisObject);
 serialization_test!(MovePackage);
+serialization_test!(MovePackageData);
 serialization_test!(MoveObjectType);
 serialization_test!(MoveStruct);
 serialization_test!(Object);

@@ -89,7 +89,6 @@ mod move_package;
 mod object;
 mod object_id;
 mod transaction;
-mod u256;
 mod validator;
 pub mod version;
 

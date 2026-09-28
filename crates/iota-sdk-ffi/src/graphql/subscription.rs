@@ -9,10 +9,7 @@
 //! [`GraphQLClient::set_rpc_server`] do not affect a subscription already
 //! opened.
 
-use std::sync::{
-    Arc,
-    atomic::{AtomicBool, Ordering},
-};
+use std::sync::Arc;
 
 #[cfg(not(target_arch = "wasm32"))]
 use futures::stream::BoxStream;
@@ -20,7 +17,6 @@ use futures::stream::BoxStream;
 use futures::stream::LocalBoxStream;
 use futures::{Stream, StreamExt};
 use iota_sdk::graphql_client::error::GraphQLResult;
-use tokio::sync::{Mutex, Notify};
 
 use crate::{
     error::Result,
@@ -28,6 +24,7 @@ use crate::{
         client::GraphQLClient,
         query_types::{GraphQLEvent, TransactionBlockKindInput},
     },
+    stream::StreamHandle,
     types::{address::Address, transaction::SignedTransaction},
 };
 
@@ -77,42 +74,6 @@ impl From<SubscriptionTransactionFilter>
             .with_kind(value.kind.map(Into::into))
             .with_signing_address(value.signing_address.map(|a| a.0))
             .with_function(value.function)
-    }
-}
-
-/// A cancellation flag that a pending `next` can wait on.
-///
-/// Foreign async support is uneven — Kotlin, Swift and Python can cancel a
-/// pending call, Go and C# cannot — so cancellation has to be something the
-/// subscription itself understands rather than something the caller's runtime
-/// does to it.
-#[derive(Default)]
-struct Cancel {
-    canceled: AtomicBool,
-    notify: Notify,
-}
-
-impl Cancel {
-    fn cancel(&self) {
-        self.canceled.store(true, Ordering::Release);
-        self.notify.notify_waiters();
-    }
-
-    fn is_canceled(&self) -> bool {
-        self.canceled.load(Ordering::Acquire)
-    }
-
-    /// Resolve once [`Cancel::cancel`] has been called.
-    async fn wait(&self) {
-        loop {
-            // Register for a wake-up before reading the flag, so a `cancel`
-            // racing with this call cannot be missed.
-            let notified = self.notify.notified();
-            if self.is_canceled() {
-                return;
-            }
-            notified.await;
-        }
     }
 }
 
@@ -168,10 +129,7 @@ macro_rules! define_subscription {
         /// Call `next` in a loop to receive updates; it only returns `None` once
         /// `cancel` has been called, since the subscription itself never ends.
         #[derive(uniffi::Object)]
-        pub struct $name {
-            stream: Mutex<SubscriptionStream<$item>>,
-            cancel: Cancel,
-        }
+        pub struct $name(StreamHandle<SubscriptionStream<$item>>);
 
         #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
         #[cfg_attr(target_arch = "wasm32", uniffi::export)]
@@ -187,7 +145,16 @@ macro_rules! define_subscription {
             /// usable afterwards, so a caller that considers the error
             /// transient can keep calling `next`.
             pub async fn next(&self) -> Result<Option<$update>> {
-                self.next_update().await
+                match self.0.next().await {
+                    Some(Ok(item)) => Ok(Some($update::$variant {
+                        $field: ($convert)(item)?,
+                    })),
+                    Some(Err(error)) if is_recoverable(&error) => Ok(Some($update::Interrupted {
+                        message: error.to_string(),
+                    })),
+                    Some(Err(error)) => Err(error.into()),
+                    None => Ok(None),
+                }
             }
 
             /// Cancel the subscription, dropping the connection and unblocking
@@ -200,56 +167,18 @@ macro_rules! define_subscription {
             /// collides with the disposal method uniffi generates for objects
             /// in some languages.
             pub fn cancel(&self) {
-                self.cancel.cancel();
-                if let Ok(mut stream) = self.stream.try_lock() {
-                    *stream = Self::drained();
-                }
+                self.0.cancel();
             }
 
             /// Whether the subscription has been canceled.
             pub fn is_canceled(&self) -> bool {
-                self.cancel.is_canceled()
+                self.0.is_canceled()
             }
         }
 
         impl $name {
             fn new(stream: SubscriptionStream<$item>) -> Self {
-                Self {
-                    stream: Mutex::new(stream),
-                    cancel: Cancel::default(),
-                }
-            }
-
-            /// The stream a canceled subscription is left with, so that
-            /// canceling drops the WebSocket instead of holding it until the
-            /// handle is freed.
-            fn drained() -> SubscriptionStream<$item> {
-                box_stream(futures::stream::empty())
-            }
-
-            async fn next_update(&self) -> Result<Option<$update>> {
-                if self.cancel.is_canceled() {
-                    return Ok(None);
-                }
-                let mut stream = self.stream.lock().await;
-                let canceled = std::pin::pin!(self.cancel.wait());
-                let item = match futures::future::select(canceled, stream.next()).await {
-                    futures::future::Either::Left(((), _)) => {
-                        *stream = Self::drained();
-                        None
-                    }
-                    futures::future::Either::Right((item, _)) => item,
-                };
-                match item {
-                    Some(Ok(item)) => Ok(Some($update::$variant {
-                        $field: ($convert)(item)?,
-                    })),
-                    Some(Err(error)) if is_recoverable(&error) => Ok(Some($update::Interrupted {
-                        message: error.to_string(),
-                    })),
-                    Some(Err(error)) => Err(error.into()),
-                    None => Ok(None),
-                }
+                Self(StreamHandle::new(stream))
             }
         }
     };
