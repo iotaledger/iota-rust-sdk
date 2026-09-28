@@ -32,7 +32,8 @@ pub trait Signer<S> {
     ///
     /// Panics if signing fails; use [`Signer::try_sign`] to handle the error.
     fn sign(&self, msg: &[u8]) -> S {
-        self.try_sign(msg).expect("signature operation failed")
+        self.try_sign(msg)
+            .unwrap_or_else(|e| panic!("signature operation failed: {e}"))
     }
 }
 
