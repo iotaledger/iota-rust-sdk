@@ -9,9 +9,11 @@ use iota_types::{
     Bls12381PublicKey, Bls12381Signature, CheckpointSequenceNumber, CheckpointSummary, EpochId,
     SignedCheckpointSummary, ValidatorAggregatedSignature, ValidatorCommittee, ValidatorSignature,
 };
-use signature::{Error as SignatureError, Verifier};
 
-use crate::bls12381::{Bls12381VerifyingKey, BlstError};
+use crate::{
+    SignatureError, Verifier,
+    bls12381::{Bls12381VerifyingKey, BlstError},
+};
 
 #[derive(Debug)]
 struct ExtendedValidatorCommittee {

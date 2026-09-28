@@ -5,7 +5,53 @@
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 use iota_types::{PersonalMessage, Transaction, UserSignature};
-pub use signature::{Error as SignatureError, Signer, Verifier};
+
+/// Error returned when signing or verifying fails, or when a key cannot be
+/// decoded. Its `Display` output states the reason.
+#[derive(Debug)]
+pub struct SignatureError(Box<dyn std::error::Error + Send + Sync + 'static>);
+
+impl SignatureError {
+    /// Create an error from a message or from an underlying error.
+    pub fn from_source(
+        source: impl Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
+    ) -> Self {
+        Self(source.into())
+    }
+}
+
+impl std::fmt::Display for SignatureError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl std::error::Error for SignatureError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        self.0.source()
+    }
+}
+
+/// Sign a message, producing a signature of type `S`.
+pub trait Signer<S> {
+    /// Sign `msg`, returning an error if signing fails.
+    fn try_sign(&self, msg: &[u8]) -> Result<S, SignatureError>;
+
+    /// Sign `msg`.
+    ///
+    /// # Panics
+    ///
+    /// Panics if signing fails; use [`Signer::try_sign`] to handle the error.
+    fn sign(&self, msg: &[u8]) -> S {
+        self.try_sign(msg).expect("signature operation failed")
+    }
+}
+
+/// Verify a signature of type `S` over a message.
+pub trait Verifier<S> {
+    /// Verify that `signature` is a valid signature over `message`.
+    fn verify(&self, message: &[u8], signature: &S) -> Result<(), SignatureError>;
+}
 
 /// Error type for private key encoding/decoding operations
 #[derive(Debug, thiserror::Error)]

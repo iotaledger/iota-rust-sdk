@@ -3,9 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_types::{PersonalMessage, PublicKey, SimpleSignature, Transaction, UserSignature};
-use signature::Verifier;
 
-use crate::{IotaVerifier, SignatureError};
+use crate::{IotaVerifier, SignatureError, Verifier};
 
 pub struct SimpleVerifier;
 
@@ -137,9 +136,8 @@ pub use keypair::{SimpleKeypair, SimpleVerifyingKey};
 )]
 mod keypair {
     use iota_types::{PublicKey, PublicKeyExt, SignatureScheme, SimpleSignature, UserSignature};
-    use signature::{Signer, Verifier};
 
-    use crate::SignatureError;
+    use crate::{SignatureError, Signer, Verifier};
 
     #[derive(Clone, Debug)]
     pub struct SimpleKeypair {
