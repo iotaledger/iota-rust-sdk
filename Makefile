@@ -34,7 +34,7 @@ semver-checks: ## Check the published crates for breaking API changes
 .PHONY: test
 test: fetch-compiled-packages ## Run unit tests
 	cargo nextest run --all-features --workspace \
-		--exclude iota-sdk-ffi --exclude iota-sdk-graphql-client --exclude integration-tests \
+		--exclude iota-sdk-graphql-client --exclude integration-tests \
 		--exclude iota-sdk-grpc-client --exclude polling-indexer --exclude capture-move-type-fixtures
 	cargo nextest run --no-default-features -p iota-sdk-grpc-client
 
@@ -439,8 +439,7 @@ example:
 examples: ## Run all Rust examples
 	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer
 	@# that require external services (e.g. PostgreSQL). Run those separately.
-	@# TODO(#1363): Re-enable Move View call over gRPC examples
-	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -not -name "grpc_move_view_call.rs" -exec basename {} .rs \;); do \
+	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 

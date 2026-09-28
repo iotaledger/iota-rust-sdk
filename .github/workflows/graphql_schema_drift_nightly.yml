@@ -1,0 +1,30 @@
+name: GraphQL Schema Drift Nightly
+
+on:
+  schedule:
+    - cron: "0 4 * * *" # Daily at 4am UTC
+  workflow_dispatch:
+
+concurrency:
+  group: graphql-schema-drift-nightly-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  drift-check:
+    # The local schema is a verbatim copy of the monorepo's; keep it
+    # byte-identical (no reformatting) so a plain diff is enough.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Diff schema.graphql against the monorepo's develop HEAD
+        run: |
+          curl --fail --location --silent --show-error --retry 3 \
+            https://raw.githubusercontent.com/iotaledger/iota/develop/crates/iota-graphql-rpc/schema.graphql \
+            | diff -u crates/iota-sdk-graphql-client-build/schema.graphql - \
+            || { echo "::error::GraphQL schema drift detected. Copy iotaledger/iota@develop crates/iota-graphql-rpc/schema.graphql verbatim over crates/iota-sdk-graphql-client-build/schema.graphql."; exit 1; }

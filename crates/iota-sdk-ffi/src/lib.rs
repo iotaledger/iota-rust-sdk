@@ -9,8 +9,8 @@
 
 use base64ct::Encoding;
 
-mod cancel;
 mod macros;
+mod stream;
 
 #[cfg(feature = "crypto")]
 pub mod crypto;
@@ -20,6 +20,7 @@ pub mod graphql;
 pub mod grpc;
 pub mod http;
 pub mod move_types;
+pub mod move_view_call;
 pub mod transaction_builder;
 pub mod types;
 
