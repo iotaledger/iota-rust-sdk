@@ -22,9 +22,7 @@ impl GraphQLClient {
     /// Return the resolved address for the given name.
     pub async fn iota_names_lookup(&self, name: &str) -> Result<Option<Arc<Address>>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .iota_names_lookup(name)
             .await?
             .map(Into::into)
@@ -38,9 +36,7 @@ impl GraphQLClient {
         pagination_filter: PaginationFilter,
     ) -> Result<NameRegistrationPage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .iota_names_registrations(**address, pagination_filter.into())
             .await?
             .map(Into::into)
@@ -54,9 +50,7 @@ impl GraphQLClient {
         format: Option<NameFormat>,
     ) -> Result<Option<Arc<Name>>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .iota_names_default_name(**address, format.map(Into::into))
             .await?
             .map(Into::into)

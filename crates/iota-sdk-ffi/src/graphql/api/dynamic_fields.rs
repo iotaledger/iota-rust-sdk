@@ -31,9 +31,7 @@ impl GraphQLClient {
         name: serde_json::Value,
     ) -> Result<Option<DynamicFieldOutput>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .dynamic_field(**address, type_tag.0.clone(), name)
             .await?
             .map(Into::into))
@@ -54,9 +52,7 @@ impl GraphQLClient {
         name: serde_json::Value,
     ) -> Result<Option<DynamicFieldOutput>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .dynamic_object_field(**address, type_tag.0.clone(), name)
             .await?
             .map(Into::into))
@@ -73,9 +69,7 @@ impl GraphQLClient {
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<DynamicFieldOutputPage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .dynamic_fields(
                 **address,
                 pagination_filter.map(Into::into).unwrap_or_default(),

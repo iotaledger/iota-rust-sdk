@@ -42,9 +42,7 @@ impl GraphQLClient {
         arguments: Option<Vec<serde_json::Value>>,
     ) -> Result<MoveViewResult> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .move_view_call_json(function_name, type_arguments, arguments)
             .await?
             .into())
