@@ -205,12 +205,12 @@ mod tests {
 
     #[test]
     fn digest_only_mask_populates_the_typed_digests() {
-        let digest = TransactionDigest::from([1; 32]);
+        let transaction_digest = TransactionDigest::from([1; 32]);
         let effects_digest = TransactionEffectsDigest::from([2; 32]);
         let events_digest = TransactionEventsDigest::from([3; 32]);
 
         let mut transaction = proto::transaction::Transaction::default();
-        transaction.digest = Some(digest.into());
+        transaction.digest = Some(transaction_digest.into());
         let mut effects = proto::transaction::TransactionEffects::default();
         effects.digest = Some(effects_digest.into());
         let mut events = proto::transaction::TransactionEvents::default();
@@ -223,7 +223,7 @@ mod tests {
 
         let converted = ExecutedTransaction::try_from(&value).unwrap();
 
-        assert_eq!(converted.digest.unwrap().0, digest);
+        assert_eq!(converted.digest.unwrap().0, transaction_digest);
         assert_eq!(converted.effects_digest.unwrap().0, effects_digest);
         assert_eq!(converted.events_digest.unwrap().0, events_digest);
         assert!(converted.transaction.is_none());
