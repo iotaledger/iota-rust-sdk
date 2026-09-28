@@ -24,6 +24,8 @@ use crate::{
     },
 };
 
+crate::ffi_map!(TransactionsByDigest<TransactionDigest, SignedTransaction>);
+
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
@@ -47,19 +49,16 @@ impl GraphQLClient {
     pub async fn transactions_by_digest(
         &self,
         digests: Vec<Arc<TransactionDigest>>,
-    ) -> Result<Vec<Option<SignedTransaction>>> {
+    ) -> Result<TransactionsByDigest> {
         let digests = digests.into_iter().map(|d| **d).collect::<Vec<_>>();
-        let transactions = self
+        Ok(self
             .0
             .read()
             .await
             .transactions_by_digest(digests.iter().copied())
-            .await?;
-
-        // Cloned rather than removed so a digest listed twice resolves twice.
-        Ok(digests
-            .iter()
-            .map(|digest| transactions.get(digest).cloned().map(Into::into))
+            .await?
+            .into_iter()
+            .map(|(digest, transaction)| (Arc::new(digest.into()), transaction.into()))
             .collect())
     }
 
