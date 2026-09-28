@@ -33,9 +33,7 @@ impl GraphQLClient {
         version: Option<Arc<Version>>,
     ) -> Result<Option<Arc<Object>>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .object(**object_id, version.map(|v| **v))
             .await?
             .map(Into::into)
@@ -53,9 +51,7 @@ impl GraphQLClient {
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<ObjectPage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .objects(
                 filter.map(Into::into),
                 pagination_filter.map(Into::into).unwrap_or_default(),
@@ -68,7 +64,7 @@ impl GraphQLClient {
     /// Return the object's bcs content `Vec<u8>` based on the provided
     /// `Address`.
     pub async fn object_bcs(&self, object_id: &ObjectId) -> Result<Option<Vec<u8>>> {
-        Ok(self.0.read().await.object_bcs(**object_id).await?)
+        Ok(self.client().object_bcs(**object_id).await?)
     }
 
     /// Return the BCS of an object that is a Move object.
@@ -83,9 +79,7 @@ impl GraphQLClient {
         version: Option<Arc<Version>>,
     ) -> Result<Option<Vec<u8>>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .move_object_contents_bcs(**object_id, version.map(|v| **v))
             .await?)
     }
@@ -102,9 +96,7 @@ impl GraphQLClient {
         version: Option<Arc<Version>>,
     ) -> Result<Option<serde_json::Value>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .move_object_contents(**object_id, version.map(|v| **v))
             .await?)
     }
