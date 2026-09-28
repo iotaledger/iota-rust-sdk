@@ -90,10 +90,9 @@ impl FaucetClient {
         address: &Address,
         client: &GraphQLClient,
     ) -> Result<Option<FaucetReceipt>> {
-        let client_lock = client.inner().read().await;
         Ok(self
             .0
-            .request_and_wait_for_finalized(**address, &client_lock)
+            .request_and_wait_for_finalized(**address, &client.client())
             .await
             .map_err(SdkFfiError::custom)?
             .map(Into::into))

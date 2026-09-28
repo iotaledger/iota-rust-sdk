@@ -249,8 +249,7 @@ fn open_transactions(
     })
 }
 
-#[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
-#[cfg_attr(target_arch = "wasm32", uniffi::export)]
+#[uniffi::export]
 impl GraphQLClient {
     /// Subscribe to a live stream of events matching the (optional) filter.
     ///
@@ -262,12 +261,12 @@ impl GraphQLClient {
     /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
     /// when it is available.
     #[uniffi::method(default(filter = None, start_after = None))]
-    pub async fn events_subscription(
+    pub fn events_subscription(
         &self,
         filter: Option<SubscriptionEventFilter>,
         start_after: Option<String>,
     ) -> EventSubscription {
-        let client = self.0.read().await.clone();
+        let client = (*self.client()).clone();
         EventSubscription::new(open_events(client, filter, start_after))
     }
 
@@ -282,12 +281,12 @@ impl GraphQLClient {
     /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
     /// when it is available.
     #[uniffi::method(default(filter = None, start_after = None))]
-    pub async fn transactions_subscription(
+    pub fn transactions_subscription(
         &self,
         filter: Option<SubscriptionTransactionFilter>,
         start_after: Option<String>,
     ) -> TransactionSubscription {
-        let client = self.0.read().await.clone();
+        let client = (*self.client()).clone();
         TransactionSubscription::new(open_transactions(client, filter, start_after))
     }
 }
