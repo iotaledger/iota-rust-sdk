@@ -44,8 +44,8 @@ impl GraphQLClient {
     }
 
     /// Get transactions by their digests, including transactions that are not
-    /// checkpointed yet. The result has one entry per requested digest, in the
-    /// same order; a digest that was not found is `None`.
+    /// checkpointed yet. Digests that were not found are absent from the
+    /// returned map.
     pub async fn transactions_by_digest(
         &self,
         digests: Vec<Arc<TransactionDigest>>,
