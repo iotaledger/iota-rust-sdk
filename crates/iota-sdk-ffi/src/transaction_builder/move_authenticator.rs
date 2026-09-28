@@ -34,6 +34,8 @@ impl MoveAuthenticatorBuilder {
     /// Resolve this move authenticator builder into a `MoveAuthenticator` which
     /// can be used to execute a transaction.
     pub async fn finish(&self, client: &GraphQLClient) -> Result<MoveAuthenticator> {
-        Ok(MoveAuthenticator(self.0.clone().finish(client).await?))
+        Ok(MoveAuthenticator(
+            self.0.clone().finish(client.client()).await?,
+        ))
     }
 }
