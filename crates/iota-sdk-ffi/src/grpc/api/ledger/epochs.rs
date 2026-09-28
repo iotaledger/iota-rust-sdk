@@ -3,7 +3,7 @@
 
 //! Epoch API implementation.
 
-use std::{collections::HashMap, sync::Arc};
+use std::sync::Arc;
 
 use iota_sdk::{
     grpc_client::read_mask_fields::EpochReadMask,
@@ -16,31 +16,45 @@ use crate::{
     types::validator::ValidatorCommittee,
 };
 
+crate::ffi_btree_map! {
+    /// The status of each protocol feature flag, keyed by flag name.
+    GrpcFeatureFlagMap<String, bool>
+}
+
+crate::ffi_btree_map! {
+    /// The value of each protocol attribute, keyed by attribute name.
+    GrpcAttributeMap<String, String>
+}
+
 /// The protocol config of an epoch.
 #[derive(uniffi::Record)]
 pub struct GrpcProtocolConfig {
     /// The protocol version.
     pub protocol_version: Option<u64>,
     /// Map of feature flags to their status.
-    pub feature_flags: HashMap<String, bool>,
+    pub feature_flags: Arc<GrpcFeatureFlagMap>,
     /// Map of attribute names to their values.
-    pub attributes: HashMap<String, String>,
+    pub attributes: Arc<GrpcAttributeMap>,
 }
 
 impl From<&proto::epoch::ProtocolConfig> for GrpcProtocolConfig {
     fn from(value: &proto::epoch::ProtocolConfig) -> Self {
         Self {
             protocol_version: value.protocol_version,
-            feature_flags: value
-                .feature_flags
-                .as_ref()
-                .map(|flags| flags.flags.clone().into_iter().collect())
-                .unwrap_or_default(),
-            attributes: value
-                .attributes
-                .as_ref()
-                .map(|attributes| attributes.attributes.clone().into_iter().collect())
-                .unwrap_or_default(),
+            feature_flags: Arc::new(
+                value
+                    .feature_flags
+                    .as_ref()
+                    .map(|flags| flags.flags.clone().into_iter().collect())
+                    .unwrap_or_default(),
+            ),
+            attributes: Arc::new(
+                value
+                    .attributes
+                    .as_ref()
+                    .map(|attributes| attributes.attributes.clone().into_iter().collect())
+                    .unwrap_or_default(),
+            ),
         }
     }
 }

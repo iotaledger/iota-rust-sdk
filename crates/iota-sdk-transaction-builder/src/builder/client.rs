@@ -127,13 +127,9 @@ pub trait TransactionBuilderLedgerClient: TransactionBuilderClientBase {
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>>;
 
     /// Fetch the chain's protocol configuration.
-    ///
-    /// The default impl returns a default [`ProtocolConfig`].
     fn protocol_config(
         &self,
-    ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>> {
-        std::future::ready(Ok(ProtocolConfig::default()))
-    }
+    ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>>;
 
     /// Get the reference gas price
     fn reference_gas_price(
@@ -406,7 +402,10 @@ pub(crate) mod test_client {
         TransactionBuilderClientBase, TransactionBuilderExecutionClient,
         TransactionBuilderLedgerClient, TransactionBuilderSimulationClient, WaitForTransaction,
     };
-    use crate::ObjectsPage;
+    use crate::{
+        ObjectsPage,
+        builder::{BASE_TX_COST_FIXED_KEY, MAX_GAS_PAYMENT_OBJECTS_KEY},
+    };
 
     /// Balance, in NANOS, of every fabricated coin. Large enough to cover any
     /// gas budget the builder might estimate in a doc test or example.
@@ -503,6 +502,17 @@ pub(crate) mod test_client {
             _epoch: impl Into<Option<u64>>,
         ) -> Result<Option<u64>, Self::Error> {
             Ok(Some(1000))
+        }
+
+        async fn protocol_config(&self) -> Result<super::ProtocolConfig, Self::Error> {
+            let mut config = super::ProtocolConfig::default();
+            config
+                .attributes
+                .insert(BASE_TX_COST_FIXED_KEY.to_owned(), "1000".to_owned());
+            config
+                .attributes
+                .insert(MAX_GAS_PAYMENT_OBJECTS_KEY.to_owned(), "256".to_owned());
+            Ok(config)
         }
     }
 
@@ -630,6 +640,10 @@ pub(crate) mod test_client {
             epoch: impl Into<Option<u64>>,
         ) -> Result<Option<u64>, Self::Error> {
             crate::TestClient.reference_gas_price(epoch).await
+        }
+
+        async fn protocol_config(&self) -> Result<super::ProtocolConfig, Self::Error> {
+            crate::TestClient.protocol_config().await
         }
     }
 

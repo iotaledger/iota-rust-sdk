@@ -57,7 +57,7 @@ async def main():
     # Print package dependencies and their linked versions.
     print("Dependencies:")
     linkage_table = package.linkage_table()
-    if len(linkage_table) == 0:
+    if linkage_table.is_empty():
         print("- none")
     else:
         for upgrade in sorted(linkage_table.values(),
@@ -69,8 +69,9 @@ async def main():
 
     # Inspect normalized modules, functions, types, and sample key objects.
     print("Package contents:")
-    module_names = sorted(
-        module_id.as_str() for module_id in package.modules().keys())
+    module_names = [
+        module_id.as_str() for module_id in package.modules().keys()
+    ]
 
     for module_name in module_names:
         print(f"Module: {module_name}")

@@ -1,9 +1,13 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::{PoisonError, RwLock};
+use std::sync::{Arc, PoisonError, RwLock};
 
-use crate::error::Result;
+use crate::{
+    error::Result,
+    transaction_builder::{builder::TransactionBuilder, client_builder::GrpcTransactionBuilder},
+    types::address::Address,
+};
 
 /// The tokio runtime that backs the gRPC channels.
 ///
@@ -117,5 +121,11 @@ impl GrpcClient {
         self.update(|client| {
             client.with_max_decoding_message_size(usize::try_from(limit).unwrap_or(usize::MAX))
         });
+    }
+
+    /// Create a new transaction builder with the given sender address, backed
+    /// by this client.
+    pub fn transaction_builder(self: Arc<Self>, sender: &Address) -> GrpcTransactionBuilder {
+        TransactionBuilder::new(sender).with_grpc_client(self)
     }
 }

@@ -60,9 +60,9 @@ gen_kotlin() {
     make kotlin
     rm -rf "$OUT_DIR/kotlin"
     mkdir -p "$OUT_DIR/kotlin/docs"
-    (cd bindings/kotlin && ./gradlew --no-daemon dokkaGfm)
+    (cd bindings/kotlin && ./gradlew --no-daemon dokkaGenerateMarkdown)
     python3 "$SCRIPT_DIR/postprocess_kotlin.py" \
-        bindings/kotlin/build/dokka/gfm "$OUT_DIR/kotlin/docs/kotlin"
+        bindings/kotlin/build/dokka/markdown "$OUT_DIR/kotlin/docs/kotlin"
     package kotlin
 }
 

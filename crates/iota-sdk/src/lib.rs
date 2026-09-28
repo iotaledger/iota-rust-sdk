@@ -13,7 +13,7 @@ pub use iota_grpc_client as grpc_client;
 pub use iota_grpc_types as grpc_types;
 #[cfg(feature = "move-types")]
 pub use iota_move_types as move_types;
-#[cfg(feature = "txn-builder")]
+#[cfg(feature = "transaction-builder")]
 pub use iota_transaction_builder as transaction_builder;
 #[cfg(feature = "types")]
 pub use iota_types as types;
