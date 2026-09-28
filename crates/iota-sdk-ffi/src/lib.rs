@@ -9,8 +9,8 @@
 
 use base64ct::Encoding;
 
-mod cancel;
 mod macros;
+mod stream;
 
 #[cfg(feature = "crypto")]
 pub mod crypto;
