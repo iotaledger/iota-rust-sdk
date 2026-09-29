@@ -61,7 +61,12 @@ async fn main() -> Result<()> {
     println!("---");
     println!("StakedIota objects ({} returned):", staked.body().len());
     for stake in staked.body() {
-        println!("  {}  {} nanos", stake.id(), stake.principal());
+        println!(
+            "  {}  v{}  {} nanos",
+            stake.object_ref().object_id,
+            stake.object_ref().version,
+            stake.object().principal()
+        );
     }
 
     Ok(())

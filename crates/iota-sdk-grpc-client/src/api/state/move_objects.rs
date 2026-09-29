@@ -4,19 +4,20 @@
 //! High-level API for listing owned objects of a known Move type.
 //!
 //! Wraps [`Client::owned_objects`] with the type filter taken from the
-//! type parameter, and decodes each returned proto `Object` into the mirror.
+//! type parameter, and decodes each returned proto `Object` into the mirror,
+//! paired with its object reference.
 //!
 //! # Read Mask
 //!
-//! Not a parameter here. Everything the mirror decodes comes out of the BCS
-//! payload, so the query always asks for the default mask and there is no way
-//! to request one that leaves the objects undecodable.
+//! Not a parameter here. The mirror and the object reference both come out of
+//! the BCS payload, so the query always asks for the default mask and there is
+//! no way to request one that leaves the objects undecodable.
 
 use std::{future::IntoFuture, marker::PhantomData, pin::Pin};
 
 use iota_grpc_types::read_mask_fields::OwnedObjectReadMask;
 use iota_move_types::MoveObject;
-use iota_types::Address;
+use iota_types::{Address, ObjectReference};
 
 use crate::{
     GrpcClient, GrpcError,
@@ -25,6 +26,30 @@ use crate::{
         state::owned_objects::ListOwnedObjectsQuery,
     },
 };
+
+/// An owned object of the Move type `T`, decoded into `T`.
+#[derive(Clone, Debug)]
+pub struct OwnedMoveObject<T> {
+    object_ref: ObjectReference,
+    object: T,
+}
+
+impl<T> OwnedMoveObject<T> {
+    /// Get the object's reference.
+    pub fn object_ref(&self) -> ObjectReference {
+        self.object_ref
+    }
+
+    /// Get the object's contents.
+    pub fn object(&self) -> &T {
+        &self.object
+    }
+
+    /// Consume the object and return its contents.
+    pub fn into_object(self) -> T {
+        self.object
+    }
+}
 
 /// Builder for listing owned objects of the Move type `T`.
 ///
@@ -56,7 +81,7 @@ impl<T: MoveObject> ListOwnedMoveObjectsQuery<T> {
     pub async fn collect(
         self,
         limit: impl Into<Option<u32>>,
-    ) -> GrpcResult<MetadataEnvelope<Vec<T>>> {
+    ) -> GrpcResult<MetadataEnvelope<Vec<OwnedMoveObject<T>>>> {
         self.inner.collect(limit).await?.try_map(|objects| {
             objects
                 .iter()
@@ -67,7 +92,7 @@ impl<T: MoveObject> ListOwnedMoveObjectsQuery<T> {
 }
 
 impl<T: MoveObject + Send + 'static> IntoFuture for ListOwnedMoveObjectsQuery<T> {
-    type Output = GrpcResult<MetadataEnvelope<Page<T>>>;
+    type Output = GrpcResult<MetadataEnvelope<Page<OwnedMoveObject<T>>>>;
     type IntoFuture = Pin<Box<dyn Future<Output = Self::Output> + Send>>;
 
     fn into_future(self) -> Self::IntoFuture {
@@ -89,14 +114,23 @@ impl<T: MoveObject + Send + 'static> IntoFuture for ListOwnedMoveObjectsQuery<T>
     }
 }
 
-/// Decode a proto `Object` into the mirror `T`, by way of the SDK `Object`.
-fn decode<T: MoveObject>(object: &iota_grpc_types::v1::object::Object) -> GrpcResult<T> {
+/// Decode a proto `Object` into an [`OwnedMoveObject`], by way of the SDK
+/// `Object`.
+fn decode<T: MoveObject>(
+    object: &iota_grpc_types::v1::object::Object,
+) -> GrpcResult<OwnedMoveObject<T>> {
     let object = object.object()?;
-    T::try_from(&object).map_err(|e| GrpcError::from(TryFromProtoError::invalid("move object", e)))
+    let mirror = T::try_from(&object)
+        .map_err(|e| GrpcError::from(TryFromProtoError::invalid("move object", e)))?;
+    Ok(OwnedMoveObject {
+        object_ref: object.object_ref(),
+        object: mirror,
+    })
 }
 
 impl GrpcClient {
-    /// List objects of the Move type `T` owned by an address, decoded into `T`.
+    /// List objects of the Move type `T` owned by an address, decoded into `T`
+    /// and paired with their object references.
     ///
     /// The type filter is derived from `T`, so unlike
     /// [`GrpcClient::owned_objects`] this needs neither a type argument nor a
@@ -126,7 +160,11 @@ impl GrpcClient {
     ///     .owned_move_objects::<StakedIota>(owner, None, None)
     ///     .await?;
     /// for staked in &page.body().items {
-    ///     println!("staked {} nanos", staked.principal());
+    ///     println!(
+    ///         "{}: staked {} nanos",
+    ///         staked.object_ref().object_id,
+    ///         staked.object().principal()
+    ///     );
     /// }
     /// # Ok(())
     /// # }
