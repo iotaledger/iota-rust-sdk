@@ -7,7 +7,8 @@
 //! endpoint in `iota_sdk::grpc_client::read_mask_fields`, so the field paths
 //! themselves are defined only there. The `read_mask` parameter of a method
 //! takes a list of the matching enum; `None` selects the endpoint's default
-//! mask.
+//! mask. Every enum has a `Custom` variant taking a raw field path, for paths
+//! that have no variant of their own.
 
 use iota_sdk::grpc_client::read_mask_fields as sdk;
 
@@ -20,6 +21,9 @@ pub(crate) trait ReadMaskField: Sized {
 
 /// Define a read mask field enum whose variants map one-to-one onto the
 /// constants of the Rust client's field namespace of the same name.
+///
+/// The optional `keyed` block adds variants carrying a map key, each mapped
+/// onto the namespace's constructor of that name.
 macro_rules! read_mask_fields {
     (
         $(#[$attr:meta])*
@@ -29,6 +33,14 @@ macro_rules! read_mask_fields {
                 $variant:ident => $path:ident
             ),* $(,)?
         }
+        $(
+            keyed {
+                $(
+                    $(#[$keyed_attr:meta])*
+                    $keyed:ident => $constructor:ident
+                ),* $(,)?
+            }
+        )?
     ) => {
         $(#[$attr])*
         #[derive(Clone, Debug, uniffi::Enum)]
@@ -37,12 +49,20 @@ macro_rules! read_mask_fields {
                 $(#[$variant_attr])*
                 $variant,
             )*
+            $($(
+                $(#[$keyed_attr])*
+                $keyed { key: String },
+            )*)?
+            /// A raw field path, for paths that have no variant of their own.
+            Custom { path: String },
         }
 
         impl From<$name> for sdk::$name {
             fn from(field: $name) -> Self {
                 match field {
                     $($name::$variant => Self::$path,)*
+                    $($($name::$keyed { key } => Self::$constructor(&key),)*)?
+                    $name::Custom { path } => Self::custom(path),
                 }
             }
         }
@@ -255,6 +275,12 @@ read_mask_fields! {
         /// Raw BCS of the next epoch's start-of-epoch system-state objects.
         EpochCloseProofBcsNextEpochSystemStateObjects =>
             EPOCH_CLOSE_PROOF_BCS_NEXT_EPOCH_SYSTEM_STATE_OBJECTS,
+    }
+    keyed {
+        /// A single feature flag, by key.
+        ProtocolConfigFeatureFlag => feature_flag,
+        /// A single protocol attribute, by key.
+        ProtocolConfigAttribute => attribute,
     }
 }
 
@@ -510,5 +536,29 @@ mod tests {
         variant_names_follow_their_paths(SimulateField::VARIANTS);
         variant_names_follow_their_paths(ViewFunctionCallField::VARIANTS);
         variant_names_follow_their_paths(DynamicFieldField::VARIANTS);
+    }
+
+    #[test]
+    fn keyed_and_custom_variants_map_onto_their_paths() {
+        let path = |field: EpochField| sdk::EpochField::from(field).as_str().to_owned();
+        assert_eq!(
+            path(EpochField::ProtocolConfigFeatureFlag {
+                key: "enable_vdf".to_owned()
+            }),
+            "protocol_config.feature_flags.enable_vdf"
+        );
+        assert_eq!(
+            path(EpochField::ProtocolConfigAttribute {
+                key: "max_tx_gas".to_owned()
+            }),
+            "protocol_config.attributes.max_tx_gas"
+        );
+        assert_eq!(
+            sdk::DynamicFieldField::from(DynamicFieldField::Custom {
+                path: "field_object.bcs".to_owned()
+            })
+            .as_str(),
+            "field_object.bcs"
+        );
     }
 }

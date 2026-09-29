@@ -20,7 +20,7 @@ async def main():
     # Only ask for the summary — keeps the message small. Pass `None` (or
     # compose more fields) to pull more data per checkpoint.
     stream = await client.checkpoints_stream(
-        start, end, read_mask=[CheckpointResponseField.CHECKPOINT_SUMMARY])
+        start, end, read_mask=[CheckpointResponseField.CHECKPOINT_SUMMARY()])
 
     print(f"Streaming checkpoints {start}..={end}")
     while (checkpoint := await stream.next()) is not None:

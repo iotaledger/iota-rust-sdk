@@ -15,7 +15,7 @@ fun main() = runBlocking {
 
         // `objects` is batched: it takes a list of ids and returns the objects in
         // the same order. The default read mask returns the reference and the
-        // BCS-decoded object; pass `readMask = listOf(ObjectField.REFERENCE)` to
+        // BCS-decoded object; pass `readMask = listOf(ObjectField.Reference)` to
         // skip the object.
         val obj =
             checkNotNull(client.objects(listOf(objectId))[0].`object`) {

@@ -23,7 +23,7 @@ fun main() = runBlocking {
             client.checkpointsStream(
                 start,
                 end,
-                readMask = listOf(CheckpointResponseField.CHECKPOINT_SUMMARY),
+                readMask = listOf(CheckpointResponseField.CheckpointSummary),
             )
 
         println("Streaming checkpoints $start..=$end")
