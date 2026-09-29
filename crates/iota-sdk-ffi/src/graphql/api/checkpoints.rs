@@ -28,9 +28,7 @@ impl GraphQLClient {
         sequence_number: Option<u64>,
     ) -> Result<Option<Arc<CheckpointSummary>>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .checkpoint(digest.map(|d| **d), sequence_number)
             .await?
             .map(Into::into)
@@ -44,9 +42,7 @@ impl GraphQLClient {
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<CheckpointSummaryPage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .checkpoints(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
@@ -58,12 +54,7 @@ impl GraphQLClient {
     pub async fn latest_checkpoint_sequence_number(
         &self,
     ) -> Result<Option<CheckpointSequenceNumber>> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .latest_checkpoint_sequence_number()
-            .await?)
+        Ok(self.client().latest_checkpoint_sequence_number().await?)
     }
 
     /// The total number of transaction blocks in the network by the end of the
@@ -73,9 +64,7 @@ impl GraphQLClient {
         digest: &CheckpointDigest,
     ) -> Result<Option<u64>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .total_transaction_blocks_by_digest(**digest)
             .await?)
     }
@@ -87,9 +76,7 @@ impl GraphQLClient {
         sequence_number: u64,
     ) -> Result<Option<u64>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .total_transaction_blocks_by_sequence_number(sequence_number)
             .await?)
     }
@@ -97,6 +84,6 @@ impl GraphQLClient {
     /// The total number of transaction blocks in the network by the end of the
     /// last known checkpoint.
     pub async fn total_transaction_blocks(&self) -> Result<Option<u64>> {
-        Ok(self.0.read().await.total_transaction_blocks().await?)
+        Ok(self.client().total_transaction_blocks().await?)
     }
 }

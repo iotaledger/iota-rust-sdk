@@ -34,13 +34,7 @@ impl GraphQLClient {
         &self,
         digest: &TransactionDigest,
     ) -> Result<Option<SignedTransaction>> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .transaction(**digest)
-            .await?
-            .map(Into::into))
+        Ok(self.client().transaction(**digest).await?.map(Into::into))
     }
 
     /// Get transactions by their digests, including transactions that are not
@@ -68,9 +62,7 @@ impl GraphQLClient {
         digest: &TransactionDigest,
     ) -> Result<Option<Arc<TransactionEffects>>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .transaction_effects(**digest)
             .await?
             .map(Into::into)
@@ -83,9 +75,7 @@ impl GraphQLClient {
         digest: &TransactionDigest,
     ) -> Result<Option<TransactionDataEffects>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .transaction_data_effects(**digest)
             .await?
             .map(Into::into))
@@ -99,9 +89,7 @@ impl GraphQLClient {
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<SignedTransactionPage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .transactions(
                 filter.as_deref().map(Into::into),
                 pagination_filter.map(Into::into).unwrap_or_default(),
@@ -123,9 +111,7 @@ impl GraphQLClient {
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<SignedTransactionPage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .address_transactions(
                 **address,
                 relation.map(Into::into),
@@ -145,9 +131,7 @@ impl GraphQLClient {
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<TransactionEffectsPage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .transactions_effects(
                 filter.as_deref().map(Into::into),
                 pagination_filter.map(Into::into).unwrap_or_default(),
@@ -166,9 +150,7 @@ impl GraphQLClient {
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<TransactionDataEffectsPage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .transactions_data_effects(
                 filter.as_deref().map(Into::into),
                 pagination_filter.map(Into::into).unwrap_or_default(),
@@ -187,9 +169,7 @@ impl GraphQLClient {
         wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .execute_transaction(
                 &signatures
                     .into_iter()
@@ -209,9 +189,7 @@ impl GraphQLClient {
     #[uniffi::method]
     pub async fn is_transaction_indexed_on_node(&self, digest: &TransactionDigest) -> Result<bool> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .is_transaction_indexed_on_node(**digest)
             .await?)
     }
@@ -220,12 +198,7 @@ impl GraphQLClient {
     /// in a checkpoint (finalized).
     #[uniffi::method]
     pub async fn is_transaction_finalized(&self, digest: &TransactionDigest) -> Result<bool> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .is_transaction_finalized(**digest)
-            .await?)
+        Ok(self.client().is_transaction_finalized(**digest).await?)
     }
 
     /// Wait for the indexing (on the node, not the indexer) or finalization of
@@ -239,9 +212,7 @@ impl GraphQLClient {
         timeout: Option<Duration>,
     ) -> Result<()> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .wait_for_transaction(**digest, wait_for.into(), timeout)
             .await?)
     }
