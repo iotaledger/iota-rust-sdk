@@ -25,12 +25,12 @@ fun main() = runBlocking {
 
         println("\nOutgoing (sent by address): ${outgoing.data.size}")
         for (tx in outgoing.data) {
-            println("  - ${tx.transaction.digest().toBase58()}")
+            println("  - ${tx.transaction.digest()}")
         }
 
         println("\nIncoming (received by address): ${incoming.data.size}")
         for (tx in incoming.data) {
-            println("  - ${tx.transaction.digest().toBase58()}")
+            println("  - ${tx.transaction.digest()}")
         }
     } catch (e: Exception) {
         e.printStackTrace()

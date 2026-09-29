@@ -42,7 +42,7 @@ async def main():
     dependencies = package_data.dependencies()
     print(f"Dependencies: {len(dependencies)}")
     digest = package_data.digest()
-    print(f"Digest: {digest.to_base58()}")
+    print(f"Digest: {digest}")
 
     # Create a random private key to derive a sender address and for signing
     private_key = Ed25519PrivateKey.random()

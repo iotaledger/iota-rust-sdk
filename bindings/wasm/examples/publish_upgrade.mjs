@@ -40,7 +40,7 @@ const packageData = MovePackageData.fromJson(packageDataJson);
 console.log(`Modules: ${packageData.modules().length}`);
 console.log(`Dependencies: ${packageData.dependencies().length}`);
 const digest = packageData.digest();
-console.log(`Digest: ${digest.toBase58()}`);
+console.log(`Digest: ${digest}`);
 
 // Create a random private key to derive a sender address and for signing
 const privateKey = Ed25519PrivateKey.random();

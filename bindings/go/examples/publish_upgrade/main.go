@@ -46,7 +46,7 @@ func main() {
 	dependencies := packageData.Dependencies()
 	fmt.Printf("Dependencies: %d\n", len(dependencies))
 	digest := packageData.Digest()
-	fmt.Printf("Digest: %s\n", digest.ToBase58())
+	fmt.Printf("Digest: %s\n", digest)
 
 	// Create a random private key to derive a sender address and for signing
 	privateKey := iota_sdk.Ed25519PrivateKeyRandom()

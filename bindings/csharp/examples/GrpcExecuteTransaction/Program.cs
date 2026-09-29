@@ -43,7 +43,7 @@ class Program
 
         var executed = await client.ExecuteTransaction(signedTransaction);
 
-        Console.WriteLine($"Digest: {executed.Digest!.ToBase58()}");
+        Console.WriteLine($"Digest: {executed.Digest}");
         Console.WriteLine($"Transaction status: {executed.Effects!.AsV1().Status()}");
     }
 }

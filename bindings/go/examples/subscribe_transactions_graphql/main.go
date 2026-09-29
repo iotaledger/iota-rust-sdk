@@ -61,7 +61,7 @@ func main() {
 		switch update := (*update).(type) {
 		case iota_sdk.TransactionUpdateTransaction:
 			transaction := update.Transaction.Transaction
-			fmt.Println("Digest: ", transaction.Digest().ToBase58())
+			fmt.Println("Digest: ", transaction.Digest())
 			fmt.Println("Sender: ", transaction.Sender().ToHex())
 			return
 		case iota_sdk.TransactionUpdateInterrupted:

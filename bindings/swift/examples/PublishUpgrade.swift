@@ -41,7 +41,7 @@ struct PublishUpgradeExample {
     let dependencies = packageData.dependencies()
     print("Dependencies: \(dependencies.count)")
     let digest = packageData.digest()
-    print("Digest: \(digest.toBase58())")
+    print("Digest: \(digest)")
 
     // Create a random private key to derive a sender address and for signing
     let privateKey = Ed25519PrivateKey.random()

@@ -84,7 +84,7 @@ func main() {
 	}
 
 	if executed.Digest != nil {
-		log.Printf("Digest: %s", (*executed.Digest).ToBase58())
+		log.Printf("Digest: %s", *executed.Digest)
 	}
 	if executed.Effects != nil {
 		switch status := (*executed.Effects).AsV1().Status().(type) {

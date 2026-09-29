@@ -45,7 +45,7 @@ struct GrpcExecuteTransactionExample {
 
     let executed = try await client.executeTransaction(signedTransaction: signedTransaction)
 
-    print("Digest: \(executed.digest!.toBase58())")
+    print("Digest: \(executed.digest!)")
     print("Transaction status: \(executed.effects!.asV1().status())")
   }
 }

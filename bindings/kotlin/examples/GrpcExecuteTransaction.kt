@@ -44,7 +44,7 @@ fun main() = runBlocking {
 
         val executed = client.executeTransaction(signedTransaction)
 
-        println("Digest: ${executed.digest!!.toBase58()}")
+        println("Digest: ${executed.digest!!}")
         println("Transaction status: ${executed.effects!!.asV1().status()}")
     } catch (e: Exception) {
         e.printStackTrace()

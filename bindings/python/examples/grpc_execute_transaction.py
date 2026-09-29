@@ -44,7 +44,7 @@ async def main():
 
     executed = await client.execute_transaction(signed_transaction)
 
-    print(f"Digest: {executed.digest.to_base58()}")
+    print(f"Digest: {executed.digest}")
     print(f"Transaction status: {executed.effects.as_v1().status()}")
 
 

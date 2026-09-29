@@ -21,7 +21,7 @@ class Program
         var packageData = MovePackageData.FromJson(packageDataJson);
         Console.WriteLine($"Modules: {packageData.Modules().Length}");
         Console.WriteLine($"Dependencies: {packageData.Dependencies().Length}");
-        Console.WriteLine($"Digest: {packageData.Digest().ToBase58()}");
+        Console.WriteLine($"Digest: {packageData.Digest()}");
 
         var privateKey = Ed25519PrivateKey.Random();
         var sender = privateKey.PublicKey().DeriveAddress();

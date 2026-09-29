@@ -57,7 +57,7 @@ fun main() = runBlocking {
             when (update) {
                 is TransactionUpdate.Transaction -> {
                     val transaction = update.transaction.transaction
-                    println("Digest: ${transaction.digest().toBase58()}")
+                    println("Digest: ${transaction.digest()}")
                     println("Sender: ${transaction.sender().toHex()}")
                     break
                 }

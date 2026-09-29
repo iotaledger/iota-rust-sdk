@@ -25,12 +25,12 @@ struct AddressTransactionsExample {
 
     print("\nOutgoing (sent by address): \(outgoing.data.count)")
     for tx in outgoing.data {
-      print("  - \(tx.transaction.digest().toBase58())")
+      print("  - \(tx.transaction.digest())")
     }
 
     print("\nIncoming (received by address): \(incoming.data.count)")
     for tx in incoming.data {
-      print("  - \(tx.transaction.digest().toBase58())")
+      print("  - \(tx.transaction.digest())")
     }
   }
 }

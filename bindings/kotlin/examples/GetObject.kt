@@ -18,7 +18,7 @@ fun main() = runBlocking {
 
         println("Object ID: ${obj.id().toHex()}")
         println("Version: ${obj.version()}")
-        println("Previous transaction: ${obj.previousTransaction().toBase58()}")
+        println("Previous transaction: ${obj.previousTransaction()}")
         println("Owner: ${obj.owner().toString()}")
         println("Storage rebate: ${obj.storageRebate()}")
         println("Type: ${obj.objectType().toString()}")

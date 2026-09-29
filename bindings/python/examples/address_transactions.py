@@ -26,11 +26,11 @@ async def main():
 
     print(f"\nOutgoing (sent by address): {len(outgoing.data)}")
     for tx in outgoing.data:
-        print(f"  - {tx.transaction.digest().to_base58()}")
+        print(f"  - {tx.transaction.digest()}")
 
     print(f"\nIncoming (received by address): {len(incoming.data)}")
     for tx in incoming.data:
-        print(f"  - {tx.transaction.digest().to_base58()}")
+        print(f"  - {tx.transaction.digest()}")
 
 
 if __name__ == "__main__":

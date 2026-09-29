@@ -18,7 +18,7 @@ if (obj === null) {
 
 console.log("Object ID:", obj.id().toHex());
 console.log("Version:", obj.version());
-console.log("Previous transaction:", obj.previousTransaction().toBase58());
+console.log(`Previous transaction: ${obj.previousTransaction()}`);
 console.log("Owner:", obj.owner());
 console.log("Storage rebate:", obj.storageRebate());
 console.log("Type:", obj.objectType());

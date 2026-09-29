@@ -42,7 +42,7 @@ fun main() = runBlocking {
         val dependencies = packageData.dependencies()
         println("Dependencies: ${dependencies.size}")
         val digest = packageData.digest()
-        println("Digest: ${digest.toBase58()}")
+        println("Digest: ${digest}")
 
         // Create a random private key to derive a sender address and for signing
         val privateKey = Ed25519PrivateKey.random()
