@@ -45,8 +45,15 @@ async fn main() -> Result<()> {
     println!("{} IOTA coin object(s):", coins.data().len());
     let mut total: u64 = 0;
     for coin in coins.data() {
+        let object_ref = coin.object_ref();
+        let coin = coin.object();
         total += coin.balance.value();
-        println!("  {}  {} nanos", coin.id.object_id(), coin.balance.value());
+        println!(
+            "  {}  v{}  {} nanos",
+            object_ref.object_id,
+            object_ref.version,
+            coin.balance.value()
+        );
     }
     println!("Total: {total} nanos");
 
@@ -59,9 +66,12 @@ async fn main() -> Result<()> {
     ));
     while let Some(stake) = staked.next().await {
         let stake = stake?;
+        let object_ref = stake.object_ref();
+        let stake = stake.object();
         println!(
-            "  staked {}  {} nanos, active from epoch {}",
-            stake.id(),
+            "  staked {}  v{}  {} nanos, active from epoch {}",
+            object_ref.object_id,
+            object_ref.version,
             stake.principal(),
             stake.stake_activation_epoch()
         );

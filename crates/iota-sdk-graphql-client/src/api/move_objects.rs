@@ -1,11 +1,12 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Typed object queries, decoding each object into a Move-type mirror.
+//! Typed object queries, decoding each object into a Move-type mirror paired
+//! with its object reference.
 
 use futures::Stream;
 use iota_move_types::MoveObject;
-use iota_types::{Address, ObjectId};
+use iota_types::{Address, ObjectId, ObjectReference};
 
 use crate::{
     GraphQLClient,
@@ -14,6 +15,30 @@ use crate::{
     query_types::ObjectFilter,
     streams::stream_paginated_query,
 };
+
+/// An object of the Move type `T`, decoded into `T`.
+#[derive(Clone, Debug)]
+pub struct OwnedMoveObject<T> {
+    object_ref: ObjectReference,
+    object: T,
+}
+
+impl<T> OwnedMoveObject<T> {
+    /// Get the object's reference.
+    pub fn object_ref(&self) -> ObjectReference {
+        self.object_ref
+    }
+
+    /// Get the object's contents.
+    pub fn object(&self) -> &T {
+        &self.object
+    }
+
+    /// Consume the object and return its contents.
+    pub fn into_object(self) -> T {
+        self.object
+    }
+}
 
 /// Filter for the typed object queries.
 ///
@@ -52,7 +77,8 @@ impl MoveObjectFilter {
 }
 
 impl GraphQLClient {
-    /// Return a page of objects of the Move type `T`, decoded into `T`.
+    /// Return a page of objects of the Move type `T`, decoded into `T` and
+    /// paired with their object references.
     ///
     /// The type filter is derived from `T`, so unlike
     /// [`GraphQLClient::objects`] this needs no type string and no separate
@@ -68,7 +94,7 @@ impl GraphQLClient {
     /// # Example
     ///
     /// ```rust,ignore
-    /// let staked: Page<StakedIota> = client
+    /// let staked: Page<OwnedMoveObject<StakedIota>> = client
     ///     .move_objects(MoveObjectFilter::default().with_owner(address), Default::default())
     ///     .await?;
     /// ```
@@ -76,18 +102,24 @@ impl GraphQLClient {
         &self,
         filter: impl Into<Option<MoveObjectFilter>>,
         pagination_filter: PaginationFilter,
-    ) -> GraphQLResult<Page<T>> {
+    ) -> GraphQLResult<Page<OwnedMoveObject<T>>> {
         let filter = filter.into().unwrap_or_default().into_object_filter::<T>();
         let page = self.objects(filter, pagination_filter).await?;
         let (page_info, objects) = page.into_parts();
         let decoded = objects
             .iter()
-            .map(T::try_from)
-            .collect::<std::result::Result<Vec<_>, _>>()?;
+            .map(|object| {
+                Ok(OwnedMoveObject {
+                    object_ref: object.object_ref(),
+                    object: T::try_from(object)?,
+                })
+            })
+            .collect::<GraphQLResult<Vec<_>>>()?;
         Ok(Page::new(page_info, decoded))
     }
 
-    /// Return a stream of objects of the Move type `T`, decoded into `T`.
+    /// Return a stream of objects of the Move type `T`, decoded into `T` and
+    /// paired with their object references.
     ///
     /// Page-by-page equivalent of [`GraphQLClient::move_objects`]; the same
     /// decode failure ends the stream with an error.
@@ -95,7 +127,7 @@ impl GraphQLClient {
         &'a self,
         filter: impl Into<Option<MoveObjectFilter>>,
         streaming_direction: Direction,
-    ) -> impl Stream<Item = GraphQLResult<T>> + 'a
+    ) -> impl Stream<Item = GraphQLResult<OwnedMoveObject<T>>> + 'a
     where
         T: MoveObject + Clone + Unpin + 'a,
     {
