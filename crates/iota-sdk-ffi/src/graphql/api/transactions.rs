@@ -46,9 +46,7 @@ impl GraphQLClient {
     ) -> Result<TransactionsByDigest> {
         let digests = digests.into_iter().map(|d| **d).collect::<Vec<_>>();
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .transactions_by_digest(digests.iter().copied())
             .await?
             .into_iter()
