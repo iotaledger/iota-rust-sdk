@@ -5,8 +5,9 @@ use std::{cmp, collections::HashMap, time::Duration};
 
 use iota_sdk::{
     graphql_client::{
-        GraphQLClient, PaginationFilter, response_to_err,
+        GraphQLClient, PaginationFilter,
         query_types::{EventFilter, TransactionsFilter},
+        response_to_err,
     },
     types::{ExecutionStatus, SignedTransaction, Transaction},
 };
