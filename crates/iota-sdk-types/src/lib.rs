@@ -419,6 +419,9 @@ mod _serde {
     pub(crate) type OptionReadableDisplay =
         ::serde_with::As<Option<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
 
+    pub(crate) type VecReadableDisplay =
+        ::serde_with::As<Vec<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
+
     pub(crate) type ReadableBase64Encoded =
         ::serde_with::As<::serde_with::IfIsHumanReadable<Base64Encoded, ::serde_with::Bytes>>;
 
