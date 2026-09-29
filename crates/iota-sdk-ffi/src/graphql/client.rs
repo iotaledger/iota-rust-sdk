@@ -114,16 +114,16 @@ impl GraphQLClient {
 
     /// Run a query.
     pub async fn run_query(&self, query: Query) -> Result<serde_json::Value> {
-        self.client()
+        let response = self
+            .client()
             .run_query_from_json(
                 serde_json::to_value(query)?
                     .as_object()
                     .ok_or_else(|| SdkFfiError::custom("invalid json; must be a map"))?
                     .clone(),
             )
-            .await?
-            .data
-            .ok_or_else(|| SdkFfiError::custom("query yielded no data"))
+            .await?;
+        Ok(iota_sdk::graphql_client::response_to_err(response)?)
     }
 
     /// Create a new transaction builder with the given sender address, backed
