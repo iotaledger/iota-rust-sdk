@@ -12,7 +12,7 @@ use iota_sdk::{
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::client::GrpcClient,
+    grpc::{client::GrpcClient, read_mask_fields::ServiceInfoField},
     types::digest::Digest,
 };
 
@@ -72,11 +72,14 @@ impl GrpcClient {
     ///
     /// The optional `read_mask` controls which fields the server returns.
     #[uniffi::method(default(read_mask = None))]
-    pub async fn service_info(&self, read_mask: Option<Vec<String>>) -> Result<ServiceInfo> {
+    pub async fn service_info(
+        &self,
+        read_mask: Option<Vec<ServiceInfoField>>,
+    ) -> Result<ServiceInfo> {
         (&self
             .client()
-            .service_info(crate::grpc::api::read_mask::<ServiceInfoReadMask>(
-                &read_mask,
+            .service_info(crate::grpc::api::read_mask::<ServiceInfoReadMask, _>(
+                read_mask,
             ))
             .await?
             .into_inner())
