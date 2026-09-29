@@ -504,7 +504,7 @@ pub struct Page<T> {
 /// The struct's [`IntoFuture`](std::future::IntoFuture) boxes the future of
 /// `send(self) -> $output`, which each invocation writes by hand in an
 /// inherent impl.
-macro_rules! define_request {
+macro_rules! define_query {
     (
         $(#[$meta:meta])*
         pub struct $name:ident $(<$generic:ident: $bound:path>)? {
@@ -530,7 +530,7 @@ macro_rules! define_request {
     };
 }
 
-pub(crate) use define_request;
+pub(crate) use define_query;
 
 /// Generate a paginated query builder for a list endpoint.
 ///
@@ -644,7 +644,7 @@ macro_rules! define_list_query {
             map_item: $map_item:expr,
         }
     ) => {
-        $crate::api::define_request! {
+        $crate::api::define_query! {
             $(#[$meta])*
             pub struct $query_name $(<$generic: $bound>)? {
                 service_client: $service_client_type,
