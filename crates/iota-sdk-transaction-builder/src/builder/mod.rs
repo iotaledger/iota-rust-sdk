@@ -1761,8 +1761,9 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                             }
                             Owner::Object(parent) => {
                                 return Err(TransactionBuilderError::Input(format!(
-                                    "object {object_id} is owned by object {parent}; pass its \
-                                     parent instead, or pass it as receiving"
+                                    "object {object_id} is owned by object {parent} and can't be \
+                                     used as a transaction input; access it through its parent \
+                                     instead"
                                 )));
                             }
                             Owner::Shared(v) => iota_types::Input::Shared(SharedObjectReference {
