@@ -1756,8 +1756,15 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                         gas.push(obj_ref);
                     } else {
                         let input = match obj.owner() {
-                            Owner::Address(_) | Owner::Object(_) | Owner::Immutable => {
+                            Owner::Address(_) | Owner::Immutable => {
                                 iota_types::Input::ImmutableOrOwned(obj.object_ref())
+                            }
+                            Owner::Object(parent) => {
+                                return Err(TransactionBuilderError::Input(format!(
+                                    "object {object_id} is owned by object {parent} and can't be \
+                                     used as a transaction input; access it through its parent \
+                                     instead"
+                                )));
                             }
                             Owner::Shared(v) => iota_types::Input::Shared(SharedObjectReference {
                                 object_id,
@@ -2935,6 +2942,84 @@ mod tests {
             assert!(
                 matches!(err, TransactionBuilderError::WrongGasObject),
                 "expected WrongGasObject, got {err}"
+            );
+        }
+
+        /// Forwards to [`crate::TestClient`], but reports one id as owned by
+        /// another object.
+        struct ChildObjectClient {
+            child: ObjectId,
+            parent: ObjectId,
+        }
+
+        impl crate::TransactionBuilderClientBase for ChildObjectClient {
+            type Error = crate::TestClientError;
+        }
+
+        impl TransactionBuilderLedgerClient for ChildObjectClient {
+            async fn object(
+                &self,
+                object_id: ObjectId,
+                version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                let object = crate::TestClient.object(object_id, version).await?;
+                Ok(object.map(|object| {
+                    if object_id == self.child {
+                        Object::new(
+                            object.data().clone(),
+                            Owner::Object(self.parent),
+                            object.previous_transaction(),
+                            object.storage_rebate(),
+                        )
+                    } else {
+                        object
+                    }
+                }))
+            }
+
+            async fn objects(
+                &self,
+                struct_tag: Option<StructTag>,
+                owner: Address,
+                cursor: Option<Vec<u8>>,
+                limit: Option<usize>,
+            ) -> Result<crate::ObjectsPage, Self::Error> {
+                crate::TestClient
+                    .objects(struct_tag, owner, cursor, limit)
+                    .await
+            }
+
+            async fn reference_gas_price(
+                &self,
+                epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                crate::TestClient.reference_gas_price(epoch).await
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                crate::TestClient.protocol_config().await
+            }
+        }
+
+        /// An object owned by another object cannot be an owned input.
+        #[tokio::test]
+        async fn an_object_owned_id_is_rejected() {
+            let sender = Address::random();
+            let child = object_id(3);
+
+            let mut builder = TransactionBuilder::new(sender).with_client(ChildObjectClient {
+                child,
+                parent: object_id(4),
+            });
+            builder.transfer_objects(sender, [child]);
+
+            let err = builder.finish_kind().await.unwrap_err();
+            let TransactionBuilderError::Input(message) = &err else {
+                panic!("expected an input error, got {err}");
+            };
+            assert!(
+                message.contains(&format!("object {child} is owned by object")),
+                "unexpected message: {message}"
             );
         }
 
