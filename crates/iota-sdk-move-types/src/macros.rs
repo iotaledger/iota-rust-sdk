@@ -5,28 +5,29 @@
 //! Move-object mirror shares.
 //!
 //! The mirrors differ only in their type and (for generic mirrors) their
-//! single type parameter, so the `TryFrom<&Object>` /
-//! `try_from_object_with_type` bodies are otherwise identical boilerplate.
-//! `from_bcs` and the field accessors stay hand-written per type.
+//! single type parameter, so the [`MoveObject`](crate::MoveObject) impl and
+//! the `TryFrom<&Object>` / `try_from_object_with_type` bodies are otherwise
+//! identical boilerplate. `from_bcs` and the field accessors stay hand-written
+//! per type.
 //!
-//! The [`StructTag`] predicate a mirror validates against is derived from its
-//! name as `is_<name:snake>` — the same `paste` snake-casing that generated
-//! that predicate in the first place, applied to the same identifier, so it
-//! always matches for a type registered on a plain `add_struct_tag_ctor!` arm.
-//! A type whose predicate lives under a different name — one registered with
-//! `@with_module` (predicate `is_<module>_<name>`), or a mirror whose Rust name
-//! diverges from the Move struct name — passes its predicate explicitly as a
-//! second argument.
+//! The struct tag comes from the [`StructTag`] constructor derived from the
+//! mirror's name as `new_<name:snake>` — the same `paste` snake-casing that
+//! generated that constructor in the first place, applied to the same
+//! identifier. `TryFrom<&Object>` accepts exactly the tag `struct_tag` returns.
 //!
 //! [`StructTag`]: iota_types::StructTag
 
-/// Generate the `TryFrom<&Object>` constructor for a non-generic mirror.
-///
-/// The predicate defaults to `is_<TypeName:snake>`; pass it explicitly as a
-/// second argument when it lives under a different name (e.g. an
-/// `@with_module` registration, whose predicate is `is_<module>_<name>`).
+/// Generate the [`MoveObject`](crate::MoveObject) impl and the
+/// `TryFrom<&Object>` constructor for a non-generic mirror.
 macro_rules! impl_try_from_object {
-    ($ty:ident, $is_fn:ident $(,)?) => {
+    ($ty:ident $(,)?) => {
+        #[cfg(feature = "serde")]
+        impl $crate::MoveObject for $ty {
+            fn struct_tag() -> ::iota_types::StructTag {
+                ::paste::paste! { ::iota_types::StructTag::[< new_ $ty:snake >]() }
+            }
+        }
+
         #[cfg(feature = "serde")]
         #[doc = concat!(
             "Decode a [`",
@@ -37,31 +38,31 @@ macro_rules! impl_try_from_object {
             type Error = $crate::FromObjectError;
 
             fn try_from(object: &::iota_types::Object) -> Result<Self, Self::Error> {
-                let move_struct = object
-                    .as_opt_struct()
-                    .ok_or($crate::FromObjectError::NotAMoveStruct)?;
-                if !move_struct.object_type().$is_fn() {
-                    return Err($crate::FromObjectError::WrongType);
-                }
-                ::bcs::from_bytes(move_struct.contents()).map_err($crate::FromObjectError::Bcs)
+                $crate::decode_move_struct(object, &<Self as $crate::MoveObject>::struct_tag())
             }
-        }
-    };
-    ($ty:ident $(,)?) => {
-        ::paste::paste! {
-            impl_try_from_object!($ty, [< is_ $ty:snake >]);
         }
     };
 }
 
-/// Generate `try_from_object_with_type` and the `TryFrom<&Object>` constructor
-/// for a mirror with a single type parameter.
-///
-/// The predicate defaults to `is_<TypeName:snake>`; pass it explicitly as a
-/// second argument when it lives under a different name (e.g. an
-/// `@with_module` registration, whose predicate is `is_<module>_<name>`).
+/// Generate the [`MoveObject`](crate::MoveObject) impl,
+/// `try_from_object_with_type` and the `TryFrom<&Object>` constructor for a
+/// mirror with a single type parameter.
 macro_rules! impl_try_from_object_generic {
-    ($ty:ident<$param:ident>, $is_fn:ident $(,)?) => {
+    ($ty:ident<$param:ident> $(,)?) => {
+        #[cfg(feature = "serde")]
+        impl<$param> $crate::MoveObject for $ty<$param>
+        where
+            $param: ::serde::de::DeserializeOwned + $crate::MoveType,
+        {
+            fn struct_tag() -> ::iota_types::StructTag {
+                ::paste::paste! {
+                    ::iota_types::StructTag::[< new_ $ty:snake >](
+                        <$param as $crate::MoveType>::type_tag(),
+                    )
+                }
+            }
+        }
+
         #[cfg(feature = "serde")]
         impl<$param> $ty<$param>
         where
@@ -78,14 +79,12 @@ macro_rules! impl_try_from_object_generic {
                 object: &::iota_types::Object,
                 type_param: &::iota_types::TypeTag,
             ) -> Result<Self, $crate::FromObjectError> {
-                let move_struct = object
-                    .as_opt_struct()
-                    .ok_or($crate::FromObjectError::NotAMoveStruct)?;
-                let tag = move_struct.struct_tag();
-                if !tag.$is_fn() || tag.type_params() != ::core::slice::from_ref(type_param) {
-                    return Err($crate::FromObjectError::WrongType);
+                ::paste::paste! {
+                    $crate::decode_move_struct(
+                        object,
+                        &::iota_types::StructTag::[< new_ $ty:snake >](type_param.clone()),
+                    )
                 }
-                ::bcs::from_bytes(move_struct.contents()).map_err($crate::FromObjectError::Bcs)
             }
         }
 
@@ -102,13 +101,8 @@ macro_rules! impl_try_from_object_generic {
             type Error = $crate::FromObjectError;
 
             fn try_from(object: &::iota_types::Object) -> Result<Self, Self::Error> {
-                Self::try_from_object_with_type(object, &<$param as $crate::MoveType>::type_tag())
+                $crate::decode_move_struct(object, &<Self as $crate::MoveObject>::struct_tag())
             }
-        }
-    };
-    ($ty:ident<$param:ident> $(,)?) => {
-        ::paste::paste! {
-            impl_try_from_object_generic!($ty<$param>, [< is_ $ty:snake >]);
         }
     };
 }

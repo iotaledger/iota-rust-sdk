@@ -506,7 +506,9 @@ pub struct Page<T> {
 ///
 /// # Parameters
 ///
-/// - `$query_name` — name of the generated builder struct
+/// - `$query_name` — name of the generated builder struct, optionally with a
+///   single bounded type parameter (e.g. `ListOwnedMoveObjectsQuery<T:
+///   MoveObject>`) usable in `item` and `map_item`
 /// - `$service_client_type` — the tonic service client type
 /// - `$item_type` — the item type exposed by the builder
 /// - `$rpc_method` — the RPC method name on the service client
@@ -548,7 +550,7 @@ macro_rules! define_list_query {
     // Pass-through variant: `$item_type` is the response element type.
     (
         $(#[$meta:meta])*
-        pub struct $query_name:ident {
+        pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
             service_client: $service_client_type:ty,
             request: $request_type:ty,
             item: $item_type:ty,
@@ -559,7 +561,7 @@ macro_rules! define_list_query {
         $crate::api::define_list_query! {
             @impl
             $(#[$meta])*
-            pub struct $query_name {
+            pub struct $query_name $(<$generic: $bound>)? {
                 service_client: $service_client_type,
                 request: $request_type,
                 item: $item_type,
@@ -574,7 +576,7 @@ macro_rules! define_list_query {
     // a fallible `fn(&ProtoItem) -> GrpcResult<$item_type>`.
     (
         $(#[$meta:meta])*
-        pub struct $query_name:ident {
+        pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
             service_client: $service_client_type:ty,
             request: $request_type:ty,
             item: $item_type:ty,
@@ -586,7 +588,7 @@ macro_rules! define_list_query {
         $crate::api::define_list_query! {
             @impl
             $(#[$meta])*
-            pub struct $query_name {
+            pub struct $query_name $(<$generic: $bound>)? {
                 service_client: $service_client_type,
                 request: $request_type,
                 item: $item_type,
@@ -600,7 +602,7 @@ macro_rules! define_list_query {
     (
         @impl
         $(#[$meta:meta])*
-        pub struct $query_name:ident {
+        pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
             service_client: $service_client_type:ty,
             request: $request_type:ty,
             item: $item_type:ty,
@@ -610,15 +612,16 @@ macro_rules! define_list_query {
         }
     ) => {
         $(#[$meta])*
-        pub struct $query_name {
+        pub struct $query_name $(<$generic>)? {
             service_client: $service_client_type,
             base_request: $request_type,
             max_message_size: Option<usize>,
             page_size: Option<u32>,
             page_token: Option<::prost::bytes::Bytes>,
+            _marker: ::std::marker::PhantomData<fn() -> ($($generic,)?)>,
         }
 
-        impl $query_name {
+        impl $(<$generic: $bound>)? $query_name $(<$generic>)? {
             pub(crate) fn new(
                 service_client: $service_client_type,
                 base_request: $request_type,
@@ -632,6 +635,7 @@ macro_rules! define_list_query {
                     max_message_size,
                     page_size,
                     page_token,
+                    _marker: ::std::marker::PhantomData,
                 }
             }
 
@@ -706,7 +710,9 @@ macro_rules! define_list_query {
             }
         }
 
-        impl ::std::future::IntoFuture for $query_name {
+        impl $(<$generic: $bound + 'static>)? ::std::future::IntoFuture
+            for $query_name $(<$generic>)?
+        {
             type Output = $crate::api::GrpcResult<
                 $crate::api::MetadataEnvelope<$crate::api::Page<$item_type>>,
             >;

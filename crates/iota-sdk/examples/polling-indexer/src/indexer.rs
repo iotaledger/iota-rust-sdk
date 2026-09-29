@@ -5,7 +5,7 @@ use std::{cmp, collections::HashMap, time::Duration};
 
 use iota_sdk::{
     graphql_client::{
-        GraphQLClient, PaginationFilter,
+        GraphQLClient, PaginationFilter, response_to_err,
         query_types::{EventFilter, TransactionsFilter},
     },
     types::{ExecutionStatus, SignedTransaction, Transaction},
@@ -581,18 +581,16 @@ async fn batch_lookup_tx_checkpoints(
             "variables": serde_json::Value::Object(variables),
         });
         let map = request.as_object().unwrap().clone();
-        let response = client.run_query_from_json(map).await?;
+        let data = response_to_err(client.run_query_from_json(map).await?)?;
 
-        if let Some(data) = response.data {
-            for (i, digest) in chunk.iter().enumerate() {
-                let seq = data
-                    .get(format!("t{i}").as_str())
-                    .and_then(|tb| tb.get("effects"))
-                    .and_then(|e| e.get("checkpoint"))
-                    .and_then(|c| c.get("sequenceNumber"))
-                    .and_then(|s| s.as_u64());
-                result.insert(digest.clone(), seq);
-            }
+        for (i, digest) in chunk.iter().enumerate() {
+            let seq = data
+                .get(format!("t{i}").as_str())
+                .and_then(|tb| tb.get("effects"))
+                .and_then(|e| e.get("checkpoint"))
+                .and_then(|c| c.get("sequenceNumber"))
+                .and_then(|s| s.as_u64());
+            result.insert(digest.clone(), seq);
         }
     }
 
