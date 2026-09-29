@@ -48,13 +48,15 @@ impl GrpcClient {
         page_token: Option<Vec<u8>>,
         read_mask: Option<Vec<OwnedObjectField>>,
     ) -> Result<OwnedObjectPage> {
-        let query = self.client().owned_objects(
-            **owner,
-            object_type.map(|object_type| object_type.0.clone()),
-            page_size,
-            page_token.map(Into::into),
-            crate::grpc::api::read_mask::<OwnedObjectReadMask, _>(read_mask),
-        );
+        let query = self
+            .client()
+            .owned_objects(**owner)
+            .object_type(object_type.map(|object_type| object_type.0.clone()))
+            .page_size(page_size)
+            .page_token(page_token.map(Into::into))
+            .read_mask(crate::grpc::api::read_mask::<OwnedObjectReadMask, _>(
+                read_mask,
+            ));
         let page = query.await?.into_inner();
         Ok(OwnedObjectPage {
             objects: page
@@ -81,13 +83,13 @@ impl GrpcClient {
         limit: Option<u32>,
         read_mask: Option<Vec<OwnedObjectField>>,
     ) -> Result<Vec<GrpcObject>> {
-        let query = self.client().owned_objects(
-            **owner,
-            object_type.map(|object_type| object_type.0.clone()),
-            None,
-            None,
-            crate::grpc::api::read_mask::<OwnedObjectReadMask, _>(read_mask),
-        );
+        let query = self
+            .client()
+            .owned_objects(**owner)
+            .object_type(object_type.map(|object_type| object_type.0.clone()))
+            .read_mask(crate::grpc::api::read_mask::<OwnedObjectReadMask, _>(
+                read_mask,
+            ));
         query
             .collect(limit)
             .await?

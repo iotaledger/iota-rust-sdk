@@ -513,6 +513,7 @@ macro_rules! define_query {
         output: $output:ty;
     ) => {
         $(#[$meta])*
+        #[must_use]
         pub struct $name $(<$generic>)? {
             $($field: $field_ty,)*
         }
@@ -664,17 +665,30 @@ macro_rules! define_list_query {
                 service_client: $service_client_type,
                 base_request: $request_type,
                 max_message_size: Option<usize>,
-                page_size: Option<u32>,
-                page_token: Option<::prost::bytes::Bytes>,
             ) -> Self {
                 Self {
                     service_client,
                     base_request,
                     max_message_size,
-                    page_size,
-                    page_token,
+                    page_size: None,
+                    page_token: None,
                     _marker: ::std::marker::PhantomData,
                 }
+            }
+
+            /// Set the maximum number of items per page.
+            pub fn page_size(mut self, page_size: impl Into<Option<u32>>) -> Self {
+                self.page_size = page_size.into();
+                self
+            }
+
+            /// Set the continuation token from a previous page.
+            pub fn page_token(
+                mut self,
+                page_token: impl Into<Option<::prost::bytes::Bytes>>,
+            ) -> Self {
+                self.page_token = page_token.into();
+                self
             }
 
             /// Auto-paginate through all pages, collecting up to `limit` items.

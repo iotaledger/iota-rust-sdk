@@ -8,8 +8,8 @@ use std::time::Duration;
 
 use iota_grpc_types::{
     read_mask_fields::{
-        EpochField, EpochReadMask, ExecuteTransactionReadMask, ObjectReadMask, OwnedObjectReadMask,
-        SimulateField, SimulateReadMask, TransactionField, TransactionReadMask,
+        EpochField, EpochReadMask, ExecuteTransactionReadMask, ObjectReadMask, SimulateField,
+        SimulateReadMask, TransactionField, TransactionReadMask,
     },
     v1::transaction_execution_service::SimulatedTransaction,
 };
@@ -117,13 +117,10 @@ impl TransactionBuilderLedgerClient for GrpcClient {
         limit: Option<usize>,
     ) -> Result<ObjectsPage, Self::Error> {
         let page = self
-            .owned_objects(
-                owner,
-                struct_tag,
-                limit.map(saturating_usize_to_u32),
-                cursor.map(prost::bytes::Bytes::from),
-                OwnedObjectReadMask::default(),
-            )
+            .owned_objects(owner)
+            .object_type(struct_tag)
+            .page_size(limit.map(saturating_usize_to_u32))
+            .page_token(cursor.map(prost::bytes::Bytes::from))
             .await?
             .into_inner();
         let data = page
