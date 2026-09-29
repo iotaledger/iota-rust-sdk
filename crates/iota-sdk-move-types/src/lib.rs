@@ -34,29 +34,18 @@ mod move_shape;
 #[cfg(all(test, feature = "serde", not(target_arch = "wasm32")))]
 mod move_shape_compare;
 
-/// A Rust type that knows the Move type tag it represents.
+/// A Rust type that knows its Move type tag.
 ///
-/// Implemented for the Rust counterparts of the Move primitives (`bool`,
-/// `u8`–`u128`, `U256` with the `u256` feature, and
-/// [`Address`](iota_types::Address)), for `String` and `Vec<T>` as
-/// `vector<u8>` and `vector<T>`, and for the mirrors in this crate that can be
-/// used as type arguments.
+/// The type argument `T` of a generic mirror such as `Coin<T>` must implement
+/// this trait, so that `Coin<IOTA>` can check that an object really is a
+/// `0x2::coin::Coin<0x2::iota::IOTA>`.
 ///
-/// Generic mirrors like [`iota_framework::coin::CoinMetadata`] or
-/// [`stardust::basic_output::BasicOutput`] take a marker type (e.g.
-/// [`iota_framework::iota::IOTA`]) as their phantom type argument. Implementing
-/// this trait declares which on-chain type the marker represents, which
-/// lets the `try_from_object` constructors verify the object's type tag
-/// against `T`. The marker is phantom, so the BCS bytes of e.g. a
-/// `BasicOutput<IOTA>` and a `BasicOutput<OTHER>` are identical — the type
-/// tag is the only place the coin type is recorded, and without this check
-/// one would silently decode as the other.
+/// Markers like [`IOTA`](iota_framework::iota::IOTA) implement it by hand.
+/// Every [`MoveObject`] implements it automatically, so an object mirror can
+/// also be a type argument, as in `Display<Coin<IOTA>>`.
 ///
-/// To decode objects holding your own coin type, define an empty marker
-/// struct and implement this trait for it. The `try_from_object`
-/// constructors also require `T: serde::de::DeserializeOwned` (an artifact
-/// of the serde derive on the generic mirrors — the phantom marker itself
-/// is never deserialized), so derive `Deserialize` as well:
+/// To use your own coin type, define an empty marker struct that derives
+/// `Deserialize` and implement this trait for it:
 ///
 /// ```
 /// #[derive(serde::Deserialize)]
@@ -77,8 +66,8 @@ pub trait MoveType {
     fn type_tag() -> iota_types::TypeTag;
 }
 
-/// An ordered list of [`MoveType`]s: `()`, a single type, or a tuple of up to
-/// five, such as the type arguments of a Move function call.
+/// An ordered list of [`MoveType`]s: `()`, a single type, or a tuple, such as
+/// the type arguments of a Move function call.
 pub trait MoveTypes {
     /// Get the type tags.
     fn type_tags() -> Vec<iota_types::TypeTag> {
@@ -89,6 +78,27 @@ pub trait MoveTypes {
 
     /// Push the type tags onto the list.
     fn push_type_tags(tags: &mut Vec<iota_types::TypeTag>);
+}
+
+/// A Rust mirror of a Move object that can be decoded from an
+/// [`Object`](iota_types::Object).
+///
+/// [`struct_tag`](Self::struct_tag) is the type of the objects it decodes,
+/// e.g. `0x2::coin::Coin<0x2::iota::IOTA>` for `Coin<IOTA>`. Every
+/// `MoveObject` is also a [`MoveType`] with that same tag.
+#[cfg(feature = "serde")]
+pub trait MoveObject:
+    Sized + for<'a> TryFrom<&'a iota_types::Object, Error = FromObjectError>
+{
+    /// The Move struct tag of the objects this type mirrors.
+    fn struct_tag() -> iota_types::StructTag;
+}
+
+#[cfg(feature = "serde")]
+impl<T: MoveObject> MoveType for T {
+    fn type_tag() -> iota_types::TypeTag {
+        iota_types::TypeTag::Struct(Box::new(T::struct_tag()))
+    }
 }
 
 /// Error returned when converting an `Object` into a typed mirror.
@@ -110,4 +120,60 @@ pub enum FromObjectError {
     /// BCS decoding of the struct contents failed.
     #[error("bcs decoding failed: {0}")]
     Bcs(#[from] bcs::Error),
+}
+
+/// Decode the BCS contents of `object`, provided it is a Move struct tagged
+/// exactly `expected`.
+#[cfg(feature = "serde")]
+fn decode_move_struct<T: serde::de::DeserializeOwned>(
+    object: &iota_types::Object,
+    expected: &iota_types::StructTag,
+) -> Result<T, FromObjectError> {
+    let move_struct = object
+        .as_opt_struct()
+        .ok_or(FromObjectError::NotAMoveStruct)?;
+    if move_struct.struct_tag() != expected {
+        return Err(FromObjectError::WrongType);
+    }
+    Ok(bcs::from_bytes(move_struct.contents())?)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod tests {
+    use super::*;
+    use crate::{
+        iota_framework::{
+            coin::{Coin, CoinMetadata},
+            iota::IOTA,
+        },
+        iota_system::staking_pool::StakedIota,
+    };
+
+    #[test]
+    fn non_generic_mirror_reports_its_move_type() {
+        assert_eq!(
+            StakedIota::struct_tag().to_string(),
+            "0x3::staking_pool::StakedIota"
+        );
+    }
+
+    #[test]
+    fn generic_mirror_composes_its_type_parameter() {
+        assert_eq!(
+            Coin::<IOTA>::struct_tag().to_string(),
+            "0x2::coin::Coin<0x2::iota::IOTA>"
+        );
+        assert_eq!(
+            CoinMetadata::<IOTA>::struct_tag().to_string(),
+            "0x2::coin::CoinMetadata<0x2::iota::IOTA>"
+        );
+    }
+
+    #[test]
+    fn type_tag_wraps_struct_tag() {
+        assert_eq!(
+            Coin::<IOTA>::type_tag(),
+            iota_types::TypeTag::Struct(Box::new(Coin::<IOTA>::struct_tag()))
+        );
+    }
 }

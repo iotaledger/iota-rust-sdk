@@ -268,7 +268,6 @@ mod tests {
         let restored: Table = serde_json::from_value(json).unwrap();
         assert_eq!(restored, table);
 
-        // BCS stays plain u64: 8 little-endian bytes, no string.
         let bcs = bcs::to_bytes(&table).unwrap();
         assert_eq!(bcs[ObjectId::LENGTH..], 42u64.to_le_bytes());
         let restored: Table = bcs::from_bytes(&bcs).unwrap();
