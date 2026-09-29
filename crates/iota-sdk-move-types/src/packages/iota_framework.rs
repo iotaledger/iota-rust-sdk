@@ -119,7 +119,6 @@ pub mod iota {
         dummy_field: bool,
     }
 
-    #[cfg(feature = "serde")]
     impl crate::MoveType for IOTA {
         /// `0x2::iota::IOTA`.
         fn type_tag() -> iota_types::TypeTag {
@@ -236,7 +235,6 @@ pub mod balance {
 
     /// Compositional tag: `Balance<T>` is itself a valid type argument
     /// (e.g. `TimeLock<Balance<IOTA>>`), so its tag is derived from `T`'s.
-    #[cfg(feature = "serde")]
     impl<T: crate::MoveType> crate::MoveType for Balance<T> {
         /// `0x2::balance::Balance<T>`.
         fn type_tag() -> iota_types::TypeTag {

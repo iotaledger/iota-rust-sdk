@@ -21,6 +21,8 @@ mod macros;
 mod packages;
 pub use packages::{iota_framework, iota_system, move_stdlib, stardust};
 
+mod builtin;
+
 // The shape machinery (this module, the `MoveShape` derives on every
 // mirror, and the comparator below) is native-only: the comparator reads
 // the fetched package artifacts from disk at test time (no `std::fs` on
@@ -33,6 +35,12 @@ mod move_shape;
 mod move_shape_compare;
 
 /// A Rust type that knows the Move type tag it represents.
+///
+/// Implemented for the Rust counterparts of the Move primitives (`bool`,
+/// `u8`–`u128`, `U256` with the `u256` feature, and
+/// [`Address`](iota_types::Address)), for `String` and `Vec<T>` as
+/// `vector<u8>` and `vector<T>`, and for the mirrors in this crate that can be
+/// used as type arguments.
 ///
 /// Generic mirrors like [`iota_framework::coin::CoinMetadata`] or
 /// [`stardust::basic_output::BasicOutput`] take a marker type (e.g.
@@ -64,10 +72,23 @@ mod move_shape_compare;
 /// For coin types only known at runtime, use the
 /// `try_from_object_with_type` constructors instead, which take the
 /// expected [`TypeTag`](iota_types::TypeTag) as a value.
-#[cfg(feature = "serde")]
 pub trait MoveType {
     /// The Move type tag this type represents (e.g. `0x2::iota::IOTA`).
     fn type_tag() -> iota_types::TypeTag;
+}
+
+/// An ordered list of [`MoveType`]s: `()`, a single type, or a tuple of up to
+/// five, such as the type arguments of a Move function call.
+pub trait MoveTypes {
+    /// Get the type tags.
+    fn type_tags() -> Vec<iota_types::TypeTag> {
+        let mut tags = Vec::new();
+        Self::push_type_tags(&mut tags);
+        tags
+    }
+
+    /// Push the type tags onto the list.
+    fn push_type_tags(tags: &mut Vec<iota_types::TypeTag>);
 }
 
 /// Error returned when converting an `Object` into a typed mirror.
