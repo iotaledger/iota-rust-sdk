@@ -24,7 +24,10 @@ use iota_sdk::{
     grpc_client::{GrpcClient, read_mask_fields::ViewFunctionCallReadMask},
     grpc_types::{
         proto::json_to_prost_stringify_numbers,
-        v1::{command::InputArgument, transaction_execution_service::ViewFunctionCallItem},
+        v1::{
+            command::{CommandOutput, InputArgument},
+            transaction_execution_service::{ViewFunctionCallItem, ViewFunctionCallOutputs},
+        },
     },
 };
 use serde_json::json;
@@ -49,16 +52,7 @@ async fn main() -> Result<()> {
         )
         .await?;
 
-    match outputs.body().return_values() {
-        Some(values) => println!(
-            "discounted_price returned {} value(s)",
-            values.outputs.len()
-        ),
-        None => println!(
-            "discounted_price aborted: {:?}",
-            outputs.body().execution_error()
-        ),
-    }
+    println!("discounted_price: {}", describe(outputs.body())?);
 
     // Three calls in one request: the call from above, the same function with a
     // discount over 100% so that it aborts, and a function that is not declared
@@ -88,15 +82,25 @@ async fn main() -> Result<()> {
         .zip(results.body())
     {
         match result {
-            Ok(outputs) => match outputs.return_values() {
-                Some(values) => println!("{call}: returned {} value(s)", values.outputs.len()),
-                None => println!("{call}: aborted ({:?})", outputs.execution_error()),
-            },
+            Ok(outputs) => println!("{call}: {}", describe(outputs)?),
             Err(e) => println!("{call}: rejected by the node ({e})"),
         }
     }
 
     Ok(())
+}
+
+fn describe(outputs: &ViewFunctionCallOutputs) -> Result<String> {
+    if let Some(values) = outputs.return_values() {
+        let json = values
+            .outputs
+            .iter()
+            .map(CommandOutput::output_json)
+            .collect::<Result<Vec<_>, _>>()?;
+        return Ok(format!("returned {}", serde_json::Value::from(json)));
+    }
+    let source = outputs.execution_error().and_then(|e| e.source.as_deref());
+    Ok(format!("aborted ({})", source.unwrap_or_default()))
 }
 
 fn view_call(fq_function_name: &str, args: Vec<serde_json::Value>) -> ViewFunctionCallItem {
