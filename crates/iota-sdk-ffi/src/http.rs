@@ -20,7 +20,8 @@ pub struct HttpClientOptions {
     #[uniffi(default = [])]
     pub extra_root_certificates: Vec<Vec<u8>>,
     /// Ignore the platform trust store, trusting only the bundled roots and
-    /// `extra_root_certificates`.
+    /// `extra_root_certificates`. Combined with `exclude_bundled_roots`,
+    /// only `extra_root_certificates` is trusted, which must then be non-empty.
     #[uniffi(default = false)]
     pub exclude_platform_roots: bool,
     /// Ignore the bundled Mozilla roots, trusting only the platform trust store
