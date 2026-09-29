@@ -177,6 +177,37 @@ impl SimulateTransactionResult {
     }
 }
 
+// ViewFunctionCallItem
+
+impl ViewFunctionCallItem {
+    /// Build a view function call whose arguments are passed as JSON.
+    ///
+    /// The node encodes each argument against the parameter's Move type.
+    /// Numbers go over the wire as strings, so `u64` and wider values keep
+    /// their precision.
+    ///
+    /// `fq_function_name` is the fully qualified name
+    /// `<package>::<module>::<function>`.
+    pub fn from_json(
+        fq_function_name: impl Into<String>,
+        type_args: &[iota_types::TypeTag],
+        call_args: &[serde_json::Value],
+    ) -> Self {
+        Self::default()
+            .with_fq_function_name(fq_function_name)
+            .with_type_args(type_args.iter().map(Into::into).collect())
+            .with_inputs(
+                call_args
+                    .iter()
+                    .map(|arg| {
+                        crate::v1::command::InputArgument::default()
+                            .with_json(crate::proto::json_to_prost_stringify_numbers(arg))
+                    })
+                    .collect(),
+            )
+    }
+}
+
 // ViewFunctionCallOutputs
 
 impl ViewFunctionCallOutputs {

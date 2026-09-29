@@ -22,10 +22,7 @@
 use eyre::Result;
 use iota_sdk::{
     grpc_client::{GrpcClient, read_mask_fields::ViewFunctionCallReadMask},
-    grpc_types::{
-        proto::json_to_prost_stringify_numbers,
-        v1::{command::InputArgument, transaction_execution_service::ViewFunctionCallItem},
-    },
+    grpc_types::v1::transaction_execution_service::ViewFunctionCallItem,
 };
 use serde_json::json;
 
@@ -66,17 +63,20 @@ async fn main() -> Result<()> {
     let results = client
         .view_function_calls(
             vec![
-                view_call(
-                    &format!("{PACKAGE}::shop::discounted_price"),
-                    vec![json!(100), json!(25)],
+                ViewFunctionCallItem::from_json(
+                    format!("{PACKAGE}::shop::discounted_price"),
+                    &[],
+                    &[json!(100), json!(25)],
                 ),
-                view_call(
-                    &format!("{PACKAGE}::shop::discounted_price"),
-                    vec![json!(100), json!(200)],
+                ViewFunctionCallItem::from_json(
+                    format!("{PACKAGE}::shop::discounted_price"),
+                    &[],
+                    &[json!(100), json!(200)],
                 ),
-                view_call(
-                    &format!("{PACKAGE}::shop::record_sale"),
-                    vec![json!(SHOP), json!(5)],
+                ViewFunctionCallItem::from_json(
+                    format!("{PACKAGE}::shop::record_sale"),
+                    &[],
+                    &[json!(SHOP), json!(5)],
                 ),
             ],
             ViewFunctionCallReadMask::default(),
@@ -97,14 +97,4 @@ async fn main() -> Result<()> {
     }
 
     Ok(())
-}
-
-fn view_call(fq_function_name: &str, args: Vec<serde_json::Value>) -> ViewFunctionCallItem {
-    ViewFunctionCallItem::default()
-        .with_fq_function_name(fq_function_name)
-        .with_inputs(
-            args.iter()
-                .map(|arg| InputArgument::default().with_json(json_to_prost_stringify_numbers(arg)))
-                .collect(),
-        )
 }

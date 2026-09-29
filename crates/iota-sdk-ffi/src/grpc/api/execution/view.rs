@@ -7,13 +7,7 @@ use std::sync::Arc;
 
 use iota_sdk::{
     grpc_client::read_mask_fields::ViewFunctionCallReadMask,
-    grpc_types::{
-        proto::json_to_prost_stringify_numbers,
-        v1::{
-            self as proto, command::InputArgument,
-            transaction_execution_service::ViewFunctionCallItem,
-        },
-    },
+    grpc_types::v1::{self as proto, transaction_execution_service::ViewFunctionCallItem},
 };
 
 use crate::{
@@ -90,19 +84,9 @@ pub struct ViewFunctionCallInput {
 
 impl From<&ViewFunctionCallInput> for ViewFunctionCallItem {
     fn from(input: &ViewFunctionCallInput) -> Self {
-        ViewFunctionCallItem::default()
-            .with_fq_function_name(&input.fq_function_name)
-            .with_type_args(input.type_args.iter().map(|tag| (&tag.0).into()).collect())
-            .with_inputs(
-                input
-                    .call_args
-                    .iter()
-                    .map(|arg| {
-                        InputArgument::default()
-                            .with_json(json_to_prost_stringify_numbers(&arg.to_json()))
-                    })
-                    .collect(),
-            )
+        let type_args: Vec<_> = input.type_args.iter().map(|tag| tag.0.clone()).collect();
+        let call_args: Vec<_> = input.call_args.iter().map(|arg| arg.to_json()).collect();
+        ViewFunctionCallItem::from_json(&input.fq_function_name, &type_args, &call_args)
     }
 }
 
