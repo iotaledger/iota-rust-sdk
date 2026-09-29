@@ -32,23 +32,18 @@ mod move_shape;
 #[cfg(all(test, feature = "serde", not(target_arch = "wasm32")))]
 mod move_shape_compare;
 
-/// A Rust type that knows the Move type tag it represents.
+/// A Rust type that knows its Move type tag.
 ///
-/// Generic mirrors like [`iota_framework::coin::CoinMetadata`] or
-/// [`stardust::basic_output::BasicOutput`] take a marker type (e.g.
-/// [`iota_framework::iota::IOTA`]) as their phantom type argument. Implementing
-/// this trait declares which on-chain type the marker represents, which
-/// lets the `try_from_object` constructors verify the object's type tag
-/// against `T`. The marker is phantom, so the BCS bytes of e.g. a
-/// `BasicOutput<IOTA>` and a `BasicOutput<OTHER>` are identical — the type
-/// tag is the only place the coin type is recorded, and without this check
-/// one would silently decode as the other.
+/// The type argument `T` of a generic mirror such as `Coin<T>` must implement
+/// this trait, so that `Coin<IOTA>` can check that an object really is a
+/// `0x2::coin::Coin<0x2::iota::IOTA>`.
 ///
-/// To decode objects holding your own coin type, define an empty marker
-/// struct and implement this trait for it. The `try_from_object`
-/// constructors also require `T: serde::de::DeserializeOwned` (an artifact
-/// of the serde derive on the generic mirrors — the phantom marker itself
-/// is never deserialized), so derive `Deserialize` as well:
+/// Markers like [`IOTA`](iota_framework::iota::IOTA) implement it by hand.
+/// Every [`MoveObject`] implements it automatically, so an object mirror can
+/// also be a type argument, as in `Display<Coin<IOTA>>`.
+///
+/// To use your own coin type, define an empty marker struct that derives
+/// `Deserialize` and implement this trait for it:
 ///
 /// ```
 /// #[derive(serde::Deserialize)]
@@ -70,18 +65,12 @@ pub trait MoveType {
     fn type_tag() -> iota_types::TypeTag;
 }
 
-/// A Rust mirror of a Move object, decodable from an on-chain
+/// A Rust mirror of a Move object that can be decoded from an
 /// [`Object`](iota_types::Object).
 ///
-/// A Move object's type is always a struct, so every `MoveObject` is also a
-/// [`MoveType`] whose [`type_tag`](MoveType::type_tag) wraps
-/// [`struct_tag`](Self::struct_tag). Every mirror with a `TryFrom<&Object>`
-/// constructor implements it.
-///
-/// Generic mirrors take their type parameter's tag from [`MoveType`], so
-/// `Coin<IOTA>` reports `0x2::coin::Coin<0x2::iota::IOTA>` while `Coin<T>` for
-/// a marker of your own reports whatever that marker's [`MoveType`] impl
-/// returns.
+/// [`struct_tag`](Self::struct_tag) is the type of the objects it decodes,
+/// e.g. `0x2::coin::Coin<0x2::iota::IOTA>` for `Coin<IOTA>`. Every
+/// `MoveObject` is also a [`MoveType`] with that same tag.
 #[cfg(feature = "serde")]
 pub trait MoveObject:
     Sized + for<'a> TryFrom<&'a iota_types::Object, Error = FromObjectError>
