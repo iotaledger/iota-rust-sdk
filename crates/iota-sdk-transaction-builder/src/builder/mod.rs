@@ -88,6 +88,9 @@ pub struct TransactionBuildData {
     /// a command is entered, and left alone by any command added afterwards,
     /// so that the state's methods keep addressing their own command.
     state_command: Option<u16>,
+    /// Why the first object passed as two conflicting kinds could not become
+    /// a single input, reported when the transaction is built.
+    input_conflict: Option<String>,
 }
 
 impl TransactionBuildData {
@@ -104,13 +107,8 @@ impl TransactionBuildData {
                 _ => false,
             }
         }) {
-            if is_gas {
-                input.is_gas = true;
-            }
-            // If the new input is already resolved, replace the old one in case it was
-            // unresolved
-            if let new_kind @ InputKind::Input(_) = kind {
-                input.kind = new_kind;
+            if let Err(conflict) = merge_input(input, kind, is_gas) {
+                self.input_conflict.get_or_insert(conflict);
             }
             return Argument::Input(*i as _);
         }
@@ -121,6 +119,14 @@ impl TransactionBuildData {
             .unwrap_or_default();
         self.inputs.insert(idx, Input { kind, is_gas });
         Argument::Input(idx as _)
+    }
+
+    /// Fail if an object was passed as two kinds that cannot be one input.
+    fn check_input_conflict(&self) -> Result<(), TransactionBuilderError> {
+        match &self.input_conflict {
+            Some(conflict) => Err(TransactionBuilderError::Input(conflict.clone())),
+            None => Ok(()),
+        }
     }
 
     /// Get the current set gas coins.
@@ -295,6 +301,63 @@ impl TransactionBuildData {
     }
 }
 
+/// Merge a new use of an object into the input already holding it, leaving
+/// the input untouched if the two cannot be the same input.
+fn merge_input(input: &mut Input, kind: InputKind, is_gas: bool) -> Result<(), String> {
+    fn kind_name(kind: &InputKind) -> &'static str {
+        match kind {
+            InputKind::Shared { .. } | InputKind::Input(iota_types::Input::Shared(_)) => "shared",
+            InputKind::Receiving(_) | InputKind::Input(iota_types::Input::Receiving(_)) => {
+                "receiving"
+            }
+            _ => "owned or immutable",
+        }
+    }
+
+    // Pure inputs are only shared when their bytes are equal.
+    let Some(object_id) = kind.object_id() else {
+        return Ok(());
+    };
+    let merged_kind = match (&input.kind, kind) {
+        // A plain id resolves to a shared input when the object is shared, so
+        // it yields to an explicit shared kind.
+        (
+            InputKind::ImmutableOrOwned(_),
+            new @ (InputKind::Shared { .. } | InputKind::Input(iota_types::Input::Shared(_))),
+        ) => new,
+        (
+            existing @ (InputKind::Shared { .. } | InputKind::Input(iota_types::Input::Shared(_))),
+            InputKind::ImmutableOrOwned(_),
+        ) => existing.clone(),
+        (existing, new) if kind_name(existing) != kind_name(&new) => {
+            return Err(format!(
+                "object {object_id} was passed both as {} and as {}",
+                kind_name(existing),
+                kind_name(&new),
+            ));
+        }
+        // A resolved input replaces an unresolved one for the same object.
+        (_, new @ InputKind::Input(_)) => new,
+        (existing, _) => existing.clone(),
+    };
+    let is_gas = input.is_gas || is_gas;
+    if is_gas
+        && !matches!(
+            merged_kind,
+            InputKind::ImmutableOrOwned(_)
+                | InputKind::Input(iota_types::Input::ImmutableOrOwned(_))
+        )
+    {
+        return Err(format!(
+            "object {object_id} was passed both as {} and as a gas coin",
+            kind_name(&merged_kind),
+        ));
+    }
+    input.kind = merged_kind;
+    input.is_gas = is_gas;
+    Ok(())
+}
+
 impl TransactionBuilder {
     /// Instantiate a new PTB.
     pub fn new(sender: Address) -> Self {
@@ -309,6 +372,7 @@ impl TransactionBuilder {
                 expiration: Default::default(),
                 assigned_results: Default::default(),
                 state_command: Default::default(),
+                input_conflict: Default::default(),
             },
             client: (),
             protocol_config: None,
@@ -371,6 +435,7 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
                 expiration: Default::default(),
                 assigned_results: Default::default(),
                 state_command: Default::default(),
+                input_conflict: Default::default(),
             },
             client: (),
             protocol_config: None,
@@ -1389,6 +1454,7 @@ impl<L> TransactionBuilder<(), L> {
 
     /// Convert this builder into a transaction.
     pub fn finish(mut self) -> Result<Transaction, TransactionBuilderError> {
+        self.data.check_input_conflict()?;
         let Some(price) = self.data.gas_price else {
             return Err(TransactionBuilderError::MissingGasPrice);
         };
@@ -1728,6 +1794,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     async fn resolve_kind(
         &mut self,
     ) -> Result<(TransactionKind, Vec<ObjectReference>), TransactionBuilderError> {
+        self.data.check_input_conflict()?;
         self.data.resolve_gas_arguments()?;
         let taken_inputs: Vec<_> = std::mem::take(&mut self.data.inputs).into_iter().collect();
         let objects = self.fetch_input_objects(&taken_inputs).await?;
@@ -2923,25 +2990,147 @@ mod tests {
             );
         }
 
+        /// Expect `builder` to fail with an input error containing `expected`.
+        async fn assert_input_error<C: TransactionBuilderLedgerClient>(
+            builder: TransactionBuilder<C>,
+            expected: &str,
+        ) {
+            let err = builder.finish_kind().await.unwrap_err();
+            let TransactionBuilderError::Input(message) = &err else {
+                panic!("expected an input error, got {err}");
+            };
+            assert!(message.contains(expected), "unexpected message: {message}");
+        }
+
         /// An object cannot be received and spent as gas in the same
-        /// transaction. A move call with a gas coin as argument is rejected
-        /// earlier by `resolve_gas_arguments`; the transfer of a gas coin is
-        /// the one command allowed to consume it, so that is the path on which
-        /// a receiving input can still carry the gas flag.
+        /// transaction, whichever of the two is set first.
         #[tokio::test]
         async fn a_receiving_id_flagged_as_gas_is_rejected() {
             let sender = Address::random();
             let receivable = object_id(3);
+            let expected = format!(
+                "object {receivable} was passed both as owned or immutable and as receiving"
+            );
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(RecordingClient::default());
+            builder.gas([receivable]);
+            builder.transfer_objects(sender, [crate::Receiving(receivable)]);
+            assert_input_error(builder, &expected).await;
 
             let mut builder =
                 TransactionBuilder::new(sender).with_client(RecordingClient::default());
             builder.transfer_objects(sender, [crate::Receiving(receivable)]);
             builder.gas([receivable]);
+            assert_input_error(
+                builder,
+                &format!(
+                    "object {receivable} was passed both as receiving and as owned or immutable"
+                ),
+            )
+            .await;
+        }
 
-            let err = builder.finish_kind().await.unwrap_err();
+        /// The same id cannot be both an owned and a receiving input.
+        #[tokio::test]
+        async fn an_id_passed_as_owned_and_receiving_is_rejected() {
+            let sender = Address::random();
+            let receivable = object_id(3);
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(RecordingClient::default());
+            builder
+                .move_call(Address::FRAMEWORK, "transfer", "public_receive")
+                .arguments((receivable, crate::Receiving(receivable)));
+            assert_input_error(
+                builder,
+                &format!(
+                    "object {receivable} was passed both as owned or immutable and as receiving"
+                ),
+            )
+            .await;
+        }
+
+        /// A plain id resolves to a shared input when the object is shared,
+        /// so it merges into an explicit shared input in either order.
+        #[tokio::test]
+        async fn a_plain_id_merges_into_a_shared_input() {
+            let sender = Address::random();
+
+            for plain_first in [true, false] {
+                let mut builder =
+                    TransactionBuilder::new(sender).with_client(RecordingClient::default());
+                let call = builder.move_call(Address::FRAMEWORK, "clock", "timestamp_ms");
+                if plain_first {
+                    call.arguments((ObjectId::CLOCK, crate::SharedMut(ObjectId::CLOCK)));
+                } else {
+                    call.arguments((crate::SharedMut(ObjectId::CLOCK), ObjectId::CLOCK));
+                }
+
+                let TransactionKind::Programmable(ptb) = builder.finish_kind().await.unwrap()
+                else {
+                    panic!("expected a programmable transaction");
+                };
+                let [iota_types::Input::Shared(shared)] = &ptb.inputs[..] else {
+                    panic!("expected a single shared input, got {:?}", ptb.inputs);
+                };
+                assert!(shared.mutable, "expected the shared input to stay mutable");
+            }
+        }
+
+        /// A shared object cannot be spent as gas, even when the gas coin is
+        /// given as a plain id.
+        #[tokio::test]
+        async fn a_shared_id_flagged_as_gas_is_rejected() {
+            let sender = Address::random();
+            let expected = format!(
+                "object {} was passed both as shared and as a gas coin",
+                ObjectId::CLOCK
+            );
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(RecordingClient::default());
+            builder.gas([ObjectId::CLOCK]);
+            builder
+                .move_call(Address::FRAMEWORK, "clock", "timestamp_ms")
+                .arguments([crate::Shared(ObjectId::CLOCK)]);
+            assert_input_error(builder, &expected).await;
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(RecordingClient::default());
+            builder
+                .move_call(Address::FRAMEWORK, "clock", "timestamp_ms")
+                .arguments([crate::Shared(ObjectId::CLOCK)]);
+            builder.gas([ObjectId::CLOCK]);
+            assert_input_error(builder, &expected).await;
+        }
+
+        /// An owned object given by reference cannot also be a shared input.
+        #[test]
+        fn a_reference_passed_as_owned_and_shared_is_rejected() {
+            let sender = Address::random();
+            let reference = ObjectReference::new(
+                object_id(3),
+                Version::from_u64(1),
+                iota_types::ObjectDigest::new([3; 32]),
+            );
+
+            let mut builder = TransactionBuilder::new(sender);
+            builder
+                .move_call(Address::FRAMEWORK, "clock", "timestamp_ms")
+                .arguments((reference, crate::Shared(object_id(3))));
+            builder.gas_price(1000);
+
+            let err = builder.finish().unwrap_err();
+            let TransactionBuilderError::Input(message) = &err else {
+                panic!("expected an input error, got {err}");
+            };
             assert!(
-                matches!(err, TransactionBuilderError::WrongGasObject),
-                "expected WrongGasObject, got {err}"
+                message.contains(&format!(
+                    "object {} was passed both as owned or immutable and as shared",
+                    object_id(3)
+                )),
+                "unexpected message: {message}"
             );
         }
 
