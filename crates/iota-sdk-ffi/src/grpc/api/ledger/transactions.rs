@@ -13,7 +13,7 @@ use iota_sdk::{
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::client::GrpcClient,
+    grpc::{client::GrpcClient, read_mask_fields::TransactionField},
     transaction_builder::WaitForTransaction,
     types::{
         digest::{TransactionDigest, TransactionEffectsDigest, TransactionEventsDigest},
@@ -28,9 +28,11 @@ use crate::{
 /// events and objects.
 ///
 /// The `transaction`, `effects`, `events`, and input/output object fields are
-/// deserialized from BCS, so the read mask must include the corresponding
-/// `bcs` sub-fields for them to be populated; digest-only read masks populate
-/// only the digest fields.
+/// deserialized from BCS, so the read mask must include the matching
+/// `TransactionField` (`TransactionBcs`, `EffectsBcs`, `EventsEventsBcs`,
+/// `InputObjectsBcs`, `OutputObjectsBcs`), or its `CheckpointResponseField`
+/// / `SimulateField` counterpart, for them to be populated; digest-only read
+/// masks populate only the digest fields.
 #[derive(uniffi::Record)]
 pub struct ExecutedTransaction {
     /// The digest of the transaction.
@@ -163,13 +165,13 @@ impl GrpcClient {
     pub async fn transactions(
         &self,
         digests: Vec<Arc<TransactionDigest>>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<TransactionField>>,
     ) -> Result<Vec<ExecutedTransaction>> {
         let digests = digests.iter().map(|digest| ***digest).collect::<Vec<_>>();
         self.client()
             .transactions(
                 digests,
-                crate::grpc::api::read_mask::<TransactionReadMask>(&read_mask),
+                crate::grpc::api::read_mask::<TransactionReadMask, _>(read_mask),
             )
             .await?
             .into_inner()
