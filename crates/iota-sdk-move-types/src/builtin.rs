@@ -75,7 +75,7 @@ impl<T: MoveType> MoveTypes for T {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::iota_framework::{balance::Balance, iota::IOTA};
+    use crate::iota_framework::{balance::Balance, iota::IOTA, vec_map::VecMap};
 
     #[test]
     fn vectors_nest_their_element_tag() {
@@ -84,6 +84,14 @@ mod tests {
         assert_eq!(
             Vec::<Balance<IOTA>>::type_tag().to_string(),
             "vector<0x2::balance::Balance<0x2::iota::IOTA>>"
+        );
+    }
+
+    #[test]
+    fn multi_parameter_mirrors_list_their_type_parameters() {
+        assert_eq!(
+            VecMap::<Address, Balance<IOTA>>::type_tag().to_string(),
+            "0x2::vec_map::VecMap<address, 0x2::balance::Balance<0x2::iota::IOTA>>"
         );
     }
 }

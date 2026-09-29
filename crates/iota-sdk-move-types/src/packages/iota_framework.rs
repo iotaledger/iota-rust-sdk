@@ -630,6 +630,18 @@ pub mod vec_map {
             }
         }
     }
+
+    impl<K: crate::MoveType, V: crate::MoveType> crate::MoveType for VecMap<K, V> {
+        /// `0x2::vec_map::VecMap<K, V>`.
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new(
+                iota_types::Address::FRAMEWORK,
+                iota_types::Identifier::from_static("vec_map"),
+                iota_types::Identifier::from_static("VecMap"),
+                <(K, V) as crate::MoveTypes>::type_tags(),
+            )))
+        }
+    }
 }
 
 /// Types from `0x2::vec_set`.
