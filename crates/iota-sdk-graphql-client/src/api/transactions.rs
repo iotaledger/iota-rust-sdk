@@ -169,6 +169,16 @@ impl GraphQLClient {
             if page.nodes.is_empty() {
                 break;
             }
+            if page.nodes.len() + digest_idx > digests.len() {
+                return Err(GraphQLError::Other(
+                    format!(
+                        "received more transactions than expected: {} for {} digests",
+                        page.nodes.len() + digest_idx,
+                        digests.len()
+                    )
+                    .into(),
+                ));
+            }
             for node in page.nodes.into_iter() {
                 if let Some(node) = node {
                     let transaction: SignedTransaction = node.try_into()?;
