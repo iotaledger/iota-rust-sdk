@@ -23,7 +23,7 @@ rustdoc-args = [
 default = []
 bcs-schema = ["dep:iota-bcs-schema", "serde"]
 serde = ["dep:bcs", "dep:serde", "dep:thiserror", "iota-types/serde"]
-u256 = ["dep:primitive-types"] # see README.md
+u256 = ["dep:primitive-types"]
 
 [dependencies]
 # external dependencies
