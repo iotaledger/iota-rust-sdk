@@ -24,18 +24,23 @@ pub mod state;
 /// Convert an optional list of typed fields into an endpoint read mask.
 ///
 /// The paths are normalized like the typed field lists of the Rust client
-/// (duplicates and subsumed paths dropped). When no fields were given, or the
-/// list is empty, the endpoint's default mask is used.
+/// (duplicates and subsumed paths dropped). When nothing is left, or no fields
+/// were given at all, the endpoint's default mask is used.
 pub(crate) fn read_mask<M, F>(fields: Option<Vec<F>>) -> M
 where
-    M: Default + From<Vec<F::Field>>,
+    M: AsRef<str> + Default + From<Vec<F::Field>>,
     F: ReadMaskField,
 {
     match fields {
-        Some(fields) if !fields.is_empty() => {
-            M::from(fields.into_iter().map(F::Field::from).collect::<Vec<_>>())
+        Some(fields) => {
+            let mask = M::from(fields.into_iter().map(F::Field::from).collect::<Vec<_>>());
+            if mask.as_ref().is_empty() {
+                M::default()
+            } else {
+                mask
+            }
         }
-        _ => M::default(),
+        None => M::default(),
     }
 }
 
@@ -95,6 +100,13 @@ mod tests {
         );
         assert_eq!(
             read_mask::<EpochReadMask, EpochField>(Some(vec![])).as_str(),
+            default.as_str()
+        );
+        assert_eq!(
+            read_mask::<EpochReadMask, _>(Some(vec![EpochField::Custom {
+                path: String::new()
+            }]))
+            .as_str(),
             default.as_str()
         );
     }
