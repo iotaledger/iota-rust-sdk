@@ -44,7 +44,11 @@ pem = ["crypto", "iota-crypto/pem"]
 bls12381 = ["crypto", "iota-crypto/bls12381"]
 bech32 = ["crypto", "iota-crypto/bech32"]
 mnemonic = ["crypto", "iota-crypto/mnemonic"]
-move-types = ["dep:iota-move-types"]
+move-types = [
+  "dep:iota-move-types",
+  "iota-graphql-client?/move-types",
+  "iota-grpc-client?/move-types",
+]
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
 # TLS for the GraphQL client (the workspace dependency disables default
@@ -112,7 +116,7 @@ required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]
 name = "grpc_owned_objects"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+required-features = ["grpc-tls-native-roots", "grpc-tls-ring", "move-types"]
 
 [[example]]
 name = "grpc_checkpoints_stream"
@@ -124,7 +128,11 @@ required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]
 name = "decode_staked_iota"
-required-features = ["move-types"]
+required-features = ["graphql"]
+
+[[example]]
+name = "move_objects"
+required-features = ["graphql", "move-types"]
 
 [[example]]
 name = "gas_station"
