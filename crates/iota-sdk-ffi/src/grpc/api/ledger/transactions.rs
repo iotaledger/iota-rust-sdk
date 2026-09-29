@@ -28,9 +28,11 @@ use crate::{
 /// events and objects.
 ///
 /// The `transaction`, `effects`, `events`, and input/output object fields are
-/// deserialized from BCS, so the read mask must include the corresponding
-/// `bcs` sub-fields for them to be populated; digest-only read masks populate
-/// only the digest fields.
+/// deserialized from BCS, so the read mask must include the matching
+/// `TransactionField` (`TransactionBcs`, `EffectsBcs`, `EventsEventsBcs`,
+/// `InputObjectsBcs`, `OutputObjectsBcs`), or its `CheckpointResponseField`
+/// / `SimulateField` counterpart, for them to be populated; digest-only read
+/// masks populate only the digest fields.
 #[derive(uniffi::Record)]
 pub struct ExecutedTransaction {
     /// The digest of the transaction.

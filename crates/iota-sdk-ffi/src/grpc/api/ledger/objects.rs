@@ -31,9 +31,9 @@ pub struct ObjectRequest {
 
 /// An object as returned by the gRPC ledger service.
 ///
-/// The `object_id`, `version` and `digest` fields come from the `reference`
-/// sub-fields of the read mask. The `object` field is deserialized from BCS,
-/// so the read mask must include `bcs` for it to be populated.
+/// The `object_id`, `version` and `digest` fields come from the `Reference...`
+/// fields of the read mask. The `object` field is deserialized from BCS, so
+/// the read mask must include `Bcs` for it to be populated.
 #[derive(uniffi::Record)]
 pub struct GrpcObject {
     /// The id of the object.

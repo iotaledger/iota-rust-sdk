@@ -36,10 +36,11 @@ use crate::{
 /// the default read mask only includes the checkpoint summary, and every
 /// other field is `None`.
 ///
-/// The `summary`, `signature`, `contents`, and `events` fields are
-/// deserialized from BCS, so the read mask must include the corresponding
-/// `bcs` sub-fields for them to be populated; digest-only read masks populate
-/// only the digest fields.
+/// The `summary`, `signature`, `contents` and `events` fields are
+/// deserialized from BCS, so the read mask must include
+/// `CheckpointSummaryBcs`, `CheckpointSignature`, `CheckpointContentsBcs` and
+/// `EventsBcs` respectively for them to be populated; digest-only read masks
+/// populate only the digest fields.
 #[derive(uniffi::Record)]
 pub struct CheckpointResponse {
     /// The checkpoint sequence number. Always available regardless of the
@@ -56,12 +57,12 @@ pub struct CheckpointResponse {
     /// The checkpoint contents.
     pub contents: Option<Arc<CheckpointContents>>,
     /// The transactions executed in the checkpoint. `None` unless the read
-    /// mask requests `transactions` or one of its sub-fields; with a
-    /// transactions filter that matches nothing, an empty list.
+    /// mask requests `Transactions` or one of its `Transactions...` fields;
+    /// with a transactions filter that matches nothing, an empty list.
     pub transactions: Option<Vec<ExecutedTransaction>>,
     /// The events emitted in the checkpoint. `None` unless the read mask
-    /// requests `events.bcs`; a checkpoint with no events, or an events
-    /// filter that matches nothing, yields an empty list.
+    /// requests `EventsBcs` (or `Events`); a checkpoint with no events, or an
+    /// events filter that matches nothing, yields an empty list.
     pub events: Option<Vec<Event>>,
 }
 

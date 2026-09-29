@@ -11,8 +11,9 @@
 //!
 //! Complex types (transactions, effects, events, objects, ...) are eagerly
 //! deserialized from their BCS representation, so the read mask must include
-//! the corresponding `bcs` sub-fields for those record fields to be
-//! populated.
+//! the matching `...Bcs` field (e.g. `TransactionField::EffectsBcs`), or a
+//! field covering it such as `TransactionField::Effects` or `All`, for those
+//! record fields to be populated.
 
 use crate::grpc::read_mask_fields::ReadMaskField;
 
