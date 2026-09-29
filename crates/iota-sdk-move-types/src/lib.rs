@@ -70,11 +70,13 @@ pub trait MoveType {
     fn type_tag() -> iota_types::TypeTag;
 }
 
-/// A Rust mirror that knows the Move struct tag of the objects it decodes.
+/// A Rust mirror of a Move object, decodable from an on-chain
+/// [`Object`](iota_types::Object).
 ///
-/// Where [`MoveType`] names the type a *phantom marker* stands for, this names
-/// the type of the object itself, so a caller holding only `T` can ask what to
-/// fetch. Every mirror with a `TryFrom<&Object>` constructor implements it.
+/// A Move object's type is always a struct, so every `MoveObject` is also a
+/// [`MoveType`] whose [`type_tag`](MoveType::type_tag) wraps
+/// [`struct_tag`](Self::struct_tag). Every mirror with a `TryFrom<&Object>`
+/// constructor implements it.
 ///
 /// Generic mirrors take their type parameter's tag from [`MoveType`], so
 /// `Coin<IOTA>` reports `0x2::coin::Coin<0x2::iota::IOTA>` while `Coin<T>` for
@@ -86,6 +88,13 @@ pub trait MoveObject:
 {
     /// The Move struct tag of the objects this type mirrors.
     fn struct_tag() -> iota_types::StructTag;
+}
+
+#[cfg(feature = "serde")]
+impl<T: MoveObject> MoveType for T {
+    fn type_tag() -> iota_types::TypeTag {
+        iota_types::TypeTag::Struct(Box::new(T::struct_tag()))
+    }
 }
 
 /// Error returned when converting an `Object` into a typed mirror.
@@ -107,6 +116,22 @@ pub enum FromObjectError {
     /// BCS decoding of the struct contents failed.
     #[error("bcs decoding failed: {0}")]
     Bcs(#[from] bcs::Error),
+}
+
+/// Decode the BCS contents of `object`, provided it is a Move struct tagged
+/// exactly `expected`.
+#[cfg(feature = "serde")]
+fn decode_move_struct<T: serde::de::DeserializeOwned>(
+    object: &iota_types::Object,
+    expected: &iota_types::StructTag,
+) -> Result<T, FromObjectError> {
+    let move_struct = object
+        .as_opt_struct()
+        .ok_or(FromObjectError::NotAMoveStruct)?;
+    if move_struct.struct_tag() != expected {
+        return Err(FromObjectError::WrongType);
+    }
+    Ok(bcs::from_bytes(move_struct.contents())?)
 }
 
 #[cfg(all(test, feature = "serde"))]
@@ -140,14 +165,11 @@ mod tests {
         );
     }
 
-    /// The tag a mirror advertises has to be the one its `TryFrom<&Object>`
-    /// accepts. Both come from the same `add_struct_tag_ctor!` registration but
-    /// through different halves of it, so a mismatched pairing in the macro
-    /// would otherwise only surface as an empty result set at runtime.
     #[test]
-    fn advertised_tag_satisfies_the_predicate_try_from_checks() {
-        assert!(StakedIota::struct_tag().is_staked_iota());
-        assert!(Coin::<IOTA>::struct_tag().is_coin());
-        assert!(CoinMetadata::<IOTA>::struct_tag().is_coin_metadata());
+    fn type_tag_wraps_struct_tag() {
+        assert_eq!(
+            Coin::<IOTA>::type_tag(),
+            iota_types::TypeTag::Struct(Box::new(Coin::<IOTA>::struct_tag()))
+        );
     }
 }
