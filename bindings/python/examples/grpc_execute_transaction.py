@@ -34,8 +34,9 @@ async def main():
     if simulated.execution_error is not None:
         print("Simulation aborted:", simulated.execution_error.source)
     else:
-        print(f"Simulation succeeded: {len(simulated.command_results)} command "
-              f"result(s), suggested gas price {simulated.suggested_gas_price}")
+        print(
+            f"Simulation succeeded: {len(simulated.command_results or [])} command "
+            f"result(s), suggested gas price {simulated.suggested_gas_price}")
 
     signature = private_key.sign_transaction(txn)
     signed_transaction = SignedTransaction(transaction=txn,
@@ -43,7 +44,7 @@ async def main():
 
     executed = await client.execute_transaction(signed_transaction)
 
-    print(f"Digest: {hex_encode(executed.digest.to_bytes())}")
+    print(f"Digest: {executed.digest.to_base58()}")
     print(f"Transaction status: {executed.effects.as_v1().status()}")
 
 

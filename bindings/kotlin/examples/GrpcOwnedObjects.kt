@@ -18,7 +18,7 @@ fun main() = runBlocking {
         val page = client.ownedObjects(owner, null, 10u)
         println("First page: ${page.objects.size} objects")
         for (obj in page.objects) {
-            println("  ${obj.objectId!!.toHex()}")
+            obj.objectId?.let { println("  ${it.toHex()}") }
         }
         if (page.nextPageToken != null) {
             println("  ...more pages available")
@@ -29,7 +29,7 @@ fun main() = runBlocking {
         println("---")
         println("Up to 50 IOTA coin objects (${coins.size} returned):")
         for (obj in coins) {
-            println("  ${obj.objectId!!.toHex()}")
+            obj.objectId?.let { println("  ${it.toHex()}") }
         }
     } catch (e: Exception) {
         e.printStackTrace()

@@ -45,7 +45,7 @@ struct GrpcExecuteTransactionExample {
 
     let executed = try await client.executeTransaction(signedTransaction: signedTransaction)
 
-    print("Digest: \(hexEncode(input: executed.digest!.toBytes()))")
+    print("Digest: \(executed.digest!.toBase58())")
     print("Transaction status: \(executed.effects!.asV1().status())")
   }
 }
