@@ -17,7 +17,7 @@ use crate::{
 impl GraphQLClient {
     /// Get the chain identifier.
     pub async fn chain_id(&self) -> Result<String> {
-        Ok(self.0.read().await.chain_id().await?)
+        Ok(self.client().chain_id().await?)
     }
 
     /// Get the reference gas price for the provided epoch or the last known one
@@ -27,13 +27,13 @@ impl GraphQLClient {
     /// the GraphQL service (e.g., due to pruning).
     #[uniffi::method(default(epoch = None))]
     pub async fn reference_gas_price(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        Ok(self.0.read().await.reference_gas_price(epoch).await?)
+        Ok(self.client().reference_gas_price(epoch).await?)
     }
 
     /// Get the protocol configuration.
     #[uniffi::method(default(version = None))]
     pub async fn protocol_config(&self, version: Option<u64>) -> Result<ProtocolConfigs> {
-        Ok(self.0.read().await.protocol_config(version).await?.into())
+        Ok(self.client().protocol_config(version).await?.into())
     }
 
     /// Get the list of active validators for the provided epoch, including
@@ -46,9 +46,7 @@ impl GraphQLClient {
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<ValidatorPage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .active_validators(epoch, pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
