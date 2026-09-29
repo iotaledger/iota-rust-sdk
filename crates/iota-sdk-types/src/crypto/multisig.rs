@@ -1071,7 +1071,7 @@ mod tests {
     }
 
     /// A passkey member signature is BCS-framed as `%d04` followed by
-    /// length-prefixed bytes containing `passkey-flag || passkey body` — the
+    /// length-prefixed bytes containing `passkey-flag || passkey body`, the
     /// historical wrapping produced by `PasskeyAuthenticator`'s serde. A
     /// round-trip test cannot detect losing (or doubling) that framing, so it
     /// is pinned here byte-by-byte.
@@ -1185,7 +1185,7 @@ mod tests {
             })
         };
 
-        // pk0, pk0 — the same key appears twice in adjacent positions.
+        // pk0, pk0: the same key appears twice in adjacent positions.
         let err = MultisigAggregatedSignature::new(vec![sig(pk0), sig(pk0)], committee.clone())
             .unwrap_err();
         assert!(
@@ -1193,7 +1193,7 @@ mod tests {
             "adjacent duplicate should be reported as DuplicatePublicKey, got {err:?}"
         );
 
-        // pk0, pk1, pk0 — pk0 reappears non-adjacently, which must also be
+        // pk0, pk1, pk0: pk0 reappears non-adjacently, which must also be
         // reported as a duplicate.
         let err = MultisigAggregatedSignature::new(vec![sig(pk0), sig(pk1), sig(pk0)], committee)
             .unwrap_err();

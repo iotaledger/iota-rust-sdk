@@ -147,7 +147,7 @@ mod serialization {
     /// Flat wire shape for `PublicKey`.
     ///
     /// The BCS variant tags are `PublicKey`'s own historical flag values
-    /// (0x00 Ed25519, 0x01 Secp256k1, 0x02 Secp256r1, 0x04 Passkey) — note
+    /// (0x00 Ed25519, 0x01 Secp256k1, 0x02 Secp256r1, 0x04 Passkey). Note
     /// that passkey public keys use tag `0x04` here even though the passkey
     /// *signature scheme* flag is `0x06`. The `ZkLoginDeprecated` placeholder
     /// holds the `0x03` slot and is rejected by the deserializer.

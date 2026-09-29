@@ -11,6 +11,6 @@ Protobuf/gRPC types for the IOTA blockchain, consumed by
 
 ## Generated code
 
-The types under `src/proto/` are build output — do not edit them by hand. They are regenerated
+The types under `src/proto/` are build output. Do not edit them by hand. They are regenerated
 from the upstream proto definitions with `make grpc` at the repository root (see
 `crates/iota-sdk-grpc-proto-build/`).

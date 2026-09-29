@@ -232,7 +232,7 @@ impl ViewFunctionCallOutputs {
 impl ViewFunctionCallResult {
     /// Get the outputs of this call, if the server ran it.
     ///
-    /// A call that ran and aborted still has outputs — the abort is reported
+    /// A call that ran and aborted still has outputs. The abort is reported
     /// through [`ViewFunctionCallOutputs::execution_error`]. `None` here means
     /// the server rejected the call outright; see [`Self::error`].
     pub fn outputs(&self) -> Option<&ViewFunctionCallOutputs> {

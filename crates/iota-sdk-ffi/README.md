@@ -115,7 +115,7 @@ The gas station supplies the whole gas payment, so setting gas coins or a sponso
 
 ### HTTP client options
 
-Constructors that open a connection — the GraphQL and faucet clients, and the gas station above — take an `HttpClientOptions`. The defaults trust the platform certificate store plus a bundled copy of the Mozilla roots, send the bindings' own user agent, and apply no timeout.
+Constructors that open a connection (the GraphQL and faucet clients, and the gas station above) take an `HttpClientOptions`. The defaults trust the platform certificate store plus a bundled copy of the Mozilla roots, send the bindings' own user agent, and apply no timeout.
 
 The fields cover the cases a foreign language cannot express by handing over an HTTP client of its own:
 

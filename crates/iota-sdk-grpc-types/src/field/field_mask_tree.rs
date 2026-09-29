@@ -150,7 +150,7 @@ impl FieldMaskTree {
     /// When a user specifies explicit map keys via a field mask (e.g.
     /// `attributes.max_tx_gas`), this method returns an iterator over those
     /// key names. When the tree is a wildcard, `None` is returned to indicate
-    /// "no filter — return all (or none, per policy)".
+    /// "no filter: return all (or none, per policy)".
     pub fn map_keys(&self) -> Option<impl Iterator<Item = &str>> {
         if self.wildcard {
             None
@@ -167,13 +167,13 @@ impl FieldMaskTree {
     /// `"flags"` or `"attributes"`).  The return value tells the caller what
     /// to put in the resulting map:
     ///
-    /// - `None` — the wrapper itself was a wildcard *or* the inner field was
-    ///   not explicitly requested → **omit the wrapper field entirely** (leave
-    ///   it as `None` in the response so clients can distinguish "not
-    ///   requested" from "empty").
-    /// - `Some(None)` — the inner field was requested without specific keys
+    /// - `None`: the wrapper itself was a wildcard *or* the inner field was not
+    ///   explicitly requested → **omit the wrapper field entirely** (leave it
+    ///   as `None` in the response so clients can distinguish "not requested"
+    ///   from "empty").
+    /// - `Some(None)`: the inner field was requested without specific keys
     ///   (e.g. `feature_flags.flags`) → include **all entries**.
-    /// - `Some(Some(keys))` — only these specific keys were requested (e.g.
+    /// - `Some(Some(keys))`: only these specific keys were requested (e.g.
     ///   `feature_flags.flags.flag_a`) → include **only those entries**.
     pub fn map_field_filter(
         &self,

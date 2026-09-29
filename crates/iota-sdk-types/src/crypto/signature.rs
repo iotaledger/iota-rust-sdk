@@ -589,7 +589,7 @@ mod serialization {
     impl SimpleSignature {
         /// Encode this signature as `<scheme-flag> <signature> <public-key>`.
         ///
-        /// Note: this is the flat body shape — no outer length prefix.
+        /// Note: this is the flat body shape (no outer length prefix).
         pub fn to_bytes(&self) -> Vec<u8> {
             bcs::to_bytes(&SimpleSignatureBody::from(self))
                 .expect("BCS serialization of SimpleSignature cannot fail")
@@ -865,7 +865,7 @@ mod serialization {
     impl UserSignature {
         /// Encode this signature as `<scheme-flag> <payload>`.
         ///
-        /// Note: this is the flat body shape — no outer length prefix.
+        /// Note: this is the flat body shape (no outer length prefix).
         pub fn to_bytes(&self) -> Vec<u8> {
             match self {
                 UserSignature::Simple(s) => s.to_bytes(),

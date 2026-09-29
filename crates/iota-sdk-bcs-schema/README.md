@@ -64,7 +64,7 @@ The macro only writes to disk when the `BCS_SCHEMA` env var is set, so normal de
 # Regenerate
 BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash
 
-# Normal build — no regeneration, no recompile overhead
+# Normal build: no regeneration, no recompile overhead
 cargo check --all-features
 ```
 
@@ -72,6 +72,6 @@ cargo check --all-features
 
 ## Limitations
 
-- `as_type` and `definition` values are trusted verbatim — they are not validated against the actual `serde` impl.
+- `as_type` and `definition` values are trusted verbatim; they are not validated against the actual `serde` impl.
 - Custom `Serialize`/`Deserialize` impls are invisible to the macro. If the wire format diverges from the Rust layout, annotate it manually or derive on a mirror type that matches the wire format.
 - `serde` attributes (`skip`, `rename`, `flatten`, `tag`, ...) are not read. Use the `bcs_schema` attributes to mirror any serde-driven differences.

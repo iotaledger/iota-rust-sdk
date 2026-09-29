@@ -2,10 +2,10 @@
 
 The IOTA gRPC client provides access to the IOTA blockchain via gRPC. It exposes four service clients:
 
-- **Ledger Service** — query blocks, transactions, and ledger state
-- **Execution Service** — execute transactions and dry-run operations
-- **State Service** — query on-chain objects and state
-- **Move Package Service** — query and interact with Move packages
+- **Ledger Service**: query blocks, transactions, and ledger state
+- **Execution Service**: execute transactions and dry-run operations
+- **State Service**: query on-chain objects and state
+- **Move Package Service**: query and interact with Move packages
 
 # Usage
 

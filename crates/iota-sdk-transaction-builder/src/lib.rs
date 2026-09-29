@@ -207,7 +207,7 @@
 //! ways depending on who holds the sponsor's key.
 //!
 //! When you hold it, set the sponsor's address with
-//! [sponsor](TransactionBuilder::sponsor) — the gas coins are drawn from it —
+//! [sponsor](TransactionBuilder::sponsor) (the gas coins are drawn from it)
 //! and call
 //! [execute_with_sponsor_signer](TransactionBuilder::execute_with_sponsor_signer),
 //! which signs as both parties and submits through the client.
@@ -221,8 +221,8 @@
 //!
 //! [GasStation] implements [GasSponsor] for the
 //! [IOTA gas station](https://github.com/iotaledger/gas-station) and is enabled
-//! by the `gas-station` feature. A station is configured once — with its URL
-//! and, typically, an authorization header — and reused for any number of
+//! by the `gas-station` feature. A station is configured once (with its URL
+//! and, typically, an authorization header) and reused for any number of
 //! transactions:
 //!
 //! ```no_run

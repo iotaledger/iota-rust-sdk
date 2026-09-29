@@ -171,7 +171,7 @@ macro_rules! define_checkpoint_stream {
             /// Cancel the stream, dropping the connection and unblocking a
             /// pending `next`.
             ///
-            /// Idempotent, and safe to call while `next` is pending — the
+            /// Idempotent, and safe to call while `next` is pending. The
             /// pending call drops the connection on its way out.
             ///
             /// Named `cancel` rather than `close` because a `close` method

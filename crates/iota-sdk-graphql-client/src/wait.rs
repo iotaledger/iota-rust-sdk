@@ -73,7 +73,7 @@ mod wasm_time {
         waker: Cell<Option<Waker>>,
     }
 
-    /// Cancelable sleep — `clearTimeout` on drop so Node's event loop
+    /// Cancelable sleep: `clearTimeout` on drop so Node's event loop
     /// doesn't stay alive past a future that's been raced out.
     pub(super) struct Sleep {
         state: Rc<State>,

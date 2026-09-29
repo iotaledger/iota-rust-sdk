@@ -153,8 +153,8 @@ impl GrpcClient {
     /// Get transactions by their digests.
     ///
     /// Results are returned in the same order as the input digests.
-    /// If any transaction cannot be read — because it is not found or has been
-    /// pruned by the serving node — the whole call fails.
+    /// If any transaction cannot be read (because it is not found or has been
+    /// pruned by the serving node), the whole call fails.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the transaction, signatures, checkpoint, and timestamp are

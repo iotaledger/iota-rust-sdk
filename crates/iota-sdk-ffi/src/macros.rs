@@ -410,7 +410,7 @@ macro_rules! ffi_map {
 /// `map-objects` is enabled, this one is always an object: a native map keeps
 /// the key order in some binding languages and drops it in others.
 ///
-/// The key type is written as it is stored — `Arc<ObjectId>`, `String` — and
+/// The key type is written as it is stored (`Arc<ObjectId>`, `String`) and
 /// lookups take its [`Deref`](std::ops::Deref) target.
 #[macro_export]
 macro_rules! ffi_btree_map {

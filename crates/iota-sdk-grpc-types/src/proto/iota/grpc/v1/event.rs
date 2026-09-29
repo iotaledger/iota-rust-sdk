@@ -35,7 +35,7 @@ impl Event {
     /// Deserialize the full event from BCS.
     ///
     /// **Read mask:** `bcs` relative to this event (see [`EVENT_BCS`]).
-    /// Full path depends on context — e.g. `"events.bcs"` for checkpoint
+    /// Full path depends on context, e.g. `"events.bcs"` for checkpoint
     /// top-level events, `"events.events.bcs"` for transaction events.
     ///
     /// [`EVENT_BCS`]: crate::read_masks::EVENT_BCS

@@ -213,12 +213,13 @@ fn type_to_schema(ty: &Type) -> String {
                 {
                     return format!("{}OCTET", lit_int.base10_digits());
                 }
-                // Non-literal length — user should use #[bcs_schema(definition = "...")]
+                // Non-literal length: the user should use
+                // `#[bcs_schema(definition = "...")]`.
                 "*OCTET".into()
             } else if let Expr::Lit(expr_lit) = &arr.len
                 && let Lit::Int(lit_int) = &expr_lit.lit
             {
-                // NRule or N(group) — exact repetition per RFC 5234 §3.7
+                // NRule or N(group): exact repetition per RFC 5234 §3.7
                 let n = lit_int.base10_digits();
                 if elem.starts_with('(') || (!elem.contains(' ') && !elem.starts_with('*')) {
                     format!("{n}{elem}")
@@ -506,7 +507,7 @@ fn write_schema_entry(schema_name: &str, definition: &str) {
     let path = schema_file_path();
     let content = std::fs::read_to_string(&path).unwrap_or_default();
 
-    // Parse existing entries — each entry is separated by a blank line.
+    // Parse existing entries: each entry is separated by a blank line.
     let mut entries: Vec<(String, String)> = Vec::new();
     for block in content.split("\n\n") {
         let trimmed = block.trim();
@@ -560,7 +561,7 @@ fn write_schema_entry(schema_name: &str, definition: &str) {
         output.push('\n');
     }
 
-    // Best-effort write — don't break compilation if it fails
+    // Best-effort write: don't break compilation if it fails
     let _ = std::fs::write(&path, output);
 }
 
@@ -606,9 +607,9 @@ fn expand(input: &DeriveInput) -> syn::Result<TokenStream2> {
         },
     };
 
-    // Write the definition to the schema file only when explicitly requested via
-    // the BCS_SCHEMA env var — keeps `--all-features` builds from regenerating
-    // the file during normal development.
+    // Write the definition to the schema file only when explicitly requested
+    // via the BCS_SCHEMA env var, which keeps `--all-features` builds from
+    // regenerating the file during normal development.
     let bcs_schema_enabled = std::env::var("BCS_SCHEMA").is_ok_and(|v| !v.is_empty() && v != "0");
     if bcs_schema_enabled {
         write_schema_entry(&schema_name, &definition);

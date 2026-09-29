@@ -6,7 +6,7 @@
 //! Highlights two things about the gRPC API:
 //! - `objects` is batched (it takes an iterable of ids and streams the matched
 //!   objects back), so we just hand it one id.
-//! - The returned proto `Object` is *lazy* — you convert into the SDK type only
+//! - The returned proto `Object` is *lazy*: you convert into the SDK type only
 //!   when you need the deserialized fields.
 
 use eyre::{Result, bail};

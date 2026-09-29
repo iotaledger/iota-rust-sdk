@@ -31,7 +31,7 @@
 //!
 //! | Endpoint | Prefix |
 //! |---|---|
-//! | `get_transactions` / `execute_transactions` | *(none — direct)* |
+//! | `get_transactions` / `execute_transactions` | *(none, direct)* |
 //! | Checkpoint queries | `transactions.` |
 //! | `simulate_transactions` | `executed_transaction.` |
 //!
@@ -114,7 +114,7 @@ pub const SIMULATE_TRANSACTIONS_READ_MASK: &str = field_mask!(
 pub const VIEW_FUNCTION_CALLS_READ_MASK: &str = field_mask!("execution_result");
 
 // ---------------------------------------------------------------------------
-// CheckpointResponse — per-method field constants
+// CheckpointResponse: per-method field constants
 //
 // These use the full paths expected by the checkpoint endpoints
 // (get_checkpoint_*, stream_checkpoints).
@@ -172,7 +172,7 @@ pub const CHECKPOINT_RESPONSE_CHECKPOINT_DATA: &str = field_mask!(
 );
 
 // ---------------------------------------------------------------------------
-// CheckpointSummary / CheckpointContents — sub-field constants
+// CheckpointSummary / CheckpointContents: sub-field constants
 //
 // Full paths from the checkpoint endpoint root.
 // ---------------------------------------------------------------------------
@@ -194,7 +194,7 @@ pub const CHECKPOINT_CONTENTS_DIGEST: &str = "checkpoint.contents.digest";
 pub const CHECKPOINT_CONTENTS_BCS: &str = "checkpoint.contents.bcs";
 
 // ---------------------------------------------------------------------------
-// ExecutedTransaction — per-method field constants
+// ExecutedTransaction: per-method field constants
 //
 // Direct (unprefixed) paths, usable with get_transactions and
 // execute_transactions. For checkpoint context prefix with "transactions.",
@@ -274,7 +274,7 @@ pub const EXECUTED_TRANSACTION_BALANCE_CHANGES: &str = "balance_changes";
 pub const EXECUTED_TRANSACTION_OBJECT_CHANGES: &str = "object_changes";
 
 // ---------------------------------------------------------------------------
-// Transaction — sub-field constants (relative to ExecutedTransaction)
+// Transaction: sub-field constants (relative to ExecutedTransaction)
 // ---------------------------------------------------------------------------
 
 /// Read mask for
@@ -287,7 +287,7 @@ pub const TRANSACTION_DIGEST: &str = "transaction.digest";
 pub const TRANSACTION_BCS: &str = "transaction.bcs";
 
 // ---------------------------------------------------------------------------
-// TransactionEffects — sub-field constants (relative to ExecutedTransaction)
+// TransactionEffects: sub-field constants (relative to ExecutedTransaction)
 // ---------------------------------------------------------------------------
 
 /// Read mask for
@@ -300,7 +300,7 @@ pub const TRANSACTION_EFFECTS_DIGEST: &str = "effects.digest";
 pub const TRANSACTION_EFFECTS_BCS: &str = "effects.bcs";
 
 // ---------------------------------------------------------------------------
-// TransactionEvents — sub-field constants (relative to ExecutedTransaction)
+// TransactionEvents: sub-field constants (relative to ExecutedTransaction)
 // ---------------------------------------------------------------------------
 
 /// Read mask for
@@ -313,7 +313,7 @@ pub const TRANSACTION_EVENTS_DIGEST: &str = "events.digest";
 pub const TRANSACTION_EVENTS_BCS: &str = "events.events.bcs";
 
 // ---------------------------------------------------------------------------
-// Event — per-method field constants
+// Event: per-method field constants
 //
 // Relative paths. The full path depends on context:
 // - Checkpoint top-level events: prefix with "events."
@@ -351,7 +351,7 @@ pub const EVENT_BCS_CONTENTS: &str = "bcs_contents";
 pub const EVENT_JSON_CONTENTS: &str = "json_contents";
 
 // ---------------------------------------------------------------------------
-// Object — per-method field constants (for get_objects)
+// Object: per-method field constants (for get_objects)
 // ---------------------------------------------------------------------------
 
 /// Read mask for
@@ -366,7 +366,7 @@ pub const OBJECT_REFERENCE: &str = "reference";
 pub const OBJECT_BCS: &str = "bcs";
 
 // ---------------------------------------------------------------------------
-// SimulatedTransaction — per-method field constants
+// SimulatedTransaction: per-method field constants
 // ---------------------------------------------------------------------------
 
 /// Read mask for
@@ -388,7 +388,7 @@ pub const SIMULATED_TRANSACTION_SUGGESTED_GAS_PRICE: &str = "suggested_gas_price
 pub const SIMULATED_TRANSACTION_EXECUTION_RESULT: &str = "execution_result";
 
 // ---------------------------------------------------------------------------
-// ViewFunctionCallOutputs — per-method field constants
+// ViewFunctionCallOutputs: per-method field constants
 // ---------------------------------------------------------------------------
 
 /// Read mask for
@@ -399,7 +399,7 @@ pub const SIMULATED_TRANSACTION_EXECUTION_RESULT: &str = "execution_result";
 pub const VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT: &str = "execution_result";
 
 // ---------------------------------------------------------------------------
-// ExecutionError — sub-field constants (relative to simulate_transactions)
+// ExecutionError: sub-field constants (relative to simulate_transactions)
 // ---------------------------------------------------------------------------
 
 /// Read mask for

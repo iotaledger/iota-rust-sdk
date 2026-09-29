@@ -270,7 +270,7 @@ mod tests {
         }
 
         // Above `u64::MAX` there is no JSON number to start from, so the caller
-        // writes a string — which arrives as itself.
+        // writes a string, which arrives as itself.
         let u128_max = serde_json::json!(u128::MAX.to_string());
         assert_eq!(
             prost_to_json(&json_to_prost_stringify_numbers(&u128_max)),

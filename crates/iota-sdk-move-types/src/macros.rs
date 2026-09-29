@@ -10,12 +10,12 @@
 //! `from_bcs` and the field accessors stay hand-written per type.
 //!
 //! The [`StructTag`] predicate a mirror validates against is derived from its
-//! name as `is_<name:snake>` — the same `paste` snake-casing that generated
+//! name as `is_<name:snake>`, the same `paste` snake-casing that generated
 //! that predicate in the first place, applied to the same identifier, so it
 //! always matches for a type registered on a plain `add_struct_tag_ctor!` arm.
-//! A type whose predicate lives under a different name — one registered with
+//! A type whose predicate lives under a different name, one registered with
 //! `@with_module` (predicate `is_<module>_<name>`), or a mirror whose Rust name
-//! diverges from the Move struct name — passes its predicate explicitly as a
+//! diverges from the Move struct name, passes its predicate explicitly as a
 //! second argument.
 //!
 //! [`StructTag`]: iota_types::StructTag

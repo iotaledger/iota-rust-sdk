@@ -34,7 +34,7 @@ pub use metadata::MetadataEnvelope;
 /// `filter_checkpoints` is disabled, only `Checkpoint` items are produced.
 ///
 /// For liveness detection with `filter_checkpoints`, wrap `stream.next()` in
-/// `tokio::time::timeout()` — if neither a `Checkpoint` nor a `Progress`
+/// `tokio::time::timeout()`: if neither a `Checkpoint` nor a `Progress`
 /// arrives within your chosen duration plus some buffer for connection latency,
 /// the connection is likely dead.
 #[derive(Clone, Debug)]
@@ -110,8 +110,8 @@ impl CheckpointResponse {
     /// Returns the proto
     /// [`CheckpointSummary`](iota_grpc_types::v1::checkpoint::CheckpointSummary)
     /// which provides:
-    /// - [`digest()`](iota_grpc_types::v1::checkpoint::CheckpointSummary::digest) — the summary digest
-    /// - [`summary()`](iota_grpc_types::v1::checkpoint::CheckpointSummary::summary) — the deserialized SDK `CheckpointSummary`
+    /// - [`digest()`](iota_grpc_types::v1::checkpoint::CheckpointSummary::digest): the summary digest
+    /// - [`summary()`](iota_grpc_types::v1::checkpoint::CheckpointSummary::summary): the deserialized SDK `CheckpointSummary`
     ///
     /// **Read mask:** `"checkpoint.summary"` (see
     /// [`CHECKPOINT_RESPONSE_SUMMARY`])
@@ -151,8 +151,8 @@ impl CheckpointResponse {
     /// Returns the proto
     /// [`CheckpointContents`](iota_grpc_types::v1::checkpoint::CheckpointContents)
     /// which provides:
-    /// - [`digest()`](iota_grpc_types::v1::checkpoint::CheckpointContents::digest) — the contents digest
-    /// - [`contents()`](iota_grpc_types::v1::checkpoint::CheckpointContents::contents) — the deserialized SDK `CheckpointContents`
+    /// - [`digest()`](iota_grpc_types::v1::checkpoint::CheckpointContents::digest): the contents digest
+    /// - [`contents()`](iota_grpc_types::v1::checkpoint::CheckpointContents::contents): the deserialized SDK `CheckpointContents`
     ///
     /// **Read mask:** `"checkpoint.contents"` (see
     /// [`CHECKPOINT_RESPONSE_CONTENTS`])

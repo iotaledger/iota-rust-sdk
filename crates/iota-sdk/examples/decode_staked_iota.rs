@@ -6,19 +6,19 @@
 //!
 //! The GraphQL client returns each object's `contents` as a raw BCS byte
 //! buffer. Without a Rust mirror of the Move type you would have to walk
-//! those bytes by hand — 32 bytes for the `UID`, 32 bytes for the pool's
+//! those bytes by hand (32 bytes for the `UID`, 32 bytes for the pool's
 //! `ID`, 8 little-endian bytes for the activation epoch, 8 more for the
-//! principal — and you'd be on the hook for keeping that decoder in sync
+//! principal) and you'd be on the hook for keeping that decoder in sync
 //! with every Move-side change.
 //!
 //! With the move-types crate, a single `StakedIota::try_from`
 //! validates the on-chain type tag and gives you typed, named-field
 //! access:
 //!
-//! - `staked.id()` — the staked object's [`ObjectId`]
-//! - `staked.pool_id()` — the staking pool the stake belongs to
-//! - `staked.stake_activation_epoch()` — the epoch the stake activates at
-//! - `staked.principal()` — the staked amount in nanos
+//! - `staked.id()`: the staked object's [`ObjectId`]
+//! - `staked.pool_id()`: the staking pool the stake belongs to
+//! - `staked.stake_activation_epoch()`: the epoch the stake activates at
+//! - `staked.principal()`: the staked amount in nanos
 //!
 //! [`ObjectId`]: iota_types::ObjectId
 

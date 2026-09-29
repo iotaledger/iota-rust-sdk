@@ -252,7 +252,7 @@ pub enum CommitteeChainError {
 /// every summary a consumer obtains this way is committee-verified, with no
 /// trust in whatever transport delivered it.
 ///
-/// The walk is transport-agnostic by design — callers drive their own loop (an
+/// The walk is transport-agnostic by design: callers drive their own loop (an
 /// in-memory list, a remote-store stream, files on disk) and feed summaries in;
 /// this type only holds the verification state.
 #[derive(Debug)]
@@ -261,8 +261,8 @@ pub struct CommitteeChainVerifier {
 }
 
 impl CommitteeChainVerifier {
-    /// Start the walk at a trusted committee — the trust root for everything
-    /// verified after it.
+    /// Start the walk at a trusted committee (the trust root for everything
+    /// verified after it).
     pub fn new(trusted_committee: ValidatorCommittee) -> Result<Self, SignatureError> {
         ValidatorCommitteeSignatureVerifier::new(trusted_committee)
             .map(|verifier| Self { verifier })

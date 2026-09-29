@@ -24,7 +24,7 @@ pub static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_P
 /// Helper function to convert a GraphQL response to a `Result`.
 ///
 /// A GraphQL response may carry `errors` together with (possibly partial)
-/// `data` — for example when a request exceeds the server's max page size, the
+/// `data`: for example when a request exceeds the server's max page size, the
 /// failing field is set to `null` in `data` and the reason is reported in
 /// `errors`. In that case the errors take precedence, so any populated `errors`
 /// list is surfaced as a query error rather than being treated as a

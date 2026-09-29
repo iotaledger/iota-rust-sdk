@@ -15,9 +15,9 @@
 //! There are two distinct ways a call can not produce a value, and they land in
 //! different places:
 //! - the node refuses to run it (not a `#[view]` function, unknown function,
-//!   wrong argument count) — that call's slot holds an `Err`;
-//! - it runs and aborts — that call's slot holds `Ok`, and the abort is read
-//!   off `execution_error()`.
+//!   wrong argument count): that call's slot holds an `Err`;
+//! - it runs and aborts: that call's slot holds `Ok`, and the abort is read off
+//!   `execution_error()`.
 
 use eyre::Result;
 use iota_sdk::{

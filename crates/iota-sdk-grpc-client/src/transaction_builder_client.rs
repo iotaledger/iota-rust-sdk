@@ -39,7 +39,7 @@ const WAIT_FOR_TRANSACTION_POLL_INTERVAL: Duration = Duration::from_millis(100);
 ///
 /// A `NOT_FOUND` for the item maps to `None`, since these callers treat a
 /// missing object or transaction as an absence rather than a failure. A failure
-/// of the call itself still propagates — including a `NOT_FOUND`, which says
+/// of the call itself still propagates, including a `NOT_FOUND`, which says
 /// the endpoint is wrong rather than that the item is absent.
 ///
 /// Anything other than exactly one result is a protocol error, not an absent
@@ -269,7 +269,7 @@ impl TransactionBuilderExecutionClient for GrpcClient {
                 interval.tick().await;
                 let response = self.transactions([digest], mask.clone()).await;
 
-                // An absent transaction is not indexed yet — keep polling.
+                // An absent transaction is not indexed yet. Keep polling.
                 if let Some(tx) = single_item(response)? {
                     let ready = match wait_for {
                         WaitForTransaction::IndexedOnNode => true,

@@ -15,7 +15,7 @@ let fixed = source.replaceAll('async public ', 'public async ');
 fixed = fixed.replace(/(?<![.\w])Object\./g, 'globalThis.Object.');
 
 // The broad regex above is too eager: the IOTA Object class's factory does
-// `Object.create(Object.prototype)` — the first `Object.create` is the
+// `Object.create(Object.prototype)`: the first `Object.create` is the
 // BUILT-IN, but the second `Object.prototype` is the IOTA Object class's
 // prototype. Without it, instances returned from `client.object(...)` would
 // be plain `{}` literals without the IOTA Object's methods. Restore the

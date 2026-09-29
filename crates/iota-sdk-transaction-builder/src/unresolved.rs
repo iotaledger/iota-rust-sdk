@@ -115,8 +115,8 @@ impl Command {
     /// The arguments of this command that cannot be replaced by
     /// [`Argument::Gas`].
     ///
-    /// [`Argument::Gas`] stands for the whole gas payment — every gas coin
-    /// smashed into one — so substituting it for an argument that names a
+    /// [`Argument::Gas`] stands for the whole gas payment (every gas coin
+    /// smashed into one), so substituting it for an argument that names a
     /// single coin changes what the command operates on. The positions left
     /// out take a coin without consuming it: a coin split from or merged into
     /// is still there afterwards.

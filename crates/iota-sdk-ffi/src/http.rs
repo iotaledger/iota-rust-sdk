@@ -64,7 +64,7 @@ impl HttpClientOptions {
 
         // Merging keeps the platform store and adds these as a floor. reqwest
         // only supports that where `rustls-platform-verifier` accepts extra
-        // roots; elsewhere — Android in particular — the roots have to stand
+        // roots; elsewhere (Android in particular), the roots have to stand
         // alone.
         #[cfg(any(all(unix, not(target_os = "android")), target_os = "windows"))]
         let merge_supported = true;

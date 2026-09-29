@@ -295,7 +295,7 @@ impl crate::MultisigCommittee {
     /// A MultiSig address is defined as the 32-byte Blake2b hash of serializing
     /// the `SignatureScheme` flag (0x03), the threshold (in little endian), and
     /// the concatenation of all n flags, public keys and their weights, where
-    /// `flag_i?` is the member's `SignatureScheme` flag — omitted for Ed25519
+    /// `flag_i?` is the member's `SignatureScheme` flag, omitted for Ed25519
     /// keys, matching their plain address derivation.
     ///
     /// `hash(0x03 || threshold || flag_1? || pk_1 || weight_1

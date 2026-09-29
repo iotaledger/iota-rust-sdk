@@ -17,7 +17,7 @@ async def main():
     start = max(head - (HOW_MANY - 1), 0)
     end = head
 
-    # Only ask for the summary — keeps the message small. Pass `None` (or
+    # Only ask for the summary, which keeps the message small. Pass `None` (or
     # compose more fields) to pull more data per checkpoint.
     stream = await client.checkpoints_stream(start,
                                              end,

@@ -5,7 +5,7 @@
 //! constructors.
 //!
 //! The coin marker `T` is phantom, so the BCS contents of e.g. a
-//! `BasicOutput<IOTA>` and a `BasicOutput<FOO>` are byte-identical — the
+//! `BasicOutput<IOTA>` and a `BasicOutput<FOO>` are byte-identical: the
 //! type tag is the only place the coin type is recorded. These tests wrap
 //! the committed fixtures in synthetic [`Object`]s with correct and forged
 //! tags and assert that the constructors accept the former and reject the
@@ -103,7 +103,7 @@ macro_rules! coin_marker_validation_tests {
 
             #[test]
             fn rejects_mismatched_coin_marker() {
-                // Same bytes, different coin in the tag — without the
+                // Same bytes, different coin in the tag: without the
                 // type-param check this would silently decode as `<IOTA>`.
                 let object = object_with_tag(FOO_TAG, FIXTURE);
                 assert!(matches!(
