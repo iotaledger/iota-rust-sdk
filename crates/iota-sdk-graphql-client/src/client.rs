@@ -30,7 +30,7 @@ pub static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_P
 /// list is surfaced as a query error rather than being treated as a
 /// success. A response with neither `data` nor `errors` is reported as an empty
 /// response error instead of panicking.
-pub fn response_to_err<T>(response: GraphQlResponse<T>) -> GraphQLResult<T> {
+pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> GraphQLResult<T> {
     match (response.data, response.errors) {
         (_, Some(errors)) if !errors.is_empty() => Err(GraphQLError::Query(errors)),
         (Some(data), _) => Ok(data),
@@ -177,17 +177,17 @@ impl GraphQLClient {
             .map_err(|e| GraphQLError::json(url, status, &bytes, target_type, e))
     }
 
-    /// Run a JSON query on the GraphQL server and return the response.
+    /// Run a JSON query on the GraphQL server and return the response data.
     /// This method expects a JSON map holding the GraphQL query string and
-    /// matching GraphQL variables. It returns a [`cynic::GraphQlResponse`]
-    /// wrapping a [`serde_json::Value`]. In general, it is recommended to use
-    /// [`run_query`](`Self::run_query`) which guarantees valid GraphQL
-    /// query syntax and returns a proper response type.
+    /// matching GraphQL variables. Any GraphQL error in the response is
+    /// returned as an error, even if partial data is present. In general, it
+    /// is recommended to use [`run_query`](`Self::run_query`) which guarantees
+    /// valid GraphQL query syntax and returns a proper response type.
     pub async fn run_query_from_json(
         &self,
         json: serde_json::Map<String, serde_json::Value>,
-    ) -> GraphQLResult<GraphQlResponse<serde_json::Value>> {
-        self.post_query(&json).await
+    ) -> GraphQLResult<serde_json::Value> {
+        response_to_err(self.post_query(&json).await?)
     }
 
     /// Handle pagination filters and return the appropriate values. If limit is

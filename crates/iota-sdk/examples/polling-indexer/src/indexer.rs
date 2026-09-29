@@ -7,7 +7,6 @@ use iota_sdk::{
     graphql_client::{
         GraphQLClient, PaginationFilter,
         query_types::{EventFilter, TransactionsFilter},
-        response_to_err,
     },
     types::{ExecutionStatus, SignedTransaction, Transaction},
 };
@@ -582,7 +581,7 @@ async fn batch_lookup_tx_checkpoints(
             "variables": serde_json::Value::Object(variables),
         });
         let map = request.as_object().unwrap().clone();
-        let data = response_to_err(client.run_query_from_json(map).await?)?;
+        let data = client.run_query_from_json(map).await?;
 
         for (i, digest) in chunk.iter().enumerate() {
             let seq = data
