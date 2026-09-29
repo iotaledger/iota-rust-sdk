@@ -3,7 +3,7 @@
 
 //! Types representing unresolved data in a PTB.
 
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt};
 
 use iota_types::{Identifier, ObjectId, ObjectReference, SharedObjectReference, TypeTag};
 
@@ -74,6 +74,73 @@ impl InputKind {
         } else {
             None
         }
+    }
+
+    /// Combine this kind with another one given for the same input.
+    ///
+    /// A resolved kind replaces the kind already set, and a shared object
+    /// stays mutable if either side asked for it. Two kinds an object cannot
+    /// be at once (owned, shared or receiving) do not combine, and `other` is
+    /// handed back as the error.
+    pub(crate) fn merge(&self, other: InputKind) -> Result<InputKind, InputKind> {
+        use iota_types::Input;
+        Ok(match (self, other) {
+            (
+                Self::ImmutableOrOwned(_) | Self::Input(Input::ImmutableOrOwned(_)),
+                other @ Self::Input(Input::ImmutableOrOwned(_)),
+            )
+            | (
+                Self::Receiving(_) | Self::Input(Input::Receiving(_)),
+                other @ Self::Input(Input::Receiving(_)),
+            )
+            | (Self::Input(Input::Pure(_)), other @ Self::Input(Input::Pure(_))) => other,
+            (
+                Self::ImmutableOrOwned(_) | Self::Input(Input::ImmutableOrOwned(_)),
+                Self::ImmutableOrOwned(_),
+            )
+            | (Self::Receiving(_) | Self::Input(Input::Receiving(_)), Self::Receiving(_)) => {
+                self.clone()
+            }
+            (
+                Self::Shared { mutable, .. }
+                | Self::Input(Input::Shared(SharedObjectReference { mutable, .. })),
+                Self::Input(Input::Shared(mut reference)),
+            ) => {
+                reference.mutable |= *mutable;
+                Self::Input(Input::Shared(reference))
+            }
+            (Self::Input(Input::Shared(reference)), Self::Shared { mutable, .. }) => {
+                Self::Input(Input::Shared(SharedObjectReference {
+                    mutable: reference.mutable || mutable,
+                    ..*reference
+                }))
+            }
+            (Self::Shared { object_id, mutable }, Self::Shared { mutable: other, .. }) => {
+                Self::Shared {
+                    object_id: *object_id,
+                    mutable: *mutable || other,
+                }
+            }
+            (_, other) => return Err(other),
+        })
+    }
+}
+
+impl fmt::Display for InputKind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(match self {
+            Self::ImmutableOrOwned(_) | Self::Input(iota_types::Input::ImmutableOrOwned(_)) => {
+                "an owned or immutable object"
+            }
+            Self::Shared { .. } | Self::Input(iota_types::Input::Shared(_)) => "a shared object",
+            Self::Receiving(_) | Self::Input(iota_types::Input::Receiving(_)) => {
+                "a receiving object"
+            }
+            Self::Input(iota_types::Input::Pure(_)) => "a pure value",
+            Self::Input(_) => {
+                unimplemented!("a new Input enum variant was added and needs to be handled")
+            }
+        })
     }
 }
 

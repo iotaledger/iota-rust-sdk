@@ -7,6 +7,8 @@
 use base64ct::Error as Base64Error;
 use iota_types::{Address, ObjectId, TransactionDigest};
 
+use crate::unresolved::InputKind;
+
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 #[allow(missing_docs)]
@@ -15,6 +17,12 @@ pub enum TransactionBuilderError {
     Input(String),
     #[error("Gas object should be an immutable or owned object")]
     WrongGasObject,
+    #[error("object {object_id} was passed as {first} and again as {second}")]
+    ConflictingInputKinds {
+        object_id: ObjectId,
+        first: Box<InputKind>,
+        second: Box<InputKind>,
+    },
     #[error("gas coin {object_id} cannot also be passed to a command")]
     GasCoinAsArgument { object_id: ObjectId },
     #[error(
