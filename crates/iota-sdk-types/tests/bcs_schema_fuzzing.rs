@@ -289,7 +289,7 @@ fn parse_paren_expr(tokens: &[String]) -> Expr {
         return Expr::Map(k.clone(), v.clone());
     }
 
-    // RFC 5234 §3.5: anonymous group: concatenation (or alternation if `Alt`
+    // RFC 5234 §3.5: anonymous group, concatenation (or alternation if `Alt`
     // was produced).
     concat_exprs(exprs)
 }

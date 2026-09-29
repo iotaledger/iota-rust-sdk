@@ -39,7 +39,7 @@ impl GrpcClient {
     /// The `read_mask` controls which fields the server returns; use
     /// `ExecuteTransactionReadMask::default()` for the default mask. Pass a
     /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// or any slice/array/vec of fields: conversion is automatic.
+    /// or any slice/array/vec of fields. Conversion is automatic.
     ///
     /// # Checkpoint Inclusion
     ///
@@ -100,7 +100,7 @@ impl GrpcClient {
     /// `ExecutedTransaction`; use `ExecuteTransactionReadMask::default()` for
     /// the default mask. Pass a
     /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// or any slice/array/vec of fields: conversion is automatic.
+    /// or any slice/array/vec of fields. Conversion is automatic.
     ///
     /// # Checkpoint Inclusion
     ///

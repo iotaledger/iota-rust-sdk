@@ -545,7 +545,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
         let type_str: &'static str = Box::leak(type_str.into_boxed_str());
         let bytes = capture(&client, &Source::TypeFilter(type_str)).await?;
         eprintln!(
-            "  ({} bytes; not written: pin the discovered ID above)",
+            "  ({} bytes; not written; pin the discovered ID above)",
             bytes.len()
         );
         return Ok(());

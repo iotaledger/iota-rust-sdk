@@ -9,7 +9,7 @@
 //! included in the response. Pass `CheckpointResponseReadMask::default()` for
 //! the default mask, or a
 //! [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-//! (or any slice/array/vec of fields): conversion is automatic.
+//! (or any slice/array/vec of fields). Conversion is automatic.
 
 use std::pin::Pin;
 
@@ -42,7 +42,7 @@ impl GrpcClient {
     /// `read_mask`; use `CheckpointResponseReadMask::default()` for the
     /// default field mask. Pass a
     /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields: conversion is automatic.
+    /// or any slice/array/vec of fields. Conversion is automatic.
     ///
     /// # Parameters
     ///
@@ -88,7 +88,7 @@ impl GrpcClient {
     /// `read_mask`; use `CheckpointResponseReadMask::default()` for the
     /// default field mask. Pass a
     /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields: conversion is automatic.
+    /// or any slice/array/vec of fields. Conversion is automatic.
     ///
     /// # Parameters
     ///
@@ -136,7 +136,7 @@ impl GrpcClient {
     /// `read_mask`; use `CheckpointResponseReadMask::default()` for the
     /// default field mask. Pass a
     /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields: conversion is automatic.
+    /// or any slice/array/vec of fields. Conversion is automatic.
     ///
     /// # Parameters
     ///
@@ -255,7 +255,7 @@ impl GrpcClient {
     /// `CheckpointResponseReadMask::default()` for the default field mask.
     /// Pass a
     /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields: conversion is automatic.
+    /// or any slice/array/vec of fields. Conversion is automatic.
     ///
     /// **Note:** The metadata in the returned [`MetadataEnvelope`] is captured
     /// from the initial gRPC response headers when the stream is opened. It is
@@ -378,7 +378,7 @@ impl GrpcClient {
     /// `CheckpointResponseReadMask::default()` for the default field mask.
     /// Pass a
     /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields: conversion is automatic.
+    /// or any slice/array/vec of fields. Conversion is automatic.
     ///
     /// # Parameters
     ///

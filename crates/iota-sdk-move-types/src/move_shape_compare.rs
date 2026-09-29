@@ -1540,7 +1540,7 @@ fn registry_matches_published_api() {
 // comparator that regressed to always returning `Ok(())` would still pass it.
 // Each test below starts from a real Move definition and the mirror's
 // known-good `move_shape()`, mutates exactly one thing, and asserts the
-// comparator now rejects it: one case per branch the comparator protects.
+// comparator now rejects it, one case per branch the comparator protects.
 
 fn struct_fields(shape: Shape) -> Vec<Field> {
     match shape {

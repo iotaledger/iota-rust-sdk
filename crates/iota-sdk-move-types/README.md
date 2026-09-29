@@ -67,7 +67,7 @@ The catch-up workflow when the nightly turns red:
 3. Bump the `move-binary-format` rev in this crate's `Cargo.toml` to the
    new monorepo SHA: this single rev pins both the parser and the
    artifact fetch.
-4. Run `make update-compiled-packages` and `make test`, then open a PR:
+4. Run `make update-compiled-packages` and `make test`, then open a PR;
    its CI validates the new mirrors against the new rev.
 
 System packages change rarely, so the expected cadence is a small
@@ -105,6 +105,6 @@ boundary).
    `Source::TypeFilter("0x…::module::Type")` if you don't have an
    ObjectId yet.
 2. Run the capture binary. For `Source::TypeFilter` entries, it prints
-   the discovered ObjectId: copy it back into the fixture entry as a
+   the discovered ObjectId. Copy it back into the fixture entry as a
    `Source::ObjectId(…)` pin so re-runs are stable.
 3. Add a corresponding `#[test]` to `tests/fixture_roundtrip.rs`.

@@ -72,7 +72,7 @@ impl GrpcClient {
     /// The `read_mask` controls which fields the server returns; use
     /// `ViewFunctionCallReadMask::default()` for the default mask. Pass a
     /// [`ViewFunctionCallField`](iota_grpc_types::read_mask_fields::ViewFunctionCallField)
-    /// or any slice/array/vec of fields: conversion is automatic.
+    /// or any slice/array/vec of fields. Conversion is automatic.
     ///
     /// # Errors
     ///
@@ -133,7 +133,7 @@ impl GrpcClient {
     /// `ViewFunctionCallOutputs`; use `ViewFunctionCallReadMask::default()`
     /// for the default mask. Pass a
     /// [`ViewFunctionCallField`](iota_grpc_types::read_mask_fields::ViewFunctionCallField)
-    /// or any slice/array/vec of fields: conversion is automatic.
+    /// or any slice/array/vec of fields. Conversion is automatic.
     ///
     /// # Errors
     ///

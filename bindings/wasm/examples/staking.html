@@ -436,7 +436,7 @@
         sel.innerHTML = "";
         if (wallets.length === 0) {
           sel.innerHTML =
-            '<option value="">No wallets found: install an IOTA wallet extension</option>';
+            '<option value="">No wallets found; install an IOTA wallet extension</option>';
           return;
         }
         wallets.forEach((w, i) => {
@@ -682,7 +682,7 @@
           const network = $("network").value;
           const txDigest = await signAndExecuteViaWallet(walletTx, network);
 
-          // Show success: use DOM API to safely render the digest
+          // Show success. Use DOM API to safely render the digest
           const url = explorerUrl(txDigest, network);
           $("result").className = "success";
           $("result").innerHTML = "";

@@ -181,7 +181,7 @@ pub trait TransactionBuilderExecutionClient: TransactionBuilderClientBase {
 
 /// A full transaction builder client: ledger reads, simulation, and execution.
 ///
-/// This is a blanket alias: do not implement it directly. Implement
+/// This is a blanket alias. Do not implement it directly. Implement
 /// [`TransactionBuilderLedgerClient`], [`TransactionBuilderSimulationClient`],
 /// and [`TransactionBuilderExecutionClient`] instead, and this trait is
 /// implemented automatically.
