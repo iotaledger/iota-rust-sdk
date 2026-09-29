@@ -173,7 +173,8 @@ pub struct GraphQLDryRunResult {
     pub transaction: Option<Arc<Transaction>>,
     /// The effects of the transaction execution.
     pub effects: Option<Arc<TransactionEffects>>,
-    /// If an input object is congested, the suggested gas price to use.
+    /// The gas price to use. This is the reference gas price, or a higher
+    /// price if an input object is congested.
     #[uniffi(default = None)]
     pub suggested_gas_price: Option<u64>,
 }
