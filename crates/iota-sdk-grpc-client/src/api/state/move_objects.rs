@@ -57,12 +57,12 @@ impl<T: MoveObject> ListOwnedMoveObjectsQuery<T> {
         self,
         limit: impl Into<Option<u32>>,
     ) -> GrpcResult<MetadataEnvelope<Vec<T>>> {
-        let (objects, metadata) = self.inner.collect(limit).await?.into_parts();
-        let decoded = objects
-            .iter()
-            .map(decode::<T>)
-            .collect::<GrpcResult<Vec<_>>>()?;
-        Ok(MetadataEnvelope::new(decoded, metadata))
+        self.inner.collect(limit).await?.try_map(|objects| {
+            objects
+                .iter()
+                .map(decode::<T>)
+                .collect::<GrpcResult<Vec<_>>>()
+        })
     }
 }
 
