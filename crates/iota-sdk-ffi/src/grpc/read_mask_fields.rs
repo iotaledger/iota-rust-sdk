@@ -19,8 +19,9 @@ pub(crate) trait ReadMaskField: Sized {
     type Field: AsRef<str> + From<Self>;
 }
 
-/// Define a read mask field enum whose variants map one-to-one onto the
-/// constants of the Rust client's field namespace of the same name.
+/// Define a read mask field enum with one variant per listed constant of the
+/// Rust client's field namespace of the same name, named after the constant
+/// in PascalCase.
 ///
 /// The optional `keyed` block adds variants carrying a map key, each mapped
 /// onto the namespace's constructor of that name.
@@ -30,7 +31,7 @@ macro_rules! read_mask_fields {
         pub enum $name:ident {
             $(
                 $(#[$variant_attr:meta])*
-                $variant:ident => $path:ident
+                $path:ident
             ),* $(,)?
         }
         $(
@@ -42,38 +43,40 @@ macro_rules! read_mask_fields {
             }
         )?
     ) => {
-        $(#[$attr])*
-        #[derive(Clone, Debug, uniffi::Enum)]
-        pub enum $name {
-            $(
-                $(#[$variant_attr])*
-                $variant,
-            )*
-            $($(
-                $(#[$keyed_attr])*
-                $keyed { key: String },
-            )*)?
-            /// A raw field path, for paths that have no variant of their own.
-            Custom { path: String },
-        }
+        paste::paste! {
+            $(#[$attr])*
+            #[derive(Clone, Debug, uniffi::Enum)]
+            pub enum $name {
+                $(
+                    $(#[$variant_attr])*
+                    [<$path:camel>],
+                )*
+                $($(
+                    $(#[$keyed_attr])*
+                    $keyed { key: String },
+                )*)?
+                /// A raw field path, for paths that have no variant of their own.
+                Custom { path: String },
+            }
 
-        impl From<$name> for sdk::$name {
-            fn from(field: $name) -> Self {
-                match field {
-                    $($name::$variant => Self::$path,)*
-                    $($($name::$keyed { key } => Self::$constructor(&key),)*)?
-                    $name::Custom { path } => Self::custom(path),
+            impl From<$name> for sdk::$name {
+                fn from(field: $name) -> Self {
+                    match field {
+                        $($name::[<$path:camel>] => Self::$path,)*
+                        $($($name::$keyed { key } => Self::$constructor(&key),)*)?
+                        $name::Custom { path } => Self::custom(path),
+                    }
                 }
+            }
+
+            #[cfg(test)]
+            impl $name {
+                const VARIANTS: &'static [Self] = &[$(Self::[<$path:camel>],)*];
             }
         }
 
         impl ReadMaskField for $name {
             type Field = sdk::$name;
-        }
-
-        #[cfg(test)]
-        impl $name {
-            const VARIANTS: &'static [Self] = &[$(Self::$variant,)*];
         }
     };
 }
@@ -82,17 +85,17 @@ read_mask_fields! {
     /// Field paths for `objects` and `objects_with_versions`.
     pub enum ObjectField {
         /// Wildcard — request all object fields.
-        All => ALL,
+        ALL,
         /// Object reference (object_id, version, digest).
-        Reference => REFERENCE,
+        REFERENCE,
         /// The object ID.
-        ReferenceObjectId => REFERENCE_OBJECT_ID,
+        REFERENCE_OBJECT_ID,
         /// The object version.
-        ReferenceVersion => REFERENCE_VERSION,
+        REFERENCE_VERSION,
         /// The object content digest.
-        ReferenceDigest => REFERENCE_DIGEST,
+        REFERENCE_DIGEST,
         /// The full BCS-encoded object.
-        Bcs => BCS,
+        BCS,
     }
 }
 
@@ -100,17 +103,17 @@ read_mask_fields! {
     /// Field paths for `owned_objects` and `all_owned_objects`.
     pub enum OwnedObjectField {
         /// Wildcard — request all fields.
-        All => ALL,
+        ALL,
         /// Object reference (object_id, version, digest).
-        Reference => REFERENCE,
+        REFERENCE,
         /// The object ID.
-        ReferenceObjectId => REFERENCE_OBJECT_ID,
+        REFERENCE_OBJECT_ID,
         /// The object version.
-        ReferenceVersion => REFERENCE_VERSION,
+        REFERENCE_VERSION,
         /// The object content digest.
-        ReferenceDigest => REFERENCE_DIGEST,
+        REFERENCE_DIGEST,
         /// The full BCS-encoded object.
-        Bcs => BCS,
+        BCS,
     }
 }
 
@@ -119,93 +122,93 @@ read_mask_fields! {
     /// `execute_transactions`.
     pub enum TransactionField {
         /// Wildcard — request all fields.
-        All => ALL,
+        ALL,
         /// Transaction data (all sub-fields).
-        Transaction => TRANSACTION,
+        TRANSACTION,
         /// The transaction digest.
-        TransactionDigest => TRANSACTION_DIGEST,
+        TRANSACTION_DIGEST,
         /// The full BCS-encoded transaction.
-        TransactionBcs => TRANSACTION_BCS,
+        TRANSACTION_BCS,
         /// User signatures (all sub-fields).
-        Signatures => SIGNATURES,
+        SIGNATURES,
         /// The full BCS-encoded signatures.
-        SignaturesBcs => SIGNATURES_BCS,
+        SIGNATURES_BCS,
         /// Transaction effects (all sub-fields).
-        Effects => EFFECTS,
+        EFFECTS,
         /// The effects digest.
-        EffectsDigest => EFFECTS_DIGEST,
+        EFFECTS_DIGEST,
         /// The full BCS-encoded effects.
-        EffectsBcs => EFFECTS_BCS,
+        EFFECTS_BCS,
         /// Transaction events (all sub-fields).
-        Events => EVENTS,
+        EVENTS,
         /// The events digest.
-        EventsDigest => EVENTS_DIGEST,
+        EVENTS_DIGEST,
         /// Individual events (all sub-fields).
-        EventsEvents => EVENTS_EVENTS,
+        EVENTS_EVENTS,
         /// Full BCS-encoded event.
-        EventsEventsBcs => EVENTS_EVENTS_BCS,
+        EVENTS_EVENTS_BCS,
         /// The ID of the package that emitted the event.
-        EventsEventsPackageId => EVENTS_EVENTS_PACKAGE_ID,
+        EVENTS_EVENTS_PACKAGE_ID,
         /// The module that emitted the event.
-        EventsEventsModule => EVENTS_EVENTS_MODULE,
+        EVENTS_EVENTS_MODULE,
         /// The sender that triggered the event.
-        EventsEventsSender => EVENTS_EVENTS_SENDER,
+        EVENTS_EVENTS_SENDER,
         /// The type of the event.
-        EventsEventsEventType => EVENTS_EVENTS_EVENT_TYPE,
+        EVENTS_EVENTS_EVENT_TYPE,
         /// The full BCS-encoded contents of the event.
-        EventsEventsBcsContents => EVENTS_EVENTS_BCS_CONTENTS,
+        EVENTS_EVENTS_BCS_CONTENTS,
         /// The JSON-encoded contents of the event.
-        EventsEventsJsonContents => EVENTS_EVENTS_JSON_CONTENTS,
+        EVENTS_EVENTS_JSON_CONTENTS,
         /// Checkpoint sequence number that included the transaction.
-        Checkpoint => CHECKPOINT,
+        CHECKPOINT,
         /// Timestamp of the checkpoint that included the transaction.
-        Timestamp => TIMESTAMP,
+        TIMESTAMP,
         /// Input objects (all sub-fields).
-        InputObjects => INPUT_OBJECTS,
+        INPUT_OBJECTS,
         /// Input object reference (object_id, version, digest).
-        InputObjectsReference => INPUT_OBJECTS_REFERENCE,
+        INPUT_OBJECTS_REFERENCE,
         /// Input object ID.
-        InputObjectsReferenceObjectId => INPUT_OBJECTS_REFERENCE_OBJECT_ID,
+        INPUT_OBJECTS_REFERENCE_OBJECT_ID,
         /// Input object version.
-        InputObjectsReferenceVersion => INPUT_OBJECTS_REFERENCE_VERSION,
+        INPUT_OBJECTS_REFERENCE_VERSION,
         /// Input object digest.
-        InputObjectsReferenceDigest => INPUT_OBJECTS_REFERENCE_DIGEST,
+        INPUT_OBJECTS_REFERENCE_DIGEST,
         /// The full BCS-encoded input object.
-        InputObjectsBcs => INPUT_OBJECTS_BCS,
+        INPUT_OBJECTS_BCS,
         /// Output objects (all sub-fields).
-        OutputObjects => OUTPUT_OBJECTS,
+        OUTPUT_OBJECTS,
         /// Output object reference (object_id, version, digest).
-        OutputObjectsReference => OUTPUT_OBJECTS_REFERENCE,
+        OUTPUT_OBJECTS_REFERENCE,
         /// Output object ID.
-        OutputObjectsReferenceObjectId => OUTPUT_OBJECTS_REFERENCE_OBJECT_ID,
+        OUTPUT_OBJECTS_REFERENCE_OBJECT_ID,
         /// Output object version.
-        OutputObjectsReferenceVersion => OUTPUT_OBJECTS_REFERENCE_VERSION,
+        OUTPUT_OBJECTS_REFERENCE_VERSION,
         /// Output object digest.
-        OutputObjectsReferenceDigest => OUTPUT_OBJECTS_REFERENCE_DIGEST,
+        OUTPUT_OBJECTS_REFERENCE_DIGEST,
         /// The full BCS-encoded output object.
-        OutputObjectsBcs => OUTPUT_OBJECTS_BCS,
+        OUTPUT_OBJECTS_BCS,
         /// Balance changes (all sub-fields).
-        BalanceChanges => BALANCE_CHANGES,
+        BALANCE_CHANGES,
         /// The owner whose balance changed.
-        BalanceChangesOwner => BALANCE_CHANGES_OWNER,
+        BALANCE_CHANGES_OWNER,
         /// The coin type of the balance change.
-        BalanceChangesCoinType => BALANCE_CHANGES_COIN_TYPE,
+        BALANCE_CHANGES_COIN_TYPE,
         /// The signed amount of the balance change.
-        BalanceChangesAmount => BALANCE_CHANGES_AMOUNT,
+        BALANCE_CHANGES_AMOUNT,
         /// Object changes (all sub-fields).
-        ObjectChanges => OBJECT_CHANGES,
+        OBJECT_CHANGES,
         /// Published-package object changes.
-        ObjectChangesPublished => OBJECT_CHANGES_PUBLISHED,
+        OBJECT_CHANGES_PUBLISHED,
         /// Mutated-object changes.
-        ObjectChangesMutated => OBJECT_CHANGES_MUTATED,
+        OBJECT_CHANGES_MUTATED,
         /// Deleted-object changes.
-        ObjectChangesDeleted => OBJECT_CHANGES_DELETED,
+        OBJECT_CHANGES_DELETED,
         /// Wrapped-object changes.
-        ObjectChangesWrapped => OBJECT_CHANGES_WRAPPED,
+        OBJECT_CHANGES_WRAPPED,
         /// Unwrapped-object changes.
-        ObjectChangesUnwrapped => OBJECT_CHANGES_UNWRAPPED,
+        OBJECT_CHANGES_UNWRAPPED,
         /// Created-object changes.
-        ObjectChangesCreated => OBJECT_CHANGES_CREATED,
+        OBJECT_CHANGES_CREATED,
     }
 }
 
@@ -213,23 +216,23 @@ read_mask_fields! {
     /// Field paths for `service_info`.
     pub enum ServiceInfoField {
         /// Wildcard — request all fields.
-        All => ALL,
+        ALL,
         /// The chain ID (network identifier).
-        ChainId => CHAIN_ID,
+        CHAIN_ID,
         /// The chain identifier string.
-        Chain => CHAIN,
+        CHAIN,
         /// The current epoch.
-        Epoch => EPOCH,
+        EPOCH,
         /// Height of the last executed checkpoint.
-        ExecutedCheckpointHeight => EXECUTED_CHECKPOINT_HEIGHT,
+        EXECUTED_CHECKPOINT_HEIGHT,
         /// Timestamp of the last executed checkpoint.
-        ExecutedCheckpointTimestamp => EXECUTED_CHECKPOINT_TIMESTAMP,
+        EXECUTED_CHECKPOINT_TIMESTAMP,
         /// Lowest available checkpoint for transaction/checkpoint data.
-        LowestAvailableCheckpoint => LOWEST_AVAILABLE_CHECKPOINT,
+        LOWEST_AVAILABLE_CHECKPOINT,
         /// Lowest available checkpoint for object data.
-        LowestAvailableCheckpointObjects => LOWEST_AVAILABLE_CHECKPOINT_OBJECTS,
+        LOWEST_AVAILABLE_CHECKPOINT_OBJECTS,
         /// The server version.
-        Server => SERVER,
+        SERVER,
     }
 }
 
@@ -237,44 +240,41 @@ read_mask_fields! {
     /// Field paths for `epoch`.
     pub enum EpochField {
         /// Wildcard — request all fields.
-        All => ALL,
+        ALL,
         /// The epoch number.
-        Epoch => EPOCH,
+        EPOCH,
         /// The validator committee for this epoch.
-        Committee => COMMITTEE,
+        COMMITTEE,
         /// The BCS-encoded system state.
-        BcsSystemState => BCS_SYSTEM_STATE,
+        BCS_SYSTEM_STATE,
         /// The first checkpoint in the epoch.
-        FirstCheckpoint => FIRST_CHECKPOINT,
+        FIRST_CHECKPOINT,
         /// The last checkpoint in the epoch.
-        LastCheckpoint => LAST_CHECKPOINT,
+        LAST_CHECKPOINT,
         /// The start timestamp of the epoch.
-        Start => START,
+        START,
         /// The end timestamp of the epoch.
-        End => END,
+        END,
         /// The reference gas price during the epoch (in NANOS).
-        ReferenceGasPrice => REFERENCE_GAS_PRICE,
+        REFERENCE_GAS_PRICE,
         /// All protocol configuration fields.
-        ProtocolConfig => PROTOCOL_CONFIG,
+        PROTOCOL_CONFIG,
         /// The protocol version.
-        ProtocolConfigProtocolVersion => PROTOCOL_CONFIG_PROTOCOL_VERSION,
+        PROTOCOL_CONFIG_PROTOCOL_VERSION,
         /// All feature flags.
-        ProtocolConfigFeatureFlags => PROTOCOL_CONFIG_FEATURE_FLAGS,
+        PROTOCOL_CONFIG_FEATURE_FLAGS,
         /// All protocol attributes.
-        ProtocolConfigAttributes => PROTOCOL_CONFIG_ATTRIBUTES,
+        PROTOCOL_CONFIG_ATTRIBUTES,
         /// All epoch-close-proof fields.
-        EpochCloseProof => EPOCH_CLOSE_PROOF,
+        EPOCH_CLOSE_PROOF,
         /// The certified checkpoint that closed the epoch.
-        EpochCloseProofCheckpoint => EPOCH_CLOSE_PROOF_CHECKPOINT,
+        EPOCH_CLOSE_PROOF_CHECKPOINT,
         /// Effects of the epoch-change transaction.
-        EpochCloseProofEndOfEpochTransactionEffects =>
-            EPOCH_CLOSE_PROOF_END_OF_EPOCH_TRANSACTION_EFFECTS,
+        EPOCH_CLOSE_PROOF_END_OF_EPOCH_TRANSACTION_EFFECTS,
         /// Events emitted by the epoch-change transaction.
-        EpochCloseProofEndOfEpochTransactionEvents =>
-            EPOCH_CLOSE_PROOF_END_OF_EPOCH_TRANSACTION_EVENTS,
+        EPOCH_CLOSE_PROOF_END_OF_EPOCH_TRANSACTION_EVENTS,
         /// Raw BCS of the next epoch's start-of-epoch system-state objects.
-        EpochCloseProofBcsNextEpochSystemStateObjects =>
-            EPOCH_CLOSE_PROOF_BCS_NEXT_EPOCH_SYSTEM_STATE_OBJECTS,
+        EPOCH_CLOSE_PROOF_BCS_NEXT_EPOCH_SYSTEM_STATE_OBJECTS,
     }
     keyed {
         /// A single feature flag, by key.
@@ -290,81 +290,81 @@ read_mask_fields! {
     /// `checkpoints_stream` and `checkpoints_stream_filtered`.
     pub enum CheckpointResponseField {
         /// Wildcard — request all fields.
-        All => ALL,
+        ALL,
         /// All checkpoint data fields.
-        Checkpoint => CHECKPOINT,
+        CHECKPOINT,
         /// The checkpoint sequence number.
-        CheckpointSequenceNumber => CHECKPOINT_SEQUENCE_NUMBER,
+        CHECKPOINT_SEQUENCE_NUMBER,
         /// Checkpoint summary (all sub-fields).
-        CheckpointSummary => CHECKPOINT_SUMMARY,
+        CHECKPOINT_SUMMARY,
         /// The checkpoint summary digest.
-        CheckpointSummaryDigest => CHECKPOINT_SUMMARY_DIGEST,
+        CHECKPOINT_SUMMARY_DIGEST,
         /// The full BCS-encoded checkpoint summary.
-        CheckpointSummaryBcs => CHECKPOINT_SUMMARY_BCS,
+        CHECKPOINT_SUMMARY_BCS,
         /// Checkpoint contents (all sub-fields).
-        CheckpointContents => CHECKPOINT_CONTENTS,
+        CHECKPOINT_CONTENTS,
         /// The checkpoint contents digest.
-        CheckpointContentsDigest => CHECKPOINT_CONTENTS_DIGEST,
+        CHECKPOINT_CONTENTS_DIGEST,
         /// The full BCS-encoded checkpoint contents.
-        CheckpointContentsBcs => CHECKPOINT_CONTENTS_BCS,
+        CHECKPOINT_CONTENTS_BCS,
         /// The validator aggregated signature.
-        CheckpointSignature => CHECKPOINT_SIGNATURE,
+        CHECKPOINT_SIGNATURE,
         /// All transactions in the checkpoint.
-        Transactions => TRANSACTIONS,
+        TRANSACTIONS,
         /// Transaction data of a checkpoint transaction (all sub-fields).
-        TransactionsTransaction => TRANSACTIONS_TRANSACTION,
+        TRANSACTIONS_TRANSACTION,
         /// The transaction digest.
-        TransactionsTransactionDigest => TRANSACTIONS_TRANSACTION_DIGEST,
+        TRANSACTIONS_TRANSACTION_DIGEST,
         /// The full BCS-encoded transaction.
-        TransactionsTransactionBcs => TRANSACTIONS_TRANSACTION_BCS,
+        TRANSACTIONS_TRANSACTION_BCS,
         /// User signatures (all sub-fields).
-        TransactionsSignatures => TRANSACTIONS_SIGNATURES,
+        TRANSACTIONS_SIGNATURES,
         /// The full BCS-encoded signatures.
-        TransactionsSignaturesBcs => TRANSACTIONS_SIGNATURES_BCS,
+        TRANSACTIONS_SIGNATURES_BCS,
         /// Transaction effects (all sub-fields).
-        TransactionsEffects => TRANSACTIONS_EFFECTS,
+        TRANSACTIONS_EFFECTS,
         /// The effects digest.
-        TransactionsEffectsDigest => TRANSACTIONS_EFFECTS_DIGEST,
+        TRANSACTIONS_EFFECTS_DIGEST,
         /// The full BCS-encoded effects.
-        TransactionsEffectsBcs => TRANSACTIONS_EFFECTS_BCS,
+        TRANSACTIONS_EFFECTS_BCS,
         /// Transaction events (all sub-fields).
-        TransactionsEvents => TRANSACTIONS_EVENTS,
+        TRANSACTIONS_EVENTS,
         /// The events digest.
-        TransactionsEventsDigest => TRANSACTIONS_EVENTS_DIGEST,
+        TRANSACTIONS_EVENTS_DIGEST,
         /// Individual events — full BCS-encoded.
-        TransactionsEventsEventsBcs => TRANSACTIONS_EVENTS_EVENTS_BCS,
+        TRANSACTIONS_EVENTS_EVENTS_BCS,
         /// Checkpoint sequence number of the transaction.
-        TransactionsCheckpoint => TRANSACTIONS_CHECKPOINT,
+        TRANSACTIONS_CHECKPOINT,
         /// Timestamp of the transaction.
-        TransactionsTimestamp => TRANSACTIONS_TIMESTAMP,
+        TRANSACTIONS_TIMESTAMP,
         /// Input objects (all sub-fields).
-        TransactionsInputObjects => TRANSACTIONS_INPUT_OBJECTS,
+        TRANSACTIONS_INPUT_OBJECTS,
         /// The full BCS-encoded input object.
-        TransactionsInputObjectsBcs => TRANSACTIONS_INPUT_OBJECTS_BCS,
+        TRANSACTIONS_INPUT_OBJECTS_BCS,
         /// Output objects (all sub-fields).
-        TransactionsOutputObjects => TRANSACTIONS_OUTPUT_OBJECTS,
+        TRANSACTIONS_OUTPUT_OBJECTS,
         /// The full BCS-encoded output object.
-        TransactionsOutputObjectsBcs => TRANSACTIONS_OUTPUT_OBJECTS_BCS,
+        TRANSACTIONS_OUTPUT_OBJECTS_BCS,
         /// Balance changes (all sub-fields).
-        TransactionsBalanceChanges => TRANSACTIONS_BALANCE_CHANGES,
+        TRANSACTIONS_BALANCE_CHANGES,
         /// Object changes (all sub-fields).
-        TransactionsObjectChanges => TRANSACTIONS_OBJECT_CHANGES,
+        TRANSACTIONS_OBJECT_CHANGES,
         /// All events in the checkpoint.
-        Events => EVENTS,
+        EVENTS,
         /// Full BCS-encoded event.
-        EventsBcs => EVENTS_BCS,
+        EVENTS_BCS,
         /// The ID of the package that emitted the event.
-        EventsPackageId => EVENTS_PACKAGE_ID,
+        EVENTS_PACKAGE_ID,
         /// The module that emitted the event.
-        EventsModule => EVENTS_MODULE,
+        EVENTS_MODULE,
         /// The sender that triggered the event.
-        EventsSender => EVENTS_SENDER,
+        EVENTS_SENDER,
         /// The type of the event.
-        EventsEventType => EVENTS_EVENT_TYPE,
+        EVENTS_EVENT_TYPE,
         /// The full BCS-encoded contents of the event.
-        EventsBcsContents => EVENTS_BCS_CONTENTS,
+        EVENTS_BCS_CONTENTS,
         /// The JSON-encoded contents of the event.
-        EventsJsonContents => EVENTS_JSON_CONTENTS,
+        EVENTS_JSON_CONTENTS,
     }
 }
 
@@ -372,68 +372,65 @@ read_mask_fields! {
     /// Field paths for `simulate_transaction` and `simulate_transactions`.
     pub enum SimulateField {
         /// Wildcard — request all fields.
-        All => ALL,
+        ALL,
         /// The simulated executed transaction (all sub-fields).
-        ExecutedTransaction => EXECUTED_TRANSACTION,
+        EXECUTED_TRANSACTION,
         /// Transaction data of the executed transaction (all sub-fields).
-        ExecutedTransactionTransaction => EXECUTED_TRANSACTION_TRANSACTION,
+        EXECUTED_TRANSACTION_TRANSACTION,
         /// The transaction digest.
-        ExecutedTransactionTransactionDigest => EXECUTED_TRANSACTION_TRANSACTION_DIGEST,
+        EXECUTED_TRANSACTION_TRANSACTION_DIGEST,
         /// The full BCS-encoded transaction.
-        ExecutedTransactionTransactionBcs => EXECUTED_TRANSACTION_TRANSACTION_BCS,
+        EXECUTED_TRANSACTION_TRANSACTION_BCS,
         /// User signatures (all sub-fields).
-        ExecutedTransactionSignatures => EXECUTED_TRANSACTION_SIGNATURES,
+        EXECUTED_TRANSACTION_SIGNATURES,
         /// The full BCS-encoded signatures.
-        ExecutedTransactionSignaturesBcs => EXECUTED_TRANSACTION_SIGNATURES_BCS,
+        EXECUTED_TRANSACTION_SIGNATURES_BCS,
         /// Transaction effects (all sub-fields).
-        ExecutedTransactionEffects => EXECUTED_TRANSACTION_EFFECTS,
+        EXECUTED_TRANSACTION_EFFECTS,
         /// The effects digest.
-        ExecutedTransactionEffectsDigest => EXECUTED_TRANSACTION_EFFECTS_DIGEST,
+        EXECUTED_TRANSACTION_EFFECTS_DIGEST,
         /// The full BCS-encoded effects.
-        ExecutedTransactionEffectsBcs => EXECUTED_TRANSACTION_EFFECTS_BCS,
+        EXECUTED_TRANSACTION_EFFECTS_BCS,
         /// Transaction events (all sub-fields).
-        ExecutedTransactionEvents => EXECUTED_TRANSACTION_EVENTS,
+        EXECUTED_TRANSACTION_EVENTS,
         /// The events digest.
-        ExecutedTransactionEventsDigest => EXECUTED_TRANSACTION_EVENTS_DIGEST,
+        EXECUTED_TRANSACTION_EVENTS_DIGEST,
         /// Individual events — full BCS-encoded.
-        ExecutedTransactionEventsEventsBcs => EXECUTED_TRANSACTION_EVENTS_EVENTS_BCS,
+        EXECUTED_TRANSACTION_EVENTS_EVENTS_BCS,
         /// Checkpoint sequence number that included the transaction.
-        ExecutedTransactionCheckpoint => EXECUTED_TRANSACTION_CHECKPOINT,
+        EXECUTED_TRANSACTION_CHECKPOINT,
         /// Timestamp of the transaction.
-        ExecutedTransactionTimestamp => EXECUTED_TRANSACTION_TIMESTAMP,
+        EXECUTED_TRANSACTION_TIMESTAMP,
         /// Input objects (all sub-fields).
-        ExecutedTransactionInputObjects => EXECUTED_TRANSACTION_INPUT_OBJECTS,
+        EXECUTED_TRANSACTION_INPUT_OBJECTS,
         /// The full BCS-encoded input object.
-        ExecutedTransactionInputObjectsBcs => EXECUTED_TRANSACTION_INPUT_OBJECTS_BCS,
+        EXECUTED_TRANSACTION_INPUT_OBJECTS_BCS,
         /// Output objects (all sub-fields).
-        ExecutedTransactionOutputObjects => EXECUTED_TRANSACTION_OUTPUT_OBJECTS,
+        EXECUTED_TRANSACTION_OUTPUT_OBJECTS,
         /// The full BCS-encoded output object.
-        ExecutedTransactionOutputObjectsBcs => EXECUTED_TRANSACTION_OUTPUT_OBJECTS_BCS,
+        EXECUTED_TRANSACTION_OUTPUT_OBJECTS_BCS,
         /// Balance changes (all sub-fields).
-        ExecutedTransactionBalanceChanges => EXECUTED_TRANSACTION_BALANCE_CHANGES,
+        EXECUTED_TRANSACTION_BALANCE_CHANGES,
         /// Object changes (all sub-fields).
-        ExecutedTransactionObjectChanges => EXECUTED_TRANSACTION_OBJECT_CHANGES,
+        EXECUTED_TRANSACTION_OBJECT_CHANGES,
         /// The suggested gas price (in NANOS).
-        SuggestedGasPrice => SUGGESTED_GAS_PRICE,
+        SUGGESTED_GAS_PRICE,
         /// Execution result (all sub-fields).
-        ExecutionResult => EXECUTION_RESULT,
+        EXECUTION_RESULT,
         /// Per-command results (on success, all sub-fields).
-        ExecutionResultCommandResults => EXECUTION_RESULT_COMMAND_RESULTS,
+        EXECUTION_RESULT_COMMAND_RESULTS,
         /// Objects mutated by reference.
-        ExecutionResultCommandResultsMutatedByRef =>
-            EXECUTION_RESULT_COMMAND_RESULTS_MUTATED_BY_REF,
+        EXECUTION_RESULT_COMMAND_RESULTS_MUTATED_BY_REF,
         /// Return values from the command.
-        ExecutionResultCommandResultsReturnValues =>
-            EXECUTION_RESULT_COMMAND_RESULTS_RETURN_VALUES,
+        EXECUTION_RESULT_COMMAND_RESULTS_RETURN_VALUES,
         /// Execution error details (on failure, all sub-fields).
-        ExecutionResultExecutionError => EXECUTION_RESULT_EXECUTION_ERROR,
+        EXECUTION_RESULT_EXECUTION_ERROR,
         /// The BCS-encoded error kind.
-        ExecutionResultExecutionErrorBcsKind => EXECUTION_RESULT_EXECUTION_ERROR_BCS_KIND,
+        EXECUTION_RESULT_EXECUTION_ERROR_BCS_KIND,
         /// The error source description.
-        ExecutionResultExecutionErrorSource => EXECUTION_RESULT_EXECUTION_ERROR_SOURCE,
+        EXECUTION_RESULT_EXECUTION_ERROR_SOURCE,
         /// The index of the command that failed.
-        ExecutionResultExecutionErrorCommandIndex =>
-            EXECUTION_RESULT_EXECUTION_ERROR_COMMAND_INDEX,
+        EXECUTION_RESULT_EXECUTION_ERROR_COMMAND_INDEX,
     }
 }
 
@@ -441,28 +438,27 @@ read_mask_fields! {
     /// Field paths for `view_function_call` and `view_function_calls`.
     pub enum ViewFunctionCallField {
         /// Wildcard — request all fields.
-        All => ALL,
+        ALL,
         /// Execution result (all sub-fields).
-        ExecutionResult => EXECUTION_RESULT,
+        EXECUTION_RESULT,
         /// Return values of the call (all sub-fields).
-        ExecutionResultReturnValues => EXECUTION_RESULT_RETURN_VALUES,
+        EXECUTION_RESULT_RETURN_VALUES,
         /// The argument each return value came from.
-        ExecutionResultReturnValuesArgument => EXECUTION_RESULT_RETURN_VALUES_ARGUMENT,
+        EXECUTION_RESULT_RETURN_VALUES_ARGUMENT,
         /// The Move type of each return value.
-        ExecutionResultReturnValuesTypeTag => EXECUTION_RESULT_RETURN_VALUES_TYPE_TAG,
+        EXECUTION_RESULT_RETURN_VALUES_TYPE_TAG,
         /// The BCS-encoded return values.
-        ExecutionResultReturnValuesBcs => EXECUTION_RESULT_RETURN_VALUES_BCS,
+        EXECUTION_RESULT_RETURN_VALUES_BCS,
         /// The return values rendered as JSON.
-        ExecutionResultReturnValuesJson => EXECUTION_RESULT_RETURN_VALUES_JSON,
+        EXECUTION_RESULT_RETURN_VALUES_JSON,
         /// Execution error details (on failure, all sub-fields).
-        ExecutionResultExecutionError => EXECUTION_RESULT_EXECUTION_ERROR,
+        EXECUTION_RESULT_EXECUTION_ERROR,
         /// The BCS-encoded error kind.
-        ExecutionResultExecutionErrorBcsKind => EXECUTION_RESULT_EXECUTION_ERROR_BCS_KIND,
+        EXECUTION_RESULT_EXECUTION_ERROR_BCS_KIND,
         /// The error source description.
-        ExecutionResultExecutionErrorSource => EXECUTION_RESULT_EXECUTION_ERROR_SOURCE,
+        EXECUTION_RESULT_EXECUTION_ERROR_SOURCE,
         /// The index of the command that failed.
-        ExecutionResultExecutionErrorCommandIndex =>
-            EXECUTION_RESULT_EXECUTION_ERROR_COMMAND_INDEX,
+        EXECUTION_RESULT_EXECUTION_ERROR_COMMAND_INDEX,
     }
 }
 
@@ -470,25 +466,25 @@ read_mask_fields! {
     /// Field paths for `dynamic_fields` and `all_dynamic_fields`.
     pub enum DynamicFieldField {
         /// Wildcard — request all fields.
-        All => ALL,
+        ALL,
         /// The kind of dynamic field (field or object).
-        Kind => KIND,
+        KIND,
         /// The parent object ID.
-        Parent => PARENT,
+        PARENT,
         /// The field object ID.
-        FieldId => FIELD_ID,
+        FIELD_ID,
         /// The child object ID (for dynamic object fields).
-        ChildId => CHILD_ID,
+        CHILD_ID,
         /// BCS-encoded field name.
-        Name => NAME,
+        NAME,
         /// BCS-encoded field value.
-        Value => VALUE,
+        VALUE,
         /// The Move type of the value.
-        ValueType => VALUE_TYPE,
+        VALUE_TYPE,
         /// The full field object (sub-fields match `objects`).
-        FieldObject => FIELD_OBJECT,
+        FIELD_OBJECT,
         /// The full child object (sub-fields match `objects`).
-        ChildObject => CHILD_OBJECT,
+        CHILD_OBJECT,
     }
 }
 
@@ -499,7 +495,7 @@ mod tests {
     use super::*;
 
     /// The variant name of each field is the PascalCase form of its path, so
-    /// a variant wired to the wrong constant shows up here.
+    /// a Rust client constant named differently from its path shows up here.
     fn variant_names_follow_their_paths<F>(variants: &[F])
     where
         F: ReadMaskField + Clone + Debug,
