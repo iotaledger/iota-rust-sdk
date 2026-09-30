@@ -4,13 +4,9 @@
 //! High-level API for calling Move view functions.
 
 use iota_grpc_types::{
-    proto::json_to_prost_stringify_numbers,
     read_mask_fields::{IntoReadMask, ViewFunctionCallReadMask},
-    v1::{
-        command::InputArgument,
-        transaction_execution_service::{
-            ViewFunctionCallItem, ViewFunctionCallOutputs, ViewFunctionCallsRequest,
-        },
+    v1::transaction_execution_service::{
+        ViewFunctionCallItem, ViewFunctionCallOutputs, ViewFunctionCallsRequest,
     },
 };
 use iota_types::TypeTag;
@@ -29,7 +25,8 @@ impl GrpcClient {
     ///
     /// Arguments are passed as JSON and encoded by the node against the
     /// parameter's Move type. Numbers go over the wire as strings. To
-    /// pass BCS-encoded arguments instead, build the [`InputArgument`]s
+    /// pass BCS-encoded arguments instead, build the
+    /// [`InputArgument`](iota_grpc_types::v1::command::InputArgument)s
     /// yourself and use [`view_function_calls`](Self::view_function_calls).
     ///
     /// # Parameters
@@ -93,20 +90,11 @@ impl GrpcClient {
         }
 
         self.view_function_calls(
-            vec![
-                ViewFunctionCallItem::default()
-                    .with_fq_function_name(fq_function_name)
-                    .with_type_args(type_args.iter().map(|t| t.into()).collect())
-                    .with_inputs(
-                        call_args
-                            .iter()
-                            .map(|arg| {
-                                InputArgument::default()
-                                    .with_json(json_to_prost_stringify_numbers(arg))
-                            })
-                            .collect(),
-                    ),
-            ],
+            vec![ViewFunctionCallItem::from_json(
+                fq_function_name,
+                type_args,
+                call_args,
+            )],
             read_mask,
         )
         .await?
