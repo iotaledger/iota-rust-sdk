@@ -12,7 +12,7 @@ use iota_sdk::{
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::{client::GrpcClient, read_mask_fields::EpochField},
+    grpc::{client::GrpcClient, read_mask_fields::GrpcEpochField},
     types::validator::ValidatorCommittee,
 };
 
@@ -61,7 +61,7 @@ impl From<&proto::epoch::ProtocolConfig> for GrpcProtocolConfig {
 
 /// Information about an epoch.
 #[derive(uniffi::Record)]
-pub struct EpochInfo {
+pub struct GrpcEpochInfo {
     /// The epoch id.
     pub epoch: Option<u64>,
     /// The committee governing the epoch.
@@ -83,7 +83,7 @@ pub struct EpochInfo {
     pub protocol_config: Option<GrpcProtocolConfig>,
 }
 
-impl TryFrom<&proto::epoch::Epoch> for EpochInfo {
+impl TryFrom<&proto::epoch::Epoch> for GrpcEpochInfo {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::epoch::Epoch) -> Result<Self> {
@@ -116,8 +116,8 @@ impl GrpcClient {
     pub async fn epoch(
         &self,
         epoch: Option<u64>,
-        read_mask: Option<Vec<EpochField>>,
-    ) -> Result<EpochInfo> {
+        read_mask: Option<Vec<GrpcEpochField>>,
+    ) -> Result<GrpcEpochInfo> {
         (&self
             .client()
             .epoch()

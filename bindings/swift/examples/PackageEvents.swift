@@ -9,11 +9,11 @@ struct PackageEventsExample {
     let client = GraphQlClient.newTestnet()
 
     let events = try await client.events(
-      filter: EventFilter(
+      filter: GraphQlEventFilter(
         eventType:
           "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"
       ),
-      paginationFilter: PaginationFilter(direction: Direction.forward, limit: 10)
+      paginationFilter: GraphQlPaginationFilter(direction: GraphQlDirection.forward, limit: 10)
     )
 
     for event in events.data {

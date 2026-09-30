@@ -78,7 +78,7 @@ class Program
           }
         }
 
-        fragment RPC_VALIDATOR_FIELDS on Validator {
+        fragment RPC_VALIDATOR_FIELDS on GraphQlValidator {
           address {
             address
           }
@@ -135,7 +135,7 @@ class Program
         }
         ";
 
-        var query = new Query(queryStr, null);
+        var query = new GraphQlQuery(queryStr, null);
         var res = await client.RunQuery(query);
         Console.WriteLine(res);
     }

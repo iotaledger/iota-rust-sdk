@@ -21,13 +21,13 @@ async def main():
         }
     }
     """
-    query_epoch_data = Query(query_string=query_epoch_data_str,)
+    query_epoch_data = GraphQlQuery(query_string=query_epoch_data_str,)
     res = await client.run_query(query_epoch_data)
     print(res)
 
     variables = {"id": 1}
-    query_epoch_data_with_variables = Query(query_string=query_epoch_data_str,
-                                            variables=json.dumps(variables))
+    query_epoch_data_with_variables = GraphQlQuery(
+        query_string=query_epoch_data_str, variables=json.dumps(variables))
     res = await client.run_query(query_epoch_data_with_variables)
     print(res)
 
@@ -36,7 +36,7 @@ async def main():
         chainIdentifier
     }
     """
-    query_chain_id = Query(query_string=query_chain_id_str,)
+    query_chain_id = GraphQlQuery(query_string=query_chain_id_str,)
     res = await client.run_query(query_chain_id)
     print(res)
 

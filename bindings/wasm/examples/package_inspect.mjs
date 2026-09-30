@@ -7,13 +7,13 @@
 
 import {
   Address,
-  Direction,
+  GraphQlDirection,
   GraphQlClient,
-  MoveAbility,
-  ObjectFilter,
-  PaginationFilter,
+  GraphQlMoveAbility,
+  GraphQlObjectFilter,
+  GraphQlPaginationFilter,
   StructTag,
-  TransactionsFilter,
+  GraphQlTransactionsFilter,
   initAsync,
 } from "@iota/sdk-wasm";
 
@@ -23,7 +23,10 @@ const FRAMEWORK_PACKAGE_ID = Address.framework().toHex();
 const HEX_DIGITS = new Set("0123456789abcdefABCDEF");
 
 function forwardPage(cursor = undefined) {
-  return PaginationFilter.new({ direction: Direction.Forward, cursor });
+  return GraphQlPaginationFilter.new({
+    direction: GraphQlDirection.Forward,
+    cursor,
+  });
 }
 
 function shortenPackageIds(signature) {
@@ -86,8 +89,11 @@ async function printObjectSamples(client, typeTag, hasKeyAbility, isGeneric) {
     return;
   }
   const objects = await client.objects(
-    ObjectFilter.new({ typeTag }),
-    PaginationFilter.new({ direction: Direction.Forward, limit: 3 }),
+    GraphQlObjectFilter.new({ typeTag }),
+    GraphQlPaginationFilter.new({
+      direction: GraphQlDirection.Forward,
+      limit: 3,
+    }),
   );
   if (objects.data.length === 0) {
     console.log("    sample objects: none found");
@@ -123,8 +129,11 @@ function extractPolicy(contents) {
 
 async function resolveUpgradeCapId(client, packageId) {
   const page = await client.transactionsEffects(
-    new TransactionsFilter().withChangedObject(packageId),
-    PaginationFilter.new({ direction: Direction.Forward, limit: 1 }),
+    new GraphQlTransactionsFilter().withChangedObject(packageId),
+    GraphQlPaginationFilter.new({
+      direction: GraphQlDirection.Forward,
+      limit: 1,
+    }),
   );
   for (const effects of page.data) {
     const effectsV1 = effects.asV1();
@@ -244,7 +253,7 @@ async function wasPackagePublishedAsImmutable(client, packageId) {
   let cursor = undefined;
   while (true) {
     const page = await client.transactionsDataEffects(
-      new TransactionsFilter().withChangedObject(packageId),
+      new GraphQlTransactionsFilter().withChangedObject(packageId),
       forwardPage(cursor),
     );
     for (const txData of page.data) {
@@ -260,7 +269,7 @@ async function wasUpgradeCapUsedForMakeImmutable(client, upgradeCapId) {
   let cursor = undefined;
   while (true) {
     const page = await client.transactionsDataEffects(
-      new TransactionsFilter().withInputObject(upgradeCapId),
+      new GraphQlTransactionsFilter().withInputObject(upgradeCapId),
       forwardPage(cursor),
     );
     for (const txData of page.data) {
@@ -387,7 +396,7 @@ for (const moduleName of moduleNames) {
       console.log(`    - ${typeTag}`);
       const hasKeyAbility =
         struct_.abilities !== null &&
-        struct_.abilities.includes(MoveAbility.Key);
+        struct_.abilities.includes(GraphQlMoveAbility.Key);
       const isGeneric =
         struct_.typeParameters !== null && struct_.typeParameters.length > 0;
       await printObjectSamples(client, typeTag, hasKeyAbility, isGeneric);

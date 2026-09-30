@@ -9,14 +9,14 @@ use crate::{error::Result, grpc::client::GrpcClient};
 
 /// Health information about the node serving the gRPC service.
 #[derive(uniffi::Record)]
-pub struct HealthInfo {
+pub struct GrpcHealthInfo {
     /// Checkpoint height of the most recently executed checkpoint.
     pub executed_checkpoint_height: Option<u64>,
     /// Estimated validator latency in milliseconds.
     pub estimated_validator_latency_ms: Option<u32>,
 }
 
-impl From<&proto::ledger_service::GetHealthResponse> for HealthInfo {
+impl From<&proto::ledger_service::GetHealthResponse> for GrpcHealthInfo {
     fn from(value: &proto::ledger_service::GetHealthResponse) -> Self {
         Self {
             executed_checkpoint_height: value.executed_checkpoint_height,
@@ -33,7 +33,7 @@ impl GrpcClient {
     /// error when the most recently executed checkpoint is older than the
     /// threshold.
     #[uniffi::method(default(threshold_ms = None))]
-    pub async fn health(&self, threshold_ms: Option<u64>) -> Result<HealthInfo> {
+    pub async fn health(&self, threshold_ms: Option<u64>) -> Result<GrpcHealthInfo> {
         Ok((&self
             .client()
             .health()

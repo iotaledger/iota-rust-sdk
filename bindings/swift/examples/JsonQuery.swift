@@ -77,7 +77,7 @@ struct JsonQueryExample {
         }
       }
 
-      fragment RPC_VALIDATOR_FIELDS on Validator {
+      fragment RPC_VALIDATOR_FIELDS on GraphQlValidator {
         address {
           address
         }
@@ -134,7 +134,7 @@ struct JsonQueryExample {
       }
       """
 
-    let query = Query(queryString: queryStr)
+    let query = GraphQlQuery(queryString: queryStr)
     let res = try await client.runQuery(query: query)
     print(res)
   }

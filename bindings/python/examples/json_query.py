@@ -78,7 +78,7 @@ async def main():
           }
         }
 
-        fragment RPC_VALIDATOR_FIELDS on Validator {
+        fragment RPC_VALIDATOR_FIELDS on GraphQlValidator {
           address {
             address
           }
@@ -135,7 +135,7 @@ async def main():
         }
     """
 
-    query = Query(query_string=query_str)
+    query = GraphQlQuery(query_string=query_str)
     res = await client.run_query(query)
     print(res)
 

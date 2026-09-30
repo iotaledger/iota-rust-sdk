@@ -139,7 +139,7 @@ func main() {
 		}
 	`
 
-	query := iota_sdk.Query{
+	query := iota_sdk.GraphQlQuery{
 		QueryString: queryStr,
 	}
 	res, err := client.RunQuery(query)
