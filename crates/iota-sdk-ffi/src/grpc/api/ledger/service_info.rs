@@ -78,7 +78,8 @@ impl GrpcClient {
     ) -> Result<ServiceInfo> {
         (&self
             .client()
-            .service_info(crate::grpc::api::read_mask::<ServiceInfoReadMask, _>(
+            .service_info()
+            .read_mask(crate::grpc::api::read_mask::<ServiceInfoReadMask, _>(
                 read_mask,
             ))
             .await?

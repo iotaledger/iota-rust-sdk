@@ -3,6 +3,8 @@
 
 //! High-level API for calling Move view functions.
 
+use std::borrow::Borrow;
+
 use iota_grpc_types::{
     proto::json_to_prost_stringify_numbers,
     read_mask_fields::{IntoReadMask, ViewFunctionCallReadMask},
@@ -10,18 +12,116 @@ use iota_grpc_types::{
         command::InputArgument,
         transaction_execution_service::{
             ViewFunctionCallItem, ViewFunctionCallOutputs, ViewFunctionCallsRequest,
+            transaction_execution_service_client::TransactionExecutionServiceClient,
         },
     },
 };
 use iota_types::TypeTag;
 
 use crate::{
-    GrpcClient,
+    GrpcClient, InterceptedChannel,
     api::{
-        GrpcError, GrpcResult, MetadataEnvelope, ProtocolError, check_result_count,
+        GrpcError, GrpcResult, MetadataEnvelope, ProtocolError, check_result_count, define_query,
         into_item_results,
     },
 };
+
+define_query! {
+    /// Request for [`GrpcClient::view_function_call`]. Await it to send the
+    /// request.
+    pub struct ViewFunctionCallQuery {
+        service_client: TransactionExecutionServiceClient<InterceptedChannel>,
+        function_call: ViewFunctionCallItem,
+        read_mask: ViewFunctionCallReadMask,
+    }
+    output: GrpcResult<MetadataEnvelope<ViewFunctionCallOutputs>>;
+}
+
+impl ViewFunctionCallQuery {
+    /// Set the type arguments.
+    pub fn type_args(mut self, type_args: impl IntoIterator<Item = impl Borrow<TypeTag>>) -> Self {
+        self.function_call.type_args = type_args.into_iter().map(|t| t.borrow().into()).collect();
+        self
+    }
+
+    /// Set the value arguments, passed as JSON.
+    pub fn call_args(
+        mut self,
+        call_args: impl IntoIterator<Item = impl Borrow<serde_json::Value>>,
+    ) -> Self {
+        self.function_call.inputs = call_args
+            .into_iter()
+            .map(|arg| {
+                InputArgument::default().with_json(json_to_prost_stringify_numbers(arg.borrow()))
+            })
+            .collect();
+        self
+    }
+
+    /// Set the field mask controlling the returned fields.
+    pub fn read_mask(mut self, read_mask: impl IntoReadMask<ViewFunctionCallReadMask>) -> Self {
+        self.read_mask = read_mask.into_read_mask();
+        self
+    }
+
+    async fn send(self) -> GrpcResult<MetadataEnvelope<ViewFunctionCallOutputs>> {
+        if self.function_call.fq_function_name.is_empty() {
+            return Err(GrpcError::EmptyRequest);
+        }
+
+        ViewFunctionCallsQuery {
+            service_client: self.service_client,
+            function_calls: vec![self.function_call],
+            read_mask: self.read_mask,
+        }
+        .send()
+        .await?
+        .try_map(|results| {
+            results.into_iter().next().ok_or_else(|| {
+                GrpcError::Protocol(ProtocolError::EmptyResponseField("call_results"))
+            })?
+        })
+    }
+}
+
+define_query! {
+    /// Request for [`GrpcClient::view_function_calls`]. Await it to send the
+    /// request.
+    pub struct ViewFunctionCallsQuery {
+        service_client: TransactionExecutionServiceClient<InterceptedChannel>,
+        function_calls: Vec<ViewFunctionCallItem>,
+        read_mask: ViewFunctionCallReadMask,
+    }
+    output: GrpcResult<MetadataEnvelope<Vec<GrpcResult<ViewFunctionCallOutputs>>>>;
+}
+
+impl ViewFunctionCallsQuery {
+    /// Set the field mask controlling the returned fields.
+    pub fn read_mask(mut self, read_mask: impl IntoReadMask<ViewFunctionCallReadMask>) -> Self {
+        self.read_mask = read_mask.into_read_mask();
+        self
+    }
+
+    async fn send(
+        mut self,
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ViewFunctionCallOutputs>>>> {
+        if self.function_calls.is_empty() {
+            return Err(GrpcError::EmptyRequest);
+        }
+
+        let expected_results = self.function_calls.len();
+        let request = ViewFunctionCallsRequest::default()
+            .with_view_function_calls(self.function_calls)
+            .with_read_mask(self.read_mask);
+
+        let response = self.service_client.view_function_calls(request).await?;
+
+        let response = MetadataEnvelope::from(response).map(|r| into_item_results(r.call_results));
+        check_result_count(response.body(), expected_results)?;
+
+        Ok(response)
+    }
+}
 
 impl GrpcClient {
     /// Call a Move view function and read back what it returns, without
@@ -35,8 +135,10 @@ impl GrpcClient {
     /// # Parameters
     ///
     /// - `fq_function_name`: Fully qualified Move view function name
-    /// - `type_args`: Type arguments
-    /// - `call_args`: Value arguments
+    ///
+    /// Set [`type_args`](ViewFunctionCallQuery::type_args) and
+    /// [`call_args`](ViewFunctionCallQuery::call_args) for a function that
+    /// takes them.
     ///
     /// Returns [`ViewFunctionCallOutputs`] which contains:
     /// - `return_values()` - View function return values in case of success
@@ -46,18 +148,13 @@ impl GrpcClient {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::GrpcClient;
-    /// # use iota_sdk_grpc_client::read_mask_fields::ViewFunctionCallReadMask;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = GrpcClient::new_localnet()?;
     ///
     /// // `discounted_price` has to be declared `#[view]` in the package.
     /// let outputs = client
-    ///     .view_function_call(
-    ///         "0x1234::shop::discounted_price",
-    ///         &[],
-    ///         &[serde_json::json!(100), serde_json::json!(25)],
-    ///         ViewFunctionCallReadMask::default(),
-    ///     )
+    ///     .view_function_call("0x1234::shop::discounted_price")
+    ///     .call_args([serde_json::json!(100), serde_json::json!(25)])
     ///     .await?;
     ///
     /// // The call ran either way; `execution_error` says whether it aborted.
@@ -69,10 +166,10 @@ impl GrpcClient {
     /// # }
     /// ```
     ///
-    /// The `read_mask` controls which fields the server returns; use
-    /// `ViewFunctionCallReadMask::default()` for the default mask. Pass a
+    /// Without [`read_mask`](ViewFunctionCallQuery::read_mask), the default
+    /// mask is used. Pass a
     /// [`ViewFunctionCallField`](iota_grpc_types::read_mask_fields::ViewFunctionCallField)
-    /// or any slice/array/vec of fields — conversion is automatic.
+    /// or any slice/array/vec of fields to choose the returned fields.
     ///
     /// # Errors
     ///
@@ -81,40 +178,12 @@ impl GrpcClient {
     /// function, a wrong argument count, a non-view function). A call that ran
     /// and *aborted* is not an error here — it comes back as
     /// [`ViewFunctionCallOutputs::execution_error`].
-    pub async fn view_function_call(
-        &self,
-        fq_function_name: &str,
-        type_args: &[TypeTag],
-        call_args: &[serde_json::Value],
-        read_mask: impl IntoReadMask<ViewFunctionCallReadMask>,
-    ) -> GrpcResult<MetadataEnvelope<ViewFunctionCallOutputs>> {
-        if fq_function_name.is_empty() {
-            return Err(GrpcError::EmptyRequest);
+    pub fn view_function_call(&self, fq_function_name: impl Into<String>) -> ViewFunctionCallQuery {
+        ViewFunctionCallQuery {
+            service_client: self.execution_service_client(),
+            function_call: ViewFunctionCallItem::default().with_fq_function_name(fq_function_name),
+            read_mask: ViewFunctionCallReadMask::default(),
         }
-
-        self.view_function_calls(
-            vec![
-                ViewFunctionCallItem::default()
-                    .with_fq_function_name(fq_function_name)
-                    .with_type_args(type_args.iter().map(|t| t.into()).collect())
-                    .with_inputs(
-                        call_args
-                            .iter()
-                            .map(|arg| {
-                                InputArgument::default()
-                                    .with_json(json_to_prost_stringify_numbers(arg))
-                            })
-                            .collect(),
-                    ),
-            ],
-            read_mask,
-        )
-        .await?
-        .try_map(|results| {
-            results.into_iter().next().ok_or_else(|| {
-                GrpcError::Protocol(ProtocolError::EmptyResponseField("call_results"))
-            })?
-        })
     }
 
     /// Call a batch of Move view functions.
@@ -129,11 +198,10 @@ impl GrpcClient {
     /// [`ViewFunctionCallOutputs::execution_error`]; only a call the server
     /// refused to run yields `Err`.
     ///
-    /// The `read_mask` controls which fields the server returns for each
-    /// `ViewFunctionCallOutputs`; use `ViewFunctionCallReadMask::default()`
-    /// for the default mask. Pass a
+    /// Without [`read_mask`](ViewFunctionCallsQuery::read_mask), the default
+    /// mask is used for each `ViewFunctionCallOutputs`. Pass a
     /// [`ViewFunctionCallField`](iota_grpc_types::read_mask_fields::ViewFunctionCallField)
-    /// or any slice/array/vec of fields — conversion is automatic.
+    /// or any slice/array/vec of fields to choose the returned fields.
     ///
     /// # Errors
     ///
@@ -142,29 +210,93 @@ impl GrpcClient {
     /// (e.g. batch size exceeded).
     /// Returns [`ProtocolError::UnexpectedResultCount`] if the server did not
     /// answer every call, since results are paired with calls by position.
-    pub async fn view_function_calls(
+    pub fn view_function_calls(
         &self,
         function_calls: Vec<ViewFunctionCallItem>,
-        read_mask: impl IntoReadMask<ViewFunctionCallReadMask>,
-    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ViewFunctionCallOutputs>>>> {
-        if function_calls.is_empty() {
-            return Err(GrpcError::EmptyRequest);
+    ) -> ViewFunctionCallsQuery {
+        ViewFunctionCallsQuery {
+            service_client: self.execution_service_client(),
+            function_calls,
+            read_mask: ViewFunctionCallReadMask::default(),
         }
+    }
+}
 
-        let expected_results = function_calls.len();
-        let read_mask = read_mask.into_read_mask();
-        let request = ViewFunctionCallsRequest::default()
-            .with_view_function_calls(function_calls)
-            .with_read_mask(read_mask);
+#[cfg(test)]
+mod tests {
+    use iota_grpc_types::{
+        proto::json_to_prost_stringify_numbers,
+        read_mask_fields::{ViewFunctionCallField, ViewFunctionCallReadMask},
+        v1::command::InputArgument,
+    };
+    use iota_types::TypeTag;
+    use serde_json::json;
 
-        let response = self
-            .execution_service_client()
-            .view_function_calls(request)
-            .await?;
+    use crate::{GrpcClient, GrpcError};
 
-        let response = MetadataEnvelope::from(response).map(|r| into_item_results(r.call_results));
-        check_result_count(response.body(), expected_results)?;
+    #[tokio::test]
+    async fn view_function_call_starts_without_arguments_and_with_the_default_mask() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let query = client.view_function_call("0x2::coin::value");
+        assert_eq!(query.function_call.fq_function_name, "0x2::coin::value");
+        assert!(query.function_call.type_args.is_empty());
+        assert!(query.function_call.inputs.is_empty());
+        assert_eq!(
+            query.read_mask.as_str(),
+            ViewFunctionCallReadMask::default().as_str()
+        );
+    }
 
-        Ok(response)
+    #[tokio::test]
+    async fn argument_setters_convert_borrowed_and_owned_values_alike() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let tags = vec![TypeTag::U64, TypeTag::Bool];
+        let args = vec![json!(100), json!("a")];
+
+        let borrowed = client
+            .view_function_call("0x2::m::f")
+            .type_args(&tags)
+            .call_args(&args);
+        let owned = client
+            .view_function_call("0x2::m::f")
+            .type_args(tags.clone())
+            .call_args(args.clone());
+
+        let expected_type_args: Vec<_> = tags.iter().map(Into::into).collect();
+        let expected_inputs: Vec<_> = args
+            .iter()
+            .map(|arg| InputArgument::default().with_json(json_to_prost_stringify_numbers(arg)))
+            .collect();
+        for query in [borrowed, owned] {
+            assert_eq!(query.function_call.type_args, expected_type_args);
+            assert_eq!(query.function_call.inputs, expected_inputs);
+        }
+    }
+
+    #[tokio::test]
+    async fn read_mask_replaces_the_default_mask() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let query = client
+            .view_function_call("0x2::m::f")
+            .read_mask(ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES);
+        assert_eq!(
+            query.read_mask.as_str(),
+            ViewFunctionCallReadMask::from(ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES)
+                .as_str()
+        );
+    }
+
+    #[tokio::test]
+    async fn awaiting_an_empty_function_name_is_an_empty_request() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let result = client.view_function_call("").await;
+        assert!(matches!(result, Err(GrpcError::EmptyRequest)));
+    }
+
+    #[tokio::test]
+    async fn awaiting_no_function_calls_is_an_empty_request() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let result = client.view_function_calls(Vec::new()).await;
+        assert!(matches!(result, Err(GrpcError::EmptyRequest)));
     }
 }

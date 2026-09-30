@@ -5,24 +5,51 @@
 
 use iota_grpc_types::{
     read_mask_fields::{IntoReadMask, ServiceInfoReadMask},
-    v1::ledger_service::{GetServiceInfoRequest, GetServiceInfoResponse},
+    v1::ledger_service::{
+        GetServiceInfoRequest, GetServiceInfoResponse, ledger_service_client::LedgerServiceClient,
+    },
 };
 
 use crate::{
-    GrpcClient,
-    api::{GrpcResult, MetadataEnvelope},
+    GrpcClient, InterceptedChannel,
+    api::{GrpcResult, MetadataEnvelope, define_query},
 };
+
+define_query! {
+    /// Request for [`GrpcClient::service_info`]. Await it to send the request.
+    pub struct GetServiceInfoQuery {
+        service_client: LedgerServiceClient<InterceptedChannel>,
+        read_mask: ServiceInfoReadMask,
+    }
+    output: GrpcResult<MetadataEnvelope<GetServiceInfoResponse>>;
+}
+
+impl GetServiceInfoQuery {
+    /// Set the field mask controlling the returned fields.
+    pub fn read_mask(mut self, read_mask: impl IntoReadMask<ServiceInfoReadMask>) -> Self {
+        self.read_mask = read_mask.into_read_mask();
+        self
+    }
+
+    async fn send(mut self) -> GrpcResult<MetadataEnvelope<GetServiceInfoResponse>> {
+        let request = GetServiceInfoRequest::default().with_read_mask(self.read_mask);
+        let response = self.service_client.get_service_info(request).await?;
+
+        Ok(MetadataEnvelope::from(response))
+    }
+}
 
 impl GrpcClient {
     /// Get service info from the node.
     ///
     /// Returns the [`GetServiceInfoResponse`] proto type with fields populated
-    /// according to the `read_mask`; use `ServiceInfoReadMask::default()` for
-    /// the default read mask, or pass a
+    /// according to the read mask. Without
+    /// [`read_mask`](GetServiceInfoQuery::read_mask), the default mask is
+    /// used. Pass a
     /// [`ServiceInfoReadMask`](iota_grpc_types::read_mask_fields::ServiceInfoReadMask)
     /// built from a
     /// [`ServiceInfoField`](iota_grpc_types::read_mask_fields::ServiceInfoField)
-    /// or any slice/array/vec of fields.
+    /// or any slice/array/vec of fields to choose the returned fields.
     ///
     /// # Example
     ///
@@ -32,13 +59,14 @@ impl GrpcClient {
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = GrpcClient::new_localnet()?;
     ///
-    /// let info = client.service_info(ServiceInfoReadMask::default()).await?;
+    /// let info = client.service_info().await?;
     /// println!("Chain ID: {:?}", info.body().chain_id);
     /// println!("Epoch: {:?}", info.body().epoch);
     ///
     /// // With a custom mask.
     /// let info = client
-    ///     .service_info(ServiceInfoReadMask::from([
+    ///     .service_info()
+    ///     .read_mask(ServiceInfoReadMask::from([
     ///         ServiceInfoField::CHAIN_ID,
     ///         ServiceInfoField::EPOCH,
     ///     ]))
@@ -46,16 +74,33 @@ impl GrpcClient {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn service_info(
-        &self,
-        read_mask: impl IntoReadMask<ServiceInfoReadMask>,
-    ) -> GrpcResult<MetadataEnvelope<GetServiceInfoResponse>> {
-        let read_mask = read_mask.into_read_mask();
-        let request = GetServiceInfoRequest::default().with_read_mask(read_mask);
+    pub fn service_info(&self) -> GetServiceInfoQuery {
+        GetServiceInfoQuery {
+            service_client: self.ledger_service_client(),
+            read_mask: ServiceInfoReadMask::default(),
+        }
+    }
+}
 
-        let mut client = self.ledger_service_client();
-        let response = client.get_service_info(request).await?;
+#[cfg(test)]
+mod tests {
+    use iota_grpc_types::read_mask_fields::{ServiceInfoField, ServiceInfoReadMask};
 
-        Ok(MetadataEnvelope::from(response))
+    use crate::GrpcClient;
+
+    #[tokio::test]
+    async fn read_mask_replaces_the_default_mask() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let query = client.service_info();
+        assert_eq!(
+            query.read_mask.as_str(),
+            ServiceInfoReadMask::default().as_str()
+        );
+
+        let query = query.read_mask(ServiceInfoField::CHAIN_ID);
+        assert_eq!(
+            query.read_mask.as_str(),
+            ServiceInfoReadMask::from(ServiceInfoField::CHAIN_ID).as_str()
+        );
     }
 }

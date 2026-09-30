@@ -6,19 +6,75 @@
 use iota_grpc_types::{
     read_mask_fields::{IntoReadMask, TransactionReadMask},
     v1::{
-        ledger_service::{GetTransactionsRequest, TransactionRequest, TransactionRequests},
+        ledger_service::{
+            GetTransactionsRequest, TransactionRequest, TransactionRequests,
+            ledger_service_client::LedgerServiceClient,
+        },
         transaction::ExecutedTransaction,
     },
 };
 use iota_types::TransactionDigest;
 
 use crate::{
-    GrpcClient,
+    GrpcClient, InterceptedChannel,
     api::{
         GrpcError, GrpcResult, MetadataEnvelope, check_result_count, check_transaction_identity,
-        collect_stream, into_item_results, saturating_usize_to_u32,
+        collect_stream, define_query, into_item_results, saturating_usize_to_u32,
     },
 };
+
+define_query! {
+    /// Request for [`GrpcClient::transactions`]. Await it to send the request.
+    pub struct GetTransactionsQuery {
+        service_client: LedgerServiceClient<InterceptedChannel>,
+        max_message_size: Option<usize>,
+        digests: Vec<TransactionDigest>,
+        read_mask: TransactionReadMask,
+    }
+    output: GrpcResult<MetadataEnvelope<Vec<GrpcResult<ExecutedTransaction>>>>;
+}
+
+impl GetTransactionsQuery {
+    /// Set the field mask controlling the returned fields.
+    pub fn read_mask(mut self, read_mask: impl IntoReadMask<TransactionReadMask>) -> Self {
+        self.read_mask = read_mask.into_read_mask();
+        self
+    }
+
+    async fn send(mut self) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ExecutedTransaction>>>> {
+        if self.digests.is_empty() {
+            return Err(GrpcError::EmptyRequest);
+        }
+
+        let requests = TransactionRequests::default().with_requests(
+            self.digests
+                .iter()
+                .map(|d| TransactionRequest::default().with_digest(*d))
+                .collect(),
+        );
+
+        let mut request = GetTransactionsRequest::default()
+            .with_requests(requests)
+            .with_read_mask(self.read_mask);
+
+        if let Some(max_size) = self.max_message_size {
+            request = request.with_max_message_size_bytes(saturating_usize_to_u32(max_size));
+        }
+
+        let response = self.service_client.get_transactions(request).await?;
+        let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
+
+        // Server guarantees results are returned in request order
+        let response = collect_stream(stream, metadata, |msg| {
+            Ok((msg.has_next, into_item_results(msg.transaction_results)))
+        })
+        .await?;
+        check_result_count(response.body(), self.digests.len())?;
+        check_transaction_identity(response.body(), &self.digests)?;
+
+        Ok(response)
+    }
+}
 
 impl GrpcClient {
     /// Get transactions by their digests.
@@ -60,12 +116,12 @@ impl GrpcClient {
     ///
     /// # Read Mask
     ///
-    /// The `read_mask` controls which fields the server returns; use
-    /// `TransactionReadMask::default()` for the default field mask, or pass a
+    /// Without [`read_mask`](GetTransactionsQuery::read_mask), the default
+    /// mask is used. Pass a
     /// [`TransactionReadMask`](iota_grpc_types::read_mask_fields::TransactionReadMask)
     /// built from a
     /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// or any slice/array/vec of fields.
+    /// or any slice/array/vec of fields to choose the returned fields.
     ///
     /// The `input_objects`, `output_objects`, `balance_changes` and
     /// `object_changes` fields (also included by wildcard masks) require the
@@ -86,9 +142,7 @@ impl GrpcClient {
     /// let digest: TransactionDigest = TransactionDigest::ZERO;
     ///
     /// // Default mask
-    /// let txs = client
-    ///     .transactions([digest], TransactionReadMask::default())
-    ///     .await?;
+    /// let txs = client.transactions([digest]).await?;
     /// for tx in txs.body() {
     ///     let tx = match tx {
     ///         Ok(tx) => tx,
@@ -111,52 +165,55 @@ impl GrpcClient {
     ///
     /// // Selected fields
     /// let txs = client
-    ///     .transactions(
-    ///         [digest],
-    ///         TransactionReadMask::from([TransactionField::EFFECTS, TransactionField::CHECKPOINT]),
-    ///     )
+    ///     .transactions([digest])
+    ///     .read_mask(TransactionReadMask::from([
+    ///         TransactionField::EFFECTS,
+    ///         TransactionField::CHECKPOINT,
+    ///     ]))
     ///     .await?;
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn transactions(
+    pub fn transactions(
         &self,
         digests: impl IntoIterator<Item = TransactionDigest>,
-        read_mask: impl IntoReadMask<TransactionReadMask>,
-    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ExecutedTransaction>>>> {
-        let digests = digests.into_iter().collect::<Vec<_>>();
-        if digests.is_empty() {
-            return Err(GrpcError::EmptyRequest);
+    ) -> GetTransactionsQuery {
+        GetTransactionsQuery {
+            service_client: self.ledger_service_client(),
+            max_message_size: self.max_decoding_message_size(),
+            digests: digests.into_iter().collect(),
+            read_mask: TransactionReadMask::default(),
         }
+    }
+}
 
-        let requests = TransactionRequests::default().with_requests(
-            digests
-                .iter()
-                .map(|d| TransactionRequest::default().with_digest(*d))
-                .collect(),
+#[cfg(test)]
+mod tests {
+    use iota_grpc_types::read_mask_fields::{TransactionField, TransactionReadMask};
+    use iota_types::TransactionDigest;
+
+    use crate::{GrpcClient, GrpcError};
+
+    #[tokio::test]
+    async fn read_mask_replaces_the_default_mask() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let query = client.transactions([TransactionDigest::ZERO]);
+        assert_eq!(
+            query.read_mask.as_str(),
+            TransactionReadMask::default().as_str()
         );
 
-        let mut request = GetTransactionsRequest::default()
-            .with_requests(requests)
-            .with_read_mask(read_mask.into_read_mask());
+        let query = query.read_mask(TransactionField::EFFECTS);
+        assert_eq!(
+            query.read_mask.as_str(),
+            TransactionReadMask::from(TransactionField::EFFECTS).as_str()
+        );
+    }
 
-        if let Some(max_size) = self.max_decoding_message_size() {
-            request = request.with_max_message_size_bytes(saturating_usize_to_u32(max_size));
-        }
-
-        let mut client = self.ledger_service_client();
-
-        let response = client.get_transactions(request).await?;
-        let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
-
-        // Server guarantees results are returned in request order
-        let response = collect_stream(stream, metadata, |msg| {
-            Ok((msg.has_next, into_item_results(msg.transaction_results)))
-        })
-        .await?;
-        check_result_count(response.body(), digests.len())?;
-        check_transaction_identity(response.body(), &digests)?;
-
-        Ok(response)
+    #[tokio::test]
+    async fn awaiting_no_digests_is_an_empty_request() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let result = client.transactions(Vec::new()).await;
+        assert!(matches!(result, Err(GrpcError::EmptyRequest)));
     }
 }

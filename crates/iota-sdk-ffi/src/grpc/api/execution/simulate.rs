@@ -211,11 +211,11 @@ impl GrpcClient {
     ) -> Result<SimulatedTransaction> {
         (&self
             .client()
-            .simulate_transaction(
-                transaction.0.clone(),
-                skip_checks,
-                crate::grpc::api::read_mask::<SimulateReadMask, _>(read_mask),
-            )
+            .simulate_transaction(transaction.0.clone())
+            .skip_checks(skip_checks)
+            .read_mask(crate::grpc::api::read_mask::<SimulateReadMask, _>(
+                read_mask,
+            ))
             .await?
             .into_inner())
             .try_into()
@@ -244,8 +244,10 @@ impl GrpcClient {
                         .skip_checks(input.skip_checks)
                     })
                     .collect(),
-                crate::grpc::api::read_mask::<SimulateReadMask, _>(read_mask),
             )
+            .read_mask(crate::grpc::api::read_mask::<SimulateReadMask, _>(
+                read_mask,
+            ))
             .await?
             .into_inner()
             .into_iter()

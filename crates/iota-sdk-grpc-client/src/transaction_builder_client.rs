@@ -8,8 +8,8 @@ use std::time::Duration;
 
 use iota_grpc_types::{
     read_mask_fields::{
-        EpochField, EpochReadMask, ExecuteTransactionReadMask, ObjectReadMask, SimulateField,
-        SimulateReadMask, TransactionField, TransactionReadMask,
+        EpochField, EpochReadMask, ExecuteTransactionReadMask, SimulateField, TransactionField,
+        TransactionReadMask,
     },
     v1::transaction_execution_service::SimulatedTransaction,
 };
@@ -78,7 +78,7 @@ impl TransactionBuilderLedgerClient for GrpcClient {
         // Default read mask (`reference` + `bcs`) provides everything needed to
         // reconstruct the SDK object.
         let response = self
-            .objects_with_versions([(object_id, version.into())], ObjectReadMask::default())
+            .objects_with_versions([(object_id, version.into())])
             .await;
 
         match single_item(response)? {
@@ -97,7 +97,7 @@ impl TransactionBuilderLedgerClient for GrpcClient {
         // Default read mask (`reference` + `bcs`) provides everything needed to
         // reconstruct the SDK objects, which `objects` returns in request
         // order.
-        self.objects_with_versions(object_ids.iter().copied(), ObjectReadMask::default())
+        self.objects_with_versions(object_ids.iter().copied())
             .await?
             .into_inner()
             .into_iter()
@@ -173,11 +173,9 @@ impl TransactionBuilderSimulationClient for GrpcClient {
         // Simulate with relaxed checks and read the gas used from the resulting
         // effects.
         let simulated = self
-            .simulate_transaction(
-                transaction.clone(),
-                true,
-                SimulateField::EXECUTED_TRANSACTION_EFFECTS_BCS,
-            )
+            .simulate_transaction(transaction.clone())
+            .skip_checks(true)
+            .read_mask(SimulateField::EXECUTED_TRANSACTION_EFFECTS_BCS)
             .await?;
         let effects = simulated
             .into_inner()
@@ -198,11 +196,8 @@ impl TransactionBuilderSimulationClient for GrpcClient {
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
         Ok(self
-            .simulate_transaction(
-                transaction.clone(),
-                skip_checks,
-                SimulateReadMask::default(),
-            )
+            .simulate_transaction(transaction.clone())
+            .skip_checks(skip_checks)
             .await?
             .into_inner())
     }
@@ -264,7 +259,7 @@ impl TransactionBuilderExecutionClient for GrpcClient {
             let mut interval = tokio::time::interval(WAIT_FOR_TRANSACTION_POLL_INTERVAL);
             loop {
                 interval.tick().await;
-                let response = self.transactions([digest], mask.clone()).await;
+                let response = self.transactions([digest]).read_mask(mask.clone()).await;
 
                 // An absent transaction is not indexed yet — keep polling.
                 if let Some(tx) = single_item(response)? {
@@ -295,10 +290,8 @@ impl TransactionBuilderExecutionClient for GrpcClient {
         digest: TransactionDigest,
     ) -> Result<Option<TransactionEffects>, Self::Error> {
         let response = self
-            .transactions(
-                [digest],
-                TransactionReadMask::from(TransactionField::EFFECTS_BCS),
-            )
+            .transactions([digest])
+            .read_mask(TransactionReadMask::from(TransactionField::EFFECTS_BCS))
             .await;
 
         match single_item(response)? {
