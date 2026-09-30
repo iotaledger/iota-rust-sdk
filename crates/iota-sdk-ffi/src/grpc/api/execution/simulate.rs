@@ -223,8 +223,10 @@ impl GrpcClient {
 
     /// Simulate a batch of transactions.
     ///
-    /// A per-transaction error does not abort the rest of the batch; each
-    /// result carries either the simulated transaction or an error message.
+    /// An error the server reports for one transaction does not abort the
+    /// rest of the batch; each result carries either the simulated transaction
+    /// or the server's error message. A transaction the server returns but
+    /// that cannot be decoded fails the whole call.
     #[uniffi::method(default(read_mask = None))]
     pub async fn simulate_transactions(
         &self,
