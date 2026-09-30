@@ -40,14 +40,19 @@ impl GetEpochQuery {
         self
     }
 
-    async fn send(mut self) -> GrpcResult<MetadataEnvelope<Epoch>> {
+    fn into_request(self) -> (LedgerServiceClient<InterceptedChannel>, GetEpochRequest) {
         let mut request = GetEpochRequest::default().with_read_mask(self.read_mask);
 
         if let Some(epoch) = self.epoch {
             request = request.with_epoch(epoch);
         }
 
-        let response = self.service_client.get_epoch(request).await?;
+        (self.service_client, request)
+    }
+
+    async fn send(self) -> GrpcResult<MetadataEnvelope<Epoch>> {
+        let (mut service_client, request) = self.into_request();
+        let response = service_client.get_epoch(request).await?;
 
         MetadataEnvelope::from(response).try_map(|r| {
             r.epoch
@@ -187,5 +192,23 @@ mod tests {
 
         let query = query.epoch(None);
         assert_eq!(query.epoch, None);
+    }
+
+    #[tokio::test]
+    async fn the_request_carries_the_epoch_and_the_mask() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let (_, request) = client
+            .epoch()
+            .epoch(5)
+            .read_mask(EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS)
+            .into_request();
+        assert_eq!(request.epoch, Some(5));
+        assert_eq!(
+            request.read_mask,
+            Some(EpochReadMask::from(EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS).into())
+        );
+
+        let (_, request) = client.epoch().into_request();
+        assert_eq!(request.epoch, None);
     }
 }

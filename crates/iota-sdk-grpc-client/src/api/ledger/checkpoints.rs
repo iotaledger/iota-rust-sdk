@@ -77,7 +77,12 @@ impl GetCheckpointQuery {
         self
     }
 
-    async fn send(mut self) -> GrpcResult<MetadataEnvelope<CheckpointResponse>> {
+    fn into_request(
+        self,
+    ) -> GrpcResult<(
+        LedgerServiceClient<InterceptedChannel>,
+        GetCheckpointRequest,
+    )> {
         let mut request = match self.checkpoint_id {
             get_checkpoint_request::CheckpointId::Latest(val) => {
                 GetCheckpointRequest::default().with_latest(val)
@@ -106,7 +111,12 @@ impl GetCheckpointQuery {
             request = request.with_max_message_size_bytes(max_size);
         }
 
-        let response = self.service_client.get_checkpoint(request).await?;
+        Ok((self.service_client, request))
+    }
+
+    async fn send(self) -> GrpcResult<MetadataEnvelope<CheckpointResponse>> {
+        let (mut service_client, request) = self.into_request()?;
+        let response = service_client.get_checkpoint(request).await?;
         let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
 
         let reassembled = GrpcClient::reassemble_checkpoint_data_stream(stream);
@@ -672,7 +682,7 @@ mod tests {
         let query = query
             .transactions_filter(grpc_filter::TransactionFilter::default())
             .events_filter(grpc_filter::EventFilter::default())
-            .read_mask(CheckpointResponseField::CHECKPOINT_SUMMARY);
+            .read_mask(CheckpointResponseField::CHECKPOINT_CONTENTS);
         assert_eq!(
             query.transactions_filter,
             Some(grpc_filter::TransactionFilter::default())
@@ -683,7 +693,48 @@ mod tests {
         );
         assert_eq!(
             query.read_mask.as_str(),
-            CheckpointResponseReadMask::from(CheckpointResponseField::CHECKPOINT_SUMMARY).as_str()
+            CheckpointResponseReadMask::from(CheckpointResponseField::CHECKPOINT_CONTENTS).as_str()
         );
+    }
+
+    #[tokio::test]
+    async fn the_request_carries_the_checkpoint_the_filters_the_mask_and_the_message_size() {
+        let client = GrpcClient::new("http://localhost")
+            .unwrap()
+            .with_max_decoding_message_size(1024);
+        let (_, request) = client
+            .checkpoint_by_sequence_number(7)
+            .transactions_filter(grpc_filter::TransactionFilter::default())
+            .events_filter(grpc_filter::EventFilter::default())
+            .read_mask(CheckpointResponseField::CHECKPOINT_CONTENTS)
+            .into_request()
+            .unwrap();
+        assert_eq!(request.checkpoint_id, Some(CheckpointId::SequenceNumber(7)));
+        assert_eq!(
+            request.transactions_filter,
+            Some(grpc_filter::TransactionFilter::default())
+        );
+        assert_eq!(
+            request.events_filter,
+            Some(grpc_filter::EventFilter::default())
+        );
+        assert_eq!(
+            request.read_mask,
+            Some(
+                CheckpointResponseReadMask::from(CheckpointResponseField::CHECKPOINT_CONTENTS)
+                    .into()
+            )
+        );
+        assert_eq!(request.max_message_size_bytes, Some(1024));
+    }
+
+    #[tokio::test]
+    async fn the_request_leaves_unset_filters_unset() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let (_, request) = client.checkpoint_latest().into_request().unwrap();
+        assert_eq!(request.checkpoint_id, Some(CheckpointId::Latest(true)));
+        assert_eq!(request.transactions_filter, None);
+        assert_eq!(request.events_filter, None);
+        assert_eq!(request.max_message_size_bytes, None);
     }
 }

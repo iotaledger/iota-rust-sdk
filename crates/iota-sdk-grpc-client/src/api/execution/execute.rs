@@ -89,11 +89,12 @@ impl ExecuteTransactionsQuery {
         self
     }
 
-    async fn send(mut self) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ExecutedTransaction>>>> {
-        if self.transactions.is_empty() {
-            return Err(GrpcError::EmptyRequest);
-        }
-
+    fn into_request(
+        self,
+    ) -> GrpcResult<(
+        TransactionExecutionServiceClient<InterceptedChannel>,
+        ExecuteTransactionsRequest,
+    )> {
         let items = self
             .transactions
             .into_iter()
@@ -108,7 +109,16 @@ impl ExecuteTransactionsQuery {
             request = request.with_checkpoint_inclusion_timeout_ms(timeout_ms);
         }
 
-        let response = self.service_client.execute_transactions(request).await?;
+        Ok((self.service_client, request))
+    }
+
+    async fn send(self) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ExecutedTransaction>>>> {
+        if self.transactions.is_empty() {
+            return Err(GrpcError::EmptyRequest);
+        }
+
+        let (mut service_client, request) = self.into_request()?;
+        let response = service_client.execute_transactions(request).await?;
 
         Ok(MetadataEnvelope::from(response).map(|r| into_item_results(r.transaction_results)))
     }
@@ -296,5 +306,30 @@ mod tests {
         let client = GrpcClient::new("http://localhost").unwrap();
         let result = client.execute_transactions(Vec::new()).await;
         assert!(matches!(result, Err(GrpcError::EmptyRequest)));
+    }
+
+    #[tokio::test]
+    async fn the_request_carries_the_timeout_and_the_mask() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let (_, request) = client
+            .execute_transaction(signed_transaction())
+            .checkpoint_inclusion_timeout_ms(5_000)
+            .read_mask(TransactionField::CHECKPOINT)
+            .batch
+            .into_request()
+            .unwrap();
+        assert_eq!(request.transactions.len(), 1);
+        assert_eq!(request.checkpoint_inclusion_timeout_ms, Some(5_000));
+        assert_eq!(
+            request.read_mask,
+            Some(ExecuteTransactionReadMask::from(TransactionField::CHECKPOINT).into())
+        );
+
+        let (_, request) = client
+            .execute_transactions(vec![signed_transaction(), signed_transaction()])
+            .into_request()
+            .unwrap();
+        assert_eq!(request.transactions.len(), 2);
+        assert_eq!(request.checkpoint_inclusion_timeout_ms, None);
     }
 }

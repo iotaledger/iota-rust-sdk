@@ -30,13 +30,18 @@ impl GetHealthQuery {
         self
     }
 
-    async fn send(mut self) -> GrpcResult<MetadataEnvelope<GetHealthResponse>> {
+    fn into_request(self) -> (LedgerServiceClient<InterceptedChannel>, GetHealthRequest) {
         let mut request = GetHealthRequest::default();
         if let Some(ms) = self.threshold_ms {
             request = request.with_threshold_ms(ms);
         }
 
-        let response = self.service_client.get_health(request).await?;
+        (self.service_client, request)
+    }
+
+    async fn send(self) -> GrpcResult<MetadataEnvelope<GetHealthResponse>> {
+        let (mut service_client, request) = self.into_request();
+        let response = service_client.get_health(request).await?;
 
         Ok(MetadataEnvelope::from(response))
     }
@@ -72,5 +77,15 @@ mod tests {
 
         let query = query.threshold_ms(2_000);
         assert_eq!(query.threshold_ms, Some(2_000));
+    }
+
+    #[tokio::test]
+    async fn the_request_carries_the_threshold() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let (_, request) = client.health().threshold_ms(2_000).into_request();
+        assert_eq!(request.threshold_ms, Some(2_000));
+
+        let (_, request) = client.health().into_request();
+        assert_eq!(request.threshold_ms, None);
     }
 }
