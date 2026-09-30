@@ -36,10 +36,8 @@ async fn main() -> Result<()> {
 
     // A page of `0x2::coin::Coin<0x2::iota::IOTA>`, decoded.
     let coins = client
-        .move_objects::<Coin<IOTA>>(
-            MoveObjectFilter::default().with_owner(owner),
-            Default::default(),
-        )
+        .move_objects::<Coin<IOTA>>()
+        .filter(MoveObjectFilter::default().with_owner(owner))
         .await?;
 
     println!("{} IOTA coin object(s):", coins.data().len());

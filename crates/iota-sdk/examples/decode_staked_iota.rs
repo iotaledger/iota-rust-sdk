@@ -37,11 +37,11 @@ async fn main() -> Result<()> {
         "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151".parse()?;
 
     let page = client
-        .objects(
+        .objects()
+        .filter(
             ObjectFilter::default()
                 .with_type("0x3::staking_pool::StakedIota".to_owned())
                 .with_owner(owner),
-            Default::default(),
         )
         .await?;
 

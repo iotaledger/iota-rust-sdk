@@ -23,8 +23,21 @@ mod test_utils;
 
 // Re-export types used by query_types module internally
 #[cfg(feature = "move-types")]
-pub use api::move_objects::{MoveObjectFilter, OwnedMoveObject};
-pub use api::network::GetChainIdQuery;
+pub use api::move_objects::{ListMoveObjectsQuery, MoveObjectFilter, OwnedMoveObject};
+pub use api::{
+    checkpoints::ListCheckpointsQuery,
+    coins::ListCoinsQuery,
+    dynamic_fields::ListDynamicFieldsQuery,
+    events::ListEventsQuery,
+    iota_names::ListIotaNamesRegistrationsQuery,
+    network::{GetChainIdQuery, ListActiveValidatorsQuery},
+    objects::ListObjectsQuery,
+    package::{GetNormalizedMoveModuleQuery, ListPackageVersionsQuery, ListPackagesQuery},
+    transactions::{
+        ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
+        ListTransactionsEffectsQuery, ListTransactionsQuery,
+    },
+};
 pub use client::{GraphQLClient, USER_AGENT};
 pub use cynic;
 pub use error::{GraphQLError, GraphQLResult};
