@@ -5,11 +5,12 @@
 //!
 //! # Read Mask
 //!
-//! All checkpoint query methods accept a `read_mask` to control which data is
-//! included in the response. Pass `CheckpointResponseReadMask::default()` for
-//! the default mask, or a
+//! The checkpoint queries take a mask through their `read_mask` setter, the
+//! streams as their `read_mask` argument, to control which data is included
+//! in the response. Without the setter, or with
+//! `CheckpointResponseReadMask::default()`, the default mask is used. Pass a
 //! [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-//! (or any slice/array/vec of fields) — conversion is automatic.
+//! (or any slice/array/vec of fields) to choose the returned fields.
 
 use std::pin::Pin;
 
@@ -19,7 +20,8 @@ use iota_grpc_types::{
     v1::{
         checkpoint, event, filter as grpc_filter,
         ledger_service::{
-            GetCheckpointRequest, StreamCheckpointsRequest, checkpoint_data, get_checkpoint_request,
+            GetCheckpointRequest, StreamCheckpointsRequest, checkpoint_data,
+            get_checkpoint_request, ledger_service_client::LedgerServiceClient,
         },
         signatures::ValidatorAggregatedSignature as ProtoValidatorAggregatedSignature,
         transaction::ExecutedTransaction,
@@ -28,167 +30,55 @@ use iota_grpc_types::{
 use iota_types::{CheckpointDigest, CheckpointSequenceNumber};
 
 use crate::{
-    GrpcClient, GrpcError,
+    GrpcClient, GrpcError, InterceptedChannel,
     api::{
         CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, GrpcResult,
-        MetadataEnvelope, ProtocolError, TryFromProtoError, saturating_usize_to_u32,
+        MetadataEnvelope, ProtocolError, TryFromProtoError, define_query, saturating_usize_to_u32,
     },
 };
 
-impl GrpcClient {
-    /// Get the latest checkpoint.
-    ///
-    /// Returns the checkpoint with fields populated according to the
-    /// `read_mask`; use `CheckpointResponseReadMask::default()` for the
-    /// default field mask. Pass a
-    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields — conversion is automatic.
-    ///
-    /// # Parameters
-    ///
-    /// * `transactions_filter` - Optional filter to apply to transactions
-    /// * `events_filter` - Optional filter to apply to events
-    /// * `read_mask` - Field mask controlling the returned fields
-    ///
-    /// # Example
-    ///
-    /// ```no_run
-    /// # use iota_sdk_grpc_client::GrpcClient;
-    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
-    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = GrpcClient::new_localnet()?;
-    /// let checkpoint = client
-    ///     .checkpoint_latest(None, None, CheckpointResponseReadMask::default())
-    ///     .await?;
-    /// println!(
-    ///     "Received checkpoint {}",
-    ///     checkpoint.body().sequence_number()
-    /// );
-    /// # Ok(())
-    /// # }
-    /// ```
-    pub async fn checkpoint_latest(
-        &self,
-        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
-        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
-        read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-    ) -> GrpcResult<MetadataEnvelope<CheckpointResponse>> {
-        self.checkpoint_internal(
-            get_checkpoint_request::CheckpointId::Latest(true),
-            transactions_filter.into(),
-            events_filter.into(),
-            read_mask.into_read_mask(),
-        )
-        .await
-    }
-
-    /// Get checkpoint by sequence number.
-    ///
-    /// Returns the checkpoint with fields populated according to the
-    /// `read_mask`; use `CheckpointResponseReadMask::default()` for the
-    /// default field mask. Pass a
-    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields — conversion is automatic.
-    ///
-    /// # Parameters
-    ///
-    /// * `sequence_number` - The checkpoint sequence number to fetch
-    /// * `transactions_filter` - Optional filter to apply to transactions
-    /// * `events_filter` - Optional filter to apply to events
-    /// * `read_mask` - Field mask controlling the returned fields
-    ///
-    /// # Example
-    ///
-    /// ```no_run
-    /// # use iota_sdk_grpc_client::GrpcClient;
-    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
-    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = GrpcClient::new_localnet()?;
-    /// let checkpoint = client
-    ///     .checkpoint_by_sequence_number(100, None, None, CheckpointResponseReadMask::default())
-    ///     .await?;
-    /// println!(
-    ///     "Received checkpoint {}",
-    ///     checkpoint.body().sequence_number()
-    /// );
-    /// # Ok(())
-    /// # }
-    /// ```
-    pub async fn checkpoint_by_sequence_number(
-        &self,
-        sequence_number: CheckpointSequenceNumber,
-        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
-        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
-        read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-    ) -> GrpcResult<MetadataEnvelope<CheckpointResponse>> {
-        self.checkpoint_internal(
-            get_checkpoint_request::CheckpointId::SequenceNumber(sequence_number),
-            transactions_filter.into(),
-            events_filter.into(),
-            read_mask.into_read_mask(),
-        )
-        .await
-    }
-
-    /// Get checkpoint by digest.
-    ///
-    /// Returns the checkpoint with fields populated according to the
-    /// `read_mask`; use `CheckpointResponseReadMask::default()` for the
-    /// default field mask. Pass a
-    /// [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-    /// or any slice/array/vec of fields — conversion is automatic.
-    ///
-    /// # Parameters
-    ///
-    /// * `digest` - The checkpoint digest to fetch
-    /// * `transactions_filter` - Optional filter to apply to transactions
-    /// * `events_filter` - Optional filter to apply to events
-    /// * `read_mask` - Field mask controlling the returned fields
-    ///
-    /// # Example
-    ///
-    /// ```no_run
-    /// # use iota_sdk_grpc_client::GrpcClient;
-    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
-    /// # use iota_types::CheckpointDigest;
-    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = GrpcClient::new_localnet()?;
-    /// let digest: CheckpointDigest = todo!();
-    /// let checkpoint = client
-    ///     .checkpoint_by_digest(digest, None, None, CheckpointResponseReadMask::default())
-    ///     .await?;
-    /// println!(
-    ///     "Received checkpoint {}",
-    ///     checkpoint.body().sequence_number()
-    /// );
-    /// # Ok(())
-    /// # }
-    /// ```
-    pub async fn checkpoint_by_digest(
-        &self,
-        digest: CheckpointDigest,
-        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
-        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
-        read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-    ) -> GrpcResult<MetadataEnvelope<CheckpointResponse>> {
-        self.checkpoint_internal(
-            get_checkpoint_request::CheckpointId::Digest(digest.into()),
-            transactions_filter.into(),
-            events_filter.into(),
-            read_mask.into_read_mask(),
-        )
-        .await
-    }
-
-    /// Internal helper to fetch checkpoint by any ID type.
-    async fn checkpoint_internal(
-        &self,
+define_query! {
+    /// Request for [`GrpcClient::checkpoint_latest`],
+    /// [`GrpcClient::checkpoint_by_sequence_number`] and
+    /// [`GrpcClient::checkpoint_by_digest`]. Await it to send the request.
+    pub struct GetCheckpointQuery {
+        service_client: LedgerServiceClient<InterceptedChannel>,
+        max_message_size: Option<usize>,
         checkpoint_id: get_checkpoint_request::CheckpointId,
         transactions_filter: Option<grpc_filter::TransactionFilter>,
         events_filter: Option<grpc_filter::EventFilter>,
         read_mask: CheckpointResponseReadMask,
-    ) -> GrpcResult<MetadataEnvelope<CheckpointResponse>> {
-        let mut request = match checkpoint_id {
+    }
+    output: GrpcResult<MetadataEnvelope<CheckpointResponse>>;
+}
+
+impl GetCheckpointQuery {
+    /// Set the filter to apply to transactions.
+    pub fn transactions_filter(
+        mut self,
+        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
+    ) -> Self {
+        self.transactions_filter = transactions_filter.into();
+        self
+    }
+
+    /// Set the filter to apply to events.
+    pub fn events_filter(
+        mut self,
+        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
+    ) -> Self {
+        self.events_filter = events_filter.into();
+        self
+    }
+
+    /// Set the field mask controlling the returned fields.
+    pub fn read_mask(mut self, read_mask: impl IntoReadMask<CheckpointResponseReadMask>) -> Self {
+        self.read_mask = read_mask.into_read_mask();
+        self
+    }
+
+    async fn send(mut self) -> GrpcResult<MetadataEnvelope<CheckpointResponse>> {
+        let mut request = match self.checkpoint_id {
             get_checkpoint_request::CheckpointId::Latest(val) => {
                 GetCheckpointRequest::default().with_latest(val)
             }
@@ -204,26 +94,22 @@ impl GrpcClient {
                 )));
             }
         }
-        .with_read_mask(read_mask);
+        .with_read_mask(self.read_mask);
 
-        if let Some(tf) = transactions_filter {
+        if let Some(tf) = self.transactions_filter {
             request = request.with_transactions_filter(tf);
         }
-        if let Some(ef) = events_filter {
+        if let Some(ef) = self.events_filter {
             request = request.with_events_filter(ef);
         }
-        if let Some(max_size) = self
-            .max_decoding_message_size()
-            .map(saturating_usize_to_u32)
-        {
+        if let Some(max_size) = self.max_message_size.map(saturating_usize_to_u32) {
             request = request.with_max_message_size_bytes(max_size);
         }
 
-        let mut client = self.ledger_service_client();
-        let response = client.get_checkpoint(request).await?;
+        let response = self.service_client.get_checkpoint(request).await?;
         let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
 
-        let reassembled = Self::reassemble_checkpoint_data_stream(stream);
+        let reassembled = GrpcClient::reassemble_checkpoint_data_stream(stream);
         futures::pin_mut!(reassembled);
 
         // Skip any progress messages and find the first checkpoint
@@ -239,6 +125,109 @@ impl GrpcClient {
         };
 
         Ok(MetadataEnvelope::new(checkpoint, metadata))
+    }
+}
+
+impl GrpcClient {
+    /// Get the latest checkpoint.
+    ///
+    /// Returns the checkpoint with fields populated according to the read
+    /// mask. Filter with
+    /// [`transactions_filter`](GetCheckpointQuery::transactions_filter) and
+    /// [`events_filter`](GetCheckpointQuery::events_filter), and choose the
+    /// returned fields with [`read_mask`](GetCheckpointQuery::read_mask).
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::GrpcClient;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = GrpcClient::new_localnet()?;
+    /// let checkpoint = client.checkpoint_latest().await?;
+    /// println!(
+    ///     "Received checkpoint {}",
+    ///     checkpoint.body().sequence_number()
+    /// );
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn checkpoint_latest(&self) -> GetCheckpointQuery {
+        self.checkpoint_query(get_checkpoint_request::CheckpointId::Latest(true))
+    }
+
+    /// Get checkpoint by sequence number.
+    ///
+    /// Takes the same setters as
+    /// [`checkpoint_latest`](GrpcClient::checkpoint_latest).
+    ///
+    /// # Parameters
+    ///
+    /// * `sequence_number` - The checkpoint sequence number to fetch
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::GrpcClient;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = GrpcClient::new_localnet()?;
+    /// let checkpoint = client.checkpoint_by_sequence_number(100).await?;
+    /// println!(
+    ///     "Received checkpoint {}",
+    ///     checkpoint.body().sequence_number()
+    /// );
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn checkpoint_by_sequence_number(
+        &self,
+        sequence_number: CheckpointSequenceNumber,
+    ) -> GetCheckpointQuery {
+        self.checkpoint_query(get_checkpoint_request::CheckpointId::SequenceNumber(
+            sequence_number,
+        ))
+    }
+
+    /// Get checkpoint by digest.
+    ///
+    /// Takes the same setters as
+    /// [`checkpoint_latest`](GrpcClient::checkpoint_latest).
+    ///
+    /// # Parameters
+    ///
+    /// * `digest` - The checkpoint digest to fetch
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # use iota_sdk_grpc_client::GrpcClient;
+    /// # use iota_types::CheckpointDigest;
+    /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    /// let client = GrpcClient::new_localnet()?;
+    /// let digest: CheckpointDigest = todo!();
+    /// let checkpoint = client.checkpoint_by_digest(digest).await?;
+    /// println!(
+    ///     "Received checkpoint {}",
+    ///     checkpoint.body().sequence_number()
+    /// );
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn checkpoint_by_digest(&self, digest: CheckpointDigest) -> GetCheckpointQuery {
+        self.checkpoint_query(get_checkpoint_request::CheckpointId::Digest(digest.into()))
+    }
+
+    fn checkpoint_query(
+        &self,
+        checkpoint_id: get_checkpoint_request::CheckpointId,
+    ) -> GetCheckpointQuery {
+        GetCheckpointQuery {
+            service_client: self.ledger_service_client(),
+            max_message_size: self.max_decoding_message_size(),
+            checkpoint_id,
+            transactions_filter: None,
+            events_filter: None,
+            read_mask: CheckpointResponseReadMask::default(),
+        }
     }
 
     /// Stream checkpoints across a range of checkpoints.
@@ -637,5 +626,64 @@ impl GrpcClient {
                 Err(GrpcError::Protocol(CheckpointStreamError::IncompleteStream { sequence_number }.into()))?;
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use iota_grpc_types::{
+        read_mask_fields::{CheckpointResponseField, CheckpointResponseReadMask},
+        v1::{filter as grpc_filter, ledger_service::get_checkpoint_request::CheckpointId},
+    };
+    use iota_types::CheckpointDigest;
+
+    use crate::GrpcClient;
+
+    #[tokio::test]
+    async fn each_entry_method_selects_its_checkpoint() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        assert_eq!(
+            client.checkpoint_latest().checkpoint_id,
+            CheckpointId::Latest(true)
+        );
+        assert_eq!(
+            client.checkpoint_by_sequence_number(7).checkpoint_id,
+            CheckpointId::SequenceNumber(7)
+        );
+        assert_eq!(
+            client
+                .checkpoint_by_digest(CheckpointDigest::ZERO)
+                .checkpoint_id,
+            CheckpointId::Digest(CheckpointDigest::ZERO.into())
+        );
+    }
+
+    #[tokio::test]
+    async fn setters_replace_the_unfiltered_default_request() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let query = client.checkpoint_latest();
+        assert_eq!(query.transactions_filter, None);
+        assert_eq!(query.events_filter, None);
+        assert_eq!(
+            query.read_mask.as_str(),
+            CheckpointResponseReadMask::default().as_str()
+        );
+
+        let query = query
+            .transactions_filter(grpc_filter::TransactionFilter::default())
+            .events_filter(grpc_filter::EventFilter::default())
+            .read_mask(CheckpointResponseField::CHECKPOINT_SUMMARY);
+        assert_eq!(
+            query.transactions_filter,
+            Some(grpc_filter::TransactionFilter::default())
+        );
+        assert_eq!(
+            query.events_filter,
+            Some(grpc_filter::EventFilter::default())
+        );
+        assert_eq!(
+            query.read_mask.as_str(),
+            CheckpointResponseReadMask::from(CheckpointResponseField::CHECKPOINT_SUMMARY).as_str()
+        );
     }
 }

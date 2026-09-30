@@ -121,10 +121,12 @@ pub use api::{
 // Re-export query builders for convenience
 pub use api::{
     execution::{
+        execute::{ExecuteTransactionQuery, ExecuteTransactionsQuery},
         simulate::{SimulateTransactionQuery, SimulateTransactionsQuery},
         view::{ViewFunctionCallQuery, ViewFunctionCallsQuery},
     },
     ledger::{
+        checkpoints::GetCheckpointQuery, epochs::GetEpochQuery, health::GetHealthQuery,
         objects::GetObjectsQuery, service_info::GetServiceInfoQuery,
         transactions::GetTransactionsQuery,
     },

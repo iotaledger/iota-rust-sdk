@@ -279,11 +279,10 @@ impl GrpcClient {
         let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let response = self
             .client()
-            .checkpoint_latest(
-                transactions_filter.as_deref().map(Into::into),
-                events_filter.as_deref().map(Into::into),
-                read_mask.clone(),
-            )
+            .checkpoint_latest()
+            .transactions_filter(transactions_filter.as_deref().map(Into::into))
+            .events_filter(events_filter.as_deref().map(Into::into))
+            .read_mask(read_mask.clone())
             .await?
             .into_inner();
         CheckpointResponse::from_response(&response, &read_mask)
@@ -307,12 +306,10 @@ impl GrpcClient {
         let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let response = self
             .client()
-            .checkpoint_by_sequence_number(
-                sequence_number,
-                transactions_filter.as_deref().map(Into::into),
-                events_filter.as_deref().map(Into::into),
-                read_mask.clone(),
-            )
+            .checkpoint_by_sequence_number(sequence_number)
+            .transactions_filter(transactions_filter.as_deref().map(Into::into))
+            .events_filter(events_filter.as_deref().map(Into::into))
+            .read_mask(read_mask.clone())
             .await?
             .into_inner();
         CheckpointResponse::from_response(&response, &read_mask)
@@ -336,12 +333,10 @@ impl GrpcClient {
         let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let response = self
             .client()
-            .checkpoint_by_digest(
-                **digest,
-                transactions_filter.as_deref().map(Into::into),
-                events_filter.as_deref().map(Into::into),
-                read_mask.clone(),
-            )
+            .checkpoint_by_digest(**digest)
+            .transactions_filter(transactions_filter.as_deref().map(Into::into))
+            .events_filter(events_filter.as_deref().map(Into::into))
+            .read_mask(read_mask.clone())
             .await?
             .into_inner();
         CheckpointResponse::from_response(&response, &read_mask)

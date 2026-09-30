@@ -9,10 +9,7 @@
 
 use eyre::Result;
 use futures::StreamExt;
-use iota_sdk::grpc_client::{
-    GrpcClient,
-    read_mask_fields::{CheckpointResponseField, CheckpointResponseReadMask},
-};
+use iota_sdk::grpc_client::{GrpcClient, read_mask_fields::CheckpointResponseField};
 
 const HOW_MANY: u64 = 5;
 
@@ -22,11 +19,7 @@ async fn main() -> Result<()> {
 
     // Pick a starting point a few checkpoints behind head so the example
     // returns promptly instead of waiting on new blocks.
-    let head = client
-        .checkpoint_latest(None, None, CheckpointResponseReadMask::default())
-        .await?
-        .body()
-        .sequence_number();
+    let head = client.checkpoint_latest().await?.body().sequence_number();
     let start = head.saturating_sub(HOW_MANY - 1);
     let end = head;
 

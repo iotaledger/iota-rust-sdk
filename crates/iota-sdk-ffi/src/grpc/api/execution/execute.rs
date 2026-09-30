@@ -45,11 +45,9 @@ impl GrpcClient {
     ) -> Result<ExecutedTransaction> {
         (&self
             .client()
-            .execute_transaction(
-                signed_transaction.into(),
-                checkpoint_inclusion_timeout_ms,
-                crate::grpc::api::read_mask::<ExecuteTransactionReadMask, _>(read_mask),
-            )
+            .execute_transaction(signed_transaction.into())
+            .checkpoint_inclusion_timeout_ms(checkpoint_inclusion_timeout_ms)
+            .read_mask(crate::grpc::api::read_mask::<ExecuteTransactionReadMask, _>(read_mask))
             .await?
             .into_inner())
             .try_into()
@@ -78,11 +76,9 @@ impl GrpcClient {
         read_mask: Option<Vec<TransactionField>>,
     ) -> Result<Vec<ExecutedTransactionResult>> {
         self.client()
-            .execute_transactions(
-                transactions.into_iter().map(Into::into).collect(),
-                checkpoint_inclusion_timeout_ms,
-                crate::grpc::api::read_mask::<ExecuteTransactionReadMask, _>(read_mask),
-            )
+            .execute_transactions(transactions.into_iter().map(Into::into).collect())
+            .checkpoint_inclusion_timeout_ms(checkpoint_inclusion_timeout_ms)
+            .read_mask(crate::grpc::api::read_mask::<ExecuteTransactionReadMask, _>(read_mask))
             .await?
             .into_inner()
             .into_iter()
