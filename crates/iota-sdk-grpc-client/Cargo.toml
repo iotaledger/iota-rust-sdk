@@ -39,4 +39,4 @@ tls-webpki-roots = ["tonic/tls-webpki-roots"]
 move-types = ["dep:iota-move-types"]
 
 [dev-dependencies]
-tokio.workspace = true
+tokio = { workspace = true, features = ["macros", "rt"] }

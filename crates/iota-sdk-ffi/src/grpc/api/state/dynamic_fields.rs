@@ -140,12 +140,14 @@ impl GrpcClient {
         page_token: Option<Vec<u8>>,
         read_mask: Option<Vec<DynamicFieldField>>,
     ) -> Result<DynamicFieldPage> {
-        let query = self.client().dynamic_fields(
-            **parent,
-            page_size,
-            page_token.map(Into::into),
-            crate::grpc::api::read_mask::<DynamicFieldReadMask, _>(read_mask),
-        );
+        let query = self
+            .client()
+            .dynamic_fields(**parent)
+            .page_size(page_size)
+            .page_token(page_token.map(Into::into))
+            .read_mask(crate::grpc::api::read_mask::<DynamicFieldReadMask, _>(
+                read_mask,
+            ));
         let page = query.await?.into_inner();
         Ok(DynamicFieldPage {
             dynamic_fields: page
@@ -169,12 +171,12 @@ impl GrpcClient {
         limit: Option<u32>,
         read_mask: Option<Vec<DynamicFieldField>>,
     ) -> Result<Vec<DynamicField>> {
-        let query = self.client().dynamic_fields(
-            **parent,
-            None,
-            None,
-            crate::grpc::api::read_mask::<DynamicFieldReadMask, _>(read_mask),
-        );
+        let query =
+            self.client()
+                .dynamic_fields(**parent)
+                .read_mask(crate::grpc::api::read_mask::<DynamicFieldReadMask, _>(
+                    read_mask,
+                ));
         query
             .collect(limit)
             .await?
