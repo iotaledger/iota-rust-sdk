@@ -5,6 +5,7 @@
 //! Network API implementation.
 
 use cynic::QueryBuilder;
+use futures::Stream;
 
 use crate::{
     GraphQLClient,
@@ -16,6 +17,7 @@ use crate::{
         EpochArgs, EpochSummaryQueryFragment, ProtocolConfigQueryFragment, ProtocolConfigs,
         ProtocolVersionArgs, Validator,
     },
+    streams::stream_paginated_query,
 };
 
 define_query! {
@@ -41,6 +43,7 @@ impl GetChainIdQuery {
 define_query! {
     /// Query for [`GraphQLClient::active_validators`]. Await it to send the
     /// request.
+    #[derive(Clone)]
     pub struct ListActiveValidatorsQuery {
         client: GraphQLClient,
         epoch: Option<u64>,
@@ -60,6 +63,13 @@ impl ListActiveValidatorsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<Validator>> {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     fn operation<'a>(
