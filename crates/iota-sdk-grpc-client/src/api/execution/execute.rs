@@ -25,7 +25,7 @@ use crate::{
 };
 
 define_query! {
-    /// Request for [`GrpcClient::execute_transaction`]. Await it to send the
+    /// Query for [`GrpcClient::execute_transaction`]. Await it to send the
     /// request.
     pub struct ExecuteTransactionQuery {
         batch: ExecuteTransactionsQuery,
@@ -61,7 +61,7 @@ impl ExecuteTransactionQuery {
 }
 
 define_query! {
-    /// Request for [`GrpcClient::execute_transactions`]. Await it to send the
+    /// Query for [`GrpcClient::execute_transactions`]. Await it to send the
     /// request.
     pub struct ExecuteTransactionsQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,

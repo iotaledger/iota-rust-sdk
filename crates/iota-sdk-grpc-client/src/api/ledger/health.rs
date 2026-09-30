@@ -13,7 +13,7 @@ use crate::{
 };
 
 define_query! {
-    /// Request for [`GrpcClient::health`]. Await it to send the request.
+    /// Query for [`GrpcClient::health`]. Await it to send the request.
     pub struct GetHealthQuery {
         service_client: LedgerServiceClient<InterceptedChannel>,
         threshold_ms: Option<u64>,

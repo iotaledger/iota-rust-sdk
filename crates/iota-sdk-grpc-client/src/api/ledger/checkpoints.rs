@@ -38,7 +38,7 @@ use crate::{
 };
 
 define_query! {
-    /// Request for [`GrpcClient::checkpoint_latest`],
+    /// Query for [`GrpcClient::checkpoint_latest`],
     /// [`GrpcClient::checkpoint_by_sequence_number`] and
     /// [`GrpcClient::checkpoint_by_digest`]. Await it to send the request.
     pub struct GetCheckpointQuery {

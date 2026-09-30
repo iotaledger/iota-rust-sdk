@@ -18,7 +18,7 @@ use crate::{
 };
 
 define_query! {
-    /// Request for [`GrpcClient::epoch`]. Await it to send the request.
+    /// Query for [`GrpcClient::epoch`]. Await it to send the request.
     pub struct GetEpochQuery {
         service_client: LedgerServiceClient<InterceptedChannel>,
         epoch: Option<u64>,
