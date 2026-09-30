@@ -79,8 +79,7 @@ pub fn field_mask_normalize(mask: &str) -> String {
 /// Unlike [`field_mask!`], this macro works with any expression that
 /// evaluates to `&str`, including `const` values from
 /// [`read_masks`](crate::read_masks). The result is a heap-allocated
-/// `String` suitable for passing to the client's `read_mask` parameter
-/// (e.g. `Some(&mask)`).
+/// `String` suitable for passing to the client's `read_mask` setters.
 ///
 /// Overlapping paths are normalized: a broader path subsumes all of its
 /// sub-paths. For example, `"effects"` and `"effects.bcs"` are merged into

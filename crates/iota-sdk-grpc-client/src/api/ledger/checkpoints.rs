@@ -5,10 +5,9 @@
 //!
 //! # Read Mask
 //!
-//! The checkpoint queries take a mask through their `read_mask` setter, the
-//! streams as their `read_mask` argument, to control which data is included
-//! in the response. Without the setter, or with
-//! `CheckpointResponseReadMask::default()`, the default mask is used. Pass a
+//! The checkpoint queries and streams take a mask through their `read_mask`
+//! setter to control which data is included in the response. Without the
+//! setter the default mask is used. Pass a
 //! [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
 //! (or any slice/array/vec of fields) to choose the returned fields.
 
@@ -140,6 +139,10 @@ impl GetCheckpointQuery {
 
 type CheckpointStream = Pin<Box<dyn Stream<Item = GrpcResult<CheckpointResponse>> + Send>>;
 type CheckpointItemStream = Pin<Box<dyn Stream<Item = GrpcResult<CheckpointStreamItem>> + Send>>;
+type StreamCheckpointsCall = (
+    LedgerServiceClient<InterceptedChannel>,
+    StreamCheckpointsRequest,
+);
 
 struct CheckpointStreamOptions {
     service_client: LedgerServiceClient<InterceptedChannel>,
@@ -153,10 +156,22 @@ struct CheckpointStreamOptions {
 
 impl CheckpointStreamOptions {
     async fn open(
-        mut self,
+        (mut service_client, request): StreamCheckpointsCall,
+    ) -> GrpcResult<MetadataEnvelope<CheckpointItemStream>> {
+        let response = service_client.stream_checkpoints(request).await?;
+        let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
+
+        Ok(MetadataEnvelope::new(
+            Box::pin(GrpcClient::reassemble_checkpoint_data_stream(stream)),
+            metadata,
+        ))
+    }
+
+    fn into_request(
+        self,
         filter_checkpoints: bool,
         progress_interval_ms: Option<u32>,
-    ) -> GrpcResult<MetadataEnvelope<CheckpointItemStream>> {
+    ) -> StreamCheckpointsCall {
         let mut request = StreamCheckpointsRequest::default().with_read_mask(self.read_mask);
 
         if let Some(start) = self.start_sequence_number {
@@ -181,64 +196,8 @@ impl CheckpointStreamOptions {
             request = request.with_max_message_size_bytes(max_size);
         }
 
-        let response = self.service_client.stream_checkpoints(request).await?;
-        let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
-
-        Ok(MetadataEnvelope::new(
-            Box::pin(GrpcClient::reassemble_checkpoint_data_stream(stream)),
-            metadata,
-        ))
+        (self.service_client, request)
     }
-}
-
-macro_rules! checkpoint_stream_setters {
-    () => {
-        /// Set the first checkpoint to stream. If `None`, starts from the
-        /// latest checkpoint.
-        pub fn start_sequence_number(
-            mut self,
-            start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
-        ) -> Self {
-            self.options.start_sequence_number = start_sequence_number.into();
-            self
-        }
-
-        /// Set the last checkpoint to stream. If `None`, streams indefinitely.
-        pub fn end_sequence_number(
-            mut self,
-            end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
-        ) -> Self {
-            self.options.end_sequence_number = end_sequence_number.into();
-            self
-        }
-
-        /// Set the filter to apply to transactions.
-        pub fn transactions_filter(
-            mut self,
-            transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
-        ) -> Self {
-            self.options.transactions_filter = transactions_filter.into();
-            self
-        }
-
-        /// Set the filter to apply to events.
-        pub fn events_filter(
-            mut self,
-            events_filter: impl Into<Option<grpc_filter::EventFilter>>,
-        ) -> Self {
-            self.options.events_filter = events_filter.into();
-            self
-        }
-
-        /// Set the field mask controlling the returned fields.
-        pub fn read_mask(
-            mut self,
-            read_mask: impl IntoReadMask<CheckpointResponseReadMask>,
-        ) -> Self {
-            self.options.read_mask = read_mask.into_read_mask();
-            self
-        }
-    };
 }
 
 define_query! {
@@ -251,10 +210,57 @@ define_query! {
 }
 
 impl CheckpointsStreamQuery {
-    checkpoint_stream_setters!();
+    /// Set the first checkpoint to stream. If `None`, starts from the
+    /// latest checkpoint.
+    pub fn start_sequence_number(
+        mut self,
+        start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
+    ) -> Self {
+        self.options.start_sequence_number = start_sequence_number.into();
+        self
+    }
+
+    /// Set the last checkpoint to stream. If `None`, streams indefinitely.
+    pub fn end_sequence_number(
+        mut self,
+        end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
+    ) -> Self {
+        self.options.end_sequence_number = end_sequence_number.into();
+        self
+    }
+
+    /// Set the filter to apply to transactions.
+    pub fn transactions_filter(
+        mut self,
+        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
+    ) -> Self {
+        self.options.transactions_filter = transactions_filter.into();
+        self
+    }
+
+    /// Set the filter to apply to events.
+    pub fn events_filter(
+        mut self,
+        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
+    ) -> Self {
+        self.options.events_filter = events_filter.into();
+        self
+    }
+
+    /// Set the field mask controlling the returned fields.
+    pub fn read_mask(mut self, read_mask: impl IntoReadMask<CheckpointResponseReadMask>) -> Self {
+        self.options.read_mask = read_mask.into_read_mask();
+        self
+    }
+
+    fn into_request(self) -> StreamCheckpointsCall {
+        self.options.into_request(false, None)
+    }
 
     async fn send(self) -> GrpcResult<MetadataEnvelope<CheckpointStream>> {
-        let (stream, metadata) = self.options.open(false, None).await?.into_parts();
+        let (stream, metadata) = CheckpointStreamOptions::open(self.into_request())
+            .await?
+            .into_parts();
 
         // remove the wrapping CheckpointStreamItem layer since we know
         // filter_checkpoints is false and thus only Checkpoint items will be
@@ -282,7 +288,48 @@ define_query! {
 }
 
 impl CheckpointsStreamFilteredQuery {
-    checkpoint_stream_setters!();
+    /// Set the first checkpoint to stream. If `None`, starts from the
+    /// latest checkpoint.
+    pub fn start_sequence_number(
+        mut self,
+        start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
+    ) -> Self {
+        self.options.start_sequence_number = start_sequence_number.into();
+        self
+    }
+
+    /// Set the last checkpoint to stream. If `None`, streams indefinitely.
+    pub fn end_sequence_number(
+        mut self,
+        end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
+    ) -> Self {
+        self.options.end_sequence_number = end_sequence_number.into();
+        self
+    }
+
+    /// Set the filter to apply to transactions.
+    pub fn transactions_filter(
+        mut self,
+        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
+    ) -> Self {
+        self.options.transactions_filter = transactions_filter.into();
+        self
+    }
+
+    /// Set the filter to apply to events.
+    pub fn events_filter(
+        mut self,
+        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
+    ) -> Self {
+        self.options.events_filter = events_filter.into();
+        self
+    }
+
+    /// Set the field mask controlling the returned fields.
+    pub fn read_mask(mut self, read_mask: impl IntoReadMask<CheckpointResponseReadMask>) -> Self {
+        self.options.read_mask = read_mask.into_read_mask();
+        self
+    }
 
     /// Set the progress message interval in milliseconds. Defaults to
     /// 2000ms, minimum 500ms.
@@ -291,8 +338,12 @@ impl CheckpointsStreamFilteredQuery {
         self
     }
 
+    fn into_request(self) -> StreamCheckpointsCall {
+        self.options.into_request(true, self.progress_interval_ms)
+    }
+
     async fn send(self) -> GrpcResult<MetadataEnvelope<CheckpointItemStream>> {
-        self.options.open(true, self.progress_interval_ms).await
+        CheckpointStreamOptions::open(self.into_request()).await
     }
 }
 
@@ -822,5 +873,33 @@ mod stream_tests {
         let query = query.start_sequence_number(3).progress_interval_ms(1_000);
         assert_eq!(query.options.start_sequence_number, Some(3));
         assert_eq!(query.progress_interval_ms, Some(1_000));
+    }
+
+    #[tokio::test]
+    async fn unfiltered_request_leaves_out_filtering_and_progress() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let (_, request) = client
+            .checkpoints_stream()
+            .start_sequence_number(3)
+            .into_request();
+        assert_eq!(request.start_sequence_number, Some(3));
+        assert_eq!(request.filter_checkpoints, None);
+        assert_eq!(request.progress_interval_ms, None);
+    }
+
+    #[tokio::test]
+    async fn filtered_request_carries_filtering_and_progress() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let (_, request) = client
+            .checkpoints_stream_filtered()
+            .transactions_filter(grpc_filter::TransactionFilter::default())
+            .progress_interval_ms(1_000)
+            .into_request();
+        assert_eq!(request.filter_checkpoints, Some(true));
+        assert_eq!(request.progress_interval_ms, Some(1_000));
+        assert_eq!(
+            request.transactions_filter,
+            Some(grpc_filter::TransactionFilter::default())
+        );
     }
 }
