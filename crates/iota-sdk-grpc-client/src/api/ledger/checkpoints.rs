@@ -167,8 +167,11 @@ impl GrpcClient {
 
     /// Get checkpoint by sequence number.
     ///
-    /// Takes the same setters as
-    /// [`checkpoint_latest`](GrpcClient::checkpoint_latest).
+    /// Returns the checkpoint with fields populated according to the read
+    /// mask. Filter with
+    /// [`transactions_filter`](GetCheckpointQuery::transactions_filter) and
+    /// [`events_filter`](GetCheckpointQuery::events_filter), and choose the
+    /// returned fields with [`read_mask`](GetCheckpointQuery::read_mask).
     ///
     /// # Parameters
     ///
@@ -199,8 +202,11 @@ impl GrpcClient {
 
     /// Get checkpoint by digest.
     ///
-    /// Takes the same setters as
-    /// [`checkpoint_latest`](GrpcClient::checkpoint_latest).
+    /// Returns the checkpoint with fields populated according to the read
+    /// mask. Filter with
+    /// [`transactions_filter`](GetCheckpointQuery::transactions_filter) and
+    /// [`events_filter`](GetCheckpointQuery::events_filter), and choose the
+    /// returned fields with [`read_mask`](GetCheckpointQuery::read_mask).
     ///
     /// # Parameters
     ///
