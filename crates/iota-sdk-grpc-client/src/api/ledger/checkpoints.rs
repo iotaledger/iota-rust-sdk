@@ -201,7 +201,7 @@ impl CheckpointStreamOptions {
 }
 
 define_query! {
-    /// Request for [`GrpcClient::checkpoints_stream`]. Await it to open the
+    /// Query for [`GrpcClient::checkpoints_stream`]. Await it to open the
     /// stream.
     pub struct CheckpointsStreamQuery {
         options: CheckpointStreamOptions,
@@ -278,7 +278,7 @@ impl CheckpointsStreamQuery {
 }
 
 define_query! {
-    /// Request for [`GrpcClient::checkpoints_stream_filtered`]. Await it to
+    /// Query for [`GrpcClient::checkpoints_stream_filtered`]. Await it to
     /// open the stream.
     pub struct CheckpointsStreamFilteredQuery {
         options: CheckpointStreamOptions,
