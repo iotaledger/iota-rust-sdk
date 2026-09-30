@@ -12,7 +12,7 @@ use crate::{
     GraphQLClient,
     api::define_query,
     error::GraphQLResult,
-    pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
+    pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         MoveObjectContentsBcsQueryFragment, MoveObjectContentsJsonQueryFragment, ObjectFilter,
         ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
@@ -22,6 +22,7 @@ use crate::{
 
 define_query! {
     /// Query for [`GraphQLClient::objects`]. Await it to send the request.
+    #[derive(Clone)]
     pub struct ListObjectsQuery {
         client: GraphQLClient,
         filter: Option<ObjectFilter>,
@@ -49,6 +50,13 @@ impl ListObjectsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<Object>> {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     fn operation(
@@ -201,24 +209,6 @@ impl GetMoveObjectContentsBcsQuery {
 }
 
 impl GraphQLClient {
-    /// Return a stream of objects based on the (optional) object filter.
-    pub fn objects_stream(
-        &self,
-        filter: impl Into<Option<ObjectFilter>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = GraphQLResult<Object>> + '_ {
-        let filter = filter.into();
-        stream_paginated_query(
-            move |pag_filter| {
-                self.objects()
-                    .filter(filter.clone())
-                    .pagination(pag_filter)
-                    .into_future()
-            },
-            streaming_direction,
-        )
-    }
-
     /// Return an object based on the provided [`Address`](iota_types::Address).
     ///
     /// If the object does not exist (e.g., due to pruning), this will resolve

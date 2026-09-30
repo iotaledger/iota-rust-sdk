@@ -59,6 +59,7 @@ pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
 pub use reqwest;
+pub use subscription::{EventsSubscriptionBuilder, TransactionsSubscriptionBuilder};
 
 mod base64 {
     use base64ct::Encoding;
