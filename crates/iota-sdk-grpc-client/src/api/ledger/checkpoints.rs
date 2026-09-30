@@ -46,8 +46,12 @@ impl GrpcClient {
     ///
     /// # Parameters
     ///
-    /// * `transactions_filter` - Optional filter to apply to transactions
-    /// * `events_filter` - Optional filter to apply to events
+    /// * `transactions_filter` - Optional filter to apply to transactions. The
+    ///   server rejects the call unless `read_mask` includes `TRANSACTIONS` or
+    ///   one of its sub-fields.
+    /// * `events_filter` - Optional filter to apply to events. The server
+    ///   rejects the call unless `read_mask` includes `EVENTS` or one of its
+    ///   sub-fields.
     /// * `read_mask` - Field mask controlling the returned fields
     ///
     /// # Example
@@ -93,8 +97,12 @@ impl GrpcClient {
     /// # Parameters
     ///
     /// * `sequence_number` - The checkpoint sequence number to fetch
-    /// * `transactions_filter` - Optional filter to apply to transactions
-    /// * `events_filter` - Optional filter to apply to events
+    /// * `transactions_filter` - Optional filter to apply to transactions. The
+    ///   server rejects the call unless `read_mask` includes `TRANSACTIONS` or
+    ///   one of its sub-fields.
+    /// * `events_filter` - Optional filter to apply to events. The server
+    ///   rejects the call unless `read_mask` includes `EVENTS` or one of its
+    ///   sub-fields.
     /// * `read_mask` - Field mask controlling the returned fields
     ///
     /// # Example
@@ -141,8 +149,12 @@ impl GrpcClient {
     /// # Parameters
     ///
     /// * `digest` - The checkpoint digest to fetch
-    /// * `transactions_filter` - Optional filter to apply to transactions
-    /// * `events_filter` - Optional filter to apply to events
+    /// * `transactions_filter` - Optional filter to apply to transactions. The
+    ///   server rejects the call unless `read_mask` includes `TRANSACTIONS` or
+    ///   one of its sub-fields.
+    /// * `events_filter` - Optional filter to apply to events. The server
+    ///   rejects the call unless `read_mask` includes `EVENTS` or one of its
+    ///   sub-fields.
     /// * `read_mask` - Field mask controlling the returned fields
     ///
     /// # Example
@@ -267,8 +279,12 @@ impl GrpcClient {
     ///   starts from the latest checkpoint.
     /// * `end_sequence_number` - Optional ending checkpoint. If `None`, streams
     ///   indefinitely.
-    /// * `transactions_filter` - Optional filter to apply to transactions
-    /// * `events_filter` - Optional filter to apply to events
+    /// * `transactions_filter` - Optional filter to apply to transactions. The
+    ///   server rejects the call unless `read_mask` includes `TRANSACTIONS` or
+    ///   one of its sub-fields.
+    /// * `events_filter` - Optional filter to apply to events. The server
+    ///   rejects the call unless `read_mask` includes `EVENTS` or one of its
+    ///   sub-fields.
     /// * `read_mask` - Field mask controlling the returned fields
     ///
     /// # Example
@@ -386,8 +402,12 @@ impl GrpcClient {
     ///   starts from the latest checkpoint.
     /// * `end_sequence_number` - Optional ending checkpoint. If `None`, streams
     ///   indefinitely.
-    /// * `transactions_filter` - Optional filter to apply to transactions
-    /// * `events_filter` - Optional filter to apply to events
+    /// * `transactions_filter` - Optional filter to apply to transactions. The
+    ///   server rejects the call unless `read_mask` includes `TRANSACTIONS` or
+    ///   one of its sub-fields.
+    /// * `events_filter` - Optional filter to apply to events. The server
+    ///   rejects the call unless `read_mask` includes `EVENTS` or one of its
+    ///   sub-fields.
     /// * `progress_interval_ms` - Optional progress message interval in
     ///   milliseconds. Defaults to 2000ms. Minimum 500ms.
     /// * `read_mask` - Field mask controlling the returned fields
@@ -396,13 +416,14 @@ impl GrpcClient {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::{GrpcClient, CheckpointStreamItem};
-    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
+    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseField;
     /// # use iota_grpc_types::v1::filter as grpc_filter;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = GrpcClient::new_localnet()?;
     /// // At least one filter is required
-    /// let tx_filter = grpc_filter::TransactionFilter::default();
+    /// let tx_filter = grpc_filter::TransactionFilter::default()
+    ///     .with_execution_status(grpc_filter::ExecutionStatusFilter::default().with_success(true));
     /// let mut stream = client
     ///     .checkpoints_stream_filtered(
     ///         Some(0),
@@ -410,7 +431,11 @@ impl GrpcClient {
     ///         Some(tx_filter),
     ///         None,
     ///         None,
-    ///         CheckpointResponseReadMask::default(),
+    ///         // A transactions filter requires transactions in the read mask
+    ///         [
+    ///             CheckpointResponseField::CHECKPOINT_SUMMARY,
+    ///             CheckpointResponseField::TRANSACTIONS,
+    ///         ],
     ///     )
     ///     .await?;
     ///
