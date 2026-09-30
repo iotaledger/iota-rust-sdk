@@ -26,7 +26,7 @@ struct TransactionSignerCallbackExample {
     let privateKey = try Ed25519PrivateKey(bytes: Data(repeating: 0, count: 32))
     let publicKey = privateKey.publicKey()
     let senderAddress = publicKey.deriveAddress()
-    print("Sender address: \(senderAddress.toHex())")
+    print("Sender address: \(senderAddress)")
 
     let client = GraphQlClient.newLocalnet()
 

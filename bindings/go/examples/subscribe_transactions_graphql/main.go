@@ -61,8 +61,8 @@ func main() {
 		switch update := (*update).(type) {
 		case iota_sdk.TransactionUpdateTransaction:
 			transaction := update.Transaction.Transaction
-			fmt.Println("Digest: ", transaction.Digest().ToBase58())
-			fmt.Println("Sender: ", transaction.Sender().ToHex())
+			fmt.Println("Digest: ", transaction.Digest())
+			fmt.Println("Sender: ", transaction.Sender())
 			return
 		case iota_sdk.TransactionUpdateInterrupted:
 			// Delivery recovers on its own; items in the gap may be missed.

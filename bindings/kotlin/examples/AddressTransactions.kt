@@ -21,16 +21,16 @@ fun main() = runBlocking {
         val outgoing = client.transactions(TransactionsFilter().withSentAddress(address))
         val incoming = client.transactions(TransactionsFilter().withRecvAddress(address))
 
-        println("Transactions for ${address.toHex()}")
+        println("Transactions for ${address}")
 
         println("\nOutgoing (sent by address): ${outgoing.data.size}")
         for (tx in outgoing.data) {
-            println("  - ${tx.transaction.digest().toBase58()}")
+            println("  - ${tx.transaction.digest()}")
         }
 
         println("\nIncoming (received by address): ${incoming.data.size}")
         for (tx in incoming.data) {
-            println("  - ${tx.transaction.digest().toBase58()}")
+            println("  - ${tx.transaction.digest()}")
         }
     } catch (e: Exception) {
         e.printStackTrace()

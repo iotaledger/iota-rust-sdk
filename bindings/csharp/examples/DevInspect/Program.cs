@@ -90,7 +90,7 @@ class Program
                 if (returnValue.TypeTag.IsAddress() && returnValue.Bcs.Length == 32)
                 {
                     var resolvedAddress = Address.FromBytes(returnValue.Bcs);
-                    Console.WriteLine($"Resolved address: {resolvedAddress.ToHex()}");
+                    Console.WriteLine($"Resolved address: {resolvedAddress}");
                 }
                 else
                 {

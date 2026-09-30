@@ -57,7 +57,7 @@ const committee = new MultisigCommittee(
 
 // 4. Derive multisig address.
 const multisigAddress = committee.deriveAddress();
-console.log(`Multisig address: ${multisigAddress.toHex()}`);
+console.log(`Multisig address: ${multisigAddress}`);
 
 const client = GraphQlClient.newLocalnet();
 

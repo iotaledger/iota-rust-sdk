@@ -14,7 +14,7 @@ async def main():
 
     private_key = Ed25519PrivateKey(b"\x00" * 32)
     sender_address = private_key.public_key().derive_address()
-    print(f"Sender address: {sender_address.to_hex()}")
+    print(f"Sender address: {sender_address}")
 
     # Request funds from faucet (the faucet client relies on GraphQL to await
     # finalization)
@@ -34,8 +34,9 @@ async def main():
     if simulated.execution_error is not None:
         print("Simulation aborted:", simulated.execution_error.source)
     else:
-        print(f"Simulation succeeded: {len(simulated.command_results)} command "
-              f"result(s), suggested gas price {simulated.suggested_gas_price}")
+        print(
+            f"Simulation succeeded: {len(simulated.command_results or [])} command "
+            f"result(s), suggested gas price {simulated.suggested_gas_price}")
 
     signature = private_key.sign_transaction(txn)
     signed_transaction = SignedTransaction(transaction=txn,
@@ -43,7 +44,7 @@ async def main():
 
     executed = await client.execute_transaction(signed_transaction)
 
-    print(f"Digest: {hex_encode(executed.digest.to_bytes())}")
+    print(f"Digest: {executed.digest}")
     print(f"Transaction status: {executed.effects.as_v1().status()}")
 
 

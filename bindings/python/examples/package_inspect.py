@@ -31,7 +31,7 @@ async def main():
     versions = await fetch_package_versions(client, package_address)
     package_prefix = package.id().to_hex()
     print(
-        f"Latest version: {latest_package.version().as_u64()} ({latest_package.id().to_hex()})"
+        f"Latest version: {latest_package.version().as_u64()} ({latest_package.id()})"
     )
     # Resolve the current upgrade policy.
     print(
@@ -48,7 +48,7 @@ async def main():
         if version.id() == latest_package.id():
             labels.append("latest")
 
-        line = f"- v{version.version().as_u64()} -> {version.id().to_hex()}"
+        line = f"- v{version.version().as_u64()} -> {version.id()}"
         if len(labels) > 0:
             line += f" [{', '.join(labels)}]"
         print(line)
@@ -63,7 +63,7 @@ async def main():
         for upgrade in sorted(linkage_table.values(),
                               key=lambda item: item.upgraded_id.to_hex()):
             print(
-                f"- {upgrade.upgraded_id.to_hex()} @ v{upgrade.upgraded_version.as_u64()}"
+                f"- {upgrade.upgraded_id} @ v{upgrade.upgraded_version.as_u64()}"
             )
     print()
 
@@ -196,7 +196,7 @@ async def print_object_samples(client, type_tag, has_key_ability, is_generic):
 
     print("    sample objects:")
     for obj in objects.data:
-        print(f"      - {obj.id().to_hex()} (version {obj.version().as_u64()})")
+        print(f"      - {obj.id()} (version {obj.version().as_u64()})")
     if objects.page_info.has_next_page:
         print("      - ...")
 

@@ -28,14 +28,14 @@ const incoming = await client.transactions(
   new TransactionsFilter().withRecvAddress(address),
 );
 
-console.log(`Transactions for ${address.toHex()}`);
+console.log(`Transactions for ${address}`);
 
 console.log(`\nOutgoing (sent by address): ${outgoing.data.length}`);
 for (const tx of outgoing.data) {
-  console.log(`  - ${tx.transaction.digest().toBase58()}`);
+  console.log(`  - ${tx.transaction.digest()}`);
 }
 
 console.log(`\nIncoming (received by address): ${incoming.data.length}`);
 for (const tx of incoming.data) {
-  console.log(`  - ${tx.transaction.digest().toBase58()}`);
+  console.log(`  - ${tx.transaction.digest()}`);
 }

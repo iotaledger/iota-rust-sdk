@@ -31,7 +31,7 @@ func main() {
 	}
 
 	if len(page.Data) == 0 {
-		fmt.Printf("No StakedIota objects owned by %s right now.\n", owner.ToHex())
+		fmt.Printf("No StakedIota objects owned by %s right now.\n", owner)
 		return
 	}
 
@@ -43,8 +43,8 @@ func main() {
 			log.Fatalf("Failed to decode StakedIota: %v", err)
 		}
 		totalPrincipal += staked.Principal()
-		fmt.Printf("- id:               %s\n", staked.Id().ToHex())
-		fmt.Printf("  pool_id:          %s\n", staked.PoolId().ToHex())
+		fmt.Printf("- id:               %s\n", staked.Id())
+		fmt.Printf("  pool_id:          %s\n", staked.PoolId())
 		fmt.Printf("  stake_activation_epoch: %d\n", staked.StakeActivationEpoch())
 		fmt.Printf("  principal (nanos): %d\n\n", staked.Principal())
 	}

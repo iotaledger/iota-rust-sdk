@@ -18,9 +18,9 @@ struct GrpcGetObjectExample {
       fatalError("Object not included in the response")
     }
 
-    print("Object ID:", obj.id().toHex())
+    print("Object ID:", obj.id())
     print("Version:", obj.version())
-    print("Previous transaction:", obj.previousTransaction().toBase58())
+    print("Previous transaction:", obj.previousTransaction())
     print("Owner:", obj.owner())
     print("Storage rebate:", obj.storageRebate())
     print("Type:", obj.objectType())

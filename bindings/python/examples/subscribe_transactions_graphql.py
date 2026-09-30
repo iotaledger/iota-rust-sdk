@@ -46,8 +46,8 @@ async def main():
 
             if update.is_TRANSACTION():
                 transaction = update.transaction.transaction
-                print("Digest: ", transaction.digest().to_base58())
-                print("Sender: ", transaction.sender().to_hex())
+                print("Digest: ", transaction.digest())
+                print("Sender: ", transaction.sender())
                 break
             else:
                 # Delivery recovers on its own; items in the gap may be missed.
