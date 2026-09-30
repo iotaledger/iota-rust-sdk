@@ -4,6 +4,8 @@
 
 //! Core client implementation for the GraphQL API.
 
+use std::sync::{Arc, OnceLock};
+
 use cynic::{GraphQlResponse, Operation, QueryBuilder, serde};
 use reqwest::Url;
 
@@ -46,7 +48,7 @@ pub struct GraphQLClient {
     pub(crate) rpc: Url,
     /// The reqwest client.
     pub(crate) inner: reqwest::Client,
-    pub(crate) service_config: std::sync::OnceLock<ServiceConfig>,
+    pub(crate) service_config: Arc<OnceLock<ServiceConfig>>,
 }
 
 impl GraphQLClient {
@@ -120,6 +122,7 @@ impl GraphQLClient {
     pub fn set_rpc_server(&mut self, server: &str) -> GraphQLResult<()> {
         let rpc = reqwest::Url::parse(server)?;
         self.rpc = rpc;
+        self.service_config = Default::default();
         Ok(())
     }
 
@@ -224,6 +227,16 @@ mod tests {
 
     use super::*;
     use crate::test_utils::test_client;
+
+    #[test]
+    fn clones_share_the_service_config_cache_until_the_server_changes() {
+        let client = GraphQLClient::new_localnet();
+        let mut clone = client.clone();
+        assert!(Arc::ptr_eq(&client.service_config, &clone.service_config));
+
+        clone.set_rpc_server(TESTNET_HOST).unwrap();
+        assert!(!Arc::ptr_eq(&client.service_config, &clone.service_config));
+    }
 
     #[test]
     fn test_rpc_server() {
