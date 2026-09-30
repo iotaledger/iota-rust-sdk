@@ -499,7 +499,7 @@ pub struct Page<T> {
     pub next_page_token: Option<::prost::bytes::Bytes>,
 }
 
-/// Generate a request object: a struct that runs its request when awaited.
+/// Generate a query object: a struct that runs its query when awaited.
 ///
 /// The struct's [`IntoFuture`](std::future::IntoFuture) boxes the future of
 /// `send(self) -> $output`, which each invocation writes by hand in an
@@ -746,9 +746,7 @@ macro_rules! define_list_query {
                     result_metadata.unwrap_or_default(),
                 ))
             }
-        }
 
-        impl $(<$generic: $bound>)? $query_name $(<$generic>)? {
             async fn send(
                 self,
             ) -> $crate::api::GrpcResult<
