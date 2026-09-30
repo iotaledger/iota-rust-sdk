@@ -133,7 +133,9 @@ pub use iota_names::error::IotaNamesError;
 pub use move_core::{
     Identifier, MAX_IDENTIFIER_LENGTH, MAX_TYPE_TAG_NESTING, StructTag, TypeParseError, TypeTag,
 };
-pub use move_package::{MovePackage, MovePackageData, TypeOrigin, UpgradeInfo, UpgradePolicy};
+pub use move_package::{
+    MovePackage, MovePackageData, TypeOrigin, UpgradeInfo, UpgradePolicy, UpgradePolicyError,
+};
 pub use object::{
     GenesisObject, MoveObjectType, MoveStruct, MoveStructContentsError, Object, ObjectData,
     ObjectReference, ObjectType, ObjectVersion, OwnedObjectReference, Owner,

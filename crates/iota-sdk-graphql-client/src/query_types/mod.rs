@@ -60,9 +60,7 @@ pub use normalized_move::{
     MoveVisibility, NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs,
     NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs, OpenMoveType,
 };
-pub use object::{
-    ObjectFilter, ObjectKey, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs,
-};
+pub use object::{ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs};
 pub use packages::{
     LatestPackageQuery, MovePackageConnection, MovePackageQuery, MovePackageVersionFilter,
     PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs, PackageVersionsQuery,
