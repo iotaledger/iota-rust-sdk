@@ -20,7 +20,7 @@ struct DecodeStakedIotaExample {
       filter: ObjectFilter(typeTag: "0x3::staking_pool::StakedIota", owner: owner))
 
     if page.data.isEmpty {
-      print("No StakedIota objects owned by \(owner.toHex()) right now.")
+      print("No StakedIota objects owned by \(owner) right now.")
       return
     }
 
@@ -29,8 +29,8 @@ struct DecodeStakedIotaExample {
     for obj in page.data {
       let staked = try StakedIota.tryFromObject(object: obj)
       totalPrincipal += staked.principal()
-      print("- id:               \(staked.id().toHex())")
-      print("  pool_id:          \(staked.poolId().toHex())")
+      print("- id:               \(staked.id())")
+      print("  pool_id:          \(staked.poolId())")
       print("  stake_activation_epoch: \(staked.stakeActivationEpoch())")
       print("  principal (nanos): \(staked.principal())\n")
     }

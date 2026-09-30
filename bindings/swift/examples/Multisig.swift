@@ -44,7 +44,7 @@ struct MultisigExample {
 
     // 4. Derive multisig address
     let multisigAddress = committee.deriveAddress()
-    print("Multisig address: \(multisigAddress.toHex())")
+    print("Multisig address: \(multisigAddress)")
 
     let client = GraphQlClient.newLocalnet()
 

@@ -21,5 +21,5 @@ const transactions = await client.transactions(
 );
 
 for (const transaction of transactions.data) {
-  console.log("Digest:", transaction.transaction.digest().toBase58());
+  console.log(`Digest: ${transaction.transaction.digest()}`);
 }

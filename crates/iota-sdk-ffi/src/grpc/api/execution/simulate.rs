@@ -9,7 +9,10 @@ use iota_sdk::{grpc_client::read_mask_fields::SimulateReadMask, grpc_types::v1 a
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::{api::ledger::transactions::ExecutedTransaction, client::GrpcClient},
+    grpc::{
+        api::ledger::transactions::ExecutedTransaction, client::GrpcClient,
+        read_mask_fields::SimulateField,
+    },
     types::{
         execution_status::ExecutionError,
         move_core::TypeTag,
@@ -204,14 +207,14 @@ impl GrpcClient {
         &self,
         transaction: &Transaction,
         skip_checks: bool,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<SimulateField>>,
     ) -> Result<SimulatedTransaction> {
         (&self
             .client()
             .simulate_transaction(
                 transaction.0.clone(),
                 skip_checks,
-                crate::grpc::api::read_mask::<SimulateReadMask>(&read_mask),
+                crate::grpc::api::read_mask::<SimulateReadMask, _>(read_mask),
             )
             .await?
             .into_inner())
@@ -220,13 +223,15 @@ impl GrpcClient {
 
     /// Simulate a batch of transactions.
     ///
-    /// A per-transaction error does not abort the rest of the batch; each
-    /// result carries either the simulated transaction or an error message.
+    /// An error the server reports for one transaction does not abort the
+    /// rest of the batch; each result carries either the simulated transaction
+    /// or the server's error message. A transaction the server returns but
+    /// that cannot be decoded fails the whole call.
     #[uniffi::method(default(read_mask = None))]
     pub async fn simulate_transactions(
         &self,
         transactions: Vec<SimulateTransactionInput>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<SimulateField>>,
     ) -> Result<Vec<SimulatedTransactionResult>> {
         self.client()
             .simulate_transactions(
@@ -239,7 +244,7 @@ impl GrpcClient {
                         .skip_checks(input.skip_checks)
                     })
                     .collect(),
-                crate::grpc::api::read_mask::<SimulateReadMask>(&read_mask),
+                crate::grpc::api::read_mask::<SimulateReadMask, _>(read_mask),
             )
             .await?
             .into_inner()

@@ -112,7 +112,7 @@ fun main() = runBlocking {
                 val returnValue = lastEffect.returnValues.first()
                 if (returnValue.typeTag.isAddress() && returnValue.bcs.size == 32) {
                     val resolvedAddress = Address.fromBytes(returnValue.bcs)
-                    println("Resolved address: ${resolvedAddress.toHex()}")
+                    println("Resolved address: ${resolvedAddress}")
                 } else {
                     println(
                         "Last result is not an address type or has wrong length: ${returnValue.bcs.size}"

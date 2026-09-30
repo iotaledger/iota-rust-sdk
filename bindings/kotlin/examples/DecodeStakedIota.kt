@@ -22,7 +22,7 @@ fun main() = runBlocking {
             client.objects(ObjectFilter(typeTag = "0x3::staking_pool::StakedIota", owner = owner))
 
         if (page.data.isEmpty()) {
-            println("No StakedIota objects owned by ${owner.toHex()} right now.")
+            println("No StakedIota objects owned by ${owner} right now.")
             return@runBlocking
         }
 
@@ -31,8 +31,8 @@ fun main() = runBlocking {
         for (obj in page.data) {
             val staked = StakedIota.tryFromObject(obj)
             totalPrincipal += staked.principal()
-            println("- id:               ${staked.id().toHex()}")
-            println("  pool_id:          ${staked.poolId().toHex()}")
+            println("- id:               ${staked.id()}")
+            println("  pool_id:          ${staked.poolId()}")
             println("  stake_activation_epoch: ${staked.stakeActivationEpoch()}")
             println("  principal (nanos): ${staked.principal()}")
             println()

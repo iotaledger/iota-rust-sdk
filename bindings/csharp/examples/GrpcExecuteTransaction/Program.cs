@@ -13,7 +13,7 @@ class Program
 
         var privateKey = new Ed25519PrivateKey(new byte[32]);
         var senderAddress = privateKey.PublicKey().DeriveAddress();
-        Console.WriteLine($"Sender address: {senderAddress.ToHex()}");
+        Console.WriteLine($"Sender address: {senderAddress}");
 
         // Request funds from faucet (the faucet client relies on GraphQL to
         // await finalization)
@@ -43,7 +43,7 @@ class Program
 
         var executed = await client.ExecuteTransaction(signedTransaction);
 
-        Console.WriteLine($"Digest: {Iota.HexEncode(executed.Digest!.ToBytes())}");
+        Console.WriteLine($"Digest: {executed.Digest}");
         Console.WriteLine($"Transaction status: {executed.Effects!.AsV1().Status()}");
     }
 }

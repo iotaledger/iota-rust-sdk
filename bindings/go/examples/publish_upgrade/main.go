@@ -46,13 +46,13 @@ func main() {
 	dependencies := packageData.Dependencies()
 	fmt.Printf("Dependencies: %d\n", len(dependencies))
 	digest := packageData.Digest()
-	fmt.Printf("Digest: %s\n", digest.ToBase58())
+	fmt.Printf("Digest: %s\n", digest)
 
 	// Create a random private key to derive a sender address and for signing
 	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
 	publicKey := privateKey.PublicKey()
 	sender := publicKey.DeriveAddress()
-	fmt.Printf("Sender: %s\n", sender.ToHex())
+	fmt.Printf("Sender: %s\n", sender)
 
 	client := iota_sdk.GraphQlClientNewLocalnet()
 
@@ -119,14 +119,14 @@ func main() {
 			if obj.AsOptStruct() != nil {
 				upgradeCapType := iota_sdk.StructTagNewUpgradeCap()
 				if obj.AsStruct().StructType.Eq(upgradeCapType) {
-					fmt.Printf("UpgradeCap: %s\n", objectId.ToHex())
-					fmt.Printf("UpgradeCapOwner: %s\n", objectWrite.Owner.AsAddress().ToHex())
+					fmt.Printf("UpgradeCap: %s\n", objectId)
+					fmt.Printf("UpgradeCapOwner: %s\n", objectWrite.Owner.AsAddress())
 					upgradeCap = objectId
 				}
 			}
 		} else if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutPackageWrite); ok {
 			pkgId := changedObj.ObjectId
-			fmt.Printf("Package ID: %s\n", pkgId.ToHex())
+			fmt.Printf("Package ID: %s\n", pkgId)
 			version := changedObj.OutputState.(iota_sdk.ObjectOutPackageWrite).Version
 			fmt.Printf("Package version: %d\n", version)
 			packageId = pkgId
@@ -208,7 +208,7 @@ func main() {
 	for _, changedObj := range (*effectsUpgrade).AsV1().ChangedObjects() {
 		if _, ok := changedObj.OutputState.(iota_sdk.ObjectOutPackageWrite); ok {
 			pkgId := changedObj.ObjectId
-			fmt.Printf("New Package ID: %s\n", pkgId.ToHex())
+			fmt.Printf("New Package ID: %s\n", pkgId)
 			version := changedObj.OutputState.(iota_sdk.ObjectOutPackageWrite).Version
 			fmt.Printf("New Package version: %d\n", version)
 		}

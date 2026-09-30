@@ -13,7 +13,7 @@ fun main() = runBlocking {
                 TransactionsFilter().withFunction("0x3::iota_system::request_add_stake")
             )
         for (transaction in transactions.data) {
-            println("Digest: ${transaction.transaction.digest().toBase58()}")
+            println("Digest: ${transaction.transaction.digest()}")
         }
     } catch (e: Exception) {
         e.printStackTrace()

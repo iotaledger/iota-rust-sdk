@@ -14,13 +14,14 @@ async def main():
 
     # `objects` is batched: it takes a list of ids and returns the objects in
     # the same order. The default read mask returns the reference and the
-    # BCS-decoded object; pass `read_mask=["reference"]` to skip the object.
+    # BCS-decoded object; pass `read_mask=[ObjectField.REFERENCE()]` to skip the
+    # object.
     obj = (await client.objects([object_id]))[0].object
     assert obj is not None, "Object not included in the response"
 
-    print("Object ID:", obj.id().to_hex())
+    print("Object ID:", obj.id())
     print("Version:", obj.version())
-    print("Previous transaction:", obj.previous_transaction().to_base58())
+    print("Previous transaction:", obj.previous_transaction())
     print("Owner:", obj.owner())
     print("Storage rebate:", obj.storage_rebate())
     print("Type:", obj.object_type())

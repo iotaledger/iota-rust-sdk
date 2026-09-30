@@ -9,7 +9,7 @@ use iota_sdk::{grpc_client::read_mask_fields::DynamicFieldReadMask, grpc_types::
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::client::GrpcClient,
+    grpc::{client::GrpcClient, read_mask_fields::DynamicFieldField},
     types::object::{Object, ObjectId},
 };
 
@@ -138,13 +138,13 @@ impl GrpcClient {
         parent: &ObjectId,
         page_size: Option<u32>,
         page_token: Option<Vec<u8>>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<DynamicFieldField>>,
     ) -> Result<DynamicFieldPage> {
         let query = self.client().dynamic_fields(
             **parent,
             page_size,
             page_token.map(Into::into),
-            crate::grpc::api::read_mask::<DynamicFieldReadMask>(&read_mask),
+            crate::grpc::api::read_mask::<DynamicFieldReadMask, _>(read_mask),
         );
         let page = query.await?.into_inner();
         Ok(DynamicFieldPage {
@@ -167,13 +167,13 @@ impl GrpcClient {
         &self,
         parent: &ObjectId,
         limit: Option<u32>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<DynamicFieldField>>,
     ) -> Result<Vec<DynamicField>> {
         let query = self.client().dynamic_fields(
             **parent,
             None,
             None,
-            crate::grpc::api::read_mask::<DynamicFieldReadMask>(&read_mask),
+            crate::grpc::api::read_mask::<DynamicFieldReadMask, _>(read_mask),
         );
         query
             .collect(limit)

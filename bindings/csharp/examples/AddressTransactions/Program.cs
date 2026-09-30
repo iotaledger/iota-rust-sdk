@@ -19,18 +19,18 @@ class Program
         var outgoing = await client.Transactions(filter: new TransactionsFilter().WithSentAddress(address));
         var incoming = await client.Transactions(filter: new TransactionsFilter().WithRecvAddress(address));
 
-        Console.WriteLine($"Transactions for {address.ToHex()}");
+        Console.WriteLine($"Transactions for {address}");
 
         Console.WriteLine($"\nOutgoing (sent by address): {outgoing.Data.Length}");
         foreach (var tx in outgoing.Data)
         {
-            Console.WriteLine($"  - {tx.Transaction.Digest().ToBase58()}");
+            Console.WriteLine($"  - {tx.Transaction.Digest()}");
         }
 
         Console.WriteLine($"\nIncoming (received by address): {incoming.Data.Length}");
         foreach (var tx in incoming.Data)
         {
-            Console.WriteLine($"  - {tx.Transaction.Digest().ToBase58()}");
+            Console.WriteLine($"  - {tx.Transaction.Digest()}");
         }
     }
 }

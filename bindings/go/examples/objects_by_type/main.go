@@ -24,7 +24,7 @@ func main() {
 	} else {
 		fmt.Println("IOTA coin object IDs:")
 		for _, coin := range coins.Data {
-			fmt.Printf("%s\n", coin.Id().ToHex())
+			fmt.Printf("%s\n", coin.Id())
 		}
 	}
 }

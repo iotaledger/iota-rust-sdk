@@ -21,7 +21,7 @@ class Program
             Console.WriteLine("IOTA coin object IDs:");
             foreach (var coin in coins.Data)
             {
-                Console.WriteLine(coin.Id().ToHex());
+                Console.WriteLine(coin.Id());
             }
         }
     }

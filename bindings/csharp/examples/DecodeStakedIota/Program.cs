@@ -22,7 +22,7 @@ class Program
 
         if (page.Data.Length == 0)
         {
-            Console.WriteLine($"No StakedIota objects owned by {owner.ToHex()} right now.");
+            Console.WriteLine($"No StakedIota objects owned by {owner} right now.");
             return;
         }
 
@@ -32,8 +32,8 @@ class Program
         {
             var staked = StakedIota.TryFromObject(obj);
             totalPrincipal += staked.Principal();
-            Console.WriteLine($"- id:               {staked.Id().ToHex()}");
-            Console.WriteLine($"  pool_id:          {staked.PoolId().ToHex()}");
+            Console.WriteLine($"- id:               {staked.Id()}");
+            Console.WriteLine($"  pool_id:          {staked.PoolId()}");
             Console.WriteLine($"  stake_activation_epoch: {staked.StakeActivationEpoch()}");
             Console.WriteLine($"  principal (nanos): {staked.Principal()}\n");
         }
