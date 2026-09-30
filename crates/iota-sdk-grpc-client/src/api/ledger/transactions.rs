@@ -41,11 +41,7 @@ impl GetTransactionsQuery {
         self
     }
 
-    async fn send(mut self) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ExecutedTransaction>>>> {
-        if self.digests.is_empty() {
-            return Err(GrpcError::EmptyRequest);
-        }
-
+    fn request(&self) -> GetTransactionsRequest {
         let requests = TransactionRequests::default().with_requests(
             self.digests
                 .iter()
@@ -55,12 +51,21 @@ impl GetTransactionsQuery {
 
         let mut request = GetTransactionsRequest::default()
             .with_requests(requests)
-            .with_read_mask(self.read_mask);
+            .with_read_mask(self.read_mask.clone());
 
         if let Some(max_size) = self.max_message_size {
             request = request.with_max_message_size_bytes(saturating_usize_to_u32(max_size));
         }
 
+        request
+    }
+
+    async fn send(mut self) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ExecutedTransaction>>>> {
+        if self.digests.is_empty() {
+            return Err(GrpcError::EmptyRequest);
+        }
+
+        let request = self.request();
         let response = self.service_client.get_transactions(request).await?;
         let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
 
@@ -215,5 +220,30 @@ mod tests {
         let client = GrpcClient::new("http://localhost").unwrap();
         let result = client.transactions(Vec::new()).await;
         assert!(matches!(result, Err(GrpcError::EmptyRequest)));
+    }
+
+    #[tokio::test]
+    async fn the_request_carries_every_digest_the_mask_and_the_message_size() {
+        let client = GrpcClient::new("http://localhost")
+            .unwrap()
+            .with_max_decoding_message_size(1024);
+        let query = client
+            .transactions([TransactionDigest::ZERO])
+            .read_mask(TransactionField::EFFECTS);
+        let request = query.request();
+
+        let digests: Vec<_> = request
+            .requests
+            .unwrap()
+            .requests
+            .into_iter()
+            .map(|r| r.digest)
+            .collect();
+        assert_eq!(digests, vec![Some(TransactionDigest::ZERO.into())]);
+        assert_eq!(
+            request.read_mask,
+            Some(TransactionReadMask::from(TransactionField::EFFECTS).into())
+        );
+        assert_eq!(request.max_message_size_bytes, Some(1024));
     }
 }

@@ -64,19 +64,20 @@ impl ViewFunctionCallQuery {
         self
     }
 
-    async fn send(self) -> GrpcResult<MetadataEnvelope<ViewFunctionCallOutputs>> {
-        if self.function_call.fq_function_name.is_empty() {
-            return Err(GrpcError::EmptyRequest);
-        }
-
+    fn into_batch(self) -> ViewFunctionCallsQuery {
         ViewFunctionCallsQuery {
             service_client: self.service_client,
             function_calls: vec![self.function_call],
             read_mask: self.read_mask,
         }
-        .send()
-        .await?
-        .try_map(|results| {
+    }
+
+    async fn send(self) -> GrpcResult<MetadataEnvelope<ViewFunctionCallOutputs>> {
+        if self.function_call.fq_function_name.is_empty() {
+            return Err(GrpcError::EmptyRequest);
+        }
+
+        self.into_batch().send().await?.try_map(|results| {
             results.into_iter().next().ok_or_else(|| {
                 GrpcError::Protocol(ProtocolError::EmptyResponseField("call_results"))
             })?
@@ -102,19 +103,26 @@ impl ViewFunctionCallsQuery {
         self
     }
 
-    async fn send(
-        mut self,
-    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ViewFunctionCallOutputs>>>> {
+    fn into_request(
+        self,
+    ) -> (
+        TransactionExecutionServiceClient<InterceptedChannel>,
+        ViewFunctionCallsRequest,
+    ) {
+        let request = ViewFunctionCallsRequest::default()
+            .with_view_function_calls(self.function_calls)
+            .with_read_mask(self.read_mask);
+        (self.service_client, request)
+    }
+
+    async fn send(self) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ViewFunctionCallOutputs>>>> {
         if self.function_calls.is_empty() {
             return Err(GrpcError::EmptyRequest);
         }
 
         let expected_results = self.function_calls.len();
-        let request = ViewFunctionCallsRequest::default()
-            .with_view_function_calls(self.function_calls)
-            .with_read_mask(self.read_mask);
-
-        let response = self.service_client.view_function_calls(request).await?;
+        let (mut service_client, request) = self.into_request();
+        let response = service_client.view_function_calls(request).await?;
 
         let response = MetadataEnvelope::from(response).map(|r| into_item_results(r.call_results));
         check_result_count(response.body(), expected_results)?;
@@ -298,5 +306,35 @@ mod tests {
         let client = GrpcClient::new("http://localhost").unwrap();
         let result = client.view_function_calls(Vec::new()).await;
         assert!(matches!(result, Err(GrpcError::EmptyRequest)));
+    }
+
+    #[tokio::test]
+    async fn the_request_carries_the_call_and_the_mask() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let args = [json!(100)];
+        let (_, request) = client
+            .view_function_call("0x2::m::f")
+            .type_args([TypeTag::U64])
+            .call_args(&args)
+            .read_mask(ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES)
+            .into_batch()
+            .into_request();
+        assert_eq!(request.view_function_calls.len(), 1);
+        let call = &request.view_function_calls[0];
+        assert_eq!(call.fq_function_name, "0x2::m::f");
+        assert_eq!(call.type_args, vec![(&TypeTag::U64).into()]);
+        assert_eq!(
+            call.inputs,
+            vec![InputArgument::default().with_json(json_to_prost_stringify_numbers(&args[0]))]
+        );
+        assert_eq!(
+            request.read_mask,
+            Some(
+                ViewFunctionCallReadMask::from(
+                    ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES
+                )
+                .into()
+            )
+        );
     }
 }

@@ -43,11 +43,7 @@ impl GetObjectsQuery {
         self
     }
 
-    async fn send(mut self) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<Object>>>> {
-        if self.refs.is_empty() {
-            return Err(GrpcError::EmptyRequest);
-        }
-
+    fn request(&self) -> GetObjectsRequest {
         let requests = ObjectRequests::default().with_requests(
             self.refs
                 .iter()
@@ -66,12 +62,21 @@ impl GetObjectsQuery {
 
         let mut request = GetObjectsRequest::default()
             .with_requests(requests)
-            .with_read_mask(self.read_mask);
+            .with_read_mask(self.read_mask.clone());
 
         if let Some(max_size) = self.max_message_size {
             request = request.with_max_message_size_bytes(saturating_usize_to_u32(max_size));
         }
 
+        request
+    }
+
+    async fn send(mut self) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<Object>>>> {
+        if self.refs.is_empty() {
+            return Err(GrpcError::EmptyRequest);
+        }
+
+        let request = self.request();
         let response = self.service_client.get_objects(request).await?;
         let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
 
@@ -304,7 +309,7 @@ mod tests {
     use iota_grpc_types::read_mask_fields::{ObjectField, ObjectReadMask};
     use iota_types::{ObjectId, Version};
 
-    use crate::{GrpcClient, GrpcError};
+    use crate::{GrpcClient, GrpcError, api::proto_object_id};
 
     #[tokio::test]
     async fn objects_asks_for_the_latest_version_with_the_default_mask() {
@@ -339,5 +344,40 @@ mod tests {
         let client = GrpcClient::new("http://localhost").unwrap();
         let result = client.objects(Vec::new()).await;
         assert!(matches!(result, Err(GrpcError::EmptyRequest)));
+    }
+
+    #[tokio::test]
+    async fn the_request_carries_every_ref_the_mask_and_the_message_size() {
+        let client = GrpcClient::new("http://localhost")
+            .unwrap()
+            .with_max_decoding_message_size(1024);
+        let pinned: ObjectId = "0x5".parse().unwrap();
+        let query = client
+            .objects_with_versions([(ObjectId::ZERO, None), (pinned, Some(Version::from_u64(7)))])
+            .read_mask(ObjectField::REFERENCE);
+        let request = query.request();
+
+        let refs: Vec<_> = request
+            .requests
+            .unwrap()
+            .requests
+            .into_iter()
+            .map(|r| {
+                let object_ref = r.object_ref.unwrap();
+                (object_ref.object_id, object_ref.version)
+            })
+            .collect();
+        assert_eq!(
+            refs,
+            vec![
+                (Some(proto_object_id(ObjectId::ZERO)), None),
+                (Some(proto_object_id(pinned)), Some(7)),
+            ]
+        );
+        assert_eq!(
+            request.read_mask,
+            Some(ObjectReadMask::from(ObjectField::REFERENCE).into())
+        );
+        assert_eq!(request.max_message_size_bytes, Some(1024));
     }
 }

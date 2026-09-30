@@ -31,9 +31,19 @@ impl GetServiceInfoQuery {
         self
     }
 
-    async fn send(mut self) -> GrpcResult<MetadataEnvelope<GetServiceInfoResponse>> {
+    fn into_request(
+        self,
+    ) -> (
+        LedgerServiceClient<InterceptedChannel>,
+        GetServiceInfoRequest,
+    ) {
         let request = GetServiceInfoRequest::default().with_read_mask(self.read_mask);
-        let response = self.service_client.get_service_info(request).await?;
+        (self.service_client, request)
+    }
+
+    async fn send(self) -> GrpcResult<MetadataEnvelope<GetServiceInfoResponse>> {
+        let (mut service_client, request) = self.into_request();
+        let response = service_client.get_service_info(request).await?;
 
         Ok(MetadataEnvelope::from(response))
     }
@@ -101,6 +111,19 @@ mod tests {
         assert_eq!(
             query.read_mask.as_str(),
             ServiceInfoReadMask::from(ServiceInfoField::CHAIN_ID).as_str()
+        );
+    }
+
+    #[tokio::test]
+    async fn the_request_carries_the_mask() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let (_, request) = client
+            .service_info()
+            .read_mask(ServiceInfoField::CHAIN_ID)
+            .into_request();
+        assert_eq!(
+            request.read_mask,
+            Some(ServiceInfoReadMask::from(ServiceInfoField::CHAIN_ID).into())
         );
     }
 }

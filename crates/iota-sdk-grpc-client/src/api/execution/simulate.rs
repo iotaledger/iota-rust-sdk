@@ -79,15 +79,19 @@ impl SimulateTransactionQuery {
         self
     }
 
-    async fn send(self) -> GrpcResult<MetadataEnvelope<SimulatedTransaction>> {
+    fn into_batch(self) -> SimulateTransactionsQuery {
         SimulateTransactionsQuery {
             service_client: self.service_client,
             transactions: vec![self.input],
             read_mask: self.read_mask,
         }
-        .send()
-        .await?
-        .try_map(extract_single_simulation_result)
+    }
+
+    async fn send(self) -> GrpcResult<MetadataEnvelope<SimulatedTransaction>> {
+        self.into_batch()
+            .send()
+            .await?
+            .try_map(extract_single_simulation_result)
     }
 }
 
@@ -109,11 +113,12 @@ impl SimulateTransactionsQuery {
         self
     }
 
-    async fn send(mut self) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<SimulatedTransaction>>>> {
-        if self.transactions.is_empty() {
-            return Err(GrpcError::EmptyRequest);
-        }
-
+    fn into_request(
+        self,
+    ) -> GrpcResult<(
+        TransactionExecutionServiceClient<InterceptedChannel>,
+        SimulateTransactionsRequest,
+    )> {
         let items = self
             .transactions
             .into_iter()
@@ -124,7 +129,16 @@ impl SimulateTransactionsQuery {
             .with_transactions(items)
             .with_read_mask(self.read_mask);
 
-        let response = self.service_client.simulate_transactions(request).await?;
+        Ok((self.service_client, request))
+    }
+
+    async fn send(self) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<SimulatedTransaction>>>> {
+        if self.transactions.is_empty() {
+            return Err(GrpcError::EmptyRequest);
+        }
+
+        let (mut service_client, request) = self.into_request()?;
+        let response = service_client.simulate_transactions(request).await?;
 
         Ok(MetadataEnvelope::from(response).map(|r| into_item_results(r.transaction_results)))
     }
@@ -253,13 +267,16 @@ fn build_simulate_item(
 
 #[cfg(test)]
 mod tests {
-    use iota_grpc_types::read_mask_fields::{SimulateField, SimulateReadMask};
+    use iota_grpc_types::{
+        read_mask_fields::{SimulateField, SimulateReadMask},
+        v1::transaction_execution_service::simulate_transaction_item::TransactionCheckModes,
+    };
     use iota_types::{
         Address, GasPayment, ProgrammableTransaction, Transaction, TransactionExpiration,
         TransactionKind, TransactionV1,
     };
 
-    use crate::{GrpcClient, GrpcError};
+    use crate::{GrpcClient, GrpcError, SimulateTransactionInput};
 
     fn transaction() -> Transaction {
         Transaction::V1(TransactionV1 {
@@ -303,5 +320,42 @@ mod tests {
         let client = GrpcClient::new("http://localhost").unwrap();
         let result = client.simulate_transactions(Vec::new()).await;
         assert!(matches!(result, Err(GrpcError::EmptyRequest)));
+    }
+
+    #[tokio::test]
+    async fn skip_checks_decides_the_request_checks() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let checks = |skip_checks| {
+            let (_, request) = client
+                .simulate_transaction(transaction())
+                .skip_checks(skip_checks)
+                .into_batch()
+                .into_request()
+                .unwrap();
+            request.transactions[0].tx_checks.clone()
+        };
+        assert_eq!(checks(false), Vec::<i32>::new());
+        assert_eq!(
+            checks(true),
+            vec![TransactionCheckModes::DisableVmChecks as i32]
+        );
+    }
+
+    #[tokio::test]
+    async fn the_request_carries_every_transaction_and_the_mask() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let (_, request) = client
+            .simulate_transactions(vec![
+                SimulateTransactionInput::new(transaction()),
+                SimulateTransactionInput::new(transaction()),
+            ])
+            .read_mask(SimulateField::EXECUTED_TRANSACTION_EFFECTS_BCS)
+            .into_request()
+            .unwrap();
+        assert_eq!(request.transactions.len(), 2);
+        assert_eq!(
+            request.read_mask,
+            Some(SimulateReadMask::from(SimulateField::EXECUTED_TRANSACTION_EFFECTS_BCS).into())
+        );
     }
 }
