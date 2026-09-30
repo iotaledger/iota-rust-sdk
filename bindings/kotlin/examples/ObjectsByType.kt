@@ -16,7 +16,7 @@ fun main() = runBlocking {
         } else {
             println("IOTA coin object IDs:")
             for (coin in coins.data) {
-                println(coin.id().toHex())
+                println(coin.id())
             }
         }
     } catch (e: Exception) {

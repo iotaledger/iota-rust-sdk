@@ -18,7 +18,7 @@ class Program
         var obj = (await client.Objects(new[] { objectId }))[0].Object
             ?? throw new InvalidOperationException("Object not included in the response");
 
-        Console.WriteLine($"Object ID: {obj.Id().ToHex()}");
+        Console.WriteLine($"Object ID: {obj.Id()}");
         Console.WriteLine($"Version: {obj.Version()}");
         Console.WriteLine($"Previous transaction: {obj.PreviousTransaction()}");
         Console.WriteLine($"Owner: {obj.Owner()}");

@@ -18,7 +18,7 @@ async def main():
     print(f"First page: {len(page.objects)} objects")
     for obj in page.objects:
         if obj.object_id is not None:
-            print(" ", obj.object_id.to_hex())
+            print(" ", obj.object_id)
     if page.next_page_token is not None:
         print("  ...more pages available")
 
@@ -28,7 +28,7 @@ async def main():
     print(f"Up to 50 IOTA coin objects ({len(coins)} returned):")
     for obj in coins:
         if obj.object_id is not None:
-            print(" ", obj.object_id.to_hex())
+            print(" ", obj.object_id)
 
 
 if __name__ == "__main__":

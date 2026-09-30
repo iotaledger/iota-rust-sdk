@@ -13,7 +13,7 @@ class Program
 
         var privateKey = new Ed25519PrivateKey(new byte[32]);
         var senderAddress = privateKey.PublicKey().DeriveAddress();
-        Console.WriteLine($"Sender address: {senderAddress.ToHex()}");
+        Console.WriteLine($"Sender address: {senderAddress}");
 
         // Request funds from faucet (the faucet client relies on GraphQL to
         // await finalization)

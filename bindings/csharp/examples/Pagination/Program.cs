@@ -35,7 +35,7 @@ class Program
         Console.WriteLine($"{allObjects.Count} objects fetched:");
         foreach (var obj in allObjects)
         {
-            Console.WriteLine(obj.Id().ToHex());
+            Console.WriteLine(obj.Id());
         }
     }
 }

@@ -17,7 +17,7 @@ class Program
             throw new Exception("missing object");
         }
 
-        Console.WriteLine($"Object ID: {obj.Id().ToHex()}");
+        Console.WriteLine($"Object ID: {obj.Id()}");
         Console.WriteLine($"Version: {obj.Version()}");
         Console.WriteLine($"Previous transaction: {obj.PreviousTransaction()}");
         Console.WriteLine($"Owner: {obj.Owner()}");

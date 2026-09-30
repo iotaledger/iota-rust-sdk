@@ -34,7 +34,7 @@ func main() {
 	}
 	obj := *objects[0].Object
 
-	fmt.Println("Object ID:", obj.Id().ToHex())
+	fmt.Println("Object ID:", obj.Id())
 	fmt.Println("Version:", obj.Version())
 	fmt.Println("Previous transaction:", obj.PreviousTransaction())
 	fmt.Println("Owner:", obj.Owner())

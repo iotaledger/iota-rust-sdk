@@ -16,7 +16,7 @@ struct ObjectsByTypeExample {
     } else {
       print("IOTA coin object IDs:")
       for coin in coins.data {
-        print(coin.id().toHex())
+        print(coin.id())
       }
     }
   }

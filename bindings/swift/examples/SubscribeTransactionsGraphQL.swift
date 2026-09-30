@@ -47,7 +47,7 @@ struct SubscribeTransactionsExample {
         case .transaction(let transaction):
           let data = transaction.transaction
           print("Digest: \(data.digest())")
-          print("Sender: \(data.sender().toHex())")
+          print("Sender: \(data.sender())")
           watchdog.cancel()
           activity.cancel()
           subscription.cancel()

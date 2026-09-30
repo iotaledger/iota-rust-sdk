@@ -35,7 +35,7 @@ func main() {
 		log.Fatalf("Failed to fetch incoming transactions: %v", err)
 	}
 
-	fmt.Printf("Transactions for %s\n", address.ToHex())
+	fmt.Printf("Transactions for %s\n", address)
 
 	fmt.Printf("\nOutgoing (sent by address): %d\n", len(outgoing.Data))
 	for _, tx := range outgoing.Data {

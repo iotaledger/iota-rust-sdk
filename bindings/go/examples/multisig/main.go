@@ -60,7 +60,7 @@ func main() {
 
 	// 4. Derive multisig address
 	multisigAddress := committee.DeriveAddress()
-	log.Printf("Multisig address: %s", multisigAddress.ToHex())
+	log.Printf("Multisig address: %s", multisigAddress)
 
 	client := iota_sdk.GraphQlClientNewLocalnet()
 

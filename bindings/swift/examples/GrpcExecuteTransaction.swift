@@ -14,7 +14,7 @@ struct GrpcExecuteTransactionExample {
 
     let privateKey = try Ed25519PrivateKey(bytes: Data(repeating: 0, count: 32))
     let senderAddress = privateKey.publicKey().deriveAddress()
-    print("Sender address: \(senderAddress.toHex())")
+    print("Sender address: \(senderAddress)")
 
     // Request funds from faucet (the faucet client relies on GraphQL to await
     // finalization)

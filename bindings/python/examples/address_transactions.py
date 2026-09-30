@@ -22,7 +22,7 @@ async def main():
     incoming = await client.transactions(
         TransactionsFilter().with_recv_address(address))
 
-    print(f"Transactions for {address.to_hex()}")
+    print(f"Transactions for {address}")
 
     print(f"\nOutgoing (sent by address): {len(outgoing.data)}")
     for tx in outgoing.data:

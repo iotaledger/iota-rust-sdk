@@ -28,7 +28,7 @@ const incoming = await client.transactions(
   new TransactionsFilter().withRecvAddress(address),
 );
 
-console.log(`Transactions for ${address.toHex()}`);
+console.log(`Transactions for ${address}`);
 
 console.log(`\nOutgoing (sent by address): ${outgoing.data.length}`);
 for (const tx of outgoing.data) {

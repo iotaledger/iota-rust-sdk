@@ -17,7 +17,7 @@ async def main():
     else:
         print("IOTA coin object IDs:")
         for coin in coins.data:
-            print(coin.id().to_hex())
+            print(coin.id())
 
 
 if __name__ == "__main__":

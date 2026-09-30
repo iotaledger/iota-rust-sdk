@@ -14,7 +14,7 @@ if (faucetReceipt) {
   console.log("Faucet receipt:");
   for (const coin of faucetReceipt.sent) {
     console.log(
-      `  Coin ID: ${coin.id.toHex()}, Amount: ${coin.amount}, Digest: ${coin.transferTxDigest}`,
+      `  Coin ID: ${coin.id}, Amount: ${coin.amount}, Digest: ${coin.transferTxDigest}`,
     );
   }
 } else {

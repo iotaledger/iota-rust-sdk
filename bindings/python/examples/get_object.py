@@ -16,7 +16,7 @@ async def main():
     if obj is None:
         raise Exception("missing object")
 
-    print("Object ID:", obj.id().to_hex())
+    print("Object ID:", obj.id())
     print("Version:", obj.version())
     print("Previous transaction:", obj.previous_transaction())
     print("Owner:", obj.owner())

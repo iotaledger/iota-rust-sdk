@@ -16,7 +16,7 @@ struct FaucetExample {
         print("Faucet receipt:")
         for coin in receipt.sent {
           print(
-            "  Coin ID: \(coin.id.toHex()), Amount: \(coin.amount), Digest: \(coin.transferTxDigest)"
+            "  Coin ID: \(coin.id), Amount: \(coin.amount), Digest: \(coin.transferTxDigest)"
           )
         }
       } else {

@@ -15,7 +15,7 @@ fun main() = runBlocking {
             println("Faucet receipt:")
             for (coin in faucetReceipt.sent) {
                 println(
-                    "  Coin ID: ${coin.id.toHex()}, Amount: ${coin.amount}, Digest: ${coin.transferTxDigest}"
+                    "  Coin ID: ${coin.id}, Amount: ${coin.amount}, Digest: ${coin.transferTxDigest}"
                 )
             }
         } else {

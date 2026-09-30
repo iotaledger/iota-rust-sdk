@@ -21,7 +21,7 @@ struct AddressTransactionsExample {
     let incoming = try await client.transactions(
       filter: TransactionsFilter().withRecvAddress(recvAddress: address))
 
-    print("Transactions for \(address.toHex())")
+    print("Transactions for \(address)")
 
     print("\nOutgoing (sent by address): \(outgoing.data.count)")
     for tx in outgoing.data {

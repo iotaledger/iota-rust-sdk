@@ -14,7 +14,7 @@ fun main() = runBlocking {
         val coins = client.coins(address)
         for (coin in coins.data) {
             println(
-                "Coin = 0x${coin.id().toHex()}, Coin Type = ${coin.coinType().asStructTag()}, Balance = ${coin.balance()}"
+                "Coin = 0x${coin.id()}, Coin Type = ${coin.coinType().asStructTag()}, Balance = ${coin.balance()}"
             )
         }
 

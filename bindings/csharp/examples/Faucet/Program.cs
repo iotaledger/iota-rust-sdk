@@ -17,7 +17,7 @@ class Program
             Console.WriteLine("Faucet receipt:");
             foreach (var coin in faucetReceipt.Sent)
             {
-                Console.WriteLine($"  Coin ID: {coin.Id.ToHex()}, Amount: {coin.Amount}, Digest: {coin.TransferTxDigest}");
+                Console.WriteLine($"  Coin ID: {coin.Id}, Amount: {coin.Amount}, Digest: {coin.TransferTxDigest}");
             }
         }
         else

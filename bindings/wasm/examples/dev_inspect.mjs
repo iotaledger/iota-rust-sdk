@@ -118,7 +118,7 @@ if (res.results.length > 0) {
     const returnValue = lastEffect.returnValues[0];
     if (returnValue.typeTag.isAddress() && returnValue.bcs.length === 32) {
       const resolvedAddress = Address.fromBytes(returnValue.bcs);
-      console.log(`Resolved address: ${resolvedAddress.toHex()}`);
+      console.log(`Resolved address: ${resolvedAddress}`);
     } else {
       console.log(
         `Last result is not an address type or has wrong length: ${returnValue.bcs.length}`,

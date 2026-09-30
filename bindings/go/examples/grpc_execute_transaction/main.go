@@ -23,7 +23,7 @@ func main() {
 		log.Fatalf("Failed to create private key: %v", err)
 	}
 	senderAddress := privateKey.PublicKey().DeriveAddress()
-	log.Printf("Sender address: %s", senderAddress.ToHex())
+	log.Printf("Sender address: %s", senderAddress)
 
 	// Request funds from faucet (the faucet client relies on GraphQL to await
 	// finalization)

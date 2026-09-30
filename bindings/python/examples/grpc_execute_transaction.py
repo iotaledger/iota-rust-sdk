@@ -14,7 +14,7 @@ async def main():
 
     private_key = Ed25519PrivateKey(b"\x00" * 32)
     sender_address = private_key.public_key().derive_address()
-    print(f"Sender address: {sender_address.to_hex()}")
+    print(f"Sender address: {sender_address}")
 
     # Request funds from faucet (the faucet client relies on GraphQL to await
     # finalization)

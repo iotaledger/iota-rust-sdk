@@ -13,7 +13,7 @@ fun main() = runBlocking {
 
         val privateKey = Ed25519PrivateKey(ByteArray(32))
         val senderAddress = privateKey.publicKey().deriveAddress()
-        println("Sender address: ${senderAddress.toHex()}")
+        println("Sender address: ${senderAddress}")
 
         // Request funds from faucet (the faucet client relies on GraphQL to
         // await finalization)

@@ -58,7 +58,7 @@ fun main() = runBlocking {
                 is TransactionUpdate.Transaction -> {
                     val transaction = update.transaction.transaction
                     println("Digest: ${transaction.digest()}")
-                    println("Sender: ${transaction.sender().toHex()}")
+                    println("Sender: ${transaction.sender()}")
                     break
                 }
                 // Delivery recovers on its own; items in the gap may be missed.

@@ -45,7 +45,7 @@ console.log(`Digest: ${digest}`);
 // Create a random private key to derive a sender address and for signing
 const privateKey = Ed25519PrivateKey.random();
 const sender = privateKey.publicKey().deriveAddress();
-console.log(`Sender: ${sender.toHex()}`);
+console.log(`Sender: ${sender}`);
 
 const client = GraphQlClient.newLocalnet();
 
@@ -88,17 +88,17 @@ for (const changedObj of effects.asV1().changedObjects()) {
   if (changedObj.outputState.tag === "ObjectWrite") {
     const objectId = changedObj.objectId;
     const obj = await client.object(objectId);
-    if (obj === null) throw new Error(`Missing object ${objectId.toHex()}`);
+    if (obj === null) throw new Error(`Missing object ${objectId}`);
     if (obj.asStruct().structType.equals(StructTag.newUpgradeCap())) {
-      console.log(`UpgradeCap: ${objectId.toHex()}`);
+      console.log(`UpgradeCap: ${objectId}`);
       console.log(
-        `UpgradeCapOwner: ${changedObj.outputState.inner.owner.asAddress().toHex()}`,
+        `UpgradeCapOwner: ${changedObj.outputState.inner.owner.asAddress()}`,
       );
       upgradeCap = objectId;
     }
   } else if (changedObj.outputState.tag === "PackageWrite") {
     packageId = changedObj.objectId;
-    console.log(`Package ID: ${packageId.toHex()}`);
+    console.log(`Package ID: ${packageId}`);
     console.log(`Package version: ${changedObj.outputState.inner.version}`);
   }
 }
@@ -155,7 +155,7 @@ console.log("Success");
 // Print the new package version (should now be 2)
 for (const changedObj of effects.asV1().changedObjects()) {
   if (changedObj.outputState.tag === "PackageWrite") {
-    console.log(`New Package ID: ${changedObj.objectId.toHex()}`);
+    console.log(`New Package ID: ${changedObj.objectId}`);
     console.log(`New Package version: ${changedObj.outputState.inner.version}`);
   }
 }

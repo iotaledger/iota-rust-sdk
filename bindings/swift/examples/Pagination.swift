@@ -31,7 +31,7 @@ struct PaginationExample {
     }
     print("\(allObjects.count) objects fetched:")
     for obj in allObjects {
-      print(obj.id().toHex())
+      print(obj.id())
     }
   }
 }

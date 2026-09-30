@@ -18,7 +18,7 @@ struct GrpcOwnedObjectsExample {
     print("First page: \(page.objects.count) objects")
     for obj in page.objects {
       if let objectId = obj.objectId {
-        print(" ", objectId.toHex())
+        print(" ", objectId)
       }
     }
     if page.nextPageToken != nil {
@@ -32,7 +32,7 @@ struct GrpcOwnedObjectsExample {
     print("Up to 50 IOTA coin objects (\(coins.count) returned):")
     for obj in coins {
       if let objectId = obj.objectId {
-        print(" ", objectId.toHex())
+        print(" ", objectId)
       }
     }
   }

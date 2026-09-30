@@ -23,7 +23,7 @@ const events = await client.events(
 
 for (const event of events.data) {
   console.log(`Type: ${event.moveType}`);
-  console.log(`Sender: ${event.sender.toHex()}`);
+  console.log(`Sender: ${event.sender}`);
   console.log(`Module: ${event.module}`);
   console.log(`JSON: ${event.json}`);
 }
