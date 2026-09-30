@@ -78,7 +78,7 @@ fun main() = runBlocking {
           }
         }
 
-        fragment RPC_VALIDATOR_FIELDS on GraphQlValidator {
+        fragment RPC_VALIDATOR_FIELDS on Validator {
           address {
             address
           }
