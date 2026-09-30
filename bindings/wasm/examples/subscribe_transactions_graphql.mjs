@@ -29,7 +29,7 @@ const recipientAddress = Address.fromHex(
 
 const privateKey = Ed25519PrivateKey.random();
 const senderAddress = privateKey.publicKey().deriveAddress();
-console.log(`Sender address: ${senderAddress.toHex()}`);
+console.log(`Sender address: ${senderAddress}`);
 
 const client = GraphQlClient.newLocalnet();
 
@@ -61,7 +61,7 @@ try {
     [UserSignature.newSimple(signature)],
     txn,
   );
-  console.log(`Executed: ${effects.digest().toBase58()}`);
+  console.log(`Executed: ${effects.digest()}`);
 
   console.log("Waiting for a transaction...");
   while (true) {
@@ -72,8 +72,8 @@ try {
 
     if (update.tag === "Transaction") {
       const { transaction } = update.inner.transaction;
-      console.log(`Digest: ${transaction.digest().toBase58()}`);
-      console.log(`Sender: ${transaction.sender().toHex()}`);
+      console.log(`Digest: ${transaction.digest()}`);
+      console.log(`Sender: ${transaction.sender()}`);
       break;
     } else {
       // Delivery recovers on its own; items in the gap may be missed.

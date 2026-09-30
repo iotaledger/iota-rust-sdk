@@ -15,7 +15,7 @@ class Program
 
         foreach (var transaction in transactions.Data)
         {
-            Console.WriteLine($"Digest: {transaction.Transaction.Digest().ToBase58()}");
+            Console.WriteLine($"Digest: {transaction.Transaction.Digest()}");
         }
     }
 }

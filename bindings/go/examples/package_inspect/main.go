@@ -58,7 +58,7 @@ func main() {
 
 	packagePrefix := pkg.Id().ToHex()
 
-	fmt.Printf("Latest version: %d (%s)\n", latest.Version().AsU64(), latest.Id().ToHex())
+	fmt.Printf("Latest version: %d (%s)\n", latest.Version().AsU64(), latest.Id())
 	// Resolve the current upgrade policy.
 	currentPolicy, err := currentPackagePolicy(client, pkg.Id())
 	if err != nil {
@@ -78,7 +78,7 @@ func main() {
 			labels = append(labels, "latest")
 		}
 
-		line := fmt.Sprintf("- v%d -> %s", version.Version().AsU64(), version.Id().ToHex())
+		line := fmt.Sprintf("- v%d -> %s", version.Version().AsU64(), version.Id())
 		if len(labels) > 0 {
 			line += fmt.Sprintf(" [%s]", joinLabels(labels))
 		}
@@ -100,7 +100,7 @@ func main() {
 		for _, upgrade := range upgrades {
 			fmt.Printf(
 				"- %s @ v%d\n",
-				upgrade.UpgradedId.ToHex(),
+				upgrade.UpgradedId,
 				upgrade.UpgradedVersion.AsU64(),
 			)
 		}
@@ -316,7 +316,7 @@ func printObjectSamples(client *iota_sdk.GraphQlClient, typeTag string, hasKeyAb
 
 	fmt.Println("    sample objects:")
 	for _, object := range objects.Data {
-		fmt.Printf("      - %s (version %d)\n", object.Id().ToHex(), object.Version().AsU64())
+		fmt.Printf("      - %s (version %d)\n", object.Id(), object.Version().AsU64())
 	}
 	if objects.PageInfo.HasNextPage {
 		fmt.Println("      - ...")

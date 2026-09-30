@@ -16,7 +16,7 @@ async def main():
         TransactionsFilter().with_input_object(shared_obj_id),)
 
     for transaction in transactions.data:
-        print("Digest:", transaction.transaction.digest().to_base58())
+        print("Digest:", transaction.transaction.digest())
 
 
 if __name__ == "__main__":

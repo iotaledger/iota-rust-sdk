@@ -37,7 +37,7 @@ fun main() = runBlocking {
         }
         println("${allObjects.size} objects fetched:")
         for (obj in allObjects) {
-            println(obj.id().toHex())
+            println(obj.id())
         }
     } catch (e: Exception) {
         e.printStackTrace()

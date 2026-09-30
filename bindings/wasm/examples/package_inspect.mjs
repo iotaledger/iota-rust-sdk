@@ -95,9 +95,7 @@ async function printObjectSamples(client, typeTag, hasKeyAbility, isGeneric) {
   }
   console.log("    sample objects:");
   for (const obj of objects.data) {
-    console.log(
-      `      - ${obj.id().toHex()} (version ${obj.version().asU64()})`,
-    );
+    console.log(`      - ${obj.id()} (version ${obj.version().asU64()})`);
   }
   if (objects.pageInfo.hasNextPage) console.log("      - ...");
 }
@@ -311,7 +309,7 @@ if (latestPackage === null) throw new Error("missing latest package");
 const versions = await fetchPackageVersions(client, packageAddress);
 const packagePrefix = pkg.id().toHex();
 console.log(
-  `Latest version: ${latestPackage.version().asU64()} (${latestPackage.id().toHex()})`,
+  `Latest version: ${latestPackage.version().asU64()} (${latestPackage.id()})`,
 );
 // Resolve the current upgrade policy.
 console.log(
@@ -324,7 +322,7 @@ for (const version of versions) {
   const labels = [];
   if (version.id().eq?.(pkg.id()) ?? false) labels.push("requested");
   if (version.id().eq?.(latestPackage.id()) ?? false) labels.push("latest");
-  let line = `- v${version.version().asU64()} -> ${version.id().toHex()}`;
+  let line = `- v${version.version().asU64()} -> ${version.id()}`;
   if (labels.length > 0) line += ` [${labels.join(", ")}]`;
   console.log(line);
 }
@@ -341,7 +339,7 @@ if (linkageTable.isEmpty()) {
     .sort((a, b) => (a.upgradedId.toHex() < b.upgradedId.toHex() ? -1 : 1));
   for (const upgrade of upgrades) {
     console.log(
-      `- ${upgrade.upgradedId.toHex()} @ v${upgrade.upgradedVersion.asU64()}`,
+      `- ${upgrade.upgradedId} @ v${upgrade.upgradedVersion.asU64()}`,
     );
   }
 }

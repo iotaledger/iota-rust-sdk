@@ -47,8 +47,8 @@ class Program
             if (update is TransactionUpdate.Transaction transaction)
             {
                 var data = transaction.TransactionValue.Transaction;
-                Console.WriteLine($"Digest: {data.Digest().ToBase58()}");
-                Console.WriteLine($"Sender: {data.Sender().ToHex()}");
+                Console.WriteLine($"Digest: {data.Digest()}");
+                Console.WriteLine($"Sender: {data.Sender()}");
                 break;
             }
             else if (update is TransactionUpdate.Interrupted interrupted)

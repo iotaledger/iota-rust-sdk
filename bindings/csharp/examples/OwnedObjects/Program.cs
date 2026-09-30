@@ -15,7 +15,7 @@ class Program
         Console.WriteLine($"Owned objects({objectsPage.Data.Length}):");
         foreach (var obj in objectsPage.Data)
         {
-            Console.WriteLine(obj.Id().ToHex());
+            Console.WriteLine(obj.Id());
         }
     }
 }

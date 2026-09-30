@@ -10,7 +10,7 @@ struct TransactionsWithFunctionExample {
     let transactions = try await client.transactions(
       filter: TransactionsFilter().withFunction(function: "0x3::iota_system::request_add_stake"))
     for transaction in transactions.data {
-      print("Digest:", transaction.transaction.digest().toBase58())
+      print("Digest:", transaction.transaction.digest())
     }
   }
 }

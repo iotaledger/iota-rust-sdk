@@ -32,7 +32,7 @@ struct PackageInspectExample {
 
     let versions = try await fetchPackageVersions(client: client, packageAddress: packageAddress)
     let packagePrefix = package.id().toHex()
-    print("Latest version: \(latestPackage.version().asU64()) (\(latestPackage.id().toHex()))")
+    print("Latest version: \(latestPackage.version().asU64()) (\(latestPackage.id()))")
     // Resolve the current upgrade policy.
     let currentPolicy = try await currentPackagePolicy(client: client, packageId: package.id())
     print("Current package policy: \(currentPolicy)")
@@ -50,7 +50,7 @@ struct PackageInspectExample {
       }
 
       let suffix = labels.isEmpty ? "" : " [\(labels.joined(separator: ", "))]"
-      print("- v\(version.version().asU64()) -> \(version.id().toHex())\(suffix)")
+      print("- v\(version.version().asU64()) -> \(version.id())\(suffix)")
     }
     print()
 
@@ -63,7 +63,7 @@ struct PackageInspectExample {
       print("- none")
     } else {
       for upgrade in dependencies {
-        print("- \(upgrade.upgradedId.toHex()) @ v\(upgrade.upgradedVersion.asU64())")
+        print("- \(upgrade.upgradedId) @ v\(upgrade.upgradedVersion.asU64())")
       }
     }
     print()
@@ -232,7 +232,7 @@ private func printObjectSamples(
 
   print("    sample objects:")
   for object in objects.data {
-    print("      - \(object.id().toHex()) (version \(object.version().asU64()))")
+    print("      - \(object.id()) (version \(object.version().asU64()))")
   }
   if objects.pageInfo.hasNextPage {
     print("      - ...")

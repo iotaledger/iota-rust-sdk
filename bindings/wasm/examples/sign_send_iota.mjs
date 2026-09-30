@@ -23,7 +23,7 @@ const recipientAddress = Address.fromHex(
 const privateKey = new Ed25519PrivateKey(new Uint8Array(32));
 const publicKey = privateKey.publicKey();
 const senderAddress = publicKey.deriveAddress();
-console.log(`Sender address: ${senderAddress.toHex()}`);
+console.log(`Sender address: ${senderAddress}`);
 
 const client = GraphQlClient.newLocalnet();
 

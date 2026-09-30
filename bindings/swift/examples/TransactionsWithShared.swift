@@ -15,7 +15,7 @@ struct TransactionsWithSharedExample {
       filter: TransactionsFilter().withInputObject(inputObject: sharedObjId))
 
     for transaction in transactions.data {
-      print("Digest:", transaction.transaction.digest().toBase58())
+      print("Digest:", transaction.transaction.digest())
     }
   }
 }

@@ -22,9 +22,9 @@ fun main() = runBlocking {
                 "Object not included in the response"
             }
 
-        println("Object ID: ${obj.id().toHex()}")
+        println("Object ID: ${obj.id()}")
         println("Version: ${obj.version()}")
-        println("Previous transaction: ${obj.previousTransaction().toBase58()}")
+        println("Previous transaction: ${obj.previousTransaction()}")
         println("Owner: ${obj.owner()}")
         println("Storage rebate: ${obj.storageRebate()}")
         println("Type: ${obj.objectType()}")

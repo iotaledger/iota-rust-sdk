@@ -15,7 +15,7 @@ class Program
         var publicKey = privateKey.PublicKey();
         var senderAddress = publicKey.DeriveAddress();
 
-        Console.WriteLine($"Sender address: {senderAddress.ToHex()}");
+        Console.WriteLine($"Sender address: {senderAddress}");
 
         var client = GraphQlClient.NewLocalnet();
 

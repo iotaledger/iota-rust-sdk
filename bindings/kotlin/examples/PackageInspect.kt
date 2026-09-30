@@ -45,9 +45,7 @@ fun main() = runBlocking {
         val latestPackage = client.packageLatest(packageAddress) ?: error("missing latest package")
         val versions = fetchPackageVersions(client, packageAddress)
         val packagePrefix = pkg.id().toHex()
-        println(
-            "Latest version: ${latestPackage.version().asU64()} (${latestPackage.id().toHex()})"
-        )
+        println("Latest version: ${latestPackage.version().asU64()} (${latestPackage.id()})")
         // Resolve the current upgrade policy.
         println("Current package policy: ${currentPackagePolicy(client, pkg.id())}")
         println()
@@ -64,7 +62,7 @@ fun main() = runBlocking {
             }
 
             val suffix = if (labels.isEmpty()) "" else " [${labels.joinToString(", ")}]"
-            println("- v${version.version().asU64()} -> ${version.id().toHex()}$suffix")
+            println("- v${version.version().asU64()} -> ${version.id()}$suffix")
         }
         println()
 
@@ -75,7 +73,7 @@ fun main() = runBlocking {
             println("- none")
         } else {
             for (upgrade in linkageTable) {
-                println("- ${upgrade.upgradedId.toHex()} @ v${upgrade.upgradedVersion.asU64()}")
+                println("- ${upgrade.upgradedId} @ v${upgrade.upgradedVersion.asU64()}")
             }
         }
         println()
@@ -226,7 +224,7 @@ private suspend fun printObjectSamples(
 
     println("    sample objects:")
     for (obj in objects.data) {
-        println("      - ${obj.id().toHex()} (version ${obj.version().asU64()})")
+        println("      - ${obj.id()} (version ${obj.version().asU64()})")
     }
     if (objects.pageInfo.hasNextPage) {
         println("      - ...")
