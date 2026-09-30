@@ -5,7 +5,10 @@
 
 use std::sync::Arc;
 
-use iota_sdk::{grpc_client::read_mask_fields::ObjectReadMask, grpc_types::v1 as proto};
+use iota_sdk::{
+    grpc_client::{GrpcResult, read_mask_fields::ObjectReadMask},
+    grpc_types::v1 as proto,
+};
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -80,12 +83,39 @@ impl TryFrom<&proto::object::Object> for GrpcObject {
     }
 }
 
+/// The result for a single object in a batch: either the object or the error
+/// the server reported for it.
+#[derive(uniffi::Record)]
+pub struct GrpcObjectResult {
+    /// The object, if the server returned it.
+    pub object: Option<GrpcObject>,
+    /// The error message, if the server reported an error for this object.
+    pub error: Option<String>,
+}
+
+impl TryFrom<GrpcResult<proto::object::Object>> for GrpcObjectResult {
+    type Error = SdkFfiError;
+
+    fn try_from(value: GrpcResult<proto::object::Object>) -> Result<Self> {
+        Ok(match value {
+            Ok(object) => Self {
+                object: Some((&object).try_into()?),
+                error: None,
+            },
+            Err(error) => Self {
+                object: None,
+                error: Some(error.to_string()),
+            },
+        })
+    }
+}
+
 fn convert_objects(
-    objects: Vec<iota_sdk::grpc_client::GrpcResult<proto::object::Object>>,
-) -> Result<Vec<GrpcObject>> {
+    objects: Vec<GrpcResult<proto::object::Object>>,
+) -> Result<Vec<GrpcObjectResult>> {
     objects
         .into_iter()
-        .map(|object| GrpcObject::try_from(&object?))
+        .map(GrpcObjectResult::try_from)
         .collect()
 }
 
@@ -93,9 +123,11 @@ fn convert_objects(
 impl GrpcClient {
     /// Get the latest version of objects by their ids.
     ///
-    /// Results are returned in the same order as the input ids.
-    /// If any object cannot be read — because it is not found, was deleted, or
-    /// has been pruned by the serving node — the whole call fails.
+    /// Results are returned in the same order as the input ids, one per
+    /// id. An object the serving node cannot return — because it is not
+    /// found, was deleted, or has been pruned — fails only its own result,
+    /// which carries the server's error message. An object the server returns
+    /// but that cannot be decoded fails the whole call.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the reference and the object are returned.
@@ -104,7 +136,7 @@ impl GrpcClient {
         &self,
         object_ids: Vec<Arc<ObjectId>>,
         read_mask: Option<Vec<ObjectField>>,
-    ) -> Result<Vec<GrpcObject>> {
+    ) -> Result<Vec<GrpcObjectResult>> {
         let ids = object_ids.iter().map(|id| ***id).collect::<Vec<_>>();
         convert_objects(
             self.client()
@@ -119,9 +151,11 @@ impl GrpcClient {
 
     /// Get objects by their ids and optional versions.
     ///
-    /// Results are returned in the same order as the input requests.
-    /// If any object cannot be read — because it is not found, was deleted, or
-    /// has been pruned by the serving node — the whole call fails.
+    /// Results are returned in the same order as the input requests, one per
+    /// request. An object the serving node cannot return — because it is not
+    /// found, was deleted, or has been pruned — fails only its own result,
+    /// which carries the server's error message. An object the server returns
+    /// but that cannot be decoded fails the whole call.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the reference and the object are returned.
@@ -130,7 +164,7 @@ impl GrpcClient {
         &self,
         requests: Vec<ObjectRequest>,
         read_mask: Option<Vec<ObjectField>>,
-    ) -> Result<Vec<GrpcObject>> {
+    ) -> Result<Vec<GrpcObjectResult>> {
         let refs = requests
             .iter()
             .map(|request| {
@@ -155,6 +189,7 @@ impl GrpcClient {
 #[cfg(test)]
 mod tests {
     use iota_sdk::{
+        grpc_client::GrpcError,
         grpc_types::v1::{self as proto, versioned::VersionedObject},
         types::{
             Address, MoveObjectType, MoveStruct, ObjectData, ObjectId, Owner, StructTag,
@@ -162,7 +197,7 @@ mod tests {
         },
     };
 
-    use super::GrpcObject;
+    use super::{GrpcObject, GrpcObjectResult};
 
     fn object() -> iota_sdk::types::Object {
         let object_id = ObjectId::from([7; 32]);
@@ -244,5 +279,21 @@ mod tests {
         value.bcs = Some(proto::bcs::BcsData::from(vec![0xff, 0xff]));
 
         assert!(GrpcObject::try_from(&value).is_err());
+    }
+
+    #[test]
+    fn item_error_populates_only_the_error() {
+        let converted = GrpcObjectResult::try_from(Err(GrpcError::EmptyRequest)).unwrap();
+
+        assert!(converted.object.is_none());
+        assert!(converted.error.is_some());
+    }
+
+    #[test]
+    fn undecodable_item_is_an_error() {
+        let mut value = proto::object::Object::default();
+        value.bcs = Some(proto::bcs::BcsData::from(vec![0xff, 0xff]));
+
+        assert!(GrpcObjectResult::try_from(Ok(value)).is_err());
     }
 }

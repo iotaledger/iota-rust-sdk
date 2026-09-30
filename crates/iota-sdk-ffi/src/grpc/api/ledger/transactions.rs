@@ -6,7 +6,7 @@
 use std::sync::Arc;
 
 use iota_sdk::{
-    grpc_client::read_mask_fields::TransactionReadMask,
+    grpc_client::{GrpcResult, read_mask_fields::TransactionReadMask},
     grpc_types::{proto::proto_to_timestamp_ms, v1 as proto},
     transaction_builder::TransactionBuilderExecutionClient,
 };
@@ -58,6 +58,34 @@ pub struct ExecutedTransaction {
     pub input_objects: Option<Vec<Arc<Object>>>,
     /// The output objects produced by the transaction.
     pub output_objects: Option<Vec<Arc<Object>>>,
+}
+
+/// The result for a single transaction in a batch: either the transaction or
+/// the error the server reported for it.
+#[derive(uniffi::Record)]
+pub struct ExecutedTransactionResult {
+    /// The transaction, if the server returned it.
+    pub transaction: Option<ExecutedTransaction>,
+    /// The error message, if the server reported an error for this
+    /// transaction.
+    pub error: Option<String>,
+}
+
+impl TryFrom<GrpcResult<proto::transaction::ExecutedTransaction>> for ExecutedTransactionResult {
+    type Error = SdkFfiError;
+
+    fn try_from(value: GrpcResult<proto::transaction::ExecutedTransaction>) -> Result<Self> {
+        Ok(match value {
+            Ok(transaction) => Self {
+                transaction: Some((&transaction).try_into()?),
+                error: None,
+            },
+            Err(error) => Self {
+                transaction: None,
+                error: Some(error.to_string()),
+            },
+        })
+    }
 }
 
 impl TryFrom<&proto::transaction::ExecutedTransaction> for ExecutedTransaction {
@@ -154,9 +182,11 @@ impl TryFrom<&proto::transaction::ExecutedTransaction> for ExecutedTransaction {
 impl GrpcClient {
     /// Get transactions by their digests.
     ///
-    /// Results are returned in the same order as the input digests.
-    /// If any transaction cannot be read — because it is not found or has been
-    /// pruned by the serving node — the whole call fails.
+    /// Results are returned in the same order as the input digests, one per
+    /// digest. A transaction the serving node cannot return — because it is
+    /// not found or has been pruned — fails only its own result, which
+    /// carries the server's error message. A transaction the server returns
+    /// but that cannot be decoded fails the whole call.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the transaction, signatures, checkpoint, and timestamp are
@@ -166,7 +196,7 @@ impl GrpcClient {
         &self,
         digests: Vec<Arc<TransactionDigest>>,
         read_mask: Option<Vec<TransactionField>>,
-    ) -> Result<Vec<ExecutedTransaction>> {
+    ) -> Result<Vec<ExecutedTransactionResult>> {
         let digests = digests.iter().map(|digest| ***digest).collect::<Vec<_>>();
         self.client()
             .transactions(
@@ -176,7 +206,7 @@ impl GrpcClient {
             .await?
             .into_inner()
             .into_iter()
-            .map(|transaction| ExecutedTransaction::try_from(&transaction?))
+            .map(ExecutedTransactionResult::try_from)
             .collect()
     }
 
@@ -199,11 +229,12 @@ impl GrpcClient {
 #[cfg(test)]
 mod tests {
     use iota_sdk::{
+        grpc_client::GrpcError,
         grpc_types::v1 as proto,
         types::{TransactionDigest, TransactionEffectsDigest, TransactionEventsDigest},
     };
 
-    use super::ExecutedTransaction;
+    use super::{ExecutedTransaction, ExecutedTransactionResult};
 
     #[test]
     fn digest_only_mask_populates_the_typed_digests() {
@@ -231,5 +262,13 @@ mod tests {
         assert!(converted.transaction.is_none());
         assert!(converted.effects.is_none());
         assert!(converted.events.is_none());
+    }
+
+    #[test]
+    fn item_error_populates_only_the_error() {
+        let converted = ExecutedTransactionResult::try_from(Err(GrpcError::EmptyRequest)).unwrap();
+
+        assert!(converted.transaction.is_none());
+        assert!(converted.error.is_some());
     }
 }
