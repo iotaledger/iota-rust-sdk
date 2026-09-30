@@ -18,6 +18,7 @@ use reqwest::Url;
 
 use crate::{
     GraphQLClient,
+    client::response_to_err,
     error::{GraphQLError, GraphQLResult},
     query_types::{
         Event, EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs,
@@ -81,7 +82,7 @@ impl GraphQLClient {
                     // changes.
                     let mut current_tx: Option<String> = None;
                     let mapped = subscription.map(move |item| -> GraphQLResult<Outcome<Event>> {
-                        let data = decode_data(item?)?;
+                        let data = response_to_err(item?)?;
                         Ok(match data.events {
                             EventSubscriptionPayload::Event(event) => {
                                 let digest = event.transaction_digest();
@@ -139,7 +140,7 @@ impl GraphQLClient {
 
                     let mapped =
                         subscription.map(|item| -> GraphQLResult<Outcome<SignedTransaction>> {
-                            let data = decode_data(item?)?;
+                            let data = response_to_err(item?)?;
                             Ok(match data.transactions {
                                 TransactionBlockSubscriptionPayload::TransactionBlock(block) => {
                                     let cursor = block.digest.clone();
@@ -218,16 +219,6 @@ async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection 
 async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection + Send + 'static> {
     let connection = ws_stream_wasm::WsMeta::connect(url.as_str(), Some(vec![WS_PROTOCOL])).await?;
     Ok(graphql_ws_client::ws_stream_wasm::Connection::new(connection).await)
-}
-
-/// Decode the data payload from a subscription response, surfacing GraphQL
-/// errors and treating an empty response as a skippable payload.
-fn decode_data<T>(response: cynic::GraphQlResponse<T>) -> GraphQLResult<T> {
-    match (response.data, response.errors) {
-        (Some(data), _) => Ok(data),
-        (None, Some(errors)) => Err(GraphQLError::Query(errors)),
-        (None, None) => Err(GraphQLError::EmptyResponse),
-    }
 }
 
 /// Wrap a connect-and-subscribe closure in an auto-reconnecting stream.

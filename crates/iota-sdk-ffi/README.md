@@ -121,10 +121,11 @@ The fields cover the cases a foreign language cannot express by handing over an 
 
 - `extra_root_certificates`: additional DER-encoded CA certificates to trust.
 - `exclude_platform_roots`: ignore the platform store, trusting only the bundled roots and the certificates above.
+- `exclude_bundled_roots`: ignore the bundled roots, trusting only the platform store and the certificates above. With both exclusions set, only `extra_root_certificates` is trusted, which pins the client to them; an empty list is then rejected.
 - `timeout_ms`: total request timeout.
 - `user_agent`: replaces the default.
 
-On wasm32 the browser controls certificate verification and request deadlines, so every field other than `user_agent` is rejected rather than silently ignored.
+On wasm32 the browser controls certificate verification and request deadlines, so every field other than `user_agent` and `exclude_bundled_roots` is rejected rather than silently ignored. `exclude_bundled_roots` is accepted because the browser only verifies against its own store.
 
 ## Supported languages
 

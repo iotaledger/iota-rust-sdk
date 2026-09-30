@@ -11,6 +11,7 @@ description = "GraphQL RPC Client for the IOTA Blockchain"
 [features]
 # TLS crypto provider and trust anchors; see README.md.
 default = ["tls-native-roots", "tls-ring", "tls-webpki-roots"]
+move-types = ["dep:iota-move-types"]
 tls-aws-lc = ["dep:rustls", "reqwest/rustls-no-provider", "rustls/aws-lc-rs"]
 tls-native-roots = []
 tls-ring = ["dep:rustls", "reqwest/rustls-no-provider", "rustls/ring"]
@@ -39,6 +40,7 @@ url = "2.5.8"
 variadics_please.workspace = true
 
 # internal dependencies
+iota-move-types = { workspace = true, features = ["serde"], optional = true }
 iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 

@@ -21,6 +21,7 @@ use crate::{
     grpc::{
         api::execution::simulate::{CommandOutput, SimulatedExecutionError},
         client::GrpcClient,
+        read_mask_fields::ViewFunctionCallField,
     },
     move_view_call::MoveViewArg,
     types::move_core::TypeTag,
@@ -126,7 +127,7 @@ impl GrpcClient {
         fq_function_name: String,
         type_args: Vec<Arc<TypeTag>>,
         call_args: Vec<Arc<MoveViewArg>>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<ViewFunctionCallField>>,
     ) -> Result<ViewFunctionCallOutputs> {
         (&self
             .client()
@@ -140,7 +141,7 @@ impl GrpcClient {
                     .iter()
                     .map(|arg| arg.to_json())
                     .collect::<Vec<_>>(),
-                crate::grpc::api::read_mask::<ViewFunctionCallReadMask>(&read_mask),
+                crate::grpc::api::read_mask::<ViewFunctionCallReadMask, _>(read_mask),
             )
             .await?
             .into_inner())
@@ -160,12 +161,12 @@ impl GrpcClient {
     pub async fn view_function_calls(
         &self,
         function_calls: Vec<ViewFunctionCallInput>,
-        read_mask: Option<Vec<String>>,
+        read_mask: Option<Vec<ViewFunctionCallField>>,
     ) -> Result<Vec<ViewFunctionCallResult>> {
         self.client()
             .view_function_calls(
                 function_calls.iter().map(Into::into).collect(),
-                crate::grpc::api::read_mask::<ViewFunctionCallReadMask>(&read_mask),
+                crate::grpc::api::read_mask::<ViewFunctionCallReadMask, _>(read_mask),
             )
             .await?
             .into_inner()
