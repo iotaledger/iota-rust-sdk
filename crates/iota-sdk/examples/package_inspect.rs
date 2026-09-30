@@ -23,7 +23,7 @@ async fn main() -> Result<()> {
 
     // Fetch package metadata and version history.
     let package = client
-        .package(package_address, None)
+        .package(package_address)
         .await?
         .ok_or_eyre("missing package")?;
     let latest_package = client
@@ -311,7 +311,8 @@ async fn resolve_upgrade_cap_id(
             }
 
             let Some(object) = client
-                .object(changed_object.object_id, Some(effects_v1.lamport_version))
+                .object(changed_object.object_id)
+                .version(Some(effects_v1.lamport_version))
                 .await?
             else {
                 continue;
@@ -495,7 +496,7 @@ async fn current_package_policy(client: &GraphQLClient, package_id: ObjectId) ->
         );
     };
 
-    let Some(contents) = client.move_object_contents(upgrade_cap_id, None).await? else {
+    let Some(contents) = client.move_object_contents(upgrade_cap_id).await? else {
         return Ok(
             if was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id).await? {
                 "Immutable".to_owned()

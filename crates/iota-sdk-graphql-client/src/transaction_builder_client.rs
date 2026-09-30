@@ -37,7 +37,7 @@ impl TransactionBuilderLedgerClient for GraphQLClient {
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> Result<Option<Object>, Self::Error> {
-        self.object(object_id, version).await
+        self.object(object_id).version(version).await
     }
 
     async fn objects(
@@ -75,7 +75,7 @@ impl TransactionBuilderLedgerClient for GraphQLClient {
     }
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
-        let cfg = crate::GraphQLClient::protocol_config(self, None).await?;
+        let cfg = crate::GraphQLClient::protocol_config(self).await?;
         let attributes = cfg
             .configs
             .into_iter()
@@ -88,7 +88,7 @@ impl TransactionBuilderLedgerClient for GraphQLClient {
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
-        self.reference_gas_price(epoch).await
+        self.reference_gas_price().epoch(epoch).await
     }
 }
 
@@ -99,7 +99,9 @@ impl TransactionBuilderSimulationClient for GraphQLClient {
         &self,
         transaction: &Transaction,
     ) -> Result<Option<u64>, Self::Error> {
-        let res = self.dry_run_transaction(transaction, true).await?;
+        let res = crate::GraphQLClient::dry_run_transaction(self, transaction)
+            .skip_checks(true)
+            .await?;
         Ok(res.effects.map(|effects| match effects {
             TransactionEffects::V1(v1) => v1.gas_cost_summary.gas_used(),
             _ => unimplemented!(
@@ -113,7 +115,9 @@ impl TransactionBuilderSimulationClient for GraphQLClient {
         transaction: &Transaction,
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
-        (*self).dry_run_transaction(transaction, skip_checks).await
+        crate::GraphQLClient::dry_run_transaction(self, transaction)
+            .skip_checks(skip_checks)
+            .await
     }
 }
 
@@ -124,7 +128,8 @@ impl TransactionBuilderExecutionClient for GraphQLClient {
         transaction: &Transaction,
         wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Self::Error> {
-        self.execute_transaction(signatures, transaction, wait_for)
+        crate::GraphQLClient::execute_transaction(self, signatures, transaction)
+            .wait_for(wait_for)
             .await
     }
 
@@ -133,7 +138,7 @@ impl TransactionBuilderExecutionClient for GraphQLClient {
         digest: TransactionDigest,
         wait_for: WaitForTransaction,
     ) -> Result<(), Self::Error> {
-        self.wait_for_transaction(digest, wait_for, None).await
+        crate::GraphQLClient::wait_for_transaction(self, digest, wait_for).await
     }
 
     async fn transaction_effects(

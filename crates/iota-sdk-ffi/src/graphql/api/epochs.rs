@@ -15,7 +15,7 @@ impl GraphQLClient {
     /// provided, it will return the last known epoch.
     #[uniffi::method(default(epoch = None))]
     pub async fn epoch(&self, epoch: Option<u64>) -> Result<Option<GraphQLEpoch>> {
-        Ok(self.client().epoch(epoch).await?.map(Into::into))
+        Ok(self.client().epoch().epoch(epoch).await?.map(Into::into))
     }
 
     /// Return the number of checkpoints in this epoch. This will return
@@ -23,7 +23,7 @@ impl GraphQLClient {
     /// service (e.g., due to pruning).
     #[uniffi::method(default(epoch = None))]
     pub async fn epoch_total_checkpoints(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        Ok(self.client().epoch_total_checkpoints(epoch).await?)
+        Ok(self.client().epoch_total_checkpoints().epoch(epoch).await?)
     }
 
     /// Return the number of transaction blocks in this epoch. This will return
@@ -31,6 +31,10 @@ impl GraphQLClient {
     /// service (e.g., due to pruning).
     #[uniffi::method(default(epoch = None))]
     pub async fn epoch_total_transaction_blocks(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        Ok(self.client().epoch_total_transaction_blocks(epoch).await?)
+        Ok(self
+            .client()
+            .epoch_total_transaction_blocks()
+            .epoch(epoch)
+            .await?)
     }
 }

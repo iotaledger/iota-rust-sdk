@@ -620,7 +620,7 @@ async fn capture(
         Source::ObjectId(id_str) => {
             let id: ObjectId = id_str.parse()?;
             let object = client
-                .object(id, None)
+                .object(id)
                 .await?
                 .ok_or_else(|| format!("object `{id_str}` not found on this network"))?;
             let move_struct = object

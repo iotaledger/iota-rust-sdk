@@ -12,7 +12,7 @@ async fn main() -> Result<()> {
 
     let package_address =
         Address::from_str("0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d")?;
-    let Some(package) = client.package(package_address, None).await? else {
+    let Some(package) = client.package(package_address).await? else {
         eyre::bail!("no package found")
     };
 
