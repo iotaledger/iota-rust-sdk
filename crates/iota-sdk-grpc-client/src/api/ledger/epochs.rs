@@ -62,6 +62,32 @@ impl GetEpochQuery {
     }
 }
 
+define_query! {
+    /// Request for [`GrpcClient::reference_gas_price`]. Await it to send the
+    /// request.
+    pub struct GetReferenceGasPriceQuery {
+        service_client: LedgerServiceClient<InterceptedChannel>,
+    }
+    output: GrpcResult<MetadataEnvelope<u64>>;
+}
+
+impl GetReferenceGasPriceQuery {
+    async fn send(mut self) -> GrpcResult<MetadataEnvelope<u64>> {
+        let field = "reference_gas_price";
+        let request = GetEpochRequest::default().with_read_mask(FieldMask {
+            paths: vec![field.to_string()],
+        });
+
+        let response = self.service_client.get_epoch(request).await?;
+
+        MetadataEnvelope::from(response).try_map(|r| {
+            r.epoch
+                .and_then(|e| e.reference_gas_price)
+                .ok_or_else(|| TryFromProtoError::missing(field).into())
+        })
+    }
+}
+
 impl GrpcClient {
     /// Get epoch information.
     ///
@@ -145,30 +171,10 @@ impl GrpcClient {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn reference_gas_price(&self) -> GrpcResult<MetadataEnvelope<u64>> {
-        self.epoch_field("reference_gas_price", |e| e.reference_gas_price)
-            .await
-    }
-
-    /// Internal helper to fetch a single field from the current epoch.
-    async fn epoch_field<T>(
-        &self,
-        field: &str,
-        extractor: impl FnOnce(Epoch) -> Option<T>,
-    ) -> GrpcResult<MetadataEnvelope<T>> {
-        // Current epoch (no epoch field set)
-        let request = GetEpochRequest::default().with_read_mask(FieldMask {
-            paths: vec![field.to_string()],
-        });
-
-        let mut client = self.ledger_service_client();
-        let response = client.get_epoch(request).await?;
-
-        MetadataEnvelope::from(response).try_map(|r| {
-            r.epoch
-                .and_then(extractor)
-                .ok_or_else(|| TryFromProtoError::missing(field).into())
-        })
+    pub fn reference_gas_price(&self) -> GetReferenceGasPriceQuery {
+        GetReferenceGasPriceQuery {
+            service_client: self.ledger_service_client(),
+        }
     }
 }
 

@@ -127,15 +127,15 @@ pub use api::{
     },
     ledger::{
         checkpoints::{CheckpointsStreamFilteredQuery, CheckpointsStreamQuery, GetCheckpointQuery},
-        epochs::GetEpochQuery,
+        epochs::{GetEpochQuery, GetReferenceGasPriceQuery},
         health::GetHealthQuery,
-        objects::GetObjectsQuery,
+        objects::{GetObjectReferencesQuery, GetObjectsQuery},
         service_info::GetServiceInfoQuery,
         transactions::GetTransactionsQuery,
     },
     move_package::package_versions::ListPackageVersionsQuery,
     state::{
-        coins::GetCoinsQuery, dynamic_fields::ListDynamicFieldsQuery,
+        coin_info::GetCoinInfoQuery, coins::GetCoinsQuery, dynamic_fields::ListDynamicFieldsQuery,
         owned_objects::ListOwnedObjectsQuery,
     },
 };

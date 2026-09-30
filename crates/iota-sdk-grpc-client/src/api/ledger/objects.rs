@@ -92,6 +92,28 @@ impl GetObjectsQuery {
     }
 }
 
+define_query! {
+    /// Request for [`GrpcClient::object_references`]. Await it to send the
+    /// request.
+    pub struct GetObjectReferencesQuery {
+        objects: GetObjectsQuery,
+    }
+    output: GrpcResult<MetadataEnvelope<Vec<GrpcResult<iota_types::ObjectReference>>>>;
+}
+
+impl GetObjectReferencesQuery {
+    async fn send(
+        self,
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<iota_types::ObjectReference>>>> {
+        Ok(self.objects.send().await?.map(|objects| {
+            objects
+                .into_iter()
+                .map(|object| Ok(object?.object_reference()?))
+                .collect()
+        }))
+    }
+}
+
 impl GrpcClient {
     /// Get objects by their IDs.
     ///
@@ -278,20 +300,13 @@ impl GrpcClient {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn object_references(
+    pub fn object_references(
         &self,
         ids: impl IntoIterator<Item = ObjectId>,
-    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<iota_types::ObjectReference>>>> {
-        Ok(self
-            .objects(ids)
-            .read_mask([ObjectField::REFERENCE])
-            .await?
-            .map(|objects| {
-                objects
-                    .into_iter()
-                    .map(|object| Ok(object?.object_reference()?))
-                    .collect()
-            }))
+    ) -> GetObjectReferencesQuery {
+        GetObjectReferencesQuery {
+            objects: self.objects(ids).read_mask([ObjectField::REFERENCE]),
+        }
     }
 
     fn objects_query(&self, refs: Vec<(ObjectId, Option<Version>)>) -> GetObjectsQuery {
@@ -335,6 +350,17 @@ mod tests {
             .read_mask(ObjectField::REFERENCE);
         assert_eq!(
             query.read_mask.as_str(),
+            ObjectReadMask::from(ObjectField::REFERENCE).as_str()
+        );
+    }
+
+    #[tokio::test]
+    async fn object_references_asks_only_for_the_reference() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let query = client.object_references([ObjectId::ZERO]);
+        assert_eq!(query.objects.refs, vec![(ObjectId::ZERO, None)]);
+        assert_eq!(
+            query.objects.read_mask.as_str(),
             ObjectReadMask::from(ObjectField::REFERENCE).as_str()
         );
     }
