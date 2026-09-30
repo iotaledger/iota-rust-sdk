@@ -4,8 +4,7 @@
 //! High-level API for epoch queries.
 
 use iota_grpc_types::{
-    field::FieldMask,
-    read_mask_fields::{EpochReadMask, IntoReadMask},
+    read_mask_fields::{EpochField, EpochReadMask, IntoReadMask},
     v1::{
         epoch::Epoch,
         ledger_service::{GetEpochRequest, ledger_service_client::LedgerServiceClient},
@@ -71,13 +70,10 @@ define_query! {
     output: GrpcResult<MetadataEnvelope<u64>>;
 }
 
-const REFERENCE_GAS_PRICE: &str = "reference_gas_price";
-
 impl GetReferenceGasPriceQuery {
     fn into_request(self) -> (LedgerServiceClient<InterceptedChannel>, GetEpochRequest) {
-        let request = GetEpochRequest::default().with_read_mask(FieldMask {
-            paths: vec![REFERENCE_GAS_PRICE.to_string()],
-        });
+        let request = GetEpochRequest::default()
+            .with_read_mask(EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE));
         (self.service_client, request)
     }
 
@@ -85,11 +81,7 @@ impl GetReferenceGasPriceQuery {
         let (mut service_client, request) = self.into_request();
         let response = service_client.get_epoch(request).await?;
 
-        MetadataEnvelope::from(response).try_map(|r| {
-            r.epoch
-                .and_then(|e| e.reference_gas_price)
-                .ok_or_else(|| TryFromProtoError::missing(REFERENCE_GAS_PRICE).into())
-        })
+        MetadataEnvelope::from(response).try_map(|r| Ok(r.epoch()?.gas_price()?))
     }
 }
 
