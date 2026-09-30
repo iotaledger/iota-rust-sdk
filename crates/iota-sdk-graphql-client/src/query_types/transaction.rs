@@ -22,7 +22,7 @@ use crate::{
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockQuery {
+pub(crate) struct TransactionBlockQuery {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TransactionBlock>,
 }
@@ -33,7 +33,7 @@ pub struct TransactionBlockQuery {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockWithEffectsQuery {
+pub(crate) struct TransactionBlockWithEffectsQuery {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TransactionBlockWithEffects>,
 }
@@ -44,7 +44,7 @@ pub struct TransactionBlockWithEffectsQuery {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockEffectsQuery {
+pub(crate) struct TransactionBlockEffectsQuery {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TxBlockEffects>,
 }
@@ -55,7 +55,7 @@ pub struct TransactionBlockEffectsQuery {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockCheckpointQuery {
+pub(crate) struct TransactionBlockCheckpointQuery {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TxBlockCheckpoint>,
 }
@@ -66,7 +66,7 @@ pub struct TransactionBlockCheckpointQuery {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockIndexedQuery {
+pub(crate) struct TransactionBlockIndexedQuery {
     #[arguments(digest: $digest)]
     pub is_transaction_indexed_on_node: bool,
 }
@@ -77,7 +77,7 @@ pub struct TransactionBlockIndexedQuery {
     graphql_type = "Query",
     variables = "TransactionBlocksQueryArgs"
 )]
-pub struct TransactionBlocksQuery {
+pub(crate) struct TransactionBlocksQuery {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
     pub transaction_blocks: TransactionBlockConnection,
 }
@@ -88,7 +88,7 @@ pub struct TransactionBlocksQuery {
     graphql_type = "Query",
     variables = "TransactionBlocksQueryArgs"
 )]
-pub struct TransactionBlocksWithEffectsQuery {
+pub(crate) struct TransactionBlocksWithEffectsQuery {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
     pub transaction_blocks: TransactionBlockWithEffectsConnection,
 }
@@ -99,7 +99,7 @@ pub struct TransactionBlocksWithEffectsQuery {
     graphql_type = "Query",
     variables = "TransactionBlocksQueryArgs"
 )]
-pub struct TransactionBlocksEffectsQuery {
+pub(crate) struct TransactionBlocksEffectsQuery {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
     pub transaction_blocks: TransactionBlockEffectsConnection,
 }
@@ -109,7 +109,7 @@ pub struct TransactionBlocksEffectsQuery {
     graphql_type = "Query",
     variables = "AddressTransactionsQueryArgs"
 )]
-pub struct AddressTransactionsQuery {
+pub(crate) struct AddressTransactionsQuery {
     #[arguments(address: $address)]
     pub address: Option<AddressTransactionBlocksQuery>,
 }
@@ -120,7 +120,7 @@ pub struct AddressTransactionsQuery {
     graphql_type = "Address",
     variables = "AddressTransactionsQueryArgs"
 )]
-pub struct AddressTransactionBlocksQuery {
+pub(crate) struct AddressTransactionBlocksQuery {
     #[arguments(first: $first, after: $after, last: $last, before: $before, relation: $relation, filter: $filter)]
     pub transaction_blocks: TransactionBlockConnection,
 }
@@ -130,12 +130,12 @@ pub struct AddressTransactionBlocksQuery {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct TransactionBlockArgs {
+pub(crate) struct TransactionBlockArgs {
     pub digest: String,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct AddressTransactionsQueryArgs {
+pub(crate) struct AddressTransactionsQueryArgs {
     pub address: Address,
     pub first: Option<i32>,
     pub after: Option<String>,
@@ -146,7 +146,7 @@ pub struct AddressTransactionsQueryArgs {
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct TransactionBlocksQueryArgs {
+pub(crate) struct TransactionBlocksQueryArgs {
     pub first: Option<i32>,
     pub after: Option<String>,
     pub last: Option<i32>,
@@ -160,39 +160,39 @@ pub struct TransactionBlocksQueryArgs {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TransactionBlock {
+pub(crate) struct TransactionBlock {
     pub bcs: Option<Base64>,
     pub effects: Option<TransactionBlockEffects>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TransactionBlockWithEffects {
+pub(crate) struct TransactionBlockWithEffects {
     pub bcs: Option<Base64>,
     pub effects: Option<TransactionBlockEffects>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TxBlockEffects {
+pub(crate) struct TxBlockEffects {
     pub effects: Option<TransactionBlockEffects>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TxBlockCheckpoint {
+pub(crate) struct TxBlockCheckpoint {
     pub effects: Option<TransactionBlockCheckpoint>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
-pub struct TransactionBlockEffects {
+pub(crate) struct TransactionBlockEffects {
     pub bcs: Option<Base64>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
-pub struct TransactionBlockCheckpoint {
+pub(crate) struct TransactionBlockCheckpoint {
     pub checkpoint: Option<Checkpoint>,
 }
 
@@ -398,7 +398,7 @@ impl TransactionsFilter {
 /// The GraphQL input object, built from a [`TransactionsFilter`].
 #[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
-pub struct TransactionBlockFilter {
+pub(crate) struct TransactionBlockFilter {
     function: Option<String>,
     kind: Option<TransactionBlockKindInput>,
     after_checkpoint: Option<u64>,
@@ -459,21 +459,21 @@ impl From<TransactionsFilter> for TransactionBlockFilter {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockConnection")]
-pub struct TransactionBlockConnection {
+pub(crate) struct TransactionBlockConnection {
     pub nodes: Vec<TransactionBlock>,
     pub page_info: PageInfo,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockConnection")]
-pub struct TransactionBlockWithEffectsConnection {
+pub(crate) struct TransactionBlockWithEffectsConnection {
     pub nodes: Vec<TransactionBlockWithEffects>,
     pub page_info: PageInfo,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockConnection")]
-pub struct TransactionBlockEffectsConnection {
+pub(crate) struct TransactionBlockEffectsConnection {
     pub nodes: Vec<TxBlockEffects>,
     pub page_info: PageInfo,
 }

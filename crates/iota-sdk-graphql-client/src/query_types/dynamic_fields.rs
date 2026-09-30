@@ -18,7 +18,7 @@ use crate::{
     graphql_type = "Query",
     variables = "DynamicFieldConnectionArgs"
 )]
-pub struct DynamicFieldsOwnerQuery {
+pub(crate) struct DynamicFieldsOwnerQuery {
     #[arguments(address: $address)]
     pub owner: Option<ObjectOwner>,
 }
@@ -28,33 +28,33 @@ pub struct DynamicFieldsOwnerQuery {
     graphql_type = "Owner",
     variables = "DynamicFieldConnectionArgs"
 )]
-pub struct ObjectOwner {
+pub(crate) struct ObjectOwner {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
     pub dynamic_fields: DynamicFieldConnection,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "DynamicFieldArgs")]
-pub struct DynamicFieldQuery {
+pub(crate) struct DynamicFieldQuery {
     #[arguments(address: $address)]
     pub owner: Option<OwnerField>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Owner", variables = "DynamicFieldArgs")]
-pub struct OwnerField {
+pub(crate) struct OwnerField {
     #[arguments(name: $name)]
     pub dynamic_field: Option<DynamicField>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct DynamicFieldArgs {
+pub(crate) struct DynamicFieldArgs {
     pub address: Address,
     pub name: DynamicFieldName,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct DynamicFieldConnectionArgs<'a> {
+pub(crate) struct DynamicFieldConnectionArgs<'a> {
     pub address: Address,
     pub after: Option<&'a str>,
     pub before: Option<&'a str>,
@@ -64,14 +64,14 @@ pub struct DynamicFieldConnectionArgs<'a> {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "DynamicFieldConnection")]
-pub struct DynamicFieldConnection {
+pub(crate) struct DynamicFieldConnection {
     pub nodes: Vec<DynamicField>,
     pub page_info: PageInfo,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "DynamicField")]
-pub struct DynamicField {
+pub(crate) struct DynamicField {
     pub value: Option<DynamicFieldValue>,
     pub name: Option<MoveValue>,
 }
@@ -79,7 +79,7 @@ pub struct DynamicField {
 #[derive(cynic::InlineFragments, Debug)]
 #[cynic(schema = "rpc", graphql_type = "DynamicFieldValue")]
 #[non_exhaustive]
-pub enum DynamicFieldValue {
+pub(crate) enum DynamicFieldValue {
     MoveObject(MoveObjectContents),
     MoveValue(MoveValue),
     #[cynic(fallback)]
@@ -88,7 +88,7 @@ pub enum DynamicFieldValue {
 
 #[derive(cynic::InputObject, Debug)]
 #[cynic(schema = "rpc", graphql_type = "DynamicFieldName")]
-pub struct DynamicFieldName {
+pub(crate) struct DynamicFieldName {
     #[cynic(rename = "type")]
     pub type_tag: String,
     pub bcs: Base64,
@@ -96,13 +96,13 @@ pub struct DynamicFieldName {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Owner", variables = "DynamicFieldArgs")]
-pub struct DynamicObjectField {
+pub(crate) struct DynamicObjectField {
     #[arguments(name: $name)]
     pub dynamic_object_field: Option<DynamicField>,
 }
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "DynamicFieldArgs")]
-pub struct DynamicObjectFieldQuery {
+pub(crate) struct DynamicObjectFieldQuery {
     #[arguments(address: $address)]
     pub owner: Option<DynamicObjectField>,
 }

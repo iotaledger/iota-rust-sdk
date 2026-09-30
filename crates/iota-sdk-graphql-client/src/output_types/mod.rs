@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+mod normalized_move;
+
 use std::str::FromStr;
 
 use base64ct::Encoding;
@@ -9,6 +11,10 @@ use cynic::serde;
 use iota_types::{SignedTransaction, TransactionEffects, TypeTag};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
+pub use self::normalized_move::{
+    MoveAbility, MoveEnum, MoveEnumVariant, MoveField, MoveFunction, MoveFunctionTypeParameter,
+    MoveModule, MoveModuleId, MoveStruct, MoveStructTypeParameter, MoveVisibility, OpenMoveType,
+};
 use crate::{
     error::{GraphQLError, GraphQLResult},
     query_types::{
@@ -145,7 +151,9 @@ impl TryFrom<&crate::query_types::TransactionArgument> for TransactionArgument {
 
     fn try_from(arg: &crate::query_types::TransactionArgument) -> GraphQLResult<Self> {
         match arg {
-            crate::query_types::TransactionArgument::GasCoin(_) => Ok(TransactionArgument::GasCoin),
+            crate::query_types::TransactionArgument::GasCoin(crate::query_types::GasCoin {
+                ..
+            }) => Ok(TransactionArgument::GasCoin),
             crate::query_types::TransactionArgument::Input(input) => {
                 Ok(TransactionArgument::Input {
                     index: input.ix as u32,

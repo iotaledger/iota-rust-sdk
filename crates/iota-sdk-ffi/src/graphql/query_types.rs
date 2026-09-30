@@ -1060,24 +1060,6 @@ pub struct ValidatorConnection {
     pub nodes: Vec<Validator>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::ValidatorConnection> for ValidatorConnection {
-    fn from(value: iota_sdk::graphql_client::query_types::ValidatorConnection) -> Self {
-        ValidatorConnection {
-            page_info: value.page_info.into(),
-            nodes: value.nodes.into_iter().map(Into::into).collect(),
-        }
-    }
-}
-
-impl From<ValidatorConnection> for iota_sdk::graphql_client::query_types::ValidatorConnection {
-    fn from(value: ValidatorConnection) -> Self {
-        iota_sdk::graphql_client::query_types::ValidatorConnection {
-            page_info: value.page_info.into(),
-            nodes: value.nodes.into_iter().map(Into::into).collect(),
-        }
-    }
-}
-
 #[derive(uniffi::Record)]
 pub struct GraphQLAddress {
     pub address: Arc<Address>,
@@ -1275,7 +1257,7 @@ impl From<CoinMetadata> for iota_sdk::graphql_client::query_types::CoinMetadata 
 
 #[derive(Debug, derive_more::Display, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Display)]
-pub struct MoveFunction(iota_sdk::graphql_client::query_types::MoveFunction);
+pub struct MoveFunction(iota_sdk::graphql_client::MoveFunction);
 
 #[uniffi::export]
 impl MoveFunction {
@@ -1321,12 +1303,12 @@ pub enum MoveVisibility {
     Friend,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveVisibility> for MoveVisibility {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveVisibility) -> Self {
+impl From<iota_sdk::graphql_client::MoveVisibility> for MoveVisibility {
+    fn from(value: iota_sdk::graphql_client::MoveVisibility) -> Self {
         match value {
-            iota_sdk::graphql_client::query_types::MoveVisibility::Public => Self::Public,
-            iota_sdk::graphql_client::query_types::MoveVisibility::Private => Self::Private,
-            iota_sdk::graphql_client::query_types::MoveVisibility::Friend => Self::Friend,
+            iota_sdk::graphql_client::MoveVisibility::Public => Self::Public,
+            iota_sdk::graphql_client::MoveVisibility::Private => Self::Private,
+            iota_sdk::graphql_client::MoveVisibility::Friend => Self::Friend,
             _ => unimplemented!(
                 "a new MoveVisibility enum variant was added and needs to be handled"
             ),
@@ -1343,25 +1325,14 @@ pub enum MoveAbility {
     Store,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveAbility> for MoveAbility {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveAbility) -> Self {
+impl From<iota_sdk::graphql_client::MoveAbility> for MoveAbility {
+    fn from(value: iota_sdk::graphql_client::MoveAbility) -> Self {
         match value {
-            iota_sdk::graphql_client::query_types::MoveAbility::Copy => Self::Copy,
-            iota_sdk::graphql_client::query_types::MoveAbility::Drop => Self::Drop,
-            iota_sdk::graphql_client::query_types::MoveAbility::Key => Self::Key,
-            iota_sdk::graphql_client::query_types::MoveAbility::Store => Self::Store,
+            iota_sdk::graphql_client::MoveAbility::Copy => Self::Copy,
+            iota_sdk::graphql_client::MoveAbility::Drop => Self::Drop,
+            iota_sdk::graphql_client::MoveAbility::Key => Self::Key,
+            iota_sdk::graphql_client::MoveAbility::Store => Self::Store,
             _ => unimplemented!("a new MoveAbility enum variant was added and needs to be handled"),
-        }
-    }
-}
-
-impl From<MoveAbility> for iota_sdk::graphql_client::query_types::MoveAbility {
-    fn from(value: MoveAbility) -> Self {
-        match value {
-            MoveAbility::Copy => Self::Copy,
-            MoveAbility::Drop => Self::Drop,
-            MoveAbility::Key => Self::Key,
-            MoveAbility::Store => Self::Store,
         }
     }
 }
@@ -1373,10 +1344,8 @@ pub struct MoveFunctionTypeParameter {
     pub constraints: Vec<MoveAbility>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveFunctionTypeParameter>
-    for MoveFunctionTypeParameter
-{
-    fn from(value: iota_sdk::graphql_client::query_types::MoveFunctionTypeParameter) -> Self {
+impl From<iota_sdk::graphql_client::MoveFunctionTypeParameter> for MoveFunctionTypeParameter {
+    fn from(value: iota_sdk::graphql_client::MoveFunctionTypeParameter) -> Self {
         Self {
             constraints: value.constraints.into_iter().map(Into::into).collect(),
         }
@@ -1389,14 +1358,8 @@ pub struct OpenMoveType {
     pub repr: String,
 }
 
-impl From<iota_sdk::graphql_client::query_types::OpenMoveType> for OpenMoveType {
-    fn from(value: iota_sdk::graphql_client::query_types::OpenMoveType) -> Self {
-        Self { repr: value.repr }
-    }
-}
-
-impl From<OpenMoveType> for iota_sdk::graphql_client::query_types::OpenMoveType {
-    fn from(value: OpenMoveType) -> Self {
+impl From<iota_sdk::graphql_client::OpenMoveType> for OpenMoveType {
+    fn from(value: iota_sdk::graphql_client::OpenMoveType) -> Self {
         Self { repr: value.repr }
     }
 }
@@ -1413,20 +1376,8 @@ pub struct MoveModule {
     pub structs: Option<MoveStructConnection>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveModule> for MoveModule {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveModule) -> Self {
-        Self {
-            file_format_version: value.file_format_version,
-            enums: value.enums.map(Into::into),
-            friends: value.friends.into(),
-            functions: value.functions.map(Into::into),
-            structs: value.structs.map(Into::into),
-        }
-    }
-}
-
-impl From<MoveModule> for iota_sdk::graphql_client::query_types::MoveModule {
-    fn from(value: MoveModule) -> Self {
+impl From<iota_sdk::graphql_client::MoveModule> for MoveModule {
+    fn from(value: iota_sdk::graphql_client::MoveModule) -> Self {
         Self {
             file_format_version: value.file_format_version,
             enums: value.enums.map(Into::into),
@@ -1443,20 +1394,23 @@ pub struct MoveModuleConnection {
     pub page_info: PageInfo,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveModuleConnection> for MoveModuleConnection {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveModuleConnection) -> Self {
+impl From<iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveModuleId>>
+    for MoveModuleConnection
+{
+    fn from(value: iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveModuleId>) -> Self {
+        let (page_info, data) = value.into_parts();
         Self {
-            nodes: value.nodes.into_iter().map(Into::into).collect(),
-            page_info: value.page_info.into(),
-        }
-    }
-}
-
-impl From<MoveModuleConnection> for iota_sdk::graphql_client::query_types::MoveModuleConnection {
-    fn from(value: MoveModuleConnection) -> Self {
-        Self {
-            nodes: value.nodes.into_iter().map(Into::into).collect(),
-            page_info: value.page_info.into(),
+            nodes: data
+                .into_iter()
+                .map(|id| MoveModuleQuery {
+                    package: MovePackageQuery {
+                        address: Arc::new(id.package.into()),
+                        bcs: None,
+                    },
+                    name: id.name,
+                })
+                .collect(),
+            page_info: page_info.into(),
         }
     }
 }
@@ -1517,21 +1471,8 @@ pub struct MoveStructTypeParameter {
     pub is_phantom: bool,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveStructTypeParameter>
-    for MoveStructTypeParameter
-{
-    fn from(value: iota_sdk::graphql_client::query_types::MoveStructTypeParameter) -> Self {
-        Self {
-            constraints: value.constraints.into_iter().map(Into::into).collect(),
-            is_phantom: value.is_phantom,
-        }
-    }
-}
-
-impl From<MoveStructTypeParameter>
-    for iota_sdk::graphql_client::query_types::MoveStructTypeParameter
-{
-    fn from(value: MoveStructTypeParameter) -> Self {
+impl From<iota_sdk::graphql_client::MoveStructTypeParameter> for MoveStructTypeParameter {
+    fn from(value: iota_sdk::graphql_client::MoveStructTypeParameter) -> Self {
         Self {
             constraints: value.constraints.into_iter().map(Into::into).collect(),
             is_phantom: value.is_phantom,
@@ -1547,17 +1488,8 @@ pub struct MoveField {
     pub move_type: Option<OpenMoveType>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveField> for MoveField {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveField) -> Self {
-        Self {
-            name: value.name,
-            move_type: value.move_type.map(Into::into),
-        }
-    }
-}
-
-impl From<MoveField> for iota_sdk::graphql_client::query_types::MoveField {
-    fn from(value: MoveField) -> Self {
+impl From<iota_sdk::graphql_client::MoveField> for MoveField {
+    fn from(value: iota_sdk::graphql_client::MoveField) -> Self {
         Self {
             name: value.name,
             move_type: value.move_type.map(Into::into),
@@ -1577,25 +1509,8 @@ pub struct MoveStructQuery {
     pub type_parameters: Option<Vec<MoveStructTypeParameter>>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveStructQuery> for MoveStructQuery {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveStructQuery) -> Self {
-        Self {
-            abilities: value
-                .abilities
-                .map(|v| v.into_iter().map(Into::into).collect()),
-            name: value.name,
-            fields: value
-                .fields
-                .map(|v| v.into_iter().map(Into::into).collect()),
-            type_parameters: value
-                .type_parameters
-                .map(|v| v.into_iter().map(Into::into).collect()),
-        }
-    }
-}
-
-impl From<MoveStructQuery> for iota_sdk::graphql_client::query_types::MoveStructQuery {
-    fn from(value: MoveStructQuery) -> Self {
+impl From<iota_sdk::graphql_client::MoveStruct> for MoveStructQuery {
+    fn from(value: iota_sdk::graphql_client::MoveStruct) -> Self {
         Self {
             abilities: value
                 .abilities
@@ -1618,20 +1533,14 @@ pub struct MoveStructConnection {
     pub nodes: Vec<MoveStructQuery>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveStructConnection> for MoveStructConnection {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveStructConnection) -> Self {
+impl From<iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveStruct>>
+    for MoveStructConnection
+{
+    fn from(value: iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveStruct>) -> Self {
+        let (page_info, data) = value.into_parts();
         Self {
-            page_info: value.page_info.into(),
-            nodes: value.nodes.into_iter().map(Into::into).collect(),
-        }
-    }
-}
-
-impl From<MoveStructConnection> for iota_sdk::graphql_client::query_types::MoveStructConnection {
-    fn from(value: MoveStructConnection) -> Self {
-        Self {
-            page_info: value.page_info.into(),
-            nodes: value.nodes.into_iter().map(Into::into).collect(),
+            nodes: data.into_iter().map(Into::into).collect(),
+            page_info: page_info.into(),
         }
     }
 }
@@ -1642,30 +1551,14 @@ pub struct MoveFunctionConnection {
     pub page_info: PageInfo,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveFunctionConnection>
+impl From<iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveFunction>>
     for MoveFunctionConnection
 {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveFunctionConnection) -> Self {
+    fn from(value: iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveFunction>) -> Self {
+        let (page_info, data) = value.into_parts();
         Self {
-            nodes: value
-                .nodes
-                .iter()
-                .cloned()
-                .map(Into::into)
-                .map(Arc::new)
-                .collect(),
-            page_info: value.page_info.into(),
-        }
-    }
-}
-
-impl From<MoveFunctionConnection>
-    for iota_sdk::graphql_client::query_types::MoveFunctionConnection
-{
-    fn from(value: MoveFunctionConnection) -> Self {
-        Self {
-            nodes: value.nodes.iter().map(|v| v.0.clone()).collect(),
-            page_info: value.page_info.into(),
+            nodes: data.into_iter().map(Into::into).map(Arc::new).collect(),
+            page_info: page_info.into(),
         }
     }
 }
@@ -1677,20 +1570,14 @@ pub struct MoveEnumConnection {
     pub page_info: PageInfo,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveEnumConnection> for MoveEnumConnection {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveEnumConnection) -> Self {
+impl From<iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveEnum>>
+    for MoveEnumConnection
+{
+    fn from(value: iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveEnum>) -> Self {
+        let (page_info, data) = value.into_parts();
         Self {
-            nodes: value.nodes.into_iter().map(Into::into).collect(),
-            page_info: value.page_info.into(),
-        }
-    }
-}
-
-impl From<MoveEnumConnection> for iota_sdk::graphql_client::query_types::MoveEnumConnection {
-    fn from(value: MoveEnumConnection) -> Self {
-        Self {
-            nodes: value.nodes.into_iter().map(Into::into).collect(),
-            page_info: value.page_info.into(),
+            nodes: data.into_iter().map(Into::into).collect(),
+            page_info: page_info.into(),
         }
     }
 }
@@ -1703,19 +1590,8 @@ pub struct MoveEnumVariant {
     pub name: String,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveEnumVariant> for MoveEnumVariant {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveEnumVariant) -> Self {
-        Self {
-            fields: value
-                .fields
-                .map(|v| v.into_iter().map(Into::into).collect()),
-            name: value.name,
-        }
-    }
-}
-
-impl From<MoveEnumVariant> for iota_sdk::graphql_client::query_types::MoveEnumVariant {
-    fn from(value: MoveEnumVariant) -> Self {
+impl From<iota_sdk::graphql_client::MoveEnumVariant> for MoveEnumVariant {
+    fn from(value: iota_sdk::graphql_client::MoveEnumVariant) -> Self {
         Self {
             fields: value
                 .fields
@@ -1737,25 +1613,8 @@ pub struct MoveEnum {
     pub variants: Option<Vec<MoveEnumVariant>>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveEnum> for MoveEnum {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveEnum) -> Self {
-        Self {
-            abilities: value
-                .abilities
-                .map(|v| v.into_iter().map(Into::into).collect()),
-            name: value.name,
-            type_parameters: value
-                .type_parameters
-                .map(|v| v.into_iter().map(Into::into).collect()),
-            variants: value
-                .variants
-                .map(|v| v.into_iter().map(Into::into).collect()),
-        }
-    }
-}
-
-impl From<MoveEnum> for iota_sdk::graphql_client::query_types::MoveEnum {
-    fn from(value: MoveEnum) -> Self {
+impl From<iota_sdk::graphql_client::MoveEnum> for MoveEnum {
+    fn from(value: iota_sdk::graphql_client::MoveEnum) -> Self {
         Self {
             abilities: value
                 .abilities

@@ -14,7 +14,7 @@ mod events;
 mod iota_names;
 #[cfg(feature = "move-types")]
 pub(crate) mod move_objects;
-mod move_view_call;
+pub(crate) mod move_view_call;
 mod network;
 mod objects;
 mod package;
