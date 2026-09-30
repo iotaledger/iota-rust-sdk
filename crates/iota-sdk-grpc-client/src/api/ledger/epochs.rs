@@ -71,19 +71,24 @@ define_query! {
     output: GrpcResult<MetadataEnvelope<u64>>;
 }
 
-impl GetReferenceGasPriceQuery {
-    async fn send(mut self) -> GrpcResult<MetadataEnvelope<u64>> {
-        let field = "reference_gas_price";
-        let request = GetEpochRequest::default().with_read_mask(FieldMask {
-            paths: vec![field.to_string()],
-        });
+const REFERENCE_GAS_PRICE: &str = "reference_gas_price";
 
-        let response = self.service_client.get_epoch(request).await?;
+impl GetReferenceGasPriceQuery {
+    fn into_request(self) -> (LedgerServiceClient<InterceptedChannel>, GetEpochRequest) {
+        let request = GetEpochRequest::default().with_read_mask(FieldMask {
+            paths: vec![REFERENCE_GAS_PRICE.to_string()],
+        });
+        (self.service_client, request)
+    }
+
+    async fn send(self) -> GrpcResult<MetadataEnvelope<u64>> {
+        let (mut service_client, request) = self.into_request();
+        let response = service_client.get_epoch(request).await?;
 
         MetadataEnvelope::from(response).try_map(|r| {
             r.epoch
                 .and_then(|e| e.reference_gas_price)
-                .ok_or_else(|| TryFromProtoError::missing(field).into())
+                .ok_or_else(|| TryFromProtoError::missing(REFERENCE_GAS_PRICE).into())
         })
     }
 }
@@ -220,5 +225,16 @@ mod tests {
 
         let (_, request) = client.epoch().into_request();
         assert_eq!(request.epoch, None);
+    }
+
+    #[tokio::test]
+    async fn reference_gas_price_asks_the_current_epoch_for_the_price_only() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let (_, request) = client.reference_gas_price().into_request();
+        assert_eq!(request.epoch, None);
+        assert_eq!(
+            request.read_mask.map(|mask| mask.paths),
+            Some(vec!["reference_gas_price".to_owned()])
+        );
     }
 }

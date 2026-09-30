@@ -406,4 +406,15 @@ mod tests {
         );
         assert_eq!(request.max_message_size_bytes, Some(1024));
     }
+
+    #[tokio::test]
+    async fn object_references_sends_the_ids_with_the_reference_mask() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let request = client.object_references([ObjectId::ZERO]).objects.request();
+        assert_eq!(
+            request.read_mask,
+            Some(ObjectReadMask::from(ObjectField::REFERENCE).into())
+        );
+        assert_eq!(request.requests.map(|r| r.requests.len()), Some(1));
+    }
 }
