@@ -3,7 +3,7 @@
 
 use eyre::Result;
 use iota_sdk::{
-    graphql_client::{GraphQLClient, pagination::PaginationFilter, query_types::ObjectFilter},
+    graphql_client::{GraphQLClient, query_types::ObjectFilter},
     types::Address,
 };
 
@@ -13,10 +13,8 @@ async fn main() -> Result<()> {
 
     let address = Address::ZERO;
     let owned_objects_page = client
-        .objects(
-            ObjectFilter::default().with_owner(address),
-            PaginationFilter::default(),
-        )
+        .objects()
+        .filter(ObjectFilter::default().with_owner(address))
         .await?;
     println!("Owned objects ({}):", owned_objects_page.data.len());
     for obj in owned_objects_page.data {

@@ -4,6 +4,8 @@
 
 //! Objects API implementation.
 
+use std::future::IntoFuture;
+
 use base64ct::Encoding;
 use cynic::QueryBuilder;
 use futures::Stream;
@@ -11,13 +13,74 @@ use iota_types::{Object, ObjectId, Version};
 
 use crate::{
     GraphQLClient,
+    api::define_query,
     error::GraphQLResult,
-    pagination::{Direction, Page, PaginationFilter},
+    pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         ObjectFilter, ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
     },
     streams::stream_paginated_query,
 };
+
+define_query! {
+    /// Query for [`GraphQLClient::objects`]. Await it to send the request.
+    pub struct ListObjectsQuery {
+        client: GraphQLClient,
+        filter: Option<ObjectFilter>,
+        pagination: PaginationFilter,
+    }
+    output: GraphQLResult<Page<Object>>;
+}
+
+impl ListObjectsQuery {
+    /// Only return the objects that match `filter`.
+    pub fn filter(mut self, filter: impl Into<Option<ObjectFilter>>) -> Self {
+        self.filter = filter.into();
+        self
+    }
+
+    /// Set the page to fetch.
+    pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
+        self.pagination = pagination;
+        self
+    }
+
+    fn operation(
+        &self,
+        pagination: &PaginationFilterResponse,
+    ) -> cynic::Operation<ObjectsQueryFragment, ObjectsQueryArgs> {
+        ObjectsQueryFragment::build(ObjectsQueryArgs {
+            after: pagination.after.clone(),
+            before: pagination.before.clone(),
+            filter: self.filter.clone(),
+            first: pagination.first,
+            last: pagination.last,
+        })
+    }
+
+    async fn send(self) -> GraphQLResult<Page<Object>> {
+        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
+        let response = self.client.run_query(&self.operation(&pagination)).await?;
+
+        let oc = response.objects;
+        let page_info = oc.page_info;
+        let bcs = oc
+            .nodes
+            .iter()
+            .map(|o| &o.bcs)
+            .filter_map(|b64| {
+                b64.as_ref()
+                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
+            })
+            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+        let objects = bcs
+            .iter()
+            .map(|b| bcs::from_bytes::<iota_types::Object>(b))
+            .collect::<Result<Vec<_>, bcs::Error>>()?;
+
+        Ok(Page::new(page_info, objects))
+    }
+}
 
 impl GraphQLClient {
     /// Return a stream of objects based on the (optional) object filter.
@@ -28,7 +91,12 @@ impl GraphQLClient {
     ) -> impl Stream<Item = GraphQLResult<Object>> + '_ {
         let filter = filter.into();
         stream_paginated_query(
-            move |pag_filter| self.objects(filter.clone(), pag_filter),
+            move |pag_filter| {
+                self.objects()
+                    .filter(filter.clone())
+                    .pagination(pag_filter)
+                    .into_future()
+            },
             streaming_direction,
         )
     }
@@ -63,9 +131,9 @@ impl GraphQLClient {
         Ok(object)
     }
 
-    /// Return a page of objects based on the provided parameters.
+    /// Return a page of objects.
     ///
-    /// Use this function together with
+    /// Use [`ListObjectsQuery::filter`] together with
     /// [`ObjectFilter::with_owner`] to get the objects owned by an address.
     ///
     /// # Example
@@ -73,41 +141,14 @@ impl GraphQLClient {
     /// ```rust,ignore
     /// let filter = ObjectFilter::default().with_owner(Address::from_str("test").unwrap());
     ///
-    /// let owned_objects = client.objects(filter, PaginationFilter::default()).await;
+    /// let owned_objects = client.objects().filter(filter).await;
     /// ```
-    pub async fn objects(
-        &self,
-        filter: impl Into<Option<ObjectFilter>>,
-        pagination_filter: PaginationFilter,
-    ) -> GraphQLResult<Page<Object>> {
-        let pagination = self.pagination_filter(pagination_filter).await;
-        let operation = ObjectsQueryFragment::build(ObjectsQueryArgs {
-            after: pagination.after,
-            before: pagination.before,
-            filter: filter.into(),
-            first: pagination.first,
-            last: pagination.last,
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        let oc = response.objects;
-        let page_info = oc.page_info;
-        let bcs = oc
-            .nodes
-            .iter()
-            .map(|o| &o.bcs)
-            .filter_map(|b64| {
-                b64.as_ref()
-                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
-            })
-            .collect::<Result<Vec<_>, base64ct::Error>>()?;
-        let objects = bcs
-            .iter()
-            .map(|b| bcs::from_bytes::<iota_types::Object>(b))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
-
-        Ok(Page::new(page_info, objects))
+    pub fn objects(&self) -> ListObjectsQuery {
+        ListObjectsQuery {
+            client: self.clone(),
+            filter: None,
+            pagination: PaginationFilter::default(),
+        }
     }
 
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
@@ -181,15 +222,32 @@ impl GraphQLClient {
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use iota_types::ObjectId;
+    use iota_types::{Address, ObjectId};
 
-    use crate::{PaginationFilter, test_utils::test_client};
+    use crate::{
+        query_types::ObjectFilter,
+        test_utils::{assert_backward_page, backward_page, sent_variables, test_client},
+    };
+
+    #[tokio::test]
+    async fn objects_sends_the_filter_and_pagination() {
+        let vars = sent_variables(|client| async move {
+            let _ = client
+                .objects()
+                .filter(ObjectFilter::default().with_owner(Address::FRAMEWORK))
+                .pagination(backward_page())
+                .await;
+        })
+        .await;
+        assert_eq!(vars["filter"]["owner"], Address::FRAMEWORK.to_string());
+        assert_backward_page(&vars);
+    }
 
     #[tokio::test]
     async fn test_objects_query() {
         let client = test_client();
         let objects = client
-            .objects(None, PaginationFilter::default())
+            .objects()
             .await
             .map_err(|e| {
                 format!(

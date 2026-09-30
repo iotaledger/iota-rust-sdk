@@ -4,17 +4,83 @@
 
 //! Coin API implementation.
 
+use std::future::IntoFuture;
+
 use cynic::QueryBuilder;
 use futures::Stream;
 use iota_types::{Address, Identifier, StructTag, framework::Coin};
 
 use crate::{
-    GraphQLClient,
+    GraphQLClient, ListObjectsQuery,
+    api::define_query,
     error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter},
     query_types::{CoinMetadata, CoinMetadataArgs, CoinMetadataQueryFragment, ObjectFilter},
     streams::stream_paginated_query,
 };
+
+define_query! {
+    /// Query for [`GraphQLClient::coins`] and [`GraphQLClient::gas_coins`].
+    /// Await it to send the request.
+    pub struct ListCoinsQuery {
+        client: GraphQLClient,
+        owner: Address,
+        coin_type: Option<StructTag>,
+        pagination: PaginationFilter,
+    }
+    output: GraphQLResult<Page<Coin>>;
+}
+
+impl ListCoinsQuery {
+    /// Only return coins of this type. [`GraphQLClient::coins`] defaults to
+    /// every type, [`GraphQLClient::gas_coins`] to IOTA.
+    pub fn coin_type(mut self, coin_type: impl Into<Option<StructTag>>) -> Self {
+        self.coin_type = coin_type.into();
+        self
+    }
+
+    /// Set the page to fetch.
+    pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
+        self.pagination = pagination;
+        self
+    }
+
+    fn objects_query(&self) -> ListObjectsQuery {
+        let type_tag = self
+            .coin_type
+            .clone()
+            .map(StructTag::new_coin)
+            .unwrap_or_else(|| {
+                StructTag::new(
+                    Address::FRAMEWORK,
+                    Identifier::from_static("coin"),
+                    Identifier::from_static("Coin"),
+                    Default::default(),
+                )
+            });
+        self.client
+            .objects()
+            .filter(ObjectFilter {
+                type_tag: Some(type_tag.to_string()),
+                owner: Some(self.owner),
+                object_ids: None,
+            })
+            .pagination(self.pagination.clone())
+    }
+
+    async fn send(self) -> GraphQLResult<Page<Coin>> {
+        let response = self.objects_query().await?;
+
+        Ok(Page::new(
+            response.page_info,
+            response
+                .data
+                .iter()
+                .flat_map(Coin::try_from_object)
+                .collect::<Vec<_>>(),
+        ))
+    }
+}
 
 impl GraphQLClient {
     /// Get the list of coins for the specified address as a stream.
@@ -29,7 +95,12 @@ impl GraphQLClient {
     ) -> impl Stream<Item = GraphQLResult<Coin>> + '_ {
         let coin_type = coin_type.into();
         stream_paginated_query(
-            move |filter| self.coins(address, coin_type.clone(), filter),
+            move |filter| {
+                self.coins(address)
+                    .coin_type(coin_type.clone())
+                    .pagination(filter)
+                    .into_future()
+            },
             streaming_direction,
         )
     }
@@ -41,59 +112,25 @@ impl GraphQLClient {
         streaming_direction: Direction,
     ) -> impl Stream<Item = GraphQLResult<Coin>> + '_ {
         stream_paginated_query(
-            move |filter| self.gas_coins(address, filter),
+            move |filter| self.gas_coins(address).pagination(filter).into_future(),
             streaming_direction,
         )
     }
 
-    /// Get the list of coins for the specified address.
-    ///
-    /// If `coin_type` is not provided, all coins will be returned. For IOTA
-    /// coins, pass in the coin type: `0x2::iota::IOTA`.
-    pub async fn coins(
-        &self,
-        owner: Address,
-        coin_type: impl Into<Option<StructTag>>,
-        pagination_filter: PaginationFilter,
-    ) -> GraphQLResult<Page<Coin>> {
-        let filter = ObjectFilter {
-            type_tag: Some(
-                coin_type
-                    .into()
-                    .map(StructTag::new_coin)
-                    .unwrap_or_else(|| {
-                        StructTag::new(
-                            Address::FRAMEWORK,
-                            Identifier::from_static("coin"),
-                            Identifier::from_static("Coin"),
-                            Default::default(),
-                        )
-                    })
-                    .to_string(),
-            ),
-            owner: Some(owner),
-            object_ids: None,
-        };
-        let response = self.objects(filter, pagination_filter).await?;
-
-        Ok(Page::new(
-            response.page_info,
-            response
-                .data
-                .iter()
-                .flat_map(Coin::try_from_object)
-                .collect::<Vec<_>>(),
-        ))
+    /// Get the list of coins for the specified address. For IOTA coins, set
+    /// the coin type to `0x2::iota::IOTA`.
+    pub fn coins(&self, owner: Address) -> ListCoinsQuery {
+        ListCoinsQuery {
+            client: self.clone(),
+            owner,
+            coin_type: None,
+            pagination: PaginationFilter::default(),
+        }
     }
 
     /// Get the list of gas coins for the specified address.
-    pub async fn gas_coins(
-        &self,
-        owner: Address,
-        pagination_filter: PaginationFilter,
-    ) -> GraphQLResult<Page<Coin>> {
-        self.coins(owner, StructTag::new_gas(), pagination_filter)
-            .await
+    pub fn gas_coins(&self, owner: Address) -> ListCoinsQuery {
+        self.coins(owner).coin_type(StructTag::new_gas())
     }
 
     /// Get the coin metadata for the coin type.
@@ -118,21 +155,65 @@ impl GraphQLClient {
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use futures::StreamExt;
-    use iota_types::{Address, Ed25519PublicKey};
+    use iota_types::{Address, Ed25519PublicKey, StructTag};
     use tokio::time;
 
     use crate::{
-        Direction, PaginationFilter,
+        Direction,
         client::LOCAL_HOST,
         faucet::FaucetClient,
-        test_utils::{NUM_COINS_FROM_FAUCET, test_client},
+        test_utils::{
+            NUM_COINS_FROM_FAUCET, assert_backward_page, backward_page, sent_variables, test_client,
+        },
     };
+
+    #[tokio::test]
+    async fn coins_sends_the_owner_coin_type_and_pagination() {
+        let vars = sent_variables(|client| async move {
+            let _ = client
+                .coins(Address::STD)
+                .coin_type(StructTag::new_gas())
+                .pagination(backward_page())
+                .await;
+        })
+        .await;
+        assert_eq!(vars["filter"]["owner"], Address::STD.to_string());
+        assert_eq!(
+            vars["filter"]["type"],
+            StructTag::new_coin(StructTag::new_gas()).to_string()
+        );
+        assert_backward_page(&vars);
+    }
+
+    #[tokio::test]
+    async fn gas_coins_sends_the_gas_coin_type() {
+        let vars = sent_variables(|client| async move {
+            let _ = client
+                .gas_coins(Address::STD)
+                .pagination(backward_page())
+                .await;
+        })
+        .await;
+        assert_eq!(
+            vars["filter"]["type"],
+            StructTag::new_coin(StructTag::new_gas()).to_string()
+        );
+    }
+
+    #[tokio::test]
+    async fn coins_default_to_every_coin_type() {
+        let vars = sent_variables(|client| async move {
+            let _ = client.coins(Address::STD).pagination(backward_page()).await;
+        })
+        .await;
+        assert_eq!(vars["filter"]["type"], "0x2::coin::Coin");
+    }
 
     #[tokio::test]
     async fn test_coins_query() {
         let client = test_client();
         client
-            .coins(Address::STD, None, PaginationFilter::default())
+            .coins(Address::STD)
             .await
             .map_err(|e| {
                 format!(

@@ -23,10 +23,8 @@ async fn main() -> Result<()> {
         .await?;
 
     let coins = client
-        .objects(
-            ObjectFilter::default().with_owner(from_address),
-            Default::default(),
-        )
+        .objects()
+        .filter(ObjectFilter::default().with_owner(from_address))
         .await?
         .data;
     let (gas_coin, to_transfer) = coins.split_first().ok_or_eyre("no coins found")?;
