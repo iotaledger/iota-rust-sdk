@@ -10,7 +10,7 @@ use reqwest::Url;
 use crate::{
     error::{GraphQLError, GraphQLResult},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
-    query_types::{ServiceConfig, ServiceConfigQuery},
+    query_types::{ServiceConfig, ServiceConfigQueryFragment},
 };
 
 pub(crate) const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
@@ -132,7 +132,7 @@ impl GraphQLClient {
         }
 
         // Otherwise, fetch and initialize it
-        let operation = ServiceConfigQuery::build(());
+        let operation = ServiceConfigQueryFragment::build(());
         let response = self.run_query(&operation).await?;
 
         let service_config = self

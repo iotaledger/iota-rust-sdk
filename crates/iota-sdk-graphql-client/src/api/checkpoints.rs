@@ -13,8 +13,8 @@ use crate::{
     error::{GraphQLError, GraphQLResult},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsArgs,
-        CheckpointsQuery,
+        CheckpointArgs, CheckpointId, CheckpointQueryFragment, CheckpointTotalTxQueryFragment,
+        CheckpointsArgs, CheckpointsQueryFragment,
     },
     streams::stream_paginated_query,
 };
@@ -46,7 +46,7 @@ impl GraphQLClient {
             return Err(GraphQLError::InvalidArgument(CONFLICTING_CHECKPOINT_ID));
         }
 
-        let operation = CheckpointQuery::build(CheckpointArgs {
+        let operation = CheckpointQueryFragment::build(CheckpointArgs {
             id: CheckpointId {
                 digest: digest.map(|d| d.to_string()),
                 sequence_number,
@@ -64,7 +64,7 @@ impl GraphQLClient {
     ) -> GraphQLResult<Page<CheckpointSummary>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = CheckpointsQuery::build(CheckpointsArgs {
+        let operation = CheckpointsQueryFragment::build(CheckpointsArgs {
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
             first: pagination.first,
@@ -131,7 +131,7 @@ impl GraphQLClient {
             return Err(GraphQLError::InvalidArgument(CONFLICTING_CHECKPOINT_ID));
         }
 
-        let operation = CheckpointTotalTxQuery::build(CheckpointArgs {
+        let operation = CheckpointTotalTxQueryFragment::build(CheckpointArgs {
             id: CheckpointId {
                 digest,
                 sequence_number,
@@ -153,9 +153,9 @@ mod tests {
     fn checkpoints_query_forwards_pagination_arguments() {
         use cynic::QueryBuilder;
 
-        use crate::query_types::{CheckpointsArgs, CheckpointsQuery};
+        use crate::query_types::{CheckpointsArgs, CheckpointsQueryFragment};
 
-        let operation = CheckpointsQuery::build(CheckpointsArgs {
+        let operation = CheckpointsQueryFragment::build(CheckpointsArgs {
             first: Some(10),
             after: None,
             last: None,
