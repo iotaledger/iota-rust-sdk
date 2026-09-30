@@ -118,7 +118,10 @@ impl GrpcClient {
 
 #[cfg(test)]
 mod tests {
-    use iota_grpc_types::read_mask_fields::{OwnedObjectField, OwnedObjectReadMask};
+    use iota_grpc_types::{
+        read_mask_fields::{OwnedObjectField, OwnedObjectReadMask},
+        v1::types::Address as ProtoAddress,
+    };
     use iota_types::{Address, StructTag};
 
     use crate::GrpcClient;
@@ -178,5 +181,49 @@ mod tests {
         let query = query.page_size(None).page_token(None);
         assert_eq!(query.page_size, None);
         assert_eq!(query.page_token, None);
+    }
+
+    #[tokio::test]
+    async fn the_request_carries_every_input() {
+        let client = GrpcClient::new("http://localhost")
+            .unwrap()
+            .with_max_decoding_message_size(1024);
+        let owner: Address = "0x5".parse().unwrap();
+        let (_, request) = client
+            .owned_objects(owner)
+            .object_type(
+                "0x2::coin::Coin<0x2::iota::IOTA>"
+                    .parse::<StructTag>()
+                    .unwrap(),
+            )
+            .read_mask(OwnedObjectField::BCS)
+            .page_size(10)
+            .page_token(prost::bytes::Bytes::from_static(b"next"))
+            .into_request();
+        assert_eq!(
+            request.owner,
+            Some(ProtoAddress::default().with_address(Vec::from(owner)))
+        );
+        assert_eq!(
+            request.object_type.as_deref(),
+            Some("0x2::coin::Coin<0x2::iota::IOTA>")
+        );
+        assert_eq!(
+            request.read_mask,
+            Some(OwnedObjectReadMask::from(OwnedObjectField::BCS).into())
+        );
+        assert_eq!(request.page_size, Some(10));
+        assert_eq!(request.page_token.as_deref(), Some(&b"next"[..]));
+        assert_eq!(request.max_message_size_bytes, Some(1024));
+    }
+
+    #[tokio::test]
+    async fn the_request_leaves_unset_inputs_unset() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let (_, request) = client.owned_objects(Address::ZERO).into_request();
+        assert_eq!(request.object_type, None);
+        assert_eq!(request.page_size, None);
+        assert_eq!(request.page_token, None);
+        assert_eq!(request.max_message_size_bytes, None);
     }
 }

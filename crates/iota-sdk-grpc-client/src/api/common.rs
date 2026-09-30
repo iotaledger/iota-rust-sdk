@@ -761,12 +761,7 @@ macro_rules! define_list_query {
                 ))
             }
 
-            async fn send(
-                self,
-            ) -> $crate::api::GrpcResult<
-                $crate::api::MetadataEnvelope<$crate::api::Page<$item_type>>,
-            > {
-                let mut service_client = self.service_client;
+            fn into_request(self) -> ($service_client_type, $request_type) {
                 let mut request = self.base_request;
 
                 if let Some(ps) = self.page_size {
@@ -781,6 +776,15 @@ macro_rules! define_list_query {
                     );
                 }
 
+                (self.service_client, request)
+            }
+
+            async fn send(
+                self,
+            ) -> $crate::api::GrpcResult<
+                $crate::api::MetadataEnvelope<$crate::api::Page<$item_type>>,
+            > {
+                let (mut service_client, request) = self.into_request();
                 let response = service_client.$rpc_method(request).await?;
                 let (body, metadata) =
                     $crate::api::MetadataEnvelope::from(response).into_parts();

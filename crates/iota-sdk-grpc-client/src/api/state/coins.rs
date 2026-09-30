@@ -165,4 +165,22 @@ mod tests {
             Some("0x2::coin::Coin")
         );
     }
+
+    #[tokio::test]
+    async fn the_request_carries_the_owner_and_the_coin_type() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let owner: Address = "0x5".parse().unwrap();
+        let (_, request) = client
+            .coins(owner)
+            .coin_type("0x2::iota::IOTA".parse::<StructTag>().unwrap())
+            .into_request();
+        assert_eq!(
+            request.owner.map(|o| o.address).as_deref(),
+            Some(Vec::from(owner).as_slice())
+        );
+        assert_eq!(
+            request.object_type.as_deref(),
+            Some("0x2::coin::Coin<0x2::iota::IOTA>")
+        );
+    }
 }

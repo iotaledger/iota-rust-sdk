@@ -90,3 +90,24 @@ impl GrpcClient {
         )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use iota_types::ObjectId;
+
+    use crate::{GrpcClient, api::proto_object_id};
+
+    #[tokio::test]
+    async fn the_request_carries_the_package_and_the_page() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let package_id: ObjectId = "0x5".parse().unwrap();
+        let (_, request) = client
+            .package_versions(package_id)
+            .page_size(2)
+            .page_token(prost::bytes::Bytes::from_static(b"next"))
+            .into_request();
+        assert_eq!(request.package_id, Some(proto_object_id(package_id)));
+        assert_eq!(request.page_size, Some(2));
+        assert_eq!(request.page_token.as_deref(), Some(&b"next"[..]));
+    }
+}

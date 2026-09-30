@@ -116,7 +116,7 @@ mod tests {
     use iota_grpc_types::read_mask_fields::{DynamicFieldField, DynamicFieldReadMask};
     use iota_types::ObjectId;
 
-    use crate::GrpcClient;
+    use crate::{GrpcClient, api::proto_object_id};
 
     #[tokio::test]
     async fn read_mask_replaces_the_default_mask() {
@@ -132,5 +132,22 @@ mod tests {
             query.base_request.read_mask,
             Some(DynamicFieldReadMask::from(DynamicFieldField::ALL).into())
         );
+    }
+
+    #[tokio::test]
+    async fn the_request_carries_the_parent_and_the_mask() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let parent: ObjectId = "0x5".parse().unwrap();
+        let (_, request) = client
+            .dynamic_fields(parent)
+            .read_mask(DynamicFieldField::ALL)
+            .page_size(3)
+            .into_request();
+        assert_eq!(request.parent, Some(proto_object_id(parent)));
+        assert_eq!(
+            request.read_mask,
+            Some(DynamicFieldReadMask::from(DynamicFieldField::ALL).into())
+        );
+        assert_eq!(request.page_size, Some(3));
     }
 }
