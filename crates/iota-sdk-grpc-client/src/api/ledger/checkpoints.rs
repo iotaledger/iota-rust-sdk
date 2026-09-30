@@ -7,7 +7,7 @@
 //!
 //! The checkpoint queries and streams take a mask through their `read_mask`
 //! setter to control which data is included in the response. Without the
-//! setter the default mask is used. Pass a
+//! setter the default mask is used. Set a
 //! [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
 //! (or any slice/array/vec of fields) to choose the returned fields.
 
