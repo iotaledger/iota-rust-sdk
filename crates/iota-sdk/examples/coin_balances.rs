@@ -17,7 +17,7 @@ async fn main() -> GraphQLResult<()> {
         );
     }
 
-    let balance = client.balance(address, None).await?.unwrap_or_default();
+    let balance = client.balance(address).await?.unwrap_or_default();
     println!("Total balance = {balance}");
 
     Ok(())

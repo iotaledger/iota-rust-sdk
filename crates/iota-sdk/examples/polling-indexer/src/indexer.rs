@@ -304,7 +304,12 @@ impl Indexer {
             return Ok(true);
         }
 
-        let Some(checkpoint) = self.client.checkpoint(None, Some(sequence)).await? else {
+        let Some(checkpoint) = self
+            .client
+            .checkpoint()
+            .sequence_number(Some(sequence))
+            .await?
+        else {
             return Ok(false);
         };
 

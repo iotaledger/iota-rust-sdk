@@ -10,24 +10,34 @@ use iota_types::{SignedTransaction, Transaction, TransactionEffects, Transaction
 
 use crate::{
     DryRunEffect, DryRunResult, GraphQLClient,
+    api::define_query,
     error::GraphQLResult,
     query_types::{DryRunArgs, DryRunQueryFragment, ObjectRef, TransactionMetadata},
 };
 
-impl GraphQLClient {
-    /// Dry run a [`Transaction`] and return the transaction effects and dry
-    /// run error (if any).
-    ///
-    /// The `skip_checks` flag disables the usual verification checks that
-    /// prevent access to objects that are owned by addresses other than the
-    /// sender, and calling non-public, non-entry functions, and some other
-    /// checks.
-    pub async fn dry_run_transaction(
-        &self,
-        transaction: &Transaction,
+define_query! {
+    /// Query for [`GraphQLClient::dry_run_transaction`]. Await it to send the
+    /// request.
+    pub struct DryRunTransactionQuery {
+        client: GraphQLClient,
+        transaction: Transaction,
         skip_checks: bool,
-    ) -> GraphQLResult<DryRunResult> {
-        let Transaction::V1(v1) = transaction else {
+    }
+    output: GraphQLResult<DryRunResult>;
+}
+
+impl DryRunTransactionQuery {
+    /// Disable the usual verification checks that prevent access to objects
+    /// that are owned by addresses other than the sender, and calling
+    /// non-public, non-entry functions, and some other checks. Defaults to
+    /// `false`.
+    pub fn skip_checks(mut self, skip_checks: bool) -> Self {
+        self.skip_checks = skip_checks;
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<DryRunResult> {
+        let Transaction::V1(v1) = &self.transaction else {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
         let gas_objects = v1
@@ -40,38 +50,76 @@ impl GraphQLClient {
                 digest: r.digest().to_base58(),
             })
             .collect::<Vec<_>>();
-        self.dry_run_transaction_kind(
-            &v1.kind,
-            skip_checks,
-            TransactionMetadata {
-                gas_budget: Some(v1.gas_payment.budget),
-                gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
-                gas_price: Some(v1.gas_payment.price),
-                gas_sponsor: Some(v1.gas_payment.owner),
-                sender: Some(v1.sender),
-            },
-        )
-        .await
+        self.client
+            .dry_run_transaction_kind(
+                &v1.kind,
+                TransactionMetadata {
+                    gas_budget: Some(v1.gas_payment.budget),
+                    gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
+                    gas_price: Some(v1.gas_payment.price),
+                    gas_sponsor: Some(v1.gas_payment.owner),
+                    sender: Some(v1.sender),
+                },
+            )
+            .skip_checks(self.skip_checks)
+            .await
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::dry_run_transaction_kind`]. Await it to send
+    /// the request.
+    pub struct DryRunTransactionKindQuery {
+        client: GraphQLClient,
+        transaction_kind: TransactionKind,
+        transaction_metadata: TransactionMetadata,
+        skip_checks: bool,
+    }
+    output: GraphQLResult<DryRunResult>;
+}
+
+impl DryRunTransactionKindQuery {
+    /// Disable the usual verification checks that prevent access to objects
+    /// that are owned by addresses other than the sender, and calling
+    /// non-public, non-entry functions, and some other checks. Defaults to
+    /// `false`.
+    pub fn skip_checks(mut self, skip_checks: bool) -> Self {
+        self.skip_checks = skip_checks;
+        self
     }
 
-    /// Dry run a [`TransactionKind`] and return the transaction effects and dry
+    async fn send(self) -> GraphQLResult<DryRunResult> {
+        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&self.transaction_kind)?);
+        self.client
+            .dry_run(tx_bytes, self.skip_checks, Some(self.transaction_metadata))
+            .await
+    }
+}
+
+impl GraphQLClient {
+    /// Dry run a [`Transaction`] and return the transaction effects and dry
     /// run error (if any).
-    ///
-    /// `skipChecks` optional flag disables the usual verification checks that
-    /// prevent access to objects that are owned by addresses other than the
-    /// sender, and calling non-public, non-entry functions, and some other
-    /// checks. Defaults to false.
-    ///
-    /// `transaction_metadata` is the transaction metadata.
-    pub async fn dry_run_transaction_kind(
+    pub fn dry_run_transaction(&self, transaction: &Transaction) -> DryRunTransactionQuery {
+        DryRunTransactionQuery {
+            client: self.clone(),
+            transaction: transaction.clone(),
+            skip_checks: false,
+        }
+    }
+
+    /// Dry run a [`TransactionKind`] with the given transaction metadata and
+    /// return the transaction effects and dry run error (if any).
+    pub fn dry_run_transaction_kind(
         &self,
         transaction_kind: &TransactionKind,
-        skip_checks: bool,
         transaction_metadata: TransactionMetadata,
-    ) -> GraphQLResult<DryRunResult> {
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&transaction_kind)?);
-        self.dry_run(tx_bytes, skip_checks, Some(transaction_metadata))
-            .await
+    ) -> DryRunTransactionKindQuery {
+        DryRunTransactionKindQuery {
+            client: self.clone(),
+            transaction_kind: transaction_kind.clone(),
+            transaction_metadata,
+            skip_checks: false,
+        }
     }
 
     /// Internal implementation of the dry run API.
@@ -128,7 +176,61 @@ impl GraphQLClient {
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use crate::GraphQLClient;
+    use base64ct::Encoding;
+    use iota_types::{Address, ObjectDigest, ObjectId, Transaction};
+
+    use crate::{
+        GraphQLClient,
+        test_utils::{sent_variables, test_transaction},
+    };
+
+    #[tokio::test]
+    async fn dry_run_transaction_sends_the_kind_metadata_and_skip_checks() {
+        let transaction = test_transaction();
+        let Transaction::V1(v1) = &transaction else {
+            unreachable!()
+        };
+        let expected_tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&v1.kind).unwrap());
+        let vars = sent_variables("DryRunQueryFragment", |client| async move {
+            let _ = client
+                .dry_run_transaction(&transaction)
+                .skip_checks(true)
+                .await;
+        })
+        .await;
+        assert_eq!(vars["txBytes"], expected_tx_bytes);
+        assert_eq!(vars["skipChecks"], true);
+        assert_eq!(vars["txMeta"]["sender"], Address::STD.to_string());
+        assert_eq!(vars["txMeta"]["gasBudget"], 5_000_000);
+        assert_eq!(vars["txMeta"]["gasPrice"], 1000);
+        assert_eq!(vars["txMeta"]["gasSponsor"], Address::FRAMEWORK.to_string());
+        let gas_object = &vars["txMeta"]["gasObjects"][0];
+        assert_eq!(gas_object["address"], ObjectId::SYSTEM_STATE.to_string());
+        assert_eq!(gas_object["version"], 3);
+        assert_eq!(gas_object["digest"], ObjectDigest::ZERO.to_base58());
+
+        let transaction = test_transaction();
+        let vars = sent_variables("DryRunQueryFragment", |client| async move {
+            let _ = client.dry_run_transaction(&transaction).await;
+        })
+        .await;
+        assert_eq!(vars["skipChecks"], false);
+    }
+
+    #[tokio::test]
+    async fn dry_run_transaction_kind_defaults_to_checking() {
+        let transaction = test_transaction();
+        let Transaction::V1(v1) = transaction else {
+            unreachable!()
+        };
+        let vars = sent_variables("DryRunQueryFragment", |client| async move {
+            let _ = client
+                .dry_run_transaction_kind(&v1.kind, Default::default())
+                .await;
+        })
+        .await;
+        assert_eq!(vars["skipChecks"], false);
+    }
 
     // This needs the transaction builder to be able to be tested properly
     #[tokio::test]

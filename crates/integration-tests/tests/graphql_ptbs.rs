@@ -75,11 +75,8 @@ async fn helper_setup() -> (
         .sent;
     let tx_digest = coins.first().unwrap().transfer_tx_digest;
     client
-        .wait_for_transaction(
-            tx_digest,
-            WaitForTransaction::Finalized,
-            Duration::from_secs(60),
-        )
+        .wait_for_transaction(tx_digest, WaitForTransaction::Finalized)
+        .timeout(Duration::from_secs(60))
         .await
         .unwrap();
 
@@ -309,7 +306,7 @@ async fn test_upgrade() {
     let mut tx = client.transaction_builder(address);
     let mut upgrade_cap = None;
     for o in created_objs {
-        let obj = client.object(o, None).await.unwrap().unwrap();
+        let obj = client.object(o).await.unwrap().unwrap();
         match obj.object_type() {
             ObjectType::Struct(x) if x.name() == "UpgradeCap" => {
                 upgrade_cap = Some(obj.id());
@@ -642,15 +639,13 @@ async fn test_move_view_call() {
     };
 
     // Typed arguments
-    let result = client
-        .move_view_call(&function, None, (21u64,))
-        .await
-        .unwrap();
+    let result = client.move_view_call(&function, (21u64,)).await.unwrap();
     assert_doubled(result);
 
     // Raw JSON arguments
     let result = client
-        .move_view_call_json(&function, None, Some(vec![serde_json::json!("21")]))
+        .move_view_call_json(&function)
+        .arguments(Some(vec![serde_json::json!("21")]))
         .await
         .unwrap();
     assert_doubled(result);

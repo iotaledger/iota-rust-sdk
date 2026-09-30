@@ -30,7 +30,9 @@ impl GraphQLClient {
     ) -> Result<Option<Arc<CheckpointSummary>>> {
         Ok(self
             .client()
-            .checkpoint(digest.map(|d| **d), sequence_number)
+            .checkpoint()
+            .digest(digest.map(|d| **d))
+            .sequence_number(sequence_number)
             .await?
             .map(Into::into)
             .map(Arc::new))
