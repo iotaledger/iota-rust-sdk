@@ -15,7 +15,45 @@ mod iota_names;
 #[cfg(feature = "move-types")]
 pub(crate) mod move_objects;
 mod move_view_call;
-mod network;
+pub(crate) mod network;
 mod objects;
 mod package;
 pub(crate) mod transactions;
+
+#[cfg(not(target_arch = "wasm32"))]
+pub(crate) type QueryFuture<T> = ::std::pin::Pin<Box<dyn ::std::future::Future<Output = T> + Send>>;
+// The HTTP client's futures are not `Send` on wasm32.
+#[cfg(target_arch = "wasm32")]
+pub(crate) type QueryFuture<T> = ::std::pin::Pin<Box<dyn ::std::future::Future<Output = T>>>;
+
+/// Generate a query object: a struct that runs its query when awaited.
+///
+/// The struct's [`IntoFuture`](std::future::IntoFuture) boxes the future of
+/// `send(self) -> $output`, which each invocation writes by hand in an
+/// inherent impl.
+macro_rules! define_query {
+    (
+        $(#[$meta:meta])*
+        pub struct $name:ident $(<$generic:ident: $bound:path>)? {
+            $($field:ident: $field_ty:ty),* $(,)?
+        }
+        output: $output:ty;
+    ) => {
+        $(#[$meta])*
+        #[must_use]
+        pub struct $name $(<$generic>)? {
+            $($field: $field_ty,)*
+        }
+
+        impl $(<$generic: $bound + 'static>)? ::std::future::IntoFuture for $name $(<$generic>)? {
+            type Output = $output;
+            type IntoFuture = $crate::api::QueryFuture<Self::Output>;
+
+            fn into_future(self) -> Self::IntoFuture {
+                Box::pin(self.send())
+            }
+        }
+    };
+}
+
+pub(crate) use define_query;
