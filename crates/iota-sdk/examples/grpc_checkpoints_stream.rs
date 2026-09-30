@@ -23,9 +23,9 @@ async fn main() -> Result<()> {
     let start = head.saturating_sub(HOW_MANY - 1);
     let end = head;
 
-    // Only ask for the summary, which keeps the message small. Leave out
-    // `.read_mask(...)` (or compose more fields) to pull more data per
-    // checkpoint.
+    // Only ask for the summary (also the default mask), which keeps the
+    // message small. Add fields such as `CHECKPOINT_CONTENTS` to pull more
+    // data per checkpoint.
     let mut stream = client
         .checkpoints_stream()
         .start_sequence_number(start)
