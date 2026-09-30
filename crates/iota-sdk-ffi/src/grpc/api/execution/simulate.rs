@@ -11,7 +11,7 @@ use crate::{
     error::{Result, SdkFfiError},
     grpc::{
         api::ledger::transactions::ExecutedTransaction, client::GrpcClient,
-        read_mask_fields::SimulateField,
+        read_mask_fields::SimulateField, status::GrpcStatusCode,
     },
     types::{
         execution_status::ExecutionError,
@@ -182,6 +182,8 @@ pub struct SimulatedTransactionResult {
     pub transaction: Option<SimulatedTransaction>,
     /// The error message, if the simulation failed.
     pub error: Option<String>,
+    /// The gRPC status code of the error, if the server reported it.
+    pub error_code: Option<GrpcStatusCode>,
 }
 
 /// A transaction to simulate with `simulate_transactions`.
@@ -252,9 +254,11 @@ impl GrpcClient {
                     Ok(transaction) => SimulatedTransactionResult {
                         transaction: Some((&transaction).try_into()?),
                         error: None,
+                        error_code: None,
                     },
                     Err(error) => SimulatedTransactionResult {
                         transaction: None,
+                        error_code: GrpcStatusCode::of(&error),
                         error: Some(error.to_string()),
                     },
                 })

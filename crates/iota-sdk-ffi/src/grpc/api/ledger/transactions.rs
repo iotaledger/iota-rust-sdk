@@ -13,7 +13,7 @@ use iota_sdk::{
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::{client::GrpcClient, read_mask_fields::TransactionField},
+    grpc::{client::GrpcClient, read_mask_fields::TransactionField, status::GrpcStatusCode},
     transaction_builder::WaitForTransaction,
     types::{
         digest::{TransactionDigest, TransactionEffectsDigest, TransactionEventsDigest},
@@ -69,6 +69,8 @@ pub struct ExecutedTransactionResult {
     /// The error message, if the server reported an error for this
     /// transaction.
     pub error: Option<String>,
+    /// The gRPC status code of the error, if the server reported it.
+    pub error_code: Option<GrpcStatusCode>,
 }
 
 impl TryFrom<GrpcResult<proto::transaction::ExecutedTransaction>> for ExecutedTransactionResult {
@@ -79,9 +81,11 @@ impl TryFrom<GrpcResult<proto::transaction::ExecutedTransaction>> for ExecutedTr
             Ok(transaction) => Self {
                 transaction: Some((&transaction).try_into()?),
                 error: None,
+                error_code: None,
             },
             Err(error) => Self {
                 transaction: None,
+                error_code: GrpcStatusCode::of(&error),
                 error: Some(error.to_string()),
             },
         })

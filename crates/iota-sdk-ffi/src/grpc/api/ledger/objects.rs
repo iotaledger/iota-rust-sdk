@@ -12,7 +12,7 @@ use iota_sdk::{
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::{client::GrpcClient, read_mask_fields::ObjectField},
+    grpc::{client::GrpcClient, read_mask_fields::ObjectField, status::GrpcStatusCode},
     types::{
         digest::ObjectDigest,
         object::{Object, ObjectId},
@@ -91,6 +91,8 @@ pub struct GrpcObjectResult {
     pub object: Option<GrpcObject>,
     /// The error message, if the server reported an error for this object.
     pub error: Option<String>,
+    /// The gRPC status code of the error, if the server reported it.
+    pub error_code: Option<GrpcStatusCode>,
 }
 
 impl TryFrom<GrpcResult<proto::object::Object>> for GrpcObjectResult {
@@ -101,9 +103,11 @@ impl TryFrom<GrpcResult<proto::object::Object>> for GrpcObjectResult {
             Ok(object) => Self {
                 object: Some((&object).try_into()?),
                 error: None,
+                error_code: None,
             },
             Err(error) => Self {
                 object: None,
+                error_code: GrpcStatusCode::of(&error),
                 error: Some(error.to_string()),
             },
         })
@@ -287,6 +291,7 @@ mod tests {
 
         assert!(converted.object.is_none());
         assert!(converted.error.is_some());
+        assert!(converted.error_code.is_none());
     }
 
     #[test]
