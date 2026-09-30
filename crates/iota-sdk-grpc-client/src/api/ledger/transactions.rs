@@ -24,7 +24,7 @@ use crate::{
 };
 
 define_query! {
-    /// Request for [`GrpcClient::transactions`]. Await it to send the request.
+    /// Query for [`GrpcClient::transactions`]. Await it to send the request.
     pub struct GetTransactionsQuery {
         service_client: LedgerServiceClient<InterceptedChannel>,
         max_message_size: Option<usize>,

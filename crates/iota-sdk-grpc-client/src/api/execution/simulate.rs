@@ -55,7 +55,7 @@ impl SimulateTransactionInput {
 }
 
 define_query! {
-    /// Request for [`GrpcClient::simulate_transaction`]. Await it to send the
+    /// Query for [`GrpcClient::simulate_transaction`]. Await it to send the
     /// request.
     pub struct SimulateTransactionQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,
@@ -96,7 +96,7 @@ impl SimulateTransactionQuery {
 }
 
 define_query! {
-    /// Request for [`GrpcClient::simulate_transactions`]. Await it to send the
+    /// Query for [`GrpcClient::simulate_transactions`]. Await it to send the
     /// request.
     pub struct SimulateTransactionsQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,

@@ -16,7 +16,7 @@ use crate::{
 };
 
 define_query! {
-    /// Request for [`GrpcClient::service_info`]. Await it to send the request.
+    /// Query for [`GrpcClient::service_info`]. Await it to send the request.
     pub struct GetServiceInfoQuery {
         service_client: LedgerServiceClient<InterceptedChannel>,
         read_mask: ServiceInfoReadMask,

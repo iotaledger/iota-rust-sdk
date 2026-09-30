@@ -27,7 +27,7 @@ use crate::{
 };
 
 define_query! {
-    /// Request for [`GrpcClient::view_function_call`]. Await it to send the
+    /// Query for [`GrpcClient::view_function_call`]. Await it to send the
     /// request.
     pub struct ViewFunctionCallQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,
@@ -86,7 +86,7 @@ impl ViewFunctionCallQuery {
 }
 
 define_query! {
-    /// Request for [`GrpcClient::view_function_calls`]. Await it to send the
+    /// Query for [`GrpcClient::view_function_calls`]. Await it to send the
     /// request.
     pub struct ViewFunctionCallsQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,

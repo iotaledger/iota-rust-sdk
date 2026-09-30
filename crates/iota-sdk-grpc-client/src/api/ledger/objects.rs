@@ -25,7 +25,7 @@ use crate::{
 };
 
 define_query! {
-    /// Request for [`GrpcClient::objects`] and
+    /// Query for [`GrpcClient::objects`] and
     /// [`GrpcClient::objects_with_versions`]. Await it to send the request.
     pub struct GetObjectsQuery {
         service_client: LedgerServiceClient<InterceptedChannel>,
