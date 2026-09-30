@@ -57,8 +57,10 @@ impl GrpcClient {
 
     /// Execute a batch of signed transactions.
     ///
-    /// A per-transaction error does not abort the rest of the batch; each
-    /// result carries either the executed transaction or an error message.
+    /// An error the server reports for one transaction does not abort the
+    /// rest of the batch; each result carries either the executed transaction
+    /// or the server's error message. A transaction the server returns but
+    /// that cannot be decoded fails the whole call.
     ///
     /// If `checkpoint_inclusion_timeout_ms` is provided, the server waits up
     /// to that long for the transactions to be included in a checkpoint
