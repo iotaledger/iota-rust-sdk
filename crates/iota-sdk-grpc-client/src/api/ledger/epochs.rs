@@ -63,7 +63,7 @@ impl GetEpochQuery {
 }
 
 define_query! {
-    /// Request for [`GrpcClient::reference_gas_price`]. Await it to send the
+    /// Query for [`GrpcClient::reference_gas_price`]. Await it to send the
     /// request.
     pub struct GetReferenceGasPriceQuery {
         service_client: LedgerServiceClient<InterceptedChannel>,

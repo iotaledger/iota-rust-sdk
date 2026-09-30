@@ -14,7 +14,7 @@ use crate::{
 };
 
 define_query! {
-    /// Request for [`GrpcClient::coin_info`]. Await it to send the request.
+    /// Query for [`GrpcClient::coin_info`]. Await it to send the request.
     pub struct GetCoinInfoQuery {
         service_client: StateServiceClient<InterceptedChannel>,
         coin_type: StructTag,

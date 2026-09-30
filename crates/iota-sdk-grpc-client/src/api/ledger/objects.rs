@@ -93,7 +93,7 @@ impl GetObjectsQuery {
 }
 
 define_query! {
-    /// Request for [`GrpcClient::object_references`]. Await it to send the
+    /// Query for [`GrpcClient::object_references`]. Await it to send the
     /// request.
     pub struct GetObjectReferencesQuery {
         objects: GetObjectsQuery,
