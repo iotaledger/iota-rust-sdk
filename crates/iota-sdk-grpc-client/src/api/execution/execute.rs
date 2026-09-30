@@ -20,7 +20,7 @@ use crate::{
     GrpcClient, InterceptedChannel,
     api::{
         GrpcError, GrpcResult, MetadataEnvelope, ProtocolError, build_proto_transaction,
-        define_query, into_item_results,
+        check_result_count, define_query, into_item_results,
     },
 };
 
@@ -117,10 +117,15 @@ impl ExecuteTransactionsQuery {
             return Err(GrpcError::EmptyRequest);
         }
 
+        let expected_results = self.transactions.len();
         let (mut service_client, request) = self.into_request()?;
         let response = service_client.execute_transactions(request).await?;
 
-        Ok(MetadataEnvelope::from(response).map(|r| into_item_results(r.transaction_results)))
+        let response =
+            MetadataEnvelope::from(response).map(|r| into_item_results(r.transaction_results));
+        check_result_count(response.body(), expected_results)?;
+
+        Ok(response)
     }
 }
 
