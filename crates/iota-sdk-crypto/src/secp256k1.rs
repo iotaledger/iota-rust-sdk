@@ -13,9 +13,8 @@ use iota_types::{
     PersonalMessage, Secp256k1PublicKey, Secp256k1Signature, SignatureScheme, SimpleSignature,
     Transaction, UserSignature,
 };
-use signature::{Signer, Verifier};
 
-use crate::{IotaVerifier, SignatureError};
+use crate::{IotaVerifier, SignatureError, Signer, Verifier};
 
 #[derive(Clone, Eq, PartialEq, zeroize::Zeroize, zeroize::ZeroizeOnDrop)]
 pub struct Secp256k1PrivateKey([u8; Self::LENGTH]);
