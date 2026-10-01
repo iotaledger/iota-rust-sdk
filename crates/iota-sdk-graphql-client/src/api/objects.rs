@@ -224,7 +224,7 @@ impl GetObjectBcsQuery {
             version: None,
         });
 
-        let response = self.client.run_query(&operation).await.unwrap();
+        let response = self.client.run_query(&operation).await?;
 
         Ok(response
             .object
@@ -310,6 +310,16 @@ mod tests {
             test_client,
         },
     };
+
+    #[tokio::test]
+    async fn object_bcs_sends_the_object_id_without_a_version() {
+        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+            let _ = client.object_bcs(ObjectId::SYSTEM_STATE).await;
+        })
+        .await;
+        assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
+        assert!(vars["version"].is_null());
+    }
 
     #[tokio::test]
     async fn object_queries_send_the_object_id_and_version() {
