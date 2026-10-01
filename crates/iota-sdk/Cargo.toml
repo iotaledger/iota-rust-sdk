@@ -77,13 +77,13 @@ hash = ["types", "iota-types/hash"]
 proptest = ["types", "iota-types/proptest"]
 
 [dependencies]
-iota-crypto = { workspace = true, optional = true }
-iota-graphql-client = { workspace = true, optional = true }
-iota-grpc-client = { workspace = true, optional = true }
-iota-grpc-types = { workspace = true, optional = true }
-iota-move-types = { workspace = true, optional = true }
-iota-transaction-builder = { workspace = true, optional = true }
-iota-types = { workspace = true, optional = true }
+iota-crypto = { version = "=1.0.0-beta.1", package = "iota-sdk-crypto", path = "../iota-sdk-crypto", default-features = false, optional = true }
+iota-graphql-client = { version = "=1.0.0-beta.1", package = "iota-sdk-graphql-client", path = "../iota-sdk-graphql-client", default-features = false, optional = true }
+iota-grpc-client = { version = "=1.0.0-beta.1", package = "iota-sdk-grpc-client", path = "../iota-sdk-grpc-client", default-features = false, optional = true }
+iota-grpc-types = { version = "=1.0.0-beta.1", package = "iota-sdk-grpc-types", path = "../iota-sdk-grpc-types", default-features = false, optional = true }
+iota-move-types = { version = "=1.0.0-beta.1", package = "iota-sdk-move-types", path = "../iota-sdk-move-types", default-features = false, optional = true }
+iota-transaction-builder = { version = "=1.0.0-beta.1", package = "iota-sdk-transaction-builder", path = "../iota-sdk-transaction-builder", default-features = false, optional = true }
+iota-types = { version = "=1.0.0-beta.1", package = "iota-sdk-types", path = "../iota-sdk-types", default-features = false, optional = true }
 
 [dev-dependencies]
 base64ct = { workspace = true, features = ["alloc", "std"] }
