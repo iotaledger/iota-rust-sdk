@@ -36,6 +36,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 The client provides `new_mainnet()`, `new_testnet()`, `new_devnet()`, `new_localnet()`, and `new(url)` for custom endpoints.
 
+## TLS
+
+`https://` endpoints, including the mainnet, testnet and devnet presets, are verified with `rustls`.
+The defaults reach them with no setup.
+
+| Feature            | Default | Effect                                                                                                                    |
+| ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `tls-ring`         | on      | `ring` as the `rustls` crypto provider                                                                                    |
+| `tls-aws-lc`       | off     | `aws-lc-rs` instead; builds a C library, so it needs a C toolchain. `tls-ring` wins if both are on.                       |
+| neither provider   | —       | HTTP-only: `GrpcClient::new` rejects an `https://` address. The build to use against a localnet.                          |
+| `tls-native-roots` | on      | trust the platform certificate store. `GrpcClient::new` fails for an `https://` address if the store has no certificates. |
+| `tls-webpki-roots` | off     | trust the bundled Mozilla roots, merged into the platform store when `tls-native-roots` is also on                        |
+| neither roots      | —       | HTTP-only, as with no provider                                                                                            |
+
+A crypto provider the application has installed as the process default
+(`rustls::crypto::CryptoProvider::install_default`) is used instead of the one the features select.
+
 ## Configuration
 
 Customize headers and message size limits:
