@@ -71,7 +71,6 @@ mod tree_display;
 pub(crate) use tree_display::{TreeDisplay, TreeWriter, impl_tree_display};
 
 #[cfg(feature = "hash")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "hash")))]
 pub mod hash;
 
 mod address;
@@ -100,7 +99,6 @@ pub use checkpoint::{
     StakeUnit,
 };
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub use crypto::SignatureFromBytesError;
 pub use crypto::{
     Bls12381PublicKey, Bls12381Signature, Ed25519PublicKey, Ed25519Signature, HashingIntentScope,
@@ -140,7 +138,6 @@ pub use object::{
 };
 pub use object_id::ObjectId;
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
 pub use transaction::{
     Argument, CanceledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
@@ -152,7 +149,6 @@ pub use transaction::{
     TransferObjects, Upgrade, VersionAssignment,
 };
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub use validator::SignerBitmapError;
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeError,
@@ -164,11 +160,9 @@ pub use version::{Version, VersionError};
 mod serialization_proptests;
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub use bcs_base64::FromBase64Error;
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod bcs_base64 {
     use base64ct::Encoding;
 

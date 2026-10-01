@@ -119,7 +119,6 @@ impl Address {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::CryptoRng,
@@ -130,7 +129,6 @@ impl Address {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
@@ -383,11 +381,9 @@ impl std::fmt::Debug for Address {
 }
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 struct ReadableAddress;
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 impl serde_with::SerializeAs<[u8; Address::LENGTH]> for ReadableAddress {
     fn serialize_as<S>(source: &[u8; Address::LENGTH], serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -399,7 +395,6 @@ impl serde_with::SerializeAs<[u8; Address::LENGTH]> for ReadableAddress {
 }
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 impl<'de> serde_with::DeserializeAs<'de, [u8; Address::LENGTH]> for ReadableAddress {
     fn deserialize_as<D>(deserializer: D) -> Result<[u8; Address::LENGTH], D::Error>
     where
