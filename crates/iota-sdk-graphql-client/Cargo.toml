@@ -66,9 +66,6 @@ eyre.workspace = true
 # internal dependencies
 iota-types = { workspace = true, features = ["serde", "rand", "hash"] }
 
-[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
-tokio = { workspace = true, features = ["macros", "rt"] }
-
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 

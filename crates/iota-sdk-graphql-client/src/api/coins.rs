@@ -115,7 +115,7 @@ impl GraphQLClient {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use futures::StreamExt;
     use iota_types::{Address, Ed25519PublicKey};
