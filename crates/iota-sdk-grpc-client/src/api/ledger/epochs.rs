@@ -94,7 +94,7 @@ impl GrpcClient {
     /// // Specific epoch with selected fields.
     /// let epoch = client
     ///     .epoch()
-    ///     .epoch(0)
+    ///     .epoch_number(0)
     ///     .read_mask(EpochReadMask::from([
     ///         EpochField::EPOCH,
     ///         EpochField::REFERENCE_GAS_PRICE,
