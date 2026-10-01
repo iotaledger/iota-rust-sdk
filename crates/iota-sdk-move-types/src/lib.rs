@@ -19,6 +19,7 @@
 mod macros;
 
 mod packages;
+pub use iota_types;
 pub use packages::{iota_framework, iota_system, move_stdlib, stardust};
 
 // The shape machinery (this module, the `MoveShape` derives on every

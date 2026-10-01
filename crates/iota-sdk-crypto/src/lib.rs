@@ -112,6 +112,7 @@ pub mod simple;
 )]
 pub mod multisig;
 
+pub use iota_types;
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
     doc_cfg,

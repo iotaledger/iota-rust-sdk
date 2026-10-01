@@ -13,6 +13,7 @@ pub mod proto;
 pub mod read_mask_fields;
 pub mod read_masks;
 
+pub use iota_types;
 pub use prost;
 pub use prost_types;
 pub use tonic;
