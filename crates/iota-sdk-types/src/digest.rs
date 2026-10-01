@@ -74,7 +74,15 @@ impl Digest {
 
     /// Decodes a digest from a Base58 encoded string.
     pub fn from_base58<T: AsRef<[u8]>>(base58: T) -> Result<Self, DigestParseError> {
-        Self::from_bytes(bs58::decode(base58).into_vec()?)
+        let bytes = bs58::decode(base58).into_vec().map_err(|e| {
+            let index = match e {
+                bs58::decode::Error::InvalidCharacter { index, .. }
+                | bs58::decode::Error::NonAsciiCharacter { index } => index,
+                _ => 0,
+            };
+            DigestParseError::InvalidBase58Character { index }
+        })?;
+        Self::from_bytes(bytes)
     }
 
     /// Returns a Base58 encoded string representation of this digest.
@@ -275,8 +283,8 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDiges
 #[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
 #[non_exhaustive]
 pub enum DigestParseError {
-    #[error("digest must be Base58 string of length 44")]
-    Base58(#[from] bs58::decode::Error),
+    #[error("invalid Base58 character at position {index}")]
+    InvalidBase58Character { index: usize },
     #[error(
         "invalid digest byte length: expected {}, got {actual}",
         Digest::LENGTH
@@ -599,12 +607,15 @@ mod tests {
         let result = Digest::from_base58("0OIl");
         assert_eq!(
             result,
-            Err(DigestParseError::Base58(
-                bs58::decode::Error::InvalidCharacter {
-                    character: '0',
-                    index: 0
-                }
-            ))
+            Err(DigestParseError::InvalidBase58Character { index: 0 })
+        );
+        assert_eq!(
+            Digest::from_base58("1110"),
+            Err(DigestParseError::InvalidBase58Character { index: 3 })
+        );
+        assert_eq!(
+            Digest::from_base58("11é"),
+            Err(DigestParseError::InvalidBase58Character { index: 2 })
         );
     }
 
