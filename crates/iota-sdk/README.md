@@ -98,10 +98,10 @@ crypto schemes except BLS12-381. gRPC, Move types and gas station sponsorship ar
 | `grpc-tls-webpki-roots`    | off     | trust the bundled Mozilla roots for gRPC                                                  |
 | `move-types`               | off     | `move_types` module, and typed Move object queries in the clients                         |
 
-`grpc` alone only reaches plain-HTTP endpoints such as a localnet; `https://` endpoints, including
-the public networks, also need a `grpc-tls-*` provider and root feature, e.g.
-`grpc-tls-ring` with `grpc-tls-native-roots`. The `iota-sdk-graphql-client` README describes how
-the GraphQL TLS features combine.
+The `graphql-tls-*` and `grpc-tls-*` features map to the `tls-*` features
+of [`iota-sdk-graphql-client`](https://crates.io/crates/iota-sdk-graphql-client) and
+[`iota-sdk-grpc-client`](https://crates.io/crates/iota-sdk-grpc-client), whose READMEs describe how
+they combine.
 
 ## License
 
