@@ -7,8 +7,8 @@ await initAsync();
 
 const client = GraphQlClient.newTestnet();
 const transactions = await client.transactions(
-  TransactionsFilter.new({ function: "0x3::iota_system::request_add_stake" }),
+  new TransactionsFilter().withFunction("0x3::iota_system::request_add_stake"),
 );
 for (const transaction of transactions.data) {
-  console.log("Digest:", transaction.transaction.digest().toBase58());
+  console.log(`Digest: ${transaction.transaction.digest()}`);
 }

@@ -13,9 +13,8 @@ use iota_types::{
     PersonalMessage, Secp256k1PublicKey, Secp256k1Signature, SignatureScheme, SimpleSignature,
     Transaction, UserSignature,
 };
-use signature::{Signer, Verifier};
 
-use crate::{IotaVerifier, SignatureError};
+use crate::{IotaVerifier, SignatureError, Signer, Verifier};
 
 #[derive(Clone, Eq, PartialEq, zeroize::Zeroize, zeroize::ZeroizeOnDrop)]
 pub struct Secp256k1PrivateKey([u8; Self::LENGTH]);
@@ -78,7 +77,7 @@ impl Secp256k1PrivateKey {
 
     pub fn random_with<R>(mut rng: R) -> Self
     where
-        R: rand_core::RngCore + rand_core::CryptoRng,
+        R: rand_core::CryptoRng,
     {
         // Almost every 32-byte value is a valid secp256k1 private key, but a
         // few (zero, or values at/above the curve order) are not. Draw fresh
@@ -97,7 +96,7 @@ impl Secp256k1PrivateKey {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::random_with(rand_core::OsRng)
+        Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
@@ -260,7 +259,7 @@ pub struct Secp256k1VerifyingKey(FcSecp256k1PublicKey);
 
 impl Secp256k1VerifyingKey {
     pub fn new(public_key: &Secp256k1PublicKey) -> Result<Self, SignatureError> {
-        FcSecp256k1PublicKey::from_bytes(public_key.inner().as_ref())
+        FcSecp256k1PublicKey::from_bytes(public_key.bytes())
             .map(Self)
             .map_err(SignatureError::from_source)
     }
@@ -317,7 +316,7 @@ impl Secp256k1VerifyingKey {
 
     #[cfg(feature = "pem")]
     pub(crate) fn from_k256(verifying_key: k256::ecdsa::VerifyingKey) -> Self {
-        let compressed = verifying_key.to_encoded_point(true);
+        let compressed = verifying_key.to_sec1_point(true);
         Self(
             FcSecp256k1PublicKey::from_bytes(compressed.as_bytes())
                 .expect("k256 public key is a valid secp256k1 point"),
@@ -336,7 +335,7 @@ impl Secp256k1VerifyingKey {
 
 impl Verifier<Secp256k1Signature> for Secp256k1VerifyingKey {
     fn verify(&self, message: &[u8], signature: &Secp256k1Signature) -> Result<(), SignatureError> {
-        let signature = FcSecp256k1Signature::from_bytes(signature.inner())
+        let signature = FcSecp256k1Signature::from_bytes(signature.bytes())
             .map_err(SignatureError::from_source)?;
         self.0
             .verify(message, &signature)
@@ -354,7 +353,7 @@ impl Verifier<SimpleSignature> for Secp256k1VerifyingKey {
             return Err(SignatureError::from_source("not a secp256k1 signature"));
         };
 
-        if public_key.inner() != self.public_key().inner() {
+        if public_key.bytes() != self.public_key().bytes() {
             return Err(SignatureError::from_source(
                 "public_key in signature does not match",
             ));
@@ -551,7 +550,7 @@ mod tests {
         verifying_key.verify(message, &sig).unwrap();
 
         // Malleate to the equivalent high-S signature `(r, n - s)`.
-        let bytes = sig.inner();
+        let bytes = sig.bytes();
         let mut r = [0u8; 32];
         let mut s = [0u8; 32];
         r.copy_from_slice(&bytes[..32]);

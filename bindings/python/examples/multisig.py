@@ -8,7 +8,7 @@
 # a send_iota transaction, signs with only 2 of the 3 keys, aggregates,
 # and executes.
 #
-# Requires a running localnet (`iota start --force-regenesis`).
+# Requires a running localnet (`iota-localnet start --force-regenesis`).
 
 from lib.iota_sdk import *
 
@@ -44,7 +44,7 @@ async def main():
 
     # 4. Derive multisig address
     multisig_address = committee.derive_address()
-    print(f"Multisig address: {multisig_address.to_hex()}")
+    print(f"Multisig address: {multisig_address}")
 
     client = GraphQlClient.new_localnet()
 

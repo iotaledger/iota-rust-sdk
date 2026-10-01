@@ -13,7 +13,7 @@
 // With this example it is necessary to run a localnet:
 //
 // ```sh
-// iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
+// iota-localnet start --with-faucet --with-graphql --committee-size 1 --force-regenesis
 // ```
 
 import Foundation
@@ -41,12 +41,12 @@ struct PublishUpgradeExample {
     let dependencies = packageData.dependencies()
     print("Dependencies: \(dependencies.count)")
     let digest = packageData.digest()
-    print("Digest: \(digest.toBase58())")
+    print("Digest: \(digest)")
 
     // Create a random private key to derive a sender address and for signing
     let privateKey = Ed25519PrivateKey.random()
     let sender = privateKey.publicKey().deriveAddress()
-    print("Sender: \(sender.toHex())")
+    print("Sender: \(sender)")
 
     let client = GraphQlClient.newLocalnet()
 
@@ -103,18 +103,18 @@ struct PublishUpgradeExample {
           throw NSError(
             domain: "PublishUpgrade", code: 1,
             userInfo: [
-              NSLocalizedDescriptionKey: "Missing object \(objectId.toHex())"
+              NSLocalizedDescriptionKey: "Missing object \(objectId)"
             ])
         }
         if obj.asStruct().structType == StructTag.newUpgradeCap() {
-          print("UpgradeCap: \(objectId.toHex())")
+          print("UpgradeCap: \(objectId)")
           print(
-            "UpgradeCapOwner: \(owner.asAddress().toHex())")
+            "UpgradeCapOwner: \(owner.asAddress())")
           upgradeCap = objectId
         }
       case .packageWrite(let version, _):
         packageId = changedObj.objectId
-        print("Package ID: \(packageId!.toHex())")
+        print("Package ID: \(packageId!)")
         print("Package version: \(version)")
       case .missing:
         break
@@ -195,7 +195,7 @@ struct PublishUpgradeExample {
     // Print the new package version (should now be 2)
     for changedObj in upgradeEffects.asV1().changedObjects() {
       if case .packageWrite(let version, _) = changedObj.outputState {
-        print("New Package ID: \(changedObj.objectId.toHex())")
+        print("New Package ID: \(changedObj.objectId)")
         print("New Package version: \(version)")
       }
     }

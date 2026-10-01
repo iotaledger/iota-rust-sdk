@@ -26,9 +26,7 @@ impl GraphQLClient {
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<EventPage> {
         let (page_info, events) = self
-            .0
-            .read()
-            .await
+            .client()
             .events(
                 filter.map(|f| f.into()),
                 pagination_filter.map(Into::into).unwrap_or_default(),

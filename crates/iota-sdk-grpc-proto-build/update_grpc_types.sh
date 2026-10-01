@@ -5,7 +5,7 @@
 # Update gRPC protobuf types.
 SCRIPT_PATH=$(realpath "$0")
 SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
-ROOT="$SCRIPT_DIR/.."
+ROOT="$SCRIPT_DIR/../.."
 
 pushd "$ROOT"
 

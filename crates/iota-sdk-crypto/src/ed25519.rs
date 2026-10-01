@@ -67,7 +67,7 @@ impl Ed25519PrivateKey {
 
     pub fn random_with<R>(mut rng: R) -> Self
     where
-        R: rand_core::RngCore + rand_core::CryptoRng,
+        R: rand_core::CryptoRng,
     {
         let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
         rng.fill_bytes(&mut buf);
@@ -79,7 +79,7 @@ impl Ed25519PrivateKey {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::random_with(rand_core::OsRng)
+        Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
@@ -133,7 +133,7 @@ impl Ed25519PrivateKey {
     ) -> Result<Self, SignatureError> {
         let private_key = Self::new(keypair_bytes.secret_key);
         if let Some(public_key) = &keypair_bytes.public_key
-            && public_key.as_ref() != private_key.public_key().inner()
+            && public_key.as_ref() != private_key.public_key().bytes()
         {
             return Err(SignatureError::from_source(
                 "PKCS#8 embedded public key does not match the private key",
@@ -148,7 +148,7 @@ impl Ed25519PrivateKey {
     fn to_pkcs8(&self) -> ed25519::pkcs8::KeypairBytes {
         ed25519::pkcs8::KeypairBytes {
             secret_key: self.0,
-            public_key: Some(ed25519::pkcs8::PublicKeyBytes(*self.public_key().inner())),
+            public_key: Some(ed25519::pkcs8::PublicKeyBytes(*self.public_key().bytes())),
         }
     }
 }
@@ -265,7 +265,7 @@ impl std::fmt::Debug for Ed25519VerifyingKey {
 
 impl Ed25519VerifyingKey {
     pub fn new(public_key: &Ed25519PublicKey) -> Result<Self, SignatureError> {
-        FcEd25519PublicKey::from_bytes(public_key.inner())
+        FcEd25519PublicKey::from_bytes(public_key.bytes())
             .map(Self)
             .map_err(SignatureError::from_source)
     }
@@ -345,7 +345,7 @@ impl Ed25519VerifyingKey {
 
 impl Verifier<Ed25519Signature> for Ed25519VerifyingKey {
     fn verify(&self, message: &[u8], signature: &Ed25519Signature) -> Result<(), SignatureError> {
-        let signature = FcEd25519Signature::from_bytes(signature.inner())
+        let signature = FcEd25519Signature::from_bytes(signature.bytes())
             .map_err(SignatureError::from_source)?;
         self.0
             .verify(message, &signature)
@@ -363,7 +363,7 @@ impl Verifier<SimpleSignature> for Ed25519VerifyingKey {
             return Err(SignatureError::from_source("not an ed25519 signature"));
         };
 
-        if public_key.inner().as_slice() != self.0.as_ref() {
+        if public_key.bytes() != self.0.as_ref() {
             return Err(SignatureError::from_source(
                 "public_key in signature does not match",
             ));

@@ -22,7 +22,7 @@ function printKey(label, privateKey) {
   console.log(
     `Public Key With Flag: ${base64Encode(publicKey.toFlaggedBytes())}`,
   );
-  console.log(`Address: ${publicKey.deriveAddress().toHex()}`);
+  console.log(`Address: ${publicKey.deriveAddress()}`);
 }
 
 printKey("Ed25519", Ed25519PrivateKey.fromMnemonic(MNEMONIC));

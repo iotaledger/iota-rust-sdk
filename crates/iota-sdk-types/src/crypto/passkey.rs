@@ -9,18 +9,8 @@ use crate::SigningDigest;
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// passkey-bcs = bytes               ; where the contents of the bytes are
-///                                   ; defined by <passkey>
-/// passkey     = passkey-flag
-///               bytes               ; passkey authenticator data
-///               client-data-json    ; valid json
-///               simple-signature    ; required to be a secp256r1 signature
-///
-/// client-data-json = string ; valid json
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
 /// the required json-schema for the `client-data-json` rule. In addition, IOTA
@@ -118,11 +108,8 @@ impl crate::TreeDisplay for PasskeyAuthenticator {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// passkey-public-key = passkey-flag secp256r1-public-key
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(
     feature = "serde",
@@ -173,7 +160,8 @@ pub(crate) mod serialization {
 
     #[derive(serde::Serialize)]
     struct AuthenticatorRef<'a> {
-        authenticator_data: &'a Vec<u8>,
+        #[serde(with = "crate::_serde::ReadableBase64Encoded")]
+        authenticator_data: &'a [u8],
         client_data_json: &'a String,
         signature: SimpleSignature,
     }
@@ -195,6 +183,7 @@ pub(crate) mod serialization {
         bcs_schema(name = "passkey-authenticator")
     )]
     pub(crate) struct Authenticator {
+        #[serde(with = "crate::_serde::ReadableBase64Encoded")]
         authenticator_data: Vec<u8>,
         client_data_json: String,
         signature: SimpleSignature,
@@ -479,6 +468,27 @@ mod tests {
 
         let sig = UserSignature::from_base64(b64).unwrap();
         assert!(matches!(sig, UserSignature::PasskeyAuthenticator(_)));
+    }
+
+    #[test]
+    fn authenticator_data_serializes_as_base64_in_json() {
+        let b64 = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";
+        let expected_authenticator_data = "WA5npzp6kvrYZs+ZuUq2Z1mil2S1cYIfq64uix17NuQdAAAAAA==";
+
+        let sig = UserSignature::from_base64(b64).unwrap();
+        let UserSignature::PasskeyAuthenticator(passkey) = &sig else {
+            panic!("fixture is a passkey signature");
+        };
+
+        let json = serde_json::to_value(passkey).unwrap();
+        assert_eq!(json["authenticator_data"], expected_authenticator_data);
+        let restored: PasskeyAuthenticator = serde_json::from_value(json).unwrap();
+        assert_eq!(passkey, &restored);
+
+        let json = serde_json::to_value(&sig).unwrap();
+        assert_eq!(json["authenticator_data"], expected_authenticator_data);
+        let restored: UserSignature = serde_json::from_value(json).unwrap();
+        assert_eq!(sig, restored);
     }
 
     #[test]

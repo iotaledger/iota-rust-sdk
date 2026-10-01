@@ -52,11 +52,16 @@ impl TryFrom<u8> for UpgradePolicy {
 
 /// Type corresponding to the output of `iota move build
 /// --dump-bytecode-as-base64`
-#[derive(Clone, derive_more::Debug)]
+#[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MovePackageData {
     /// The package modules as a series of bytes
     #[cfg_attr(feature = "serde", serde(with = "serialization::modules"))]
+    #[cfg_attr(
+        feature = "proptest",
+        strategy(proptest::collection::vec(proptest::collection::vec(proptest::arbitrary::any::<u8>(), 0..=1024), 0..=5))
+    )]
     #[debug(
         "{:?}",
         modules
@@ -98,11 +103,8 @@ impl crate::TreeDisplay for MovePackageData {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// upgrade-info = object-id version
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -128,11 +130,8 @@ impl crate::TreeDisplay for UpgradeInfo {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// type-origin = identifier identifier object-id
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -160,15 +159,8 @@ impl crate::TreeDisplay for TypeOrigin {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// move-package = object-id                          ; id
-///                version                            ; version
-///                (vector (identifier bytes))        ; modules
-///                (vector type-origin)               ; type-origin-table
-///                (vector (object-id upgrade-info))  ; linkage-table
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -229,30 +221,40 @@ impl MovePackage {
     /// type origin and linkage tables) already supplied.
     ///
     /// It does not perform any type of validation. Ensure that the supplied
-    /// parts are semantically valid.
+    /// parts are semantically valid. A package that is about to be written
+    /// on-chain is additionally held to a size limit, which
+    /// [`MovePackage::check_size`] applies.
     pub fn new(
         id: ObjectId,
         version: Version,
         modules: BTreeMap<Identifier, Vec<u8>>,
-        max_move_package_size: u64,
         type_origin_table: Vec<TypeOrigin>,
         linkage_table: BTreeMap<ObjectId, UpgradeInfo>,
-    ) -> Result<Self, ExecutionError> {
-        let pkg = Self {
+    ) -> Self {
+        Self {
             id,
             version,
             modules,
             type_origin_table,
             linkage_table,
-        };
-        let object_size = pkg.size() as u64;
-        if object_size > max_move_package_size {
+        }
+    }
+
+    /// Check the package against `max_package_size`, the number of bytes a
+    /// package may occupy on-chain.
+    ///
+    /// Only a package that is about to be written needs this. One that was read
+    /// back from the network was already held to the limit of the protocol
+    /// version that accepted it, and that limit is not knowable from here.
+    pub fn check_size(&self, max_package_size: u64) -> Result<(), ExecutionError> {
+        let object_size = self.size() as u64;
+        if object_size > max_package_size {
             return Err(ExecutionError::PackageTooBig {
                 object_size,
-                max_object_size: max_move_package_size,
+                max_object_size: max_package_size,
             });
         }
-        Ok(pkg)
+        Ok(())
     }
 
     /// Calculate the digest of the [MovePackage].
@@ -266,9 +268,9 @@ impl MovePackage {
         )
     }
 
-    /// It is important that this function is shared across both the calculation
-    /// of the digest for the package, and the calculation of the digest
-    /// on-chain.
+    // It is important that this function is shared across both the calculation
+    // of the digest for the package, and the calculation of the digest
+    // on-chain.
     #[cfg(feature = "hash")]
     pub fn compute_digest_for_modules_and_deps<'a>(
         modules: impl IntoIterator<Item = &'a Vec<u8>>,
@@ -280,7 +282,7 @@ impl MovePackage {
             .chain(
                 modules
                     .into_iter()
-                    .map(|module| Hasher::digest(module).into_inner()),
+                    .map(|module| Hasher::digest(module).into_bytes()),
             )
             .collect::<Vec<_>>();
 
@@ -296,7 +298,7 @@ impl MovePackage {
     }
 
     /// Retrieve the module from this package with the given [Identifier].
-    pub fn get_module(&self, name: &Identifier) -> Option<&Vec<u8>> {
+    pub fn module(&self, name: &Identifier) -> Option<&Vec<u8>> {
         self.modules.get(name)
     }
 
@@ -389,17 +391,6 @@ mod serialization {
 
     use super::*;
 
-    impl MovePackageData {
-        pub fn to_base64(&self) -> String {
-            base64ct::Base64::encode_string(&bcs::to_bytes(self).expect("bcs encoding failed"))
-        }
-
-        pub fn from_base64(base64: &str) -> Result<Self, bcs::Error> {
-            use serde::de::Error;
-            bcs::from_bytes(&base64ct::Base64::decode_vec(base64).map_err(bcs::Error::custom)?)
-        }
-    }
-
     pub mod modules {
         use super::*;
 
@@ -429,7 +420,7 @@ mod serialization {
         use super::*;
 
         pub fn serialize<S: Serializer>(value: &Digest, serializer: S) -> Result<S::Ok, S::Error> {
-            value.as_bytes().serialize(serializer)
+            value.bytes().as_slice().serialize(serializer)
         }
 
         pub fn deserialize<'de, D>(deserializer: D) -> Result<Digest, D::Error>
@@ -524,19 +515,10 @@ mod tests {
     }
 
     #[test]
-    fn new_exceeding_max_size_fails() {
-        let modules = [module("m", &[0; 100])];
+    fn check_size_rejects_a_package_over_the_limit() {
+        let pkg = package([module("m", &[0; 100])], vec![], []);
         let max = 10_u64;
-        let err = MovePackage::new(
-            ObjectId::ZERO,
-            Version::OBJECT_START,
-            modules.into_iter().collect(),
-            max,
-            vec![],
-            BTreeMap::new(),
-        )
-        .unwrap_err();
-        match err {
+        match pkg.check_size(max).unwrap_err() {
             ExecutionError::PackageTooBig {
                 object_size,
                 max_object_size,
@@ -546,6 +528,12 @@ mod tests {
             }
             other => panic!("expected PackageTooBig, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn check_size_accepts_a_package_at_the_limit() {
+        let pkg = package([module("m", &[0; 100])], vec![], []);
+        pkg.check_size(pkg.size() as u64).unwrap();
     }
 
     #[cfg(feature = "hash")]

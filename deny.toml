@@ -56,6 +56,9 @@ ignore = [
   "RUSTSEC-2024-0388",
   # bincode is unmaintained
   "RUSTSEC-2025-0141",
+  # `clear_on_drop` is unmaintained. Only reachable through `bulletproofs`,
+  # pinned by `fastcrypto`; neither has a newer release that drops it.
+  "RUSTSEC-2026-0283",
 ]
 # Threshold for security vulnerabilities, any vulnerability with a CVSS score
 # lower than the range specified will be ignored. Note that ignored advisories

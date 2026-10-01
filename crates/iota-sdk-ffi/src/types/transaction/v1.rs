@@ -15,21 +15,8 @@ use crate::types::{
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// effects-v1 = execution-status
-///              u64                                ; epoch
-///              gas-cost-summary
-///              digest                             ; transaction digest
-///              (option u32)                       ; gas object index
-///              (option digest)                    ; events digest
-///              (vector digest)                    ; list of transaction dependencies
-///              u64                                ; lamport version
-///              (vector changed-object)
-///              (vector unchanged-shared-object)
-///              (option digest)                    ; auxiliary data digest
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct TransactionEffectsV1(pub iota_sdk::types::TransactionEffectsV1);
@@ -209,16 +196,6 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// What this transaction did to each object it changed, with the version
-    /// and digest each side is at resolved.
-    pub fn object_changes(&self) -> Vec<ObjectChange> {
-        self.0
-            .object_changes()
-            .into_iter()
-            .map(Into::into)
-            .collect()
-    }
-
     /// Every object still in the store after this transaction, tagged with how
     /// it got there.
     pub fn all_changed_objects(&self) -> Vec<ChangedObjectWrite> {
@@ -256,11 +233,8 @@ impl TransactionEffectsV1 {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// changed-object = object-id object-in object-out id-operation
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct ChangedObject {
     /// Id of the object
@@ -301,11 +275,8 @@ impl From<ChangedObject> for iota_sdk::types::ChangedObject {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// unchanged-shared-object = object-id unchanged-shared-object-kind
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct UnchangedSharedObject {
     pub object_id: Arc<ObjectId>,
@@ -334,21 +305,8 @@ impl From<UnchangedSharedObject> for iota_sdk::types::UnchangedSharedObject {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// unchanged-shared-object-kind =  read-only-root
-///                              =/ mutate-deleted
-///                              =/ read-deleted
-///                              =/ canceled
-///                              =/ per-epoch-config
-///
-/// read-only-root      = %d00 u64 digest
-/// mutate-deleted      = %d01 u64
-/// read-deleted        = %d02 u64
-/// canceled           = %d03 u64
-/// per-epoch-config    = %d04
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 pub enum UnchangedSharedKind {
     /// Read-only shared objects from the input. We don't really need
@@ -391,7 +349,9 @@ impl From<iota_sdk::types::UnchangedSharedKind> for UnchangedSharedKind {
                 version: Arc::new(version.into()),
             },
             iota_sdk::types::UnchangedSharedKind::PerEpochConfig => Self::PerEpochConfig,
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new UnchangedSharedKind enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -423,14 +383,8 @@ impl From<UnchangedSharedKind> for iota_sdk::types::UnchangedSharedKind {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object-in = object-in-missing / object-in-data
-///
-/// object-in-missing = %d00
-/// object-in-data    = %d01 u64 digest owner
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 pub enum ObjectIn {
     Missing,
@@ -455,7 +409,7 @@ impl From<iota_sdk::types::ObjectIn> for ObjectIn {
                 digest: Arc::new(digest.into()),
                 owner: Arc::new(owner.into()),
             },
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new ObjectIn enum variant was added and needs to be handled"),
         }
     }
 }
@@ -481,18 +435,8 @@ impl From<ObjectIn> for iota_sdk::types::ObjectIn {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object-out  =  object-out-missing
-///             =/ object-out-object-write
-///             =/ object-out-package-write
-///
-///
-/// object-out-missing        = %d00
-/// object-out-object-write   = %d01 digest owner
-/// object-out-package-write  = %d02 version digest
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 pub enum ObjectOut {
     /// Same definition as in ObjectIn.
@@ -522,7 +466,7 @@ impl From<iota_sdk::types::ObjectOut> for ObjectOut {
                 version: Arc::new(version.into()),
                 digest: Arc::new(digest.into()),
             },
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!("a new ObjectOut enum variant was added and needs to be handled"),
         }
     }
 }
@@ -547,17 +491,8 @@ impl From<ObjectOut> for iota_sdk::types::ObjectOut {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// id-operation =  id-operation-none
-///              =/ id-operation-created
-///              =/ id-operation-deleted
-///
-/// id-operation-none       = %d00
-/// id-operation-created    = %d01
-/// id-operation-deleted    = %d02
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 #[repr(u8)]
 pub enum IdOperation {
@@ -572,7 +507,7 @@ impl From<iota_sdk::types::IdOperation> for IdOperation {
             iota_sdk::types::IdOperation::None => Self::None,
             iota_sdk::types::IdOperation::Created => Self::Created,
             iota_sdk::types::IdOperation::Deleted => Self::Deleted,
-            _ => unimplemented!("a new IdOperation variant was added and needs to be handled"),
+            _ => unimplemented!("a new IdOperation enum variant was added and needs to be handled"),
         }
     }
 }
@@ -623,8 +558,8 @@ pub struct OwnedObjectReference {
 impl From<iota_sdk::types::OwnedObjectReference> for OwnedObjectReference {
     fn from(value: iota_sdk::types::OwnedObjectReference) -> Self {
         Self {
-            reference: value.reference.into(),
-            owner: Arc::new(value.owner.into()),
+            reference: (*value.reference()).into(),
+            owner: Arc::new((*value.owner()).into()),
         }
     }
 }
@@ -639,8 +574,8 @@ pub struct ObjectVersion {
 impl From<iota_sdk::types::ObjectVersion> for ObjectVersion {
     fn from(value: iota_sdk::types::ObjectVersion) -> Self {
         Self {
-            object_id: Arc::new(value.object_id.into()),
-            version: Arc::new(value.version.into()),
+            object_id: Arc::new((*value.object_id()).into()),
+            version: Arc::new(value.version().into()),
         }
     }
 }
@@ -678,31 +613,9 @@ impl From<iota_sdk::types::InputSharedObject> for InputSharedObject {
             iota_sdk::types::InputSharedObject::Canceled(object) => Self::Canceled {
                 object: object.into(),
             },
-        }
-    }
-}
-
-/// What an executed transaction did to one object, with the version and digest
-/// each side is at resolved.
-#[derive(uniffi::Record)]
-pub struct ObjectChange {
-    pub object_id: Arc<ObjectId>,
-    pub input_version: Option<Arc<Version>>,
-    pub input_digest: Option<Arc<ObjectDigest>>,
-    pub output_version: Option<Arc<Version>>,
-    pub output_digest: Option<Arc<ObjectDigest>>,
-    pub id_operation: IdOperation,
-}
-
-impl From<iota_sdk::types::ObjectChange> for ObjectChange {
-    fn from(value: iota_sdk::types::ObjectChange) -> Self {
-        Self {
-            object_id: Arc::new(value.object_id.into()),
-            input_version: value.input_version.map(|v| Arc::new(v.into())),
-            input_digest: value.input_digest.map(|d| Arc::new(d.into())),
-            output_version: value.output_version.map(|v| Arc::new(v.into())),
-            output_digest: value.output_digest.map(|d| Arc::new(d.into())),
-            id_operation: value.id_operation.into(),
+            _ => unimplemented!(
+                "a new InputSharedObject enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -725,6 +638,7 @@ impl From<iota_sdk::types::WriteKind> for WriteKind {
             iota_sdk::types::WriteKind::Mutate => Self::Mutate,
             iota_sdk::types::WriteKind::Create => Self::Create,
             iota_sdk::types::WriteKind::Unwrap => Self::Unwrap,
+            _ => unimplemented!("a new WriteKind enum variant was added and needs to be handled"),
         }
     }
 }
@@ -743,6 +657,9 @@ impl From<iota_sdk::types::ObjectRemoveKind> for ObjectRemoveKind {
         match value {
             iota_sdk::types::ObjectRemoveKind::Delete => Self::Delete,
             iota_sdk::types::ObjectRemoveKind::Wrap => Self::Wrap,
+            _ => unimplemented!(
+                "a new ObjectRemoveKind enum variant was added and needs to be handled"
+            ),
         }
     }
 }

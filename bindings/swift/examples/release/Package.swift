@@ -8,7 +8,7 @@ let package = Package(
     .macOS(.v13)
   ],
   dependencies: [
-    .package(url: "https://github.com/iotaledger/iota-sdk-swift.git", from: "0.0.1-alpha.1")
+    .package(url: "https://github.com/iotaledger/iota-sdk-swift.git", from: "1.0.0-beta.2")
   ],
   targets: [
     .executableTarget(

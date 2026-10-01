@@ -9,14 +9,6 @@ import (
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
-func addrFromHex(hex string) *iota_sdk.Address {
-	address, err := iota_sdk.AddressFromHex(hex)
-	if err != nil {
-		log.Fatalf("Failed to parse address: %v", err)
-	}
-	return address
-}
-
 func identifier(ident string) *iota_sdk.Identifier {
 	identifier, err := iota_sdk.NewIdentifier(ident)
 	if err != nil {
@@ -26,9 +18,15 @@ func identifier(ident string) *iota_sdk.Identifier {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client := iota_sdk.GraphQlClientNewLocalnet()
 
-	sender := addrFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
+	sender := privateKey.PublicKey().DeriveAddress()
+
+	faucet := iota_sdk.FaucetClientNewLocalnet()
+	if _, err := faucet.RequestAndWaitForFinalized(sender, client); err != nil {
+		log.Fatalf("Failed to request faucet: %v", err)
+	}
 
 	builder := client.TransactionBuilder(sender)
 

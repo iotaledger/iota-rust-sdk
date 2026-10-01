@@ -17,20 +17,20 @@ struct AddressTransactionsExample {
       hex: "0xa7c2cf9d8f8d95ff69d7a598c49c77acc36253f496f064a533ad306879b40bfa")
 
     let outgoing = try await client.transactions(
-      filter: TransactionsFilter(sentAddress: address))
+      filter: TransactionsFilter().withSentAddress(sentAddress: address))
     let incoming = try await client.transactions(
-      filter: TransactionsFilter(recvAddress: address))
+      filter: TransactionsFilter().withRecvAddress(recvAddress: address))
 
-    print("Transactions for \(address.toHex())")
+    print("Transactions for \(address)")
 
     print("\nOutgoing (sent by address): \(outgoing.data.count)")
     for tx in outgoing.data {
-      print("  - \(tx.transaction.digest().toBase58())")
+      print("  - \(tx.transaction.digest())")
     }
 
     print("\nIncoming (received by address): \(incoming.data.count)")
     for tx in incoming.data {
-      print("  - \(tx.transaction.digest().toBase58())")
+      print("  - \(tx.transaction.digest())")
     }
   }
 }

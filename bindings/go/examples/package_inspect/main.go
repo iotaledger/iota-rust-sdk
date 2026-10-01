@@ -58,7 +58,7 @@ func main() {
 
 	packagePrefix := pkg.Id().ToHex()
 
-	fmt.Printf("Latest version: %d (%s)\n", latest.Version().AsU64(), latest.Id().ToHex())
+	fmt.Printf("Latest version: %d (%s)\n", latest.Version().AsU64(), latest.Id())
 	// Resolve the current upgrade policy.
 	currentPolicy, err := currentPackagePolicy(client, pkg.Id())
 	if err != nil {
@@ -78,7 +78,7 @@ func main() {
 			labels = append(labels, "latest")
 		}
 
-		line := fmt.Sprintf("- v%d -> %s", version.Version().AsU64(), version.Id().ToHex())
+		line := fmt.Sprintf("- v%d -> %s", version.Version().AsU64(), version.Id())
 		if len(labels) > 0 {
 			line += fmt.Sprintf(" [%s]", joinLabels(labels))
 		}
@@ -89,13 +89,10 @@ func main() {
 	// Print package dependencies and their linked versions.
 	fmt.Println("Dependencies:")
 	linkageTable := pkg.LinkageTable()
-	if len(linkageTable) == 0 {
+	if linkageTable.IsEmpty() {
 		fmt.Println("- none")
 	} else {
-		upgrades := make([]iota_sdk.UpgradeInfo, 0, len(linkageTable))
-		for _, upgrade := range linkageTable {
-			upgrades = append(upgrades, upgrade)
-		}
+		upgrades := linkageTable.Values()
 		sort.Slice(upgrades, func(i, j int) bool {
 			return upgrades[i].UpgradedId.ToHex() < upgrades[j].UpgradedId.ToHex()
 		})
@@ -103,7 +100,7 @@ func main() {
 		for _, upgrade := range upgrades {
 			fmt.Printf(
 				"- %s @ v%d\n",
-				upgrade.UpgradedId.ToHex(),
+				upgrade.UpgradedId,
 				upgrade.UpgradedVersion.AsU64(),
 			)
 		}
@@ -112,11 +109,10 @@ func main() {
 
 	// Inspect normalized modules, functions, types, and sample key objects.
 	fmt.Println("Package contents:")
-	moduleNames := make([]string, 0, len(pkg.Modules()))
-	for moduleID := range pkg.Modules() {
+	moduleNames := make([]string, 0, pkg.Modules().Len())
+	for _, moduleID := range pkg.Modules().Keys() {
 		moduleNames = append(moduleNames, moduleID.AsStr())
 	}
-	sort.Strings(moduleNames)
 
 	for _, moduleName := range moduleNames {
 		fmt.Println("Module:", moduleName)
@@ -320,7 +316,7 @@ func printObjectSamples(client *iota_sdk.GraphQlClient, typeTag string, hasKeyAb
 
 	fmt.Println("    sample objects:")
 	for _, object := range objects.Data {
-		fmt.Printf("      - %s (version %d)\n", object.Id().ToHex(), object.Version().AsU64())
+		fmt.Printf("      - %s (version %d)\n", object.Id(), object.Version().AsU64())
 	}
 	if objects.PageInfo.HasNextPage {
 		fmt.Println("      - ...")
@@ -369,8 +365,9 @@ func extractPolicy(contents string) (uint8, bool) {
 
 func resolveUpgradeCapID(client *iota_sdk.GraphQlClient, packageID *iota_sdk.ObjectId) (*iota_sdk.ObjectId, error) {
 	limit := int32(1)
+	filter := iota_sdk.NewTransactionsFilter().WithChangedObject(packageID)
 	page, err := client.TransactionsEffects(
-		&iota_sdk.TransactionsFilter{ChangedObject: &packageID},
+		&filter,
 		&iota_sdk.PaginationFilter{Direction: iota_sdk.DirectionForward, Limit: &limit},
 	)
 	if err != nil {
@@ -544,10 +541,11 @@ func usesUpgradeCapForMakeImmutable(tx *iota_sdk.Transaction, upgradeCapID *iota
 
 func wasPackagePublishedAsImmutable(client *iota_sdk.GraphQlClient, packageID *iota_sdk.ObjectId) (bool, error) {
 	var cursor *string
+	filter := iota_sdk.NewTransactionsFilter().WithChangedObject(packageID)
 
 	for {
 		page, err := client.TransactionsDataEffects(
-			&iota_sdk.TransactionsFilter{ChangedObject: &packageID},
+			&filter,
 			forwardPage(cursor),
 		)
 		if err != nil {
@@ -573,10 +571,11 @@ func wasPackagePublishedAsImmutable(client *iota_sdk.GraphQlClient, packageID *i
 
 func wasUpgradeCapUsedForMakeImmutable(client *iota_sdk.GraphQlClient, upgradeCapID *iota_sdk.ObjectId) (bool, error) {
 	var cursor *string
+	filter := iota_sdk.NewTransactionsFilter().WithInputObject(upgradeCapID)
 
 	for {
 		page, err := client.TransactionsDataEffects(
-			&iota_sdk.TransactionsFilter{InputObject: &upgradeCapID},
+			&filter,
 			forwardPage(cursor),
 		)
 		if err != nil {

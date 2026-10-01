@@ -1,13 +1,13 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{collections::HashMap, sync::Arc};
+use std::sync::Arc;
 
 use crate::{
     error::Result,
     types::{
         address::Address,
-        digest::{ObjectDigest, TransactionDigest},
+        digest::{Digest, ObjectDigest, TransactionDigest},
         move_core::{Identifier, StructTag, TypeTag},
         version::Version,
     },
@@ -26,11 +26,8 @@ use crate::{
 ///
 /// # BCS
 ///
-/// An `ObjectId`'s BCS serialized form is defined by the following:
-///
-/// ```text
-/// object-id = address
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(
     Debug,
     derive_more::Deref,
@@ -38,7 +35,9 @@ use crate::{
     derive_more::From,
     Eq,
     Hash,
+    Ord,
     PartialEq,
+    PartialOrd,
     uniffi::Object,
 )]
 #[uniffi::export(Debug, Display, Eq, Hash)]
@@ -214,11 +213,8 @@ named_object_id!(
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object-reference = object-id u64 digest
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq, uniffi::Record)]
 pub struct ObjectReference {
     object_id: Arc<ObjectId>,
@@ -246,11 +242,8 @@ impl From<ObjectReference> for iota_sdk::types::ObjectReference {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object = object-data owner digest u64
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct Object(pub iota_sdk::types::Object);
@@ -351,14 +344,8 @@ impl Object {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object-data = object-data-struct / object-data-package
-///
-/// object-data-struct  = %d00 object-move-struct
-/// object-data-package = %d01 object-move-package
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct ObjectData(pub iota_sdk::types::ObjectData);
@@ -408,11 +395,8 @@ impl ObjectData {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// type-origin = identifier identifier object-id
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct TypeOrigin {
     /// The name of the module the data type resides in.
@@ -448,12 +432,9 @@ impl From<TypeOrigin> for iota_sdk::types::TypeOrigin {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// upgrade-info = object-id u64
-/// ```
-#[derive(Clone, uniffi::Record)]
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct UpgradeInfo {
     /// ID of the upgraded package
     pub upgraded_id: Arc<ObjectId>,
@@ -479,19 +460,23 @@ impl From<UpgradeInfo> for iota_sdk::types::UpgradeInfo {
     }
 }
 
+crate::ffi_btree_map! {
+    /// A package's modules, keyed by module name.
+    ModuleMap<Arc<Identifier>, Vec<u8>>
+}
+
+crate::ffi_btree_map! {
+    /// The version of each package a package depends on, keyed by the
+    /// dependency's runtime ID.
+    LinkageMap<Arc<ObjectId>, UpgradeInfo>
+}
+
 /// A move package
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// move-package = object-id                          ; id
-///                u64                                ; version
-///                (vector (identifier bytes))        ; modules
-///                (vector type-origin)               ; type-origin-table
-///                (vector (object-id upgrade-info))  ; linkage-table
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct MovePackage(pub iota_sdk::types::MovePackage);
@@ -502,21 +487,24 @@ impl MovePackage {
     pub fn new(
         id: &ObjectId,
         version: &Version,
-        modules: HashMap<Arc<Identifier>, Vec<u8>>,
+        modules: &ModuleMap,
         type_origin_table: Vec<TypeOrigin>,
-        linkage_table: HashMap<Arc<ObjectId>, UpgradeInfo>,
+        linkage_table: &LinkageMap,
     ) -> Result<Self> {
         Ok(Self(iota_sdk::types::MovePackage {
             id: **id,
             version: **version,
-            modules: modules.into_iter().map(|(k, v)| (k.0.clone(), v)).collect(),
+            modules: modules
+                .iter()
+                .map(|(k, v)| (k.0.clone(), v.clone()))
+                .collect(),
             type_origin_table: type_origin_table
                 .into_iter()
                 .map(TryInto::try_into)
                 .collect::<Result<Vec<_>, _>>()?,
             linkage_table: linkage_table
-                .into_iter()
-                .map(|(k, v)| (**k, v.into()))
+                .iter()
+                .map(|(k, v)| (k.0, v.clone().into()))
                 .collect(),
         }))
     }
@@ -529,7 +517,7 @@ impl MovePackage {
         self.0.version.into()
     }
 
-    pub fn modules(&self) -> HashMap<Arc<Identifier>, Vec<u8>> {
+    pub fn modules(&self) -> ModuleMap {
         self.0
             .modules
             .iter()
@@ -546,12 +534,27 @@ impl MovePackage {
             .collect()
     }
 
-    pub fn linkage_table(&self) -> HashMap<Arc<ObjectId>, UpgradeInfo> {
+    pub fn linkage_table(&self) -> LinkageMap {
         self.0
             .linkage_table
             .iter()
             .map(|(k, v)| (Arc::new((*k).into()), v.clone().into()))
             .collect()
+    }
+
+    /// Calculate the digest of the MovePackage.
+    pub fn digest(&self) -> Digest {
+        self.0.digest().into()
+    }
+
+    /// Retrieve the module from this package with the given Identifier.
+    pub fn module(&self, name: &Identifier) -> Option<Vec<u8>> {
+        self.0.modules.get(&name.0).cloned()
+    }
+
+    /// Return the size of the package in bytes.
+    pub fn size(&self) -> u64 {
+        self.0.size() as _
     }
 }
 
@@ -559,19 +562,8 @@ impl MovePackage {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// move-struct = compressed-struct-tag u64 bytes
-///
-/// compressed-struct-tag = other-struct-type / gas-coin-type / staked-iota-type / coin-type
-/// other-struct-type     = %d00 struct-tag
-/// gas-coin-type         = %d01
-/// staked-iota-type      = %d02
-/// coin-type             = %d03 type-tag
-///
-/// ; The first 32 bytes of the `bytes` contents are the object's object-id.
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct MoveStruct {
     /// The type of this object
@@ -611,16 +603,8 @@ impl From<MoveStruct> for iota_sdk::types::MoveStruct {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// owner = owner-address / owner-object / owner-shared / owner-immutable
-///
-/// owner-address   = %d00 address
-/// owner-object    = %d01 object-id
-/// owner-shared    = %d02 u64
-/// owner-immutable = %d03
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(
     Debug,
     derive_more::Deref,
@@ -782,11 +766,8 @@ impl ObjectType {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// genesis-object = %d00 object-data owner   ; RawObject
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct GenesisObject(pub iota_sdk::types::GenesisObject);

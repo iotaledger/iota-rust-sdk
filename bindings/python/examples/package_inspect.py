@@ -31,7 +31,7 @@ async def main():
     versions = await fetch_package_versions(client, package_address)
     package_prefix = package.id().to_hex()
     print(
-        f"Latest version: {latest_package.version().as_u64()} ({latest_package.id().to_hex()})"
+        f"Latest version: {latest_package.version().as_u64()} ({latest_package.id()})"
     )
     # Resolve the current upgrade policy.
     print(
@@ -48,7 +48,7 @@ async def main():
         if version.id() == latest_package.id():
             labels.append("latest")
 
-        line = f"- v{version.version().as_u64()} -> {version.id().to_hex()}"
+        line = f"- v{version.version().as_u64()} -> {version.id()}"
         if len(labels) > 0:
             line += f" [{', '.join(labels)}]"
         print(line)
@@ -57,20 +57,21 @@ async def main():
     # Print package dependencies and their linked versions.
     print("Dependencies:")
     linkage_table = package.linkage_table()
-    if len(linkage_table) == 0:
+    if linkage_table.is_empty():
         print("- none")
     else:
         for upgrade in sorted(linkage_table.values(),
                               key=lambda item: item.upgraded_id.to_hex()):
             print(
-                f"- {upgrade.upgraded_id.to_hex()} @ v{upgrade.upgraded_version.as_u64()}"
+                f"- {upgrade.upgraded_id} @ v{upgrade.upgraded_version.as_u64()}"
             )
     print()
 
     # Inspect normalized modules, functions, types, and sample key objects.
     print("Package contents:")
-    module_names = sorted(
-        module_id.as_str() for module_id in package.modules().keys())
+    module_names = [
+        module_id.as_str() for module_id in package.modules().keys()
+    ]
 
     for module_name in module_names:
         print(f"Module: {module_name}")
@@ -195,7 +196,7 @@ async def print_object_samples(client, type_tag, has_key_ability, is_generic):
 
     print("    sample objects:")
     for obj in objects.data:
-        print(f"      - {obj.id().to_hex()} (version {obj.version().as_u64()})")
+        print(f"      - {obj.id()} (version {obj.version().as_u64()})")
     if objects.page_info.has_next_page:
         print("      - ...")
 
@@ -223,7 +224,7 @@ def extract_policy(contents):
 
 async def resolve_upgrade_cap_id(client, package_id):
     page = await client.transactions_effects(
-        TransactionsFilter(changed_object=package_id),
+        TransactionsFilter().with_changed_object(package_id),
         PaginationFilter(direction=Direction.FORWARD, limit=1),
     )
 
@@ -343,7 +344,7 @@ async def was_package_published_as_immutable(client, package_id):
 
     while True:
         page = await client.transactions_data_effects(
-            TransactionsFilter(changed_object=package_id),
+            TransactionsFilter().with_changed_object(package_id),
             forward_page(cursor),
         )
 
@@ -363,7 +364,7 @@ async def was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id):
 
     while True:
         page = await client.transactions_data_effects(
-            TransactionsFilter(input_object=upgrade_cap_id),
+            TransactionsFilter().with_input_object(upgrade_cap_id),
             forward_page(cursor),
         )
 

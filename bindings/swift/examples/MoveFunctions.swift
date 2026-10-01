@@ -18,7 +18,7 @@ struct MoveFunctionsExample {
         userInfo: [NSLocalizedDescriptionKey: "missing package"])
     }
 
-    for (moduleId, _) in package.modules() {
+    for moduleId in package.modules().keys() {
       let module = try await client.normalizedMoveModule(
         package: packageAddress,
         module: moduleId.asStr()

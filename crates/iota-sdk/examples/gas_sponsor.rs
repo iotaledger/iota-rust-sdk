@@ -4,11 +4,11 @@
 use std::str::FromStr;
 
 use eyre::Result;
-use iota_sdk::{graphql_client::Client, types::Address};
+use iota_sdk::{graphql_client::GraphQLClient, types::Address};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     let sender_address =
         Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;

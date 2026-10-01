@@ -45,9 +45,9 @@ where
     T: Clone + Unpin,
     F: Fn(PaginationFilter) -> Fut,
     F: Unpin,
-    Fut: Future<Output = Result<Page<T>, error::Error>>,
+    Fut: Future<Output = Result<Page<T>, error::GraphQLError>>,
 {
-    type Item = Result<T, error::Error>;
+    type Item = Result<T, error::GraphQLError>;
 
     fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         if self.finished {
@@ -63,8 +63,8 @@ where
                 }
 
                 // For backward pagination, we check for previous page
-                // For the first page in backward pagination, we don't need to check
-                // has_previous_page
+                // For the first page in backward pagination, we don't need to
+                // check has_previous_page
                 let should_continue = match direction {
                     Direction::Forward => page_info.has_next_page,
                     Direction::Backward => page_info.has_previous_page,
@@ -85,7 +85,8 @@ where
                             .has_next_page
                             .then(|| page_info.end_cursor.clone()),
                         Direction::Backward => {
-                            // For the first page in backward pagination, we don't use a cursor
+                            // For the first page in backward pagination, we
+                            // don't use a cursor
                             // This ensures we start from the last page
                             if self.is_first_page {
                                 None
@@ -160,11 +161,11 @@ where
 /// ```rust,ignore
 /// use futures::StreamExt;
 /// use iota_graphql_client::streams::stream_paginated_query;
-/// use iota_graphql_client::Client;
+/// use iota_graphql_client::GraphQLClient;
 /// use iota_graphql_client::PaginationFilter;
 /// use iota_graphql_client::Direction;
 ///
-/// let client = Client::new_testnet();
+/// let client = GraphQLClient::new_testnet();
 /// let stream = stream_paginated_query(|pagination_filter, Direction::Forward| {
 ///    client.coins(owner, coin_type, pagination_filter)
 /// });
@@ -179,7 +180,7 @@ where
 pub fn stream_paginated_query<T, F, Fut>(query_fn: F, direction: Direction) -> PageStream<T, F, Fut>
 where
     F: Fn(PaginationFilter) -> Fut,
-    Fut: Future<Output = Result<Page<T>, error::Error>>,
+    Fut: Future<Output = Result<Page<T>, error::GraphQLError>>,
 {
     PageStream::new(query_fn, direction)
 }

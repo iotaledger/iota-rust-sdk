@@ -45,9 +45,7 @@ fun main() = runBlocking {
         val latestPackage = client.packageLatest(packageAddress) ?: error("missing latest package")
         val versions = fetchPackageVersions(client, packageAddress)
         val packagePrefix = pkg.id().toHex()
-        println(
-            "Latest version: ${latestPackage.version().asU64()} (${latestPackage.id().toHex()})"
-        )
+        println("Latest version: ${latestPackage.version().asU64()} (${latestPackage.id()})")
         // Resolve the current upgrade policy.
         println("Current package policy: ${currentPackagePolicy(client, pkg.id())}")
         println()
@@ -64,25 +62,25 @@ fun main() = runBlocking {
             }
 
             val suffix = if (labels.isEmpty()) "" else " [${labels.joinToString(", ")}]"
-            println("- v${version.version().asU64()} -> ${version.id().toHex()}$suffix")
+            println("- v${version.version().asU64()} -> ${version.id()}$suffix")
         }
         println()
 
         // Print package dependencies and their linked versions.
         println("Dependencies:")
-        val linkageTable = pkg.linkageTable().values.sortedBy { it.upgradedId.toHex() }
+        val linkageTable = pkg.linkageTable().values().sortedBy { it.upgradedId.toHex() }
         if (linkageTable.isEmpty()) {
             println("- none")
         } else {
             for (upgrade in linkageTable) {
-                println("- ${upgrade.upgradedId.toHex()} @ v${upgrade.upgradedVersion.asU64()}")
+                println("- ${upgrade.upgradedId} @ v${upgrade.upgradedVersion.asU64()}")
             }
         }
         println()
 
         // Inspect normalized modules, functions, types, and sample key objects.
         println("Package contents:")
-        val moduleNames = pkg.modules().keys.map { it.asStr() }.sorted()
+        val moduleNames = pkg.modules().keys().map { it.asStr() }
         for (moduleName in moduleNames) {
             println("Module: $moduleName")
 
@@ -158,8 +156,10 @@ private fun shortenPackageIds(signature: String): String {
 
             if (end > index + 2) {
                 val candidate = signature.substring(index, end)
-                val shortAddress =
-                    runCatching { Address.fromHex(candidate).toShortHex() }.getOrNull()
+                val shortAddress = runCatching {
+                    Address.fromHex(candidate).toShortHex()
+                }
+                    .getOrNull()
                 shortened.append(shortAddress ?: candidate)
                 index = end
                 continue
@@ -224,7 +224,7 @@ private suspend fun printObjectSamples(
 
     println("    sample objects:")
     for (obj in objects.data) {
-        println("      - ${obj.id().toHex()} (version ${obj.version().asU64()})")
+        println("      - ${obj.id()} (version ${obj.version().asU64()})")
     }
     if (objects.pageInfo.hasNextPage) {
         println("      - ...")
@@ -239,16 +239,15 @@ private fun formatPolicyName(policy: Int): String =
         else -> "Unknown ($policy)"
     }
 
-private fun extractPolicy(contents: Value): Int? =
-    runCatching {
-            jsonParser.parseToJsonElement(contents).jsonObject["policy"]?.jsonPrimitive?.intOrNull
-        }
-        .getOrNull()
+private fun extractPolicy(contents: Value): Int? = runCatching {
+    jsonParser.parseToJsonElement(contents).jsonObject["policy"]?.jsonPrimitive?.intOrNull
+}
+    .getOrNull()
 
 private suspend fun resolveUpgradeCapId(client: GraphQlClient, packageId: ObjectId): ObjectId? {
     val page =
         client.transactionsEffects(
-            TransactionsFilter(changedObject = packageId),
+            TransactionsFilter().withChangedObject(packageId),
             PaginationFilter(direction = Direction.FORWARD, limit = 1),
         )
 
@@ -294,15 +293,14 @@ private fun publishesPackageAsImmutable(tx: Transaction): Boolean {
     val programmableTx = programmableTransactionJson(tx) ?: return false
     val commands = programmableTx["commands"] as? JsonArray ?: return false
 
-    val publishIndexes =
-        commands.mapIndexedNotNull { index, command ->
-            val commandObject = command as? JsonObject ?: return@mapIndexedNotNull null
-            if (commandObject["command"]?.jsonPrimitive?.contentOrNull == "publish") {
-                index
-            } else {
-                null
-            }
+    val publishIndexes = commands.mapIndexedNotNull { index, command ->
+        val commandObject = command as? JsonObject ?: return@mapIndexedNotNull null
+        if (commandObject["command"]?.jsonPrimitive?.contentOrNull == "publish") {
+            index
+        } else {
+            null
         }
+    }
     if (publishIndexes.size != 1) {
         return false
     }
@@ -329,15 +327,14 @@ private fun usesUpgradeCapForMakeImmutable(tx: Transaction, upgradeCapId: Object
     val inputs = programmableTx["inputs"] as? JsonArray ?: return false
     val commands = programmableTx["commands"] as? JsonArray ?: return false
 
-    val upgradeCapInputs =
-        inputs.mapIndexedNotNull { index, input ->
-            val inputObject = input as? JsonObject ?: return@mapIndexedNotNull null
-            if (inputMatchesObjectId(inputObject, upgradeCapId.toHex())) {
-                index
-            } else {
-                null
-            }
+    val upgradeCapInputs = inputs.mapIndexedNotNull { index, input ->
+        val inputObject = input as? JsonObject ?: return@mapIndexedNotNull null
+        if (inputMatchesObjectId(inputObject, upgradeCapId.toHex())) {
+            index
+        } else {
+            null
         }
+    }
     if (upgradeCapInputs.isEmpty()) {
         return false
     }
@@ -368,7 +365,7 @@ private suspend fun wasPackagePublishedAsImmutable(
     while (true) {
         val page =
             client.transactionsDataEffects(
-                TransactionsFilter(changedObject = packageId),
+                TransactionsFilter().withChangedObject(packageId),
                 forwardPage(cursor),
             )
 
@@ -395,7 +392,7 @@ private suspend fun wasUpgradeCapUsedForMakeImmutable(
     while (true) {
         val page =
             client.transactionsDataEffects(
-                TransactionsFilter(inputObject = upgradeCapId),
+                TransactionsFilter().withInputObject(upgradeCapId),
                 forwardPage(cursor),
             )
 

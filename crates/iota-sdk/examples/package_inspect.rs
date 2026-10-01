@@ -8,7 +8,7 @@
 use eyre::{OptionExt, Result};
 use iota_sdk::{
     graphql_client::{
-        Client,
+        GraphQLClient,
         pagination::{Direction, PaginationFilter},
         query_types::{MoveAbility, ObjectFilter, TransactionsFilter},
     },
@@ -19,7 +19,7 @@ use iota_sdk::{
 async fn main() -> Result<()> {
     let package_id = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d";
     let package_address = Address::from_hex(package_id)?;
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     // Fetch package metadata and version history.
     let package = client
@@ -209,7 +209,7 @@ fn format_function_signature(signature: &str, package_type_prefix: &str) -> Stri
 }
 
 async fn fetch_package_versions(
-    client: &Client,
+    client: &GraphQLClient,
     package_address: Address,
 ) -> Result<Vec<MovePackage>> {
     let mut packages = Vec::new();
@@ -234,7 +234,7 @@ async fn fetch_package_versions(
 }
 
 async fn print_object_samples(
-    client: &Client,
+    client: &GraphQLClient,
     type_tag: &str,
     has_key_ability: bool,
     is_generic: bool,
@@ -292,7 +292,10 @@ fn extract_policy_value(contents: &serde_json::Value) -> Option<u8> {
     }
 }
 
-async fn resolve_upgrade_cap_id(client: &Client, package_id: ObjectId) -> Result<Option<ObjectId>> {
+async fn resolve_upgrade_cap_id(
+    client: &GraphQLClient,
+    package_id: ObjectId,
+) -> Result<Option<ObjectId>> {
     let effects_page = client
         .transactions_effects(
             TransactionsFilter::default().with_changed_object(package_id),
@@ -427,7 +430,10 @@ fn uses_upgrade_cap_for_make_immutable(tx: &Transaction, upgrade_cap_id: ObjectI
     })
 }
 
-async fn was_package_published_as_immutable(client: &Client, package_id: ObjectId) -> Result<bool> {
+async fn was_package_published_as_immutable(
+    client: &GraphQLClient,
+    package_id: ObjectId,
+) -> Result<bool> {
     let mut cursor = None;
 
     loop {
@@ -455,7 +461,7 @@ async fn was_package_published_as_immutable(client: &Client, package_id: ObjectI
 }
 
 async fn was_upgrade_cap_used_for_make_immutable(
-    client: &Client,
+    client: &GraphQLClient,
     upgrade_cap_id: ObjectId,
 ) -> Result<bool> {
     let mut cursor = None;
@@ -485,7 +491,7 @@ async fn was_upgrade_cap_used_for_make_immutable(
     }
 }
 
-async fn current_package_policy(client: &Client, package_id: ObjectId) -> Result<String> {
+async fn current_package_policy(client: &GraphQLClient, package_id: ObjectId) -> Result<String> {
     let Some(upgrade_cap_id) = resolve_upgrade_cap_id(client, package_id).await? else {
         return Ok(
             if was_package_published_as_immutable(client, package_id).await? {

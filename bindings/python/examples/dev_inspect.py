@@ -107,7 +107,7 @@ async def main():
             if return_value.type_tag.is_address() and len(
                     return_value.bcs) == 32:
                 resolved_address = Address.from_bytes(return_value.bcs)
-                print(f"Resolved address: {resolved_address.to_hex()}")
+                print(f"Resolved address: {resolved_address}")
             else:
                 print(
                     f"Last result is not an address type or has wrong length: {len(return_value.bcs)}"

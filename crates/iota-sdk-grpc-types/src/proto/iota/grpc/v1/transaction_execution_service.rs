@@ -176,3 +176,77 @@ impl SimulateTransactionResult {
         }
     }
 }
+
+// ViewFunctionCallOutputs
+
+impl ViewFunctionCallOutputs {
+    /// Get the execution result (return values on success, execution error on
+    /// failure).
+    ///
+    /// **Read mask:** `"execution_result"` (see
+    /// [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]).
+    ///
+    /// [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]: crate::read_masks::VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT
+    pub fn execution_result(
+        &self,
+    ) -> Result<
+        &crate::v1::transaction_execution_service::view_function_call_outputs::ExecutionResult,
+        TryFromProtoError,
+    > {
+        self.execution_result
+            .as_ref()
+            .ok_or_else(|| TryFromProtoError::missing(Self::EXECUTION_RESULT_ONEOF))
+    }
+
+    /// Returns `Some` if the call returned, `None` if it aborted.
+    ///
+    /// **Read mask:** `"execution_result"` (see
+    /// [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]).
+    ///
+    /// [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]: crate::read_masks::VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT
+    pub fn return_values(&self) -> Option<&crate::v1::command::CommandOutputs> {
+        match &self.execution_result {
+            Some(crate::v1::transaction_execution_service::view_function_call_outputs::ExecutionResult::ReturnValues(r)) => Some(r),
+            _ => None,
+        }
+    }
+
+    /// Returns `Some` if the call aborted, `None` if it returned.
+    ///
+    /// **Read mask:** `"execution_result"` (see
+    /// [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]).
+    ///
+    /// [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]: crate::read_masks::VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT
+    pub fn execution_error(
+        &self,
+    ) -> Option<&crate::v1::transaction_execution_service::ExecutionError> {
+        match &self.execution_result {
+            Some(crate::v1::transaction_execution_service::view_function_call_outputs::ExecutionResult::ExecutionError(e)) => Some(e),
+            _ => None,
+        }
+    }
+}
+
+// ViewFunctionCallResult
+
+impl ViewFunctionCallResult {
+    /// Get the outputs of this call, if the server ran it.
+    ///
+    /// A call that ran and aborted still has outputs — the abort is reported
+    /// through [`ViewFunctionCallOutputs::execution_error`]. `None` here means
+    /// the server rejected the call outright; see [`Self::error`].
+    pub fn outputs(&self) -> Option<&ViewFunctionCallOutputs> {
+        match &self.result {
+            Some(view_function_call_result::Result::CallOutputs(outputs)) => Some(outputs),
+            _ => None,
+        }
+    }
+
+    /// Get the error from the result, if the server rejected this call.
+    pub fn error(&self) -> Option<&crate::google::rpc::Status> {
+        match &self.result {
+            Some(view_function_call_result::Result::Error(e)) => Some(e),
+            _ => None,
+        }
+    }
+}

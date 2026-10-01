@@ -17,11 +17,8 @@ use super::{Address, address::AddressParseError};
 ///
 /// # BCS
 ///
-/// An `ObjectId`'s BCS serialized form is defined by the following:
-///
-/// ```text
-/// object-id = address
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -185,7 +182,7 @@ impl ObjectId {
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(rng: R) -> Self
     where
-        R: rand_core::RngCore + rand_core::CryptoRng,
+        R: rand_core::CryptoRng,
     {
         Self::from_address(Address::random_with(rng))
     }
@@ -193,7 +190,7 @@ impl ObjectId {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::random_with(rand_core::OsRng)
+        Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 }
 
@@ -230,6 +227,24 @@ impl From<Address> for ObjectId {
 impl From<ObjectId> for Vec<u8> {
     fn from(value: ObjectId) -> Self {
         value.0.into()
+    }
+}
+
+impl From<&ObjectId> for Vec<u8> {
+    fn from(value: &ObjectId) -> Self {
+        (&value.0).into()
+    }
+}
+
+impl From<ObjectId> for String {
+    fn from(value: ObjectId) -> Self {
+        value.to_string()
+    }
+}
+
+impl From<&ObjectId> for String {
+    fn from(value: &ObjectId) -> Self {
+        value.to_string()
     }
 }
 

@@ -27,7 +27,7 @@ func main() {
 	}
 	pkg := *packageOpt
 
-	for moduleId := range pkg.Modules() {
+	for _, moduleId := range pkg.Modules().Keys() {
 		moduleOpt, err := client.NormalizedMoveModule(
 			packageAddress,
 			moduleId.AsStr(),

@@ -6,11 +6,8 @@
 ///
 /// # BCS
 ///
-/// A `Digest`'s BCS serialized form is defined by the following:
-///
-/// ```text
-/// digest = %d32 32OCTET
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// Due to historical reasons, even though a `Digest` has a fixed-length of 32,
 /// IOTA's binary representation of a `Digest` is prefixed with its length
@@ -52,7 +49,7 @@ impl Digest {
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
-        R: rand_core::RngCore + rand_core::CryptoRng,
+        R: rand_core::CryptoRng,
     {
         let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
         rng.fill_bytes(&mut buf);
@@ -62,22 +59,17 @@ impl Digest {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::random_with(rand_core::OsRng)
+        Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
     /// Returns a slice to the inner array representation of this digest.
-    pub const fn inner(&self) -> &[u8; Self::LENGTH] {
+    pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
         &self.0
     }
 
     /// Returns the inner array representation of this digest.
-    pub const fn into_inner(self) -> [u8; Self::LENGTH] {
+    pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
         self.0
-    }
-
-    /// Returns a slice of bytes representing the digest.
-    pub const fn as_bytes(&self) -> &[u8] {
-        &self.0
     }
 
     /// Decodes a digest from a Base58 encoded string.
@@ -137,7 +129,7 @@ impl AsRef<[u8; Self::LENGTH]> for Digest {
 
 impl From<Digest> for [u8; Digest::LENGTH] {
     fn from(digest: Digest) -> Self {
-        digest.into_inner()
+        digest.into_bytes()
     }
 }
 
@@ -194,6 +186,18 @@ impl std::fmt::Display for Digest {
         let encoded = std::str::from_utf8(&buf[..len]).unwrap();
 
         f.write_str(encoded)
+    }
+}
+
+impl From<Digest> for String {
+    fn from(value: Digest) -> Self {
+        value.to_string()
+    }
+}
+
+impl From<&Digest> for String {
+    fn from(value: &Digest) -> Self {
+        value.to_string()
     }
 }
 
@@ -264,7 +268,7 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDiges
         D: serde::Deserializer<'de>,
     {
         let digest: Digest = serde_with::DisplayFromStr::deserialize_as(deserializer)?;
-        Ok(digest.into_inner())
+        Ok(digest.into_bytes())
     }
 }
 
@@ -295,6 +299,10 @@ pub type SigningDigest = [u8; Digest::LENGTH];
 macro_rules! impl_digest_wrapper {
     ($(#[$meta:meta])* $name:ident) => {
         $(#[$meta])*
+        /// # BCS
+        ///
+        /// The BCS serialized form of this type is specified in
+        /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
         #[derive(Clone, Copy, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
         #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
         #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -324,7 +332,7 @@ macro_rules! impl_digest_wrapper {
             #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
             pub fn random_with<R>(rng: R) -> Self
             where
-                R: rand_core::RngCore + rand_core::CryptoRng,
+                R: rand_core::CryptoRng,
             {
                 Self(Digest::random_with(rng))
             }
@@ -347,18 +355,13 @@ macro_rules! impl_digest_wrapper {
             }
 
             /// Returns a reference to the inner array representation of this digest.
-            pub const fn inner(&self) -> &[u8; Self::LENGTH] {
-                self.0.inner()
+            pub const fn bytes(&self) -> &[u8; Self::LENGTH] {
+                self.0.bytes()
             }
 
             /// Returns the inner array representation of this digest.
-            pub const fn into_inner(self) -> [u8; Self::LENGTH] {
-                self.0.into_inner()
-            }
-
-            /// Returns a slice of bytes representing the digest.
-            pub const fn as_bytes(&self) -> &[u8] {
-                self.0.as_bytes()
+            pub const fn into_bytes(self) -> [u8; Self::LENGTH] {
+                self.0.into_bytes()
             }
 
             /// Decodes a digest from a Base58 encoded string.
@@ -401,13 +404,13 @@ macro_rules! impl_digest_wrapper {
 
         impl AsRef<[u8]> for $name {
             fn as_ref(&self) -> &[u8] {
-                self.0.as_bytes()
+                self.0.bytes()
             }
         }
 
         impl AsRef<[u8; Self::LENGTH]> for $name {
             fn as_ref(&self) -> &[u8; Self::LENGTH] {
-                self.0.inner()
+                self.0.bytes()
             }
         }
 
@@ -431,7 +434,7 @@ macro_rules! impl_digest_wrapper {
 
         impl From<$name> for [u8; Digest::LENGTH] {
             fn from(digest: $name) -> Self {
-                digest.into_inner()
+                digest.into_bytes()
             }
         }
 
@@ -639,7 +642,7 @@ mod tests {
     fn from_bytes_valid() {
         let bytes = [42u8; 32];
         let digest = Digest::from_bytes(bytes).unwrap();
-        assert_eq!(digest.into_inner(), bytes);
+        assert_eq!(digest.into_bytes(), bytes);
     }
 
     #[test]

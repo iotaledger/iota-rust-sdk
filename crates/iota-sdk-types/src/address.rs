@@ -52,11 +52,8 @@ use crate::ObjectId;
 ///
 /// # BCS
 ///
-/// An `Address`'s BCS serialized form is defined by the following:
-///
-/// ```text
-/// address = 32OCTET
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -125,7 +122,7 @@ impl Address {
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
-        R: rand_core::RngCore + rand_core::CryptoRng,
+        R: rand_core::CryptoRng,
     {
         let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
         rng.fill_bytes(&mut buf);
@@ -135,7 +132,7 @@ impl Address {
     #[cfg(feature = "rand")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::random_with(rand_core::OsRng)
+        Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
     /// Return the underlying byte array of a Address.
@@ -344,6 +341,24 @@ impl From<[u8; 32]> for Address {
 impl From<Address> for Vec<u8> {
     fn from(value: Address) -> Self {
         value.0.to_vec()
+    }
+}
+
+impl From<&Address> for Vec<u8> {
+    fn from(value: &Address) -> Self {
+        value.0.to_vec()
+    }
+}
+
+impl From<Address> for String {
+    fn from(value: Address) -> Self {
+        value.to_string()
+    }
+}
+
+impl From<&Address> for String {
+    fn from(value: &Address) -> Self {
+        value.to_string()
     }
 }
 

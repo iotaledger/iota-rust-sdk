@@ -15,7 +15,7 @@
 
 use std::collections::HashMap;
 
-use rand::{RngCore, SeedableRng, rngs::StdRng};
+use rand::{Rng, SeedableRng, rngs::StdRng};
 use serde::{Serialize, de::DeserializeOwned};
 
 // ─── Grammar AST ─────────────────────────────────────────────────────────────
@@ -851,6 +851,7 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<ValidatorAggregatedSignature>("validator-aggregated-signature");
     test.check_rule::<ValidatorCommittee>("validator-committee");
     test.check_rule::<ValidatorCommitteeMember>("validator-committee-member");
+    test.check_rule::<ValidatorSignature>("validator-signature");
     test.check_rule::<VersionAssignment>("version-assignment");
 
     if !test.failures.is_empty() {

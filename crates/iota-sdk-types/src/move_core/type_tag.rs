@@ -8,21 +8,8 @@ use crate::{StructTag, TypeParseError};
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// type-tag = %d00            ; Bool
-///          / %d01            ; U8
-///          / %d02            ; U64
-///          / %d03            ; U128
-///          / %d04            ; Address
-///          / %d05            ; Signer
-///          / %d06 type-tag   ; Vector
-///          / %d07 struct-tag ; Struct
-///          / %d08            ; U16
-///          / %d09            ; U32
-///          / %d10            ; U256
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub enum TypeTag {
@@ -189,6 +176,18 @@ impl std::fmt::Display for TypeTag {
             TypeTag::Vector(t) => write!(f, "vector<{t}>"),
             TypeTag::Struct(s) => write!(f, "{s}"),
         }
+    }
+}
+
+impl From<TypeTag> for String {
+    fn from(value: TypeTag) -> Self {
+        value.to_string()
+    }
+}
+
+impl From<&TypeTag> for String {
+    fn from(value: &TypeTag) -> Self {
+        value.to_string()
     }
 }
 

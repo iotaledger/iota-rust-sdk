@@ -36,9 +36,7 @@ impl GraphQLClient {
         version: Option<Arc<Version>>,
     ) -> Result<Option<Arc<MovePackage>>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .package(**address, version.map(|v| **v))
             .await?
             .map(Into::into)
@@ -57,9 +55,7 @@ impl GraphQLClient {
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<MovePackagePage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .package_versions(
                 **address,
                 pagination_filter.map(Into::into).unwrap_or_default(),
@@ -76,9 +72,7 @@ impl GraphQLClient {
     /// original ID with the package at address.
     pub async fn package_latest(&self, address: &Address) -> Result<Option<Arc<MovePackage>>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .package_latest(**address)
             .await?
             .map(Into::into)
@@ -100,9 +94,7 @@ impl GraphQLClient {
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<MovePackagePage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .packages(
                 pagination_filter.map(Into::into).unwrap_or_default(),
                 after_checkpoint,
@@ -124,9 +116,7 @@ impl GraphQLClient {
         version: Option<Arc<Version>>,
     ) -> Result<Option<Arc<MoveFunction>>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .normalized_move_function(**package, module, function, version.map(|v| **v))
             .await?
             .map(Into::into)
@@ -155,9 +145,7 @@ impl GraphQLClient {
         pagination_filter_structs: Option<PaginationFilter>,
     ) -> Result<Option<MoveModule>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .normalized_move_module(
                 **package,
                 module,

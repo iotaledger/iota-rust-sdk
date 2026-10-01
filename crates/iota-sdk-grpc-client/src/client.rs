@@ -12,21 +12,21 @@ use iota_grpc_types::v1::{
 };
 use tonic::codec::CompressionEncoding;
 
-use crate::{api::Result, interceptors::HeadersInterceptor};
+use crate::{api::GrpcResult, interceptors::HeadersInterceptor};
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
 pub(crate) const MAINNET_HOST: &str = "https://grpc.mainnet.iota.cafe:443";
 pub(crate) const TESTNET_HOST: &str = "https://grpc.testnet.iota.cafe:443";
 pub(crate) const DEVNET_HOST: &str = "https://grpc.devnet.iota.cafe:443";
-pub(crate) const LOCAL_HOST: &str = "http://localhost:9000";
+pub(crate) const LOCAL_HOST: &str = "http://localhost:50051";
 
 pub type InterceptedChannel =
     tonic::service::interceptor::InterceptedService<tonic::transport::Channel, HeadersInterceptor>;
 
 /// gRPC client factory for IOTA gRPC operations.
 #[derive(Clone)]
-pub struct Client {
+pub struct GrpcClient {
     /// Target URI of the gRPC server
     uri: http::Uri,
     /// Shared gRPC channel for all service clients
@@ -37,9 +37,9 @@ pub struct Client {
     max_decoding_message_size: Option<usize>,
 }
 
-impl Client {
-    /// Create a new Client instance for the given gRPC server URI.
-    pub fn new<T>(uri: T) -> Result<Self>
+impl GrpcClient {
+    /// Create a new GrpcClient instance for the given gRPC server URI.
+    pub fn new<T>(uri: T) -> GrpcResult<Self>
     where
         T: TryInto<http::Uri>,
         T::Error: Into<BoxError>,
@@ -52,7 +52,7 @@ impl Client {
         let endpoint = tonic::transport::Endpoint::from(uri.clone());
 
         #[cfg(all(
-            feature = "tls-ring",
+            any(feature = "tls-ring", feature = "tls-aws-lc"),
             any(feature = "tls-native-roots", feature = "tls-webpki-roots")
         ))]
         let endpoint = if uri.scheme() == Some(&http::uri::Scheme::HTTPS) {
@@ -65,12 +65,12 @@ impl Client {
         };
 
         #[cfg(not(all(
-            feature = "tls-ring",
+            any(feature = "tls-ring", feature = "tls-aws-lc"),
             any(feature = "tls-native-roots", feature = "tls-webpki-roots")
         )))]
         if uri.scheme() == Some(&http::uri::Scheme::HTTPS) {
             return Err(tonic::Status::failed_precondition(
-                "HTTPS requires the `tls-ring` feature and either `tls-native-roots` or `tls-webpki-roots` to be enabled",
+                "HTTPS requires the `tls-ring` or `tls-aws-lc` feature and either `tls-native-roots` or `tls-webpki-roots` to be enabled",
             )
             .into());
         }
@@ -90,25 +90,25 @@ impl Client {
 
     /// Create a new client connected to the `mainnet` gRPC server:
     /// <https://grpc.mainnet.iota.cafe:443>.
-    pub fn new_mainnet() -> Result<Self> {
+    pub fn new_mainnet() -> GrpcResult<Self> {
         Self::new(MAINNET_HOST)
     }
 
     /// Create a new client connected to the `testnet` gRPC server:
     /// <https://grpc.testnet.iota.cafe:443>.
-    pub fn new_testnet() -> Result<Self> {
+    pub fn new_testnet() -> GrpcResult<Self> {
         Self::new(TESTNET_HOST)
     }
 
     /// Create a new client connected to the `devnet` gRPC server:
     /// <https://grpc.devnet.iota.cafe:443>.
-    pub fn new_devnet() -> Result<Self> {
+    pub fn new_devnet() -> GrpcResult<Self> {
         Self::new(DEVNET_HOST)
     }
 
     /// Create a new client connected to a `localnet` gRPC server:
-    /// <http://localhost:9000>.
-    pub fn new_localnet() -> Result<Self> {
+    /// <http://localhost:50051>.
+    pub fn new_localnet() -> GrpcResult<Self> {
         Self::new(LOCAL_HOST)
     }
 
@@ -119,7 +119,7 @@ impl Client {
     /// Get a reference to the underlying channel.
     ///
     /// This can be useful for creating additional service clients that aren't
-    /// yet integrated into Client.
+    /// yet integrated into GrpcClient.
     pub fn channel(&self) -> &tonic::transport::Channel {
         &self.channel
     }
@@ -225,11 +225,11 @@ mod tests {
     #[cfg(not(feature = "tls-ring"))]
     #[test]
     fn https_without_tls_ring_returns_failed_precondition() {
-        use super::Client;
+        use super::GrpcClient;
 
-        let status = match Client::new("https://example.com") {
-            Err(crate::api::Error::Grpc(status)) => status,
-            Err(other) => panic!("expected Error::Grpc, got: {other:?}"),
+        let status = match GrpcClient::new("https://example.com") {
+            Err(crate::api::GrpcError::Grpc(status)) => status,
+            Err(other) => panic!("expected GrpcError::Grpc, got: {other:?}"),
             Ok(_) => panic!("new should fail without tls-ring"),
         };
 
@@ -240,7 +240,7 @@ mod tests {
         );
         assert!(
             status.message().contains("tls-ring"),
-            "error should mention `tls-ring` feature, got: {}",
+            "error should mention the `tls-ring` feature, got: {}",
             status.message()
         );
     }

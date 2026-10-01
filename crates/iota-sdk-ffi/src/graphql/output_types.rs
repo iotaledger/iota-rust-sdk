@@ -40,7 +40,9 @@ impl From<iota_sdk::graphql_client::TransactionArgument> for TransactionArgument
             iota_sdk::graphql_client::TransactionArgument::Result { cmd, index } => {
                 TransactionArgument::Result { cmd, index }
             }
-            _ => unimplemented!("a new enum variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new TransactionArgument enum variant was added and needs to be handled"
+            ),
         }
     }
 }

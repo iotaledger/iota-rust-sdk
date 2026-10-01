@@ -9,12 +9,8 @@ use crate::checkpoint::{EpochId, StakeUnit};
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// validator-committee = u64 ; epoch
-///                       (vector validator-committee-member)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -24,6 +20,79 @@ pub struct ValidatorCommittee {
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     pub members: Vec<ValidatorCommitteeMember>,
+}
+
+/// An error returned when a [`ValidatorCommittee`] is not well-formed.
+#[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
+pub enum ValidatorCommitteeError {
+    #[error("Validator committee must have at least one member")]
+    EmptyCommittee,
+    #[error("Validator committee has zero total stake")]
+    ZeroTotalStake,
+    #[error("Validator committee total stake overflows a stake unit")]
+    StakeOverflow,
+    #[error("Duplicate public key")]
+    DuplicatePublicKey,
+}
+
+impl ValidatorCommittee {
+    /// Construct a [`ValidatorCommittee`] and verify it via [`Self::validate`].
+    pub fn new(
+        epoch: EpochId,
+        members: Vec<ValidatorCommitteeMember>,
+    ) -> Result<Self, ValidatorCommitteeError> {
+        let committee = Self { epoch, members };
+        committee.validate()?;
+        Ok(committee)
+    }
+
+    /// Checks if the committee is valid.
+    ///
+    /// A valid committee is one that:
+    ///  - Has at least one member
+    ///  - Has a nonzero total stake that fits in a [`StakeUnit`]
+    ///  - Contains no duplicate public keys
+    ///
+    /// Deserialization and the public fields both bypass this check, so a
+    /// committee that came off the wire or out of a checkpoint payload has to
+    /// be validated before its stake is used to derive a quorum threshold.
+    pub fn validate(&self) -> Result<(), ValidatorCommitteeError> {
+        if self.members.is_empty() {
+            return Err(ValidatorCommitteeError::EmptyCommittee);
+        }
+        let mut total_stake: u64 = 0;
+        for (idx, member) in self.members.iter().enumerate() {
+            total_stake = total_stake
+                .checked_add(member.stake)
+                .ok_or(ValidatorCommitteeError::StakeOverflow)?;
+            if self
+                .members
+                .iter()
+                .skip(idx + 1)
+                .any(|other| other.public_key == member.public_key)
+            {
+                return Err(ValidatorCommitteeError::DuplicatePublicKey);
+            }
+        }
+        if total_stake == 0 {
+            return Err(ValidatorCommitteeError::ZeroTotalStake);
+        }
+
+        Ok(())
+    }
+
+    /// The combined stake of all members, or
+    /// [`ValidatorCommitteeError::StakeOverflow`] if it does not fit in a
+    /// [`StakeUnit`].
+    pub fn total_stake(&self) -> Result<StakeUnit, ValidatorCommitteeError> {
+        self.members
+            .iter()
+            .try_fold(0, |total: StakeUnit, member| {
+                total.checked_add(member.stake)
+            })
+            .ok_or(ValidatorCommitteeError::StakeOverflow)
+    }
 }
 
 impl crate::TreeDisplay for ValidatorCommittee {
@@ -38,12 +107,8 @@ impl crate::TreeDisplay for ValidatorCommittee {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// validator-committee-member = bls12381-public-key
-///                              u64 ; stake
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -68,18 +133,10 @@ impl crate::TreeDisplay for ValidatorCommitteeMember {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// ```text
-/// validator-aggregated-signature = u64                  ; epoch
-///                                  bls12381-signature   ; signature
-///                                  bytes                ; bitmap — contents of the bytes are
-///                                                       ; valid according to the serialized
-///                                                       ; spec for roaring bitmaps
-/// ```
-///
-/// See [here](https://github.com/RoaringBitmap/RoaringFormatSpec) for the specification for the
-/// serialized format of RoaringBitmaps.
+/// The `bitmap` bytes follow the [RoaringBitmap serialized format](https://github.com/RoaringBitmap/RoaringFormatSpec).
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -95,7 +152,78 @@ pub struct ValidatorAggregatedSignature {
         strategy(proptest::strategy::Just(roaring::RoaringBitmap::default()))
     )]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "bytes"))]
-    pub bitmap: roaring::RoaringBitmap,
+    bitmap: roaring::RoaringBitmap,
+}
+
+/// Error returned when a signer bitmap cannot be read.
+#[cfg(feature = "serde")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+#[derive(Debug, thiserror::Error)]
+#[error("invalid signer bitmap: {0}")]
+#[non_exhaustive]
+pub struct SignerBitmapError(String);
+
+impl ValidatorAggregatedSignature {
+    /// Construct an aggregated signature from the committee indices of the
+    /// validators that signed.
+    ///
+    /// Indices are deduplicated and stored in ascending order regardless of
+    /// the order they are supplied in.
+    pub fn new(
+        epoch: EpochId,
+        signature: Bls12381Signature,
+        signers: impl IntoIterator<Item = u32>,
+    ) -> Self {
+        Self {
+            epoch,
+            signature,
+            bitmap: signers.into_iter().collect(),
+        }
+    }
+
+    /// Construct an aggregated signature from a signer set in the
+    /// [RoaringBitmap serialized form], as it appears in the BCS encoding
+    /// of this type.
+    ///
+    /// [RoaringBitmap serialized form]: https://github.com/RoaringBitmap/RoaringFormatSpec
+    #[cfg(feature = "serde")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+    pub fn from_signer_bitmap(
+        epoch: EpochId,
+        signature: Bls12381Signature,
+        bitmap: &[u8],
+    ) -> Result<Self, SignerBitmapError> {
+        Ok(Self {
+            epoch,
+            signature,
+            bitmap: roaring::RoaringBitmap::deserialize_from(bitmap)
+                .map_err(|e| SignerBitmapError(e.to_string()))?,
+        })
+    }
+
+    /// The committee indices of the validators that signed, in ascending order.
+    pub fn signer_indices(&self) -> impl Iterator<Item = u32> + '_ {
+        self.bitmap.iter()
+    }
+
+    /// The number of validators that signed.
+    pub fn signer_count(&self) -> u64 {
+        self.bitmap.len()
+    }
+
+    /// The signer set in the [RoaringBitmap serialized form], as it appears in
+    /// the BCS encoding of this type.
+    ///
+    /// [RoaringBitmap serialized form]: https://github.com/RoaringBitmap/RoaringFormatSpec
+    #[cfg(feature = "serde")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
+    pub fn signer_bitmap(&self) -> Vec<u8> {
+        let mut bytes = Vec::with_capacity(self.bitmap.serialized_size());
+        self.bitmap
+            .serialize_into(&mut bytes)
+            .expect("writing to a Vec cannot fail");
+        bytes
+    }
 }
 
 impl crate::TreeDisplay for ValidatorAggregatedSignature {
@@ -131,7 +259,7 @@ impl serde_with::SerializeAs<Bls12381PublicKey> for BinaryValidatorPublicKey {
     where
         S: serde::Serializer,
     {
-        ::serde_with::Bytes::serialize_as(source.inner(), serializer)
+        ::serde_with::Bytes::serialize_as(source.bytes(), serializer)
     }
 }
 
@@ -151,18 +279,15 @@ impl<'de> serde_with::DeserializeAs<'de, Bls12381PublicKey> for BinaryValidatorP
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// validator-signature = u64                  ; epoch
-///                       bls12381-public-key
-///                       bls12381-signature
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct ValidatorSignature {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+    #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub epoch: EpochId,
     #[cfg_attr(feature = "serde", serde(with = "ValidatorPublicKeySerialization"))]
     pub public_key: Bls12381PublicKey,
@@ -185,6 +310,60 @@ crate::impl_tree_display!(
     ValidatorSignature
 );
 
+#[cfg(test)]
+mod committee_tests {
+    #[cfg(target_arch = "wasm32")]
+    use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
+
+    fn member(key_byte: u8, stake: StakeUnit) -> ValidatorCommitteeMember {
+        ValidatorCommitteeMember {
+            public_key: Bls12381PublicKey::new([key_byte; Bls12381PublicKey::LENGTH]),
+            stake,
+        }
+    }
+
+    #[test]
+    fn new_accepts_a_well_formed_committee() {
+        let committee =
+            ValidatorCommittee::new(0, vec![member(1, 6_000), member(2, 4_000)]).unwrap();
+        assert_eq!(committee.total_stake().unwrap(), 10_000);
+    }
+
+    #[test]
+    fn new_rejects_an_empty_committee() {
+        assert!(matches!(
+            ValidatorCommittee::new(0, Vec::new()),
+            Err(ValidatorCommitteeError::EmptyCommittee)
+        ));
+    }
+
+    #[test]
+    fn new_rejects_zero_total_stake() {
+        assert!(matches!(
+            ValidatorCommittee::new(0, vec![member(1, 0), member(2, 0)]),
+            Err(ValidatorCommitteeError::ZeroTotalStake)
+        ));
+    }
+
+    #[test]
+    fn new_rejects_stake_that_overflows() {
+        assert!(matches!(
+            ValidatorCommittee::new(0, vec![member(1, StakeUnit::MAX), member(2, 2)]),
+            Err(ValidatorCommitteeError::StakeOverflow)
+        ));
+    }
+
+    #[test]
+    fn new_rejects_duplicate_public_keys() {
+        assert!(matches!(
+            ValidatorCommittee::new(0, vec![member(1, 5_000), member(1, 5_000)]),
+            Err(ValidatorCommitteeError::DuplicatePublicKey)
+        ));
+    }
+}
+
 #[cfg(all(test, feature = "serde"))]
 mod tests {
     #[cfg(target_arch = "wasm32")]
@@ -202,5 +381,52 @@ mod tests {
         let signature: ValidatorAggregatedSignature = bcs::from_bytes(&bcs).unwrap();
         let bytes = bcs::to_bytes(&signature).unwrap();
         assert_eq!(bcs, bytes);
+    }
+
+    #[test]
+    fn signers_are_sorted_and_deduplicated() {
+        let signature = ValidatorAggregatedSignature::new(
+            7,
+            Bls12381Signature::new([0; Bls12381Signature::LENGTH]),
+            [4, 1, 4, 0],
+        );
+
+        assert_eq!(signature.signer_indices().collect::<Vec<_>>(), [0, 1, 4]);
+        assert_eq!(signature.signer_count(), 3);
+    }
+
+    #[test]
+    fn signer_bitmap_round_trips() {
+        let signature = ValidatorAggregatedSignature::new(
+            7,
+            Bls12381Signature::new([0; Bls12381Signature::LENGTH]),
+            [0, 3, 9],
+        );
+
+        let back = ValidatorAggregatedSignature::from_signer_bitmap(
+            signature.epoch,
+            signature.signature,
+            &signature.signer_bitmap(),
+        )
+        .unwrap();
+
+        assert_eq!(signature, back);
+    }
+
+    #[test]
+    fn a_truncated_signer_bitmap_is_rejected() {
+        let signature = ValidatorAggregatedSignature::new(
+            7,
+            Bls12381Signature::new([0; Bls12381Signature::LENGTH]),
+            [0, 3, 9],
+        );
+        let bitmap = signature.signer_bitmap();
+
+        ValidatorAggregatedSignature::from_signer_bitmap(
+            signature.epoch,
+            signature.signature,
+            &bitmap[..bitmap.len() - 1],
+        )
+        .unwrap_err();
     }
 }

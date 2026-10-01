@@ -22,7 +22,7 @@ async def main():
         type_tag="0x3::staking_pool::StakedIota", owner=owner))
 
     if len(page.data) == 0:
-        print(f"No StakedIota objects owned by {owner.to_hex()} right now.")
+        print(f"No StakedIota objects owned by {owner} right now.")
         return
 
     print(f"Decoded {len(page.data)} StakedIota object(s):\n")
@@ -30,8 +30,8 @@ async def main():
     for obj in page.data:
         staked = StakedIota.try_from_object(obj)
         total_principal += staked.principal()
-        print(f"- id:               {staked.id().to_hex()}")
-        print(f"  pool_id:          {staked.pool_id().to_hex()}")
+        print(f"- id:               {staked.id()}")
+        print(f"  pool_id:          {staked.pool_id()}")
         print(f"  stake_activation_epoch: {staked.stake_activation_epoch()}")
         print(f"  principal (nanos): {staked.principal()}")
         print()

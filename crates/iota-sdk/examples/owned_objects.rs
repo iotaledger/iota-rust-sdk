@@ -3,13 +3,13 @@
 
 use eyre::Result;
 use iota_sdk::{
-    graphql_client::{Client, pagination::PaginationFilter, query_types::ObjectFilter},
+    graphql_client::{GraphQLClient, pagination::PaginationFilter, query_types::ObjectFilter},
     types::Address,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet();
 
     let address = Address::ZERO;
     let owned_objects_page = client

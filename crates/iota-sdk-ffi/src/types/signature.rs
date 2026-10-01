@@ -5,32 +5,20 @@ use std::sync::Arc;
 
 use crate::{
     error::Result,
-    types::crypto::{
-        Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
-        Secp256r1PublicKey, Secp256r1Signature, move_authenticator::MoveAuthenticator,
-        multisig::MultisigAggregatedSignature, passkey::PasskeyAuthenticator,
-        public_key::PublicKey,
+    types::{
+        address::Address,
+        crypto::{
+            Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
+            Secp256r1PublicKey, Secp256r1Signature, move_authenticator::MoveAuthenticator,
+            multisig::MultisigAggregatedSignature, passkey::PasskeyAuthenticator,
+            public_key::PublicKey,
+        },
     },
 };
 
 /// Flag use to disambiguate the signature schemes supported by IOTA.
 ///
 /// # BCS
-///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// signature-scheme = ed25519-flag / secp256k1-flag / secp256r1-flag /
-///                    multisig-flag / bls-flag / passkey-auth-flag /
-///                    move-auth-flag
-/// ed25519-flag                    = %d00
-/// secp256k1-flag                  = %d01
-/// secp256r1-flag                  = %d02
-/// multisig-flag                   = %d03
-/// bls-flag                        = %d04
-/// passkey-auth-flag               = %d06
-/// move-auth-flag                  = %d07
-/// ```
 ///
 /// Flag `%d05` is reserved: it was formerly used for the now-removed zklogin
 /// authenticator (which was never enabled on chain) and is intentionally
@@ -57,7 +45,9 @@ impl From<iota_sdk::types::SignatureScheme> for SignatureScheme {
             iota_sdk::types::SignatureScheme::Bls12381 => Self::Bls12381,
             iota_sdk::types::SignatureScheme::PasskeyAuthenticator => Self::PasskeyAuthenticator,
             iota_sdk::types::SignatureScheme::MoveAuthenticator => Self::MoveAuthenticator,
-            _ => unimplemented!("a new SignatureScheme variant was added and needs to be handled"),
+            _ => unimplemented!(
+                "a new SignatureScheme enum variant was added and needs to be handled"
+            ),
         }
     }
 }
@@ -83,18 +73,8 @@ impl From<SignatureScheme> for iota_sdk::types::SignatureScheme {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// user-signature = bytes ; where the contents of the bytes are defined by
-///                        ; <user-signature-body>
-/// user-signature-body = (%d00 ed25519-signature ed25519-public-key) /
-///                       (%d01 secp256k1-signature secp256k1-public-key) /
-///                       (%d02 secp256r1-signature secp256r1-public-key) /
-///                       (%d03 multisig-aggregated-signature) /
-///                       (%d06 passkey-authenticator) /
-///                       (%d07 move-authenticator)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
 /// different from the majority of the types in IOTA. In particular if a
@@ -136,6 +116,11 @@ impl UserSignature {
     /// Return the flag for this signature scheme
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme().into()
+    }
+
+    /// Derive the `Address` of the signer that this signature authenticates.
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
@@ -249,15 +234,8 @@ impl UserSignature {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// simple-signature = bytes ; where the contents of the bytes are defined by
-///                          ; <simple-signature-body>
-/// simple-signature-body = (ed25519-flag ed25519-signature ed25519-public-key) /
-///                         (secp256k1-flag secp256k1-signature secp256k1-public-key) /
-///                         (secp256r1-flag secp256r1-signature secp256r1-public-key)
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// Note: Due to historical reasons, signatures are serialized slightly
 /// different from the majority of the types in IOTA. In particular if a
@@ -296,6 +274,11 @@ impl SimpleSignature {
 
     pub fn scheme(&self) -> SignatureScheme {
         self.0.scheme().into()
+    }
+
+    /// Derive the `Address` of the public key that produced this signature.
+    pub fn derive_address(&self) -> Address {
+        self.0.derive_address().into()
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {

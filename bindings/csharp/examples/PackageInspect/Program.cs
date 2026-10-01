@@ -36,7 +36,7 @@ class Program
         var versions = await FetchPackageVersions(client, packageAddress);
         var packagePrefix = package.Id().ToHex();
         Console.WriteLine(
-            $"Latest version: {latestPackage.Version().AsU64()} ({latestPackage.Id().ToHex()})"
+            $"Latest version: {latestPackage.Version().AsU64()} ({latestPackage.Id()})"
         );
         // Resolve the current upgrade policy.
         Console.WriteLine(
@@ -59,7 +59,7 @@ class Program
             }
 
             var suffix = labels.Count == 0 ? string.Empty : $" [{string.Join(", ", labels)}]";
-            Console.WriteLine($"- v{version.Version().AsU64()} -> {version.Id().ToHex()}{suffix}");
+            Console.WriteLine($"- v{version.Version().AsU64()} -> {version.Id()}{suffix}");
         }
         Console.WriteLine();
 
@@ -67,7 +67,7 @@ class Program
         Console.WriteLine("Dependencies:");
         var dependencies = package
             .LinkageTable()
-            .Select(entry => entry.Value)
+            .Values()
             .OrderBy(upgrade => upgrade.UpgradedId.ToHex())
             .ToArray();
         if (dependencies.Length == 0)
@@ -79,7 +79,7 @@ class Program
             foreach (var dependency in dependencies)
             {
                 Console.WriteLine(
-                    $"- {dependency.UpgradedId.ToHex()} @ v{dependency.UpgradedVersion.AsU64()}"
+                    $"- {dependency.UpgradedId} @ v{dependency.UpgradedVersion.AsU64()}"
                 );
             }
         }
@@ -87,11 +87,7 @@ class Program
 
         // Inspect normalized modules, functions, types, and sample key objects.
         Console.WriteLine("Package contents:");
-        var moduleNames = package
-            .Modules()
-            .Keys
-            .Select(moduleId => moduleId.AsStr())
-            .OrderBy(moduleName => moduleName);
+        var moduleNames = package.Modules().Keys().Select(moduleId => moduleId.AsStr());
 
         foreach (var moduleName in moduleNames)
         {
@@ -279,7 +275,7 @@ class Program
         Console.WriteLine("    sample objects:");
         foreach (var obj in objects.Data)
         {
-            Console.WriteLine($"      - {obj.Id().ToHex()} (version {obj.Version().AsU64()})");
+            Console.WriteLine($"      - {obj.Id()} (version {obj.Version().AsU64()})");
         }
         if (objects.PageInfo.HasNextPage)
         {
@@ -328,7 +324,7 @@ class Program
     static async Task<ObjectId?> ResolveUpgradeCapId(GraphQlClient client, ObjectId packageId)
     {
         var page = await client.TransactionsEffects(
-            new TransactionsFilter(ChangedObject: packageId),
+            new TransactionsFilter().WithChangedObject(packageId),
             new PaginationFilter(Direction.Forward, Limit: 1)
         );
 
@@ -528,7 +524,7 @@ class Program
         while (true)
         {
             var page = await client.TransactionsDataEffects(
-                new TransactionsFilter(ChangedObject: packageId),
+                new TransactionsFilter().WithChangedObject(packageId),
                 ForwardPage(cursor)
             );
 
@@ -559,7 +555,7 @@ class Program
         while (true)
         {
             var page = await client.TransactionsDataEffects(
-                new TransactionsFilter(InputObject: upgradeCapId),
+                new TransactionsFilter().WithInputObject(upgradeCapId),
                 ForwardPage(cursor)
             );
 

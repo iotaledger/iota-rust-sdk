@@ -31,7 +31,7 @@ impl From<iota_sdk::types::IntentError> for IntentError {
             iota_sdk::types::IntentError::Scope => Self::Scope,
             iota_sdk::types::IntentError::Version => Self::Version,
             iota_sdk::types::IntentError::AppId => Self::AppId,
-            _ => unimplemented!("a new IntentError variant was added and needs to be handled"),
+            _ => unimplemented!("a new IntentError enum variant was added and needs to be handled"),
         }
     }
 }
@@ -56,11 +56,8 @@ impl From<IntentError> for iota_sdk::types::IntentError {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// intent-scope = u8
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum IntentScope {
     /// Used for a user signature on a transaction data.
@@ -100,7 +97,7 @@ impl From<iota_sdk::types::IntentScope> for IntentScope {
             iota_sdk::types::IntentScope::ConsensusBlock => Self::ConsensusBlock,
             iota_sdk::types::IntentScope::DiscoveryPeers => Self::DiscoveryPeers,
             iota_sdk::types::IntentScope::AuthorityCapabilities => Self::AuthorityCapabilities,
-            _ => unimplemented!("a new IntentScope variant was added and needs to be handled"),
+            _ => unimplemented!("a new IntentScope enum variant was added and needs to be handled"),
         }
     }
 }
@@ -130,11 +127,8 @@ impl From<IntentScope> for iota_sdk::types::IntentScope {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// intent-version = u8
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum IntentVersion {
     V0 = 0,
@@ -144,7 +138,9 @@ impl From<iota_sdk::types::IntentVersion> for IntentVersion {
     fn from(value: iota_sdk::types::IntentVersion) -> Self {
         match value {
             iota_sdk::types::IntentVersion::V0 => Self::V0,
-            _ => unimplemented!("a new IntentVersion variant was added and needs to be handled"),
+            _ => {
+                unimplemented!("a new IntentVersion enum variant was added and needs to be handled")
+            }
         }
     }
 }
@@ -167,11 +163,8 @@ impl From<IntentVersion> for iota_sdk::types::IntentVersion {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// intent-app-id = u8
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum IntentAppId {
     Iota = 0,
@@ -183,7 +176,7 @@ impl From<iota_sdk::types::IntentAppId> for IntentAppId {
         match value {
             iota_sdk::types::IntentAppId::Iota => Self::Iota,
             iota_sdk::types::IntentAppId::Consensus => Self::Consensus,
-            _ => unimplemented!("a new IntentAppId variant was added and needs to be handled"),
+            _ => unimplemented!("a new IntentAppId enum variant was added and needs to be handled"),
         }
     }
 }
@@ -211,11 +204,8 @@ impl From<IntentAppId> for iota_sdk::types::IntentAppId {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// intent = intent-scope intent-version intent-app-id
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct Intent(pub iota_sdk::types::Intent);
@@ -312,7 +302,9 @@ impl From<iota_sdk::types::HashingIntentScope> for HashingIntentScope {
             iota_sdk::types::HashingIntentScope::ChildObjectId => Self::ChildObjectId,
             iota_sdk::types::HashingIntentScope::RegularObjectId => Self::RegularObjectId,
             _ => {
-                unimplemented!("a new HashingIntentScope variant was added and needs to be handled")
+                unimplemented!(
+                    "a new HashingIntentScope enum variant was added and needs to be handled"
+                )
             }
         }
     }

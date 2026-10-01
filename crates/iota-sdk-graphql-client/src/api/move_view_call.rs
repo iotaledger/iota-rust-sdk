@@ -5,16 +5,16 @@ use cynic::QueryBuilder;
 use iota_types::{Address, ObjectId, ObjectReference, TypeTag};
 
 use crate::{
-    Client,
-    error::Result,
+    GraphQLClient,
+    error::GraphQLResult,
     query_types::{MoveViewCallArgs, MoveViewCallQuery, MoveViewResult},
 };
 
-impl Client {
+impl GraphQLClient {
     /// Execute a Move View Function with raw JSON arguments.
     ///
-    /// This is an alternative to [`Client::move_view_call`] that accepts raw
-    /// JSON values instead of typed arguments.
+    /// This is an alternative to [`GraphQLClient::move_view_call`] that accepts
+    /// raw JSON values instead of typed arguments.
     ///
     /// A View Function is a function in a Move module with a return type that
     /// does not alter the state of the ledger. When using this interface,
@@ -24,7 +24,7 @@ impl Client {
     /// # Arguments
     /// * `function_name` - The Move function fully qualified name as
     ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x2::hash::blake2b256`
+    ///   `0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4::shop::total_revenue`
     /// * `type_arguments` - The type arguments of the Move function
     /// * `arguments` - The arguments to be passed into the Move function, in
     ///   JSON format
@@ -37,7 +37,7 @@ impl Client {
         function_name: impl Into<String>,
         type_arguments: impl Into<Option<Vec<String>>>,
         arguments: impl Into<Option<Vec<serde_json::Value>>>,
-    ) -> Result<MoveViewResult> {
+    ) -> GraphQLResult<MoveViewResult> {
         let operation = MoveViewCallQuery::build(MoveViewCallArgs {
             function_name: function_name.into(),
             type_arguments: type_arguments.into(),
@@ -67,18 +67,23 @@ impl Client {
     /// # Arguments
     /// * `function_name` - The Move function fully qualified name as
     ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x2::hash::blake2b256`
+    ///   `0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4::shop::total_revenue`
     /// * `type_arguments` - The type arguments of the Move function
     /// * `arguments` - The typed arguments to be passed into the Move function
     ///
     /// # Example
     /// ```rust,ignore
+    /// // The `view_demo` package published on testnet, and the shared
+    /// // `view_demo::shop::Shop` created when it was published.
+    /// let package = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4";
+    /// let shop = ObjectId::from_str(
+    ///     "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20",
+    /// )?;
+    ///
     /// // Single argument: wrap in a list or tuple
-    /// let result = client.move_view_call(
-    ///     "0x2::hash::blake2b256",
-    ///     None,
-    ///     [vec![0u8, 1, 2]],
-    /// ).await?;
+    /// let result = client
+    ///     .move_view_call(format!("{package}::shop::total_revenue"), None, (shop,))
+    ///     .await?;
     /// ```
     ///
     /// # Returns
@@ -89,7 +94,7 @@ impl Client {
         function_name: impl Into<String>,
         type_arguments: impl Into<Option<Vec<TypeTag>>>,
         arguments: A,
-    ) -> Result<MoveViewResult> {
+    ) -> GraphQLResult<MoveViewResult> {
         let type_args_strings = type_arguments
             .into()
             .map(|tags| tags.into_iter().map(|t| t.to_string()).collect());

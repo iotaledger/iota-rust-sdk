@@ -24,7 +24,7 @@ async def main():
     private_key = Ed25519PrivateKey(b"\x00" * 32)
     public_key = private_key.public_key()
     sender_address = public_key.derive_address()
-    print(f"Sender address: {sender_address.to_hex()}")
+    print(f"Sender address: {sender_address}")
 
     client = GraphQlClient.new_localnet()
 

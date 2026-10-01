@@ -8,7 +8,7 @@ metrics-port: 9185
 storage-config:
   redis:
     redis_url: "redis://redis:6379"
-fullnode-url: "http://localhost:9000"
+fullnode-url: "http://localhost:50051"
 coin-init-config:
   target-init-balance: 100000000
   refresh-interval-sec: 86400

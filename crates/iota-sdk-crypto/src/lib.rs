@@ -5,7 +5,43 @@
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 use iota_types::{PersonalMessage, Transaction, UserSignature};
-pub use signature::{Error as SignatureError, Signer, Verifier};
+
+/// Error returned when signing or verifying fails, or when a key cannot be
+/// decoded. Its `Display` output states the reason.
+#[derive(Debug, thiserror::Error)]
+#[error(transparent)]
+pub struct SignatureError(Box<dyn std::error::Error + Send + Sync + 'static>);
+
+impl SignatureError {
+    /// Create an error from a message or from an underlying error.
+    pub fn from_source(
+        source: impl Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
+    ) -> Self {
+        Self(source.into())
+    }
+}
+
+/// Sign a message, producing a signature of type `S`.
+pub trait Signer<S> {
+    /// Sign `msg`, returning an error if signing fails.
+    fn try_sign(&self, msg: &[u8]) -> Result<S, SignatureError>;
+
+    /// Sign `msg`.
+    ///
+    /// # Panics
+    ///
+    /// Panics if signing fails; use [`Signer::try_sign`] to handle the error.
+    fn sign(&self, msg: &[u8]) -> S {
+        self.try_sign(msg)
+            .unwrap_or_else(|e| panic!("signature operation failed: {e}"))
+    }
+}
+
+/// Verify a signature of type `S` over a message.
+pub trait Verifier<S> {
+    /// Verify that `signature` is a valid signature over `message`.
+    fn verify(&self, message: &[u8], signature: &S) -> Result<(), SignatureError>;
+}
 
 /// Error type for private key encoding/decoding operations
 #[derive(Debug, thiserror::Error)]
@@ -260,10 +296,20 @@ where
 
 /// Defines a type which can be converted to and from a base64 string of its
 /// raw bytes
-#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
+#[cfg(any(
+    feature = "bls12381",
+    feature = "ed25519",
+    feature = "secp256r1",
+    feature = "secp256k1",
+))]
 #[cfg_attr(
     doc_cfg,
-    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
+    doc(cfg(any(
+        feature = "bls12381",
+        feature = "ed25519",
+        feature = "secp256r1",
+        feature = "secp256k1",
+    )))
 )]
 pub trait ToFromBase64 {
     type Error;
@@ -279,7 +325,12 @@ pub trait ToFromBase64 {
         Self: Sized;
 }
 
-#[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
+#[cfg(any(
+    feature = "bls12381",
+    feature = "ed25519",
+    feature = "secp256r1",
+    feature = "secp256k1",
+))]
 impl<T: ToFromBytes<Error = PrivateKeyError>> ToFromBase64 for T
 where
     T::ByteArray: AsRef<[u8]>,
@@ -335,19 +386,24 @@ impl<T: ToFromFlaggedBytes<Error = PrivateKeyError>> ToFromBech32 for T {
 
     #[cfg(feature = "bech32")]
     fn from_bech32(value: &str) -> Result<Self, Self::Error> {
-        use bech32::Hrp;
+        use bech32::{Hrp, primitives::decode::CheckedHrpstring};
 
         let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
             .map_err(|e| PrivateKeyError::Bech32Hrp(format!("{e}")))?;
 
-        let (hrp, data) = bech32::decode(value)
+        // Only the Bech32 checksum is valid for this encoding; `bech32::decode`
+        // would also accept a Bech32m checksum.
+        let parsed = CheckedHrpstring::new::<bech32::Bech32>(value)
             .map_err(|e| PrivateKeyError::Bech32(format!("decoding failed: {e}")))?;
 
+        let hrp = parsed.hrp();
         if hrp != expected_hrp {
             return Err(PrivateKeyError::Bech32Hrp(format!(
                 "expected {IOTA_PRIV_KEY_PREFIX}, got {hrp}"
             )));
         }
+
+        let data: Vec<u8> = parsed.byte_iter().collect();
 
         if data.is_empty() {
             return Err(PrivateKeyError::EmptyData("bech32 data".to_string()));

@@ -10,10 +10,10 @@ fun main() = runBlocking {
         val client = GraphQlClient.newTestnet()
         val transactions =
             client.transactions(
-                TransactionsFilter(function = "0x3::iota_system::request_add_stake")
+                TransactionsFilter().withFunction("0x3::iota_system::request_add_stake")
             )
         for (transaction in transactions.data) {
-            println("Digest: ${transaction.transaction.digest().toBase58()}")
+            println("Digest: ${transaction.transaction.digest()}")
         }
     } catch (e: Exception) {
         e.printStackTrace()

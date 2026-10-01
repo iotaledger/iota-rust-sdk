@@ -11,7 +11,7 @@ use crate::proto::{TryFromProtoError, get_inner_field};
 impl From<iota_types::Digest> for Digest {
     fn from(value: iota_types::Digest) -> Self {
         Self {
-            digest: value.into_inner().to_vec().into(),
+            digest: value.into_bytes().to_vec().into(),
         }
     }
 }

@@ -98,17 +98,21 @@ jobs:
           cp Sources/CIotaSDK/CIotaSDK.h headers/
           cp dist/module.modulemap headers/
 
+      # The file name must match the install name (@rpath/libiota_sdk_ffi.dylib)
+      # or dyld fails to load the library at runtime, so put the universal
+      # dylib in its own directory instead of renaming it.
       - name: Create macOS universal dylib
         run: |
+          mkdir -p lib/darwin-universal
           lipo -create \
             lib/darwin-amd64/libiota_sdk_ffi.dylib \
             lib/darwin-aarch64/libiota_sdk_ffi.dylib \
-            -output libiota_sdk_ffi_macos.dylib
+            -output lib/darwin-universal/libiota_sdk_ffi.dylib
 
       - name: Create XCFramework
         run: |
           xcodebuild -create-xcframework \
-            -library libiota_sdk_ffi_macos.dylib -headers headers \
+            -library lib/darwin-universal/libiota_sdk_ffi.dylib -headers headers \
             -library lib/ios-aarch64/libiota_sdk_ffi.dylib -headers headers \
             -library lib/ios-sim-aarch64/libiota_sdk_ffi.dylib -headers headers \
             -output IotaSDK.xcframework

@@ -8,7 +8,7 @@
 // a send_iota transaction, signs with only 2 of the 3 keys, aggregates,
 // and executes.
 //
-// Requires a running localnet (`iota start --force-regenesis`).
+// Requires a running localnet (`iota-localnet start --force-regenesis`).
 
 import Foundation
 import IotaSDK
@@ -44,7 +44,7 @@ struct MultisigExample {
 
     // 4. Derive multisig address
     let multisigAddress = committee.deriveAddress()
-    print("Multisig address: \(multisigAddress.toHex())")
+    print("Multisig address: \(multisigAddress)")
 
     let client = GraphQlClient.newLocalnet()
 

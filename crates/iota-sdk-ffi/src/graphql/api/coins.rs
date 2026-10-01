@@ -30,9 +30,7 @@ impl GraphQLClient {
         coin_type: Option<Arc<StructTag>>,
     ) -> Result<CoinPage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .coins(
                 **owner,
                 coin_type.map(|t| t.0.clone()),
@@ -51,9 +49,7 @@ impl GraphQLClient {
         pagination_filter: Option<PaginationFilter>,
     ) -> Result<CoinPage> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .gas_coins(
                 **owner,
                 pagination_filter.map(Into::into).unwrap_or_default(),
@@ -66,9 +62,7 @@ impl GraphQLClient {
     /// Get the coin metadata for the coin type.
     pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<CoinMetadata>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .coin_metadata(coin_type)
             .await?
             .map(CoinMetadata::from))
@@ -76,6 +70,6 @@ impl GraphQLClient {
 
     /// Get total supply for the coin type.
     pub async fn total_supply(&self, coin_type: &str) -> Result<Option<u64>> {
-        Ok(self.0.read().await.total_supply(coin_type).await?)
+        Ok(self.client().total_supply(coin_type).await?)
     }
 }

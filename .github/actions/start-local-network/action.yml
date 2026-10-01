@@ -32,7 +32,7 @@ runs:
         # tar -zxvf "$artifact_name.tgz" ./iota ./iota-localnet
 
         # Uncomment when using a released build
-        IOTA_BINARY_VERSION="v1.29.0"
+        IOTA_BINARY_VERSION="v1.31.1-rc"
         ASSET_NAME="iota-$IOTA_BINARY_VERSION-linux-x86_64.tgz"
         download_url="https://github.com/iotaledger/iota/releases/download/$IOTA_BINARY_VERSION/$ASSET_NAME"
         echo "Downloading binary from $download_url"

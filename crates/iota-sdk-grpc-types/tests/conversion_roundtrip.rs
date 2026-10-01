@@ -255,40 +255,40 @@ fn user_signature_roundtrip() {
 
 #[test]
 fn argument_roundtrip_gas() {
-    let original = iota_types::transaction::Argument::Gas;
+    let original = iota_types::Argument::Gas;
 
     let proto: v1::command::Argument = original.try_into().unwrap();
-    let back: iota_types::transaction::Argument = (&proto).try_into().unwrap();
+    let back: iota_types::Argument = (&proto).try_into().unwrap();
 
-    assert_eq!(iota_types::transaction::Argument::Gas, back);
+    assert_eq!(iota_types::Argument::Gas, back);
 }
 
 #[test]
 fn argument_roundtrip_input() {
-    let original = iota_types::transaction::Argument::Input(7);
+    let original = iota_types::Argument::Input(7);
 
     let proto: v1::command::Argument = original.try_into().unwrap();
-    let back: iota_types::transaction::Argument = (&proto).try_into().unwrap();
+    let back: iota_types::Argument = (&proto).try_into().unwrap();
 
     assert_eq!(original, back);
 }
 
 #[test]
 fn argument_roundtrip_result() {
-    let original = iota_types::transaction::Argument::Result(3);
+    let original = iota_types::Argument::Result(3);
 
     let proto: v1::command::Argument = original.try_into().unwrap();
-    let back: iota_types::transaction::Argument = (&proto).try_into().unwrap();
+    let back: iota_types::Argument = (&proto).try_into().unwrap();
 
     assert_eq!(original, back);
 }
 
 #[test]
 fn argument_roundtrip_nested_result() {
-    let original = iota_types::transaction::Argument::NestedResult(2, 5);
+    let original = iota_types::Argument::NestedResult(2, 5);
 
     let proto: v1::command::Argument = original.try_into().unwrap();
-    let back: iota_types::transaction::Argument = (&proto).try_into().unwrap();
+    let back: iota_types::Argument = (&proto).try_into().unwrap();
 
     assert_eq!(original, back);
 }

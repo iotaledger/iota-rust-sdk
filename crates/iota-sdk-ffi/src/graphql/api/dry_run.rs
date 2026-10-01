@@ -28,9 +28,7 @@ impl GraphQLClient {
         skip_checks: bool,
     ) -> Result<DryRunResult> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .dry_run_transaction(&transaction.0, skip_checks)
             .await?
             .into())
@@ -53,9 +51,7 @@ impl GraphQLClient {
         skip_checks: bool,
     ) -> Result<DryRunResult> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .dry_run_transaction_kind(
                 &transaction_kind.into(),
                 skip_checks,

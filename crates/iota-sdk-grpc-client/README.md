@@ -11,15 +11,15 @@ The IOTA gRPC client provides access to the IOTA blockchain via gRPC. It exposes
 
 ## Connecting to a gRPC server
 
-Instantiate a client with one of the predefined network constructors or `Client::new(url)` for a custom endpoint:
+Instantiate a client with one of the predefined network constructors or `GrpcClient::new(url)` for a custom endpoint:
 
 ```rust
-use iota_sdk_grpc_client::Client;
+use iota_sdk_grpc_client::GrpcClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Connect to devnet
-    let client = Client::new_devnet()?;
+    let client = GrpcClient::new_devnet()?;
 
     // Access service clients
     let ledger = client.ledger_service_client();
@@ -40,11 +40,11 @@ The client provides `new_mainnet()`, `new_testnet()`, `new_devnet()`, `new_local
 Customize headers and message size limits:
 
 ```rust
-use iota_sdk_grpc_client::Client;
+use iota_sdk_grpc_client::GrpcClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = Client::new_devnet()?
+    let client = GrpcClient::new_devnet()?
         .with_headers(vec![("x-custom-header", "value")])
         .with_max_decoding_message_size(16 * 1024 * 1024); // 16MB
 

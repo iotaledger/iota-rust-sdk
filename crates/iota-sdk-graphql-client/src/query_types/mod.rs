@@ -19,7 +19,6 @@ mod object;
 mod packages;
 mod protocol_config;
 mod service_config;
-#[cfg(not(target_arch = "wasm32"))]
 mod subscriptions;
 mod transaction;
 
@@ -75,7 +74,6 @@ pub use protocol_config::{
 };
 use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
-#[cfg(not(target_arch = "wasm32"))]
 pub use subscriptions::{
     EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs, Lagged,
     SubscriptionEvent, SubscriptionEventFilter, SubscriptionTransactionBlock,
@@ -83,11 +81,13 @@ pub use subscriptions::{
     TransactionsSubscriptionArgs,
 };
 pub use transaction::{
-    TransactionBlock, TransactionBlockArgs, TransactionBlockCheckpointQuery,
-    TransactionBlockEffectsQuery, TransactionBlockIndexedQuery, TransactionBlockKindInput,
-    TransactionBlockQuery, TransactionBlockWithEffects, TransactionBlockWithEffectsQuery,
-    TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
-    TransactionBlocksWithEffectsQuery, TransactionsFilter,
+    AddressTransactionBlocksQuery, AddressTransactionRelationship, AddressTransactionsQuery,
+    AddressTransactionsQueryArgs, TransactionBlock, TransactionBlockArgs,
+    TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery, TransactionBlockFilter,
+    TransactionBlockIndexedQuery, TransactionBlockKindInput, TransactionBlockQuery,
+    TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
+    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
+    TransactionsFilter, TransactionsSelector,
 };
 
 use crate::error;
@@ -176,7 +176,7 @@ pub struct PageInfo {
 }
 
 impl TryFrom<BigInt> for u64 {
-    type Error = error::Error;
+    type Error = error::GraphQLError;
 
     fn try_from(value: BigInt) -> Result<Self, Self::Error> {
         Ok(value.0.parse::<u64>()?)

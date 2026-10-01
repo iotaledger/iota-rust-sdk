@@ -9,11 +9,8 @@ use crate::error::Result;
 ///
 /// # BCS
 ///
-/// A `Digest`'s BCS serialized form is defined by the following:
-///
-/// ```text
-/// digest = %d32 32OCTET
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
 /// Due to historical reasons, even though a `Digest` has a fixed-length of 32,
 /// IOTA's binary representation of a `Digest` is prefixed with its length
@@ -52,7 +49,7 @@ impl Digest {
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
-        self.0.as_bytes().to_vec()
+        self.0.bytes().to_vec()
     }
 
     pub fn to_base58(&self) -> String {
@@ -115,7 +112,7 @@ macro_rules! ffi_digest_wrapper {
             }
 
             pub fn to_bytes(&self) -> Vec<u8> {
-                self.0.as_bytes().to_vec()
+                self.0.bytes().to_vec()
             }
 
             pub fn to_base58(&self) -> String {

@@ -32,7 +32,7 @@ struct PackageInspectExample {
 
     let versions = try await fetchPackageVersions(client: client, packageAddress: packageAddress)
     let packagePrefix = package.id().toHex()
-    print("Latest version: \(latestPackage.version().asU64()) (\(latestPackage.id().toHex()))")
+    print("Latest version: \(latestPackage.version().asU64()) (\(latestPackage.id()))")
     // Resolve the current upgrade policy.
     let currentPolicy = try await currentPackagePolicy(client: client, packageId: package.id())
     print("Current package policy: \(currentPolicy)")
@@ -50,27 +50,27 @@ struct PackageInspectExample {
       }
 
       let suffix = labels.isEmpty ? "" : " [\(labels.joined(separator: ", "))]"
-      print("- v\(version.version().asU64()) -> \(version.id().toHex())\(suffix)")
+      print("- v\(version.version().asU64()) -> \(version.id())\(suffix)")
     }
     print()
 
     // Print package dependencies and their linked versions.
     print("Dependencies:")
-    let dependencies = package.linkageTable().values.sorted {
+    let dependencies = package.linkageTable().values().sorted {
       $0.upgradedId.toHex() < $1.upgradedId.toHex()
     }
     if dependencies.isEmpty {
       print("- none")
     } else {
       for upgrade in dependencies {
-        print("- \(upgrade.upgradedId.toHex()) @ v\(upgrade.upgradedVersion.asU64())")
+        print("- \(upgrade.upgradedId) @ v\(upgrade.upgradedVersion.asU64())")
       }
     }
     print()
 
     // Inspect normalized modules, functions, types, and sample key objects.
     print("Package contents:")
-    let moduleNames = package.modules().keys.map { $0.asStr() }.sorted()
+    let moduleNames = package.modules().keys().map { $0.asStr() }
     for moduleName in moduleNames {
       print("Module: \(moduleName)")
 
@@ -232,7 +232,7 @@ private func printObjectSamples(
 
   print("    sample objects:")
   for object in objects.data {
-    print("      - \(object.id().toHex()) (version \(object.version().asU64()))")
+    print("      - \(object.id()) (version \(object.version().asU64()))")
   }
   if objects.pageInfo.hasNextPage {
     print("      - ...")
@@ -277,7 +277,7 @@ private func resolveUpgradeCapId(
   packageId: ObjectId
 ) async throws -> ObjectId? {
   let page = try await client.transactionsEffects(
-    filter: TransactionsFilter(changedObject: packageId),
+    filter: TransactionsFilter().withChangedObject(changedObject: packageId),
     paginationFilter: PaginationFilter(direction: .forward, limit: 1)
   )
 
@@ -421,7 +421,7 @@ private func wasPackagePublishedAsImmutable(
 
   while true {
     let page = try await client.transactionsDataEffects(
-      filter: TransactionsFilter(changedObject: packageId),
+      filter: TransactionsFilter().withChangedObject(changedObject: packageId),
       paginationFilter: forwardPage(cursor: cursor)
     )
 
@@ -447,7 +447,7 @@ private func wasUpgradeCapUsedForMakeImmutable(
 
   while true {
     let page = try await client.transactionsDataEffects(
-      filter: TransactionsFilter(inputObject: upgradeCapId),
+      filter: TransactionsFilter().withInputObject(inputObject: upgradeCapId),
       paginationFilter: forwardPage(cursor: cursor)
     )
 

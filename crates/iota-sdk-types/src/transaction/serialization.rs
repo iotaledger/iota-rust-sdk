@@ -469,4 +469,76 @@ mod tests {
             tx_kind
         );
     }
+
+    #[test]
+    fn change_epoch_u64_vectors_serialize_as_strings_in_json() {
+        let v3 = EndOfEpochTransactionKind::new_change_epoch_v3(
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            vec![],
+            vec![u64::MAX],
+        );
+        let json = serde_json::to_value(&v3).unwrap();
+        assert_eq!(
+            json["ChangeEpochV3"]["eligible_active_validators"],
+            serde_json::json!(["18446744073709551615"])
+        );
+        assert_eq!(
+            serde_json::from_value::<EndOfEpochTransactionKind>(json).unwrap(),
+            v3
+        );
+        let bcs = bcs::to_bytes(&v3).unwrap();
+        let mut tail = vec![1];
+        tail.extend(u64::MAX.to_le_bytes());
+        assert!(bcs.ends_with(&tail));
+        assert_eq!(
+            bcs::from_bytes::<EndOfEpochTransactionKind>(&bcs).unwrap(),
+            v3
+        );
+
+        let v4 = EndOfEpochTransactionKind::new_change_epoch_v4(
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            vec![],
+            vec![u64::MAX],
+            vec![9007199254740993],
+            true,
+        );
+        let json = serde_json::to_value(&v4).unwrap();
+        assert_eq!(
+            json["ChangeEpochV4"]["eligible_active_validators"],
+            serde_json::json!(["18446744073709551615"])
+        );
+        assert_eq!(
+            json["ChangeEpochV4"]["scores"],
+            serde_json::json!(["9007199254740993"])
+        );
+        assert_eq!(
+            serde_json::from_value::<EndOfEpochTransactionKind>(json).unwrap(),
+            v4
+        );
+        let bcs = bcs::to_bytes(&v4).unwrap();
+        let mut tail = vec![1];
+        tail.extend(u64::MAX.to_le_bytes());
+        tail.push(1);
+        tail.extend(9007199254740993u64.to_le_bytes());
+        tail.push(1);
+        assert!(bcs.ends_with(&tail));
+        assert_eq!(
+            bcs::from_bytes::<EndOfEpochTransactionKind>(&bcs).unwrap(),
+            v4
+        );
+    }
 }

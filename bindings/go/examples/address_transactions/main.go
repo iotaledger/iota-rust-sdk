@@ -23,29 +23,27 @@ func main() {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
-	outgoing, err := client.Transactions(&iota_sdk.TransactionsFilter{
-		SentAddress: &address,
-	}, nil)
+	sentFilter := iota_sdk.NewTransactionsFilter().WithSentAddress(address)
+	outgoing, err := client.Transactions(&sentFilter, nil)
 	if err != nil {
 		log.Fatalf("Failed to fetch outgoing transactions: %v", err)
 	}
 
-	incoming, err := client.Transactions(&iota_sdk.TransactionsFilter{
-		RecvAddress: &address,
-	}, nil)
+	recvFilter := iota_sdk.NewTransactionsFilter().WithRecvAddress(address)
+	incoming, err := client.Transactions(&recvFilter, nil)
 	if err != nil {
 		log.Fatalf("Failed to fetch incoming transactions: %v", err)
 	}
 
-	fmt.Printf("Transactions for %s\n", address.ToHex())
+	fmt.Printf("Transactions for %s\n", address)
 
 	fmt.Printf("\nOutgoing (sent by address): %d\n", len(outgoing.Data))
 	for _, tx := range outgoing.Data {
-		fmt.Printf("  - %s\n", tx.Transaction.Digest().ToBase58())
+		fmt.Printf("  - %s\n", tx.Transaction.Digest())
 	}
 
 	fmt.Printf("\nIncoming (received by address): %d\n", len(incoming.Data))
 	for _, tx := range incoming.Data {
-		fmt.Printf("  - %s\n", tx.Transaction.Digest().ToBase58())
+		fmt.Printf("  - %s\n", tx.Transaction.Digest())
 	}
 }

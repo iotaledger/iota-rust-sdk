@@ -4,29 +4,16 @@
 
 use crate::{
     EffectsAuxDataDigest, EpochId, ExecutionStatus, GasCostSummary, IdOperation, InputSharedObject,
-    ObjectChange, ObjectDigest, ObjectId, ObjectReference, ObjectRemoveKind, ObjectVersion,
-    OwnedObjectReference, Owner, TransactionDigest, TransactionEventsDigest, Version, WriteKind,
+    ObjectDigest, ObjectId, ObjectReference, ObjectRemoveKind, ObjectVersion, OwnedObjectReference,
+    Owner, TransactionDigest, TransactionEventsDigest, Version, WriteKind,
 };
 
 /// Version 1 of TransactionEffects
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// transaction-effects-v1 = execution-status                    ; status
-///                          u64                                 ; epoch
-///                          gas-cost-summary                    ; gas-used
-///                          transaction-digest                  ; transaction-digest
-///                          (option u32)                        ; gas-object-index
-///                          (option transaction-events-digest)  ; events-digest
-///                          (vector transaction-digest)         ; dependencies
-///                          u64                                 ; lamport-version
-///                          (vector changed-object)             ; changed-objects
-///                          (vector unchanged-shared-object)    ; unchanged-shared-objects
-///                          (option effects-aux-data-digest)    ; auxiliary-data-digest
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -96,11 +83,8 @@ impl crate::TreeDisplay for TransactionEffectsV1 {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// changed-object = object-id object-in object-out id-operation
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -132,12 +116,8 @@ impl crate::TreeDisplay for ChangedObject {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// unchanged-shared-object = object-id               ; object-id
-///                           unchanged-shared-kind   ; kind
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -168,15 +148,8 @@ crate::impl_tree_display!(
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// unchanged-shared-kind = %d00 u64 object-digest   ; ReadOnlyRoot
-///                       / %d01 u64                  ; MutateDeleted
-///                       / %d02 u64                  ; ReadDeleted
-///                       / %d03 u64                  ; Canceled
-///                       / %d04                       ; PerEpochConfig
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -246,12 +219,8 @@ impl crate::TreeDisplay for UnchangedSharedKind {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object-in = %d00                          ; Missing
-///           / %d01 u64 object-digest owner   ; Data
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -330,13 +299,8 @@ impl crate::TreeDisplay for ObjectIn {
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// object-out = %d00                       ; Missing
-///            / %d01 object-digest owner   ; ObjectWrite
-///            / %d02 u64 object-digest     ; PackageWrite
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -487,35 +451,6 @@ impl TransactionEffectsV1 {
                         }
                     }),
             )
-            .collect()
-    }
-
-    /// What this transaction did to each object it changed, with the version
-    /// and digest each side is at resolved.
-    pub fn object_changes(&self) -> Vec<ObjectChange> {
-        self.changed_objects
-            .iter()
-            .map(|changed| {
-                let input = match changed.input_state {
-                    ObjectIn::Data {
-                        version, digest, ..
-                    } => Some((version, digest)),
-                    _ => None,
-                };
-                let output = match changed.output_state {
-                    ObjectOut::ObjectWrite { digest, .. } => Some((self.lamport_version, digest)),
-                    ObjectOut::PackageWrite { version, digest } => Some((version, digest)),
-                    _ => None,
-                };
-                ObjectChange {
-                    object_id: changed.object_id,
-                    input_version: input.map(|(version, _)| version),
-                    input_digest: input.map(|(_, digest)| digest),
-                    output_version: output.map(|(version, _)| version),
-                    output_digest: output.map(|(_, digest)| digest),
-                    id_operation: changed.id_operation,
-                }
-            })
             .collect()
     }
 

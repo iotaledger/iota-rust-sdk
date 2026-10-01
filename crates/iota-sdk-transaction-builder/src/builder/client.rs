@@ -9,26 +9,17 @@ use iota_types::{
 };
 
 /// Determines what to wait for after executing a transaction.
-///
-/// Users should almost always use [`WaitForTransaction::Finalized`] (the
-/// default), as clients may interact with the indexer and not the fullnode
-/// directly. Using [`WaitForTransaction::IndexedOnNode`] only guarantees the
-/// transaction is indexed on the fullnode (meaning you can submit transactions
-/// that reference objects created by this transaction), but subsequent queries
-/// using the transaction ID can still fail until the transaction is indexed on
-/// the indexer.
 #[derive(Default)]
 #[non_exhaustive]
 pub enum WaitForTransaction {
     /// Indicates that the transaction effects will be usable in subsequent
     /// transactions (you can reference objects created by this transaction),
-    /// and that the transaction itself is indexed on the fullnode.
+    /// and that the transaction itself is indexed on the fullnode, so queries
+    /// served by the fullnode, such as gRPC, will find it.
     ///
     /// **Warning:** This does not guarantee the transaction is indexed on the
-    /// indexer. Since the client may query the indexer, subsequent
-    /// queries with this transaction ID may still fail. Prefer
-    /// [`WaitForTransaction::Finalized`] unless you have a specific reason to
-    /// use this.
+    /// indexer, so queries served by an indexer, such as GraphQL, may not
+    /// find it yet. Use [`WaitForTransaction::Finalized`] with those clients.
     IndexedOnNode,
     /// Indicates that the transaction has been included in a checkpoint, and
     /// all queries may include it.
@@ -52,9 +43,26 @@ pub struct ObjectsPage {
 /// map of attribute name to value, parsed by callers as needed.
 #[derive(Clone, Debug, Default)]
 pub struct ProtocolConfig {
+    pub(crate) attributes: BTreeMap<String, String>,
+}
+
+impl ProtocolConfig {
+    /// Builds a config from attributes keyed by their canonical protocol name
+    /// (e.g. `"max_gas_payment_objects"`).
+    pub fn new(attributes: BTreeMap<String, String>) -> Self {
+        Self { attributes }
+    }
+
     /// All available configuration attributes, keyed by their canonical
     /// protocol name (e.g. `"max_gas_payment_objects"`).
-    pub attributes: BTreeMap<String, String>,
+    pub fn attributes(&self) -> &BTreeMap<String, String> {
+        &self.attributes
+    }
+
+    /// Looks up one attribute by its canonical protocol name.
+    pub fn attribute(&self, name: &str) -> Option<&str> {
+        self.attributes.get(name).map(String::as_str)
+    }
 }
 
 /// Base trait shared by the transaction builder client traits, carrying the
@@ -110,13 +118,9 @@ pub trait TransactionBuilderLedgerClient: TransactionBuilderClientBase {
     ) -> impl std::future::Future<Output = Result<ObjectsPage, Self::Error>>;
 
     /// Fetch the chain's protocol configuration.
-    ///
-    /// The default impl returns a default [`ProtocolConfig`].
     fn protocol_config(
         &self,
-    ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>> {
-        std::future::ready(Ok(ProtocolConfig::default()))
-    }
+    ) -> impl std::future::Future<Output = Result<ProtocolConfig, Self::Error>>;
 
     /// Get the reference gas price
     fn reference_gas_price(
@@ -389,7 +393,10 @@ pub(crate) mod test_client {
         TransactionBuilderClientBase, TransactionBuilderExecutionClient,
         TransactionBuilderLedgerClient, TransactionBuilderSimulationClient, WaitForTransaction,
     };
-    use crate::ObjectsPage;
+    use crate::{
+        ObjectsPage,
+        builder::{BASE_TX_COST_FIXED_KEY, MAX_GAS_PAYMENT_OBJECTS_KEY},
+    };
 
     /// Balance, in NANOS, of every fabricated coin. Large enough to cover any
     /// gas budget the builder might estimate in a doc test or example.
@@ -486,6 +493,17 @@ pub(crate) mod test_client {
             _epoch: impl Into<Option<u64>>,
         ) -> Result<Option<u64>, Self::Error> {
             Ok(Some(1000))
+        }
+
+        async fn protocol_config(&self) -> Result<super::ProtocolConfig, Self::Error> {
+            let mut config = super::ProtocolConfig::default();
+            config
+                .attributes
+                .insert(BASE_TX_COST_FIXED_KEY.to_owned(), "1000".to_owned());
+            config
+                .attributes
+                .insert(MAX_GAS_PAYMENT_OBJECTS_KEY.to_owned(), "256".to_owned());
+            Ok(config)
         }
     }
 
@@ -613,6 +631,10 @@ pub(crate) mod test_client {
             epoch: impl Into<Option<u64>>,
         ) -> Result<Option<u64>, Self::Error> {
             crate::TestClient.reference_gas_price(epoch).await
+        }
+
+        async fn protocol_config(&self) -> Result<super::ProtocolConfig, Self::Error> {
+            crate::TestClient.protocol_config().await
         }
     }
 

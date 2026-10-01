@@ -69,6 +69,11 @@ pub mod nft {
     ///
     /// One-time witness marker. The Move struct is empty; the Rust mirror
     /// carries a `dummy_field` to preserve the BCS wire format.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -193,6 +198,11 @@ pub mod stardust_upgrade_label {
     /// Name of the label applied to vested rewards migrated from Stardust.
     /// The Move struct is empty; the Rust mirror carries a `dummy_field`
     /// to preserve the BCS wire format.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[expect(non_camel_case_types)]
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -307,6 +317,11 @@ pub mod alias {
     /// Outputs owned by the AliasID/Address in Stardust will be sent to
     /// this object and have to be received via it once extracted from
     /// `AliasOutput`.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -399,6 +414,11 @@ pub mod alias_output {
 pub mod timelock_unlock_condition {
     /// Rust version of the Move
     /// `stardust::timelock_unlock_condition::TimelockUnlockCondition` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -426,6 +446,11 @@ pub mod expiration_unlock_condition {
     /// Rust version of the Move
     /// `stardust::expiration_unlock_condition::ExpirationUnlockCondition`
     /// type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -461,6 +486,11 @@ pub mod storage_deposit_return_unlock_condition {
     /// Rust version of the Move
     /// `stardust::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition`
     /// type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]

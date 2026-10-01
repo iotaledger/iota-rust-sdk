@@ -7,10 +7,13 @@ import asyncio
 
 
 async def main():
-    client = GraphQlClient.new_testnet()
+    client = GraphQlClient.new_localnet()
 
-    sender = Address.from_hex(
-        "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
+    private_key = Ed25519PrivateKey.random()
+    sender = private_key.public_key().derive_address()
+
+    faucet = FaucetClient.new_localnet()
+    await faucet.request_and_wait_for_finalized(sender, client)
 
     builder = client.transaction_builder(sender)
 

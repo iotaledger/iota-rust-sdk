@@ -8,7 +8,7 @@
 // a send_iota transaction, signs with only 2 of the 3 keys, aggregates,
 // and executes.
 //
-// Requires a running localnet (`iota start --force-regenesis`).
+// Requires a running localnet (`iota-localnet start --force-regenesis`).
 
 using IotaSdk;
 
@@ -42,7 +42,7 @@ class Program
 
         // 4. Derive multisig address
         var multisigAddress = committee.DeriveAddress();
-        Console.WriteLine($"Multisig address: {multisigAddress.ToHex()}");
+        Console.WriteLine($"Multisig address: {multisigAddress}");
 
         var client = GraphQlClient.NewLocalnet();
 

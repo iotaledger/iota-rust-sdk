@@ -8,7 +8,7 @@
 // a send_iota transaction, signs with only 2 of the 3 keys, aggregates,
 // and executes.
 //
-// Requires a running localnet (`iota start --force-regenesis`).
+// Requires a running localnet (`iota-localnet start --force-regenesis`).
 
 package main
 
@@ -60,7 +60,7 @@ func main() {
 
 	// 4. Derive multisig address
 	multisigAddress := committee.DeriveAddress()
-	log.Printf("Multisig address: %s", multisigAddress.ToHex())
+	log.Printf("Multisig address: %s", multisigAddress)
 
 	client := iota_sdk.GraphQlClientNewLocalnet()
 

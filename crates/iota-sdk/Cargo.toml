@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk"
-version = "3.0.0-alpha.1"
+version = "3.0.0-beta.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
@@ -20,6 +20,9 @@ default = [
   "crypto",
   "ed25519",
   "graphql",
+  "graphql-tls-native-roots",
+  "graphql-tls-ring",
+  "graphql-tls-webpki-roots",
   "hash",
   "mnemonic",
   "passkey",
@@ -28,7 +31,7 @@ default = [
   "secp256k1",
   "secp256r1",
   "serde",
-  "txn-builder",
+  "transaction-builder",
   "types",
 ]
 # Crypto
@@ -41,20 +44,31 @@ pem = ["crypto", "iota-crypto/pem"]
 bls12381 = ["crypto", "iota-crypto/bls12381"]
 bech32 = ["crypto", "iota-crypto/bech32"]
 mnemonic = ["crypto", "iota-crypto/mnemonic"]
-move-types = ["dep:iota-move-types"]
+move-types = [
+  "dep:iota-move-types",
+  "iota-graphql-client?/move-types",
+  "iota-grpc-client?/move-types",
+]
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
+# TLS for the GraphQL client (the workspace dependency disables default
+# features, so these are not inherited).
+graphql-tls-aws-lc = ["graphql", "iota-graphql-client/tls-aws-lc"]
+graphql-tls-native-roots = ["graphql", "iota-graphql-client/tls-native-roots"]
+graphql-tls-ring = ["graphql", "iota-graphql-client/tls-ring"]
+graphql-tls-webpki-roots = ["graphql", "iota-graphql-client/tls-webpki-roots"]
 # gRPC
-grpc = [
-  "dep:iota-grpc-client",
-  "dep:iota-grpc-types",
-]
+grpc = ["dep:iota-grpc-client", "dep:iota-grpc-types"]
 # TLS support for the gRPC client (required to reach `https://` endpoints
 # such as the public testnet/mainnet nodes).
-grpc-tls-native-roots = ["grpc", "iota-grpc-client/tls-native-roots"]
+grpc-tls-aws-lc = ["grpc", "iota-grpc-client/tls-aws-lc"]
 grpc-tls-ring = ["grpc", "iota-grpc-client/tls-ring"]
+grpc-tls-native-roots = ["grpc", "iota-grpc-client/tls-native-roots"]
+grpc-tls-webpki-roots = ["grpc", "iota-grpc-client/tls-webpki-roots"]
 # Transaction Builder
-txn-builder = ["dep:iota-transaction-builder"]
+transaction-builder = ["dep:iota-transaction-builder"]
+# Sponsorship through the IOTA gas station.
+gas-station = ["transaction-builder", "iota-transaction-builder/gas-station"]
 # Types
 types = ["dep:iota-types"]
 serde = ["types", "iota-types/serde"]
@@ -78,8 +92,7 @@ cynic.workspace = true
 eyre.workspace = true
 futures.workspace = true
 hex.workspace = true
-rand.workspace = true
-reqwest = { workspace = true, features = ["rustls-tls", "json"] }
+reqwest = { workspace = true, features = ["rustls-no-provider", "json"] }
 serde_json.workspace = true
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 
@@ -87,23 +100,40 @@ tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 iota-graphql-client-build.workspace = true
 
 # gRPC examples: skipped unless the gRPC TLS features are enabled (e.g.
-# `cargo run --example chain_id_grpc --features grpc-tls-native-roots,grpc-tls-ring`).
+# `cargo run --example grpc_get_object --features grpc-tls-native-roots,grpc-tls-ring`).
+# `grpc_service_info` targets localnet over plain HTTP and only needs `grpc`.
 [[example]]
-name = "chain_id_grpc"
+name = "grpc_service_info"
+required-features = ["grpc"]
+
+[[example]]
+name = "grpc_execute_transaction"
+required-features = ["grpc"]
+
+[[example]]
+name = "grpc_get_object"
 required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]
-name = "get_object_grpc"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+name = "grpc_owned_objects"
+required-features = ["grpc-tls-native-roots", "grpc-tls-ring", "move-types"]
 
 [[example]]
-name = "owned_objects_grpc"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+name = "grpc_checkpoints_stream"
+required-features = ["grpc"]
 
 [[example]]
-name = "stream_checkpoints_grpc"
+name = "grpc_view_function_call"
 required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]
 name = "decode_staked_iota"
-required-features = ["move-types"]
+required-features = ["graphql"]
+
+[[example]]
+name = "move_objects"
+required-features = ["graphql", "move-types"]
+
+[[example]]
+name = "gas_station"
+required-features = ["gas-station"]

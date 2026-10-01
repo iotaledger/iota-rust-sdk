@@ -8,14 +8,8 @@ use crate::{Address, Identifier, TypeParseError, TypeTag};
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// struct-tag = address            ; address of the package
-///              identifier         ; name of the module
-///              identifier         ; name of the type
-///              (vector type-tag)  ; type parameters
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -316,51 +310,6 @@ macro_rules! add_struct_tag_ctor {
     };
 }
 
-macro_rules! add_struct_tag_ctor_from_struct_tag {
-    (@with_module $address:ident, $($module:ident :: $name:ident),+ $(,)?) => {
-        $(
-            paste::paste! {
-                pub fn [< new_ $module:snake _ $name:snake >](struct_tag: impl Into<StructTag>) -> Self {
-                    Self {
-                        address: Address::$address,
-                        module: Identifier::from_static(stringify!($module)),
-                        name: Identifier::from_static(stringify!($name)),
-                        type_params: vec![TypeTag::Struct(Box::new(struct_tag.into()))],
-                    }
-                }
-
-                pub fn [< is_ $module:snake _ $name:snake >](&self) -> bool {
-                    self.address == Address::$address
-                        && self.module == Identifier::from_static(stringify!($module))
-                        && self.name == Identifier::from_static(stringify!($name))
-                        && self.type_params.len() == 1
-                }
-            }
-        )+
-    };
-    ($address:ident, $($module:ident :: $name:ident),+ $(,)?) => {
-        $(
-            paste::paste! {
-                pub fn [< new_ $name:snake >](struct_tag: impl Into<StructTag>) -> Self {
-                    Self {
-                        address: Address::$address,
-                        module: Identifier::from_static(stringify!($module)),
-                        name: Identifier::from_static(stringify!($name)),
-                        type_params: vec![TypeTag::Struct(Box::new(struct_tag.into()))],
-                    }
-                }
-
-                pub fn [< is_ $name:snake >](&self) -> bool {
-                    self.address == Address::$address
-                        && self.module == Identifier::from_static(stringify!($module))
-                        && self.name == Identifier::from_static(stringify!($name))
-                        && self.type_params.len() == 1
-                }
-            }
-        )+
-    };
-}
-
 macro_rules! add_struct_tag_ctor_from_type_tag {
     (@with_module $address:ident, $($module:ident :: $name:ident),+ $(,)?) => {
         $(
@@ -441,17 +390,13 @@ impl StructTag {
     );
     add_struct_tag_ctor!(STD, string::String);
     add_struct_tag_ctor!(@with_module STD, ascii::String);
-    add_struct_tag_ctor_from_struct_tag!(
-        FRAMEWORK,
-        coin::CoinMetadata,
-        coin::TreasuryCap,
-        coin_manager::CoinManager,
-        display::DisplayCreated
-    );
-    add_struct_tag_ctor_from_struct_tag!(@with_module FRAMEWORK, display::VersionUpdated);
     add_struct_tag_ctor_from_type_tag!(
         FRAMEWORK,
         coin::Coin,
+        coin::CoinMetadata,
+        coin::TreasuryCap,
+        coin_manager::CoinManager,
+        display::DisplayCreated,
         coin::RegulatedCoinMetadata,
         coin::DenyCapV1,
         balance::Balance,
@@ -468,7 +413,7 @@ impl StructTag {
         labeler::LabelerCap,
         kiosk::PurchaseCap,
     );
-    add_struct_tag_ctor_from_type_tag!(@with_module FRAMEWORK, config::Setting, dynamic_object_field::Wrapper, transfer::Receiving);
+    add_struct_tag_ctor_from_type_tag!(@with_module FRAMEWORK, config::Setting, display::VersionUpdated, dynamic_object_field::Wrapper, transfer::Receiving);
     add_struct_tag_ctor_from_type_tag!(STD, option::Option);
     add_struct_tag_ctor!(STARDUST, alias::Alias, nft::Nft, irc27::Irc27Metadata);
     add_struct_tag_ctor_from_type_tag!(
@@ -496,6 +441,18 @@ impl std::fmt::Display for StructTag {
             write!(f, ">")?;
         }
         Ok(())
+    }
+}
+
+impl From<StructTag> for String {
+    fn from(value: StructTag) -> Self {
+        value.to_string()
+    }
+}
+
+impl From<&StructTag> for String {
+    fn from(value: &StructTag) -> Self {
+        value.to_string()
     }
 }
 

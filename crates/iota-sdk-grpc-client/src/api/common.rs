@@ -18,7 +18,8 @@ use iota_grpc_types::{
         transaction::{ExecutedTransaction, Transaction as ProtoTransaction},
         transaction_execution_service::{
             ExecuteTransactionResult, SimulateTransactionResult, SimulatedTransaction,
-            execute_transaction_result, simulate_transaction_result,
+            ViewFunctionCallOutputs, ViewFunctionCallResult, execute_transaction_result,
+            simulate_transaction_result, view_function_call_result,
         },
         types::ObjectId as ProtoObjectId,
     },
@@ -31,7 +32,7 @@ use super::MetadataEnvelope;
 /// Errors that can occur during gRPC client API operations.
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
-pub enum Error {
+pub enum GrpcError {
     /// Error converting proto types to SDK types.
     #[error("proto conversion error: {0}")]
     ProtoConversion(#[from] Box<TryFromProtoError>),
@@ -41,7 +42,7 @@ pub enum Error {
     #[error("server error (code {code}): {msg}", code = .0.code, msg = .0.message)]
     Server(RpcStatus),
 
-    /// Client-side protocol error (e.g. checkpoint stream reassembly).
+    /// GrpcClient-side protocol error (e.g. checkpoint stream reassembly).
     #[error("protocol error: {0}")]
     Protocol(ProtocolError),
 
@@ -62,7 +63,7 @@ pub enum Error {
     Grpc(Box<tonic::Status>),
 }
 
-impl Error {
+impl GrpcError {
     /// Returns `true` if the error carries a `NOT_FOUND` status, whether the
     /// server reported it for the call or for a single item of a batched
     /// request.
@@ -76,43 +77,43 @@ impl Error {
     /// checkpoint, do report absence at the call level.
     pub fn is_not_found(&self) -> bool {
         match self {
-            Error::Server(status) => status.code == i32::from(tonic::Code::NotFound),
-            Error::Grpc(status) => status.code() == tonic::Code::NotFound,
+            GrpcError::Server(status) => status.code == i32::from(tonic::Code::NotFound),
+            GrpcError::Grpc(status) => status.code() == tonic::Code::NotFound,
             _ => false,
         }
     }
 }
 
-impl From<TryFromProtoError> for Error {
+impl From<TryFromProtoError> for GrpcError {
     fn from(err: TryFromProtoError) -> Self {
-        Error::ProtoConversion(Box::new(err))
+        GrpcError::ProtoConversion(Box::new(err))
     }
 }
 
-impl From<tonic::Status> for Error {
+impl From<tonic::Status> for GrpcError {
     fn from(status: tonic::Status) -> Self {
-        Error::Grpc(Box::new(status))
+        GrpcError::Grpc(Box::new(status))
     }
 }
 
-impl From<Error> for tonic::Status {
-    fn from(err: Error) -> Self {
+impl From<GrpcError> for tonic::Status {
+    fn from(err: GrpcError) -> Self {
         match err {
-            Error::ProtoConversion(e) => {
+            GrpcError::ProtoConversion(e) => {
                 tonic::Status::internal(format!("proto conversion error: {e}"))
             }
-            Error::Server(status) => status.to_tonic_status(),
-            Error::Protocol(err) => tonic::Status::internal(format!("protocol error: {err}")),
-            Error::Signature(err) => {
+            GrpcError::Server(status) => status.to_tonic_status(),
+            GrpcError::Protocol(err) => tonic::Status::internal(format!("protocol error: {err}")),
+            GrpcError::Signature(err) => {
                 tonic::Status::internal(format!("signature conversion error: {err}"))
             }
-            Error::EmptyRequest => {
+            GrpcError::EmptyRequest => {
                 tonic::Status::invalid_argument("empty request: at least one item must be provided")
             }
-            Error::UnexpectedEndOfStream => {
+            GrpcError::UnexpectedEndOfStream => {
                 tonic::Status::internal("stream ended unexpectedly: has_next was true")
             }
-            Error::Grpc(status) => *status,
+            GrpcError::Grpc(status) => *status,
         }
     }
 }
@@ -138,7 +139,7 @@ pub enum ProtocolError {
     #[error("expected {expected} results, got {actual}")]
     UnexpectedResultCount { expected: usize, actual: usize },
 
-    /// `get_objects` answered a position with a different object than the one
+    /// `objects()` answered a position with a different object than the one
     /// requested there.
     #[error("requested object {expected} at position {position}, but got {actual}")]
     UnexpectedObject {
@@ -147,7 +148,7 @@ pub enum ProtocolError {
         actual: ObjectId,
     },
 
-    /// `get_transactions` answered a position with a different transaction than
+    /// `transactions()` answered a position with a different transaction than
     /// the one requested there.
     #[error("requested transaction {expected} at position {position}, but got {actual}")]
     UnexpectedTransaction {
@@ -183,7 +184,7 @@ pub enum CheckpointStreamError {
 }
 
 /// Result type alias for API operations.
-pub type Result<T> = std::result::Result<T, Error>;
+pub type GrpcResult<T> = std::result::Result<T, GrpcError>;
 
 // =============================================================================
 // Field Masks
@@ -262,7 +263,7 @@ pub trait ProtoResult {
     type Value;
 
     /// Extract the result, converting to our error types.
-    fn into_result(self) -> Result<Self::Value>;
+    fn into_result(self) -> GrpcResult<Self::Value>;
 }
 
 /// Convert a batch of proto results into one result per requested item,
@@ -270,9 +271,10 @@ pub trait ProtoResult {
 ///
 /// The batched RPCs report a failure for a single item as a `google.rpc.Status`
 /// in that item's slot, so the outcome for one item is independent of the
-/// others: a caller that needs every item can `collect::<Result<Vec<_>>>()`,
-/// while one that tolerates gaps can inspect each slot.
-pub fn into_item_results<T: ProtoResult>(batch: Vec<T>) -> Vec<Result<T::Value>> {
+/// others: a caller that needs every item can
+/// `collect::<GrpcResult<Vec<_>>>()`, while one that tolerates gaps can inspect
+/// each slot.
+pub fn into_item_results<T: ProtoResult>(batch: Vec<T>) -> Vec<GrpcResult<T::Value>> {
     batch.into_iter().map(ProtoResult::into_result).collect()
 }
 
@@ -280,11 +282,11 @@ pub fn into_item_results<T: ProtoResult>(batch: Vec<T>) -> Vec<Result<T::Value>>
 ///
 /// Callers pair results with requests by position, so a count that does not
 /// match the request leaves no way to tell which item each result belongs to.
-pub fn check_result_count<T>(results: &[T], expected: usize) -> Result<()> {
+pub fn check_result_count<T>(results: &[T], expected: usize) -> GrpcResult<()> {
     if results.len() == expected {
         Ok(())
     } else {
-        Err(Error::Protocol(ProtocolError::UnexpectedResultCount {
+        Err(GrpcError::Protocol(ProtocolError::UnexpectedResultCount {
             expected,
             actual: results.len(),
         }))
@@ -297,16 +299,16 @@ pub fn check_result_count<T>(results: &[T], expected: usize) -> Result<()> {
 /// holds object `i`, so the pairing callers rely on is checked rather than
 /// trusted.
 pub fn check_object_identity(
-    results: &[Result<ProtoObject>],
+    results: &[GrpcResult<ProtoObject>],
     requested: &[(ObjectId, Option<Version>)],
-) -> Result<()> {
+) -> GrpcResult<()> {
     for (position, (result, (expected, _))) in results.iter().zip(requested).enumerate() {
         let Ok(object) = result else { continue };
         let Some(actual) = answered_object_id(object)? else {
             continue;
         };
         if actual != *expected {
-            return Err(Error::Protocol(ProtocolError::UnexpectedObject {
+            return Err(GrpcError::Protocol(ProtocolError::UnexpectedObject {
                 position,
                 expected: *expected,
                 actual,
@@ -321,16 +323,16 @@ pub fn check_object_identity(
 /// See [`check_object_identity`] for why the pairing is checked rather than
 /// trusted.
 pub fn check_transaction_identity(
-    results: &[Result<ExecutedTransaction>],
+    results: &[GrpcResult<ExecutedTransaction>],
     requested: &[TransactionDigest],
-) -> Result<()> {
+) -> GrpcResult<()> {
     for (position, (result, expected)) in results.iter().zip(requested).enumerate() {
         let Ok(transaction) = result else { continue };
         let Some(actual) = answered_transaction_digest(transaction)? else {
             continue;
         };
         if actual != *expected {
-            return Err(Error::Protocol(ProtocolError::UnexpectedTransaction {
+            return Err(GrpcError::Protocol(ProtocolError::UnexpectedTransaction {
                 position,
                 expected: *expected,
                 actual,
@@ -343,7 +345,7 @@ pub fn check_transaction_identity(
 /// The id of an answered object, taken from its reference or, when the read
 /// mask left that out, from its BCS. `None` when it carries neither, leaving
 /// nothing to compare.
-fn answered_object_id(object: &ProtoObject) -> Result<Option<ObjectId>> {
+fn answered_object_id(object: &ProtoObject) -> GrpcResult<Option<ObjectId>> {
     if let Some(id) = object
         .reference
         .as_ref()
@@ -362,7 +364,7 @@ fn answered_object_id(object: &ProtoObject) -> Result<Option<ObjectId>> {
 /// carries neither, leaving nothing to compare.
 fn answered_transaction_digest(
     transaction: &ExecutedTransaction,
-) -> Result<Option<TransactionDigest>> {
+) -> GrpcResult<Option<TransactionDigest>> {
     let Some(transaction) = transaction.transaction.as_ref() else {
         return Ok(None);
     };
@@ -378,12 +380,12 @@ fn answered_transaction_digest(
 impl ProtoResult for ObjectResult {
     type Value = ProtoObject;
 
-    fn into_result(self) -> Result<Self::Value> {
+    fn into_result(self) -> GrpcResult<Self::Value> {
         match self.result {
             Some(object_result::Result::Object(obj)) => Ok(obj),
-            Some(object_result::Result::Error(e)) => Err(Error::Server(e)),
+            Some(object_result::Result::Error(e)) => Err(GrpcError::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+            Some(_) => Err(GrpcError::Protocol(ProtocolError::UnknownVariant(
                 "object result",
             ))),
         }
@@ -393,12 +395,12 @@ impl ProtoResult for ObjectResult {
 impl ProtoResult for TransactionResult {
     type Value = ExecutedTransaction;
 
-    fn into_result(self) -> Result<Self::Value> {
+    fn into_result(self) -> GrpcResult<Self::Value> {
         match self.result {
             Some(transaction_result::Result::ExecutedTransaction(tx)) => Ok(tx),
-            Some(transaction_result::Result::Error(e)) => Err(Error::Server(e)),
+            Some(transaction_result::Result::Error(e)) => Err(GrpcError::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+            Some(_) => Err(GrpcError::Protocol(ProtocolError::UnknownVariant(
                 "transaction result",
             ))),
         }
@@ -408,12 +410,12 @@ impl ProtoResult for TransactionResult {
 impl ProtoResult for ExecuteTransactionResult {
     type Value = ExecutedTransaction;
 
-    fn into_result(self) -> Result<Self::Value> {
+    fn into_result(self) -> GrpcResult<Self::Value> {
         match self.result {
             Some(execute_transaction_result::Result::ExecutedTransaction(tx)) => Ok(tx),
-            Some(execute_transaction_result::Result::Error(e)) => Err(Error::Server(e)),
+            Some(execute_transaction_result::Result::Error(e)) => Err(GrpcError::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+            Some(_) => Err(GrpcError::Protocol(ProtocolError::UnknownVariant(
                 "execute transaction result",
             ))),
         }
@@ -423,13 +425,28 @@ impl ProtoResult for ExecuteTransactionResult {
 impl ProtoResult for SimulateTransactionResult {
     type Value = SimulatedTransaction;
 
-    fn into_result(self) -> Result<Self::Value> {
+    fn into_result(self) -> GrpcResult<Self::Value> {
         match self.result {
             Some(simulate_transaction_result::Result::SimulatedTransaction(tx)) => Ok(tx),
-            Some(simulate_transaction_result::Result::Error(e)) => Err(Error::Server(e)),
+            Some(simulate_transaction_result::Result::Error(e)) => Err(GrpcError::Server(e)),
             None => Err(TryFromProtoError::missing("result").into()),
-            Some(_) => Err(Error::Protocol(ProtocolError::UnknownVariant(
+            Some(_) => Err(GrpcError::Protocol(ProtocolError::UnknownVariant(
                 "simulate transaction result",
+            ))),
+        }
+    }
+}
+
+impl ProtoResult for ViewFunctionCallResult {
+    type Value = ViewFunctionCallOutputs;
+
+    fn into_result(self) -> GrpcResult<Self::Value> {
+        match self.result {
+            Some(view_function_call_result::Result::CallOutputs(r)) => Ok(r),
+            Some(view_function_call_result::Result::Error(e)) => Err(GrpcError::Server(e)),
+            None => Err(TryFromProtoError::missing("result").into()),
+            Some(_) => Err(GrpcError::Protocol(ProtocolError::UnknownVariant(
+                "view function call result",
             ))),
         }
     }
@@ -445,14 +462,14 @@ impl ProtoResult for SimulateTransactionResult {
 /// The `extract` closure receives each stream message and must return
 /// `(has_next, items)`.  Because some streams require fallible per-item
 /// conversion (e.g. via [`ProtoResult`]), the closure itself returns
-/// `Result<…>`.
+/// `GrpcResult<…>`.
 pub async fn collect_stream<T, I, F>(
     mut stream: tonic::Streaming<T>,
     metadata: tonic::metadata::MetadataMap,
     extract: F,
-) -> Result<MetadataEnvelope<Vec<I>>>
+) -> GrpcResult<MetadataEnvelope<Vec<I>>>
 where
-    F: Fn(T) -> Result<(bool, Vec<I>)>,
+    F: Fn(T) -> GrpcResult<(bool, Vec<I>)>,
 {
     let mut results = Vec::new();
     let mut has_next = false;
@@ -464,7 +481,7 @@ where
     }
 
     if has_next {
-        return Err(Error::UnexpectedEndOfStream);
+        return Err(GrpcError::UnexpectedEndOfStream);
     }
 
     Ok(MetadataEnvelope::new(results, metadata))
@@ -482,6 +499,40 @@ pub struct Page<T> {
     pub next_page_token: Option<::prost::bytes::Bytes>,
 }
 
+/// Generate a query object: a struct that runs its query when awaited.
+///
+/// The struct's [`IntoFuture`](std::future::IntoFuture) boxes the future of
+/// `send(self) -> $output`, which each invocation writes by hand in an
+/// inherent impl.
+macro_rules! define_query {
+    (
+        $(#[$meta:meta])*
+        pub struct $name:ident $(<$generic:ident: $bound:path>)? {
+            $($field:ident: $field_ty:ty),* $(,)?
+        }
+        output: $output:ty;
+    ) => {
+        $(#[$meta])*
+        #[must_use]
+        pub struct $name $(<$generic>)? {
+            $($field: $field_ty,)*
+        }
+
+        impl $(<$generic: $bound + 'static>)? ::std::future::IntoFuture for $name $(<$generic>)? {
+            type Output = $output;
+            type IntoFuture = ::std::pin::Pin<
+                Box<dyn ::std::future::Future<Output = Self::Output> + Send>,
+            >;
+
+            fn into_future(self) -> Self::IntoFuture {
+                Box::pin(self.send())
+            }
+        }
+    };
+}
+
+pub(crate) use define_query;
+
 /// Generate a paginated query builder for a list endpoint.
 ///
 /// The generated struct implements [`IntoFuture`](std::future::IntoFuture) for
@@ -489,14 +540,17 @@ pub struct Page<T> {
 ///
 /// # Parameters
 ///
-/// - `$query_name` — name of the generated builder struct
+/// - `$query_name` — name of the generated builder struct, optionally with a
+///   single bounded type parameter (e.g. `ListOwnedMoveObjectsQuery<T:
+///   MoveObject>`) usable in `item` and `map_item`
 /// - `$service_client_type` — the tonic service client type
 /// - `$item_type` — the item type exposed by the builder
 /// - `$rpc_method` — the RPC method name on the service client
 /// - `$items_field` — the field name on the response containing the items vec
-/// - `map_item` (optional) — a fallible `fn(&ProtoItem) -> Result<$item_type>`
-///   applied to each response element. When omitted, items are passed through
-///   unchanged (so `$item_type` must be the response field's element type).
+/// - `map_item` (optional) — a fallible `fn(&ProtoItem) ->
+///   GrpcResult<$item_type>` applied to each response element. When omitted,
+///   items are passed through unchanged (so `$item_type` must be the response
+///   field's element type).
 ///
 /// # Example
 ///
@@ -522,7 +576,7 @@ pub struct Page<T> {
 ///         item: Coin,
 ///         rpc_method: list_owned_objects,
 ///         items_field: objects,
-///         map_item: object_to_coin, // fn(&Object) -> Result<Coin>
+///         map_item: object_to_coin, // fn(&Object) -> GrpcResult<Coin>
 ///     }
 /// }
 /// ```
@@ -530,7 +584,7 @@ macro_rules! define_list_query {
     // Pass-through variant: `$item_type` is the response element type.
     (
         $(#[$meta:meta])*
-        pub struct $query_name:ident {
+        pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
             service_client: $service_client_type:ty,
             request: $request_type:ty,
             item: $item_type:ty,
@@ -541,22 +595,22 @@ macro_rules! define_list_query {
         $crate::api::define_list_query! {
             @impl
             $(#[$meta])*
-            pub struct $query_name {
+            pub struct $query_name $(<$generic: $bound>)? {
                 service_client: $service_client_type,
                 request: $request_type,
                 item: $item_type,
                 rpc_method: $rpc_method,
                 items_field: $items_field,
-                map_item: |item| $crate::api::Result::Ok(item),
+                map_item: |item| $crate::api::GrpcResult::Ok(item),
             }
         }
     };
 
     // Conversion variant: each response element is mapped through `$map_item`,
-    // a fallible `fn(&ProtoItem) -> Result<$item_type>`.
+    // a fallible `fn(&ProtoItem) -> GrpcResult<$item_type>`.
     (
         $(#[$meta:meta])*
-        pub struct $query_name:ident {
+        pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
             service_client: $service_client_type:ty,
             request: $request_type:ty,
             item: $item_type:ty,
@@ -568,7 +622,7 @@ macro_rules! define_list_query {
         $crate::api::define_list_query! {
             @impl
             $(#[$meta])*
-            pub struct $query_name {
+            pub struct $query_name $(<$generic: $bound>)? {
                 service_client: $service_client_type,
                 request: $request_type,
                 item: $item_type,
@@ -582,7 +636,7 @@ macro_rules! define_list_query {
     (
         @impl
         $(#[$meta:meta])*
-        pub struct $query_name:ident {
+        pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
             service_client: $service_client_type:ty,
             request: $request_type:ty,
             item: $item_type:ty,
@@ -591,30 +645,50 @@ macro_rules! define_list_query {
             map_item: $map_item:expr,
         }
     ) => {
-        $(#[$meta])*
-        pub struct $query_name {
-            service_client: $service_client_type,
-            base_request: $request_type,
-            max_message_size: Option<usize>,
-            page_size: Option<u32>,
-            page_token: Option<::prost::bytes::Bytes>,
-        }
-
-        impl $query_name {
-            pub(crate) fn new(
+        $crate::api::define_query! {
+            $(#[$meta])*
+            pub struct $query_name $(<$generic: $bound>)? {
                 service_client: $service_client_type,
                 base_request: $request_type,
                 max_message_size: Option<usize>,
                 page_size: Option<u32>,
                 page_token: Option<::prost::bytes::Bytes>,
+                _marker: ::std::marker::PhantomData<fn() -> ($($generic,)?)>,
+            }
+            output: $crate::api::GrpcResult<
+                $crate::api::MetadataEnvelope<$crate::api::Page<$item_type>>,
+            >;
+        }
+
+        impl $(<$generic: $bound>)? $query_name $(<$generic>)? {
+            pub(crate) fn new(
+                service_client: $service_client_type,
+                base_request: $request_type,
+                max_message_size: Option<usize>,
             ) -> Self {
                 Self {
                     service_client,
                     base_request,
                     max_message_size,
-                    page_size,
-                    page_token,
+                    page_size: None,
+                    page_token: None,
+                    _marker: ::std::marker::PhantomData,
                 }
+            }
+
+            /// Set the maximum number of items per page.
+            pub fn page_size(mut self, page_size: impl Into<Option<u32>>) -> Self {
+                self.page_size = page_size.into();
+                self
+            }
+
+            /// Set the continuation token from a previous page.
+            pub fn page_token(
+                mut self,
+                page_token: impl Into<Option<::prost::bytes::Bytes>>,
+            ) -> Self {
+                self.page_token = page_token.into();
+                self
             }
 
             /// Auto-paginate through all pages, collecting up to `limit` items.
@@ -623,7 +697,7 @@ macro_rules! define_list_query {
             pub async fn collect(
                 self,
                 limit: impl Into<Option<u32>>,
-            ) -> $crate::api::Result<$crate::api::MetadataEnvelope<Vec<$item_type>>> {
+            ) -> $crate::api::GrpcResult<$crate::api::MetadataEnvelope<Vec<$item_type>>> {
                 let limit = limit.into();
                 let mut all_items: Vec<$item_type> = Vec::new();
                 let mut next_page_token = self.page_token;
@@ -686,52 +760,49 @@ macro_rules! define_list_query {
                     result_metadata.unwrap_or_default(),
                 ))
             }
-        }
 
-        impl ::std::future::IntoFuture for $query_name {
-            type Output = $crate::api::Result<
+            fn into_request(self) -> ($service_client_type, $request_type) {
+                let mut request = self.base_request;
+
+                if let Some(ps) = self.page_size {
+                    request = request.with_page_size(ps);
+                }
+                if let Some(token) = self.page_token {
+                    request = request.with_page_token(token);
+                }
+                if let Some(max_size) = self.max_message_size {
+                    request = request.with_max_message_size_bytes(
+                        $crate::api::saturating_usize_to_u32(max_size),
+                    );
+                }
+
+                (self.service_client, request)
+            }
+
+            async fn send(
+                self,
+            ) -> $crate::api::GrpcResult<
                 $crate::api::MetadataEnvelope<$crate::api::Page<$item_type>>,
-            >;
-            type IntoFuture = ::std::pin::Pin<
-                Box<dyn ::std::future::Future<Output = Self::Output> + Send>,
-            >;
+            > {
+                let (mut service_client, request) = self.into_request();
+                let response = service_client.$rpc_method(request).await?;
+                let (body, metadata) =
+                    $crate::api::MetadataEnvelope::from(response).into_parts();
 
-            fn into_future(self) -> Self::IntoFuture {
-                Box::pin(async move {
-                    let mut service_client = self.service_client;
-                    let mut request = self.base_request;
+                let map_item = $map_item;
+                let items = body
+                    .$items_field
+                    .into_iter()
+                    .map(map_item)
+                    .collect::<$crate::api::GrpcResult<Vec<$item_type>>>()?;
 
-                    if let Some(ps) = self.page_size {
-                        request = request.with_page_size(ps);
-                    }
-                    if let Some(token) = self.page_token {
-                        request = request.with_page_token(token);
-                    }
-                    if let Some(max_size) = self.max_message_size {
-                        request = request.with_max_message_size_bytes(
-                            $crate::api::saturating_usize_to_u32(max_size),
-                        );
-                    }
-
-                    let response = service_client.$rpc_method(request).await?;
-                    let (body, metadata) =
-                        $crate::api::MetadataEnvelope::from(response).into_parts();
-
-                    let map_item = $map_item;
-                    let items = body
-                        .$items_field
-                        .into_iter()
-                        .map(map_item)
-                        .collect::<$crate::api::Result<Vec<$item_type>>>()?;
-
-                    Ok($crate::api::MetadataEnvelope::new(
-                        $crate::api::Page {
-                            items,
-                            next_page_token: body.next_page_token,
-                        },
-                        metadata,
-                    ))
-                })
+                Ok($crate::api::MetadataEnvelope::new(
+                    $crate::api::Page {
+                        items,
+                        next_page_token: body.next_page_token,
+                    },
+                    metadata,
+                ))
             }
         }
     };
@@ -748,9 +819,9 @@ pub fn proto_object_id(id: ObjectId) -> ProtoObjectId {
 pub fn build_proto_transaction<T: Serialize>(
     data: &T,
     digest: TransactionDigest,
-) -> Result<ProtoTransaction> {
+) -> GrpcResult<ProtoTransaction> {
     let bcs = BcsData::serialize(data)
-        .map_err(|e| Error::from(TryFromProtoError::invalid("transaction", e)))?;
+        .map_err(|e| GrpcError::from(TryFromProtoError::invalid("transaction", e)))?;
 
     let proto_transaction = ProtoTransaction::default()
         .with_digest(digest)
@@ -764,8 +835,8 @@ mod tests {
     use iota_grpc_types::{
         google::rpc::Status,
         v1::{
-            object::Object, types::ObjectReference as ProtoObjectReference,
-            versioned::VersionedObject,
+            command::CommandOutputs, object::Object, transaction_execution_service::ExecutionError,
+            types::ObjectReference as ProtoObjectReference, versioned::VersionedObject,
         },
     };
     use iota_types::{
@@ -773,8 +844,9 @@ mod tests {
     };
 
     use super::{
-        BcsData, Error, ExecutedTransaction, ObjectResult, ProtoTransaction, ProtocolError, Result,
-        check_object_identity, check_transaction_identity, into_item_results, proto_object_id,
+        BcsData, ExecutedTransaction, GrpcError, GrpcResult, ObjectResult, ProtoTransaction,
+        ProtocolError, ViewFunctionCallOutputs, ViewFunctionCallResult, check_object_identity,
+        check_transaction_identity, into_item_results, proto_object_id,
     };
 
     #[test]
@@ -793,7 +865,7 @@ mod tests {
 
         assert_eq!(items.len(), 3);
         assert!(items[0].is_ok());
-        assert!(matches!(items[1], Err(Error::Server(_))));
+        assert!(matches!(items[1], Err(GrpcError::Server(_))));
         assert!(items[2].is_ok());
     }
 
@@ -807,6 +879,64 @@ mod tests {
         assert_eq!(into_item_results(batch).len(), 2);
     }
 
+    /// Each view function call runs in its own transaction, so a call the node
+    /// refuses fails only its own slot.
+    #[test]
+    fn a_rejected_view_function_call_keeps_the_surrounding_calls() {
+        let batch = vec![
+            ViewFunctionCallResult::default().with_call_outputs(
+                ViewFunctionCallOutputs::default().with_return_values(CommandOutputs::default()),
+            ),
+            ViewFunctionCallResult::default().with_error(Status {
+                code: tonic::Code::InvalidArgument.into(),
+                message: "no function 'nope' in module 0x2::hash".to_owned(),
+                details: Vec::new(),
+            }),
+        ];
+
+        let items = into_item_results(batch);
+
+        assert_eq!(items.len(), 2);
+        assert!(items[0].is_ok());
+        assert!(matches!(items[1], Err(GrpcError::Server(_))));
+    }
+
+    /// A call that ran and aborted is not a failed *request*: it occupies the
+    /// `Ok` slot, and the abort is read off the outputs. Only a call the node
+    /// refused to run yields `Err`.
+    #[test]
+    fn an_aborted_view_function_call_reports_through_its_outputs() {
+        let batch = vec![
+            ViewFunctionCallResult::default().with_call_outputs(
+                ViewFunctionCallOutputs::default().with_return_values(CommandOutputs::default()),
+            ),
+            ViewFunctionCallResult::default().with_call_outputs(
+                ViewFunctionCallOutputs::default()
+                    .with_execution_error(ExecutionError::default().with_source("MoveAbort(1)")),
+            ),
+        ];
+
+        let items = into_item_results(batch);
+
+        let returned = items[0].as_ref().expect("the call returned");
+        assert!(returned.return_values().is_some());
+        assert!(returned.execution_error().is_none());
+
+        let aborted = items[1].as_ref().expect("the call ran, then aborted");
+        assert!(aborted.return_values().is_none());
+        assert_eq!(
+            aborted.execution_error().and_then(|e| e.source.as_deref()),
+            Some("MoveAbort(1)")
+        );
+    }
+
+    #[test]
+    fn a_view_function_call_result_without_a_variant_is_a_protocol_error() {
+        let items = into_item_results(vec![ViewFunctionCallResult::default()]);
+
+        assert!(matches!(items[0], Err(GrpcError::ProtoConversion(_))));
+    }
+
     fn object_id(byte: u8) -> ObjectId {
         ObjectId::new([byte; ObjectId::LENGTH])
     }
@@ -817,7 +947,7 @@ mod tests {
 
     /// A proto object carrying just its reference, as the default read mask
     /// requests.
-    fn answered(id: ObjectId) -> Result<Object> {
+    fn answered(id: ObjectId) -> GrpcResult<Object> {
         let mut object = Object::default();
         object.reference =
             Some(ProtoObjectReference::default().with_object_id(proto_object_id(id)));
@@ -868,7 +998,7 @@ mod tests {
         let results = vec![answered(object_id(1)), answered(object_id(9))];
 
         let err = check_object_identity(&results, &requested).unwrap_err();
-        let Error::Protocol(ProtocolError::UnexpectedObject {
+        let GrpcError::Protocol(ProtocolError::UnexpectedObject {
             position,
             expected,
             actual,
@@ -886,7 +1016,7 @@ mod tests {
         let requested = [(object_id(1), None), (object_id(2), None)];
         let results = vec![
             answered(object_id(1)),
-            Err(Error::Server(Status {
+            Err(GrpcError::Server(Status {
                 code: tonic::Code::NotFound.into(),
                 message: String::new(),
                 details: Vec::new(),
@@ -902,7 +1032,7 @@ mod tests {
         let results = vec![Ok(answered_with_bcs_only(object_id(9)))];
 
         let err = check_object_identity(&results, &requested).unwrap_err();
-        let Error::Protocol(ProtocolError::UnexpectedObject {
+        let GrpcError::Protocol(ProtocolError::UnexpectedObject {
             expected, actual, ..
         }) = err
         else {
@@ -929,7 +1059,7 @@ mod tests {
         ];
 
         let err = check_transaction_identity(&results, &requested).unwrap_err();
-        let Error::Protocol(ProtocolError::UnexpectedTransaction {
+        let GrpcError::Protocol(ProtocolError::UnexpectedTransaction {
             position,
             expected,
             actual,
@@ -944,13 +1074,13 @@ mod tests {
 
     #[test]
     fn not_found_is_recognized_at_the_call_and_item_level() {
-        let item_level = Error::Server(Status {
+        let item_level = GrpcError::Server(Status {
             code: tonic::Code::NotFound.into(),
             message: String::new(),
             details: Vec::new(),
         });
-        let call_level = Error::from(tonic::Status::not_found("gone"));
-        let other = Error::Server(Status {
+        let call_level = GrpcError::from(tonic::Status::not_found("gone"));
+        let other = GrpcError::Server(Status {
             code: tonic::Code::Internal.into(),
             message: String::new(),
             details: Vec::new(),
@@ -959,6 +1089,6 @@ mod tests {
         assert!(item_level.is_not_found());
         assert!(call_level.is_not_found());
         assert!(!other.is_not_found());
-        assert!(!Error::EmptyRequest.is_not_found());
+        assert!(!GrpcError::EmptyRequest.is_not_found());
     }
 }

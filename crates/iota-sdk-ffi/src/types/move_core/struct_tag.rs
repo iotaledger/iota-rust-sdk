@@ -12,14 +12,8 @@ use crate::types::{
 ///
 /// # BCS
 ///
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// struct-tag = address            ; address of the package
-///              identifier         ; name of the module
-///              identifier         ; name of the type
-///              (vector type-tag)  ; type parameters
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct StructTag(pub iota_sdk::types::StructTag);
@@ -185,22 +179,6 @@ macro_rules! export_struct_tag_from_type_tag_ctors {
     } }
 }
 
-macro_rules! export_struct_tag_from_struct_tag_ctors {
-    ($($name:ident),+ $(,)?) => { paste::paste! {
-        #[uniffi::export]
-        impl StructTag {$(
-            #[uniffi::constructor]
-            pub fn [< new_ $name:snake >](struct_tag: &StructTag) -> Self {
-                Self(iota_sdk::types::StructTag::[< new_ $name:snake >](struct_tag.0.clone()))
-            }
-
-            pub fn [< is_ $name:snake >](&self) -> bool {
-                self.0.[< is_ $name:snake >]()
-            }
-        )+}
-    } }
-}
-
 export_struct_tag_ctors!(
     AsciiString,
     Clock,
@@ -249,8 +227,6 @@ export_struct_tag_from_type_tag_ctors!(
     BasicOutput,
     NftOutput,
     AliasOutput,
-);
-export_struct_tag_from_struct_tag_ctors!(
     CoinManager,
     CoinMetadata,
     DisplayCreated,

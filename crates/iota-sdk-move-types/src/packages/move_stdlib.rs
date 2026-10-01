@@ -9,6 +9,11 @@ pub mod fixed_point32 {
     ///
     /// A fixed-point numeric type with 32 fractional bits, represented by an
     /// underlying `u64`.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -34,6 +39,11 @@ pub mod ascii {
     /// The Move type guarantees that all bytes are valid ASCII. This Rust
     /// mirror does **not** enforce that invariant — it is up to the caller.
     /// Wire format: a length-prefixed byte vector.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -52,6 +62,11 @@ pub mod ascii {
     }
 
     /// Rust version of the Move `std::ascii::Char` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -77,6 +92,11 @@ pub mod string {
     /// The Move type holds a UTF-8 encoded byte sequence. This Rust mirror
     /// does **not** enforce that invariant. Wire format: a length-prefixed
     /// byte vector — identical to Rust's [`struct@String`].
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -101,6 +121,11 @@ pub mod uq32_32 {
     ///
     /// An unsigned fixed-point numeric type with 32 integer bits and 32
     /// fractional bits, represented by an underlying `u64`.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -123,6 +148,11 @@ pub mod uq64_64 {
     ///
     /// An unsigned fixed-point numeric type with 64 integer bits and 64
     /// fractional bits, represented by an underlying `u128`.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -142,6 +172,11 @@ pub mod uq64_64 {
 /// Types from `0x1::bit_vector`.
 pub mod bit_vector {
     /// Rust version of the Move `std::bit_vector::BitVector` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -171,6 +206,11 @@ pub mod type_name {
     /// example: `00000000000000000000000000000001::string::String`, or
     /// for nested generics:
     /// `0a::module_name1::type_name1<0a::module_name2::type_name2<u64>>`.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]

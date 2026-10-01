@@ -22,7 +22,7 @@ use crate::{
 impl From<iota_types::ValidatorCommitteeMember> for ValidatorCommitteeMember {
     fn from(value: iota_types::ValidatorCommitteeMember) -> Self {
         Self {
-            public_key: Some(value.public_key.as_bytes().to_vec().into()),
+            public_key: Some(value.public_key.bytes().to_vec().into()),
             weight: Some(value.stake),
         }
     }

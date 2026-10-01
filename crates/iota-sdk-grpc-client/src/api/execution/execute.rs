@@ -14,13 +14,14 @@ use iota_grpc_types::{
 use iota_types::SignedTransaction;
 
 use crate::{
-    Client,
+    GrpcClient,
     api::{
-        Error, MetadataEnvelope, ProtocolError, Result, build_proto_transaction, into_item_results,
+        GrpcError, GrpcResult, MetadataEnvelope, ProtocolError, build_proto_transaction,
+        into_item_results,
     },
 };
 
-impl Client {
+impl GrpcClient {
     /// Execute a signed transaction.
     ///
     /// This submits the transaction to the network for execution and waits for
@@ -50,11 +51,11 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// # use iota_sdk_grpc_client::Client;
+    /// # use iota_sdk_grpc_client::GrpcClient;
     /// # use iota_sdk_grpc_client::read_mask_fields::ExecuteTransactionReadMask;
     /// # use iota_types::SignedTransaction;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-    /// let client = Client::new_localnet()?;
+    /// let client = GrpcClient::new_localnet()?;
     ///
     /// let signed_tx: SignedTransaction = todo!();
     /// let result = client
@@ -76,7 +77,7 @@ impl Client {
         signed_transaction: SignedTransaction,
         checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
         read_mask: impl IntoReadMask<ExecuteTransactionReadMask>,
-    ) -> Result<MetadataEnvelope<ExecutedTransaction>> {
+    ) -> GrpcResult<MetadataEnvelope<ExecutedTransaction>> {
         self.execute_transactions(
             vec![signed_transaction],
             checkpoint_inclusion_timeout_ms,
@@ -91,9 +92,9 @@ impl Client {
     /// Transactions are executed sequentially on the server. Each transaction
     /// is independent — failure of one does not abort the rest.
     ///
-    /// Returns a `Vec<Result<ExecutedTransaction>>` in the same order as the
-    /// input. Each element is either the successfully executed transaction or
-    /// the per-item error returned by the server.
+    /// Returns a `Vec<GrpcResult<ExecutedTransaction>>` in the same order as
+    /// the input. Each element is either the successfully executed
+    /// transaction or the per-item error returned by the server.
     ///
     /// The `read_mask` controls which fields the server returns for each
     /// `ExecutedTransaction`; use `ExecuteTransactionReadMask::default()` for
@@ -110,25 +111,25 @@ impl Client {
     ///
     /// # Errors
     ///
-    /// Returns [`Error::EmptyRequest`] if `transactions` is empty.
-    /// Returns a transport-level [`Error::Grpc`] if the entire RPC fails
+    /// Returns [`GrpcError::EmptyRequest`] if `transactions` is empty.
+    /// Returns a transport-level [`GrpcError::Grpc`] if the entire RPC fails
     /// (e.g. batch size exceeded).
     pub async fn execute_transactions(
         &self,
         transactions: Vec<SignedTransaction>,
         checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
         read_mask: impl IntoReadMask<ExecuteTransactionReadMask>,
-    ) -> Result<MetadataEnvelope<Vec<Result<ExecutedTransaction>>>> {
+    ) -> GrpcResult<MetadataEnvelope<Vec<GrpcResult<ExecutedTransaction>>>> {
         let read_mask = read_mask.into_read_mask();
         let checkpoint_inclusion_timeout_ms = checkpoint_inclusion_timeout_ms.into();
         if transactions.is_empty() {
-            return Err(Error::EmptyRequest);
+            return Err(GrpcError::EmptyRequest);
         }
 
         let items = transactions
             .into_iter()
             .map(build_execute_item)
-            .collect::<Result<Vec<_>>>()?;
+            .collect::<GrpcResult<Vec<_>>>()?;
 
         let mut request = ExecuteTransactionsRequest::default()
             .with_transactions(items)
@@ -148,16 +149,15 @@ impl Client {
 }
 
 fn extract_single_execution_result(
-    results: Vec<Result<ExecutedTransaction>>,
-) -> Result<ExecutedTransaction> {
-    results
-        .into_iter()
-        .next()
-        .ok_or_else(|| Error::Protocol(ProtocolError::EmptyResponseField("transaction_results")))?
+    results: Vec<GrpcResult<ExecutedTransaction>>,
+) -> GrpcResult<ExecutedTransaction> {
+    results.into_iter().next().ok_or_else(|| {
+        GrpcError::Protocol(ProtocolError::EmptyResponseField("transaction_results"))
+    })?
 }
 
 /// Convert a `SignedTransaction` into a proto `ExecuteTransactionItem`.
-fn build_execute_item(signed_transaction: SignedTransaction) -> Result<ExecuteTransactionItem> {
+fn build_execute_item(signed_transaction: SignedTransaction) -> GrpcResult<ExecuteTransactionItem> {
     let tx_digest = signed_transaction.transaction.digest();
     let proto_transaction = build_proto_transaction(&signed_transaction.transaction, tx_digest)?;
 
@@ -165,8 +165,8 @@ fn build_execute_item(signed_transaction: SignedTransaction) -> Result<ExecuteTr
         signed_transaction
             .signatures
             .into_iter()
-            .map(|sig| ProtoUserSignature::try_from(sig).map_err(Error::Signature))
-            .collect::<Result<Vec<_>>>()?,
+            .map(|sig| ProtoUserSignature::try_from(sig).map_err(GrpcError::Signature))
+            .collect::<GrpcResult<Vec<_>>>()?,
     );
 
     Ok(ExecuteTransactionItem::default()

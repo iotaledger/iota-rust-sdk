@@ -35,12 +35,11 @@ macro_rules! impl_crypto_object {
 
             #[uniffi::constructor]
             pub fn random() -> Self {
-                let mut rng = rand::thread_rng();
-                Self(iota_sdk::types::$t::random_with(&mut rng))
+                Self(iota_sdk::types::$t::random())
             }
 
             pub fn to_bytes(&self) -> Vec<u8> {
-                self.0.as_bytes().to_vec()
+                self.0.bytes().to_vec()
             }
         }
     };
@@ -51,11 +50,8 @@ impl_crypto_object!(
     ///
     /// # BCS
     ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// bls12381-public-key = %d96 96OCTET
-    /// ```
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
     ///
     /// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
     /// fixed-length of 96, IOTA's binary representation of a min-sig
@@ -68,11 +64,8 @@ impl_crypto_object!(
     ///
     /// # BCS
     ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// ed25519-public-key = 32OCTET
-    /// ```
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
     Ed25519PublicKey
 );
 
@@ -104,11 +97,8 @@ impl_crypto_object!(
     ///
     /// # BCS
     ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// secp256k1-public-key = 33OCTET
-    /// ```
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
     Secp256k1PublicKey
 );
 
@@ -141,11 +131,8 @@ impl_crypto_object!(
     ///
     /// # BCS
     ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// secp256r1-public-key = 33OCTET
-    /// ```
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
     Secp256r1PublicKey
 );
 
@@ -178,11 +165,8 @@ impl_crypto_object!(
     ///
     /// # BCS
     ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// ed25519-signature = 64OCTET
-    /// ```
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
     Ed25519Signature
 );
 impl_crypto_object!(
@@ -190,11 +174,8 @@ impl_crypto_object!(
     ///
     /// # BCS
     ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// bls12381-signature = 48OCTET
-    /// ```
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
     Bls12381Signature
 );
 impl_crypto_object!(
@@ -202,11 +183,8 @@ impl_crypto_object!(
     ///
     /// # BCS
     ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// secp256k1-signature = 64OCTET
-    /// ```
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
     Secp256k1Signature
 );
 impl_crypto_object!(
@@ -214,11 +192,8 @@ impl_crypto_object!(
     ///
     /// # BCS
     ///
-    /// The BCS serialized form for this type is defined by the following ABNF:
-    ///
-    /// ```text
-    /// secp256r1-signature = 64OCTET
-    /// ```
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
     Secp256r1Signature
 );
 
