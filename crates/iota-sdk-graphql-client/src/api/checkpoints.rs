@@ -11,7 +11,7 @@ use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};
 use crate::{
     GraphQLClient,
     api::define_query,
-    error::{GraphQLError, GraphQLResult},
+    error::GraphQLResult,
     pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         CheckpointArgs, CheckpointId, CheckpointQueryFragment, CheckpointTotalTxQueryFragment,
@@ -98,8 +98,49 @@ impl GetCheckpointQuery {
     }
 }
 
-const CONFLICTING_CHECKPOINT_ID: &str =
-    "either digest or sequence_number can be provided, but not both";
+define_query! {
+    /// Query for [`GraphQLClient::latest_checkpoint_sequence_number`]. Await
+    /// it to send the request.
+    pub struct GetLatestCheckpointSequenceNumberQuery {
+        client: GraphQLClient,
+    }
+    output: GraphQLResult<Option<CheckpointSequenceNumber>>;
+}
+
+impl GetLatestCheckpointSequenceNumberQuery {
+    async fn send(self) -> GraphQLResult<Option<CheckpointSequenceNumber>> {
+        Ok(self.client.checkpoint().await?.map(|c| c.sequence_number))
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::total_transaction_blocks`],
+    /// [`GraphQLClient::total_transaction_blocks_by_digest`] and
+    /// [`GraphQLClient::total_transaction_blocks_by_sequence_number`]. Await it
+    /// to send the request.
+    pub struct GetTotalTransactionBlocksQuery {
+        client: GraphQLClient,
+        digest: Option<String>,
+        sequence_number: Option<u64>,
+    }
+    output: GraphQLResult<Option<u64>>;
+}
+
+impl GetTotalTransactionBlocksQuery {
+    async fn send(self) -> GraphQLResult<Option<u64>> {
+        let operation = CheckpointTotalTxQueryFragment::build(CheckpointArgs {
+            id: CheckpointId {
+                digest: self.digest,
+                sequence_number: self.sequence_number,
+            },
+        });
+        let response = self.client.run_query(&operation).await?;
+
+        Ok(response
+            .checkpoint
+            .and_then(|c| c.network_total_transactions))
+    }
+}
 
 impl GraphQLClient {
     /// Get the [`CheckpointSummary`] of the last known checkpoint.
@@ -139,60 +180,46 @@ impl GraphQLClient {
 
     /// Return the sequence number of the latest checkpoint that has been
     /// executed.
-    pub async fn latest_checkpoint_sequence_number(
-        &self,
-    ) -> GraphQLResult<Option<CheckpointSequenceNumber>> {
-        Ok(self.checkpoint().await?.map(|c| c.sequence_number))
+    pub fn latest_checkpoint_sequence_number(&self) -> GetLatestCheckpointSequenceNumberQuery {
+        GetLatestCheckpointSequenceNumberQuery {
+            client: self.clone(),
+        }
     }
 
     /// The total number of transaction blocks in the network by the end of the
     /// provided checkpoint digest.
-    pub async fn total_transaction_blocks_by_digest(
+    pub fn total_transaction_blocks_by_digest(
         &self,
         digest: CheckpointDigest,
-    ) -> GraphQLResult<Option<u64>> {
-        self.internal_total_transaction_blocks(Some(digest.to_string()), None)
-            .await
+    ) -> GetTotalTransactionBlocksQuery {
+        GetTotalTransactionBlocksQuery {
+            client: self.clone(),
+            digest: Some(digest.to_string()),
+            sequence_number: None,
+        }
     }
 
     /// The total number of transaction blocks in the network by the end of the
     /// provided checkpoint sequence number.
-    pub async fn total_transaction_blocks_by_sequence_number(
+    pub fn total_transaction_blocks_by_sequence_number(
         &self,
         sequence_number: u64,
-    ) -> GraphQLResult<Option<u64>> {
-        self.internal_total_transaction_blocks(None, Some(sequence_number))
-            .await
+    ) -> GetTotalTransactionBlocksQuery {
+        GetTotalTransactionBlocksQuery {
+            client: self.clone(),
+            digest: None,
+            sequence_number: Some(sequence_number),
+        }
     }
 
     /// The total number of transaction blocks in the network by the end of the
     /// last known checkpoint.
-    pub async fn total_transaction_blocks(&self) -> GraphQLResult<Option<u64>> {
-        self.internal_total_transaction_blocks(None, None).await
-    }
-
-    /// Internal function to get the total number of transaction blocks based on
-    /// the provided checkpoint digest or sequence number.
-    async fn internal_total_transaction_blocks(
-        &self,
-        digest: Option<String>,
-        sequence_number: Option<u64>,
-    ) -> GraphQLResult<Option<u64>> {
-        if digest.is_some() && sequence_number.is_some() {
-            return Err(GraphQLError::InvalidArgument(CONFLICTING_CHECKPOINT_ID));
+    pub fn total_transaction_blocks(&self) -> GetTotalTransactionBlocksQuery {
+        GetTotalTransactionBlocksQuery {
+            client: self.clone(),
+            digest: None,
+            sequence_number: None,
         }
-
-        let operation = CheckpointTotalTxQueryFragment::build(CheckpointArgs {
-            id: CheckpointId {
-                digest,
-                sequence_number,
-            },
-        });
-        let response = self.run_query(&operation).await?;
-
-        Ok(response
-            .checkpoint
-            .and_then(|c| c.network_total_transactions))
     }
 }
 
@@ -201,6 +228,39 @@ mod tests {
     use iota_types::CheckpointDigest;
 
     use crate::test_utils::{assert_backward_page, backward_page, sent_variables, test_client};
+
+    #[tokio::test]
+    async fn total_transaction_blocks_send_the_checkpoint() {
+        let request = sent_variables("CheckpointTotalTxQueryFragment", |client| async move {
+            let _ = client.total_transaction_blocks_by_sequence_number(7).await;
+        })
+        .await;
+        let vars = &request;
+        assert_eq!(vars["id"]["sequenceNumber"], 7);
+        assert!(vars["id"]["digest"].is_null());
+
+        let digest = CheckpointDigest::ZERO;
+        let vars = sent_variables("CheckpointTotalTxQueryFragment", |client| async move {
+            let _ = client.total_transaction_blocks_by_digest(digest).await;
+        })
+        .await;
+        assert_eq!(vars["id"]["digest"], digest.to_string());
+        assert!(vars["id"]["sequenceNumber"].is_null());
+
+        let request = sent_variables("CheckpointTotalTxQueryFragment", |client| async move {
+            let _ = client.total_transaction_blocks().await;
+        })
+        .await;
+        assert!(request["id"]["digest"].is_null());
+        assert!(request["id"]["sequenceNumber"].is_null());
+
+        let request = sent_variables("CheckpointQueryFragment", |client| async move {
+            let _ = client.latest_checkpoint_sequence_number().await;
+        })
+        .await;
+        assert!(request["id"]["digest"].is_null());
+        assert!(request["id"]["sequenceNumber"].is_null());
+    }
 
     #[tokio::test]
     async fn checkpoint_sends_the_digest_or_sequence_number() {

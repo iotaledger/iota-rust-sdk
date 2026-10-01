@@ -40,6 +40,24 @@ pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> GraphQLResult<
     }
 }
 
+crate::api::define_query! {
+    /// Query for [`GraphQLClient::max_page_size`]. Await it to send the
+    /// request.
+    pub struct GetMaxPageSizeQuery {
+        client: GraphQLClient,
+    }
+    output: GraphQLResult<i32>;
+}
+
+impl GetMaxPageSizeQuery {
+    async fn send(self) -> GraphQLResult<i32> {
+        self.client
+            .service_config()
+            .await
+            .map(|cfg| cfg.max_page_size)
+    }
+}
+
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
 #[derive(Clone, Debug)]
@@ -220,8 +238,10 @@ impl GraphQLClient {
     }
 
     /// Lazily fetch the max page size
-    pub async fn max_page_size(&self) -> GraphQLResult<i32> {
-        self.service_config().await.map(|cfg| cfg.max_page_size)
+    pub fn max_page_size(&self) -> GetMaxPageSizeQuery {
+        GetMaxPageSizeQuery {
+            client: self.clone(),
+        }
     }
 }
 
