@@ -108,10 +108,8 @@ impl GrpcClient {
         let ids = object_ids.iter().map(|id| ***id).collect::<Vec<_>>();
         convert_objects(
             self.client()
-                .objects(
-                    ids,
-                    crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask),
-                )
+                .objects(ids)
+                .read_mask(crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask))
                 .await?
                 .into_inner(),
         )
@@ -142,10 +140,8 @@ impl GrpcClient {
             .collect::<Vec<_>>();
         convert_objects(
             self.client()
-                .objects_with_versions(
-                    refs,
-                    crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask),
-                )
+                .objects_with_versions(refs)
+                .read_mask(crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask))
                 .await?
                 .into_inner(),
         )

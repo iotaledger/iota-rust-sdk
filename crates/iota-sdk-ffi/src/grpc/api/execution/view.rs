@@ -131,18 +131,12 @@ impl GrpcClient {
     ) -> Result<ViewFunctionCallOutputs> {
         (&self
             .client()
-            .view_function_call(
-                &fq_function_name,
-                &type_args
-                    .iter()
-                    .map(|tag| tag.0.clone())
-                    .collect::<Vec<_>>(),
-                &call_args
-                    .iter()
-                    .map(|arg| arg.to_json())
-                    .collect::<Vec<_>>(),
-                crate::grpc::api::read_mask::<ViewFunctionCallReadMask, _>(read_mask),
-            )
+            .view_function_call(fq_function_name)
+            .type_args(type_args.iter().map(|tag| &tag.0))
+            .call_args(call_args.iter().map(|arg| arg.to_json()))
+            .read_mask(crate::grpc::api::read_mask::<ViewFunctionCallReadMask, _>(
+                read_mask,
+            ))
             .await?
             .into_inner())
             .try_into()
@@ -164,10 +158,10 @@ impl GrpcClient {
         read_mask: Option<Vec<ViewFunctionCallField>>,
     ) -> Result<Vec<ViewFunctionCallResult>> {
         self.client()
-            .view_function_calls(
-                function_calls.iter().map(Into::into).collect(),
-                crate::grpc::api::read_mask::<ViewFunctionCallReadMask, _>(read_mask),
-            )
+            .view_function_calls(function_calls.iter().map(Into::into).collect())
+            .read_mask(crate::grpc::api::read_mask::<ViewFunctionCallReadMask, _>(
+                read_mask,
+            ))
             .await?
             .into_inner()
             .iter()

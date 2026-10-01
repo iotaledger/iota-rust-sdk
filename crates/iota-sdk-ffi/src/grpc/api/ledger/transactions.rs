@@ -169,10 +169,10 @@ impl GrpcClient {
     ) -> Result<Vec<ExecutedTransaction>> {
         let digests = digests.iter().map(|digest| ***digest).collect::<Vec<_>>();
         self.client()
-            .transactions(
-                digests,
-                crate::grpc::api::read_mask::<TransactionReadMask, _>(read_mask),
-            )
+            .transactions(digests)
+            .read_mask(crate::grpc::api::read_mask::<TransactionReadMask, _>(
+                read_mask,
+            ))
             .await?
             .into_inner()
             .into_iter()
