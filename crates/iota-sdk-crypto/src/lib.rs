@@ -120,6 +120,9 @@ pub use iota_types;
 )]
 #[doc(inline)]
 pub use multisig::UserSignatureVerifier;
+#[cfg(feature = "rand")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+pub use rand_core;
 
 /// Interface for signing user transactions and messages in IOTA
 ///
