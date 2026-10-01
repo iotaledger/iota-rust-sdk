@@ -79,15 +79,6 @@ impl From<iota_sdk::graphql_client::DryRunReturn> for DryRunReturn {
     }
 }
 
-impl From<DryRunReturn> for iota_sdk::graphql_client::DryRunReturn {
-    fn from(value: DryRunReturn) -> Self {
-        iota_sdk::graphql_client::DryRunReturn {
-            type_tag: value.type_tag.0.clone(),
-            bcs: value.bcs,
-        }
-    }
-}
-
 /// A mutation to an argument that was mutably borrowed by a command.
 #[derive(uniffi::Record)]
 pub struct DryRunMutation {
@@ -109,16 +100,6 @@ impl From<iota_sdk::graphql_client::DryRunMutation> for DryRunMutation {
     }
 }
 
-impl From<DryRunMutation> for iota_sdk::graphql_client::DryRunMutation {
-    fn from(value: DryRunMutation) -> Self {
-        iota_sdk::graphql_client::DryRunMutation {
-            input: value.input.into(),
-            type_tag: value.type_tag.0.clone(),
-            bcs: value.bcs,
-        }
-    }
-}
-
 /// Effects of a single command in the dry run, including mutated references
 /// and return values.
 #[derive(uniffi::Record)]
@@ -132,19 +113,6 @@ pub struct DryRunEffect {
 impl From<iota_sdk::graphql_client::DryRunEffect> for DryRunEffect {
     fn from(value: iota_sdk::graphql_client::DryRunEffect) -> Self {
         DryRunEffect {
-            mutated_references: value
-                .mutated_references
-                .into_iter()
-                .map(Into::into)
-                .collect(),
-            return_values: value.return_values.into_iter().map(Into::into).collect(),
-        }
-    }
-}
-
-impl From<DryRunEffect> for iota_sdk::graphql_client::DryRunEffect {
-    fn from(value: DryRunEffect) -> Self {
-        iota_sdk::graphql_client::DryRunEffect {
             mutated_references: value
                 .mutated_references
                 .into_iter()
@@ -178,17 +146,6 @@ impl From<iota_sdk::graphql_client::DryRunResult> for DryRunResult {
             results: value.results.into_iter().map(Into::into).collect(),
             transaction: value.transaction.map(Into::into),
             effects: value.effects.map(Into::into).map(Arc::new),
-        }
-    }
-}
-
-impl From<DryRunResult> for iota_sdk::graphql_client::DryRunResult {
-    fn from(value: DryRunResult) -> Self {
-        iota_sdk::graphql_client::DryRunResult {
-            error: value.error,
-            results: value.results.into_iter().map(Into::into).collect(),
-            transaction: value.transaction.map(Into::into),
-            effects: value.effects.map(|v| v.0.clone()),
         }
     }
 }

@@ -26,6 +26,7 @@ use crate::{
 /// The result of a simulation (dry run), which includes the effects of the
 /// transaction and intermediate results for each command.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DryRunResult {
     /// The error that occurred during dry run execution, if any.
     pub error: Option<String>,
@@ -41,6 +42,7 @@ pub struct DryRunResult {
 /// Effects of a single command in the dry run, including mutated references
 /// and return values.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DryRunEffect {
     /// Changes made to arguments that were mutably borrowed by this
     /// command.
@@ -51,6 +53,7 @@ pub struct DryRunEffect {
 
 /// A mutation to an argument that was mutably borrowed by a command.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DryRunMutation {
     /// The transaction argument that was mutated.
     pub input: TransactionArgument,
@@ -62,6 +65,7 @@ pub struct DryRunMutation {
 
 /// A return value from a command in the dry run.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DryRunReturn {
     /// The Move type of the return value.
     pub type_tag: TypeTag,
@@ -173,6 +177,7 @@ impl TryFrom<&crate::query_types::TransactionArgument> for TransactionArgument {
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct TransactionDataEffects {
     pub signed_transaction: SignedTransaction,
     pub effects: TransactionEffects,
@@ -181,6 +186,7 @@ pub struct TransactionDataEffects {
 /// The name part of a dynamic field, including its type, bcs, and json
 /// representation.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DynamicFieldName {
     /// The type name of this dynamic field name
     pub type_tag: TypeTag,
@@ -192,6 +198,7 @@ pub struct DynamicFieldName {
 
 /// The value part of a dynamic field.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DynamicFieldValue {
     pub type_tag: TypeTag,
     pub bcs: Vec<u8>,
@@ -200,6 +207,7 @@ pub struct DynamicFieldValue {
 /// The output of a dynamic field query, that includes the name, value, and
 /// value's json representation.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DynamicFieldOutput {
     /// The name of the dynamic field
     pub name: DynamicFieldName,

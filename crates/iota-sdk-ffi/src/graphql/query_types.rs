@@ -83,15 +83,6 @@ impl From<iota_sdk::graphql_client::TransactionDataEffects> for TransactionDataE
     }
 }
 
-impl From<TransactionDataEffects> for iota_sdk::graphql_client::TransactionDataEffects {
-    fn from(value: TransactionDataEffects) -> Self {
-        Self {
-            signed_transaction: value.signed_transaction.into(),
-            effects: value.effects.0.clone(),
-        }
-    }
-}
-
 /// Filter for transaction queries.
 ///
 /// Holds at most one of the function, kind, address and object filters that
@@ -616,16 +607,6 @@ impl From<iota_sdk::graphql_client::DynamicFieldOutput> for DynamicFieldOutput {
     }
 }
 
-impl From<DynamicFieldOutput> for iota_sdk::graphql_client::DynamicFieldOutput {
-    fn from(value: DynamicFieldOutput) -> Self {
-        Self {
-            name: value.name.into(),
-            value: value.value.map(Into::into),
-            value_as_json: value.value_as_json,
-        }
-    }
-}
-
 /// The name part of a dynamic field, including its type, bcs, and json
 /// representation.
 #[derive(uniffi::Record)]
@@ -649,16 +630,6 @@ impl From<iota_sdk::graphql_client::DynamicFieldName> for DynamicFieldName {
     }
 }
 
-impl From<DynamicFieldName> for iota_sdk::graphql_client::DynamicFieldName {
-    fn from(value: DynamicFieldName) -> Self {
-        Self {
-            type_tag: value.type_tag.0.clone(),
-            bcs: value.bcs,
-            json: value.json,
-        }
-    }
-}
-
 /// The value part of a dynamic field.
 #[derive(uniffi::Record)]
 pub struct DynamicFieldValue {
@@ -670,15 +641,6 @@ impl From<iota_sdk::graphql_client::DynamicFieldValue> for DynamicFieldValue {
     fn from(value: iota_sdk::graphql_client::DynamicFieldValue) -> Self {
         Self {
             type_tag: Arc::new(value.type_tag.into()),
-            bcs: value.bcs,
-        }
-    }
-}
-
-impl From<DynamicFieldValue> for iota_sdk::graphql_client::DynamicFieldValue {
-    fn from(value: DynamicFieldValue) -> Self {
-        Self {
-            type_tag: value.type_tag.0.clone(),
             bcs: value.bcs,
         }
     }

@@ -29,6 +29,7 @@ pub enum MoveVisibility {
 /// A Move type that may still have unbound type parameters, which are
 /// rendered as `$0`, `$1`, ...
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct OpenMoveType {
     pub repr: String,
 }
@@ -36,6 +37,7 @@ pub struct OpenMoveType {
 /// A type parameter of a Move function, with the abilities it is constrained
 /// to.
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct MoveFunctionTypeParameter {
     pub constraints: Vec<MoveAbility>,
 }
@@ -43,6 +45,7 @@ pub struct MoveFunctionTypeParameter {
 /// A type parameter of a Move struct or enum, with the abilities it is
 /// constrained to.
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct MoveStructTypeParameter {
     pub constraints: Vec<MoveAbility>,
     pub is_phantom: bool,
@@ -50,6 +53,7 @@ pub struct MoveStructTypeParameter {
 
 /// The signature of a Move function.
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct MoveFunction {
     pub is_entry: Option<bool>,
     pub name: String,
@@ -61,6 +65,7 @@ pub struct MoveFunction {
 
 /// A field of a Move struct or enum variant.
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct MoveField {
     pub name: String,
     pub move_type: Option<OpenMoveType>,
@@ -68,6 +73,7 @@ pub struct MoveField {
 
 /// A Move struct definition.
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct MoveStruct {
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
@@ -77,6 +83,7 @@ pub struct MoveStruct {
 
 /// A Move enum definition.
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct MoveEnum {
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
@@ -86,6 +93,7 @@ pub struct MoveEnum {
 
 /// A variant of a Move enum.
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct MoveEnumVariant {
     pub fields: Option<Vec<MoveField>>,
     pub name: String,
@@ -93,6 +101,7 @@ pub struct MoveEnumVariant {
 
 /// A Move module identified by its package and name.
 #[derive(Clone, Debug, Eq, PartialEq)]
+#[non_exhaustive]
 pub struct MoveModuleId {
     pub package: Address,
     pub name: String,
@@ -101,6 +110,7 @@ pub struct MoveModuleId {
 /// The normalized contents of a Move module. Each list is one page of the
 /// module's items.
 #[derive(Clone, Debug)]
+#[non_exhaustive]
 pub struct MoveModule {
     pub file_format_version: i32,
     pub enums: Option<Page<MoveEnum>>,
