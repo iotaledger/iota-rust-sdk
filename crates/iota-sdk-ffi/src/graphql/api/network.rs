@@ -48,7 +48,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .active_validators()
-            .epoch(epoch)
+            .epoch_number(epoch)
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
