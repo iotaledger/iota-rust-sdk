@@ -4,7 +4,6 @@
 
 //! Package API implementation.
 
-use base64ct::Encoding;
 use cynic::QueryBuilder;
 use iota_types::{Address, MovePackage, Object, Version};
 
@@ -47,7 +46,7 @@ impl GraphQLClient {
         Ok(response
             .package
             .and_then(|x| x.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .map(|bcs| crate::error::decode_base64(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Object>(&bcs))
             .transpose()?
@@ -87,9 +86,9 @@ impl GraphQLClient {
             .map(|p| &p.bcs)
             .filter_map(|b64| {
                 b64.as_ref()
-                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
+                    .map(|b| crate::error::decode_base64(b.0.as_str()))
             })
-            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+            .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
             .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
@@ -112,7 +111,7 @@ impl GraphQLClient {
         Ok(response
             .latest_package
             .and_then(|x| x.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(&bcs.0))
+            .map(|bcs| crate::error::decode_base64(&bcs.0))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Object>(&bcs))
             .transpose()?
@@ -155,9 +154,9 @@ impl GraphQLClient {
             .map(|p| &p.bcs)
             .filter_map(|b64| {
                 b64.as_ref()
-                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
+                    .map(|b| crate::error::decode_base64(b.0.as_str()))
             })
-            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+            .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
             .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))

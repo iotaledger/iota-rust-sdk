@@ -85,7 +85,7 @@ impl PublicKeyExt for Secp256k1PublicKey {
 }
 
 impl std::str::FromStr for Secp256k1PublicKey {
-    type Err = base64ct::Error;
+    type Err = super::Base64ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         super::Base64FromStr33::from_str(s).map(|a| Self::new(a.0))
@@ -194,7 +194,7 @@ impl Secp256k1Signature {
 }
 
 impl std::str::FromStr for Secp256k1Signature {
-    type Err = base64ct::Error;
+    type Err = super::Base64ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         super::Base64FromStr64::from_str(s).map(|a| Self::new(a.0))

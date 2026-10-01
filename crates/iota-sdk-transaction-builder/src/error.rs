@@ -4,7 +4,6 @@
 
 //! Transaction Builder errors.
 
-use base64ct::Error as Base64Error;
 use iota_types::{Address, ObjectId, TransactionDigest};
 
 #[derive(Debug, thiserror::Error)]
@@ -28,8 +27,6 @@ pub enum TransactionBuilderError {
     GasCoinTransferredMoreThanOnce,
     #[error("BCS serialization error: {0}")]
     Bcs(bcs::Error),
-    #[error("Decoding error: {0}")]
-    Decoding(#[from] Base64Error),
     #[error("Missing object id")]
     MissingObjectId,
     #[error("Missing version for object {0}")]

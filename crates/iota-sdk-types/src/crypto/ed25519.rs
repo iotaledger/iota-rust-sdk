@@ -83,7 +83,7 @@ impl PublicKeyExt for Ed25519PublicKey {
 }
 
 impl std::str::FromStr for Ed25519PublicKey {
-    type Err = base64ct::Error;
+    type Err = super::Base64ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         super::Base64FromStr32::from_str(s).map(|a| Self::new(a.0))
@@ -192,7 +192,7 @@ impl Ed25519Signature {
 }
 
 impl std::str::FromStr for Ed25519Signature {
-    type Err = base64ct::Error;
+    type Err = super::Base64ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         super::Base64FromStr64::from_str(s).map(|a| Self::new(a.0))
