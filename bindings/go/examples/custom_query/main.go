@@ -25,7 +25,7 @@ func main() {
 	}`
 
 	queryEpochData := iota_sdk.GraphQlQuery{
-		QueryString: queryEpochDataStr,
+		Query: queryEpochDataStr,
 	}
 	res1, err := client.RunQuery(queryEpochData)
 	if err != nil {
@@ -37,8 +37,8 @@ func main() {
 	variables := string(variablesJson)
 
 	queryEpochDataWithVariables := iota_sdk.GraphQlQuery{
-		QueryString: queryEpochDataStr,
-		Variables:   &variables,
+		Query:     queryEpochDataStr,
+		Variables: &variables,
 	}
 	res2, err := client.RunQuery(queryEpochDataWithVariables)
 	if err != nil {
@@ -51,7 +51,7 @@ func main() {
 		chainIdentifier
 	}`
 	queryChainId := iota_sdk.GraphQlQuery{
-		QueryString: queryChainIdStr,
+		Query: queryChainIdStr,
 	}
 	res3, err := client.RunQuery(queryChainId)
 	if err != nil {

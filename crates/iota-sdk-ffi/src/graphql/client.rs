@@ -33,8 +33,7 @@ impl From<iota_sdk::graphql_client::GraphQLClient> for GraphQLClient {
 
 #[derive(Debug, serde::Serialize, uniffi::Record)]
 pub struct GraphQLQuery {
-    #[serde(rename = "query")]
-    pub query_string: String,
+    pub query: String,
     #[uniffi(default = None)]
     #[serde(default)]
     pub variables: Option<serde_json::Value>,

@@ -135,7 +135,7 @@ async def main():
         }
     """
 
-    query = GraphQlQuery(query_string=query_str)
+    query = GraphQlQuery(query=query_str)
     res = await client.run_query(query)
     print(res)
 

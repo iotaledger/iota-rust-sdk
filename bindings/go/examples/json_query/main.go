@@ -140,7 +140,7 @@ func main() {
 	`
 
 	query := iota_sdk.GraphQlQuery{
-		QueryString: queryStr,
+		Query: queryStr,
 	}
 	res, err := client.RunQuery(query)
 	if err != nil {

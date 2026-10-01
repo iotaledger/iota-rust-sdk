@@ -19,13 +19,13 @@ struct CustomQueryExample {
           }
       }
       """
-    let queryEpochData = GraphQlQuery(queryString: queryEpochDataStr)
+    let queryEpochData = GraphQlQuery(query: queryEpochDataStr)
     let res = try await client.runQuery(query: queryEpochData)
     print(res)
 
     let variables = "{\"id\": 1}"
     let queryEpochDataWithVariables = GraphQlQuery(
-      queryString: queryEpochDataStr, variables: variables)
+      query: queryEpochDataStr, variables: variables)
     let res2 = try await client.runQuery(query: queryEpochDataWithVariables)
     print(res2)
 
@@ -34,7 +34,7 @@ struct CustomQueryExample {
           chainIdentifier
       }
       """
-    let queryChainId = GraphQlQuery(queryString: queryChainIdStr)
+    let queryChainId = GraphQlQuery(query: queryChainIdStr)
     let res3 = try await client.runQuery(query: queryChainId)
     print(res3)
   }

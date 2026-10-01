@@ -133,5 +133,5 @@ const queryStr = `
   }
 `;
 
-const res = await client.runQuery(GraphQlQuery.new({ queryString: queryStr }));
+const res = await client.runQuery(GraphQlQuery.new({ query: queryStr }));
 console.log(res);
