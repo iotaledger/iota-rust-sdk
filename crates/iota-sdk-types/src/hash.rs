@@ -377,9 +377,18 @@ impl From<&crate::UserSignature> for Address {
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
 #[error("no signature found for address {address}")]
+#[non_exhaustive]
 pub struct MissingSignatureError {
     /// The address no signature commits to.
     pub address: Address,
+}
+
+#[cfg(feature = "serde")]
+impl MissingSignatureError {
+    /// Create an error for the given address.
+    pub fn new(address: Address) -> Self {
+        Self { address }
+    }
 }
 
 /// Borrowed mirror of [`Transaction`](crate::Transaction) that serializes
@@ -509,7 +518,7 @@ mod type_digest {
                     .iter()
                     .find(|signature| signature.derive_address() == address)
                     .map(crate::UserSignature::auth_digest)
-                    .ok_or(super::MissingSignatureError { address })
+                    .ok_or(super::MissingSignatureError::new(address))
             };
 
             let sender_auth_digest = digest_for_address(transaction.sender)?;
