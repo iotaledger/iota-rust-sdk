@@ -1,6 +1,7 @@
 # iota-sdk-grpc-client
 
-The IOTA gRPC client provides access to the IOTA blockchain via gRPC. It exposes four service clients:
+The IOTA gRPC client provides access to the IOTA blockchain via gRPC. It wraps the low-level proto
+types and provides ergonomic APIs using SDK types from `iota_types`, on top of four service clients:
 
 - **Ledger Service** — query blocks, transactions, and ledger state
 - **Execution Service** — execute transactions and dry-run operations
@@ -13,7 +14,7 @@ The IOTA gRPC client provides access to the IOTA blockchain via gRPC. It exposes
 
 Instantiate a client with one of the predefined network constructors or `GrpcClient::new(url)` for a custom endpoint:
 
-```rust
+```rust,no_run
 use iota_sdk_grpc_client::GrpcClient;
 
 #[tokio::main]
@@ -39,15 +40,54 @@ The client provides `new_mainnet()`, `new_testnet()`, `new_devnet()`, `new_local
 
 Customize headers and message size limits:
 
-```rust
-use iota_sdk_grpc_client::GrpcClient;
+```rust,no_run
+use iota_sdk_grpc_client::{GrpcClient, HeadersInterceptor};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let mut headers = HeadersInterceptor::new();
+    headers.headers_mut().insert("x-custom-header", "value".parse()?);
+
     let client = GrpcClient::new_devnet()?
-        .with_headers(vec![("x-custom-header", "value")])
+        .with_headers(headers)
         .with_max_decoding_message_size(16 * 1024 * 1024); // 16MB
 
+    Ok(())
+}
+```
+
+## Reading data
+
+The batched reads return one result per request, so an item the node cannot serve fails only its
+own slot:
+
+```rust,no_run
+use iota_sdk_grpc_client::GrpcClient;
+use iota_types::{ObjectId, TransactionDigest};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = GrpcClient::new_localnet()?;
+
+    // Get a transaction with the default field mask.
+    let digest: TransactionDigest = todo!();
+    let txs = client.transactions([digest]).await?;
+    for tx in txs.body() {
+        match tx {
+            Ok(tx) => println!("Transaction digest: {:?}", tx.transaction()?.digest()?),
+            Err(e) => eprintln!("could not read transaction: {e}"),
+        }
+    }
+
+    // Get an object with the default field mask.
+    let object_id: ObjectId = "0x2".parse()?;
+    let objects = client.objects([object_id]).await?;
+    for object in objects.body() {
+        match object {
+            Ok(object) => println!("Object version: {:?}", object.object_reference()?.version()),
+            Err(e) => eprintln!("could not read object: {e}"),
+        }
+    }
     Ok(())
 }
 ```
