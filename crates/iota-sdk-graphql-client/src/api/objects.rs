@@ -208,6 +208,31 @@ impl GetMoveObjectContentsBcsQuery {
     }
 }
 
+define_query! {
+    /// Query for [`GraphQLClient::object_bcs`]. Await it to send the request.
+    pub struct GetObjectBcsQuery {
+        client: GraphQLClient,
+        object_id: ObjectId,
+    }
+    output: GraphQLResult<Option<Vec<u8>>>;
+}
+
+impl GetObjectBcsQuery {
+    async fn send(self) -> GraphQLResult<Option<Vec<u8>>> {
+        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+            object_id: self.object_id,
+            version: None,
+        });
+
+        let response = self.client.run_query(&operation).await.unwrap();
+
+        Ok(response
+            .object
+            .and_then(|o| o.bcs.map(|bcs| crate::base64::decode(bcs.0.as_str())))
+            .transpose()?)
+    }
+}
+
 impl GraphQLClient {
     /// Return an object based on the provided [`Address`](iota_types::Address).
     ///
@@ -240,18 +265,11 @@ impl GraphQLClient {
 
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
     /// [`Address`](iota_types::Address).
-    pub async fn object_bcs(&self, object_id: ObjectId) -> GraphQLResult<Option<Vec<u8>>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+    pub fn object_bcs(&self, object_id: ObjectId) -> GetObjectBcsQuery {
+        GetObjectBcsQuery {
+            client: self.clone(),
             object_id,
-            version: None,
-        });
-
-        let response = self.run_query(&operation).await.unwrap();
-
-        response
-            .object
-            .and_then(|o| o.bcs.map(|bcs| crate::base64::decode(bcs.0.as_str())))
-            .transpose()
+        }
     }
 
     /// Return the contents JSON of an object that is a Move object.

@@ -26,31 +26,39 @@ mod test_utils;
 pub use api::move_objects::{ListMoveObjectsQuery, MoveObjectFilter, OwnedMoveObject};
 pub use api::{
     balance::GetBalanceQuery,
-    checkpoints::{GetCheckpointQuery, ListCheckpointsQuery},
-    coins::{ListCoinsQuery, ListGasCoinsQuery},
+    checkpoints::{
+        GetCheckpointQuery, GetLatestCheckpointSequenceNumberQuery, GetTotalTransactionBlocksQuery,
+        ListCheckpointsQuery,
+    },
+    coins::{GetCoinMetadataQuery, GetTotalSupplyQuery, ListCoinsQuery, ListGasCoinsQuery},
     dry_run::{DryRunTransactionKindQuery, DryRunTransactionQuery},
-    dynamic_fields::ListDynamicFieldsQuery,
+    dynamic_fields::{GetDynamicFieldQuery, GetDynamicObjectFieldQuery, ListDynamicFieldsQuery},
     epochs::{GetEpochQuery, GetEpochTotalCheckpointsQuery, GetEpochTotalTransactionBlocksQuery},
     events::ListEventsQuery,
-    iota_names::{GetIotaNamesDefaultNameQuery, ListIotaNamesRegistrationsQuery},
+    iota_names::{
+        GetIotaNamesDefaultNameQuery, GetIotaNamesLookupQuery, ListIotaNamesRegistrationsQuery,
+    },
     move_view_call::{MoveViewArg, MoveViewArgList, MoveViewCallJsonQuery, MoveViewCallQuery},
     network::{
         GetChainIdQuery, GetProtocolConfigQuery, GetReferenceGasPriceQuery,
         ListActiveValidatorsQuery,
     },
     objects::{
-        GetMoveObjectContentsBcsQuery, GetMoveObjectContentsQuery, GetObjectQuery, ListObjectsQuery,
+        GetMoveObjectContentsBcsQuery, GetMoveObjectContentsQuery, GetObjectBcsQuery,
+        GetObjectQuery, ListObjectsQuery,
     },
     package::{
-        GetNormalizedMoveFunctionQuery, GetNormalizedMoveModuleQuery, GetPackageQuery,
-        ListPackageVersionsQuery, ListPackagesQuery,
+        GetNormalizedMoveFunctionQuery, GetNormalizedMoveModuleQuery, GetPackageLatestQuery,
+        GetPackageQuery, ListPackageVersionsQuery, ListPackagesQuery,
     },
     transactions::{
-        ExecuteTransactionQuery, ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
+        ExecuteTransactionQuery, GetTransactionDataEffectsQuery, GetTransactionEffectsQuery,
+        GetTransactionQuery, IsTransactionFinalizedQuery, IsTransactionIndexedOnNodeQuery,
+        ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
         ListTransactionsEffectsQuery, ListTransactionsQuery, WaitForTransactionQuery,
     },
 };
-pub use client::{GraphQLClient, GraphQLClientBuilder, USER_AGENT};
+pub use client::{GetMaxPageSizeQuery, GraphQLClient, GraphQLClientBuilder, USER_AGENT};
 pub use cynic;
 pub use error::{GraphQLError, GraphQLResult};
 pub use iota_transaction_builder::WaitForTransaction;
