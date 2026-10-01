@@ -217,10 +217,12 @@ impl crate::FromMnemonic for Secp256r1PrivateKey {
 
         use crate::ToFromBytes;
 
-        let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)?;
+        let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)
+            .map_err(|e| crate::PrivateKeyError::Bip39(e.to_string()))?;
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
-        let child_xprv =
-            bip32::XPrv::derive_from_path(seed, &bip32::DerivationPath::from_str(&path)?)?;
+        let child_xprv = bip32::DerivationPath::from_str(&path)
+            .and_then(|path| bip32::XPrv::derive_from_path(seed, &path))
+            .map_err(|e| crate::PrivateKeyError::Bip32(e.to_string()))?;
         Self::from_bytes(child_xprv.private_key().to_bytes())
     }
 }
