@@ -282,30 +282,10 @@ impl From<FromUtf8Error> for GraphQLError {
     }
 }
 
-#[cfg(not(target_arch = "wasm32"))]
-impl From<tokio_tungstenite::tungstenite::Error> for GraphQLError {
-    fn from(error: tokio_tungstenite::tungstenite::Error) -> Self {
-        Self::Subscription(error.into())
-    }
-}
-
-impl From<graphql_ws_client::Error> for GraphQLError {
-    fn from(error: graphql_ws_client::Error) -> Self {
-        Self::Subscription(error.into())
-    }
-}
-
 #[cfg(feature = "move-types")]
 impl From<iota_move_types::FromObjectError> for GraphQLError {
     fn from(error: iota_move_types::FromObjectError) -> Self {
         Self::Deserialization(error.into())
-    }
-}
-
-#[cfg(target_arch = "wasm32")]
-impl From<ws_stream_wasm::WsErr> for GraphQLError {
-    fn from(error: ws_stream_wasm::WsErr) -> Self {
-        Self::Subscription(error.into())
     }
 }
 
