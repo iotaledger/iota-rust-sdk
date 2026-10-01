@@ -53,7 +53,14 @@ fn is_valid_path_component(component: &str) -> bool {
     true
 }
 
-pub trait MessageFields {
+pub(crate) mod sealed {
+    pub trait Sealed {}
+}
+
+/// Field metadata of a generated message, used to validate read masks.
+///
+/// This trait is sealed and implemented only for the generated message types.
+pub trait MessageFields: sealed::Sealed {
     const FIELDS: &'static [&'static MessageField];
 
     /// Oneof group names declared in this message.
@@ -66,6 +73,8 @@ pub trait MessageFields {
     const ONEOFS: &'static [&'static str] = &[];
 }
 
+/// Metadata of one field of a generated message.
+#[non_exhaustive]
 pub struct MessageField {
     pub name: &'static str,
     pub json_name: &'static str,
