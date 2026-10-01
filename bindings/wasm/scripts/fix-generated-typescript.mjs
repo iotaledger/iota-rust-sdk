@@ -43,11 +43,11 @@ fixed = fixed.replace(
 // Restore the default for `GraphQlPaginationFilter.direction`.
 // uniffi record metadata can only encode literal defaults (numbers, strings,
 // bools, None, Some(...), []), never an enum variant, so the `#[default]`
-// `GraphQLDirection::Forward` on the Rust field cannot be carried into the bindings.
+// `GraphQlDirection::Forward` on the Rust field cannot be carried into the bindings.
 // As a result ubrn emits `direction` as a required field and omits it from the
 // record's `defaults()`. In TypeScript that surfaces as a type error, but in
 // plain JS the field is silently `undefined`, the enum converter lowers it to a
-// garbage ordinal, and the next call panics ("Invalid GraphQLDirection enum value").
+// garbage ordinal, and the next call panics ("Invalid GraphQlDirection enum value").
 // Upgrading does not help: uniffi's bare `#[uniffi(default)]` keyword exists
 // (>=0.30) but ubrn deliberately renders an enum type-default as `undefined`
 // ("no canonical first variant"), reproducing the same bug. So we inject the
