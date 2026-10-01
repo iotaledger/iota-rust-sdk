@@ -35,7 +35,6 @@ pub struct OwnedMoveObject<T> {
     object: T,
 }
 
-#[cfg_attr(doc_cfg, doc(cfg(feature = "move-types")))]
 impl<T> OwnedMoveObject<T> {
     /// Get the object's reference.
     pub fn object_ref(&self) -> ObjectReference {
@@ -88,7 +87,6 @@ fn decode<T: MoveObject>(
     })
 }
 
-#[cfg_attr(doc_cfg, doc(cfg(feature = "move-types")))]
 impl GrpcClient {
     /// List objects of the Move type `T` owned by an address, decoded into `T`
     /// and paired with their object references.
