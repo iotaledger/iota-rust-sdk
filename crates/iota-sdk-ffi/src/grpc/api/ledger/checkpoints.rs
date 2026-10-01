@@ -265,7 +265,10 @@ impl GrpcClient {
     /// Get the latest checkpoint.
     ///
     /// The optional `transactions_filter` and `events_filter` narrow the
-    /// transactions and events returned for the checkpoint.
+    /// transactions and events returned for the checkpoint. The server rejects
+    /// the call if a filter is set without the matching field in `read_mask`:
+    /// `Transactions` (or one of its sub-fields) for `transactions_filter`,
+    /// `Events` (or one of its sub-fields) for `events_filter`.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, only the checkpoint summary is returned.
@@ -292,7 +295,10 @@ impl GrpcClient {
     /// Get a checkpoint by its sequence number.
     ///
     /// The optional `transactions_filter` and `events_filter` narrow the
-    /// transactions and events returned for the checkpoint.
+    /// transactions and events returned for the checkpoint. The server rejects
+    /// the call if a filter is set without the matching field in `read_mask`:
+    /// `Transactions` (or one of its sub-fields) for `transactions_filter`,
+    /// `Events` (or one of its sub-fields) for `events_filter`.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, only the checkpoint summary is returned.
@@ -321,7 +327,10 @@ impl GrpcClient {
     /// Get a checkpoint by its digest.
     ///
     /// The optional `transactions_filter` and `events_filter` narrow the
-    /// transactions and events returned for the checkpoint.
+    /// transactions and events returned for the checkpoint. The server rejects
+    /// the call if a filter is set without the matching field in `read_mask`:
+    /// `Transactions` (or one of its sub-fields) for `transactions_filter`,
+    /// `Events` (or one of its sub-fields) for `events_filter`.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, only the checkpoint summary is returned.
@@ -357,7 +366,11 @@ impl GrpcClient {
     /// indefinitely.
     ///
     /// The optional `transactions_filter` and `events_filter` narrow the
-    /// transactions and events returned for each checkpoint.
+    /// transactions and events returned for each checkpoint. The server
+    /// rejects the call if a filter is set without the matching field in
+    /// `read_mask`: `Transactions` (or one of its sub-fields) for
+    /// `transactions_filter`, `Events` (or one of its sub-fields) for
+    /// `events_filter`.
     ///
     /// The optional `read_mask` controls which fields the server returns for
     /// each checkpoint. If `None`, only the checkpoint summary is returned.
@@ -397,7 +410,11 @@ impl GrpcClient {
     /// Unlike [`GrpcClient::checkpoints_stream`], the filters decide which
     /// checkpoints are returned at all; checkpoints without any matching
     /// transactions or events are skipped entirely. At least one of
-    /// `transactions_filter` or `events_filter` must be set.
+    /// `transactions_filter` or `events_filter` must be set, and the server
+    /// rejects the call if a filter is set without the matching field in
+    /// `read_mask`: `Transactions` (or one of its sub-fields) for
+    /// `transactions_filter`, `Events` (or one of its sub-fields) for
+    /// `events_filter`.
     ///
     /// While the server scans non-matching checkpoints, the stream yields
     /// progress items indicating the current scan position (default every
