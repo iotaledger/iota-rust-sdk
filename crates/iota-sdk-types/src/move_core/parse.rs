@@ -3,14 +3,64 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use winnow::{
-    ModalResult, Parser,
+    Parser,
     ascii::multispace0,
     combinator::{alt, delimited, opt, separated},
-    stream::AsChar,
+    error::{AddContext, ErrMode, FromExternalError, ParserError},
+    stream::{AsChar, Stream},
     token::{one_of, take_while},
 };
 
 use crate::{Address, Identifier, StructTag, TypeParseError, TypeTag};
+
+type ModalResult<O> = winnow::ModalResult<O, InnerError>;
+
+/// Parser error that wraps the public [`TypeParseError`].
+#[derive(Debug)]
+pub(crate) struct InnerError(TypeParseError);
+
+impl ParserError<&str> for InnerError {
+    type Inner = Self;
+
+    fn from_input(input: &&str) -> Self {
+        Self(TypeParseError::Parse {
+            input: (*input).to_owned(),
+            source: None,
+        })
+    }
+
+    fn into_inner(self) -> winnow::Result<Self::Inner, Self> {
+        Ok(self)
+    }
+}
+
+impl AddContext<&str> for InnerError {
+    fn add_context(
+        self,
+        _input: &&str,
+        _token_start: &<&str as Stream>::Checkpoint,
+        _context: &'static str,
+    ) -> Self {
+        self
+    }
+}
+
+impl<E: std::error::Error + Send + Sync + 'static> FromExternalError<&str, E> for InnerError {
+    fn from_external_error(input: &&str, e: E) -> Self {
+        Self(TypeParseError::Parse {
+            input: (*input).to_owned(),
+            source: Some(Box::new(e)),
+        })
+    }
+}
+
+/// Runs `parser` over the whole of `input`.
+pub(crate) fn parse_complete<'a, O>(
+    mut parser: impl Parser<&'a str, O, ErrMode<InnerError>>,
+    input: &'a str,
+) -> Result<O, TypeParseError> {
+    parser.parse(input).map_err(|e| e.into_inner().0)
+}
 
 /// Maximum length in bytes of a Move [`Identifier`].
 pub const MAX_IDENTIFIER_LENGTH: usize = 128;
@@ -18,7 +68,7 @@ pub const MAX_IDENTIFIER_LENGTH: usize = 128;
 pub const MAX_TYPE_TAG_NESTING: usize = 16;
 
 /// ALLOWED_IDENTIFIERS = r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";
-pub(crate) fn parse_identifier(input: &mut &str) -> ModalResult<Identifier, TypeParseError> {
+pub(crate) fn parse_identifier(input: &mut &str) -> ModalResult<Identifier> {
     alt((
         "<SELF>",
         (one_of(|c: char| c.is_alpha()), valid_remainder(0)).take(),
@@ -27,18 +77,16 @@ pub(crate) fn parse_identifier(input: &mut &str) -> ModalResult<Identifier, Type
     .parse_next(input)
     .and_then(|s| {
         if s.len() > MAX_IDENTIFIER_LENGTH {
-            return Err(winnow::error::ErrMode::Cut(
+            return Err(ErrMode::Cut(InnerError(
                 TypeParseError::IdentifierMaxLengthExceeded { actual: s.len() },
-            ));
+            )));
         }
         Ok(s)
     })
     .map(Identifier::new_unchecked)
 }
 
-fn valid_remainder<'a>(
-    minimum: usize,
-) -> impl FnMut(&mut &'a str) -> ModalResult<&'a str, TypeParseError> {
+fn valid_remainder<'a>(minimum: usize) -> impl FnMut(&mut &'a str) -> ModalResult<&'a str> {
     move |input: &mut &'a str| {
         take_while(
             // Use .. instead of ..= since we've already processed a single character
@@ -49,25 +97,23 @@ fn valid_remainder<'a>(
     }
 }
 
-pub(crate) fn parse_address(input: &mut &str) -> ModalResult<Address, TypeParseError> {
+pub(crate) fn parse_address(input: &mut &str) -> ModalResult<Address> {
     ("0x", take_while(1..=64, AsChar::is_hex_digit))
         .take()
         .try_map(Address::from_prefixed_short_hex)
         .parse_next(input)
 }
 
-pub(crate) fn parse_type_tag(input: &mut &str) -> ModalResult<TypeTag, TypeParseError> {
+pub(crate) fn parse_type_tag(input: &mut &str) -> ModalResult<TypeTag> {
     parse_type_tag_impl(0).parse_next(input)
 }
 
-fn parse_type_tag_impl(
-    depth: usize,
-) -> impl FnMut(&mut &str) -> ModalResult<TypeTag, TypeParseError> {
+fn parse_type_tag_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<TypeTag> {
     move |input: &mut &str| {
         if depth > MAX_TYPE_TAG_NESTING {
-            return Err(winnow::error::ErrMode::Cut(
+            return Err(ErrMode::Cut(InnerError(
                 TypeParseError::NestingLimitExceeded,
-            ));
+            )));
         }
         // `alt` takes at most 10 branches, so the primitives are grouped
         alt((
@@ -94,13 +140,11 @@ fn parse_type_tag_impl(
     }
 }
 
-pub(crate) fn parse_struct_tag(input: &mut &str) -> ModalResult<StructTag, TypeParseError> {
+pub(crate) fn parse_struct_tag(input: &mut &str) -> ModalResult<StructTag> {
     parse_struct_tag_impl(0).parse_next(input)
 }
 
-fn parse_struct_tag_impl(
-    depth: usize,
-) -> impl FnMut(&mut &str) -> ModalResult<StructTag, TypeParseError> {
+fn parse_struct_tag_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<StructTag> {
     move |input: &mut &str| {
         let (address, _, module, _, name) = (
             parse_address,
@@ -124,9 +168,7 @@ fn parse_struct_tag_impl(
     }
 }
 
-fn parse_generics(
-    depth: usize,
-) -> impl FnMut(&mut &str) -> ModalResult<Vec<TypeTag>, TypeParseError> {
+fn parse_generics(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<Vec<TypeTag>> {
     move |input: &mut &str| {
         separated(
             1..,
