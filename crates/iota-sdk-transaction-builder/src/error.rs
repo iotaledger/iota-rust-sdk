@@ -27,7 +27,7 @@ pub enum TransactionBuilderError {
     #[error("only one command can transfer the gas coin")]
     GasCoinTransferredMoreThanOnce,
     #[error("BCS serialization error: {0}")]
-    Bcs(bcs::Error),
+    Bcs(iota_types::BcsError),
     #[error("Decoding error: {0}")]
     Decoding(#[from] Base64Error),
     #[error("Missing object id")]

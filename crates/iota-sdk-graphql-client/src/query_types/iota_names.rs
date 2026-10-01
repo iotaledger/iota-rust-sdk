@@ -107,7 +107,8 @@ impl TryFrom<NameRegistration> for iota_types::iota_names::NameRegistration {
                 .0
                 .as_str(),
         )?;
-        bcs::from_bytes::<iota_types::Object>(&bytes)?
+        bcs::from_bytes::<iota_types::Object>(&bytes)
+            .map_err(iota_types::BcsError::new)?
             .to_rust()
             .map_err(GraphQLError::deserialization)
     }

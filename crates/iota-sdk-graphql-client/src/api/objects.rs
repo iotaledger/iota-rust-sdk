@@ -55,7 +55,7 @@ impl GraphQLClient {
             .transpose()?;
 
         let object = bcs
-            .map(|b| bcs::from_bytes::<iota_types::Object>(&b))
+            .map(|b| bcs::from_bytes::<iota_types::Object>(&b).map_err(iota_types::BcsError::new))
             .transpose()?;
 
         Ok(object)
@@ -102,8 +102,8 @@ impl GraphQLClient {
             .collect::<Result<Vec<_>, base64ct::Error>>()?;
         let objects = bcs
             .iter()
-            .map(|b| bcs::from_bytes::<iota_types::Object>(b))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
+            .map(|b| bcs::from_bytes::<iota_types::Object>(b).map_err(iota_types::BcsError::new))
+            .collect::<Result<Vec<_>, iota_types::BcsError>>()?;
 
         Ok(Page::new(page_info, objects))
     }

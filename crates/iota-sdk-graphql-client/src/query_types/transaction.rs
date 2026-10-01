@@ -486,7 +486,9 @@ impl TryFrom<TransactionBlock> for SignedTransaction {
             .bcs
             .map(|tx| base64ct::Base64::decode_vec(tx.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<SenderSignedTransaction>(&bcs))
+            .map(|bcs| {
+                bcs::from_bytes::<SenderSignedTransaction>(&bcs).map_err(iota_types::BcsError::new)
+            })
             .transpose()?;
 
         if let Some(transaction) = transaction {
@@ -505,7 +507,9 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
             .effects
             .map(|fx| base64ct::Base64::decode_vec(fx.bcs.unwrap().0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
+            .map(|bcs| {
+                bcs::from_bytes::<TransactionEffects>(&bcs).map_err(iota_types::BcsError::new)
+            })
             .transpose()?;
         effects.ok_or(GraphQLError::EmptyResponseField("transaction effects bcs"))
     }

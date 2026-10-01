@@ -69,7 +69,9 @@ impl GraphQLClient {
         skip_checks: bool,
         transaction_metadata: TransactionMetadata,
     ) -> GraphQLResult<DryRunResult> {
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&transaction_kind)?);
+        let tx_bytes = base64ct::Base64::encode_string(
+            &bcs::to_bytes(&transaction_kind).map_err(iota_types::BcsError::new)?,
+        );
         self.dry_run(tx_bytes, skip_checks, Some(transaction_metadata))
             .await
     }
@@ -105,7 +107,9 @@ impl GraphQLClient {
             .and_then(|tx| tx.bcs.as_ref())
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
+            .map(|bcs| {
+                bcs::from_bytes::<TransactionEffects>(&bcs).map_err(iota_types::BcsError::new)
+            })
             .transpose()?;
 
         // Extract transaction
@@ -114,7 +118,9 @@ impl GraphQLClient {
             .and_then(|tx| tx.bcs.as_ref())
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<SignedTransaction>(&bcs))
+            .map(|bcs| {
+                bcs::from_bytes::<SignedTransaction>(&bcs).map_err(iota_types::BcsError::new)
+            })
             .transpose()?;
 
         Ok(DryRunResult {
