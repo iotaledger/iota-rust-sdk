@@ -853,11 +853,8 @@ mod tests {
     fn a_per_item_error_keeps_the_surrounding_items() {
         let batch = vec![
             ObjectResult::default().with_object(Object::default()),
-            ObjectResult::default().with_error(Status {
-                code: tonic::Code::NotFound.into(),
-                message: "Object 0x2 not found".to_owned(),
-                details: Vec::new(),
-            }),
+            ObjectResult::default()
+                .with_error(Status::new(tonic::Code::NotFound, "Object 0x2 not found")),
             ObjectResult::default().with_object(Object::default()),
         ];
 
@@ -887,11 +884,10 @@ mod tests {
             ViewFunctionCallResult::default().with_call_outputs(
                 ViewFunctionCallOutputs::default().with_return_values(CommandOutputs::default()),
             ),
-            ViewFunctionCallResult::default().with_error(Status {
-                code: tonic::Code::InvalidArgument.into(),
-                message: "no function 'nope' in module 0x2::hash".to_owned(),
-                details: Vec::new(),
-            }),
+            ViewFunctionCallResult::default().with_error(Status::new(
+                tonic::Code::InvalidArgument,
+                "no function 'nope' in module 0x2::hash",
+            )),
         ];
 
         let items = into_item_results(batch);
@@ -1016,11 +1012,7 @@ mod tests {
         let requested = [(object_id(1), None), (object_id(2), None)];
         let results = vec![
             answered(object_id(1)),
-            Err(GrpcError::Server(Status {
-                code: tonic::Code::NotFound.into(),
-                message: String::new(),
-                details: Vec::new(),
-            })),
+            Err(GrpcError::Server(Status::new(tonic::Code::NotFound, ""))),
         ];
 
         assert!(check_object_identity(&results, &requested).is_ok());
@@ -1074,17 +1066,9 @@ mod tests {
 
     #[test]
     fn not_found_is_recognized_at_the_call_and_item_level() {
-        let item_level = GrpcError::Server(Status {
-            code: tonic::Code::NotFound.into(),
-            message: String::new(),
-            details: Vec::new(),
-        });
+        let item_level = GrpcError::Server(Status::new(tonic::Code::NotFound, ""));
         let call_level = GrpcError::from(tonic::Status::not_found("gone"));
-        let other = GrpcError::Server(Status {
-            code: tonic::Code::Internal.into(),
-            message: String::new(),
-            details: Vec::new(),
-        });
+        let other = GrpcError::Server(Status::new(tonic::Code::Internal, ""));
 
         assert!(item_level.is_not_found());
         assert!(call_level.is_not_found());

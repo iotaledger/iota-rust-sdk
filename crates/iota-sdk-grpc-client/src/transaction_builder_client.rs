@@ -316,11 +316,7 @@ mod tests {
     use crate::api::{ProtocolError, RpcStatus};
 
     fn not_found_status() -> RpcStatus {
-        RpcStatus {
-            code: tonic::Code::NotFound.into(),
-            message: String::new(),
-            details: Vec::new(),
-        }
+        RpcStatus::new(tonic::Code::NotFound, "")
     }
 
     #[test]
