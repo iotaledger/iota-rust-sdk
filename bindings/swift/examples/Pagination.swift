@@ -15,10 +15,10 @@ struct PaginationExample {
     while true {
       print("Fetching page with cursor: \(nextCursor ?? "nil")")
       let page = try await client.objects(
-        filter: ObjectFilter(owner: address),
+        filter: GraphQlObjectFilter(owner: address),
         // Limit to 1 to demonstrate pagination
-        paginationFilter: PaginationFilter(
-          direction: Direction.forward,
+        paginationFilter: GraphQlPaginationFilter(
+          direction: GraphQlDirection.forward,
           cursor: nextCursor,
           limit: 1)
       )

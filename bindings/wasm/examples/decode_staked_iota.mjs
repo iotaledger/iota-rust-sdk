@@ -10,7 +10,7 @@
 import {
   Address,
   GraphQlClient,
-  ObjectFilter,
+  GraphQlObjectFilter,
   StakedIota,
   initAsync,
 } from "@iota/sdk-wasm";
@@ -24,7 +24,7 @@ const owner = Address.fromHex(
 );
 
 const page = await client.objects(
-  ObjectFilter.new({ typeTag: "0x3::staking_pool::StakedIota", owner }),
+  GraphQlObjectFilter.new({ typeTag: "0x3::staking_pool::StakedIota", owner }),
 );
 
 if (page.data.length === 0) {

@@ -20,7 +20,7 @@ pub(crate) trait ReadMaskField: Sized {
 }
 
 /// Define a read mask field enum with one variant per listed constant of the
-/// Rust client's field namespace of the same name, named after the constant
+/// Rust client's field namespace given after `for`, named after the constant
 /// in PascalCase.
 ///
 /// The optional `keyed` block adds variants carrying a map key, each mapped
@@ -28,7 +28,7 @@ pub(crate) trait ReadMaskField: Sized {
 macro_rules! read_mask_fields {
     (
         $(#[$attr:meta])*
-        pub enum $name:ident {
+        pub enum $name:ident for $field:ident {
             $(
                 $(#[$variant_attr:meta])*
                 $path:ident
@@ -59,7 +59,7 @@ macro_rules! read_mask_fields {
                 Custom { path: String },
             }
 
-            impl From<$name> for sdk::$name {
+            impl From<$name> for sdk::$field {
                 fn from(field: $name) -> Self {
                     match field {
                         $($name::[<$path:camel>] => Self::$path,)*
@@ -76,14 +76,14 @@ macro_rules! read_mask_fields {
         }
 
         impl ReadMaskField for $name {
-            type Field = sdk::$name;
+            type Field = sdk::$field;
         }
     };
 }
 
 read_mask_fields! {
     /// Field paths for `objects` and `objects_with_versions`.
-    pub enum ObjectField {
+    pub enum GrpcObjectField for ObjectField {
         /// Wildcard — request all object fields.
         ALL,
         /// Object reference (object_id, version, digest).
@@ -101,7 +101,7 @@ read_mask_fields! {
 
 read_mask_fields! {
     /// Field paths for `owned_objects` and `all_owned_objects`.
-    pub enum OwnedObjectField {
+    pub enum GrpcOwnedObjectField for OwnedObjectField {
         /// Wildcard — request all fields.
         ALL,
         /// Object reference (object_id, version, digest).
@@ -120,7 +120,7 @@ read_mask_fields! {
 read_mask_fields! {
     /// Field paths for `transactions`, `execute_transaction` and
     /// `execute_transactions`.
-    pub enum TransactionField {
+    pub enum GrpcTransactionField for TransactionField {
         /// Wildcard — request all fields.
         ALL,
         /// Transaction data (all sub-fields).
@@ -214,7 +214,7 @@ read_mask_fields! {
 
 read_mask_fields! {
     /// Field paths for `service_info`.
-    pub enum ServiceInfoField {
+    pub enum GrpcServiceInfoField for ServiceInfoField {
         /// Wildcard — request all fields.
         ALL,
         /// The chain ID (network identifier).
@@ -238,7 +238,7 @@ read_mask_fields! {
 
 read_mask_fields! {
     /// Field paths for `epoch`.
-    pub enum EpochField {
+    pub enum GrpcEpochField for EpochField {
         /// Wildcard — request all fields.
         ALL,
         /// The epoch number.
@@ -288,7 +288,7 @@ read_mask_fields! {
     /// Field paths for the checkpoint methods: `checkpoint_latest`,
     /// `checkpoint_by_sequence_number`, `checkpoint_by_digest`,
     /// `checkpoints_stream` and `checkpoints_stream_filtered`.
-    pub enum CheckpointResponseField {
+    pub enum GrpcCheckpointResponseField for CheckpointResponseField {
         /// Wildcard — request all fields.
         ALL,
         /// All checkpoint data fields.
@@ -370,7 +370,7 @@ read_mask_fields! {
 
 read_mask_fields! {
     /// Field paths for `simulate_transaction` and `simulate_transactions`.
-    pub enum SimulateField {
+    pub enum GrpcSimulateField for SimulateField {
         /// Wildcard — request all fields.
         ALL,
         /// The simulated executed transaction (all sub-fields).
@@ -436,7 +436,7 @@ read_mask_fields! {
 
 read_mask_fields! {
     /// Field paths for `view_function_call` and `view_function_calls`.
-    pub enum ViewFunctionCallField {
+    pub enum GrpcViewFunctionCallField for ViewFunctionCallField {
         /// Wildcard — request all fields.
         ALL,
         /// Execution result (all sub-fields).
@@ -464,7 +464,7 @@ read_mask_fields! {
 
 read_mask_fields! {
     /// Field paths for `dynamic_fields` and `all_dynamic_fields`.
-    pub enum DynamicFieldField {
+    pub enum GrpcDynamicFieldField for DynamicFieldField {
         /// Wildcard — request all fields.
         ALL,
         /// The kind of dynamic field (field or object).
@@ -523,34 +523,34 @@ mod tests {
 
     #[test]
     fn every_variant_maps_onto_its_path() {
-        variant_names_follow_their_paths(ObjectField::VARIANTS);
-        variant_names_follow_their_paths(OwnedObjectField::VARIANTS);
-        variant_names_follow_their_paths(TransactionField::VARIANTS);
-        variant_names_follow_their_paths(ServiceInfoField::VARIANTS);
-        variant_names_follow_their_paths(EpochField::VARIANTS);
-        variant_names_follow_their_paths(CheckpointResponseField::VARIANTS);
-        variant_names_follow_their_paths(SimulateField::VARIANTS);
-        variant_names_follow_their_paths(ViewFunctionCallField::VARIANTS);
-        variant_names_follow_their_paths(DynamicFieldField::VARIANTS);
+        variant_names_follow_their_paths(GrpcObjectField::VARIANTS);
+        variant_names_follow_their_paths(GrpcOwnedObjectField::VARIANTS);
+        variant_names_follow_their_paths(GrpcTransactionField::VARIANTS);
+        variant_names_follow_their_paths(GrpcServiceInfoField::VARIANTS);
+        variant_names_follow_their_paths(GrpcEpochField::VARIANTS);
+        variant_names_follow_their_paths(GrpcCheckpointResponseField::VARIANTS);
+        variant_names_follow_their_paths(GrpcSimulateField::VARIANTS);
+        variant_names_follow_their_paths(GrpcViewFunctionCallField::VARIANTS);
+        variant_names_follow_their_paths(GrpcDynamicFieldField::VARIANTS);
     }
 
     #[test]
     fn keyed_and_custom_variants_map_onto_their_paths() {
-        let path = |field: EpochField| sdk::EpochField::from(field).as_str().to_owned();
+        let path = |field: GrpcEpochField| sdk::EpochField::from(field).as_str().to_owned();
         assert_eq!(
-            path(EpochField::ProtocolConfigFeatureFlag {
+            path(GrpcEpochField::ProtocolConfigFeatureFlag {
                 key: "enable_vdf".to_owned()
             }),
             "protocol_config.feature_flags.enable_vdf"
         );
         assert_eq!(
-            path(EpochField::ProtocolConfigAttribute {
+            path(GrpcEpochField::ProtocolConfigAttribute {
                 key: "max_tx_gas".to_owned()
             }),
             "protocol_config.attributes.max_tx_gas"
         );
         assert_eq!(
-            sdk::DynamicFieldField::from(DynamicFieldField::Custom {
+            sdk::DynamicFieldField::from(GrpcDynamicFieldField::Custom {
                 path: "field_object.bcs".to_owned()
             })
             .as_str(),

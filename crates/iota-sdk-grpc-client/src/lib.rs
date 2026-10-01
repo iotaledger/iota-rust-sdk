@@ -121,11 +121,16 @@ pub use api::{
 // Re-export query builders for convenience
 pub use api::{
     execution::{
+        execute::{ExecuteTransactionQuery, ExecuteTransactionsQuery},
         simulate::{SimulateTransactionQuery, SimulateTransactionsQuery},
         view::{ViewFunctionCallQuery, ViewFunctionCallsQuery},
     },
     ledger::{
-        objects::GetObjectsQuery, service_info::GetServiceInfoQuery,
+        checkpoints::{CheckpointsStreamFilteredQuery, CheckpointsStreamQuery, GetCheckpointQuery},
+        epochs::GetEpochQuery,
+        health::GetHealthQuery,
+        objects::GetObjectsQuery,
+        service_info::GetServiceInfoQuery,
         transactions::GetTransactionsQuery,
     },
     move_package::package_versions::ListPackageVersionsQuery,
@@ -137,6 +142,7 @@ pub use api::{
 // Re-export typed read mask field enums
 pub use iota_grpc_types::read_mask_fields;
 pub use iota_grpc_types::{prost, prost_types, tonic};
+pub use iota_types;
 
 mod client;
 pub use client::{GrpcClient, InterceptedChannel};

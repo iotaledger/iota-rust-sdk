@@ -6,7 +6,8 @@
 use crate::{
     error::Result,
     graphql::{
-        client::GraphQLClient, output_types::DryRunResult, query_types::TransactionMetadata,
+        client::GraphQLClient, output_types::GraphQLDryRunResult,
+        query_types::GraphQLTransactionMetadata,
     },
     types::transaction::{Transaction, TransactionKind},
 };
@@ -26,7 +27,7 @@ impl GraphQLClient {
         &self,
         transaction: &Transaction,
         skip_checks: bool,
-    ) -> Result<DryRunResult> {
+    ) -> Result<GraphQLDryRunResult> {
         Ok(self
             .client()
             .dry_run_transaction(&transaction.0, skip_checks)
@@ -47,9 +48,9 @@ impl GraphQLClient {
     pub async fn dry_run_transaction_kind(
         &self,
         transaction_kind: TransactionKind,
-        transaction_metadata: TransactionMetadata,
+        transaction_metadata: GraphQLTransactionMetadata,
         skip_checks: bool,
-    ) -> Result<DryRunResult> {
+    ) -> Result<GraphQLDryRunResult> {
         Ok(self
             .client()
             .dry_run_transaction_kind(

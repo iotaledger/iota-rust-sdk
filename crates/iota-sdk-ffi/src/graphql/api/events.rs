@@ -9,8 +9,8 @@ use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::EventPage,
-        query_types::{EventFilter, GraphQLEvent, PaginationFilter},
+        pagination::GraphQLEventPage,
+        query_types::{GraphQLEvent, GraphQLEventFilter, GraphQLPaginationFilter},
     },
 };
 
@@ -22,9 +22,9 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn events(
         &self,
-        filter: Option<EventFilter>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<EventPage> {
+        filter: Option<GraphQLEventFilter>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLEventPage> {
         let (page_info, events) = self
             .client()
             .events(
