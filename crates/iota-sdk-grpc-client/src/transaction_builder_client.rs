@@ -8,8 +8,7 @@ use std::time::Duration;
 
 use iota_grpc_types::{
     read_mask_fields::{
-        EpochField, EpochReadMask, ExecuteTransactionReadMask, SimulateField, TransactionField,
-        TransactionReadMask,
+        EpochField, EpochReadMask, SimulateField, TransactionField, TransactionReadMask,
     },
     v1::transaction_execution_service::SimulatedTransaction,
 };
@@ -134,10 +133,8 @@ impl TransactionBuilderLedgerClient for GrpcClient {
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
         let epoch = self
-            .epoch(
-                None,
-                EpochReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES),
-            )
+            .epoch()
+            .read_mask(EpochReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES))
             .await?
             .into_inner();
         let attributes = epoch
@@ -153,10 +150,9 @@ impl TransactionBuilderLedgerClient for GrpcClient {
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
         let epoch = self
-            .epoch(
-                epoch.into(),
-                EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE),
-            )
+            .epoch()
+            .epoch_number(epoch)
+            .read_mask(EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE))
             .await?
             .into_inner();
         Ok(epoch.reference_gas_price)
@@ -215,14 +211,9 @@ impl TransactionBuilderExecutionClient for GrpcClient {
             transaction: transaction.clone(),
             signatures: signatures.to_vec(),
         };
-        let result = GrpcClient::execute_transaction(
-            self,
-            signed_transaction,
-            None,
-            ExecuteTransactionReadMask::default(),
-        )
-        .await?
-        .into_inner();
+        let result = GrpcClient::execute_transaction(self, signed_transaction)
+            .await?
+            .into_inner();
         let effects = result.effects()?.effects()?;
 
         if let Some(wait_for) = wait_for {
