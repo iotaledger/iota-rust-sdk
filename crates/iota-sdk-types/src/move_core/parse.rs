@@ -6,8 +6,8 @@ use winnow::{
     Parser,
     ascii::multispace0,
     combinator::{alt, delimited, opt, separated},
-    error::{AddContext, ErrMode, FromExternalError, ParserError},
-    stream::{AsChar, Stream},
+    error::{ErrMode, FromExternalError, ParserError},
+    stream::AsChar,
     token::{one_of, take_while},
 };
 
@@ -31,17 +31,6 @@ impl ParserError<&str> for InnerError {
 
     fn into_inner(self) -> winnow::Result<Self::Inner, Self> {
         Ok(self)
-    }
-}
-
-impl AddContext<&str> for InnerError {
-    fn add_context(
-        self,
-        _input: &&str,
-        _token_start: &<&str as Stream>::Checkpoint,
-        _context: &'static str,
-    ) -> Self {
-        self
     }
 }
 
