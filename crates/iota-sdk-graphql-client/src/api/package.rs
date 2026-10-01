@@ -423,7 +423,7 @@ mod tests {
 
     #[tokio::test]
     async fn package_versions_sends_the_address_versions_and_pagination() {
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("PackageVersionsQueryFragment", |client| async move {
             let _ = client
                 .package_versions(Address::FRAMEWORK)
                 .after_version(Version::from_u64(2))
@@ -440,7 +440,7 @@ mod tests {
 
     #[tokio::test]
     async fn packages_sends_the_checkpoints_and_pagination() {
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("PackagesQueryFragment", |client| async move {
             let _ = client
                 .packages()
                 .after_checkpoint(2)
@@ -461,7 +461,7 @@ mod tests {
             cursor: Some(cursor.to_owned()),
             limit: Some(limit),
         };
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("NormalizedMoveModuleQueryFragment", |client| async move {
             let _ = client
                 .normalized_move_module(Address::FRAMEWORK, "coin")
                 .version(Version::from_u64(4))

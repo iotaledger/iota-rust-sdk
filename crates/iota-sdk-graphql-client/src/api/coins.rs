@@ -169,7 +169,7 @@ mod tests {
 
     #[tokio::test]
     async fn coins_sends_the_owner_coin_type_and_pagination() {
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("ObjectsQueryFragment", |client| async move {
             let _ = client
                 .coins(Address::STD)
                 .coin_type(StructTag::new_gas())
@@ -187,7 +187,7 @@ mod tests {
 
     #[tokio::test]
     async fn gas_coins_sends_the_gas_coin_type() {
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("ObjectsQueryFragment", |client| async move {
             let _ = client
                 .gas_coins(Address::STD)
                 .pagination(backward_page())
@@ -202,7 +202,7 @@ mod tests {
 
     #[tokio::test]
     async fn coins_default_to_every_coin_type() {
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("ObjectsQueryFragment", |client| async move {
             let _ = client.coins(Address::STD).pagination(backward_page()).await;
         })
         .await;

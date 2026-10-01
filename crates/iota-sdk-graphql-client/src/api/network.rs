@@ -150,7 +150,7 @@ mod tests {
 
     #[tokio::test]
     async fn active_validators_sends_the_epoch_and_pagination() {
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("ActiveValidatorsQueryFragment", |client| async move {
             let _ = client
                 .active_validators()
                 .epoch(3)

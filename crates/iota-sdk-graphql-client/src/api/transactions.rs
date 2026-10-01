@@ -503,7 +503,7 @@ mod tests {
 
     #[tokio::test]
     async fn transactions_send_the_filter_and_pagination() {
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("TransactionBlocksQueryFragment", |client| async move {
             let _ = client
                 .transactions()
                 .filter(sent_by_framework())
@@ -517,13 +517,16 @@ mod tests {
         );
         assert_backward_page(&vars);
 
-        let vars = sent_variables(|client| async move {
-            let _ = client
-                .transactions_effects()
-                .filter(sent_by_framework())
-                .pagination(backward_page())
-                .await;
-        })
+        let vars = sent_variables(
+            "TransactionBlocksEffectsQueryFragment",
+            |client| async move {
+                let _ = client
+                    .transactions_effects()
+                    .filter(sent_by_framework())
+                    .pagination(backward_page())
+                    .await;
+            },
+        )
         .await;
         assert_eq!(
             vars["filter"]["sentAddress"],
@@ -531,13 +534,16 @@ mod tests {
         );
         assert_backward_page(&vars);
 
-        let vars = sent_variables(|client| async move {
-            let _ = client
-                .transactions_data_effects()
-                .filter(sent_by_framework())
-                .pagination(backward_page())
-                .await;
-        })
+        let vars = sent_variables(
+            "TransactionBlocksWithEffectsQueryFragment",
+            |client| async move {
+                let _ = client
+                    .transactions_data_effects()
+                    .filter(sent_by_framework())
+                    .pagination(backward_page())
+                    .await;
+            },
+        )
         .await;
         assert_eq!(
             vars["filter"]["sentAddress"],
@@ -548,7 +554,7 @@ mod tests {
 
     #[tokio::test]
     async fn address_transactions_sends_the_address_relation_filter_and_pagination() {
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("AddressTransactionsQueryFragment", |client| async move {
             let _ = client
                 .address_transactions(Address::STD)
                 .relation(AddressTransactionRelationship::Recv)

@@ -85,7 +85,7 @@ mod tests {
 
     #[tokio::test]
     async fn events_sends_the_filter_and_pagination() {
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("EventsQueryFragment", |client| async move {
             let _ = client
                 .events()
                 .filter(EventFilter {
