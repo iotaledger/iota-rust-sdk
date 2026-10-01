@@ -112,6 +112,7 @@ pub mod simple;
 )]
 pub mod multisig;
 
+pub use iota_types;
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[cfg_attr(
     doc_cfg,
@@ -119,6 +120,9 @@ pub mod multisig;
 )]
 #[doc(inline)]
 pub use multisig::UserSignatureVerifier;
+#[cfg(feature = "rand")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+pub use rand_core;
 
 /// Interface for signing user transactions and messages in IOTA
 ///

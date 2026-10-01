@@ -16,10 +16,10 @@ use iota_sdk::grpc_client::{
 use crate::{
     error::{Result, SdkFfiError},
     grpc::{
-        api::{ledger::transactions::ExecutedTransaction, read_mask_requests},
+        api::{ledger::transactions::GrpcExecutedTransaction, read_mask_requests},
         client::GrpcClient,
         filters::{GrpcEventFilter, GrpcTransactionFilter},
-        read_mask_fields::CheckpointResponseField,
+        read_mask_fields::GrpcCheckpointResponseField,
     },
     stream::StreamHandle,
     types::{
@@ -42,7 +42,7 @@ use crate::{
 /// `EventsBcs` respectively for them to be populated; digest-only read masks
 /// populate only the digest fields.
 #[derive(uniffi::Record)]
-pub struct CheckpointResponse {
+pub struct GrpcCheckpointResponse {
     /// The checkpoint sequence number. Always available regardless of the
     /// read mask.
     pub sequence_number: u64,
@@ -60,14 +60,14 @@ pub struct CheckpointResponse {
     /// mask requests `Transactions` or one of its sub-fields (e.g.
     /// `TransactionsEffectsBcs`); with a transactions filter that matches
     /// nothing, an empty list.
-    pub transactions: Option<Vec<ExecutedTransaction>>,
+    pub transactions: Option<Vec<GrpcExecutedTransaction>>,
     /// The events emitted in the checkpoint. `None` unless the read mask
     /// requests `EventsBcs` (or `Events`); a checkpoint with no events, or an
     /// events filter that matches nothing, yields an empty list.
     pub events: Option<Vec<Event>>,
 }
 
-impl CheckpointResponse {
+impl GrpcCheckpointResponse {
     /// Convert a client response, using the read mask it was requested with
     /// to tell fields that were not requested from fields that are empty.
     fn from_response(
@@ -208,25 +208,25 @@ macro_rules! define_checkpoint_stream {
 
 define_checkpoint_stream!(
     /// A stream of checkpoints returned by [`GrpcClient::checkpoints_stream`].
-    CheckpointStream,
+    GrpcCheckpointStream,
     iota_sdk::grpc_client::CheckpointResponse,
-    CheckpointResponse,
-    |checkpoint, read_mask| CheckpointResponse::from_response(&checkpoint, read_mask)
+    GrpcCheckpointResponse,
+    |checkpoint, read_mask| GrpcCheckpointResponse::from_response(&checkpoint, read_mask)
 );
 
 /// An item yielded by a filtered checkpoint stream: either a checkpoint with
 /// matching data, or a progress indicator emitted while the server scans
 /// checkpoints that have none.
 #[derive(uniffi::Enum)]
-pub enum CheckpointStreamItem {
+pub enum GrpcCheckpointStreamItem {
     /// A complete checkpoint with its transactions and events.
-    Checkpoint { checkpoint: CheckpointResponse },
+    Checkpoint { checkpoint: GrpcCheckpointResponse },
     /// A progress indicator sent during filtered scanning, carrying the
     /// sequence number of the latest scanned checkpoint.
     Progress { latest_scanned_sequence_number: u64 },
 }
 
-impl CheckpointStreamItem {
+impl GrpcCheckpointStreamItem {
     fn from_item(
         value: iota_sdk::grpc_client::CheckpointStreamItem,
         read_mask: &CheckpointResponseReadMask,
@@ -234,7 +234,7 @@ impl CheckpointStreamItem {
         Ok(match value {
             iota_sdk::grpc_client::CheckpointStreamItem::Checkpoint(checkpoint) => {
                 Self::Checkpoint {
-                    checkpoint: CheckpointResponse::from_response(&checkpoint, read_mask)?,
+                    checkpoint: GrpcCheckpointResponse::from_response(&checkpoint, read_mask)?,
                 }
             }
             iota_sdk::grpc_client::CheckpointStreamItem::Progress {
@@ -254,10 +254,10 @@ impl CheckpointStreamItem {
 define_checkpoint_stream!(
     /// A stream of filtered checkpoints returned by
     /// [`GrpcClient::checkpoints_stream_filtered`].
-    FilteredCheckpointStream,
+    GrpcFilteredCheckpointStream,
     iota_sdk::grpc_client::CheckpointStreamItem,
-    CheckpointStreamItem,
-    CheckpointStreamItem::from_item
+    GrpcCheckpointStreamItem,
+    GrpcCheckpointStreamItem::from_item
 );
 
 #[uniffi::export(async_runtime = "tokio")]
@@ -274,19 +274,18 @@ impl GrpcClient {
         &self,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
-        read_mask: Option<Vec<CheckpointResponseField>>,
-    ) -> Result<CheckpointResponse> {
+        read_mask: Option<Vec<GrpcCheckpointResponseField>>,
+    ) -> Result<GrpcCheckpointResponse> {
         let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let response = self
             .client()
-            .checkpoint_latest(
-                transactions_filter.as_deref().map(Into::into),
-                events_filter.as_deref().map(Into::into),
-                read_mask.clone(),
-            )
+            .checkpoint_latest()
+            .transactions_filter(transactions_filter.as_deref().map(Into::into))
+            .events_filter(events_filter.as_deref().map(Into::into))
+            .read_mask(read_mask.clone())
             .await?
             .into_inner();
-        CheckpointResponse::from_response(&response, &read_mask)
+        GrpcCheckpointResponse::from_response(&response, &read_mask)
     }
 
     /// Get a checkpoint by its sequence number.
@@ -302,20 +301,18 @@ impl GrpcClient {
         sequence_number: u64,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
-        read_mask: Option<Vec<CheckpointResponseField>>,
-    ) -> Result<CheckpointResponse> {
+        read_mask: Option<Vec<GrpcCheckpointResponseField>>,
+    ) -> Result<GrpcCheckpointResponse> {
         let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let response = self
             .client()
-            .checkpoint_by_sequence_number(
-                sequence_number,
-                transactions_filter.as_deref().map(Into::into),
-                events_filter.as_deref().map(Into::into),
-                read_mask.clone(),
-            )
+            .checkpoint_by_sequence_number(sequence_number)
+            .transactions_filter(transactions_filter.as_deref().map(Into::into))
+            .events_filter(events_filter.as_deref().map(Into::into))
+            .read_mask(read_mask.clone())
             .await?
             .into_inner();
-        CheckpointResponse::from_response(&response, &read_mask)
+        GrpcCheckpointResponse::from_response(&response, &read_mask)
     }
 
     /// Get a checkpoint by its digest.
@@ -331,20 +328,18 @@ impl GrpcClient {
         digest: &CheckpointDigest,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
-        read_mask: Option<Vec<CheckpointResponseField>>,
-    ) -> Result<CheckpointResponse> {
+        read_mask: Option<Vec<GrpcCheckpointResponseField>>,
+    ) -> Result<GrpcCheckpointResponse> {
         let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let response = self
             .client()
-            .checkpoint_by_digest(
-                **digest,
-                transactions_filter.as_deref().map(Into::into),
-                events_filter.as_deref().map(Into::into),
-                read_mask.clone(),
-            )
+            .checkpoint_by_digest(**digest)
+            .transactions_filter(transactions_filter.as_deref().map(Into::into))
+            .events_filter(events_filter.as_deref().map(Into::into))
+            .read_mask(read_mask.clone())
             .await?
             .into_inner();
-        CheckpointResponse::from_response(&response, &read_mask)
+        GrpcCheckpointResponse::from_response(&response, &read_mask)
     }
 
     /// Stream checkpoints across a range of sequence numbers.
@@ -374,8 +369,8 @@ impl GrpcClient {
         end_sequence_number: Option<u64>,
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
-        read_mask: Option<Vec<CheckpointResponseField>>,
-    ) -> Result<CheckpointStream> {
+        read_mask: Option<Vec<GrpcCheckpointResponseField>>,
+    ) -> Result<GrpcCheckpointStream> {
         let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let stream = self
             .client()
@@ -388,7 +383,7 @@ impl GrpcClient {
             )
             .await?
             .into_inner();
-        Ok(CheckpointStream::new(stream, read_mask))
+        Ok(GrpcCheckpointStream::new(stream, read_mask))
     }
 
     /// Stream checkpoints across a range of sequence numbers, skipping
@@ -424,8 +419,8 @@ impl GrpcClient {
         transactions_filter: Option<Arc<GrpcTransactionFilter>>,
         events_filter: Option<Arc<GrpcEventFilter>>,
         progress_interval_ms: Option<u32>,
-        read_mask: Option<Vec<CheckpointResponseField>>,
-    ) -> Result<FilteredCheckpointStream> {
+        read_mask: Option<Vec<GrpcCheckpointResponseField>>,
+    ) -> Result<GrpcFilteredCheckpointStream> {
         let read_mask = crate::grpc::api::read_mask::<CheckpointResponseReadMask, _>(read_mask);
         let stream = self
             .client()
@@ -439,6 +434,6 @@ impl GrpcClient {
             )
             .await?
             .into_inner();
-        Ok(FilteredCheckpointStream::new(stream, read_mask))
+        Ok(GrpcFilteredCheckpointStream::new(stream, read_mask))
     }
 }

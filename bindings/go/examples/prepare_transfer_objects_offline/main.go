@@ -30,7 +30,7 @@ func main() {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
-	objectFilter := iota_sdk.ObjectFilter{Owner: &fromAddress}
+	objectFilter := iota_sdk.GraphQlObjectFilter{Owner: &fromAddress}
 	coinsPage, err := client.Objects(&objectFilter, nil)
 	if err != nil {
 		log.Fatalf("Failed to get owned objects: %v", err)

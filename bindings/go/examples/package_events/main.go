@@ -14,12 +14,12 @@ func main() {
 	client := iota_sdk.GraphQlClientNewTestnet()
 
 	eventType := string("0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent")
-	eventFilter := iota_sdk.EventFilter{
+	eventFilter := iota_sdk.GraphQlEventFilter{
 		EventType: &eventType,
 	}
 	limit := int32(10)
-	paginationFilter := iota_sdk.PaginationFilter{
-		Direction: iota_sdk.DirectionForward,
+	paginationFilter := iota_sdk.GraphQlPaginationFilter{
+		Direction: iota_sdk.GraphQlDirectionForward,
 		Limit:     &limit,
 	}
 
