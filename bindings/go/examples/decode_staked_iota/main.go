@@ -25,7 +25,7 @@ func main() {
 	}
 
 	stakedIotaType := "0x3::staking_pool::StakedIota"
-	page, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType, Owner: &owner}, nil)
+	page, err := client.Objects(&iota_sdk.GraphQlObjectFilter{TypeTag: &stakedIotaType, Owner: &owner}, nil)
 	if err != nil {
 		log.Fatalf("Failed to fetch StakedIota objects: %v", err)
 	}

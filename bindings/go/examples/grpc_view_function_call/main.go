@@ -16,7 +16,7 @@ const packageId = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4
 // A shared `view_demo::shop::Shop` created when the package was published.
 const shopId = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20"
 
-func describe(outputs iota_sdk.ViewFunctionCallOutputs) string {
+func describe(outputs iota_sdk.GrpcViewFunctionCallOutputs) string {
 	if outputs.ReturnValues != nil {
 		values := []iota_sdk.Value{}
 		for _, value := range *outputs.ReturnValues {
@@ -58,7 +58,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to parse object id: %v", err)
 	}
-	results, err := client.ViewFunctionCalls([]iota_sdk.ViewFunctionCallInput{
+	results, err := client.ViewFunctionCalls([]iota_sdk.GrpcViewFunctionCallInput{
 		{
 			FqFunctionName: packageId + "::shop::discounted_price",
 			CallArgs:       []*iota_sdk.MoveViewArg{iota_sdk.MoveViewArgU64(100), iota_sdk.MoveViewArgU64(25)},

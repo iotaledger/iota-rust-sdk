@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, query_types::MoveViewResult},
+    graphql::{client::GraphQLClient, query_types::GraphQLMoveViewResult},
     move_view_call::MoveViewArg,
     types::move_core::TypeTag,
 };
@@ -32,15 +32,15 @@ impl GraphQLClient {
     ///   JSON format
     ///
     /// # Returns
-    /// A `MoveViewResult` containing either execution results (return values)
-    /// or an error.
+    /// A `GraphQLMoveViewResult` containing either execution results (return
+    /// values) or an error.
     #[uniffi::method(default(type_arguments = None, arguments = None))]
     pub async fn move_view_call_json(
         &self,
         function_name: String,
         type_arguments: Option<Vec<String>>,
         arguments: Option<Vec<serde_json::Value>>,
-    ) -> Result<MoveViewResult> {
+    ) -> Result<GraphQLMoveViewResult> {
         Ok(self
             .client()
             .move_view_call_json(function_name, type_arguments, arguments)
@@ -72,15 +72,15 @@ impl GraphQLClient {
     /// * `arguments` - The typed arguments to be passed into the Move function
     ///
     /// # Returns
-    /// A `MoveViewResult` containing either execution results (return values)
-    /// or an error.
+    /// A `GraphQLMoveViewResult` containing either execution results (return
+    /// values) or an error.
     #[uniffi::method(default(type_arguments = None, arguments = None))]
     pub async fn move_view_call(
         &self,
         function_name: String,
         type_arguments: Option<Vec<Arc<TypeTag>>>,
         arguments: Option<Vec<Arc<MoveViewArg>>>,
-    ) -> Result<MoveViewResult> {
+    ) -> Result<GraphQLMoveViewResult> {
         let arguments = arguments.map(|args| args.iter().map(|arg| arg.to_json()).collect());
         let type_arguments =
             type_arguments.map(|tags| tags.iter().map(|t| t.to_string()).collect());

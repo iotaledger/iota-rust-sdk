@@ -32,7 +32,7 @@ struct UnstakeExample {
 
     // Unstake
     let stakedIotas = try await client.objects(
-      filter: ObjectFilter(
+      filter: GraphQlObjectFilter(
         typeTag: String(describing: StructTag.newStakedIota()), owner: owner))
     if stakedIotas.data.isEmpty {
       throw NSError(

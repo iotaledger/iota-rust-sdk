@@ -14,7 +14,7 @@ import {
   FaucetClient,
   GraphQlClient,
   PtbArgument,
-  SubscriptionTransactionFilter,
+  GraphQlSubscriptionTransactionFilter,
   UserSignature,
   initAsync,
 } from "@iota/sdk-wasm";
@@ -45,7 +45,7 @@ if (!receipt || receipt.sent.length === 0) {
 const startAfter = receipt.sent[0].transferTxDigest.toBase58();
 
 const subscription = await client.transactionsSubscription(
-  SubscriptionTransactionFilter.new({ signingAddress: senderAddress }),
+  GraphQlSubscriptionTransactionFilter.new({ signingAddress: senderAddress }),
   startAfter,
 );
 
