@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! The IOTA Rust SDK
+#![doc = include_str!("../README.md")]
 
 #[cfg(feature = "crypto")]
 pub use iota_crypto as crypto;
