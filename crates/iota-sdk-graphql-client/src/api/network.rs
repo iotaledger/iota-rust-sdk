@@ -50,9 +50,9 @@ define_query! {
 }
 
 impl ListActiveValidatorsQuery {
-    /// Set the epoch. Defaults to the current epoch.
-    pub fn epoch(mut self, epoch: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch.into();
+    /// Set the epoch number. Defaults to the current epoch.
+    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
+        self.epoch = epoch_number.into();
         self
     }
 
@@ -153,7 +153,7 @@ mod tests {
         let vars = sent_variables("ActiveValidatorsQueryFragment", |client| async move {
             let _ = client
                 .active_validators()
-                .epoch(3)
+                .epoch_number(3)
                 .pagination(backward_page())
                 .await;
         })
