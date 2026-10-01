@@ -126,8 +126,11 @@ pub use api::{
         view::{ViewFunctionCallQuery, ViewFunctionCallsQuery},
     },
     ledger::{
-        checkpoints::GetCheckpointQuery, epochs::GetEpochQuery, health::GetHealthQuery,
-        objects::GetObjectsQuery, service_info::GetServiceInfoQuery,
+        checkpoints::{CheckpointsStreamFilteredQuery, CheckpointsStreamQuery, GetCheckpointQuery},
+        epochs::GetEpochQuery,
+        health::GetHealthQuery,
+        objects::GetObjectsQuery,
+        service_info::GetServiceInfoQuery,
         transactions::GetTransactionsQuery,
     },
     move_package::package_versions::ListPackageVersionsQuery,
