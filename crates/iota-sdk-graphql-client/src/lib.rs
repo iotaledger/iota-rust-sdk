@@ -24,6 +24,7 @@ mod test_utils;
 #[cfg(feature = "move-types")]
 pub use api::move_objects::{MoveObjectFilter, OwnedMoveObject};
 pub use client::{GraphQLClient, USER_AGENT};
+pub use cynic;
 pub use error::{GraphQLError, GraphQLResult};
 pub use iota_transaction_builder::WaitForTransaction;
 pub(crate) use iota_types::Address;
