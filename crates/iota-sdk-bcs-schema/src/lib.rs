@@ -32,7 +32,10 @@ pub fn derive_bcs_schema(input: TokenStream) -> TokenStream {
     }
 }
 
+/// Internal to the IOTA SDK workspace: the generated impl targets a
+/// `crate::move_shape` module that the deriving crate has to define.
 #[cfg(feature = "move-shape")]
+#[doc(hidden)]
 #[proc_macro_derive(MoveShape)]
 pub fn derive_move_shape(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);

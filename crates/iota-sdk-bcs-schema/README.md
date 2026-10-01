@@ -2,6 +2,8 @@
 
 A procedural macro that emits an [ABNF](https://datatracker.ietf.org/doc/html/rfc5234) grammar fragment for each type it is derived on, so the BCS wire format can be described in a single machine-readable file.
 
+This crate is a build tool of the IOTA SDK, published only so that the `bcs-schema` feature of `iota-sdk-types` and `iota-sdk-move-types` can be enabled from crates.io. The `#[bcs_schema(..)]` attributes, the `BCS_SCHEMA*` environment variables and the ABNF output may change in any minor release. The `move-shape` feature is internal to the SDK workspace.
+
 ## Why
 
 A formal, human- and machine-readable description of the BCS wire format makes it possible to:
