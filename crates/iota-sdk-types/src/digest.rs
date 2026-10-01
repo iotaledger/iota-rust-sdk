@@ -75,12 +75,15 @@ impl Digest {
     /// Decodes a digest from a Base58 encoded string.
     pub fn from_base58<T: AsRef<[u8]>>(base58: T) -> Result<Self, DigestParseError> {
         let bytes = bs58::decode(base58).into_vec().map_err(|e| {
-            let index = match e {
+            match e {
                 bs58::decode::Error::InvalidCharacter { index, .. }
-                | bs58::decode::Error::NonAsciiCharacter { index } => index,
-                _ => 0,
-            };
-            DigestParseError::InvalidBase58Character { index }
+                | bs58::decode::Error::NonAsciiCharacter { index } => {
+                    DigestParseError::InvalidBase58Character { index }
+                }
+                // `bs58::decode::DecodeBuilder::into_vec` can only return the two variants above,
+                // but we include a catch-all case to handle any unexpected errors.
+                _ => DigestParseError::InvalidBase58,
+            }
         })?;
         Self::from_bytes(bytes)
     }
@@ -290,6 +293,8 @@ pub enum DigestParseError {
         Digest::LENGTH
     )]
     InvalidByteLength { actual: usize },
+    #[error("invalid Base58 string")]
+    InvalidBase58,
 }
 
 // Don't implement like the other digest type since this isn't intended to be
