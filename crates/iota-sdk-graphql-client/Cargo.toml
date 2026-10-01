@@ -8,6 +8,14 @@ readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "GraphQL RPC Client for the IOTA Blockchain"
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [
+  "--cfg=doc_cfg",
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
+
 [features]
 # TLS crypto provider and trust anchors; see README.md.
 default = ["tls-native-roots", "tls-ring", "tls-webpki-roots"]

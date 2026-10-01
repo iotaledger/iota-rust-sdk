@@ -23,6 +23,7 @@ pub struct OwnedMoveObject<T> {
     object: T,
 }
 
+#[cfg_attr(doc_cfg, doc(cfg(feature = "move-types")))]
 impl<T> OwnedMoveObject<T> {
     /// Get the object's reference.
     pub fn object_ref(&self) -> ObjectReference {
@@ -53,6 +54,7 @@ pub struct MoveObjectFilter {
     object_ids: Option<Vec<ObjectId>>,
 }
 
+#[cfg_attr(doc_cfg, doc(cfg(feature = "move-types")))]
 impl MoveObjectFilter {
     /// Filter by the address owning the object.
     pub fn with_owner(mut self, owner: impl Into<Option<Address>>) -> Self {
@@ -76,6 +78,7 @@ impl MoveObjectFilter {
     }
 }
 
+#[cfg_attr(doc_cfg, doc(cfg(feature = "move-types")))]
 impl GraphQLClient {
     /// Return a page of objects of the Move type `T`, decoded into `T` and
     /// paired with their object references.

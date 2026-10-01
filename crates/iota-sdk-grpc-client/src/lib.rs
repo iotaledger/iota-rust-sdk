@@ -48,11 +48,14 @@
 //! # }
 //! ```
 
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
+
 mod api;
 mod transaction_builder_client;
 
 // Re-export all read mask constants (per-method fields)
 #[cfg(feature = "move-types")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "move-types")))]
 pub use api::state::move_objects::{ListOwnedMoveObjectsQuery, OwnedMoveObject};
 pub use api::{
     // CheckpointResponse per-method masks

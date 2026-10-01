@@ -11,6 +11,14 @@ description = "gRPC/protobuf types for the IOTA Blockchain"
 [lints]
 workspace = true
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [
+  "--cfg=doc_cfg",
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
+
 [dependencies]
 # external dependencies
 bcs.workspace = true

@@ -8,6 +8,14 @@ readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "Transaction API for the IOTA Blockchain Rust SDK"
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [
+  "--cfg=doc_cfg",
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
+
 [features]
 default = []
 gas-station = ["dep:reqwest"]

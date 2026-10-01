@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #![doc = include_str!("../README.md")]
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 mod api;
 mod client;
@@ -22,6 +23,7 @@ mod test_utils;
 
 // Re-export types used by query_types module internally
 #[cfg(feature = "move-types")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "move-types")))]
 pub use api::move_objects::{MoveObjectFilter, OwnedMoveObject};
 pub use client::{GraphQLClient, USER_AGENT};
 pub use error::{GraphQLError, GraphQLResult};
