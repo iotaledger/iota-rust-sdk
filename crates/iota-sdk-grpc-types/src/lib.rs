@@ -13,6 +13,8 @@ pub mod proto;
 pub mod read_mask_fields;
 pub mod read_masks;
 
+pub use iota_types;
+
 /// Joins field names with commas to build a read mask string constant.
 ///
 /// Accepts string **literals** only (for compile-time concatenation via
