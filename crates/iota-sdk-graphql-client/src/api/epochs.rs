@@ -23,9 +23,9 @@ define_query! {
 }
 
 impl GetEpochQuery {
-    /// Set the epoch. Defaults to the last known epoch.
-    pub fn epoch(mut self, epoch: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch.into();
+    /// Set the epoch number. Defaults to the last known epoch.
+    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
+        self.epoch = epoch_number.into();
         self
     }
 
@@ -48,9 +48,9 @@ define_query! {
 }
 
 impl GetEpochTotalCheckpointsQuery {
-    /// Set the epoch. Defaults to the last known epoch.
-    pub fn epoch(mut self, epoch: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch.into();
+    /// Set the epoch number. Defaults to the last known epoch.
+    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
+        self.epoch = epoch_number.into();
         self
     }
 
@@ -72,9 +72,9 @@ define_query! {
 }
 
 impl GetEpochTotalTransactionBlocksQuery {
-    /// Set the epoch. Defaults to the last known epoch.
-    pub fn epoch(mut self, epoch: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch.into();
+    /// Set the epoch number. Defaults to the last known epoch.
+    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
+        self.epoch = epoch_number.into();
         self
     }
 
@@ -132,19 +132,22 @@ mod tests {
     #[tokio::test]
     async fn epoch_queries_send_the_epoch() {
         let vars = sent_variables("EpochQueryFragment", |client| async move {
-            let _ = client.epoch().epoch(3).await;
+            let _ = client.epoch().epoch_number(3).await;
         })
         .await;
         assert_eq!(vars["id"], 3);
 
         let vars = sent_variables("EpochSummaryQueryFragment", |client| async move {
-            let _ = client.epoch_total_checkpoints().epoch(4).await;
+            let _ = client.epoch_total_checkpoints().epoch_number(4).await;
         })
         .await;
         assert_eq!(vars["id"], 4);
 
         let vars = sent_variables("EpochSummaryQueryFragment", |client| async move {
-            let _ = client.epoch_total_transaction_blocks().epoch(5).await;
+            let _ = client
+                .epoch_total_transaction_blocks()
+                .epoch_number(5)
+                .await;
         })
         .await;
         assert_eq!(vars["id"], 5);
