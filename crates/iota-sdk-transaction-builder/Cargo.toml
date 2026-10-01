@@ -10,7 +10,7 @@ description = "Transaction API for the IOTA Blockchain Rust SDK"
 
 [features]
 default = []
-gas-station = ["dep:reqwest"]
+gas-station = ["dep:base64ct", "dep:reqwest"]
 test-client = []
 
 [lints]
@@ -18,7 +18,7 @@ workspace = true
 
 [dependencies]
 # external dependencies
-base64ct = { workspace = true, features = ["std"] }
+base64ct = { workspace = true, features = ["std"], optional = true }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 primitive-types.workspace = true
