@@ -8,21 +8,12 @@ use iota_sdk::grpc_client::read_mask_fields::ExecuteTransactionReadMask;
 use crate::{
     error::Result,
     grpc::{
-        api::ledger::transactions::ExecutedTransaction, client::GrpcClient,
+        api::ledger::transactions::{ExecutedTransaction, ExecutedTransactionResult},
+        client::GrpcClient,
         read_mask_fields::TransactionField,
     },
     types::transaction::SignedTransaction,
 };
-
-/// The result of executing a single transaction in a batch: either the
-/// executed transaction or an error.
-#[derive(uniffi::Record)]
-pub struct ExecutedTransactionResult {
-    /// The executed transaction, if execution succeeded.
-    pub transaction: Option<ExecutedTransaction>,
-    /// The error message, if execution failed.
-    pub error: Option<String>,
-}
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GrpcClient {
@@ -86,18 +77,7 @@ impl GrpcClient {
             .await?
             .into_inner()
             .into_iter()
-            .map(|result| {
-                Ok(match result {
-                    Ok(transaction) => ExecutedTransactionResult {
-                        transaction: Some((&transaction).try_into()?),
-                        error: None,
-                    },
-                    Err(error) => ExecutedTransactionResult {
-                        transaction: None,
-                        error: Some(error.to_string()),
-                    },
-                })
-            })
+            .map(ExecutedTransactionResult::try_from)
             .collect()
     }
 }
