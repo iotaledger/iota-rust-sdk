@@ -35,6 +35,7 @@ pub fn backward_page() -> crate::PaginationFilter {
 /// and return the variables of the first request that is not the service
 /// config query, which pagination sends first.
 pub async fn sent_variables<Fut: Future>(
+    operation: &str,
     send: impl FnOnce(GraphQLClient) -> Fut,
 ) -> serde_json::Value {
     let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
@@ -43,6 +44,7 @@ pub async fn sent_variables<Fut: Future>(
         loop {
             let request = answer_one_request(&listener).await;
             if request["operationName"] != "ServiceConfigQueryFragment" {
+                assert_eq!(request["operationName"], operation);
                 break request["variables"].clone();
             }
         }

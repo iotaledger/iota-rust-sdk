@@ -183,7 +183,7 @@ mod tests {
 
     #[tokio::test]
     async fn checkpoints_sends_the_pagination() {
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("CheckpointsQueryFragment", |client| async move {
             let _ = client.checkpoints().pagination(backward_page()).await;
         })
         .await;

@@ -145,12 +145,15 @@ mod tests {
 
     #[tokio::test]
     async fn iota_names_registrations_sends_the_address_and_pagination() {
-        let vars = sent_variables(|client| async move {
-            let _ = client
-                .iota_names_registrations(Address::FRAMEWORK)
-                .pagination(backward_page())
-                .await;
-        })
+        let vars = sent_variables(
+            "IotaNamesAddressRegistrationsQueryFragment",
+            |client| async move {
+                let _ = client
+                    .iota_names_registrations(Address::FRAMEWORK)
+                    .pagination(backward_page())
+                    .await;
+            },
+        )
         .await;
         assert_eq!(vars["address"], Address::FRAMEWORK.to_string());
         assert_backward_page(&vars);

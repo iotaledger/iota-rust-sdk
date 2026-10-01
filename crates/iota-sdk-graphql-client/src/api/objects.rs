@@ -231,7 +231,7 @@ mod tests {
 
     #[tokio::test]
     async fn objects_sends_the_filter_and_pagination() {
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("ObjectsQueryFragment", |client| async move {
             let _ = client
                 .objects()
                 .filter(ObjectFilter::default().with_owner(Address::FRAMEWORK))

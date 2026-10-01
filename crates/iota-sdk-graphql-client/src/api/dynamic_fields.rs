@@ -196,7 +196,7 @@ mod tests {
     #[tokio::test]
     async fn dynamic_fields_sends_the_address_and_pagination() {
         let address = ObjectId::SYSTEM_STATE.into();
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("DynamicFieldsOwnerQueryFragment", |client| async move {
             let _ = client
                 .dynamic_fields(address)
                 .pagination(backward_page())

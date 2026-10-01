@@ -199,7 +199,7 @@ mod tests {
 
     #[tokio::test]
     async fn move_objects_sends_the_type_filter_and_pagination() {
-        let vars = sent_variables(|client| async move {
+        let vars = sent_variables("ObjectsQueryFragment", |client| async move {
             let _ = client
                 .move_objects::<Coin<IOTA>>()
                 .filter(MoveObjectFilter::default().with_owner(Address::STD))
