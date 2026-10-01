@@ -28,9 +28,10 @@ define_query! {
 }
 
 impl GetEpochQuery {
-    /// Set the epoch to query. If `None`, queries the current epoch.
-    pub fn epoch(mut self, epoch: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch.into();
+    /// Set the number of the epoch to query. If `None`, queries the current
+    /// epoch.
+    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
+        self.epoch = epoch_number.into();
         self
     }
 
@@ -65,9 +66,10 @@ impl GrpcClient {
     /// Get epoch information.
     ///
     /// Returns the [`Epoch`] proto type of the current epoch, or of the one set
-    /// with [`epoch`](GetEpochQuery::epoch), with fields populated according
-    /// to the read mask. Without [`read_mask`](GetEpochQuery::read_mask), the
-    /// default mask is used. Pass an
+    /// with [`epoch_number`](GetEpochQuery::epoch_number), with fields
+    /// populated according to the read mask. Without
+    /// [`read_mask`](GetEpochQuery::read_mask), the default mask is used.
+    /// Pass an
     /// [`EpochReadMask`](iota_grpc_types::read_mask_fields::EpochReadMask)
     /// built from an
     /// [`EpochField`](iota_grpc_types::read_mask_fields::EpochField) or any
@@ -183,14 +185,16 @@ mod tests {
         assert_eq!(query.epoch, None);
         assert_eq!(query.read_mask.as_str(), EpochReadMask::default().as_str());
 
-        let query = query.epoch(5).read_mask(EpochField::REFERENCE_GAS_PRICE);
+        let query = query
+            .epoch_number(5)
+            .read_mask(EpochField::REFERENCE_GAS_PRICE);
         assert_eq!(query.epoch, Some(5));
         assert_eq!(
             query.read_mask.as_str(),
             EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE).as_str()
         );
 
-        let query = query.epoch(None);
+        let query = query.epoch_number(None);
         assert_eq!(query.epoch, None);
     }
 
@@ -199,7 +203,7 @@ mod tests {
         let client = GrpcClient::new("http://localhost").unwrap();
         let (_, request) = client
             .epoch()
-            .epoch(5)
+            .epoch_number(5)
             .read_mask(EpochField::PROTOCOL_CONFIG_FEATURE_FLAGS)
             .into_request();
         assert_eq!(request.epoch, Some(5));

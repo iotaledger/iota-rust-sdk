@@ -151,7 +151,7 @@ impl TransactionBuilderLedgerClient for GrpcClient {
     ) -> Result<Option<u64>, Self::Error> {
         let epoch = self
             .epoch()
-            .epoch(epoch)
+            .epoch_number(epoch)
             .read_mask(EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE))
             .await?
             .into_inner();

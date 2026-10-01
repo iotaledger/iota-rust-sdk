@@ -121,7 +121,7 @@ impl GrpcClient {
         (&self
             .client()
             .epoch()
-            .epoch(epoch)
+            .epoch_number(epoch)
             .read_mask(crate::grpc::api::read_mask::<EpochReadMask, _>(read_mask))
             .await?
             .into_inner())
