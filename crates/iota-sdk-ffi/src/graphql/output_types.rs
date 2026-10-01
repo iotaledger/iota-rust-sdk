@@ -10,7 +10,7 @@ use crate::types::{
 
 /// A transaction argument used in programmable transactions.
 #[derive(uniffi::Enum)]
-pub enum TransactionArgument {
+pub enum GraphQLTransactionArgument {
     /// Reference to the gas coin.
     GasCoin,
     /// An input to the programmable transaction block.
@@ -30,15 +30,17 @@ pub enum TransactionArgument {
     },
 }
 
-impl From<iota_sdk::graphql_client::TransactionArgument> for TransactionArgument {
+impl From<iota_sdk::graphql_client::TransactionArgument> for GraphQLTransactionArgument {
     fn from(value: iota_sdk::graphql_client::TransactionArgument) -> Self {
         match value {
-            iota_sdk::graphql_client::TransactionArgument::GasCoin => TransactionArgument::GasCoin,
+            iota_sdk::graphql_client::TransactionArgument::GasCoin => {
+                GraphQLTransactionArgument::GasCoin
+            }
             iota_sdk::graphql_client::TransactionArgument::Input { index } => {
-                TransactionArgument::Input { index }
+                GraphQLTransactionArgument::Input { index }
             }
             iota_sdk::graphql_client::TransactionArgument::Result { cmd, index } => {
-                TransactionArgument::Result { cmd, index }
+                GraphQLTransactionArgument::Result { cmd, index }
             }
             _ => unimplemented!(
                 "a new TransactionArgument enum variant was added and needs to be handled"
@@ -47,14 +49,16 @@ impl From<iota_sdk::graphql_client::TransactionArgument> for TransactionArgument
     }
 }
 
-impl From<TransactionArgument> for iota_sdk::graphql_client::TransactionArgument {
-    fn from(value: TransactionArgument) -> Self {
+impl From<GraphQLTransactionArgument> for iota_sdk::graphql_client::TransactionArgument {
+    fn from(value: GraphQLTransactionArgument) -> Self {
         match value {
-            TransactionArgument::GasCoin => iota_sdk::graphql_client::TransactionArgument::GasCoin,
-            TransactionArgument::Input { index } => {
+            GraphQLTransactionArgument::GasCoin => {
+                iota_sdk::graphql_client::TransactionArgument::GasCoin
+            }
+            GraphQLTransactionArgument::Input { index } => {
                 iota_sdk::graphql_client::TransactionArgument::Input { index }
             }
-            TransactionArgument::Result { cmd, index } => {
+            GraphQLTransactionArgument::Result { cmd, index } => {
                 iota_sdk::graphql_client::TransactionArgument::Result { cmd, index }
             }
         }
@@ -63,16 +67,16 @@ impl From<TransactionArgument> for iota_sdk::graphql_client::TransactionArgument
 
 /// A return value from a command in the dry run.
 #[derive(uniffi::Record)]
-pub struct DryRunReturn {
+pub struct GraphQLDryRunReturn {
     /// The Move type of the return value.
     pub type_tag: Arc<TypeTag>,
     /// The BCS representation of the return value.
     pub bcs: Vec<u8>,
 }
 
-impl From<iota_sdk::graphql_client::DryRunReturn> for DryRunReturn {
+impl From<iota_sdk::graphql_client::DryRunReturn> for GraphQLDryRunReturn {
     fn from(value: iota_sdk::graphql_client::DryRunReturn) -> Self {
-        DryRunReturn {
+        GraphQLDryRunReturn {
             type_tag: Arc::new(value.type_tag.into()),
             bcs: value.bcs,
         }
@@ -81,18 +85,18 @@ impl From<iota_sdk::graphql_client::DryRunReturn> for DryRunReturn {
 
 /// A mutation to an argument that was mutably borrowed by a command.
 #[derive(uniffi::Record)]
-pub struct DryRunMutation {
+pub struct GraphQLDryRunMutation {
     /// The transaction argument that was mutated.
-    pub input: TransactionArgument,
+    pub input: GraphQLTransactionArgument,
     /// The Move type of the mutated value.
     pub type_tag: Arc<TypeTag>,
     /// The BCS representation of the mutated value.
     pub bcs: Vec<u8>,
 }
 
-impl From<iota_sdk::graphql_client::DryRunMutation> for DryRunMutation {
+impl From<iota_sdk::graphql_client::DryRunMutation> for GraphQLDryRunMutation {
     fn from(value: iota_sdk::graphql_client::DryRunMutation) -> Self {
-        DryRunMutation {
+        GraphQLDryRunMutation {
             input: value.input.into(),
             type_tag: Arc::new(value.type_tag.into()),
             bcs: value.bcs,
@@ -103,16 +107,16 @@ impl From<iota_sdk::graphql_client::DryRunMutation> for DryRunMutation {
 /// Effects of a single command in the dry run, including mutated references
 /// and return values.
 #[derive(uniffi::Record)]
-pub struct DryRunEffect {
+pub struct GraphQLDryRunEffect {
     /// Changes made to arguments that were mutably borrowed by this command.
-    pub mutated_references: Vec<DryRunMutation>,
+    pub mutated_references: Vec<GraphQLDryRunMutation>,
     /// Return results of this command.
-    pub return_values: Vec<DryRunReturn>,
+    pub return_values: Vec<GraphQLDryRunReturn>,
 }
 
-impl From<iota_sdk::graphql_client::DryRunEffect> for DryRunEffect {
+impl From<iota_sdk::graphql_client::DryRunEffect> for GraphQLDryRunEffect {
     fn from(value: iota_sdk::graphql_client::DryRunEffect) -> Self {
-        DryRunEffect {
+        GraphQLDryRunEffect {
             mutated_references: value
                 .mutated_references
                 .into_iter()
@@ -127,21 +131,21 @@ impl From<iota_sdk::graphql_client::DryRunEffect> for DryRunEffect {
 /// transaction, any errors that may have occurred, and intermediate results for
 /// each command.
 #[derive(uniffi::Record)]
-pub struct DryRunResult {
+pub struct GraphQLDryRunResult {
     /// The error that occurred during dry run execution, if any.
     pub error: Option<String>,
     /// The intermediate results for each command of the dry run execution,
     /// including contents of mutated references and return values.
-    pub results: Vec<DryRunEffect>,
+    pub results: Vec<GraphQLDryRunEffect>,
     /// The transaction block representing the dry run execution.
     pub transaction: Option<SignedTransaction>,
     /// The effects of the transaction execution.
     pub effects: Option<Arc<TransactionEffects>>,
 }
 
-impl From<iota_sdk::graphql_client::DryRunResult> for DryRunResult {
+impl From<iota_sdk::graphql_client::DryRunResult> for GraphQLDryRunResult {
     fn from(value: iota_sdk::graphql_client::DryRunResult) -> Self {
-        DryRunResult {
+        GraphQLDryRunResult {
             error: value.error,
             results: value.results.into_iter().map(Into::into).collect(),
             transaction: value.transaction.map(Into::into),

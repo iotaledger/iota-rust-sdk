@@ -9,8 +9,8 @@ use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::MovePackagePage,
-        query_types::{MoveFunction, MoveModule, PaginationFilter},
+        pagination::GraphQLMovePackagePage,
+        query_types::{GraphQLMoveFunction, GraphQLMoveModule, GraphQLPaginationFilter},
     },
     types::{address::Address, object::MovePackage, version::Version},
 };
@@ -52,8 +52,8 @@ impl GraphQLClient {
         address: &Address,
         after_version: Option<Arc<Version>>,
         before_version: Option<Arc<Version>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<MovePackagePage> {
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLMovePackagePage> {
         Ok(self
             .client()
             .package_versions(
@@ -91,8 +91,8 @@ impl GraphQLClient {
         &self,
         after_checkpoint: Option<u64>,
         before_checkpoint: Option<u64>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<MovePackagePage> {
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLMovePackagePage> {
         Ok(self
             .client()
             .packages(
@@ -114,7 +114,7 @@ impl GraphQLClient {
         module: &str,
         function: &str,
         version: Option<Arc<Version>>,
-    ) -> Result<Option<Arc<MoveFunction>>> {
+    ) -> Result<Option<Arc<GraphQLMoveFunction>>> {
         Ok(self
             .client()
             .normalized_move_function(**package, module, function, version.map(|v| **v))
@@ -139,11 +139,11 @@ impl GraphQLClient {
         package: &Address,
         module: &str,
         version: Option<Arc<Version>>,
-        pagination_filter_enums: Option<PaginationFilter>,
-        pagination_filter_friends: Option<PaginationFilter>,
-        pagination_filter_functions: Option<PaginationFilter>,
-        pagination_filter_structs: Option<PaginationFilter>,
-    ) -> Result<Option<MoveModule>> {
+        pagination_filter_enums: Option<GraphQLPaginationFilter>,
+        pagination_filter_friends: Option<GraphQLPaginationFilter>,
+        pagination_filter_functions: Option<GraphQLPaginationFilter>,
+        pagination_filter_structs: Option<GraphQLPaginationFilter>,
+    ) -> Result<Option<GraphQLMoveModule>> {
         Ok(self
             .client()
             .normalized_move_module(

@@ -9,8 +9,8 @@ use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::ObjectPage,
-        query_types::{ObjectFilter, PaginationFilter},
+        pagination::GraphQLObjectPage,
+        query_types::{GraphQLObjectFilter, GraphQLPaginationFilter},
     },
     types::{
         object::{Object, ObjectId},
@@ -42,14 +42,14 @@ impl GraphQLClient {
 
     /// Return a page of objects based on the provided parameters.
     ///
-    /// Use this function together with the `ObjectFilter::owner` to get the
-    /// objects owned by an address.
+    /// Use this function together with the `GraphQLObjectFilter::owner` to get
+    /// the objects owned by an address.
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn objects(
         &self,
-        filter: Option<ObjectFilter>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<ObjectPage> {
+        filter: Option<GraphQLObjectFilter>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLObjectPage> {
         Ok(self
             .client()
             .objects(

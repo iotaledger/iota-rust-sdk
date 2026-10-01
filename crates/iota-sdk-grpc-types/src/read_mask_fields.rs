@@ -5,23 +5,24 @@
 //!
 //! Each endpoint has a typed namespace (e.g. [`ObjectField`]) whose associated
 //! constants identify the fields the server can return, and a matching
-//! per-endpoint mask type (e.g. [`ObjectReadMask`]) that the client method
-//! accepts. Use the mask's `default()` for the endpoint's default mask, or
-//! build a mask from a single field, a slice, an array, or an owned vec of the
-//! matching kind — conversion happens automatically:
+//! per-endpoint mask type (e.g. [`ObjectReadMask`]) that the client's
+//! `read_mask` setter accepts. Without the setter the endpoint's default mask
+//! is used; otherwise build a mask from a single field, a slice, an array, or
+//! an owned vec of the matching kind, and conversion happens automatically:
 //!
 //! ```ignore
-//! use iota_sdk_grpc_types::read_mask_fields::{ObjectField, ObjectReadMask};
+//! use iota_sdk_grpc_types::read_mask_fields::ObjectField;
 //!
 //! // Default mask.
-//! client.objects([id], ObjectReadMask::default()).await?;
+//! client.objects([id]).await?;
 //!
 //! // A single field.
-//! client.objects([id], ObjectField::BCS).await?;
+//! client.objects([id]).read_mask(ObjectField::BCS).await?;
 //!
 //! // Multiple fields.
 //! client
-//!     .objects([id], [ObjectField::REFERENCE, ObjectField::BCS])
+//!     .objects([id])
+//!     .read_mask([ObjectField::REFERENCE, ObjectField::BCS])
 //!     .await?;
 //! ```
 //!
@@ -41,7 +42,7 @@ use crate::{
 
 /// Conversion into an endpoint-scoped read mask.
 ///
-/// This is the bound used by the client's `read_mask` parameters. It is
+/// This is the bound used by the client's `read_mask` setters. It is
 /// implemented for everything convertible into the endpoint's mask type: the
 /// mask itself (e.g. `ObjectReadMask::default()` for the endpoint default), a
 /// field constant of the matching field namespace (e.g. [`ObjectField::BCS`]),

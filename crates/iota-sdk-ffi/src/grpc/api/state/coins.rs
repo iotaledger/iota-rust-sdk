@@ -35,12 +35,12 @@ impl GrpcClient {
         page_size: Option<u32>,
         page_token: Option<Vec<u8>>,
     ) -> Result<GrpcCoinPage> {
-        let query = self.client().coins(
-            **owner,
-            coin_type.map(|coin_type| coin_type.0.clone()),
-            page_size,
-            page_token.map(Into::into),
-        );
+        let query = self
+            .client()
+            .coins(**owner)
+            .coin_type(coin_type.map(|coin_type| coin_type.0.clone()))
+            .page_size(page_size)
+            .page_token(page_token.map(Into::into));
         let page = query.await?.into_inner();
         Ok(GrpcCoinPage {
             coins: page
@@ -64,12 +64,10 @@ impl GrpcClient {
         coin_type: Option<Arc<StructTag>>,
         limit: Option<u32>,
     ) -> Result<Vec<Arc<Coin>>> {
-        let query = self.client().coins(
-            **owner,
-            coin_type.map(|coin_type| coin_type.0.clone()),
-            None,
-            None,
-        );
+        let query = self
+            .client()
+            .coins(**owner)
+            .coin_type(coin_type.map(|coin_type| coin_type.0.clone()));
         Ok(query
             .collect(limit)
             .await?

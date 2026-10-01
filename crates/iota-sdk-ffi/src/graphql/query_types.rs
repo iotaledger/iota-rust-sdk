@@ -5,8 +5,8 @@ use std::sync::{Arc, RwLock};
 
 use base64ct::Encoding;
 use iota_sdk::graphql_client::query_types::{
-    AddressTransactionRelationship as GraphQLAddressTransactionRelationship, Base64, BigInt,
-    TransactionBlockKindInput as GraphQLTransactionBlockKindInput,
+    AddressTransactionRelationship as SdkAddressTransactionRelationship, Base64, BigInt,
+    TransactionBlockKindInput as SdkTransactionBlockKindInput,
 };
 
 use crate::{
@@ -27,11 +27,11 @@ uniffi::custom_type!(Base64, String, {
 });
 
 #[derive(uniffi::Record)]
-pub struct TransactionMetadata {
+pub struct GraphQLTransactionMetadata {
     #[uniffi(default = None)]
     pub gas_budget: Option<u64>,
     #[uniffi(default = None)]
-    pub gas_objects: Option<Vec<ObjectRef>>,
+    pub gas_objects: Option<Vec<GraphQLObjectRef>>,
     #[uniffi(default = None)]
     pub gas_price: Option<u64>,
     #[uniffi(default = None)]
@@ -40,7 +40,9 @@ pub struct TransactionMetadata {
     pub sender: Option<Arc<Address>>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::TransactionMetadata> for TransactionMetadata {
+impl From<iota_sdk::graphql_client::query_types::TransactionMetadata>
+    for GraphQLTransactionMetadata
+{
     fn from(value: iota_sdk::graphql_client::query_types::TransactionMetadata) -> Self {
         Self {
             gas_budget: value.gas_budget,
@@ -54,8 +56,10 @@ impl From<iota_sdk::graphql_client::query_types::TransactionMetadata> for Transa
     }
 }
 
-impl From<TransactionMetadata> for iota_sdk::graphql_client::query_types::TransactionMetadata {
-    fn from(value: TransactionMetadata) -> Self {
+impl From<GraphQLTransactionMetadata>
+    for iota_sdk::graphql_client::query_types::TransactionMetadata
+{
+    fn from(value: GraphQLTransactionMetadata) -> Self {
         Self {
             gas_budget: value.gas_budget,
             gas_objects: value
@@ -69,12 +73,12 @@ impl From<TransactionMetadata> for iota_sdk::graphql_client::query_types::Transa
 }
 
 #[derive(uniffi::Record)]
-pub struct TransactionDataEffects {
+pub struct GraphQLTransactionDataEffects {
     pub signed_transaction: SignedTransaction,
     pub effects: Arc<TransactionEffects>,
 }
 
-impl From<iota_sdk::graphql_client::TransactionDataEffects> for TransactionDataEffects {
+impl From<iota_sdk::graphql_client::TransactionDataEffects> for GraphQLTransactionDataEffects {
     fn from(value: iota_sdk::graphql_client::TransactionDataEffects) -> Self {
         Self {
             signed_transaction: value.signed_transaction.into(),
@@ -90,9 +94,11 @@ impl From<iota_sdk::graphql_client::TransactionDataEffects> for TransactionDataE
 /// setters replaces whichever was set before; the sender, checkpoint and
 /// digest filters can be combined with them and with each other freely.
 #[derive(Default, uniffi::Object)]
-pub struct TransactionsFilter(RwLock<iota_sdk::graphql_client::query_types::TransactionsFilter>);
+pub struct GraphQLTransactionsFilter(
+    RwLock<iota_sdk::graphql_client::query_types::TransactionsFilter>,
+);
 
-impl TransactionsFilter {
+impl GraphQLTransactionsFilter {
     fn update(
         &self,
         f: impl FnOnce(
@@ -104,14 +110,16 @@ impl TransactionsFilter {
     }
 }
 
-impl From<&TransactionsFilter> for iota_sdk::graphql_client::query_types::TransactionsFilter {
-    fn from(value: &TransactionsFilter) -> Self {
+impl From<&GraphQLTransactionsFilter>
+    for iota_sdk::graphql_client::query_types::TransactionsFilter
+{
+    fn from(value: &GraphQLTransactionsFilter) -> Self {
         value.0.read().expect("error reading from filter").clone()
     }
 }
 
 #[uniffi::export]
-impl TransactionsFilter {
+impl GraphQLTransactionsFilter {
     /// Create a filter that selects on nothing.
     #[uniffi::constructor]
     pub fn new() -> Self {
@@ -130,8 +138,8 @@ impl TransactionsFilter {
     /// Select by transaction kind.
     ///
     /// Replaces the selector already set, if any.
-    pub fn with_kind(self: Arc<Self>, kind: TransactionBlockKindInput) -> Arc<Self> {
-        let kind = GraphQLTransactionBlockKindInput::from(kind);
+    pub fn with_kind(self: Arc<Self>, kind: GraphQLTransactionBlockKindInput) -> Arc<Self> {
+        let kind = SdkTransactionBlockKindInput::from(kind);
         self.update(|filter| filter.with_kind(kind));
         self
     }
@@ -216,13 +224,13 @@ impl TransactionsFilter {
 }
 
 #[derive(uniffi::Record)]
-pub struct ObjectRef {
+pub struct GraphQLObjectRef {
     pub address: Arc<ObjectId>,
     pub digest: String,
     pub version: u64,
 }
 
-impl From<iota_sdk::graphql_client::query_types::ObjectRef> for ObjectRef {
+impl From<iota_sdk::graphql_client::query_types::ObjectRef> for GraphQLObjectRef {
     fn from(value: iota_sdk::graphql_client::query_types::ObjectRef) -> Self {
         Self {
             address: Arc::new(value.address.into()),
@@ -232,8 +240,8 @@ impl From<iota_sdk::graphql_client::query_types::ObjectRef> for ObjectRef {
     }
 }
 
-impl From<ObjectRef> for iota_sdk::graphql_client::query_types::ObjectRef {
-    fn from(value: ObjectRef) -> Self {
+impl From<GraphQLObjectRef> for iota_sdk::graphql_client::query_types::ObjectRef {
+    fn from(value: GraphQLObjectRef) -> Self {
         Self {
             address: (**value.address),
             digest: value.digest,
@@ -243,7 +251,7 @@ impl From<ObjectRef> for iota_sdk::graphql_client::query_types::ObjectRef {
 }
 
 #[derive(uniffi::Record)]
-pub struct Epoch {
+pub struct GraphQLEpoch {
     /// The epoch's id as a sequence number that starts at 0 and is incremented
     /// by one at every epoch change.
     pub epoch_id: u64,
@@ -271,7 +279,7 @@ pub struct Epoch {
     /// The epoch's corresponding protocol configuration, including the feature
     /// flags and the configuration options.
     #[uniffi(default = None)]
-    pub protocol_configs: Option<ProtocolConfigs>,
+    pub protocol_configs: Option<GraphQLProtocolConfigs>,
     /// The minimum gas price that a quorum of validators are guaranteed to sign
     /// a transaction for.
     #[uniffi(default = None)]
@@ -306,10 +314,10 @@ pub struct Epoch {
     /// For epochs other than the current the data provided refer to the start
     /// of the epoch.
     #[uniffi(default = None)]
-    pub validator_set: Option<ValidatorSet>,
+    pub validator_set: Option<GraphQLValidatorSet>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::Epoch> for Epoch {
+impl From<iota_sdk::graphql_client::query_types::Epoch> for GraphQLEpoch {
     fn from(value: iota_sdk::graphql_client::query_types::Epoch) -> Self {
         Self {
             epoch_id: value.epoch_id,
@@ -327,7 +335,7 @@ impl From<iota_sdk::graphql_client::query_types::Epoch> for Epoch {
             total_gas_fees: value.total_gas_fees.map(|v| v.0),
             total_stake_rewards: value.total_stake_rewards.map(|v| v.0),
             total_transactions: value.total_transactions,
-            validator_set: value.validator_set.map(|vs| ValidatorSet {
+            validator_set: value.validator_set.map(|vs| GraphQLValidatorSet {
                 inactive_pools_id: vs.inactive_pools_id.map(Into::into).map(Arc::new),
                 inactive_pools_size: vs.inactive_pools_size,
                 pending_active_validators_id: vs
@@ -346,8 +354,8 @@ impl From<iota_sdk::graphql_client::query_types::Epoch> for Epoch {
     }
 }
 
-impl From<Epoch> for iota_sdk::graphql_client::query_types::Epoch {
-    fn from(value: Epoch) -> Self {
+impl From<GraphQLEpoch> for iota_sdk::graphql_client::query_types::Epoch {
+    fn from(value: GraphQLEpoch) -> Self {
         Self {
             epoch_id: value.epoch_id,
             fund_inflow: value.fund_inflow.map(|v| v.into()),
@@ -372,7 +380,7 @@ impl From<Epoch> for iota_sdk::graphql_client::query_types::Epoch {
 }
 
 #[derive(uniffi::Record)]
-pub struct ValidatorSet {
+pub struct GraphQLValidatorSet {
     /// Object ID of the `Table` storing the inactive staking pools.
     #[uniffi(default = None)]
     pub inactive_pools_id: Option<Arc<ObjectId>>,
@@ -411,7 +419,7 @@ pub struct ValidatorSet {
     pub validator_candidates_id: Option<Arc<ObjectId>>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::ValidatorSet> for ValidatorSet {
+impl From<iota_sdk::graphql_client::query_types::ValidatorSet> for GraphQLValidatorSet {
     fn from(value: iota_sdk::graphql_client::query_types::ValidatorSet) -> Self {
         Self {
             inactive_pools_id: value.inactive_pools_id.map(Into::into).map(Arc::new),
@@ -431,8 +439,8 @@ impl From<iota_sdk::graphql_client::query_types::ValidatorSet> for ValidatorSet 
     }
 }
 
-impl From<ValidatorSet> for iota_sdk::graphql_client::query_types::ValidatorSet {
-    fn from(value: ValidatorSet) -> Self {
+impl From<GraphQLValidatorSet> for iota_sdk::graphql_client::query_types::ValidatorSet {
+    fn from(value: GraphQLValidatorSet) -> Self {
         Self {
             inactive_pools_id: value.inactive_pools_id.map(|v| **v),
             inactive_pools_size: value.inactive_pools_size,
@@ -449,7 +457,7 @@ impl From<ValidatorSet> for iota_sdk::graphql_client::query_types::ValidatorSet 
 }
 
 #[derive(uniffi::Record)]
-pub struct EventFilter {
+pub struct GraphQLEventFilter {
     #[uniffi(default = None)]
     pub emitting_module: Option<String>,
     #[uniffi(default = None)]
@@ -460,7 +468,7 @@ pub struct EventFilter {
     pub transaction_digest: Option<String>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::EventFilter> for EventFilter {
+impl From<iota_sdk::graphql_client::query_types::EventFilter> for GraphQLEventFilter {
     fn from(value: iota_sdk::graphql_client::query_types::EventFilter) -> Self {
         Self {
             emitting_module: value.emitting_module,
@@ -471,8 +479,8 @@ impl From<iota_sdk::graphql_client::query_types::EventFilter> for EventFilter {
     }
 }
 
-impl From<EventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
-    fn from(value: EventFilter) -> Self {
+impl From<GraphQLEventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
+    fn from(value: GraphQLEventFilter) -> Self {
         Self::default()
             .with_emitting_module(value.emitting_module)
             .with_event_type(value.event_type)
@@ -549,7 +557,7 @@ impl TryFrom<iota_sdk::graphql_client::query_types::Event> for GraphQLEvent {
 }
 
 #[derive(uniffi::Record)]
-pub struct ObjectFilter {
+pub struct GraphQLObjectFilter {
     #[uniffi(default = None)]
     pub type_tag: Option<String>,
     #[uniffi(default = None)]
@@ -558,7 +566,7 @@ pub struct ObjectFilter {
     pub object_ids: Option<Vec<Arc<ObjectId>>>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::ObjectFilter> for ObjectFilter {
+impl From<iota_sdk::graphql_client::query_types::ObjectFilter> for GraphQLObjectFilter {
     fn from(value: iota_sdk::graphql_client::query_types::ObjectFilter) -> Self {
         Self {
             type_tag: value.type_tag,
@@ -570,8 +578,8 @@ impl From<iota_sdk::graphql_client::query_types::ObjectFilter> for ObjectFilter 
     }
 }
 
-impl From<ObjectFilter> for iota_sdk::graphql_client::query_types::ObjectFilter {
-    fn from(value: ObjectFilter) -> Self {
+impl From<GraphQLObjectFilter> for iota_sdk::graphql_client::query_types::ObjectFilter {
+    fn from(value: GraphQLObjectFilter) -> Self {
         Self::default()
             .with_type(value.type_tag)
             .with_owner(value.owner.map(|v| **v))
@@ -586,18 +594,18 @@ impl From<ObjectFilter> for iota_sdk::graphql_client::query_types::ObjectFilter 
 /// The output of a dynamic field query, that includes the name, value, and
 /// value's json representation.
 #[derive(uniffi::Record)]
-pub struct DynamicFieldOutput {
+pub struct GraphQLDynamicFieldOutput {
     /// The name of the dynamic field
-    pub name: DynamicFieldName,
+    pub name: GraphQLDynamicFieldName,
     /// The dynamic field value typename and bcs
     #[uniffi(default = None)]
-    pub value: Option<DynamicFieldValue>,
+    pub value: Option<GraphQLDynamicFieldValue>,
     /// The json representation of the dynamic field value object
     #[uniffi(default = None)]
     pub value_as_json: Option<serde_json::Value>,
 }
 
-impl From<iota_sdk::graphql_client::DynamicFieldOutput> for DynamicFieldOutput {
+impl From<iota_sdk::graphql_client::DynamicFieldOutput> for GraphQLDynamicFieldOutput {
     fn from(value: iota_sdk::graphql_client::DynamicFieldOutput) -> Self {
         Self {
             name: value.name.into(),
@@ -610,7 +618,7 @@ impl From<iota_sdk::graphql_client::DynamicFieldOutput> for DynamicFieldOutput {
 /// The name part of a dynamic field, including its type, bcs, and json
 /// representation.
 #[derive(uniffi::Record)]
-pub struct DynamicFieldName {
+pub struct GraphQLDynamicFieldName {
     /// The type name of this dynamic field name
     pub type_tag: Arc<TypeTag>,
     /// The bcs bytes of this dynamic field name
@@ -620,7 +628,7 @@ pub struct DynamicFieldName {
     pub json: Option<serde_json::Value>,
 }
 
-impl From<iota_sdk::graphql_client::DynamicFieldName> for DynamicFieldName {
+impl From<iota_sdk::graphql_client::DynamicFieldName> for GraphQLDynamicFieldName {
     fn from(value: iota_sdk::graphql_client::DynamicFieldName) -> Self {
         Self {
             type_tag: Arc::new(value.type_tag.into()),
@@ -632,12 +640,12 @@ impl From<iota_sdk::graphql_client::DynamicFieldName> for DynamicFieldName {
 
 /// The value part of a dynamic field.
 #[derive(uniffi::Record)]
-pub struct DynamicFieldValue {
+pub struct GraphQLDynamicFieldValue {
     pub type_tag: Arc<TypeTag>,
     pub bcs: Vec<u8>,
 }
 
-impl From<iota_sdk::graphql_client::DynamicFieldValue> for DynamicFieldValue {
+impl From<iota_sdk::graphql_client::DynamicFieldValue> for GraphQLDynamicFieldValue {
     fn from(value: iota_sdk::graphql_client::DynamicFieldValue) -> Self {
         Self {
             type_tag: Arc::new(value.type_tag.into()),
@@ -648,7 +656,7 @@ impl From<iota_sdk::graphql_client::DynamicFieldValue> for DynamicFieldValue {
 
 /// Represents a validator in the system.
 #[derive(uniffi::Record)]
-pub struct Validator {
+pub struct GraphQLValidator {
     /// The APY of this validator in basis points.
     /// To get the APY in percentage, divide by 100.
     #[uniffi(default = None)]
@@ -660,7 +668,7 @@ pub struct Validator {
     pub commission_rate: Option<i32>,
     /// Validator's credentials.
     #[uniffi(default = None)]
-    pub credentials: Option<ValidatorCredentials>,
+    pub credentials: Option<GraphQLValidatorCredentials>,
     /// Validator's description.
     #[uniffi(default = None)]
     pub description: Option<String>,
@@ -681,7 +689,7 @@ pub struct Validator {
     pub next_epoch_commission_rate: Option<i32>,
     /// Validator's credentials for the next epoch.
     #[uniffi(default = None)]
-    pub next_epoch_credentials: Option<ValidatorCredentials>,
+    pub next_epoch_credentials: Option<GraphQLValidatorCredentials>,
     /// The validator's gas price quote for the next epoch.
     #[uniffi(default = None)]
     pub next_epoch_gas_price: Option<u64>,
@@ -730,7 +738,7 @@ pub struct Validator {
     pub voting_power: Option<i32>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::Validator> for Validator {
+impl From<iota_sdk::graphql_client::query_types::Validator> for GraphQLValidator {
     fn from(value: iota_sdk::graphql_client::query_types::Validator) -> Self {
         Self {
             apy: value.apy,
@@ -769,8 +777,8 @@ impl From<iota_sdk::graphql_client::query_types::Validator> for Validator {
     }
 }
 
-impl From<Validator> for iota_sdk::graphql_client::query_types::Validator {
-    fn from(value: Validator) -> Self {
+impl From<GraphQLValidator> for iota_sdk::graphql_client::query_types::Validator {
+    fn from(value: GraphQLValidator) -> Self {
         Self {
             apy: value.apy,
             address: GraphQLAddress {
@@ -789,7 +797,7 @@ impl From<Validator> for iota_sdk::graphql_client::query_types::Validator {
             next_epoch_gas_price: value.next_epoch_gas_price.map(|v| v.to_string().into()),
             next_epoch_stake: value.next_epoch_stake.map(|v| v.to_string().into()),
             operation_cap: value.operation_cap.map(|o| {
-                MoveObject {
+                GraphQLMoveObject {
                     bcs: Some(Base64(base64ct::Base64::encode_string(&o))),
                 }
                 .into()
@@ -816,7 +824,7 @@ impl From<Validator> for iota_sdk::graphql_client::query_types::Validator {
 
 /// The credentials related fields associated with a validator.
 #[derive(uniffi::Record)]
-pub struct ValidatorCredentials {
+pub struct GraphQLValidatorCredentials {
     #[uniffi(default = None)]
     pub authority_pub_key: Option<Base64>,
     #[uniffi(default = None)]
@@ -833,7 +841,9 @@ pub struct ValidatorCredentials {
     pub primary_address: Option<String>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::ValidatorCredentials> for ValidatorCredentials {
+impl From<iota_sdk::graphql_client::query_types::ValidatorCredentials>
+    for GraphQLValidatorCredentials
+{
     fn from(value: iota_sdk::graphql_client::query_types::ValidatorCredentials) -> Self {
         Self {
             authority_pub_key: value.authority_pub_key,
@@ -847,8 +857,10 @@ impl From<iota_sdk::graphql_client::query_types::ValidatorCredentials> for Valid
     }
 }
 
-impl From<ValidatorCredentials> for iota_sdk::graphql_client::query_types::ValidatorCredentials {
-    fn from(value: ValidatorCredentials) -> Self {
+impl From<GraphQLValidatorCredentials>
+    for iota_sdk::graphql_client::query_types::ValidatorCredentials
+{
+    fn from(value: GraphQLValidatorCredentials) -> Self {
         Self {
             authority_pub_key: value.authority_pub_key,
             network_pub_key: value.network_pub_key,
@@ -863,7 +875,7 @@ impl From<ValidatorCredentials> for iota_sdk::graphql_client::query_types::Valid
 
 /// The kind of a transaction, used to filter transaction queries.
 #[derive(uniffi::Enum)]
-pub enum TransactionBlockKindInput {
+pub enum GraphQLTransactionBlockKindInput {
     SystemTx,
     ProgrammableTx,
     Genesis,
@@ -872,7 +884,25 @@ pub enum TransactionBlockKindInput {
     EndOfEpochTx,
 }
 
-impl From<GraphQLTransactionBlockKindInput> for TransactionBlockKindInput {
+impl From<SdkTransactionBlockKindInput> for GraphQLTransactionBlockKindInput {
+    fn from(value: SdkTransactionBlockKindInput) -> Self {
+        match value {
+            SdkTransactionBlockKindInput::SystemTx => Self::SystemTx,
+            SdkTransactionBlockKindInput::ProgrammableTx => Self::ProgrammableTx,
+            SdkTransactionBlockKindInput::Genesis => Self::Genesis,
+            SdkTransactionBlockKindInput::ConsensusCommitPrologueV1 => {
+                Self::ConsensusCommitPrologueV1
+            }
+            SdkTransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
+            SdkTransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
+            _ => unimplemented!(
+                "a new TransactionBlockKindInput enum variant was added and needs to be handled"
+            ),
+        }
+    }
+}
+
+impl From<GraphQLTransactionBlockKindInput> for SdkTransactionBlockKindInput {
     fn from(value: GraphQLTransactionBlockKindInput) -> Self {
         match value {
             GraphQLTransactionBlockKindInput::SystemTx => Self::SystemTx,
@@ -883,29 +913,13 @@ impl From<GraphQLTransactionBlockKindInput> for TransactionBlockKindInput {
             }
             GraphQLTransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
             GraphQLTransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
-            _ => unimplemented!(
-                "a new TransactionBlockKindInput enum variant was added and needs to be handled"
-            ),
-        }
-    }
-}
-
-impl From<TransactionBlockKindInput> for GraphQLTransactionBlockKindInput {
-    fn from(value: TransactionBlockKindInput) -> Self {
-        match value {
-            TransactionBlockKindInput::SystemTx => Self::SystemTx,
-            TransactionBlockKindInput::ProgrammableTx => Self::ProgrammableTx,
-            TransactionBlockKindInput::Genesis => Self::Genesis,
-            TransactionBlockKindInput::ConsensusCommitPrologueV1 => Self::ConsensusCommitPrologueV1,
-            TransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
-            TransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
         }
     }
 }
 
 /// The relationship between an address and a transaction.
 #[derive(uniffi::Enum)]
-pub enum AddressTransactionRelationship {
+pub enum GraphQLAddressTransactionRelationship {
     /// Transactions the address has sent.
     Sent,
     /// Transactions that sent objects to the address.
@@ -915,32 +929,32 @@ pub enum AddressTransactionRelationship {
     Affected,
 }
 
-impl From<GraphQLAddressTransactionRelationship> for AddressTransactionRelationship {
-    fn from(value: GraphQLAddressTransactionRelationship) -> Self {
+impl From<SdkAddressTransactionRelationship> for GraphQLAddressTransactionRelationship {
+    fn from(value: SdkAddressTransactionRelationship) -> Self {
         match value {
-            GraphQLAddressTransactionRelationship::Sent => Self::Sent,
-            GraphQLAddressTransactionRelationship::Recv => Self::Recv,
-            GraphQLAddressTransactionRelationship::Affected => Self::Affected,
+            SdkAddressTransactionRelationship::Sent => Self::Sent,
+            SdkAddressTransactionRelationship::Recv => Self::Recv,
+            SdkAddressTransactionRelationship::Affected => Self::Affected,
             _ => unimplemented!(
-                "a new GraphQLAddressTransactionRelationship enum variant was added and needs to be handled"
+                "a new AddressTransactionRelationship enum variant was added and needs to be handled"
             ),
         }
     }
 }
 
-impl From<AddressTransactionRelationship> for GraphQLAddressTransactionRelationship {
-    fn from(value: AddressTransactionRelationship) -> Self {
+impl From<GraphQLAddressTransactionRelationship> for SdkAddressTransactionRelationship {
+    fn from(value: GraphQLAddressTransactionRelationship) -> Self {
         match value {
-            AddressTransactionRelationship::Sent => Self::Sent,
-            AddressTransactionRelationship::Recv => Self::Recv,
-            AddressTransactionRelationship::Affected => Self::Affected,
+            GraphQLAddressTransactionRelationship::Sent => Self::Sent,
+            GraphQLAddressTransactionRelationship::Recv => Self::Recv,
+            GraphQLAddressTransactionRelationship::Affected => Self::Affected,
         }
     }
 }
 
 /// Information about pagination in a connection.
 #[derive(uniffi::Record)]
-pub struct PageInfo {
+pub struct GraphQLPageInfo {
     /// When paginating backwards, are there more items?
     pub has_previous_page: bool,
     /// Are there more items when paginating forwards?
@@ -953,7 +967,7 @@ pub struct PageInfo {
     pub end_cursor: Option<String>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::PageInfo> for PageInfo {
+impl From<iota_sdk::graphql_client::query_types::PageInfo> for GraphQLPageInfo {
     fn from(value: iota_sdk::graphql_client::query_types::PageInfo) -> Self {
         Self {
             has_previous_page: value.has_previous_page,
@@ -964,8 +978,8 @@ impl From<iota_sdk::graphql_client::query_types::PageInfo> for PageInfo {
     }
 }
 
-impl From<PageInfo> for iota_sdk::graphql_client::query_types::PageInfo {
-    fn from(value: PageInfo) -> Self {
+impl From<GraphQLPageInfo> for iota_sdk::graphql_client::query_types::PageInfo {
+    fn from(value: GraphQLPageInfo) -> Self {
         Self {
             has_previous_page: value.has_previous_page,
             has_next_page: value.has_next_page,
@@ -978,9 +992,9 @@ impl From<PageInfo> for iota_sdk::graphql_client::query_types::PageInfo {
 /// Pagination options for querying the GraphQL server. It defaults to forward
 /// pagination with the GraphQL server's max page size.
 #[derive(uniffi::Record)]
-pub struct PaginationFilter {
+pub struct GraphQLPaginationFilter {
     /// The direction of pagination.
-    pub direction: Direction,
+    pub direction: GraphQLDirection,
     /// An opaque cursor used for pagination.
     #[uniffi(default = None)]
     pub cursor: Option<String>,
@@ -990,8 +1004,8 @@ pub struct PaginationFilter {
     pub limit: Option<i32>,
 }
 
-impl From<PaginationFilter> for iota_sdk::graphql_client::pagination::PaginationFilter {
-    fn from(value: PaginationFilter) -> Self {
+impl From<GraphQLPaginationFilter> for iota_sdk::graphql_client::pagination::PaginationFilter {
+    fn from(value: GraphQLPaginationFilter) -> Self {
         Self {
             direction: value.direction.into(),
             cursor: value.cursor,
@@ -1002,24 +1016,24 @@ impl From<PaginationFilter> for iota_sdk::graphql_client::pagination::Pagination
 
 /// Pagination direction.
 #[derive(uniffi::Enum)]
-pub enum Direction {
+pub enum GraphQLDirection {
     Forward,
     Backward,
 }
 
-impl From<Direction> for iota_sdk::graphql_client::pagination::Direction {
-    fn from(value: Direction) -> Self {
+impl From<GraphQLDirection> for iota_sdk::graphql_client::pagination::Direction {
+    fn from(value: GraphQLDirection) -> Self {
         match value {
-            Direction::Forward => Self::Forward,
-            Direction::Backward => Self::Backward,
+            GraphQLDirection::Forward => Self::Forward,
+            GraphQLDirection::Backward => Self::Backward,
         }
     }
 }
 
 #[derive(uniffi::Record)]
-pub struct ValidatorConnection {
-    pub page_info: PageInfo,
-    pub nodes: Vec<Validator>,
+pub struct GraphQLValidatorConnection {
+    pub page_info: GraphQLPageInfo,
+    pub nodes: Vec<GraphQLValidator>,
 }
 
 #[derive(uniffi::Record)]
@@ -1045,13 +1059,13 @@ impl From<GraphQLAddress> for iota_sdk::graphql_client::query_types::GraphQLAddr
 
 /// The BCS contents of an on-chain Move object.
 #[derive(uniffi::Record)]
-pub struct MoveObject {
+pub struct GraphQLMoveObject {
     #[uniffi(default = None)]
     pub bcs: Option<Base64>,
 }
 
-impl From<MoveObject> for iota_sdk::graphql_client::query_types::MoveObject {
-    fn from(value: MoveObject) -> Self {
+impl From<GraphQLMoveObject> for iota_sdk::graphql_client::query_types::MoveObject {
+    fn from(value: GraphQLMoveObject) -> Self {
         Self { bcs: value.bcs }
     }
 }
@@ -1061,7 +1075,7 @@ impl From<MoveObject> for iota_sdk::graphql_client::query_types::MoveObject {
 /// These can only change during protocol upgrades which happen on epoch
 /// boundaries.
 #[derive(uniffi::Record)]
-pub struct ProtocolConfigs {
+pub struct GraphQLProtocolConfigs {
     /// The protocol is not required to change on every epoch boundary, so the
     /// protocol version tracks which change to the protocol these configs
     /// are from.
@@ -1070,14 +1084,14 @@ pub struct ProtocolConfigs {
     /// form of boolean configuration that are usually used to gate features
     /// while they are in development. Once a flag has been enabled, it is
     /// rare for it to be disabled.
-    pub feature_flags: Vec<ProtocolConfigFeatureFlag>,
+    pub feature_flags: Vec<GraphQLProtocolConfigFeatureFlag>,
     /// List all available configurations and their values. These configurations
     /// can take any value (but they will all be represented in string
     /// form), and do not include feature flags.
-    pub configs: Vec<ProtocolConfigAttr>,
+    pub configs: Vec<GraphQLProtocolConfigAttr>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::ProtocolConfigs> for ProtocolConfigs {
+impl From<iota_sdk::graphql_client::query_types::ProtocolConfigs> for GraphQLProtocolConfigs {
     fn from(value: iota_sdk::graphql_client::query_types::ProtocolConfigs) -> Self {
         Self {
             protocol_version: value.protocol_version,
@@ -1087,8 +1101,8 @@ impl From<iota_sdk::graphql_client::query_types::ProtocolConfigs> for ProtocolCo
     }
 }
 
-impl From<ProtocolConfigs> for iota_sdk::graphql_client::query_types::ProtocolConfigs {
-    fn from(value: ProtocolConfigs) -> Self {
+impl From<GraphQLProtocolConfigs> for iota_sdk::graphql_client::query_types::ProtocolConfigs {
+    fn from(value: GraphQLProtocolConfigs) -> Self {
         Self {
             protocol_version: value.protocol_version,
             feature_flags: value.feature_flags.into_iter().map(Into::into).collect(),
@@ -1101,13 +1115,13 @@ impl From<ProtocolConfigs> for iota_sdk::graphql_client::query_types::ProtocolCo
 /// gate features while they are in development. Once a lag has been enabled, it
 /// is rare for it to be disabled.
 #[derive(uniffi::Record)]
-pub struct ProtocolConfigFeatureFlag {
+pub struct GraphQLProtocolConfigFeatureFlag {
     pub key: String,
     pub value: bool,
 }
 
 impl From<iota_sdk::graphql_client::query_types::ProtocolConfigFeatureFlag>
-    for ProtocolConfigFeatureFlag
+    for GraphQLProtocolConfigFeatureFlag
 {
     fn from(value: iota_sdk::graphql_client::query_types::ProtocolConfigFeatureFlag) -> Self {
         Self {
@@ -1117,10 +1131,10 @@ impl From<iota_sdk::graphql_client::query_types::ProtocolConfigFeatureFlag>
     }
 }
 
-impl From<ProtocolConfigFeatureFlag>
+impl From<GraphQLProtocolConfigFeatureFlag>
     for iota_sdk::graphql_client::query_types::ProtocolConfigFeatureFlag
 {
-    fn from(value: ProtocolConfigFeatureFlag) -> Self {
+    fn from(value: GraphQLProtocolConfigFeatureFlag) -> Self {
         Self {
             key: value.key,
             value: value.value,
@@ -1130,12 +1144,12 @@ impl From<ProtocolConfigFeatureFlag>
 
 /// A key-value protocol configuration attribute.
 #[derive(uniffi::Record)]
-pub struct ProtocolConfigAttr {
+pub struct GraphQLProtocolConfigAttr {
     pub key: String,
     pub value: Option<String>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::ProtocolConfigAttr> for ProtocolConfigAttr {
+impl From<iota_sdk::graphql_client::query_types::ProtocolConfigAttr> for GraphQLProtocolConfigAttr {
     fn from(value: iota_sdk::graphql_client::query_types::ProtocolConfigAttr) -> Self {
         Self {
             key: value.key,
@@ -1144,8 +1158,8 @@ impl From<iota_sdk::graphql_client::query_types::ProtocolConfigAttr> for Protoco
     }
 }
 
-impl From<ProtocolConfigAttr> for iota_sdk::graphql_client::query_types::ProtocolConfigAttr {
-    fn from(value: ProtocolConfigAttr) -> Self {
+impl From<GraphQLProtocolConfigAttr> for iota_sdk::graphql_client::query_types::ProtocolConfigAttr {
+    fn from(value: GraphQLProtocolConfigAttr) -> Self {
         Self {
             key: value.key,
             value: value.value,
@@ -1155,7 +1169,7 @@ impl From<ProtocolConfigAttr> for iota_sdk::graphql_client::query_types::Protoco
 
 /// The coin metadata associated with the given coin type.
 #[derive(uniffi::Record)]
-pub struct CoinMetadata {
+pub struct GraphQLCoinMetadata {
     /// The CoinMetadata object ID.
     pub address: Arc<ObjectId>,
     /// The number of decimal places used to represent the token.
@@ -1180,7 +1194,7 @@ pub struct CoinMetadata {
     pub version: u64,
 }
 
-impl TryFrom<iota_sdk::graphql_client::query_types::CoinMetadata> for CoinMetadata {
+impl TryFrom<iota_sdk::graphql_client::query_types::CoinMetadata> for GraphQLCoinMetadata {
     type Error = SdkFfiError;
 
     fn try_from(
@@ -1202,8 +1216,8 @@ impl TryFrom<iota_sdk::graphql_client::query_types::CoinMetadata> for CoinMetada
     }
 }
 
-impl From<CoinMetadata> for iota_sdk::graphql_client::query_types::CoinMetadata {
-    fn from(value: CoinMetadata) -> Self {
+impl From<GraphQLCoinMetadata> for iota_sdk::graphql_client::query_types::CoinMetadata {
+    fn from(value: GraphQLCoinMetadata) -> Self {
         Self {
             address: **value.address,
             decimals: value.decimals,
@@ -1219,10 +1233,10 @@ impl From<CoinMetadata> for iota_sdk::graphql_client::query_types::CoinMetadata 
 
 #[derive(Debug, derive_more::Display, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug, Display)]
-pub struct MoveFunction(iota_sdk::graphql_client::MoveFunction);
+pub struct GraphQLMoveFunction(iota_sdk::graphql_client::MoveFunction);
 
 #[uniffi::export]
-impl MoveFunction {
+impl GraphQLMoveFunction {
     pub fn is_entry(&self) -> bool {
         self.0.is_entry.is_some_and(|v| v)
     }
@@ -1231,41 +1245,41 @@ impl MoveFunction {
         self.0.name.clone()
     }
 
-    pub fn parameters(&self) -> Option<Vec<OpenMoveType>> {
+    pub fn parameters(&self) -> Option<Vec<GraphQLOpenMoveType>> {
         self.0
             .parameters
             .clone()
             .map(|v| v.into_iter().map(Into::into).collect())
     }
 
-    pub fn return_type(&self) -> Option<Vec<OpenMoveType>> {
+    pub fn return_type(&self) -> Option<Vec<GraphQLOpenMoveType>> {
         self.0
             .return_
             .clone()
             .map(|v| v.into_iter().map(Into::into).collect())
     }
 
-    pub fn type_parameters(&self) -> Option<Vec<MoveFunctionTypeParameter>> {
+    pub fn type_parameters(&self) -> Option<Vec<GraphQLMoveFunctionTypeParameter>> {
         self.0
             .type_parameters
             .clone()
             .map(|v| v.into_iter().map(Into::into).collect())
     }
 
-    pub fn visibility(&self) -> Option<MoveVisibility> {
+    pub fn visibility(&self) -> Option<GraphQLMoveVisibility> {
         self.0.visibility.map(Into::into)
     }
 }
 
 /// The visibility of a Move function.
 #[derive(uniffi::Enum)]
-pub enum MoveVisibility {
+pub enum GraphQLMoveVisibility {
     Public,
     Private,
     Friend,
 }
 
-impl From<iota_sdk::graphql_client::MoveVisibility> for MoveVisibility {
+impl From<iota_sdk::graphql_client::MoveVisibility> for GraphQLMoveVisibility {
     fn from(value: iota_sdk::graphql_client::MoveVisibility) -> Self {
         match value {
             iota_sdk::graphql_client::MoveVisibility::Public => Self::Public,
@@ -1280,14 +1294,14 @@ impl From<iota_sdk::graphql_client::MoveVisibility> for MoveVisibility {
 
 /// An ability a Move type can have.
 #[derive(uniffi::Enum)]
-pub enum MoveAbility {
+pub enum GraphQLMoveAbility {
     Copy,
     Drop,
     Key,
     Store,
 }
 
-impl From<iota_sdk::graphql_client::MoveAbility> for MoveAbility {
+impl From<iota_sdk::graphql_client::MoveAbility> for GraphQLMoveAbility {
     fn from(value: iota_sdk::graphql_client::MoveAbility) -> Self {
         match value {
             iota_sdk::graphql_client::MoveAbility::Copy => Self::Copy,
@@ -1302,11 +1316,13 @@ impl From<iota_sdk::graphql_client::MoveAbility> for MoveAbility {
 /// A type parameter of a Move function, with the abilities it is constrained
 /// to.
 #[derive(uniffi::Record)]
-pub struct MoveFunctionTypeParameter {
-    pub constraints: Vec<MoveAbility>,
+pub struct GraphQLMoveFunctionTypeParameter {
+    pub constraints: Vec<GraphQLMoveAbility>,
 }
 
-impl From<iota_sdk::graphql_client::MoveFunctionTypeParameter> for MoveFunctionTypeParameter {
+impl From<iota_sdk::graphql_client::MoveFunctionTypeParameter>
+    for GraphQLMoveFunctionTypeParameter
+{
     fn from(value: iota_sdk::graphql_client::MoveFunctionTypeParameter) -> Self {
         Self {
             constraints: value.constraints.into_iter().map(Into::into).collect(),
@@ -1316,29 +1332,29 @@ impl From<iota_sdk::graphql_client::MoveFunctionTypeParameter> for MoveFunctionT
 
 /// A Move type that may still have unbound type parameters.
 #[derive(uniffi::Record)]
-pub struct OpenMoveType {
+pub struct GraphQLOpenMoveType {
     pub repr: String,
 }
 
-impl From<iota_sdk::graphql_client::OpenMoveType> for OpenMoveType {
+impl From<iota_sdk::graphql_client::OpenMoveType> for GraphQLOpenMoveType {
     fn from(value: iota_sdk::graphql_client::OpenMoveType) -> Self {
         Self { repr: value.repr }
     }
 }
 
 #[derive(uniffi::Record)]
-pub struct MoveModule {
+pub struct GraphQLMoveModule {
     pub file_format_version: i32,
     #[uniffi(default = None)]
-    pub enums: Option<MoveEnumConnection>,
-    pub friends: MoveModuleConnection,
+    pub enums: Option<GraphQLMoveEnumConnection>,
+    pub friends: GraphQLMoveModuleConnection,
     #[uniffi(default = None)]
-    pub functions: Option<MoveFunctionConnection>,
+    pub functions: Option<GraphQLMoveFunctionConnection>,
     #[uniffi(default = None)]
-    pub structs: Option<MoveStructConnection>,
+    pub structs: Option<GraphQLMoveStructConnection>,
 }
 
-impl From<iota_sdk::graphql_client::MoveModule> for MoveModule {
+impl From<iota_sdk::graphql_client::MoveModule> for GraphQLMoveModule {
     fn from(value: iota_sdk::graphql_client::MoveModule) -> Self {
         Self {
             file_format_version: value.file_format_version,
@@ -1351,21 +1367,21 @@ impl From<iota_sdk::graphql_client::MoveModule> for MoveModule {
 }
 
 #[derive(uniffi::Record)]
-pub struct MoveModuleConnection {
-    pub nodes: Vec<MoveModuleQuery>,
-    pub page_info: PageInfo,
+pub struct GraphQLMoveModuleConnection {
+    pub nodes: Vec<GraphQLMoveModuleQuery>,
+    pub page_info: GraphQLPageInfo,
 }
 
 impl From<iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveModuleId>>
-    for MoveModuleConnection
+    for GraphQLMoveModuleConnection
 {
     fn from(value: iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveModuleId>) -> Self {
         let (page_info, data) = value.into_parts();
         Self {
             nodes: data
                 .into_iter()
-                .map(|id| MoveModuleQuery {
-                    package: MovePackageQuery {
+                .map(|id| GraphQLMoveModuleQuery {
+                    package: GraphQLMovePackageQuery {
                         address: Arc::new(id.package.into()),
                         bcs: None,
                     },
@@ -1378,13 +1394,13 @@ impl From<iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveModuleId>
 }
 
 #[derive(uniffi::Record)]
-pub struct MovePackageQuery {
+pub struct GraphQLMovePackageQuery {
     pub address: Arc<Address>,
     #[uniffi(default = None)]
     pub bcs: Option<Base64>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MovePackageQuery> for MovePackageQuery {
+impl From<iota_sdk::graphql_client::query_types::MovePackageQuery> for GraphQLMovePackageQuery {
     fn from(value: iota_sdk::graphql_client::query_types::MovePackageQuery) -> Self {
         Self {
             address: Arc::new(value.address.into()),
@@ -1393,8 +1409,8 @@ impl From<iota_sdk::graphql_client::query_types::MovePackageQuery> for MovePacka
     }
 }
 
-impl From<MovePackageQuery> for iota_sdk::graphql_client::query_types::MovePackageQuery {
-    fn from(value: MovePackageQuery) -> Self {
+impl From<GraphQLMovePackageQuery> for iota_sdk::graphql_client::query_types::MovePackageQuery {
+    fn from(value: GraphQLMovePackageQuery) -> Self {
         Self {
             address: (**value.address),
             bcs: value.bcs,
@@ -1403,12 +1419,12 @@ impl From<MovePackageQuery> for iota_sdk::graphql_client::query_types::MovePacka
 }
 
 #[derive(uniffi::Record)]
-pub struct MoveModuleQuery {
-    pub package: MovePackageQuery,
+pub struct GraphQLMoveModuleQuery {
+    pub package: GraphQLMovePackageQuery,
     pub name: String,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveModuleQuery> for MoveModuleQuery {
+impl From<iota_sdk::graphql_client::query_types::MoveModuleQuery> for GraphQLMoveModuleQuery {
     fn from(value: iota_sdk::graphql_client::query_types::MoveModuleQuery) -> Self {
         Self {
             package: value.package.into(),
@@ -1417,8 +1433,8 @@ impl From<iota_sdk::graphql_client::query_types::MoveModuleQuery> for MoveModule
     }
 }
 
-impl From<MoveModuleQuery> for iota_sdk::graphql_client::query_types::MoveModuleQuery {
-    fn from(value: MoveModuleQuery) -> Self {
+impl From<GraphQLMoveModuleQuery> for iota_sdk::graphql_client::query_types::MoveModuleQuery {
+    fn from(value: GraphQLMoveModuleQuery) -> Self {
         Self {
             package: value.package.into(),
             name: value.name,
@@ -1428,12 +1444,12 @@ impl From<MoveModuleQuery> for iota_sdk::graphql_client::query_types::MoveModule
 
 /// A type parameter of a Move struct, with the abilities it is constrained to.
 #[derive(uniffi::Record)]
-pub struct MoveStructTypeParameter {
-    pub constraints: Vec<MoveAbility>,
+pub struct GraphQLMoveStructTypeParameter {
+    pub constraints: Vec<GraphQLMoveAbility>,
     pub is_phantom: bool,
 }
 
-impl From<iota_sdk::graphql_client::MoveStructTypeParameter> for MoveStructTypeParameter {
+impl From<iota_sdk::graphql_client::MoveStructTypeParameter> for GraphQLMoveStructTypeParameter {
     fn from(value: iota_sdk::graphql_client::MoveStructTypeParameter) -> Self {
         Self {
             constraints: value.constraints.into_iter().map(Into::into).collect(),
@@ -1444,13 +1460,13 @@ impl From<iota_sdk::graphql_client::MoveStructTypeParameter> for MoveStructTypeP
 
 /// A field of a Move struct or enum variant.
 #[derive(uniffi::Record)]
-pub struct MoveField {
+pub struct GraphQLMoveField {
     pub name: String,
     #[uniffi(default = None)]
-    pub move_type: Option<OpenMoveType>,
+    pub move_type: Option<GraphQLOpenMoveType>,
 }
 
-impl From<iota_sdk::graphql_client::MoveField> for MoveField {
+impl From<iota_sdk::graphql_client::MoveField> for GraphQLMoveField {
     fn from(value: iota_sdk::graphql_client::MoveField) -> Self {
         Self {
             name: value.name,
@@ -1461,17 +1477,17 @@ impl From<iota_sdk::graphql_client::MoveField> for MoveField {
 
 /// A Move struct definition.
 #[derive(uniffi::Record)]
-pub struct MoveStructQuery {
+pub struct GraphQLMoveStructQuery {
     #[uniffi(default = None)]
-    pub abilities: Option<Vec<MoveAbility>>,
+    pub abilities: Option<Vec<GraphQLMoveAbility>>,
     pub name: String,
     #[uniffi(default = None)]
-    pub fields: Option<Vec<MoveField>>,
+    pub fields: Option<Vec<GraphQLMoveField>>,
     #[uniffi(default = None)]
-    pub type_parameters: Option<Vec<MoveStructTypeParameter>>,
+    pub type_parameters: Option<Vec<GraphQLMoveStructTypeParameter>>,
 }
 
-impl From<iota_sdk::graphql_client::MoveStruct> for MoveStructQuery {
+impl From<iota_sdk::graphql_client::MoveStruct> for GraphQLMoveStructQuery {
     fn from(value: iota_sdk::graphql_client::MoveStruct) -> Self {
         Self {
             abilities: value
@@ -1490,13 +1506,13 @@ impl From<iota_sdk::graphql_client::MoveStruct> for MoveStructQuery {
 
 /// A page of Move struct definitions.
 #[derive(uniffi::Record)]
-pub struct MoveStructConnection {
-    pub page_info: PageInfo,
-    pub nodes: Vec<MoveStructQuery>,
+pub struct GraphQLMoveStructConnection {
+    pub page_info: GraphQLPageInfo,
+    pub nodes: Vec<GraphQLMoveStructQuery>,
 }
 
 impl From<iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveStruct>>
-    for MoveStructConnection
+    for GraphQLMoveStructConnection
 {
     fn from(value: iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveStruct>) -> Self {
         let (page_info, data) = value.into_parts();
@@ -1508,13 +1524,13 @@ impl From<iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveStruct>>
 }
 
 #[derive(uniffi::Record)]
-pub struct MoveFunctionConnection {
-    pub nodes: Vec<Arc<MoveFunction>>,
-    pub page_info: PageInfo,
+pub struct GraphQLMoveFunctionConnection {
+    pub nodes: Vec<Arc<GraphQLMoveFunction>>,
+    pub page_info: GraphQLPageInfo,
 }
 
 impl From<iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveFunction>>
-    for MoveFunctionConnection
+    for GraphQLMoveFunctionConnection
 {
     fn from(value: iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveFunction>) -> Self {
         let (page_info, data) = value.into_parts();
@@ -1527,13 +1543,13 @@ impl From<iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveFunction>
 
 /// A page of Move enum definitions.
 #[derive(uniffi::Record)]
-pub struct MoveEnumConnection {
-    pub nodes: Vec<MoveEnum>,
-    pub page_info: PageInfo,
+pub struct GraphQLMoveEnumConnection {
+    pub nodes: Vec<GraphQLMoveEnum>,
+    pub page_info: GraphQLPageInfo,
 }
 
 impl From<iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveEnum>>
-    for MoveEnumConnection
+    for GraphQLMoveEnumConnection
 {
     fn from(value: iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveEnum>) -> Self {
         let (page_info, data) = value.into_parts();
@@ -1546,13 +1562,13 @@ impl From<iota_sdk::graphql_client::Page<iota_sdk::graphql_client::MoveEnum>>
 
 /// A variant of a Move enum.
 #[derive(uniffi::Record)]
-pub struct MoveEnumVariant {
+pub struct GraphQLMoveEnumVariant {
     #[uniffi(default = None)]
-    pub fields: Option<Vec<MoveField>>,
+    pub fields: Option<Vec<GraphQLMoveField>>,
     pub name: String,
 }
 
-impl From<iota_sdk::graphql_client::MoveEnumVariant> for MoveEnumVariant {
+impl From<iota_sdk::graphql_client::MoveEnumVariant> for GraphQLMoveEnumVariant {
     fn from(value: iota_sdk::graphql_client::MoveEnumVariant) -> Self {
         Self {
             fields: value
@@ -1565,17 +1581,17 @@ impl From<iota_sdk::graphql_client::MoveEnumVariant> for MoveEnumVariant {
 
 /// A Move enum definition.
 #[derive(uniffi::Record)]
-pub struct MoveEnum {
+pub struct GraphQLMoveEnum {
     #[uniffi(default = None)]
-    pub abilities: Option<Vec<MoveAbility>>,
+    pub abilities: Option<Vec<GraphQLMoveAbility>>,
     pub name: String,
     #[uniffi(default = None)]
-    pub type_parameters: Option<Vec<MoveStructTypeParameter>>,
+    pub type_parameters: Option<Vec<GraphQLMoveStructTypeParameter>>,
     #[uniffi(default = None)]
-    pub variants: Option<Vec<MoveEnumVariant>>,
+    pub variants: Option<Vec<GraphQLMoveEnumVariant>>,
 }
 
-impl From<iota_sdk::graphql_client::MoveEnum> for MoveEnum {
+impl From<iota_sdk::graphql_client::MoveEnum> for GraphQLMoveEnum {
     fn from(value: iota_sdk::graphql_client::MoveEnum) -> Self {
         Self {
             abilities: value
@@ -1599,7 +1615,7 @@ impl From<iota_sdk::graphql_client::MoveEnum> for MoveEnum {
 /// the return values of the Move view function, and the `error` field will be
 /// `None`.
 #[derive(uniffi::Record)]
-pub struct MoveViewResult {
+pub struct GraphQLMoveViewResult {
     /// Execution error from executing the Move view function.
     #[uniffi(default = None)]
     pub error: Option<String>,
@@ -1609,7 +1625,7 @@ pub struct MoveViewResult {
     pub results: Option<Vec<String>>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveViewResult> for MoveViewResult {
+impl From<iota_sdk::graphql_client::query_types::MoveViewResult> for GraphQLMoveViewResult {
     fn from(value: iota_sdk::graphql_client::query_types::MoveViewResult) -> Self {
         Self {
             error: value.error,
@@ -1624,11 +1640,11 @@ impl From<iota_sdk::graphql_client::query_types::MoveViewResult> for MoveViewRes
 
 // Information about the configuration of the GraphQL service.
 #[derive(uniffi::Record)]
-pub struct ServiceConfig {
+pub struct GraphQLServiceConfig {
     /// Default number of elements allowed on a single page of a connection.
     pub default_page_size: i32,
     /// List of all features that are enabled on this RPC service.
-    pub enabled_features: Vec<Feature>,
+    pub enabled_features: Vec<GraphQLFeature>,
     // TODO This field is retrieved as a string, instead of i32
     /// Maximum estimated cost of a database query used to serve a GraphQL
     /// request.  This is measured in the same units that the database uses
@@ -1677,7 +1693,7 @@ pub struct ServiceConfig {
     pub request_timeout_ms: i32,
 }
 
-impl From<iota_sdk::graphql_client::query_types::ServiceConfig> for ServiceConfig {
+impl From<iota_sdk::graphql_client::query_types::ServiceConfig> for GraphQLServiceConfig {
     fn from(value: iota_sdk::graphql_client::query_types::ServiceConfig) -> Self {
         Self {
             default_page_size: value.default_page_size,
@@ -1699,7 +1715,7 @@ impl From<iota_sdk::graphql_client::query_types::ServiceConfig> for ServiceConfi
 
 /// A feature an RPC service can have enabled.
 #[derive(uniffi::Enum)]
-pub enum Feature {
+pub enum GraphQLFeature {
     Analytics,
     Coins,
     DynamicFields,
@@ -1707,7 +1723,7 @@ pub enum Feature {
     SystemState,
 }
 
-impl From<iota_sdk::graphql_client::query_types::Feature> for Feature {
+impl From<iota_sdk::graphql_client::query_types::Feature> for GraphQLFeature {
     fn from(value: iota_sdk::graphql_client::query_types::Feature) -> Self {
         match value {
             iota_sdk::graphql_client::query_types::Feature::Analytics => Self::Analytics,
