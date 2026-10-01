@@ -27,7 +27,11 @@ impl GraphQLClient {
     /// the GraphQL service (e.g., due to pruning).
     #[uniffi::method(default(epoch = None))]
     pub async fn reference_gas_price(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        Ok(self.client().reference_gas_price().epoch(epoch).await?)
+        Ok(self
+            .client()
+            .reference_gas_price()
+            .epoch_number(epoch)
+            .await?)
     }
 
     /// Get the protocol configuration.

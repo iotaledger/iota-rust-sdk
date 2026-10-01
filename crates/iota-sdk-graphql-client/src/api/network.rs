@@ -106,9 +106,9 @@ define_query! {
 }
 
 impl GetReferenceGasPriceQuery {
-    /// Set the epoch. Defaults to the last known epoch.
-    pub fn epoch(mut self, epoch: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch.into();
+    /// Set the epoch number. Defaults to the last known epoch.
+    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
+        self.epoch = epoch_number.into();
         self
     }
 
@@ -240,7 +240,7 @@ mod tests {
     #[tokio::test]
     async fn reference_gas_price_and_protocol_config_send_their_input() {
         let vars = sent_variables("EpochSummaryQueryFragment", |client| async move {
-            let _ = client.reference_gas_price().epoch(3).await;
+            let _ = client.reference_gas_price().epoch_number(3).await;
         })
         .await;
         assert_eq!(vars["id"], 3);

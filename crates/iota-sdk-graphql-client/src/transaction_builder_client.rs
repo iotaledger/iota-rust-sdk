@@ -88,7 +88,7 @@ impl TransactionBuilderLedgerClient for GraphQLClient {
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
-        self.reference_gas_price().epoch(epoch).await
+        self.reference_gas_price().epoch_number(epoch).await
     }
 }
 

@@ -16,7 +16,7 @@ async fn main() -> GraphQLResult<()> {
 
     let previous_epoch = client
         .epoch()
-        .epoch(Some(current_epoch.epoch_id - 1))
+        .epoch_number(Some(current_epoch.epoch_id - 1))
         .await?
         .unwrap();
     println!("Previous epoch: {}", previous_epoch.epoch_id);
