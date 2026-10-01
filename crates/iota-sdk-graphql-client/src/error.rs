@@ -258,12 +258,6 @@ impl From<base64ct::Error> for GraphQLError {
     }
 }
 
-impl From<chrono::ParseError> for GraphQLError {
-    fn from(error: chrono::ParseError) -> Self {
-        Self::Parse(error.into())
-    }
-}
-
 impl From<DigestParseError> for GraphQLError {
     fn from(error: DigestParseError) -> Self {
         Self::Parse(error.into())
