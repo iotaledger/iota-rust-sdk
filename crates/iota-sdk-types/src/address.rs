@@ -165,15 +165,22 @@ impl Address {
         if hex.len() != Self::LENGTH * 2 {
             return Err(AddressParseError::InvalidHexLength { actual: hex.len() });
         }
-        Self::decode_hex(hex, 0)
+        Self::decode_hex(hex)
     }
 
-    /// Decodes exactly `Self::LENGTH * 2` hex characters, reporting invalid
-    /// character positions shifted back by `padding`.
-    fn decode_hex(hex: &[u8], padding: usize) -> Result<Self, AddressParseError> {
-        <[u8; Self::LENGTH] as hex::FromHex>::from_hex(hex)
+    /// Decodes up to `Self::LENGTH * 2` hex characters, left-padding with `0`s.
+    fn decode_hex(hex: &[u8]) -> Result<Self, AddressParseError> {
+        if hex.len() > Self::LENGTH * 2 {
+            return Err(AddressParseError::InvalidHexLength { actual: hex.len() });
+        }
+        let mut buf = [b'0'; Self::LENGTH * 2];
+        let padding = buf.len() - hex.len();
+        buf[padding..].copy_from_slice(hex);
+
+        <[u8; Self::LENGTH] as hex::FromHex>::from_hex(buf)
             .map(Self)
             .map_err(|e| match e {
+                // The padding is all `0`s, so an invalid character is always past it.
                 hex::FromHexError::InvalidHexCharacter { c, index } => {
                     AddressParseError::InvalidHexCharacter {
                         c,
@@ -181,9 +188,7 @@ impl Address {
                     }
                 }
                 hex::FromHexError::OddLength | hex::FromHexError::InvalidStringLength => {
-                    AddressParseError::InvalidHexLength {
-                        actual: hex.len() - padding,
-                    }
+                    AddressParseError::InvalidHexLength { actual: hex.len() }
                 }
             })
     }
@@ -219,19 +224,7 @@ impl Address {
             hex
         };
 
-        // If the string is too short we'll need to pad with 0's
-        if hex.len() < Self::LENGTH * 2 {
-            let mut buf = [b'0'; Self::LENGTH * 2];
-            let pad_length = (Self::LENGTH * 2) - hex.len();
-
-            buf[pad_length..].copy_from_slice(hex);
-
-            Self::decode_hex(&buf, pad_length)
-        } else if hex.len() > Self::LENGTH * 2 {
-            Err(AddressParseError::InvalidHexLength { actual: hex.len() })
-        } else {
-            Self::decode_hex(hex, 0)
-        }
+        Self::decode_hex(hex)
     }
 
     /// Parses an Address from a hex string with a mandatory `0x` prefix.
