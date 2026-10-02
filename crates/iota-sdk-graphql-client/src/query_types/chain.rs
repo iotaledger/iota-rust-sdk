@@ -10,6 +10,6 @@ use crate::query_types::schema;
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query")]
-pub(crate) struct ChainIdentifierQuery {
+pub(crate) struct ChainIdentifierQueryFragment {
     pub chain_identifier: String,
 }

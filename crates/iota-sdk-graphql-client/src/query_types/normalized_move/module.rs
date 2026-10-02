@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::query_types::{
-    Address, MoveAbility, MoveFunction, MovePackageQuery, OpenMoveType, PageInfo, schema,
+    Address, MoveAbility, MoveFunction, MovePackageQueryFragment, OpenMoveType, PageInfo, schema,
 };
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
@@ -12,7 +12,7 @@ use crate::query_types::{
     graphql_type = "Query",
     variables = "NormalizedMoveModuleQueryArgs"
 )]
-pub(crate) struct NormalizedMoveModuleQuery {
+pub(crate) struct NormalizedMoveModuleQueryFragment {
     #[arguments(address: $package, version: $version)]
     pub package: Option<MovePackage>,
 }
@@ -73,12 +73,12 @@ pub(crate) struct MoveModule {
 #[cynic(schema = "rpc", graphql_type = "MoveStructConnection")]
 pub(crate) struct MoveStructConnection {
     pub page_info: PageInfo,
-    pub nodes: Vec<MoveStructQuery>,
+    pub nodes: Vec<MoveStructQueryFragment>,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveStruct")]
-pub(crate) struct MoveStructQuery {
+pub(crate) struct MoveStructQueryFragment {
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
     pub fields: Option<Vec<MoveField>>,
@@ -88,20 +88,20 @@ pub(crate) struct MoveStructQuery {
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModuleConnection")]
 pub(crate) struct MoveModuleConnection {
-    pub nodes: Vec<MoveModuleIdQuery>,
+    pub nodes: Vec<MoveModuleIdQueryFragment>,
     pub page_info: PageInfo,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModule")]
-pub struct MoveModuleQuery {
-    pub package: MovePackageQuery,
+pub struct MoveModuleQueryFragment {
+    pub package: MovePackageQueryFragment,
     pub name: String,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModule")]
-pub(crate) struct MoveModuleIdQuery {
+pub(crate) struct MoveModuleIdQueryFragment {
     pub package: MovePackageAddress,
     pub name: String,
 }

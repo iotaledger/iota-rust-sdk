@@ -10,7 +10,7 @@ use crate::query_types::schema;
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query")]
-pub(crate) struct ServiceConfigQuery {
+pub(crate) struct ServiceConfigQueryFragment {
     pub service_config: ServiceConfig,
 }
 

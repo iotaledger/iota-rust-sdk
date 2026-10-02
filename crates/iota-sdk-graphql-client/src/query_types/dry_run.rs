@@ -9,7 +9,7 @@ use crate::query_types::{Address, Base64, MoveType, ObjectId, schema};
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "DryRunArgs")]
-pub(crate) struct DryRunQuery {
+pub(crate) struct DryRunQueryFragment {
     #[arguments(txBytes: $tx_bytes, skipChecks: $skip_checks, txMeta: $tx_meta)]
     pub dry_run_transaction_block: DryRunResult,
 }

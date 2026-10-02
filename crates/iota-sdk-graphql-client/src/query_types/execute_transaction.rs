@@ -10,7 +10,7 @@ use crate::query_types::{Base64, schema};
     graphql_type = "Mutation",
     variables = "ExecuteTransactionArgs"
 )]
-pub(crate) struct ExecuteTransactionQuery {
+pub(crate) struct ExecuteTransactionQueryFragment {
     #[arguments(signatures: $signatures, txBytes: $tx_bytes)]
     pub execute_transaction_block: ExecutionResult,
 }

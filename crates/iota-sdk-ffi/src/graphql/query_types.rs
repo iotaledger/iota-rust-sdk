@@ -1400,8 +1400,10 @@ pub struct GraphQLMovePackageQuery {
     pub bcs: Option<Base64>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MovePackageQuery> for GraphQLMovePackageQuery {
-    fn from(value: iota_sdk::graphql_client::query_types::MovePackageQuery) -> Self {
+impl From<iota_sdk::graphql_client::query_types::MovePackageQueryFragment>
+    for GraphQLMovePackageQuery
+{
+    fn from(value: iota_sdk::graphql_client::query_types::MovePackageQueryFragment) -> Self {
         Self {
             address: Arc::new(value.address.into()),
             bcs: value.bcs,
@@ -1409,7 +1411,9 @@ impl From<iota_sdk::graphql_client::query_types::MovePackageQuery> for GraphQLMo
     }
 }
 
-impl From<GraphQLMovePackageQuery> for iota_sdk::graphql_client::query_types::MovePackageQuery {
+impl From<GraphQLMovePackageQuery>
+    for iota_sdk::graphql_client::query_types::MovePackageQueryFragment
+{
     fn from(value: GraphQLMovePackageQuery) -> Self {
         Self {
             address: (**value.address),
@@ -1424,8 +1428,10 @@ pub struct GraphQLMoveModuleQuery {
     pub name: String,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveModuleQuery> for GraphQLMoveModuleQuery {
-    fn from(value: iota_sdk::graphql_client::query_types::MoveModuleQuery) -> Self {
+impl From<iota_sdk::graphql_client::query_types::MoveModuleQueryFragment>
+    for GraphQLMoveModuleQuery
+{
+    fn from(value: iota_sdk::graphql_client::query_types::MoveModuleQueryFragment) -> Self {
         Self {
             package: value.package.into(),
             name: value.name,
@@ -1433,7 +1439,9 @@ impl From<iota_sdk::graphql_client::query_types::MoveModuleQuery> for GraphQLMov
     }
 }
 
-impl From<GraphQLMoveModuleQuery> for iota_sdk::graphql_client::query_types::MoveModuleQuery {
+impl From<GraphQLMoveModuleQuery>
+    for iota_sdk::graphql_client::query_types::MoveModuleQueryFragment
+{
     fn from(value: GraphQLMoveModuleQuery) -> Self {
         Self {
             package: value.package.into(),

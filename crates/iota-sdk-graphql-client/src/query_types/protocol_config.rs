@@ -14,7 +14,7 @@ use crate::query_types::schema;
     graphql_type = "Query",
     variables = "ProtocolVersionArgs"
 )]
-pub(crate) struct ProtocolConfigQuery {
+pub(crate) struct ProtocolConfigQueryFragment {
     #[arguments(protocolVersion: $id)]
     pub protocol_config: ProtocolConfigs,
 }

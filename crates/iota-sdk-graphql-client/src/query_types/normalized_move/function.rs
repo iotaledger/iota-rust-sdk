@@ -10,7 +10,7 @@ use crate::query_types::{Address, MoveFunction, schema};
     graphql_type = "Query",
     variables = "NormalizedMoveFunctionQueryArgs"
 )]
-pub(crate) struct NormalizedMoveFunctionQuery {
+pub(crate) struct NormalizedMoveFunctionQueryFragment {
     #[arguments(address: $address, version: $version)]
     pub package: Option<MovePackage>,
 }

@@ -256,8 +256,8 @@ impl From<query_types::MoveField> for MoveField {
     }
 }
 
-impl From<query_types::MoveStructQuery> for MoveStruct {
-    fn from(value: query_types::MoveStructQuery) -> Self {
+impl From<query_types::MoveStructQueryFragment> for MoveStruct {
+    fn from(value: query_types::MoveStructQueryFragment) -> Self {
         Self {
             abilities: map_vec(value.abilities),
             name: value.name,
@@ -287,8 +287,8 @@ impl From<query_types::MoveEnumVariant> for MoveEnumVariant {
     }
 }
 
-impl From<query_types::MoveModuleIdQuery> for MoveModuleId {
-    fn from(value: query_types::MoveModuleIdQuery) -> Self {
+impl From<query_types::MoveModuleIdQueryFragment> for MoveModuleId {
+    fn from(value: query_types::MoveModuleIdQueryFragment) -> Self {
         Self {
             package: value.package.address,
             name: value.name,

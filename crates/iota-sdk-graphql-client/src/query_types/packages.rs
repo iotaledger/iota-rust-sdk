@@ -12,9 +12,9 @@ use crate::query_types::{Base64, PageInfo, schema};
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageArgs")]
-pub(crate) struct PackageQuery {
+pub(crate) struct PackageQueryFragment {
     #[arguments(address: $address, version: $version)]
-    pub package: Option<MovePackageQuery>,
+    pub package: Option<MovePackageQueryFragment>,
 }
 
 // ===========================================================================
@@ -23,9 +23,9 @@ pub(crate) struct PackageQuery {
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageArgs")]
-pub(crate) struct LatestPackageQuery {
+pub(crate) struct LatestPackageQueryFragment {
     #[arguments(address: $address)]
-    pub latest_package: Option<MovePackageQuery>,
+    pub latest_package: Option<MovePackageQueryFragment>,
 }
 
 #[derive(Clone, cynic::QueryVariables, Debug)]
@@ -36,7 +36,7 @@ pub(crate) struct PackageArgs {
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackage")]
-pub struct MovePackageQuery {
+pub struct MovePackageQueryFragment {
     pub address: Address,
     pub bcs: Option<Base64>,
 }
@@ -51,7 +51,7 @@ pub struct MovePackageQuery {
     graphql_type = "Query",
     variables = "PackagesQueryArgs"
 )]
-pub(crate) struct PackagesQuery {
+pub(crate) struct PackagesQueryFragment {
     #[arguments(after: $after, before: $before, filter: $filter, first: $first, last: $last)]
     pub packages: MovePackageConnection,
 }
@@ -76,7 +76,7 @@ pub(crate) struct PackageCheckpointFilter {
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackageConnection")]
 pub(crate) struct MovePackageConnection {
-    pub nodes: Vec<MovePackageQuery>,
+    pub nodes: Vec<MovePackageQueryFragment>,
     pub page_info: PageInfo,
 }
 
@@ -90,7 +90,7 @@ pub(crate) struct MovePackageConnection {
     graphql_type = "Query",
     variables = "PackageVersionsArgs"
 )]
-pub(crate) struct PackageVersionsQuery {
+pub(crate) struct PackageVersionsQueryFragment {
     #[arguments(address: $address, after: $after, first: $first, last: $last, before: $before, filter:$filter)]
     pub package_versions: MovePackageConnection,
 }

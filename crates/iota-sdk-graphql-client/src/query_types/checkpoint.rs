@@ -16,14 +16,14 @@ use crate::{
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointArgs")]
-pub(crate) struct CheckpointQuery {
+pub(crate) struct CheckpointQueryFragment {
     #[arguments(id: $id)]
     pub checkpoint: Option<Checkpoint>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointArgs")]
-pub(crate) struct CheckpointTotalTxQuery {
+pub(crate) struct CheckpointTotalTxQueryFragment {
     #[arguments(id: $id)]
     pub checkpoint: Option<CheckpointTotalTx>,
 }
@@ -36,7 +36,7 @@ pub(crate) struct CheckpointTotalTx {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointsArgs")]
-pub(crate) struct CheckpointsQuery {
+pub(crate) struct CheckpointsQueryFragment {
     #[arguments(first: $first, after: $after, last: $last, before: $before)]
     pub checkpoints: CheckpointConnection,
 }
