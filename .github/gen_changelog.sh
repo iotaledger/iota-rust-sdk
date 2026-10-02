@@ -10,7 +10,7 @@ git fetch --tags
 
 echo "Generating changelog for package: $PACKAGE version $VERSION at $PACKAGE_ROOT" 1>&2
 
-LATEST_TAG=$(git tag -l "$PACKAGE-v*" --sort=-v:refname | head -n 1)
+LATEST_TAG=$(git tag -l "$PACKAGE-v*" --sort=-creatordate | head -n 1)
 echo "Latest tag: $LATEST_TAG" 1>&2
 
 if [ -n "$LATEST_TAG" ]; then

@@ -70,7 +70,7 @@ webpki-root-certs = "1"
 ws_stream_wasm = "0.7"
 
 # internal dependencies
-iota-bcs-schema = { version = "1.0.0-beta.1", package = "iota-sdk-bcs-schema", path = "crates/iota-sdk-bcs-schema" }
+iota-bcs-schema = { version = "0.1.0", package = "iota-sdk-bcs-schema", path = "crates/iota-sdk-bcs-schema" }
 iota-crypto = { version = "1.0.0-beta.1", package = "iota-sdk-crypto", path = "crates/iota-sdk-crypto", default-features = false }
 iota-graphql-client = { version = "1.0.0-beta.1", package = "iota-sdk-graphql-client", path = "crates/iota-sdk-graphql-client", default-features = false }
 iota-graphql-client-build = { version = "1.0.0-beta.1", package = "iota-sdk-graphql-client-build", path = "crates/iota-sdk-graphql-client-build", default-features = false }
