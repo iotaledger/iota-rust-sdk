@@ -324,6 +324,8 @@ fn generate_message_fields_impl(
     };
 
     quote! {
+        impl crate::field::sealed::Sealed for #message_path {}
+
         impl MessageFields for #message_path {
             const FIELDS: &'static [&'static MessageField] = &[
                 #field_refs
