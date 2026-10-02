@@ -33,7 +33,7 @@ async fn main() -> Result<()> {
         };
         if let Some(funs) = module.functions {
             println!("Module: {module_id}");
-            for fun in funs.nodes {
+            for fun in funs.data {
                 println!("- {fun}");
             }
             println!();

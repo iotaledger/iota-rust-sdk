@@ -10,13 +10,13 @@ use crate::query_types::{Base64, BigInt, GraphQLAddress, MoveObject, ObjectId, P
     graphql_type = "Query",
     variables = "ActiveValidatorsArgs"
 )]
-pub struct ActiveValidatorsQueryFragment {
+pub(crate) struct ActiveValidatorsQueryFragment {
     #[arguments(id: $id)]
     pub epoch: Option<EpochValidator>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ActiveValidatorsArgs<'a> {
+pub(crate) struct ActiveValidatorsArgs<'a> {
     pub id: Option<u64>,
     pub after: Option<&'a str>,
     pub before: Option<&'a str>,
@@ -30,7 +30,7 @@ pub struct ActiveValidatorsArgs<'a> {
     graphql_type = "Epoch",
     variables = "ActiveValidatorsArgs"
 )]
-pub struct EpochValidator {
+pub(crate) struct EpochValidator {
     pub validator_set: Option<ValidatorSetQueryFragment>,
 }
 
@@ -40,14 +40,14 @@ pub struct EpochValidator {
     graphql_type = "ValidatorSet",
     variables = "ActiveValidatorsArgs"
 )]
-pub struct ValidatorSetQueryFragment {
+pub(crate) struct ValidatorSetQueryFragment {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
     pub active_validators: ValidatorConnection,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "ValidatorConnection")]
-pub struct ValidatorConnection {
+pub(crate) struct ValidatorConnection {
     pub page_info: PageInfo,
     pub nodes: Vec<Validator>,
 }

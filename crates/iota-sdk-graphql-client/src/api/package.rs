@@ -9,15 +9,15 @@ use cynic::QueryBuilder;
 use iota_types::{Address, MovePackage, Object, Version};
 
 use crate::{
-    GraphQLClient, Page,
+    GraphQLClient, MoveFunction, MoveModule, Page,
     error::GraphQLResult,
     pagination::PaginationFilter,
     query_types::{
-        LatestPackageQueryFragment, MoveFunction, MoveModule, MovePackageVersionFilter,
-        NormalizedMoveFunctionQueryArgs, NormalizedMoveFunctionQueryFragment,
-        NormalizedMoveModuleQueryArgs, NormalizedMoveModuleQueryFragment, PackageArgs,
-        PackageCheckpointFilter, PackageQueryFragment, PackageVersionsArgs,
-        PackageVersionsQueryFragment, PackagesQueryArgs, PackagesQueryFragment,
+        LatestPackageQueryFragment, MovePackageVersionFilter, NormalizedMoveFunctionQueryArgs,
+        NormalizedMoveFunctionQueryFragment, NormalizedMoveModuleQueryArgs,
+        NormalizedMoveModuleQueryFragment, PackageArgs, PackageCheckpointFilter,
+        PackageQueryFragment, PackageVersionsArgs, PackageVersionsQueryFragment, PackagesQueryArgs,
+        PackagesQueryFragment,
     },
 };
 
@@ -188,7 +188,8 @@ impl GraphQLClient {
         Ok(response
             .package
             .and_then(|p| p.module)
-            .and_then(|m| m.function))
+            .and_then(|m| m.function)
+            .map(Into::into))
     }
 
     /// Return the normalized Move module data for the provided module.
@@ -232,7 +233,7 @@ impl GraphQLClient {
         });
         let response = self.run_query(&operation).await?;
 
-        Ok(response.package.and_then(|p| p.module))
+        Ok(response.package.and_then(|p| p.module).map(Into::into))
     }
 }
 

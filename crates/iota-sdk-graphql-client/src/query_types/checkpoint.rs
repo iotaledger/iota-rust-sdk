@@ -16,40 +16,40 @@ use crate::{
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointArgs")]
-pub struct CheckpointQueryFragment {
+pub(crate) struct CheckpointQueryFragment {
     #[arguments(id: $id)]
     pub checkpoint: Option<Checkpoint>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointArgs")]
-pub struct CheckpointTotalTxQueryFragment {
+pub(crate) struct CheckpointTotalTxQueryFragment {
     #[arguments(id: $id)]
     pub checkpoint: Option<CheckpointTotalTx>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Checkpoint")]
-pub struct CheckpointTotalTx {
+pub(crate) struct CheckpointTotalTx {
     pub network_total_transactions: Option<u64>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointsArgs")]
-pub struct CheckpointsQueryFragment {
+pub(crate) struct CheckpointsQueryFragment {
     #[arguments(first: $first, after: $after, last: $last, before: $before)]
     pub checkpoints: CheckpointConnection,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "CheckpointConnection")]
-pub struct CheckpointConnection {
+pub(crate) struct CheckpointConnection {
     pub nodes: Vec<Checkpoint>,
     pub page_info: PageInfo,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct CheckpointsArgs<'a> {
+pub(crate) struct CheckpointsArgs<'a> {
     pub first: Option<i32>,
     pub after: Option<&'a str>,
     pub last: Option<i32>,
@@ -61,13 +61,13 @@ pub struct CheckpointsArgs<'a> {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct CheckpointArgs {
+pub(crate) struct CheckpointArgs {
     pub id: CheckpointId,
 }
 
 #[derive(cynic::InputObject, Debug)]
 #[cynic(schema = "rpc", graphql_type = "CheckpointId")]
-pub struct CheckpointId {
+pub(crate) struct CheckpointId {
     pub digest: Option<String>,
     pub sequence_number: Option<u64>,
 }
@@ -77,7 +77,7 @@ pub struct CheckpointId {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Checkpoint")]
-pub struct Checkpoint {
+pub(crate) struct Checkpoint {
     /// BCS serialization of the `CheckpointSummary`, Base64-encoded.
     pub bcs: Option<Base64>,
 }
