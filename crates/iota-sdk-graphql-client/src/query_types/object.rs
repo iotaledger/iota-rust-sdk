@@ -83,13 +83,6 @@ impl ObjectFilter {
     }
 }
 
-#[derive(Clone, cynic::InputObject, Debug)]
-#[cynic(schema = "rpc", graphql_type = "ObjectKey")]
-pub(crate) struct ObjectKey {
-    pub object_id: ObjectId,
-    pub version: u64,
-}
-
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "ObjectConnection")]
 pub(crate) struct ObjectConnection {
