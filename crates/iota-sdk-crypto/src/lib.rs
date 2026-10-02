@@ -62,12 +62,14 @@ pub enum PrivateKeyError {
     /// HRP (Human Readable Part) error
     #[error("bech32 HRP error: {0}")]
     Bech32Hrp(String),
+    /// BIP-32 derivation path or key derivation error
     #[cfg(feature = "mnemonic")]
     #[error("mnemonic error: {0}")]
-    Bip32(#[from] bip32::Error),
+    Bip32(String),
+    /// BIP-39 mnemonic phrase error
     #[cfg(feature = "mnemonic")]
     #[error("mnemonic error: {0}")]
-    Bip39(#[from] bip39::Error),
+    Bip39(String),
 }
 
 #[cfg(feature = "bls12381")]

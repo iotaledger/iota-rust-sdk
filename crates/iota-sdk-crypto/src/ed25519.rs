@@ -208,9 +208,11 @@ impl crate::FromMnemonic for Ed25519PrivateKey {
     {
         use std::str::FromStr;
 
-        let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)?;
+        let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)
+            .map_err(|e| crate::PrivateKeyError::Bip39(e.to_string()))?;
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
-        let path = bip32::DerivationPath::from_str(&path)?
+        let path = bip32::DerivationPath::from_str(&path)
+            .map_err(|e| crate::PrivateKeyError::Bip32(e.to_string()))?
             .into_iter()
             .map(|c| c.0)
             .collect::<Vec<_>>();
