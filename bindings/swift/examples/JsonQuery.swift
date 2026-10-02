@@ -134,7 +134,7 @@ struct JsonQueryExample {
       }
       """
 
-    let query = Query(queryString: queryStr)
+    let query = GraphQlQuery(query: queryStr)
     let res = try await client.runQuery(query: query)
     print(res)
   }

@@ -6,17 +6,17 @@
  * history, dependencies, functions, types, and sample objects.
  */
 import iota_sdk.Address
-import iota_sdk.Direction
 import iota_sdk.GraphQlClient
-import iota_sdk.MoveAbility
+import iota_sdk.GraphQlDirection
+import iota_sdk.GraphQlMoveAbility
+import iota_sdk.GraphQlObjectFilter
+import iota_sdk.GraphQlPaginationFilter
+import iota_sdk.GraphQlTransactionsFilter
 import iota_sdk.MovePackage
-import iota_sdk.ObjectFilter
 import iota_sdk.ObjectId
 import iota_sdk.ObjectOut
-import iota_sdk.PaginationFilter
 import iota_sdk.StructTag
 import iota_sdk.Transaction
-import iota_sdk.TransactionsFilter
 import iota_sdk.Value
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -27,8 +27,8 @@ import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
-private fun forwardPage(cursor: String? = null): PaginationFilter =
-    PaginationFilter(direction = Direction.FORWARD, cursor = cursor)
+private fun forwardPage(cursor: String? = null): GraphQlPaginationFilter =
+    GraphQlPaginationFilter(direction = GraphQlDirection.FORWARD, cursor = cursor)
 
 private val frameworkPackageId = Address.framework().toHex()
 private val jsonParser = Json { ignoreUnknownKeys = true }
@@ -122,7 +122,8 @@ fun main() = runBlocking {
                 for (structType in structs.nodes) {
                     val typeTag = "$packagePrefix::$moduleName::${structType.name}"
                     println("    - $typeTag")
-                    val hasKeyAbility = structType.abilities?.contains(MoveAbility.KEY) == true
+                    val hasKeyAbility =
+                        structType.abilities?.contains(GraphQlMoveAbility.KEY) == true
                     val isGeneric =
                         structType.typeParameters != null &&
                             structType.typeParameters!!.isNotEmpty()
@@ -213,8 +214,8 @@ private suspend fun printObjectSamples(
 
     val objects =
         client.objects(
-            ObjectFilter(typeTag = typeTag),
-            PaginationFilter(direction = Direction.FORWARD, limit = 3),
+            GraphQlObjectFilter(typeTag = typeTag),
+            GraphQlPaginationFilter(direction = GraphQlDirection.FORWARD, limit = 3),
         )
 
     if (objects.data.isEmpty()) {
@@ -247,8 +248,8 @@ private fun extractPolicy(contents: Value): Int? = runCatching {
 private suspend fun resolveUpgradeCapId(client: GraphQlClient, packageId: ObjectId): ObjectId? {
     val page =
         client.transactionsEffects(
-            TransactionsFilter().withChangedObject(packageId),
-            PaginationFilter(direction = Direction.FORWARD, limit = 1),
+            GraphQlTransactionsFilter().withChangedObject(packageId),
+            GraphQlPaginationFilter(direction = GraphQlDirection.FORWARD, limit = 1),
         )
 
     for (effects in page.data) {
@@ -365,7 +366,7 @@ private suspend fun wasPackagePublishedAsImmutable(
     while (true) {
         val page =
             client.transactionsDataEffects(
-                TransactionsFilter().withChangedObject(packageId),
+                GraphQlTransactionsFilter().withChangedObject(packageId),
                 forwardPage(cursor),
             )
 
@@ -392,7 +393,7 @@ private suspend fun wasUpgradeCapUsedForMakeImmutable(
     while (true) {
         val page =
             client.transactionsDataEffects(
-                TransactionsFilter().withInputObject(upgradeCapId),
+                GraphQlTransactionsFilter().withInputObject(upgradeCapId),
                 forwardPage(cursor),
             )
 

@@ -10,7 +10,8 @@ use iota_sdk::types::CheckpointSequenceNumber;
 use crate::{
     error::Result,
     graphql::{
-        client::GraphQLClient, pagination::CheckpointSummaryPage, query_types::PaginationFilter,
+        client::GraphQLClient, pagination::GraphQLCheckpointSummaryPage,
+        query_types::GraphQLPaginationFilter,
     },
     types::{checkpoint::CheckpointSummary, digest::CheckpointDigest},
 };
@@ -39,8 +40,8 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None))]
     pub async fn checkpoints(
         &self,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<CheckpointSummaryPage> {
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLCheckpointSummaryPage> {
         Ok(self
             .client()
             .checkpoints(pagination_filter.map(Into::into).unwrap_or_default())
