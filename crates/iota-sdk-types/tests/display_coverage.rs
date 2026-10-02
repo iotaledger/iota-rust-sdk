@@ -129,7 +129,6 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::SignedCheckpointSummary>();
     assert_display::<iota_sdk_types::SignedTransaction>();
     assert_display::<iota_sdk_types::SimpleSignature>();
-    assert_display::<iota_sdk_types::SmartAccountBuildKind>();
     assert_display::<iota_sdk_types::SmartAccountClaim>();
     assert_display::<iota_sdk_types::SplitCoins>();
     assert_display::<iota_sdk_types::StructTag>();

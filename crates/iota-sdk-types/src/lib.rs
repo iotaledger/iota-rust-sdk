@@ -148,9 +148,9 @@ pub use transaction::{
     ConsensusDeterminedVersionAssignments, DenyRuleSet, EndOfEpochTransactionKind, GasPayment,
     GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall, ProgrammableTransaction,
     Publish, RandomnessRound, RandomnessStateUpdate, SenderSignedTransaction,
-    SharedObjectReference, SignedTransaction, SmartAccountBuildKind, SmartAccountClaim, SplitCoins,
-    SystemPackage, Transaction, TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind,
-    TransactionV1, TransferObjects, Upgrade, VersionAssignment,
+    SharedObjectReference, SignedTransaction, SmartAccountClaim, SplitCoins, SystemPackage,
+    Transaction, TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind, TransactionV1,
+    TransferObjects, Upgrade, VersionAssignment,
 };
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]

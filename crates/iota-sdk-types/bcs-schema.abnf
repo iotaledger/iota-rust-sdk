@@ -423,12 +423,8 @@ simple-signature-body = %d00 ed25519-signature ed25519-public-key       ; Ed2551
 
 size    = uleb128   ; BCS sequence/string length (ULEB128-encoded)
 
-smart-account-build-kind = %d00   ; Mutable
-                         / %d01   ; Immutable
-
-smart-account-claim = u8                         ; public-key-scheme
-                      bytes                      ; public-key-raw-bytes
-                      smart-account-build-kind   ; build-kind
+smart-account-claim = u8      ; public-key-scheme
+                      bytes   ; public-key-raw-bytes
 
 split-coins = argument           ; coin
               (size *argument)   ; amounts

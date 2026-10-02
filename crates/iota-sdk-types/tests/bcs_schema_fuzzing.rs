@@ -830,7 +830,6 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<RandomnessStateUpdate>("randomness-state-update");
     test.check_rule::<SignedCheckpointSummary>("signed-checkpoint-summary");
     test.check_rule::<SignedTransaction>("signed-transaction");
-    test.check_rule::<SmartAccountBuildKind>("smart-account-build-kind");
     test.check_rule::<SmartAccountClaim>("smart-account-claim");
     test.check_rule::<SplitCoins>("split-coins");
     test.check_rule::<StructTag>("struct-tag");
