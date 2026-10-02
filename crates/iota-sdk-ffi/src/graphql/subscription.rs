@@ -22,7 +22,7 @@ use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        query_types::{GraphQLEvent, TransactionBlockKindInput},
+        query_types::{GraphQLEvent, GraphQLTransactionBlockKindInput},
     },
     stream::StreamHandle,
     types::{address::Address, transaction::SignedTransaction},
@@ -30,17 +30,17 @@ use crate::{
 
 /// Filter incoming events in a subscription. Exactly one field must be set.
 #[derive(Default, uniffi::Record)]
-pub struct SubscriptionEventFilter {
+pub struct GraphQLSubscriptionEventFilter {
     /// Filter incoming events by emitting module, e.g. `"0x02"` (package) or
     /// `"0x02::coin"` (module).
     #[uniffi(default = None)]
     pub emitting_module: Option<String>,
 }
 
-impl From<SubscriptionEventFilter>
+impl From<GraphQLSubscriptionEventFilter>
     for iota_sdk::graphql_client::query_types::SubscriptionEventFilter
 {
-    fn from(value: SubscriptionEventFilter) -> Self {
+    fn from(value: GraphQLSubscriptionEventFilter) -> Self {
         Self::default().with_emitting_module(value.emitting_module)
     }
 }
@@ -48,10 +48,10 @@ impl From<SubscriptionEventFilter>
 /// Filter incoming transactions in a subscription. Exactly one field must be
 /// set.
 #[derive(Default, uniffi::Record)]
-pub struct SubscriptionTransactionFilter {
+pub struct GraphQLSubscriptionTransactionFilter {
     /// Filter incoming transactions by kind.
     #[uniffi(default = None)]
-    pub kind: Option<TransactionBlockKindInput>,
+    pub kind: Option<GraphQLTransactionBlockKindInput>,
     /// Filter incoming transactions by sender address.
     ///
     /// Only the sender is compared, despite the name — a sponsored transaction
@@ -66,10 +66,10 @@ pub struct SubscriptionTransactionFilter {
     pub function: Option<String>,
 }
 
-impl From<SubscriptionTransactionFilter>
+impl From<GraphQLSubscriptionTransactionFilter>
     for iota_sdk::graphql_client::query_types::SubscriptionTransactionFilter
 {
-    fn from(value: SubscriptionTransactionFilter) -> Self {
+    fn from(value: GraphQLSubscriptionTransactionFilter) -> Self {
         Self::default()
             .with_kind(value.kind.map(Into::into))
             .with_signing_address(value.signing_address.map(|a| a.0))
@@ -185,8 +185,8 @@ macro_rules! define_subscription {
 }
 
 define_subscription!(
-    EventSubscription,
-    EventUpdate,
+    GraphQLEventSubscription,
+    GraphQLEventUpdate,
     Event,
     event,
     iota_sdk::graphql_client::query_types::Event,
@@ -194,8 +194,8 @@ define_subscription!(
     GraphQLEvent::try_from
 );
 define_subscription!(
-    TransactionSubscription,
-    TransactionUpdate,
+    GraphQLTransactionSubscription,
+    GraphQLTransactionUpdate,
     Transaction,
     transaction,
     iota_sdk::types::SignedTransaction,
@@ -220,7 +220,7 @@ fn is_recoverable(error: &iota_sdk::graphql_client::error::GraphQLError) -> bool
 /// Open the event stream a subscription handle reads from.
 fn open_events(
     client: iota_sdk::graphql_client::GraphQLClient,
-    filter: Option<SubscriptionEventFilter>,
+    filter: Option<GraphQLSubscriptionEventFilter>,
     start_after: Option<String>,
 ) -> SubscriptionStream<iota_sdk::graphql_client::query_types::Event> {
     let filter = filter.map(Into::into);
@@ -236,7 +236,7 @@ fn open_events(
 /// Open the transaction stream a subscription handle reads from.
 fn open_transactions(
     client: iota_sdk::graphql_client::GraphQLClient,
-    filter: Option<SubscriptionTransactionFilter>,
+    filter: Option<GraphQLSubscriptionTransactionFilter>,
     start_after: Option<String>,
 ) -> SubscriptionStream<iota_sdk::types::SignedTransaction> {
     let filter = filter.map(Into::into);
@@ -263,11 +263,11 @@ impl GraphQLClient {
     #[uniffi::method(default(filter = None, start_after = None))]
     pub fn events_subscription(
         &self,
-        filter: Option<SubscriptionEventFilter>,
+        filter: Option<GraphQLSubscriptionEventFilter>,
         start_after: Option<String>,
-    ) -> EventSubscription {
+    ) -> GraphQLEventSubscription {
         let client = (*self.client()).clone();
-        EventSubscription::new(open_events(client, filter, start_after))
+        GraphQLEventSubscription::new(open_events(client, filter, start_after))
     }
 
     /// Subscribe to a live stream of transactions matching the (optional)
@@ -283,10 +283,10 @@ impl GraphQLClient {
     #[uniffi::method(default(filter = None, start_after = None))]
     pub fn transactions_subscription(
         &self,
-        filter: Option<SubscriptionTransactionFilter>,
+        filter: Option<GraphQLSubscriptionTransactionFilter>,
         start_after: Option<String>,
-    ) -> TransactionSubscription {
+    ) -> GraphQLTransactionSubscription {
         let client = (*self.client()).clone();
-        TransactionSubscription::new(open_transactions(client, filter, start_after))
+        GraphQLTransactionSubscription::new(open_transactions(client, filter, start_after))
     }
 }

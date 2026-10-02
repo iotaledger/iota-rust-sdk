@@ -15,7 +15,7 @@ use crate::{
 
 /// The state of the `MetadataCap` of a coin type.
 #[derive(uniffi::Enum)]
-pub enum MetadataCapState {
+pub enum GrpcMetadataCapState {
     /// The state of the `MetadataCap` is unknown.
     Unknown,
     /// The `MetadataCap` has been claimed.
@@ -26,7 +26,7 @@ pub enum MetadataCapState {
     Deleted,
 }
 
-impl From<proto::coin::coin_metadata::MetadataCapState> for MetadataCapState {
+impl From<proto::coin::coin_metadata::MetadataCapState> for GrpcMetadataCapState {
     fn from(value: proto::coin::coin_metadata::MetadataCapState) -> Self {
         match value {
             proto::coin::coin_metadata::MetadataCapState::Claimed => Self::Claimed,
@@ -56,7 +56,7 @@ pub struct GrpcCoinMetadata {
     /// The `MetadataCap` id if it has been claimed for the coin type.
     pub metadata_cap_id: Option<Arc<ObjectId>>,
     /// State of the `MetadataCap` for the coin type.
-    pub metadata_cap_state: Option<MetadataCapState>,
+    pub metadata_cap_state: Option<GrpcMetadataCapState>,
 }
 
 impl TryFrom<&proto::coin::CoinMetadata> for GrpcCoinMetadata {
@@ -85,7 +85,7 @@ impl TryFrom<&proto::coin::CoinMetadata> for GrpcCoinMetadata {
                 .map(Arc::new),
             metadata_cap_state: value.metadata_cap_state.map(|state| {
                 proto::coin::coin_metadata::MetadataCapState::try_from(state)
-                    .map_or(MetadataCapState::Unknown, Into::into)
+                    .map_or(GrpcMetadataCapState::Unknown, Into::into)
             }),
         })
     }
@@ -93,7 +93,7 @@ impl TryFrom<&proto::coin::CoinMetadata> for GrpcCoinMetadata {
 
 /// The supply state of a coin type.
 #[derive(uniffi::Enum)]
-pub enum SupplyState {
+pub enum GrpcSupplyState {
     /// The supply is unknown or the `TreasuryCap` still exists (minting still
     /// possible).
     Unknown,
@@ -104,7 +104,7 @@ pub enum SupplyState {
     BurnOnly,
 }
 
-impl From<proto::coin::coin_treasury::SupplyState> for SupplyState {
+impl From<proto::coin::coin_treasury::SupplyState> for GrpcSupplyState {
     fn from(value: proto::coin::coin_treasury::SupplyState) -> Self {
         match value {
             proto::coin::coin_treasury::SupplyState::Fixed => Self::Fixed,
@@ -116,16 +116,16 @@ impl From<proto::coin::coin_treasury::SupplyState> for SupplyState {
 
 /// The treasury of a coin type.
 #[derive(uniffi::Record)]
-pub struct CoinTreasury {
+pub struct GrpcCoinTreasury {
     /// The id of the `0x2::coin::TreasuryCap` object.
     pub id: Option<Arc<ObjectId>>,
     /// Total available supply for the coin type.
     pub total_supply: Option<u64>,
     /// Supply state indicating if the supply is fixed or can still be minted.
-    pub supply_state: Option<SupplyState>,
+    pub supply_state: Option<GrpcSupplyState>,
 }
 
-impl TryFrom<&proto::coin::CoinTreasury> for CoinTreasury {
+impl TryFrom<&proto::coin::CoinTreasury> for GrpcCoinTreasury {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::coin::CoinTreasury) -> Result<Self> {
@@ -140,7 +140,7 @@ impl TryFrom<&proto::coin::CoinTreasury> for CoinTreasury {
             total_supply: value.total_supply,
             supply_state: value.supply_state.map(|state| {
                 proto::coin::coin_treasury::SupplyState::try_from(state)
-                    .map_or(SupplyState::Unknown, Into::into)
+                    .map_or(GrpcSupplyState::Unknown, Into::into)
             }),
         })
     }
@@ -148,7 +148,7 @@ impl TryFrom<&proto::coin::CoinTreasury> for CoinTreasury {
 
 /// The regulated state of a coin type.
 #[derive(uniffi::Enum)]
-pub enum CoinRegulatedState {
+pub enum GrpcCoinRegulatedState {
     /// The regulated state of the coin is unknown.
     Unknown,
     /// The coin is regulated.
@@ -157,7 +157,7 @@ pub enum CoinRegulatedState {
     Unregulated,
 }
 
-impl From<proto::coin::regulated_coin_metadata::CoinRegulatedState> for CoinRegulatedState {
+impl From<proto::coin::regulated_coin_metadata::CoinRegulatedState> for GrpcCoinRegulatedState {
     fn from(value: proto::coin::regulated_coin_metadata::CoinRegulatedState) -> Self {
         match value {
             proto::coin::regulated_coin_metadata::CoinRegulatedState::Regulated => Self::Regulated,
@@ -183,7 +183,7 @@ pub struct GrpcRegulatedCoinMetadata {
     /// Variant of the regulated coin metadata.
     pub variant: Option<u32>,
     /// The coin's regulated state.
-    pub coin_regulated_state: Option<CoinRegulatedState>,
+    pub coin_regulated_state: Option<GrpcCoinRegulatedState>,
 }
 
 impl TryFrom<&proto::coin::RegulatedCoinMetadata> for GrpcRegulatedCoinMetadata {
@@ -216,7 +216,7 @@ impl TryFrom<&proto::coin::RegulatedCoinMetadata> for GrpcRegulatedCoinMetadata 
             variant: value.variant,
             coin_regulated_state: value.coin_regulated_state.map(|state| {
                 proto::coin::regulated_coin_metadata::CoinRegulatedState::try_from(state)
-                    .map_or(CoinRegulatedState::Unknown, Into::into)
+                    .map_or(GrpcCoinRegulatedState::Unknown, Into::into)
             }),
         })
     }
@@ -232,7 +232,7 @@ pub struct GrpcCoinInfo {
     pub metadata: Option<GrpcCoinMetadata>,
     /// Information about the coin type's `0x2::coin::TreasuryCap`, if it
     /// exists and has not been wrapped.
-    pub treasury: Option<CoinTreasury>,
+    pub treasury: Option<GrpcCoinTreasury>,
     /// Information about the coin type's regulated metadata, if the coin is
     /// regulated.
     pub regulated_metadata: Option<GrpcRegulatedCoinMetadata>,
@@ -276,21 +276,24 @@ impl GrpcClient {
 mod tests {
     use iota_sdk::grpc_types::v1 as proto;
 
-    use super::{CoinTreasury, SupplyState};
+    use super::{GrpcCoinTreasury, GrpcSupplyState};
 
     #[test]
     fn unrecognized_enum_value_is_unknown_not_absent() {
         let mut treasury = proto::coin::CoinTreasury::default();
         treasury.supply_state = Some(i32::MAX);
 
-        let converted = CoinTreasury::try_from(&treasury).unwrap();
+        let converted = GrpcCoinTreasury::try_from(&treasury).unwrap();
 
-        assert!(matches!(converted.supply_state, Some(SupplyState::Unknown)));
+        assert!(matches!(
+            converted.supply_state,
+            Some(GrpcSupplyState::Unknown)
+        ));
     }
 
     #[test]
     fn absent_enum_value_stays_absent() {
-        let converted = CoinTreasury::try_from(&proto::coin::CoinTreasury::default()).unwrap();
+        let converted = GrpcCoinTreasury::try_from(&proto::coin::CoinTreasury::default()).unwrap();
 
         assert!(converted.supply_state.is_none());
     }

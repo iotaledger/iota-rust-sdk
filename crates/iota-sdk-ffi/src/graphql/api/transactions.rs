@@ -9,10 +9,13 @@ use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::{SignedTransactionPage, TransactionDataEffectsPage, TransactionEffectsPage},
+        pagination::{
+            GraphQLSignedTransactionPage, GraphQLTransactionDataEffectsPage,
+            GraphQLTransactionEffectsPage,
+        },
         query_types::{
-            AddressTransactionRelationship, PaginationFilter, TransactionDataEffects,
-            TransactionsFilter,
+            GraphQLAddressTransactionRelationship, GraphQLPaginationFilter,
+            GraphQLTransactionDataEffects, GraphQLTransactionsFilter,
         },
     },
     transaction_builder::WaitForTransaction,
@@ -52,7 +55,7 @@ impl GraphQLClient {
     pub async fn transaction_data_effects(
         &self,
         digest: &TransactionDigest,
-    ) -> Result<Option<TransactionDataEffects>> {
+    ) -> Result<Option<GraphQLTransactionDataEffects>> {
         Ok(self
             .client()
             .transaction_data_effects(**digest)
@@ -64,9 +67,9 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions(
         &self,
-        filter: Option<Arc<TransactionsFilter>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<SignedTransactionPage> {
+        filter: Option<Arc<GraphQLTransactionsFilter>>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLSignedTransactionPage> {
         Ok(self
             .client()
             .transactions(
@@ -85,10 +88,10 @@ impl GraphQLClient {
     pub async fn address_transactions(
         &self,
         address: &Address,
-        relation: Option<AddressTransactionRelationship>,
-        filter: Option<Arc<TransactionsFilter>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<SignedTransactionPage> {
+        relation: Option<GraphQLAddressTransactionRelationship>,
+        filter: Option<Arc<GraphQLTransactionsFilter>>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLSignedTransactionPage> {
         Ok(self
             .client()
             .address_transactions(
@@ -106,9 +109,9 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_effects(
         &self,
-        filter: Option<Arc<TransactionsFilter>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<TransactionEffectsPage> {
+        filter: Option<Arc<GraphQLTransactionsFilter>>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLTransactionEffectsPage> {
         Ok(self
             .client()
             .transactions_effects(
@@ -125,9 +128,9 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_data_effects(
         &self,
-        filter: Option<Arc<TransactionsFilter>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<TransactionDataEffectsPage> {
+        filter: Option<Arc<GraphQLTransactionsFilter>>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLTransactionDataEffectsPage> {
         Ok(self
             .client()
             .transactions_data_effects(

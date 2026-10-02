@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import iota_sdk.GraphQlClient
-import iota_sdk.Query
+import iota_sdk.GraphQlQuery
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -135,7 +135,7 @@ fun main() = runBlocking {
         }
     """
 
-    val query = Query(queryStr)
+    val query = GraphQlQuery(queryStr)
     val res = client.runQuery(query)
     println(res)
 }

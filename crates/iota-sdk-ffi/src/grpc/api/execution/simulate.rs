@@ -10,8 +10,8 @@ use iota_sdk::{grpc_client::read_mask_fields::SimulateReadMask, grpc_types::v1 a
 use crate::{
     error::{Result, SdkFfiError},
     grpc::{
-        api::ledger::transactions::ExecutedTransaction, client::GrpcClient,
-        read_mask_fields::SimulateField,
+        api::ledger::transactions::GrpcExecutedTransaction, client::GrpcClient,
+        read_mask_fields::GrpcSimulateField,
     },
     types::{
         execution_status::ExecutionError,
@@ -22,7 +22,7 @@ use crate::{
 
 /// An intermediate result/output from the execution of a single command.
 #[derive(uniffi::Record)]
-pub struct CommandOutput {
+pub struct GrpcCommandOutput {
     /// The argument the output corresponds to.
     pub argument: Option<Arc<Argument>>,
     /// The Move type of the output.
@@ -33,7 +33,7 @@ pub struct CommandOutput {
     pub json: Option<serde_json::Value>,
 }
 
-impl TryFrom<&proto::command::CommandOutput> for CommandOutput {
+impl TryFrom<&proto::command::CommandOutput> for GrpcCommandOutput {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::command::CommandOutput) -> Result<Self> {
@@ -64,14 +64,14 @@ impl TryFrom<&proto::command::CommandOutput> for CommandOutput {
 
 /// The intermediate results/outputs from the execution of a single command.
 #[derive(uniffi::Record)]
-pub struct CommandResult {
+pub struct GrpcCommandResult {
     /// The outputs of the arguments that were mutably borrowed by the command.
-    pub mutated_by_ref: Vec<CommandOutput>,
+    pub mutated_by_ref: Vec<GrpcCommandOutput>,
     /// The return values of the command.
-    pub return_values: Vec<CommandOutput>,
+    pub return_values: Vec<GrpcCommandOutput>,
 }
 
-impl TryFrom<&proto::command::CommandResult> for CommandResult {
+impl TryFrom<&proto::command::CommandResult> for GrpcCommandResult {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::command::CommandResult) -> Result<Self> {
@@ -106,7 +106,7 @@ impl TryFrom<&proto::command::CommandResult> for CommandResult {
 
 /// An error that occurred during the simulated execution of a transaction.
 #[derive(uniffi::Record)]
-pub struct SimulatedExecutionError {
+pub struct GrpcSimulatedExecutionError {
     /// The kind of execution error.
     pub error: Option<ExecutionError>,
     /// The error source as a string.
@@ -115,7 +115,9 @@ pub struct SimulatedExecutionError {
     pub command_index: Option<u64>,
 }
 
-impl TryFrom<&proto::transaction_execution_service::ExecutionError> for SimulatedExecutionError {
+impl TryFrom<&proto::transaction_execution_service::ExecutionError>
+    for GrpcSimulatedExecutionError
+{
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::transaction_execution_service::ExecutionError) -> Result<Self> {
@@ -134,19 +136,21 @@ impl TryFrom<&proto::transaction_execution_service::ExecutionError> for Simulate
 
 /// The result of simulating a transaction.
 #[derive(uniffi::Record)]
-pub struct SimulatedTransaction {
+pub struct GrpcSimulatedTransaction {
     /// The simulated executed transaction.
-    pub transaction: Option<ExecutedTransaction>,
+    pub transaction: Option<GrpcExecutedTransaction>,
     /// The suggested gas price (in NANOS).
     pub suggested_gas_price: Option<u64>,
     /// The intermediate results/outputs for each command of the transaction,
     /// if the simulation succeeded.
-    pub command_results: Option<Vec<CommandResult>>,
+    pub command_results: Option<Vec<GrpcCommandResult>>,
     /// The execution error, if the simulation failed.
-    pub execution_error: Option<SimulatedExecutionError>,
+    pub execution_error: Option<GrpcSimulatedExecutionError>,
 }
 
-impl TryFrom<&proto::transaction_execution_service::SimulatedTransaction> for SimulatedTransaction {
+impl TryFrom<&proto::transaction_execution_service::SimulatedTransaction>
+    for GrpcSimulatedTransaction
+{
     type Error = SdkFfiError;
 
     fn try_from(
@@ -177,16 +181,16 @@ impl TryFrom<&proto::transaction_execution_service::SimulatedTransaction> for Si
 /// The result of simulating a single transaction in a batch: either the
 /// simulated transaction or an error.
 #[derive(uniffi::Record)]
-pub struct SimulatedTransactionResult {
+pub struct GrpcSimulatedTransactionResult {
     /// The simulated transaction, if the simulation succeeded.
-    pub transaction: Option<SimulatedTransaction>,
+    pub transaction: Option<GrpcSimulatedTransaction>,
     /// The error message, if the simulation failed.
     pub error: Option<String>,
 }
 
 /// A transaction to simulate with `simulate_transactions`.
 #[derive(uniffi::Record)]
-pub struct SimulateTransactionInput {
+pub struct GrpcSimulateTransactionInput {
     /// The transaction to simulate.
     pub transaction: Arc<Transaction>,
     /// Whether to skip the VM checks during the simulation.
@@ -207,8 +211,8 @@ impl GrpcClient {
         &self,
         transaction: &Transaction,
         skip_checks: bool,
-        read_mask: Option<Vec<SimulateField>>,
-    ) -> Result<SimulatedTransaction> {
+        read_mask: Option<Vec<GrpcSimulateField>>,
+    ) -> Result<GrpcSimulatedTransaction> {
         (&self
             .client()
             .simulate_transaction(transaction.0.clone())
@@ -230,9 +234,9 @@ impl GrpcClient {
     #[uniffi::method(default(read_mask = None))]
     pub async fn simulate_transactions(
         &self,
-        transactions: Vec<SimulateTransactionInput>,
-        read_mask: Option<Vec<SimulateField>>,
-    ) -> Result<Vec<SimulatedTransactionResult>> {
+        transactions: Vec<GrpcSimulateTransactionInput>,
+        read_mask: Option<Vec<GrpcSimulateField>>,
+    ) -> Result<Vec<GrpcSimulatedTransactionResult>> {
         self.client()
             .simulate_transactions(
                 transactions
@@ -253,11 +257,11 @@ impl GrpcClient {
             .into_iter()
             .map(|result| {
                 Ok(match result {
-                    Ok(transaction) => SimulatedTransactionResult {
+                    Ok(transaction) => GrpcSimulatedTransactionResult {
                         transaction: Some((&transaction).try_into()?),
                         error: None,
                     },
-                    Err(error) => SimulatedTransactionResult {
+                    Err(error) => GrpcSimulatedTransactionResult {
                         transaction: None,
                         error: Some(error.to_string()),
                     },
@@ -281,7 +285,7 @@ mod tests {
         },
     };
 
-    use super::SimulatedTransaction;
+    use super::GrpcSimulatedTransaction;
 
     #[test]
     fn simulated_transaction_with_command_results() {
@@ -297,7 +301,7 @@ mod tests {
         proto.suggested_gas_price = Some(1000);
         proto.execution_result = Some(ExecutionResult::CommandResults(results));
 
-        let converted = SimulatedTransaction::try_from(&proto).unwrap();
+        let converted = GrpcSimulatedTransaction::try_from(&proto).unwrap();
 
         assert_eq!(converted.suggested_gas_price, Some(1000));
         let command_results = converted.command_results.unwrap();
@@ -318,7 +322,7 @@ mod tests {
         let mut proto = ProtoSimulatedTransaction::default();
         proto.execution_result = Some(ExecutionResult::ExecutionError(error));
 
-        let converted = SimulatedTransaction::try_from(&proto).unwrap();
+        let converted = GrpcSimulatedTransaction::try_from(&proto).unwrap();
 
         assert!(converted.command_results.is_none());
         let execution_error = converted.execution_error.unwrap();
