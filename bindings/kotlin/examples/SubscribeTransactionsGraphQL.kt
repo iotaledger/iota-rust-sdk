@@ -11,9 +11,9 @@
 import iota_sdk.Address
 import iota_sdk.FaucetClient
 import iota_sdk.GraphQlClient
-import iota_sdk.SubscriptionTransactionFilter
-import iota_sdk.TransactionBlockKindInput
-import iota_sdk.TransactionUpdate
+import iota_sdk.GraphQlSubscriptionTransactionFilter
+import iota_sdk.GraphQlTransactionBlockKindInput
+import iota_sdk.GraphQlTransactionUpdate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -25,7 +25,9 @@ fun main() = runBlocking {
         val client = GraphQlClient.newLocalnet()
         val subscription =
             client.transactionsSubscription(
-                SubscriptionTransactionFilter(kind = TransactionBlockKindInput.PROGRAMMABLE_TX)
+                GraphQlSubscriptionTransactionFilter(
+                    kind = GraphQlTransactionBlockKindInput.PROGRAMMABLE_TX
+                )
             )
 
         val activity = launch {
@@ -55,14 +57,14 @@ fun main() = runBlocking {
             }
 
             when (update) {
-                is TransactionUpdate.Transaction -> {
+                is GraphQlTransactionUpdate.Transaction -> {
                     val transaction = update.transaction.transaction
                     println("Digest: ${transaction.digest()}")
                     println("Sender: ${transaction.sender()}")
                     break
                 }
                 // Delivery recovers on its own; items in the gap may be missed.
-                is TransactionUpdate.Interrupted -> println("Interrupted: ${update.message}")
+                is GraphQlTransactionUpdate.Interrupted -> println("Interrupted: ${update.message}")
             }
         }
 

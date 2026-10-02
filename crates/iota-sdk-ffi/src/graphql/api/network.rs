@@ -7,8 +7,8 @@ use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::ValidatorPage,
-        query_types::{PaginationFilter, ProtocolConfigs},
+        pagination::GraphQLValidatorPage,
+        query_types::{GraphQLPaginationFilter, GraphQLProtocolConfigs},
     },
 };
 
@@ -32,7 +32,7 @@ impl GraphQLClient {
 
     /// Get the protocol configuration.
     #[uniffi::method(default(version = None))]
-    pub async fn protocol_config(&self, version: Option<u64>) -> Result<ProtocolConfigs> {
+    pub async fn protocol_config(&self, version: Option<u64>) -> Result<GraphQLProtocolConfigs> {
         Ok(self.client().protocol_config(version).await?.into())
     }
 
@@ -43,8 +43,8 @@ impl GraphQLClient {
     pub async fn active_validators(
         &self,
         epoch: Option<u64>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<ValidatorPage> {
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLValidatorPage> {
         Ok(self
             .client()
             .active_validators(epoch, pagination_filter.map(Into::into).unwrap_or_default())

@@ -46,7 +46,6 @@ impl Digest {
 
     /// Generates a new digest from the provided random number generator.
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::CryptoRng,
@@ -57,7 +56,6 @@ impl Digest {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
@@ -74,7 +72,18 @@ impl Digest {
 
     /// Decodes a digest from a Base58 encoded string.
     pub fn from_base58<T: AsRef<[u8]>>(base58: T) -> Result<Self, DigestParseError> {
-        Self::from_bytes(bs58::decode(base58).into_vec()?)
+        let bytes = bs58::decode(base58).into_vec().map_err(|e| {
+            match e {
+                bs58::decode::Error::InvalidCharacter { index, .. }
+                | bs58::decode::Error::NonAsciiCharacter { index } => {
+                    DigestParseError::InvalidBase58Character { index }
+                }
+                // `bs58::decode::DecodeBuilder::into_vec` can only return the two variants above,
+                // but we include a catch-all case to handle any unexpected errors.
+                _ => DigestParseError::InvalidBase58,
+            }
+        })?;
+        Self::from_bytes(bytes)
     }
 
     /// Returns a Base58 encoded string representation of this digest.
@@ -245,11 +254,9 @@ type DigestSerialization =
     ::serde_with::As<::serde_with::IfIsHumanReadable<ReadableDigest, ::serde_with::Bytes>>;
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 struct ReadableDigest;
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 impl serde_with::SerializeAs<[u8; Digest::LENGTH]> for ReadableDigest {
     fn serialize_as<S>(source: &[u8; Digest::LENGTH], serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -261,7 +268,6 @@ impl serde_with::SerializeAs<[u8; Digest::LENGTH]> for ReadableDigest {
 }
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDigest {
     fn deserialize_as<D>(deserializer: D) -> Result<[u8; Digest::LENGTH], D::Error>
     where
@@ -275,13 +281,15 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDiges
 #[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
 #[non_exhaustive]
 pub enum DigestParseError {
-    #[error("digest must be Base58 string of length 44")]
-    Base58(#[from] bs58::decode::Error),
+    #[error("invalid Base58 character at position {index}")]
+    InvalidBase58Character { index: usize },
     #[error(
         "invalid digest byte length: expected {}, got {actual}",
         Digest::LENGTH
     )]
     InvalidByteLength { actual: usize },
+    #[error("invalid Base58 string")]
+    InvalidBase58,
 }
 
 // Don't implement like the other digest type since this isn't intended to be
@@ -329,7 +337,6 @@ macro_rules! impl_digest_wrapper {
 
             /// Generates a new digest from the provided random number generator.
             #[cfg(feature = "rand")]
-            #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
             pub fn random_with<R>(rng: R) -> Self
             where
                 R: rand_core::CryptoRng,
@@ -339,7 +346,6 @@ macro_rules! impl_digest_wrapper {
 
             /// Generates a new random digest.
             #[cfg(feature = "rand")]
-            #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
             pub fn random() -> Self {
                 Self(Digest::random())
             }
@@ -599,12 +605,15 @@ mod tests {
         let result = Digest::from_base58("0OIl");
         assert_eq!(
             result,
-            Err(DigestParseError::Base58(
-                bs58::decode::Error::InvalidCharacter {
-                    character: '0',
-                    index: 0
-                }
-            ))
+            Err(DigestParseError::InvalidBase58Character { index: 0 })
+        );
+        assert_eq!(
+            Digest::from_base58("1110"),
+            Err(DigestParseError::InvalidBase58Character { index: 3 })
+        );
+        assert_eq!(
+            Digest::from_base58("11é"),
+            Err(DigestParseError::InvalidBase58Character { index: 2 })
         );
     }
 
