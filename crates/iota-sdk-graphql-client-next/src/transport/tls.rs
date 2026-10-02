@@ -9,7 +9,12 @@
 //! behalf. Without either of them `reqwest` is built with no TLS at all, so an
 //! HTTP-only build needs no provider and reaches a plain-HTTP endpoint as-is.
 
-/// A [`reqwest::ClientBuilder`] carrying this crate's trust anchors.
+/// How long the built-in transport may take to connect.
+#[cfg(not(target_arch = "wasm32"))]
+const DEFAULT_CONNECT_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(5);
+
+/// A [`reqwest::ClientBuilder`] carrying this crate's trust anchors and a
+/// connect timeout of 5 seconds.
 ///
 /// With the default features the bundled Mozilla roots are merged into the
 /// platform trust store rather than replacing it, so corporate CAs and
@@ -32,13 +37,14 @@
 #[cfg(not(target_arch = "wasm32"))]
 pub(crate) fn default_http_client_builder() -> reqwest::ClientBuilder {
     install_default_crypto_provider();
-    apply_roots(reqwest::Client::builder())
+    apply_roots(reqwest::Client::builder().connect_timeout(DEFAULT_CONNECT_TIMEOUT))
 }
 
 /// A plain [`reqwest::ClientBuilder`].
 ///
-/// On wasm32 the browser owns certificate verification, so there are no trust
-/// anchors and no crypto provider to configure.
+/// On wasm32 the browser owns connections and certificate verification, so
+/// there is no connect timeout, no trust anchors and no crypto provider to
+/// configure.
 #[cfg(target_arch = "wasm32")]
 pub(crate) fn default_http_client_builder() -> reqwest::ClientBuilder {
     reqwest::Client::builder()

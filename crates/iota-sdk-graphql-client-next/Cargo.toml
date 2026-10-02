@@ -88,11 +88,11 @@ iota-graphql-client-build.workspace = true
 
 [[example]]
 name = "configuration"
-required-features = ["tls-ring"]
+required-features = ["reqwest"]
 
 [[example]]
 name = "custom_transport"
-required-features = ["tls-ring"]
+required-features = ["reqwest"]
 
 [[example]]
 name = "move_objects"

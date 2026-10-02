@@ -83,9 +83,20 @@ let client = GraphQLClient::builder("https://graphql.testnet.iota.cafe")
     .build()?;
 ```
 
-Requests go through a `Transport`. The default one is built on `reqwest`; pass
-your own `reqwest::Client` with `reqwest_client`, or any other transport with
-`transport`. The client sets its headers, timeout and retries on top of either.
+Requests go through a `Transport`. The default one is built on `reqwest`, with a
+connect timeout of 5 seconds; pass your own `reqwest::Client` with
+`reqwest_client`, e.g. to set a proxy or another connect timeout, or any other
+transport with `transport`. The client sets its headers, timeout and retries on
+top of either. Start your own `reqwest::Client` from
+`ReqwestTransport::default_client_builder()` to keep the default transport's TLS
+setup:
+
+```rust,ignore
+let http = ReqwestTransport::default_client_builder()
+    .connect_timeout(Duration::from_secs(3))
+    .build()?;
+let client = GraphQLClient::builder(endpoint).reqwest_client(http).build()?;
+```
 
 ## Server versions
 

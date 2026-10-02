@@ -29,8 +29,6 @@ const DEVNET_ENDPOINT: &str = "https://graphql.devnet.iota.cafe";
 const LOCALNET_ENDPOINT: &str = "http://localhost:9125/graphql";
 
 const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
-#[cfg(feature = "reqwest")]
-const DEFAULT_CONNECT_TIMEOUT: Duration = Duration::from_secs(5);
 
 /// A client for the IOTA GraphQL RPC service.
 ///
@@ -256,8 +254,6 @@ pub struct ClientBuilder {
     transport: Option<Box<dyn Transport>>,
     headers: Vec<(String, String)>,
     timeout: Option<Duration>,
-    #[cfg(feature = "reqwest")]
-    connect_timeout: Option<Duration>,
     retry: RetryPolicy,
 }
 
@@ -279,8 +275,6 @@ impl ClientBuilder {
             transport: None,
             headers: Vec::new(),
             timeout: Some(DEFAULT_TIMEOUT),
-            #[cfg(feature = "reqwest")]
-            connect_timeout: Some(DEFAULT_CONNECT_TIMEOUT),
             retry: RetryPolicy::default(),
         }
     }
@@ -299,17 +293,6 @@ impl ClientBuilder {
         self
     }
 
-    /// How long the built-in transport may take to connect. Defaults to 5
-    /// seconds; `None` waits indefinitely. A transport set with
-    /// [`transport`](Self::transport) or
-    /// [`reqwest_client`](Self::reqwest_client) is not affected.
-    #[cfg(feature = "reqwest")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "reqwest")))]
-    pub fn connect_timeout(mut self, timeout: impl Into<Option<Duration>>) -> Self {
-        self.connect_timeout = timeout.into();
-        self
-    }
-
     /// How to retry failed requests. Defaults to [`RetryPolicy::default`].
     pub fn retry(mut self, retry: RetryPolicy) -> Self {
         self.retry = retry;
@@ -322,13 +305,17 @@ impl ClientBuilder {
         self
     }
 
-    /// Send requests through `client`, e.g. to choose its trust anchors, TLS
-    /// backend or proxies.
+    /// Send requests through `client`, e.g. to set its proxies or connect
+    /// timeout.
     ///
-    /// Note that on a build with `tls-ring` or `tls-aws-lc`, `reqwest` has no
-    /// crypto provider to fall back on, so building the `reqwest::Client`
-    /// panics unless one has been installed for the process. See the crate
-    /// README.
+    /// Start it from [`ReqwestTransport::default_client_builder`] to keep the
+    /// built-in transport's trust anchors, crypto provider and connect
+    /// timeout. Note that on a build with `tls-ring` or `tls-aws-lc`,
+    /// `reqwest` has no crypto provider to fall back on, so building a
+    /// `reqwest::Client` any other way panics unless one has been installed
+    /// for the process.
+    ///
+    /// [`ReqwestTransport::default_client_builder`]: crate::transport::ReqwestTransport::default_client_builder
     #[cfg(feature = "reqwest")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "reqwest")))]
     pub fn reqwest_client(self, client: reqwest::Client) -> Self {
@@ -355,7 +342,7 @@ impl ClientBuilder {
         let transport = match self.transport {
             Some(transport) => transport,
             #[cfg(feature = "reqwest")]
-            None => default_transport(&endpoint, self.connect_timeout)?,
+            None => default_transport(&endpoint)?,
             #[cfg(not(feature = "reqwest"))]
             None => {
                 return Err(Error::invalid_input(
@@ -415,25 +402,14 @@ fn validate_header(name: &str, value: &str) -> Result<()> {
 }
 
 #[cfg(feature = "reqwest")]
-fn default_transport(
-    endpoint: &url::Url,
-    connect_timeout: Option<Duration>,
-) -> Result<Box<dyn Transport>> {
+fn default_transport(endpoint: &url::Url) -> Result<Box<dyn Transport>> {
     if let Some(scheme) = crate::transport::tls::unsupported_scheme(endpoint.as_str()) {
         return Err(Error::invalid_input(format!(
             "`{scheme}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or set a \
              transport on the builder"
         )));
     }
-    let builder = crate::transport::tls::default_http_client_builder();
-    #[cfg(not(target_arch = "wasm32"))]
-    let builder = match connect_timeout {
-        Some(timeout) => builder.connect_timeout(timeout),
-        None => builder,
-    };
-    #[cfg(target_arch = "wasm32")]
-    let _ = connect_timeout;
-    let client = builder
+    let client = crate::transport::ReqwestTransport::default_client_builder()
         .build()
         .map_err(|error| Error::invalid_input(format!("cannot build the HTTP client: {error}")))?;
     Ok(Box::new(crate::transport::ReqwestTransport::new(client)))

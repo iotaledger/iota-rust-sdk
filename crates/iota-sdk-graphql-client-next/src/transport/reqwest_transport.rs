@@ -7,8 +7,8 @@ use crate::TransportError;
 /// A [`Transport`] backed by a [`reqwest::Client`].
 ///
 /// This is the client's default transport. Pass your own `reqwest::Client`
-/// to choose its trust anchors, TLS backend or proxies; the client's headers,
-/// timeout and retries still apply.
+/// to change its proxies, connect timeout, trust anchors or TLS backend; the
+/// client's headers, timeout and retries still apply.
 #[derive(Clone, Debug)]
 pub struct ReqwestTransport {
     client: reqwest::Client,
@@ -18,6 +18,25 @@ impl ReqwestTransport {
     /// A transport sending its requests through `client`.
     pub fn new(client: reqwest::Client) -> Self {
         Self { client }
+    }
+
+    /// The [`reqwest::ClientBuilder`] the built-in transport is built from:
+    /// this crate's trust anchors and crypto provider (see the crate README),
+    /// and a connect timeout of 5 seconds.
+    ///
+    /// Build your own `reqwest::Client` from it to change other settings
+    /// while keeping those. With `tls-ring` or `tls-aws-lc`, calling it
+    /// installs that crypto provider for the process, unless one is installed
+    /// already.
+    ///
+    /// ```rust,ignore
+    /// let http = ReqwestTransport::default_client_builder()
+    ///     .connect_timeout(Duration::from_secs(3))
+    ///     .build()?;
+    /// let client = GraphQLClient::builder(endpoint).reqwest_client(http).build()?;
+    /// ```
+    pub fn default_client_builder() -> reqwest::ClientBuilder {
+        super::tls::default_http_client_builder()
     }
 }
 
@@ -52,4 +71,14 @@ fn transport_error(error: reqwest::Error) -> TransportError {
         return TransportError::connect(error);
     }
     TransportError::other(error)
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn the_default_client_builder_builds_without_a_preinstalled_provider() {
+        ReqwestTransport::default_client_builder().build().unwrap();
+    }
 }

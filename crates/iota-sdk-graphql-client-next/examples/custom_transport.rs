@@ -42,11 +42,8 @@ impl<T: Transport> Transport for Logging<T> {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    rustls::crypto::ring::default_provider()
-        .install_default()
-        .ok();
     let transport = Logging {
-        inner: ReqwestTransport::new(reqwest::Client::new()),
+        inner: ReqwestTransport::new(ReqwestTransport::default_client_builder().build()?),
     };
     let client = GraphQLClient::builder("https://graphql.testnet.iota.cafe")
         .transport(transport)
