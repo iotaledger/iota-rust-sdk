@@ -11,15 +11,16 @@ use crate::{
     error::GraphQLResult,
     pagination::{Page, PaginationFilter},
     query_types::{
-        ActiveValidatorsArgs, ActiveValidatorsQuery, ChainIdentifierQuery, EpochArgs,
-        EpochSummaryQuery, ProtocolConfigQuery, ProtocolConfigs, ProtocolVersionArgs, Validator,
+        ActiveValidatorsArgs, ActiveValidatorsQueryFragment, ChainIdentifierQueryFragment,
+        EpochArgs, EpochSummaryQueryFragment, ProtocolConfigQueryFragment, ProtocolConfigs,
+        ProtocolVersionArgs, Validator,
     },
 };
 
 impl GraphQLClient {
     /// Get the chain identifier.
     pub async fn chain_id(&self) -> GraphQLResult<String> {
-        let operation = ChainIdentifierQuery::build(());
+        let operation = ChainIdentifierQueryFragment::build(());
         let response = self.run_query(&operation).await?;
 
         Ok(response.chain_identifier)
@@ -34,7 +35,7 @@ impl GraphQLClient {
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> GraphQLResult<Option<u64>> {
-        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch.into() });
+        let operation = EpochSummaryQueryFragment::build(EpochArgs { id: epoch.into() });
         let response = self.run_query(&operation).await?;
 
         response
@@ -49,7 +50,8 @@ impl GraphQLClient {
         &self,
         version: impl Into<Option<u64>>,
     ) -> GraphQLResult<ProtocolConfigs> {
-        let operation = ProtocolConfigQuery::build(ProtocolVersionArgs { id: version.into() });
+        let operation =
+            ProtocolConfigQueryFragment::build(ProtocolVersionArgs { id: version.into() });
         let response = self.run_query(&operation).await?;
         Ok(response.protocol_config)
     }
@@ -64,7 +66,7 @@ impl GraphQLClient {
     ) -> GraphQLResult<Page<Validator>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = ActiveValidatorsQuery::build(ActiveValidatorsArgs {
+        let operation = ActiveValidatorsQueryFragment::build(ActiveValidatorsArgs {
             id: epoch.into(),
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
@@ -87,7 +89,7 @@ impl GraphQLClient {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use crate::{PaginationFilter, test_utils::test_client};
 

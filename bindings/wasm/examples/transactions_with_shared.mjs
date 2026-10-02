@@ -4,7 +4,7 @@
 import {
   GraphQlClient,
   ObjectId,
-  TransactionsFilter,
+  GraphQlTransactionsFilter,
   initAsync,
 } from "@iota/sdk-wasm";
 
@@ -17,7 +17,7 @@ const sharedObjId = ObjectId.fromHex(
 );
 
 const transactions = await client.transactions(
-  new TransactionsFilter().withInputObject(sharedObjId),
+  new GraphQlTransactionsFilter().withInputObject(sharedObjId),
 );
 
 for (const transaction of transactions.data) {

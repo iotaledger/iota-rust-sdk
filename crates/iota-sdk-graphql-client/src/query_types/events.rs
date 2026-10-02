@@ -4,7 +4,7 @@
 
 use crate::query_types::{
     Address, Base64, DateTime, GraphQLAddress, JsonValue, MoveData, MoveType, PageInfo,
-    normalized_move::MoveModuleQuery, schema,
+    normalized_move::MoveModuleQueryFragment, schema,
 };
 
 // ===========================================================================
@@ -13,7 +13,7 @@ use crate::query_types::{
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "EventsQueryArgs")]
-pub struct EventsQuery {
+pub struct EventsQueryFragment {
     #[arguments(after: $after, before: $before, filter: $filter, first: $first, last: $last)]
     pub events: EventConnection,
 }
@@ -85,7 +85,7 @@ impl EventFilter {
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Event")]
 pub struct Event {
-    pub sending_module: Option<MoveModuleQuery>,
+    pub sending_module: Option<MoveModuleQueryFragment>,
     pub sender: Option<GraphQLAddress>,
     #[cynic(rename = "type")]
     pub move_type: MoveType,

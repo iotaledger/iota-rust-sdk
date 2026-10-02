@@ -14,7 +14,7 @@ use crate::{
     graphql_type = "Query",
     variables = "ResolveIotaNamesAddressArgs"
 )]
-pub struct ResolveIotaNamesAddressQuery {
+pub struct ResolveIotaNamesAddressQueryFragment {
     #[arguments(name: $name)]
     pub resolve_iota_names_address: Option<GraphQLAddress>,
 }
@@ -30,9 +30,9 @@ pub struct ResolveIotaNamesAddressArgs {
     graphql_type = "Query",
     variables = "IotaNamesRegistrationsArgs"
 )]
-pub struct IotaNamesAddressRegistrationsQuery {
+pub struct IotaNamesAddressRegistrationsQueryFragment {
     #[arguments(address: $address)]
-    pub address: Option<IotaNamesRegistrationsQuery>,
+    pub address: Option<IotaNamesRegistrationsQueryFragment>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -41,9 +41,9 @@ pub struct IotaNamesAddressRegistrationsQuery {
     graphql_type = "Query",
     variables = "IotaNamesDefaultNameArgs"
 )]
-pub struct IotaNamesAddressDefaultNameQuery {
+pub struct IotaNamesAddressDefaultNameQueryFragment {
     #[arguments(address: $address)]
-    pub address: Option<IotaNamesDefaultNameQuery>,
+    pub address: Option<IotaNamesDefaultNameQueryFragment>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -52,7 +52,7 @@ pub struct IotaNamesAddressDefaultNameQuery {
     graphql_type = "Address",
     variables = "IotaNamesRegistrationsArgs"
 )]
-pub struct IotaNamesRegistrationsQuery {
+pub struct IotaNamesRegistrationsQueryFragment {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
     pub iota_names_registrations: NameRegistrationConnection,
 }
@@ -72,7 +72,7 @@ pub struct IotaNamesRegistrationsArgs {
     graphql_type = "Address",
     variables = "IotaNamesDefaultNameArgs"
 )]
-pub struct IotaNamesDefaultNameQuery {
+pub struct IotaNamesDefaultNameQueryFragment {
     #[arguments(format: $format)]
     pub iota_names_default_name: Option<String>,
 }

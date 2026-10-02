@@ -151,6 +151,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::Upgrade>();
     assert_display::<iota_sdk_types::UpgradeInfo>();
     assert_display::<iota_sdk_types::UpgradePolicy>();
+    assert_display::<iota_sdk_types::UpgradePolicyError>();
     assert_display::<iota_sdk_types::UserSignature>();
     assert_display::<iota_sdk_types::ValidatorAggregatedSignature>();
     assert_display::<iota_sdk_types::ValidatorCommittee>();

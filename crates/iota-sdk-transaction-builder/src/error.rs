@@ -4,7 +4,6 @@
 
 //! Transaction Builder errors.
 
-use base64ct::Error as Base64Error;
 use iota_types::{Address, ObjectId, TransactionDigest};
 
 #[derive(Debug, thiserror::Error)]
@@ -28,36 +27,18 @@ pub enum TransactionBuilderError {
     GasCoinTransferredMoreThanOnce,
     #[error("BCS serialization error: {0}")]
     Bcs(iota_types::BcsError),
-    #[error("Decoding error: {0}")]
-    Decoding(#[from] Base64Error),
-    #[error("Missing object id")]
-    MissingObjectId,
-    #[error("Missing version for object {0}")]
-    MissingVersion(ObjectId),
-    #[error("Missing digest for object {0}")]
-    MissingDigest(ObjectId),
     #[error("Missing transaction for digest {0}")]
     MissingTransaction(TransactionDigest),
-    #[error("Missing gas objects")]
-    MissingGasObjects,
     #[error("Missing gas budget")]
     MissingGasBudget,
     #[error("Missing gas price")]
     MissingGasPrice,
-    #[error("Missing object kind for object {0}")]
-    MissingObjectKind(ObjectId),
-    #[error("Missing initial shared version for object {0}")]
-    MissingInitialSharedVersion(ObjectId),
-    #[error("Missing pure value")]
-    MissingPureValue,
     #[error("Missing protocol value: {name}")]
     MissingProtocolValue { name: String },
     #[error("Invalid protocol value: {name} = {value}")]
     InvalidProtocolValue { name: String, value: String },
     #[error("Unknown shared object mutability for object {0}")]
     SharedObjectMutability(ObjectId),
-    #[error("Unsupported literal")]
-    UnsupportedLiteral,
     #[error("only programmable transactions can be converted into a TransactionBuilder")]
     UnsupportedTransactionKind,
     #[error("Invalid account for move authenticator: {0}")]
