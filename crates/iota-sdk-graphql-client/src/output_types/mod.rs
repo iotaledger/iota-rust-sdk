@@ -6,7 +6,7 @@ use std::str::FromStr;
 
 use base64ct::Encoding;
 use cynic::serde;
-use iota_types::{SignedTransaction, TransactionEffects, TypeTag};
+use iota_types::{SignedTransaction, Transaction, TransactionEffects, TypeTag};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 use crate::{
@@ -20,16 +20,50 @@ use crate::{
 /// The result of a simulation (dry run), which includes the effects of the
 /// transaction and intermediate results for each command.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DryRunResult {
     /// The error that occurred during dry run execution, if any.
     pub error: Option<String>,
     /// The intermediate results for each command of the dry run execution,
     /// including contents of mutated references and return values.
     pub results: Vec<DryRunEffect>,
-    /// The transaction block representing the dry run execution.
-    pub transaction: Option<SignedTransaction>,
+    /// The transaction that was dry run, without signatures.
+    pub transaction: Option<Transaction>,
     /// The effects of the transaction execution.
     pub effects: Option<TransactionEffects>,
+    /// The gas price to use. This is the reference gas price, or a higher
+    /// price if an input object is congested.
+    #[serde(default, with = "option_u64_string")]
+    pub suggested_gas_price: Option<u64>,
+}
+
+/// Serializes an `Option<u64>` as a string in human-readable formats, so the
+/// value stays exact in JavaScript.
+mod option_u64_string {
+    use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error};
+
+    pub(super) fn serialize<S: Serializer>(
+        value: &Option<u64>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error> {
+        if serializer.is_human_readable() {
+            value.map(|v| v.to_string()).serialize(serializer)
+        } else {
+            value.serialize(serializer)
+        }
+    }
+
+    pub(super) fn deserialize<'de, D: Deserializer<'de>>(
+        deserializer: D,
+    ) -> Result<Option<u64>, D::Error> {
+        if deserializer.is_human_readable() {
+            Option::<String>::deserialize(deserializer)?
+                .map(|v| v.parse().map_err(D::Error::custom))
+                .transpose()
+        } else {
+            Option::<u64>::deserialize(deserializer)
+        }
+    }
 }
 
 /// Effects of a single command in the dry run, including mutated references
