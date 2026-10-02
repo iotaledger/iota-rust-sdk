@@ -50,7 +50,7 @@ impl GraphQLClient {
             .and_then(|x| x.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?
             .map(|obj| obj.data.into_package()))
     }
@@ -93,8 +93,13 @@ impl GraphQLClient {
             .collect::<Result<Vec<_>, base64ct::Error>>()?;
         let packages = bcs
             .iter()
-            .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
+            .map(|b| {
+                Ok(bcs::from_bytes::<Object>(b)
+                    .map_err(iota_types::BcsError::new)?
+                    .data
+                    .into_package())
+            })
+            .collect::<Result<Vec<_>, iota_types::BcsError>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -115,7 +120,7 @@ impl GraphQLClient {
             .and_then(|x| x.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(&bcs.0))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?
             .map(|obj| obj.data.into_package()))
     }
@@ -161,8 +166,13 @@ impl GraphQLClient {
             .collect::<Result<Vec<_>, base64ct::Error>>()?;
         let packages = bcs
             .iter()
-            .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
+            .map(|b| {
+                Ok(bcs::from_bytes::<Object>(b)
+                    .map_err(iota_types::BcsError::new)?
+                    .data
+                    .into_package())
+            })
+            .collect::<Result<Vec<_>, iota_types::BcsError>>()?;
 
         Ok(Page::new(page_info, packages))
     }

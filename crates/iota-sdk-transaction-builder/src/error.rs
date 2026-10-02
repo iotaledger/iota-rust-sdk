@@ -26,7 +26,7 @@ pub enum TransactionBuilderError {
     #[error("only one command can transfer the gas coin")]
     GasCoinTransferredMoreThanOnce,
     #[error("BCS serialization error: {0}")]
-    Bcs(bcs::Error),
+    Bcs(iota_types::BcsError),
     #[error("Missing transaction for digest {0}")]
     MissingTransaction(TransactionDigest),
     #[error("Missing gas budget")]
