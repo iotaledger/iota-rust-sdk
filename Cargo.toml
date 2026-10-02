@@ -10,6 +10,7 @@ members = [
   "crates/iota-sdk-ffi",
   "crates/iota-sdk-graphql-client",
   "crates/iota-sdk-graphql-client-build",
+  "crates/iota-sdk-graphql-client-next",
   "crates/iota-sdk-grpc-client",
   "crates/iota-sdk-grpc-proto-build",
   "crates/iota-sdk-grpc-types",
@@ -63,6 +64,9 @@ tokio = "1.53.1"
 tokio-tungstenite = { version = "0.28", default-features = false, features = ["connect", "rustls-tls-webpki-roots"] }
 tonic = "0.14"
 tracing = "0.1"
+# Custom profile for WASM builds — optimizes for binary size.
+# Usage: cargo build -p iota-sdk-wasm --profile wasm-release --target wasm32-unknown-unknown
+url = "2.5.8"
 variadics_please = "2.0"
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
@@ -76,6 +80,7 @@ iota-client-api = { version = "1.0.0-beta.1", package = "iota-sdk-client-api", p
 iota-crypto = { version = "1.0.0-beta.1", package = "iota-sdk-crypto", path = "crates/iota-sdk-crypto", default-features = false }
 iota-graphql-client = { version = "1.0.0-beta.1", package = "iota-sdk-graphql-client", path = "crates/iota-sdk-graphql-client", default-features = false }
 iota-graphql-client-build = { version = "1.0.0-beta.1", package = "iota-sdk-graphql-client-build", path = "crates/iota-sdk-graphql-client-build", default-features = false }
+iota-graphql-client-next = { version = "1.0.0-beta.1", package = "iota-sdk-graphql-client-next", path = "crates/iota-sdk-graphql-client-next", default-features = false }
 iota-grpc-client = { version = "1.0.0-beta.1", package = "iota-sdk-grpc-client", path = "crates/iota-sdk-grpc-client", default-features = false }
 iota-grpc-proto-build = { version = "0.0.1-alpha.1", package = "iota-sdk-grpc-proto-build", path = "crates/iota-sdk-grpc-proto-build", default-features = false }
 iota-grpc-types = { version = "1.0.0-beta.1", package = "iota-sdk-grpc-types", path = "crates/iota-sdk-grpc-types", default-features = false }
@@ -84,8 +89,6 @@ iota-sdk = { version = "3.0.0-beta.1", package = "iota-sdk", path = "crates/iota
 iota-transaction-builder = { version = "1.0.0-beta.1", package = "iota-sdk-transaction-builder", path = "crates/iota-sdk-transaction-builder", default-features = false }
 iota-types = { version = "1.0.0-beta.1", package = "iota-sdk-types", path = "crates/iota-sdk-types", default-features = false }
 
-# Custom profile for WASM builds — optimizes for binary size.
-# Usage: cargo build -p iota-sdk-wasm --profile wasm-release --target wasm32-unknown-unknown
 [profile.wasm-release]
 codegen-units = 1
 inherits = "release"
