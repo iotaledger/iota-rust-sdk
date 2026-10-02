@@ -1,6 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+#![doc = include_str!("../README.md")]
+
 use std::{
     collections::HashMap,
     sync::{Mutex, OnceLock},
