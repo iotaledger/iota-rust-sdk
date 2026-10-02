@@ -1,12 +1,13 @@
 [package]
-name = "iota-sdk-graphql-client"
+name = "iota-sdk-graphql-client-next"
 version = "1.0.0-beta.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
+publish = false
 readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
-description = "GraphQL RPC Client for the IOTA Blockchain"
+description = "GraphQL RPC client for the IOTA blockchain"
 
 [package.metadata.docs.rs]
 # To build locally:
@@ -22,12 +23,23 @@ rustdoc-args = [
 ]
 
 [features]
-# TLS crypto provider and trust anchors; see README.md.
-default = ["tls-native-roots", "tls-ring", "tls-webpki-roots"]
+# Built-in HTTP transport, TLS crypto provider and trust anchors; see README.md.
+default = ["reqwest", "tls-native-roots", "tls-ring", "tls-webpki-roots"]
 move-types = ["dep:iota-move-types"]
-tls-aws-lc = ["dep:rustls", "reqwest/rustls-no-provider", "rustls/aws-lc-rs"]
+reqwest = ["dep:reqwest"]
+tls-aws-lc = [
+  "dep:rustls",
+  "reqwest",
+  "reqwest/rustls-no-provider",
+  "rustls/aws-lc-rs",
+]
 tls-native-roots = []
-tls-ring = ["dep:rustls", "reqwest/rustls-no-provider", "rustls/ring"]
+tls-ring = [
+  "dep:rustls",
+  "reqwest",
+  "reqwest/rustls-no-provider",
+  "rustls/ring",
+]
 tls-webpki-roots = ["dep:webpki-root-certs"]
 
 [lints]
@@ -35,52 +47,53 @@ workspace = true
 
 [dependencies]
 # external dependencies
-async-stream.workspace = true
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
 cynic.workspace = true
-derive_more = { workspace = true, features = ["from"] }
 futures.workspace = true
-reqwest = { workspace = true, features = ["json"] }
+reqwest = { workspace = true, optional = true }
 serde.workspace = true
 serde_json.workspace = true
-strum = { workspace = true, features = ["derive"] }
 thiserror.workspace = true
-tokio = { workspace = true, features = ["time"] }
 tracing.workspace = true
 url.workspace = true
-variadics_please.workspace = true
 
 # internal dependencies
+iota-client-api.workspace = true
 iota-move-types = { workspace = true, features = ["serde"], optional = true }
-iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
-# Subscriptions are delivered over a WebSocket. The transport differs per
-# target, so `graphql-ws-client` picks up a different integration on each.
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-graphql-ws-client = { workspace = true, features = ["tungstenite-0.28"] }
 rustls = { version = "0.23", default-features = false, optional = true }
-tokio-tungstenite.workspace = true
+tokio = { workspace = true, features = ["time"] }
 webpki-root-certs = { workspace = true, optional = true }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-getrandom_2.workspace = true
-graphql-ws-client = { workspace = true, features = ["ws_stream_wasm"] }
 js-sys.workspace = true
 wasm-bindgen.workspace = true
-wasm-bindgen-futures.workspace = true
-ws_stream_wasm.workspace = true
 
 [dev-dependencies]
 # external dependencies
 eyre.workspace = true
 
 # internal dependencies
-iota-types = { workspace = true, features = ["serde", "rand", "hash"] }
+iota-crypto = { workspace = true, features = ["ed25519"] }
+iota-transaction-builder.workspace = true
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 
 [build-dependencies]
 iota-graphql-client-build.workspace = true
+
+[[example]]
+name = "configuration"
+required-features = ["reqwest"]
+
+[[example]]
+name = "custom_transport"
+required-features = ["reqwest"]
+
+[[example]]
+name = "move_objects"
+required-features = ["move-types"]

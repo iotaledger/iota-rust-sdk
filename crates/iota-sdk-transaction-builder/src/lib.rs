@@ -348,7 +348,7 @@ pub use self::builder::gas_station::{
 };
 pub use self::{
     builder::{
-        TransactionBuildData, TransactionBuilder,
+        Offline, TransactionBuildData, TransactionBuilder,
         client::{
             ObjectsPage, ProtocolConfig, TransactionBuilderClient, TransactionBuilderClientBase,
             TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
