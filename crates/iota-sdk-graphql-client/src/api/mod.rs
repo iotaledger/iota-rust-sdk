@@ -21,10 +21,10 @@ mod package;
 pub(crate) mod transactions;
 
 #[cfg(not(target_arch = "wasm32"))]
-pub(crate) type QueryFuture<T> = ::std::pin::Pin<Box<dyn ::std::future::Future<Output = T> + Send>>;
+pub(crate) type QueryFuture<T> = futures::future::BoxFuture<'static, T>;
 // The HTTP client's futures are not `Send` on wasm32.
 #[cfg(target_arch = "wasm32")]
-pub(crate) type QueryFuture<T> = ::std::pin::Pin<Box<dyn ::std::future::Future<Output = T>>>;
+pub(crate) type QueryFuture<T> = futures::future::LocalBoxFuture<'static, T>;
 
 /// Generate a query object: a struct that runs its query when awaited.
 ///
