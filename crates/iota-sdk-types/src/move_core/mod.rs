@@ -6,7 +6,6 @@ mod parse;
 
 mod identifier;
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization;
 mod struct_tag;
 mod type_tag;

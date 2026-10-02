@@ -46,7 +46,6 @@ impl Digest {
 
     /// Generates a new digest from the provided random number generator.
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::CryptoRng,
@@ -57,7 +56,6 @@ impl Digest {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
@@ -256,11 +254,9 @@ type DigestSerialization =
     ::serde_with::As<::serde_with::IfIsHumanReadable<ReadableDigest, ::serde_with::Bytes>>;
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 struct ReadableDigest;
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 impl serde_with::SerializeAs<[u8; Digest::LENGTH]> for ReadableDigest {
     fn serialize_as<S>(source: &[u8; Digest::LENGTH], serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -272,7 +268,6 @@ impl serde_with::SerializeAs<[u8; Digest::LENGTH]> for ReadableDigest {
 }
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDigest {
     fn deserialize_as<D>(deserializer: D) -> Result<[u8; Digest::LENGTH], D::Error>
     where
@@ -342,7 +337,6 @@ macro_rules! impl_digest_wrapper {
 
             /// Generates a new digest from the provided random number generator.
             #[cfg(feature = "rand")]
-            #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
             pub fn random_with<R>(rng: R) -> Self
             where
                 R: rand_core::CryptoRng,
@@ -352,7 +346,6 @@ macro_rules! impl_digest_wrapper {
 
             /// Generates a new random digest.
             #[cfg(feature = "rand")]
-            #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
             pub fn random() -> Self {
                 Self(Digest::random())
             }
