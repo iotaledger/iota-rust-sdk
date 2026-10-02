@@ -8,6 +8,19 @@ readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "Transaction API for the IOTA Blockchain Rust SDK"
 
+[package.metadata.docs.rs]
+# To build locally:
+# RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --features gas-station --no-deps --open
+features = ["gas-station"]
+rustdoc-args = [
+  # Enable doc_cfg showing the required features.
+  "--cfg=doc_cfg",
+  # Generate links to definition in rustdoc source code pages
+  # https://github.com/rust-lang/rust/pull/84176
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
+
 [features]
 default = []
 gas-station = ["dep:reqwest"]
