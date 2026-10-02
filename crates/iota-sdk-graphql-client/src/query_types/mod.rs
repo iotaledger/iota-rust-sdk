@@ -92,8 +92,9 @@ pub use transaction::{
     TransactionBlockIndexedQueryFragment, TransactionBlockKindInput, TransactionBlockQueryFragment,
     TransactionBlockWithEffects, TransactionBlockWithEffectsQueryFragment,
     TransactionBlocksEffectsQueryFragment, TransactionBlocksQueryArgs,
-    TransactionBlocksQueryFragment, TransactionBlocksWithEffectsQueryFragment, TransactionsFilter,
-    TransactionsSelector,
+    TransactionBlocksQueryFragment, TransactionBlocksWithEffectsQueryFragment,
+    TransactionsByDigestsPage, TransactionsByDigestsQueryArgs, TransactionsByDigestsQueryFragment,
+    TransactionsFilter, TransactionsSelector,
 };
 
 use crate::error;

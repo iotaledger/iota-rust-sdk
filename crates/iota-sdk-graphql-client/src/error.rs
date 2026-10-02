@@ -144,6 +144,9 @@ pub enum GraphQLError {
     /// error.
     #[error("subscription lagged: {count} payload(s) dropped by the server")]
     Lagged { count: u32 },
+    /// Any other error not covered by the above variants.
+    #[error("other error: {0}")]
+    Other(#[source] BoxError),
 }
 
 /// The HTTP response a [`GraphQLError::Http`] or [`GraphQLError::Json`] was
