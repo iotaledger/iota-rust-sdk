@@ -7,11 +7,18 @@
 //! for future core type evolution. When core types themselves
 //! need versioning, these wrappers will evolve naturally.
 
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
+
 pub mod field;
 pub mod headers;
 pub mod proto;
 pub mod read_mask_fields;
 pub mod read_masks;
+
+pub use iota_types;
+pub use prost;
+pub use prost_types;
+pub use tonic;
 
 /// Joins field names with commas to build a read mask string constant.
 ///
@@ -74,8 +81,7 @@ pub fn field_mask_normalize(mask: &str) -> String {
 /// Unlike [`field_mask!`], this macro works with any expression that
 /// evaluates to `&str`, including `const` values from
 /// [`read_masks`](crate::read_masks). The result is a heap-allocated
-/// `String` suitable for passing to the client's `read_mask` parameter
-/// (e.g. `Some(&mask)`).
+/// `String` suitable for passing to the client's `read_mask` setters.
 ///
 /// Overlapping paths are normalized: a broader path subsumes all of its
 /// sub-paths. For example, `"effects"` and `"effects.bcs"` are merged into

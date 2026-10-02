@@ -14,8 +14,8 @@ use crate::{
     error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldQuery, DynamicFieldsOwnerQuery,
-        DynamicObjectFieldQuery,
+        DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldQueryFragment,
+        DynamicFieldsOwnerQueryFragment, DynamicObjectFieldQueryFragment,
     },
     streams::stream_paginated_query,
 };
@@ -62,7 +62,7 @@ impl GraphQLClient {
         name: impl Into<NameValue>,
     ) -> GraphQLResult<Option<DynamicFieldOutput>> {
         let bcs = name.into().0;
-        let operation = DynamicFieldQuery::build(DynamicFieldArgs {
+        let operation = DynamicFieldQueryFragment::build(DynamicFieldArgs {
             address,
             name: crate::query_types::DynamicFieldName {
                 type_tag: type_tag.to_string(),
@@ -97,7 +97,7 @@ impl GraphQLClient {
         name: impl Into<NameValue>,
     ) -> GraphQLResult<Option<DynamicFieldOutput>> {
         let bcs = name.into().0;
-        let operation = DynamicObjectFieldQuery::build(DynamicFieldArgs {
+        let operation = DynamicObjectFieldQueryFragment::build(DynamicFieldArgs {
             address,
             name: crate::query_types::DynamicFieldName {
                 type_tag: type_tag.to_string(),
@@ -125,7 +125,7 @@ impl GraphQLClient {
         pagination_filter: PaginationFilter,
     ) -> GraphQLResult<Page<DynamicFieldOutput>> {
         let pagination = self.pagination_filter(pagination_filter).await;
-        let operation = DynamicFieldsOwnerQuery::build(DynamicFieldConnectionArgs {
+        let operation = DynamicFieldsOwnerQueryFragment::build(DynamicFieldConnectionArgs {
             address,
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
@@ -134,7 +134,7 @@ impl GraphQLClient {
         });
         let response = self.run_query(&operation).await?;
 
-        let DynamicFieldsOwnerQuery { owner: Some(dfs) } = response else {
+        let DynamicFieldsOwnerQueryFragment { owner: Some(dfs) } = response else {
             return Ok(Page::new_empty());
         };
 
@@ -149,7 +149,7 @@ impl GraphQLClient {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use base64ct::Encoding;
     use iota_types::{ObjectId, TypeTag};

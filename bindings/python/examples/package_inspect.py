@@ -109,7 +109,7 @@ async def main():
                 type_tag = f"{package_prefix}::{module_name}::{struct_.name}"
                 print(f"    - {type_tag}")
                 has_key_ability = (struct_.abilities is not None and
-                                   MoveAbility.KEY in struct_.abilities)
+                                   GraphQlMoveAbility.KEY in struct_.abilities)
                 is_generic = (struct_.type_parameters is not None and
                               len(struct_.type_parameters) > 0)
                 await print_object_samples(client, type_tag, has_key_ability,
@@ -121,8 +121,8 @@ async def main():
 
 
 def forward_page(cursor=None):
-    return PaginationFilter(
-        direction=Direction.FORWARD,
+    return GraphQlPaginationFilter(
+        direction=GraphQlDirection.FORWARD,
         cursor=cursor,
     )
 
@@ -186,8 +186,8 @@ async def print_object_samples(client, type_tag, has_key_ability, is_generic):
         return
 
     objects = await client.objects(
-        ObjectFilter(type_tag=type_tag),
-        PaginationFilter(direction=Direction.FORWARD, limit=3),
+        GraphQlObjectFilter(type_tag=type_tag),
+        GraphQlPaginationFilter(direction=GraphQlDirection.FORWARD, limit=3),
     )
 
     if len(objects.data) == 0:
@@ -224,8 +224,8 @@ def extract_policy(contents):
 
 async def resolve_upgrade_cap_id(client, package_id):
     page = await client.transactions_effects(
-        TransactionsFilter().with_changed_object(package_id),
-        PaginationFilter(direction=Direction.FORWARD, limit=1),
+        GraphQlTransactionsFilter().with_changed_object(package_id),
+        GraphQlPaginationFilter(direction=GraphQlDirection.FORWARD, limit=1),
     )
 
     for effects in page.data:
@@ -344,7 +344,7 @@ async def was_package_published_as_immutable(client, package_id):
 
     while True:
         page = await client.transactions_data_effects(
-            TransactionsFilter().with_changed_object(package_id),
+            GraphQlTransactionsFilter().with_changed_object(package_id),
             forward_page(cursor),
         )
 
@@ -364,7 +364,7 @@ async def was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id):
 
     while True:
         page = await client.transactions_data_effects(
-            TransactionsFilter().with_input_object(upgrade_cap_id),
+            GraphQlTransactionsFilter().with_input_object(upgrade_cap_id),
             forward_page(cursor),
         )
 

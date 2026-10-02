@@ -12,7 +12,7 @@ use crate::{
     GraphQLClient,
     error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter},
-    query_types::{CoinMetadata, CoinMetadataArgs, CoinMetadataQuery, ObjectFilter},
+    query_types::{CoinMetadata, CoinMetadataArgs, CoinMetadataQueryFragment, ObjectFilter},
     streams::stream_paginated_query,
 };
 
@@ -98,7 +98,7 @@ impl GraphQLClient {
 
     /// Get the coin metadata for the coin type.
     pub async fn coin_metadata(&self, coin_type: &str) -> GraphQLResult<Option<CoinMetadata>> {
-        let operation = CoinMetadataQuery::build(CoinMetadataArgs { coin_type });
+        let operation = CoinMetadataQueryFragment::build(CoinMetadataArgs { coin_type });
         let response = self.run_query(&operation).await?;
 
         Ok(response.coin_metadata)
@@ -115,7 +115,7 @@ impl GraphQLClient {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use futures::StreamExt;
     use iota_types::{Address, Ed25519PublicKey};

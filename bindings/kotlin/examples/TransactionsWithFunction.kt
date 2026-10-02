@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import iota_sdk.GraphQlClient
-import iota_sdk.TransactionsFilter
+import iota_sdk.GraphQlTransactionsFilter
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -10,7 +10,7 @@ fun main() = runBlocking {
         val client = GraphQlClient.newTestnet()
         val transactions =
             client.transactions(
-                TransactionsFilter().withFunction("0x3::iota_system::request_add_stake")
+                GraphQlTransactionsFilter().withFunction("0x3::iota_system::request_add_stake")
             )
         for (transaction in transactions.data) {
             println("Digest: ${transaction.transaction.digest()}")

@@ -17,21 +17,22 @@ use crate::{
     error::{GraphQLError, GraphQLResult},
     pagination::{Page, PaginationFilter},
     query_types::{
-        IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery,
-        IotaNamesDefaultNameArgs, IotaNamesDefaultNameQuery, IotaNamesRegistrationsArgs,
-        IotaNamesRegistrationsQuery, ResolveIotaNamesAddressArgs, ResolveIotaNamesAddressQuery,
+        IotaNamesAddressDefaultNameQueryFragment, IotaNamesAddressRegistrationsQueryFragment,
+        IotaNamesDefaultNameArgs, IotaNamesDefaultNameQueryFragment, IotaNamesRegistrationsArgs,
+        IotaNamesRegistrationsQueryFragment, ResolveIotaNamesAddressArgs,
+        ResolveIotaNamesAddressQueryFragment,
     },
 };
 
 impl GraphQLClient {
     /// Return the resolved address for the given name.
     pub async fn iota_names_lookup(&self, name: &str) -> GraphQLResult<Option<Address>> {
-        let operation = ResolveIotaNamesAddressQuery::build(ResolveIotaNamesAddressArgs {
+        let operation = ResolveIotaNamesAddressQueryFragment::build(ResolveIotaNamesAddressArgs {
             name: name.to_owned(),
         });
         let response = self.run_query(&operation).await?;
 
-        let ResolveIotaNamesAddressQuery {
+        let ResolveIotaNamesAddressQueryFragment {
             resolve_iota_names_address: Some(address),
         } = response
         else {
@@ -48,18 +49,19 @@ impl GraphQLClient {
         pagination_filter: PaginationFilter,
     ) -> GraphQLResult<Page<NameRegistration>> {
         let pagination = self.pagination_filter(pagination_filter).await;
-        let operation = IotaNamesAddressRegistrationsQuery::build(IotaNamesRegistrationsArgs {
-            address,
-            after: pagination.after,
-            before: pagination.before,
-            first: pagination.first,
-            last: pagination.last,
-        });
+        let operation =
+            IotaNamesAddressRegistrationsQueryFragment::build(IotaNamesRegistrationsArgs {
+                address,
+                after: pagination.after,
+                before: pagination.before,
+                first: pagination.first,
+                last: pagination.last,
+            });
         let response = self.run_query(&operation).await?;
 
-        let IotaNamesAddressRegistrationsQuery {
+        let IotaNamesAddressRegistrationsQueryFragment {
             address:
-                Some(IotaNamesRegistrationsQuery {
+                Some(IotaNamesRegistrationsQueryFragment {
                     iota_names_registrations,
                 }),
         } = response
@@ -83,15 +85,15 @@ impl GraphQLClient {
         address: Address,
         format: impl Into<Option<NameFormat>>,
     ) -> GraphQLResult<Option<Name>> {
-        let operation = IotaNamesAddressDefaultNameQuery::build(IotaNamesDefaultNameArgs {
+        let operation = IotaNamesAddressDefaultNameQueryFragment::build(IotaNamesDefaultNameArgs {
             address,
             format: format.into().map(Into::into),
         });
         let response = self.run_query(&operation).await?;
 
-        let IotaNamesAddressDefaultNameQuery {
+        let IotaNamesAddressDefaultNameQueryFragment {
             address:
-                Some(IotaNamesDefaultNameQuery {
+                Some(IotaNamesDefaultNameQueryFragment {
                     iota_names_default_name: Some(name),
                 }),
         } = response

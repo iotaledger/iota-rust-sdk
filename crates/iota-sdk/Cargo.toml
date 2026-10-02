@@ -4,7 +4,7 @@ version = "3.0.0-beta.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
-readme = "../../README.md"
+readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "The official SDK for IOTA"
 
@@ -14,15 +14,24 @@ crate-type = ["cdylib", "rlib"]
 [lints]
 workspace = true
 
+[package.metadata.docs.rs]
+# To build locally:
+# RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --all-features --no-deps --open
+all-features = true
+rustdoc-args = [
+  # Enable doc_cfg showing the required features.
+  "--cfg=doc_cfg",
+  # Generate links to definition in rustdoc source code pages
+  # https://github.com/rust-lang/rust/pull/84176
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
+
 [features]
 default = [
   "bech32",
   "crypto",
   "ed25519",
-  "graphql",
-  "graphql-tls-native-roots",
-  "graphql-tls-ring",
-  "graphql-tls-webpki-roots",
   "hash",
   "mnemonic",
   "passkey",
