@@ -12,7 +12,9 @@ use crate::{
     GraphQLClient,
     error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter},
-    query_types::{ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs},
+    query_types::{
+        ObjectFilter, ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
+    },
     streams::stream_paginated_query,
 };
 
@@ -40,7 +42,7 @@ impl GraphQLClient {
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> GraphQLResult<Option<Object>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs {
+        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
             object_id,
             version: version.into().map(|v| v.as_u64()),
         });
@@ -78,7 +80,7 @@ impl GraphQLClient {
         pagination_filter: PaginationFilter,
     ) -> GraphQLResult<Page<Object>> {
         let pagination = self.pagination_filter(pagination_filter).await;
-        let operation = ObjectsQuery::build(ObjectsQueryArgs {
+        let operation = ObjectsQueryFragment::build(ObjectsQueryArgs {
             after: pagination.after,
             before: pagination.before,
             filter: filter.into(),
@@ -110,7 +112,7 @@ impl GraphQLClient {
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
     /// [`Address`](iota_types::Address).
     pub async fn object_bcs(&self, object_id: ObjectId) -> GraphQLResult<Option<Vec<u8>>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs {
+        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
             object_id,
             version: None,
         });
@@ -133,7 +135,7 @@ impl GraphQLClient {
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> GraphQLResult<Option<serde_json::Value>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs {
+        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
             object_id,
             version: version.into().map(|v| v.as_u64()),
         });
@@ -157,7 +159,7 @@ impl GraphQLClient {
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> GraphQLResult<Option<Vec<u8>>> {
-        let operation = ObjectQuery::build(ObjectQueryArgs {
+        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
             object_id,
             version: version.into().map(|v| v.as_u64()),
         });
@@ -173,7 +175,7 @@ impl GraphQLClient {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use iota_types::ObjectId;
 

@@ -139,9 +139,6 @@ jwk = string   ; kty
 jwk-id = string   ; iss
          string   ; kid
 
-key-pair = bytes   ; private-key
-           bytes   ; public-key
-
 kiosk-borrow = id   ; kiosk-id
                id   ; item-id
 
@@ -210,9 +207,6 @@ random-inner = u64     ; version
 
 scalar = bool   ; dummy-field
 
-scenario = u64          ; txn-number
-           tx-context   ; ctx
-
 size    = uleb128   ; BCS sequence/string length (ULEB128-encoded)
 
 staked-iota = uid   ; id
@@ -266,8 +260,6 @@ system-parameters-v1 = u64   ; epoch-duration-ms
                        u64   ; validator-low-stake-grace-period
                        bag   ; extra-fields
 
-test = uid   ; id
-
 timelock-unlock-condition = u32   ; unix-time
 
 timelocked-staked-iota = uid                    ; id
@@ -310,15 +302,6 @@ tx-context = address   ; sender
              u64       ; epoch
              u64       ; epoch-timestamp-ms
              u64       ; ids-created
-
-tx-context-builder = address                 ; sender
-                     u64                     ; epoch
-                     u64                     ; epoch-timestamp-ms
-                     u64                     ; ids-created
-                     (%d00 / %d01 u64)       ; rgp
-                     u64                     ; gas-price
-                     u64                     ; gas-budget
-                     (%d00 / %d01 address)   ; sponsor
 
 type-name = string   ; name
 

@@ -9,7 +9,7 @@ use iota_sdk::{grpc_client::read_mask_fields::ObjectReadMask, grpc_types::v1 as 
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::{client::GrpcClient, read_mask_fields::ObjectField},
+    grpc::{client::GrpcClient, read_mask_fields::GrpcObjectField},
     types::{
         digest::ObjectDigest,
         object::{Object, ObjectId},
@@ -21,7 +21,7 @@ use crate::{
 /// optional version. If no version is provided, the latest version is
 /// returned.
 #[derive(uniffi::Record)]
-pub struct ObjectRequest {
+pub struct GrpcObjectRequest {
     /// The id of the object.
     pub object_id: Arc<ObjectId>,
     /// The optional version of the object.
@@ -103,15 +103,13 @@ impl GrpcClient {
     pub async fn objects(
         &self,
         object_ids: Vec<Arc<ObjectId>>,
-        read_mask: Option<Vec<ObjectField>>,
+        read_mask: Option<Vec<GrpcObjectField>>,
     ) -> Result<Vec<GrpcObject>> {
         let ids = object_ids.iter().map(|id| ***id).collect::<Vec<_>>();
         convert_objects(
             self.client()
-                .objects(
-                    ids,
-                    crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask),
-                )
+                .objects(ids)
+                .read_mask(crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask))
                 .await?
                 .into_inner(),
         )
@@ -128,8 +126,8 @@ impl GrpcClient {
     #[uniffi::method(default(read_mask = None))]
     pub async fn objects_with_versions(
         &self,
-        requests: Vec<ObjectRequest>,
-        read_mask: Option<Vec<ObjectField>>,
+        requests: Vec<GrpcObjectRequest>,
+        read_mask: Option<Vec<GrpcObjectField>>,
     ) -> Result<Vec<GrpcObject>> {
         let refs = requests
             .iter()
@@ -142,10 +140,8 @@ impl GrpcClient {
             .collect::<Vec<_>>();
         convert_objects(
             self.client()
-                .objects_with_versions(
-                    refs,
-                    crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask),
-                )
+                .objects_with_versions(refs)
+                .read_mask(crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask))
                 .await?
                 .into_inner(),
         )

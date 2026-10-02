@@ -259,12 +259,6 @@ pub(crate) fn decode_base64(input: &str) -> GraphQLResult<Vec<u8>> {
     base64ct::Base64::decode_vec(input).map_err(|e| GraphQLError::Parse(e.into()))
 }
 
-impl From<chrono::ParseError> for GraphQLError {
-    fn from(error: chrono::ParseError) -> Self {
-        Self::Parse(error.into())
-    }
-}
-
 impl From<DigestParseError> for GraphQLError {
     fn from(error: DigestParseError) -> Self {
         Self::Parse(error.into())
@@ -289,19 +283,6 @@ impl From<FromUtf8Error> for GraphQLError {
     }
 }
 
-#[cfg(not(target_arch = "wasm32"))]
-impl From<tokio_tungstenite::tungstenite::Error> for GraphQLError {
-    fn from(error: tokio_tungstenite::tungstenite::Error) -> Self {
-        Self::Subscription(error.into())
-    }
-}
-
-impl From<graphql_ws_client::Error> for GraphQLError {
-    fn from(error: graphql_ws_client::Error) -> Self {
-        Self::Subscription(error.into())
-    }
-}
-
 #[cfg(feature = "move-types")]
 impl From<iota_move_types::FromObjectError> for GraphQLError {
     fn from(error: iota_move_types::FromObjectError) -> Self {
@@ -309,14 +290,7 @@ impl From<iota_move_types::FromObjectError> for GraphQLError {
     }
 }
 
-#[cfg(target_arch = "wasm32")]
-impl From<ws_stream_wasm::WsErr> for GraphQLError {
-    fn from(error: ws_stream_wasm::WsErr) -> Self {
-        Self::Subscription(error.into())
-    }
-}
-
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use super::*;
 
