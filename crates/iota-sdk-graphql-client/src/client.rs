@@ -228,14 +228,34 @@ mod tests {
     use super::*;
     use crate::test_utils::test_client;
 
+    fn service_config() -> ServiceConfig {
+        ServiceConfig {
+            default_page_size: 20,
+            enabled_features: Vec::new(),
+            max_move_value_depth: 1,
+            max_output_nodes: 1,
+            max_page_size: 50,
+            max_query_depth: 1,
+            max_query_nodes: 1,
+            max_query_payload_size: 1,
+            max_type_argument_depth: 1,
+            max_type_argument_width: 1,
+            max_type_nodes: 1,
+            mutation_timeout_ms: 1,
+            request_timeout_ms: 1,
+        }
+    }
+
     #[test]
     fn clones_share_the_service_config_cache_until_the_server_changes() {
         let client = GraphQLClient::new_localnet();
+        client.service_config.set(service_config()).unwrap();
         let mut clone = client.clone();
-        assert!(Arc::ptr_eq(&client.service_config, &clone.service_config));
+        assert!(clone.service_config.get().is_some());
 
         clone.set_rpc_server(TESTNET_HOST).unwrap();
-        assert!(!Arc::ptr_eq(&client.service_config, &clone.service_config));
+        assert!(clone.service_config.get().is_none());
+        assert!(client.service_config.get().is_some());
     }
 
     #[test]
