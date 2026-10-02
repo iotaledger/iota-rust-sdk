@@ -323,7 +323,7 @@ pub mod coin {
         }
     }
 
-    impl_try_from_object_generic!(Coin<T>);
+    impl_try_from_object_generic!(Coin<phantom T>);
 
     /// Rust version of the Move `iota::coin::CoinMetadata<T>` type.
     ///
@@ -384,7 +384,7 @@ pub mod coin {
         }
     }
 
-    impl_try_from_object_generic!(CoinMetadata<T>);
+    impl_try_from_object_generic!(CoinMetadata<phantom T>);
 
     /// Rust version of the Move `iota::coin::RegulatedCoinMetadata<T>` type.
     ///
@@ -417,7 +417,7 @@ pub mod coin {
         }
     }
 
-    impl_try_from_object_generic!(RegulatedCoinMetadata<T>);
+    impl_try_from_object_generic!(RegulatedCoinMetadata<phantom T>);
 
     /// Rust version of the Move `iota::coin::TreasuryCap<T>` type.
     ///
@@ -439,7 +439,7 @@ pub mod coin {
         }
     }
 
-    impl_try_from_object_generic!(TreasuryCap<T>);
+    impl_try_from_object_generic!(TreasuryCap<phantom T>);
 
     /// Rust version of the Move `iota::coin::DenyCapV1<T>` type.
     ///
@@ -469,7 +469,7 @@ pub mod coin {
         }
     }
 
-    impl_try_from_object_generic!(DenyCapV1<T>);
+    impl_try_from_object_generic!(DenyCapV1<phantom T>);
 }
 
 /// Types from `0x2::table`.
@@ -1187,7 +1187,7 @@ pub mod labeler {
         }
     }
 
-    impl_try_from_object_generic!(LabelerCap<L>);
+    impl_try_from_object_generic!(LabelerCap<phantom L>);
 }
 
 /// Types from `0x2::linked_table`.
@@ -1530,7 +1530,7 @@ pub mod display {
         }
     }
 
-    impl_try_from_object_generic!(Display<T>);
+    impl_try_from_object_generic!(Display<phantom T>);
 
     /// Rust version of the Move `iota::display::DisplayCreated<T>` event
     /// type.
@@ -2055,7 +2055,7 @@ pub mod coin_manager {
         pub metadata_immutable: bool,
     }
 
-    impl_try_from_object_generic!(CoinManager<T>);
+    impl_try_from_object_generic!(CoinManager<phantom T>);
 
     /// Rust version of the Move
     /// `iota::coin_manager::CoinManagerTreasuryCap<T>` type.
@@ -2080,7 +2080,7 @@ pub mod coin_manager {
         }
     }
 
-    impl_try_from_object_generic!(CoinManagerTreasuryCap<T>);
+    impl_try_from_object_generic!(CoinManagerTreasuryCap<phantom T>);
 
     /// Rust version of the Move
     /// `iota::coin_manager::CoinManagerMetadataCap<T>` type.
@@ -2105,7 +2105,7 @@ pub mod coin_manager {
         }
     }
 
-    impl_try_from_object_generic!(CoinManagerMetadataCap<T>);
+    impl_try_from_object_generic!(CoinManagerMetadataCap<phantom T>);
 
     /// Rust version of the Move
     /// `iota::coin_manager::ImmutableCoinMetadata<T>` type.
@@ -2233,7 +2233,7 @@ pub mod token {
         }
     }
 
-    impl_try_from_object_generic!(Token<T>);
+    impl_try_from_object_generic!(Token<phantom T>);
 
     /// Rust version of the Move `iota::token::TokenPolicyCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2259,7 +2259,7 @@ pub mod token {
         }
     }
 
-    impl_try_from_object_generic!(TokenPolicyCap<T>);
+    impl_try_from_object_generic!(TokenPolicyCap<phantom T>);
 
     /// Rust version of the Move `iota::token::TokenPolicy<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2292,7 +2292,7 @@ pub mod token {
         }
     }
 
-    impl_try_from_object_generic!(TokenPolicy<T>);
+    impl_try_from_object_generic!(TokenPolicy<phantom T>);
 
     /// Rust version of the Move `iota::token::ActionRequest<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2961,7 +2961,7 @@ pub mod config {
         }
     }
 
-    impl_try_from_object_generic!(Config<WriteCap>);
+    impl_try_from_object_generic!(Config<phantom WriteCap>);
 
     /// Rust version of the Move `iota::config::Setting<Value>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -3332,7 +3332,7 @@ pub mod kiosk {
         }
     }
 
-    impl_try_from_object_generic!(PurchaseCap<T>);
+    impl_try_from_object_generic!(PurchaseCap<phantom T>);
 
     /// Rust version of the Move `iota::kiosk::Borrow` type.
     ///
@@ -3614,7 +3614,7 @@ pub mod transfer_policy {
         }
     }
 
-    impl_try_from_object_generic!(TransferPolicy<T>);
+    impl_try_from_object_generic!(TransferPolicy<phantom T>);
 
     /// Rust version of the Move
     /// `iota::transfer_policy::TransferPolicyCap<T>` type.
@@ -3641,7 +3641,7 @@ pub mod transfer_policy {
         }
     }
 
-    impl_try_from_object_generic!(TransferPolicyCap<T>);
+    impl_try_from_object_generic!(TransferPolicyCap<phantom T>);
 
     /// Rust version of the Move
     /// `iota::transfer_policy::TransferPolicyCreated<T>` event.
