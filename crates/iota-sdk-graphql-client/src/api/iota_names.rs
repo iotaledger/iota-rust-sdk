@@ -82,6 +82,47 @@ impl ListIotaNamesRegistrationsQuery {
     }
 }
 
+define_query! {
+    /// Query for [`GraphQLClient::iota_names_default_name`]. Await it to send
+    /// the request.
+    pub struct GetIotaNamesDefaultNameQuery {
+        client: GraphQLClient,
+        address: Address,
+        format: Option<NameFormat>,
+    }
+    output: GraphQLResult<Option<Name>>;
+}
+
+impl GetIotaNamesDefaultNameQuery {
+    /// Set the format of the returned name.
+    pub fn format(mut self, format: impl Into<Option<NameFormat>>) -> Self {
+        self.format = format.into();
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<Option<Name>> {
+        let operation = IotaNamesAddressDefaultNameQueryFragment::build(IotaNamesDefaultNameArgs {
+            address: self.address,
+            format: self.format.map(Into::into),
+        });
+        let response = self.client.run_query(&operation).await?;
+
+        let IotaNamesAddressDefaultNameQueryFragment {
+            address:
+                Some(IotaNamesDefaultNameQueryFragment {
+                    iota_names_default_name: Some(name),
+                }),
+        } = response
+        else {
+            return Ok(None);
+        };
+
+        Ok(Some(Name::from_str(&name).map_err(|source| {
+            GraphQLError::InvalidName { name, source }
+        })?))
+    }
+}
+
 impl GraphQLClient {
     /// Return the resolved address for the given name.
     pub async fn iota_names_lookup(&self, name: &str) -> GraphQLResult<Option<Address>> {
@@ -110,38 +151,45 @@ impl GraphQLClient {
     }
 
     /// Get the default name pointing to this address, if one exists.
-    pub async fn iota_names_default_name(
-        &self,
-        address: Address,
-        format: impl Into<Option<NameFormat>>,
-    ) -> GraphQLResult<Option<Name>> {
-        let operation = IotaNamesAddressDefaultNameQueryFragment::build(IotaNamesDefaultNameArgs {
+    pub fn iota_names_default_name(&self, address: Address) -> GetIotaNamesDefaultNameQuery {
+        GetIotaNamesDefaultNameQuery {
+            client: self.clone(),
             address,
-            format: format.into().map(Into::into),
-        });
-        let response = self.run_query(&operation).await?;
-
-        let IotaNamesAddressDefaultNameQueryFragment {
-            address:
-                Some(IotaNamesDefaultNameQueryFragment {
-                    iota_names_default_name: Some(name),
-                }),
-        } = response
-        else {
-            return Ok(None);
-        };
-
-        Ok(Some(Name::from_str(&name).map_err(|source| {
-            GraphQLError::InvalidName { name, source }
-        })?))
+            format: None,
+        }
     }
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use iota_types::Address;
+    use iota_types::{Address, iota_names::NameFormat};
 
     use crate::test_utils::{assert_backward_page, backward_page, sent_variables};
+
+    #[tokio::test]
+    async fn iota_names_default_name_sends_the_address_and_format() {
+        let vars = sent_variables(
+            "IotaNamesAddressDefaultNameQueryFragment",
+            |client| async move {
+                let _ = client
+                    .iota_names_default_name(Address::FRAMEWORK)
+                    .format(NameFormat::Dot)
+                    .await;
+            },
+        )
+        .await;
+        assert_eq!(vars["address"], Address::FRAMEWORK.to_string());
+        assert_eq!(vars["format"], "DOT");
+
+        let vars = sent_variables(
+            "IotaNamesAddressDefaultNameQueryFragment",
+            |client| async move {
+                let _ = client.iota_names_default_name(Address::FRAMEWORK).await;
+            },
+        )
+        .await;
+        assert!(vars["format"].is_null());
+    }
 
     #[tokio::test]
     async fn iota_names_registrations_sends_the_address_and_pagination() {

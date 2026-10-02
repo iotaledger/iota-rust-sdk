@@ -93,6 +93,60 @@ impl ListActiveValidatorsQuery {
     }
 }
 
+define_query! {
+    /// Query for [`GraphQLClient::reference_gas_price`]. Await it to send the
+    /// request.
+    pub struct GetReferenceGasPriceQuery {
+        client: GraphQLClient,
+        epoch: Option<u64>,
+    }
+    output: GraphQLResult<Option<u64>>;
+}
+
+impl GetReferenceGasPriceQuery {
+    /// Set the epoch number. Defaults to the last known epoch.
+    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
+        self.epoch = epoch_number.into();
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<Option<u64>> {
+        let operation = EpochSummaryQueryFragment::build(EpochArgs { id: self.epoch });
+        let response = self.client.run_query(&operation).await?;
+
+        response
+            .epoch
+            .and_then(|e| e.reference_gas_price)
+            .map(|x| x.try_into())
+            .transpose()
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::protocol_config`]. Await it to send the
+    /// request.
+    pub struct GetProtocolConfigQuery {
+        client: GraphQLClient,
+        version: Option<u64>,
+    }
+    output: GraphQLResult<ProtocolConfigs>;
+}
+
+impl GetProtocolConfigQuery {
+    /// Set the protocol version. Defaults to the latest version.
+    pub fn version(mut self, version: impl Into<Option<u64>>) -> Self {
+        self.version = version.into();
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<ProtocolConfigs> {
+        let operation =
+            ProtocolConfigQueryFragment::build(ProtocolVersionArgs { id: self.version });
+        let response = self.client.run_query(&operation).await?;
+        Ok(response.protocol_config)
+    }
+}
+
 impl GraphQLClient {
     /// Get the chain identifier.
     pub fn chain_id(&self) -> GetChainIdQuery {
@@ -101,34 +155,23 @@ impl GraphQLClient {
         }
     }
 
-    /// Get the reference gas price for the provided epoch or the last known one
-    /// if no epoch is provided.
+    /// Get the reference gas price. Defaults to the last known epoch.
     ///
-    /// This will return `Ok(None)` if the epoch requested is not available in
-    /// the GraphQL service (e.g., due to pruning).
-    pub async fn reference_gas_price(
-        &self,
-        epoch: impl Into<Option<u64>>,
-    ) -> GraphQLResult<Option<u64>> {
-        let operation = EpochSummaryQueryFragment::build(EpochArgs { id: epoch.into() });
-        let response = self.run_query(&operation).await?;
-
-        response
-            .epoch
-            .and_then(|e| e.reference_gas_price)
-            .map(|x| x.try_into())
-            .transpose()
+    /// This will resolve to `Ok(None)` if the epoch requested is not available
+    /// in the GraphQL service (e.g., due to pruning).
+    pub fn reference_gas_price(&self) -> GetReferenceGasPriceQuery {
+        GetReferenceGasPriceQuery {
+            client: self.clone(),
+            epoch: None,
+        }
     }
 
-    /// Get the protocol configuration.
-    pub async fn protocol_config(
-        &self,
-        version: impl Into<Option<u64>>,
-    ) -> GraphQLResult<ProtocolConfigs> {
-        let operation =
-            ProtocolConfigQueryFragment::build(ProtocolVersionArgs { id: version.into() });
-        let response = self.run_query(&operation).await?;
-        Ok(response.protocol_config)
+    /// Get the protocol configuration. Defaults to the latest version.
+    pub fn protocol_config(&self) -> GetProtocolConfigQuery {
+        GetProtocolConfigQuery {
+            client: self.clone(),
+            version: None,
+        }
     }
 
     /// Get the list of active validators, including related metadata.
@@ -180,10 +223,37 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn reference_gas_price_and_protocol_config_send_their_input() {
+        let vars = sent_variables("EpochSummaryQueryFragment", |client| async move {
+            let _ = client.reference_gas_price().epoch_number(3).await;
+        })
+        .await;
+        assert_eq!(vars["id"], 3);
+
+        let vars = sent_variables("ProtocolConfigQueryFragment", |client| async move {
+            let _ = client.protocol_config().version(50).await;
+        })
+        .await;
+        assert_eq!(vars["id"], 50);
+
+        let vars = sent_variables("EpochSummaryQueryFragment", |client| async move {
+            let _ = client.reference_gas_price().await;
+        })
+        .await;
+        assert!(vars["id"].is_null());
+
+        let vars = sent_variables("ProtocolConfigQueryFragment", |client| async move {
+            let _ = client.protocol_config().await;
+        })
+        .await;
+        assert!(vars["id"].is_null());
+    }
+
+    #[tokio::test]
     async fn test_reference_gas_price_query() {
         let client = test_client();
         client
-            .reference_gas_price(None)
+            .reference_gas_price()
             .await
             .map_err(|e| {
                 format!(
@@ -199,7 +269,7 @@ mod tests {
     async fn test_protocol_config_query() {
         let client = test_client();
         client
-            .protocol_config(None)
+            .protocol_config()
             .await
             .map_err(|e| {
                 format!(
@@ -211,7 +281,8 @@ mod tests {
 
         // test specific version
         let pc = client
-            .protocol_config(Some(50))
+            .protocol_config()
+            .version(50)
             .await
             .map_err(|e| {
                 format!(

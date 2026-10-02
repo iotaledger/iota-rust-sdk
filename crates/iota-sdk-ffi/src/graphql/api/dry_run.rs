@@ -30,7 +30,8 @@ impl GraphQLClient {
     ) -> Result<GraphQLDryRunResult> {
         Ok(self
             .client()
-            .dry_run_transaction(&transaction.0, skip_checks)
+            .dry_run_transaction(&transaction.0)
+            .skip_checks(skip_checks)
             .await?
             .into())
     }
@@ -51,13 +52,17 @@ impl GraphQLClient {
         transaction_metadata: GraphQLTransactionMetadata,
         skip_checks: bool,
     ) -> Result<GraphQLDryRunResult> {
+        let metadata: iota_sdk::graphql_client::query_types::TransactionMetadata =
+            transaction_metadata.into();
         Ok(self
             .client()
-            .dry_run_transaction_kind(
-                &transaction_kind.0,
-                skip_checks,
-                transaction_metadata.into(),
-            )
+            .dry_run_transaction_kind(&transaction_kind.0)
+            .sender(metadata.sender)
+            .gas_budget(metadata.gas_budget)
+            .gas_price(metadata.gas_price)
+            .gas_objects(metadata.gas_objects)
+            .gas_sponsor(metadata.gas_sponsor)
+            .skip_checks(skip_checks)
             .await?
             .into())
     }

@@ -41,13 +41,18 @@ pub async fn sent_variables<Fut: Future>(
     let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
     let client = GraphQLClient::new(&format!("http://{}", listener.local_addr().unwrap())).unwrap();
     let server = async {
-        loop {
-            let request = answer_one_request(&listener).await;
-            if request["operationName"] != "ServiceConfigQueryFragment" {
-                assert_eq!(request["operationName"], operation);
-                break request["variables"].clone();
+        let request = async {
+            loop {
+                let request = answer_one_request(&listener).await;
+                if request["operationName"] != "ServiceConfigQueryFragment" {
+                    assert_eq!(request["operationName"], operation);
+                    break request["variables"].clone();
+                }
             }
-        }
+        };
+        tokio::time::timeout(std::time::Duration::from_secs(5), request)
+            .await
+            .expect("no request sent")
     };
     let (variables, _) = tokio::join!(server, send(client));
     variables
@@ -90,4 +95,30 @@ pub fn assert_backward_page(variables: &serde_json::Value) {
     assert_eq!(variables["last"], 7);
     assert!(variables["after"].is_null());
     assert!(variables["first"].is_null());
+}
+
+pub fn test_transaction() -> iota_types::Transaction {
+    use iota_types::{
+        Address, GasPayment, ObjectDigest, ObjectId, ObjectReference, ProgrammableTransaction,
+        Transaction, TransactionExpiration, TransactionKind, TransactionV1, Version,
+    };
+
+    Transaction::V1(TransactionV1 {
+        kind: TransactionKind::Programmable(ProgrammableTransaction {
+            inputs: Vec::new(),
+            commands: Vec::new(),
+        }),
+        sender: Address::STD,
+        gas_payment: GasPayment {
+            objects: vec![ObjectReference::new(
+                ObjectId::SYSTEM_STATE,
+                Version::from_u64(3),
+                ObjectDigest::ZERO,
+            )],
+            owner: Address::FRAMEWORK,
+            price: 1000,
+            budget: 5_000_000,
+        },
+        expiration: TransactionExpiration::None,
+    })
 }

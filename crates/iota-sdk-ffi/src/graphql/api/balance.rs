@@ -17,6 +17,10 @@ impl GraphQLClient {
         address: &Address,
         coin_type: Option<String>,
     ) -> Result<Option<u64>> {
-        Ok(self.client().balance(**address, coin_type).await?)
+        Ok(self
+            .client()
+            .balance(**address)
+            .coin_type(coin_type)
+            .await?)
     }
 }
