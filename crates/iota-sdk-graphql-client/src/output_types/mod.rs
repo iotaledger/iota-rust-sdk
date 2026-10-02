@@ -33,6 +33,10 @@ pub struct DryRunResult {
     pub effects: Option<TransactionEffects>,
     /// The gas price to use. This is the reference gas price, or a higher
     /// price if an input object is congested.
+    #[serde(
+        default,
+        with = "::serde_with::As::<Option<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>"
+    )]
     pub suggested_gas_price: Option<u64>,
 }
 
