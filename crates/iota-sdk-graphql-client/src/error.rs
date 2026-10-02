@@ -144,6 +144,9 @@ pub enum GraphQLError {
     /// error.
     #[error("subscription lagged: {count} payload(s) dropped by the server")]
     Lagged { count: u32 },
+    /// An error occurred during a move view call.
+    #[error("move view call error: {0}")]
+    MoveViewCall(String),
 }
 
 /// The HTTP response a [`GraphQLError::Http`] or [`GraphQLError::Json`] was

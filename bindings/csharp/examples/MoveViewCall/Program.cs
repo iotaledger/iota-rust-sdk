@@ -101,5 +101,15 @@ class Program
         {
             Console.WriteLine("No shop JSON results");
         }
+
+        Console.WriteLine();
+        Console.WriteLine("=== Example 5: MoveViewCallBuilder() ===");
+        Console.WriteLine();
+
+        var builder = client
+            .MoveViewCallBuilder(ObjectId.FromHex(Package), "shop", "sale_at")
+            .Arguments(new[] { MoveViewArg.ObjectId(objectId), MoveViewArg.U64(1) });
+
+        Console.WriteLine($"Builder Results: {string.Join(", ", await builder.Execute())}");
     }
 }
