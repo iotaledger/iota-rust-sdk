@@ -4,8 +4,6 @@
 
 //! Dynamic Fields API implementation.
 
-use std::future::IntoFuture;
-
 use base64ct::Encoding;
 use cynic::QueryBuilder;
 use futures::Stream;
@@ -15,7 +13,7 @@ use crate::{
     DynamicFieldOutput, GraphQLClient, NameValue,
     api::define_query,
     error::GraphQLResult,
-    pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
+    pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldQueryFragment,
         DynamicFieldsOwnerQueryFragment, DynamicObjectFieldQueryFragment,
@@ -26,6 +24,7 @@ use crate::{
 define_query! {
     /// Query for [`GraphQLClient::dynamic_fields`]. Await it to send the
     /// request.
+    #[derive(Clone)]
     pub struct ListDynamicFieldsQuery {
         client: GraphQLClient,
         address: Address,
@@ -39,6 +38,13 @@ impl ListDynamicFieldsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<DynamicFieldOutput>> {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     fn operation<'a>(
@@ -74,23 +80,6 @@ impl ListDynamicFieldsQuery {
 }
 
 impl GraphQLClient {
-    /// Get a stream of dynamic fields for the provided address. Note that this
-    /// will also fetch dynamic fields on wrapped objects.
-    pub fn dynamic_fields_stream(
-        &self,
-        address: Address,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = GraphQLResult<DynamicFieldOutput>> + '_ {
-        stream_paginated_query(
-            move |filter| {
-                self.dynamic_fields(address)
-                    .pagination(filter)
-                    .into_future()
-            },
-            streaming_direction,
-        )
-    }
-
     /// Access a dynamic field on an object using its name. Names are arbitrary
     /// Move values whose type have copy, drop, and store, and are specified
     /// using their type, and their BCS contents, Base64 encoded.

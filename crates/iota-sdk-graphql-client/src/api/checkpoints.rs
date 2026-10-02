@@ -4,8 +4,6 @@
 
 //! Checkpoints API implementation.
 
-use std::future::IntoFuture;
-
 use cynic::QueryBuilder;
 use futures::Stream;
 use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};
@@ -14,7 +12,7 @@ use crate::{
     GraphQLClient,
     api::define_query,
     error::{GraphQLError, GraphQLResult},
-    pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
+    pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         CheckpointArgs, CheckpointId, CheckpointQueryFragment, CheckpointTotalTxQueryFragment,
         CheckpointsArgs, CheckpointsQueryFragment,
@@ -24,6 +22,7 @@ use crate::{
 
 define_query! {
     /// Query for [`GraphQLClient::checkpoints`]. Await it to send the request.
+    #[derive(Clone)]
     pub struct ListCheckpointsQuery {
         client: GraphQLClient,
         pagination: PaginationFilter,
@@ -36,6 +35,15 @@ impl ListCheckpointsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    /// Without a cursor this fetches every checkpoint, which may take many
+    /// requests.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<CheckpointSummary>> {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     fn operation<'a>(
@@ -94,18 +102,6 @@ const CONFLICTING_CHECKPOINT_ID: &str =
     "either digest or sequence_number can be provided, but not both";
 
 impl GraphQLClient {
-    /// Get a stream of [`CheckpointSummary`]. Note that this will fetch all
-    /// checkpoints which may trigger a lot of requests.
-    pub fn checkpoints_stream(
-        &self,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = GraphQLResult<CheckpointSummary>> + '_ {
-        stream_paginated_query(
-            move |filter| self.checkpoints().pagination(filter).into_future(),
-            streaming_direction,
-        )
-    }
-
     /// Get the [`CheckpointSummary`] of the last known checkpoint.
     pub fn checkpoint(&self) -> GetCheckpointQuery {
         GetCheckpointQuery {
