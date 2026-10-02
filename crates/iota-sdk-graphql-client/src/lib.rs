@@ -24,8 +24,11 @@ mod test_utils;
 #[cfg(feature = "move-types")]
 pub use api::move_objects::{MoveObjectFilter, OwnedMoveObject};
 pub use client::{GraphQLClient, USER_AGENT};
+pub use cynic;
 pub use error::{GraphQLError, GraphQLResult};
 pub use iota_transaction_builder::WaitForTransaction;
+pub use iota_types;
 pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
+pub use reqwest;

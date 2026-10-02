@@ -17,7 +17,7 @@ struct PrepareTransferObjectsOfflineExample {
     let faucet = FaucetClient.newLocalnet()
     _ = try await faucet.requestAndWaitForFinalized(address: fromAddress, client: client)
 
-    let coins = try await client.objects(filter: ObjectFilter(owner: fromAddress)).data
+    let coins = try await client.objects(filter: GraphQlObjectFilter(owner: fromAddress)).data
     guard let gasCoin = coins.first else {
       throw NSError(
         domain: "PrepareTransferObjectsOffline", code: 1,

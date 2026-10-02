@@ -141,7 +141,7 @@ class Program
 
                     var hasKeyAbility =
                         structType.Abilities != null
-                        && structType.Abilities.Contains(MoveAbility.Key);
+                        && structType.Abilities.Contains(GraphQlMoveAbility.Key);
                     var isGeneric =
                         structType.TypeParameters != null
                         && structType.TypeParameters.Length > 0;
@@ -157,8 +157,8 @@ class Program
         }
     }
 
-    static PaginationFilter ForwardPage(string? cursor = null) =>
-        new(Direction.Forward, Cursor: cursor);
+    static GraphQlPaginationFilter ForwardPage(string? cursor = null) =>
+        new(GraphQlDirection.Forward, Cursor: cursor);
 
     static string CreateFrameworkPackageId()
     {
@@ -262,8 +262,8 @@ class Program
         }
 
         var objects = await client.Objects(
-            new ObjectFilter(TypeTag: typeTag),
-            new PaginationFilter(Direction.Forward, Limit: 3)
+            new GraphQlObjectFilter(TypeTag: typeTag),
+            new GraphQlPaginationFilter(GraphQlDirection.Forward, Limit: 3)
         );
 
         if (objects.Data.Length == 0)
@@ -324,8 +324,8 @@ class Program
     static async Task<ObjectId?> ResolveUpgradeCapId(GraphQlClient client, ObjectId packageId)
     {
         var page = await client.TransactionsEffects(
-            new TransactionsFilter().WithChangedObject(packageId),
-            new PaginationFilter(Direction.Forward, Limit: 1)
+            new GraphQlTransactionsFilter().WithChangedObject(packageId),
+            new GraphQlPaginationFilter(GraphQlDirection.Forward, Limit: 1)
         );
 
         foreach (var effects in page.Data)
@@ -524,7 +524,7 @@ class Program
         while (true)
         {
             var page = await client.TransactionsDataEffects(
-                new TransactionsFilter().WithChangedObject(packageId),
+                new GraphQlTransactionsFilter().WithChangedObject(packageId),
                 ForwardPage(cursor)
             );
 
@@ -555,7 +555,7 @@ class Program
         while (true)
         {
             var page = await client.TransactionsDataEffects(
-                new TransactionsFilter().WithInputObject(upgradeCapId),
+                new GraphQlTransactionsFilter().WithInputObject(upgradeCapId),
                 ForwardPage(cursor)
             );
 

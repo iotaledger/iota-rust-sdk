@@ -23,55 +23,60 @@ mod subscriptions;
 mod transaction;
 
 pub use active_validators::{
-    ActiveValidatorsArgs, ActiveValidatorsQuery, EpochValidator, Validator, ValidatorConnection,
-    ValidatorCredentials, ValidatorSetQuery,
+    ActiveValidatorsArgs, ActiveValidatorsQueryFragment, EpochValidator, Validator,
+    ValidatorConnection, ValidatorCredentials, ValidatorSetQueryFragment,
 };
-pub use balance::{Balance, BalanceArgs, BalanceQuery, Owner};
-pub use chain::ChainIdentifierQuery;
+pub use balance::{Balance, BalanceArgs, BalanceQueryFragment, Owner};
+pub use chain::ChainIdentifierQueryFragment;
 pub use checkpoint::{
-    CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsArgs,
-    CheckpointsQuery,
+    CheckpointArgs, CheckpointId, CheckpointQueryFragment, CheckpointTotalTxQueryFragment,
+    CheckpointsArgs, CheckpointsQueryFragment,
 };
-pub use coin::{CoinMetadata, CoinMetadataArgs, CoinMetadataQuery};
+pub use coin::{CoinMetadata, CoinMetadataArgs, CoinMetadataQueryFragment};
 use cynic::impl_scalar;
 pub use dry_run::{
-    DryRunArgs, DryRunEffect, DryRunMutation, DryRunQuery, DryRunResult, DryRunReturn, GasCoin,
-    Input, ObjectRef, ResultArg, TransactionArgument, TransactionMetadata,
+    DryRunArgs, DryRunEffect, DryRunMutation, DryRunQueryFragment, DryRunResult, DryRunReturn,
+    GasCoin, Input, ObjectRef, ResultArg, TransactionArgument, TransactionMetadata,
 };
 pub use dynamic_fields::{
-    DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQuery,
-    DynamicFieldsOwnerQuery, DynamicObjectFieldQuery,
+    DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQueryFragment,
+    DynamicFieldsOwnerQueryFragment, DynamicObjectFieldQueryFragment,
 };
-pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, ValidatorSet};
-pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
-pub use execute_transaction::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
+pub use epoch::{Epoch, EpochArgs, EpochQueryFragment, EpochSummaryQueryFragment, ValidatorSet};
+pub use events::{Event, EventConnection, EventFilter, EventsQueryArgs, EventsQueryFragment};
+pub use execute_transaction::{
+    ExecuteTransactionArgs, ExecuteTransactionQueryFragment, ExecutionResult,
+};
 pub use iota_names::{
-    IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs,
-    IotaNamesDefaultNameQuery, IotaNamesRegistrationsArgs, IotaNamesRegistrationsQuery,
-    NameRegistration, NameRegistrationConnection, ResolveIotaNamesAddressArgs,
-    ResolveIotaNamesAddressQuery,
+    IotaNamesAddressDefaultNameQueryFragment, IotaNamesAddressRegistrationsQueryFragment,
+    IotaNamesDefaultNameArgs, IotaNamesDefaultNameQueryFragment, IotaNamesRegistrationsArgs,
+    IotaNamesRegistrationsQueryFragment, NameRegistration, NameRegistrationConnection,
+    ResolveIotaNamesAddressArgs, ResolveIotaNamesAddressQueryFragment,
 };
 use iota_types::{Address, ObjectId};
-pub use move_view_call::{MoveViewCallArgs, MoveViewCallQuery, MoveViewResult};
+pub use move_view_call::{MoveViewCallArgs, MoveViewCallQueryFragment, MoveViewResult};
 pub use normalized_move::{
     MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunction,
     MoveFunctionConnection, MoveFunctionTypeParameter, MoveModule, MoveModuleConnection,
-    MoveModuleQuery, MoveStructConnection, MoveStructQuery, MoveStructTypeParameter,
-    MoveVisibility, NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs,
-    NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs, OpenMoveType,
+    MoveModuleQueryFragment, MoveStructConnection, MoveStructQueryFragment,
+    MoveStructTypeParameter, MoveVisibility, NormalizedMoveFunctionQueryArgs,
+    NormalizedMoveFunctionQueryFragment, NormalizedMoveModuleQueryArgs,
+    NormalizedMoveModuleQueryFragment, OpenMoveType,
 };
-pub use object::{ObjectFilter, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs};
+pub use object::{
+    ObjectFilter, ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
+};
 pub use packages::{
-    LatestPackageQuery, MovePackageConnection, MovePackageQuery, MovePackageVersionFilter,
-    PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs, PackageVersionsQuery,
-    PackagesQuery, PackagesQueryArgs,
+    LatestPackageQueryFragment, MovePackageConnection, MovePackageQueryFragment,
+    MovePackageVersionFilter, PackageArgs, PackageCheckpointFilter, PackageQueryFragment,
+    PackageVersionsArgs, PackageVersionsQueryFragment, PackagesQueryArgs, PackagesQueryFragment,
 };
 pub use protocol_config::{
-    ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigQuery, ProtocolConfigs,
+    ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigQueryFragment, ProtocolConfigs,
     ProtocolVersionArgs,
 };
 use serde_json::Value as JsonValue;
-pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
+pub use service_config::{Feature, ServiceConfig, ServiceConfigQueryFragment};
 pub use subscriptions::{
     EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs, Lagged,
     SubscriptionEvent, SubscriptionEventFilter, SubscriptionTransactionBlock,
@@ -79,13 +84,15 @@ pub use subscriptions::{
     TransactionsSubscriptionArgs,
 };
 pub use transaction::{
-    AddressTransactionBlocksQuery, AddressTransactionRelationship, AddressTransactionsQuery,
-    AddressTransactionsQueryArgs, TransactionBlock, TransactionBlockArgs,
-    TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery, TransactionBlockFilter,
-    TransactionBlockIndexedQuery, TransactionBlockKindInput, TransactionBlockQuery,
-    TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
-    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
-    TransactionsFilter, TransactionsSelector,
+    AddressTransactionBlocksQueryFragment, AddressTransactionRelationship,
+    AddressTransactionsQueryArgs, AddressTransactionsQueryFragment, TransactionBlock,
+    TransactionBlockArgs, TransactionBlockCheckpointQueryFragment,
+    TransactionBlockEffectsQueryFragment, TransactionBlockFilter,
+    TransactionBlockIndexedQueryFragment, TransactionBlockKindInput, TransactionBlockQueryFragment,
+    TransactionBlockWithEffects, TransactionBlockWithEffectsQueryFragment,
+    TransactionBlocksEffectsQueryFragment, TransactionBlocksQueryArgs,
+    TransactionBlocksQueryFragment, TransactionBlocksWithEffectsQueryFragment, TransactionsFilter,
+    TransactionsSelector,
 };
 
 use crate::error;
