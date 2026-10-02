@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #![doc = include_str!("../README.md")]
-
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 #[cfg(feature = "crypto")]
