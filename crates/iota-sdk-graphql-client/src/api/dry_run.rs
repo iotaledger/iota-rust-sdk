@@ -6,7 +6,7 @@
 
 use base64ct::Encoding;
 use cynic::QueryBuilder;
-use iota_types::{SignedTransaction, Transaction, TransactionEffects, TransactionKind};
+use iota_types::{Address, SignedTransaction, Transaction, TransactionEffects, TransactionKind};
 
 use crate::{
     DryRunEffect, DryRunResult, GraphQLClient,
@@ -51,16 +51,12 @@ impl DryRunTransactionQuery {
             })
             .collect::<Vec<_>>();
         self.client
-            .dry_run_transaction_kind(
-                &v1.kind,
-                TransactionMetadata {
-                    gas_budget: Some(v1.gas_payment.budget),
-                    gas_objects: (!gas_objects.is_empty()).then_some(gas_objects),
-                    gas_price: Some(v1.gas_payment.price),
-                    gas_sponsor: Some(v1.gas_payment.owner),
-                    sender: Some(v1.sender),
-                },
-            )
+            .dry_run_transaction_kind(&v1.kind)
+            .sender(v1.sender)
+            .gas_budget(v1.gas_payment.budget)
+            .gas_price(v1.gas_payment.price)
+            .gas_objects((!gas_objects.is_empty()).then_some(gas_objects))
+            .gas_sponsor(v1.gas_payment.owner)
             .skip_checks(self.skip_checks)
             .await
     }
@@ -79,6 +75,36 @@ define_query! {
 }
 
 impl DryRunTransactionKindQuery {
+    /// Set the sender of the transaction.
+    pub fn sender(mut self, sender: impl Into<Option<Address>>) -> Self {
+        self.transaction_metadata.sender = sender.into();
+        self
+    }
+
+    /// Set the gas budget of the transaction.
+    pub fn gas_budget(mut self, gas_budget: impl Into<Option<u64>>) -> Self {
+        self.transaction_metadata.gas_budget = gas_budget.into();
+        self
+    }
+
+    /// Set the gas price of the transaction.
+    pub fn gas_price(mut self, gas_price: impl Into<Option<u64>>) -> Self {
+        self.transaction_metadata.gas_price = gas_price.into();
+        self
+    }
+
+    /// Set the objects that pay for the gas.
+    pub fn gas_objects(mut self, gas_objects: impl Into<Option<Vec<ObjectRef>>>) -> Self {
+        self.transaction_metadata.gas_objects = gas_objects.into();
+        self
+    }
+
+    /// Set the sponsor that pays for the gas.
+    pub fn gas_sponsor(mut self, gas_sponsor: impl Into<Option<Address>>) -> Self {
+        self.transaction_metadata.gas_sponsor = gas_sponsor.into();
+        self
+    }
+
     /// Disable the usual verification checks that prevent access to objects
     /// that are owned by addresses other than the sender, and calling
     /// non-public, non-entry functions, and some other checks. Defaults to
@@ -107,17 +133,16 @@ impl GraphQLClient {
         }
     }
 
-    /// Dry run a [`TransactionKind`] with the given transaction metadata and
-    /// return the transaction effects and dry run error (if any).
+    /// Dry run a [`TransactionKind`] and return the transaction effects and
+    /// dry run error (if any).
     pub fn dry_run_transaction_kind(
         &self,
         transaction_kind: &TransactionKind,
-        transaction_metadata: TransactionMetadata,
     ) -> DryRunTransactionKindQuery {
         DryRunTransactionKindQuery {
             client: self.clone(),
             transaction_kind: transaction_kind.clone(),
-            transaction_metadata,
+            transaction_metadata: TransactionMetadata::default(),
             skip_checks: false,
         }
     }
@@ -224,9 +249,7 @@ mod tests {
             unreachable!()
         };
         let vars = sent_variables("DryRunQueryFragment", |client| async move {
-            let _ = client
-                .dry_run_transaction_kind(&v1.kind, Default::default())
-                .await;
+            let _ = client.dry_run_transaction_kind(&v1.kind).await;
         })
         .await;
         assert_eq!(vars["skipChecks"], false);
