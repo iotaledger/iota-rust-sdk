@@ -912,13 +912,13 @@ crate::ffi_move_object! {
     }
 }
 
-/// A typed view of a `0x2::coin_manager::ImmutableCoinMetadata<IOTA>` — the
+/// A typed view of a `0x2::coin_manager::ImmutableCoinMetadata<T>` — the
 /// frozen metadata fallback embedded in a `CoinManager`. Reachable only via
 /// `CoinManager::immutable_metadata`; it is not a standalone on-chain object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct ImmutableCoinMetadata(
-    pub iota_sdk::move_types::iota_framework::coin_manager::ImmutableCoinMetadata<IOTA>,
+    pub iota_sdk::move_types::iota_framework::coin_manager::ImmutableCoinMetadata<()>,
 );
 
 #[uniffi::export]
@@ -1251,7 +1251,7 @@ crate::ffi_move_object! {
 crate::ffi_move_object_generic! {
     /// A typed view of an on-chain `0x2::coin::TreasuryCap<T>` object, the
     /// capability controlling a coin type's supply.
-    TreasuryCap(iota_sdk::move_types::iota_framework::coin::TreasuryCap<IOTA>) {
+    TreasuryCap(iota_sdk::move_types::iota_framework::coin::TreasuryCap<()>) {
         /// Total supply of the coin currently in circulation, in base units.
         pub fn total_supply(&self) -> u64 {
             self.0.total_supply.value
@@ -1263,7 +1263,7 @@ crate::ffi_move_object_generic! {
     /// A typed view of an on-chain `0x2::coin::RegulatedCoinMetadata<T>`
     /// object.
     RegulatedCoinMetadata(
-        iota_sdk::move_types::iota_framework::coin::RegulatedCoinMetadata<IOTA>
+        iota_sdk::move_types::iota_framework::coin::RegulatedCoinMetadata<()>
     ) {
         /// Object ID of the coin's `CoinMetadata` object.
         pub fn coin_metadata_object(&self) -> ObjectId {
@@ -1280,7 +1280,7 @@ crate::ffi_move_object_generic! {
 crate::ffi_move_object_generic! {
     /// A typed view of an on-chain `0x2::coin::DenyCapV1<T>` object, the
     /// capability for denying addresses from using a regulated coin.
-    DenyCapV1(iota_sdk::move_types::iota_framework::coin::DenyCapV1<IOTA>) {
+    DenyCapV1(iota_sdk::move_types::iota_framework::coin::DenyCapV1<()>) {
         /// Whether the bearer may also enable a global pause.
         pub fn allow_global_pause(&self) -> bool {
             self.0.allow_global_pause
@@ -1290,7 +1290,7 @@ crate::ffi_move_object_generic! {
 
 crate::ffi_move_object_generic! {
     /// A typed view of an on-chain `0x2::display::Display<T>` object.
-    Display(iota_sdk::move_types::iota_framework::display::Display<IOTA>) {
+    Display(iota_sdk::move_types::iota_framework::display::Display<()>) {
         /// Version, bumped manually by the publisher on each update.
         pub fn version(&self) -> u16 {
             self.0.version
@@ -1311,7 +1311,7 @@ crate::ffi_move_object_generic! {
 
 crate::ffi_move_object_generic! {
     /// A typed view of an on-chain `0x2::coin_manager::CoinManager<T>` object.
-    CoinManager(iota_sdk::move_types::iota_framework::coin_manager::CoinManager<IOTA>) {
+    CoinManager(iota_sdk::move_types::iota_framework::coin_manager::CoinManager<()>) {
         /// Optional maximum supply cap, in base units.
         pub fn maximum_supply(&self) -> Option<u64> {
             self.0.maximum_supply
@@ -1337,7 +1337,18 @@ crate::ffi_move_object_generic! {
             self.0
                 .metadata
                 .clone()
-                .map(|m| Arc::new(IotaCoinMetadata(m)))
+                .map(|m| {
+                    Arc::new(IotaCoinMetadata(
+                        iota_sdk::move_types::iota_framework::coin::CoinMetadata::new(
+                            m.id,
+                            m.decimals,
+                            m.name,
+                            m.symbol,
+                            m.description,
+                            m.icon_url,
+                        ),
+                    ))
+                })
         }
 
         /// Frozen fallback metadata, used only if the original metadata has
@@ -1355,7 +1366,7 @@ crate::ffi_move_object_generic! {
     /// A typed view of an on-chain
     /// `0x2::coin_manager::CoinManagerTreasuryCap<T>` object.
     CoinManagerTreasuryCap(
-        iota_sdk::move_types::iota_framework::coin_manager::CoinManagerTreasuryCap<IOTA>
+        iota_sdk::move_types::iota_framework::coin_manager::CoinManagerTreasuryCap<()>
     ) {
     }
 }
@@ -1364,14 +1375,14 @@ crate::ffi_move_object_generic! {
     /// A typed view of an on-chain
     /// `0x2::coin_manager::CoinManagerMetadataCap<T>` object.
     CoinManagerMetadataCap(
-        iota_sdk::move_types::iota_framework::coin_manager::CoinManagerMetadataCap<IOTA>
+        iota_sdk::move_types::iota_framework::coin_manager::CoinManagerMetadataCap<()>
     ) {
     }
 }
 
 crate::ffi_move_object_generic! {
     /// A typed view of an on-chain `0x2::token::Token<T>` object.
-    Token(iota_sdk::move_types::iota_framework::token::Token<IOTA>) {
+    Token(iota_sdk::move_types::iota_framework::token::Token<()>) {
         /// The token's balance, in base units.
         pub fn balance(&self) -> u64 {
             self.0.balance.value()
@@ -1381,7 +1392,7 @@ crate::ffi_move_object_generic! {
 
 crate::ffi_move_object_generic! {
     /// A typed view of an on-chain `0x2::token::TokenPolicyCap<T>` object.
-    TokenPolicyCap(iota_sdk::move_types::iota_framework::token::TokenPolicyCap<IOTA>) {
+    TokenPolicyCap(iota_sdk::move_types::iota_framework::token::TokenPolicyCap<()>) {
         /// Object ID of the `TokenPolicy` this cap controls (the Move `for`
         /// field).
         pub fn policy_id(&self) -> ObjectId {
@@ -1392,7 +1403,7 @@ crate::ffi_move_object_generic! {
 
 crate::ffi_move_object_generic! {
     /// A typed view of an on-chain `0x2::token::TokenPolicy<T>` object.
-    TokenPolicy(iota_sdk::move_types::iota_framework::token::TokenPolicy<IOTA>) {
+    TokenPolicy(iota_sdk::move_types::iota_framework::token::TokenPolicy<()>) {
         /// Balance spent on the `spend` action, in base units.
         pub fn spent_balance(&self) -> u64 {
             self.0.spent_balance.value()
@@ -1420,7 +1431,7 @@ crate::ffi_move_object_generic! {
     /// A typed view of an on-chain `0x2::config::Config<WriteCap>` object,
     /// where `WriteCap` is the phantom type parameter from the Move
     /// declaration, not a concrete type.
-    Config(iota_sdk::move_types::iota_framework::config::Config<IOTA>) {
+    Config(iota_sdk::move_types::iota_framework::config::Config<()>) {
         // The config's settings live in dynamic fields off its `UID`, not in
         // the struct itself. Decode a `bool`-valued one with
         // [`BoolSetting::try_from_bcs`].
@@ -1472,7 +1483,7 @@ crate::ffi_move_object_generic! {
     /// A typed view of an on-chain
     /// `0x2::transfer_policy::TransferPolicy<T>` object.
     TransferPolicy(
-        iota_sdk::move_types::iota_framework::transfer_policy::TransferPolicy<IOTA>
+        iota_sdk::move_types::iota_framework::transfer_policy::TransferPolicy<()>
     ) {
         /// IOTA balance collected by the policy, in nanos.
         pub fn balance(&self) -> u64 {
@@ -1490,7 +1501,7 @@ crate::ffi_move_object_generic! {
     /// A typed view of an on-chain
     /// `0x2::transfer_policy::TransferPolicyCap<T>` object.
     TransferPolicyCap(
-        iota_sdk::move_types::iota_framework::transfer_policy::TransferPolicyCap<IOTA>
+        iota_sdk::move_types::iota_framework::transfer_policy::TransferPolicyCap<()>
     ) {
         /// Object ID of the `TransferPolicy` this cap controls.
         pub fn policy_id(&self) -> ObjectId {
@@ -1501,13 +1512,13 @@ crate::ffi_move_object_generic! {
 
 crate::ffi_move_object_generic! {
     /// A typed view of an on-chain `0x2::labeler::LabelerCap<L>` object.
-    LabelerCap(iota_sdk::move_types::iota_framework::labeler::LabelerCap<IOTA>) {
+    LabelerCap(iota_sdk::move_types::iota_framework::labeler::LabelerCap<()>) {
     }
 }
 
 crate::ffi_move_object_generic! {
     /// A typed view of an on-chain `0x2::kiosk::PurchaseCap<T>` object.
-    PurchaseCap(iota_sdk::move_types::iota_framework::kiosk::PurchaseCap<IOTA>) {
+    PurchaseCap(iota_sdk::move_types::iota_framework::kiosk::PurchaseCap<()>) {
         /// Object ID of the kiosk the listed item belongs to.
         pub fn kiosk_id(&self) -> ObjectId {
             self.0.kiosk_id.bytes.into()
@@ -1813,8 +1824,7 @@ impl StorageDepositReturnUnlockCondition {
 // Events are not objects (no `key`, no `UID`); they are decoded from the
 // BCS `contents` of an event query result via `ffi_move_event!`. Generic
 // events carry a phantom (`serde(skip)`) type parameter, so their BCS layout
-// is instantiation-independent and they are wrapped at `<IOTA>` like the
-// generic object shims.
+// is instantiation-independent and they are wrapped at `<IOTA>`.
 // =====================================================================
 
 /// A reference to an authenticator function
