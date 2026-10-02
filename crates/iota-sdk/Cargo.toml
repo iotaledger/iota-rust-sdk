@@ -84,19 +84,19 @@ transaction-builder = ["dep:iota-transaction-builder"]
 gas-station = ["transaction-builder", "iota-transaction-builder/gas-station"]
 # Types
 types = ["dep:iota-types"]
-serde = ["types", "iota-types/serde"]
+serde = ["types", "iota-types/serde", "iota-move-types?/serde"]
 rand = ["types", "iota-types/rand", "iota-crypto?/rand"]
 hash = ["types", "iota-types/hash"]
 proptest = ["types", "iota-types/proptest"]
 
 [dependencies]
-iota-crypto = { workspace = true, features = ["ed25519"], optional = true }
+iota-crypto = { workspace = true, optional = true }
 iota-graphql-client = { workspace = true, optional = true }
 iota-grpc-client = { workspace = true, optional = true }
 iota-grpc-types = { workspace = true, optional = true }
-iota-move-types = { workspace = true, features = ["serde"], optional = true }
+iota-move-types = { workspace = true, optional = true }
 iota-transaction-builder = { workspace = true, optional = true }
-iota-types = { workspace = true, features = ["rand"], optional = true }
+iota-types = { workspace = true, optional = true }
 
 [dev-dependencies]
 base64ct = { workspace = true, features = ["alloc", "std"] }
