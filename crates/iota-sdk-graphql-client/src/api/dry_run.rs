@@ -11,7 +11,7 @@ use iota_types::{SignedTransaction, Transaction, TransactionEffects, Transaction
 use crate::{
     DryRunEffect, DryRunResult, GraphQLClient,
     error::GraphQLResult,
-    query_types::{DryRunArgs, DryRunQuery, ObjectRef, TransactionMetadata},
+    query_types::{DryRunArgs, DryRunQueryFragment, ObjectRef, TransactionMetadata},
 };
 
 impl GraphQLClient {
@@ -81,7 +81,7 @@ impl GraphQLClient {
         skip_checks: bool,
         tx_meta: impl Into<Option<TransactionMetadata>>,
     ) -> GraphQLResult<DryRunResult> {
-        let operation = DryRunQuery::build(DryRunArgs {
+        let operation = DryRunQueryFragment::build(DryRunArgs {
             tx_bytes,
             skip_checks,
             tx_meta: tx_meta.into(),

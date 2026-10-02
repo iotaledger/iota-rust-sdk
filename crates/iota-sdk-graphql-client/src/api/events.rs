@@ -10,7 +10,7 @@ use crate::{
     GraphQLClient,
     error::GraphQLResult,
     pagination::{Page, PaginationFilter},
-    query_types::{Event, EventFilter, EventsQuery, EventsQueryArgs},
+    query_types::{Event, EventFilter, EventsQueryArgs, EventsQueryFragment},
 };
 
 impl GraphQLClient {
@@ -22,7 +22,7 @@ impl GraphQLClient {
     ) -> GraphQLResult<Page<Event>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = EventsQuery::build(EventsQueryArgs {
+        let operation = EventsQueryFragment::build(EventsQueryArgs {
             filter: filter.into(),
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),

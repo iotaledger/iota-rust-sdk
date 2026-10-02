@@ -4,8 +4,7 @@
 //! High-level API for epoch queries.
 
 use iota_grpc_types::{
-    field::FieldMask,
-    read_mask_fields::{EpochReadMask, IntoReadMask},
+    read_mask_fields::{EpochField, EpochReadMask, IntoReadMask},
     v1::{
         epoch::Epoch,
         ledger_service::{GetEpochRequest, ledger_service_client::LedgerServiceClient},
@@ -59,6 +58,30 @@ impl GetEpochQuery {
             r.epoch
                 .ok_or_else(|| TryFromProtoError::missing("epoch").into())
         })
+    }
+}
+
+define_query! {
+    /// Query for [`GrpcClient::reference_gas_price`]. Await it to send the
+    /// request.
+    pub struct GetReferenceGasPriceQuery {
+        service_client: LedgerServiceClient<InterceptedChannel>,
+    }
+    output: GrpcResult<MetadataEnvelope<u64>>;
+}
+
+impl GetReferenceGasPriceQuery {
+    fn into_request(self) -> (LedgerServiceClient<InterceptedChannel>, GetEpochRequest) {
+        let request = GetEpochRequest::default()
+            .with_read_mask(EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE));
+        (self.service_client, request)
+    }
+
+    async fn send(self) -> GrpcResult<MetadataEnvelope<u64>> {
+        let (mut service_client, request) = self.into_request();
+        let response = service_client.get_epoch(request).await?;
+
+        MetadataEnvelope::from(response).try_map(|r| Ok(r.epoch()?.gas_price()?))
     }
 }
 
@@ -145,30 +168,10 @@ impl GrpcClient {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn reference_gas_price(&self) -> GrpcResult<MetadataEnvelope<u64>> {
-        self.epoch_field("reference_gas_price", |e| e.reference_gas_price)
-            .await
-    }
-
-    /// Internal helper to fetch a single field from the current epoch.
-    async fn epoch_field<T>(
-        &self,
-        field: &str,
-        extractor: impl FnOnce(Epoch) -> Option<T>,
-    ) -> GrpcResult<MetadataEnvelope<T>> {
-        // Current epoch (no epoch field set)
-        let request = GetEpochRequest::default().with_read_mask(FieldMask {
-            paths: vec![field.to_string()],
-        });
-
-        let mut client = self.ledger_service_client();
-        let response = client.get_epoch(request).await?;
-
-        MetadataEnvelope::from(response).try_map(|r| {
-            r.epoch
-                .and_then(extractor)
-                .ok_or_else(|| TryFromProtoError::missing(field).into())
-        })
+    pub fn reference_gas_price(&self) -> GetReferenceGasPriceQuery {
+        GetReferenceGasPriceQuery {
+            service_client: self.ledger_service_client(),
+        }
     }
 }
 
@@ -214,5 +217,16 @@ mod tests {
 
         let (_, request) = client.epoch().into_request();
         assert_eq!(request.epoch, None);
+    }
+
+    #[tokio::test]
+    async fn reference_gas_price_asks_the_current_epoch_for_the_price_only() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let (_, request) = client.reference_gas_price().into_request();
+        assert_eq!(request.epoch, None);
+        assert_eq!(
+            request.read_mask.map(|mask| mask.paths),
+            Some(vec!["reference_gas_price".to_owned()])
+        );
     }
 }
