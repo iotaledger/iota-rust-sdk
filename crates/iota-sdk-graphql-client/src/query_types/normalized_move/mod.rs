@@ -5,11 +5,11 @@
 mod function;
 mod module;
 
-pub use function::{NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs};
+pub use function::{NormalizedMoveFunctionQueryArgs, NormalizedMoveFunctionQueryFragment};
 pub use module::{
     MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunctionConnection, MoveModule,
-    MoveModuleConnection, MoveModuleQuery, MoveStructConnection, MoveStructQuery,
-    MoveStructTypeParameter, NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs,
+    MoveModuleConnection, MoveModuleQueryFragment, MoveStructConnection, MoveStructQueryFragment,
+    MoveStructTypeParameter, NormalizedMoveModuleQueryArgs, NormalizedMoveModuleQueryFragment,
 };
 
 use crate::query_types::schema;
