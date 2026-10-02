@@ -18,7 +18,7 @@ mod tls;
 mod transaction_builder_client;
 mod wait;
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod test_utils;
 
 // Re-export types used by query_types module internally

@@ -289,7 +289,7 @@ impl From<iota_move_types::FromObjectError> for GraphQLError {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use super::*;
 
