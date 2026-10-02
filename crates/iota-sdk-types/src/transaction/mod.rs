@@ -14,10 +14,8 @@ mod randomness_round;
 pub use randomness_round::RandomnessRound;
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization;
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use serialization::SignedTransactionWithIntentMessage;
 
 /// Transaction
@@ -1420,7 +1418,6 @@ impl Input {
 
     /// Create a `Pure` input from a BCS-serializable value.
     #[cfg(feature = "serde")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
     pub fn pure<T: serde::Serialize>(value: &T) -> Self {
         Self::Pure(bcs::to_bytes(value).expect("value should be serializable"))
     }

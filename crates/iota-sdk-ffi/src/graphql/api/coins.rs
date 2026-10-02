@@ -9,8 +9,8 @@ use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::CoinPage,
-        query_types::{CoinMetadata, PaginationFilter},
+        pagination::GraphQLCoinPage,
+        query_types::{GraphQLCoinMetadata, GraphQLPaginationFilter},
     },
     types::{address::Address, move_core::StructTag},
 };
@@ -26,9 +26,9 @@ impl GraphQLClient {
     pub async fn coins(
         &self,
         owner: &Address,
-        pagination_filter: Option<PaginationFilter>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
         coin_type: Option<Arc<StructTag>>,
-    ) -> Result<CoinPage> {
+    ) -> Result<GraphQLCoinPage> {
         Ok(self
             .client()
             .coins(
@@ -46,8 +46,8 @@ impl GraphQLClient {
     pub async fn gas_coins(
         &self,
         owner: &Address,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<CoinPage> {
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLCoinPage> {
         Ok(self
             .client()
             .gas_coins(
@@ -60,11 +60,11 @@ impl GraphQLClient {
     }
 
     /// Get the coin metadata for the coin type.
-    pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<CoinMetadata>> {
+    pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<GraphQLCoinMetadata>> {
         self.client()
             .coin_metadata(coin_type)
             .await?
-            .map(CoinMetadata::try_from)
+            .map(GraphQLCoinMetadata::try_from)
             .transpose()
     }
 

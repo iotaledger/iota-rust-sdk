@@ -176,7 +176,6 @@ impl crate::TreeDisplay for MoveAuthenticatorV1 {
 crate::impl_tree_display!(MoveAuthenticator, MoveAuthenticatorV1);
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
 
     use super::*;

@@ -374,7 +374,6 @@ impl From<&crate::UserSignature> for Address {
 /// [`SignedTransaction`](crate::SignedTransaction) commits to an expected
 /// signer address.
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
 #[error("no signature found for address {address}")]
 #[non_exhaustive]
@@ -401,7 +400,6 @@ enum TransactionRef<'a> {
 }
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod type_digest {
     use super::Hasher;
     use crate::{
@@ -542,7 +540,6 @@ mod type_digest {
 }
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod signing_message {
     use crate::{
         Intent, IntentMessage, IntentScope, PersonalMessage, SigningDigest, Transaction,
@@ -659,7 +656,6 @@ impl crate::ObjectId {
     ///
     /// hash(parent || len(key) || key || key_type_tag)
     #[cfg(feature = "serde")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
     pub fn derive_dynamic_child_id(&self, key_type_tag: &crate::TypeTag, key_bytes: &[u8]) -> Self {
         let mut hasher = Hasher::new();
         hasher.update([HashingIntent::ChildObjectId as u8]);
@@ -681,7 +677,6 @@ impl crate::ObjectId {
     ///
     /// hash(parent || len(key) || key || DerivedObjectKey(key_type_tag))
     #[cfg(feature = "serde")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
     pub fn derive_object_id(&self, key_type_tag: &crate::TypeTag, key_bytes: &[u8]) -> Self {
         // Wrap the key type into `DerivedObjectKey<K>` to preserve on-chain
         // namespacing

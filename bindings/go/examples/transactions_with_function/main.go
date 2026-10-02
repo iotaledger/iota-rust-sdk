@@ -13,7 +13,7 @@ import (
 func main() {
 	client := iota_sdk.GraphQlClientNewTestnet()
 
-	filter := iota_sdk.NewTransactionsFilter().WithFunction("0x3::iota_system::request_add_stake")
+	filter := iota_sdk.NewGraphQlTransactionsFilter().WithFunction("0x3::iota_system::request_add_stake")
 	transactions, err := client.Transactions(&filter, nil)
 	if err != nil {
 		log.Fatalf("Failed to get transactions: %v", err)

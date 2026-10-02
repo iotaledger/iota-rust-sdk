@@ -16,7 +16,7 @@ fun main() = runBlocking {
         val faucet = FaucetClient.newLocalnet()
         faucet.requestAndWaitForFinalized(fromAddress, client)
 
-        val coins = client.objects(ObjectFilter(owner = fromAddress)).data
+        val coins = client.objects(GraphQlObjectFilter(owner = fromAddress)).data
         if (coins.isEmpty()) {
             throw Exception("No coins found")
         }

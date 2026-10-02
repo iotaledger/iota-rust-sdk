@@ -62,63 +62,50 @@ pub enum PrivateKeyError {
     /// HRP (Human Readable Part) error
     #[error("bech32 HRP error: {0}")]
     Bech32Hrp(String),
+    /// BIP-32 derivation path or key derivation error
     #[cfg(feature = "mnemonic")]
     #[error("mnemonic error: {0}")]
-    Bip32(#[from] bip32::Error),
+    Bip32(String),
+    /// BIP-39 mnemonic phrase error
     #[cfg(feature = "mnemonic")]
     #[error("mnemonic error: {0}")]
-    Bip39(#[from] bip39::Error),
+    Bip39(String),
 }
 
 #[cfg(feature = "bls12381")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "bls12381")))]
 pub mod bls12381;
 
 #[cfg(feature = "bls12381")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "bls12381")))]
 pub mod validator;
 
 #[cfg(feature = "ed25519")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
 pub mod ed25519;
 
 #[cfg(feature = "mnemonic")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "mnemonic")))]
 pub mod mnemonic;
 
 #[cfg(feature = "secp256k1")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]
 pub mod secp256k1;
 
 #[cfg(feature = "secp256r1")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "secp256r1")))]
 pub mod secp256r1;
 
 #[cfg(feature = "passkey")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 pub mod passkey;
 
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
-#[cfg_attr(
-    doc_cfg,
-    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
-)]
 pub mod simple;
 
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
-#[cfg_attr(
-    doc_cfg,
-    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
-)]
 pub mod multisig;
 
+pub use iota_types;
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
-#[cfg_attr(
-    doc_cfg,
-    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
-)]
 #[doc(inline)]
 pub use multisig::UserSignatureVerifier;
+#[cfg(feature = "rand")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+pub use rand_core;
 
 /// Interface for signing user transactions and messages in IOTA
 ///
@@ -206,7 +193,6 @@ pub(crate) use impl_iota_verifier;
 
 /// Bech32 prefix for IOTA private keys
 #[cfg(feature = "bech32")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
 pub const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
 
 #[cfg(feature = "mnemonic")]
@@ -302,15 +288,6 @@ where
     feature = "secp256r1",
     feature = "secp256k1",
 ))]
-#[cfg_attr(
-    doc_cfg,
-    doc(cfg(any(
-        feature = "bls12381",
-        feature = "ed25519",
-        feature = "secp256r1",
-        feature = "secp256k1",
-    )))
-)]
 pub trait ToFromBase64 {
     type Error;
 
