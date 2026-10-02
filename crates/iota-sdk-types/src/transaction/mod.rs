@@ -4,13 +4,12 @@
 
 use std::collections::BTreeSet;
 
-use crate::SignatureSchemeError;
-
 use super::{
     Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, Event, GenesisObject, Identifier,
     Intent, IntentMessage, MoveAuthenticator, ObjectId, ObjectReference, ProtocolVersion,
     PublicKey, SignatureScheme, TransactionDigest, TypeTag, UserSignature, Version,
 };
+use crate::SignatureSchemeError;
 
 mod randomness_round;
 pub use randomness_round::RandomnessRound;
@@ -2053,7 +2052,6 @@ impl AccountClaimKind {
 /// ```text
 /// smart-account-claim = u8      ; public-key-scheme
 ///                       bytes   ; public-key-raw-bytes
-///                       smart-account-build-kind
 /// ```
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -2075,20 +2073,14 @@ pub struct SmartAccountClaim {
     )]
     #[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(public_key_raw_bytes))]
     pub public_key_raw_bytes: Vec<u8>,
-    /// Whether the created account object is mutable or immutable.
-    pub build_kind: SmartAccountBuildKind,
 }
 
 impl SmartAccountClaim {
     /// Creates a claim of the address derived from `public_key`, which is the
     /// address a transaction signed by the corresponding private key is sent
     /// from.
-    pub fn new(public_key: &PublicKey, build_kind: SmartAccountBuildKind) -> Self {
-        Self::new_unchecked(
-            public_key.scheme(),
-            public_key.as_ref().to_vec(),
-            build_kind,
-        )
+    pub fn new(public_key: &PublicKey) -> Self {
+        Self::new_unchecked(public_key.scheme(), public_key.as_ref().to_vec())
     }
 
     /// Creates a claim of the address derived from `committee`, which is the
@@ -2098,29 +2090,20 @@ impl SmartAccountClaim {
     /// from.
     #[cfg(feature = "serde")]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
-    pub fn new_multisig(
-        committee: &crate::MultisigCommittee,
-        build_kind: SmartAccountBuildKind,
-    ) -> Self {
+    pub fn new_multisig(committee: &crate::MultisigCommittee) -> Self {
         Self::new_unchecked(
             SignatureScheme::Multisig,
             bcs::to_bytes(committee).expect("bcs serialization failed"),
-            build_kind,
         )
     }
 
     /// Creates a claim of the address derived from the public key described by
     /// `scheme` and `public_key_raw_bytes`, without checking that the two
     /// describe a key at all.
-    fn new_unchecked(
-        scheme: SignatureScheme,
-        public_key_raw_bytes: Vec<u8>,
-        build_kind: SmartAccountBuildKind,
-    ) -> Self {
+    fn new_unchecked(scheme: SignatureScheme, public_key_raw_bytes: Vec<u8>) -> Self {
         Self {
             public_key_scheme: scheme.to_u8(),
             public_key_raw_bytes,
-            build_kind,
         }
     }
 
@@ -2132,29 +2115,6 @@ impl SmartAccountClaim {
     pub fn signature_scheme(&self) -> Result<SignatureScheme, SignatureSchemeError> {
         SignatureScheme::from_byte(self.public_key_scheme)
     }
-}
-
-/// Whether the account object created by a [`SmartAccountClaim`] can be changed
-/// after the claim.
-///
-/// # BCS
-///
-/// ```text
-/// smart-account-build-kind =  %d00 ; Mutable
-///                          =/ %d01 ; Immutable
-/// ```
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
-#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-#[non_exhaustive]
-pub enum SmartAccountBuildKind {
-    /// A shared object: the account can rotate its authenticator and add,
-    /// remove or mutate its fields.
-    Mutable,
-    /// A frozen object: neither the authenticator nor any field can ever
-    /// change.
-    Immutable,
 }
 
 impl crate::TreeDisplay for ClaimAccountTransaction {
@@ -2183,19 +2143,8 @@ impl crate::TreeDisplay for SmartAccountClaim {
         w.leaf(
             "Public Key Raw Bytes",
             &hex::encode(&self.public_key_raw_bytes),
-            false,
-        )?;
-        w.child("Build Kind", &self.build_kind, true)
-    }
-}
-
-impl crate::TreeDisplay for SmartAccountBuildKind {
-    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
-        w.enum_name("Smart Account Build Kind");
-        match self {
-            Self::Mutable => w.header("Mutable"),
-            Self::Immutable => w.header("Immutable"),
-        }
+            true,
+        )
     }
 }
 
@@ -2233,7 +2182,6 @@ crate::impl_tree_display!(
     ClaimAccountTransaction,
     AccountClaimKind,
     SmartAccountClaim,
-    SmartAccountBuildKind,
 );
 
 #[cfg(test)]
@@ -2247,10 +2195,7 @@ mod tests {
     #[test]
     fn new_from_ed25519_public_key() {
         let public_key = Ed25519PublicKey::new([1; Ed25519PublicKey::LENGTH]);
-        let claim = SmartAccountClaim::new(
-            &PublicKey::Ed25519(public_key),
-            SmartAccountBuildKind::Mutable,
-        );
+        let claim = SmartAccountClaim::new(&PublicKey::Ed25519(public_key));
 
         assert_eq!(claim.public_key_scheme, 0x00);
         assert_eq!(claim.public_key_raw_bytes, public_key.bytes().as_slice());
@@ -2260,10 +2205,7 @@ mod tests {
     #[test]
     fn new_from_passkey_public_key() {
         let secp256r1 = Secp256r1PublicKey::new([2; Secp256r1PublicKey::LENGTH]);
-        let claim = SmartAccountClaim::new(
-            &PublicKey::Passkey(PasskeyPublicKey::new(secp256r1)),
-            SmartAccountBuildKind::Immutable,
-        );
+        let claim = SmartAccountClaim::new(&PublicKey::Passkey(PasskeyPublicKey::new(secp256r1)));
 
         // A passkey is claimed by the secp256r1 key it wraps, under the
         // passkey scheme flag, matching `PasskeyPublicKey::derive_address`.
@@ -2281,7 +2223,6 @@ mod tests {
             // `0x05` is the flag of the removed zklogin authenticator.
             public_key_scheme: 0x05,
             public_key_raw_bytes: vec![0; 32],
-            build_kind: SmartAccountBuildKind::Mutable,
         };
 
         assert!(claim.signature_scheme().is_err());
@@ -2300,7 +2241,7 @@ mod tests {
             1,
         )
         .unwrap();
-        let claim = SmartAccountClaim::new_multisig(&committee, SmartAccountBuildKind::Mutable);
+        let claim = SmartAccountClaim::new_multisig(&committee);
 
         assert_eq!(claim.public_key_scheme, 0x03);
         assert_eq!(claim.signature_scheme().unwrap(), SignatureScheme::Multisig);
