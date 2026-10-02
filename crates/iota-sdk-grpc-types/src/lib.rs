@@ -7,6 +7,8 @@
 //! for future core type evolution. When core types themselves
 //! need versioning, these wrappers will evolve naturally.
 
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
+
 pub mod field;
 pub mod headers;
 pub mod proto;

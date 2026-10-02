@@ -138,7 +138,7 @@ pub(crate) fn unsupported_scheme(_server: &str) -> Option<String> {
     None
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use super::unsupported_scheme;
 

@@ -41,6 +41,8 @@
 //! # }
 //! ```
 
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
+
 mod api;
 mod transaction_builder_client;
 

@@ -3,6 +3,8 @@
 
 //! The IOTA Rust SDK
 
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
+
 #[cfg(feature = "crypto")]
 pub use iota_crypto as crypto;
 #[cfg(feature = "graphql")]
