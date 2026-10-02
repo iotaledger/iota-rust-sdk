@@ -42,7 +42,7 @@ use crate::{
 
 /// Conversion into an endpoint-scoped read mask.
 ///
-/// This is the bound used by the client's `read_mask` parameters. It is
+/// This is the bound used by the client's `read_mask` setters. It is
 /// implemented for everything convertible into the endpoint's mask type: the
 /// mask itself (e.g. `ObjectReadMask::default()` for the endpoint default), a
 /// field constant of the matching field namespace (e.g. [`ObjectField::BCS`]),
