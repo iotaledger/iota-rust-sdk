@@ -3,12 +3,7 @@
 
 //! Common utilities shared across API modules.
 
-use std::borrow::Cow;
-
-pub use iota_grpc_types::{
-    field::FieldMask, field_mask_normalize, google::rpc::Status as RpcStatus,
-    proto::TryFromProtoError,
-};
+pub use iota_grpc_types::{google::rpc::Status as RpcStatus, proto::TryFromProtoError};
 use iota_grpc_types::{
     proto::GrpcConversionError,
     v1::{
@@ -185,67 +180,6 @@ pub enum CheckpointStreamError {
 
 /// Result type alias for API operations.
 pub type GrpcResult<T> = std::result::Result<T, GrpcError>;
-
-// =============================================================================
-// Field Masks
-// =============================================================================
-
-/// A low-level read mask string.
-///
-/// Most callers should use the scoped per-endpoint mask types in
-/// [`read_mask_fields`](crate::read_mask_fields)
-/// (e.g. [`ObjectReadMask`](crate::read_mask_fields::ObjectReadMask)) which
-/// are passed directly to the client methods. This type is the underlying
-/// string holder, useful when composing masks by hand:
-///
-/// ```
-/// use iota_sdk_grpc_client::ReadMask;
-///
-/// let mask = ReadMask::from("effects,checkpoint");
-/// assert_eq!(mask.as_str(), "effects,checkpoint");
-/// ```
-#[derive(Clone, Debug)]
-pub struct ReadMask<'a>(Cow<'a, str>);
-
-impl<'a> ReadMask<'a> {
-    /// Returns the comma-separated field mask string.
-    pub fn as_str(&self) -> &str {
-        &self.0
-    }
-}
-
-impl<'a> From<&'a str> for ReadMask<'a> {
-    fn from(s: &'a str) -> Self {
-        Self(Cow::Borrowed(s))
-    }
-}
-
-impl From<String> for ReadMask<'_> {
-    fn from(s: String) -> Self {
-        Self(Cow::Owned(s))
-    }
-}
-
-impl From<&[&str]> for ReadMask<'_> {
-    /// Paths are normalized: broader paths subsume their sub-paths.
-    fn from(paths: &[&str]) -> Self {
-        Self(Cow::Owned(field_mask_normalize(&paths.join(","))))
-    }
-}
-
-impl<const N: usize> From<&[&str; N]> for ReadMask<'_> {
-    /// Paths are normalized: broader paths subsume their sub-paths.
-    fn from(paths: &[&str; N]) -> Self {
-        Self::from(paths.as_slice())
-    }
-}
-
-impl From<FieldMask> for ReadMask<'_> {
-    /// Paths are normalized: broader paths subsume their sub-paths.
-    fn from(mask: FieldMask) -> Self {
-        Self(Cow::Owned(field_mask_normalize(&mask.paths.join(","))))
-    }
-}
 
 /// Safely convert a `usize` to `u32`, saturating at `u32::MAX` instead of
 /// silently truncating on 64-bit platforms.

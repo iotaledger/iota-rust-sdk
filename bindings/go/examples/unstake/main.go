@@ -47,7 +47,7 @@ func main() {
 
 	// Unstake
 	stakedIotaType := iota_sdk.StructTagNewStakedIota().String()
-	stakedIotas, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType, Owner: &owner}, nil)
+	stakedIotas, err := client.Objects(&iota_sdk.GraphQlObjectFilter{TypeTag: &stakedIotaType, Owner: &owner}, nil)
 	if err != nil {
 		log.Fatalf("Failed to get staked iota: %v", err)
 	}

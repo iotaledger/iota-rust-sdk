@@ -8,7 +8,7 @@ class Program
     static async Task Main(string[] args)
     {
         var client = GraphQlClient.NewTestnet();
-        var filter = new ObjectFilter(TypeTag: "0x2::coin::Coin<0x2::iota::IOTA>");
+        var filter = new GraphQlObjectFilter(TypeTag: "0x2::coin::Coin<0x2::iota::IOTA>");
 
         var coins = await client.Objects(filter);
 
