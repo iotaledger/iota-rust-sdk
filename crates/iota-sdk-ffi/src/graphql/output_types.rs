@@ -165,20 +165,16 @@ impl From<GraphQLDryRunEffect> for iota_sdk::graphql_client::DryRunEffect {
 #[derive(uniffi::Record)]
 pub struct GraphQLDryRunResult {
     /// The error that occurred during dry run execution, if any.
-    #[uniffi(default = None)]
     pub error: Option<String>,
     /// The intermediate results for each command of the dry run execution,
     /// including contents of mutated references and return values.
     pub results: Vec<GraphQLDryRunEffect>,
     /// The transaction that was dry run, without signatures.
-    #[uniffi(default = None)]
     pub transaction: Option<Arc<Transaction>>,
     /// The effects of the transaction execution.
-    #[uniffi(default = None)]
     pub effects: Option<Arc<TransactionEffects>>,
     /// The gas price to use. This is the reference gas price, or a higher
     /// price if an input object is congested.
-    #[uniffi(default = None)]
     pub suggested_gas_price: Option<u64>,
 }
 
