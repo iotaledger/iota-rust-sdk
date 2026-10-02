@@ -1760,6 +1760,7 @@ Examples:
 
     # add special cases (aliases that differ from package names in this workspace)
     internal_crates_dict["iota-bcs-schema"] = None
+    internal_crates_dict["iota-client-api"] = None
     internal_crates_dict["iota-crypto"] = None
     internal_crates_dict["iota-graphql-client"] = None
     internal_crates_dict["iota-graphql-client-build"] = None
