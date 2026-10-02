@@ -4,6 +4,7 @@
 #![doc = include_str!("../README.md")]
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 #![warn(missing_docs)]
+#![deny(unreachable_pub)]
 
 mod api;
 mod client;

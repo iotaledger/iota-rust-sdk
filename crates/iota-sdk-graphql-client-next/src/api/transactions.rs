@@ -441,7 +441,7 @@ pub struct TransactionFilterInput {
     graphql_type = "TransactionBlockKindInput",
     rename_all = "SCREAMING_SNAKE_CASE"
 )]
-pub enum TransactionKindInput {
+pub(crate) enum TransactionKindInput {
     SystemTx,
     ProgrammableTx,
     Genesis,
