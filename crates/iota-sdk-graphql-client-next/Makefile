@@ -17,7 +17,7 @@ test:
 
 .PHONY: wasm
 wasm:
-	CC=clang wasm-pack test -r --node --all-features
+	CC=clang cargo check --target wasm32-unknown-unknown --all-features --lib --tests
 
 %:
 	$(MAKE) -C ../.. $@

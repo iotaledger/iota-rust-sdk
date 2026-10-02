@@ -28,15 +28,15 @@ default = ["reqwest", "tls-native-roots", "tls-ring", "tls-webpki-roots"]
 move-types = ["dep:iota-move-types"]
 reqwest = ["dep:reqwest"]
 tls-aws-lc = [
-  "reqwest",
   "dep:rustls",
+  "reqwest",
   "reqwest/rustls-no-provider",
   "rustls/aws-lc-rs",
 ]
 tls-native-roots = []
 tls-ring = [
-  "reqwest",
   "dep:rustls",
+  "reqwest",
   "reqwest/rustls-no-provider",
   "rustls/ring",
 ]
@@ -72,8 +72,28 @@ webpki-root-certs = { workspace = true, optional = true }
 js-sys.workspace = true
 wasm-bindgen.workspace = true
 
+[dev-dependencies]
+# external dependencies
+eyre.workspace = true
+
+# internal dependencies
+iota-crypto = { workspace = true, features = ["ed25519"] }
+iota-transaction-builder.workspace = true
+
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
 
 [build-dependencies]
 iota-graphql-client-build.workspace = true
+
+[[example]]
+name = "configuration"
+required-features = ["tls-ring"]
+
+[[example]]
+name = "custom_transport"
+required-features = ["tls-ring"]
+
+[[example]]
+name = "move_objects"
+required-features = ["move-types"]
