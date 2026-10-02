@@ -65,8 +65,8 @@ directory.
 
 ## Feature flags
 
-The default features cover the GraphQL client, the transaction builder, the core types and all
-crypto schemes except BLS12-381. gRPC, Move types and gas station sponsorship are opt-in.
+The default features cover the transaction builder, the core types and all crypto schemes
+except BLS12-381. GraphQL, gRPC, Move types and gas station sponsorship are opt-in.
 
 | Feature                    | Default | Effect                                                                                    |
 | -------------------------- | ------- | ----------------------------------------------------------------------------------------- |
@@ -84,13 +84,13 @@ crypto schemes except BLS12-381. gRPC, Move types and gas station sponsorship ar
 | `pem`                      | on      | DER and PEM encoding of keys                                                              |
 | `bech32`                   | on      | Bech32 encoding of private keys                                                           |
 | `mnemonic`                 | on      | key derivation from mnemonic phrases                                                      |
-| `graphql`                  | on      | `graphql_client` module                                                                   |
-| `graphql-tls-ring`         | on      | `ring` as the GraphQL client's TLS crypto provider                                        |
-| `graphql-tls-aws-lc`       | off     | `aws-lc-rs` as the GraphQL client's TLS crypto provider                                   |
-| `graphql-tls-native-roots` | on      | trust the platform certificate store for GraphQL                                          |
-| `graphql-tls-webpki-roots` | on      | trust the bundled Mozilla roots for GraphQL                                               |
 | `transaction-builder`      | on      | `transaction_builder` module                                                              |
 | `gas-station`              | off     | gas sponsorship through the [IOTA gas station](https://github.com/iotaledger/gas-station) |
+| `graphql`                  | off     | `graphql_client` module                                                                   |
+| `graphql-tls-ring`         | off     | `ring` as the GraphQL client's TLS crypto provider                                        |
+| `graphql-tls-aws-lc`       | off     | `aws-lc-rs` as the GraphQL client's TLS crypto provider                                   |
+| `graphql-tls-native-roots` | off     | trust the platform certificate store for GraphQL                                          |
+| `graphql-tls-webpki-roots` | off     | trust the bundled Mozilla roots for GraphQL                                               |
 | `grpc`                     | off     | `grpc_client` and `grpc_types` modules                                                    |
 | `grpc-tls-ring`            | off     | `ring` as the gRPC client's TLS crypto provider                                           |
 | `grpc-tls-aws-lc`          | off     | `aws-lc-rs` as the gRPC client's TLS crypto provider                                      |
