@@ -27,9 +27,8 @@ Ready-made clients ship with the
 [`iota-sdk-graphql-client`](https://crates.io/crates/iota-sdk-graphql-client) and
 [`iota-sdk-grpc-client`](https://crates.io/crates/iota-sdk-grpc-client) crates. To back the builder
 with another transport, implement the three client traits; `TransactionBuilderClient` is then
-implemented automatically. `objects_by_id` (one request per object) and `protocol_config` have
-default implementations worth overriding when your transport can batch requests or fetch the real
-protocol configuration.
+implemented automatically. `objects_by_id` has a default implementation (one request per object)
+worth overriding when your transport can batch requests.
 
 ### Example with Client Resolution
 

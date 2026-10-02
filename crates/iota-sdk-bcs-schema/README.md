@@ -27,7 +27,7 @@ Two types whose names kebab-case to the same rule (e.g. `ObjectID` and `ObjectId
 ## Usage
 
 ```rust,ignore
-use iota_bcs_schema::BcsSchema;
+use iota_sdk_bcs_schema::BcsSchema;
 
 #[derive(serde::Serialize, serde::Deserialize, BcsSchema)]
 struct GasPayment {
