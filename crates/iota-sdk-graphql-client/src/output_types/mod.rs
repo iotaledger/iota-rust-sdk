@@ -27,7 +27,7 @@ pub struct DryRunResult {
     /// The intermediate results for each command of the dry run execution,
     /// including contents of mutated references and return values.
     pub results: Vec<DryRunEffect>,
-    /// The transaction block representing the dry run execution.
+    /// The transaction that was dry run, without signatures.
     pub transaction: Option<Transaction>,
     /// The effects of the transaction execution.
     pub effects: Option<TransactionEffects>,
