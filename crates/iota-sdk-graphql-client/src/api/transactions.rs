@@ -173,8 +173,8 @@ impl GraphQLClient {
 
         match response.transaction_block.map(|tx| (tx.bcs, tx.effects)) {
             Some((Some(bcs), Some(effects))) => {
-                let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
-                let effects = base64ct::Base64::decode_vec(effects.bcs.unwrap().0.as_str())?;
+                let bcs = crate::error::decode_base64(bcs.0.as_str())?;
+                let effects = crate::error::decode_base64(effects.bcs.unwrap().0.as_str())?;
                 let transaction: SenderSignedTransaction = bcs::from_bytes(&bcs)?;
                 let effects: TransactionEffects = bcs::from_bytes(&effects)?;
 
@@ -219,9 +219,9 @@ impl GraphQLClient {
                             "transaction bcs or effects",
                         ));
                     };
-                    let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
+                    let bcs = crate::error::decode_base64(bcs.0.as_str())?;
                     let effects =
-                        base64ct::Base64::decode_vec(effects.bcs.as_ref().unwrap().0.as_str())?;
+                        crate::error::decode_base64(effects.bcs.as_ref().unwrap().0.as_str())?;
                     let transaction: SenderSignedTransaction = bcs::from_bytes(&bcs)?;
                     let effects: TransactionEffects = bcs::from_bytes(&effects)?;
 
@@ -266,7 +266,7 @@ impl GraphQLClient {
         let response = self.run_query(&operation).await?;
 
         let result = response.execute_transaction_block;
-        let bcs = base64ct::Base64::decode_vec(result.effects.bcs.0.as_str())?;
+        let bcs = crate::error::decode_base64(result.effects.bcs.0.as_str())?;
         let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
 
         if let Some(wait_for) = wait_for {

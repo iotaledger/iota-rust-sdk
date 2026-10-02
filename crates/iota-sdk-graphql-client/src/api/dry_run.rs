@@ -103,7 +103,7 @@ impl GraphQLClient {
             .as_ref()
             .and_then(|tx| tx.effects.as_ref())
             .and_then(|tx| tx.bcs.as_ref())
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .map(|bcs| crate::error::decode_base64(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
             .transpose()?;
@@ -112,7 +112,7 @@ impl GraphQLClient {
         let transaction = txn_block
             .as_ref()
             .and_then(|tx| tx.bcs.as_ref())
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .map(|bcs| crate::error::decode_base64(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<SignedTransaction>(&bcs))
             .transpose()?;
