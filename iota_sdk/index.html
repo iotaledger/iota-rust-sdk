@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="iota-sdk"><title>iota_sdk - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-1ed95124.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="iota_sdk" data-themes="" data-resource-suffix="" data-rustdoc-version="1.98.1 (48a229cea 2026-09-01)" data-channel="1.98.1" data-search-js="search-9944d736.js" data-stringdex-js="stringdex-2da4960a.js" data-settings-js="settings-170eb4bf.js" ><script src="../static.files/storage-41dd4d93.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-f7c3ffd8.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate iota_sdk</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../iota_sdk/index.html">iota_<wbr>sdk</a><span class="version">3.0.0-beta.1</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#iota-sdk" title="iota-sdk">iota-sdk</a><ul><li><a href="#example" title="Example">Example</a></li><li><a href="#feature-flags" title="Feature flags">Feature flags</a></li><li><a href="#license" title="License">License</a></li></ul></li></ul><h3><a href="#reexports">Crate Items</a></h3><ul class="block"><li><a href="#reexports" title="Re-exports">Re-exports</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1>Crate <span>iota_<wbr>sdk</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/iota_sdk/lib.rs.html#4-20">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="iota-sdk"><a class="doc-anchor" href="#iota-sdk">§</a>iota-sdk</h2>
+<p><a href="https://crates.io/crates/iota-sdk"><img src="https://img.shields.io/crates/v/iota-sdk" alt="iota-sdk on crates.io" /></a>
+<a href="https://docs.rs/iota-sdk"><img src="https://img.shields.io/badge/docs-latest-brightgreen" alt="Documentation (latest release)" /></a></p>
+<p>A Rust SDK for integrating with the <a href="https://docs.iota.org/">IOTA blockchain</a>. This crate bundles
+the SDK’s libraries behind feature flags, so an application depends on one crate and compiles only
+what it enables.</p>
+<div><table><thead><tr><th>Module</th><th>Crate</th><th>Feature</th></tr></thead><tbody>
+<tr><td><code>types</code></td><td><a href="https://crates.io/crates/iota-sdk-types"><code>iota-sdk-types</code></a></td><td><code>types</code></td></tr>
+<tr><td><code>crypto</code></td><td><a href="https://crates.io/crates/iota-sdk-crypto"><code>iota-sdk-crypto</code></a></td><td><code>crypto</code></td></tr>
+<tr><td><code>graphql_client</code></td><td><a href="https://crates.io/crates/iota-sdk-graphql-client"><code>iota-sdk-graphql-client</code></a></td><td><code>graphql</code></td></tr>
+<tr><td><code>transaction_builder</code></td><td><a href="https://crates.io/crates/iota-sdk-transaction-builder"><code>iota-sdk-transaction-builder</code></a></td><td><code>transaction-builder</code></td></tr>
+<tr><td><code>grpc_client</code></td><td><a href="https://crates.io/crates/iota-sdk-grpc-client"><code>iota-sdk-grpc-client</code></a></td><td><code>grpc</code></td></tr>
+<tr><td><code>grpc_types</code></td><td><a href="https://crates.io/crates/iota-sdk-grpc-types"><code>iota-sdk-grpc-types</code></a></td><td><code>grpc</code></td></tr>
+<tr><td><code>move_types</code></td><td><a href="https://crates.io/crates/iota-sdk-move-types"><code>iota-sdk-move-types</code></a></td><td><code>move-types</code></td></tr>
+</tbody></table>
+</div><h3 id="example"><a class="doc-anchor" href="#example">§</a>Example</h3>
+<p>Build, dry-run, sign and execute a transfer on a local network:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>eyre::Result;
+<span class="kw">use </span>iota_sdk::{
+    crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
+    graphql_client::{GraphQLClient, faucet::FaucetClient},
+    types::Address,
+};
+
+<span class="attr">#[tokio::main]
+</span><span class="kw">async fn </span>main() -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">let </span>recipient =
+        Address::from_hex(<span class="string">"0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"</span>)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>private_key = Ed25519PrivateKey::new([<span class="number">0</span>; Ed25519PrivateKey::LENGTH]);
+    <span class="kw">let </span>sender = private_key.public_key().derive_address();
+
+    <span class="kw">let </span>client = GraphQLClient::new_localnet();
+    FaucetClient::new_localnet()
+        .request_and_wait_for_finalized(sender, <span class="kw-2">&amp;</span>client)
+        .<span class="kw">await</span><span class="question-mark">?</span>;
+
+    <span class="kw">let </span><span class="kw-2">mut </span>builder = client.transaction_builder(sender);
+    builder.send_iota(recipient, <span class="number">1_000u64</span>);
+    <span class="kw">let </span>tx = builder.finish().<span class="kw">await</span><span class="question-mark">?</span>;
+
+    <span class="kw">let </span>dry_run = client.dry_run_transaction(<span class="kw-2">&amp;</span>tx, <span class="bool-val">false</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(err) = dry_run.error {
+        <span class="macro">eyre::bail!</span>(<span class="string">"Dry run failed: {err}"</span>);
+    }
+
+    <span class="kw">let </span>signature = private_key.sign_transaction(<span class="kw-2">&amp;</span>tx)<span class="question-mark">?</span>;
+    <span class="kw">let </span>effects = client.execute_transaction(<span class="kw-2">&amp;</span>[signature], <span class="kw-2">&amp;</span>tx, <span class="prelude-val">None</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="macro">println!</span>(<span class="string">"Digest: {}"</span>, effects.digest());
+
+    <span class="prelude-val">Ok</span>(())
+}</code></pre></div>
+<p>More examples, covering queries, Move calls, staking, multisig, gas sponsorship and the gRPC client,
+are in the <a href="https://github.com/iotaledger/iota-rust-sdk/tree/develop/crates/iota-sdk/examples"><code>examples</code></a>
+directory.</p>
+<h3 id="feature-flags"><a class="doc-anchor" href="#feature-flags">§</a>Feature flags</h3>
+<p>The default features cover the transaction builder, the core types and all crypto schemes
+except BLS12-381. GraphQL, gRPC, Move types and gas station sponsorship are opt-in.</p>
+<div><table><thead><tr><th>Feature</th><th>Default</th><th>Effect</th></tr></thead><tbody>
+<tr><td><code>types</code></td><td>on</td><td><code>types</code> module</td></tr>
+<tr><td><code>serde</code></td><td>on</td><td>serialization of the core types</td></tr>
+<tr><td><code>hash</code></td><td>on</td><td>hashing, needed to derive addresses and digests</td></tr>
+<tr><td><code>rand</code></td><td>on</td><td>random generation of the core types and keys</td></tr>
+<tr><td><code>proptest</code></td><td>off</td><td><code>proptest</code> strategies for the core types</td></tr>
+<tr><td><code>crypto</code></td><td>on</td><td><code>crypto</code> module, with the signing and verifying traits</td></tr>
+<tr><td><code>ed25519</code></td><td>on</td><td>Ed25519 keys and signatures</td></tr>
+<tr><td><code>secp256k1</code></td><td>on</td><td>Secp256k1 keys and signatures</td></tr>
+<tr><td><code>secp256r1</code></td><td>on</td><td>Secp256r1 keys and signatures</td></tr>
+<tr><td><code>passkey</code></td><td>on</td><td>passkey signature verification</td></tr>
+<tr><td><code>bls12381</code></td><td>off</td><td>BLS12-381 keys and signatures</td></tr>
+<tr><td><code>pem</code></td><td>on</td><td>DER and PEM encoding of keys</td></tr>
+<tr><td><code>bech32</code></td><td>on</td><td>Bech32 encoding of private keys</td></tr>
+<tr><td><code>mnemonic</code></td><td>on</td><td>key derivation from mnemonic phrases</td></tr>
+<tr><td><code>transaction-builder</code></td><td>on</td><td><code>transaction_builder</code> module</td></tr>
+<tr><td><code>gas-station</code></td><td>off</td><td>gas sponsorship through the <a href="https://github.com/iotaledger/gas-station">IOTA gas station</a></td></tr>
+<tr><td><code>graphql</code></td><td>off</td><td><code>graphql_client</code> module</td></tr>
+<tr><td><code>graphql-tls-ring</code></td><td>off</td><td><code>ring</code> as the GraphQL client’s TLS crypto provider</td></tr>
+<tr><td><code>graphql-tls-aws-lc</code></td><td>off</td><td><code>aws-lc-rs</code> as the GraphQL client’s TLS crypto provider</td></tr>
+<tr><td><code>graphql-tls-native-roots</code></td><td>off</td><td>trust the platform certificate store for GraphQL</td></tr>
+<tr><td><code>graphql-tls-webpki-roots</code></td><td>off</td><td>trust the bundled Mozilla roots for GraphQL</td></tr>
+<tr><td><code>grpc</code></td><td>off</td><td><code>grpc_client</code> and <code>grpc_types</code> modules</td></tr>
+<tr><td><code>grpc-tls-ring</code></td><td>off</td><td><code>ring</code> as the gRPC client’s TLS crypto provider</td></tr>
+<tr><td><code>grpc-tls-aws-lc</code></td><td>off</td><td><code>aws-lc-rs</code> as the gRPC client’s TLS crypto provider</td></tr>
+<tr><td><code>grpc-tls-native-roots</code></td><td>off</td><td>trust the platform certificate store for gRPC</td></tr>
+<tr><td><code>grpc-tls-webpki-roots</code></td><td>off</td><td>trust the bundled Mozilla roots for gRPC</td></tr>
+<tr><td><code>move-types</code></td><td>off</td><td><code>move_types</code> module, and typed Move object queries in the clients</td></tr>
+</tbody></table>
+</div>
+<p>The <code>graphql-tls-*</code> and <code>grpc-tls-*</code> features map to the <code>tls-*</code> features
+of <a href="https://crates.io/crates/iota-sdk-graphql-client"><code>iota-sdk-graphql-client</code></a> and
+<a href="https://crates.io/crates/iota-sdk-grpc-client"><code>iota-sdk-grpc-client</code></a>, whose READMEs describe how
+they combine.</p>
+<h3 id="license"><a class="doc-anchor" href="#license">§</a>License</h3>
+<p>This project is available under the terms of the
+<a href="https://github.com/iotaledger/iota-rust-sdk/blob/develop/LICENSE">Apache 2.0 license</a>.</p>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><dl class="item-table reexports"><dt id="reexport.crypto"><code>pub use iota_crypto as crypto;</code><wbr><span class="stab portability" title="Available on crate feature `crypto` only"><code>crypto</code></span></dt><dt id="reexport.graphql_client"><code>pub use iota_graphql_client as graphql_client;</code><wbr><span class="stab portability" title="Available on crate feature `graphql` only"><code>graphql</code></span></dt><dt id="reexport.grpc_client"><code>pub use iota_grpc_client as grpc_client;</code><wbr><span class="stab portability" title="Available on crate feature `grpc` only"><code>grpc</code></span></dt><dt id="reexport.grpc_types"><code>pub use iota_grpc_types as grpc_types;</code><wbr><span class="stab portability" title="Available on crate feature `grpc` only"><code>grpc</code></span></dt><dt id="reexport.move_types"><code>pub use iota_move_types as move_types;</code><wbr><span class="stab portability" title="Available on crate feature `move-types` only"><code>move-types</code></span></dt><dt id="reexport.transaction_builder"><code>pub use iota_transaction_builder as transaction_builder;</code><wbr><span class="stab portability" title="Available on crate feature `transaction-builder` only"><code>transaction-builder</code></span></dt><dt id="reexport.types"><code>pub use iota_types as types;</code><wbr><span class="stab portability" title="Available on crate feature `types` only"><code>types</code></span></dt></dl></section></div></main></body></html>

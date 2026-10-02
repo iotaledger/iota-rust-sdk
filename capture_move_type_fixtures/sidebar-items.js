@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["FIXTURES"],"enum":["Source"],"fn":["capture","main"],"struct":["Fixture"]};
