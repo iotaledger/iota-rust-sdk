@@ -8,29 +8,51 @@ use cynic::QueryBuilder;
 
 use crate::{
     GraphQLClient,
+    api::define_query,
     error::GraphQLResult,
-    pagination::{Page, PaginationFilter},
+    pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{Event, EventFilter, EventsQueryArgs, EventsQueryFragment},
 };
 
-impl GraphQLClient {
-    /// Return a page of events based on the (optional) event filter.
-    pub async fn events(
-        &self,
-        filter: impl Into<Option<EventFilter>>,
-        pagination_filter: PaginationFilter,
-    ) -> GraphQLResult<Page<Event>> {
-        let pagination = self.pagination_filter(pagination_filter).await;
+define_query! {
+    /// Query for [`GraphQLClient::events`]. Await it to send the request.
+    pub struct ListEventsQuery {
+        client: GraphQLClient,
+        filter: Option<EventFilter>,
+        pagination: PaginationFilter,
+    }
+    output: GraphQLResult<Page<Event>>;
+}
 
-        let operation = EventsQueryFragment::build(EventsQueryArgs {
-            filter: filter.into(),
+impl ListEventsQuery {
+    /// Only return the events that match `filter`.
+    pub fn filter(mut self, filter: impl Into<Option<EventFilter>>) -> Self {
+        self.filter = filter.into();
+        self
+    }
+
+    /// Set the page to fetch.
+    pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
+        self.pagination = pagination;
+        self
+    }
+
+    fn operation<'a>(
+        &self,
+        pagination: &'a PaginationFilterResponse,
+    ) -> cynic::Operation<EventsQueryFragment, EventsQueryArgs<'a>> {
+        EventsQueryFragment::build(EventsQueryArgs {
+            filter: self.filter.clone(),
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
             first: pagination.first,
             last: pagination.last,
-        });
+        })
+    }
 
-        let response = self.run_query(&operation).await?;
+    async fn send(self) -> GraphQLResult<Page<Event>> {
+        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
+        let response = self.client.run_query(&self.operation(&pagination)).await?;
 
         let ec = response.events;
         let page_info = ec.page_info;
@@ -41,15 +63,48 @@ impl GraphQLClient {
     }
 }
 
+impl GraphQLClient {
+    /// Return a page of events.
+    pub fn events(&self) -> ListEventsQuery {
+        ListEventsQuery {
+            client: self.clone(),
+            filter: None,
+            pagination: PaginationFilter::default(),
+        }
+    }
+}
+
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use crate::{PaginationFilter, test_utils::test_client};
+    use iota_types::Address;
+
+    use crate::{
+        query_types::EventFilter,
+        test_utils::{assert_backward_page, backward_page, sent_variables, test_client},
+    };
+
+    #[tokio::test]
+    async fn events_sends_the_filter_and_pagination() {
+        let vars = sent_variables("EventsQueryFragment", |client| async move {
+            let _ = client
+                .events()
+                .filter(EventFilter {
+                    sender: Some(Address::FRAMEWORK),
+                    ..Default::default()
+                })
+                .pagination(backward_page())
+                .await;
+        })
+        .await;
+        assert_eq!(vars["filter"]["sender"], Address::FRAMEWORK.to_string());
+        assert_backward_page(&vars);
+    }
 
     #[tokio::test]
     async fn test_events_query() {
         let client = test_client();
         let events = client
-            .events(None, PaginationFilter::default())
+            .events()
             .await
             .map_err(|e| {
                 format!(

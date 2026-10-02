@@ -4,6 +4,8 @@
 
 //! Dynamic Fields API implementation.
 
+use std::future::IntoFuture;
+
 use base64ct::Encoding;
 use cynic::QueryBuilder;
 use futures::Stream;
@@ -11,14 +13,65 @@ use iota_types::{Address, TypeTag};
 
 use crate::{
     DynamicFieldOutput, GraphQLClient, NameValue,
+    api::define_query,
     error::GraphQLResult,
-    pagination::{Direction, Page, PaginationFilter},
+    pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldQueryFragment,
         DynamicFieldsOwnerQueryFragment, DynamicObjectFieldQueryFragment,
     },
     streams::stream_paginated_query,
 };
+
+define_query! {
+    /// Query for [`GraphQLClient::dynamic_fields`]. Await it to send the
+    /// request.
+    pub struct ListDynamicFieldsQuery {
+        client: GraphQLClient,
+        address: Address,
+        pagination: PaginationFilter,
+    }
+    output: GraphQLResult<Page<DynamicFieldOutput>>;
+}
+
+impl ListDynamicFieldsQuery {
+    /// Set the page to fetch.
+    pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
+        self.pagination = pagination;
+        self
+    }
+
+    fn operation<'a>(
+        &self,
+        pagination: &'a PaginationFilterResponse,
+    ) -> cynic::Operation<DynamicFieldsOwnerQueryFragment, DynamicFieldConnectionArgs<'a>> {
+        DynamicFieldsOwnerQueryFragment::build(DynamicFieldConnectionArgs {
+            address: self.address,
+            after: pagination.after.as_deref(),
+            before: pagination.before.as_deref(),
+            first: pagination.first,
+            last: pagination.last,
+        })
+    }
+
+    async fn send(self) -> GraphQLResult<Page<DynamicFieldOutput>> {
+        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
+        let response = self.client.run_query(&self.operation(&pagination)).await?;
+
+        let DynamicFieldsOwnerQueryFragment { owner: Some(dfs) } = response else {
+            return Ok(Page::new_empty());
+        };
+
+        Ok(Page::new(
+            dfs.dynamic_fields.page_info,
+            dfs.dynamic_fields
+                .nodes
+                .into_iter()
+                .map(TryInto::try_into)
+                .collect::<GraphQLResult<Vec<_>>>()?,
+        ))
+    }
+}
 
 impl GraphQLClient {
     /// Get a stream of dynamic fields for the provided address. Note that this
@@ -29,7 +82,11 @@ impl GraphQLClient {
         streaming_direction: Direction,
     ) -> impl Stream<Item = GraphQLResult<DynamicFieldOutput>> + '_ {
         stream_paginated_query(
-            move |filter| self.dynamic_fields(address, filter),
+            move |filter| {
+                self.dynamic_fields(address)
+                    .pagination(filter)
+                    .into_future()
+            },
             streaming_direction,
         )
     }
@@ -117,35 +174,12 @@ impl GraphQLClient {
 
     /// Get a page of dynamic fields for the provided address. Note that this
     /// will also fetch dynamic fields on wrapped objects.
-    ///
-    /// This returns [`Page`] of [`DynamicFieldOutput`]s.
-    pub async fn dynamic_fields(
-        &self,
-        address: Address,
-        pagination_filter: PaginationFilter,
-    ) -> GraphQLResult<Page<DynamicFieldOutput>> {
-        let pagination = self.pagination_filter(pagination_filter).await;
-        let operation = DynamicFieldsOwnerQueryFragment::build(DynamicFieldConnectionArgs {
+    pub fn dynamic_fields(&self, address: Address) -> ListDynamicFieldsQuery {
+        ListDynamicFieldsQuery {
+            client: self.clone(),
             address,
-            after: pagination.after.as_deref(),
-            before: pagination.before.as_deref(),
-            first: pagination.first,
-            last: pagination.last,
-        });
-        let response = self.run_query(&operation).await?;
-
-        let DynamicFieldsOwnerQueryFragment { owner: Some(dfs) } = response else {
-            return Ok(Page::new_empty());
-        };
-
-        Ok(Page::new(
-            dfs.dynamic_fields.page_info,
-            dfs.dynamic_fields
-                .nodes
-                .into_iter()
-                .map(TryInto::try_into)
-                .collect::<GraphQLResult<Vec<_>>>()?,
-        ))
+            pagination: PaginationFilter::default(),
+        }
     }
 }
 
@@ -154,7 +188,24 @@ mod tests {
     use base64ct::Encoding;
     use iota_types::{ObjectId, TypeTag};
 
-    use crate::{BcsName, PaginationFilter, test_utils::test_client};
+    use crate::{
+        BcsName,
+        test_utils::{assert_backward_page, backward_page, sent_variables, test_client},
+    };
+
+    #[tokio::test]
+    async fn dynamic_fields_sends_the_address_and_pagination() {
+        let address = ObjectId::SYSTEM_STATE.into();
+        let vars = sent_variables("DynamicFieldsOwnerQueryFragment", |client| async move {
+            let _ = client
+                .dynamic_fields(address)
+                .pagination(backward_page())
+                .await;
+        })
+        .await;
+        assert_eq!(vars["address"], address.to_string());
+        assert_backward_page(&vars);
+    }
 
     #[tokio::test]
     async fn test_dynamic_field_query() {
@@ -187,7 +238,7 @@ mod tests {
     async fn test_dynamic_fields_query() {
         let client = test_client();
         client
-            .dynamic_fields(ObjectId::SYSTEM_STATE.into(), PaginationFilter::default())
+            .dynamic_fields(ObjectId::SYSTEM_STATE.into())
             .await
             .map_err(|e| {
                 format!(
