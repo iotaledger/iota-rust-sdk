@@ -9,7 +9,15 @@ use crate::error::Result;
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
-#[derive(Debug, derive_more::Deref, derive_more::Display, derive_more::From, uniffi::Object)]
+#[derive(
+    Debug,
+    derive_more::Deref,
+    derive_more::Display,
+    derive_more::From,
+    Eq,
+    PartialEq,
+    uniffi::Object,
+)]
 #[uniffi::export(Display)]
 pub struct Version(iota_sdk::types::Version);
 
