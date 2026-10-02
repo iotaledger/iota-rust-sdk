@@ -75,25 +75,7 @@ define_query! {
 }
 
 impl GetCheckpointQuery {
-    /// Select the checkpoint by digest. Setting both this and
-    /// [`sequence_number`](Self::sequence_number) is an error.
-    pub fn digest(mut self, digest: impl Into<Option<CheckpointDigest>>) -> Self {
-        self.digest = digest.into();
-        self
-    }
-
-    /// Select the checkpoint by sequence number. Setting both this and
-    /// [`digest`](Self::digest) is an error.
-    pub fn sequence_number(mut self, sequence_number: impl Into<Option<u64>>) -> Self {
-        self.sequence_number = sequence_number.into();
-        self
-    }
-
     async fn send(self) -> GraphQLResult<Option<CheckpointSummary>> {
-        if self.digest.is_some() && self.sequence_number.is_some() {
-            return Err(GraphQLError::InvalidArgument(CONFLICTING_CHECKPOINT_ID));
-        }
-
         let operation = CheckpointQueryFragment::build(CheckpointArgs {
             id: CheckpointId {
                 digest: self.digest.map(|d| d.to_string()),
@@ -122,13 +104,30 @@ impl GraphQLClient {
         )
     }
 
-    /// Get the [`CheckpointSummary`] for a given checkpoint digest or
-    /// sequence number. Defaults to the last known checkpoint.
+    /// Get the [`CheckpointSummary`] of the last known checkpoint.
     pub fn checkpoint(&self) -> GetCheckpointQuery {
         GetCheckpointQuery {
             client: self.clone(),
             digest: None,
             sequence_number: None,
+        }
+    }
+
+    /// Get the [`CheckpointSummary`] for the given checkpoint digest.
+    pub fn checkpoint_by_digest(&self, digest: CheckpointDigest) -> GetCheckpointQuery {
+        GetCheckpointQuery {
+            client: self.clone(),
+            digest: Some(digest),
+            sequence_number: None,
+        }
+    }
+
+    /// Get the [`CheckpointSummary`] for the given checkpoint sequence number.
+    pub fn checkpoint_by_sequence_number(&self, sequence_number: u64) -> GetCheckpointQuery {
+        GetCheckpointQuery {
+            client: self.clone(),
+            digest: None,
+            sequence_number: Some(sequence_number),
         }
     }
 
@@ -203,18 +202,15 @@ impl GraphQLClient {
 mod tests {
     use iota_types::CheckpointDigest;
 
-    use crate::{
-        GraphQLClient, GraphQLError,
-        test_utils::{
-            assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
-            test_client,
-        },
+    use crate::test_utils::{
+        assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+        test_client,
     };
 
     #[tokio::test]
     async fn checkpoint_sends_the_digest_or_sequence_number() {
         let vars = sent_variables("CheckpointQueryFragment", |client| async move {
-            let _ = client.checkpoint().sequence_number(7).await;
+            let _ = client.checkpoint_by_sequence_number(7).await;
         })
         .await;
         assert_eq!(vars["id"]["sequenceNumber"], 7);
@@ -222,7 +218,7 @@ mod tests {
 
         let digest = CheckpointDigest::ZERO;
         let vars = sent_variables("CheckpointQueryFragment", |client| async move {
-            let _ = client.checkpoint().digest(digest).await;
+            let _ = client.checkpoint_by_digest(digest).await;
         })
         .await;
         assert_eq!(vars["id"]["digest"], digest.to_string());
@@ -234,16 +230,6 @@ mod tests {
         .await;
         assert!(vars["id"]["digest"].is_null());
         assert!(vars["id"]["sequenceNumber"].is_null());
-    }
-
-    #[tokio::test]
-    async fn checkpoint_rejects_both_digest_and_sequence_number() {
-        let result = GraphQLClient::new_localnet()
-            .checkpoint()
-            .digest(CheckpointDigest::ZERO)
-            .sequence_number(7)
-            .await;
-        assert!(matches!(result, Err(GraphQLError::InvalidArgument(_))));
     }
 
     #[tokio::test]
@@ -373,8 +359,7 @@ mod tests {
         );
 
         let checkpoint = client
-            .checkpoint()
-            .sequence_number(checkpoint_sequence_number)
+            .checkpoint_by_sequence_number(checkpoint_sequence_number)
             .await
             .unwrap()
             .unwrap();

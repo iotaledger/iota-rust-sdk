@@ -28,14 +28,16 @@ impl GraphQLClient {
         digest: Option<Arc<CheckpointDigest>>,
         sequence_number: Option<u64>,
     ) -> Result<Option<Arc<CheckpointSummary>>> {
-        Ok(self
-            .client()
-            .checkpoint()
-            .digest(digest.map(|d| **d))
-            .sequence_number(sequence_number)
-            .await?
-            .map(Into::into)
-            .map(Arc::new))
+        let client = self.client();
+        let query = match (digest, sequence_number) {
+            (None, None) => client.checkpoint(),
+            (Some(digest), None) => client.checkpoint_by_digest(**digest),
+            (None, Some(sequence_number)) => client.checkpoint_by_sequence_number(sequence_number),
+            (Some(_), Some(_)) => Err(iota_sdk::graphql_client::GraphQLError::InvalidArgument(
+                "either digest or sequence_number can be provided, but not both",
+            ))?,
+        };
+        Ok(query.await?.map(Into::into).map(Arc::new))
     }
 
     /// Get a page of `CheckpointSummary` for the provided parameters.
