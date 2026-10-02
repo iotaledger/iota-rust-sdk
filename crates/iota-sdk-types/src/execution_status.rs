@@ -375,6 +375,12 @@ pub enum ExecutionError {
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         max_scaled_size: u64,
     },
+    /// Built-in authenticator verification failed to verify the transaction,
+    /// which could be due to various reasons such as invalid signatures,
+    /// incorrect authentication keys, or other issues related to
+    /// transaction authentication.
+    #[error("Built-in authenticator verification failed: {reason}")]
+    BuiltinAuthenticatorVerificationError { reason: String },
 }
 
 impl ExecutionError {
@@ -422,6 +428,7 @@ impl ExecutionError {
         ExecutionCanceledDueToExecutionWorkerCongestion,
         MoveVectorElemTooBig,
         MoveRawValueTooBig,
+        BuiltinAuthenticatorVerificationError,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
