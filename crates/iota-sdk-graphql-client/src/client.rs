@@ -119,6 +119,10 @@ impl GraphQLClient {
 
     /// Set the server address for the GraphQL client. It should be a
     /// valid URL with a host and optionally a port number.
+    ///
+    /// The service config cached from the previous server is dropped and
+    /// fetched from the new one when next needed; clones of this client keep
+    /// theirs.
     pub fn set_rpc_server(&mut self, server: &str) -> GraphQLResult<()> {
         let rpc = reqwest::Url::parse(server)?;
         self.rpc = rpc;
