@@ -163,13 +163,34 @@ impl Address {
             hex
         };
         if hex.len() != Self::LENGTH * 2 {
-            return Err(AddressParseError::FromHex(
-                hex::FromHexError::InvalidStringLength,
-            ));
+            return Err(AddressParseError::InvalidHexLength { actual: hex.len() });
         }
-        <[u8; Self::LENGTH] as hex::FromHex>::from_hex(hex)
+        Self::decode_hex(hex)
+    }
+
+    /// Decodes up to `Self::LENGTH * 2` hex characters, left-padding with `0`s.
+    fn decode_hex(hex: &[u8]) -> Result<Self, AddressParseError> {
+        if hex.len() > Self::LENGTH * 2 {
+            return Err(AddressParseError::InvalidHexLength { actual: hex.len() });
+        }
+        let mut buf = [b'0'; Self::LENGTH * 2];
+        let padding = buf.len() - hex.len();
+        buf[padding..].copy_from_slice(hex);
+
+        <[u8; Self::LENGTH] as hex::FromHex>::from_hex(buf)
             .map(Self)
-            .map_err(AddressParseError::FromHex)
+            .map_err(|e| match e {
+                // The padding is all `0`s, so an invalid character is always past it.
+                hex::FromHexError::InvalidHexCharacter { c, index } => {
+                    AddressParseError::InvalidHexCharacter {
+                        c,
+                        index: index - padding,
+                    }
+                }
+                hex::FromHexError::OddLength | hex::FromHexError::InvalidStringLength => {
+                    AddressParseError::InvalidHexLength { actual: hex.len() }
+                }
+            })
     }
 
     /// Parses an Address from a full-length hex string (64 hex characters),
@@ -203,19 +224,7 @@ impl Address {
             hex
         };
 
-        // If the string is too short we'll need to pad with 0's
-        if hex.len() < Self::LENGTH * 2 {
-            let mut buf = [b'0'; Self::LENGTH * 2];
-            let pad_length = (Self::LENGTH * 2) - hex.len();
-
-            buf[pad_length..].copy_from_slice(hex);
-
-            <[u8; Self::LENGTH] as hex::FromHex>::from_hex(buf)
-        } else {
-            <[u8; Self::LENGTH] as hex::FromHex>::from_hex(hex)
-        }
-        .map(Self)
-        .map_err(AddressParseError::FromHex)
+        Self::decode_hex(hex)
     }
 
     /// Parses an Address from a hex string with a mandatory `0x` prefix.
@@ -413,8 +422,13 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Address::LENGTH]> for ReadableAddr
 #[derive(Clone, Debug, PartialEq, thiserror::Error)]
 #[non_exhaustive]
 pub enum AddressParseError {
-    #[error("address must be hex string of length {}", Address::LENGTH * 2)]
-    FromHex(#[from] hex::FromHexError),
+    #[error(
+        "address must be hex string of length {}, got {actual}",
+        Address::LENGTH * 2
+    )]
+    InvalidHexLength { actual: usize },
+    #[error("invalid hex character {c:?} at position {index}")]
+    InvalidHexCharacter { c: char, index: usize },
     #[error(
         "invalid address byte length: expected {}, got {actual}",
         Address::LENGTH
@@ -496,13 +510,17 @@ mod tests {
     #[test]
     fn parse_address_invalid_hex_char() {
         let result = Address::from_short_hex("0xGGGG");
-        assert!(result.is_err());
-        assert!(matches!(
+        assert_eq!(
             result,
-            Err(AddressParseError::FromHex(
-                hex::FromHexError::InvalidHexCharacter { .. }
-            ))
-        ));
+            Err(AddressParseError::InvalidHexCharacter { c: 'G', index: 0 })
+        );
+
+        let result =
+            Address::from_hex("0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f33z");
+        assert_eq!(
+            result,
+            Err(AddressParseError::InvalidHexCharacter { c: 'z', index: 63 })
+        );
     }
 
     #[test]
@@ -511,21 +529,25 @@ mod tests {
         let result = Address::from_short_hex(
             "0x002a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331",
         );
-        assert!(matches!(
+        assert_eq!(
             result,
-            Err(AddressParseError::FromHex(hex::FromHexError::OddLength))
-        ));
+            Err(AddressParseError::InvalidHexLength { actual: 65 })
+        );
 
         // 66 hex chars (two more than allowed 64)
         let result = Address::from_short_hex(
             "0x002a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f3316",
         );
-        assert!(matches!(
+        assert_eq!(
             result,
-            Err(AddressParseError::FromHex(
-                hex::FromHexError::InvalidStringLength
-            ))
-        ));
+            Err(AddressParseError::InvalidHexLength { actual: 66 })
+        );
+
+        let result = Address::from_hex("0x2");
+        assert_eq!(
+            result,
+            Err(AddressParseError::InvalidHexLength { actual: 1 })
+        );
     }
 
     #[test]
