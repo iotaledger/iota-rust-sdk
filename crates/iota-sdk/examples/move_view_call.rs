@@ -23,10 +23,8 @@ async fn main() -> GraphQLResult<()> {
     println!("=== Example 1: move_view_call() with typed arguments (primitives) ===\n");
 
     let result = client
-        .move_view_call(
-            format!("{PACKAGE}::shop::discounted_price"),
-            (100u64, 25u64),
-        )
+        .move_view_call(format!("{PACKAGE}::shop::discounted_price"))
+        .arguments((100u64, 25u64))
         .await?;
 
     if let Some(error) = result.error {
@@ -64,10 +62,8 @@ async fn main() -> GraphQLResult<()> {
     println!("\n=== Example 3: move_view_call() with typed arguments (shared object) ===\n");
 
     let result = client
-        .move_view_call(
-            format!("{PACKAGE}::shop::sale_at"),
-            (ObjectId::from_str(SHOP)?, 1u64),
-        )
+        .move_view_call(format!("{PACKAGE}::shop::sale_at"))
+        .arguments((ObjectId::from_str(SHOP)?, 1u64))
         .await?;
 
     if let Some(error) = result.error {

@@ -639,7 +639,11 @@ async fn test_move_view_call() {
     };
 
     // Typed arguments
-    let result = client.move_view_call(&function, (21u64,)).await.unwrap();
+    let result = client
+        .move_view_call(&function)
+        .arguments((21u64,))
+        .await
+        .unwrap();
     assert_doubled(result);
 
     // Raw JSON arguments
