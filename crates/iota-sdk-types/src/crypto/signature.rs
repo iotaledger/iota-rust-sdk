@@ -264,27 +264,25 @@ impl crate::TreeDisplay for SimpleSignature {
 /// Flag `%d05` is reserved: it was formerly used for the now-removed zklogin
 /// authenticator (which was never enabled on chain) and is intentionally
 /// skipped.
-#[derive(
-    Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, strum::Display, strum::EnumString,
-)]
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, strum::Display)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
 #[non_exhaustive]
 pub enum SignatureScheme {
-    #[strum(to_string = "Ed25519", serialize = "ed25519")]
+    #[strum(to_string = "Ed25519")]
     Ed25519 = 0x00,
-    #[strum(to_string = "Secp256k1", serialize = "secp256k1")]
+    #[strum(to_string = "Secp256k1")]
     Secp256k1 = 0x01,
-    #[strum(to_string = "Secp256r1", serialize = "secp256r1")]
+    #[strum(to_string = "Secp256r1")]
     Secp256r1 = 0x02,
-    #[strum(to_string = "Multisig", serialize = "multisig")]
+    #[strum(to_string = "Multisig")]
     Multisig = 0x03,
     // This is currently not supported for user addresses
-    #[strum(to_string = "Bls12381", serialize = "bls12381")]
+    #[strum(to_string = "Bls12381")]
     Bls12381 = 0x04,
-    #[strum(to_string = "PasskeyAuthenticator", serialize = "passkeyauthenticator")]
+    #[strum(to_string = "PasskeyAuthenticator")]
     PasskeyAuthenticator = 0x06,
-    #[strum(to_string = "MoveAuthenticator", serialize = "moveauthenticator")]
+    #[strum(to_string = "MoveAuthenticator")]
     MoveAuthenticator = 0x07,
 }
 
@@ -309,13 +307,33 @@ impl SignatureScheme {
             0x04 => Ok(Self::Bls12381),
             0x06 => Ok(Self::PasskeyAuthenticator),
             0x07 => Ok(Self::MoveAuthenticator),
-            invalid => Err(SignatureSchemeError(invalid)),
+            invalid => Err(SignatureSchemeError::flag(invalid)),
         }
     }
 
     /// Convert to a byte flag
     pub fn to_u8(self) -> u8 {
         self as u8
+    }
+}
+
+impl std::str::FromStr for SignatureScheme {
+    type Err = SignatureSchemeError;
+
+    /// Parses the `Display` form of a scheme or its all-lowercase spelling.
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Ed25519" | "ed25519" => Ok(Self::Ed25519),
+            "Secp256k1" | "secp256k1" => Ok(Self::Secp256k1),
+            "Secp256r1" | "secp256r1" => Ok(Self::Secp256r1),
+            "Multisig" | "multisig" => Ok(Self::Multisig),
+            "Bls12381" | "bls12381" => Ok(Self::Bls12381),
+            "PasskeyAuthenticator" | "passkeyauthenticator" => Ok(Self::PasskeyAuthenticator),
+            "MoveAuthenticator" | "moveauthenticator" => Ok(Self::MoveAuthenticator),
+            invalid => Err(SignatureSchemeError(SignatureSchemeErrorKind::Name(
+                invalid.to_owned(),
+            ))),
+        }
     }
 }
 
@@ -326,11 +344,25 @@ impl super::PasskeyPublicKey {
     }
 }
 
-/// Error returned when a byte does not correspond to a known
-/// [`SignatureScheme`] flag.
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, thiserror::Error)]
-#[error("invalid signature scheme: {0:02x}")]
-pub struct SignatureSchemeError(u8);
+/// Error returned when a byte flag or a name does not correspond to a known
+/// [`SignatureScheme`].
+#[derive(Clone, Debug, Eq, Hash, PartialEq, thiserror::Error)]
+#[error(transparent)]
+pub struct SignatureSchemeError(SignatureSchemeErrorKind);
+
+impl SignatureSchemeError {
+    fn flag(flag: u8) -> Self {
+        Self(SignatureSchemeErrorKind::Flag(flag))
+    }
+}
+
+#[derive(Clone, Debug, Eq, Hash, PartialEq, thiserror::Error)]
+enum SignatureSchemeErrorKind {
+    #[error("invalid signature scheme: {0:02x}")]
+    Flag(u8),
+    #[error("invalid signature scheme: {0:?}")]
+    Name(String),
+}
 
 /// A signature from a user
 ///
@@ -406,13 +438,13 @@ impl UserSignature {
                     Ok(PublicKey::Secp256r1(*public_key))
                 }
             },
-            UserSignature::Multisig(_) => {
-                Err(SignatureSchemeError(SignatureScheme::Multisig.to_u8()))
-            }
+            UserSignature::Multisig(_) => Err(SignatureSchemeError::flag(
+                SignatureScheme::Multisig.to_u8(),
+            )),
             UserSignature::PasskeyAuthenticator(passkey_authenticator) => {
                 Ok(PublicKey::Passkey(passkey_authenticator.public_key()))
             }
-            UserSignature::MoveAuthenticator(_) => Err(SignatureSchemeError(
+            UserSignature::MoveAuthenticator(_) => Err(SignatureSchemeError::flag(
                 SignatureScheme::MoveAuthenticator.to_u8(),
             )),
         }
@@ -1038,6 +1070,28 @@ mod serialization {
             assert_eq!(SignatureScheme::from_str("ed25519").unwrap().to_u8(), 0x00);
             assert_eq!(SignatureScheme::from_str("Ed25519").unwrap().to_u8(), 0x00);
             assert!(SignatureScheme::from_str("zklogin").is_err());
+        }
+
+        #[test]
+        fn signature_scheme_from_str_rejects_other_spellings() {
+            use std::str::FromStr as _;
+
+            for invalid in ["", "ED25519", "eD25519", " ed25519", "Passkey", "bls12-381"] {
+                assert!(
+                    SignatureScheme::from_str(invalid).is_err(),
+                    "{invalid:?} must not parse"
+                );
+            }
+            assert_eq!(
+                SignatureScheme::from_str("zklogin")
+                    .unwrap_err()
+                    .to_string(),
+                "invalid signature scheme: \"zklogin\""
+            );
+            assert_eq!(
+                SignatureScheme::from_byte(0x05).unwrap_err().to_string(),
+                "invalid signature scheme: 05"
+            );
         }
 
         /// A bare `0x05` flag previously decoded to the (removed) zklogin

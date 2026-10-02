@@ -264,7 +264,7 @@ where
         }
 
         let flag = iota_types::SignatureScheme::from_byte(bytes[0])
-            .map_err(|e| PrivateKeyError::InvalidScheme(format!("{e:?}")))?;
+            .map_err(|e| PrivateKeyError::InvalidScheme(e.to_string()))?;
 
         if flag != Self::SCHEME {
             return Err(PrivateKeyError::InvalidScheme(format!(
