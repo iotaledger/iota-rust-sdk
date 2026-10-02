@@ -499,6 +499,40 @@ pub struct Page<T> {
     pub next_page_token: Option<::prost::bytes::Bytes>,
 }
 
+/// Generate a query object: a struct that runs its query when awaited.
+///
+/// The struct's [`IntoFuture`](std::future::IntoFuture) boxes the future of
+/// `send(self) -> $output`, which each invocation writes by hand in an
+/// inherent impl.
+macro_rules! define_query {
+    (
+        $(#[$meta:meta])*
+        pub struct $name:ident $(<$generic:ident: $bound:path>)? {
+            $($field:ident: $field_ty:ty),* $(,)?
+        }
+        output: $output:ty;
+    ) => {
+        $(#[$meta])*
+        #[must_use]
+        pub struct $name $(<$generic>)? {
+            $($field: $field_ty,)*
+        }
+
+        impl $(<$generic: $bound + 'static>)? ::std::future::IntoFuture for $name $(<$generic>)? {
+            type Output = $output;
+            type IntoFuture = ::std::pin::Pin<
+                Box<dyn ::std::future::Future<Output = Self::Output> + Send>,
+            >;
+
+            fn into_future(self) -> Self::IntoFuture {
+                Box::pin(self.send())
+            }
+        }
+    };
+}
+
+pub(crate) use define_query;
+
 /// Generate a paginated query builder for a list endpoint.
 ///
 /// The generated struct implements [`IntoFuture`](std::future::IntoFuture) for
@@ -506,7 +540,9 @@ pub struct Page<T> {
 ///
 /// # Parameters
 ///
-/// - `$query_name` — name of the generated builder struct
+/// - `$query_name` — name of the generated builder struct, optionally with a
+///   single bounded type parameter (e.g. `ListOwnedMoveObjectsQuery<T:
+///   MoveObject>`) usable in `item` and `map_item`
 /// - `$service_client_type` — the tonic service client type
 /// - `$item_type` — the item type exposed by the builder
 /// - `$rpc_method` — the RPC method name on the service client
@@ -548,7 +584,7 @@ macro_rules! define_list_query {
     // Pass-through variant: `$item_type` is the response element type.
     (
         $(#[$meta:meta])*
-        pub struct $query_name:ident {
+        pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
             service_client: $service_client_type:ty,
             request: $request_type:ty,
             item: $item_type:ty,
@@ -559,7 +595,7 @@ macro_rules! define_list_query {
         $crate::api::define_list_query! {
             @impl
             $(#[$meta])*
-            pub struct $query_name {
+            pub struct $query_name $(<$generic: $bound>)? {
                 service_client: $service_client_type,
                 request: $request_type,
                 item: $item_type,
@@ -574,7 +610,7 @@ macro_rules! define_list_query {
     // a fallible `fn(&ProtoItem) -> GrpcResult<$item_type>`.
     (
         $(#[$meta:meta])*
-        pub struct $query_name:ident {
+        pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
             service_client: $service_client_type:ty,
             request: $request_type:ty,
             item: $item_type:ty,
@@ -586,7 +622,7 @@ macro_rules! define_list_query {
         $crate::api::define_list_query! {
             @impl
             $(#[$meta])*
-            pub struct $query_name {
+            pub struct $query_name $(<$generic: $bound>)? {
                 service_client: $service_client_type,
                 request: $request_type,
                 item: $item_type,
@@ -600,7 +636,7 @@ macro_rules! define_list_query {
     (
         @impl
         $(#[$meta:meta])*
-        pub struct $query_name:ident {
+        pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
             service_client: $service_client_type:ty,
             request: $request_type:ty,
             item: $item_type:ty,
@@ -609,30 +645,50 @@ macro_rules! define_list_query {
             map_item: $map_item:expr,
         }
     ) => {
-        $(#[$meta])*
-        pub struct $query_name {
-            service_client: $service_client_type,
-            base_request: $request_type,
-            max_message_size: Option<usize>,
-            page_size: Option<u32>,
-            page_token: Option<::prost::bytes::Bytes>,
-        }
-
-        impl $query_name {
-            pub(crate) fn new(
+        $crate::api::define_query! {
+            $(#[$meta])*
+            pub struct $query_name $(<$generic: $bound>)? {
                 service_client: $service_client_type,
                 base_request: $request_type,
                 max_message_size: Option<usize>,
                 page_size: Option<u32>,
                 page_token: Option<::prost::bytes::Bytes>,
+                _marker: ::std::marker::PhantomData<fn() -> ($($generic,)?)>,
+            }
+            output: $crate::api::GrpcResult<
+                $crate::api::MetadataEnvelope<$crate::api::Page<$item_type>>,
+            >;
+        }
+
+        impl $(<$generic: $bound>)? $query_name $(<$generic>)? {
+            pub(crate) fn new(
+                service_client: $service_client_type,
+                base_request: $request_type,
+                max_message_size: Option<usize>,
             ) -> Self {
                 Self {
                     service_client,
                     base_request,
                     max_message_size,
-                    page_size,
-                    page_token,
+                    page_size: None,
+                    page_token: None,
+                    _marker: ::std::marker::PhantomData,
                 }
+            }
+
+            /// Set the maximum number of items per page.
+            pub fn page_size(mut self, page_size: impl Into<Option<u32>>) -> Self {
+                self.page_size = page_size.into();
+                self
+            }
+
+            /// Set the continuation token from a previous page.
+            pub fn page_token(
+                mut self,
+                page_token: impl Into<Option<::prost::bytes::Bytes>>,
+            ) -> Self {
+                self.page_token = page_token.into();
+                self
             }
 
             /// Auto-paginate through all pages, collecting up to `limit` items.
@@ -704,52 +760,49 @@ macro_rules! define_list_query {
                     result_metadata.unwrap_or_default(),
                 ))
             }
-        }
 
-        impl ::std::future::IntoFuture for $query_name {
-            type Output = $crate::api::GrpcResult<
+            fn into_request(self) -> ($service_client_type, $request_type) {
+                let mut request = self.base_request;
+
+                if let Some(ps) = self.page_size {
+                    request = request.with_page_size(ps);
+                }
+                if let Some(token) = self.page_token {
+                    request = request.with_page_token(token);
+                }
+                if let Some(max_size) = self.max_message_size {
+                    request = request.with_max_message_size_bytes(
+                        $crate::api::saturating_usize_to_u32(max_size),
+                    );
+                }
+
+                (self.service_client, request)
+            }
+
+            async fn send(
+                self,
+            ) -> $crate::api::GrpcResult<
                 $crate::api::MetadataEnvelope<$crate::api::Page<$item_type>>,
-            >;
-            type IntoFuture = ::std::pin::Pin<
-                Box<dyn ::std::future::Future<Output = Self::Output> + Send>,
-            >;
+            > {
+                let (mut service_client, request) = self.into_request();
+                let response = service_client.$rpc_method(request).await?;
+                let (body, metadata) =
+                    $crate::api::MetadataEnvelope::from(response).into_parts();
 
-            fn into_future(self) -> Self::IntoFuture {
-                Box::pin(async move {
-                    let mut service_client = self.service_client;
-                    let mut request = self.base_request;
+                let map_item = $map_item;
+                let items = body
+                    .$items_field
+                    .into_iter()
+                    .map(map_item)
+                    .collect::<$crate::api::GrpcResult<Vec<$item_type>>>()?;
 
-                    if let Some(ps) = self.page_size {
-                        request = request.with_page_size(ps);
-                    }
-                    if let Some(token) = self.page_token {
-                        request = request.with_page_token(token);
-                    }
-                    if let Some(max_size) = self.max_message_size {
-                        request = request.with_max_message_size_bytes(
-                            $crate::api::saturating_usize_to_u32(max_size),
-                        );
-                    }
-
-                    let response = service_client.$rpc_method(request).await?;
-                    let (body, metadata) =
-                        $crate::api::MetadataEnvelope::from(response).into_parts();
-
-                    let map_item = $map_item;
-                    let items = body
-                        .$items_field
-                        .into_iter()
-                        .map(map_item)
-                        .collect::<$crate::api::GrpcResult<Vec<$item_type>>>()?;
-
-                    Ok($crate::api::MetadataEnvelope::new(
-                        $crate::api::Page {
-                            items,
-                            next_page_token: body.next_page_token,
-                        },
-                        metadata,
-                    ))
-                })
+                Ok($crate::api::MetadataEnvelope::new(
+                    $crate::api::Page {
+                        items,
+                        next_page_token: body.next_page_token,
+                    },
+                    metadata,
+                ))
             }
         }
     };

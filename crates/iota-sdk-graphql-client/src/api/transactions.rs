@@ -20,13 +20,15 @@ use crate::{
     error::{GraphQLError, GraphQLResult},
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        AddressTransactionBlocksQuery, AddressTransactionRelationship, AddressTransactionsQuery,
-        AddressTransactionsQueryArgs, ExecuteTransactionArgs, ExecuteTransactionQuery,
-        TransactionBlockArgs, TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery,
-        TransactionBlockIndexedQuery, TransactionBlockQuery, TransactionBlockWithEffectsQuery,
-        TransactionBlocksEffectsQuery, TransactionBlocksQuery, TransactionBlocksQueryArgs,
-        TransactionBlocksWithEffectsQuery, TransactionsByDigestsQuery,
-        TransactionsByDigestsQueryArgs, TransactionsFilter,
+        AddressTransactionBlocksQueryFragment, AddressTransactionRelationship,
+        AddressTransactionsQueryArgs, AddressTransactionsQueryFragment, ExecuteTransactionArgs,
+        ExecuteTransactionQueryFragment, TransactionBlockArgs,
+        TransactionBlockCheckpointQueryFragment, TransactionBlockEffectsQueryFragment,
+        TransactionBlockIndexedQueryFragment, TransactionBlockQueryFragment,
+        TransactionBlockWithEffectsQueryFragment, TransactionBlocksEffectsQueryFragment,
+        TransactionBlocksQueryArgs, TransactionBlocksQueryFragment,
+        TransactionBlocksWithEffectsQueryFragment, TransactionsByDigestsQueryArgs,
+        TransactionsByDigestsQueryFragment, TransactionsFilter,
     },
     streams::stream_paginated_query,
 };
@@ -46,7 +48,7 @@ impl GraphQLClient {
         &self,
         digest: TransactionDigest,
     ) -> GraphQLResult<Option<SignedTransaction>> {
-        let operation = TransactionBlockQuery::build(TransactionBlockArgs {
+        let operation = TransactionBlockQueryFragment::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
         let response = self.run_query(&operation).await?;
@@ -65,7 +67,7 @@ impl GraphQLClient {
     ) -> GraphQLResult<Page<SignedTransaction>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = TransactionBlocksQuery::build(TransactionBlocksQueryArgs {
+        let operation = TransactionBlocksQueryFragment::build(TransactionBlocksQueryArgs {
             after: pagination.after,
             before: pagination.before,
             filter: filter.into().map(Into::into),
@@ -119,7 +121,7 @@ impl GraphQLClient {
     async fn digests_per_query(&self, limit: Option<i32>) -> GraphQLResult<usize> {
         // Measure the payload of a request without digests rather than
         // predicting how the query is serialized.
-        let empty = TransactionsByDigestsQuery::build(TransactionsByDigestsQueryArgs {
+        let empty = TransactionsByDigestsQueryFragment::build(TransactionsByDigestsQueryArgs {
             digests: Vec::new(),
             limit,
             cursor: None,
@@ -159,11 +161,12 @@ impl GraphQLClient {
         let mut digest_idx = 0;
         let digest_strings = digests.iter().map(|d| d.to_string()).collect::<Vec<_>>();
         loop {
-            let operation = TransactionsByDigestsQuery::build(TransactionsByDigestsQueryArgs {
-                digests: digest_strings.clone(),
-                limit,
-                cursor,
-            });
+            let operation =
+                TransactionsByDigestsQueryFragment::build(TransactionsByDigestsQueryArgs {
+                    digests: digest_strings.clone(),
+                    limit,
+                    cursor,
+                });
             let page = self.run_query(&operation).await?.transactions_by_digests;
 
             if page.nodes.is_empty() {
@@ -220,7 +223,7 @@ impl GraphQLClient {
     ) -> GraphQLResult<Page<SignedTransaction>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = AddressTransactionsQuery::build(AddressTransactionsQueryArgs {
+        let operation = AddressTransactionsQueryFragment::build(AddressTransactionsQueryArgs {
             address,
             after: pagination.after,
             before: pagination.before,
@@ -232,7 +235,8 @@ impl GraphQLClient {
 
         let response = self.run_query(&operation).await?;
 
-        let Some(AddressTransactionBlocksQuery { transaction_blocks }) = response.address else {
+        let Some(AddressTransactionBlocksQueryFragment { transaction_blocks }) = response.address
+        else {
             return Ok(Page::new_empty());
         };
 
@@ -250,7 +254,7 @@ impl GraphQLClient {
         &self,
         digest: TransactionDigest,
     ) -> GraphQLResult<Option<TransactionEffects>> {
-        let operation = TransactionBlockEffectsQuery::build(TransactionBlockArgs {
+        let operation = TransactionBlockEffectsQueryFragment::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
         let response = self.run_query(&operation).await?;
@@ -269,7 +273,7 @@ impl GraphQLClient {
     ) -> GraphQLResult<Page<TransactionEffects>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = TransactionBlocksEffectsQuery::build(TransactionBlocksQueryArgs {
+        let operation = TransactionBlocksEffectsQueryFragment::build(TransactionBlocksQueryArgs {
             after: pagination.after,
             before: pagination.before,
             filter: filter.into().map(Into::into),
@@ -295,7 +299,7 @@ impl GraphQLClient {
         &self,
         digest: TransactionDigest,
     ) -> GraphQLResult<Option<TransactionDataEffects>> {
-        let operation = TransactionBlockWithEffectsQuery::build(TransactionBlockArgs {
+        let operation = TransactionBlockWithEffectsQueryFragment::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
         let response = self.run_query(&operation).await?;
@@ -325,13 +329,14 @@ impl GraphQLClient {
     ) -> GraphQLResult<Page<TransactionDataEffects>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = TransactionBlocksWithEffectsQuery::build(TransactionBlocksQueryArgs {
-            after: pagination.after,
-            before: pagination.before,
-            filter: filter.into().map(Into::into),
-            first: pagination.first,
-            last: pagination.last,
-        });
+        let operation =
+            TransactionBlocksWithEffectsQueryFragment::build(TransactionBlocksQueryArgs {
+                after: pagination.after,
+                before: pagination.before,
+                filter: filter.into().map(Into::into),
+                first: pagination.first,
+                last: pagination.last,
+            });
 
         let response = self.run_query(&operation).await?;
 
@@ -386,7 +391,7 @@ impl GraphQLClient {
         wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> GraphQLResult<TransactionEffects> {
         let wait_for = wait_for.into();
-        let operation = ExecuteTransactionQuery::build(ExecuteTransactionArgs {
+        let operation = ExecuteTransactionQueryFragment::build(ExecuteTransactionArgs {
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
             tx_bytes: base64ct::Base64::encode_string(bcs::to_bytes(transaction).unwrap().as_ref()),
         });
@@ -413,7 +418,7 @@ impl GraphQLClient {
         &self,
         digest: TransactionDigest,
     ) -> GraphQLResult<bool> {
-        let operation = TransactionBlockIndexedQuery::build(TransactionBlockArgs {
+        let operation = TransactionBlockIndexedQueryFragment::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
         Ok(self
@@ -425,7 +430,7 @@ impl GraphQLClient {
     /// Returns whether the transaction for the given digest has been included
     /// in a checkpoint (finalized).
     pub async fn is_transaction_finalized(&self, digest: TransactionDigest) -> GraphQLResult<bool> {
-        let operation = TransactionBlockCheckpointQuery::build(TransactionBlockArgs {
+        let operation = TransactionBlockCheckpointQueryFragment::build(TransactionBlockArgs {
             digest: digest.to_string(),
         });
         let response = self.run_query(&operation).await?;

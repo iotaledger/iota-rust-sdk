@@ -19,7 +19,7 @@ pub use common::{
 };
 pub(crate) use common::{
     TryFromProtoError, build_proto_transaction, check_object_identity, check_result_count,
-    check_transaction_identity, collect_stream, define_list_query, into_item_results,
+    check_transaction_identity, collect_stream, define_list_query, define_query, into_item_results,
     proto_object_id, saturating_usize_to_u32,
 };
 pub use iota_grpc_types::read_masks::*;
@@ -203,12 +203,9 @@ impl CheckpointResponse {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::GrpcClient;
-    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseReadMask;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = GrpcClient::new_localnet()?;
-    /// let cp = client
-    ///     .checkpoint_latest(None, None, CheckpointResponseReadMask::default())
-    ///     .await?;
+    /// let cp = client.checkpoint_latest().await?;
     /// let data = cp.body().checkpoint_data()?;
     /// # Ok(())
     /// # }

@@ -139,6 +139,9 @@ pub use object::{
     ObjectReference, ObjectType, ObjectVersion, OwnedObjectReference, Owner,
 };
 pub use object_id::ObjectId;
+#[cfg(feature = "rand")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+pub use rand_core;
 #[cfg(feature = "serde")]
 #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
@@ -418,6 +421,9 @@ mod _serde {
 
     pub(crate) type OptionReadableDisplay =
         ::serde_with::As<Option<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
+
+    pub(crate) type VecReadableDisplay =
+        ::serde_with::As<Vec<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
 
     pub(crate) type ReadableBase64Encoded =
         ::serde_with::As<::serde_with::IfIsHumanReadable<Base64Encoded, ::serde_with::Bytes>>;

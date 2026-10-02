@@ -140,8 +140,8 @@ async fn main() -> Result<()> {
     .unwrap()
     .clone();
 
-    let response = client.run_query_from_json(json).await?;
-    println!("{response:?}");
+    let data = client.run_query_from_json(json).await?;
+    println!("{data:?}");
 
     Ok(())
 }

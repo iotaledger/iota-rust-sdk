@@ -10,10 +10,7 @@
 //! # Example
 //!
 //! ```no_run
-//! use iota_sdk_grpc_client::{
-//!     GrpcClient,
-//!     read_mask_fields::{ObjectReadMask, TransactionReadMask},
-//! };
+//! use iota_sdk_grpc_client::GrpcClient;
 //! use iota_types::{ObjectId, TransactionDigest};
 //!
 //! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
@@ -23,9 +20,7 @@
 //! // The batched reads return one result per request, so a transaction the
 //! // node cannot serve fails only its own slot.
 //! let digest: TransactionDigest = todo!();
-//! let txs = client
-//!     .transactions([digest], TransactionReadMask::default())
-//!     .await?;
+//! let txs = client.transactions([digest]).await?;
 //! for tx in txs.body() {
 //!     match tx {
 //!         Ok(tx) => println!("Transaction digest: {:?}", tx.transaction()?.digest()?),
@@ -35,9 +30,7 @@
 //!
 //! // Get an object with the default field mask.
 //! let object_id: ObjectId = "0x2".parse()?;
-//! let objects = client
-//!     .objects([object_id], ObjectReadMask::default())
-//!     .await?;
+//! let objects = client.objects([object_id]).await?;
 //! for object in objects.body() {
 //!     match object {
 //!         Ok(object) => println!("Object version: {:?}", object.object_reference()?.version()),
@@ -52,6 +45,8 @@ mod api;
 mod transaction_builder_client;
 
 // Re-export all read mask constants (per-method fields)
+#[cfg(feature = "move-types")]
+pub use api::state::move_objects::{ListOwnedMoveObjectsQuery, OwnedMoveObject};
 pub use api::{
     // CheckpointResponse per-method masks
     CHECKPOINT_CONTENTS_BCS,
@@ -125,14 +120,29 @@ pub use api::{
 };
 // Re-export query builders for convenience
 pub use api::{
+    execution::{
+        execute::{ExecuteTransactionQuery, ExecuteTransactionsQuery},
+        simulate::{SimulateTransactionQuery, SimulateTransactionsQuery},
+        view::{ViewFunctionCallQuery, ViewFunctionCallsQuery},
+    },
+    ledger::{
+        checkpoints::{CheckpointsStreamFilteredQuery, CheckpointsStreamQuery, GetCheckpointQuery},
+        epochs::{GetEpochQuery, GetReferenceGasPriceQuery},
+        health::GetHealthQuery,
+        objects::{GetObjectReferencesQuery, GetObjectsQuery},
+        service_info::GetServiceInfoQuery,
+        transactions::GetTransactionsQuery,
+    },
     move_package::package_versions::ListPackageVersionsQuery,
     state::{
-        coins::GetCoinsQuery, dynamic_fields::ListDynamicFieldsQuery,
+        coin_info::GetCoinInfoQuery, coins::GetCoinsQuery, dynamic_fields::ListDynamicFieldsQuery,
         owned_objects::ListOwnedObjectsQuery,
     },
 };
 // Re-export typed read mask field enums
 pub use iota_grpc_types::read_mask_fields;
+pub use iota_grpc_types::{prost, prost_types, tonic};
+pub use iota_types;
 
 mod client;
 pub use client::{GrpcClient, InterceptedChannel};

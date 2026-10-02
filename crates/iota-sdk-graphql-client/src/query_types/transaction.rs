@@ -22,7 +22,7 @@ use crate::{
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockQuery {
+pub struct TransactionBlockQueryFragment {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TransactionBlock>,
 }
@@ -33,7 +33,7 @@ pub struct TransactionBlockQuery {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockWithEffectsQuery {
+pub struct TransactionBlockWithEffectsQueryFragment {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TransactionBlockWithEffects>,
 }
@@ -44,7 +44,7 @@ pub struct TransactionBlockWithEffectsQuery {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockEffectsQuery {
+pub struct TransactionBlockEffectsQueryFragment {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TxBlockEffects>,
 }
@@ -55,7 +55,7 @@ pub struct TransactionBlockEffectsQuery {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockCheckpointQuery {
+pub struct TransactionBlockCheckpointQueryFragment {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TxBlockCheckpoint>,
 }
@@ -66,7 +66,7 @@ pub struct TransactionBlockCheckpointQuery {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockIndexedQuery {
+pub struct TransactionBlockIndexedQueryFragment {
     #[arguments(digest: $digest)]
     pub is_transaction_indexed_on_node: bool,
 }
@@ -77,7 +77,7 @@ pub struct TransactionBlockIndexedQuery {
     graphql_type = "Query",
     variables = "TransactionBlocksQueryArgs"
 )]
-pub struct TransactionBlocksQuery {
+pub struct TransactionBlocksQueryFragment {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
     pub transaction_blocks: TransactionBlockConnection,
 }
@@ -88,7 +88,7 @@ pub struct TransactionBlocksQuery {
     graphql_type = "Query",
     variables = "TransactionBlocksQueryArgs"
 )]
-pub struct TransactionBlocksWithEffectsQuery {
+pub struct TransactionBlocksWithEffectsQueryFragment {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
     pub transaction_blocks: TransactionBlockWithEffectsConnection,
 }
@@ -99,7 +99,7 @@ pub struct TransactionBlocksWithEffectsQuery {
     graphql_type = "Query",
     variables = "TransactionBlocksQueryArgs"
 )]
-pub struct TransactionBlocksEffectsQuery {
+pub struct TransactionBlocksEffectsQueryFragment {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
     pub transaction_blocks: TransactionBlockEffectsConnection,
 }
@@ -110,7 +110,7 @@ pub struct TransactionBlocksEffectsQuery {
     graphql_type = "Query",
     variables = "TransactionsByDigestsQueryArgs"
 )]
-pub struct TransactionsByDigestsQuery {
+pub struct TransactionsByDigestsQueryFragment {
     #[arguments(digests: $digests, limit: $limit, cursor: $cursor)]
     pub transactions_by_digests: TransactionsByDigestsPage,
 }
@@ -121,9 +121,9 @@ pub struct TransactionsByDigestsQuery {
     graphql_type = "Query",
     variables = "AddressTransactionsQueryArgs"
 )]
-pub struct AddressTransactionsQuery {
+pub struct AddressTransactionsQueryFragment {
     #[arguments(address: $address)]
-    pub address: Option<AddressTransactionBlocksQuery>,
+    pub address: Option<AddressTransactionBlocksQueryFragment>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -132,7 +132,7 @@ pub struct AddressTransactionsQuery {
     graphql_type = "Address",
     variables = "AddressTransactionsQueryArgs"
 )]
-pub struct AddressTransactionBlocksQuery {
+pub struct AddressTransactionBlocksQueryFragment {
     #[arguments(first: $first, after: $after, last: $last, before: $before, relation: $relation, filter: $filter)]
     pub transaction_blocks: TransactionBlockConnection,
 }

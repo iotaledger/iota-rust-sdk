@@ -9,9 +9,11 @@ use iota_types::{
     Bls12381PublicKey, Bls12381Signature, CheckpointSequenceNumber, CheckpointSummary, EpochId,
     SignedCheckpointSummary, ValidatorAggregatedSignature, ValidatorCommittee, ValidatorSignature,
 };
-use signature::{Error as SignatureError, Verifier};
 
-use crate::bls12381::{Bls12381VerifyingKey, BlstError};
+use crate::{
+    SignatureError, Verifier,
+    bls12381::{Bls12381VerifyingKey, BlstError},
+};
 
 #[derive(Debug)]
 struct ExtendedValidatorCommittee {
@@ -444,8 +446,6 @@ mod tests {
 
     use super::*;
     use crate::bls12381::Bls12381PrivateKey;
-    #[cfg(test)]
-    use crate::tests::error_chain;
 
     #[proptest]
     fn basic_aggregation(private_keys: [Bls12381PrivateKey; 4], summary: CheckpointSummary) {
@@ -752,9 +752,8 @@ mod tests {
         // is what separates the two.
         assert!(matches!(err, CommitteeChainError::Signature(_)), "{err}");
         assert!(
-            error_chain(&err).contains("insufficient signing weight"),
-            "{}",
-            error_chain(&err)
+            err.to_string().contains("insufficient signing weight"),
+            "{err}"
         );
         assert_eq!(verifier.committee(), &committee0);
     }

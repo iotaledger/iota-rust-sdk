@@ -13,14 +13,14 @@ struct GrpcGetObjectExample {
 
     // `objects` is batched: it takes a list of ids and returns the objects in
     // the same order. The default read mask returns the reference and the
-    // BCS-decoded object; pass `readMask: ["reference"]` to skip the object.
+    // BCS-decoded object; pass `readMask: [.reference]` to skip the object.
     guard let obj = try await client.objects(objectIds: [objectId])[0].object else {
       fatalError("Object not included in the response")
     }
 
-    print("Object ID:", obj.id().toHex())
+    print("Object ID:", obj.id())
     print("Version:", obj.version())
-    print("Previous transaction:", obj.previousTransaction().toBase58())
+    print("Previous transaction:", obj.previousTransaction())
     print("Owner:", obj.owner())
     print("Storage rebate:", obj.storageRebate())
     print("Type:", obj.objectType())

@@ -10,7 +10,7 @@
 import {
   Address,
   GraphQlClient,
-  ObjectFilter,
+  GraphQlObjectFilter,
   StakedIota,
   initAsync,
 } from "@iota/sdk-wasm";
@@ -24,19 +24,19 @@ const owner = Address.fromHex(
 );
 
 const page = await client.objects(
-  ObjectFilter.new({ typeTag: "0x3::staking_pool::StakedIota", owner }),
+  GraphQlObjectFilter.new({ typeTag: "0x3::staking_pool::StakedIota", owner }),
 );
 
 if (page.data.length === 0) {
-  console.log(`No StakedIota objects owned by ${owner.toHex()} right now.`);
+  console.log(`No StakedIota objects owned by ${owner} right now.`);
 } else {
   console.log(`Decoded ${page.data.length} StakedIota object(s):\n`);
   let totalPrincipal = 0n;
   for (const obj of page.data) {
     const staked = StakedIota.tryFromObject(obj);
     totalPrincipal += staked.principal();
-    console.log(`- id:               ${staked.id().toHex()}`);
-    console.log(`  pool_id:          ${staked.poolId().toHex()}`);
+    console.log(`- id:               ${staked.id()}`);
+    console.log(`  pool_id:          ${staked.poolId()}`);
     console.log(`  stake_activation_epoch: ${staked.stakeActivationEpoch()}`);
     console.log(`  principal (nanos): ${staked.principal()}`);
     console.log();

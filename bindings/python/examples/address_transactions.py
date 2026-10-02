@@ -18,19 +18,19 @@ async def main():
         "0xa7c2cf9d8f8d95ff69d7a598c49c77acc36253f496f064a533ad306879b40bfa")
 
     outgoing = await client.transactions(
-        TransactionsFilter().with_sent_address(address))
+        GraphQlTransactionsFilter().with_sent_address(address))
     incoming = await client.transactions(
-        TransactionsFilter().with_recv_address(address))
+        GraphQlTransactionsFilter().with_recv_address(address))
 
-    print(f"Transactions for {address.to_hex()}")
+    print(f"Transactions for {address}")
 
     print(f"\nOutgoing (sent by address): {len(outgoing.data)}")
     for tx in outgoing.data:
-        print(f"  - {tx.transaction.digest().to_base58()}")
+        print(f"  - {tx.transaction.digest()}")
 
     print(f"\nIncoming (received by address): {len(incoming.data)}")
     for tx in incoming.data:
-        print(f"  - {tx.transaction.digest().to_base58()}")
+        print(f"  - {tx.transaction.digest()}")
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ use crate::{
     graphql_type = "Query",
     variables = "DynamicFieldConnectionArgs"
 )]
-pub struct DynamicFieldsOwnerQuery {
+pub struct DynamicFieldsOwnerQueryFragment {
     #[arguments(address: $address)]
     pub owner: Option<ObjectOwner>,
 }
@@ -35,7 +35,7 @@ pub struct ObjectOwner {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "DynamicFieldArgs")]
-pub struct DynamicFieldQuery {
+pub struct DynamicFieldQueryFragment {
     #[arguments(address: $address)]
     pub owner: Option<OwnerField>,
 }
@@ -102,7 +102,7 @@ pub struct DynamicObjectField {
 }
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "DynamicFieldArgs")]
-pub struct DynamicObjectFieldQuery {
+pub struct DynamicObjectFieldQueryFragment {
     #[arguments(address: $address)]
     pub owner: Option<DynamicObjectField>,
 }

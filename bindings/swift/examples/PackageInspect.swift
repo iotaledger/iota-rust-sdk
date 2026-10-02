@@ -32,7 +32,7 @@ struct PackageInspectExample {
 
     let versions = try await fetchPackageVersions(client: client, packageAddress: packageAddress)
     let packagePrefix = package.id().toHex()
-    print("Latest version: \(latestPackage.version().asU64()) (\(latestPackage.id().toHex()))")
+    print("Latest version: \(latestPackage.version().asU64()) (\(latestPackage.id()))")
     // Resolve the current upgrade policy.
     let currentPolicy = try await currentPackagePolicy(client: client, packageId: package.id())
     print("Current package policy: \(currentPolicy)")
@@ -50,7 +50,7 @@ struct PackageInspectExample {
       }
 
       let suffix = labels.isEmpty ? "" : " [\(labels.joined(separator: ", "))]"
-      print("- v\(version.version().asU64()) -> \(version.id().toHex())\(suffix)")
+      print("- v\(version.version().asU64()) -> \(version.id())\(suffix)")
     }
     print()
 
@@ -63,7 +63,7 @@ struct PackageInspectExample {
       print("- none")
     } else {
       for upgrade in dependencies {
-        print("- \(upgrade.upgradedId.toHex()) @ v\(upgrade.upgradedVersion.asU64())")
+        print("- \(upgrade.upgradedId) @ v\(upgrade.upgradedVersion.asU64())")
       }
     }
     print()
@@ -132,8 +132,8 @@ struct PackageInspectExample {
   }
 }
 
-private func forwardPage(cursor: String? = nil) -> PaginationFilter {
-  PaginationFilter(direction: .forward, cursor: cursor)
+private func forwardPage(cursor: String? = nil) -> GraphQlPaginationFilter {
+  GraphQlPaginationFilter(direction: .forward, cursor: cursor)
 }
 
 private func isHexDigit(_ character: Character) -> Bool {
@@ -221,8 +221,8 @@ private func printObjectSamples(
   }
 
   let objects = try await client.objects(
-    filter: ObjectFilter(typeTag: typeTag),
-    paginationFilter: PaginationFilter(direction: .forward, limit: 3)
+    filter: GraphQlObjectFilter(typeTag: typeTag),
+    paginationFilter: GraphQlPaginationFilter(direction: .forward, limit: 3)
   )
 
   if objects.data.isEmpty {
@@ -232,7 +232,7 @@ private func printObjectSamples(
 
   print("    sample objects:")
   for object in objects.data {
-    print("      - \(object.id().toHex()) (version \(object.version().asU64()))")
+    print("      - \(object.id()) (version \(object.version().asU64()))")
   }
   if objects.pageInfo.hasNextPage {
     print("      - ...")
@@ -277,8 +277,8 @@ private func resolveUpgradeCapId(
   packageId: ObjectId
 ) async throws -> ObjectId? {
   let page = try await client.transactionsEffects(
-    filter: TransactionsFilter().withChangedObject(changedObject: packageId),
-    paginationFilter: PaginationFilter(direction: .forward, limit: 1)
+    filter: GraphQlTransactionsFilter().withChangedObject(changedObject: packageId),
+    paginationFilter: GraphQlPaginationFilter(direction: .forward, limit: 1)
   )
 
   for effects in page.data {
@@ -421,7 +421,7 @@ private func wasPackagePublishedAsImmutable(
 
   while true {
     let page = try await client.transactionsDataEffects(
-      filter: TransactionsFilter().withChangedObject(changedObject: packageId),
+      filter: GraphQlTransactionsFilter().withChangedObject(changedObject: packageId),
       paginationFilter: forwardPage(cursor: cursor)
     )
 
@@ -447,7 +447,7 @@ private func wasUpgradeCapUsedForMakeImmutable(
 
   while true {
     let page = try await client.transactionsDataEffects(
-      filter: TransactionsFilter().withInputObject(inputObject: upgradeCapId),
+      filter: GraphQlTransactionsFilter().withInputObject(inputObject: upgradeCapId),
       paginationFilter: forwardPage(cursor: cursor)
     )
 

@@ -9,7 +9,7 @@
 
 import iota_sdk.Address
 import iota_sdk.GraphQlClient
-import iota_sdk.TransactionsFilter
+import iota_sdk.GraphQlTransactionsFilter
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -18,19 +18,19 @@ fun main() = runBlocking {
         val address =
             Address.fromHex("0xa7c2cf9d8f8d95ff69d7a598c49c77acc36253f496f064a533ad306879b40bfa")
 
-        val outgoing = client.transactions(TransactionsFilter().withSentAddress(address))
-        val incoming = client.transactions(TransactionsFilter().withRecvAddress(address))
+        val outgoing = client.transactions(GraphQlTransactionsFilter().withSentAddress(address))
+        val incoming = client.transactions(GraphQlTransactionsFilter().withRecvAddress(address))
 
-        println("Transactions for ${address.toHex()}")
+        println("Transactions for ${address}")
 
         println("\nOutgoing (sent by address): ${outgoing.data.size}")
         for (tx in outgoing.data) {
-            println("  - ${tx.transaction.digest().toBase58()}")
+            println("  - ${tx.transaction.digest()}")
         }
 
         println("\nIncoming (received by address): ${incoming.data.size}")
         for (tx in incoming.data) {
-            println("  - ${tx.transaction.digest().toBase58()}")
+            println("  - ${tx.transaction.digest()}")
         }
     } catch (e: Exception) {
         e.printStackTrace()

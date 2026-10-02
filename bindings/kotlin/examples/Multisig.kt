@@ -45,7 +45,7 @@ fun main() = runBlocking {
 
         // 4. Derive multisig address
         val multisigAddress = committee.deriveAddress()
-        println("Multisig address: ${multisigAddress.toHex()}")
+        println("Multisig address: ${multisigAddress}")
 
         val client = GraphQlClient.newLocalnet()
 

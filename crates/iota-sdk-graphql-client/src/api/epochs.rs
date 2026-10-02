@@ -9,7 +9,7 @@ use cynic::QueryBuilder;
 use crate::{
     GraphQLClient,
     error::GraphQLResult,
-    query_types::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery},
+    query_types::{Epoch, EpochArgs, EpochQueryFragment, EpochSummaryQueryFragment},
 };
 
 impl GraphQLClient {
@@ -18,15 +18,15 @@ impl GraphQLClient {
     pub(crate) async fn epoch_summary(
         &self,
         epoch: Option<u64>,
-    ) -> GraphQLResult<EpochSummaryQuery> {
-        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch });
+    ) -> GraphQLResult<EpochSummaryQueryFragment> {
+        let operation = EpochSummaryQueryFragment::build(EpochArgs { id: epoch });
         self.run_query(&operation).await
     }
 
     /// Return the epoch information for the provided epoch. If no epoch is
     /// provided, it will return the last known epoch.
     pub async fn epoch(&self, epoch: impl Into<Option<u64>>) -> GraphQLResult<Option<Epoch>> {
-        let operation = EpochQuery::build(EpochArgs { id: epoch.into() });
+        let operation = EpochQueryFragment::build(EpochArgs { id: epoch.into() });
         let response = self.run_query(&operation).await?;
 
         Ok(response.epoch)

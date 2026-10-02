@@ -14,4 +14,4 @@ const address = publicKey.deriveAddress();
 console.log(`Private Key: ${privateKeyBech32}`);
 console.log(`Public Key: ${base64Encode(publicKey.toBytes())}`);
 console.log(`Public Key With Flag: ${base64Encode(flaggedPublicKey)}`);
-console.log(`Address: ${address.toHex()}`);
+console.log(`Address: ${address}`);
