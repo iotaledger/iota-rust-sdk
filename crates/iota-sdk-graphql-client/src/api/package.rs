@@ -375,6 +375,36 @@ impl GetNormalizedMoveFunctionQuery {
     }
 }
 
+define_query! {
+    /// Query for [`GraphQLClient::package_latest`]. Await it to send the
+    /// request.
+    pub struct GetPackageLatestQuery {
+        client: GraphQLClient,
+        address: Address,
+    }
+    output: GraphQLResult<Option<MovePackage>>;
+}
+
+impl GetPackageLatestQuery {
+    async fn send(self) -> GraphQLResult<Option<MovePackage>> {
+        let operation = LatestPackageQueryFragment::build(PackageArgs {
+            address: self.address,
+            version: None,
+        });
+
+        let response = self.client.run_query(&operation).await?;
+
+        Ok(response
+            .latest_package
+            .and_then(|x| x.bcs)
+            .map(|bcs| base64ct::Base64::decode_vec(&bcs.0))
+            .transpose()?
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
+            .transpose()?
+            .map(|obj| obj.data.into_package()))
+    }
+}
+
 impl GraphQLClient {
     /// The package corresponding to the given address (at the optionally given
     /// version). When no version is given, the package is loaded directly
@@ -412,22 +442,11 @@ impl GraphQLClient {
     /// Fetch the latest version of the package at address.
     /// This corresponds to the package with the highest version that shares its
     /// original ID with the package at address.
-    pub async fn package_latest(&self, address: Address) -> GraphQLResult<Option<MovePackage>> {
-        let operation = LatestPackageQueryFragment::build(PackageArgs {
+    pub fn package_latest(&self, address: Address) -> GetPackageLatestQuery {
+        GetPackageLatestQuery {
+            client: self.clone(),
             address,
-            version: None,
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        Ok(response
-            .latest_package
-            .and_then(|x| x.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(&bcs.0))
-            .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
-            .transpose()?
-            .map(|obj| obj.data.into_package()))
+        }
     }
 
     /// The Move packages that exist in the network, optionally bounded
@@ -492,6 +511,16 @@ mod tests {
         Direction, PaginationFilter,
         test_utils::{assert_backward_page, backward_page, sent_variables, test_client},
     };
+
+    #[tokio::test]
+    async fn package_latest_sends_the_address_without_a_version() {
+        let vars = sent_variables("LatestPackageQueryFragment", |client| async move {
+            let _ = client.package_latest(Address::FRAMEWORK).await;
+        })
+        .await;
+        assert_eq!(vars["address"], Address::FRAMEWORK.to_string());
+        assert!(vars["version"].is_null());
+    }
 
     #[tokio::test]
     async fn package_sends_the_address_and_version() {
