@@ -132,8 +132,8 @@ struct PackageInspectExample {
   }
 }
 
-private func forwardPage(cursor: String? = nil) -> PaginationFilter {
-  PaginationFilter(direction: .forward, cursor: cursor)
+private func forwardPage(cursor: String? = nil) -> GraphQlPaginationFilter {
+  GraphQlPaginationFilter(direction: .forward, cursor: cursor)
 }
 
 private func isHexDigit(_ character: Character) -> Bool {
@@ -221,8 +221,8 @@ private func printObjectSamples(
   }
 
   let objects = try await client.objects(
-    filter: ObjectFilter(typeTag: typeTag),
-    paginationFilter: PaginationFilter(direction: .forward, limit: 3)
+    filter: GraphQlObjectFilter(typeTag: typeTag),
+    paginationFilter: GraphQlPaginationFilter(direction: .forward, limit: 3)
   )
 
   if objects.data.isEmpty {
@@ -277,8 +277,8 @@ private func resolveUpgradeCapId(
   packageId: ObjectId
 ) async throws -> ObjectId? {
   let page = try await client.transactionsEffects(
-    filter: TransactionsFilter().withChangedObject(changedObject: packageId),
-    paginationFilter: PaginationFilter(direction: .forward, limit: 1)
+    filter: GraphQlTransactionsFilter().withChangedObject(changedObject: packageId),
+    paginationFilter: GraphQlPaginationFilter(direction: .forward, limit: 1)
   )
 
   for effects in page.data {
@@ -421,7 +421,7 @@ private func wasPackagePublishedAsImmutable(
 
   while true {
     let page = try await client.transactionsDataEffects(
-      filter: TransactionsFilter().withChangedObject(changedObject: packageId),
+      filter: GraphQlTransactionsFilter().withChangedObject(changedObject: packageId),
       paginationFilter: forwardPage(cursor: cursor)
     )
 
@@ -447,7 +447,7 @@ private func wasUpgradeCapUsedForMakeImmutable(
 
   while true {
     let page = try await client.transactionsDataEffects(
-      filter: TransactionsFilter().withInputObject(inputObject: upgradeCapId),
+      filter: GraphQlTransactionsFilter().withInputObject(inputObject: upgradeCapId),
       paginationFilter: forwardPage(cursor: cursor)
     )
 

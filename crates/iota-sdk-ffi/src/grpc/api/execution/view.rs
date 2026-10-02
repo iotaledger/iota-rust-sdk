@@ -19,9 +19,9 @@ use iota_sdk::{
 use crate::{
     error::{Result, SdkFfiError},
     grpc::{
-        api::execution::simulate::{CommandOutput, SimulatedExecutionError},
+        api::execution::simulate::{GrpcCommandOutput, GrpcSimulatedExecutionError},
         client::GrpcClient,
-        read_mask_fields::ViewFunctionCallField,
+        read_mask_fields::GrpcViewFunctionCallField,
     },
     move_view_call::MoveViewArg,
     types::move_core::TypeTag,
@@ -33,15 +33,15 @@ use crate::{
 /// read mask includes `execution_result`: the first if the call returned, the
 /// second if it aborted.
 #[derive(uniffi::Record)]
-pub struct ViewFunctionCallOutputs {
+pub struct GrpcViewFunctionCallOutputs {
     /// The values the function returned.
-    pub return_values: Option<Vec<CommandOutput>>,
+    pub return_values: Option<Vec<GrpcCommandOutput>>,
     /// Why the call aborted.
-    pub execution_error: Option<SimulatedExecutionError>,
+    pub execution_error: Option<GrpcSimulatedExecutionError>,
 }
 
 impl TryFrom<&proto::transaction_execution_service::ViewFunctionCallOutputs>
-    for ViewFunctionCallOutputs
+    for GrpcViewFunctionCallOutputs
 {
     type Error = SdkFfiError;
 
@@ -67,17 +67,17 @@ impl TryFrom<&proto::transaction_execution_service::ViewFunctionCallOutputs>
 /// The result of a single call in a batch of Move view function calls: either
 /// the outputs of the call or the error the node returned for it.
 #[derive(uniffi::Record)]
-pub struct ViewFunctionCallResult {
+pub struct GrpcViewFunctionCallResult {
     /// The outputs of the call, if the node ran it. A call that ran and
     /// aborted still has outputs, with the abort in `execution_error`.
-    pub outputs: Option<ViewFunctionCallOutputs>,
+    pub outputs: Option<GrpcViewFunctionCallOutputs>,
     /// The error message, if the node refused to run the call.
     pub error: Option<String>,
 }
 
 /// A Move view function to call with `view_function_calls`.
 #[derive(uniffi::Record)]
-pub struct ViewFunctionCallInput {
+pub struct GrpcViewFunctionCallInput {
     /// The fully qualified function name, `<package>::<module>::<function>`.
     pub fq_function_name: String,
     /// The type arguments, in declaration order.
@@ -88,8 +88,8 @@ pub struct ViewFunctionCallInput {
     pub call_args: Vec<Arc<MoveViewArg>>,
 }
 
-impl From<&ViewFunctionCallInput> for ViewFunctionCallItem {
-    fn from(input: &ViewFunctionCallInput) -> Self {
+impl From<&GrpcViewFunctionCallInput> for ViewFunctionCallItem {
+    fn from(input: &GrpcViewFunctionCallInput) -> Self {
         ViewFunctionCallItem::default()
             .with_fq_function_name(&input.fq_function_name)
             .with_type_args(input.type_args.iter().map(|tag| (&tag.0).into()).collect())
@@ -127,22 +127,16 @@ impl GrpcClient {
         fq_function_name: String,
         type_args: Vec<Arc<TypeTag>>,
         call_args: Vec<Arc<MoveViewArg>>,
-        read_mask: Option<Vec<ViewFunctionCallField>>,
-    ) -> Result<ViewFunctionCallOutputs> {
+        read_mask: Option<Vec<GrpcViewFunctionCallField>>,
+    ) -> Result<GrpcViewFunctionCallOutputs> {
         (&self
             .client()
-            .view_function_call(
-                &fq_function_name,
-                &type_args
-                    .iter()
-                    .map(|tag| tag.0.clone())
-                    .collect::<Vec<_>>(),
-                &call_args
-                    .iter()
-                    .map(|arg| arg.to_json())
-                    .collect::<Vec<_>>(),
-                crate::grpc::api::read_mask::<ViewFunctionCallReadMask, _>(read_mask),
-            )
+            .view_function_call(fq_function_name)
+            .type_args(type_args.iter().map(|tag| &tag.0))
+            .call_args(call_args.iter().map(|arg| arg.to_json()))
+            .read_mask(crate::grpc::api::read_mask::<ViewFunctionCallReadMask, _>(
+                read_mask,
+            ))
             .await?
             .into_inner())
             .try_into()
@@ -160,24 +154,24 @@ impl GrpcClient {
     #[uniffi::method(default(read_mask = None))]
     pub async fn view_function_calls(
         &self,
-        function_calls: Vec<ViewFunctionCallInput>,
-        read_mask: Option<Vec<ViewFunctionCallField>>,
-    ) -> Result<Vec<ViewFunctionCallResult>> {
+        function_calls: Vec<GrpcViewFunctionCallInput>,
+        read_mask: Option<Vec<GrpcViewFunctionCallField>>,
+    ) -> Result<Vec<GrpcViewFunctionCallResult>> {
         self.client()
-            .view_function_calls(
-                function_calls.iter().map(Into::into).collect(),
-                crate::grpc::api::read_mask::<ViewFunctionCallReadMask, _>(read_mask),
-            )
+            .view_function_calls(function_calls.iter().map(Into::into).collect())
+            .read_mask(crate::grpc::api::read_mask::<ViewFunctionCallReadMask, _>(
+                read_mask,
+            ))
             .await?
             .into_inner()
             .iter()
             .map(|result| {
                 Ok(match result {
-                    Ok(outputs) => ViewFunctionCallResult {
+                    Ok(outputs) => GrpcViewFunctionCallResult {
                         outputs: Some(outputs.try_into()?),
                         error: None,
                     },
-                    Err(error) => ViewFunctionCallResult {
+                    Err(error) => GrpcViewFunctionCallResult {
                         outputs: None,
                         error: Some(error.to_string()),
                     },
@@ -203,7 +197,7 @@ mod tests {
         },
     };
 
-    use super::{ViewFunctionCallInput, ViewFunctionCallOutputs};
+    use super::{GrpcViewFunctionCallInput, GrpcViewFunctionCallOutputs};
     use crate::move_view_call::MoveViewArg;
 
     #[test]
@@ -215,7 +209,7 @@ mod tests {
         let mut proto = ProtoViewFunctionCallOutputs::default();
         proto.execution_result = Some(ExecutionResult::ReturnValues(outputs));
 
-        let converted = ViewFunctionCallOutputs::try_from(&proto).unwrap();
+        let converted = GrpcViewFunctionCallOutputs::try_from(&proto).unwrap();
 
         let return_values = converted.return_values.unwrap();
         assert_eq!(return_values.len(), 1);
@@ -231,7 +225,7 @@ mod tests {
         let mut proto = ProtoViewFunctionCallOutputs::default();
         proto.execution_result = Some(ExecutionResult::ExecutionError(error));
 
-        let converted = ViewFunctionCallOutputs::try_from(&proto).unwrap();
+        let converted = GrpcViewFunctionCallOutputs::try_from(&proto).unwrap();
 
         assert!(converted.return_values.is_none());
         let execution_error = converted.execution_error.unwrap();
@@ -246,7 +240,8 @@ mod tests {
     #[test]
     fn view_function_call_outputs_masked_out() {
         let converted =
-            ViewFunctionCallOutputs::try_from(&ProtoViewFunctionCallOutputs::default()).unwrap();
+            GrpcViewFunctionCallOutputs::try_from(&ProtoViewFunctionCallOutputs::default())
+                .unwrap();
 
         assert!(converted.return_values.is_none());
         assert!(converted.execution_error.is_none());
@@ -254,7 +249,7 @@ mod tests {
 
     #[test]
     fn view_function_call_input_passes_numbers_as_json_strings() {
-        let input = ViewFunctionCallInput {
+        let input = GrpcViewFunctionCallInput {
             fq_function_name: "0x2::shop::discounted_price".to_owned(),
             type_args: vec![],
             call_args: vec![

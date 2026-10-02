@@ -13,10 +13,11 @@ use crate::{
     error::GraphQLResult,
     pagination::PaginationFilter,
     query_types::{
-        LatestPackageQuery, MoveFunction, MoveModule, MovePackageVersionFilter,
-        NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs, NormalizedMoveModuleQuery,
-        NormalizedMoveModuleQueryArgs, PackageArgs, PackageCheckpointFilter, PackageQuery,
-        PackageVersionsArgs, PackageVersionsQuery, PackagesQuery, PackagesQueryArgs,
+        LatestPackageQueryFragment, MoveFunction, MoveModule, MovePackageVersionFilter,
+        NormalizedMoveFunctionQueryArgs, NormalizedMoveFunctionQueryFragment,
+        NormalizedMoveModuleQueryArgs, NormalizedMoveModuleQueryFragment, PackageArgs,
+        PackageCheckpointFilter, PackageQueryFragment, PackageVersionsArgs,
+        PackageVersionsQueryFragment, PackagesQueryArgs, PackagesQueryFragment,
     },
 };
 
@@ -37,7 +38,7 @@ impl GraphQLClient {
         address: Address,
         version: impl Into<Option<Version>>,
     ) -> GraphQLResult<Option<MovePackage>> {
-        let operation = PackageQuery::build(PackageArgs {
+        let operation = PackageQueryFragment::build(PackageArgs {
             address,
             version: version.into().map(|v| v.as_u64()),
         });
@@ -65,7 +66,7 @@ impl GraphQLClient {
         before_version: impl Into<Option<Version>>,
     ) -> GraphQLResult<Page<MovePackage>> {
         let pagination = self.pagination_filter(pagination_filter).await;
-        let operation = PackageVersionsQuery::build(PackageVersionsArgs {
+        let operation = PackageVersionsQueryFragment::build(PackageVersionsArgs {
             address,
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
@@ -102,7 +103,7 @@ impl GraphQLClient {
     /// This corresponds to the package with the highest version that shares its
     /// original ID with the package at address.
     pub async fn package_latest(&self, address: Address) -> GraphQLResult<Option<MovePackage>> {
-        let operation = LatestPackageQuery::build(PackageArgs {
+        let operation = LatestPackageQueryFragment::build(PackageArgs {
             address,
             version: None,
         });
@@ -134,7 +135,7 @@ impl GraphQLClient {
     ) -> GraphQLResult<Page<MovePackage>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = PackagesQuery::build(PackagesQueryArgs {
+        let operation = PackagesQueryFragment::build(PackagesQueryArgs {
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
             first: pagination.first,
@@ -175,12 +176,13 @@ impl GraphQLClient {
         function: &str,
         version: impl Into<Option<Version>>,
     ) -> GraphQLResult<Option<MoveFunction>> {
-        let operation = NormalizedMoveFunctionQuery::build(NormalizedMoveFunctionQueryArgs {
-            address: package,
-            module,
-            function,
-            version: version.into().map(|v| v.as_u64()),
-        });
+        let operation =
+            NormalizedMoveFunctionQueryFragment::build(NormalizedMoveFunctionQueryArgs {
+                address: package,
+                module,
+                function,
+                version: version.into().map(|v| v.as_u64()),
+            });
         let response = self.run_query(&operation).await?;
 
         Ok(response
@@ -207,7 +209,7 @@ impl GraphQLClient {
         let friends = self.pagination_filter(pagination_filter_friends).await;
         let functions = self.pagination_filter(pagination_filter_functions).await;
         let structs = self.pagination_filter(pagination_filter_structs).await;
-        let operation = NormalizedMoveModuleQuery::build(NormalizedMoveModuleQueryArgs {
+        let operation = NormalizedMoveModuleQueryFragment::build(NormalizedMoveModuleQueryArgs {
             package,
             module,
             version: version.into().map(|v| v.as_u64()),
@@ -234,7 +236,7 @@ impl GraphQLClient {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use iota_types::Address;
 

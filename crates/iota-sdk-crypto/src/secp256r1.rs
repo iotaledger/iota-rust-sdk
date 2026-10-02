@@ -75,6 +75,8 @@ impl Secp256r1PrivateKey {
         )
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::CryptoRng,
@@ -94,7 +96,6 @@ impl Secp256r1PrivateKey {
     /// Generate a new private key using the operating system's random number
     /// generator.
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
@@ -102,7 +103,6 @@ impl Secp256r1PrivateKey {
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
     /// format).
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
         p256::pkcs8::DecodePrivateKey::from_pkcs8_der(bytes)
             .map(Self::from_p256)
@@ -111,7 +111,6 @@ impl Secp256r1PrivateKey {
 
     /// Serialize this private key as DER-encoded PKCS#8
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use p256::pkcs8::EncodePrivateKey;
 
@@ -123,7 +122,6 @@ impl Secp256r1PrivateKey {
 
     /// Deserialize PKCS#8-encoded private key from PEM.
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
         p256::pkcs8::DecodePrivateKey::from_pkcs8_pem(s)
             .map(Self::from_p256)
@@ -132,7 +130,6 @@ impl Secp256r1PrivateKey {
 
     /// Serialize this private key as PEM-encoded PKCS#8
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePrivateKey;
 
@@ -277,7 +274,6 @@ impl Secp256r1VerifyingKey {
 
     /// Deserialize public key from ASN.1 DER-encoded data (binary format).
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
         p256::pkcs8::DecodePublicKey::from_public_key_der(bytes)
             .map(Self::from_p256)
@@ -286,7 +282,6 @@ impl Secp256r1VerifyingKey {
 
     /// Serialize this public key as DER-encoded data
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use pkcs8::EncodePublicKey;
 
@@ -298,7 +293,6 @@ impl Secp256r1VerifyingKey {
 
     /// Deserialize public key from PEM.
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
         p256::pkcs8::DecodePublicKey::from_public_key_pem(s)
             .map(Self::from_p256)
@@ -307,7 +301,6 @@ impl Secp256r1VerifyingKey {
 
     /// Serialize this public key into PEM
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePublicKey;
 

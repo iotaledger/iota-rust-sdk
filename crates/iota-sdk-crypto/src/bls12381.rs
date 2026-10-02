@@ -83,6 +83,8 @@ impl Bls12381PrivateKey {
         self.verifying_key().public_key()
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::CryptoRng,
@@ -96,7 +98,6 @@ impl Bls12381PrivateKey {
     /// Generate a new private key using the operating system's random number
     /// generator.
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }

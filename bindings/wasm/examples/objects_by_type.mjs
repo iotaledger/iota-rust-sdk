@@ -1,14 +1,14 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import { GraphQlClient, ObjectFilter, initAsync } from "@iota/sdk-wasm";
+import { GraphQlClient, GraphQlObjectFilter, initAsync } from "@iota/sdk-wasm";
 
 await initAsync();
 
 const client = GraphQlClient.newTestnet();
 
 const coins = await client.objects(
-  ObjectFilter.new({ typeTag: "0x2::coin::Coin<0x2::iota::IOTA>" }),
+  GraphQlObjectFilter.new({ typeTag: "0x2::coin::Coin<0x2::iota::IOTA>" }),
 );
 
 if (coins.data.length === 0) {

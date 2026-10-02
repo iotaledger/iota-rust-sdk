@@ -3,7 +3,7 @@
 
 import IotaSDK
 
-func describe(_ outputs: ViewFunctionCallOutputs) -> String {
+func describe(_ outputs: GrpcViewFunctionCallOutputs) -> String {
   if let returnValues = outputs.returnValues {
     return "returned \(returnValues.compactMap { $0.json })"
   }
@@ -33,13 +33,13 @@ struct GrpcViewFunctionCallExample {
     let shopId = try ObjectId.fromHex(hex: shop)
     let results = try await client.viewFunctionCalls(
       functionCalls: [
-        ViewFunctionCallInput(
+        GrpcViewFunctionCallInput(
           fqFunctionName: "\(package)::shop::discounted_price",
           callArgs: [MoveViewArg.u64(value: 100), MoveViewArg.u64(value: 25)]),
-        ViewFunctionCallInput(
+        GrpcViewFunctionCallInput(
           fqFunctionName: "\(package)::shop::discounted_price",
           callArgs: [MoveViewArg.u64(value: 100), MoveViewArg.u64(value: 200)]),
-        ViewFunctionCallInput(
+        GrpcViewFunctionCallInput(
           fqFunctionName: "\(package)::shop::record_sale",
           callArgs: [MoveViewArg.objectId(value: shopId), MoveViewArg.u64(value: 5)]),
       ])

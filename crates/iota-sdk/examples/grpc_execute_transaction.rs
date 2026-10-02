@@ -7,10 +7,7 @@ use eyre::Result;
 use iota_sdk::{
     crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
     graphql_client::{GraphQLClient, faucet::FaucetClient},
-    grpc_client::{
-        GrpcClient,
-        read_mask_fields::{ExecuteTransactionReadMask, SimulateReadMask},
-    },
+    grpc_client::GrpcClient,
     transaction_builder::TransactionBuilder,
     types::{Address, SignedTransaction},
 };
@@ -40,10 +37,7 @@ async fn main() -> Result<()> {
     let tx = builder.finish().await?;
 
     // Simulate first: the node runs the transaction without committing it.
-    let simulated = client
-        .simulate_transaction(tx.clone(), false, SimulateReadMask::default())
-        .await?
-        .into_inner();
+    let simulated = client.simulate_transaction(tx.clone()).await?.into_inner();
     match simulated.execution_error() {
         Some(error) => println!("Simulation aborted: {:?}", error.source),
         None => println!(
@@ -60,11 +54,7 @@ async fn main() -> Result<()> {
     };
 
     let executed = client
-        .execute_transaction(
-            signed_transaction,
-            None,
-            ExecuteTransactionReadMask::default(),
-        )
+        .execute_transaction(signed_transaction)
         .await?
         .into_inner();
 

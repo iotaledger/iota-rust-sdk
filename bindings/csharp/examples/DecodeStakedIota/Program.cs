@@ -16,7 +16,7 @@ class Program
         var client = GraphQlClient.NewTestnet();
 
         var owner = Address.FromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151");
-        var filter = new ObjectFilter(TypeTag: "0x3::staking_pool::StakedIota", Owner: owner);
+        var filter = new GraphQlObjectFilter(TypeTag: "0x3::staking_pool::StakedIota", Owner: owner);
 
         var page = await client.Objects(filter);
 
