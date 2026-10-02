@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::query_types::{
-    Address, MoveAbility, MoveFunction, MovePackageQuery, OpenMoveType, PageInfo, schema,
+    Address, MoveAbility, MoveFunction, MovePackageQueryFragment, OpenMoveType, PageInfo, schema,
 };
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
@@ -12,7 +12,7 @@ use crate::query_types::{
     graphql_type = "Query",
     variables = "NormalizedMoveModuleQueryArgs"
 )]
-pub struct NormalizedMoveModuleQuery {
+pub struct NormalizedMoveModuleQueryFragment {
     #[arguments(address: $package, version: $version)]
     pub package: Option<MovePackage>,
 }
@@ -73,12 +73,12 @@ pub struct MoveModule {
 #[cynic(schema = "rpc", graphql_type = "MoveStructConnection")]
 pub struct MoveStructConnection {
     pub page_info: PageInfo,
-    pub nodes: Vec<MoveStructQuery>,
+    pub nodes: Vec<MoveStructQueryFragment>,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveStruct")]
-pub struct MoveStructQuery {
+pub struct MoveStructQueryFragment {
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
     pub fields: Option<Vec<MoveField>>,
@@ -88,14 +88,14 @@ pub struct MoveStructQuery {
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModuleConnection")]
 pub struct MoveModuleConnection {
-    pub nodes: Vec<MoveModuleQuery>,
+    pub nodes: Vec<MoveModuleQueryFragment>,
     pub page_info: PageInfo,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModule")]
-pub struct MoveModuleQuery {
-    pub package: MovePackageQuery,
+pub struct MoveModuleQueryFragment {
+    pub package: MovePackageQueryFragment,
     pub name: String,
 }
 

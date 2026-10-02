@@ -15,10 +15,13 @@
 //! `pub mod`. Generic Move types stay generic in Rust (with a
 //! `PhantomData<T>` placeholder for phantom parameters).
 
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
+
 #[macro_use]
 mod macros;
 
 mod packages;
+pub use iota_types;
 pub use packages::{iota_framework, iota_system, move_stdlib, stardust};
 
 mod builtin;

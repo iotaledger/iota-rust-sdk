@@ -3,9 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_types::{PersonalMessage, PublicKey, SimpleSignature, Transaction, UserSignature};
-use signature::Verifier;
 
-use crate::{IotaVerifier, SignatureError};
+use crate::{IotaVerifier, SignatureError, Verifier};
 
 pub struct SimpleVerifier;
 
@@ -123,23 +122,14 @@ impl_iota_verifier_for_public_key!(
 );
 
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
-#[cfg_attr(
-    doc_cfg,
-    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
-)]
 #[rustfmt::skip]
 pub use keypair::{SimpleKeypair, SimpleVerifyingKey};
 
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
-#[cfg_attr(
-    doc_cfg,
-    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
-)]
 mod keypair {
     use iota_types::{PublicKey, PublicKeyExt, SignatureScheme, SimpleSignature, UserSignature};
-    use signature::{Signer, Verifier};
 
-    use crate::SignatureError;
+    use crate::{SignatureError, Signer, Verifier};
 
     #[derive(Clone, Debug)]
     pub struct SimpleKeypair {
@@ -201,7 +191,6 @@ mod keypair {
         /// Returns the inner ed25519 private key, or `None` if this keypair
         /// uses another scheme.
         #[cfg(feature = "ed25519")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
         pub fn as_opt_ed25519(&self) -> Option<&crate::ed25519::Ed25519PrivateKey> {
             match &self.inner {
                 InnerKeypair::Ed25519(private_key) => Some(private_key),
@@ -216,7 +205,6 @@ mod keypair {
         ///
         /// Panics if this keypair uses another scheme.
         #[cfg(feature = "ed25519")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
         pub fn as_ed25519(&self) -> &crate::ed25519::Ed25519PrivateKey {
             self.as_opt_ed25519().expect("not an ed25519 private key")
         }
@@ -224,7 +212,6 @@ mod keypair {
         /// Returns the inner secp256k1 private key, or `None` if this keypair
         /// uses another scheme.
         #[cfg(feature = "secp256k1")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]
         pub fn as_opt_secp256k1(&self) -> Option<&crate::secp256k1::Secp256k1PrivateKey> {
             match &self.inner {
                 InnerKeypair::Secp256k1(private_key) => Some(private_key),
@@ -239,7 +226,6 @@ mod keypair {
         ///
         /// Panics if this keypair uses another scheme.
         #[cfg(feature = "secp256k1")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]
         pub fn as_secp256k1(&self) -> &crate::secp256k1::Secp256k1PrivateKey {
             self.as_opt_secp256k1()
                 .expect("not a secp256k1 private key")
@@ -248,7 +234,6 @@ mod keypair {
         /// Returns the inner secp256r1 private key, or `None` if this keypair
         /// uses another scheme.
         #[cfg(feature = "secp256r1")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256r1")))]
         pub fn as_opt_secp256r1(&self) -> Option<&crate::secp256r1::Secp256r1PrivateKey> {
             match &self.inner {
                 InnerKeypair::Secp256r1(private_key) => Some(private_key),
@@ -263,7 +248,6 @@ mod keypair {
         ///
         /// Panics if this keypair uses another scheme.
         #[cfg(feature = "secp256r1")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256r1")))]
         pub fn as_secp256r1(&self) -> &crate::secp256r1::Secp256r1PrivateKey {
             self.as_opt_secp256r1()
                 .expect("not a secp256r1 private key")
@@ -349,7 +333,6 @@ mod keypair {
         /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
         /// format).
         #[cfg(feature = "pem")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
         pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
             let private_key =
                 pkcs8::PrivateKeyInfo::try_from(bytes).map_err(SignatureError::from_source)?;
@@ -392,7 +375,6 @@ mod keypair {
 
         /// Serialize this private key as DER-encoded PKCS#8
         #[cfg(feature = "pem")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
         pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
             match &self.inner {
                 #[cfg(feature = "ed25519")]
@@ -406,7 +388,6 @@ mod keypair {
 
         /// Deserialize PKCS#8-encoded private key from PEM.
         #[cfg(feature = "pem")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
         pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
             use pkcs8::der::pem::PemLabel;
 
@@ -419,7 +400,6 @@ mod keypair {
 
         /// Serialize this private key as DER-encoded PKCS#8
         #[cfg(feature = "pem")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
         pub fn to_pem(&self) -> Result<String, SignatureError> {
             match &self.inner {
                 #[cfg(feature = "ed25519")]
@@ -452,7 +432,6 @@ mod keypair {
     }
 
     #[cfg(feature = "ed25519")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
     impl From<crate::ed25519::Ed25519PrivateKey> for SimpleKeypair {
         fn from(private_key: crate::ed25519::Ed25519PrivateKey) -> Self {
             Self {
@@ -462,7 +441,6 @@ mod keypair {
     }
 
     #[cfg(feature = "secp256r1")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256r1")))]
     impl From<crate::secp256r1::Secp256r1PrivateKey> for SimpleKeypair {
         fn from(private_key: crate::secp256r1::Secp256r1PrivateKey) -> Self {
             Self {
@@ -472,7 +450,6 @@ mod keypair {
     }
 
     #[cfg(feature = "secp256k1")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]
     impl From<crate::secp256k1::Secp256k1PrivateKey> for SimpleKeypair {
         fn from(private_key: crate::secp256k1::Secp256k1PrivateKey) -> Self {
             Self {
@@ -532,7 +509,6 @@ mod keypair {
 
         /// Deserialize public key from ASN.1 DER-encoded data (binary format).
         #[cfg(feature = "pem")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
         pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
             let public_key = pkcs8::SubjectPublicKeyInfoRef::try_from(bytes)
                 .map_err(SignatureError::from_source)?;
@@ -575,7 +551,6 @@ mod keypair {
 
         /// Serialize this public key as DER-encoded data
         #[cfg(feature = "pem")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
         pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
             match &self.inner {
                 #[cfg(feature = "ed25519")]
@@ -589,7 +564,6 @@ mod keypair {
 
         /// Deserialize public key from PEM.
         #[cfg(feature = "pem")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
         pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
             use pkcs8::der::pem::PemLabel;
 
@@ -601,7 +575,6 @@ mod keypair {
 
         /// Serialize this public key as PEM
         #[cfg(feature = "pem")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
         pub fn to_pem(&self) -> Result<String, SignatureError> {
             match &self.inner {
                 #[cfg(feature = "ed25519")]
@@ -650,7 +623,6 @@ mod keypair {
     crate::impl_iota_verifier!(SimpleVerifyingKey);
 
     #[cfg(feature = "ed25519")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
     impl From<crate::ed25519::Ed25519VerifyingKey> for SimpleVerifyingKey {
         fn from(verifying_key: crate::ed25519::Ed25519VerifyingKey) -> Self {
             Self {
@@ -660,7 +632,6 @@ mod keypair {
     }
 
     #[cfg(feature = "secp256r1")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256r1")))]
     impl From<crate::secp256r1::Secp256r1VerifyingKey> for SimpleVerifyingKey {
         fn from(verifying_key: crate::secp256r1::Secp256r1VerifyingKey) -> Self {
             Self {
@@ -670,7 +641,6 @@ mod keypair {
     }
 
     #[cfg(feature = "secp256k1")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]
     impl From<crate::secp256k1::Secp256k1VerifyingKey> for SimpleVerifyingKey {
         fn from(verifying_key: crate::secp256k1::Secp256k1VerifyingKey) -> Self {
             Self {

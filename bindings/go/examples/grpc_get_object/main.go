@@ -24,7 +24,7 @@ func main() {
 	// `Objects` is batched: it takes a list of ids and returns the objects in
 	// the same order. The default read mask returns the reference and the
 	// BCS-decoded object; pass a read mask like
-	// `[]iota_sdk.ObjectField{iota_sdk.ObjectFieldReference{}}` to skip the object.
+	// `[]iota_sdk.GrpcObjectField{iota_sdk.GrpcObjectFieldReference{}}` to skip the object.
 	objects, err := client.Objects([]*iota_sdk.ObjectId{objectID}, nil)
 	if err != nil {
 		log.Fatalf("Failed to get object: %v", err)
@@ -34,9 +34,9 @@ func main() {
 	}
 	obj := *objects[0].Object
 
-	fmt.Println("Object ID:", obj.Id().ToHex())
+	fmt.Println("Object ID:", obj.Id())
 	fmt.Println("Version:", obj.Version())
-	fmt.Println("Previous transaction:", obj.PreviousTransaction().ToBase58())
+	fmt.Println("Previous transaction:", obj.PreviousTransaction())
 	fmt.Println("Owner:", obj.Owner())
 	fmt.Println("Storage rebate:", obj.StorageRebate())
 	fmt.Println("Type:", obj.ObjectType())

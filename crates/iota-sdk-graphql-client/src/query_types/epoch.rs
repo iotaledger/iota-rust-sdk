@@ -9,14 +9,14 @@ use crate::query_types::{BigInt, DateTime, ObjectId, ProtocolConfigs, schema};
 // ===========================================================================
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "EpochArgs")]
-pub struct EpochQuery {
+pub struct EpochQueryFragment {
     #[arguments(id: $id)]
     pub epoch: Option<Epoch>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "EpochArgs")]
-pub struct EpochSummaryQuery {
+pub struct EpochSummaryQueryFragment {
     #[arguments(id: $id)]
     pub epoch: Option<EpochSummary>,
 }

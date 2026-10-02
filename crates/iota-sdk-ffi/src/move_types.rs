@@ -12,8 +12,7 @@
 //!   their embedded [`ValidatorSetV2`] / [`ValidatorSetV1`], [`ValidatorV1`],
 //!   [`ValidatorMetadataV1`], [`StakingPoolV1`], [`SystemParametersV1`], and
 //!   [`StorageFundV1`]), [`UnverifiedValidatorOperationCap`].
-//! - **Framework types** (`0x2`): [`IotaCoinMetadata`] (the `Iota` prefix
-//!   disambiguates this from the GraphQL-derived `CoinMetadata` record),
+//! - **Framework types** (`0x2`): [`IotaCoinMetadata`],
 //!   [`ImmutableCoinMetadata`], [`Clock`], [`TimelockedIotaBalance`],
 //!   [`UpgradeCap`], [`Publisher`], [`Kiosk`], [`KioskOwnerCap`],
 //!   [`KioskExtension`], [`DenyList`], [`Random`] (with [`RandomInner`]),

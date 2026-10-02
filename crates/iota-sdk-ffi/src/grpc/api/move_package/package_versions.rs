@@ -15,7 +15,7 @@ use crate::{
 
 /// A version of a Move package.
 #[derive(uniffi::Record)]
-pub struct PackageVersion {
+pub struct GrpcPackageVersion {
     /// The original (immutable) package id shared across all versions.
     pub original_id: Option<Arc<ObjectId>>,
     /// The storage id of the specific package version.
@@ -24,7 +24,7 @@ pub struct PackageVersion {
     pub version: Option<u64>,
 }
 
-impl TryFrom<&proto::move_package_service::PackageVersion> for PackageVersion {
+impl TryFrom<&proto::move_package_service::PackageVersion> for GrpcPackageVersion {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::move_package_service::PackageVersion) -> Result<Self> {
@@ -50,9 +50,9 @@ impl TryFrom<&proto::move_package_service::PackageVersion> for PackageVersion {
 
 /// A page of package versions returned by the gRPC server.
 #[derive(uniffi::Record)]
-pub struct PackageVersionPage {
+pub struct GrpcPackageVersionPage {
     /// The package versions returned in the page.
-    pub versions: Vec<PackageVersion>,
+    pub versions: Vec<GrpcPackageVersion>,
     /// Token to retrieve the next page. `None` when this is the last page.
     pub next_page_token: Option<Vec<u8>>,
 }
@@ -68,12 +68,14 @@ impl GrpcClient {
         package_id: &ObjectId,
         page_size: Option<u32>,
         page_token: Option<Vec<u8>>,
-    ) -> Result<PackageVersionPage> {
-        let query =
-            self.client()
-                .package_versions(**package_id, page_size, page_token.map(Into::into));
+    ) -> Result<GrpcPackageVersionPage> {
+        let query = self
+            .client()
+            .package_versions(**package_id)
+            .page_size(page_size)
+            .page_token(page_token.map(Into::into));
         let page = query.await?.into_inner();
-        Ok(PackageVersionPage {
+        Ok(GrpcPackageVersionPage {
             versions: page
                 .items
                 .iter()
@@ -90,8 +92,8 @@ impl GrpcClient {
         &self,
         package_id: &ObjectId,
         limit: Option<u32>,
-    ) -> Result<Vec<PackageVersion>> {
-        let query = self.client().package_versions(**package_id, None, None);
+    ) -> Result<Vec<GrpcPackageVersion>> {
+        let query = self.client().package_versions(**package_id);
         query
             .collect(limit)
             .await?

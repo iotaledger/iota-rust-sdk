@@ -34,13 +34,13 @@ impl GrpcClient {
     ///
     /// Returns a query builder. Await it directly for a single page
     /// (with access to `next_page_token`), or call `.collect(limit)` to
-    /// auto-paginate through all results.
+    /// auto-paginate through all results. Page with
+    /// [`page_size`](ListPackageVersionsQuery::page_size) and
+    /// [`page_token`](ListPackageVersionsQuery::page_token).
     ///
     /// # Parameters
     ///
     /// - `package_id` - The object ID of any version of the package.
-    /// - `page_size` - Optional maximum number of versions per page.
-    /// - `page_token` - Optional continuation token from a previous page.
     ///
     /// # Examples
     ///
@@ -52,7 +52,7 @@ impl GrpcClient {
     /// let client = GrpcClient::new_localnet()?;
     /// let package_id: ObjectId = "0x2".parse()?;
     ///
-    /// let page = client.package_versions(package_id, None, None).await?;
+    /// let page = client.package_versions(package_id).await?;
     /// for version in &page.body().items {
     ///     println!("Package version: {:?}", version);
     /// }
@@ -69,7 +69,8 @@ impl GrpcClient {
     /// let package_id: ObjectId = "0x2".parse()?;
     ///
     /// let all = client
-    ///     .package_versions(package_id, Some(50), None)
+    ///     .package_versions(package_id)
+    ///     .page_size(50)
     ///     .collect(None)
     ///     .await?;
     /// for version in all.body() {
@@ -78,12 +79,7 @@ impl GrpcClient {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn package_versions(
-        &self,
-        package_id: ObjectId,
-        page_size: impl Into<Option<u32>>,
-        page_token: impl Into<Option<prost::bytes::Bytes>>,
-    ) -> ListPackageVersionsQuery {
+    pub fn package_versions(&self, package_id: ObjectId) -> ListPackageVersionsQuery {
         let base_request =
             ListPackageVersionsRequest::default().with_package_id(proto_object_id(package_id));
 
@@ -91,8 +87,27 @@ impl GrpcClient {
             self.move_package_service_client(),
             base_request,
             self.max_decoding_message_size(),
-            page_size.into(),
-            page_token.into(),
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use iota_types::ObjectId;
+
+    use crate::{GrpcClient, api::proto_object_id};
+
+    #[tokio::test]
+    async fn the_request_carries_the_package_and_the_page() {
+        let client = GrpcClient::new("http://localhost").unwrap();
+        let package_id: ObjectId = "0x5".parse().unwrap();
+        let (_, request) = client
+            .package_versions(package_id)
+            .page_size(2)
+            .page_token(prost::bytes::Bytes::from_static(b"next"))
+            .into_request();
+        assert_eq!(request.package_id, Some(proto_object_id(package_id)));
+        assert_eq!(request.page_size, Some(2));
+        assert_eq!(request.page_token.as_deref(), Some(&b"next"[..]));
     }
 }

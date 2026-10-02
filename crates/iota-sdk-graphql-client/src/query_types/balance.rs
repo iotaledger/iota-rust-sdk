@@ -9,7 +9,7 @@ use crate::{
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "BalanceArgs")]
-pub struct BalanceQuery {
+pub struct BalanceQueryFragment {
     #[arguments(address: $address)]
     pub owner: Option<Owner>,
 }

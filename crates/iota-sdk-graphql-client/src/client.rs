@@ -10,7 +10,7 @@ use reqwest::Url;
 use crate::{
     error::{GraphQLError, GraphQLResult},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
-    query_types::{ServiceConfig, ServiceConfigQuery},
+    query_types::{ServiceConfig, ServiceConfigQueryFragment},
 };
 
 pub(crate) const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
@@ -132,7 +132,7 @@ impl GraphQLClient {
         }
 
         // Otherwise, fetch and initialize it
-        let operation = ServiceConfigQuery::build(());
+        let operation = ServiceConfigQueryFragment::build(());
         let response = self.run_query(&operation).await?;
 
         let service_config = self
@@ -177,17 +177,17 @@ impl GraphQLClient {
             .map_err(|e| GraphQLError::json(url, status, &bytes, target_type, e))
     }
 
-    /// Run a JSON query on the GraphQL server and return the response.
+    /// Run a JSON query on the GraphQL server and return the response data.
     /// This method expects a JSON map holding the GraphQL query string and
-    /// matching GraphQL variables. It returns a [`cynic::GraphQlResponse`]
-    /// wrapping a [`serde_json::Value`]. In general, it is recommended to use
-    /// [`run_query`](`Self::run_query`) which guarantees valid GraphQL
-    /// query syntax and returns a proper response type.
+    /// matching GraphQL variables. Any GraphQL error in the response is
+    /// returned as an error, even if partial data is present. In general, it
+    /// is recommended to use [`run_query`](`Self::run_query`) which guarantees
+    /// valid GraphQL query syntax and returns a proper response type.
     pub async fn run_query_from_json(
         &self,
         json: serde_json::Map<String, serde_json::Value>,
-    ) -> GraphQLResult<GraphQlResponse<serde_json::Value>> {
-        self.post_query(&json).await
+    ) -> GraphQLResult<serde_json::Value> {
+        response_to_err(self.post_query(&json).await?)
     }
 
     /// Handle pagination filters and return the appropriate values. If limit is
@@ -218,7 +218,7 @@ impl GraphQLClient {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use serde_json::json;
 

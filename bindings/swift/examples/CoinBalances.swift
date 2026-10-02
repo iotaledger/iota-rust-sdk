@@ -14,7 +14,7 @@ struct CoinBalancesExample {
     let coins = try await client.coins(owner: address)
     for coin in coins.data {
       print(
-        "Coin = \(coin.id().toHex()), Coin Type = \(coin.coinType().asStructTag()), Balance = \(coin.balance())"
+        "Coin = \(coin.id()), Coin Type = \(coin.coinType().asStructTag()), Balance = \(coin.balance())"
       )
     }
 
