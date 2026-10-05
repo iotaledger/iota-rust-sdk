@@ -330,9 +330,7 @@ impl std::str::FromStr for SignatureScheme {
             "Bls12381" | "bls12381" => Ok(Self::Bls12381),
             "PasskeyAuthenticator" | "passkeyauthenticator" => Ok(Self::PasskeyAuthenticator),
             "MoveAuthenticator" | "moveauthenticator" => Ok(Self::MoveAuthenticator),
-            invalid => Err(SignatureSchemeError(SignatureSchemeErrorKind::Name(
-                invalid.to_owned(),
-            ))),
+            invalid => Err(SignatureSchemeError::Name(invalid.to_owned())),
         }
     }
 }
@@ -347,21 +345,17 @@ impl super::PasskeyPublicKey {
 /// Error returned when a byte flag or a name does not correspond to a known
 /// [`SignatureScheme`].
 #[derive(Clone, Debug, Eq, Hash, PartialEq, thiserror::Error)]
-#[error(transparent)]
-pub struct SignatureSchemeError(SignatureSchemeErrorKind);
-
-impl SignatureSchemeError {
-    fn flag(flag: u8) -> Self {
-        Self(SignatureSchemeErrorKind::Flag(flag))
-    }
-}
-
-#[derive(Clone, Debug, Eq, Hash, PartialEq, thiserror::Error)]
-enum SignatureSchemeErrorKind {
+pub enum SignatureSchemeError {
     #[error("invalid signature scheme: {0:02x}")]
     Flag(u8),
     #[error("invalid signature scheme: {0:?}")]
     Name(String),
+}
+
+impl SignatureSchemeError {
+    fn flag(flag: u8) -> Self {
+        Self::Flag(flag)
+    }
 }
 
 /// A signature from a user
