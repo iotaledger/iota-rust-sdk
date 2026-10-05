@@ -248,29 +248,10 @@ impl GetNormalizedMoveModuleQuery {
         self
     }
 
-    async fn resolved_pagination(&mut self) -> ModulePagination {
-        ModulePagination {
-            enums: self
-                .client
-                .pagination_filter(std::mem::take(&mut self.enums_pagination))
-                .await,
-            friends: self
-                .client
-                .pagination_filter(std::mem::take(&mut self.friends_pagination))
-                .await,
-            functions: self
-                .client
-                .pagination_filter(std::mem::take(&mut self.functions_pagination))
-                .await,
-            structs: self
-                .client
-                .pagination_filter(std::mem::take(&mut self.structs_pagination))
-                .await,
-        }
-    }
-
     fn operation<'a>(
-        &'a self,
+        package: Address,
+        module: &'a str,
+        version: Option<Version>,
         pagination: &'a ModulePagination,
     ) -> cynic::Operation<NormalizedMoveModuleQueryFragment, NormalizedMoveModuleQueryArgs<'a>>
     {
@@ -281,9 +262,9 @@ impl GetNormalizedMoveModuleQuery {
             structs,
         } = pagination;
         NormalizedMoveModuleQueryFragment::build(NormalizedMoveModuleQueryArgs {
-            package: self.package,
-            module: &self.module,
-            version: self.version.map(|v| v.as_u64()),
+            package,
+            module,
+            version: version.map(|v| v.as_u64()),
             after_enums: enums.after.as_deref(),
             after_functions: functions.after.as_deref(),
             after_structs: structs.after.as_deref(),
@@ -303,9 +284,26 @@ impl GetNormalizedMoveModuleQuery {
         })
     }
 
-    async fn send(mut self) -> GraphQLResult<Option<MoveModule>> {
-        let pagination = self.resolved_pagination().await;
-        let response = self.client.run_query(&self.operation(&pagination)).await?;
+    async fn send(self) -> GraphQLResult<Option<MoveModule>> {
+        let Self {
+            client,
+            package,
+            module,
+            version,
+            enums_pagination,
+            friends_pagination,
+            functions_pagination,
+            structs_pagination,
+        } = self;
+        let pagination = ModulePagination {
+            enums: client.pagination_filter(enums_pagination).await,
+            friends: client.pagination_filter(friends_pagination).await,
+            functions: client.pagination_filter(functions_pagination).await,
+            structs: client.pagination_filter(structs_pagination).await,
+        };
+        let response = client
+            .run_query(&Self::operation(package, &module, version, &pagination))
+            .await?;
 
         Ok(response.package.and_then(|p| p.module))
     }
