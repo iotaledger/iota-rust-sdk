@@ -15,6 +15,8 @@
 //! `pub mod`. Generic Move types stay generic in Rust (with a
 //! `PhantomData<T>` placeholder for phantom parameters).
 
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
+
 #[macro_use]
 mod macros;
 

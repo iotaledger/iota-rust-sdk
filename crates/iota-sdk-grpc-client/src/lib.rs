@@ -41,6 +41,8 @@
 //! # }
 //! ```
 
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
+
 mod api;
 mod transaction_builder_client;
 
@@ -101,7 +103,7 @@ pub use api::{
 // Re-export types for convenience
 pub use api::{
     CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, GrpcError, GrpcResult,
-    MetadataEnvelope, Page, ProtocolError, ReadMask, RpcStatus,
+    MetadataEnvelope, Page, ProtocolError, RpcStatus,
     execution::simulate::SimulateTransactionInput,
 };
 // Re-export all read mask constants (endpoint defaults)
@@ -127,15 +129,15 @@ pub use api::{
     },
     ledger::{
         checkpoints::{CheckpointsStreamFilteredQuery, CheckpointsStreamQuery, GetCheckpointQuery},
-        epochs::GetEpochQuery,
+        epochs::{GetEpochQuery, GetReferenceGasPriceQuery},
         health::GetHealthQuery,
-        objects::GetObjectsQuery,
+        objects::{GetObjectReferencesQuery, GetObjectsQuery},
         service_info::GetServiceInfoQuery,
         transactions::GetTransactionsQuery,
     },
     move_package::package_versions::ListPackageVersionsQuery,
     state::{
-        coins::GetCoinsQuery, dynamic_fields::ListDynamicFieldsQuery,
+        coin_info::GetCoinInfoQuery, coins::GetCoinsQuery, dynamic_fields::ListDynamicFieldsQuery,
         owned_objects::ListOwnedObjectsQuery,
     },
 };

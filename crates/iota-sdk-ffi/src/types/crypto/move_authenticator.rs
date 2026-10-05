@@ -6,7 +6,6 @@ use std::sync::Arc;
 use crate::types::{
     address::Address,
     move_core::TypeTag,
-    object::ObjectReference,
     transaction::{Input, SharedObjectReference},
 };
 
@@ -49,36 +48,18 @@ pub struct MoveAuthenticatorV1(pub iota_sdk::types::MoveAuthenticatorV1);
 
 #[uniffi::export]
 impl MoveAuthenticatorV1 {
-    /// Create a new move authenticator with an immutable object.
+    /// Create a new move authenticator for a shared account object.
     #[uniffi::constructor]
-    pub fn new_with_immutable_account_object(
-        call_args: Vec<Input>,
-        type_args: Vec<Arc<TypeTag>>,
-        object_to_authenticate: ObjectReference,
-    ) -> Self {
-        Self(
-            iota_sdk::types::MoveAuthenticatorV1::new_with_immutable_account_object(
-                call_args.into_iter().map(Into::into).collect(),
-                type_args.into_iter().map(|v| v.0.clone()).collect(),
-                object_to_authenticate.into(),
-            ),
-        )
-    }
-
-    /// Create a new move authenticator with a shared object.
-    #[uniffi::constructor]
-    pub fn new_with_shared_account_object(
+    pub fn new(
         call_args: Vec<Input>,
         type_args: Vec<Arc<TypeTag>>,
         object_to_authenticate: SharedObjectReference,
     ) -> Self {
-        Self(
-            iota_sdk::types::MoveAuthenticatorV1::new_with_shared_account_object(
-                call_args.into_iter().map(Into::into).collect(),
-                type_args.into_iter().map(|v| v.0.clone()).collect(),
-                object_to_authenticate.into(),
-            ),
-        )
+        Self(iota_sdk::types::MoveAuthenticatorV1::new(
+            call_args.into_iter().map(Into::into).collect(),
+            type_args.into_iter().map(|v| v.0.clone()).collect(),
+            object_to_authenticate.into(),
+        ))
     }
 
     pub fn address(&self) -> Address {
