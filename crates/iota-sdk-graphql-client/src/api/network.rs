@@ -63,11 +63,11 @@ impl ListActiveValidatorsQuery {
     }
 
     fn operation<'a>(
-        &self,
+        epoch: Option<u64>,
         pagination: &'a PaginationFilterResponse,
     ) -> cynic::Operation<ActiveValidatorsQueryFragment, ActiveValidatorsArgs<'a>> {
         ActiveValidatorsQueryFragment::build(ActiveValidatorsArgs {
-            id: self.epoch,
+            id: epoch,
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
             first: pagination.first,
@@ -76,8 +76,15 @@ impl ListActiveValidatorsQuery {
     }
 
     async fn send(self) -> GraphQLResult<Page<Validator>> {
-        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
-        let response = self.client.run_query(&self.operation(&pagination)).await?;
+        let Self {
+            client,
+            pagination,
+            epoch,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(epoch, &pagination))
+            .await?;
 
         if let Some(validators) = response.epoch.and_then(|v| v.validator_set) {
             let page_info = validators.active_validators.page_info;

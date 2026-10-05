@@ -45,19 +45,15 @@ impl ListCoinsQuery {
         self
     }
 
-    fn objects_query(&self) -> ListObjectsQuery {
-        let type_tag = self
-            .coin_type
-            .clone()
-            .map(StructTag::new_coin)
-            .unwrap_or_else(|| {
-                StructTag::new(
-                    Address::FRAMEWORK,
-                    Identifier::from_static("coin"),
-                    Identifier::from_static("Coin"),
-                    Default::default(),
-                )
-            });
+    fn objects_query(self) -> ListObjectsQuery {
+        let type_tag = self.coin_type.map(StructTag::new_coin).unwrap_or_else(|| {
+            StructTag::new(
+                Address::FRAMEWORK,
+                Identifier::from_static("coin"),
+                Identifier::from_static("Coin"),
+                Default::default(),
+            )
+        });
         self.client
             .objects()
             .filter(ObjectFilter {
@@ -65,7 +61,7 @@ impl ListCoinsQuery {
                 owner: Some(self.owner),
                 object_ids: None,
             })
-            .pagination(self.pagination.clone())
+            .pagination(self.pagination)
     }
 
     async fn send(self) -> GraphQLResult<Page<Coin>> {

@@ -55,25 +55,41 @@ impl ListPackageVersionsQuery {
     }
 
     fn operation<'a>(
-        &self,
+        address: Address,
+        after_version: Option<Version>,
+        before_version: Option<Version>,
         pagination: &'a PaginationFilterResponse,
     ) -> cynic::Operation<PackageVersionsQueryFragment, PackageVersionsArgs<'a>> {
         PackageVersionsQueryFragment::build(PackageVersionsArgs {
-            address: self.address,
+            address,
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
             first: pagination.first,
             last: pagination.last,
             filter: Some(MovePackageVersionFilter {
-                after_version: self.after_version.map(|v| v.as_u64()),
-                before_version: self.before_version.map(|v| v.as_u64()),
+                after_version: after_version.map(|v| v.as_u64()),
+                before_version: before_version.map(|v| v.as_u64()),
             }),
         })
     }
 
     async fn send(self) -> GraphQLResult<Page<MovePackage>> {
-        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
-        let response = self.client.run_query(&self.operation(&pagination)).await?;
+        let Self {
+            client,
+            pagination,
+            address,
+            after_version,
+            before_version,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(
+                address,
+                after_version,
+                before_version,
+                &pagination,
+            ))
+            .await?;
 
         let pc = response.package_versions;
         let page_info = pc.page_info;
@@ -126,7 +142,8 @@ impl ListPackagesQuery {
     }
 
     fn operation<'a>(
-        &self,
+        after_checkpoint: Option<u64>,
+        before_checkpoint: Option<u64>,
         pagination: &'a PaginationFilterResponse,
     ) -> cynic::Operation<PackagesQueryFragment, PackagesQueryArgs<'a>> {
         PackagesQueryFragment::build(PackagesQueryArgs {
@@ -135,15 +152,27 @@ impl ListPackagesQuery {
             first: pagination.first,
             last: pagination.last,
             filter: Some(PackageCheckpointFilter {
-                after_checkpoint: self.after_checkpoint,
-                before_checkpoint: self.before_checkpoint,
+                after_checkpoint,
+                before_checkpoint,
             }),
         })
     }
 
     async fn send(self) -> GraphQLResult<Page<MovePackage>> {
-        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
-        let response = self.client.run_query(&self.operation(&pagination)).await?;
+        let Self {
+            client,
+            pagination,
+            after_checkpoint,
+            before_checkpoint,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(
+                after_checkpoint,
+                before_checkpoint,
+                &pagination,
+            ))
+            .await?;
 
         let pc = response.packages;
         let page_info = pc.page_info;

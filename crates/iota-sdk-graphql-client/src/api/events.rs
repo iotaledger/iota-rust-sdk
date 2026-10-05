@@ -38,11 +38,11 @@ impl ListEventsQuery {
     }
 
     fn operation<'a>(
-        &self,
+        filter: Option<EventFilter>,
         pagination: &'a PaginationFilterResponse,
     ) -> cynic::Operation<EventsQueryFragment, EventsQueryArgs<'a>> {
         EventsQueryFragment::build(EventsQueryArgs {
-            filter: self.filter.clone(),
+            filter,
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
             first: pagination.first,
@@ -51,8 +51,15 @@ impl ListEventsQuery {
     }
 
     async fn send(self) -> GraphQLResult<Page<Event>> {
-        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
-        let response = self.client.run_query(&self.operation(&pagination)).await?;
+        let Self {
+            client,
+            pagination,
+            filter,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(filter, &pagination))
+            .await?;
 
         let ec = response.events;
         let page_info = ec.page_info;

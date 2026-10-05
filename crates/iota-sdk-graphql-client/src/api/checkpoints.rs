@@ -39,7 +39,6 @@ impl ListCheckpointsQuery {
     }
 
     fn operation<'a>(
-        &self,
         pagination: &'a PaginationFilterResponse,
     ) -> cynic::Operation<CheckpointsQueryFragment, CheckpointsArgs<'a>> {
         CheckpointsQueryFragment::build(CheckpointsArgs {
@@ -51,8 +50,9 @@ impl ListCheckpointsQuery {
     }
 
     async fn send(self) -> GraphQLResult<Page<CheckpointSummary>> {
-        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
-        let response = self.client.run_query(&self.operation(&pagination)).await?;
+        let Self { client, pagination } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client.run_query(&Self::operation(&pagination)).await?;
 
         let cc = response.checkpoints;
         let page_info = cc.page_info;

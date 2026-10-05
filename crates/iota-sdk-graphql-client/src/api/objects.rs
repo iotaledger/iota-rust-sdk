@@ -46,21 +46,28 @@ impl ListObjectsQuery {
     }
 
     fn operation(
-        &self,
+        filter: Option<ObjectFilter>,
         pagination: &PaginationFilterResponse,
     ) -> cynic::Operation<ObjectsQueryFragment, ObjectsQueryArgs> {
         ObjectsQueryFragment::build(ObjectsQueryArgs {
             after: pagination.after.clone(),
             before: pagination.before.clone(),
-            filter: self.filter.clone(),
+            filter,
             first: pagination.first,
             last: pagination.last,
         })
     }
 
     async fn send(self) -> GraphQLResult<Page<Object>> {
-        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
-        let response = self.client.run_query(&self.operation(&pagination)).await?;
+        let Self {
+            client,
+            pagination,
+            filter,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(filter, &pagination))
+            .await?;
 
         let oc = response.objects;
         let page_info = oc.page_info;

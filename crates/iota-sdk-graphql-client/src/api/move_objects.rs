@@ -103,16 +103,11 @@ impl<T: MoveObject> ListMoveObjectsQuery<T> {
         self
     }
 
-    fn objects_query(&self) -> ListObjectsQuery {
+    fn objects_query(self) -> ListObjectsQuery {
         self.client
             .objects()
-            .filter(
-                self.filter
-                    .clone()
-                    .unwrap_or_default()
-                    .into_object_filter::<T>(),
-            )
-            .pagination(self.pagination.clone())
+            .filter(self.filter.unwrap_or_default().into_object_filter::<T>())
+            .pagination(self.pagination)
     }
 
     async fn send(self) -> GraphQLResult<Page<OwnedMoveObject<T>>> {

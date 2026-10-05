@@ -58,21 +58,28 @@ impl ListTransactionsQuery {
     }
 
     fn operation(
-        &self,
+        filter: Option<TransactionsFilter>,
         pagination: &PaginationFilterResponse,
     ) -> cynic::Operation<TransactionBlocksQueryFragment, TransactionBlocksQueryArgs> {
         TransactionBlocksQueryFragment::build(TransactionBlocksQueryArgs {
             after: pagination.after.clone(),
             before: pagination.before.clone(),
-            filter: self.filter.clone().map(Into::into),
+            filter: filter.map(Into::into),
             first: pagination.first,
             last: pagination.last,
         })
     }
 
     async fn send(self) -> GraphQLResult<Page<SignedTransaction>> {
-        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
-        let response = self.client.run_query(&self.operation(&pagination)).await?;
+        let Self {
+            client,
+            pagination,
+            filter,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(filter, &pagination))
+            .await?;
 
         let txc = response.transaction_blocks;
         let page_info = txc.page_info;
@@ -120,23 +127,34 @@ impl ListAddressTransactionsQuery {
     }
 
     fn operation(
-        &self,
+        address: Address,
+        relation: Option<AddressTransactionRelationship>,
+        filter: Option<TransactionsFilter>,
         pagination: &PaginationFilterResponse,
     ) -> cynic::Operation<AddressTransactionsQueryFragment, AddressTransactionsQueryArgs> {
         AddressTransactionsQueryFragment::build(AddressTransactionsQueryArgs {
-            address: self.address,
-            relation: self.relation,
+            address,
+            relation,
             after: pagination.after.clone(),
             before: pagination.before.clone(),
-            filter: self.filter.clone().map(Into::into),
+            filter: filter.map(Into::into),
             first: pagination.first,
             last: pagination.last,
         })
     }
 
     async fn send(self) -> GraphQLResult<Page<SignedTransaction>> {
-        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
-        let response = self.client.run_query(&self.operation(&pagination)).await?;
+        let Self {
+            client,
+            pagination,
+            address,
+            relation,
+            filter,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(address, relation, filter, &pagination))
+            .await?;
 
         let Some(AddressTransactionBlocksQueryFragment { transaction_blocks }) = response.address
         else {
@@ -178,21 +196,28 @@ impl ListTransactionsEffectsQuery {
     }
 
     fn operation(
-        &self,
+        filter: Option<TransactionsFilter>,
         pagination: &PaginationFilterResponse,
     ) -> cynic::Operation<TransactionBlocksEffectsQueryFragment, TransactionBlocksQueryArgs> {
         TransactionBlocksEffectsQueryFragment::build(TransactionBlocksQueryArgs {
             after: pagination.after.clone(),
             before: pagination.before.clone(),
-            filter: self.filter.clone().map(Into::into),
+            filter: filter.map(Into::into),
             first: pagination.first,
             last: pagination.last,
         })
     }
 
     async fn send(self) -> GraphQLResult<Page<TransactionEffects>> {
-        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
-        let response = self.client.run_query(&self.operation(&pagination)).await?;
+        let Self {
+            client,
+            pagination,
+            filter,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(filter, &pagination))
+            .await?;
 
         let txc = response.transaction_blocks;
         let page_info = txc.page_info;
@@ -231,22 +256,29 @@ impl ListTransactionsDataEffectsQuery {
     }
 
     fn operation(
-        &self,
+        filter: Option<TransactionsFilter>,
         pagination: &PaginationFilterResponse,
     ) -> cynic::Operation<TransactionBlocksWithEffectsQueryFragment, TransactionBlocksQueryArgs>
     {
         TransactionBlocksWithEffectsQueryFragment::build(TransactionBlocksQueryArgs {
             after: pagination.after.clone(),
             before: pagination.before.clone(),
-            filter: self.filter.clone().map(Into::into),
+            filter: filter.map(Into::into),
             first: pagination.first,
             last: pagination.last,
         })
     }
 
     async fn send(self) -> GraphQLResult<Page<TransactionDataEffects>> {
-        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
-        let response = self.client.run_query(&self.operation(&pagination)).await?;
+        let Self {
+            client,
+            pagination,
+            filter,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(filter, &pagination))
+            .await?;
 
         let txc = response.transaction_blocks;
         let page_info = txc.page_info;

@@ -42,11 +42,11 @@ impl ListDynamicFieldsQuery {
     }
 
     fn operation<'a>(
-        &self,
+        address: Address,
         pagination: &'a PaginationFilterResponse,
     ) -> cynic::Operation<DynamicFieldsOwnerQueryFragment, DynamicFieldConnectionArgs<'a>> {
         DynamicFieldsOwnerQueryFragment::build(DynamicFieldConnectionArgs {
-            address: self.address,
+            address,
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
             first: pagination.first,
@@ -55,8 +55,15 @@ impl ListDynamicFieldsQuery {
     }
 
     async fn send(self) -> GraphQLResult<Page<DynamicFieldOutput>> {
-        let pagination = self.client.pagination_filter(self.pagination.clone()).await;
-        let response = self.client.run_query(&self.operation(&pagination)).await?;
+        let Self {
+            client,
+            pagination,
+            address,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(address, &pagination))
+            .await?;
 
         let DynamicFieldsOwnerQueryFragment { owner: Some(dfs) } = response else {
             return Ok(Page::new_empty());
