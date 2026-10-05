@@ -156,22 +156,25 @@ impl Address {
     /// with or without a `0x` prefix. Will return an error if the string is not
     /// exactly 64 hex characters long (excluding the `0x` prefix).
     pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
-        let hex = hex.as_ref();
-        let hex = if hex.starts_with(b"0x") {
-            &hex[2..]
-        } else {
-            hex
-        };
+        let hex = Self::strip_hex_prefix(hex.as_ref())?;
         if hex.len() != Self::LENGTH * 2 {
             return Err(AddressParseError::InvalidHexLength { actual: hex.len() });
         }
         Self::decode_hex(hex)
     }
 
+    /// Strips an optional `0x` prefix and rejects non-ASCII input.
+    fn strip_hex_prefix(hex: &[u8]) -> Result<&[u8], AddressParseError> {
+        if !hex.is_ascii() {
+            return Err(AddressParseError::NonAsciiCharacter);
+        }
+        Ok(hex.strip_prefix(b"0x").unwrap_or(hex))
+    }
+
     /// Decodes up to `Self::LENGTH * 2` hex characters, left-padding with `0`s.
     fn decode_hex(hex: &[u8]) -> Result<Self, AddressParseError> {
         if hex.len() > Self::LENGTH * 2 {
-            return Err(AddressParseError::InvalidHexLength { actual: hex.len() });
+            return Err(AddressParseError::HexTooLong { actual: hex.len() });
         }
         let mut buf = [b'0'; Self::LENGTH * 2];
         let padding = buf.len() - hex.len();
@@ -188,7 +191,7 @@ impl Address {
                     }
                 }
                 hex::FromHexError::OddLength | hex::FromHexError::InvalidStringLength => {
-                    AddressParseError::InvalidHexLength { actual: hex.len() }
+                    AddressParseError::HexTooLong { actual: hex.len() }
                 }
             })
     }
@@ -217,14 +220,7 @@ impl Address {
     /// The string can be of variable length; if it's shorter than 64 hex
     /// characters, it will be left-padded with `0`s.
     pub fn from_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
-        let hex = hex.as_ref();
-        let hex = if hex.starts_with(b"0x") {
-            &hex[2..]
-        } else {
-            hex
-        };
-
-        Self::decode_hex(hex)
+        Self::decode_hex(Self::strip_hex_prefix(hex.as_ref())?)
     }
 
     /// Parses an Address from a hex string with a mandatory `0x` prefix.
@@ -427,6 +423,13 @@ pub enum AddressParseError {
         Address::LENGTH * 2
     )]
     InvalidHexLength { actual: usize },
+    #[error(
+        "address hex string must be at most {} characters, got {actual}",
+        Address::LENGTH * 2
+    )]
+    HexTooLong { actual: usize },
+    #[error("address hex string contains non-ASCII characters")]
+    NonAsciiCharacter,
     #[error("invalid hex character {c:?} at position {index}")]
     InvalidHexCharacter { c: char, index: usize },
     #[error(
@@ -524,24 +527,29 @@ mod tests {
     }
 
     #[test]
+    fn parse_address_non_ascii() {
+        let result = Address::from_short_hex("0x\u{e9}1");
+        assert_eq!(result, Err(AddressParseError::NonAsciiCharacter));
+
+        let result = Address::from_hex(
+            "0x\u{e9}2a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f3",
+        );
+        assert_eq!(result, Err(AddressParseError::NonAsciiCharacter));
+    }
+
+    #[test]
     fn parse_address_too_long() {
         // 65 hex chars (one more than allowed 64)
         let result = Address::from_short_hex(
             "0x002a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331",
         );
-        assert_eq!(
-            result,
-            Err(AddressParseError::InvalidHexLength { actual: 65 })
-        );
+        assert_eq!(result, Err(AddressParseError::HexTooLong { actual: 65 }));
 
         // 66 hex chars (two more than allowed 64)
         let result = Address::from_short_hex(
             "0x002a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f3316",
         );
-        assert_eq!(
-            result,
-            Err(AddressParseError::InvalidHexLength { actual: 66 })
-        );
+        assert_eq!(result, Err(AddressParseError::HexTooLong { actual: 66 }));
 
         let result = Address::from_hex("0x2");
         assert_eq!(
