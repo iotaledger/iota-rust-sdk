@@ -64,8 +64,7 @@ pub use normalized_move::{
     NormalizedMoveModuleQueryFragment, OpenMoveType,
 };
 pub use object::{
-    ObjectFilter, ObjectKey, ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs,
-    ObjectsQueryFragment,
+    ObjectFilter, ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
 };
 pub use packages::{
     LatestPackageQueryFragment, MovePackageConnection, MovePackageQueryFragment,
