@@ -503,7 +503,8 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
     fn try_from(value: TxBlockEffects) -> Result<Self, Self::Error> {
         let effects = value
             .effects
-            .map(|fx| base64ct::Base64::decode_vec(fx.bcs.unwrap().0.as_str()))
+            .and_then(|fx| fx.bcs)
+            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
             .transpose()?;

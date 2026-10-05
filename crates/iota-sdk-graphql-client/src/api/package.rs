@@ -10,7 +10,7 @@ use iota_types::{Address, MovePackage, Object, Version};
 
 use crate::{
     GraphQLClient, Page,
-    error::GraphQLResult,
+    error::{GraphQLError, GraphQLResult},
     pagination::PaginationFilter,
     query_types::{
         LatestPackageQueryFragment, MoveFunction, MoveModule, MovePackageVersionFilter,
@@ -45,14 +45,13 @@ impl GraphQLClient {
 
         let response = self.run_query(&operation).await?;
 
-        Ok(response
+        response
             .package
             .and_then(|x| x.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
-            .transpose()?
-            .map(|obj| obj.data.into_package()))
+            .map(|bcs| package_from_bcs(&bcs))
+            .transpose()
     }
 
     /// Fetch all versions of package at address (packages that share this
@@ -93,8 +92,8 @@ impl GraphQLClient {
             .collect::<Result<Vec<_>, base64ct::Error>>()?;
         let packages = bcs
             .iter()
-            .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
+            .map(|b| package_from_bcs(b))
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -110,14 +109,13 @@ impl GraphQLClient {
 
         let response = self.run_query(&operation).await?;
 
-        Ok(response
+        response
             .latest_package
             .and_then(|x| x.bcs)
             .map(|bcs| base64ct::Base64::decode_vec(&bcs.0))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
-            .transpose()?
-            .map(|obj| obj.data.into_package()))
+            .map(|bcs| package_from_bcs(&bcs))
+            .transpose()
     }
 
     /// The Move packages that exist in the network, optionally filtered to be
@@ -161,8 +159,8 @@ impl GraphQLClient {
             .collect::<Result<Vec<_>, base64ct::Error>>()?;
         let packages = bcs
             .iter()
-            .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
+            .map(|b| package_from_bcs(b))
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -234,6 +232,14 @@ impl GraphQLClient {
 
         Ok(response.package.and_then(|p| p.module))
     }
+}
+
+/// Decode an object's BCS and return it as a package.
+fn package_from_bcs(bcs: &[u8]) -> GraphQLResult<MovePackage> {
+    bcs::from_bytes::<Object>(bcs)?
+        .data
+        .into_opt_package()
+        .ok_or_else(|| GraphQLError::Deserialization("object is not a package".into()))
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
