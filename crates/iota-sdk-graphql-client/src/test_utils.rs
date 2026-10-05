@@ -7,10 +7,10 @@
 use crate::GraphQLClient;
 
 /// Number of coins expected from a faucet request.
-pub const NUM_COINS_FROM_FAUCET: usize = 5;
+pub(crate) const NUM_COINS_FROM_FAUCET: usize = 5;
 
 /// Create a test client based on the NETWORK environment variable.
-pub fn test_client() -> GraphQLClient {
+pub(crate) fn test_client() -> GraphQLClient {
     let network = std::env::var("NETWORK").unwrap_or_else(|_| "local".to_string());
     match network.as_str() {
         "mainnet" => GraphQLClient::new_mainnet(),
@@ -23,7 +23,7 @@ pub fn test_client() -> GraphQLClient {
 
 /// A pagination filter whose every field differs from the default, so a
 /// query that drops it sends different variables.
-pub fn backward_page() -> crate::PaginationFilter {
+pub(crate) fn backward_page() -> crate::PaginationFilter {
     crate::PaginationFilter {
         direction: crate::Direction::Backward,
         cursor: Some("cursor".to_owned()),
@@ -34,7 +34,7 @@ pub fn backward_page() -> crate::PaginationFilter {
 /// Run `send` against a local server that answers every request with `{}`,
 /// and return the variables of the first request that is not the service
 /// config query, which pagination sends first.
-pub async fn sent_variables<Fut: Future>(
+pub(crate) async fn sent_variables<Fut: Future>(
     operation: &str,
     send: impl FnOnce(GraphQLClient) -> Fut,
 ) -> serde_json::Value {
@@ -85,7 +85,7 @@ async fn answer_one_request(listener: &tokio::net::TcpListener) -> serde_json::V
     serde_json::from_slice(&body).unwrap()
 }
 
-pub fn assert_backward_page(variables: &serde_json::Value) {
+pub(crate) fn assert_backward_page(variables: &serde_json::Value) {
     assert_eq!(variables["before"], "cursor");
     assert_eq!(variables["last"], 7);
     assert!(variables["after"].is_null());
