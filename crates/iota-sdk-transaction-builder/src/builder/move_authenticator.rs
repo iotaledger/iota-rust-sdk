@@ -133,16 +133,14 @@ impl MoveAuthenticatorBuilder {
                 "account must be shared".to_owned(),
             ));
         };
-        Ok(MoveAuthenticator::V1(
-            MoveAuthenticatorV1::new_with_shared_account_object(
-                call_args,
-                self.type_args,
-                SharedObjectReference {
-                    object_id: account.id(),
-                    initial_shared_version: *version,
-                    mutable: false,
-                },
-            ),
-        ))
+        Ok(MoveAuthenticator::V1(MoveAuthenticatorV1::new(
+            call_args,
+            self.type_args,
+            SharedObjectReference {
+                object_id: account.id(),
+                initial_shared_version: *version,
+                mutable: false,
+            },
+        )))
     }
 }
