@@ -4,8 +4,6 @@
 
 //! Coin API implementation.
 
-use std::future::IntoFuture;
-
 use cynic::QueryBuilder;
 use futures::Stream;
 use iota_types::{Address, Identifier, StructTag, framework::Coin};

@@ -4,8 +4,6 @@
 
 //! Dynamic Fields API implementation.
 
-use std::future::IntoFuture;
-
 use base64ct::Encoding;
 use cynic::QueryBuilder;
 use futures::Stream;

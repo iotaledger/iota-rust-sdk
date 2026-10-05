@@ -4,8 +4,6 @@
 
 //! Checkpoints API implementation.
 
-use std::future::IntoFuture;
-
 use cynic::QueryBuilder;
 use futures::Stream;
 use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};

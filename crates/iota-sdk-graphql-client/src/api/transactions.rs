@@ -4,7 +4,7 @@
 
 //! Transactions API implementation.
 
-use std::{future::IntoFuture, time::Duration};
+use std::time::Duration;
 
 use base64ct::Encoding;
 use cynic::{MutationBuilder, QueryBuilder};
