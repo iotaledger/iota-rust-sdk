@@ -95,7 +95,6 @@ pub mod version;
 
 pub use address::{Address, AddressParseError};
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub use bcs_error::BcsError;
 pub use checkpoint::{
     CheckpointCommitment, CheckpointContents, CheckpointContentsV1, CheckpointData,
