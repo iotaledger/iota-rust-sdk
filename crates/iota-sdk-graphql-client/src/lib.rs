@@ -26,7 +26,7 @@ mod test_utils;
 pub use api::move_objects::{ListMoveObjectsQuery, MoveObjectFilter, OwnedMoveObject};
 pub use api::{
     checkpoints::ListCheckpointsQuery,
-    coins::ListCoinsQuery,
+    coins::{ListCoinsQuery, ListGasCoinsQuery},
     dynamic_fields::ListDynamicFieldsQuery,
     events::ListEventsQuery,
     iota_names::ListIotaNamesRegistrationsQuery,

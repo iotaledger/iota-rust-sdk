@@ -18,8 +18,7 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GraphQLClient::coins`] and [`GraphQLClient::gas_coins`].
-    /// Await it to send the request.
+    /// Query for [`GraphQLClient::coins`]. Await it to send the request.
     pub struct ListCoinsQuery {
         client: GraphQLClient,
         owner: Address,
@@ -30,8 +29,7 @@ define_query! {
 }
 
 impl ListCoinsQuery {
-    /// Only return coins of this type. [`GraphQLClient::coins`] defaults to
-    /// every type, [`GraphQLClient::gas_coins`] to IOTA.
+    /// Only return coins of this type. Defaults to every type.
     pub fn coin_type(mut self, coin_type: impl Into<Option<StructTag>>) -> Self {
         self.coin_type = coin_type.into();
         self
@@ -72,6 +70,26 @@ impl ListCoinsQuery {
                 .flat_map(Coin::try_from_object)
                 .collect::<Vec<_>>(),
         ))
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::gas_coins`]. Await it to send the request.
+    pub struct ListGasCoinsQuery {
+        coins: ListCoinsQuery,
+    }
+    output: GraphQLResult<Page<Coin>>;
+}
+
+impl ListGasCoinsQuery {
+    /// Set the page to fetch.
+    pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
+        self.coins = self.coins.pagination(pagination);
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<Page<Coin>> {
+        self.coins.send().await
     }
 }
 
@@ -122,8 +140,10 @@ impl GraphQLClient {
     }
 
     /// Get the list of gas coins for the specified address.
-    pub fn gas_coins(&self, owner: Address) -> ListCoinsQuery {
-        self.coins(owner).coin_type(StructTag::new_gas())
+    pub fn gas_coins(&self, owner: Address) -> ListGasCoinsQuery {
+        ListGasCoinsQuery {
+            coins: self.coins(owner).coin_type(StructTag::new_gas()),
+        }
     }
 
     /// Get the coin metadata for the coin type.
