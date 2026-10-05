@@ -33,6 +33,14 @@ define_query! {
 }
 
 impl ListObjectsQuery {
+    pub(crate) fn new(client: GraphQLClient) -> Self {
+        Self {
+            client,
+            filter: None,
+            pagination: PaginationFilter::default(),
+        }
+    }
+
     /// Only return the objects that match `filter`.
     pub fn filter(mut self, filter: impl Into<Option<ObjectFilter>>) -> Self {
         self.filter = filter.into();
@@ -151,11 +159,7 @@ impl GraphQLClient {
     /// let owned_objects = client.objects().filter(filter).await;
     /// ```
     pub fn objects(&self) -> ListObjectsQuery {
-        ListObjectsQuery {
-            client: self.clone(),
-            filter: None,
-            pagination: PaginationFilter::default(),
-        }
+        ListObjectsQuery::new(self.clone())
     }
 
     /// Return the object's bcs content [`Vec<u8>`] based on the provided

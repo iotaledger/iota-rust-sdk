@@ -54,8 +54,7 @@ impl ListCoinsQuery {
                 Default::default(),
             )
         });
-        self.client
-            .objects()
+        ListObjectsQuery::new(self.client)
             .filter(ObjectFilter {
                 type_tag: Some(type_tag.to_string()),
                 owner: Some(self.owner),

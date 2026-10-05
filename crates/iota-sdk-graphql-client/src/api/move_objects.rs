@@ -104,8 +104,7 @@ impl<T: MoveObject> ListMoveObjectsQuery<T> {
     }
 
     fn objects_query(self) -> ListObjectsQuery {
-        self.client
-            .objects()
+        ListObjectsQuery::new(self.client)
             .filter(self.filter.unwrap_or_default().into_object_filter::<T>())
             .pagination(self.pagination)
     }
