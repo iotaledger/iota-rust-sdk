@@ -111,7 +111,7 @@ pub(crate) fn assert_backward_page(variables: &serde_json::Value) {
     assert!(variables["first"].is_null());
 }
 
-pub fn test_transaction() -> iota_types::Transaction {
+pub(crate) fn test_transaction() -> iota_types::Transaction {
     use iota_types::{
         Address, GasPayment, ObjectDigest, ObjectId, ObjectReference, ProgrammableTransaction,
         Transaction, TransactionExpiration, TransactionKind, TransactionV1, Version,
