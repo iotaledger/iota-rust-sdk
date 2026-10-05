@@ -278,7 +278,7 @@ fn format_policy_name(policy: u8) -> String {
         Ok(UpgradePolicy::Compatible) => "Compatible".to_owned(),
         Ok(UpgradePolicy::Additive) => "Additive".to_owned(),
         Ok(UpgradePolicy::DepOnly) => "Dependency-only".to_owned(),
-        Ok(_) | Err(()) => format!("Unknown ({policy})"),
+        Ok(_) | Err(_) => format!("Unknown ({policy})"),
     }
 }
 

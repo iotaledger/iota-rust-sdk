@@ -15,11 +15,11 @@ func main() {
 
 	address := iota_sdk.AddressZero()
 
-	objectFilter := iota_sdk.ObjectFilter{
+	objectFilter := iota_sdk.GraphQlObjectFilter{
 		Owner: &address,
 	}
-	paginationFilter := iota_sdk.PaginationFilter{
-		Direction: iota_sdk.DirectionForward,
+	paginationFilter := iota_sdk.GraphQlPaginationFilter{
+		Direction: iota_sdk.GraphQlDirectionForward,
 	}
 
 	objectsPage, err := client.Objects(&objectFilter, &paginationFilter)

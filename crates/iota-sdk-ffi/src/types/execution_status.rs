@@ -209,6 +209,15 @@ pub enum ExecutionError {
         value_size: u64,
         max_scaled_size: u64,
     },
+    /// The account object named by a Move authenticator has no authenticator
+    /// function: the object has no authenticator function field, or the field
+    /// cannot be read. Nothing can authenticate the transaction.
+    AuthenticatorFunctionNotFound { object_id: Arc<ObjectId> },
+    /// The account object named by a Move authenticator is not a shared
+    /// object: it is immutable, or owned by an address or by another object.
+    /// An account must be shared so that a transaction carrying a Move
+    /// authenticator is ordered by consensus.
+    AccountNotSharedObject { object_id: Arc<ObjectId> },
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -390,6 +399,16 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 value_size,
                 max_scaled_size,
             },
+            iota_sdk::types::ExecutionError::AuthenticatorFunctionNotFound { object_id } => {
+                Self::AuthenticatorFunctionNotFound {
+                    object_id: Arc::new(object_id.into()),
+                }
+            }
+            iota_sdk::types::ExecutionError::AccountNotSharedObject { object_id } => {
+                Self::AccountNotSharedObject {
+                    object_id: Arc::new(object_id.into()),
+                }
+            }
             _ => unimplemented!(
                 "a new ExecutionError enum variant was added and needs to be handled"
             ),
@@ -533,6 +552,14 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             } => Self::MoveRawValueTooBig {
                 value_size,
                 max_scaled_size,
+            },
+            ExecutionError::AuthenticatorFunctionNotFound { object_id } => {
+                Self::AuthenticatorFunctionNotFound {
+                    object_id: **object_id,
+                }
+            }
+            ExecutionError::AccountNotSharedObject { object_id } => Self::AccountNotSharedObject {
+                object_id: **object_id,
             },
         }
     }
