@@ -88,7 +88,7 @@ impl EventFilter {
 #[cynic(schema = "rpc", graphql_type = "Event")]
 pub struct Event {
     /// The transaction that emitted this event.
-    pub transaction_block: Option<TxBlockDigest>,
+    pub transaction_block: Option<TransactionBlockDigest>,
     pub sending_module: Option<MoveModuleQueryFragment>,
     pub sender: Option<GraphQLAddress>,
     #[cynic(rename = "type")]
@@ -112,6 +112,6 @@ impl Event {
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TxBlockDigest {
+pub struct TransactionBlockDigest {
     pub digest: Option<String>,
 }

@@ -44,7 +44,8 @@ pub use dynamic_fields::{
 };
 pub use epoch::{Epoch, EpochArgs, EpochQueryFragment, EpochSummaryQueryFragment, ValidatorSet};
 pub use events::{
-    Event, EventConnection, EventFilter, EventsQueryArgs, EventsQueryFragment, TxBlockDigest,
+    Event, EventConnection, EventFilter, EventsQueryArgs, EventsQueryFragment,
+    TransactionBlockDigest,
 };
 pub use execute_transaction::{
     ExecuteTransactionArgs, ExecuteTransactionQueryFragment, ExecutionResult,
