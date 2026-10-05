@@ -43,7 +43,7 @@ define_query! {
     /// request.
     pub struct ListActiveValidatorsQuery {
         client: GraphQLClient,
-        epoch: Option<u64>,
+        epoch_number: Option<u64>,
         pagination: PaginationFilter,
     }
     output: GraphQLResult<Page<Validator>>;
@@ -52,7 +52,7 @@ define_query! {
 impl ListActiveValidatorsQuery {
     /// Set the epoch number. Defaults to the current epoch.
     pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch_number.into();
+        self.epoch_number = epoch_number.into();
         self
     }
 
@@ -63,11 +63,11 @@ impl ListActiveValidatorsQuery {
     }
 
     fn operation<'a>(
-        epoch: Option<u64>,
+        epoch_number: Option<u64>,
         pagination: &'a PaginationFilterResponse,
     ) -> cynic::Operation<ActiveValidatorsQueryFragment, ActiveValidatorsArgs<'a>> {
         ActiveValidatorsQueryFragment::build(ActiveValidatorsArgs {
-            id: epoch,
+            id: epoch_number,
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
             first: pagination.first,
@@ -79,21 +79,16 @@ impl ListActiveValidatorsQuery {
         let Self {
             client,
             pagination,
-            epoch,
+            epoch_number,
         } = self;
         let pagination = client.pagination_filter(pagination).await;
         let response = client
-            .run_query(&Self::operation(epoch, &pagination))
+            .run_query(&Self::operation(epoch_number, &pagination))
             .await?;
 
         if let Some(validators) = response.epoch.and_then(|v| v.validator_set) {
             let page_info = validators.active_validators.page_info;
-            let nodes = validators
-                .active_validators
-                .nodes
-                .into_iter()
-                .collect::<Vec<_>>();
-            Ok(Page::new(page_info, nodes))
+            Ok(Page::new(page_info, validators.active_validators.nodes))
         } else {
             Ok(Page::new_empty())
         }
@@ -142,7 +137,7 @@ impl GraphQLClient {
     pub fn active_validators(&self) -> ListActiveValidatorsQuery {
         ListActiveValidatorsQuery {
             client: self.clone(),
-            epoch: None,
+            epoch_number: None,
             pagination: PaginationFilter::default(),
         }
     }

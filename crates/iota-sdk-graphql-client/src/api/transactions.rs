@@ -232,8 +232,8 @@ impl ListTransactionsEffectsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::transactions_data_effects`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::transactions_data_effects`]. Await it to
+    /// send the request.
     pub struct ListTransactionsDataEffectsQuery {
         client: GraphQLClient,
         filter: Option<TransactionsFilter>,
