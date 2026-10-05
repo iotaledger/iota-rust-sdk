@@ -87,7 +87,10 @@ mod tests {
 
     use crate::{
         query_types::EventFilter,
-        test_utils::{assert_backward_page, backward_page, sent_variables, test_client},
+        test_utils::{
+            assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+            test_client,
+        },
     };
 
     #[tokio::test]
@@ -105,6 +108,19 @@ mod tests {
         .await;
         assert_eq!(vars["filter"]["sender"], Address::FRAMEWORK.to_string());
         assert_backward_page(&vars);
+
+        let vars = sent_variables("EventsQueryFragment", |client| async move {
+            let _ = client
+                .events()
+                .filter(EventFilter {
+                    sender: Some(Address::FRAMEWORK),
+                    ..Default::default()
+                })
+                .pagination(forward_page())
+                .await;
+        })
+        .await;
+        assert_forward_page(&vars);
     }
 
     #[tokio::test]

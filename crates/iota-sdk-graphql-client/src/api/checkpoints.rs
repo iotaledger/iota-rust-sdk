@@ -179,7 +179,10 @@ impl GraphQLClient {
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use crate::test_utils::{assert_backward_page, backward_page, sent_variables, test_client};
+    use crate::test_utils::{
+        assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+        test_client,
+    };
 
     #[tokio::test]
     async fn checkpoints_sends_the_pagination() {
@@ -188,6 +191,12 @@ mod tests {
         })
         .await;
         assert_backward_page(&vars);
+
+        let vars = sent_variables("CheckpointsQueryFragment", |client| async move {
+            let _ = client.checkpoints().pagination(forward_page()).await;
+        })
+        .await;
+        assert_forward_page(&vars);
     }
 
     #[test]

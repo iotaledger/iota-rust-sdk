@@ -159,7 +159,8 @@ mod tests {
         client::LOCAL_HOST,
         faucet::FaucetClient,
         test_utils::{
-            NUM_COINS_FROM_FAUCET, assert_backward_page, backward_page, sent_variables, test_client,
+            NUM_COINS_FROM_FAUCET, assert_backward_page, assert_forward_page, backward_page,
+            forward_page, sent_variables, test_client,
         },
     };
 
@@ -179,6 +180,16 @@ mod tests {
             StructTag::new_coin(StructTag::new_gas()).to_string()
         );
         assert_backward_page(&vars);
+
+        let vars = sent_variables("ObjectsQueryFragment", |client| async move {
+            let _ = client
+                .coins(Address::STD)
+                .coin_type(StructTag::new_gas())
+                .pagination(forward_page())
+                .await;
+        })
+        .await;
+        assert_forward_page(&vars);
     }
 
     #[tokio::test]

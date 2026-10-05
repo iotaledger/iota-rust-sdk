@@ -233,7 +233,10 @@ mod tests {
 
     use crate::{
         query_types::ObjectFilter,
-        test_utils::{assert_backward_page, backward_page, sent_variables, test_client},
+        test_utils::{
+            assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+            test_client,
+        },
     };
 
     #[tokio::test]
@@ -248,6 +251,16 @@ mod tests {
         .await;
         assert_eq!(vars["filter"]["owner"], Address::FRAMEWORK.to_string());
         assert_backward_page(&vars);
+
+        let vars = sent_variables("ObjectsQueryFragment", |client| async move {
+            let _ = client
+                .objects()
+                .filter(ObjectFilter::default().with_owner(Address::FRAMEWORK))
+                .pagination(forward_page())
+                .await;
+        })
+        .await;
+        assert_forward_page(&vars);
     }
 
     #[tokio::test]

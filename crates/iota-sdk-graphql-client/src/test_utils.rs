@@ -41,13 +41,18 @@ pub(crate) async fn sent_variables<Fut: Future>(
     let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
     let client = GraphQLClient::new(&format!("http://{}", listener.local_addr().unwrap())).unwrap();
     let server = async {
-        loop {
-            let request = answer_one_request(&listener).await;
-            if request["operationName"] != "ServiceConfigQueryFragment" {
-                assert_eq!(request["operationName"], operation);
-                break request["variables"].clone();
+        let request = async {
+            loop {
+                let request = answer_one_request(&listener).await;
+                if request["operationName"] != "ServiceConfigQueryFragment" {
+                    assert_eq!(request["operationName"], operation);
+                    break request["variables"].clone();
+                }
             }
-        }
+        };
+        tokio::time::timeout(std::time::Duration::from_secs(5), request)
+            .await
+            .expect("no request sent")
     };
     let (variables, _) = tokio::join!(server, send(client));
     variables
@@ -83,6 +88,20 @@ async fn answer_one_request(listener: &tokio::net::TcpListener) -> serde_json::V
         .await
         .unwrap();
     serde_json::from_slice(&body).unwrap()
+}
+
+pub(crate) fn forward_page() -> crate::PaginationFilter {
+    crate::PaginationFilter {
+        direction: crate::Direction::Forward,
+        ..backward_page()
+    }
+}
+
+pub(crate) fn assert_forward_page(variables: &serde_json::Value) {
+    assert_eq!(variables["after"], "cursor");
+    assert_eq!(variables["first"], 7);
+    assert!(variables["before"].is_null());
+    assert!(variables["last"].is_null());
 }
 
 pub(crate) fn assert_backward_page(variables: &serde_json::Value) {

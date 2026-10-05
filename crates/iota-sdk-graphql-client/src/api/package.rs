@@ -447,7 +447,10 @@ mod tests {
 
     use crate::{
         Direction, PaginationFilter,
-        test_utils::{assert_backward_page, backward_page, sent_variables, test_client},
+        test_utils::{
+            assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+            test_client,
+        },
     };
 
     #[tokio::test]
@@ -465,6 +468,17 @@ mod tests {
         assert_eq!(vars["filter"]["afterVersion"], 2);
         assert_eq!(vars["filter"]["beforeVersion"], 5);
         assert_backward_page(&vars);
+
+        let vars = sent_variables("PackageVersionsQueryFragment", |client| async move {
+            let _ = client
+                .package_versions(Address::FRAMEWORK)
+                .after_version(Version::from_u64(2))
+                .before_version(Version::from_u64(5))
+                .pagination(forward_page())
+                .await;
+        })
+        .await;
+        assert_forward_page(&vars);
     }
 
     #[tokio::test]
@@ -481,6 +495,17 @@ mod tests {
         assert_eq!(vars["filter"]["afterCheckpoint"], 2);
         assert_eq!(vars["filter"]["beforeCheckpoint"], 5);
         assert_backward_page(&vars);
+
+        let vars = sent_variables("PackagesQueryFragment", |client| async move {
+            let _ = client
+                .packages()
+                .after_checkpoint(2)
+                .before_checkpoint(5)
+                .pagination(forward_page())
+                .await;
+        })
+        .await;
+        assert_forward_page(&vars);
     }
 
     #[tokio::test]

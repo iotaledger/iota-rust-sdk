@@ -190,7 +190,10 @@ mod tests {
     use iota_move_types::iota_framework::{coin::Coin, iota::IOTA};
 
     use super::*;
-    use crate::test_utils::{assert_backward_page, backward_page, sent_variables, test_client};
+    use crate::test_utils::{
+        assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+        test_client,
+    };
 
     #[tokio::test]
     async fn move_objects_sends_the_type_filter_and_pagination() {
@@ -208,6 +211,16 @@ mod tests {
             Coin::<IOTA>::struct_tag().to_string()
         );
         assert_backward_page(&vars);
+
+        let vars = sent_variables("ObjectsQueryFragment", |client| async move {
+            let _ = client
+                .move_objects::<Coin<IOTA>>()
+                .filter(MoveObjectFilter::default().with_owner(Address::STD))
+                .pagination(forward_page())
+                .await;
+        })
+        .await;
+        assert_forward_page(&vars);
     }
 
     #[tokio::test]

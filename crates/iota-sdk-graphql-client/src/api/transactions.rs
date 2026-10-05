@@ -526,7 +526,10 @@ mod tests {
 
     use crate::{
         query_types::{AddressTransactionRelationship, TransactionsFilter},
-        test_utils::{assert_backward_page, backward_page, sent_variables, test_client},
+        test_utils::{
+            assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+            test_client,
+        },
     };
 
     fn sent_by_framework() -> TransactionsFilter {
@@ -534,7 +537,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn transactions_send_the_filter_and_pagination() {
+    async fn transactions_sends_the_filter_and_pagination() {
         let vars = sent_variables("TransactionBlocksQueryFragment", |client| async move {
             let _ = client
                 .transactions()
@@ -549,6 +552,19 @@ mod tests {
         );
         assert_backward_page(&vars);
 
+        let vars = sent_variables("TransactionBlocksQueryFragment", |client| async move {
+            let _ = client
+                .transactions()
+                .filter(sent_by_framework())
+                .pagination(forward_page())
+                .await;
+        })
+        .await;
+        assert_forward_page(&vars);
+    }
+
+    #[tokio::test]
+    async fn transactions_effects_sends_the_filter_and_pagination() {
         let vars = sent_variables(
             "TransactionBlocksEffectsQueryFragment",
             |client| async move {
@@ -567,6 +583,22 @@ mod tests {
         assert_backward_page(&vars);
 
         let vars = sent_variables(
+            "TransactionBlocksEffectsQueryFragment",
+            |client| async move {
+                let _ = client
+                    .transactions_effects()
+                    .filter(sent_by_framework())
+                    .pagination(forward_page())
+                    .await;
+            },
+        )
+        .await;
+        assert_forward_page(&vars);
+    }
+
+    #[tokio::test]
+    async fn transactions_data_effects_sends_the_filter_and_pagination() {
+        let vars = sent_variables(
             "TransactionBlocksWithEffectsQueryFragment",
             |client| async move {
                 let _ = client
@@ -582,6 +614,19 @@ mod tests {
             Address::FRAMEWORK.to_string()
         );
         assert_backward_page(&vars);
+
+        let vars = sent_variables(
+            "TransactionBlocksWithEffectsQueryFragment",
+            |client| async move {
+                let _ = client
+                    .transactions_data_effects()
+                    .filter(sent_by_framework())
+                    .pagination(forward_page())
+                    .await;
+            },
+        )
+        .await;
+        assert_forward_page(&vars);
     }
 
     #[tokio::test]
@@ -602,6 +647,17 @@ mod tests {
             Address::FRAMEWORK.to_string()
         );
         assert_backward_page(&vars);
+
+        let vars = sent_variables("AddressTransactionsQueryFragment", |client| async move {
+            let _ = client
+                .address_transactions(Address::STD)
+                .relation(AddressTransactionRelationship::Recv)
+                .filter(sent_by_framework())
+                .pagination(forward_page())
+                .await;
+        })
+        .await;
+        assert_forward_page(&vars);
     }
 
     #[tokio::test]

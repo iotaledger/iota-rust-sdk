@@ -152,7 +152,10 @@ impl GraphQLClient {
 mod tests {
     use crate::{
         GraphQLClient,
-        test_utils::{assert_backward_page, backward_page, sent_variables, test_client},
+        test_utils::{
+            assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+            test_client,
+        },
     };
 
     #[tokio::test]
@@ -167,6 +170,16 @@ mod tests {
         .await;
         assert_eq!(vars["id"], 3);
         assert_backward_page(&vars);
+
+        let vars = sent_variables("ActiveValidatorsQueryFragment", |client| async move {
+            let _ = client
+                .active_validators()
+                .epoch_number(3)
+                .pagination(forward_page())
+                .await;
+        })
+        .await;
+        assert_forward_page(&vars);
     }
 
     #[test]

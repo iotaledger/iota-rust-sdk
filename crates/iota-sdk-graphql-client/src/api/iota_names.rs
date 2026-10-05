@@ -148,7 +148,9 @@ impl GraphQLClient {
 mod tests {
     use iota_types::Address;
 
-    use crate::test_utils::{assert_backward_page, backward_page, sent_variables};
+    use crate::test_utils::{
+        assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+    };
 
     #[tokio::test]
     async fn iota_names_registrations_sends_the_address_and_pagination() {
@@ -164,5 +166,17 @@ mod tests {
         .await;
         assert_eq!(vars["address"], Address::FRAMEWORK.to_string());
         assert_backward_page(&vars);
+
+        let vars = sent_variables(
+            "IotaNamesAddressRegistrationsQueryFragment",
+            |client| async move {
+                let _ = client
+                    .iota_names_registrations(Address::FRAMEWORK)
+                    .pagination(forward_page())
+                    .await;
+            },
+        )
+        .await;
+        assert_forward_page(&vars);
     }
 }
