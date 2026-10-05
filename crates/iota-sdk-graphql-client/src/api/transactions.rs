@@ -59,11 +59,11 @@ impl ListTransactionsQuery {
 
     fn operation(
         filter: Option<TransactionsFilter>,
-        pagination: &PaginationFilterResponse,
+        pagination: PaginationFilterResponse,
     ) -> cynic::Operation<TransactionBlocksQueryFragment, TransactionBlocksQueryArgs> {
         TransactionBlocksQueryFragment::build(TransactionBlocksQueryArgs {
-            after: pagination.after.clone(),
-            before: pagination.before.clone(),
+            after: pagination.after,
+            before: pagination.before,
             filter: filter.map(Into::into),
             first: pagination.first,
             last: pagination.last,
@@ -78,7 +78,7 @@ impl ListTransactionsQuery {
         } = self;
         let pagination = client.pagination_filter(pagination).await;
         let response = client
-            .run_query(&Self::operation(filter, &pagination))
+            .run_query(&Self::operation(filter, pagination))
             .await?;
 
         let txc = response.transaction_blocks;
@@ -130,13 +130,13 @@ impl ListAddressTransactionsQuery {
         address: Address,
         relation: Option<AddressTransactionRelationship>,
         filter: Option<TransactionsFilter>,
-        pagination: &PaginationFilterResponse,
+        pagination: PaginationFilterResponse,
     ) -> cynic::Operation<AddressTransactionsQueryFragment, AddressTransactionsQueryArgs> {
         AddressTransactionsQueryFragment::build(AddressTransactionsQueryArgs {
             address,
             relation,
-            after: pagination.after.clone(),
-            before: pagination.before.clone(),
+            after: pagination.after,
+            before: pagination.before,
             filter: filter.map(Into::into),
             first: pagination.first,
             last: pagination.last,
@@ -153,7 +153,7 @@ impl ListAddressTransactionsQuery {
         } = self;
         let pagination = client.pagination_filter(pagination).await;
         let response = client
-            .run_query(&Self::operation(address, relation, filter, &pagination))
+            .run_query(&Self::operation(address, relation, filter, pagination))
             .await?;
 
         let Some(AddressTransactionBlocksQueryFragment { transaction_blocks }) = response.address
@@ -197,11 +197,11 @@ impl ListTransactionsEffectsQuery {
 
     fn operation(
         filter: Option<TransactionsFilter>,
-        pagination: &PaginationFilterResponse,
+        pagination: PaginationFilterResponse,
     ) -> cynic::Operation<TransactionBlocksEffectsQueryFragment, TransactionBlocksQueryArgs> {
         TransactionBlocksEffectsQueryFragment::build(TransactionBlocksQueryArgs {
-            after: pagination.after.clone(),
-            before: pagination.before.clone(),
+            after: pagination.after,
+            before: pagination.before,
             filter: filter.map(Into::into),
             first: pagination.first,
             last: pagination.last,
@@ -216,7 +216,7 @@ impl ListTransactionsEffectsQuery {
         } = self;
         let pagination = client.pagination_filter(pagination).await;
         let response = client
-            .run_query(&Self::operation(filter, &pagination))
+            .run_query(&Self::operation(filter, pagination))
             .await?;
 
         let txc = response.transaction_blocks;
@@ -257,12 +257,12 @@ impl ListTransactionsDataEffectsQuery {
 
     fn operation(
         filter: Option<TransactionsFilter>,
-        pagination: &PaginationFilterResponse,
+        pagination: PaginationFilterResponse,
     ) -> cynic::Operation<TransactionBlocksWithEffectsQueryFragment, TransactionBlocksQueryArgs>
     {
         TransactionBlocksWithEffectsQueryFragment::build(TransactionBlocksQueryArgs {
-            after: pagination.after.clone(),
-            before: pagination.before.clone(),
+            after: pagination.after,
+            before: pagination.before,
             filter: filter.map(Into::into),
             first: pagination.first,
             last: pagination.last,
@@ -277,7 +277,7 @@ impl ListTransactionsDataEffectsQuery {
         } = self;
         let pagination = client.pagination_filter(pagination).await;
         let response = client
-            .run_query(&Self::operation(filter, &pagination))
+            .run_query(&Self::operation(filter, pagination))
             .await?;
 
         let txc = response.transaction_blocks;

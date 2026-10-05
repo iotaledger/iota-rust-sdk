@@ -45,13 +45,13 @@ impl ListIotaNamesRegistrationsQuery {
 
     fn operation(
         address: Address,
-        pagination: &PaginationFilterResponse,
+        pagination: PaginationFilterResponse,
     ) -> cynic::Operation<IotaNamesAddressRegistrationsQueryFragment, IotaNamesRegistrationsArgs>
     {
         IotaNamesAddressRegistrationsQueryFragment::build(IotaNamesRegistrationsArgs {
             address,
-            after: pagination.after.clone(),
-            before: pagination.before.clone(),
+            after: pagination.after,
+            before: pagination.before,
             first: pagination.first,
             last: pagination.last,
         })
@@ -65,7 +65,7 @@ impl ListIotaNamesRegistrationsQuery {
         } = self;
         let pagination = client.pagination_filter(pagination).await;
         let response = client
-            .run_query(&Self::operation(address, &pagination))
+            .run_query(&Self::operation(address, pagination))
             .await?;
 
         let IotaNamesAddressRegistrationsQueryFragment {

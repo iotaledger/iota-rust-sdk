@@ -47,11 +47,11 @@ impl ListObjectsQuery {
 
     fn operation(
         filter: Option<ObjectFilter>,
-        pagination: &PaginationFilterResponse,
+        pagination: PaginationFilterResponse,
     ) -> cynic::Operation<ObjectsQueryFragment, ObjectsQueryArgs> {
         ObjectsQueryFragment::build(ObjectsQueryArgs {
-            after: pagination.after.clone(),
-            before: pagination.before.clone(),
+            after: pagination.after,
+            before: pagination.before,
             filter,
             first: pagination.first,
             last: pagination.last,
@@ -66,7 +66,7 @@ impl ListObjectsQuery {
         } = self;
         let pagination = client.pagination_filter(pagination).await;
         let response = client
-            .run_query(&Self::operation(filter, &pagination))
+            .run_query(&Self::operation(filter, pagination))
             .await?;
 
         let oc = response.objects;
