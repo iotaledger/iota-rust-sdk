@@ -813,7 +813,6 @@ crate::impl_tree_display!(
 
 // TODO improve ser/de to do borrowing to avoid clones where possible
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
