@@ -82,7 +82,7 @@ impl GraphQLClient {
                     // changes.
                     let mut current_tx: Option<String> = None;
                     let mapped = subscription.map(move |item| -> GraphQLResult<Outcome<Event>> {
-                        let data = response_to_err(item?)?;
+                        let data = response_to_err(item.map_err(GraphQLError::subscription)?)?;
                         Ok(match data.events {
                             EventSubscriptionPayload::Event(event) => {
                                 let digest = event.transaction_digest();
@@ -140,7 +140,7 @@ impl GraphQLClient {
 
                     let mapped =
                         subscription.map(|item| -> GraphQLResult<Outcome<SignedTransaction>> {
-                            let data = response_to_err(item?)?;
+                            let data = response_to_err(item.map_err(GraphQLError::subscription)?)?;
                             Ok(match data.transactions {
                                 TransactionBlockSubscriptionPayload::TransactionBlock(block) => {
                                     let cursor = block.digest.clone();
@@ -190,9 +190,10 @@ impl GraphQLClient {
         Operation: graphql_ws_client::graphql::GraphqlOperation + Unpin + Send + 'static,
     {
         let connection = connect(&self.ws_url()?).await?;
-        Ok(graphql_ws_client::Client::build(connection)
+        graphql_ws_client::Client::build(connection)
             .subscribe(operation)
-            .await?)
+            .await
+            .map_err(GraphQLError::subscription)
     }
 }
 
@@ -206,18 +207,25 @@ impl GraphQLClient {
 async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection + Send + 'static> {
     use tokio_tungstenite::tungstenite::{client::IntoClientRequest, http::HeaderValue};
 
-    let mut request = url.as_str().into_client_request()?;
+    let mut request = url
+        .as_str()
+        .into_client_request()
+        .map_err(GraphQLError::subscription)?;
     request.headers_mut().insert(
         "Sec-WebSocket-Protocol",
         HeaderValue::from_static(WS_PROTOCOL),
     );
-    let (connection, _response) = tokio_tungstenite::connect_async(request).await?;
+    let (connection, _response) = tokio_tungstenite::connect_async(request)
+        .await
+        .map_err(GraphQLError::subscription)?;
     Ok(connection)
 }
 
 #[cfg(target_arch = "wasm32")]
 async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection + Send + 'static> {
-    let connection = ws_stream_wasm::WsMeta::connect(url.as_str(), Some(vec![WS_PROTOCOL])).await?;
+    let connection = ws_stream_wasm::WsMeta::connect(url.as_str(), Some(vec![WS_PROTOCOL]))
+        .await
+        .map_err(GraphQLError::subscription)?;
     Ok(graphql_ws_client::ws_stream_wasm::Connection::new(connection).await)
 }
 

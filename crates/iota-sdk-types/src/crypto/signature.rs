@@ -452,7 +452,6 @@ impl UserSignature {
 }
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
     use std::{borrow::Cow, str::FromStr};
 

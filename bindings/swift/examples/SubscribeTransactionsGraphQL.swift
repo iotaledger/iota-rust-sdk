@@ -19,7 +19,7 @@ struct SubscribeTransactionsExample {
     do {
       let client = GraphQlClient.newLocalnet()
       let subscription = client.transactionsSubscription(
-        filter: SubscriptionTransactionFilter(kind: .programmableTx))
+        filter: GraphQlSubscriptionTransactionFilter(kind: .programmableTx))
 
       let activity = Task {
         // Give the subscription a moment to connect before generating activity,
