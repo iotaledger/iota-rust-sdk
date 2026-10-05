@@ -162,9 +162,7 @@ impl crate::ToFromBytes for Ed25519PrivateKey {
     fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error> {
         let bytes = bytes.as_ref();
         if bytes.len() != Self::LENGTH {
-            return Err(crate::PrivateKeyError::InvalidScheme(
-                "invalid ed25519 key length".to_string(),
-            ));
+            return Err(SignatureError::from_source("invalid ed25519 key length").into());
         }
 
         let mut arr = [0u8; Self::LENGTH];
