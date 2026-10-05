@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use iota_types::TransactionDigest;
+
 use crate::query_types::{
     Address, Base64, DateTime, GraphQLAddress, JsonValue, MoveData, MoveType, PageInfo,
     normalized_move::MoveModuleQueryFragment, schema,
@@ -85,6 +87,8 @@ impl EventFilter {
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Event")]
 pub struct Event {
+    /// The transaction that emitted this event.
+    pub transaction_block: Option<TxBlockDigest>,
     pub sending_module: Option<MoveModuleQueryFragment>,
     pub sender: Option<GraphQLAddress>,
     #[cynic(rename = "type")]
@@ -93,4 +97,21 @@ pub struct Event {
     pub timestamp: Option<DateTime>,
     pub data: MoveData,
     pub json: JsonValue,
+}
+
+impl Event {
+    /// The digest of the transaction that emitted this event, which can be
+    /// passed as `start_after` to resume an events stream after it.
+    pub fn transaction_digest(&self) -> Option<TransactionDigest> {
+        self.transaction_block
+            .as_ref()
+            .and_then(|tx| tx.digest.as_deref())
+            .and_then(|digest| digest.parse().ok())
+    }
+}
+
+#[derive(Clone, cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
+pub struct TxBlockDigest {
+    pub digest: Option<String>,
 }

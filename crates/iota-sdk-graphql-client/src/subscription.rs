@@ -5,15 +5,15 @@
 //! a WebSocket (`graphql-transport-ws`).
 //!
 //! Unlike the paginated `events` / `transactions` page methods, these stream
-//! data as it arrives and never terminate on their own. The stream
-//! transparently reconnects on disconnect, resuming from the last item it
-//! delivered via the subscription's `startAfter` cursor.
+//! data as it arrives. The stream transparently reconnects on disconnect,
+//! resuming from the last item it delivered via the subscription's
+//! `startAfter` cursor, and ends only on an error reconnecting cannot fix.
 
 use std::{future::Future, time::Duration};
 
 use cynic::SubscriptionBuilder;
 use futures::{Stream, StreamExt};
-use iota_types::SignedTransaction;
+use iota_types::{SignedTransaction, TransactionDigest};
 use reqwest::Url;
 
 use crate::{
@@ -54,8 +54,12 @@ impl GraphQLClient {
     ///
     /// The stream yields events as they arrive and reconnects automatically on
     /// disconnect. `start_after` optionally resumes the stream from the
-    /// transaction immediately following the given transaction digest;
+    /// transaction immediately following the given transaction digest, such as
+    /// [`Event::transaction_digest`] of the last event processed;
     /// thereafter the stream tracks its own resume point.
+    ///
+    /// Transport failures and [`GraphQLError::Lagged`] are yielded and the
+    /// stream continues; any other error is yielded and ends the stream.
     ///
     /// Note: subscriptions are served over a WebSocket, which the node has to
     /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
@@ -63,7 +67,7 @@ impl GraphQLClient {
     pub fn events_stream(
         &self,
         filter: impl Into<Option<SubscriptionEventFilter>>,
-        start_after: impl Into<Option<String>>,
+        start_after: impl Into<Option<TransactionDigest>>,
     ) -> impl Stream<Item = GraphQLResult<Event>> + Unpin + '_ {
         let filter = filter.into();
         reconnecting_subscription(
@@ -85,16 +89,18 @@ impl GraphQLClient {
                         let data = response_to_err(item.map_err(GraphQLError::subscription)?)?;
                         Ok(match data.events {
                             EventSubscriptionPayload::Event(event) => {
-                                let digest = event.transaction_digest();
+                                let digest = event
+                                    .transaction_block
+                                    .as_ref()
+                                    .and_then(|tx| tx.digest.clone());
                                 let mut cursor = None;
-                                if let Some(new) = &digest
-                                    && current_tx.as_deref() != Some(new.as_str())
+                                if let Some(new) = digest
+                                    && current_tx.as_ref() != Some(&new)
                                 {
-                                    cursor = current_tx.take();
-                                    current_tx = Some(new.clone());
+                                    cursor = current_tx.replace(new);
                                 }
                                 Outcome::Item {
-                                    value: Event::from(*event),
+                                    value: *event,
                                     cursor,
                                 }
                             }
@@ -107,7 +113,7 @@ impl GraphQLClient {
                     Ok(mapped.boxed())
                 }
             },
-            start_after.into(),
+            start_after.into().map(|digest| digest.to_string()),
         )
     }
 
@@ -119,13 +125,16 @@ impl GraphQLClient {
     /// from the transaction immediately following the given digest; thereafter
     /// the stream tracks its own resume point.
     ///
+    /// Transport failures and [`GraphQLError::Lagged`] are yielded and the
+    /// stream continues; any other error is yielded and ends the stream.
+    ///
     /// Note: subscriptions are served over a WebSocket, which the node has to
     /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
     /// when it is available.
     pub fn transactions_stream(
         &self,
         filter: impl Into<Option<SubscriptionTransactionFilter>>,
-        start_after: impl Into<Option<String>>,
+        start_after: impl Into<Option<TransactionDigest>>,
     ) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin + '_ {
         let filter = filter.into();
         reconnecting_subscription(
@@ -158,7 +167,7 @@ impl GraphQLClient {
                     Ok(mapped.boxed())
                 }
             },
-            start_after.into(),
+            start_after.into().map(|digest| digest.to_string()),
         )
     }
 
@@ -232,9 +241,9 @@ async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection 
 /// Wrap a connect-and-subscribe closure in an auto-reconnecting stream.
 ///
 /// `connect` is called with the current resume cursor on every (re)connection
-/// and must yield a stream of decoded [`Outcome`]s. Connection and transport
-/// errors are surfaced to the consumer and then trigger a backed-off reconnect;
-/// the stream itself never terminates.
+/// and must yield a stream of decoded [`Outcome`]s. Transport errors are
+/// surfaced to the consumer and then trigger a backed-off reconnect; any other
+/// error is surfaced and ends the stream.
 fn reconnecting_subscription<'a, T, C, Fut, S>(
     connect: C,
     initial_cursor: Option<String>,
@@ -267,16 +276,122 @@ where
                             }),
                             Ok(Outcome::Skip) => {}
                             Err(error) => {
+                                let reconnect = is_transport_error(&error);
                                 yield Err(error);
+                                if !reconnect {
+                                    return;
+                                }
                                 break;
                             }
                         }
                     }
                 }
-                Err(error) => yield Err(error),
+                Err(error) => {
+                    let reconnect = is_transport_error(&error);
+                    yield Err(error);
+                    if !reconnect {
+                        return;
+                    }
+                }
             }
             crate::wait::sleep(backoff).await;
             backoff = (backoff * 2).min(MAX_BACKOFF);
         }
     })
+}
+
+/// Whether `error` is a transport failure that reconnecting can fix.
+fn is_transport_error(error: &GraphQLError) -> bool {
+    matches!(error, GraphQLError::Subscription(_))
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use std::cell::Cell;
+
+    use futures::{StreamExt, stream};
+
+    use super::*;
+
+    #[tokio::test]
+    async fn fatal_connect_error_ends_the_stream() {
+        let attempts = Cell::new(0);
+        let mut stream = reconnecting_subscription(
+            |_| {
+                attempts.set(attempts.get() + 1);
+                async {
+                    GraphQLResult::<stream::Empty<GraphQLResult<Outcome<()>>>>::Err(
+                        GraphQLError::UnsupportedSubscriptionScheme("ftp".to_owned()),
+                    )
+                }
+            },
+            None,
+        );
+
+        assert!(matches!(
+            stream.next().await,
+            Some(Err(GraphQLError::UnsupportedSubscriptionScheme(_)))
+        ));
+        assert!(stream.next().await.is_none());
+        assert_eq!(attempts.get(), 1);
+    }
+
+    #[tokio::test]
+    async fn fatal_item_error_ends_the_stream() {
+        let mut stream = reconnecting_subscription(
+            |_| async {
+                Ok(stream::iter([
+                    Ok(Outcome::Item {
+                        value: 1,
+                        cursor: None,
+                    }),
+                    Err(GraphQLError::EmptyResponse),
+                    Ok(Outcome::Item {
+                        value: 2,
+                        cursor: None,
+                    }),
+                ]))
+            },
+            None,
+        );
+
+        assert!(matches!(stream.next().await, Some(Ok(1))));
+        assert!(matches!(
+            stream.next().await,
+            Some(Err(GraphQLError::EmptyResponse))
+        ));
+        assert!(stream.next().await.is_none());
+    }
+
+    #[tokio::test]
+    async fn transport_error_reconnects_from_the_cursor() {
+        let cursors = std::cell::RefCell::new(Vec::new());
+        let mut stream = reconnecting_subscription(
+            |cursor| {
+                cursors.borrow_mut().push(cursor);
+                async {
+                    Ok(stream::iter([
+                        Ok(Outcome::Item {
+                            value: (),
+                            cursor: Some("tx".to_owned()),
+                        }),
+                        Err(GraphQLError::subscription("connection reset")),
+                    ]))
+                }
+            },
+            Some("start".to_owned()),
+        );
+
+        assert!(matches!(stream.next().await, Some(Ok(()))));
+        assert!(matches!(
+            stream.next().await,
+            Some(Err(GraphQLError::Subscription(_)))
+        ));
+        assert!(matches!(stream.next().await, Some(Ok(()))));
+        drop(stream);
+        assert_eq!(
+            *cursors.borrow(),
+            [Some("start".to_owned()), Some("tx".to_owned())]
+        );
+    }
 }

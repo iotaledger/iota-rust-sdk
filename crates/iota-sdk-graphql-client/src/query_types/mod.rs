@@ -43,7 +43,9 @@ pub use dynamic_fields::{
     DynamicFieldsOwnerQueryFragment, DynamicObjectFieldQueryFragment,
 };
 pub use epoch::{Epoch, EpochArgs, EpochQueryFragment, EpochSummaryQueryFragment, ValidatorSet};
-pub use events::{Event, EventConnection, EventFilter, EventsQueryArgs, EventsQueryFragment};
+pub use events::{
+    Event, EventConnection, EventFilter, EventsQueryArgs, EventsQueryFragment, TxBlockDigest,
+};
 pub use execute_transaction::{
     ExecuteTransactionArgs, ExecuteTransactionQueryFragment, ExecutionResult,
 };
@@ -79,9 +81,8 @@ use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQueryFragment};
 pub use subscriptions::{
     EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs, Lagged,
-    SubscriptionEvent, SubscriptionEventFilter, SubscriptionTransactionBlock,
-    SubscriptionTransactionFilter, TransactionBlockSubscriptionPayload, TransactionsSubscription,
-    TransactionsSubscriptionArgs,
+    SubscriptionEventFilter, SubscriptionTransactionBlock, SubscriptionTransactionFilter,
+    TransactionBlockSubscriptionPayload, TransactionsSubscription, TransactionsSubscriptionArgs,
 };
 pub use transaction::{
     AddressTransactionBlocksQueryFragment, AddressTransactionRelationship,

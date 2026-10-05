@@ -536,12 +536,20 @@ pub struct GraphQLEvent {
     pub data: String,
     /// Representation of a Move value in JSON
     pub json: String,
+    /// Digest of the transaction that emitted this event, which can be passed
+    /// as `start_after` to resume an events subscription after it.
+    #[uniffi(default = None)]
+    pub transaction_digest: Option<Arc<TransactionDigest>>,
 }
 
 impl TryFrom<iota_sdk::graphql_client::query_types::Event> for GraphQLEvent {
     type Error = crate::error::SdkFfiError;
 
     fn try_from(value: iota_sdk::graphql_client::query_types::Event) -> crate::error::Result<Self> {
+        let transaction_digest = value
+            .transaction_digest()
+            .map(TransactionDigest::from)
+            .map(Arc::new);
         let (package_id, module) = match value.sending_module {
             Some(sending_module) => (
                 Some(Arc::new(ObjectId(iota_sdk::types::ObjectId::from(
@@ -561,6 +569,7 @@ impl TryFrom<iota_sdk::graphql_client::query_types::Event> for GraphQLEvent {
             timestamp: value.timestamp.map(|t| t.0),
             data: value.data.0.to_string(),
             json: value.json.to_string(),
+            transaction_digest,
         })
     }
 }

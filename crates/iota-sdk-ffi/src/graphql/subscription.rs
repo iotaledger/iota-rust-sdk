@@ -25,7 +25,7 @@ use crate::{
         query_types::{GraphQLEvent, GraphQLTransactionBlockKindInput},
     },
     stream::StreamHandle,
-    types::{address::Address, transaction::SignedTransaction},
+    types::{address::Address, digest::TransactionDigest, transaction::SignedTransaction},
 };
 
 /// Filter incoming events in a subscription. Exactly one field must be set.
@@ -126,8 +126,8 @@ macro_rules! define_subscription {
 
         /// A live subscription.
         ///
-        /// Call `next` in a loop to receive updates; it only returns `None` once
-        /// `cancel` has been called, since the subscription itself never ends.
+        /// Call `next` in a loop to receive updates; it returns `None` once
+        /// `cancel` has been called or after it raised an error.
         #[derive(uniffi::Object)]
         pub struct $name(StreamHandle<SubscriptionStream<$item>>);
 
@@ -141,9 +141,9 @@ macro_rules! define_subscription {
             /// between them.
             ///
             /// Raises for errors the subscription cannot recover from by
-            /// itself, such as a rejected filter. The subscription stays
-            /// usable afterwards, so a caller that considers the error
-            /// transient can keep calling `next`.
+            /// itself, such as a rejected filter. The subscription has ended
+            /// then, and later calls return `None`; open a new one, passing
+            /// `start_after`, to resume.
             pub async fn next(&self) -> Result<Option<$update>> {
                 match self.0.next().await {
                     Some(Ok(item)) => Ok(Some($update::$variant {
@@ -221,7 +221,7 @@ fn is_recoverable(error: &iota_sdk::graphql_client::error::GraphQLError) -> bool
 fn open_events(
     client: iota_sdk::graphql_client::GraphQLClient,
     filter: Option<GraphQLSubscriptionEventFilter>,
-    start_after: Option<String>,
+    start_after: Option<iota_sdk::types::TransactionDigest>,
 ) -> SubscriptionStream<iota_sdk::graphql_client::query_types::Event> {
     let filter = filter.map(Into::into);
     box_stream(async_stream::stream! {
@@ -237,7 +237,7 @@ fn open_events(
 fn open_transactions(
     client: iota_sdk::graphql_client::GraphQLClient,
     filter: Option<GraphQLSubscriptionTransactionFilter>,
-    start_after: Option<String>,
+    start_after: Option<iota_sdk::types::TransactionDigest>,
 ) -> SubscriptionStream<iota_sdk::types::SignedTransaction> {
     let filter = filter.map(Into::into);
     box_stream(async_stream::stream! {
@@ -254,8 +254,9 @@ impl GraphQLClient {
     /// Subscribe to a live stream of events matching the (optional) filter.
     ///
     /// `start_after` optionally resumes from the transaction immediately
-    /// following the given transaction digest; thereafter the subscription
-    /// tracks its own resume point across reconnects.
+    /// following the given transaction digest, such as the `transaction_digest`
+    /// of the last event processed; thereafter the subscription tracks its own
+    /// resume point across reconnects.
     ///
     /// Note: subscriptions are served over a WebSocket, which the node has to
     /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
@@ -264,10 +265,10 @@ impl GraphQLClient {
     pub fn events_subscription(
         &self,
         filter: Option<GraphQLSubscriptionEventFilter>,
-        start_after: Option<String>,
+        start_after: Option<Arc<TransactionDigest>>,
     ) -> GraphQLEventSubscription {
         let client = (*self.client()).clone();
-        GraphQLEventSubscription::new(open_events(client, filter, start_after))
+        GraphQLEventSubscription::new(open_events(client, filter, start_after.map(|d| **d)))
     }
 
     /// Subscribe to a live stream of transactions matching the (optional)
@@ -284,9 +285,13 @@ impl GraphQLClient {
     pub fn transactions_subscription(
         &self,
         filter: Option<GraphQLSubscriptionTransactionFilter>,
-        start_after: Option<String>,
+        start_after: Option<Arc<TransactionDigest>>,
     ) -> GraphQLTransactionSubscription {
         let client = (*self.client()).clone();
-        GraphQLTransactionSubscription::new(open_transactions(client, filter, start_after))
+        GraphQLTransactionSubscription::new(open_transactions(
+            client,
+            filter,
+            start_after.map(|d| **d),
+        ))
     }
 }

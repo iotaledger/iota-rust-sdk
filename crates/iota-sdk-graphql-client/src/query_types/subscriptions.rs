@@ -12,10 +12,7 @@ use iota_types::{SenderSignedTransaction, SignedTransaction};
 
 use crate::{
     error::{self, GraphQLError},
-    query_types::{
-        Address, Base64, DateTime, Event, GraphQLAddress, JsonValue, MoveData, MoveType,
-        TransactionBlockKindInput, normalized_move::MoveModuleQueryFragment, schema,
-    },
+    query_types::{Address, Base64, Event, TransactionBlockKindInput, schema},
 };
 
 // ===========================================================================
@@ -138,7 +135,7 @@ impl SubscriptionTransactionFilter {
 #[cynic(schema = "rpc", graphql_type = "EventSubscriptionPayload")]
 #[non_exhaustive]
 pub enum EventSubscriptionPayload {
-    Event(Box<SubscriptionEvent>),
+    Event(Box<Event>),
     Lagged(Lagged),
     #[cynic(fallback)]
     Unknown,
@@ -167,46 +164,6 @@ pub struct Lagged {
 // Payload bodies
 // ===========================================================================
 
-/// An event as delivered over a subscription. Mirrors [`Event`] but also
-/// selects the emitting transaction's digest, which is used as the stream
-/// recovery cursor (`startAfter`).
-#[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Event")]
-pub struct SubscriptionEvent {
-    pub transaction_block: Option<TxBlockDigest>,
-    pub sending_module: Option<MoveModuleQueryFragment>,
-    pub sender: Option<GraphQLAddress>,
-    #[cynic(rename = "type")]
-    pub move_type: MoveType,
-    pub bcs: Base64,
-    pub timestamp: Option<DateTime>,
-    pub data: MoveData,
-    pub json: JsonValue,
-}
-
-impl SubscriptionEvent {
-    /// Digest of the transaction that emitted this event, if available.
-    pub(crate) fn transaction_digest(&self) -> Option<String> {
-        self.transaction_block
-            .as_ref()
-            .and_then(|tb| tb.digest.clone())
-    }
-}
-
-impl From<SubscriptionEvent> for Event {
-    fn from(event: SubscriptionEvent) -> Self {
-        Event {
-            sending_module: event.sending_module,
-            sender: event.sender,
-            move_type: event.move_type,
-            bcs: event.bcs,
-            timestamp: event.timestamp,
-            data: event.data,
-            json: event.json,
-        }
-    }
-}
-
 /// A transaction block as delivered over a subscription. Selects the digest
 /// (used as the stream recovery cursor) alongside the `SenderSignedData` BCS
 /// that a [`SignedTransaction`] is rebuilt from.
@@ -234,10 +191,4 @@ impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
             Err(GraphQLError::EmptyResponseField("transaction bcs"))
         }
     }
-}
-
-#[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TxBlockDigest {
-    pub digest: Option<String>,
 }
