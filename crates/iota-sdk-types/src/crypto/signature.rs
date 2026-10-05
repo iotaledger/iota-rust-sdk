@@ -307,7 +307,7 @@ impl SignatureScheme {
             0x04 => Ok(Self::Bls12381),
             0x06 => Ok(Self::PasskeyAuthenticator),
             0x07 => Ok(Self::MoveAuthenticator),
-            invalid => Err(SignatureSchemeError::flag(invalid)),
+            invalid => Err(SignatureSchemeError::Flag(invalid)),
         }
     }
 
@@ -345,17 +345,12 @@ impl super::PasskeyPublicKey {
 /// Error returned when a byte flag or a name does not correspond to a known
 /// [`SignatureScheme`].
 #[derive(Clone, Debug, Eq, Hash, PartialEq, thiserror::Error)]
+#[non_exhaustive]
 pub enum SignatureSchemeError {
     #[error("invalid signature scheme: {0:02x}")]
     Flag(u8),
     #[error("invalid signature scheme: {0:?}")]
     Name(String),
-}
-
-impl SignatureSchemeError {
-    fn flag(flag: u8) -> Self {
-        Self::Flag(flag)
-    }
 }
 
 /// A signature from a user
@@ -432,13 +427,13 @@ impl UserSignature {
                     Ok(PublicKey::Secp256r1(*public_key))
                 }
             },
-            UserSignature::Multisig(_) => Err(SignatureSchemeError::flag(
+            UserSignature::Multisig(_) => Err(SignatureSchemeError::Flag(
                 SignatureScheme::Multisig.to_u8(),
             )),
             UserSignature::PasskeyAuthenticator(passkey_authenticator) => {
                 Ok(PublicKey::Passkey(passkey_authenticator.public_key()))
             }
-            UserSignature::MoveAuthenticator(_) => Err(SignatureSchemeError::flag(
+            UserSignature::MoveAuthenticator(_) => Err(SignatureSchemeError::Flag(
                 SignatureScheme::MoveAuthenticator.to_u8(),
             )),
         }
