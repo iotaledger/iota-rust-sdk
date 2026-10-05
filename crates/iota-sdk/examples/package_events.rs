@@ -7,7 +7,7 @@ use iota_sdk::graphql_client::{
 
 #[tokio::main]
 async fn main() -> GraphQLResult<()> {
-    let client = GraphQLClient::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     let events = client
         .events(

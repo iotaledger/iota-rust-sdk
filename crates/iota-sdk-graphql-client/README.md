@@ -74,7 +74,7 @@ use eyre::Result;
 async fn main() -> Result<()> {
 
    // Connect to the mainnet GraphQL server
-   let client = GraphQLClient::new_mainnet();
+   let client = GraphQLClient::new_mainnet()?;
    let chain_id = client.chain_id().await?;
    println!("{:?}", chain_id);
 
@@ -245,7 +245,7 @@ pub struct ChainIdQuery {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let mut client = GraphQLClient::new_devnet();
+    let mut client = GraphQLClient::new_devnet()?;
 
     // Query the data for the last known epoch. Note that id variable is None, so last epoch data
     // will be returned.

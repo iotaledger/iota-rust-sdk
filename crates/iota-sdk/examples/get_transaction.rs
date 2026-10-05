@@ -5,7 +5,7 @@ use iota_sdk::graphql_client::{GraphQLClient, error::GraphQLResult, pagination::
 
 #[tokio::main]
 async fn main() -> GraphQLResult<()> {
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
 
     let transactions = client
         .transactions(None, PaginationFilter::default())

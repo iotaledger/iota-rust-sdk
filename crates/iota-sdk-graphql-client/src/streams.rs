@@ -165,7 +165,7 @@ where
 /// use iota_graphql_client::PaginationFilter;
 /// use iota_graphql_client::Direction;
 ///
-/// let client = GraphQLClient::new_testnet();
+/// let client = GraphQLClient::new_testnet().unwrap();
 /// let stream = stream_paginated_query(|pagination_filter, Direction::Forward| {
 ///    client.coins(owner, coin_type, pagination_filter)
 /// });

@@ -13,10 +13,10 @@ pub const NUM_COINS_FROM_FAUCET: usize = 5;
 pub fn test_client() -> GraphQLClient {
     let network = std::env::var("NETWORK").unwrap_or_else(|_| "local".to_string());
     match network.as_str() {
-        "mainnet" => GraphQLClient::new_mainnet(),
-        "testnet" => GraphQLClient::new_testnet(),
-        "devnet" => GraphQLClient::new_devnet(),
-        "local" => GraphQLClient::new_localnet(),
+        "mainnet" => GraphQLClient::new_mainnet().unwrap(),
+        "testnet" => GraphQLClient::new_testnet().unwrap(),
+        "devnet" => GraphQLClient::new_devnet().unwrap(),
+        "local" => GraphQLClient::new_localnet().unwrap(),
         _ => GraphQLClient::new(&network).expect("Invalid network URL: {network}"),
     }
 }
