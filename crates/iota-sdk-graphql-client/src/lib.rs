@@ -24,7 +24,10 @@ mod test_utils;
 // Re-export types used by query_types module internally
 #[cfg(feature = "move-types")]
 pub use api::move_objects::{MoveObjectFilter, OwnedMoveObject};
-pub use api::move_view_call::{MoveViewArg, MoveViewArgList};
+pub use api::{
+    move_view_call::{MoveViewArg, MoveViewArgList},
+    network::GetChainIdQuery,
+};
 pub use client::{GraphQLClient, USER_AGENT};
 pub use cynic;
 pub use error::{GraphQLError, GraphQLResult};

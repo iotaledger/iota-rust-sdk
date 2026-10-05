@@ -109,7 +109,7 @@ cargo test --doc                 # Direct doc test invocation
 - **Linting**: Clippy with warnings as errors (`-Dwarnings`)
 - **Naming**: crates `iota-sdk-*`, modules `snake_case`, types `PascalCase`, constants `UPPER_SNAKE_CASE`
 - **Errors**: `thiserror` enums, `#[non_exhaustive]` at the type level
-- **Feature gating**: optional functionality lives behind features; APIs use `#[cfg(feature = "…")]` and `#[cfg_attr(doc_cfg, doc(cfg(feature = "…")))]` for docs.rs visibility
+- **Feature gating**: optional functionality lives behind features; APIs use `#[cfg(feature = "…")]`; crates enable `#![cfg_attr(doc_cfg, feature(doc_cfg))]`, which makes docs.rs show the required feature, so items need no `doc(cfg)` attribute
 - **Comments**: see [Writing style](#writing-style) below
 
 ## Writing style
