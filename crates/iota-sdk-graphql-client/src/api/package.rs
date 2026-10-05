@@ -248,23 +248,23 @@ impl GetNormalizedMoveModuleQuery {
         self
     }
 
-    async fn resolved_pagination(&self) -> ModulePagination {
+    async fn resolved_pagination(&mut self) -> ModulePagination {
         ModulePagination {
             enums: self
                 .client
-                .pagination_filter(self.enums_pagination.clone())
+                .pagination_filter(std::mem::take(&mut self.enums_pagination))
                 .await,
             friends: self
                 .client
-                .pagination_filter(self.friends_pagination.clone())
+                .pagination_filter(std::mem::take(&mut self.friends_pagination))
                 .await,
             functions: self
                 .client
-                .pagination_filter(self.functions_pagination.clone())
+                .pagination_filter(std::mem::take(&mut self.functions_pagination))
                 .await,
             structs: self
                 .client
-                .pagination_filter(self.structs_pagination.clone())
+                .pagination_filter(std::mem::take(&mut self.structs_pagination))
                 .await,
         }
     }
@@ -303,7 +303,7 @@ impl GetNormalizedMoveModuleQuery {
         })
     }
 
-    async fn send(self) -> GraphQLResult<Option<MoveModule>> {
+    async fn send(mut self) -> GraphQLResult<Option<MoveModule>> {
         let pagination = self.resolved_pagination().await;
         let response = self.client.run_query(&self.operation(&pagination)).await?;
 
