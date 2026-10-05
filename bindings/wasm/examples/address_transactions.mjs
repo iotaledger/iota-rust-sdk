@@ -11,7 +11,7 @@ import {
   Address,
   GraphQlClient,
   initAsync,
-  TransactionsFilter,
+  GraphQlTransactionsFilter,
 } from "@iota/sdk-wasm";
 
 await initAsync();
@@ -22,10 +22,10 @@ const address = Address.fromHex(
 );
 
 const outgoing = await client.transactions(
-  new TransactionsFilter().withSentAddress(address),
+  new GraphQlTransactionsFilter().withSentAddress(address),
 );
 const incoming = await client.transactions(
-  new TransactionsFilter().withRecvAddress(address),
+  new GraphQlTransactionsFilter().withRecvAddress(address),
 );
 
 console.log(`Transactions for ${address}`);

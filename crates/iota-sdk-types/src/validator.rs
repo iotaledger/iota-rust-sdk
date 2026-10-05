@@ -157,7 +157,6 @@ pub struct ValidatorAggregatedSignature {
 
 /// Error returned when a signer bitmap cannot be read.
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 #[derive(Debug, thiserror::Error)]
 #[error("invalid signer bitmap: {0}")]
 #[non_exhaustive]
@@ -187,7 +186,6 @@ impl ValidatorAggregatedSignature {
     ///
     /// [RoaringBitmap serialized form]: https://github.com/RoaringBitmap/RoaringFormatSpec
     #[cfg(feature = "serde")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
     pub fn from_signer_bitmap(
         epoch: EpochId,
         signature: Bls12381Signature,
@@ -216,7 +214,6 @@ impl ValidatorAggregatedSignature {
     ///
     /// [RoaringBitmap serialized form]: https://github.com/RoaringBitmap/RoaringFormatSpec
     #[cfg(feature = "serde")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
     pub fn signer_bitmap(&self) -> Vec<u8> {
         let mut bytes = Vec::with_capacity(self.bitmap.serialized_size());
         self.bitmap
