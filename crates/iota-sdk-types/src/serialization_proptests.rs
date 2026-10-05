@@ -146,7 +146,6 @@ serialization_test!(Publish);
 serialization_test!(RandomnessStateUpdate);
 serialization_test!(SignedTransaction);
 serialization_test!(SenderSignedTransaction);
-serialization_test!(SmartAccountBuildKind);
 serialization_test!(SmartAccountClaim);
 serialization_test!(SplitCoins);
 serialization_test!(SystemPackage);
