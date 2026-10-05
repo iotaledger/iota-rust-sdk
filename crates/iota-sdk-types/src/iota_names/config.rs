@@ -11,6 +11,7 @@ use crate::{ObjectId, address::Address, iota_names::error::IotaNamesError};
     derive(serde::Deserialize, serde::Serialize),
     serde(rename_all = "kebab-case")
 )]
+#[non_exhaustive]
 pub struct IotaNamesConfig {
     /// Address of the `iota_names` package.
     pub package_address: Address,

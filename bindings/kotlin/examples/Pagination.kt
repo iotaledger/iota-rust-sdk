@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import iota_sdk.Address
-import iota_sdk.Direction
 import iota_sdk.GraphQlClient
+import iota_sdk.GraphQlDirection
+import iota_sdk.GraphQlObjectFilter
+import iota_sdk.GraphQlPaginationFilter
 import iota_sdk.Object
-import iota_sdk.ObjectFilter
-import iota_sdk.PaginationFilter
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -20,9 +20,9 @@ fun main() = runBlocking {
             println("Fetching page with cursor: $nextCursor")
             val page =
                 client.objects(
-                    ObjectFilter(owner = address),
-                    PaginationFilter(
-                        direction = Direction.FORWARD,
+                    GraphQlObjectFilter(owner = address),
+                    GraphQlPaginationFilter(
+                        direction = GraphQlDirection.FORWARD,
                         cursor = nextCursor,
                         // Limit to 1 to demonstrate pagination
                         limit = 1,

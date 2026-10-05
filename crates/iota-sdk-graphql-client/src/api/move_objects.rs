@@ -139,7 +139,7 @@ impl GraphQLClient {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use futures::StreamExt;
     use iota_move_types::iota_framework::{coin::Coin, iota::IOTA};

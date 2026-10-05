@@ -8,21 +8,42 @@ use cynic::QueryBuilder;
 
 use crate::{
     GraphQLClient,
+    api::define_query,
     error::GraphQLResult,
     pagination::{Page, PaginationFilter},
     query_types::{
-        ActiveValidatorsArgs, ActiveValidatorsQuery, ChainIdentifierQuery, EpochArgs,
-        EpochSummaryQuery, ProtocolConfigQuery, ProtocolConfigs, ProtocolVersionArgs, Validator,
+        ActiveValidatorsArgs, ActiveValidatorsQueryFragment, ChainIdentifierQueryFragment,
+        EpochArgs, EpochSummaryQueryFragment, ProtocolConfigQueryFragment, ProtocolConfigs,
+        ProtocolVersionArgs, Validator,
     },
 };
 
-impl GraphQLClient {
-    /// Get the chain identifier.
-    pub async fn chain_id(&self) -> GraphQLResult<String> {
-        let operation = ChainIdentifierQuery::build(());
-        let response = self.run_query(&operation).await?;
+define_query! {
+    /// Query for [`GraphQLClient::chain_id`]. Await it to send the request.
+    pub struct GetChainIdQuery {
+        client: GraphQLClient,
+    }
+    output: GraphQLResult<String>;
+}
+
+impl GetChainIdQuery {
+    fn operation(&self) -> cynic::Operation<ChainIdentifierQueryFragment, ()> {
+        ChainIdentifierQueryFragment::build(())
+    }
+
+    async fn send(self) -> GraphQLResult<String> {
+        let response = self.client.run_query(&self.operation()).await?;
 
         Ok(response.chain_identifier)
+    }
+}
+
+impl GraphQLClient {
+    /// Get the chain identifier.
+    pub fn chain_id(&self) -> GetChainIdQuery {
+        GetChainIdQuery {
+            client: self.clone(),
+        }
     }
 
     /// Get the reference gas price for the provided epoch or the last known one
@@ -34,7 +55,7 @@ impl GraphQLClient {
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> GraphQLResult<Option<u64>> {
-        let operation = EpochSummaryQuery::build(EpochArgs { id: epoch.into() });
+        let operation = EpochSummaryQueryFragment::build(EpochArgs { id: epoch.into() });
         let response = self.run_query(&operation).await?;
 
         response
@@ -49,7 +70,8 @@ impl GraphQLClient {
         &self,
         version: impl Into<Option<u64>>,
     ) -> GraphQLResult<ProtocolConfigs> {
-        let operation = ProtocolConfigQuery::build(ProtocolVersionArgs { id: version.into() });
+        let operation =
+            ProtocolConfigQueryFragment::build(ProtocolVersionArgs { id: version.into() });
         let response = self.run_query(&operation).await?;
         Ok(response.protocol_config)
     }
@@ -64,7 +86,7 @@ impl GraphQLClient {
     ) -> GraphQLResult<Page<Validator>> {
         let pagination = self.pagination_filter(pagination_filter).await;
 
-        let operation = ActiveValidatorsQuery::build(ActiveValidatorsArgs {
+        let operation = ActiveValidatorsQueryFragment::build(ActiveValidatorsArgs {
             id: epoch.into(),
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
@@ -87,15 +109,25 @@ impl GraphQLClient {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use crate::{PaginationFilter, test_utils::test_client};
+    use crate::{GraphQLClient, PaginationFilter, test_utils::test_client};
+
+    #[test]
+    fn chain_id_builds_the_chain_identifier_operation() {
+        let operation = GraphQLClient::new_localnet().chain_id().operation();
+        assert_eq!(
+            operation.operation_name.as_deref(),
+            Some("ChainIdentifierQueryFragment")
+        );
+        assert!(operation.query.contains("chainIdentifier"));
+    }
 
     #[tokio::test]
     async fn test_chain_id() {
         let client = test_client();
-        let chain_id = client.chain_id().await;
-        assert!(chain_id.is_ok());
+        let chain_id = client.chain_id().await.unwrap();
+        assert!(!chain_id.is_empty());
     }
 
     #[tokio::test]
