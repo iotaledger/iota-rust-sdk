@@ -22,6 +22,13 @@ pub struct ObjectsQueryFragment {
     pub objects: ObjectConnection,
 }
 
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectQueryArgs")]
+pub struct MoveObjectContentsQueryFragment {
+    #[arguments(address: $object_id, version: $version)]
+    pub object: Option<ObjectContents>,
+}
+
 // ===========================================================================
 // Object(s) Query Args
 // ===========================================================================
@@ -48,8 +55,13 @@ pub struct ObjectsQueryArgs {
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Object")]
 pub struct Object {
-    pub as_move_object: Option<MoveObjectContents>,
     pub bcs: Option<Base64>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "Object")]
+pub struct ObjectContents {
+    pub as_move_object: Option<MoveObjectContents>,
 }
 
 #[derive(Clone, cynic::InputObject, Debug, Default)]

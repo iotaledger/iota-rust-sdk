@@ -285,10 +285,6 @@ pub struct GraphQLEpoch {
     /// the net amount of storage fees accumulated in this epoch.
     #[uniffi(default = None)]
     pub net_inflow: Option<String>,
-    /// The epoch's corresponding protocol configuration, including the feature
-    /// flags and the configuration options.
-    #[uniffi(default = None)]
-    pub protocol_configs: Option<GraphQLProtocolConfigs>,
     /// The minimum gas price that a quorum of validators are guaranteed to sign
     /// a transaction for.
     #[uniffi(default = None)]
@@ -335,7 +331,6 @@ impl From<iota_sdk::graphql_client::query_types::Epoch> for GraphQLEpoch {
             fund_size: value.fund_size.map(|v| v.0),
             live_object_set_digest: value.live_object_set_digest,
             net_inflow: value.net_inflow.map(|v| v.0),
-            protocol_configs: value.protocol_configs.map(Into::into),
             reference_gas_price: value.reference_gas_price.map(|v| v.0),
             start_timestamp: value.start_timestamp.0,
             end_timestamp: value.end_timestamp.map(|dt| dt.0),
@@ -372,7 +367,6 @@ impl From<GraphQLEpoch> for iota_sdk::graphql_client::query_types::Epoch {
             fund_size: value.fund_size.map(|v| v.into()),
             live_object_set_digest: value.live_object_set_digest,
             net_inflow: value.net_inflow.map(|v| v.into()),
-            protocol_configs: value.protocol_configs.map(Into::into),
             reference_gas_price: value.reference_gas_price.map(|v| v.into()),
             start_timestamp: iota_sdk::graphql_client::query_types::DateTime(value.start_timestamp),
             end_timestamp: value
@@ -1523,7 +1517,10 @@ impl From<iota_sdk::graphql_client::query_types::MoveModuleQueryFragment>
 {
     fn from(value: iota_sdk::graphql_client::query_types::MoveModuleQueryFragment) -> Self {
         Self {
-            package: value.package.into(),
+            package: GraphQLMovePackageQuery {
+                address: Arc::new(value.package.address.into()),
+                bcs: None,
+            },
             name: value.name,
         }
     }
@@ -1534,7 +1531,9 @@ impl From<GraphQLMoveModuleQuery>
 {
     fn from(value: GraphQLMoveModuleQuery) -> Self {
         Self {
-            package: value.package.into(),
+            package: iota_sdk::graphql_client::query_types::MovePackageAddress {
+                address: **value.package.address,
+            },
             name: value.name,
         }
     }

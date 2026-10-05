@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::query_types::{
-    Address, MoveAbility, MoveFunction, MovePackageQueryFragment, OpenMoveType, PageInfo, schema,
+    Address, MoveAbility, MoveFunction, MovePackageAddress, OpenMoveType, PageInfo, schema,
 };
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
@@ -95,7 +95,7 @@ pub struct MoveModuleConnection {
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModule")]
 pub struct MoveModuleQueryFragment {
-    pub package: MovePackageQueryFragment,
+    pub package: MovePackageAddress,
     pub name: String,
 }
 

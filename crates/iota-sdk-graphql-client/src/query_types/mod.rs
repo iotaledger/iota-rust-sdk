@@ -64,12 +64,14 @@ pub use normalized_move::{
     NormalizedMoveModuleQueryFragment, OpenMoveType,
 };
 pub use object::{
-    ObjectFilter, ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
+    MoveObjectContentsQueryFragment, ObjectFilter, ObjectQueryArgs, ObjectQueryFragment,
+    ObjectsQueryArgs, ObjectsQueryFragment,
 };
 pub use packages::{
-    LatestPackageQueryFragment, MovePackageConnection, MovePackageQueryFragment,
-    MovePackageVersionFilter, PackageArgs, PackageCheckpointFilter, PackageQueryFragment,
-    PackageVersionsArgs, PackageVersionsQueryFragment, PackagesQueryArgs, PackagesQueryFragment,
+    LatestPackageQueryFragment, MovePackageAddress, MovePackageConnection,
+    MovePackageQueryFragment, MovePackageVersionFilter, PackageArgs, PackageCheckpointFilter,
+    PackageQueryFragment, PackageVersionsArgs, PackageVersionsQueryFragment, PackagesQueryArgs,
+    PackagesQueryFragment,
 };
 pub use protocol_config::{
     ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigQueryFragment, ProtocolConfigs,

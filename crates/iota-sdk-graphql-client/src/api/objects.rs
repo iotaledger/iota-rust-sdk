@@ -14,7 +14,8 @@ use crate::{
     error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter},
     query_types::{
-        ObjectFilter, ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
+        MoveObjectContentsQueryFragment, ObjectFilter, ObjectQueryArgs, ObjectQueryFragment,
+        ObjectsQueryArgs, ObjectsQueryFragment,
     },
     streams::stream_paginated_query,
 };
@@ -139,7 +140,7 @@ impl GraphQLClient {
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> GraphQLResult<Option<serde_json::Value>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+        let operation = MoveObjectContentsQueryFragment::build(ObjectQueryArgs {
             object_id,
             version: version.into().map(|v| v.as_u64()),
         });
@@ -163,7 +164,7 @@ impl GraphQLClient {
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> GraphQLResult<Option<Vec<u8>>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+        let operation = MoveObjectContentsQueryFragment::build(ObjectQueryArgs {
             object_id,
             version: version.into().map(|v| v.as_u64()),
         });
