@@ -5,7 +5,7 @@ use std::sync::{Arc, PoisonError, RwLock};
 
 use crate::{
     error::{Result, SdkFfiError},
-    graphql::query_types::ServiceConfig,
+    graphql::query_types::GraphQLServiceConfig,
     http::HttpClientOptions,
     transaction_builder::{builder::TransactionBuilder, client_builder::GraphQLTransactionBuilder},
     types::address::Address,
@@ -32,10 +32,8 @@ impl From<iota_sdk::graphql_client::GraphQLClient> for GraphQLClient {
 }
 
 #[derive(Debug, serde::Serialize, uniffi::Record)]
-pub struct Query {
-    // `query_string` avoids C# CS0542 (member == type `Query`); serde keeps the `query` wire key.
-    #[serde(rename = "query")]
-    pub query_string: String,
+pub struct GraphQLQuery {
+    pub query: String,
     #[uniffi(default = None)]
     #[serde(default)]
     pub variables: Option<serde_json::Value>,
@@ -108,12 +106,12 @@ impl GraphQLClient {
 
     /// Get the GraphQL service configuration, including complexity limits, read
     /// and mutation limits, supported versions, and others.
-    pub async fn service_config(&self) -> Result<ServiceConfig> {
+    pub async fn service_config(&self) -> Result<GraphQLServiceConfig> {
         Ok(self.client().service_config().await?.clone().into())
     }
 
     /// Run a query.
-    pub async fn run_query(&self, query: Query) -> Result<serde_json::Value> {
+    pub async fn run_query(&self, query: GraphQLQuery) -> Result<serde_json::Value> {
         Ok(self
             .client()
             .run_query_from_json(

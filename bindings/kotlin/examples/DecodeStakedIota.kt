@@ -9,7 +9,7 @@
 
 import iota_sdk.Address
 import iota_sdk.GraphQlClient
-import iota_sdk.ObjectFilter
+import iota_sdk.GraphQlObjectFilter
 import iota_sdk.StakedIota
 import kotlinx.coroutines.runBlocking
 
@@ -19,7 +19,9 @@ fun main() = runBlocking {
         val owner =
             Address.fromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
         val page =
-            client.objects(ObjectFilter(typeTag = "0x3::staking_pool::StakedIota", owner = owner))
+            client.objects(
+                GraphQlObjectFilter(typeTag = "0x3::staking_pool::StakedIota", owner = owner)
+            )
 
         if (page.data.isEmpty()) {
             println("No StakedIota objects owned by ${owner} right now.")

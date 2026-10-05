@@ -5,7 +5,7 @@ use std::sync::{Arc, RwLock};
 
 use crate::{
     error::Result,
-    graphql::output_types::DryRunResult,
+    graphql::output_types::GraphQLDryRunResult,
     transaction_builder::{
         Payment, WaitForTransaction,
         gas_station::GasStation,
@@ -543,7 +543,7 @@ client_transaction_builder! {
     /// automatically resolve inputs. Use `finish` to finalize the transaction
     /// data.
     GraphQLTransactionBuilder: Arc<iota_sdk::graphql_client::GraphQLClient>,
-    dry_run -> DryRunResult = |result| result.into()
+    dry_run -> GraphQLDryRunResult = |result| result.into()
 }
 
 #[cfg(feature = "grpc")]
@@ -552,6 +552,6 @@ client_transaction_builder! {
     /// automatically resolve inputs. Use `finish` to finalize the transaction
     /// data.
     GrpcTransactionBuilder: Arc<iota_sdk::grpc_client::GrpcClient>,
-    dry_run -> crate::grpc::api::execution::simulate::SimulatedTransaction =
-        |result| crate::grpc::api::execution::simulate::SimulatedTransaction::try_from(&result)?
+    dry_run -> crate::grpc::api::execution::simulate::GrpcSimulatedTransaction =
+        |result| crate::grpc::api::execution::simulate::GrpcSimulatedTransaction::try_from(&result)?
 }

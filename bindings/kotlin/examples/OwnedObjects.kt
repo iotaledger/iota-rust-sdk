@@ -3,14 +3,14 @@
 
 import iota_sdk.Address
 import iota_sdk.GraphQlClient
-import iota_sdk.ObjectFilter
+import iota_sdk.GraphQlObjectFilter
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
     try {
         val client = GraphQlClient.newTestnet()
         val address = Address.zero()
-        val objectFilter = ObjectFilter(owner = address)
+        val objectFilter = GraphQlObjectFilter(owner = address)
         val objectsPage = client.objects(objectFilter)
         println("Owned objects (${objectsPage.data.size}):")
         for (obj in objectsPage.data) {
