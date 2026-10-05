@@ -186,13 +186,18 @@ mod tests {
     use super::*;
     use crate::{
         error::GraphQLResult,
-        test_utils::{assert_backward_page, backward_page, sent_variables},
+        test_utils::{
+            assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+        },
     };
 
     macro_rules! first_request_of {
         ($operation:expr, $query:expr) => {
+            first_request_of!($operation, $query, backward_page())
+        };
+        ($operation:expr, $query:expr, $page:expr) => {
             sent_variables($operation, |client| async move {
-                let _ = Box::pin($query(client).pagination(backward_page()).stream())
+                let _ = Box::pin($query(client).pagination($page).stream())
                     .next()
                     .await;
             })
@@ -325,57 +330,127 @@ mod tests {
             "CheckpointsQueryFragment",
             |c: crate::GraphQLClient| c.checkpoints()
         ));
+        assert_forward_page(&first_request_of!(
+            "CheckpointsQueryFragment",
+            |c: crate::GraphQLClient| c.checkpoints(),
+            forward_page()
+        ));
         assert_backward_page(&first_request_of!(
             "ObjectsQueryFragment",
             |c: crate::GraphQLClient| c.coins(Address::STD)
+        ));
+        assert_forward_page(&first_request_of!(
+            "ObjectsQueryFragment",
+            |c: crate::GraphQLClient| c.coins(Address::STD),
+            forward_page()
         ));
         assert_backward_page(&first_request_of!(
             "ObjectsQueryFragment",
             |c: crate::GraphQLClient| c.gas_coins(Address::STD)
         ));
+        assert_forward_page(&first_request_of!(
+            "ObjectsQueryFragment",
+            |c: crate::GraphQLClient| c.gas_coins(Address::STD),
+            forward_page()
+        ));
         assert_backward_page(&first_request_of!(
             "DynamicFieldsOwnerQueryFragment",
             |c: crate::GraphQLClient| c.dynamic_fields(Address::STD)
+        ));
+        assert_forward_page(&first_request_of!(
+            "DynamicFieldsOwnerQueryFragment",
+            |c: crate::GraphQLClient| c.dynamic_fields(Address::STD),
+            forward_page()
         ));
         assert_backward_page(&first_request_of!(
             "EventsQueryFragment",
             |c: crate::GraphQLClient| c.events()
         ));
+        assert_forward_page(&first_request_of!(
+            "EventsQueryFragment",
+            |c: crate::GraphQLClient| c.events(),
+            forward_page()
+        ));
         assert_backward_page(&first_request_of!(
             "IotaNamesAddressRegistrationsQueryFragment",
             |c: crate::GraphQLClient| c.iota_names_registrations(Address::STD)
+        ));
+        assert_forward_page(&first_request_of!(
+            "IotaNamesAddressRegistrationsQueryFragment",
+            |c: crate::GraphQLClient| c.iota_names_registrations(Address::STD),
+            forward_page()
         ));
         assert_backward_page(&first_request_of!(
             "ActiveValidatorsQueryFragment",
             |c: crate::GraphQLClient| c.active_validators()
         ));
+        assert_forward_page(&first_request_of!(
+            "ActiveValidatorsQueryFragment",
+            |c: crate::GraphQLClient| c.active_validators(),
+            forward_page()
+        ));
         assert_backward_page(&first_request_of!(
             "ObjectsQueryFragment",
             |c: crate::GraphQLClient| c.objects()
+        ));
+        assert_forward_page(&first_request_of!(
+            "ObjectsQueryFragment",
+            |c: crate::GraphQLClient| c.objects(),
+            forward_page()
         ));
         assert_backward_page(&first_request_of!(
             "PackageVersionsQueryFragment",
             |c: crate::GraphQLClient| c.package_versions(Address::FRAMEWORK)
         ));
+        assert_forward_page(&first_request_of!(
+            "PackageVersionsQueryFragment",
+            |c: crate::GraphQLClient| c.package_versions(Address::FRAMEWORK),
+            forward_page()
+        ));
         assert_backward_page(&first_request_of!(
             "PackagesQueryFragment",
             |c: crate::GraphQLClient| c.packages()
+        ));
+        assert_forward_page(&first_request_of!(
+            "PackagesQueryFragment",
+            |c: crate::GraphQLClient| c.packages(),
+            forward_page()
         ));
         assert_backward_page(&first_request_of!(
             "TransactionBlocksQueryFragment",
             |c: crate::GraphQLClient| c.transactions()
         ));
+        assert_forward_page(&first_request_of!(
+            "TransactionBlocksQueryFragment",
+            |c: crate::GraphQLClient| c.transactions(),
+            forward_page()
+        ));
         assert_backward_page(&first_request_of!(
             "AddressTransactionsQueryFragment",
             |c: crate::GraphQLClient| c.address_transactions(Address::STD)
+        ));
+        assert_forward_page(&first_request_of!(
+            "AddressTransactionsQueryFragment",
+            |c: crate::GraphQLClient| c.address_transactions(Address::STD),
+            forward_page()
         ));
         assert_backward_page(&first_request_of!(
             "TransactionBlocksEffectsQueryFragment",
             |c: crate::GraphQLClient| c.transactions_effects()
         ));
+        assert_forward_page(&first_request_of!(
+            "TransactionBlocksEffectsQueryFragment",
+            |c: crate::GraphQLClient| c.transactions_effects(),
+            forward_page()
+        ));
         assert_backward_page(&first_request_of!(
             "TransactionBlocksWithEffectsQueryFragment",
             |c: crate::GraphQLClient| c.transactions_data_effects()
+        ));
+        assert_forward_page(&first_request_of!(
+            "TransactionBlocksWithEffectsQueryFragment",
+            |c: crate::GraphQLClient| c.transactions_data_effects(),
+            forward_page()
         ));
     }
 
@@ -387,6 +462,11 @@ mod tests {
         assert_backward_page(&first_request_of!(
             "ObjectsQueryFragment",
             |c: crate::GraphQLClient| c.move_objects::<Coin<IOTA>>()
+        ));
+        assert_forward_page(&first_request_of!(
+            "ObjectsQueryFragment",
+            |c: crate::GraphQLClient| c.move_objects::<Coin<IOTA>>(),
+            forward_page()
         ));
     }
 }
