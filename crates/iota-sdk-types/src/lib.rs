@@ -75,7 +75,6 @@ pub mod hash;
 
 mod address;
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod bcs_error;
 mod checkpoint;
 pub mod crypto;
