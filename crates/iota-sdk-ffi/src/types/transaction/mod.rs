@@ -1667,8 +1667,6 @@ pub struct SmartAccountClaim {
     /// The transaction is rejected unless the scheme and these bytes derive
     /// the transaction sender's address.
     pub public_key_raw_bytes: Vec<u8>,
-    /// Whether the created account object is mutable or immutable.
-    pub build_kind: SmartAccountBuildKind,
 }
 
 impl From<iota_sdk::types::SmartAccountClaim> for SmartAccountClaim {
@@ -1676,7 +1674,6 @@ impl From<iota_sdk::types::SmartAccountClaim> for SmartAccountClaim {
         Self {
             public_key_scheme: value.public_key_scheme,
             public_key_raw_bytes: value.public_key_raw_bytes,
-            build_kind: value.build_kind.into(),
         }
     }
 }
@@ -1686,7 +1683,6 @@ impl From<SmartAccountClaim> for iota_sdk::types::SmartAccountClaim {
         Self {
             public_key_scheme: value.public_key_scheme,
             public_key_raw_bytes: value.public_key_raw_bytes,
-            build_kind: value.build_kind.into(),
         }
     }
 }
@@ -1695,21 +1691,15 @@ impl From<SmartAccountClaim> for iota_sdk::types::SmartAccountClaim {
 /// is the address a transaction signed by the corresponding private key is sent
 /// from.
 #[uniffi::export]
-pub fn smart_account_claim_new(
-    public_key: &PublicKey,
-    build_kind: SmartAccountBuildKind,
-) -> SmartAccountClaim {
-    iota_sdk::types::SmartAccountClaim::new(&public_key.0, build_kind.into()).into()
+pub fn smart_account_claim_new(public_key: &PublicKey) -> SmartAccountClaim {
+    iota_sdk::types::SmartAccountClaim::new(&public_key.0).into()
 }
 
 /// Create a `SmartAccountClaim` of the address derived from `committee`, which
 /// is the address a transaction signed by that committee is sent from.
 #[uniffi::export]
-pub fn smart_account_claim_new_multisig(
-    committee: &MultisigCommittee,
-    build_kind: SmartAccountBuildKind,
-) -> SmartAccountClaim {
-    iota_sdk::types::SmartAccountClaim::new_multisig(&committee.0, build_kind.into()).into()
+pub fn smart_account_claim_new_multisig(committee: &MultisigCommittee) -> SmartAccountClaim {
+    iota_sdk::types::SmartAccountClaim::new_multisig(&committee.0).into()
 }
 
 /// The signature scheme of the public key in `claim`.
@@ -1720,44 +1710,6 @@ pub fn smart_account_claim_new_multisig(
 pub fn smart_account_claim_signature_scheme(claim: SmartAccountClaim) -> Result<SignatureScheme> {
     let claim: iota_sdk::types::SmartAccountClaim = claim.into();
     Ok(claim.signature_scheme()?.into())
-}
-
-/// Whether the account object created by a `SmartAccountClaim` can be changed
-/// after the claim
-///
-/// # BCS
-///
-/// The BCS serialized form of this type is specified in
-/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
-#[derive(Clone, uniffi::Enum)]
-pub enum SmartAccountBuildKind {
-    /// A shared object: the account can rotate its authenticator and add,
-    /// remove or mutate its fields.
-    Mutable,
-    /// A frozen object: neither the authenticator nor any field can ever
-    /// change.
-    Immutable,
-}
-
-impl From<iota_sdk::types::SmartAccountBuildKind> for SmartAccountBuildKind {
-    fn from(value: iota_sdk::types::SmartAccountBuildKind) -> Self {
-        match value {
-            iota_sdk::types::SmartAccountBuildKind::Mutable => Self::Mutable,
-            iota_sdk::types::SmartAccountBuildKind::Immutable => Self::Immutable,
-            _ => unimplemented!(
-                "a new SmartAccountBuildKind enum variant was added and needs to be handled"
-            ),
-        }
-    }
-}
-
-impl From<SmartAccountBuildKind> for iota_sdk::types::SmartAccountBuildKind {
-    fn from(value: SmartAccountBuildKind) -> Self {
-        match value {
-            SmartAccountBuildKind::Mutable => Self::Mutable,
-            SmartAccountBuildKind::Immutable => Self::Immutable,
-        }
-    }
 }
 
 /// Payment information for executing a transaction
@@ -2033,8 +1985,7 @@ crate::export_iota_types_bcs_conversion!(
     TransactionDenyRulesUpdate,
     GasPayment,
     TransactionExpiration,
-    SmartAccountClaim,
-    SmartAccountBuildKind
+    SmartAccountClaim
 );
 crate::export_iota_types_objects_bcs_conversion!(
     Transaction,
@@ -2070,8 +2021,7 @@ crate::export_iota_types_json_conversion!(
     TransactionDenyRulesUpdate,
     GasPayment,
     TransactionExpiration,
-    SmartAccountClaim,
-    SmartAccountBuildKind
+    SmartAccountClaim
 );
 crate::export_iota_types_objects_json_conversion!(
     Transaction,
@@ -2108,8 +2058,7 @@ crate::export_iota_types_display!(
     GasPayment,
     SharedObjectReference,
     TransactionExpiration,
-    SmartAccountClaim,
-    SmartAccountBuildKind
+    SmartAccountClaim
 );
 crate::export_iota_types_objects_display!(
     Transaction,
