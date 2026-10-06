@@ -12,6 +12,7 @@ use crate::{
         pagination::GraphQLMovePackagePage,
         query_types::{GraphQLMoveFunction, GraphQLMoveModule, GraphQLPaginationFilter},
     },
+    helpers::SetIfSome,
     types::{address::Address, object::MovePackage, version::Version},
 };
 
@@ -38,7 +39,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .package(**address)
-            .version(version.map(|v| **v))
+            .set_if_some(version.map(|v| **v), |query, value| query.version(value))
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -59,8 +60,12 @@ impl GraphQLClient {
             .client()
             .package_versions(**address)
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
-            .after_version(after_version.map(|v| **v))
-            .before_version(before_version.map(|v| **v))
+            .set_if_some(after_version.map(|v| **v), |query, value| {
+                query.after_version(value)
+            })
+            .set_if_some(before_version.map(|v| **v), |query, value| {
+                query.before_version(value)
+            })
             .await?
             .map(Into::into)
             .into())
@@ -96,8 +101,12 @@ impl GraphQLClient {
             .client()
             .packages()
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
-            .after_checkpoint(after_checkpoint)
-            .before_checkpoint(before_checkpoint)
+            .set_if_some(after_checkpoint, |query, value| {
+                query.after_checkpoint(value)
+            })
+            .set_if_some(before_checkpoint, |query, value| {
+                query.before_checkpoint(value)
+            })
             .await?
             .map(Into::into)
             .into())
@@ -116,7 +125,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .normalized_move_function(**package, module, function)
-            .version(version.map(|v| **v))
+            .set_if_some(version.map(|v| **v), |query, value| query.version(value))
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -146,7 +155,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .normalized_move_module(**package, module)
-            .version(version.map(|v| **v))
+            .set_if_some(version.map(|v| **v), |query, value| query.version(value))
             .enums_pagination(pagination_filter_enums.map(Into::into).unwrap_or_default())
             .friends_pagination(
                 pagination_filter_friends

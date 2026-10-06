@@ -10,6 +10,7 @@ use crate::{
         pagination::GraphQLValidatorPage,
         query_types::{GraphQLPaginationFilter, GraphQLProtocolConfigs},
     },
+    helpers::SetIfSome,
 };
 
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
@@ -30,7 +31,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .reference_gas_price()
-            .epoch_number(epoch)
+            .set_if_some(epoch, |query, value| query.epoch_number(value))
             .await?)
     }
 
@@ -40,7 +41,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .protocol_config()
-            .version(version)
+            .set_if_some(version, |query, value| query.version(value))
             .await?
             .into())
     }
@@ -57,7 +58,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .active_validators()
-            .epoch_number(epoch)
+            .set_if_some(epoch, |query, value| query.epoch_number(value))
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)

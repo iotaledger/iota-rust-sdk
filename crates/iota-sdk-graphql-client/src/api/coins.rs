@@ -31,8 +31,8 @@ define_query! {
 
 impl ListCoinsQuery {
     /// Only return coins of this type. Defaults to every type.
-    pub fn coin_type(mut self, coin_type: impl Into<Option<StructTag>>) -> Self {
-        self.coin_type = coin_type.into();
+    pub fn coin_type(mut self, coin_type: StructTag) -> Self {
+        self.coin_type = Some(coin_type);
         self
     }
 

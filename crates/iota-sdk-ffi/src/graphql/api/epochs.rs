@@ -6,6 +6,7 @@
 use crate::{
     error::Result,
     graphql::{client::GraphQLClient, query_types::GraphQLEpoch},
+    helpers::SetIfSome,
 };
 
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
@@ -18,7 +19,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .epoch()
-            .epoch_number(epoch)
+            .set_if_some(epoch, |query, value| query.epoch_number(value))
             .await?
             .map(Into::into))
     }
@@ -31,7 +32,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .epoch_total_checkpoints()
-            .epoch_number(epoch)
+            .set_if_some(epoch, |query, value| query.epoch_number(value))
             .await?)
     }
 
@@ -43,7 +44,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .epoch_total_transaction_blocks()
-            .epoch_number(epoch)
+            .set_if_some(epoch, |query, value| query.epoch_number(value))
             .await?)
     }
 }

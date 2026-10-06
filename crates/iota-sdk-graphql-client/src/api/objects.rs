@@ -41,8 +41,8 @@ impl ListObjectsQuery {
     }
 
     /// Only return the objects that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<ObjectFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: ObjectFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
@@ -112,8 +112,8 @@ define_query! {
 
 impl GetObjectQuery {
     /// Set the object version. Defaults to the latest version.
-    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = Some(version);
         self
     }
 
@@ -152,8 +152,8 @@ define_query! {
 
 impl GetMoveObjectContentsQuery {
     /// Set the object version. Defaults to the latest version.
-    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = Some(version);
         self
     }
 
@@ -186,8 +186,8 @@ define_query! {
 
 impl GetMoveObjectContentsBcsQuery {
     /// Set the object version. Defaults to the latest version.
-    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = Some(version);
         self
     }
 
