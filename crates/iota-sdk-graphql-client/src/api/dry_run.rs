@@ -6,7 +6,9 @@
 
 use base64ct::Encoding;
 use cynic::QueryBuilder;
-use iota_types::{Address, SignedTransaction, Transaction, TransactionEffects, TransactionKind};
+use iota_types::{
+    Address, ObjectReference, SignedTransaction, Transaction, TransactionEffects, TransactionKind,
+};
 
 use crate::{
     DryRunEffect, DryRunResult, GraphQLClient,
@@ -40,16 +42,7 @@ impl DryRunTransactionQuery {
         let Transaction::V1(v1) = &self.transaction else {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
-        let gas_objects = v1
-            .gas_payment
-            .objects
-            .iter()
-            .map(|r| ObjectRef {
-                address: *r.object_id(),
-                version: r.version().as_u64(),
-                digest: r.digest().to_base58(),
-            })
-            .collect::<Vec<_>>();
+        let gas_objects = v1.gas_payment.objects.clone();
         self.client
             .dry_run_transaction_kind(&v1.kind)
             .sender(v1.sender)
@@ -94,8 +87,10 @@ impl DryRunTransactionKindQuery {
     }
 
     /// Set the objects that pay for the gas.
-    pub fn gas_objects(mut self, gas_objects: impl Into<Option<Vec<ObjectRef>>>) -> Self {
-        self.transaction_metadata.gas_objects = gas_objects.into();
+    pub fn gas_objects(mut self, gas_objects: impl Into<Option<Vec<ObjectReference>>>) -> Self {
+        self.transaction_metadata.gas_objects = gas_objects
+            .into()
+            .map(|objects| objects.into_iter().map(ObjectRef::from).collect());
         self
     }
 
@@ -206,7 +201,6 @@ mod tests {
 
     use crate::{
         GraphQLClient,
-        query_types::ObjectRef,
         test_utils::{sent_variables, test_transaction},
     };
 
@@ -261,7 +255,7 @@ mod tests {
                 .sender(Address::STD)
                 .gas_budget(5_000_000)
                 .gas_price(1000)
-                .gas_objects(vec![ObjectRef::from(gas_object)])
+                .gas_objects(vec![gas_object])
                 .gas_sponsor(Address::FRAMEWORK)
                 .skip_checks(true)
                 .await;
