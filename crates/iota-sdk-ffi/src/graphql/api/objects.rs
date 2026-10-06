@@ -52,10 +52,9 @@ impl GraphQLClient {
     ) -> Result<GraphQLObjectPage> {
         Ok(self
             .client()
-            .objects(
-                filter.map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .objects()
+            .filter(filter.map(Into::into))
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())

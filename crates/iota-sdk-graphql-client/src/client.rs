@@ -4,6 +4,8 @@
 
 //! Core client implementation for the GraphQL API.
 
+use std::sync::{Arc, OnceLock};
+
 use cynic::{GraphQlResponse, Operation, QueryBuilder, serde};
 use reqwest::Url;
 
@@ -46,7 +48,7 @@ pub struct GraphQLClient {
     pub(crate) rpc: Url,
     /// The reqwest client.
     pub(crate) inner: reqwest::Client,
-    pub(crate) service_config: std::sync::OnceLock<ServiceConfig>,
+    pub(crate) service_config: Arc<OnceLock<ServiceConfig>>,
 }
 
 impl GraphQLClient {
@@ -117,9 +119,14 @@ impl GraphQLClient {
 
     /// Set the server address for the GraphQL client. It should be a
     /// valid URL with a host and optionally a port number.
+    ///
+    /// The service config cached from the previous server is dropped and
+    /// fetched from the new one when next needed; clones of this client keep
+    /// theirs.
     pub fn set_rpc_server(&mut self, server: &str) -> GraphQLResult<()> {
         let rpc = reqwest::Url::parse(server)?;
         self.rpc = rpc;
+        self.service_config = Default::default();
         Ok(())
     }
 
@@ -224,6 +231,36 @@ mod tests {
 
     use super::*;
     use crate::test_utils::test_client;
+
+    fn service_config() -> ServiceConfig {
+        ServiceConfig {
+            default_page_size: 20,
+            enabled_features: Vec::new(),
+            max_move_value_depth: 1,
+            max_output_nodes: 1,
+            max_page_size: 50,
+            max_query_depth: 1,
+            max_query_nodes: 1,
+            max_query_payload_size: 1,
+            max_type_argument_depth: 1,
+            max_type_argument_width: 1,
+            max_type_nodes: 1,
+            mutation_timeout_ms: 1,
+            request_timeout_ms: 1,
+        }
+    }
+
+    #[test]
+    fn clones_share_the_service_config_cache_until_the_server_changes() {
+        let client = GraphQLClient::new_localnet();
+        client.service_config.set(service_config()).unwrap();
+        let mut clone = client.clone();
+        assert!(clone.service_config.get().is_some());
+
+        clone.set_rpc_server(TESTNET_HOST).unwrap();
+        assert!(clone.service_config.get().is_none());
+        assert!(client.service_config.get().is_some());
+    }
 
     #[test]
     fn test_rpc_server() {
