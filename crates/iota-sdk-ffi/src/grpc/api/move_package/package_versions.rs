@@ -10,6 +10,7 @@ use iota_sdk::grpc_types::v1 as proto;
 use crate::{
     error::{Result, SdkFfiError},
     grpc::client::GrpcClient,
+    helpers::SetIfSome,
     types::object::ObjectId,
 };
 
@@ -72,8 +73,10 @@ impl GrpcClient {
         let query = self
             .client()
             .package_versions(**package_id)
-            .page_size(page_size)
-            .page_token(page_token.map(Into::into));
+            .set_if_some(page_size, |query, value| query.page_size(value))
+            .set_if_some(page_token.map(Into::into), |query, value| {
+                query.page_token(value)
+            });
         let page = query.await?.into_inner();
         Ok(GrpcPackageVersionPage {
             versions: page

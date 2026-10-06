@@ -21,6 +21,7 @@ use crate::{
         filters::{GrpcEventFilter, GrpcTransactionFilter},
         read_mask_fields::GrpcCheckpointResponseField,
     },
+    helpers::SetIfSome,
     stream::StreamHandle,
     types::{
         checkpoint::{CheckpointContents, CheckpointSummary},
@@ -280,8 +281,13 @@ impl GrpcClient {
         let response = self
             .client()
             .checkpoint_latest()
-            .transactions_filter(transactions_filter.as_deref().map(Into::into))
-            .events_filter(events_filter.as_deref().map(Into::into))
+            .set_if_some(
+                transactions_filter.as_deref().map(Into::into),
+                |query, value| query.transactions_filter(value),
+            )
+            .set_if_some(events_filter.as_deref().map(Into::into), |query, value| {
+                query.events_filter(value)
+            })
             .read_mask(read_mask.clone())
             .await?
             .into_inner();
@@ -307,8 +313,13 @@ impl GrpcClient {
         let response = self
             .client()
             .checkpoint_by_sequence_number(sequence_number)
-            .transactions_filter(transactions_filter.as_deref().map(Into::into))
-            .events_filter(events_filter.as_deref().map(Into::into))
+            .set_if_some(
+                transactions_filter.as_deref().map(Into::into),
+                |query, value| query.transactions_filter(value),
+            )
+            .set_if_some(events_filter.as_deref().map(Into::into), |query, value| {
+                query.events_filter(value)
+            })
             .read_mask(read_mask.clone())
             .await?
             .into_inner();
@@ -334,8 +345,13 @@ impl GrpcClient {
         let response = self
             .client()
             .checkpoint_by_digest(**digest)
-            .transactions_filter(transactions_filter.as_deref().map(Into::into))
-            .events_filter(events_filter.as_deref().map(Into::into))
+            .set_if_some(
+                transactions_filter.as_deref().map(Into::into),
+                |query, value| query.transactions_filter(value),
+            )
+            .set_if_some(events_filter.as_deref().map(Into::into), |query, value| {
+                query.events_filter(value)
+            })
             .read_mask(read_mask.clone())
             .await?
             .into_inner();
@@ -375,10 +391,19 @@ impl GrpcClient {
         let stream = self
             .client()
             .checkpoints_stream()
-            .start_sequence_number(start_sequence_number)
-            .end_sequence_number(end_sequence_number)
-            .transactions_filter(transactions_filter.as_deref().map(Into::into))
-            .events_filter(events_filter.as_deref().map(Into::into))
+            .set_if_some(start_sequence_number, |query, value| {
+                query.start_sequence_number(value)
+            })
+            .set_if_some(end_sequence_number, |query, value| {
+                query.end_sequence_number(value)
+            })
+            .set_if_some(
+                transactions_filter.as_deref().map(Into::into),
+                |query, value| query.transactions_filter(value),
+            )
+            .set_if_some(events_filter.as_deref().map(Into::into), |query, value| {
+                query.events_filter(value)
+            })
             .read_mask(read_mask.clone())
             .await?
             .into_inner();
@@ -424,11 +449,22 @@ impl GrpcClient {
         let stream = self
             .client()
             .checkpoints_stream_filtered()
-            .start_sequence_number(start_sequence_number)
-            .end_sequence_number(end_sequence_number)
-            .transactions_filter(transactions_filter.as_deref().map(Into::into))
-            .events_filter(events_filter.as_deref().map(Into::into))
-            .progress_interval_ms(progress_interval_ms)
+            .set_if_some(start_sequence_number, |query, value| {
+                query.start_sequence_number(value)
+            })
+            .set_if_some(end_sequence_number, |query, value| {
+                query.end_sequence_number(value)
+            })
+            .set_if_some(
+                transactions_filter.as_deref().map(Into::into),
+                |query, value| query.transactions_filter(value),
+            )
+            .set_if_some(events_filter.as_deref().map(Into::into), |query, value| {
+                query.events_filter(value)
+            })
+            .set_if_some(progress_interval_ms, |query, value| {
+                query.progress_interval_ms(value)
+            })
             .read_mask(read_mask.clone())
             .await?
             .into_inner();
