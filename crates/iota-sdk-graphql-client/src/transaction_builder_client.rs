@@ -53,18 +53,17 @@ impl TransactionBuilderLedgerClient for GraphQLClient {
         // rather than panicked on.
         let cursor = cursor.map(String::from_utf8).transpose()?;
         let page = self
-            .objects(
-                ObjectFilter {
-                    type_tag: struct_tag.map(|tag| tag.to_string()),
-                    owner: Some(owner),
-                    object_ids: None,
-                },
-                PaginationFilter {
-                    direction: Direction::Forward,
-                    cursor,
-                    limit: limit.map(|v| v as _),
-                },
-            )
+            .objects()
+            .filter(ObjectFilter {
+                type_tag: struct_tag.map(|tag| tag.to_string()),
+                owner: Some(owner),
+                object_ids: None,
+            })
+            .pagination(PaginationFilter {
+                direction: Direction::Forward,
+                cursor,
+                limit: limit.map(|v| v as _),
+            })
             .await?;
         let (page_info, data) = page.into_parts();
         let next_cursor = page_info
