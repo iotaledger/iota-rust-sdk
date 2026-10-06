@@ -19,7 +19,7 @@ use iota_sdk::{
 async fn main() -> Result<()> {
     let package_id = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d";
     let package_address = Address::from_hex(package_id)?;
-    let client = GraphQLClient::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     // Fetch package metadata and version history.
     let package = client

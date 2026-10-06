@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct ObjectsByTypeExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = try GraphQlClient.newTestnet()
 
     let coins = try await client.objects(
       filter: GraphQlObjectFilter(typeTag: "0x2::coin::Coin<0x2::iota::IOTA>"))

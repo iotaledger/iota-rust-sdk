@@ -11,7 +11,7 @@ use iota_sdk::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
 
     let private_key = Ed25519PrivateKey::random();
     let sender_address = private_key.public_key().derive_address();

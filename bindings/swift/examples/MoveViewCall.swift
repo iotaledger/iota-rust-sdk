@@ -12,7 +12,7 @@ let shop = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20"
 @main
 struct MoveViewCallExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = try GraphQlClient.newTestnet()
 
     // ===========================================================================
     // Example 1: Using moveViewCall() with typed arguments (primitives)
