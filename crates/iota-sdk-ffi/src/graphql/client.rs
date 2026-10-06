@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::{Arc, PoisonError, RwLock};
+use std::sync::Arc;
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -13,21 +13,18 @@ use crate::{
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
-pub struct GraphQLClient(RwLock<Arc<iota_sdk::graphql_client::GraphQLClient>>);
+pub struct GraphQLClient(Arc<iota_sdk::graphql_client::GraphQLClient>);
 
 impl GraphQLClient {
-    /// A handle on the current client configuration.
+    /// A handle on the client.
     pub(crate) fn client(&self) -> Arc<iota_sdk::graphql_client::GraphQLClient> {
-        self.0
-            .read()
-            .unwrap_or_else(PoisonError::into_inner)
-            .clone()
+        self.0.clone()
     }
 }
 
 impl From<iota_sdk::graphql_client::GraphQLClient> for GraphQLClient {
     fn from(client: iota_sdk::graphql_client::GraphQLClient) -> Self {
-        Self(RwLock::new(Arc::new(client)))
+        Self(Arc::new(client))
     }
 }
 
@@ -92,16 +89,6 @@ impl GraphQLClient {
     /// Lazily fetch the max page size
     pub async fn max_page_size(&self) -> Result<i32> {
         Ok(self.client().max_page_size().await?)
-    }
-
-    /// Set the server address for the GraphQL client. It should be a
-    /// valid URL with a host and optionally a port number.
-    pub fn set_rpc_server(&self, server: String) -> Result<()> {
-        let mut current = self.0.write().unwrap_or_else(PoisonError::into_inner);
-        let mut client = (**current).clone();
-        client.set_rpc_server(&server)?;
-        *current = Arc::new(client);
-        Ok(())
     }
 
     /// Get the GraphQL service configuration, including complexity limits, read

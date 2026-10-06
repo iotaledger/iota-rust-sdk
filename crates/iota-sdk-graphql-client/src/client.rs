@@ -183,19 +183,6 @@ impl GraphQLClient {
         &self.rpc
     }
 
-    /// Set the server address for the GraphQL client. It should be a
-    /// valid URL with a host and optionally a port number.
-    ///
-    /// The service config cached from the previous server is dropped and
-    /// fetched from the new one when next needed; clones of this client keep
-    /// theirs.
-    pub fn set_rpc_server(&mut self, server: &str) -> GraphQLResult<()> {
-        let rpc = reqwest::Url::parse(server)?;
-        self.rpc = rpc;
-        self.service_config = Default::default();
-        Ok(())
-    }
-
     /// Get the GraphQL service configuration, including complexity limits, read
     /// and mutation limits, supported versions, and others.
     pub async fn service_config(&self) -> GraphQLResult<&ServiceConfig> {
@@ -298,51 +285,12 @@ mod tests {
     use super::*;
     use crate::test_utils::test_client;
 
-    fn service_config() -> ServiceConfig {
-        ServiceConfig {
-            default_page_size: 20,
-            enabled_features: Vec::new(),
-            max_move_value_depth: 1,
-            max_output_nodes: 1,
-            max_page_size: 50,
-            max_query_depth: 1,
-            max_query_nodes: 1,
-            max_query_payload_size: 1,
-            max_type_argument_depth: 1,
-            max_type_argument_width: 1,
-            max_type_nodes: 1,
-            mutation_timeout_ms: 1,
-            request_timeout_ms: 1,
-        }
-    }
-
-    #[test]
-    fn clones_share_the_service_config_cache_until_the_server_changes() {
-        let client = GraphQLClient::new_localnet().unwrap();
-        client.service_config.set(service_config()).unwrap();
-        let mut clone = client.clone();
-        assert!(clone.service_config.get().is_some());
-
-        clone.set_rpc_server(TESTNET_HOST).unwrap();
-        assert!(clone.service_config.get().is_none());
-        assert!(client.service_config.get().is_some());
-    }
-
     #[test]
     fn test_rpc_server() {
-        let mut client = GraphQLClient::new_localnet().unwrap();
+        let client = GraphQLClient::new_localnet().unwrap();
         assert_eq!(client.rpc_server(), &LOCAL_HOST.parse().unwrap());
-        client.set_rpc_server(MAINNET_HOST).unwrap();
+        let client = GraphQLClient::new_mainnet().unwrap();
         assert_eq!(client.rpc_server(), &MAINNET_HOST.parse().unwrap());
-        client.set_rpc_server(TESTNET_HOST).unwrap();
-        assert_eq!(client.rpc_server(), &TESTNET_HOST.parse().unwrap());
-        client.set_rpc_server(DEVNET_HOST).unwrap();
-        assert_eq!(client.rpc_server(), &DEVNET_HOST.parse().unwrap());
-        client.set_rpc_server(LOCAL_HOST).unwrap();
-        assert_eq!(client.rpc_server(), &LOCAL_HOST.parse().unwrap());
-
-        assert!(client.set_rpc_server("localhost:9125/graphql").is_ok());
-        assert!(client.set_rpc_server("9125/graphql").is_err());
     }
 
     // A response carrying both partial `data` and a populated `errors` list
