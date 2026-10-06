@@ -65,7 +65,10 @@ impl ListCheckpointsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::checkpoint`]. Await it to send the request.
+    /// Query for [`GraphQLClient::checkpoint`],
+    /// [`GraphQLClient::checkpoint_by_digest`] and
+    /// [`GraphQLClient::checkpoint_by_sequence_number`]. Await it to send the
+    /// request.
     pub struct GetCheckpointQuery {
         client: GraphQLClient,
         digest: Option<CheckpointDigest>,
