@@ -75,7 +75,7 @@ impl TransactionBuilderLedgerClient for GraphQLClient {
     }
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
-        let cfg = crate::GraphQLClient::protocol_config(self).await?;
+        let cfg = self.protocol_config().await?;
         let attributes = cfg
             .configs
             .into_iter()
@@ -99,7 +99,8 @@ impl TransactionBuilderSimulationClient for GraphQLClient {
         &self,
         transaction: &Transaction,
     ) -> Result<Option<u64>, Self::Error> {
-        let res = crate::GraphQLClient::dry_run_transaction(self, transaction)
+        let res = self
+            .dry_run_transaction(transaction)
             .skip_checks(true)
             .await?;
         Ok(res.effects.map(|effects| match effects {
@@ -115,7 +116,7 @@ impl TransactionBuilderSimulationClient for GraphQLClient {
         transaction: &Transaction,
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
-        crate::GraphQLClient::dry_run_transaction(self, transaction)
+        self.dry_run_transaction(transaction)
             .skip_checks(skip_checks)
             .await
     }
@@ -128,7 +129,7 @@ impl TransactionBuilderExecutionClient for GraphQLClient {
         transaction: &Transaction,
         wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Self::Error> {
-        crate::GraphQLClient::execute_transaction(self, signatures, transaction)
+        self.execute_transaction(signatures, transaction)
             .wait_for(wait_for)
             .await
     }
@@ -138,7 +139,7 @@ impl TransactionBuilderExecutionClient for GraphQLClient {
         digest: TransactionDigest,
         wait_for: WaitForTransaction,
     ) -> Result<(), Self::Error> {
-        crate::GraphQLClient::wait_for_transaction(self, digest, wait_for).await
+        self.wait_for_transaction(digest, wait_for).await
     }
 
     async fn transaction_effects(
