@@ -113,7 +113,8 @@ impl AsRef<str> for MessageField {
 
 #[doc(hidden)]
 impl MessageField {
-    pub const fn new(name: &'static str) -> Self {
+    #[cfg(test)]
+    const fn new(name: &'static str) -> Self {
         Self {
             name,
             json_name: "",
