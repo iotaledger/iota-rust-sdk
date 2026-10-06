@@ -1,5 +1,8 @@
 # iota-sdk-grpc-client
 
+[![iota-sdk-grpc-client on crates.io](https://img.shields.io/crates/v/iota-sdk-grpc-client)](https://crates.io/crates/iota-sdk-grpc-client)
+[![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-grpc-client)
+
 The IOTA gRPC client provides access to the IOTA blockchain via gRPC. It wraps the low-level proto
 types and provides ergonomic APIs using SDK types from `iota_types`, on top of four service clients:
 

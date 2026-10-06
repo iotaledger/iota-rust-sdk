@@ -1,5 +1,8 @@
 # iota-sdk-graphql-client-build
 
+[![iota-sdk-graphql-client-build on crates.io](https://img.shields.io/crates/v/iota-sdk-graphql-client-build)](https://crates.io/crates/iota-sdk-graphql-client-build)
+[![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-graphql-client-build)
+
 This crate provides a function to register a schema to enable building custom queries using cynic derive macros queries. Call
 this function in a `build.rs` file in your crate if you need to build custom queries.
 
