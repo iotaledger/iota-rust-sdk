@@ -104,6 +104,135 @@ impl ListTransactionsQuery {
 }
 
 define_query! {
+    /// Query for [`GraphQLClient::transactions_by_digest`]. Await it to send
+    /// the request.
+    pub struct GetTransactionsByDigestQuery {
+        client: GraphQLClient,
+        digests: Vec<TransactionDigest>,
+    }
+    output: GraphQLResult<HashMap<TransactionDigest, SignedTransaction>>;
+}
+
+impl GetTransactionsByDigestQuery {
+    async fn send(self) -> GraphQLResult<HashMap<TransactionDigest, SignedTransaction>> {
+        let Self { client, digests } = self;
+        if digests.is_empty() {
+            return Ok(HashMap::new());
+        }
+
+        // One page per round trip, so ask for the largest the server allows.
+        // Falling back to `None` leaves the page size up to the server.
+        let limit = client.max_page_size().await.ok();
+        let chunk_size = Self::digests_per_query(&client, limit).await?;
+
+        let mut transactions = HashMap::with_capacity(digests.len());
+        for chunk in digests.chunks(chunk_size) {
+            transactions.extend(Self::request(&client, chunk, limit).await?);
+        }
+
+        Ok(transactions)
+    }
+
+    /// How many digests fit into one `transactionsByDigests` request.
+    ///
+    /// The server measures the whole request body against
+    /// `maxQueryPayloadSize`, so the digest list only gets what the query text
+    /// and the cursor leave over.
+    async fn digests_per_query(client: &GraphQLClient, limit: Option<i32>) -> GraphQLResult<usize> {
+        // Measure the payload of a request without digests rather than
+        // predicting how the query is serialized.
+        let empty = TransactionsByDigestsQueryFragment::build(TransactionsByDigestsQueryArgs {
+            digests: Vec::new(),
+            limit,
+            cursor: None,
+        });
+        let overhead = serde_json::to_string(&empty)
+            .map_err(|e| {
+                GraphQLError::Other(
+                    format!("failed to determine the overhead of an empty transactionsByDigests request: {e}").into(),
+                )
+            })?
+            .len()
+            + CURSOR_PAYLOAD_RESERVE;
+
+        let budget = client.max_query_payload_size().await? as usize;
+        let chunk_size = budget.saturating_sub(overhead) / DIGEST_PAYLOAD_SIZE;
+
+        if chunk_size == 0 {
+            return Err(GraphQLError::Other(
+                format!(
+                    "a single digest exceeds the server's query payload limit of {budget} bytes"
+                )
+                .into(),
+            ));
+        }
+
+        Ok(chunk_size)
+    }
+
+    /// Walk the pages of one `transactionsByDigests` request to the end.
+    async fn request(
+        client: &GraphQLClient,
+        digests: &[TransactionDigest],
+        limit: Option<i32>,
+    ) -> GraphQLResult<HashMap<TransactionDigest, SignedTransaction>> {
+        let mut transactions = HashMap::with_capacity(digests.len());
+        let mut cursor = None;
+        let mut digest_idx = 0;
+        let digest_strings = digests.iter().map(|d| d.to_string()).collect::<Vec<_>>();
+        loop {
+            let operation =
+                TransactionsByDigestsQueryFragment::build(TransactionsByDigestsQueryArgs {
+                    digests: digest_strings.clone(),
+                    limit,
+                    cursor,
+                });
+            let page = client.run_query(&operation).await?.transactions_by_digests;
+
+            if page.nodes.is_empty() {
+                break;
+            }
+            if page.nodes.len() + digest_idx > digests.len() {
+                return Err(GraphQLError::Other(
+                    format!(
+                        "received more transactions than expected: {} for {} digests",
+                        page.nodes.len() + digest_idx,
+                        digests.len()
+                    )
+                    .into(),
+                ));
+            }
+            for node in page.nodes.into_iter() {
+                if let Some(node) = node {
+                    let transaction: SignedTransaction = node.try_into()?;
+                    transactions.insert(digests[digest_idx], transaction);
+                }
+                digest_idx += 1;
+            }
+
+            cursor = page.end_cursor;
+            if !page.has_next_page || cursor.is_none() || digest_idx >= digests.len() {
+                break;
+            }
+        }
+
+        // The server holds one node per digest, so a short response means the
+        // pages could not be walked to the end.
+        if digest_idx != digests.len() {
+            return Err(GraphQLError::Other(
+                format!(
+                    "expected one entry per digest, got {digest_idx} for {} digests",
+                    digests.len()
+                )
+                .into(),
+            ));
+        }
+
+        Ok(transactions)
+    }
+}
+
+define_query! {
     /// Query for [`GraphQLClient::address_transactions`]. Await it to send the
     /// request.
     pub struct ListAddressTransactionsQuery {
@@ -349,124 +478,14 @@ impl GraphQLClient {
     /// Get transactions by their digests, including transactions that are not
     /// checkpointed yet. Digests that were not found are absent from the
     /// returned map.
-    pub async fn transactions_by_digest(
+    pub fn transactions_by_digest(
         &self,
         digests: impl IntoIterator<Item = TransactionDigest>,
-    ) -> GraphQLResult<HashMap<TransactionDigest, SignedTransaction>> {
-        let digests = digests.into_iter().collect::<Vec<_>>();
-        if digests.is_empty() {
-            return Ok(HashMap::new());
+    ) -> GetTransactionsByDigestQuery {
+        GetTransactionsByDigestQuery {
+            client: self.clone(),
+            digests: digests.into_iter().collect(),
         }
-
-        // One page per round trip, so ask for the largest the server allows.
-        // Falling back to `None` leaves the page size up to the server.
-        let limit = self.max_page_size().await.ok();
-        let chunk_size = self.digests_per_query(limit).await?;
-
-        let mut transactions = HashMap::with_capacity(digests.len());
-        for chunk in digests.chunks(chunk_size) {
-            transactions.extend(self.request_transactions_by_digest(chunk, limit).await?);
-        }
-
-        Ok(transactions)
-    }
-
-    /// How many digests fit into one `transactionsByDigests` request.
-    ///
-    /// The server measures the whole request body against
-    /// `maxQueryPayloadSize`, so the digest list only gets what the query text
-    /// and the cursor leave over.
-    async fn digests_per_query(&self, limit: Option<i32>) -> GraphQLResult<usize> {
-        // Measure the payload of a request without digests rather than
-        // predicting how the query is serialized.
-        let empty = TransactionsByDigestsQueryFragment::build(TransactionsByDigestsQueryArgs {
-            digests: Vec::new(),
-            limit,
-            cursor: None,
-        });
-        let overhead = serde_json::to_string(&empty)
-            .map_err(|e| {
-                GraphQLError::Other(
-                    format!("failed to determine the overhead of an empty transactionsByDigests request: {e}").into(),
-                )
-            })?
-            .len()
-            + CURSOR_PAYLOAD_RESERVE;
-
-        let budget = self.max_query_payload_size().await? as usize;
-        let chunk_size = budget.saturating_sub(overhead) / DIGEST_PAYLOAD_SIZE;
-
-        if chunk_size == 0 {
-            return Err(GraphQLError::Other(
-                format!(
-                    "a single digest exceeds the server's query payload limit of {budget} bytes"
-                )
-                .into(),
-            ));
-        }
-
-        Ok(chunk_size)
-    }
-
-    /// Walk the pages of one `transactionsByDigests` request to the end.
-    async fn request_transactions_by_digest(
-        &self,
-        digests: &[TransactionDigest],
-        limit: Option<i32>,
-    ) -> GraphQLResult<HashMap<TransactionDigest, SignedTransaction>> {
-        let mut transactions = HashMap::with_capacity(digests.len());
-        let mut cursor = None;
-        let mut digest_idx = 0;
-        let digest_strings = digests.iter().map(|d| d.to_string()).collect::<Vec<_>>();
-        loop {
-            let operation =
-                TransactionsByDigestsQueryFragment::build(TransactionsByDigestsQueryArgs {
-                    digests: digest_strings.clone(),
-                    limit,
-                    cursor,
-                });
-            let page = self.run_query(&operation).await?.transactions_by_digests;
-
-            if page.nodes.is_empty() {
-                break;
-            }
-            if page.nodes.len() + digest_idx > digests.len() {
-                return Err(GraphQLError::Other(
-                    format!(
-                        "received more transactions than expected: {} for {} digests",
-                        page.nodes.len() + digest_idx,
-                        digests.len()
-                    )
-                    .into(),
-                ));
-            }
-            for node in page.nodes.into_iter() {
-                if let Some(node) = node {
-                    let transaction: SignedTransaction = node.try_into()?;
-                    transactions.insert(digests[digest_idx], transaction);
-                }
-                digest_idx += 1;
-            }
-
-            cursor = page.end_cursor;
-            if !page.has_next_page || cursor.is_none() || digest_idx >= digests.len() {
-                break;
-            }
-        }
-
-        // The server holds one node per digest, so a short response means the
-        // pages could not be walked to the end.
-        if digest_idx != digests.len() {
-            return Err(GraphQLError::Other(
-                format!(
-                    "expected one entry per digest, got {digest_idx} for {} digests",
-                    digests.len()
-                )
-                .into(),
-            ));
-        }
-
-        Ok(transactions)
     }
 
     /// Get a page of transactions related to the given address.

@@ -34,8 +34,8 @@ pub use api::{
     objects::ListObjectsQuery,
     package::{GetNormalizedMoveModuleQuery, ListPackageVersionsQuery, ListPackagesQuery},
     transactions::{
-        ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
-        ListTransactionsEffectsQuery, ListTransactionsQuery,
+        GetTransactionsByDigestQuery, ListAddressTransactionsQuery,
+        ListTransactionsDataEffectsQuery, ListTransactionsEffectsQuery, ListTransactionsQuery,
     },
 };
 pub use client::{GraphQLClient, USER_AGENT};
