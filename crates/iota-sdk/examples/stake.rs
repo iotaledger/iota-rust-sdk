@@ -16,7 +16,7 @@ async fn main() -> Result<()> {
         Address::from_str("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
 
     let validator = client
-        .active_validators(None, Default::default())
+        .active_validators()
         .await?
         .data
         .into_iter()

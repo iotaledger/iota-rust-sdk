@@ -44,7 +44,8 @@ impl GraphQLClient {
     ) -> Result<GraphQLCheckpointSummaryPage> {
         Ok(self
             .client()
-            .checkpoints(pagination_filter.map(Into::into).unwrap_or_default())
+            .checkpoints()
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
