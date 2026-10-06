@@ -11,9 +11,7 @@ use std::str::FromStr;
 
 use eyre::Result;
 use iota_sdk::{
-    graphql_client::{
-        GraphQLClient, pagination::PaginationFilter, query_types::TransactionsFilter,
-    },
+    graphql_client::{GraphQLClient, query_types::TransactionsFilter},
     types::Address,
 };
 
@@ -25,17 +23,13 @@ async fn main() -> Result<()> {
         Address::from_str("0xa7c2cf9d8f8d95ff69d7a598c49c77acc36253f496f064a533ad306879b40bfa")?;
 
     let outgoing = client
-        .transactions(
-            TransactionsFilter::default().with_sent_address(address),
-            PaginationFilter::default(),
-        )
+        .transactions()
+        .filter(TransactionsFilter::default().with_sent_address(address))
         .await?;
 
     let incoming = client
-        .transactions(
-            TransactionsFilter::default().with_recv_address(address),
-            PaginationFilter::default(),
-        )
+        .transactions()
+        .filter(TransactionsFilter::default().with_recv_address(address))
         .await?;
 
     println!("Transactions for {address}");

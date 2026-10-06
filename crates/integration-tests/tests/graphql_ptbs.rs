@@ -118,10 +118,7 @@ async fn test_transfer_obj_execution() {
     check_effects_status_success(effects);
 
     // check that recipient has 1 coin
-    let recipient_coins = client
-        .coins(recipient, None, PaginationFilter::default())
-        .await
-        .unwrap();
+    let recipient_coins = client.coins(recipient).await.unwrap();
     assert_eq!(recipient_coins.data().len(), 1);
 }
 
@@ -154,10 +151,7 @@ async fn test_split_transfer() {
     check_effects_status_success(effects);
 
     // check that recipient has 1 coin
-    let recipient_coins = client
-        .coins(recipient, None, PaginationFilter::default())
-        .await
-        .unwrap();
+    let recipient_coins = client.coins(recipient).await.unwrap();
     assert_eq!(recipient_coins.data().len(), 1);
 }
 
@@ -204,10 +198,7 @@ async fn test_merge_coins() {
     check_effects_status_success(effects);
 
     // check that there are two coins
-    let coins_after = client
-        .coins(address, None, PaginationFilter::default())
-        .await
-        .unwrap();
+    let coins_after = client.coins(address).await.unwrap();
     assert_eq!(coins_after.data().len(), 2);
 }
 
@@ -229,10 +220,7 @@ async fn test_divide_coins() {
     let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
 
-    let owned = client
-        .coins(address, None, PaginationFilter::default())
-        .await
-        .unwrap();
+    let owned = client.coins(address).await.unwrap();
 
     // PARTS - 1 coins that the sender did not have before, of an equal share
     // each, and none of them transferred by the transaction itself.
@@ -418,15 +406,12 @@ async fn test_manual_gas_pin_consolidates_255_coins() {
         let mut cursor = None;
         loop {
             let page = client
-                .coins(
-                    owner,
-                    None,
-                    PaginationFilter {
-                        direction: Direction::Forward,
-                        cursor: cursor.clone(),
-                        limit: None,
-                    },
-                )
+                .coins(owner)
+                .pagination(PaginationFilter {
+                    direction: Direction::Forward,
+                    cursor: cursor.clone(),
+                    limit: None,
+                })
                 .await
                 .unwrap();
             out.extend(page.data().iter().map(|c| (*c.id(), c.balance())));
@@ -570,7 +555,7 @@ async fn test_events_subscription() {
         tokio::time::sleep(Duration::from_secs(2)).await;
         let validator = GraphQLClient::new_localnet()
             .unwrap()
-            .active_validators(None, PaginationFilter::default())
+            .active_validators()
             .await
             .unwrap()
             .data()

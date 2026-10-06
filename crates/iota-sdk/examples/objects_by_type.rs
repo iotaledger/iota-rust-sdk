@@ -8,10 +8,8 @@ async fn main() -> GraphQLResult<()> {
     let client = GraphQLClient::new_testnet()?;
 
     let coins = client
-        .objects(
-            ObjectFilter::default().with_type("0x2::coin::Coin<0x2::iota::IOTA>".to_owned()),
-            Default::default(),
-        )
+        .objects()
+        .filter(ObjectFilter::default().with_type("0x2::coin::Coin<0x2::iota::IOTA>".to_owned()))
         .await?;
 
     if coins.data.is_empty() {

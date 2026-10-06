@@ -19,15 +19,14 @@ async fn main() -> Result<()> {
     while let Some(cursor) = Some(next_cursor.clone()) {
         println!("Fetching page with cursor: {cursor:?}");
         let owned_objects_page = client
-            .objects(
-                ObjectFilter::default().with_owner(address),
-                PaginationFilter {
-                    cursor,
-                    // Limit to 1 to demonstrate pagination
-                    limit: Some(1),
-                    ..Default::default()
-                },
-            )
+            .objects()
+            .filter(ObjectFilter::default().with_owner(address))
+            .pagination(PaginationFilter {
+                cursor,
+                // Limit to 1 to demonstrate pagination
+                limit: Some(1),
+                ..Default::default()
+            })
             .await?;
         let (page_info, data) = owned_objects_page.into_parts();
         all_objects.extend(data);

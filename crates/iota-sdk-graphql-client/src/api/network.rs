@@ -10,7 +10,7 @@ use crate::{
     GraphQLClient,
     api::define_query,
     error::GraphQLResult,
-    pagination::{Page, PaginationFilter},
+    pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         ActiveValidatorsArgs, ActiveValidatorsQueryFragment, ChainIdentifierQueryFragment,
         EpochArgs, EpochSummaryQueryFragment, ProtocolConfigQueryFragment, ProtocolConfigs,
@@ -35,6 +35,63 @@ impl GetChainIdQuery {
         let response = self.client.run_query(&self.operation()).await?;
 
         Ok(response.chain_identifier)
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::active_validators`]. Await it to send the
+    /// request.
+    pub struct ListActiveValidatorsQuery {
+        client: GraphQLClient,
+        epoch_number: Option<u64>,
+        pagination: PaginationFilter,
+    }
+    output: GraphQLResult<Page<Validator>>;
+}
+
+impl ListActiveValidatorsQuery {
+    /// Set the epoch number. Defaults to the current epoch.
+    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
+        self.epoch_number = epoch_number.into();
+        self
+    }
+
+    /// Set the page to fetch.
+    pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
+        self.pagination = pagination;
+        self
+    }
+
+    fn operation<'a>(
+        epoch_number: Option<u64>,
+        pagination: &'a PaginationFilterResponse,
+    ) -> cynic::Operation<ActiveValidatorsQueryFragment, ActiveValidatorsArgs<'a>> {
+        ActiveValidatorsQueryFragment::build(ActiveValidatorsArgs {
+            id: epoch_number,
+            after: pagination.after.as_deref(),
+            before: pagination.before.as_deref(),
+            first: pagination.first,
+            last: pagination.last,
+        })
+    }
+
+    async fn send(self) -> GraphQLResult<Page<Validator>> {
+        let Self {
+            client,
+            pagination,
+            epoch_number,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(epoch_number, &pagination))
+            .await?;
+
+        if let Some(validators) = response.epoch.and_then(|v| v.validator_set) {
+            let page_info = validators.active_validators.page_info;
+            Ok(Page::new(page_info, validators.active_validators.nodes))
+        } else {
+            Ok(Page::new_empty())
+        }
     }
 }
 
@@ -76,42 +133,49 @@ impl GraphQLClient {
         Ok(response.protocol_config)
     }
 
-    /// Get the list of active validators for the provided epoch, including
-    /// related metadata. If no epoch is provided, it will return the active
-    /// validators for the current epoch.
-    pub async fn active_validators(
-        &self,
-        epoch: impl Into<Option<u64>>,
-        pagination_filter: PaginationFilter,
-    ) -> GraphQLResult<Page<Validator>> {
-        let pagination = self.pagination_filter(pagination_filter).await;
-
-        let operation = ActiveValidatorsQueryFragment::build(ActiveValidatorsArgs {
-            id: epoch.into(),
-            after: pagination.after.as_deref(),
-            before: pagination.before.as_deref(),
-            first: pagination.first,
-            last: pagination.last,
-        });
-        let response = self.run_query(&operation).await?;
-
-        if let Some(validators) = response.epoch.and_then(|v| v.validator_set) {
-            let page_info = validators.active_validators.page_info;
-            let nodes = validators
-                .active_validators
-                .nodes
-                .into_iter()
-                .collect::<Vec<_>>();
-            Ok(Page::new(page_info, nodes))
-        } else {
-            Ok(Page::new_empty())
+    /// Get the list of active validators, including related metadata.
+    pub fn active_validators(&self) -> ListActiveValidatorsQuery {
+        ListActiveValidatorsQuery {
+            client: self.clone(),
+            epoch_number: None,
+            pagination: PaginationFilter::default(),
         }
     }
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use crate::{GraphQLClient, PaginationFilter, test_utils::test_client};
+    use crate::{
+        GraphQLClient,
+        test_utils::{
+            assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+            test_client,
+        },
+    };
+
+    #[tokio::test]
+    async fn active_validators_sends_the_epoch_and_pagination() {
+        let vars = sent_variables("ActiveValidatorsQueryFragment", |client| async move {
+            let _ = client
+                .active_validators()
+                .epoch_number(3)
+                .pagination(backward_page())
+                .await;
+        })
+        .await;
+        assert_eq!(vars["id"], 3);
+        assert_backward_page(&vars);
+
+        let vars = sent_variables("ActiveValidatorsQueryFragment", |client| async move {
+            let _ = client
+                .active_validators()
+                .epoch_number(3)
+                .pagination(forward_page())
+                .await;
+        })
+        .await;
+        assert_forward_page(&vars);
+    }
 
     #[test]
     fn chain_id_builds_the_chain_identifier_operation() {
@@ -187,7 +251,7 @@ mod tests {
     async fn test_active_validators() {
         let client = test_client();
         let av = client
-            .active_validators(None, PaginationFilter::default())
+            .active_validators()
             .await
             .map_err(|e| {
                 format!(

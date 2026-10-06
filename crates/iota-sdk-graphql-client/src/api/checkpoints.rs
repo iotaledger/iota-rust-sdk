@@ -10,14 +10,59 @@ use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};
 
 use crate::{
     GraphQLClient,
+    api::define_query,
     error::{GraphQLError, GraphQLResult},
-    pagination::{Direction, Page, PaginationFilter},
+    pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         CheckpointArgs, CheckpointId, CheckpointQueryFragment, CheckpointTotalTxQueryFragment,
         CheckpointsArgs, CheckpointsQueryFragment,
     },
     streams::stream_paginated_query,
 };
+
+define_query! {
+    /// Query for [`GraphQLClient::checkpoints`]. Await it to send the request.
+    pub struct ListCheckpointsQuery {
+        client: GraphQLClient,
+        pagination: PaginationFilter,
+    }
+    output: GraphQLResult<Page<CheckpointSummary>>;
+}
+
+impl ListCheckpointsQuery {
+    /// Set the page to fetch.
+    pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
+        self.pagination = pagination;
+        self
+    }
+
+    fn operation<'a>(
+        pagination: &'a PaginationFilterResponse,
+    ) -> cynic::Operation<CheckpointsQueryFragment, CheckpointsArgs<'a>> {
+        CheckpointsQueryFragment::build(CheckpointsArgs {
+            after: pagination.after.as_deref(),
+            before: pagination.before.as_deref(),
+            first: pagination.first,
+            last: pagination.last,
+        })
+    }
+
+    async fn send(self) -> GraphQLResult<Page<CheckpointSummary>> {
+        let Self { client, pagination } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client.run_query(&Self::operation(&pagination)).await?;
+
+        let cc = response.checkpoints;
+        let page_info = cc.page_info;
+        let nodes = cc
+            .nodes
+            .into_iter()
+            .map(|c| c.try_into())
+            .collect::<GraphQLResult<Vec<_>>>()?;
+
+        Ok(Page::new(page_info, nodes))
+    }
+}
 
 const CONFLICTING_CHECKPOINT_ID: &str =
     "either digest or sequence_number can be provided, but not both";
@@ -29,7 +74,10 @@ impl GraphQLClient {
         &self,
         streaming_direction: Direction,
     ) -> impl Stream<Item = GraphQLResult<CheckpointSummary>> + '_ {
-        stream_paginated_query(move |filter| self.checkpoints(filter), streaming_direction)
+        stream_paginated_query(
+            move |filter| self.checkpoints().pagination(filter).into_future(),
+            streaming_direction,
+        )
     }
 
     /// Get the [`CheckpointSummary`] for a given checkpoint digest or
@@ -57,30 +105,12 @@ impl GraphQLClient {
         response.checkpoint.map(|c| c.try_into()).transpose()
     }
 
-    /// Get a page of [`CheckpointSummary`] for the provided parameters.
-    pub async fn checkpoints(
-        &self,
-        pagination_filter: PaginationFilter,
-    ) -> GraphQLResult<Page<CheckpointSummary>> {
-        let pagination = self.pagination_filter(pagination_filter).await;
-
-        let operation = CheckpointsQueryFragment::build(CheckpointsArgs {
-            after: pagination.after.as_deref(),
-            before: pagination.before.as_deref(),
-            first: pagination.first,
-            last: pagination.last,
-        });
-        let response = self.run_query(&operation).await?;
-
-        let cc = response.checkpoints;
-        let page_info = cc.page_info;
-        let nodes = cc
-            .nodes
-            .into_iter()
-            .map(|c| c.try_into())
-            .collect::<GraphQLResult<Vec<_>>>()?;
-
-        Ok(Page::new(page_info, nodes))
+    /// Get a page of [`CheckpointSummary`].
+    pub fn checkpoints(&self) -> ListCheckpointsQuery {
+        ListCheckpointsQuery {
+            client: self.clone(),
+            pagination: PaginationFilter::default(),
+        }
     }
 
     /// Return the sequence number of the latest checkpoint that has been
@@ -147,7 +177,25 @@ impl GraphQLClient {
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use crate::{PaginationFilter, test_utils::test_client};
+    use crate::test_utils::{
+        assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+        test_client,
+    };
+
+    #[tokio::test]
+    async fn checkpoints_sends_the_pagination() {
+        let vars = sent_variables("CheckpointsQueryFragment", |client| async move {
+            let _ = client.checkpoints().pagination(backward_page()).await;
+        })
+        .await;
+        assert_backward_page(&vars);
+
+        let vars = sent_variables("CheckpointsQueryFragment", |client| async move {
+            let _ = client.checkpoints().pagination(forward_page()).await;
+        })
+        .await;
+        assert_forward_page(&vars);
+    }
 
     #[test]
     fn checkpoints_query_forwards_pagination_arguments() {
@@ -190,7 +238,7 @@ mod tests {
     async fn test_checkpoints_query() {
         let client = test_client();
         let cs = client
-            .checkpoints(PaginationFilter::default())
+            .checkpoints()
             .await
             .map_err(|e| {
                 format!(

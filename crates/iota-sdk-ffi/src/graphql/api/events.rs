@@ -27,10 +27,9 @@ impl GraphQLClient {
     ) -> Result<GraphQLEventPage> {
         let (page_info, events) = self
             .client()
-            .events(
-                filter.map(|f| f.into()),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .events()
+            .filter(filter.map(|f| f.into()))
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .into_parts();
         let events = events
