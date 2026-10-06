@@ -79,9 +79,10 @@ use serde_json::Value as JsonValue;
 pub use service_config::{Feature, ServiceConfig, ServiceConfigQueryFragment};
 pub use subscriptions::{
     EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs, Lagged,
-    SubscriptionEvent, SubscriptionEventFilter, SubscriptionTransactionBlock,
-    SubscriptionTransactionFilter, TransactionBlockSubscriptionPayload, TransactionsSubscription,
-    TransactionsSubscriptionArgs,
+    SubscriptionEvent, SubscriptionEventFilter, SubscriptionEventFilterInput,
+    SubscriptionTransactionBlock, SubscriptionTransactionFilter,
+    SubscriptionTransactionFilterInput, TransactionBlockSubscriptionPayload,
+    TransactionsSubscription, TransactionsSubscriptionArgs,
 };
 pub use transaction::{
     AddressTransactionBlocksQueryFragment, AddressTransactionRelationship,

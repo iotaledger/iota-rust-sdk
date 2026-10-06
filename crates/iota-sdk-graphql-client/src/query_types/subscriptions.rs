@@ -51,82 +51,87 @@ pub struct TransactionsSubscription {
 #[derive(cynic::QueryVariables, Debug)]
 pub struct EventsSubscriptionArgs {
     pub start_after: Option<String>,
-    pub filter: Option<SubscriptionEventFilter>,
+    pub filter: Option<SubscriptionEventFilterInput>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
 pub struct TransactionsSubscriptionArgs {
     pub start_after: Option<String>,
-    pub filter: Option<SubscriptionTransactionFilter>,
+    pub filter: Option<SubscriptionTransactionFilterInput>,
 }
 
 // ===========================================================================
 // Subscription filters
 // ===========================================================================
 
-/// Filter incoming events in a subscription. Exactly one field must be set
-/// (the GraphQL input is `@oneOf`).
-#[derive(Clone, cynic::InputObject, Debug, Default)]
-#[cynic(schema = "rpc", graphql_type = "SubscriptionEventFilter")]
+/// Filter incoming events in a subscription.
+///
+/// The GraphQL input is `@oneOf`, so exactly one criterion is selected.
+#[derive(Clone, Debug)]
 #[non_exhaustive]
-pub struct SubscriptionEventFilter {
+pub enum SubscriptionEventFilter {
     /// Filter incoming events by emitting module, e.g. `"0x02"` (package) or
     /// `"0x02::coin"` (module).
-    pub emitting_module: Option<String>,
+    EmittingModule(String),
 }
 
-impl SubscriptionEventFilter {
-    /// Filter incoming events by emitting module, e.g. `"0x02"` (package) or
-    /// `"0x02::coin"` (module).
-    pub fn with_emitting_module(mut self, emitting_module: impl Into<Option<String>>) -> Self {
-        self.emitting_module = emitting_module.into();
-        self
+/// The GraphQL input object, built from a [`SubscriptionEventFilter`].
+#[derive(Clone, cynic::InputObject, Debug, Default)]
+#[cynic(schema = "rpc", graphql_type = "SubscriptionEventFilter")]
+pub struct SubscriptionEventFilterInput {
+    emitting_module: Option<String>,
+}
+
+impl From<SubscriptionEventFilter> for SubscriptionEventFilterInput {
+    fn from(filter: SubscriptionEventFilter) -> Self {
+        match filter {
+            SubscriptionEventFilter::EmittingModule(module) => Self {
+                emitting_module: Some(module),
+            },
+        }
     }
 }
 
-/// Filter incoming transactions in a subscription. Exactly one field must be
-/// set (the GraphQL input is `@oneOf`).
-#[derive(Clone, cynic::InputObject, Debug, Default)]
-#[cynic(schema = "rpc", graphql_type = "SubscriptionTransactionFilter")]
+/// Filter incoming transactions in a subscription.
+///
+/// The GraphQL input is `@oneOf`, so exactly one criterion is selected.
+#[derive(Clone, Debug)]
 #[non_exhaustive]
-pub struct SubscriptionTransactionFilter {
+pub enum SubscriptionTransactionFilter {
     /// Filter incoming transactions by kind.
-    pub kind: Option<TransactionBlockKindInput>,
+    Kind(TransactionBlockKindInput),
     /// Filter incoming transactions by sender address.
     ///
     /// Only the sender is compared, despite the name — a sponsored
     /// transaction is not matched by its sponsor's (gas owner's) address,
     /// even though the sponsor also signed it.
-    pub signing_address: Option<Address>,
+    SigningAddress(Address),
     /// Filter incoming transactions by package, module, or function name, e.g.
     /// `"0x03"`, `"0x03::iota_system"`, or
     /// `"0x03::iota_system::request_add_stake"`.
-    pub function: Option<String>,
+    Function(String),
 }
 
-impl SubscriptionTransactionFilter {
-    /// Filter incoming transactions by kind.
-    pub fn with_kind(mut self, kind: impl Into<Option<TransactionBlockKindInput>>) -> Self {
-        self.kind = kind.into();
-        self
-    }
+/// The GraphQL input object, built from a [`SubscriptionTransactionFilter`].
+#[derive(Clone, cynic::InputObject, Debug, Default)]
+#[cynic(schema = "rpc", graphql_type = "SubscriptionTransactionFilter")]
+pub struct SubscriptionTransactionFilterInput {
+    kind: Option<TransactionBlockKindInput>,
+    signing_address: Option<Address>,
+    function: Option<String>,
+}
 
-    /// Filter incoming transactions by sender address.
-    ///
-    /// Only the sender is compared, despite the name — a sponsored transaction
-    /// is not matched by its sponsor's (gas owner's) address, even though the
-    /// sponsor also signed it.
-    pub fn with_signing_address(mut self, signing_address: impl Into<Option<Address>>) -> Self {
-        self.signing_address = signing_address.into();
-        self
-    }
-
-    /// Filter incoming transactions by package, module, or function name, e.g.
-    /// `"0x03"`, `"0x03::iota_system"`, or
-    /// `"0x03::iota_system::request_add_stake"`.
-    pub fn with_function(mut self, function: impl Into<Option<String>>) -> Self {
-        self.function = function.into();
-        self
+impl From<SubscriptionTransactionFilter> for SubscriptionTransactionFilterInput {
+    fn from(filter: SubscriptionTransactionFilter) -> Self {
+        let mut input = Self::default();
+        match filter {
+            SubscriptionTransactionFilter::Kind(kind) => input.kind = Some(kind),
+            SubscriptionTransactionFilter::SigningAddress(address) => {
+                input.signing_address = Some(address)
+            }
+            SubscriptionTransactionFilter::Function(function) => input.function = Some(function),
+        }
+        input
     }
 }
 

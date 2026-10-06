@@ -65,7 +65,7 @@ impl GraphQLClient {
         filter: impl Into<Option<SubscriptionEventFilter>>,
         start_after: impl Into<Option<String>>,
     ) -> impl Stream<Item = GraphQLResult<Event>> + Unpin + '_ {
-        let filter = filter.into();
+        let filter = filter.into().map(Into::into);
         reconnecting_subscription(
             move |cursor| {
                 let filter = filter.clone();
@@ -127,7 +127,7 @@ impl GraphQLClient {
         filter: impl Into<Option<SubscriptionTransactionFilter>>,
         start_after: impl Into<Option<String>>,
     ) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin + '_ {
-        let filter = filter.into();
+        let filter = filter.into().map(Into::into);
         reconnecting_subscription(
             move |cursor| {
                 let filter = filter.clone();
