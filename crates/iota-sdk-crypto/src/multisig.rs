@@ -103,7 +103,6 @@ impl MultisigVerifier {
 }
 
 #[cfg(feature = "passkey")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 impl MultisigVerifier {
     pub fn with_passkey_verifier(
         mut self,
@@ -220,7 +219,6 @@ impl UserSignatureVerifier {
 }
 
 #[cfg(feature = "passkey")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 impl UserSignatureVerifier {
     pub fn with_passkey_verifier(
         mut self,

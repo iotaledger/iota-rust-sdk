@@ -130,7 +130,6 @@ macro_rules! impl_base64_helper {
         }
 
         #[cfg(feature = "serde")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
         impl serde_with::SerializeAs<[u8; Self::LENGTH]> for $base {
             fn serialize_as<S>(
                 source: &[u8; Self::LENGTH],
@@ -145,7 +144,6 @@ macro_rules! impl_base64_helper {
         }
 
         #[cfg(feature = "serde")]
-        #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
         impl<'de> serde_with::DeserializeAs<'de, [u8; Self::LENGTH]> for $base {
             fn deserialize_as<D>(deserializer: D) -> Result<[u8; Self::LENGTH], D::Error>
             where
