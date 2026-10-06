@@ -11,7 +11,7 @@ use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};
 use crate::{
     GraphQLClient,
     api::define_query,
-    error::{GraphQLError, GraphQLResult},
+    error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         CheckpointArgs, CheckpointId, CheckpointQueryFragment, CheckpointTotalTxQueryFragment,
@@ -87,9 +87,6 @@ impl GetCheckpointQuery {
         response.checkpoint.map(|c| c.try_into()).transpose()
     }
 }
-
-const CONFLICTING_CHECKPOINT_ID: &str =
-    "either digest or sequence_number can be provided, but not both";
 
 impl GraphQLClient {
     /// Get a stream of [`CheckpointSummary`]. Note that this will fetch all
@@ -180,10 +177,6 @@ impl GraphQLClient {
         digest: Option<String>,
         sequence_number: Option<u64>,
     ) -> GraphQLResult<Option<u64>> {
-        if digest.is_some() && sequence_number.is_some() {
-            return Err(GraphQLError::InvalidArgument(CONFLICTING_CHECKPOINT_ID));
-        }
-
         let operation = CheckpointTotalTxQueryFragment::build(CheckpointArgs {
             id: CheckpointId {
                 digest,
