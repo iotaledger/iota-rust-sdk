@@ -38,7 +38,8 @@ impl GraphQLClient {
     ) -> Result<GraphQLNameRegistrationPage> {
         Ok(self
             .client()
-            .iota_names_registrations(**address, pagination_filter.into())
+            .iota_names_registrations(**address)
+            .pagination(pagination_filter.into())
             .await?
             .map(Into::into)
             .into())

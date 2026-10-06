@@ -49,6 +49,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ListDynamicFieldsRequest {}
     impl MessageFields for ListDynamicFieldsRequest {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::PARENT_FIELD,
@@ -117,6 +118,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ListDynamicFieldsResponse {}
     impl MessageFields for ListDynamicFieldsResponse {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::DYNAMIC_FIELDS_FIELD,
@@ -206,6 +208,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ListOwnedObjectsRequest {}
     impl MessageFields for ListOwnedObjectsRequest {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::OWNER_FIELD,
@@ -279,6 +282,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ListOwnedObjectsResponse {}
     impl MessageFields for ListOwnedObjectsResponse {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::OBJECTS_FIELD,
@@ -324,6 +328,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for GetCoinInfoRequest {}
     impl MessageFields for GetCoinInfoRequest {
         const FIELDS: &'static [&'static MessageField] = &[Self::COIN_TYPE_FIELD];
     }
@@ -386,6 +391,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::coin::RegulatedCoinMetadata::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for GetCoinInfoResponse {}
     impl MessageFields for GetCoinInfoResponse {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::COIN_TYPE_FIELD,

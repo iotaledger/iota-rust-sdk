@@ -37,7 +37,7 @@ async fn main() -> Result<()> {
     let private_key = Ed25519PrivateKey::new([0; Ed25519PrivateKey::LENGTH]);
     let sender = private_key.public_key().derive_address();
 
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
     FaucetClient::new_localnet()
         .request_and_wait_for_finalized(sender, &client)
         .await?;

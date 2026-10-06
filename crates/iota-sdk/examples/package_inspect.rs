@@ -19,7 +19,7 @@ use iota_sdk::{
 async fn main() -> Result<()> {
     let package_id = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d";
     let package_address = Address::from_hex(package_id)?;
-    let client = GraphQLClient::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     // Fetch package metadata and version history.
     let package = client
@@ -97,15 +97,11 @@ async fn main() -> Result<()> {
         println!("Module: {module_name}");
 
         let Some(module) = client
-            .normalized_move_module(
-                package_address,
-                module_name,
-                None,
-                module_page.clone(),
-                module_page.clone(),
-                module_page.clone(),
-                module_page.clone(),
-            )
+            .normalized_move_module(package_address, module_name)
+            .enums_pagination(module_page.clone())
+            .friends_pagination(module_page.clone())
+            .functions_pagination(module_page.clone())
+            .structs_pagination(module_page.clone())
             .await?
         else {
             println!("  metadata: missing");
@@ -217,7 +213,8 @@ async fn fetch_package_versions(
 
     loop {
         let page = client
-            .package_versions(package_address, forward_page(cursor.clone()), None, None)
+            .package_versions(package_address)
+            .pagination(forward_page(cursor.clone()))
             .await?;
 
         packages.extend(page.data);
@@ -249,13 +246,12 @@ async fn print_object_samples(
     }
 
     let objects = client
-        .objects(
-            ObjectFilter::default().with_type(type_tag.to_owned()),
-            PaginationFilter {
-                limit: Some(3),
-                ..forward_page(None)
-            },
-        )
+        .objects()
+        .filter(ObjectFilter::default().with_type(type_tag.to_owned()))
+        .pagination(PaginationFilter {
+            limit: Some(3),
+            ..forward_page(None)
+        })
         .await?;
 
     if objects.data.is_empty() {
@@ -297,14 +293,13 @@ async fn resolve_upgrade_cap_id(
     package_id: ObjectId,
 ) -> Result<Option<ObjectId>> {
     let effects_page = client
-        .transactions_effects(
-            TransactionsFilter::default().with_changed_object(package_id),
-            PaginationFilter {
-                direction: Direction::Forward,
-                cursor: None,
-                limit: Some(1),
-            },
-        )
+        .transactions_effects()
+        .filter(TransactionsFilter::default().with_changed_object(package_id))
+        .pagination(PaginationFilter {
+            direction: Direction::Forward,
+            cursor: None,
+            limit: Some(1),
+        })
         .await?;
 
     for effects in effects_page.data {
@@ -438,10 +433,9 @@ async fn was_package_published_as_immutable(
 
     loop {
         let page = client
-            .transactions_data_effects(
-                TransactionsFilter::default().with_changed_object(package_id),
-                forward_page(cursor.clone()),
-            )
+            .transactions_data_effects()
+            .filter(TransactionsFilter::default().with_changed_object(package_id))
+            .pagination(forward_page(cursor.clone()))
             .await?;
 
         if page
@@ -468,10 +462,9 @@ async fn was_upgrade_cap_used_for_make_immutable(
 
     loop {
         let page = client
-            .transactions_data_effects(
-                TransactionsFilter::default().with_input_object(upgrade_cap_id),
-                forward_page(cursor.clone()),
-            )
+            .transactions_data_effects()
+            .filter(TransactionsFilter::default().with_input_object(upgrade_cap_id))
+            .pagination(forward_page(cursor.clone()))
             .await?;
 
         if page.data.iter().any(|tx_data| {

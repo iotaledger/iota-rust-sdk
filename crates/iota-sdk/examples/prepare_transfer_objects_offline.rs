@@ -11,7 +11,7 @@ use iota_sdk::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
 
     let private_key = Ed25519PrivateKey::random();
     let from_address = private_key.public_key().derive_address();
@@ -23,10 +23,8 @@ async fn main() -> Result<()> {
         .await?;
 
     let coins = client
-        .objects(
-            ObjectFilter::default().with_owner(from_address),
-            Default::default(),
-        )
+        .objects()
+        .filter(ObjectFilter::default().with_owner(from_address))
         .await?
         .data;
     let (gas_coin, to_transfer) = coins.split_first().ok_or_eyre("no coins found")?;

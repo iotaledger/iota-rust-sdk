@@ -8,7 +8,7 @@ use iota_sdk::{graphql_client::GraphQLClient, types::Address};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     let package_address =
         Address::from_str("0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d")?;
@@ -18,15 +18,7 @@ async fn main() -> Result<()> {
 
     for (module_id, _) in package.modules {
         let Some(module) = client
-            .normalized_move_module(
-                package_address,
-                module_id.as_str(),
-                None,
-                Default::default(),
-                Default::default(),
-                Default::default(),
-                Default::default(),
-            )
+            .normalized_move_module(package_address, module_id.as_str())
             .await?
         else {
             eyre::bail!("module `{module_id}` not found")
