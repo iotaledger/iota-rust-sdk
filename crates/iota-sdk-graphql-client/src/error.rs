@@ -7,7 +7,7 @@ use std::{
     string::FromUtf8Error,
 };
 
-use cynic::GraphQlError;
+use cynic::serde::Deserialize;
 use iota_types::{
     AddressParseError, DigestParseError, TypeParseError, TypeTag, iota_names::error::IotaNamesError,
 };
@@ -36,7 +36,25 @@ fn truncated_body(bytes: &[u8]) -> String {
     body
 }
 
-fn display_graphql_errors(errors: &[GraphQlError]) -> String {
+/// A GraphQL error as reported by the server, with its [`ErrorExtensions`]
+/// decoded.
+pub type QueryError = cynic::GraphQlError<ErrorExtensions>;
+
+/// The `extensions` object of a GraphQL error returned by the server.
+#[derive(Clone, Debug, Default, Eq, PartialEq, Deserialize)]
+#[serde(crate = "cynic::serde")]
+#[non_exhaustive]
+pub struct ErrorExtensions {
+    /// Machine-readable error kind, e.g. `BAD_USER_INPUT`.
+    pub code: Option<String>,
+}
+
+/// Convert an error whose extensions were not decoded; `code` is `None`.
+pub(crate) fn query_error(error: cynic::GraphQlError) -> QueryError {
+    QueryError::new(error.message, error.locations, error.path, None)
+}
+
+fn display_graphql_errors(errors: &[QueryError]) -> String {
     errors
         .iter()
         .map(|e| e.to_string())
@@ -82,9 +100,10 @@ pub enum GraphQLError {
         #[source]
         source: serde_json::Error,
     },
-    /// The server returned errors for the query.
+    /// The server returned errors for the query. Subscription errors carry no
+    /// [`ErrorExtensions::code`].
     #[error("query error: [{}]", display_graphql_errors(.0))]
-    Query(Vec<GraphQlError>),
+    Query(Vec<QueryError>),
     /// The response carried neither data nor errors.
     #[error("empty response: the server returned neither data nor errors")]
     EmptyResponse,

@@ -10,7 +10,7 @@ use cynic::{GraphQlResponse, Operation, QueryBuilder, serde};
 use reqwest::Url;
 
 use crate::{
-    error::{GraphQLError, GraphQLResult},
+    error::{ErrorExtensions, GraphQLError, GraphQLResult},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
     query_types::{ServiceConfig, ServiceConfigQueryFragment},
 };
@@ -32,7 +32,9 @@ pub static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_P
 /// list is surfaced as a query error rather than being treated as a
 /// success. A response with neither `data` nor `errors` is reported as an empty
 /// response error instead of panicking.
-pub(crate) fn response_to_err<T>(response: GraphQlResponse<T>) -> GraphQLResult<T> {
+pub(crate) fn response_to_err<T>(
+    response: GraphQlResponse<T, ErrorExtensions>,
+) -> GraphQLResult<T> {
     match (response.data, response.errors) {
         (_, Some(errors)) if !errors.is_empty() => Err(GraphQLError::Query(errors)),
         (Some(data), _) => Ok(data),
@@ -157,7 +159,10 @@ impl GraphQLClient {
         T: serde::de::DeserializeOwned,
         V: serde::Serialize,
     {
-        response_to_err(self.post_query(operation).await?)
+        response_to_err(
+            self.post_query::<GraphQlResponse<T, ErrorExtensions>>(operation)
+                .await?,
+        )
     }
 
     /// POST a JSON-serializable GraphQL request body and decode the JSON
@@ -194,7 +199,10 @@ impl GraphQLClient {
         &self,
         json: serde_json::Map<String, serde_json::Value>,
     ) -> GraphQLResult<serde_json::Value> {
-        response_to_err(self.post_query(&json).await?)
+        response_to_err(
+            self.post_query::<GraphQlResponse<serde_json::Value, ErrorExtensions>>(&json)
+                .await?,
+        )
     }
 
     /// Handle pagination filters and return the appropriate values. If limit is
@@ -284,11 +292,16 @@ mod tests {
     // panicking on the unreachable arm.
     #[test]
     fn test_response_to_err_data_and_errors() {
-        let response: GraphQlResponse<serde_json::Value> = serde_json::from_value(json!({
-            "data": { "epoch": null },
-            "errors": [{ "message": "Page size 75 exceeds the max page size of 50" }],
-        }))
-        .unwrap();
+        let response: GraphQlResponse<serde_json::Value, ErrorExtensions> =
+            serde_json::from_value(json!({
+                "data": { "epoch": null },
+                "errors": [{
+                    "message": "Page size 75 exceeds the max page size of 50",
+                    "path": ["events"],
+                    "extensions": { "code": "BAD_USER_INPUT", "other": 1 },
+                }],
+            }))
+            .unwrap();
 
         let GraphQLError::Query(errors) = response_to_err(response).unwrap_err() else {
             panic!("expected GraphQLError::Query");
@@ -298,11 +311,15 @@ mod tests {
             errors[0].message,
             "Page size 75 exceeds the max page size of 50"
         );
+        assert_eq!(
+            errors[0].extensions.as_ref().unwrap().code.as_deref(),
+            Some("BAD_USER_INPUT")
+        );
     }
 
     #[test]
     fn test_response_to_err_data_only() {
-        let response: GraphQlResponse<serde_json::Value> =
+        let response: GraphQlResponse<serde_json::Value, ErrorExtensions> =
             serde_json::from_value(json!({ "data": { "epoch": 1 } })).unwrap();
 
         let data = response_to_err(response).unwrap();
@@ -311,11 +328,12 @@ mod tests {
 
     #[test]
     fn test_response_to_err_errors_only() {
-        let response: GraphQlResponse<serde_json::Value> = serde_json::from_value(json!({
-            "data": null,
-            "errors": [{ "message": "boom" }],
-        }))
-        .unwrap();
+        let response: GraphQlResponse<serde_json::Value, ErrorExtensions> =
+            serde_json::from_value(json!({
+                "data": null,
+                "errors": [{ "message": "boom" }],
+            }))
+            .unwrap();
 
         let GraphQLError::Query(errors) = response_to_err(response).unwrap_err() else {
             panic!("expected GraphQLError::Query");

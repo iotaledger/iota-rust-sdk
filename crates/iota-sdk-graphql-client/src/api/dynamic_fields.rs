@@ -108,7 +108,7 @@ impl GraphQLClient {
     ///
     /// # Example
     /// ```rust,ignore
-    /// 
+    ///
     /// let client = iota_graphql_client::GraphQLClient::new_testnet().unwrap();
     /// let address = ObjectId::system().into();
     /// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();

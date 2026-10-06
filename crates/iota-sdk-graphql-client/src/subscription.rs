@@ -19,7 +19,7 @@ use reqwest::Url;
 use crate::{
     GraphQLClient,
     client::response_to_err,
-    error::{GraphQLError, GraphQLResult},
+    error::{GraphQLError, GraphQLResult, query_error},
     query_types::{
         Event, EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs,
         SubscriptionEventFilter, SubscriptionTransactionFilter,
@@ -47,6 +47,17 @@ enum Outcome<T> {
     /// A payload that carries nothing to yield (unknown union variant or an
     /// empty response).
     Skip,
+}
+
+/// Like [`response_to_err`], for subscription responses whose error extensions
+/// are not decoded.
+fn subscription_response_to_err<T>(response: cynic::GraphQlResponse<T>) -> GraphQLResult<T> {
+    response_to_err(cynic::GraphQlResponse {
+        data: response.data,
+        errors: response
+            .errors
+            .map(|errors| errors.into_iter().map(query_error).collect()),
+    })
 }
 
 impl GraphQLClient {
@@ -82,7 +93,9 @@ impl GraphQLClient {
                     // changes.
                     let mut current_tx: Option<String> = None;
                     let mapped = subscription.map(move |item| -> GraphQLResult<Outcome<Event>> {
-                        let data = response_to_err(item.map_err(GraphQLError::subscription)?)?;
+                        let data = subscription_response_to_err(
+                            item.map_err(GraphQLError::subscription)?,
+                        )?;
                         Ok(match data.events {
                             EventSubscriptionPayload::Event(event) => {
                                 let digest = event.transaction_digest();
@@ -140,7 +153,9 @@ impl GraphQLClient {
 
                     let mapped =
                         subscription.map(|item| -> GraphQLResult<Outcome<SignedTransaction>> {
-                            let data = response_to_err(item.map_err(GraphQLError::subscription)?)?;
+                            let data = subscription_response_to_err(
+                                item.map_err(GraphQLError::subscription)?,
+                            )?;
                             Ok(match data.transactions {
                                 TransactionBlockSubscriptionPayload::TransactionBlock(block) => {
                                     let cursor = block.digest.clone();
