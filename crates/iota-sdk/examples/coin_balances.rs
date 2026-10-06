@@ -8,11 +8,7 @@ async fn main() -> GraphQLResult<()> {
     let client = GraphQLClient::new_testnet();
     let address = "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151".parse()?;
 
-    for coin in client
-        .coins(address, None, Default::default())
-        .await?
-        .data()
-    {
+    for coin in client.coins(address).await?.data() {
         println!(
             "Coin = {}, Coin Type = {}, Balance = {}",
             coin.id(),

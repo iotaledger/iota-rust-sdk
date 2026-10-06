@@ -18,15 +18,7 @@ async fn main() -> Result<()> {
 
     for (module_id, _) in package.modules {
         let Some(module) = client
-            .normalized_move_module(
-                package_address,
-                module_id.as_str(),
-                None,
-                Default::default(),
-                Default::default(),
-                Default::default(),
-                Default::default(),
-            )
+            .normalized_move_module(package_address, module_id.as_str())
             .await?
         else {
             eyre::bail!("module `{module_id}` not found")
