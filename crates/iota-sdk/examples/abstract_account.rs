@@ -13,7 +13,7 @@ use iota_sdk::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
     let account_address = Address::from(setup_account(&client).await?);
     let to_address =
         Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;

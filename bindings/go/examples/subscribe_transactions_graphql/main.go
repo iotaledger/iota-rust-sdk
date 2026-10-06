@@ -22,7 +22,10 @@ import (
 const deadline = 60 * time.Second
 
 func main() {
-	client := iota_sdk.GraphQlClientNewLocalnet()
+	client, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 	kind := iota_sdk.GraphQlTransactionBlockKindInputProgrammableTx
 	subscription := client.TransactionsSubscription(&iota_sdk.GraphQlSubscriptionTransactionFilter{Kind: &kind}, nil)
 	defer subscription.Cancel()

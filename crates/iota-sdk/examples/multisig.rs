@@ -42,7 +42,7 @@ async fn main() -> Result<()> {
     let multisig_address = committee.derive_address();
     println!("Multisig address: {multisig_address}");
 
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
 
     // 4. Fund the multisig address
     FaucetClient::new_localnet()

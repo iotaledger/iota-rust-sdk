@@ -5,7 +5,7 @@ use iota_sdk::graphql_client::{GraphQLClient, error::GraphQLResult, query_types:
 
 #[tokio::main]
 async fn main() -> GraphQLResult<()> {
-    let client = GraphQLClient::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     let coins = client
         .objects()

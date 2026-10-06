@@ -11,7 +11,10 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	coinType := "0x2::coin::Coin<0x2::iota::IOTA>"
 	coins, err := client.Objects(&iota_sdk.GraphQlObjectFilter{TypeTag: &coinType}, nil)

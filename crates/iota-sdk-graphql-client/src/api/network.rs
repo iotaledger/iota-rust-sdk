@@ -222,7 +222,10 @@ mod tests {
 
     #[test]
     fn chain_id_builds_the_chain_identifier_operation() {
-        let operation = GraphQLClient::new_localnet().chain_id().operation();
+        let operation = GraphQLClient::new_localnet()
+            .unwrap()
+            .chain_id()
+            .operation();
         assert_eq!(
             operation.operation_name.as_deref(),
             Some("ChainIdentifierQueryFragment")

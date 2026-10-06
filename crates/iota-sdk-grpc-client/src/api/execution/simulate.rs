@@ -214,8 +214,9 @@ impl GrpcClient {
 
     /// Simulate a batch of transactions without executing them.
     ///
-    /// Transactions are simulated sequentially on the server. Each transaction
-    /// is independent — failure of one does not abort the rest.
+    /// Each transaction is simulated independently against the current state,
+    /// so it does not see the effects of other transactions in the batch.
+    /// Failure of one transaction does not abort the rest.
     ///
     /// Returns a `Vec<GrpcResult<SimulatedTransaction>>` in the same order as
     /// the input. Each element is either the successfully simulated
