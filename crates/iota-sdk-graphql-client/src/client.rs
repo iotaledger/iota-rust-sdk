@@ -20,6 +20,9 @@ pub(crate) const MAINNET_HOST: &str = "https://graphql.mainnet.iota.cafe";
 pub(crate) const TESTNET_HOST: &str = "https://graphql.testnet.iota.cafe";
 pub(crate) const DEVNET_HOST: &str = "https://graphql.devnet.iota.cafe";
 pub(crate) const LOCAL_HOST: &str = "http://localhost:9125/graphql";
+/// Connect timeout of the HTTP clients this crate builds itself.
+#[cfg(not(target_arch = "wasm32"))]
+pub(crate) const DEFAULT_CONNECT_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(5);
 /// Value this crate sends as the `User-Agent` header.
 pub static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
@@ -51,6 +54,59 @@ pub struct GraphQLClient {
     pub(crate) service_config: Arc<OnceLock<ServiceConfig>>,
 }
 
+/// Builds a [`GraphQLClient`] on top of the default HTTP client, so that
+/// timeouts and headers can be set without losing the crate's user agent and
+/// trust anchors. Created by [`GraphQLClient::builder`].
+#[derive(Debug)]
+pub struct GraphQLClientBuilder {
+    server: String,
+    http: reqwest::ClientBuilder,
+}
+
+impl GraphQLClientBuilder {
+    /// Total timeout of each request, from connecting until the response body
+    /// has been read. No timeout is set by default.
+    pub fn timeout(mut self, timeout: std::time::Duration) -> Self {
+        self.http = self.http.timeout(timeout);
+        self
+    }
+
+    /// Timeout for establishing a connection. Defaults to 5 seconds.
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn connect_timeout(mut self, timeout: std::time::Duration) -> Self {
+        self.http = self.http.connect_timeout(timeout);
+        self
+    }
+
+    /// Add headers sent with every request, for example an API key. A header
+    /// already set under the same name is replaced.
+    pub fn default_headers(mut self, headers: reqwest::header::HeaderMap) -> Self {
+        self.http = self.http.default_headers(headers);
+        self
+    }
+
+    /// Adjust the underlying [`reqwest::ClientBuilder`] for anything not
+    /// covered by the other setters.
+    pub fn configure(
+        mut self,
+        f: impl FnOnce(reqwest::ClientBuilder) -> reqwest::ClientBuilder,
+    ) -> Self {
+        self.http = f(self.http);
+        self
+    }
+
+    /// Build the client.
+    ///
+    /// An `https` or `wss` address is rejected on a build without a crypto
+    /// provider, as with [`GraphQLClient::new`].
+    pub fn build(self) -> GraphQLResult<GraphQLClient> {
+        if let Some(scheme) = crate::tls::unsupported_scheme(&self.server) {
+            return Err(GraphQLError::TlsUnavailable(scheme));
+        }
+        GraphQLClient::new_with_reqwest_client(&self.server, self.http.build()?)
+    }
+}
+
 impl GraphQLClient {
     /// Create a new GraphQL client with the provided server address.
     ///
@@ -65,6 +121,16 @@ impl GraphQLClient {
             return Err(GraphQLError::TlsUnavailable(scheme));
         }
         Self::new_with_reqwest_client(server, crate::tls::default_http_client_builder().build()?)
+    }
+
+    /// Start building a client for `server` from this crate's default HTTP
+    /// client, keeping its user agent and trust anchors while letting you set
+    /// timeouts and headers.
+    pub fn builder(server: &str) -> GraphQLClientBuilder {
+        GraphQLClientBuilder {
+            server: server.to_owned(),
+            http: crate::tls::default_http_client_builder(),
+        }
     }
 
     /// Create a new GraphQL client that issues its requests through the
@@ -337,5 +403,35 @@ mod tests {
                 )
             })
             .unwrap();
+    }
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod builder_tests {
+    use std::time::Duration;
+
+    use reqwest::header::{HeaderMap, HeaderValue};
+
+    use super::GraphQLClient;
+
+    #[test]
+    fn builder_applies_settings() {
+        let mut headers = HeaderMap::new();
+        headers.insert("x-api-key", HeaderValue::from_static("secret"));
+        let client = GraphQLClient::builder("http://127.0.0.1:9125/graphql")
+            .timeout(Duration::from_secs(30))
+            .connect_timeout(Duration::from_secs(2))
+            .default_headers(headers)
+            .build()
+            .unwrap();
+        assert_eq!(
+            client.rpc_server().as_str(),
+            "http://127.0.0.1:9125/graphql"
+        );
+    }
+
+    #[test]
+    fn builder_rejects_invalid_url() {
+        assert!(GraphQLClient::builder("not a url").build().is_err());
     }
 }
