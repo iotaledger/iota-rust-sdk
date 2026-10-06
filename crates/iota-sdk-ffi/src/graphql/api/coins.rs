@@ -31,11 +31,9 @@ impl GraphQLClient {
     ) -> Result<GraphQLCoinPage> {
         Ok(self
             .client()
-            .coins(
-                **owner,
-                coin_type.map(|t| t.0.clone()),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .coins(**owner)
+            .coin_type(coin_type.map(|t| t.0.clone()))
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -50,10 +48,8 @@ impl GraphQLClient {
     ) -> Result<GraphQLCoinPage> {
         Ok(self
             .client()
-            .gas_coins(
-                **owner,
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .gas_coins(**owner)
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
