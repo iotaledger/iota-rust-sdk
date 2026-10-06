@@ -55,7 +55,7 @@ define_query! {
         client: GraphQLClient,
         function_name: String,
         type_arguments: Option<Vec<TypeTag>>,
-        arguments: Vec<serde_json::Value>,
+        arguments: Option<Vec<serde_json::Value>>,
     }
     output: GraphQLResult<MoveViewResult>;
 }
@@ -70,7 +70,7 @@ impl MoveViewCallQuery {
     /// Set the typed arguments passed into the Move function. A single
     /// argument is wrapped in a list or tuple.
     pub fn arguments(mut self, arguments: impl MoveViewArgList) -> Self {
-        self.arguments = arguments.to_json_vec();
+        self.arguments = Some(arguments.to_json_vec());
         self
     }
 
@@ -161,7 +161,7 @@ impl GraphQLClient {
             client: self.clone(),
             function_name: function_name.into(),
             type_arguments: None,
-            arguments: Vec::new(),
+            arguments: None,
         }
     }
 }
@@ -409,7 +409,7 @@ mod tests {
         })
         .await;
         assert!(vars["typeArguments"].is_null());
-        assert_eq!(vars["arguments"], serde_json::json!([]));
+        assert!(vars["arguments"].is_null());
 
         let vars = sent_variables("MoveViewCallQueryFragment", |client| async move {
             let _ = client.move_view_call_json("0x2::coin::value").await;
