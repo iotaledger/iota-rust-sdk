@@ -106,7 +106,7 @@ impl<T: MoveObject> ListMoveObjectsQuery<T> {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<OwnedMoveObject<T>>>
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<OwnedMoveObject<T>>> + Unpin
     where
         T: Clone + Unpin,
     {
@@ -233,7 +233,7 @@ mod tests {
     #[tokio::test]
     async fn test_move_objects_stream() {
         let client = test_client();
-        let mut stream = Box::pin(client.move_objects::<Coin<IOTA>>().stream());
+        let mut stream = client.move_objects::<Coin<IOTA>>().stream();
         stream
             .next()
             .await

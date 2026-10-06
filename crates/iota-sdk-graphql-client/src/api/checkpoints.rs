@@ -41,7 +41,7 @@ impl ListCheckpointsQuery {
     /// and in its direction, with its limit as the page size.
     /// Without a cursor this fetches every checkpoint, which may take many
     /// requests.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<CheckpointSummary>> {
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<CheckpointSummary>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
