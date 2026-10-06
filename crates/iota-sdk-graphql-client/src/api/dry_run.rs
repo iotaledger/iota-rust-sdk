@@ -202,10 +202,11 @@ impl GraphQLClient {
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use base64ct::Encoding;
-    use iota_types::{Address, ObjectDigest, ObjectId, Transaction};
+    use iota_types::{Address, ObjectDigest, ObjectId, ObjectReference, Transaction, Version};
 
     use crate::{
         GraphQLClient,
+        query_types::ObjectRef,
         test_utils::{sent_variables, test_transaction},
     };
 
@@ -243,16 +244,54 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn dry_run_transaction_kind_defaults_to_checking() {
-        let transaction = test_transaction();
-        let Transaction::V1(v1) = transaction else {
+    async fn dry_run_transaction_kind_sends_the_kind_metadata_and_skip_checks() {
+        let Transaction::V1(v1) = test_transaction() else {
             unreachable!()
         };
+        let expected_tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&v1.kind).unwrap());
+        let gas_object = ObjectReference::new(
+            ObjectId::SYSTEM_STATE,
+            Version::from_u64(3),
+            ObjectDigest::ZERO,
+        );
+        let kind = v1.kind.clone();
+        let vars = sent_variables("DryRunQueryFragment", |client| async move {
+            let _ = client
+                .dry_run_transaction_kind(&kind)
+                .sender(Address::STD)
+                .gas_budget(5_000_000)
+                .gas_price(1000)
+                .gas_objects(vec![ObjectRef::from(gas_object)])
+                .gas_sponsor(Address::FRAMEWORK)
+                .skip_checks(true)
+                .await;
+        })
+        .await;
+        assert_eq!(vars["txBytes"], expected_tx_bytes);
+        assert_eq!(vars["skipChecks"], true);
+        assert_eq!(vars["txMeta"]["sender"], Address::STD.to_string());
+        assert_eq!(vars["txMeta"]["gasBudget"], 5_000_000);
+        assert_eq!(vars["txMeta"]["gasPrice"], 1000);
+        assert_eq!(vars["txMeta"]["gasSponsor"], Address::FRAMEWORK.to_string());
+        let gas_object = &vars["txMeta"]["gasObjects"][0];
+        assert_eq!(gas_object["address"], ObjectId::SYSTEM_STATE.to_string());
+        assert_eq!(gas_object["version"], 3);
+        assert_eq!(gas_object["digest"], ObjectDigest::ZERO.to_base58());
+
         let vars = sent_variables("DryRunQueryFragment", |client| async move {
             let _ = client.dry_run_transaction_kind(&v1.kind).await;
         })
         .await;
         assert_eq!(vars["skipChecks"], false);
+        for field in [
+            "sender",
+            "gasBudget",
+            "gasPrice",
+            "gasObjects",
+            "gasSponsor",
+        ] {
+            assert!(vars["txMeta"][field].is_null(), "{field} is set by default");
+        }
     }
 
     // This needs the transaction builder to be able to be tested properly
