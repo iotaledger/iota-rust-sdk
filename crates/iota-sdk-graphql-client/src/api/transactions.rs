@@ -427,12 +427,34 @@ impl GraphQLClient {
     }
 
     /// Execute a transaction.
+    ///
+    /// If `wait_for` is set and the wait fails, the error is returned even
+    /// though the transaction was executed. Use
+    /// [`Self::execute_transaction_and_wait`] to keep the effects in that case.
     pub async fn execute_transaction(
         &self,
         signatures: &[UserSignature],
         transaction: &Transaction,
         wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> GraphQLResult<TransactionEffects> {
+        let (effects, wait_result) = self
+            .execute_transaction_and_wait(signatures, transaction, wait_for)
+            .await?;
+        wait_result?;
+        Ok(effects)
+    }
+
+    /// Execute a transaction and, if `wait_for` is set, wait for it.
+    ///
+    /// The outer `Err` means the transaction was not executed. Once it was, the
+    /// effects are returned together with the outcome of the wait, which is
+    /// `Ok(())` when no wait was requested.
+    pub async fn execute_transaction_and_wait(
+        &self,
+        signatures: &[UserSignature],
+        transaction: &Transaction,
+        wait_for: impl Into<Option<WaitForTransaction>>,
+    ) -> GraphQLResult<(TransactionEffects, GraphQLResult<()>)> {
         let wait_for = wait_for.into();
         let operation = ExecuteTransactionQueryFragment::build(ExecuteTransactionArgs {
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
@@ -445,12 +467,15 @@ impl GraphQLClient {
         let bcs = base64ct::Base64::decode_vec(result.effects.bcs.0.as_str())?;
         let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
 
-        if let Some(wait_for) = wait_for {
-            self.wait_for_transaction(transaction.digest(), wait_for, None)
-                .await?;
-        }
+        let wait_result = match wait_for {
+            Some(wait_for) => {
+                self.wait_for_transaction(transaction.digest(), wait_for, None)
+                    .await
+            }
+            None => Ok(()),
+        };
 
-        Ok(effects)
+        Ok((effects, wait_result))
     }
 
     /// Returns whether the transaction for the given digest has been indexed
@@ -490,7 +515,8 @@ impl GraphQLClient {
     }
 
     /// Wait for the indexing or finalization of a transaction
-    /// by its digest. An optional timeout can be provided, which, if
+    /// by its digest. Polls with exponential backoff (100 ms up to 2 s) and
+    /// retries failed requests. An optional timeout can be provided, which, if
     /// exceeded, will return an error (default 60s).
     pub async fn wait_for_transaction(
         &self,
@@ -501,17 +527,22 @@ impl GraphQLClient {
         crate::wait::timeout(
             timeout.into().unwrap_or_else(|| Duration::from_secs(60)),
             async {
+                let mut delay = Duration::from_millis(100);
                 loop {
-                    if match wait_for {
-                        WaitForTransaction::IndexedOnNode => self.is_transaction_indexed_on_node(digest).await?,
-                        WaitForTransaction::Finalized => self.is_transaction_finalized(digest).await?,
+                    let poll = match wait_for {
+                        WaitForTransaction::IndexedOnNode => self.is_transaction_indexed_on_node(digest).await,
+                        WaitForTransaction::Finalized => self.is_transaction_finalized(digest).await,
                         _ => unimplemented!(
                             "a new WaitForTransaction enum variant was added and needs to be handled"
                         ),
-                    } {
-                        break Ok(());
+                    };
+                    match poll {
+                        Ok(true) => break Ok(()),
+                        Ok(false) | Err(GraphQLError::Request(_)) => {}
+                        Err(e) => break Err(e),
                     }
-                    crate::wait::sleep(Duration::from_millis(100)).await;
+                    crate::wait::sleep(delay).await;
+                    delay = (delay * 2).min(Duration::from_secs(2));
                 }
             },
         )
