@@ -5,19 +5,19 @@
 //! API implementations for the GraphQL client.
 
 mod balance;
-mod checkpoints;
-mod coins;
+pub(crate) mod checkpoints;
+pub(crate) mod coins;
 mod dry_run;
-mod dynamic_fields;
+pub(crate) mod dynamic_fields;
 mod epochs;
-mod events;
-mod iota_names;
+pub(crate) mod events;
+pub(crate) mod iota_names;
 #[cfg(feature = "move-types")]
 pub(crate) mod move_objects;
 mod move_view_call;
 pub(crate) mod network;
-mod objects;
-mod package;
+pub(crate) mod objects;
+pub(crate) mod package;
 pub(crate) mod transactions;
 
 #[cfg(not(target_arch = "wasm32"))]
