@@ -26,7 +26,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to create GraphQL client: %v", err)
 	}
-	filter := iota_sdk.GraphQlSubscriptionTransactionFilterKind{Kind: iota_sdk.GraphQlTransactionBlockKindInputProgrammableTx}
+	var filter iota_sdk.GraphQlSubscriptionTransactionFilter = iota_sdk.GraphQlSubscriptionTransactionFilterKind{
+		Kind: iota_sdk.GraphQlTransactionBlockKindInputProgrammableTx,
+	}
 	subscription := client.TransactionsSubscription(&filter, nil)
 	defer subscription.Cancel()
 
