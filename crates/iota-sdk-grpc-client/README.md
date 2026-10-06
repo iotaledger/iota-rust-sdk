@@ -8,9 +8,9 @@ types and provides ergonomic APIs using SDK types from `iota_types`, on top of f
 - **State Service** — query on-chain objects and state
 - **Move Package Service** — query and interact with Move packages
 
-# Usage
+## Usage
 
-## Connecting to a gRPC server
+### Connecting to a gRPC server
 
 Instantiate a client with one of the predefined network constructors or `GrpcClient::new(url)` for a custom endpoint:
 
@@ -32,11 +32,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-## Network presets
+### Network presets
 
 The client provides `new_mainnet()`, `new_testnet()`, `new_devnet()`, `new_localnet()`, and `new(url)` for custom endpoints.
 
-## TLS
+### TLS
 
 `https://` endpoints, including the mainnet, testnet and devnet presets, are verified with `rustls`.
 The defaults reach them with no setup.
@@ -53,7 +53,7 @@ The defaults reach them with no setup.
 A crypto provider the application has installed as the process default
 (`rustls::crypto::CryptoProvider::install_default`) is used instead of the one the features select.
 
-## Configuration
+### Configuration
 
 Customize headers and message size limits:
 
@@ -73,7 +73,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-## Reading data
+### Reading data
 
 The batched reads return one result per request, so an item the node cannot serve fails only its
 own slot:
@@ -109,6 +109,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-## Service examples
+### Service examples
 
 Each service client exposes methods corresponding to the gRPC service definition. See the crate documentation for the full list of available methods.
