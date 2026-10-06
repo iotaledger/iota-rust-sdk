@@ -14,8 +14,9 @@ use iota_types::{
 
 use crate::{
     GraphQLClient,
+    api::define_query,
     error::{GraphQLError, GraphQLResult},
-    pagination::{Page, PaginationFilter},
+    pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         IotaNamesAddressDefaultNameQueryFragment, IotaNamesAddressRegistrationsQueryFragment,
         IotaNamesDefaultNameArgs, IotaNamesDefaultNameQueryFragment, IotaNamesRegistrationsArgs,
@@ -23,6 +24,70 @@ use crate::{
         ResolveIotaNamesAddressQueryFragment,
     },
 };
+
+define_query! {
+    /// Query for [`GraphQLClient::iota_names_registrations`]. Await it to send
+    /// the request.
+    pub struct ListIotaNamesRegistrationsQuery {
+        client: GraphQLClient,
+        address: Address,
+        pagination: PaginationFilter,
+    }
+    output: GraphQLResult<Page<NameRegistration>>;
+}
+
+impl ListIotaNamesRegistrationsQuery {
+    /// Set the page to fetch.
+    pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
+        self.pagination = pagination;
+        self
+    }
+
+    fn operation(
+        address: Address,
+        pagination: PaginationFilterResponse,
+    ) -> cynic::Operation<IotaNamesAddressRegistrationsQueryFragment, IotaNamesRegistrationsArgs>
+    {
+        IotaNamesAddressRegistrationsQueryFragment::build(IotaNamesRegistrationsArgs {
+            address,
+            after: pagination.after,
+            before: pagination.before,
+            first: pagination.first,
+            last: pagination.last,
+        })
+    }
+
+    async fn send(self) -> GraphQLResult<Page<NameRegistration>> {
+        let Self {
+            client,
+            pagination,
+            address,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(address, pagination))
+            .await?;
+
+        let IotaNamesAddressRegistrationsQueryFragment {
+            address:
+                Some(IotaNamesRegistrationsQueryFragment {
+                    iota_names_registrations,
+                }),
+        } = response
+        else {
+            return Ok(Page::new_empty());
+        };
+
+        Ok(Page::new(
+            iota_names_registrations.page_info,
+            iota_names_registrations
+                .nodes
+                .into_iter()
+                .map(TryInto::try_into)
+                .collect::<GraphQLResult<Vec<_>>>()?,
+        ))
+    }
+}
 
 impl GraphQLClient {
     /// Return the resolved address for the given name.
@@ -43,40 +108,12 @@ impl GraphQLClient {
     }
 
     /// Find all registration NFTs for the given address.
-    pub async fn iota_names_registrations(
-        &self,
-        address: Address,
-        pagination_filter: PaginationFilter,
-    ) -> GraphQLResult<Page<NameRegistration>> {
-        let pagination = self.pagination_filter(pagination_filter).await;
-        let operation =
-            IotaNamesAddressRegistrationsQueryFragment::build(IotaNamesRegistrationsArgs {
-                address,
-                after: pagination.after,
-                before: pagination.before,
-                first: pagination.first,
-                last: pagination.last,
-            });
-        let response = self.run_query(&operation).await?;
-
-        let IotaNamesAddressRegistrationsQueryFragment {
-            address:
-                Some(IotaNamesRegistrationsQueryFragment {
-                    iota_names_registrations,
-                }),
-        } = response
-        else {
-            return Ok(Page::new_empty());
-        };
-
-        Ok(Page::new(
-            iota_names_registrations.page_info,
-            iota_names_registrations
-                .nodes
-                .into_iter()
-                .map(TryInto::try_into)
-                .collect::<GraphQLResult<Vec<_>>>()?,
-        ))
+    pub fn iota_names_registrations(&self, address: Address) -> ListIotaNamesRegistrationsQuery {
+        ListIotaNamesRegistrationsQuery {
+            client: self.clone(),
+            address,
+            pagination: PaginationFilter::default(),
+        }
     }
 
     /// Get the default name pointing to this address, if one exists.
@@ -104,5 +141,42 @@ impl GraphQLClient {
         Ok(Some(Name::from_str(&name).map_err(|source| {
             GraphQLError::InvalidName { name, source }
         })?))
+    }
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use iota_types::Address;
+
+    use crate::test_utils::{
+        assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+    };
+
+    #[tokio::test]
+    async fn iota_names_registrations_sends_the_address_and_pagination() {
+        let vars = sent_variables(
+            "IotaNamesAddressRegistrationsQueryFragment",
+            |client| async move {
+                let _ = client
+                    .iota_names_registrations(Address::FRAMEWORK)
+                    .pagination(backward_page())
+                    .await;
+            },
+        )
+        .await;
+        assert_eq!(vars["address"], Address::FRAMEWORK.to_string());
+        assert_backward_page(&vars);
+
+        let vars = sent_variables(
+            "IotaNamesAddressRegistrationsQueryFragment",
+            |client| async move {
+                let _ = client
+                    .iota_names_registrations(Address::FRAMEWORK)
+                    .pagination(forward_page())
+                    .await;
+            },
+        )
+        .await;
+        assert_forward_page(&vars);
     }
 }

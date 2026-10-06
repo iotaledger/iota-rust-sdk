@@ -103,10 +103,13 @@ impl MultisigVerifier {
 }
 
 #[cfg(feature = "passkey")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 impl MultisigVerifier {
-    pub fn with_passkey_verifier(&mut self, passkey_verifier: crate::passkey::PasskeyVerifier) {
+    pub fn with_passkey_verifier(
+        mut self,
+        passkey_verifier: crate::passkey::PasskeyVerifier,
+    ) -> Self {
         self.passkey_verifier = Some(passkey_verifier);
+        self
     }
 
     pub fn passkey_verifier(&self) -> Option<&crate::passkey::PasskeyVerifier> {
@@ -216,10 +219,13 @@ impl UserSignatureVerifier {
 }
 
 #[cfg(feature = "passkey")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 impl UserSignatureVerifier {
-    pub fn with_passkey_verifier(&mut self, passkey_verifier: crate::passkey::PasskeyVerifier) {
-        self.inner.with_passkey_verifier(passkey_verifier);
+    pub fn with_passkey_verifier(
+        mut self,
+        passkey_verifier: crate::passkey::PasskeyVerifier,
+    ) -> Self {
+        self.inner = self.inner.with_passkey_verifier(passkey_verifier);
+        self
     }
 
     pub fn passkey_verifier(&self) -> Option<&crate::passkey::PasskeyVerifier> {

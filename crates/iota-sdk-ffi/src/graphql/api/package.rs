@@ -56,12 +56,10 @@ impl GraphQLClient {
     ) -> Result<GraphQLMovePackagePage> {
         Ok(self
             .client()
-            .package_versions(
-                **address,
-                pagination_filter.map(Into::into).unwrap_or_default(),
-                after_version.map(|v| **v),
-                before_version.map(|v| **v),
-            )
+            .package_versions(**address)
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
+            .after_version(after_version.map(|v| **v))
+            .before_version(before_version.map(|v| **v))
             .await?
             .map(Into::into)
             .into())
@@ -95,11 +93,10 @@ impl GraphQLClient {
     ) -> Result<GraphQLMovePackagePage> {
         Ok(self
             .client()
-            .packages(
-                pagination_filter.map(Into::into).unwrap_or_default(),
-                after_checkpoint,
-                before_checkpoint,
-            )
+            .packages()
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
+            .after_checkpoint(after_checkpoint)
+            .before_checkpoint(before_checkpoint)
             .await?
             .map(Into::into)
             .into())
@@ -146,17 +143,20 @@ impl GraphQLClient {
     ) -> Result<Option<GraphQLMoveModule>> {
         Ok(self
             .client()
-            .normalized_move_module(
-                **package,
-                module,
-                version.map(|v| **v),
-                pagination_filter_enums.map(Into::into).unwrap_or_default(),
+            .normalized_move_module(**package, module)
+            .version(version.map(|v| **v))
+            .enums_pagination(pagination_filter_enums.map(Into::into).unwrap_or_default())
+            .friends_pagination(
                 pagination_filter_friends
                     .map(Into::into)
                     .unwrap_or_default(),
+            )
+            .functions_pagination(
                 pagination_filter_functions
                     .map(Into::into)
                     .unwrap_or_default(),
+            )
+            .structs_pagination(
                 pagination_filter_structs
                     .map(Into::into)
                     .unwrap_or_default(),
