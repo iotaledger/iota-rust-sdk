@@ -616,6 +616,27 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn wait_for_transaction_sends_the_digest_to_the_status_query() {
+        let digest = test_transaction().digest();
+        for (wait_for, operation) in [
+            (
+                WaitForTransaction::IndexedOnNode,
+                "TransactionBlockIndexedQueryFragment",
+            ),
+            (
+                WaitForTransaction::Finalized,
+                "TransactionBlockCheckpointQueryFragment",
+            ),
+        ] {
+            let vars = sent_variables(operation, |client| async move {
+                let _ = client.wait_for_transaction(digest, wait_for).await;
+            })
+            .await;
+            assert_eq!(vars["digest"], digest.to_string());
+        }
+    }
+
+    #[tokio::test]
     async fn wait_for_transaction_stops_at_the_timeout() {
         let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
         let client =
