@@ -46,13 +46,13 @@ async fn main() -> Result<()> {
     builder.send_iota(recipient, 1_000u64);
     let tx = builder.finish().await?;
 
-    let dry_run = client.dry_run_transaction(&tx, false).await?;
+    let dry_run = client.dry_run_transaction(&tx).await?;
     if let Some(err) = dry_run.error {
         eyre::bail!("Dry run failed: {err}");
     }
 
     let signature = private_key.sign_transaction(&tx)?;
-    let effects = client.execute_transaction(&[signature], &tx, None).await?;
+    let effects = client.execute_transaction(&[signature], &tx).await?;
     println!("Digest: {}", effects.digest());
 
     Ok(())

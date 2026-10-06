@@ -90,7 +90,7 @@ async fn setup_account(client: &GraphQLClient) -> Result<ObjectId> {
             }
             ObjectOut::ObjectWrite { .. } => {
                 let object_id = changed_obj.object_id;
-                let object = client.object(object_id, None).await?;
+                let object = client.object(object_id).await?;
 
                 if let Some(object) = object {
                     if object.as_struct().object_type().name()

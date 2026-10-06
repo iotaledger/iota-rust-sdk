@@ -110,3 +110,29 @@ pub(crate) fn assert_backward_page(variables: &serde_json::Value) {
     assert!(variables["after"].is_null());
     assert!(variables["first"].is_null());
 }
+
+pub(crate) fn test_transaction() -> iota_types::Transaction {
+    use iota_types::{
+        Address, GasPayment, ObjectDigest, ObjectId, ObjectReference, ProgrammableTransaction,
+        Transaction, TransactionExpiration, TransactionKind, TransactionV1, Version,
+    };
+
+    Transaction::V1(TransactionV1 {
+        kind: TransactionKind::Programmable(ProgrammableTransaction {
+            inputs: Vec::new(),
+            commands: Vec::new(),
+        }),
+        sender: Address::STD,
+        gas_payment: GasPayment {
+            objects: vec![ObjectReference::new(
+                ObjectId::SYSTEM_STATE,
+                Version::from_u64(3),
+                ObjectDigest::ZERO,
+            )],
+            owner: Address::FRAMEWORK,
+            price: 1000,
+            budget: 5_000_000,
+        },
+        expiration: TransactionExpiration::None,
+    })
+}
