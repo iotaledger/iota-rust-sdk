@@ -66,6 +66,7 @@ pub struct GraphQLClientBuilder {
 impl GraphQLClientBuilder {
     /// Total timeout of each request, from connecting until the response body
     /// has been read. No timeout is set by default.
+    #[cfg(not(target_arch = "wasm32"))]
     pub fn timeout(mut self, timeout: std::time::Duration) -> Self {
         self.http = self.http.timeout(timeout);
         self
