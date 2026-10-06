@@ -1,9 +1,9 @@
-### Description
+# iota-sdk-graphql-client-build
 
 This crate provides a function to register a schema to enable building custom queries using cynic derive macros queries. Call
 this function in a `build.rs` file in your crate if you need to build custom queries.
 
-### Usage
+## Usage
 
 1. Add this crate as a build dependency in your `Cargo.toml` file.
 
