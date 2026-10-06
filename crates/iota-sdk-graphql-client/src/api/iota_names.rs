@@ -112,8 +112,8 @@ define_query! {
 
 impl GetIotaNamesDefaultNameQuery {
     /// Set the format of the returned name.
-    pub fn format(mut self, format: impl Into<Option<NameFormat>>) -> Self {
-        self.format = format.into();
+    pub fn format(mut self, format: NameFormat) -> Self {
+        self.format = Some(format);
         self
     }
 

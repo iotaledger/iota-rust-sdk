@@ -22,6 +22,7 @@ use crate::{
         client::GraphQLClient,
         query_types::{GraphQLEvent, GraphQLTransactionBlockKindInput},
     },
+    helpers::SetIfSome,
     stream::StreamHandle,
     types::{address::Address, transaction::SignedTransaction},
 };
@@ -224,8 +225,8 @@ fn open_events(
     box_stream(
         client
             .events_subscription()
-            .filter(filter.map(Into::into))
-            .start_after(start_after)
+            .set_if_some(filter.map(Into::into), |query, value| query.filter(value))
+            .set_if_some(start_after, |query, value| query.start_after(value))
             .subscribe(),
     )
 }
@@ -239,8 +240,8 @@ fn open_transactions(
     box_stream(
         client
             .transactions_subscription()
-            .filter(filter.map(Into::into))
-            .start_after(start_after)
+            .set_if_some(filter.map(Into::into), |query, value| query.filter(value))
+            .set_if_some(start_after, |query, value| query.start_after(value))
             .subscribe(),
     )
 }

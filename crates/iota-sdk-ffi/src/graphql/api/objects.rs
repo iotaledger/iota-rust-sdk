@@ -12,6 +12,7 @@ use crate::{
         pagination::GraphQLObjectPage,
         query_types::{GraphQLObjectFilter, GraphQLPaginationFilter},
     },
+    helpers::SetIfSome,
     types::{
         object::{Object, ObjectId},
         version::Version,
@@ -35,7 +36,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .object(**object_id)
-            .version(version.map(|v| **v))
+            .set_if_some(version.map(|v| **v), |query, value| query.version(value))
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -54,7 +55,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .objects()
-            .filter(filter.map(Into::into))
+            .set_if_some(filter.map(Into::into), |query, value| query.filter(value))
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
@@ -81,7 +82,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .move_object_contents_bcs(**object_id)
-            .version(version.map(|v| **v))
+            .set_if_some(version.map(|v| **v), |query, value| query.version(value))
             .await?)
     }
 
@@ -99,7 +100,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .move_object_contents(**object_id)
-            .version(version.map(|v| **v))
+            .set_if_some(version.map(|v| **v), |query, value| query.version(value))
             .await?)
     }
 }

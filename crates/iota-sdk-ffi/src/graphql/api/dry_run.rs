@@ -9,6 +9,7 @@ use crate::{
         client::GraphQLClient, output_types::GraphQLDryRunResult,
         query_types::GraphQLTransactionMetadata,
     },
+    helpers::SetIfSome,
     types::transaction::{Transaction, TransactionKind},
 };
 
@@ -72,11 +73,13 @@ impl GraphQLClient {
         Ok(self
             .client()
             .dry_run_transaction_kind(&transaction_kind.0)
-            .sender(metadata.sender)
-            .gas_budget(metadata.gas_budget)
-            .gas_price(metadata.gas_price)
-            .gas_objects(gas_objects)
-            .gas_sponsor(metadata.gas_sponsor)
+            .set_if_some(metadata.sender, |query, value| query.sender(value))
+            .set_if_some(metadata.gas_budget, |query, value| query.gas_budget(value))
+            .set_if_some(metadata.gas_price, |query, value| query.gas_price(value))
+            .set_if_some(gas_objects, |query, value| query.gas_objects(value))
+            .set_if_some(metadata.gas_sponsor, |query, value| {
+                query.gas_sponsor(value)
+            })
             .skip_checks(skip_checks)
             .await?
             .into())

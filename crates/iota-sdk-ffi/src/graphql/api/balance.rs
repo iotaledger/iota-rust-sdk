@@ -3,7 +3,9 @@
 
 //! Balance API implementation.
 
-use crate::{error::Result, graphql::client::GraphQLClient, types::address::Address};
+use crate::{
+    error::Result, graphql::client::GraphQLClient, helpers::SetIfSome, types::address::Address,
+};
 
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
@@ -19,7 +21,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .balance(**address)
-            .coin_type(coin_type)
+            .set_if_some(coin_type, |query, value| query.coin_type(value))
             .await?)
     }
 }

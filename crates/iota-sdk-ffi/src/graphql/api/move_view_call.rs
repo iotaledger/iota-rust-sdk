@@ -6,6 +6,7 @@ use std::sync::Arc;
 use crate::{
     error::Result,
     graphql::{client::GraphQLClient, query_types::GraphQLMoveViewResult},
+    helpers::SetIfSome,
     move_view_call::MoveViewArg,
     types::move_core::TypeTag,
 };
@@ -44,8 +45,8 @@ impl GraphQLClient {
         Ok(self
             .client()
             .move_view_call_json(function_name)
-            .type_arguments(type_arguments)
-            .arguments(arguments)
+            .set_if_some(type_arguments, |query, value| query.type_arguments(value))
+            .set_if_some(arguments, |query, value| query.arguments(value))
             .await?
             .into())
     }
