@@ -42,7 +42,7 @@ impl ListEventsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<Event>> {
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<Event>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }

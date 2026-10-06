@@ -197,9 +197,7 @@ mod tests {
         };
         ($operation:expr, $query:expr, $page:expr) => {
             sent_variables($operation, |client| async move {
-                let _ = Box::pin($query(client).pagination($page).stream())
-                    .next()
-                    .await;
+                let _ = $query(client).pagination($page).stream().next().await;
             })
             .await
         };

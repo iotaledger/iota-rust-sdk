@@ -60,7 +60,7 @@ impl ListTransactionsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> {
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
@@ -137,7 +137,7 @@ impl ListAddressTransactionsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> {
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
@@ -214,7 +214,7 @@ impl ListTransactionsEffectsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<TransactionEffects>> {
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<TransactionEffects>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
@@ -282,7 +282,7 @@ impl ListTransactionsDataEffectsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<TransactionDataEffects>> {
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<TransactionDataEffects>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
