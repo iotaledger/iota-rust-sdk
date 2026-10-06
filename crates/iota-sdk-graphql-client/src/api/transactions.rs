@@ -316,8 +316,7 @@ define_query! {
     pub struct ExecuteTransactionQuery {
         client: GraphQLClient,
         signatures: Vec<String>,
-        tx_bytes: String,
-        digest: TransactionDigest,
+        transaction: Transaction,
         wait_for: Option<WaitForTransaction>,
     }
     output: GraphQLResult<TransactionEffects>;
@@ -334,7 +333,9 @@ impl ExecuteTransactionQuery {
     async fn send(self) -> GraphQLResult<TransactionEffects> {
         let operation = ExecuteTransactionQueryFragment::build(ExecuteTransactionArgs {
             signatures: self.signatures,
-            tx_bytes: self.tx_bytes,
+            tx_bytes: base64ct::Base64::encode_string(
+                bcs::to_bytes(&self.transaction).unwrap().as_ref(),
+            ),
         });
 
         let response = self.client.run_query(&operation).await?;
@@ -345,7 +346,7 @@ impl ExecuteTransactionQuery {
 
         if let Some(wait_for) = self.wait_for {
             self.client
-                .wait_for_transaction(self.digest, wait_for)
+                .wait_for_transaction(self.transaction.digest(), wait_for)
                 .await?;
         }
 
@@ -522,8 +523,7 @@ impl GraphQLClient {
         ExecuteTransactionQuery {
             client: self.clone(),
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
-            tx_bytes: base64ct::Base64::encode_string(bcs::to_bytes(transaction).unwrap().as_ref()),
-            digest: transaction.digest(),
+            transaction: transaction.clone(),
             wait_for: None,
         }
     }
