@@ -25,7 +25,7 @@ define_query! {
 }
 
 impl GetBalanceQuery {
-    /// Set the coin type. Defaults to `0x2::coin::Coin<0x2::iota::IOTA>`.
+    /// Set the coin type. Defaults to `0x2::iota::IOTA`.
     pub fn coin_type(mut self, coin_type: impl Into<Option<String>>) -> Self {
         self.coin_type = coin_type.into();
         self
@@ -69,12 +69,12 @@ mod tests {
         let vars = sent_variables("BalanceQueryFragment", |client| async move {
             let _ = client
                 .balance(Address::STD)
-                .coin_type("0x2::coin::Coin<0x2::iota::IOTA>".to_owned())
+                .coin_type("0x2::iota::IOTA".to_owned())
                 .await;
         })
         .await;
         assert_eq!(vars["address"], Address::STD.to_string());
-        assert_eq!(vars["coinType"], "0x2::coin::Coin<0x2::iota::IOTA>");
+        assert_eq!(vars["coinType"], "0x2::iota::IOTA");
 
         let vars = sent_variables("BalanceQueryFragment", |client| async move {
             let _ = client.balance(Address::STD).await;
