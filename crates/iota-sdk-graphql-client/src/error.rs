@@ -41,7 +41,7 @@ fn truncated_body(bytes: &[u8]) -> String {
 pub type QueryError = cynic::GraphQlError<ErrorExtensions>;
 
 /// The `extensions` object of a GraphQL error returned by the server.
-#[derive(Clone, Debug, Default, Eq, PartialEq, Deserialize)]
+#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq)]
 #[serde(crate = "cynic::serde")]
 #[non_exhaustive]
 pub struct ErrorExtensions {
