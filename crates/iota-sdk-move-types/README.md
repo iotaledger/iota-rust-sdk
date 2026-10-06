@@ -1,5 +1,8 @@
 # iota-sdk-move-types
 
+[![iota-sdk-move-types on crates.io](https://img.shields.io/crates/v/iota-sdk-move-types)](https://crates.io/crates/iota-sdk-move-types)
+[![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-move-types)
+
 Rust representations of Move types used by the IOTA blockchain.
 
 Each top-level module mirrors one on-chain system package, with every Move
