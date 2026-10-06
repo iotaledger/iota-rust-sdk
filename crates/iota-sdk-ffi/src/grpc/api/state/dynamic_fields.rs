@@ -10,6 +10,7 @@ use iota_sdk::{grpc_client::read_mask_fields::DynamicFieldReadMask, grpc_types::
 use crate::{
     error::{Result, SdkFfiError},
     grpc::{client::GrpcClient, read_mask_fields::GrpcDynamicFieldField},
+    helpers::SetIfSome,
     types::object::{Object, ObjectId},
 };
 
@@ -143,8 +144,10 @@ impl GrpcClient {
         let query = self
             .client()
             .dynamic_fields(**parent)
-            .page_size(page_size)
-            .page_token(page_token.map(Into::into))
+            .set_if_some(page_size, |query, value| query.page_size(value))
+            .set_if_some(page_token.map(Into::into), |query, value| {
+                query.page_token(value)
+            })
             .read_mask(crate::grpc::api::read_mask::<DynamicFieldReadMask, _>(
                 read_mask,
             ));

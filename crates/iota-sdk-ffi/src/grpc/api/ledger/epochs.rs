@@ -13,6 +13,7 @@ use iota_sdk::{
 use crate::{
     error::{Result, SdkFfiError},
     grpc::{client::GrpcClient, read_mask_fields::GrpcEpochField},
+    helpers::SetIfSome,
     types::validator::ValidatorCommittee,
 };
 
@@ -121,7 +122,7 @@ impl GrpcClient {
         (&self
             .client()
             .epoch()
-            .epoch_number(epoch)
+            .set_if_some(epoch, |query, value| query.epoch_number(value))
             .read_mask(crate::grpc::api::read_mask::<EpochReadMask, _>(read_mask))
             .await?
             .into_inner())

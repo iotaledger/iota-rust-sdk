@@ -13,6 +13,7 @@ use crate::{
         api::ledger::objects::GrpcObject, client::GrpcClient,
         read_mask_fields::GrpcOwnedObjectField,
     },
+    helpers::SetIfSome,
     types::{address::Address, move_core::StructTag},
 };
 
@@ -52,9 +53,14 @@ impl GrpcClient {
         let query = self
             .client()
             .owned_objects(**owner)
-            .object_type(object_type.map(|object_type| object_type.0.clone()))
-            .page_size(page_size)
-            .page_token(page_token.map(Into::into))
+            .set_if_some(
+                object_type.map(|object_type| object_type.0.clone()),
+                |query, value| query.object_type(value),
+            )
+            .set_if_some(page_size, |query, value| query.page_size(value))
+            .set_if_some(page_token.map(Into::into), |query, value| {
+                query.page_token(value)
+            })
             .read_mask(crate::grpc::api::read_mask::<OwnedObjectReadMask, _>(
                 read_mask,
             ));
@@ -87,7 +93,10 @@ impl GrpcClient {
         let query = self
             .client()
             .owned_objects(**owner)
-            .object_type(object_type.map(|object_type| object_type.0.clone()))
+            .set_if_some(
+                object_type.map(|object_type| object_type.0.clone()),
+                |query, value| query.object_type(value),
+            )
             .read_mask(crate::grpc::api::read_mask::<OwnedObjectReadMask, _>(
                 read_mask,
             ));
