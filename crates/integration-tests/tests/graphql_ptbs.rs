@@ -649,7 +649,7 @@ async fn test_move_view_call() {
     // Raw JSON arguments
     let result = client
         .move_view_call_json(&function)
-        .arguments(Some(vec![serde_json::json!("21")]))
+        .arguments(vec![serde_json::json!("21")])
         .await
         .unwrap();
     assert_doubled(result);

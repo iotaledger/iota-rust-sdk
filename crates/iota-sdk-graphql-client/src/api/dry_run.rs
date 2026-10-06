@@ -117,7 +117,7 @@ impl DryRunTransactionKindQuery {
     async fn send(self) -> GraphQLResult<DryRunResult> {
         let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&self.transaction_kind)?);
         self.client
-            .dry_run(tx_bytes, self.skip_checks, Some(self.transaction_metadata))
+            .dry_run(tx_bytes, self.skip_checks, self.transaction_metadata)
             .await
     }
 }

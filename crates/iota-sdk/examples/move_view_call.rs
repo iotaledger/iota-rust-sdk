@@ -44,7 +44,7 @@ async fn main() -> GraphQLResult<()> {
         .move_view_call_json(format!("{PACKAGE}::shop::discounted_price"))
         .arguments(
             // `u64` is passed as a string so large values survive JSON.
-            Some(vec![serde_json::json!("100"), serde_json::json!("25")]),
+            vec![serde_json::json!("100"), serde_json::json!("25")],
         )
         .await?;
 
@@ -81,7 +81,7 @@ async fn main() -> GraphQLResult<()> {
 
     let result = client
         .move_view_call_json(format!("{PACKAGE}::shop::sale_at"))
-        .arguments(Some(vec![serde_json::json!(SHOP), serde_json::json!("1")]))
+        .arguments(vec![serde_json::json!(SHOP), serde_json::json!("1")])
         .await?;
 
     if let Some(error) = result.error {

@@ -312,7 +312,7 @@ async fn resolve_upgrade_cap_id(
 
             let Some(object) = client
                 .object(changed_object.object_id)
-                .version(Some(effects_v1.lamport_version))
+                .version(effects_v1.lamport_version)
                 .await?
             else {
                 continue;
