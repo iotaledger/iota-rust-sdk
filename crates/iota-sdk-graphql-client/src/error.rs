@@ -231,8 +231,8 @@ impl GraphQLError {
     }
 }
 
-impl From<bcs::Error> for GraphQLError {
-    fn from(error: bcs::Error) -> Self {
+impl From<iota_types::BcsError> for GraphQLError {
+    fn from(error: iota_types::BcsError) -> Self {
         Self::Deserialization(error.into())
     }
 }
@@ -351,7 +351,9 @@ mod tests {
     fn chain_formatters_repeat_the_wrapped_message() {
         use std::error::Error as _;
 
-        let error = GraphQLError::from(bcs::from_bytes::<u64>(&[]).unwrap_err());
+        let error = GraphQLError::from(iota_types::BcsError::new(
+            bcs::from_bytes::<u64>(&[]).unwrap_err(),
+        ));
 
         assert_eq!(
             error.to_string(),

@@ -33,7 +33,7 @@ pub use api::{
     epochs::{GetEpochQuery, GetEpochTotalCheckpointsQuery, GetEpochTotalTransactionBlocksQuery},
     events::ListEventsQuery,
     iota_names::{GetIotaNamesDefaultNameQuery, ListIotaNamesRegistrationsQuery},
-    move_view_call::{MoveViewCallJsonQuery, MoveViewCallQuery},
+    move_view_call::{MoveViewArg, MoveViewArgList, MoveViewCallJsonQuery, MoveViewCallQuery},
     network::{
         GetChainIdQuery, GetProtocolConfigQuery, GetReferenceGasPriceQuery,
         ListActiveValidatorsQuery,
@@ -51,7 +51,7 @@ pub use api::{
         WaitForTransactionQuery,
     },
 };
-pub use client::{GraphQLClient, USER_AGENT};
+pub use client::{GraphQLClient, GraphQLClientBuilder, USER_AGENT};
 pub use cynic;
 pub use error::{GraphQLError, GraphQLResult};
 pub use iota_transaction_builder::WaitForTransaction;
