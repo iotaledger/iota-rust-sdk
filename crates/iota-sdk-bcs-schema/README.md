@@ -1,5 +1,8 @@
 # iota-sdk-bcs-schema
 
+[![iota-sdk-bcs-schema on crates.io](https://img.shields.io/crates/v/iota-sdk-bcs-schema)](https://crates.io/crates/iota-sdk-bcs-schema)
+[![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-bcs-schema)
+
 A procedural macro that emits an [ABNF](https://datatracker.ietf.org/doc/html/rfc5234) grammar fragment for each type it is derived on, so the BCS wire format can be described in a single machine-readable file.
 
 This crate is a build tool of the IOTA SDK, published only so that the `bcs-schema` feature of `iota-sdk-types` and `iota-sdk-move-types` can be enabled from crates.io. The `move-shape` feature is internal to the SDK workspace.
@@ -28,8 +31,8 @@ Two types whose names kebab-case to the same rule (e.g. `ObjectID` and `ObjectId
 
 ## Usage
 
-```rust
-use iota_bcs_schema::BcsSchema;
+```rust,ignore
+use iota_sdk_bcs_schema::BcsSchema;
 
 #[derive(serde::Serialize, serde::Deserialize, BcsSchema)]
 struct GasPayment {

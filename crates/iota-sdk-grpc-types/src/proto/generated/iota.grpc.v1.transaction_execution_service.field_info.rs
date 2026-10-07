@@ -25,6 +25,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::signatures::UserSignature::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ExecuteTransactionItem {}
     impl MessageFields for ExecuteTransactionItem {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::TRANSACTION_FIELD,
@@ -92,6 +93,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ExecuteTransactionsRequest {}
     impl MessageFields for ExecuteTransactionsRequest {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::TRANSACTIONS_FIELD,
@@ -157,6 +159,7 @@ mod _field_impls {
     impl ExecuteTransactionResult {
         pub const RESULT_ONEOF: &'static str = "result";
     }
+    impl crate::field::sealed::Sealed for ExecuteTransactionResult {}
     impl MessageFields for ExecuteTransactionResult {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::EXECUTED_TRANSACTION_FIELD,
@@ -207,6 +210,7 @@ mod _field_impls {
             message_fields: Some(ExecuteTransactionResult::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ExecuteTransactionsResponse {}
     impl MessageFields for ExecuteTransactionsResponse {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::TRANSACTION_RESULTS_FIELD,
@@ -257,6 +261,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for SimulateTransactionItem {}
     impl MessageFields for SimulateTransactionItem {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::TRANSACTION_FIELD,
@@ -312,6 +317,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for SimulateTransactionsRequest {}
     impl MessageFields for SimulateTransactionsRequest {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::TRANSACTIONS_FIELD,
@@ -373,6 +379,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ExecutionError {}
     impl MessageFields for ExecutionError {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::BCS_KIND_FIELD,
@@ -450,6 +457,7 @@ mod _field_impls {
     impl SimulatedTransaction {
         pub const EXECUTION_RESULT_ONEOF: &'static str = "execution_result";
     }
+    impl crate::field::sealed::Sealed for SimulatedTransaction {}
     impl MessageFields for SimulatedTransaction {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::EXECUTED_TRANSACTION_FIELD,
@@ -523,6 +531,7 @@ mod _field_impls {
     impl SimulateTransactionResult {
         pub const RESULT_ONEOF: &'static str = "result";
     }
+    impl crate::field::sealed::Sealed for SimulateTransactionResult {}
     impl MessageFields for SimulateTransactionResult {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::SIMULATED_TRANSACTION_FIELD,
@@ -569,6 +578,7 @@ mod _field_impls {
             message_fields: Some(SimulateTransactionResult::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for SimulateTransactionsResponse {}
     impl MessageFields for SimulateTransactionsResponse {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::TRANSACTION_RESULTS_FIELD,
@@ -627,6 +637,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::command::InputArgument::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ViewFunctionCallItem {}
     impl MessageFields for ViewFunctionCallItem {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::FQ_FUNCTION_NAME_FIELD,
@@ -685,6 +696,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ViewFunctionCallsRequest {}
     impl MessageFields for ViewFunctionCallsRequest {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::VIEW_FUNCTION_CALLS_FIELD,
@@ -741,6 +753,7 @@ mod _field_impls {
     impl ViewFunctionCallOutputs {
         pub const EXECUTION_RESULT_ONEOF: &'static str = "execution_result";
     }
+    impl crate::field::sealed::Sealed for ViewFunctionCallOutputs {}
     impl MessageFields for ViewFunctionCallOutputs {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::RETURN_VALUES_FIELD,
@@ -800,6 +813,7 @@ mod _field_impls {
     impl ViewFunctionCallResult {
         pub const RESULT_ONEOF: &'static str = "result";
     }
+    impl crate::field::sealed::Sealed for ViewFunctionCallResult {}
     impl MessageFields for ViewFunctionCallResult {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::CALL_OUTPUTS_FIELD,
@@ -846,6 +860,7 @@ mod _field_impls {
             message_fields: Some(ViewFunctionCallResult::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ViewFunctionCallsResponse {}
     impl MessageFields for ViewFunctionCallsResponse {
         const FIELDS: &'static [&'static MessageField] = &[Self::CALL_RESULTS_FIELD];
     }

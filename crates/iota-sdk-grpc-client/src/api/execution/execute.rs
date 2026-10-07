@@ -194,8 +194,10 @@ impl GrpcClient {
 
     /// Execute a batch of signed transactions.
     ///
-    /// Transactions are executed sequentially on the server. Each transaction
-    /// is independent — failure of one does not abort the rest.
+    /// Transactions are executed concurrently on the server, so their relative
+    /// execution order is not guaranteed. Send transactions that must run in a
+    /// given order (for example, ones that use the same shared object) in
+    /// separate batches. Failure of one transaction does not abort the rest.
     ///
     /// Returns a `Vec<GrpcResult<ExecutedTransaction>>` in the same order as
     /// the input. Each element is either the successfully executed

@@ -90,26 +90,26 @@ impl GraphQLClient {
 
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
     /// {MAINNET_HOST}.
-    pub fn new_mainnet() -> Self {
-        Self::new(MAINNET_HOST).expect("cannot build mainnet client")
+    pub fn new_mainnet() -> GraphQLResult<Self> {
+        Self::new(MAINNET_HOST)
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
     /// {TESTNET_HOST}.
-    pub fn new_testnet() -> Self {
-        Self::new(TESTNET_HOST).expect("cannot build testnet client")
+    pub fn new_testnet() -> GraphQLResult<Self> {
+        Self::new(TESTNET_HOST)
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
     /// {DEVNET_HOST}.
-    pub fn new_devnet() -> Self {
-        Self::new(DEVNET_HOST).expect("cannot build devnet client")
+    pub fn new_devnet() -> GraphQLResult<Self> {
+        Self::new(DEVNET_HOST)
     }
 
     /// Create a new GraphQL client connected to a `localnet` GraphQL server:
     /// {LOCAL_HOST}.
-    pub fn new_localnet() -> Self {
-        Self::new(LOCAL_HOST).expect("Invalid localhost URL")
+    pub fn new_localnet() -> GraphQLResult<Self> {
+        Self::new(LOCAL_HOST)
     }
 
     /// Return the URL for the GraphQL server.
@@ -259,7 +259,7 @@ mod tests {
 
     #[test]
     fn clones_share_the_service_config_cache_until_the_server_changes() {
-        let client = GraphQLClient::new_localnet();
+        let client = GraphQLClient::new_localnet().unwrap();
         client.service_config.set(service_config()).unwrap();
         let mut clone = client.clone();
         assert!(clone.service_config.get().is_some());
@@ -271,7 +271,9 @@ mod tests {
 
     #[test]
     fn test_rpc_server() {
-        let mut client = GraphQLClient::new_mainnet();
+        let mut client = GraphQLClient::new_localnet().unwrap();
+        assert_eq!(client.rpc_server(), &LOCAL_HOST.parse().unwrap());
+        client.set_rpc_server(MAINNET_HOST).unwrap();
         assert_eq!(client.rpc_server(), &MAINNET_HOST.parse().unwrap());
         client.set_rpc_server(TESTNET_HOST).unwrap();
         assert_eq!(client.rpc_server(), &TESTNET_HOST.parse().unwrap());

@@ -37,7 +37,7 @@ async fn main() -> Result<()> {
     let private_key = Ed25519PrivateKey::new([0; Ed25519PrivateKey::LENGTH]);
     let sender = private_key.public_key().derive_address();
 
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
     FaucetClient::new_localnet()
         .request_and_wait_for_finalized(sender, &client)
         .await?;
@@ -46,13 +46,13 @@ async fn main() -> Result<()> {
     builder.send_iota(recipient, 1_000u64);
     let tx = builder.finish().await?;
 
-    let dry_run = client.dry_run_transaction(&tx, false).await?;
+    let dry_run = client.dry_run_transaction(&tx).await?;
     if let Some(err) = dry_run.error {
         eyre::bail!("Dry run failed: {err}");
     }
 
     let signature = private_key.sign_transaction(&tx)?;
-    let effects = client.execute_transaction(&[signature], &tx, None).await?;
+    let effects = client.execute_transaction(&[signature], &tx).await?;
     println!("Digest: {}", effects.digest());
 
     Ok(())

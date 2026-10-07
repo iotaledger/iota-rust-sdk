@@ -53,7 +53,8 @@ impl GraphQLClient {
     ) -> Result<Option<Arc<Name>>> {
         Ok(self
             .client()
-            .iota_names_default_name(**address, format.map(Into::into))
+            .iota_names_default_name(**address)
+            .format(format.map(Into::into))
             .await?
             .map(Into::into)
             .map(Arc::new))
