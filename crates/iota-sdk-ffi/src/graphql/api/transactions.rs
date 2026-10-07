@@ -153,8 +153,8 @@ impl GraphQLClient {
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
                 &transaction.0,
-                wait_for.map(Into::into),
             )
+            .wait_for(wait_for.map(Into::into))
             .await?
             .into())
     }
@@ -190,7 +190,8 @@ impl GraphQLClient {
     ) -> Result<()> {
         Ok(self
             .client()
-            .wait_for_transaction(**digest, wait_for.into(), timeout)
+            .wait_for_transaction(**digest, wait_for.into())
+            .timeout(timeout)
             .await?)
     }
 }

@@ -19,11 +19,11 @@ use iota_sdk::{
 async fn main() -> Result<()> {
     let package_id = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d";
     let package_address = Address::from_hex(package_id)?;
-    let client = GraphQLClient::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     // Fetch package metadata and version history.
     let package = client
-        .package(package_address, None)
+        .package(package_address)
         .await?
         .ok_or_eyre("missing package")?;
     let latest_package = client
@@ -311,7 +311,8 @@ async fn resolve_upgrade_cap_id(
             }
 
             let Some(object) = client
-                .object(changed_object.object_id, Some(effects_v1.lamport_version))
+                .object(changed_object.object_id)
+                .version(effects_v1.lamport_version)
                 .await?
             else {
                 continue;
@@ -495,7 +496,7 @@ async fn current_package_policy(client: &GraphQLClient, package_id: ObjectId) ->
         );
     };
 
-    let Some(contents) = client.move_object_contents(upgrade_cap_id, None).await? else {
+    let Some(contents) = client.move_object_contents(upgrade_cap_id).await? else {
         return Ok(
             if was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id).await? {
                 "Immutable".to_owned()

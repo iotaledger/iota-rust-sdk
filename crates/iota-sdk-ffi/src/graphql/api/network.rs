@@ -27,13 +27,22 @@ impl GraphQLClient {
     /// the GraphQL service (e.g., due to pruning).
     #[uniffi::method(default(epoch = None))]
     pub async fn reference_gas_price(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        Ok(self.client().reference_gas_price(epoch).await?)
+        Ok(self
+            .client()
+            .reference_gas_price()
+            .epoch_number(epoch)
+            .await?)
     }
 
     /// Get the protocol configuration.
     #[uniffi::method(default(version = None))]
     pub async fn protocol_config(&self, version: Option<u64>) -> Result<GraphQLProtocolConfigs> {
-        Ok(self.client().protocol_config(version).await?.into())
+        Ok(self
+            .client()
+            .protocol_config()
+            .version(version)
+            .await?
+            .into())
     }
 
     /// Get the list of active validators for the provided epoch, including

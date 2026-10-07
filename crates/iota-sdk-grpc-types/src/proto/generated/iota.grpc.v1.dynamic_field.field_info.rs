@@ -81,6 +81,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::object::Object::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for DynamicField {}
     impl MessageFields for DynamicField {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::KIND_FIELD,
