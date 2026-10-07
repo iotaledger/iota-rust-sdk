@@ -94,6 +94,114 @@ impl ListObjectsQuery {
     }
 }
 
+define_query! {
+    /// Query for [`GraphQLClient::object`]. Await it to send the request.
+    pub struct GetObjectQuery {
+        client: GraphQLClient,
+        object_id: ObjectId,
+        version: Option<Version>,
+    }
+    output: GraphQLResult<Option<Object>>;
+}
+
+impl GetObjectQuery {
+    /// Set the object version. Defaults to the latest version.
+    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
+        self.version = version.into();
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<Option<Object>> {
+        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+            object_id: self.object_id,
+            version: self.version.map(|v| v.as_u64()),
+        });
+
+        let response = self.client.run_query(&operation).await?;
+
+        let obj = response.object;
+        let bcs = obj
+            .and_then(|o| o.bcs)
+            .map(|bcs| crate::error::decode_base64(bcs.0.as_str()))
+            .transpose()?;
+
+        let object = bcs
+            .map(|b| bcs::from_bytes::<iota_types::Object>(&b))
+            .transpose()?;
+
+        Ok(object)
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::move_object_contents`]. Await it to send the
+    /// request.
+    pub struct GetMoveObjectContentsQuery {
+        client: GraphQLClient,
+        object_id: ObjectId,
+        version: Option<Version>,
+    }
+    output: GraphQLResult<Option<serde_json::Value>>;
+}
+
+impl GetMoveObjectContentsQuery {
+    /// Set the object version. Defaults to the latest version.
+    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
+        self.version = version.into();
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<Option<serde_json::Value>> {
+        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+            object_id: self.object_id,
+            version: self.version.map(|v| v.as_u64()),
+        });
+
+        let response = self.client.run_query(&operation).await?;
+
+        Ok(response
+            .object
+            .and_then(|o| o.as_move_object)
+            .and_then(|o| o.contents)
+            .and_then(|mv| mv.json))
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::move_object_contents_bcs`]. Await it to send
+    /// the request.
+    pub struct GetMoveObjectContentsBcsQuery {
+        client: GraphQLClient,
+        object_id: ObjectId,
+        version: Option<Version>,
+    }
+    output: GraphQLResult<Option<Vec<u8>>>;
+}
+
+impl GetMoveObjectContentsBcsQuery {
+    /// Set the object version. Defaults to the latest version.
+    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
+        self.version = version.into();
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<Option<Vec<u8>>> {
+        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+            object_id: self.object_id,
+            version: self.version.map(|v| v.as_u64()),
+        });
+
+        let response = self.client.run_query(&operation).await?;
+
+        response
+            .object
+            .and_then(|o| o.as_move_object)
+            .and_then(|o| o.contents)
+            .map(|bcs| crate::error::decode_base64(bcs.bcs.0.as_str()))
+            .transpose()
+    }
+}
+
 impl GraphQLClient {
     /// Return a stream of objects based on the (optional) object filter.
     pub fn objects_stream(
@@ -115,32 +223,15 @@ impl GraphQLClient {
 
     /// Return an object based on the provided [`Address`](iota_types::Address).
     ///
-    /// If the object does not exist (e.g., due to pruning), this will return
-    /// `Ok(None)`. Similarly, if this is not an object but an address, it
-    /// will return `Ok(None)`.
-    pub async fn object(
-        &self,
-        object_id: ObjectId,
-        version: impl Into<Option<Version>>,
-    ) -> GraphQLResult<Option<Object>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+    /// If the object does not exist (e.g., due to pruning), this will resolve
+    /// to `Ok(None)`. Similarly, if this is not an object but an address, it
+    /// will resolve to `Ok(None)`.
+    pub fn object(&self, object_id: ObjectId) -> GetObjectQuery {
+        GetObjectQuery {
+            client: self.clone(),
             object_id,
-            version: version.into().map(|v| v.as_u64()),
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        let obj = response.object;
-        let bcs = obj
-            .and_then(|o| o.bcs)
-            .map(|bcs| crate::error::decode_base64(bcs.0.as_str()))
-            .transpose()?;
-
-        let object = bcs
-            .map(|b| bcs::from_bytes::<iota_types::Object>(&b))
-            .transpose()?;
-
-        Ok(object)
+            version: None,
+        }
     }
 
     /// Return a page of objects.
@@ -177,57 +268,34 @@ impl GraphQLClient {
 
     /// Return the contents JSON of an object that is a Move object.
     ///
-    /// If the object does not exist (e.g., due to pruning), this will return
-    /// `Ok(None)`. Similarly, if this is not an object but an address, it
-    /// will return `Ok(None)`.
-    pub async fn move_object_contents(
-        &self,
-        object_id: ObjectId,
-        version: impl Into<Option<Version>>,
-    ) -> GraphQLResult<Option<serde_json::Value>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+    /// If the object does not exist (e.g., due to pruning), this will resolve
+    /// to `Ok(None)`. Similarly, if this is not an object but an address, it
+    /// will resolve to `Ok(None)`.
+    pub fn move_object_contents(&self, object_id: ObjectId) -> GetMoveObjectContentsQuery {
+        GetMoveObjectContentsQuery {
+            client: self.clone(),
             object_id,
-            version: version.into().map(|v| v.as_u64()),
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        Ok(response
-            .object
-            .and_then(|o| o.as_move_object)
-            .and_then(|o| o.contents)
-            .and_then(|mv| mv.json))
+            version: None,
+        }
     }
 
     /// Return the BCS of an object that is a Move object.
     ///
-    /// If the object does not exist (e.g., due to pruning), this will return
-    /// `Ok(None)`. Similarly, if this is not an object but an address, it
-    /// will return `Ok(None)`.
-    pub async fn move_object_contents_bcs(
-        &self,
-        object_id: ObjectId,
-        version: impl Into<Option<Version>>,
-    ) -> GraphQLResult<Option<Vec<u8>>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+    /// If the object does not exist (e.g., due to pruning), this will resolve
+    /// to `Ok(None)`. Similarly, if this is not an object but an address, it
+    /// will resolve to `Ok(None)`.
+    pub fn move_object_contents_bcs(&self, object_id: ObjectId) -> GetMoveObjectContentsBcsQuery {
+        GetMoveObjectContentsBcsQuery {
+            client: self.clone(),
             object_id,
-            version: version.into().map(|v| v.as_u64()),
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        response
-            .object
-            .and_then(|o| o.as_move_object)
-            .and_then(|o| o.contents)
-            .map(|bcs| crate::error::decode_base64(bcs.bcs.0.as_str()))
-            .transpose()
+            version: None,
+        }
     }
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use iota_types::{Address, ObjectId};
+    use iota_types::{Address, ObjectId, Version};
 
     use crate::{
         query_types::ObjectFilter,
@@ -236,6 +304,59 @@ mod tests {
             test_client,
         },
     };
+
+    #[tokio::test]
+    async fn object_queries_send_the_object_id_and_version() {
+        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+            let _ = client
+                .object(ObjectId::SYSTEM_STATE)
+                .version(Version::from_u64(3))
+                .await;
+        })
+        .await;
+        assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
+        assert_eq!(vars["version"], 3);
+
+        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+            let _ = client
+                .move_object_contents(ObjectId::SYSTEM_STATE)
+                .version(Version::from_u64(4))
+                .await;
+        })
+        .await;
+        assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
+        assert_eq!(vars["version"], 4);
+
+        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+            let _ = client
+                .move_object_contents_bcs(ObjectId::SYSTEM_STATE)
+                .version(Version::from_u64(5))
+                .await;
+        })
+        .await;
+        assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
+        assert_eq!(vars["version"], 5);
+
+        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+            let _ = client.object(ObjectId::SYSTEM_STATE).await;
+        })
+        .await;
+        assert!(vars["version"].is_null());
+
+        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+            let _ = client.move_object_contents(ObjectId::SYSTEM_STATE).await;
+        })
+        .await;
+        assert!(vars["version"].is_null());
+
+        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+            let _ = client
+                .move_object_contents_bcs(ObjectId::SYSTEM_STATE)
+                .await;
+        })
+        .await;
+        assert!(vars["version"].is_null());
+    }
 
     #[tokio::test]
     async fn objects_sends_the_filter_and_pagination() {
@@ -285,7 +406,7 @@ mod tests {
     async fn test_object_query() {
         let client = test_client();
         client
-            .object(ObjectId::SYSTEM_STATE, None)
+            .object(ObjectId::SYSTEM_STATE)
             .await
             .map_err(|e| {
                 format!(

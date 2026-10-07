@@ -11,7 +11,7 @@ use iota_sdk::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
 
     let private_key = Ed25519PrivateKey::random();
     let from_address = private_key.public_key().derive_address();
@@ -33,7 +33,7 @@ async fn main() -> Result<()> {
         .iter()
         .map(|obj| obj.object_ref())
         .collect::<Vec<_>>();
-    let gas_price = client.reference_gas_price(None).await?.unwrap_or(100);
+    let gas_price = client.reference_gas_price().await?.unwrap_or(100);
 
     let mut builder = TransactionBuilder::new(from_address);
 
@@ -48,7 +48,7 @@ async fn main() -> Result<()> {
     println!("Signing Digest: {}", txn.signing_digest_hex());
     println!("Txn Bytes: {}", txn.to_base64());
 
-    let res = client.dry_run_transaction(&txn, false).await?;
+    let res = client.dry_run_transaction(&txn).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to transfer objects: {err}");

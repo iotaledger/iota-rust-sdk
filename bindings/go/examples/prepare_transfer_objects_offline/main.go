@@ -18,7 +18,10 @@ func addrFromHex(hex string) *iota_sdk.Address {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewLocalnet()
+	client, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
 	fromAddress := privateKey.PublicKey().DeriveAddress()

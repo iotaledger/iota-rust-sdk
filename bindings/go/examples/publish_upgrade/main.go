@@ -54,7 +54,10 @@ func main() {
 	sender := publicKey.DeriveAddress()
 	fmt.Printf("Sender: %s\n", sender)
 
-	client := iota_sdk.GraphQlClientNewLocalnet()
+	client, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	// Fund the sender address for gas payment
 	faucet := iota_sdk.FaucetClientNewLocalnet()

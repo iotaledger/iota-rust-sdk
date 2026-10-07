@@ -310,6 +310,94 @@ impl ListTransactionsDataEffectsQuery {
     }
 }
 
+define_query! {
+    /// Query for [`GraphQLClient::execute_transaction`]. Await it to send the
+    /// request.
+    pub struct ExecuteTransactionQuery {
+        client: GraphQLClient,
+        signatures: Vec<String>,
+        transaction: Transaction,
+        wait_for: Option<WaitForTransaction>,
+    }
+    output: GraphQLResult<TransactionEffects>;
+}
+
+impl ExecuteTransactionQuery {
+    /// Wait for the executed transaction to be indexed or finalized before
+    /// resolving.
+    pub fn wait_for(mut self, wait_for: impl Into<Option<WaitForTransaction>>) -> Self {
+        self.wait_for = wait_for.into();
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<TransactionEffects> {
+        let operation = ExecuteTransactionQueryFragment::build(ExecuteTransactionArgs {
+            signatures: self.signatures,
+            tx_bytes: base64ct::Base64::encode_string(
+                bcs::to_bytes(&self.transaction).unwrap().as_ref(),
+            ),
+        });
+
+        let response = self.client.run_query(&operation).await?;
+
+        let result = response.execute_transaction_block;
+        let bcs = crate::error::decode_base64(result.effects.bcs.0.as_str())?;
+        let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
+
+        if let Some(wait_for) = self.wait_for {
+            self.client
+                .wait_for_transaction(self.transaction.digest(), wait_for)
+                .await?;
+        }
+
+        Ok(effects)
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::wait_for_transaction`]. Await it to send the
+    /// request.
+    pub struct WaitForTransactionQuery {
+        client: GraphQLClient,
+        digest: TransactionDigest,
+        wait_for: WaitForTransaction,
+        timeout: Option<Duration>,
+    }
+    output: GraphQLResult<()>;
+}
+
+impl WaitForTransactionQuery {
+    /// Set how long to wait. Defaults to 60s.
+    pub fn timeout(mut self, timeout: impl Into<Option<Duration>>) -> Self {
+        self.timeout = timeout.into();
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<()> {
+        let client = &self.client;
+        let digest = self.digest;
+        crate::wait::timeout(
+            self.timeout.unwrap_or_else(|| Duration::from_secs(60)),
+            async {
+                loop {
+                    if match self.wait_for {
+                        WaitForTransaction::IndexedOnNode => client.is_transaction_indexed_on_node(digest).await?,
+                        WaitForTransaction::Finalized => client.is_transaction_finalized(digest).await?,
+                        _ => unimplemented!(
+                            "a new WaitForTransaction enum variant was added and needs to be handled"
+                        ),
+                    } {
+                        break Ok(());
+                    }
+                    crate::wait::sleep(Duration::from_millis(100)).await;
+                }
+            },
+        )
+        .await
+        .map_err(|_| GraphQLError::Timeout)?
+    }
+}
+
 impl GraphQLClient {
     /// Get a transaction by its digest.
     pub async fn transaction(
@@ -427,30 +515,17 @@ impl GraphQLClient {
     }
 
     /// Execute a transaction.
-    pub async fn execute_transaction(
+    pub fn execute_transaction(
         &self,
         signatures: &[UserSignature],
         transaction: &Transaction,
-        wait_for: impl Into<Option<WaitForTransaction>>,
-    ) -> GraphQLResult<TransactionEffects> {
-        let wait_for = wait_for.into();
-        let operation = ExecuteTransactionQueryFragment::build(ExecuteTransactionArgs {
+    ) -> ExecuteTransactionQuery {
+        ExecuteTransactionQuery {
+            client: self.clone(),
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
-            tx_bytes: base64ct::Base64::encode_string(bcs::to_bytes(transaction).unwrap().as_ref()),
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        let result = response.execute_transaction_block;
-        let bcs = crate::error::decode_base64(result.effects.bcs.0.as_str())?;
-        let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
-
-        if let Some(wait_for) = wait_for {
-            self.wait_for_transaction(transaction.digest(), wait_for, None)
-                .await?;
+            transaction: transaction.clone(),
+            wait_for: None,
         }
-
-        Ok(effects)
     }
 
     /// Returns whether the transaction for the given digest has been indexed
@@ -489,48 +564,93 @@ impl GraphQLClient {
         Ok(false)
     }
 
-    /// Wait for the indexing or finalization of a transaction
-    /// by its digest. An optional timeout can be provided, which, if
-    /// exceeded, will return an error (default 60s).
-    pub async fn wait_for_transaction(
+    /// Wait for the indexing or finalization of a transaction by its digest.
+    /// Resolves to an error if it takes longer than the timeout, 60s unless
+    /// set with [`timeout`](WaitForTransactionQuery::timeout).
+    pub fn wait_for_transaction(
         &self,
         digest: TransactionDigest,
         wait_for: WaitForTransaction,
-        timeout: impl Into<Option<Duration>>,
-    ) -> GraphQLResult<()> {
-        crate::wait::timeout(
-            timeout.into().unwrap_or_else(|| Duration::from_secs(60)),
-            async {
-                loop {
-                    if match wait_for {
-                        WaitForTransaction::IndexedOnNode => self.is_transaction_indexed_on_node(digest).await?,
-                        WaitForTransaction::Finalized => self.is_transaction_finalized(digest).await?,
-                        _ => unimplemented!(
-                            "a new WaitForTransaction enum variant was added and needs to be handled"
-                        ),
-                    } {
-                        break Ok(());
-                    }
-                    crate::wait::sleep(Duration::from_millis(100)).await;
-                }
-            },
-        )
-        .await
-        .map_err(|_| GraphQLError::Timeout)?
+    ) -> WaitForTransactionQuery {
+        WaitForTransactionQuery {
+            client: self.clone(),
+            digest,
+            wait_for,
+            timeout: None,
+        }
     }
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use iota_types::Address;
+    use std::time::Duration;
+
+    use base64ct::Encoding;
+    use iota_types::{Address, Ed25519PublicKey, Ed25519Signature, SimpleSignature, UserSignature};
 
     use crate::{
+        GraphQLClient, GraphQLError, WaitForTransaction,
         query_types::{AddressTransactionRelationship, TransactionsFilter},
         test_utils::{
             assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
-            test_client,
+            test_client, test_transaction,
         },
     };
+
+    #[tokio::test]
+    async fn execute_transaction_sends_the_signatures_and_transaction() {
+        let transaction = test_transaction();
+        let signature = UserSignature::Simple(SimpleSignature::Ed25519 {
+            signature: Ed25519Signature::new([1; 64]),
+            public_key: Ed25519PublicKey::new([2; 32]),
+        });
+        let expected_signature = signature.to_base64();
+        let expected_tx_bytes =
+            base64ct::Base64::encode_string(&bcs::to_bytes(&transaction).unwrap());
+        let vars = sent_variables("ExecuteTransactionQueryFragment", |client| async move {
+            let _ = client.execute_transaction(&[signature], &transaction).await;
+        })
+        .await;
+        assert_eq!(vars["signatures"], serde_json::json!([expected_signature]));
+        assert_eq!(vars["txBytes"], expected_tx_bytes);
+    }
+
+    #[tokio::test]
+    async fn wait_for_transaction_sends_the_digest_to_the_status_query() {
+        let digest = test_transaction().digest();
+        for (wait_for, operation) in [
+            (
+                WaitForTransaction::IndexedOnNode,
+                "TransactionBlockIndexedQueryFragment",
+            ),
+            (
+                WaitForTransaction::Finalized,
+                "TransactionBlockCheckpointQueryFragment",
+            ),
+        ] {
+            let vars = sent_variables(operation, |client| async move {
+                let _ = client.wait_for_transaction(digest, wait_for).await;
+            })
+            .await;
+            assert_eq!(vars["digest"], digest.to_string());
+        }
+    }
+
+    #[tokio::test]
+    async fn wait_for_transaction_stops_at_the_timeout() {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let client =
+            GraphQLClient::new(&format!("http://{}", listener.local_addr().unwrap())).unwrap();
+        let result = tokio::time::timeout(
+            Duration::from_secs(10),
+            client
+                .wait_for_transaction(test_transaction().digest(), WaitForTransaction::Finalized)
+                .timeout(Duration::from_millis(100)),
+        )
+        .await
+        .expect("the query's own timeout fires first");
+        assert!(matches!(result, Err(GraphQLError::Timeout)));
+    }
 
     fn sent_by_framework() -> TransactionsFilter {
         TransactionsFilter::default().with_sent_address(Address::FRAMEWORK)
