@@ -1478,37 +1478,8 @@ impl From<GraphQLMoveModuleConnection>
 }
 
 #[derive(uniffi::Record)]
-pub struct GraphQLMovePackageQuery {
-    pub address: Arc<Address>,
-    #[uniffi(default = None)]
-    pub bcs: Option<Base64>,
-}
-
-impl From<iota_sdk::graphql_client::query_types::MovePackageQueryFragment>
-    for GraphQLMovePackageQuery
-{
-    fn from(value: iota_sdk::graphql_client::query_types::MovePackageQueryFragment) -> Self {
-        Self {
-            address: Arc::new(value.address.into()),
-            bcs: value.bcs,
-        }
-    }
-}
-
-impl From<GraphQLMovePackageQuery>
-    for iota_sdk::graphql_client::query_types::MovePackageQueryFragment
-{
-    fn from(value: GraphQLMovePackageQuery) -> Self {
-        Self {
-            address: (**value.address),
-            bcs: value.bcs,
-        }
-    }
-}
-
-#[derive(uniffi::Record)]
 pub struct GraphQLMoveModuleQuery {
-    pub package: GraphQLMovePackageQuery,
+    pub package: Arc<Address>,
     pub name: String,
 }
 
@@ -1517,10 +1488,7 @@ impl From<iota_sdk::graphql_client::query_types::MoveModuleQueryFragment>
 {
     fn from(value: iota_sdk::graphql_client::query_types::MoveModuleQueryFragment) -> Self {
         Self {
-            package: GraphQLMovePackageQuery {
-                address: Arc::new(value.package.address.into()),
-                bcs: None,
-            },
+            package: Arc::new(value.package.address.into()),
             name: value.name,
         }
     }
@@ -1532,7 +1500,7 @@ impl From<GraphQLMoveModuleQuery>
     fn from(value: GraphQLMoveModuleQuery) -> Self {
         Self {
             package: iota_sdk::graphql_client::query_types::MovePackageAddress {
-                address: **value.package.address,
+                address: **value.package,
             },
             name: value.name,
         }
