@@ -13,10 +13,10 @@ pub(crate) const NUM_COINS_FROM_FAUCET: usize = 5;
 pub(crate) fn test_client() -> GraphQLClient {
     let network = std::env::var("NETWORK").unwrap_or_else(|_| "local".to_string());
     match network.as_str() {
-        "mainnet" => GraphQLClient::new_mainnet(),
-        "testnet" => GraphQLClient::new_testnet(),
-        "devnet" => GraphQLClient::new_devnet(),
-        "local" => GraphQLClient::new_localnet(),
+        "mainnet" => GraphQLClient::new_mainnet().unwrap(),
+        "testnet" => GraphQLClient::new_testnet().unwrap(),
+        "devnet" => GraphQLClient::new_devnet().unwrap(),
+        "local" => GraphQLClient::new_localnet().unwrap(),
         _ => GraphQLClient::new(&network).expect("Invalid network URL: {network}"),
     }
 }
@@ -109,4 +109,30 @@ pub(crate) fn assert_backward_page(variables: &serde_json::Value) {
     assert_eq!(variables["last"], 7);
     assert!(variables["after"].is_null());
     assert!(variables["first"].is_null());
+}
+
+pub(crate) fn test_transaction() -> iota_types::Transaction {
+    use iota_types::{
+        Address, GasPayment, ObjectDigest, ObjectId, ObjectReference, ProgrammableTransaction,
+        Transaction, TransactionExpiration, TransactionKind, TransactionV1, Version,
+    };
+
+    Transaction::V1(TransactionV1 {
+        kind: TransactionKind::Programmable(ProgrammableTransaction {
+            inputs: Vec::new(),
+            commands: Vec::new(),
+        }),
+        sender: Address::STD,
+        gas_payment: GasPayment {
+            objects: vec![ObjectReference::new(
+                ObjectId::SYSTEM_STATE,
+                Version::from_u64(3),
+                ObjectDigest::ZERO,
+            )],
+            owner: Address::FRAMEWORK,
+            price: 1000,
+            budget: 5_000_000,
+        },
+        expiration: TransactionExpiration::None,
+    })
 }

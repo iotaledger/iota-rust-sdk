@@ -524,9 +524,9 @@ const FIXTURES: &[Fixture] = &[
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
     let network = std::env::var("IOTA_NETWORK").unwrap_or_else(|_| "mainnet".to_string());
     let client = match network.as_str() {
-        "testnet" => GraphQLClient::new_testnet(),
-        "devnet" => GraphQLClient::new_devnet(),
-        "mainnet" => GraphQLClient::new_mainnet(),
+        "testnet" => GraphQLClient::new_testnet()?,
+        "devnet" => GraphQLClient::new_devnet()?,
+        "mainnet" => GraphQLClient::new_mainnet()?,
         other => {
             return Err(format!(
                 "unknown IOTA_NETWORK={other}; expected one of: testnet, devnet, mainnet"
@@ -620,7 +620,7 @@ async fn capture(
         Source::ObjectId(id_str) => {
             let id: ObjectId = id_str.parse()?;
             let object = client
-                .object(id, None)
+                .object(id)
                 .await?
                 .ok_or_else(|| format!("object `{id_str}` not found on this network"))?;
             let move_struct = object

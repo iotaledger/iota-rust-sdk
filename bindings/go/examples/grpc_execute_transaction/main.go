@@ -27,8 +27,12 @@ func main() {
 
 	// Request funds from faucet (the faucet client relies on GraphQL to await
 	// finalization)
+	graphQlClient, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 	faucet := iota_sdk.FaucetClientNewLocalnet()
-	_, err = faucet.RequestAndWaitForFinalized(senderAddress, iota_sdk.GraphQlClientNewLocalnet())
+	_, err = faucet.RequestAndWaitForFinalized(senderAddress, graphQlClient)
 	if err != nil {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}

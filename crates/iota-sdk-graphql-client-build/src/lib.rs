@@ -37,7 +37,7 @@
 ///
 /// #[tokio::main]
 /// async fn main() {
-///     let client = GraphQLClient::new_mainnet();
+///     let client = GraphQLClient::new_mainnet().unwrap();
 ///     let operation = MyQuery::build(());
 ///     let q = client.run_query(&operation).await.unwrap();
 ///     println!("{:?}", q);
