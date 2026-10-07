@@ -3,12 +3,7 @@
 
 //! Common utilities shared across API modules.
 
-use std::borrow::Cow;
-
-pub use iota_grpc_types::{
-    field::FieldMask, field_mask_normalize, google::rpc::Status as RpcStatus,
-    proto::TryFromProtoError,
-};
+pub use iota_grpc_types::{google::rpc::Status as RpcStatus, proto::TryFromProtoError};
 use iota_grpc_types::{
     proto::GrpcConversionError,
     v1::{
@@ -185,67 +180,6 @@ pub enum CheckpointStreamError {
 
 /// Result type alias for API operations.
 pub type GrpcResult<T> = std::result::Result<T, GrpcError>;
-
-// =============================================================================
-// Field Masks
-// =============================================================================
-
-/// A low-level read mask string.
-///
-/// Most callers should use the scoped per-endpoint mask types in
-/// [`read_mask_fields`](crate::read_mask_fields)
-/// (e.g. [`ObjectReadMask`](crate::read_mask_fields::ObjectReadMask)) which
-/// are passed directly to the client methods. This type is the underlying
-/// string holder, useful when composing masks by hand:
-///
-/// ```
-/// use iota_sdk_grpc_client::ReadMask;
-///
-/// let mask = ReadMask::from("effects,checkpoint");
-/// assert_eq!(mask.as_str(), "effects,checkpoint");
-/// ```
-#[derive(Clone, Debug)]
-pub struct ReadMask<'a>(Cow<'a, str>);
-
-impl<'a> ReadMask<'a> {
-    /// Returns the comma-separated field mask string.
-    pub fn as_str(&self) -> &str {
-        &self.0
-    }
-}
-
-impl<'a> From<&'a str> for ReadMask<'a> {
-    fn from(s: &'a str) -> Self {
-        Self(Cow::Borrowed(s))
-    }
-}
-
-impl From<String> for ReadMask<'_> {
-    fn from(s: String) -> Self {
-        Self(Cow::Owned(s))
-    }
-}
-
-impl From<&[&str]> for ReadMask<'_> {
-    /// Paths are normalized: broader paths subsume their sub-paths.
-    fn from(paths: &[&str]) -> Self {
-        Self(Cow::Owned(field_mask_normalize(&paths.join(","))))
-    }
-}
-
-impl<const N: usize> From<&[&str; N]> for ReadMask<'_> {
-    /// Paths are normalized: broader paths subsume their sub-paths.
-    fn from(paths: &[&str; N]) -> Self {
-        Self::from(paths.as_slice())
-    }
-}
-
-impl From<FieldMask> for ReadMask<'_> {
-    /// Paths are normalized: broader paths subsume their sub-paths.
-    fn from(mask: FieldMask) -> Self {
-        Self(Cow::Owned(field_mask_normalize(&mask.paths.join(","))))
-    }
-}
 
 /// Safely convert a `usize` to `u32`, saturating at `u32::MAX` instead of
 /// silently truncating on 64-bit platforms.
@@ -499,6 +433,40 @@ pub struct Page<T> {
     pub next_page_token: Option<::prost::bytes::Bytes>,
 }
 
+/// Generate a query object: a struct that runs its query when awaited.
+///
+/// The struct's [`IntoFuture`](std::future::IntoFuture) boxes the future of
+/// `send(self) -> $output`, which each invocation writes by hand in an
+/// inherent impl.
+macro_rules! define_query {
+    (
+        $(#[$meta:meta])*
+        pub struct $name:ident $(<$generic:ident: $bound:path>)? {
+            $($field:ident: $field_ty:ty),* $(,)?
+        }
+        output: $output:ty;
+    ) => {
+        $(#[$meta])*
+        #[must_use]
+        pub struct $name $(<$generic>)? {
+            $($field: $field_ty,)*
+        }
+
+        impl $(<$generic: $bound + 'static>)? ::std::future::IntoFuture for $name $(<$generic>)? {
+            type Output = $output;
+            type IntoFuture = ::std::pin::Pin<
+                Box<dyn ::std::future::Future<Output = Self::Output> + Send>,
+            >;
+
+            fn into_future(self) -> Self::IntoFuture {
+                Box::pin(self.send())
+            }
+        }
+    };
+}
+
+pub(crate) use define_query;
+
 /// Generate a paginated query builder for a list endpoint.
 ///
 /// The generated struct implements [`IntoFuture`](std::future::IntoFuture) for
@@ -506,7 +474,9 @@ pub struct Page<T> {
 ///
 /// # Parameters
 ///
-/// - `$query_name` — name of the generated builder struct
+/// - `$query_name` — name of the generated builder struct, optionally with a
+///   single bounded type parameter (e.g. `ListOwnedMoveObjectsQuery<T:
+///   MoveObject>`) usable in `item` and `map_item`
 /// - `$service_client_type` — the tonic service client type
 /// - `$item_type` — the item type exposed by the builder
 /// - `$rpc_method` — the RPC method name on the service client
@@ -548,7 +518,7 @@ macro_rules! define_list_query {
     // Pass-through variant: `$item_type` is the response element type.
     (
         $(#[$meta:meta])*
-        pub struct $query_name:ident {
+        pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
             service_client: $service_client_type:ty,
             request: $request_type:ty,
             item: $item_type:ty,
@@ -559,7 +529,7 @@ macro_rules! define_list_query {
         $crate::api::define_list_query! {
             @impl
             $(#[$meta])*
-            pub struct $query_name {
+            pub struct $query_name $(<$generic: $bound>)? {
                 service_client: $service_client_type,
                 request: $request_type,
                 item: $item_type,
@@ -574,7 +544,7 @@ macro_rules! define_list_query {
     // a fallible `fn(&ProtoItem) -> GrpcResult<$item_type>`.
     (
         $(#[$meta:meta])*
-        pub struct $query_name:ident {
+        pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
             service_client: $service_client_type:ty,
             request: $request_type:ty,
             item: $item_type:ty,
@@ -586,7 +556,7 @@ macro_rules! define_list_query {
         $crate::api::define_list_query! {
             @impl
             $(#[$meta])*
-            pub struct $query_name {
+            pub struct $query_name $(<$generic: $bound>)? {
                 service_client: $service_client_type,
                 request: $request_type,
                 item: $item_type,
@@ -600,7 +570,7 @@ macro_rules! define_list_query {
     (
         @impl
         $(#[$meta:meta])*
-        pub struct $query_name:ident {
+        pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
             service_client: $service_client_type:ty,
             request: $request_type:ty,
             item: $item_type:ty,
@@ -609,30 +579,50 @@ macro_rules! define_list_query {
             map_item: $map_item:expr,
         }
     ) => {
-        $(#[$meta])*
-        pub struct $query_name {
-            service_client: $service_client_type,
-            base_request: $request_type,
-            max_message_size: Option<usize>,
-            page_size: Option<u32>,
-            page_token: Option<::prost::bytes::Bytes>,
-        }
-
-        impl $query_name {
-            pub(crate) fn new(
+        $crate::api::define_query! {
+            $(#[$meta])*
+            pub struct $query_name $(<$generic: $bound>)? {
                 service_client: $service_client_type,
                 base_request: $request_type,
                 max_message_size: Option<usize>,
                 page_size: Option<u32>,
                 page_token: Option<::prost::bytes::Bytes>,
+                _marker: ::std::marker::PhantomData<fn() -> ($($generic,)?)>,
+            }
+            output: $crate::api::GrpcResult<
+                $crate::api::MetadataEnvelope<$crate::api::Page<$item_type>>,
+            >;
+        }
+
+        impl $(<$generic: $bound>)? $query_name $(<$generic>)? {
+            pub(crate) fn new(
+                service_client: $service_client_type,
+                base_request: $request_type,
+                max_message_size: Option<usize>,
             ) -> Self {
                 Self {
                     service_client,
                     base_request,
                     max_message_size,
-                    page_size,
-                    page_token,
+                    page_size: None,
+                    page_token: None,
+                    _marker: ::std::marker::PhantomData,
                 }
+            }
+
+            /// Set the maximum number of items per page.
+            pub fn page_size(mut self, page_size: impl Into<Option<u32>>) -> Self {
+                self.page_size = page_size.into();
+                self
+            }
+
+            /// Set the continuation token from a previous page.
+            pub fn page_token(
+                mut self,
+                page_token: impl Into<Option<::prost::bytes::Bytes>>,
+            ) -> Self {
+                self.page_token = page_token.into();
+                self
             }
 
             /// Auto-paginate through all pages, collecting up to `limit` items.
@@ -704,52 +694,49 @@ macro_rules! define_list_query {
                     result_metadata.unwrap_or_default(),
                 ))
             }
-        }
 
-        impl ::std::future::IntoFuture for $query_name {
-            type Output = $crate::api::GrpcResult<
+            fn into_request(self) -> ($service_client_type, $request_type) {
+                let mut request = self.base_request;
+
+                if let Some(ps) = self.page_size {
+                    request = request.with_page_size(ps);
+                }
+                if let Some(token) = self.page_token {
+                    request = request.with_page_token(token);
+                }
+                if let Some(max_size) = self.max_message_size {
+                    request = request.with_max_message_size_bytes(
+                        $crate::api::saturating_usize_to_u32(max_size),
+                    );
+                }
+
+                (self.service_client, request)
+            }
+
+            async fn send(
+                self,
+            ) -> $crate::api::GrpcResult<
                 $crate::api::MetadataEnvelope<$crate::api::Page<$item_type>>,
-            >;
-            type IntoFuture = ::std::pin::Pin<
-                Box<dyn ::std::future::Future<Output = Self::Output> + Send>,
-            >;
+            > {
+                let (mut service_client, request) = self.into_request();
+                let response = service_client.$rpc_method(request).await?;
+                let (body, metadata) =
+                    $crate::api::MetadataEnvelope::from(response).into_parts();
 
-            fn into_future(self) -> Self::IntoFuture {
-                Box::pin(async move {
-                    let mut service_client = self.service_client;
-                    let mut request = self.base_request;
+                let map_item = $map_item;
+                let items = body
+                    .$items_field
+                    .into_iter()
+                    .map(map_item)
+                    .collect::<$crate::api::GrpcResult<Vec<$item_type>>>()?;
 
-                    if let Some(ps) = self.page_size {
-                        request = request.with_page_size(ps);
-                    }
-                    if let Some(token) = self.page_token {
-                        request = request.with_page_token(token);
-                    }
-                    if let Some(max_size) = self.max_message_size {
-                        request = request.with_max_message_size_bytes(
-                            $crate::api::saturating_usize_to_u32(max_size),
-                        );
-                    }
-
-                    let response = service_client.$rpc_method(request).await?;
-                    let (body, metadata) =
-                        $crate::api::MetadataEnvelope::from(response).into_parts();
-
-                    let map_item = $map_item;
-                    let items = body
-                        .$items_field
-                        .into_iter()
-                        .map(map_item)
-                        .collect::<$crate::api::GrpcResult<Vec<$item_type>>>()?;
-
-                    Ok($crate::api::MetadataEnvelope::new(
-                        $crate::api::Page {
-                            items,
-                            next_page_token: body.next_page_token,
-                        },
-                        metadata,
-                    ))
-                })
+                Ok($crate::api::MetadataEnvelope::new(
+                    $crate::api::Page {
+                        items,
+                        next_page_token: body.next_page_token,
+                    },
+                    metadata,
+                ))
             }
         }
     };
@@ -800,11 +787,8 @@ mod tests {
     fn a_per_item_error_keeps_the_surrounding_items() {
         let batch = vec![
             ObjectResult::default().with_object(Object::default()),
-            ObjectResult::default().with_error(Status {
-                code: tonic::Code::NotFound.into(),
-                message: "Object 0x2 not found".to_owned(),
-                details: Vec::new(),
-            }),
+            ObjectResult::default()
+                .with_error(Status::new(tonic::Code::NotFound, "Object 0x2 not found")),
             ObjectResult::default().with_object(Object::default()),
         ];
 
@@ -834,11 +818,10 @@ mod tests {
             ViewFunctionCallResult::default().with_call_outputs(
                 ViewFunctionCallOutputs::default().with_return_values(CommandOutputs::default()),
             ),
-            ViewFunctionCallResult::default().with_error(Status {
-                code: tonic::Code::InvalidArgument.into(),
-                message: "no function 'nope' in module 0x2::hash".to_owned(),
-                details: Vec::new(),
-            }),
+            ViewFunctionCallResult::default().with_error(Status::new(
+                tonic::Code::InvalidArgument,
+                "no function 'nope' in module 0x2::hash",
+            )),
         ];
 
         let items = into_item_results(batch);
@@ -963,11 +946,7 @@ mod tests {
         let requested = [(object_id(1), None), (object_id(2), None)];
         let results = vec![
             answered(object_id(1)),
-            Err(GrpcError::Server(Status {
-                code: tonic::Code::NotFound.into(),
-                message: String::new(),
-                details: Vec::new(),
-            })),
+            Err(GrpcError::Server(Status::new(tonic::Code::NotFound, ""))),
         ];
 
         assert!(check_object_identity(&results, &requested).is_ok());
@@ -1021,17 +1000,9 @@ mod tests {
 
     #[test]
     fn not_found_is_recognized_at_the_call_and_item_level() {
-        let item_level = GrpcError::Server(Status {
-            code: tonic::Code::NotFound.into(),
-            message: String::new(),
-            details: Vec::new(),
-        });
+        let item_level = GrpcError::Server(Status::new(tonic::Code::NotFound, ""));
         let call_level = GrpcError::from(tonic::Status::not_found("gone"));
-        let other = GrpcError::Server(Status {
-            code: tonic::Code::Internal.into(),
-            message: String::new(),
-            details: Vec::new(),
-        });
+        let other = GrpcError::Server(Status::new(tonic::Code::Internal, ""));
 
         assert!(item_level.is_not_found());
         assert!(call_level.is_not_found());

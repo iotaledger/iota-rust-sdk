@@ -12,9 +12,9 @@ use crate::query_types::{Base64, PageInfo, schema};
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageArgs")]
-pub struct PackageQuery {
+pub struct PackageQueryFragment {
     #[arguments(address: $address, version: $version)]
-    pub package: Option<MovePackageQuery>,
+    pub package: Option<MovePackageQueryFragment>,
 }
 
 // ===========================================================================
@@ -23,9 +23,9 @@ pub struct PackageQuery {
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "PackageArgs")]
-pub struct LatestPackageQuery {
+pub struct LatestPackageQueryFragment {
     #[arguments(address: $address)]
-    pub latest_package: Option<MovePackageQuery>,
+    pub latest_package: Option<MovePackageQueryFragment>,
 }
 
 #[derive(Clone, cynic::QueryVariables, Debug)]
@@ -36,7 +36,7 @@ pub struct PackageArgs {
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackage")]
-pub struct MovePackageQuery {
+pub struct MovePackageQueryFragment {
     pub address: Address,
     pub bcs: Option<Base64>,
 }
@@ -51,7 +51,7 @@ pub struct MovePackageQuery {
     graphql_type = "Query",
     variables = "PackagesQueryArgs"
 )]
-pub struct PackagesQuery {
+pub struct PackagesQueryFragment {
     #[arguments(after: $after, before: $before, filter: $filter, first: $first, last: $last)]
     pub packages: MovePackageConnection,
 }
@@ -90,7 +90,7 @@ impl PackageCheckpointFilter {
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackageConnection")]
 pub struct MovePackageConnection {
-    pub nodes: Vec<MovePackageQuery>,
+    pub nodes: Vec<MovePackageQueryFragment>,
     pub page_info: PageInfo,
 }
 
@@ -104,7 +104,7 @@ pub struct MovePackageConnection {
     graphql_type = "Query",
     variables = "PackageVersionsArgs"
 )]
-pub struct PackageVersionsQuery {
+pub struct PackageVersionsQueryFragment {
     #[arguments(address: $address, after: $after, first: $first, last: $last, before: $before, filter:$filter)]
     pub package_versions: MovePackageConnection,
 }

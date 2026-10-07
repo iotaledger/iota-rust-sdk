@@ -7,7 +7,7 @@ import IotaSDK
 @main
 struct GetObjectExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = try GraphQlClient.newTestnet()
 
     let objectId = try ObjectId.fromHex(
       hex: "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
@@ -18,9 +18,9 @@ struct GetObjectExample {
         userInfo: [NSLocalizedDescriptionKey: "missing object"])
     }
 
-    print("Object ID:", obj.id().toHex())
+    print("Object ID:", obj.id())
     print("Version:", obj.version())
-    print("Previous transaction:", obj.previousTransaction().toBase58())
+    print("Previous transaction:", obj.previousTransaction())
     print("Owner:", obj.owner())
     print("Storage rebate:", obj.storageRebate())
     print("Type:", obj.objectType())

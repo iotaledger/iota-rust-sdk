@@ -2,3 +2,4 @@
 namespace = "IotaSdk"
 class_name = "IotaSdk"
 access_modifier = "public"
+global_methods_class_name = "Iota"

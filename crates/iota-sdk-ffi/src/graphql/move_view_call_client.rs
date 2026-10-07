@@ -37,7 +37,7 @@ impl MoveViewCallClient for GraphQLClient {
         arguments: &[serde_json::Value],
     ) -> Result<Vec<serde_json::Value>, Self::Error> {
         MoveViewCallClient::move_view_call(
-            &*self.0.read().await,
+            &*self.client(),
             function_name,
             type_arguments,
             arguments,

@@ -9,8 +9,8 @@ use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::ObjectPage,
-        query_types::{ObjectFilter, PaginationFilter},
+        pagination::GraphQLObjectPage,
+        query_types::{GraphQLObjectFilter, GraphQLPaginationFilter},
     },
     types::{
         object::{Object, ObjectId},
@@ -33,10 +33,9 @@ impl GraphQLClient {
         version: Option<Arc<Version>>,
     ) -> Result<Option<Arc<Object>>> {
         Ok(self
-            .0
-            .read()
-            .await
-            .object(**object_id, version.map(|v| **v))
+            .client()
+            .object(**object_id)
+            .version(version.map(|v| **v))
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -44,22 +43,19 @@ impl GraphQLClient {
 
     /// Return a page of objects based on the provided parameters.
     ///
-    /// Use this function together with the `ObjectFilter::owner` to get the
-    /// objects owned by an address.
+    /// Use this function together with the `GraphQLObjectFilter::owner` to get
+    /// the objects owned by an address.
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn objects(
         &self,
-        filter: Option<ObjectFilter>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<ObjectPage> {
+        filter: Option<GraphQLObjectFilter>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLObjectPage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .objects(
-                filter.map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .client()
+            .objects()
+            .filter(filter.map(Into::into))
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -68,7 +64,7 @@ impl GraphQLClient {
     /// Return the object's bcs content `Vec<u8>` based on the provided
     /// `Address`.
     pub async fn object_bcs(&self, object_id: &ObjectId) -> Result<Option<Vec<u8>>> {
-        Ok(self.0.read().await.object_bcs(**object_id).await?)
+        Ok(self.client().object_bcs(**object_id).await?)
     }
 
     /// Return the BCS of an object that is a Move object.
@@ -83,10 +79,9 @@ impl GraphQLClient {
         version: Option<Arc<Version>>,
     ) -> Result<Option<Vec<u8>>> {
         Ok(self
-            .0
-            .read()
-            .await
-            .move_object_contents_bcs(**object_id, version.map(|v| **v))
+            .client()
+            .move_object_contents_bcs(**object_id)
+            .version(version.map(|v| **v))
             .await?)
     }
 
@@ -102,10 +97,9 @@ impl GraphQLClient {
         version: Option<Arc<Version>>,
     ) -> Result<Option<serde_json::Value>> {
         Ok(self
-            .0
-            .read()
-            .await
-            .move_object_contents(**object_id, version.map(|v| **v))
+            .client()
+            .move_object_contents(**object_id)
+            .version(version.map(|v| **v))
             .await?)
     }
 }

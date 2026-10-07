@@ -12,7 +12,7 @@ use reqwest::header::{AUTHORIZATION, HeaderValue};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
     let gas_station_auth_token = "test";
     let keypair = Ed25519PrivateKey::random();
     let sender = keypair.public_key().derive_address();

@@ -8,9 +8,23 @@ readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "GraphQL RPC Client for the IOTA Blockchain"
 
+[package.metadata.docs.rs]
+# To build locally:
+# RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --all-features --no-deps --open
+all-features = true
+rustdoc-args = [
+  # Enable doc_cfg showing the required features.
+  "--cfg=doc_cfg",
+  # Generate links to definition in rustdoc source code pages
+  # https://github.com/rust-lang/rust/pull/84176
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
+
 [features]
 # TLS crypto provider and trust anchors; see README.md.
 default = ["tls-native-roots", "tls-ring", "tls-webpki-roots"]
+move-types = ["dep:iota-move-types"]
 tls-aws-lc = ["dep:rustls", "reqwest/rustls-no-provider", "rustls/aws-lc-rs"]
 tls-native-roots = []
 tls-ring = ["dep:rustls", "reqwest/rustls-no-provider", "rustls/ring"]
@@ -24,7 +38,6 @@ workspace = true
 async-stream.workspace = true
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true
-chrono = "0.4.45"
 cynic.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 futures.workspace = true
@@ -39,6 +52,7 @@ url = "2.5.8"
 variadics_please.workspace = true
 
 # internal dependencies
+iota-move-types = { workspace = true, features = ["serde"], optional = true }
 iota-transaction-builder.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
@@ -65,11 +79,8 @@ eyre.workspace = true
 # internal dependencies
 iota-types = { workspace = true, features = ["serde", "rand", "hash"] }
 
-[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
-tokio = { workspace = true, features = ["macros", "rt"] }
-
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
-tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
+tokio = { workspace = true, features = ["io-util", "macros", "net", "rt-multi-thread", "time"] }
 
 [build-dependencies]
 iota-graphql-client-build.workspace = true

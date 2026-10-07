@@ -31,12 +31,12 @@ impl MoveViewCallClient for GraphQLClient {
         arguments: &[serde_json::Value],
     ) -> Result<Vec<serde_json::Value>, Self::Error> {
         let result = self
-            .move_view_call_json(
-                function_name,
+            .move_view_call_json(function_name)
+            .type_arguments(
                 (!type_arguments.is_empty())
                     .then(|| type_arguments.iter().map(|t| t.to_string()).collect()),
-                (!arguments.is_empty()).then(|| arguments.to_vec()),
             )
+            .arguments((!arguments.is_empty()).then(|| arguments.to_vec()))
             .await?;
 
         match (result.error, result.results) {

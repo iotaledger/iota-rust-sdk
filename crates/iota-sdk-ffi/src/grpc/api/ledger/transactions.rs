@@ -13,7 +13,7 @@ use iota_sdk::{
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::client::GrpcClient,
+    grpc::{client::GrpcClient, read_mask_fields::GrpcTransactionField},
     transaction_builder::WaitForTransaction,
     types::{
         digest::{TransactionDigest, TransactionEffectsDigest, TransactionEventsDigest},
@@ -28,11 +28,13 @@ use crate::{
 /// events and objects.
 ///
 /// The `transaction`, `effects`, `events`, and input/output object fields are
-/// deserialized from BCS, so the read mask must include the corresponding
-/// `bcs` sub-fields for them to be populated; digest-only read masks populate
-/// only the digest fields.
+/// deserialized from BCS, so the read mask must include the matching
+/// `GrpcTransactionField` (`TransactionBcs`, `EffectsBcs`, `EventsEventsBcs`,
+/// `InputObjectsBcs`, `OutputObjectsBcs`), or its `GrpcCheckpointResponseField`
+/// / `GrpcSimulateField` counterpart, for them to be populated; digest-only
+/// read masks populate only the digest fields.
 #[derive(uniffi::Record)]
-pub struct ExecutedTransaction {
+pub struct GrpcExecutedTransaction {
     /// The digest of the transaction.
     pub digest: Option<Arc<TransactionDigest>>,
     /// The transaction itself.
@@ -58,7 +60,7 @@ pub struct ExecutedTransaction {
     pub output_objects: Option<Vec<Arc<Object>>>,
 }
 
-impl TryFrom<&proto::transaction::ExecutedTransaction> for ExecutedTransaction {
+impl TryFrom<&proto::transaction::ExecutedTransaction> for GrpcExecutedTransaction {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::transaction::ExecutedTransaction) -> Result<Self> {
@@ -163,18 +165,18 @@ impl GrpcClient {
     pub async fn transactions(
         &self,
         digests: Vec<Arc<TransactionDigest>>,
-        read_mask: Option<Vec<String>>,
-    ) -> Result<Vec<ExecutedTransaction>> {
+        read_mask: Option<Vec<GrpcTransactionField>>,
+    ) -> Result<Vec<GrpcExecutedTransaction>> {
         let digests = digests.iter().map(|digest| ***digest).collect::<Vec<_>>();
         self.client()
-            .transactions(
-                digests,
-                crate::grpc::api::read_mask::<TransactionReadMask>(&read_mask),
-            )
+            .transactions(digests)
+            .read_mask(crate::grpc::api::read_mask::<TransactionReadMask, _>(
+                read_mask,
+            ))
             .await?
             .into_inner()
             .into_iter()
-            .map(|transaction| ExecutedTransaction::try_from(&transaction?))
+            .map(|transaction| GrpcExecutedTransaction::try_from(&transaction?))
             .collect()
     }
 
@@ -201,7 +203,7 @@ mod tests {
         types::{TransactionDigest, TransactionEffectsDigest, TransactionEventsDigest},
     };
 
-    use super::ExecutedTransaction;
+    use super::GrpcExecutedTransaction;
 
     #[test]
     fn digest_only_mask_populates_the_typed_digests() {
@@ -221,7 +223,7 @@ mod tests {
         value.effects = Some(effects);
         value.events = Some(events);
 
-        let converted = ExecutedTransaction::try_from(&value).unwrap();
+        let converted = GrpcExecutedTransaction::try_from(&value).unwrap();
 
         assert_eq!(converted.digest.unwrap().0, transaction_digest);
         assert_eq!(converted.effects_digest.unwrap().0, effects_digest);

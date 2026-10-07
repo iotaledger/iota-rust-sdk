@@ -96,9 +96,9 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
         throw Exception("Missing account id")
     }
 
-    println("Package ID: ${packageId.toHex()}")
-    println("PackageMetadataV1 ID: ${packageMetadataId.toHex()}")
-    println("Account ID: ${accountId.toHex()}\n")
+    println("Package ID: ${packageId}")
+    println("PackageMetadataV1 ID: ${packageMetadataId}")
+    println("Account ID: ${accountId}\n")
 
     // Build the `link_auth` PTB
     builder = client.transactionBuilder(sender)

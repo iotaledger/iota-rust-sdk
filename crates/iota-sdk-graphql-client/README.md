@@ -8,13 +8,13 @@ It provides a set of APIs for querying the blockchain for information such as ch
 reference gas price, protocol configuration, service configuration, checkpoint, epoch,
 executing transactions and more.
 
-# Design Principles
+## Design Principles
 
 1. **Type Safety**: The client uses the `cynic` library to generate types from the schema. This ensures that the queries are type-safe.
 1. **Convenience**: The client provides a set of APIs for common queries such as chain identifier, reference gas price, protocol configuration, service configuration, checkpoint, epoch, executing transactions and more.
 1. **Custom Queries**: The client provides a way to run custom queries using the `cynic` library.
 
-# TLS
+## TLS
 
 HTTPS is verified with `rustls`. Every axis has a default, so reaching the public networks needs no setup.
 
@@ -32,7 +32,7 @@ platform verifier aborts the process unless the application performs a JNI
 handshake this crate cannot do on its behalf. On wasm32 none of this applies —
 the browser owns certificate verification.
 
-## Bringing your own client
+### Bringing your own client
 
 `Client::new_with_reqwest_client` takes a `reqwest::Client` you built yourself, for
 pinning a certificate set, choosing a different TLS backend, or setting proxies
@@ -60,9 +60,9 @@ is exported if you want it) and no bundled roots, so it trusts whatever your
 `https://` from one means enabling a provider feature here, or turning on
 `reqwest`'s TLS in your own manifest.
 
-# Usage
+## Usage
 
-## Connecting to a GraphQL server
+### Connecting to a GraphQL server
 
 Instantiate a client with [`GraphQLClient::new(server: &str)`] or use one of the predefined functions for different networks [`GraphQLClient`].
 
@@ -74,7 +74,7 @@ use eyre::Result;
 async fn main() -> Result<()> {
 
    // Connect to the mainnet GraphQL server
-   let client = GraphQLClient::new_mainnet();
+   let client = GraphQLClient::new_mainnet()?;
    let chain_id = client.chain_id().await?;
    println!("{:?}", chain_id);
 
@@ -82,11 +82,11 @@ async fn main() -> Result<()> {
 }
 ```
 
-## Requesting gas from the faucet
+### Requesting gas from the faucet
 
 The client provides an API to request gas from the faucet. The `request_and_wait` function sends a request to the faucet and waits until the transaction is confirmed. The function returns the transaction details if the request is successful.
 
-### Example for a local network.
+#### Example for a local network.
 
 The testnet and devnet faucets are only available through the web interface, so `FaucetClient` can only be used with a local or custom faucet service.
 
@@ -113,7 +113,7 @@ async fn main() -> Result<()> {
 }
 ```
 
-### Example for custom faucet service.
+#### Example for custom faucet service.
 
 Note that this `FaucetClient` is explicitly designed to work with two endpoints: `v1/gas`, and `v1/status`. When passing in the custom faucet URL, skip the final endpoint and only pass in the top-level url (e.g., `http://localhost:9123`).
 
@@ -139,7 +139,7 @@ async fn main() -> Result<()> {
 }
 ```
 
-## Custom Queries
+### Custom Queries
 
 There are several options for running custom queries.
 
@@ -245,7 +245,7 @@ pub struct ChainIdQuery {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let mut client = GraphQLClient::new_devnet();
+    let mut client = GraphQLClient::new_devnet()?;
 
     // Query the data for the last known epoch. Note that id variable is None, so last epoch data
     // will be returned.

@@ -4,7 +4,7 @@ version = "3.0.0-beta.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
-readme = "../../README.md"
+readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "The official SDK for IOTA"
 
@@ -14,15 +14,24 @@ crate-type = ["cdylib", "rlib"]
 [lints]
 workspace = true
 
+[package.metadata.docs.rs]
+# To build locally:
+# RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --all-features --no-deps --open
+all-features = true
+rustdoc-args = [
+  # Enable doc_cfg showing the required features.
+  "--cfg=doc_cfg",
+  # Generate links to definition in rustdoc source code pages
+  # https://github.com/rust-lang/rust/pull/84176
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
+
 [features]
 default = [
   "bech32",
   "crypto",
   "ed25519",
-  "graphql",
-  "graphql-tls-native-roots",
-  "graphql-tls-ring",
-  "graphql-tls-webpki-roots",
   "hash",
   "mnemonic",
   "passkey",
@@ -44,7 +53,11 @@ pem = ["crypto", "iota-crypto/pem"]
 bls12381 = ["crypto", "iota-crypto/bls12381"]
 bech32 = ["crypto", "iota-crypto/bech32"]
 mnemonic = ["crypto", "iota-crypto/mnemonic"]
-move-types = ["dep:iota-move-types"]
+move-types = [
+  "dep:iota-move-types",
+  "iota-graphql-client?/move-types",
+  "iota-grpc-client?/move-types",
+]
 # GraphQL
 graphql = ["dep:iota-graphql-client"]
 # TLS for the GraphQL client (the workspace dependency disables default
@@ -67,19 +80,19 @@ transaction-builder = ["dep:iota-transaction-builder"]
 gas-station = ["transaction-builder", "iota-transaction-builder/gas-station"]
 # Types
 types = ["dep:iota-types"]
-serde = ["types", "iota-types/serde"]
+serde = ["types", "iota-types/serde", "iota-move-types?/serde"]
 rand = ["types", "iota-types/rand", "iota-crypto?/rand"]
 hash = ["types", "iota-types/hash"]
 proptest = ["types", "iota-types/proptest"]
 
 [dependencies]
-iota-crypto = { workspace = true, features = ["ed25519"], optional = true }
+iota-crypto = { workspace = true, optional = true }
 iota-graphql-client = { workspace = true, optional = true }
 iota-grpc-client = { workspace = true, optional = true }
 iota-grpc-types = { workspace = true, optional = true }
-iota-move-types = { workspace = true, features = ["serde"], optional = true }
+iota-move-types = { workspace = true, optional = true }
 iota-transaction-builder = { workspace = true, optional = true }
-iota-types = { workspace = true, features = ["rand"], optional = true }
+iota-types = { workspace = true, optional = true }
 
 [dev-dependencies]
 base64ct = { workspace = true, features = ["alloc", "std"] }
@@ -112,7 +125,7 @@ required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]
 name = "grpc_owned_objects"
-required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
+required-features = ["grpc-tls-native-roots", "grpc-tls-ring", "move-types"]
 
 [[example]]
 name = "grpc_checkpoints_stream"
@@ -124,7 +137,11 @@ required-features = ["grpc-tls-native-roots", "grpc-tls-ring"]
 
 [[example]]
 name = "decode_staked_iota"
-required-features = ["move-types"]
+required-features = ["graphql"]
+
+[[example]]
+name = "move_objects"
+required-features = ["graphql", "move-types"]
 
 [[example]]
 name = "gas_station"

@@ -315,6 +315,12 @@ impl From<MoveObjectType> for StructTag {
     }
 }
 
+impl From<MoveObjectType> for TypeTag {
+    fn from(obj_type: MoveObjectType) -> Self {
+        Self::Struct(Box::new(obj_type.0))
+    }
+}
+
 impl PartialEq<StructTag> for MoveObjectType {
     fn eq(&self, other: &StructTag) -> bool {
         &self.0 == other
@@ -807,7 +813,6 @@ crate::impl_tree_display!(
 
 // TODO improve ser/de to do borrowing to avoid clones where possible
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 

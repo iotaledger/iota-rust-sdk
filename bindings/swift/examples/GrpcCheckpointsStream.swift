@@ -19,7 +19,7 @@ struct GrpcCheckpointsStreamExample {
     // Only ask for the summary — keeps the message small. Pass nil (or
     // compose more fields) to pull more data per checkpoint.
     let stream = try await client.checkpointsStream(
-      startSequenceNumber: start, endSequenceNumber: end, readMask: ["checkpoint.summary"])
+      startSequenceNumber: start, endSequenceNumber: end, readMask: [.checkpointSummary])
 
     print("Streaming checkpoints \(start)..=\(end)")
     while let checkpoint = try await stream.next() {

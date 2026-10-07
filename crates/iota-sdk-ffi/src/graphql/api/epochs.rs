@@ -5,7 +5,7 @@
 
 use crate::{
     error::Result,
-    graphql::{client::GraphQLClient, query_types::Epoch},
+    graphql::{client::GraphQLClient, query_types::GraphQLEpoch},
 };
 
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
@@ -14,8 +14,13 @@ impl GraphQLClient {
     /// Return the epoch information for the provided epoch. If no epoch is
     /// provided, it will return the last known epoch.
     #[uniffi::method(default(epoch = None))]
-    pub async fn epoch(&self, epoch: Option<u64>) -> Result<Option<Epoch>> {
-        Ok(self.0.read().await.epoch(epoch).await?.map(Into::into))
+    pub async fn epoch(&self, epoch: Option<u64>) -> Result<Option<GraphQLEpoch>> {
+        Ok(self
+            .client()
+            .epoch()
+            .epoch_number(epoch)
+            .await?
+            .map(Into::into))
     }
 
     /// Return the number of checkpoints in this epoch. This will return
@@ -23,7 +28,11 @@ impl GraphQLClient {
     /// service (e.g., due to pruning).
     #[uniffi::method(default(epoch = None))]
     pub async fn epoch_total_checkpoints(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        Ok(self.0.read().await.epoch_total_checkpoints(epoch).await?)
+        Ok(self
+            .client()
+            .epoch_total_checkpoints()
+            .epoch_number(epoch)
+            .await?)
     }
 
     /// Return the number of transaction blocks in this epoch. This will return
@@ -32,10 +41,9 @@ impl GraphQLClient {
     #[uniffi::method(default(epoch = None))]
     pub async fn epoch_total_transaction_blocks(&self, epoch: Option<u64>) -> Result<Option<u64>> {
         Ok(self
-            .0
-            .read()
-            .await
-            .epoch_total_transaction_blocks(epoch)
+            .client()
+            .epoch_total_transaction_blocks()
+            .epoch_number(epoch)
             .await?)
     }
 }

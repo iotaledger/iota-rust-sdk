@@ -6,7 +6,7 @@ use iota_sdk::graphql_client::GraphQLClient;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     let json = serde_json::json!({
         "query": r#"
@@ -140,8 +140,8 @@ async fn main() -> Result<()> {
     .unwrap()
     .clone();
 
-    let response = client.run_query_from_json(json).await?;
-    println!("{response:?}");
+    let data = client.run_query_from_json(json).await?;
+    println!("{data:?}");
 
     Ok(())
 }

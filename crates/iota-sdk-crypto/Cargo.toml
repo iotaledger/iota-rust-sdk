@@ -26,10 +26,10 @@ rustdoc-args = [
 
 [features]
 default = []
-ed25519 = ["dep:base64ct", "dep:fastcrypto", "dep:rand_core", "dep:zeroize"]
-secp256r1 = ["dep:base64ct", "dep:fastcrypto", "dep:rand_core", "dep:zeroize"]
+ed25519 = ["dep:base64ct", "dep:fastcrypto", "dep:zeroize"]
+secp256r1 = ["dep:base64ct", "dep:fastcrypto", "dep:zeroize"]
 passkey = ["secp256r1", "dep:sha2"]
-secp256k1 = ["dep:base64ct", "dep:fastcrypto", "dep:rand_core", "dep:zeroize"]
+secp256k1 = ["dep:base64ct", "dep:fastcrypto", "dep:zeroize"]
 bech32 = ["dep:bech32"]
 rand = ["dep:getrandom_4", "dep:rand_core"]
 # PKCS#8/PEM support. fastcrypto has no PKCS#8 codec, so ed25519, p256 and
@@ -52,7 +52,6 @@ pem = [
 bls12381 = [
   "dep:base64ct",
   "dep:blst",
-  "dep:rand_core",
   "dep:zeroize",
 ]
 mnemonic = ["dep:bip32", "dep:bip39", "dep:slip10_ed25519"]
@@ -85,7 +84,6 @@ pkcs8 = { version = "0.11", optional = true, features = ["std"] }
 rand_core = { workspace = true, optional = true }
 # passkey verification support
 sha2 = { version = "0.11.0", optional = true }
-signature = { version = "3.0", features = ["alloc"] }
 slip10_ed25519 = { version = "0.1.3", optional = true }
 thiserror.workspace = true
 zeroize = { version = "1.9", features = ["derive"], optional = true }

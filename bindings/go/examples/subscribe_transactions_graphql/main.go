@@ -22,9 +22,12 @@ import (
 const deadline = 60 * time.Second
 
 func main() {
-	client := iota_sdk.GraphQlClientNewLocalnet()
-	kind := iota_sdk.TransactionBlockKindInputProgrammableTx
-	subscription := client.TransactionsSubscription(&iota_sdk.SubscriptionTransactionFilter{Kind: &kind}, nil)
+	client, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
+	kind := iota_sdk.GraphQlTransactionBlockKindInputProgrammableTx
+	subscription := client.TransactionsSubscription(&iota_sdk.GraphQlSubscriptionTransactionFilter{Kind: &kind}, nil)
 	defer subscription.Cancel()
 
 	// Cancelling unblocks a pending Next, which is what keeps the example from
@@ -59,12 +62,12 @@ func main() {
 		}
 
 		switch update := (*update).(type) {
-		case iota_sdk.TransactionUpdateTransaction:
+		case iota_sdk.GraphQlTransactionUpdateTransaction:
 			transaction := update.Transaction.Transaction
-			fmt.Println("Digest: ", transaction.Digest().ToBase58())
-			fmt.Println("Sender: ", transaction.Sender().ToHex())
+			fmt.Println("Digest: ", transaction.Digest())
+			fmt.Println("Sender: ", transaction.Sender())
 			return
-		case iota_sdk.TransactionUpdateInterrupted:
+		case iota_sdk.GraphQlTransactionUpdateInterrupted:
 			// Delivery recovers on its own; items in the gap may be missed.
 			fmt.Println("Interrupted: ", update.Message)
 		}

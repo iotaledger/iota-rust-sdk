@@ -9,10 +9,13 @@ use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::{SignedTransactionPage, TransactionDataEffectsPage, TransactionEffectsPage},
+        pagination::{
+            GraphQLSignedTransactionPage, GraphQLTransactionDataEffectsPage,
+            GraphQLTransactionEffectsPage,
+        },
         query_types::{
-            AddressTransactionRelationship, PaginationFilter, TransactionDataEffects,
-            TransactionsFilter,
+            GraphQLAddressTransactionRelationship, GraphQLPaginationFilter,
+            GraphQLTransactionDataEffects, GraphQLTransactionsFilter,
         },
     },
     transaction_builder::WaitForTransaction,
@@ -32,13 +35,7 @@ impl GraphQLClient {
         &self,
         digest: &TransactionDigest,
     ) -> Result<Option<SignedTransaction>> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .transaction(**digest)
-            .await?
-            .map(Into::into))
+        Ok(self.client().transaction(**digest).await?.map(Into::into))
     }
 
     /// Get a transaction's effects by its digest.
@@ -47,9 +44,7 @@ impl GraphQLClient {
         digest: &TransactionDigest,
     ) -> Result<Option<Arc<TransactionEffects>>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .transaction_effects(**digest)
             .await?
             .map(Into::into)
@@ -60,11 +55,9 @@ impl GraphQLClient {
     pub async fn transaction_data_effects(
         &self,
         digest: &TransactionDigest,
-    ) -> Result<Option<TransactionDataEffects>> {
+    ) -> Result<Option<GraphQLTransactionDataEffects>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .transaction_data_effects(**digest)
             .await?
             .map(Into::into))
@@ -74,17 +67,14 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions(
         &self,
-        filter: Option<Arc<TransactionsFilter>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<SignedTransactionPage> {
+        filter: Option<Arc<GraphQLTransactionsFilter>>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLSignedTransactionPage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .transactions(
-                filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .client()
+            .transactions()
+            .filter(filter.as_deref().map(Into::into))
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -97,20 +87,16 @@ impl GraphQLClient {
     pub async fn address_transactions(
         &self,
         address: &Address,
-        relation: Option<AddressTransactionRelationship>,
-        filter: Option<Arc<TransactionsFilter>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<SignedTransactionPage> {
+        relation: Option<GraphQLAddressTransactionRelationship>,
+        filter: Option<Arc<GraphQLTransactionsFilter>>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLSignedTransactionPage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .address_transactions(
-                **address,
-                relation.map(Into::into),
-                filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .client()
+            .address_transactions(**address)
+            .relation(relation.map(Into::into))
+            .filter(filter.as_deref().map(Into::into))
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -120,17 +106,14 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_effects(
         &self,
-        filter: Option<Arc<TransactionsFilter>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<TransactionEffectsPage> {
+        filter: Option<Arc<GraphQLTransactionsFilter>>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLTransactionEffectsPage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .transactions_effects(
-                filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .client()
+            .transactions_effects()
+            .filter(filter.as_deref().map(Into::into))
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -141,17 +124,14 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_data_effects(
         &self,
-        filter: Option<Arc<TransactionsFilter>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<TransactionDataEffectsPage> {
+        filter: Option<Arc<GraphQLTransactionsFilter>>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLTransactionDataEffectsPage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .transactions_data_effects(
-                filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .client()
+            .transactions_data_effects()
+            .filter(filter.as_deref().map(Into::into))
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -166,17 +146,15 @@ impl GraphQLClient {
         wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .execute_transaction(
                 &signatures
                     .into_iter()
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
                 &transaction.0,
-                wait_for.map(Into::into),
             )
+            .wait_for(wait_for.map(Into::into))
             .await?
             .into())
     }
@@ -188,9 +166,7 @@ impl GraphQLClient {
     #[uniffi::method]
     pub async fn is_transaction_indexed_on_node(&self, digest: &TransactionDigest) -> Result<bool> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .is_transaction_indexed_on_node(**digest)
             .await?)
     }
@@ -199,12 +175,7 @@ impl GraphQLClient {
     /// in a checkpoint (finalized).
     #[uniffi::method]
     pub async fn is_transaction_finalized(&self, digest: &TransactionDigest) -> Result<bool> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .is_transaction_finalized(**digest)
-            .await?)
+        Ok(self.client().is_transaction_finalized(**digest).await?)
     }
 
     /// Wait for the indexing (on the node, not the indexer) or finalization of
@@ -218,10 +189,9 @@ impl GraphQLClient {
         timeout: Option<Duration>,
     ) -> Result<()> {
         Ok(self
-            .0
-            .read()
-            .await
-            .wait_for_transaction(**digest, wait_for.into(), timeout)
+            .client()
+            .wait_for_transaction(**digest, wait_for.into())
+            .timeout(timeout)
             .await?)
     }
 }

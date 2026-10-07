@@ -90,10 +90,9 @@ impl FaucetClient {
         address: &Address,
         client: &GraphQLClient,
     ) -> Result<Option<FaucetReceipt>> {
-        let client_lock = client.inner().read().await;
         Ok(self
             .0
-            .request_and_wait_for_finalized(**address, &client_lock)
+            .request_and_wait_for_finalized(**address, &client.client())
             .await
             .map_err(SdkFfiError::custom)?
             .map(Into::into))
@@ -101,8 +100,8 @@ impl FaucetClient {
 
     /// Check the faucet request status.
     ///
-    /// Possible statuses are defined in: `BatchSendStatusType`
-    pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>> {
+    /// Possible statuses are defined in: `FaucetBatchSendStatusType`
+    pub async fn request_status(&self, id: String) -> Result<Option<FaucetBatchSendStatus>> {
         Ok(self
             .0
             .request_status(id)
@@ -113,13 +112,13 @@ impl FaucetClient {
 }
 
 #[derive(uniffi::Enum)]
-pub enum BatchSendStatusType {
+pub enum FaucetBatchSendStatusType {
     InProgress,
     Succeeded,
     Discarded,
 }
 
-impl From<iota_sdk::graphql_client::faucet::BatchSendStatusType> for BatchSendStatusType {
+impl From<iota_sdk::graphql_client::faucet::BatchSendStatusType> for FaucetBatchSendStatusType {
     fn from(value: iota_sdk::graphql_client::faucet::BatchSendStatusType) -> Self {
         match value {
             iota_sdk::graphql_client::faucet::BatchSendStatusType::InProgress => Self::InProgress,
@@ -132,24 +131,24 @@ impl From<iota_sdk::graphql_client::faucet::BatchSendStatusType> for BatchSendSt
     }
 }
 
-impl From<BatchSendStatusType> for iota_sdk::graphql_client::faucet::BatchSendStatusType {
-    fn from(value: BatchSendStatusType) -> Self {
+impl From<FaucetBatchSendStatusType> for iota_sdk::graphql_client::faucet::BatchSendStatusType {
+    fn from(value: FaucetBatchSendStatusType) -> Self {
         match value {
-            BatchSendStatusType::InProgress => Self::InProgress,
-            BatchSendStatusType::Succeeded => Self::Succeeded,
-            BatchSendStatusType::Discarded => Self::Discarded,
+            FaucetBatchSendStatusType::InProgress => Self::InProgress,
+            FaucetBatchSendStatusType::Succeeded => Self::Succeeded,
+            FaucetBatchSendStatusType::Discarded => Self::Discarded,
         }
     }
 }
 
 #[derive(uniffi::Record)]
-pub struct CoinInfo {
+pub struct FaucetCoinInfo {
     pub amount: u64,
     pub id: Arc<ObjectId>,
     pub transfer_tx_digest: Arc<TransactionDigest>,
 }
 
-impl From<iota_sdk::graphql_client::faucet::CoinInfo> for CoinInfo {
+impl From<iota_sdk::graphql_client::faucet::CoinInfo> for FaucetCoinInfo {
     fn from(value: iota_sdk::graphql_client::faucet::CoinInfo) -> Self {
         Self {
             amount: value.amount,
@@ -159,8 +158,8 @@ impl From<iota_sdk::graphql_client::faucet::CoinInfo> for CoinInfo {
     }
 }
 
-impl From<CoinInfo> for iota_sdk::graphql_client::faucet::CoinInfo {
-    fn from(value: CoinInfo) -> Self {
+impl From<FaucetCoinInfo> for iota_sdk::graphql_client::faucet::CoinInfo {
+    fn from(value: FaucetCoinInfo) -> Self {
         Self {
             amount: value.amount,
             id: value.id.0,
@@ -171,7 +170,7 @@ impl From<CoinInfo> for iota_sdk::graphql_client::faucet::CoinInfo {
 
 #[derive(uniffi::Record)]
 pub struct FaucetReceipt {
-    pub sent: Vec<CoinInfo>,
+    pub sent: Vec<FaucetCoinInfo>,
 }
 
 impl From<iota_sdk::graphql_client::faucet::FaucetReceipt> for FaucetReceipt {
@@ -191,12 +190,12 @@ impl From<FaucetReceipt> for iota_sdk::graphql_client::faucet::FaucetReceipt {
 }
 
 #[derive(uniffi::Record)]
-pub struct BatchSendStatus {
-    pub status: BatchSendStatusType,
+pub struct FaucetBatchSendStatus {
+    pub status: FaucetBatchSendStatusType,
     pub transferred_gas_objects: Option<FaucetReceipt>,
 }
 
-impl From<iota_sdk::graphql_client::faucet::BatchSendStatus> for BatchSendStatus {
+impl From<iota_sdk::graphql_client::faucet::BatchSendStatus> for FaucetBatchSendStatus {
     fn from(value: iota_sdk::graphql_client::faucet::BatchSendStatus) -> Self {
         Self {
             status: value.status.into(),
@@ -205,8 +204,8 @@ impl From<iota_sdk::graphql_client::faucet::BatchSendStatus> for BatchSendStatus
     }
 }
 
-impl From<BatchSendStatus> for iota_sdk::graphql_client::faucet::BatchSendStatus {
-    fn from(value: BatchSendStatus) -> Self {
+impl From<FaucetBatchSendStatus> for iota_sdk::graphql_client::faucet::BatchSendStatus {
+    fn from(value: FaucetBatchSendStatus) -> Self {
         Self {
             status: value.status.into(),
             transferred_gas_objects: value.transferred_gas_objects.map(Into::into),

@@ -26,9 +26,9 @@ async def generate_activity():
 
 async def main():
     client = GraphQlClient.new_localnet()
-    subscription = await client.transactions_subscription(
-        filter=SubscriptionTransactionFilter(
-            kind=TransactionBlockKindInput.PROGRAMMABLE_TX))
+    subscription = client.transactions_subscription(
+        filter=GraphQlSubscriptionTransactionFilter(
+            kind=GraphQlTransactionBlockKindInput.PROGRAMMABLE_TX))
 
     activity = asyncio.create_task(generate_activity())
     # Cancelling unblocks a pending `next`, which is what keeps the example from
@@ -46,8 +46,8 @@ async def main():
 
             if update.is_TRANSACTION():
                 transaction = update.transaction.transaction
-                print("Digest: ", transaction.digest().to_base58())
-                print("Sender: ", transaction.sender().to_hex())
+                print("Digest: ", transaction.digest())
+                print("Sender: ", transaction.sender())
                 break
             else:
                 # Delivery recovers on its own; items in the gap may be missed.

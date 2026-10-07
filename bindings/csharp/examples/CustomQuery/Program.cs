@@ -20,12 +20,12 @@ class Program
                 totalTransactions
             }
         }";
-        var queryEpochData = new Query(queryEpochDataStr, null);
+        var queryEpochData = new GraphQlQuery(queryEpochDataStr, null);
         var res1 = await client.RunQuery(queryEpochData);
         Console.WriteLine(res1);
 
         var variables = JsonSerializer.Serialize(new { id = 1 });
-        var queryEpochDataWithVariables = new Query(queryEpochDataStr, variables);
+        var queryEpochDataWithVariables = new GraphQlQuery(queryEpochDataStr, variables);
         var res2 = await client.RunQuery(queryEpochDataWithVariables);
         Console.WriteLine(res2);
 
@@ -33,7 +33,7 @@ class Program
         query MyQuery {
             chainIdentifier
         }";
-        var queryChainId = new Query(queryChainIdStr, null);
+        var queryChainId = new GraphQlQuery(queryChainIdStr, null);
         var res3 = await client.RunQuery(queryChainId);
         Console.WriteLine(res3);
     }

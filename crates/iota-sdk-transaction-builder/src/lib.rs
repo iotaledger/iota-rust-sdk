@@ -356,10 +356,10 @@ pub mod types;
 #[allow(missing_docs)]
 pub mod unresolved;
 
+pub use iota_types;
 // Re-exported so that configuring a gas station does not require depending on
 // reqwest directly.
 #[cfg(feature = "gas-station")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "gas-station")))]
 pub use reqwest::{
     Url, header,
     header::{HeaderMap, HeaderName, HeaderValue},

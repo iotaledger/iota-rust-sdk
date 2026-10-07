@@ -12,15 +12,15 @@ import IotaSDK
 @main
 struct DecodeStakedIotaExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = try GraphQlClient.newTestnet()
     let owner = try Address.fromHex(
       hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
     let page = try await client.objects(
-      filter: ObjectFilter(typeTag: "0x3::staking_pool::StakedIota", owner: owner))
+      filter: GraphQlObjectFilter(typeTag: "0x3::staking_pool::StakedIota", owner: owner))
 
     if page.data.isEmpty {
-      print("No StakedIota objects owned by \(owner.toHex()) right now.")
+      print("No StakedIota objects owned by \(owner) right now.")
       return
     }
 
@@ -29,8 +29,8 @@ struct DecodeStakedIotaExample {
     for obj in page.data {
       let staked = try StakedIota.tryFromObject(object: obj)
       totalPrincipal += staked.principal()
-      print("- id:               \(staked.id().toHex())")
-      print("  pool_id:          \(staked.poolId().toHex())")
+      print("- id:               \(staked.id())")
+      print("  pool_id:          \(staked.poolId())")
       print("  stake_activation_epoch: \(staked.stakeActivationEpoch())")
       print("  principal (nanos): \(staked.principal())\n")
     }

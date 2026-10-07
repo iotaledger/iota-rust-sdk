@@ -17,9 +17,9 @@ struct SubscribeTransactionsExample {
 
   static func main() async {
     do {
-      let client = GraphQlClient.newLocalnet()
-      let subscription = await client.transactionsSubscription(
-        filter: SubscriptionTransactionFilter(kind: .programmableTx))
+      let client = try GraphQlClient.newLocalnet()
+      let subscription = client.transactionsSubscription(
+        filter: GraphQlSubscriptionTransactionFilter(kind: .programmableTx))
 
       let activity = Task {
         // Give the subscription a moment to connect before generating activity,
@@ -46,8 +46,8 @@ struct SubscribeTransactionsExample {
         switch update {
         case .transaction(let transaction):
           let data = transaction.transaction
-          print("Digest: \(data.digest().toBase58())")
-          print("Sender: \(data.sender().toHex())")
+          print("Digest: \(data.digest())")
+          print("Sender: \(data.sender())")
           watchdog.cancel()
           activity.cancel()
           subscription.cancel()

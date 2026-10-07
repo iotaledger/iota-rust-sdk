@@ -4,13 +4,15 @@
 
 //! Core client implementation for the GraphQL API.
 
+use std::sync::{Arc, OnceLock};
+
 use cynic::{GraphQlResponse, Operation, QueryBuilder, serde};
 use reqwest::Url;
 
 use crate::{
     error::{GraphQLError, GraphQLResult},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
-    query_types::{ServiceConfig, ServiceConfigQuery},
+    query_types::{ServiceConfig, ServiceConfigQueryFragment},
 };
 
 pub(crate) const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
@@ -46,7 +48,7 @@ pub struct GraphQLClient {
     pub(crate) rpc: Url,
     /// The reqwest client.
     pub(crate) inner: reqwest::Client,
-    pub(crate) service_config: std::sync::OnceLock<ServiceConfig>,
+    pub(crate) service_config: Arc<OnceLock<ServiceConfig>>,
 }
 
 impl GraphQLClient {
@@ -88,26 +90,26 @@ impl GraphQLClient {
 
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
     /// {MAINNET_HOST}.
-    pub fn new_mainnet() -> Self {
-        Self::new(MAINNET_HOST).expect("cannot build mainnet client")
+    pub fn new_mainnet() -> GraphQLResult<Self> {
+        Self::new(MAINNET_HOST)
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
     /// {TESTNET_HOST}.
-    pub fn new_testnet() -> Self {
-        Self::new(TESTNET_HOST).expect("cannot build testnet client")
+    pub fn new_testnet() -> GraphQLResult<Self> {
+        Self::new(TESTNET_HOST)
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
     /// {DEVNET_HOST}.
-    pub fn new_devnet() -> Self {
-        Self::new(DEVNET_HOST).expect("cannot build devnet client")
+    pub fn new_devnet() -> GraphQLResult<Self> {
+        Self::new(DEVNET_HOST)
     }
 
     /// Create a new GraphQL client connected to a `localnet` GraphQL server:
     /// {LOCAL_HOST}.
-    pub fn new_localnet() -> Self {
-        Self::new(LOCAL_HOST).expect("Invalid localhost URL")
+    pub fn new_localnet() -> GraphQLResult<Self> {
+        Self::new(LOCAL_HOST)
     }
 
     /// Return the URL for the GraphQL server.
@@ -117,9 +119,14 @@ impl GraphQLClient {
 
     /// Set the server address for the GraphQL client. It should be a
     /// valid URL with a host and optionally a port number.
+    ///
+    /// The service config cached from the previous server is dropped and
+    /// fetched from the new one when next needed; clones of this client keep
+    /// theirs.
     pub fn set_rpc_server(&mut self, server: &str) -> GraphQLResult<()> {
         let rpc = reqwest::Url::parse(server)?;
         self.rpc = rpc;
+        self.service_config = Default::default();
         Ok(())
     }
 
@@ -132,7 +139,7 @@ impl GraphQLClient {
         }
 
         // Otherwise, fetch and initialize it
-        let operation = ServiceConfigQuery::build(());
+        let operation = ServiceConfigQueryFragment::build(());
         let response = self.run_query(&operation).await?;
 
         let service_config = self
@@ -177,17 +184,17 @@ impl GraphQLClient {
             .map_err(|e| GraphQLError::json(url, status, &bytes, target_type, e))
     }
 
-    /// Run a JSON query on the GraphQL server and return the response.
+    /// Run a JSON query on the GraphQL server and return the response data.
     /// This method expects a JSON map holding the GraphQL query string and
-    /// matching GraphQL variables. It returns a [`cynic::GraphQlResponse`]
-    /// wrapping a [`serde_json::Value`]. In general, it is recommended to use
-    /// [`run_query`](`Self::run_query`) which guarantees valid GraphQL
-    /// query syntax and returns a proper response type.
+    /// matching GraphQL variables. Any GraphQL error in the response is
+    /// returned as an error, even if partial data is present. In general, it
+    /// is recommended to use [`run_query`](`Self::run_query`) which guarantees
+    /// valid GraphQL query syntax and returns a proper response type.
     pub async fn run_query_from_json(
         &self,
         json: serde_json::Map<String, serde_json::Value>,
-    ) -> GraphQLResult<GraphQlResponse<serde_json::Value>> {
-        self.post_query(&json).await
+    ) -> GraphQLResult<serde_json::Value> {
+        response_to_err(self.post_query(&json).await?)
     }
 
     /// Handle pagination filters and return the appropriate values. If limit is
@@ -218,16 +225,48 @@ impl GraphQLClient {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use serde_json::json;
 
     use super::*;
     use crate::test_utils::test_client;
 
+    fn service_config() -> ServiceConfig {
+        ServiceConfig {
+            default_page_size: 20,
+            enabled_features: Vec::new(),
+            max_move_value_depth: 1,
+            max_output_nodes: 1,
+            max_page_size: 50,
+            max_query_depth: 1,
+            max_query_nodes: 1,
+            max_query_payload_size: 1,
+            max_type_argument_depth: 1,
+            max_type_argument_width: 1,
+            max_type_nodes: 1,
+            mutation_timeout_ms: 1,
+            request_timeout_ms: 1,
+        }
+    }
+
+    #[test]
+    fn clones_share_the_service_config_cache_until_the_server_changes() {
+        let client = GraphQLClient::new_localnet().unwrap();
+        client.service_config.set(service_config()).unwrap();
+        let mut clone = client.clone();
+        assert!(clone.service_config.get().is_some());
+
+        clone.set_rpc_server(TESTNET_HOST).unwrap();
+        assert!(clone.service_config.get().is_none());
+        assert!(client.service_config.get().is_some());
+    }
+
     #[test]
     fn test_rpc_server() {
-        let mut client = GraphQLClient::new_mainnet();
+        let mut client = GraphQLClient::new_localnet().unwrap();
+        assert_eq!(client.rpc_server(), &LOCAL_HOST.parse().unwrap());
+        client.set_rpc_server(MAINNET_HOST).unwrap();
         assert_eq!(client.rpc_server(), &MAINNET_HOST.parse().unwrap());
         client.set_rpc_server(TESTNET_HOST).unwrap();
         assert_eq!(client.rpc_server(), &TESTNET_HOST.parse().unwrap());

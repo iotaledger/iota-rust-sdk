@@ -17,6 +17,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for AllEventFilter {}
     impl MessageFields for AllEventFilter {
         const FIELDS: &'static [&'static MessageField] = &[Self::FILTERS_FIELD];
     }
@@ -55,6 +56,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for AnyEventFilter {}
     impl MessageFields for AnyEventFilter {
         const FIELDS: &'static [&'static MessageField] = &[Self::FILTERS_FIELD];
     }
@@ -93,6 +95,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for NotEventFilter {}
     impl MessageFields for NotEventFilter {
         const FIELDS: &'static [&'static MessageField] = &[Self::FILTER_FIELD];
     }
@@ -131,6 +134,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::types::Address::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for AddressFilter {}
     impl MessageFields for AddressFilter {
         const FIELDS: &'static [&'static MessageField] = &[Self::ADDRESS_FIELD];
     }
@@ -177,6 +181,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for MovePackageAndModuleFilter {}
     impl MessageFields for MovePackageAndModuleFilter {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::PACKAGE_ID_FIELD,
@@ -222,6 +227,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for MoveEventTypeFilter {}
     impl MessageFields for MoveEventTypeFilter {
         const FIELDS: &'static [&'static MessageField] = &[Self::STRUCT_TAG_FIELD];
     }
@@ -311,6 +317,7 @@ mod _field_impls {
     impl EventFilter {
         pub const FILTER_ONEOF: &'static str = "filter";
     }
+    impl crate::field::sealed::Sealed for EventFilter {}
     impl MessageFields for EventFilter {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::ALL_FIELD,
@@ -386,6 +393,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for AllTransactionFilter {}
     impl MessageFields for AllTransactionFilter {
         const FIELDS: &'static [&'static MessageField] = &[Self::FILTERS_FIELD];
     }
@@ -424,6 +432,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for AnyTransactionFilter {}
     impl MessageFields for AnyTransactionFilter {
         const FIELDS: &'static [&'static MessageField] = &[Self::FILTERS_FIELD];
     }
@@ -462,6 +471,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for NotTransactionFilter {}
     impl MessageFields for NotTransactionFilter {
         const FIELDS: &'static [&'static MessageField] = &[Self::FILTER_FIELD];
     }
@@ -500,6 +510,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for TransactionKindsFilter {}
     impl MessageFields for TransactionKindsFilter {
         const FIELDS: &'static [&'static MessageField] = &[Self::KINDS_FIELD];
     }
@@ -538,6 +549,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::types::ObjectReference::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ObjectIdFilter {}
     impl MessageFields for ObjectIdFilter {
         const FIELDS: &'static [&'static MessageField] = &[Self::OBJECT_REF_FIELD];
     }
@@ -594,6 +606,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for MoveCallCommandFilter {}
     impl MessageFields for MoveCallCommandFilter {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::PACKAGE_ID_FIELD,
@@ -635,6 +648,7 @@ mod _field_impls {
         }
     }
     impl TransferObjectsCommandFilter {}
+    impl crate::field::sealed::Sealed for TransferObjectsCommandFilter {}
     impl MessageFields for TransferObjectsCommandFilter {
         const FIELDS: &'static [&'static MessageField] = &[];
     }
@@ -660,6 +674,7 @@ mod _field_impls {
         }
     }
     impl SplitCoinsCommandFilter {}
+    impl crate::field::sealed::Sealed for SplitCoinsCommandFilter {}
     impl MessageFields for SplitCoinsCommandFilter {
         const FIELDS: &'static [&'static MessageField] = &[];
     }
@@ -685,6 +700,7 @@ mod _field_impls {
         }
     }
     impl MergeCoinsCommandFilter {}
+    impl crate::field::sealed::Sealed for MergeCoinsCommandFilter {}
     impl MessageFields for MergeCoinsCommandFilter {
         const FIELDS: &'static [&'static MessageField] = &[];
     }
@@ -710,6 +726,7 @@ mod _field_impls {
         }
     }
     impl PublishCommandFilter {}
+    impl crate::field::sealed::Sealed for PublishCommandFilter {}
     impl MessageFields for PublishCommandFilter {
         const FIELDS: &'static [&'static MessageField] = &[];
     }
@@ -735,6 +752,7 @@ mod _field_impls {
         }
     }
     impl MakeMoveVecCommandFilter {}
+    impl crate::field::sealed::Sealed for MakeMoveVecCommandFilter {}
     impl MessageFields for MakeMoveVecCommandFilter {
         const FIELDS: &'static [&'static MessageField] = &[];
     }
@@ -769,6 +787,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::types::ObjectId::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for UpgradeCommandFilter {}
     impl MessageFields for UpgradeCommandFilter {
         const FIELDS: &'static [&'static MessageField] = &[Self::PACKAGE_ID_FIELD];
     }
@@ -858,6 +877,7 @@ mod _field_impls {
     impl CommandFilter {
         pub const FILTER_ONEOF: &'static str = "filter";
     }
+    impl crate::field::sealed::Sealed for CommandFilter {}
     impl MessageFields for CommandFilter {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::MOVE_CALL_FIELD,
@@ -931,6 +951,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ExecutionStatusFilter {}
     impl MessageFields for ExecutionStatusFilter {
         const FIELDS: &'static [&'static MessageField] = &[Self::SUCCESS_FIELD];
     }
@@ -1044,6 +1065,7 @@ mod _field_impls {
     impl TransactionFilter {
         pub const FILTER_ONEOF: &'static str = "filter";
     }
+    impl crate::field::sealed::Sealed for TransactionFilter {}
     impl MessageFields for TransactionFilter {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::ALL_FIELD,

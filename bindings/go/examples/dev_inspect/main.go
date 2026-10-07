@@ -35,7 +35,10 @@ func identifier(ident string) *iota_sdk.Identifier {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	sender := iota_sdk.AddressZero()
 
@@ -146,7 +149,7 @@ func main() {
 				if err != nil {
 					log.Fatalf("Failed to create address from bytes: %v", err)
 				}
-				fmt.Printf("Resolved address: %s\n", resolvedAddress.ToHex())
+				fmt.Printf("Resolved address: %s\n", resolvedAddress)
 			} else {
 				fmt.Printf("Last result is not an address type or has wrong length: %d\n", len(returnValue.Bcs))
 			}

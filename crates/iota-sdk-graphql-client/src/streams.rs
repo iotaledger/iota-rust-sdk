@@ -165,10 +165,17 @@ where
 /// use iota_graphql_client::PaginationFilter;
 /// use iota_graphql_client::Direction;
 ///
-/// let client = GraphQLClient::new_testnet();
-/// let stream = stream_paginated_query(|pagination_filter, Direction::Forward| {
-///    client.coins(owner, coin_type, pagination_filter)
-/// });
+/// let client = GraphQLClient::new_testnet().unwrap();
+/// let stream = stream_paginated_query(
+///     |pagination_filter| {
+///         client
+///             .coins(owner)
+///             .coin_type(coin_type.clone())
+///             .pagination(pagination_filter)
+///             .into_future()
+///     },
+///     Direction::Forward,
+/// );
 ///
 /// while let Some(result) = stream.next().await {
 ///    match result {

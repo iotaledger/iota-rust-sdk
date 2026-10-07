@@ -42,12 +42,12 @@ fun main() = runBlocking {
         val dependencies = packageData.dependencies()
         println("Dependencies: ${dependencies.size}")
         val digest = packageData.digest()
-        println("Digest: ${digest.toBase58()}")
+        println("Digest: ${digest}")
 
         // Create a random private key to derive a sender address and for signing
         val privateKey = Ed25519PrivateKey.random()
         val sender = privateKey.publicKey().deriveAddress()
-        println("Sender: ${sender.toHex()}")
+        println("Sender: ${sender}")
 
         val client = GraphQlClient.newLocalnet()
 
@@ -85,19 +85,18 @@ fun main() = runBlocking {
             if (changedObj.outputState is ObjectOut.ObjectWrite) {
                 val objectId = changedObj.objectId
                 val obj: Object =
-                    client.`object`(objectId, null)
-                        ?: throw Exception("Missing object ${objectId.toHex()}")
+                    client.`object`(objectId, null) ?: throw Exception("Missing object ${objectId}")
                 val upgradeCapType = StructTag.newUpgradeCap()
                 if (obj.asStruct().structType == upgradeCapType) {
-                    println("UpgradeCap: ${objectId.toHex()}")
+                    println("UpgradeCap: ${objectId}")
                     println(
-                        "UpgradeCapOwner: ${(changedObj.outputState as ObjectOut.ObjectWrite).owner.asAddress().toHex()}"
+                        "UpgradeCapOwner: ${(changedObj.outputState as ObjectOut.ObjectWrite).owner.asAddress()}"
                     )
                     upgradeCap = objectId
                 }
             } else if (changedObj.outputState is ObjectOut.PackageWrite) {
                 val pkgId = changedObj.objectId
-                println("Package ID: ${pkgId.toHex()}")
+                println("Package ID: ${pkgId}")
                 val version = (changedObj.outputState as ObjectOut.PackageWrite).version
                 println("Package version: ${version}")
                 packageId = pkgId
@@ -162,7 +161,7 @@ fun main() = runBlocking {
         for (changedObj in effectsUpgrade.asV1().changedObjects()) {
             if (changedObj.outputState is ObjectOut.PackageWrite) {
                 val pkgId = changedObj.objectId
-                println("New Package ID: ${pkgId.toHex()}")
+                println("New Package ID: ${pkgId}")
                 val version = (changedObj.outputState as ObjectOut.PackageWrite).version
                 println("New Package version: $version")
             }

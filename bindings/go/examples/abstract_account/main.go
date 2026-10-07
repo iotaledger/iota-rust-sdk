@@ -11,7 +11,10 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewLocalnet()
+	client, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 	accountId, err := setupAccount(client)
 	if err != nil {
 		log.Fatalf("Failed to setup account: %v", err)
@@ -130,9 +133,9 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 		return nil, fmt.Errorf("missing account id")
 	}
 
-	fmt.Printf("Package ID: %s\n", packageId.ToHex())
-	fmt.Printf("PackageMetadataV1 ID: %s\n", packageMetadataId.ToHex())
-	fmt.Printf("Account ID: %s\n\n", accountId.ToHex())
+	fmt.Printf("Package ID: %s\n", packageId)
+	fmt.Printf("PackageMetadataV1 ID: %s\n", packageMetadataId)
+	fmt.Printf("Account ID: %s\n\n", accountId)
 
 	// Build the `link_auth` PTB
 	accountModule, _ := iota_sdk.NewIdentifier("account")

@@ -14,13 +14,14 @@ struct GrpcExecuteTransactionExample {
 
     let privateKey = try Ed25519PrivateKey(bytes: Data(repeating: 0, count: 32))
     let senderAddress = privateKey.publicKey().deriveAddress()
-    print("Sender address: \(senderAddress.toHex())")
+    print("Sender address: \(senderAddress)")
 
     // Request funds from faucet (the faucet client relies on GraphQL to await
     // finalization)
+    let graphQlClient = try GraphQlClient.newLocalnet()
     let faucet = FaucetClient.newLocalnet()
     _ = try await faucet.requestAndWaitForFinalized(
-      address: senderAddress, client: GraphQlClient.newLocalnet())
+      address: senderAddress, client: graphQlClient)
 
     let client = try GrpcClient.newLocalnet()
 
@@ -45,7 +46,7 @@ struct GrpcExecuteTransactionExample {
 
     let executed = try await client.executeTransaction(signedTransaction: signedTransaction)
 
-    print("Digest: \(hexEncode(input: executed.digest!.toBytes()))")
+    print("Digest: \(executed.digest!)")
     print("Transaction status: \(executed.effects!.asV1().status())")
   }
 }
