@@ -4,8 +4,8 @@
 
 use iota_types::ObjectReference;
 
-use super::transaction::TransactionBlock;
-use crate::query_types::{Address, Base64, MoveType, ObjectId, schema};
+use super::transaction::TransactionBlockEffects;
+use crate::query_types::{Address, Base64, BigInt, MoveType, ObjectId, schema};
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "DryRunArgs")]
@@ -19,7 +19,15 @@ pub struct DryRunQueryFragment {
 pub struct DryRunResult {
     pub error: Option<String>,
     pub results: Option<Vec<DryRunEffect>>,
-    pub transaction: Option<TransactionBlock>,
+    pub transaction: Option<DryRunTransactionBlock>,
+    pub suggested_gas_price: Option<BigInt>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
+pub struct DryRunTransactionBlock {
+    pub bcs_unsigned: Option<Base64>,
+    pub effects: Option<TransactionBlockEffects>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]

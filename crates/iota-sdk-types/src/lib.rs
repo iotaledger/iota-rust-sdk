@@ -103,6 +103,9 @@ pub use version::{Version, VersionError};
 mod serialization_proptests;
 
 #[cfg(feature = "serde")]
+#[doc(hidden)]
+pub use _serde::OptionReadableDisplay;
+#[cfg(feature = "serde")]
 pub use bcs_base64::FromBase64Error;
 
 #[cfg(feature = "serde")]
@@ -353,7 +356,7 @@ mod _serde {
     pub(crate) type ReadableDisplay =
         ::serde_with::As<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>;
 
-    pub(crate) type OptionReadableDisplay =
+    pub type OptionReadableDisplay =
         ::serde_with::As<Option<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
 
     pub(crate) type VecReadableDisplay =

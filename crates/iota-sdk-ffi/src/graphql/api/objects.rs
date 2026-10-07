@@ -34,7 +34,8 @@ impl GraphQLClient {
     ) -> Result<Option<Arc<Object>>> {
         Ok(self
             .client()
-            .object(**object_id, version.map(|v| **v))
+            .object(**object_id)
+            .version(version.map(|v| **v))
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -79,7 +80,8 @@ impl GraphQLClient {
     ) -> Result<Option<Vec<u8>>> {
         Ok(self
             .client()
-            .move_object_contents_bcs(**object_id, version.map(|v| **v))
+            .move_object_contents_bcs(**object_id)
+            .version(version.map(|v| **v))
             .await?)
     }
 
@@ -96,7 +98,8 @@ impl GraphQLClient {
     ) -> Result<Option<serde_json::Value>> {
         Ok(self
             .client()
-            .move_object_contents(**object_id, version.map(|v| **v))
+            .move_object_contents(**object_id)
+            .version(version.map(|v| **v))
             .await?)
     }
 }
