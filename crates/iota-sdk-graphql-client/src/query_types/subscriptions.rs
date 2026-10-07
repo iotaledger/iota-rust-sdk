@@ -28,7 +28,7 @@ use crate::{
     graphql_type = "Subscription",
     variables = "EventsSubscriptionArgs"
 )]
-pub struct EventsSubscription {
+pub(crate) struct EventsSubscription {
     #[arguments(startAfter: $start_after, filter: $filter)]
     pub events: EventSubscriptionPayload,
 }
@@ -39,7 +39,7 @@ pub struct EventsSubscription {
     graphql_type = "Subscription",
     variables = "TransactionsSubscriptionArgs"
 )]
-pub struct TransactionsSubscription {
+pub(crate) struct TransactionsSubscription {
     #[arguments(startAfter: $start_after, filter: $filter)]
     pub transactions: TransactionBlockSubscriptionPayload,
 }
@@ -49,13 +49,13 @@ pub struct TransactionsSubscription {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct EventsSubscriptionArgs {
+pub(crate) struct EventsSubscriptionArgs {
     pub start_after: Option<String>,
     pub filter: Option<SubscriptionEventFilter>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct TransactionsSubscriptionArgs {
+pub(crate) struct TransactionsSubscriptionArgs {
     pub start_after: Option<String>,
     pub filter: Option<SubscriptionTransactionFilter>,
 }
@@ -137,7 +137,7 @@ impl SubscriptionTransactionFilter {
 #[derive(cynic::InlineFragments, Debug)]
 #[cynic(schema = "rpc", graphql_type = "EventSubscriptionPayload")]
 #[non_exhaustive]
-pub enum EventSubscriptionPayload {
+pub(crate) enum EventSubscriptionPayload {
     Event(Box<SubscriptionEvent>),
     Lagged(Lagged),
     #[cynic(fallback)]
@@ -147,7 +147,7 @@ pub enum EventSubscriptionPayload {
 #[derive(cynic::InlineFragments, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockSubscriptionPayload")]
 #[non_exhaustive]
-pub enum TransactionBlockSubscriptionPayload {
+pub(crate) enum TransactionBlockSubscriptionPayload {
     TransactionBlock(SubscriptionTransactionBlock),
     Lagged(Lagged),
     #[cynic(fallback)]
@@ -158,7 +158,7 @@ pub enum TransactionBlockSubscriptionPayload {
 /// because the subscriber could not keep up.
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Lagged")]
-pub struct Lagged {
+pub(crate) struct Lagged {
     /// Number of missed payloads since the previously emitted one.
     pub count: i32,
 }
@@ -172,7 +172,7 @@ pub struct Lagged {
 /// recovery cursor (`startAfter`).
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Event")]
-pub struct SubscriptionEvent {
+pub(crate) struct SubscriptionEvent {
     pub transaction_block: Option<TxBlockDigest>,
     pub sending_module: Option<MoveModuleQueryFragment>,
     pub sender: Option<GraphQLAddress>,
@@ -212,7 +212,7 @@ impl From<SubscriptionEvent> for Event {
 /// that a [`SignedTransaction`] is rebuilt from.
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct SubscriptionTransactionBlock {
+pub(crate) struct SubscriptionTransactionBlock {
     pub digest: Option<String>,
     pub bcs: Option<Base64>,
 }
@@ -238,6 +238,6 @@ impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TxBlockDigest {
+pub(crate) struct TxBlockDigest {
     pub digest: Option<String>,
 }

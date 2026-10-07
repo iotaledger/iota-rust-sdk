@@ -9,16 +9,16 @@ use cynic::QueryBuilder;
 use iota_types::{Address, MovePackage, Object, Version};
 
 use crate::{
-    GraphQLClient, Page,
+    GraphQLClient, MoveFunction, MoveModule, Page,
     api::define_query,
     error::GraphQLResult,
     pagination::{PaginationFilter, PaginationFilterResponse},
     query_types::{
-        LatestPackageQueryFragment, MoveFunction, MoveModule, MovePackageVersionFilter,
-        NormalizedMoveFunctionQueryArgs, NormalizedMoveFunctionQueryFragment,
-        NormalizedMoveModuleQueryArgs, NormalizedMoveModuleQueryFragment, PackageArgs,
-        PackageCheckpointFilter, PackageQueryFragment, PackageVersionsArgs,
-        PackageVersionsQueryFragment, PackagesQueryArgs, PackagesQueryFragment,
+        LatestPackageQueryFragment, MovePackageVersionFilter, NormalizedMoveFunctionQueryArgs,
+        NormalizedMoveFunctionQueryFragment, NormalizedMoveModuleQueryArgs,
+        NormalizedMoveModuleQueryFragment, PackageArgs, PackageCheckpointFilter,
+        PackageQueryFragment, PackageVersionsArgs, PackageVersionsQueryFragment, PackagesQueryArgs,
+        PackagesQueryFragment,
     },
 };
 
@@ -305,7 +305,7 @@ impl GetNormalizedMoveModuleQuery {
             .run_query(&Self::operation(package, &module, version, &pagination))
             .await?;
 
-        Ok(response.package.and_then(|p| p.module))
+        Ok(response.package.and_then(|p| p.module).map(Into::into))
     }
 }
 
@@ -380,7 +380,8 @@ impl GetNormalizedMoveFunctionQuery {
         Ok(response
             .package
             .and_then(|p| p.module)
-            .and_then(|m| m.function))
+            .and_then(|m| m.function)
+            .map(Into::into))
     }
 }
 

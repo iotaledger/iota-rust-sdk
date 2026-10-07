@@ -33,7 +33,7 @@ pub use api::{
     epochs::{GetEpochQuery, GetEpochTotalCheckpointsQuery, GetEpochTotalTransactionBlocksQuery},
     events::ListEventsQuery,
     iota_names::{GetIotaNamesDefaultNameQuery, ListIotaNamesRegistrationsQuery},
-    move_view_call::{MoveViewCallJsonQuery, MoveViewCallQuery},
+    move_view_call::{MoveViewArg, MoveViewArgList, MoveViewCallJsonQuery, MoveViewCallQuery},
     network::{
         GetChainIdQuery, GetProtocolConfigQuery, GetReferenceGasPriceQuery,
         ListActiveValidatorsQuery,

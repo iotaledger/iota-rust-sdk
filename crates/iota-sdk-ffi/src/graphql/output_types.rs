@@ -83,15 +83,6 @@ impl From<iota_sdk::graphql_client::DryRunReturn> for GraphQLDryRunReturn {
     }
 }
 
-impl From<GraphQLDryRunReturn> for iota_sdk::graphql_client::DryRunReturn {
-    fn from(value: GraphQLDryRunReturn) -> Self {
-        iota_sdk::graphql_client::DryRunReturn {
-            type_tag: value.type_tag.0.clone(),
-            bcs: value.bcs,
-        }
-    }
-}
-
 /// A mutation to an argument that was mutably borrowed by a command.
 #[derive(uniffi::Record)]
 pub struct GraphQLDryRunMutation {
@@ -113,16 +104,6 @@ impl From<iota_sdk::graphql_client::DryRunMutation> for GraphQLDryRunMutation {
     }
 }
 
-impl From<GraphQLDryRunMutation> for iota_sdk::graphql_client::DryRunMutation {
-    fn from(value: GraphQLDryRunMutation) -> Self {
-        iota_sdk::graphql_client::DryRunMutation {
-            input: value.input.into(),
-            type_tag: value.type_tag.0.clone(),
-            bcs: value.bcs,
-        }
-    }
-}
-
 /// Effects of a single command in the dry run, including mutated references
 /// and return values.
 #[derive(uniffi::Record)]
@@ -136,19 +117,6 @@ pub struct GraphQLDryRunEffect {
 impl From<iota_sdk::graphql_client::DryRunEffect> for GraphQLDryRunEffect {
     fn from(value: iota_sdk::graphql_client::DryRunEffect) -> Self {
         GraphQLDryRunEffect {
-            mutated_references: value
-                .mutated_references
-                .into_iter()
-                .map(Into::into)
-                .collect(),
-            return_values: value.return_values.into_iter().map(Into::into).collect(),
-        }
-    }
-}
-
-impl From<GraphQLDryRunEffect> for iota_sdk::graphql_client::DryRunEffect {
-    fn from(value: GraphQLDryRunEffect) -> Self {
-        iota_sdk::graphql_client::DryRunEffect {
             mutated_references: value
                 .mutated_references
                 .into_iter()
