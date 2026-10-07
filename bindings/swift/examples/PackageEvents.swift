@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct PackageEventsExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = try GraphQlClient.newTestnet()
 
     let events = try await client.events(
       filter: GraphQlEventFilter(

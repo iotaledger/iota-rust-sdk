@@ -33,7 +33,7 @@ use crate::{
     },
 };
 
-mod assigned_results;
+pub(crate) mod assigned_results;
 pub(crate) mod client;
 pub(crate) mod gas_sponsor;
 #[cfg(feature = "gas-station")]

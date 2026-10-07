@@ -10,14 +10,14 @@ use crate::query_types::{Address, Base64, MoveObjectContents, ObjectId, PageInfo
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectQueryArgs")]
-pub struct ObjectQueryFragment {
+pub(crate) struct ObjectQueryFragment {
     #[arguments(address: $object_id, version: $version)]
     pub object: Option<Object>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectsQueryArgs")]
-pub struct ObjectsQueryFragment {
+pub(crate) struct ObjectsQueryFragment {
     #[arguments(after: $after, before: $before, filter: $filter, first: $first, last: $last)]
     pub objects: ObjectConnection,
 }
@@ -27,13 +27,13 @@ pub struct ObjectsQueryFragment {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ObjectQueryArgs {
+pub(crate) struct ObjectQueryArgs {
     pub object_id: ObjectId,
     pub version: Option<u64>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ObjectsQueryArgs {
+pub(crate) struct ObjectsQueryArgs {
     pub after: Option<String>,
     pub before: Option<String>,
     pub filter: Option<ObjectFilter>,
@@ -47,7 +47,7 @@ pub struct ObjectsQueryArgs {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Object")]
-pub struct Object {
+pub(crate) struct Object {
     pub as_move_object: Option<MoveObjectContents>,
     pub bcs: Option<Base64>,
 }
@@ -83,16 +83,9 @@ impl ObjectFilter {
     }
 }
 
-#[derive(Clone, cynic::InputObject, Debug)]
-#[cynic(schema = "rpc", graphql_type = "ObjectKey")]
-pub struct ObjectKey {
-    pub object_id: ObjectId,
-    pub version: u64,
-}
-
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "ObjectConnection")]
-pub struct ObjectConnection {
+pub(crate) struct ObjectConnection {
     pub page_info: PageInfo,
     pub nodes: Vec<Object>,
 }

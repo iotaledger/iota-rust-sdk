@@ -10,7 +10,7 @@ let abstractAccountPrecompiledPackage =
 @main
 struct AbstractAccountExample {
   static func main() async throws {
-    let client = GraphQlClient.newLocalnet()
+    let client = try GraphQlClient.newLocalnet()
     let accountId = try await setupAccount(client: client)
     let fromAddress = accountId.toAddress()
     let toAddress = try Address.fromHex(

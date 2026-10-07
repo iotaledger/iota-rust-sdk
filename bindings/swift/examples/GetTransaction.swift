@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct GetTransactionExample {
   static func main() async throws {
-    let client = GraphQlClient.newLocalnet()
+    let client = try GraphQlClient.newLocalnet()
 
     let transactions = try await client.transactions()
     guard let digest = transactions.data.first?.transaction.digest() else {

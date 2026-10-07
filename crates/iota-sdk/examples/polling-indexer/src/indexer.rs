@@ -211,14 +211,13 @@ impl Indexer {
         loop {
             let tx_page = self
                 .client
-                .transactions_data_effects(
-                    tx_filter.clone(),
-                    PaginationFilter {
-                        limit: Some(self.config.page_size),
-                        cursor: tx_cursor.clone(),
-                        ..Default::default()
-                    },
-                )
+                .transactions_data_effects()
+                .filter(tx_filter.clone())
+                .pagination(PaginationFilter {
+                    limit: Some(self.config.page_size),
+                    cursor: tx_cursor.clone(),
+                    ..Default::default()
+                })
                 .await?;
 
             // Single pass: pair each eligible transaction with its digest.
@@ -305,7 +304,7 @@ impl Indexer {
             return Ok(true);
         }
 
-        let Some(checkpoint) = self.client.checkpoint(None, Some(sequence)).await? else {
+        let Some(checkpoint) = self.client.checkpoint_by_sequence_number(sequence).await? else {
             return Ok(false);
         };
 
@@ -345,14 +344,13 @@ impl Indexer {
         loop {
             let tx_page = self
                 .client
-                .transactions_data_effects(
-                    tx_filter.clone(),
-                    PaginationFilter {
-                        limit: Some(self.config.page_size),
-                        cursor: tx_cursor.clone(),
-                        ..Default::default()
-                    },
-                )
+                .transactions_data_effects()
+                .filter(tx_filter.clone())
+                .pagination(PaginationFilter {
+                    limit: Some(self.config.page_size),
+                    cursor: tx_cursor.clone(),
+                    ..Default::default()
+                })
                 .await?;
 
             for tx_data in tx_page.data() {
@@ -423,16 +421,17 @@ impl Indexer {
         loop {
             let event_page = self
                 .client
-                .events(
+                .events()
+                .filter(
                     EventFilter::default()
                         .with_transaction_digest(transaction_digest.to_owned())
                         .with_event_type(self.config.filters.event_type.clone()),
-                    PaginationFilter {
-                        limit: Some(self.config.page_size),
-                        cursor: cursor.clone(),
-                        ..Default::default()
-                    },
                 )
+                .pagination(PaginationFilter {
+                    limit: Some(self.config.page_size),
+                    cursor: cursor.clone(),
+                    ..Default::default()
+                })
                 .await?;
 
             for event in event_page.data() {

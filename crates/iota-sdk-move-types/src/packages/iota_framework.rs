@@ -318,8 +318,8 @@ pub mod coin {
     {
         /// Decode a [`Coin<T>`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -379,8 +379,8 @@ pub mod coin {
     {
         /// Decode a [`CoinMetadata<T>`] from BCS bytes without verifying
         /// the on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -821,8 +821,8 @@ pub mod clock {
     impl Clock {
         /// Decode a [`Clock`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -897,25 +897,6 @@ pub mod intent {
                 app_id,
             }
         }
-    }
-}
-
-/// Types from `0x2::ecdsa_k1`.
-pub mod ecdsa_k1 {
-    /// Rust version of the Move `iota::ecdsa_k1::KeyPair` type.
-    // The Move-side `KeyPair` struct is `#[test_only]`, so it's absent
-    // from the compiled package and cannot participate in the
-    // `move_shape_compare` cross-check. No `MoveShape` derive here.
-    /// # BCS
-    ///
-    /// The BCS serialized form of this type is specified in
-    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
-    #[derive(Clone, Debug, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    pub struct KeyPair {
-        pub private_key: Vec<u8>,
-        pub public_key: Vec<u8>,
     }
 }
 
@@ -1067,8 +1048,8 @@ pub mod timelock {
     {
         /// Decode a [`TimeLock<T>`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -1079,7 +1060,7 @@ pub mod timelock {
 pub mod borrow {
     use iota_types::Address;
 
-    use super::object::{ID, UID};
+    use super::object::ID;
 
     /// Rust version of the Move `iota::borrow::Referent<T>` type.
     ///
@@ -1121,23 +1102,6 @@ pub mod borrow {
     pub struct Borrow {
         pub r#ref: Address,
         pub obj: ID,
-    }
-
-    /// Rust version of the Move `iota::borrow::Test` type.
-    ///
-    /// The Move-side `Test` struct is `#[test_only]`, so it doesn't ship
-    /// in the compiled package and can't participate in the
-    /// `move_shape_compare` cross-check. No `MoveShape` derive here.
-    ///
-    /// # BCS
-    ///
-    /// The BCS serialized form of this type is specified in
-    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
-    #[derive(Clone, Debug, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    pub struct Test {
-        pub id: UID,
     }
 }
 
@@ -1655,8 +1619,8 @@ pub mod package {
     impl Publisher {
         /// Decode a [`Publisher`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -1692,8 +1656,8 @@ pub mod package {
     impl UpgradeCap {
         /// Decode an [`UpgradeCap`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -2398,69 +2362,6 @@ pub mod token {
                 _marker: PhantomData,
             }
         }
-    }
-}
-
-/// Types from `0x2::test_scenario`.
-///
-/// The Move-side `test_scenario` module is annotated `#[test_only]`, so
-/// none of its structs ship in the compiled package — they're omitted
-/// from the `move_shape_compare` cross-check and therefore don't carry the
-/// `MoveShape` derive.
-pub mod test_scenario {
-    use iota_types::Address;
-
-    use super::{object::ID, tx_context::TxContext, vec_map::VecMap};
-
-    /// Rust version of the Move `iota::test_scenario::Scenario` type.
-    ///
-    /// Mocks a multi-transaction IOTA execution in a single Move test
-    /// procedure.
-    ///
-    /// # BCS
-    ///
-    /// The BCS serialized form of this type is specified in
-    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
-    #[derive(Clone, Debug, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    pub struct Scenario {
-        pub txn_number: u64,
-        pub ctx: TxContext,
-    }
-
-    /// Rust version of the Move `iota::test_scenario::TxContextBuilder` type.
-    ///
-    /// # BCS
-    ///
-    /// The BCS serialized form of this type is specified in
-    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
-    #[derive(Clone, Debug, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    pub struct TxContextBuilder {
-        pub sender: Address,
-        pub epoch: u64,
-        pub epoch_timestamp_ms: u64,
-        pub ids_created: u64,
-        pub rgp: Option<u64>,
-        pub gas_price: u64,
-        pub gas_budget: u64,
-        pub sponsor: Option<Address>,
-    }
-
-    /// Rust version of the Move `iota::test_scenario::TransactionEffects` type.
-    #[derive(Clone, Debug, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    pub struct TransactionEffects {
-        pub created: Vec<ID>,
-        pub written: Vec<ID>,
-        pub deleted: Vec<ID>,
-        pub transferred_to_account: VecMap<ID, Address>,
-        pub transferred_to_object: VecMap<ID, ID>,
-        pub shared: Vec<ID>,
-        pub frozen: Vec<ID>,
-        pub num_user_events: u64,
     }
 }
 
@@ -3367,8 +3268,8 @@ pub mod kiosk {
     impl Kiosk {
         /// Decode a [`Kiosk`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -3396,8 +3297,8 @@ pub mod kiosk {
     impl KioskOwnerCap {
         /// Decode a [`KioskOwnerCap`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 

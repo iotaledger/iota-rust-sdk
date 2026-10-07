@@ -73,6 +73,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for CoinMetadata {}
     impl MessageFields for CoinMetadata {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::ID_FIELD,
@@ -164,6 +165,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for CoinTreasury {}
     impl MessageFields for CoinTreasury {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::ID_FIELD,
@@ -254,6 +256,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for RegulatedCoinMetadata {}
     impl MessageFields for RegulatedCoinMetadata {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::ID_FIELD,

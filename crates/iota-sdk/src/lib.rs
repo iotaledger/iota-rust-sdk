@@ -1,8 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! The IOTA Rust SDK
-
+#![doc = include_str!("../README.md")]
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 #[cfg(feature = "crypto")]
