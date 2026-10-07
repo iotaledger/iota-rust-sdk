@@ -16,6 +16,7 @@ const SHOP: &str = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5
 #[tokio::main]
 async fn main() -> GraphQLResult<()> {
     let client = GraphQLClient::new_testnet()?;
+    let package = ObjectId::from_str(PACKAGE)?;
 
     // ===========================================================================
     // Example 1: Using move_view_call() with typed arguments (primitives)
@@ -23,7 +24,7 @@ async fn main() -> GraphQLResult<()> {
     println!("=== Example 1: move_view_call() with typed arguments (primitives) ===\n");
 
     let result = client
-        .move_view_call(format!("{PACKAGE}::shop::discounted_price"))
+        .move_view_call(package, "shop", "discounted_price")
         .arguments((100u64, 25u64))
         .await?;
 
@@ -62,7 +63,7 @@ async fn main() -> GraphQLResult<()> {
     println!("\n=== Example 3: move_view_call() with typed arguments (shared object) ===\n");
 
     let result = client
-        .move_view_call(format!("{PACKAGE}::shop::sale_at"))
+        .move_view_call(package, "shop", "sale_at")
         .arguments((ObjectId::from_str(SHOP)?, 1u64))
         .await?;
 
@@ -98,7 +99,7 @@ async fn main() -> GraphQLResult<()> {
     println!("\n=== Example 5: move_view_call() with arguments appended one at a time ===\n");
 
     let result = client
-        .move_view_call(format!("{PACKAGE}::shop::sale_at"))
+        .move_view_call(package, "shop", "sale_at")
         .argument(ObjectId::from_str(SHOP)?)
         .argument(1u64)
         .await?;
