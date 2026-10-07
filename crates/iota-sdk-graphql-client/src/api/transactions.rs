@@ -296,8 +296,10 @@ impl ListTransactionsDataEffectsQuery {
                     };
                     let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
                     let effects = base64ct::Base64::decode_vec(effects_bcs.0.as_str())?;
-                    let transaction: SenderSignedTransaction = bcs::from_bytes(&bcs)?;
-                    let effects: TransactionEffects = bcs::from_bytes(&effects)?;
+                    let transaction: SenderSignedTransaction =
+                        bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
+                    let effects: TransactionEffects =
+                        bcs::from_bytes(&effects).map_err(iota_types::BcsError::new)?;
 
                     Ok(TransactionDataEffects {
                         signed_transaction: transaction.into(),
@@ -343,7 +345,8 @@ impl ExecuteTransactionQuery {
 
         let result = response.execute_transaction_block;
         let bcs = base64ct::Base64::decode_vec(result.effects.bcs.0.as_str())?;
-        let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
+        let effects: TransactionEffects =
+            bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
 
         if let Some(wait_for) = self.wait_for {
             self.client
@@ -478,8 +481,10 @@ impl GraphQLClient {
                     .ok_or(GraphQLError::EmptyResponseField("transaction effects bcs"))?;
                 let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
                 let effects = base64ct::Base64::decode_vec(effects_bcs.0.as_str())?;
-                let transaction: SenderSignedTransaction = bcs::from_bytes(&bcs)?;
-                let effects: TransactionEffects = bcs::from_bytes(&effects)?;
+                let transaction: SenderSignedTransaction =
+                    bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
+                let effects: TransactionEffects =
+                    bcs::from_bytes(&effects).map_err(iota_types::BcsError::new)?;
 
                 Ok(Some(TransactionDataEffects {
                     signed_transaction: transaction.into(),
