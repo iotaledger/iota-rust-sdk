@@ -5,7 +5,7 @@
 use std::str::FromStr;
 
 use cynic::serde;
-use iota_types::{SignedTransaction, TransactionEffects, TypeTag};
+use iota_types::{SignedTransaction, Transaction, TransactionEffects, TypeTag};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 use crate::{
@@ -19,16 +19,21 @@ use crate::{
 /// The result of a simulation (dry run), which includes the effects of the
 /// transaction and intermediate results for each command.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DryRunResult {
     /// The error that occurred during dry run execution, if any.
     pub error: Option<String>,
     /// The intermediate results for each command of the dry run execution,
     /// including contents of mutated references and return values.
     pub results: Vec<DryRunEffect>,
-    /// The transaction block representing the dry run execution.
-    pub transaction: Option<SignedTransaction>,
+    /// The transaction that was dry run, without signatures.
+    pub transaction: Option<Transaction>,
     /// The effects of the transaction execution.
     pub effects: Option<TransactionEffects>,
+    /// The gas price to use. This is the reference gas price, or a higher
+    /// price if an input object is congested.
+    #[serde(default, with = "iota_types::OptionReadableDisplay")]
+    pub suggested_gas_price: Option<u64>,
 }
 
 /// Effects of a single command in the dry run, including mutated references
