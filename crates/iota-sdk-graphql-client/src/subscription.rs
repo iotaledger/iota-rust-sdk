@@ -49,8 +49,9 @@ enum Outcome<T> {
     Skip,
 }
 
-/// Like [`response_to_err`], for subscription responses whose error extensions
-/// are not decoded.
+/// Convert a subscription response to a `Result`, surfacing any `errors` as a
+/// query error. The subscription transport does not decode error extensions,
+/// so the errors carry no `code`.
 fn subscription_response_to_err<T>(response: cynic::GraphQlResponse<T>) -> GraphQLResult<T> {
     response_to_err(cynic::GraphQlResponse {
         data: response.data,
