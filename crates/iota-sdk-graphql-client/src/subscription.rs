@@ -7,7 +7,10 @@
 //! Unlike the paginated `events` / `transactions` page methods, these stream
 //! data as it arrives. The stream transparently reconnects on disconnect,
 //! resuming from the last item it delivered via the subscription's
-//! `startAfter` cursor, and ends only on an error reconnecting cannot fix.
+//! `startAfter` cursor, and ends on any error other than a transport failure
+//! ([`GraphQLError::Subscription`]) or [`GraphQLError::Lagged`]. In the
+//! browser, a rejected WebSocket handshake is indistinguishable from a dropped
+//! connection, so it is retried as a transport failure.
 
 use std::{future::Future, time::Duration};
 
@@ -219,15 +222,40 @@ async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection 
     let mut request = url
         .as_str()
         .into_client_request()
-        .map_err(GraphQLError::subscription)?;
+        .map_err(handshake_error)?;
     request.headers_mut().insert(
         "Sec-WebSocket-Protocol",
         HeaderValue::from_static(WS_PROTOCOL),
     );
     let (connection, _response) = tokio_tungstenite::connect_async(request)
         .await
-        .map_err(GraphQLError::subscription)?;
+        .map_err(handshake_error)?;
     Ok(connection)
+}
+
+/// Convert a failed WebSocket handshake into a [`GraphQLError`], as
+/// [`GraphQLError::SubscriptionRejected`] if retrying would fail the same way.
+#[cfg(not(target_arch = "wasm32"))]
+fn handshake_error(error: tokio_tungstenite::tungstenite::Error) -> GraphQLError {
+    use tokio_tungstenite::tungstenite::{Error, http::StatusCode};
+
+    let permanent = match &error {
+        Error::Url(_) | Error::HttpFormat(_) | Error::Tls(_) => true,
+        Error::Http(response) => {
+            let status = response.status();
+            status.is_client_error()
+                && !matches!(
+                    status,
+                    StatusCode::REQUEST_TIMEOUT | StatusCode::TOO_MANY_REQUESTS
+                )
+        }
+        _ => false,
+    };
+    if permanent {
+        GraphQLError::SubscriptionRejected(error.into())
+    } else {
+        GraphQLError::subscription(error)
+    }
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -334,6 +362,36 @@ mod tests {
         ));
         assert!(stream.next().await.is_none());
         assert_eq!(attempts.get(), 1);
+    }
+
+    #[test]
+    fn handshake_error_rejects_client_errors_only() {
+        use tokio_tungstenite::tungstenite::{Error, http::Response};
+
+        let upgrade_response = |status: u16| {
+            handshake_error(Error::Http(Box::new(
+                Response::builder().status(status).body(None).unwrap(),
+            )))
+        };
+
+        assert!(matches!(
+            upgrade_response(404),
+            GraphQLError::SubscriptionRejected(_)
+        ));
+        assert!(matches!(
+            upgrade_response(403),
+            GraphQLError::SubscriptionRejected(_)
+        ));
+        for status in [408, 429, 502, 503] {
+            assert!(matches!(
+                upgrade_response(status),
+                GraphQLError::Subscription(_)
+            ));
+        }
+        assert!(matches!(
+            handshake_error(Error::Io(std::io::ErrorKind::ConnectionRefused.into())),
+            GraphQLError::Subscription(_)
+        ));
     }
 
     #[tokio::test]
