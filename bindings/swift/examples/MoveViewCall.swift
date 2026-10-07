@@ -20,10 +20,12 @@ struct MoveViewCallExample {
     print("=== Example 1: moveViewCall() with typed arguments (primitives) ===")
     print()
 
+    let packageId = try ObjectId.fromHex(hex: package)
     let priceArgs = [MoveViewArg.u64(value: 100), MoveViewArg.u64(value: 25)]
 
     let result = try await client.moveViewCall(
-      functionName: "\(package)::shop::discounted_price", typeArguments: nil, arguments: priceArgs)
+      package: packageId, module: "shop", function: "discounted_price", typeArguments: nil,
+      arguments: priceArgs)
 
     if result.error != nil {
       print("Error:", result.error!)
@@ -42,7 +44,7 @@ struct MoveViewCallExample {
 
     // `u64` is passed as a string so large values survive JSON.
     let jsonResult = try await client.moveViewCallJson(
-      functionName: "\(package)::shop::discounted_price", typeArguments: nil,
+      package: packageId, module: "shop", function: "discounted_price", typeArguments: nil,
       arguments: ["\"100\"", "\"25\""])
 
     if jsonResult.error != nil {
@@ -68,7 +70,8 @@ struct MoveViewCallExample {
     ]
 
     let shopResult = try await client.moveViewCall(
-      functionName: "\(package)::shop::sale_at", typeArguments: nil, arguments: shopArgs)
+      package: packageId, module: "shop", function: "sale_at", typeArguments: nil,
+      arguments: shopArgs)
 
     if shopResult.error != nil {
       print("Shop Error:", shopResult.error!)
@@ -86,7 +89,7 @@ struct MoveViewCallExample {
     print()
 
     let shopJsonResult = try await client.moveViewCallJson(
-      functionName: "\(package)::shop::sale_at", typeArguments: nil,
+      package: packageId, module: "shop", function: "sale_at", typeArguments: nil,
       arguments: ["\"\(shop)\"", "\"1\""])
 
     if shopJsonResult.error != nil {

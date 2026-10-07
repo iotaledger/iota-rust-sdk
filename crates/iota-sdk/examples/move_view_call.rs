@@ -42,7 +42,7 @@ async fn main() -> GraphQLResult<()> {
     println!("\n=== Example 2: move_view_call_json() with JSON values (primitives) ===\n");
 
     let result = client
-        .move_view_call_json(format!("{PACKAGE}::shop::discounted_price"))
+        .move_view_call_json(package, "shop", "discounted_price")
         .arguments(
             // `u64` is passed as a string so large values survive JSON.
             vec![serde_json::json!("100"), serde_json::json!("25")],
@@ -81,7 +81,7 @@ async fn main() -> GraphQLResult<()> {
     println!("\n=== Example 4: move_view_call_json() with JSON values (shared object) ===\n");
 
     let result = client
-        .move_view_call_json(format!("{PACKAGE}::shop::sale_at"))
+        .move_view_call_json(package, "shop", "sale_at")
         .arguments(vec![serde_json::json!(SHOP), serde_json::json!("1")])
         .await?;
 

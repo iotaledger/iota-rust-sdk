@@ -7,7 +7,7 @@ use crate::{
     error::Result,
     graphql::{client::GraphQLClient, query_types::GraphQLMoveViewResult},
     move_view_call::MoveViewArg,
-    types::move_core::TypeTag,
+    types::{move_core::TypeTag, object::ObjectId},
 };
 
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
@@ -24,9 +24,9 @@ impl GraphQLClient {
     /// ledger.
     ///
     /// # Arguments
-    /// * `function_name` - The Move function fully qualified name as
-    ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4::shop::total_revenue`
+    /// * `package` - The package the Move function is defined in
+    /// * `module` - The module the Move function is defined in
+    /// * `function` - The name of the Move function
     /// * `type_arguments` - The type arguments of the Move function
     /// * `arguments` - The arguments to be passed into the Move function, in
     ///   JSON format
@@ -37,13 +37,15 @@ impl GraphQLClient {
     #[uniffi::method(default(type_arguments = None, arguments = None))]
     pub async fn move_view_call_json(
         &self,
-        function_name: String,
+        package: &ObjectId,
+        module: String,
+        function: String,
         type_arguments: Option<Vec<String>>,
         arguments: Option<Vec<serde_json::Value>>,
     ) -> Result<GraphQLMoveViewResult> {
         Ok(self
             .client()
-            .move_view_call_json(function_name)
+            .move_view_call_json(**package, module, function)
             .type_arguments(type_arguments)
             .arguments(arguments)
             .await?
@@ -67,9 +69,9 @@ impl GraphQLClient {
     /// rather than execution level.
     ///
     /// # Arguments
-    /// * `function_name` - The Move function fully qualified name as
-    ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4::shop::total_revenue`
+    /// * `package` - The package the Move function is defined in
+    /// * `module` - The module the Move function is defined in
+    /// * `function` - The name of the Move function
     /// * `type_arguments` - The type arguments of the Move function
     /// * `arguments` - The typed arguments to be passed into the Move function
     ///
@@ -79,7 +81,9 @@ impl GraphQLClient {
     #[uniffi::method(default(type_arguments = None, arguments = None))]
     pub async fn move_view_call(
         &self,
-        function_name: String,
+        package: &ObjectId,
+        module: String,
+        function: String,
         type_arguments: Option<Vec<Arc<TypeTag>>>,
         arguments: Option<Vec<Arc<MoveViewArg>>>,
     ) -> Result<GraphQLMoveViewResult> {
@@ -87,7 +91,7 @@ impl GraphQLClient {
         let type_arguments =
             type_arguments.map(|tags| tags.iter().map(|t| t.to_string()).collect());
 
-        self.move_view_call_json(function_name, type_arguments, arguments)
+        self.move_view_call_json(package, module, function, type_arguments, arguments)
             .await
     }
 }

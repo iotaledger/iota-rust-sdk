@@ -617,7 +617,6 @@ async fn test_move_view_call() {
 
     let client = GraphQLClient::new_localnet().unwrap();
     let package_id = package_id.unwrap();
-    let function = format!("{package_id}::test_example::double");
 
     let assert_doubled = |result: iota_graphql_client::query_types::MoveViewResult| {
         assert_eq!(
@@ -650,7 +649,7 @@ async fn test_move_view_call() {
 
     // Raw JSON arguments
     let result = client
-        .move_view_call_json(&function)
+        .move_view_call_json(package_id, "test_example", "double")
         .arguments(vec![serde_json::json!("21")])
         .await
         .unwrap();
