@@ -460,10 +460,7 @@ impl std::str::FromStr for StructTag {
     type Err = TypeParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use winnow::Parser;
-        crate::move_core::parse::parse_struct_tag
-            .parse(s)
-            .map_err(|e| e.into_inner())
+        crate::move_core::parse::parse_complete(crate::move_core::parse::parse_struct_tag, s)
     }
 }
 
