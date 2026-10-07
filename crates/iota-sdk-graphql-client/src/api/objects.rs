@@ -322,7 +322,7 @@ mod tests {
         assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
         assert_eq!(vars["version"], 3);
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsQueryFragment", |client| async move {
             let _ = client
                 .move_object_contents(ObjectId::SYSTEM_STATE)
                 .version(Version::from_u64(4))
@@ -332,7 +332,7 @@ mod tests {
         assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
         assert_eq!(vars["version"], 4);
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsQueryFragment", |client| async move {
             let _ = client
                 .move_object_contents_bcs(ObjectId::SYSTEM_STATE)
                 .version(Version::from_u64(5))
@@ -348,13 +348,13 @@ mod tests {
         .await;
         assert!(vars["version"].is_null());
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsQueryFragment", |client| async move {
             let _ = client.move_object_contents(ObjectId::SYSTEM_STATE).await;
         })
         .await;
         assert!(vars["version"].is_null());
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsQueryFragment", |client| async move {
             let _ = client
                 .move_object_contents_bcs(ObjectId::SYSTEM_STATE)
                 .await;
