@@ -6,7 +6,7 @@ use winnow::{
     Parser,
     ascii::multispace0,
     combinator::{alt, delimited, opt, separated},
-    error::{ErrMode, FromExternalError, ParserError},
+    error::{ErrMode, ParserError},
     stream::AsChar,
     token::{one_of, take_while},
 };
@@ -31,15 +31,6 @@ impl ParserError<&str> for InnerError {
 
     fn into_inner(self) -> winnow::Result<Self::Inner, Self> {
         Ok(self)
-    }
-}
-
-impl<E: std::error::Error + Send + Sync + 'static> FromExternalError<&str, E> for InnerError {
-    fn from_external_error(input: &&str, e: E) -> Self {
-        Self(TypeParseError::Parse {
-            input: (*input).to_owned(),
-            source: Some(Box::new(e)),
-        })
     }
 }
 
@@ -77,20 +68,18 @@ pub(crate) fn parse_identifier(input: &mut &str) -> ModalResult<Identifier> {
 
 fn valid_remainder<'a>(minimum: usize) -> impl FnMut(&mut &'a str) -> ModalResult<&'a str> {
     move |input: &mut &'a str| {
-        take_while(
-            // Use .. instead of ..= since we've already processed a single character
-            minimum..MAX_IDENTIFIER_LENGTH,
-            (b'_', b'a'..=b'z', b'A'..=b'Z', b'0'..=b'9'),
-        )
-        .parse_next(input)
+        take_while(minimum.., (b'_', b'a'..=b'z', b'A'..=b'Z', b'0'..=b'9')).parse_next(input)
     }
 }
 
 pub(crate) fn parse_address(input: &mut &str) -> ModalResult<Address> {
-    ("0x", take_while(1..=64, AsChar::is_hex_digit))
+    ("0x", take_while(1.., AsChar::is_hex_digit))
         .take()
-        .try_map(Address::from_prefixed_short_hex)
         .parse_next(input)
+        .and_then(|s| {
+            Address::from_prefixed_short_hex(s)
+                .map_err(|e| ErrMode::Cut(InnerError(TypeParseError::Address(e))))
+        })
 }
 
 pub(crate) fn parse_type_tag(input: &mut &str) -> ModalResult<TypeTag> {
@@ -351,6 +340,20 @@ mod tests {
             matches!(&err, TypeParseError::Parse { input, source: None } if input == " extra"),
             "{err:?}"
         );
+
+        let err = "a"
+            .repeat(MAX_IDENTIFIER_LENGTH + 1)
+            .parse::<Identifier>()
+            .unwrap_err();
+        assert!(
+            matches!(err, TypeParseError::IdentifierMaxLengthExceeded { actual } if actual == MAX_IDENTIFIER_LENGTH + 1),
+            "{err:?}"
+        );
+
+        let err = format!("0x{}::Foo::Bar", "1".repeat(65))
+            .parse::<StructTag>()
+            .unwrap_err();
+        assert!(matches!(err, TypeParseError::Address(_)), "{err:?}");
 
         let err = "0x1::Foo::".parse::<StructTag>().unwrap_err();
         assert!(
