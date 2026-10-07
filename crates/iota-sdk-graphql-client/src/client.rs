@@ -281,7 +281,14 @@ impl GraphQLClient {
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
+    use std::time::Duration;
+
+    use reqwest::header::{HeaderMap, HeaderValue};
     use serde_json::json;
+    use tokio::{
+        io::{AsyncReadExt, AsyncWriteExt},
+        net::TcpListener,
+    };
 
     use super::*;
     use crate::test_utils::test_client;
@@ -353,19 +360,6 @@ mod tests {
             })
             .unwrap();
     }
-}
-
-#[cfg(all(test, not(target_arch = "wasm32")))]
-mod builder_tests {
-    use std::time::Duration;
-
-    use reqwest::header::{HeaderMap, HeaderValue};
-    use tokio::{
-        io::{AsyncReadExt, AsyncWriteExt},
-        net::TcpListener,
-    };
-
-    use super::{GraphQLClient, GraphQLError, USER_AGENT};
 
     async fn bind() -> (TcpListener, String) {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
