@@ -285,9 +285,7 @@ mod keypair {
                 return Err(SignatureError::from_source("empty bytes"));
             }
 
-            let flag = SignatureScheme::from_byte(bytes[0]).map_err(|e| {
-                SignatureError::from_source(format!("invalid signature scheme: {e:?}"))
-            })?;
+            let flag = SignatureScheme::from_byte(bytes[0]).map_err(SignatureError::from_source)?;
             let key_bytes = &bytes[1..];
 
             match flag {
@@ -660,8 +658,7 @@ mod keypair {
         where
             Self: Sized,
         {
-            Self::from_bytes(bytes)
-                .map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
+            Ok(Self::from_bytes(bytes)?)
         }
     }
 }

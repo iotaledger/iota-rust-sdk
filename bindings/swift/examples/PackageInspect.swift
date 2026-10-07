@@ -16,7 +16,7 @@ struct PackageInspectExample {
     let packageId = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d"
 
     let packageAddress = try Address.fromHex(hex: packageId)
-    let client = GraphQlClient.newTestnet()
+    let client = try GraphQlClient.newTestnet()
 
     // Fetch package metadata and version history.
     guard let package = try await client.package(address: packageAddress) else {

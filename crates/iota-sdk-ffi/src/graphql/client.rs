@@ -64,29 +64,29 @@ impl GraphQLClient {
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
     /// {MAINNET_HOST}.
     #[uniffi::constructor]
-    pub fn new_mainnet() -> Self {
-        iota_sdk::graphql_client::GraphQLClient::new_mainnet().into()
+    pub fn new_mainnet() -> Result<Self> {
+        Ok(iota_sdk::graphql_client::GraphQLClient::new_mainnet()?.into())
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
     /// {TESTNET_HOST}.
     #[uniffi::constructor]
-    pub fn new_testnet() -> Self {
-        iota_sdk::graphql_client::GraphQLClient::new_testnet().into()
+    pub fn new_testnet() -> Result<Self> {
+        Ok(iota_sdk::graphql_client::GraphQLClient::new_testnet()?.into())
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
     /// {DEVNET_HOST}.
     #[uniffi::constructor]
-    pub fn new_devnet() -> Self {
-        iota_sdk::graphql_client::GraphQLClient::new_devnet().into()
+    pub fn new_devnet() -> Result<Self> {
+        Ok(iota_sdk::graphql_client::GraphQLClient::new_devnet()?.into())
     }
 
     /// Create a new GraphQL client connected to the `localhost` GraphQL server:
     /// {DEFAULT_LOCAL_HOST}.
     #[uniffi::constructor]
-    pub fn new_localnet() -> Self {
-        iota_sdk::graphql_client::GraphQLClient::new_localnet().into()
+    pub fn new_localnet() -> Result<Self> {
+        Ok(iota_sdk::graphql_client::GraphQLClient::new_localnet()?.into())
     }
 
     /// Lazily fetch the max page size
