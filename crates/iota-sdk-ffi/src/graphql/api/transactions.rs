@@ -72,10 +72,9 @@ impl GraphQLClient {
     ) -> Result<GraphQLSignedTransactionPage> {
         Ok(self
             .client()
-            .transactions(
-                filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .transactions()
+            .filter(filter.as_deref().map(Into::into))
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -94,12 +93,10 @@ impl GraphQLClient {
     ) -> Result<GraphQLSignedTransactionPage> {
         Ok(self
             .client()
-            .address_transactions(
-                **address,
-                relation.map(Into::into),
-                filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .address_transactions(**address)
+            .relation(relation.map(Into::into))
+            .filter(filter.as_deref().map(Into::into))
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -114,10 +111,9 @@ impl GraphQLClient {
     ) -> Result<GraphQLTransactionEffectsPage> {
         Ok(self
             .client()
-            .transactions_effects(
-                filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .transactions_effects()
+            .filter(filter.as_deref().map(Into::into))
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -133,10 +129,9 @@ impl GraphQLClient {
     ) -> Result<GraphQLTransactionDataEffectsPage> {
         Ok(self
             .client()
-            .transactions_data_effects(
-                filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .transactions_data_effects()
+            .filter(filter.as_deref().map(Into::into))
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -158,8 +153,8 @@ impl GraphQLClient {
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
                 &transaction.0,
-                wait_for.map(Into::into),
             )
+            .wait_for(wait_for.map(Into::into))
             .await?
             .into())
     }
@@ -195,7 +190,8 @@ impl GraphQLClient {
     ) -> Result<()> {
         Ok(self
             .client()
-            .wait_for_transaction(**digest, wait_for.into(), timeout)
+            .wait_for_transaction(**digest, wait_for.into())
+            .timeout(timeout)
             .await?)
     }
 }

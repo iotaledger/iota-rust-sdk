@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
     let sender_address = public_key.derive_address();
     println!("Sender address: {sender_address}");
 
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
 
     // Request funds from faucet
     FaucetClient::new_localnet()

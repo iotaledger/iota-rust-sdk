@@ -23,8 +23,33 @@ mod test_utils;
 
 // Re-export types used by query_types module internally
 #[cfg(feature = "move-types")]
-pub use api::move_objects::{MoveObjectFilter, OwnedMoveObject};
-pub use api::network::GetChainIdQuery;
+pub use api::move_objects::{ListMoveObjectsQuery, MoveObjectFilter, OwnedMoveObject};
+pub use api::{
+    balance::GetBalanceQuery,
+    checkpoints::{GetCheckpointQuery, ListCheckpointsQuery},
+    coins::{ListCoinsQuery, ListGasCoinsQuery},
+    dry_run::{DryRunTransactionKindQuery, DryRunTransactionQuery},
+    dynamic_fields::ListDynamicFieldsQuery,
+    epochs::{GetEpochQuery, GetEpochTotalCheckpointsQuery, GetEpochTotalTransactionBlocksQuery},
+    events::ListEventsQuery,
+    iota_names::{GetIotaNamesDefaultNameQuery, ListIotaNamesRegistrationsQuery},
+    move_view_call::{MoveViewCallJsonQuery, MoveViewCallQuery},
+    network::{
+        GetChainIdQuery, GetProtocolConfigQuery, GetReferenceGasPriceQuery,
+        ListActiveValidatorsQuery,
+    },
+    objects::{
+        GetMoveObjectContentsBcsQuery, GetMoveObjectContentsQuery, GetObjectQuery, ListObjectsQuery,
+    },
+    package::{
+        GetNormalizedMoveFunctionQuery, GetNormalizedMoveModuleQuery, GetPackageQuery,
+        ListPackageVersionsQuery, ListPackagesQuery,
+    },
+    transactions::{
+        ExecuteTransactionQuery, ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
+        ListTransactionsEffectsQuery, ListTransactionsQuery, WaitForTransactionQuery,
+    },
+};
 pub use client::{GraphQLClient, USER_AGENT};
 pub use cynic;
 pub use error::{GraphQLError, GraphQLResult};
