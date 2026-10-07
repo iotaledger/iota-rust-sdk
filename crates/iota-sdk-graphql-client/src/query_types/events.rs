@@ -15,7 +15,7 @@ use crate::query_types::{
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "EventsQueryArgs")]
-pub struct EventsQueryFragment {
+pub(crate) struct EventsQueryFragment {
     #[arguments(after: $after, before: $before, filter: $filter, first: $first, last: $last)]
     pub events: EventConnection,
 }
@@ -25,7 +25,7 @@ pub struct EventsQueryFragment {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct EventsQueryArgs<'a> {
+pub(crate) struct EventsQueryArgs<'a> {
     pub filter: Option<EventFilter>,
     pub after: Option<&'a str>,
     pub before: Option<&'a str>,
@@ -39,7 +39,7 @@ pub struct EventsQueryArgs<'a> {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "EventConnection")]
-pub struct EventConnection {
+pub(crate) struct EventConnection {
     pub page_info: PageInfo,
     pub nodes: Vec<Event>,
 }

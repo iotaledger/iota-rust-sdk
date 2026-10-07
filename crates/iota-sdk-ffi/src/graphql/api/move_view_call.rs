@@ -43,7 +43,9 @@ impl GraphQLClient {
     ) -> Result<GraphQLMoveViewResult> {
         Ok(self
             .client()
-            .move_view_call_json(function_name, type_arguments, arguments)
+            .move_view_call_json(function_name)
+            .type_arguments(type_arguments)
+            .arguments(arguments)
             .await?
             .into())
     }

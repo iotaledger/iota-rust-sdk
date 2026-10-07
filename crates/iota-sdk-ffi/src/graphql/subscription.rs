@@ -5,9 +5,7 @@
 //!
 //! The Rust API exposes these as a `Stream`, which has no uniffi equivalent, so
 //! each subscription is a handle object that is pulled one item at a time with
-//! `next`. The handle owns a clone of the client, so later calls to
-//! [`GraphQLClient::set_rpc_server`] do not affect a subscription already
-//! opened.
+//! `next`.
 
 use std::sync::Arc;
 
