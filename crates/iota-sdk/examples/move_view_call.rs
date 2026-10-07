@@ -93,18 +93,22 @@ async fn main() -> GraphQLResult<()> {
     }
 
     // ===========================================================================
-    // Example 5: Using the MoveViewCallBuilder to assemble the call
+    // Example 5: Using move_view_call() with arguments appended one at a time
     // ===========================================================================
-    println!("\n=== Example 5: MoveViewCallBuilder ===\n");
+    println!("\n=== Example 5: move_view_call() with arguments appended one at a time ===\n");
 
-    match client
-        .move_view_call_builder(ObjectId::from_str(PACKAGE)?, "shop", "sale_at")
-        .arguments((ObjectId::from_str(SHOP)?, 1u64))
-        .execute()
-        .await
-    {
-        Ok(results) => println!("Builder Results: {results:?}"),
-        Err(error) => println!("Builder Error: {error}"),
+    let result = client
+        .move_view_call(format!("{PACKAGE}::shop::sale_at"))
+        .argument(ObjectId::from_str(SHOP)?)
+        .argument(1u64)
+        .await?;
+
+    if let Some(error) = result.error {
+        println!("Appended Arguments Error: {error}");
+    } else if let Some(results) = result.results {
+        println!("Appended Arguments Results: {results:?}");
+    } else {
+        println!("No appended arguments results");
     }
 
     Ok(())

@@ -9,7 +9,6 @@ mod api;
 mod client;
 pub mod error;
 pub mod faucet;
-mod move_view_call_client;
 pub mod output_types;
 pub mod pagination;
 pub mod query_types;
@@ -34,7 +33,7 @@ pub use api::{
     epochs::{GetEpochQuery, GetEpochTotalCheckpointsQuery, GetEpochTotalTransactionBlocksQuery},
     events::ListEventsQuery,
     iota_names::{GetIotaNamesDefaultNameQuery, ListIotaNamesRegistrationsQuery},
-    move_view_call::{MoveViewCallJsonQuery, MoveViewCallQuery},
+    move_view_call::{MoveViewArg, MoveViewArgList, MoveViewCallJsonQuery, MoveViewCallQuery},
     network::{
         GetChainIdQuery, GetProtocolConfigQuery, GetReferenceGasPriceQuery,
         ListActiveValidatorsQuery,
@@ -54,7 +53,7 @@ pub use api::{
 pub use client::{GraphQLClient, GraphQLClientBuilder, USER_AGENT};
 pub use cynic;
 pub use error::{GraphQLError, GraphQLResult};
-pub use iota_transaction_builder::{MoveViewArg, MoveViewArgList, WaitForTransaction};
+pub use iota_transaction_builder::WaitForTransaction;
 pub use iota_types;
 pub(crate) use iota_types::Address;
 pub use output_types::*;

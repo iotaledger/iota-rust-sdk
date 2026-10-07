@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use cynic::QueryBuilder;
-use iota_transaction_builder::types::MoveViewArgList;
-use iota_types::TypeTag;
+use iota_transaction_builder::types::MoveTypes;
+use iota_types::{Address, ObjectId, ObjectReference, TypeTag};
 
 use crate::{
     GraphQLClient,
@@ -14,7 +14,8 @@ use crate::{
 
 define_query! {
     /// Query for [`GraphQLClient::move_view_call_json`]. Await it to send the
-    /// request.
+    /// request, or clone it first to send the same call again.
+    #[derive(Clone)]
     pub struct MoveViewCallJsonQuery {
         client: GraphQLClient,
         function_name: String,
@@ -51,7 +52,8 @@ impl MoveViewCallJsonQuery {
 
 define_query! {
     /// Query for [`GraphQLClient::move_view_call`]. Await it to send the
-    /// request.
+    /// request, or clone it first to send the same call again.
+    #[derive(Clone)]
     pub struct MoveViewCallQuery {
         client: GraphQLClient,
         function_name: String,
@@ -68,10 +70,29 @@ impl MoveViewCallQuery {
         self
     }
 
-    /// Set the typed arguments passed into the Move function. A single
-    /// argument is wrapped in a list or tuple.
+    /// Set the type arguments of the Move function from Rust types, e.g.
+    /// `generics::<(u64, String)>()`.
+    pub fn generics<G: MoveTypes>(mut self) -> Self {
+        self.type_arguments = Some(G::type_tags());
+        self
+    }
+
+    /// Set the typed arguments passed into the Move function, replacing the
+    /// ones set so far. A single argument is wrapped in a list or tuple.
     pub fn arguments(mut self, arguments: impl MoveViewArgList) -> Self {
         self.arguments = Some(arguments.to_json_vec());
+        self
+    }
+
+    /// Append a single typed argument passed into the Move function.
+    ///
+    /// A collection is appended as one argument, i.e. a Move vector; use
+    /// [`arguments`](Self::arguments) to pass a collection as the whole
+    /// argument list.
+    pub fn argument(mut self, argument: impl MoveViewArg) -> Self {
+        self.arguments
+            .get_or_insert_default()
+            .push(argument.to_json());
         self
     }
 
@@ -127,9 +148,6 @@ impl GraphQLClient {
     /// and any arguments. The function's result values are provided and
     /// decoded using the appropriate Move type, then formatted in JSON.
     ///
-    /// See [`MoveViewCallBuilder`](iota_transaction_builder::MoveViewCallBuilder)
-    /// for a call that is assembled argument by argument.
-    ///
     /// The use of this interface does not require signature checks (even for
     /// functions that take Owned Objects as input) or gas coins, as it does
     /// not alter ledger state. Spam attacks are dealt with at the RPC level
@@ -168,6 +186,223 @@ impl GraphQLClient {
             arguments: None,
         }
     }
+}
+
+/// A trait which defines a single argument for a Move View Function call.
+#[diagnostic::on_unimplemented(message = "Provided value is not a valid Move view argument.")]
+pub trait MoveViewArg {
+    /// Convert this argument to a JSON value for the GraphQL API.
+    fn to_json(self) -> serde_json::Value;
+}
+
+// Macro for types that convert to JSON Number
+macro_rules! impl_move_view_arg_number {
+    ($($ty:ty),* $(,)?) => {
+        $(
+            impl MoveViewArg for $ty {
+                fn to_json(self) -> serde_json::Value {
+                    serde_json::Value::Number(self.into())
+                }
+            }
+
+            impl MoveViewArg for &$ty {
+                fn to_json(self) -> serde_json::Value {
+                    (*self).to_json()
+                }
+            }
+        )*
+    };
+}
+
+// Macro for types that convert to JSON String via to_string()
+macro_rules! impl_move_view_arg_string {
+    ($($ty:ty),* $(,)?) => {
+        $(
+            impl MoveViewArg for $ty {
+                fn to_json(self) -> serde_json::Value {
+                    serde_json::Value::String(self.to_string())
+                }
+            }
+
+            impl MoveViewArg for &$ty {
+                fn to_json(self) -> serde_json::Value {
+                    (*self).to_json()
+                }
+            }
+        )*
+    };
+}
+
+impl MoveViewArg for bool {
+    fn to_json(self) -> serde_json::Value {
+        serde_json::Value::Bool(self)
+    }
+}
+
+impl MoveViewArg for &bool {
+    fn to_json(self) -> serde_json::Value {
+        (*self).to_json()
+    }
+}
+
+impl_move_view_arg_number!(u8, u16, u32);
+
+// u64 and u128 must be represented as strings in JSON to avoid precision loss
+impl_move_view_arg_string!(u64, u128, ObjectId, Address);
+
+impl MoveViewArg for &str {
+    fn to_json(self) -> serde_json::Value {
+        serde_json::Value::String((*self).to_owned())
+    }
+}
+
+impl MoveViewArg for String {
+    fn to_json(self) -> serde_json::Value {
+        serde_json::Value::String(self)
+    }
+}
+
+impl MoveViewArg for &String {
+    fn to_json(self) -> serde_json::Value {
+        self.as_str().to_json()
+    }
+}
+
+impl MoveViewArg for ObjectReference {
+    fn to_json(self) -> serde_json::Value {
+        serde_json::Value::String(self.object_id.to_string())
+    }
+}
+
+impl MoveViewArg for &ObjectReference {
+    fn to_json(self) -> serde_json::Value {
+        serde_json::Value::String(self.object_id.to_string())
+    }
+}
+
+// Collection implementations
+impl<T: MoveViewArg> MoveViewArg for Vec<T> {
+    fn to_json(self) -> serde_json::Value {
+        serde_json::Value::Array(self.into_iter().map(|v| v.to_json()).collect())
+    }
+}
+
+impl<T> MoveViewArg for &[T]
+where
+    for<'a> &'a T: MoveViewArg,
+{
+    fn to_json(self) -> serde_json::Value {
+        serde_json::Value::Array(self.iter().map(|v| v.to_json()).collect())
+    }
+}
+
+impl<const N: usize, T: MoveViewArg> MoveViewArg for [T; N] {
+    fn to_json(self) -> serde_json::Value {
+        serde_json::Value::Array(self.into_iter().map(|v| v.to_json()).collect())
+    }
+}
+
+impl<T: MoveViewArg> MoveViewArg for Option<T> {
+    fn to_json(self) -> serde_json::Value {
+        match self {
+            Some(v) => v.to_json(),
+            None => serde_json::Value::Null,
+        }
+    }
+}
+
+// Smart pointer implementations
+impl<T> MoveViewArg for std::sync::Arc<T>
+where
+    for<'a> &'a T: MoveViewArg,
+{
+    fn to_json(self) -> serde_json::Value {
+        self.as_ref().to_json()
+    }
+}
+
+impl<T> MoveViewArg for Box<T>
+where
+    for<'a> &'a T: MoveViewArg,
+{
+    fn to_json(self) -> serde_json::Value {
+        self.as_ref().to_json()
+    }
+}
+
+// Allow passing raw JSON values
+impl MoveViewArg for serde_json::Value {
+    fn to_json(self) -> serde_json::Value {
+        self
+    }
+}
+
+/// A trait which defines a list of arguments for a Move View Function call.
+#[diagnostic::on_unimplemented(
+    message = "Provided value is not a valid list of Move view arguments.",
+    note = "Expected a tuple, vector, array, or slice of types that implement `MoveViewArg`."
+)]
+pub trait MoveViewArgList: sealed::Sealed {
+    /// Convert the arguments to a vector of JSON values.
+    fn to_json_vec(self) -> Vec<serde_json::Value>;
+}
+
+// Single element tuple implementation
+impl<T: MoveViewArg> MoveViewArgList for (T,) {
+    fn to_json_vec(self) -> Vec<serde_json::Value> {
+        vec![self.0.to_json()]
+    }
+}
+
+impl<T: MoveViewArg> MoveViewArgList for Vec<T> {
+    fn to_json_vec(self) -> Vec<serde_json::Value> {
+        self.into_iter().map(|v| v.to_json()).collect()
+    }
+}
+
+impl<const N: usize, T: MoveViewArg> MoveViewArgList for [T; N] {
+    fn to_json_vec(self) -> Vec<serde_json::Value> {
+        self.into_iter().map(|v| v.to_json()).collect()
+    }
+}
+
+impl<T> MoveViewArgList for &[T]
+where
+    for<'a> &'a T: MoveViewArg,
+{
+    fn to_json_vec(self) -> Vec<serde_json::Value> {
+        self.iter().map(|v| v.to_json()).collect()
+    }
+}
+
+// Tuple implementations using a macro
+macro_rules! impl_move_view_args_tuple {
+    ($(($n:tt, $T:ident)),*) => {
+        impl<$($T),+> sealed::Sealed for ($($T),+) {}
+
+        impl<$($T),+> MoveViewArgList for ($($T),+)
+        where $($T: MoveViewArg),+
+        {
+            fn to_json_vec(self) -> Vec<serde_json::Value> {
+                vec![
+                    $(
+                        self.$n.to_json()
+                    ),+
+                ]
+            }
+        }
+    };
+}
+
+variadics_please::all_tuples_enumerated!(impl_move_view_args_tuple, 2, 15, T);
+
+mod sealed {
+    pub trait Sealed {}
+
+    impl<T> Sealed for (T,) {}
+    impl<T> Sealed for Vec<T> {}
+    impl<const N: usize, T> Sealed for [T; N] {}
+    impl<T> Sealed for &[T] {}
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
@@ -215,5 +450,36 @@ mod tests {
         .await;
         assert!(vars["typeArguments"].is_null());
         assert!(vars["arguments"].is_null());
+    }
+
+    #[tokio::test]
+    async fn move_view_calls_append_arguments_and_take_type_arguments_from_generics() {
+        let vars = sent_variables("MoveViewCallQueryFragment", |client| async move {
+            let _ = client
+                .move_view_call("0x2::coin::value")
+                .arguments((1u8, "a"))
+                .argument(u64::MAX)
+                .argument(vec![2u8, 3])
+                .generics::<(u64, String)>()
+                .await;
+        })
+        .await;
+        assert_eq!(
+            vars["arguments"],
+            serde_json::json!([1, "a", u64::MAX.to_string(), [2, 3]])
+        );
+        assert_eq!(
+            vars["typeArguments"],
+            serde_json::json!(["u64", "vector<u8>"])
+        );
+
+        let vars = sent_variables("MoveViewCallQueryFragment", |client| async move {
+            let _ = client
+                .move_view_call("0x2::coin::value")
+                .argument(21u64)
+                .await;
+        })
+        .await;
+        assert_eq!(vars["arguments"], serde_json::json!(["21"]));
     }
 }
