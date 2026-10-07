@@ -7,12 +7,16 @@ include!("../../../generated/iota.grpc.v1.bcs.field_info.rs");
 include!("../../../generated/iota.grpc.v1.bcs.accessors.rs");
 
 impl BcsData {
-    pub fn serialize<T: serde::Serialize>(value: &T) -> Result<Self, bcs::Error> {
-        bcs::to_bytes(value).map(|bcs| Self { data: bcs.into() })
+    pub fn serialize<T: serde::Serialize>(value: &T) -> Result<Self, iota_types::BcsError> {
+        bcs::to_bytes(value)
+            .map(|bcs| Self { data: bcs.into() })
+            .map_err(iota_types::BcsError::new)
     }
 
-    pub fn deserialize<'de, T: serde::Deserialize<'de>>(&'de self) -> Result<T, bcs::Error> {
-        bcs::from_bytes(self.data.as_ref())
+    pub fn deserialize<'de, T: serde::Deserialize<'de>>(
+        &'de self,
+    ) -> Result<T, iota_types::BcsError> {
+        bcs::from_bytes(self.data.as_ref()).map_err(iota_types::BcsError::new)
     }
 
     /// Get the raw BCS bytes as a slice.

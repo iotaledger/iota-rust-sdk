@@ -8,9 +8,9 @@
 use eyre::{OptionExt, Result};
 use iota_sdk::{
     graphql_client::{
-        GraphQLClient,
+        GraphQLClient, MoveAbility,
         pagination::{Direction, PaginationFilter},
-        query_types::{MoveAbility, ObjectFilter, TransactionsFilter},
+        query_types::{ObjectFilter, TransactionsFilter},
     },
     types::{Address, Input, MoveCall, MovePackage, ObjectId, Transaction, UpgradePolicy},
 };
@@ -110,11 +110,11 @@ async fn main() -> Result<()> {
         };
 
         if let Some(functions) = &module.functions {
-            if functions.nodes.is_empty() {
+            if functions.data.is_empty() {
                 println!("  functions: none");
             } else {
                 println!("  functions:");
-                for function in &functions.nodes {
+                for function in &functions.data {
                     println!(
                         "    - {}",
                         format_function_signature(&function.to_string(), &package_type_prefix)
@@ -129,11 +129,11 @@ async fn main() -> Result<()> {
         }
 
         if let Some(structs) = &module.structs {
-            if structs.nodes.is_empty() {
+            if structs.data.is_empty() {
                 println!("  types: none");
             } else {
                 println!("  types:");
-                for struct_ in &structs.nodes {
+                for struct_ in &structs.data {
                     let type_tag =
                         format!("{package_type_prefix}::{module_name}::{}", struct_.name);
                     println!("    - {type_tag}");
