@@ -33,37 +33,8 @@ pub struct DryRunResult {
     pub effects: Option<TransactionEffects>,
     /// The gas price to use. This is the reference gas price, or a higher
     /// price if an input object is congested.
-    #[serde(default, with = "option_u64_string")]
+    #[serde(default, with = "iota_types::OptionReadableDisplay")]
     pub suggested_gas_price: Option<u64>,
-}
-
-/// Serializes an `Option<u64>` as a string in human-readable formats, so the
-/// value stays exact in JavaScript.
-mod option_u64_string {
-    use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error};
-
-    pub(super) fn serialize<S: Serializer>(
-        value: &Option<u64>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error> {
-        if serializer.is_human_readable() {
-            value.map(|v| v.to_string()).serialize(serializer)
-        } else {
-            value.serialize(serializer)
-        }
-    }
-
-    pub(super) fn deserialize<'de, D: Deserializer<'de>>(
-        deserializer: D,
-    ) -> Result<Option<u64>, D::Error> {
-        if deserializer.is_human_readable() {
-            Option::<String>::deserialize(deserializer)?
-                .map(|v| v.parse().map_err(D::Error::custom))
-                .transpose()
-        } else {
-            Option::<u64>::deserialize(deserializer)
-        }
-    }
 }
 
 /// Effects of a single command in the dry run, including mutated references
