@@ -345,6 +345,31 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_errors() {
+        let err = "u64 extra".parse::<TypeTag>().unwrap_err();
+        assert!(
+            matches!(&err, TypeParseError::Parse { input, source: None } if input == " extra"),
+            "{err:?}"
+        );
+
+        let err = "0x1::Foo::".parse::<StructTag>().unwrap_err();
+        assert!(
+            matches!(&err, TypeParseError::Parse { source: None, .. }),
+            "{err:?}"
+        );
+
+        let mut nested = "u8".to_string();
+        for _ in 0..=MAX_TYPE_TAG_NESTING {
+            nested = format!("vector<{nested}>");
+        }
+        let err = nested.parse::<TypeTag>().unwrap_err();
+        assert!(
+            matches!(err, TypeParseError::NestingLimitExceeded),
+            "{err:?}"
+        );
+    }
+
+    #[test]
     fn test_type_tag_max_nesting_depth() {
         // Generate a type tag with exactly MAX_TYPE_TAG_NESTING levels (should succeed)
         let mut valid_nested = "u8".to_string();
