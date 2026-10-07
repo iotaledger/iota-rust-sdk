@@ -225,7 +225,9 @@ impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
             .bcs
             .map(|tx| base64ct::Base64::decode_vec(tx.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<SenderSignedTransaction>(&bcs))
+            .map(|bcs| {
+                bcs::from_bytes::<SenderSignedTransaction>(&bcs).map_err(iota_types::BcsError::new)
+            })
             .transpose()?;
 
         if let Some(transaction) = transaction {

@@ -12,6 +12,8 @@ pub(crate) use tree_display::{TreeDisplay, TreeWriter, impl_tree_display};
 pub mod hash;
 
 mod address;
+#[cfg(feature = "serde")]
+mod bcs_error;
 mod checkpoint;
 pub mod crypto;
 mod digest;
@@ -30,6 +32,8 @@ mod validator;
 pub mod version;
 
 pub use address::{Address, AddressParseError};
+#[cfg(feature = "serde")]
+pub use bcs_error::BcsError;
 pub use checkpoint::{
     CheckpointCommitment, CheckpointContents, CheckpointContentsV1, CheckpointData,
     CheckpointSequenceNumber, CheckpointSummary, CheckpointTimestamp, CheckpointTransaction,
@@ -141,8 +145,8 @@ mod bcs_base64 {
                     }
 
                     #[doc = "Deserialize a `" $type "` from BCS bytes."]
-                    pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-                        bcs::from_bytes::<Self>(bytes)
+                    pub fn from_bcs(bytes: &[u8]) -> Result<Self, crate::BcsError> {
+                        bcs::from_bytes::<Self>(bytes).map_err(crate::BcsError::new)
                     }
 
                     #[doc = "Deserialize a `" $type "` from a base64-encoded string of its BCS bytes."]

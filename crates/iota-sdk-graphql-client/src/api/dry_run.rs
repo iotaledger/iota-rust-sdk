@@ -108,7 +108,9 @@ impl DryRunTransactionKindQuery {
     }
 
     async fn send(self) -> GraphQLResult<DryRunResult> {
-        let tx_bytes = base64ct::Base64::encode_string(&bcs::to_bytes(&self.transaction_kind)?);
+        let tx_bytes = base64ct::Base64::encode_string(
+            &bcs::to_bytes(&self.transaction_kind).map_err(iota_types::BcsError::new)?,
+        );
         self.client
             .dry_run(tx_bytes, self.skip_checks, self.transaction_metadata)
             .await
@@ -171,7 +173,9 @@ impl GraphQLClient {
             .and_then(|tx| tx.bcs.as_ref())
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
+            .map(|bcs| {
+                bcs::from_bytes::<TransactionEffects>(&bcs).map_err(iota_types::BcsError::new)
+            })
             .transpose()?;
 
         // Extract transaction
@@ -180,7 +184,7 @@ impl GraphQLClient {
             .and_then(|tx| tx.bcs_unsigned.as_ref())
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Transaction>(&bcs))
+            .map(|bcs| bcs::from_bytes::<Transaction>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?;
 
         let suggested_gas_price = response

@@ -255,7 +255,9 @@ impl DynamicFieldOutput {
         }
 
         let bcs = &self.name.bcs;
-        bcs::from_bytes::<T>(bcs).map_err(Into::into)
+        bcs::from_bytes::<T>(bcs)
+            .map_err(iota_types::BcsError::new)
+            .map_err(Into::into)
     }
 
     /// Deserialize the value of the dynamic field into the specified type.
@@ -273,6 +275,8 @@ impl DynamicFieldOutput {
             });
         }
 
-        bcs::from_bytes::<T>(&dfv.bcs).map_err(Into::into)
+        bcs::from_bytes::<T>(&dfv.bcs)
+            .map_err(iota_types::BcsError::new)
+            .map_err(Into::into)
     }
 }
