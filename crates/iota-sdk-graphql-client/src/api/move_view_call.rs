@@ -320,7 +320,7 @@ impl MoveViewArg for serde_json::Value {
     message = "Provided value is not a valid list of Move view arguments.",
     note = "Expected a tuple, vector, array, or slice of types that implement `MoveViewArg`."
 )]
-pub trait MoveViewArgList {
+pub trait MoveViewArgList: sealed::Sealed {
     /// Convert the arguments to a vector of JSON values.
     fn to_json_vec(self) -> Vec<serde_json::Value>;
 }
@@ -356,6 +356,8 @@ where
 // Tuple implementations using a macro
 macro_rules! impl_move_view_args_tuple {
     ($(($n:tt, $T:ident)),*) => {
+        impl<$($T),+> sealed::Sealed for ($($T),+) {}
+
         impl<$($T),+> MoveViewArgList for ($($T),+)
         where $($T: MoveViewArg),+
         {
@@ -371,6 +373,15 @@ macro_rules! impl_move_view_args_tuple {
 }
 
 variadics_please::all_tuples_enumerated!(impl_move_view_args_tuple, 2, 15, T);
+
+mod sealed {
+    pub trait Sealed {}
+
+    impl<T> Sealed for (T,) {}
+    impl<T> Sealed for Vec<T> {}
+    impl<const N: usize, T> Sealed for [T; N] {}
+    impl<T> Sealed for &[T] {}
+}
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {

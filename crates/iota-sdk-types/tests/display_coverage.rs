@@ -19,6 +19,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::Argument>();
     assert_display::<iota_sdk_types::BalanceChange>();
     assert_display::<iota_sdk_types::Base64ParseError>();
+    assert_display::<iota_sdk_types::BcsError>();
     assert_display::<iota_sdk_types::Bls12381PublicKey>();
     assert_display::<iota_sdk_types::Bls12381Signature>();
     assert_display::<iota_sdk_types::CanceledTransaction>();

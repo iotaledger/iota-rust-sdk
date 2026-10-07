@@ -8,16 +8,16 @@ use cynic::QueryBuilder;
 use iota_types::{Address, MovePackage, Object, Version};
 
 use crate::{
-    GraphQLClient, Page,
+    GraphQLClient, MoveFunction, MoveModule, Page,
     api::define_query,
     error::GraphQLResult,
     pagination::{PaginationFilter, PaginationFilterResponse},
     query_types::{
-        LatestPackageQueryFragment, MoveFunction, MoveModule, MovePackageVersionFilter,
-        NormalizedMoveFunctionQueryArgs, NormalizedMoveFunctionQueryFragment,
-        NormalizedMoveModuleQueryArgs, NormalizedMoveModuleQueryFragment, PackageArgs,
-        PackageCheckpointFilter, PackageQueryFragment, PackageVersionsArgs,
-        PackageVersionsQueryFragment, PackagesQueryArgs, PackagesQueryFragment,
+        LatestPackageQueryFragment, MovePackageVersionFilter, NormalizedMoveFunctionQueryArgs,
+        NormalizedMoveFunctionQueryFragment, NormalizedMoveModuleQueryArgs,
+        NormalizedMoveModuleQueryFragment, PackageArgs, PackageCheckpointFilter,
+        PackageQueryFragment, PackageVersionsArgs, PackageVersionsQueryFragment, PackagesQueryArgs,
+        PackagesQueryFragment,
     },
 };
 
@@ -103,8 +103,13 @@ impl ListPackageVersionsQuery {
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
-            .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
+            .map(|b| {
+                Ok(bcs::from_bytes::<Object>(b)
+                    .map_err(iota_types::BcsError::new)?
+                    .data
+                    .into_package())
+            })
+            .collect::<Result<Vec<_>, iota_types::BcsError>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -186,8 +191,13 @@ impl ListPackagesQuery {
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
-            .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
+            .map(|b| {
+                Ok(bcs::from_bytes::<Object>(b)
+                    .map_err(iota_types::BcsError::new)?
+                    .data
+                    .into_package())
+            })
+            .collect::<Result<Vec<_>, iota_types::BcsError>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -304,7 +314,7 @@ impl GetNormalizedMoveModuleQuery {
             .run_query(&Self::operation(package, &module, version, &pagination))
             .await?;
 
-        Ok(response.package.and_then(|p| p.module))
+        Ok(response.package.and_then(|p| p.module).map(Into::into))
     }
 }
 
@@ -339,7 +349,7 @@ impl GetPackageQuery {
             .and_then(|x| x.bcs)
             .map(|bcs| crate::error::decode_base64(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?
             .map(|obj| obj.data.into_package()))
     }
@@ -379,7 +389,8 @@ impl GetNormalizedMoveFunctionQuery {
         Ok(response
             .package
             .and_then(|p| p.module)
-            .and_then(|m| m.function))
+            .and_then(|m| m.function)
+            .map(Into::into))
     }
 }
 
@@ -433,7 +444,7 @@ impl GraphQLClient {
             .and_then(|x| x.bcs)
             .map(|bcs| crate::error::decode_base64(&bcs.0))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?
             .map(|obj| obj.data.into_package()))
     }
