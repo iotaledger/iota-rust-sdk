@@ -296,3 +296,44 @@ where
         }
     })
 }
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use cynic::{GraphQlError as CynicError, GraphQlErrorPathSegment, GraphQlResponse};
+
+    use super::*;
+
+    #[test]
+    fn errors_surface_as_query_errors_without_a_code() {
+        let response = GraphQlResponse {
+            data: None::<()>,
+            errors: Some(vec![CynicError::new(
+                "boom".to_owned(),
+                None,
+                Some(vec![GraphQlErrorPathSegment::Field("events".to_owned())]),
+                Some(Default::default()),
+            )]),
+        };
+
+        let GraphQLError::Query(errors) = subscription_response_to_err(response).unwrap_err()
+        else {
+            panic!("expected GraphQLError::Query");
+        };
+        assert_eq!(errors.len(), 1);
+        assert_eq!(errors[0].message, "boom");
+        assert_eq!(
+            errors[0].path,
+            Some(vec![GraphQlErrorPathSegment::Field("events".to_owned())])
+        );
+        assert_eq!(errors[0].extensions, None);
+    }
+
+    #[test]
+    fn data_without_errors_is_returned() {
+        let response = GraphQlResponse {
+            data: Some(1),
+            errors: None,
+        };
+        assert_eq!(subscription_response_to_err(response).unwrap(), 1);
+    }
+}
