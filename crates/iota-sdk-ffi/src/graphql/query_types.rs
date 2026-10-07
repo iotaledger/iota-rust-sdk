@@ -536,9 +536,9 @@ pub struct GraphQLEvent {
     pub data: String,
     /// Representation of a Move value in JSON
     pub json: String,
-    /// Digest of the transaction that emitted this event, which can be passed
-    /// as `start_after` to resume an events subscription after it.
-    #[uniffi(default = None)]
+    /// Digest of the transaction that emitted this event. Once all of that
+    /// transaction's events have been processed, it can be passed as
+    /// `start_after` to resume an events subscription after it.
     pub transaction_digest: Option<Arc<TransactionDigest>>,
 }
 

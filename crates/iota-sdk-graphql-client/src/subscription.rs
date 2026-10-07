@@ -6,11 +6,12 @@
 //!
 //! Unlike the paginated `events` / `transactions` page methods, these stream
 //! data as it arrives. The stream transparently reconnects on disconnect,
-//! resuming from the last item it delivered via the subscription's
-//! `startAfter` cursor, and ends on any error other than a transport failure
-//! ([`GraphQLError::Subscription`]) or [`GraphQLError::Lagged`]. In the
-//! browser, a rejected WebSocket handshake is indistinguishable from a dropped
-//! connection, so it is retried as a transport failure.
+//! resuming via the subscription's `startAfter` cursor after the last
+//! transaction it fully delivered, and ends on any error other than a
+//! transport failure ([`GraphQLError::Subscription`]) or
+//! [`GraphQLError::Lagged`]. In the browser, a rejected WebSocket handshake is
+//! indistinguishable from a dropped connection, so it is retried as a transport
+//! failure.
 
 use std::{future::Future, time::Duration};
 
@@ -57,9 +58,14 @@ impl GraphQLClient {
     ///
     /// The stream yields events as they arrive and reconnects automatically on
     /// disconnect. `start_after` optionally resumes the stream from the
-    /// transaction immediately following the given transaction digest, such as
-    /// [`Event::transaction_digest`] of the last event processed;
-    /// thereafter the stream tracks its own resume point.
+    /// transaction immediately following the given transaction digest, which
+    /// should be the [`Event::transaction_digest`] of the last transaction
+    /// whose events were all processed — events of the transaction itself are
+    /// not emitted again. Thereafter the stream tracks its own resume point.
+    ///
+    /// A transaction counts as fully received only once an event from the next
+    /// transaction arrives, so after a reconnect the events of the transaction
+    /// that was being received when the connection dropped are yielded again.
     ///
     /// Transport failures and [`GraphQLError::Lagged`] are yielded and the
     /// stream continues; any other error is yielded and ends the stream.
@@ -178,17 +184,19 @@ impl GraphQLClient {
     /// upgrading the scheme (`http` → `ws`, `https` → `wss`).
     fn ws_url(&self) -> GraphQLResult<Url> {
         let mut url = self.rpc.clone();
-        match url.scheme() {
-            "https" => url.set_scheme("wss"),
-            "http" => url.set_scheme("ws"),
-            "ws" | "wss" => Ok(()),
+        let scheme = match url.scheme() {
+            "https" => "wss",
+            "http" => "ws",
+            "ws" => "ws",
+            "wss" => "wss",
             other => {
                 return Err(GraphQLError::UnsupportedSubscriptionScheme(
                     other.to_owned(),
                 ));
             }
-        }
-        .map_err(|_| GraphQLError::subscription("failed to derive the WebSocket URL"))?;
+        };
+        url.set_scheme(scheme)
+            .map_err(|_| GraphQLError::UnsupportedSubscriptionScheme(url.scheme().to_owned()))?;
         url.set_path("/subscriptions");
         Ok(url)
     }
@@ -241,6 +249,9 @@ fn handshake_error(error: tokio_tungstenite::tungstenite::Error) -> GraphQLError
 
     let permanent = match &error {
         Error::Url(_) | Error::HttpFormat(_) | Error::Tls(_) => true,
+        // A failed TLS handshake, e.g. a `wss` URL for a server that only
+        // speaks plain HTTP, or an invalid certificate.
+        Error::Io(io) => io.kind() == std::io::ErrorKind::InvalidData,
         Error::Http(response) => {
             let status = response.status();
             status.is_client_error()
@@ -365,7 +376,7 @@ mod tests {
     }
 
     #[test]
-    fn handshake_error_rejects_client_errors_only() {
+    fn handshake_error_rejects_permanent_failures_only() {
         use tokio_tungstenite::tungstenite::{Error, http::Response};
 
         let upgrade_response = |status: u16| {
@@ -388,6 +399,10 @@ mod tests {
                 GraphQLError::Subscription(_)
             ));
         }
+        assert!(matches!(
+            handshake_error(Error::Io(std::io::ErrorKind::InvalidData.into())),
+            GraphQLError::SubscriptionRejected(_)
+        ));
         assert!(matches!(
             handshake_error(Error::Io(std::io::ErrorKind::ConnectionRefused.into())),
             GraphQLError::Subscription(_)

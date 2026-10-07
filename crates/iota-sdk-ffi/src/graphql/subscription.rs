@@ -146,9 +146,13 @@ macro_rules! define_subscription {
             /// `start_after`, to resume.
             pub async fn next(&self) -> Result<Option<$update>> {
                 match self.0.next().await {
-                    Some(Ok(item)) => Ok(Some($update::$variant {
-                        $field: ($convert)(item)?,
-                    })),
+                    Some(Ok(item)) => match ($convert)(item) {
+                        Ok($field) => Ok(Some($update::$variant { $field })),
+                        Err(error) => {
+                            self.0.cancel();
+                            Err(error)
+                        }
+                    },
                     Some(Err(error)) if is_recoverable(&error) => Ok(Some($update::Interrupted {
                         message: error.to_string(),
                     })),
@@ -254,9 +258,16 @@ impl GraphQLClient {
     /// Subscribe to a live stream of events matching the (optional) filter.
     ///
     /// `start_after` optionally resumes from the transaction immediately
-    /// following the given transaction digest, such as the `transaction_digest`
-    /// of the last event processed; thereafter the subscription tracks its own
-    /// resume point across reconnects.
+    /// following the given transaction digest, which should be the
+    /// `transaction_digest` of the last transaction whose events were all
+    /// processed — events of the transaction itself are not emitted again.
+    /// Thereafter the subscription tracks its own resume point across
+    /// reconnects.
+    ///
+    /// A transaction counts as fully received only once an event from the next
+    /// transaction arrives, so after a reconnect the events of the transaction
+    /// that was being received when the connection dropped are delivered
+    /// again.
     ///
     /// Note: subscriptions are served over a WebSocket, which the node has to
     /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`

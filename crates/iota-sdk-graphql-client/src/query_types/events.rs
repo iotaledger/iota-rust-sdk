@@ -100,8 +100,9 @@ pub struct Event {
 }
 
 impl Event {
-    /// The digest of the transaction that emitted this event, which can be
-    /// passed as `start_after` to resume an events stream after it.
+    /// The digest of the transaction that emitted this event. Once all of
+    /// that transaction's events have been processed, it can be passed as
+    /// `start_after` to resume an events stream after it.
     pub fn transaction_digest(&self) -> Option<TransactionDigest> {
         self.transaction_block
             .as_ref()
