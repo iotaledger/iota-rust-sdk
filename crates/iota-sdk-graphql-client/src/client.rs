@@ -360,23 +360,72 @@ mod builder_tests {
     use std::time::Duration;
 
     use reqwest::header::{HeaderMap, HeaderValue};
+    use tokio::{
+        io::{AsyncReadExt, AsyncWriteExt},
+        net::TcpListener,
+    };
 
-    use super::GraphQLClient;
+    use super::{GraphQLClient, GraphQLError, USER_AGENT};
 
-    #[test]
-    fn builder_applies_settings() {
+    async fn bind() -> (TcpListener, String) {
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let url = format!("http://{}/graphql", listener.local_addr().unwrap());
+        (listener, url)
+    }
+
+    #[tokio::test]
+    async fn builder_sends_default_headers_and_keeps_user_agent() {
+        let (listener, url) = bind().await;
+        let server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            let mut buf = vec![0; 4096];
+            let n = socket.read(&mut buf).await.unwrap();
+            socket
+                .write_all(
+                    b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: 13\r\n\r\n{\"data\":null}",
+                )
+                .await
+                .unwrap();
+            String::from_utf8_lossy(&buf[..n]).to_lowercase()
+        });
+
         let mut headers = HeaderMap::new();
         headers.insert("x-api-key", HeaderValue::from_static("secret"));
-        let client = GraphQLClient::builder("http://127.0.0.1:9125/graphql")
-            .timeout(Duration::from_secs(30))
-            .connect_timeout(Duration::from_secs(2))
+        let client = GraphQLClient::builder(&url)
             .default_headers(headers)
             .build()
             .unwrap();
-        assert_eq!(
-            client.rpc_server().as_str(),
-            "http://127.0.0.1:9125/graphql"
+        let _ = client.run_query_from_json(Default::default()).await;
+
+        let request = server.await.unwrap();
+        assert!(request.contains("x-api-key: secret"), "{request}");
+        assert!(
+            request.contains(&format!("user-agent: {}", USER_AGENT.to_lowercase())),
+            "{request}"
         );
+    }
+
+    #[tokio::test]
+    async fn builder_timeout_applies() {
+        let (listener, url) = bind().await;
+        // Accept the connection but never answer.
+        let _server = tokio::spawn(async move {
+            let (_socket, _) = listener.accept().await.unwrap();
+            std::future::pending::<()>().await;
+        });
+
+        let client = GraphQLClient::builder(&url)
+            .timeout(Duration::from_millis(200))
+            .build()
+            .unwrap();
+        let err = client
+            .run_query_from_json(Default::default())
+            .await
+            .unwrap_err();
+        let GraphQLError::Request(err) = err else {
+            panic!("expected a request error, got {err:?}");
+        };
+        assert!(err.is_timeout(), "{err:?}");
     }
 
     #[test]
