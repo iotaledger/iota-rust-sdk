@@ -6,9 +6,7 @@
 
 use base64ct::Encoding;
 use cynic::QueryBuilder;
-use iota_types::{
-    Address, ObjectReference, SignedTransaction, Transaction, TransactionEffects, TransactionKind,
-};
+use iota_types::{Address, ObjectReference, Transaction, TransactionEffects, TransactionKind};
 
 use crate::{
     DryRunEffect, DryRunResult, GraphQLClient,
@@ -183,12 +181,16 @@ impl GraphQLClient {
         // Extract transaction
         let transaction = txn_block
             .as_ref()
-            .and_then(|tx| tx.bcs.as_ref())
+            .and_then(|tx| tx.bcs_unsigned.as_ref())
             .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| {
-                bcs::from_bytes::<SignedTransaction>(&bcs).map_err(iota_types::BcsError::new)
-            })
+            .map(|bcs| bcs::from_bytes::<Transaction>(&bcs).map_err(iota_types::BcsError::new))
+            .transpose()?;
+
+        let suggested_gas_price = response
+            .dry_run_transaction_block
+            .suggested_gas_price
+            .map(u64::try_from)
             .transpose()?;
 
         Ok(DryRunResult {
@@ -196,6 +198,7 @@ impl GraphQLClient {
             results,
             transaction,
             effects,
+            suggested_gas_price,
         })
     }
 }
