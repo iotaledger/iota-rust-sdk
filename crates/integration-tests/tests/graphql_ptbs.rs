@@ -65,7 +65,7 @@ async fn helper_setup() -> (
     Vec<CoinInfo>,
 ) {
     let (address, pk) = helper_address_pk();
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet().unwrap();
     let mut tx = TransactionBuilder::new(address).with_client(client.clone());
     let coins = FaucetClient::new_localnet()
         .request_and_wait(address)
@@ -75,11 +75,8 @@ async fn helper_setup() -> (
         .sent;
     let tx_digest = coins.first().unwrap().transfer_tx_digest;
     client
-        .wait_for_transaction(
-            tx_digest,
-            WaitForTransaction::Finalized,
-            Duration::from_secs(60),
-        )
+        .wait_for_transaction(tx_digest, WaitForTransaction::Finalized)
+        .timeout(Duration::from_secs(60))
         .await
         .unwrap();
 
@@ -109,7 +106,7 @@ async fn test_transfer_obj_execution() {
     let (mut tx, _, pk, coins) = helper_setup().await;
 
     // get the object information from the client
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet().unwrap();
     let coin = coins.first().unwrap().id;
     let recipient = Address::random();
     tx.transfer_objects(recipient, [coin]);
@@ -138,7 +135,7 @@ async fn test_move_call() {
 
 #[tokio::test]
 async fn test_split_transfer() {
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet().unwrap();
     let (mut tx, _, pk, _) = helper_setup().await;
 
     // transfer 1 IOTA from Gas coin
@@ -305,11 +302,11 @@ async fn test_upgrade() {
     }
     check_effects_status_success(effects);
 
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet().unwrap();
     let mut tx = client.transaction_builder(address);
     let mut upgrade_cap = None;
     for o in created_objs {
-        let obj = client.object(o, None).await.unwrap().unwrap();
+        let obj = client.object(o).await.unwrap().unwrap();
         match obj.object_type() {
             ObjectType::Struct(x) if x.name() == "UpgradeCap" => {
                 upgrade_cap = Some(obj.id());
@@ -514,7 +511,7 @@ async fn test_auto_gas_pins_full_first_page_for_consolidation() {
 async fn test_transactions_subscription() {
     use futures::StreamExt;
 
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet().unwrap();
     let mut stream = client.transactions_stream(None, None);
 
     tokio::spawn(async move {
@@ -546,7 +543,7 @@ async fn test_transactions_subscription() {
 async fn test_events_subscription() {
     use futures::StreamExt;
 
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet().unwrap();
     let filter = SubscriptionEventFilter::default().with_emitting_module("0x3".to_owned());
     let mut stream = client.events_stream(filter, None);
 
@@ -554,6 +551,7 @@ async fn test_events_subscription() {
         // Give the subscription time to connect before generating activity.
         tokio::time::sleep(Duration::from_secs(2)).await;
         let validator = GraphQLClient::new_localnet()
+            .unwrap()
             .active_validators()
             .await
             .unwrap()
@@ -617,7 +615,7 @@ async fn test_move_view_call() {
     }
     check_effects_status_success(effects);
 
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet().unwrap();
     let function = format!("{}::test_example::double", package_id.unwrap());
 
     let assert_doubled = |result: iota_graphql_client::query_types::MoveViewResult| {
@@ -643,14 +641,16 @@ async fn test_move_view_call() {
 
     // Typed arguments
     let result = client
-        .move_view_call(&function, None, (21u64,))
+        .move_view_call(&function)
+        .arguments((21u64,))
         .await
         .unwrap();
     assert_doubled(result);
 
     // Raw JSON arguments
     let result = client
-        .move_view_call_json(&function, None, Some(vec![serde_json::json!("21")]))
+        .move_view_call_json(&function)
+        .arguments(vec![serde_json::json!("21")])
         .await
         .unwrap();
     assert_doubled(result);

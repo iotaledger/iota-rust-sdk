@@ -25,7 +25,7 @@ const PATIENCE: Duration = Duration::from_secs(60);
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     // Subscriptions are served over a WebSocket that the node has to have
     // enabled

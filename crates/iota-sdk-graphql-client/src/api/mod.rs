@@ -4,12 +4,12 @@
 
 //! API implementations for the GraphQL client.
 
-mod balance;
+pub(crate) mod balance;
 pub(crate) mod checkpoints;
 pub(crate) mod coins;
-mod dry_run;
+pub(crate) mod dry_run;
 pub(crate) mod dynamic_fields;
-mod epochs;
+pub(crate) mod epochs;
 pub(crate) mod events;
 pub(crate) mod iota_names;
 #[cfg(feature = "move-types")]

@@ -11,7 +11,7 @@ use iota_sdk::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
 
     let private_key = Ed25519PrivateKey::random();
     let owner = private_key.public_key().derive_address();
@@ -34,7 +34,8 @@ async fn main() -> Result<()> {
     let stake_tx = builder.finish().await?;
     let sig = private_key.sign_transaction(&stake_tx)?;
     client
-        .execute_transaction(&[sig], &stake_tx, WaitForTransaction::Finalized)
+        .execute_transaction(&[sig], &stake_tx)
+        .wait_for(WaitForTransaction::Finalized)
         .await?;
 
     // Unstake

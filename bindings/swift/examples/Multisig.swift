@@ -46,7 +46,7 @@ struct MultisigExample {
     let multisigAddress = committee.deriveAddress()
     print("Multisig address: \(multisigAddress)")
 
-    let client = GraphQlClient.newLocalnet()
+    let client = try GraphQlClient.newLocalnet()
 
     // 5. Fund the multisig address
     let faucet = FaucetClient.newLocalnet()

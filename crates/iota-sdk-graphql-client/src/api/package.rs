@@ -309,6 +309,82 @@ impl GetNormalizedMoveModuleQuery {
     }
 }
 
+define_query! {
+    /// Query for [`GraphQLClient::package`]. Await it to send the request.
+    pub struct GetPackageQuery {
+        client: GraphQLClient,
+        address: Address,
+        version: Option<Version>,
+    }
+    output: GraphQLResult<Option<MovePackage>>;
+}
+
+impl GetPackageQuery {
+    /// Set the package version. Without it, the package is loaded from the
+    /// given address.
+    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
+        self.version = version.into();
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<Option<MovePackage>> {
+        let operation = PackageQueryFragment::build(PackageArgs {
+            address: self.address,
+            version: self.version.map(|v| v.as_u64()),
+        });
+
+        let response = self.client.run_query(&operation).await?;
+
+        Ok(response
+            .package
+            .and_then(|x| x.bcs)
+            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .transpose()?
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
+            .transpose()?
+            .map(|obj| obj.data.into_package()))
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::normalized_move_function`]. Await it to send
+    /// the request.
+    pub struct GetNormalizedMoveFunctionQuery {
+        client: GraphQLClient,
+        package: Address,
+        module: String,
+        function: String,
+        version: Option<Version>,
+    }
+    output: GraphQLResult<Option<MoveFunction>>;
+}
+
+impl GetNormalizedMoveFunctionQuery {
+    /// Set the package version. Without it, the package at the given address
+    /// is used.
+    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
+        self.version = version.into();
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<Option<MoveFunction>> {
+        let operation =
+            NormalizedMoveFunctionQueryFragment::build(NormalizedMoveFunctionQueryArgs {
+                address: self.package,
+                module: &self.module,
+                function: &self.function,
+                version: self.version.map(|v| v.as_u64()),
+            });
+        let response = self.client.run_query(&operation).await?;
+
+        Ok(response
+            .package
+            .and_then(|p| p.module)
+            .and_then(|m| m.function)
+            .map(Into::into))
+    }
+}
+
 impl GraphQLClient {
     /// The package corresponding to the given address (at the optionally given
     /// version). When no version is given, the package is loaded directly
@@ -321,26 +397,12 @@ impl GraphQLClient {
     ///
     /// Note that this interpretation of version is different from a historical
     /// object read (the interpretation of version for the object query).
-    pub async fn package(
-        &self,
-        address: Address,
-        version: impl Into<Option<Version>>,
-    ) -> GraphQLResult<Option<MovePackage>> {
-        let operation = PackageQueryFragment::build(PackageArgs {
+    pub fn package(&self, address: Address) -> GetPackageQuery {
+        GetPackageQuery {
+            client: self.clone(),
             address,
-            version: version.into().map(|v| v.as_u64()),
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        Ok(response
-            .package
-            .and_then(|x| x.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
-            .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
-            .transpose()?
-            .map(|obj| obj.data.into_package()))
+            version: None,
+        }
     }
 
     /// Fetch all versions of package at address (packages that share this
@@ -396,27 +458,19 @@ impl GraphQLClient {
 
     /// Return the normalized Move function data for the provided package,
     /// module, and function.
-    pub async fn normalized_move_function(
+    pub fn normalized_move_function(
         &self,
         package: Address,
-        module: &str,
-        function: &str,
-        version: impl Into<Option<Version>>,
-    ) -> GraphQLResult<Option<MoveFunction>> {
-        let operation =
-            NormalizedMoveFunctionQueryFragment::build(NormalizedMoveFunctionQueryArgs {
-                address: package,
-                module,
-                function,
-                version: version.into().map(|v| v.as_u64()),
-            });
-        let response = self.run_query(&operation).await?;
-
-        Ok(response
-            .package
-            .and_then(|p| p.module)
-            .and_then(|m| m.function)
-            .map(Into::into))
+        module: impl Into<String>,
+        function: impl Into<String>,
+    ) -> GetNormalizedMoveFunctionQuery {
+        GetNormalizedMoveFunctionQuery {
+            client: self.clone(),
+            package,
+            module: module.into(),
+            function: function.into(),
+            version: None,
+        }
     }
 
     /// Return the normalized Move module data for the provided module.
@@ -451,6 +505,48 @@ mod tests {
             test_client,
         },
     };
+
+    #[tokio::test]
+    async fn package_sends_the_address_and_version() {
+        let vars = sent_variables("PackageQueryFragment", |client| async move {
+            let _ = client
+                .package(Address::FRAMEWORK)
+                .version(Version::from_u64(3))
+                .await;
+        })
+        .await;
+        assert_eq!(vars["address"], Address::FRAMEWORK.to_string());
+        assert_eq!(vars["version"], 3);
+
+        let vars = sent_variables("PackageQueryFragment", |client| async move {
+            let _ = client.package(Address::FRAMEWORK).await;
+        })
+        .await;
+        assert!(vars["version"].is_null());
+    }
+
+    #[tokio::test]
+    async fn normalized_move_function_sends_the_function_and_version() {
+        let vars = sent_variables("NormalizedMoveFunctionQueryFragment", |client| async move {
+            let _ = client
+                .normalized_move_function(Address::FRAMEWORK, "coin", "value")
+                .version(Version::from_u64(3))
+                .await;
+        })
+        .await;
+        assert_eq!(vars["address"], Address::FRAMEWORK.to_string());
+        assert_eq!(vars["module"], "coin");
+        assert_eq!(vars["function"], "value");
+        assert_eq!(vars["version"], 3);
+
+        let vars = sent_variables("NormalizedMoveFunctionQueryFragment", |client| async move {
+            let _ = client
+                .normalized_move_function(Address::FRAMEWORK, "coin", "value")
+                .await;
+        })
+        .await;
+        assert!(vars["version"].is_null());
+    }
 
     #[tokio::test]
     async fn package_versions_sends_the_address_versions_and_pagination() {
@@ -550,7 +646,7 @@ mod tests {
     async fn test_package() {
         let client = test_client();
         client
-            .package(Address::FRAMEWORK, None)
+            .package(Address::FRAMEWORK)
             .await
             .map_err(|e| {
                 format!(

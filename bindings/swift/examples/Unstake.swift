@@ -7,7 +7,7 @@ import IotaSDK
 @main
 struct UnstakeExample {
   static func main() async throws {
-    let client = GraphQlClient.newLocalnet()
+    let client = try GraphQlClient.newLocalnet()
 
     let privateKey = Ed25519PrivateKey.random()
     let owner = privateKey.publicKey().deriveAddress()

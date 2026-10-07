@@ -25,18 +25,29 @@ mod test_utils;
 #[cfg(feature = "move-types")]
 pub use api::move_objects::{ListMoveObjectsQuery, MoveObjectFilter, OwnedMoveObject};
 pub use api::{
-    checkpoints::ListCheckpointsQuery,
+    balance::GetBalanceQuery,
+    checkpoints::{GetCheckpointQuery, ListCheckpointsQuery},
     coins::{ListCoinsQuery, ListGasCoinsQuery},
+    dry_run::{DryRunTransactionKindQuery, DryRunTransactionQuery},
     dynamic_fields::ListDynamicFieldsQuery,
+    epochs::{GetEpochQuery, GetEpochTotalCheckpointsQuery, GetEpochTotalTransactionBlocksQuery},
     events::ListEventsQuery,
-    iota_names::ListIotaNamesRegistrationsQuery,
-    move_view_call::{MoveViewArg, MoveViewArgList},
-    network::{GetChainIdQuery, ListActiveValidatorsQuery},
-    objects::ListObjectsQuery,
-    package::{GetNormalizedMoveModuleQuery, ListPackageVersionsQuery, ListPackagesQuery},
+    iota_names::{GetIotaNamesDefaultNameQuery, ListIotaNamesRegistrationsQuery},
+    move_view_call::{MoveViewArg, MoveViewArgList, MoveViewCallJsonQuery, MoveViewCallQuery},
+    network::{
+        GetChainIdQuery, GetProtocolConfigQuery, GetReferenceGasPriceQuery,
+        ListActiveValidatorsQuery,
+    },
+    objects::{
+        GetMoveObjectContentsBcsQuery, GetMoveObjectContentsQuery, GetObjectQuery, ListObjectsQuery,
+    },
+    package::{
+        GetNormalizedMoveFunctionQuery, GetNormalizedMoveModuleQuery, GetPackageQuery,
+        ListPackageVersionsQuery, ListPackagesQuery,
+    },
     transactions::{
-        ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
-        ListTransactionsEffectsQuery, ListTransactionsQuery,
+        ExecuteTransactionQuery, ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
+        ListTransactionsEffectsQuery, ListTransactionsQuery, WaitForTransactionQuery,
     },
 };
 pub use client::{GraphQLClient, USER_AGENT};

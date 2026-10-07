@@ -37,7 +37,8 @@ impl GraphQLClient {
     ) -> Result<Option<Arc<MovePackage>>> {
         Ok(self
             .client()
-            .package(**address, version.map(|v| **v))
+            .package(**address)
+            .version(version.map(|v| **v))
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -114,7 +115,8 @@ impl GraphQLClient {
     ) -> Result<Option<Arc<GraphQLMoveFunction>>> {
         Ok(self
             .client()
-            .normalized_move_function(**package, module, function, version.map(|v| **v))
+            .normalized_move_function(**package, module, function)
+            .version(version.map(|v| **v))
             .await?
             .map(Into::into)
             .map(Arc::new))
