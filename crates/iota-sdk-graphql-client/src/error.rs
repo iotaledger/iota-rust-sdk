@@ -100,8 +100,8 @@ pub enum GraphQLError {
         #[source]
         source: serde_json::Error,
     },
-    /// The server returned errors for the query. Subscription errors carry no
-    /// [`ErrorExtensions::code`].
+    /// The server returned errors for the query. The server sends no
+    /// [`ErrorExtensions::code`] for subscription errors.
     #[error("query error: [{}]", display_graphql_errors(.0))]
     Query(Vec<QueryError>),
     /// The response carried neither data nor errors.
