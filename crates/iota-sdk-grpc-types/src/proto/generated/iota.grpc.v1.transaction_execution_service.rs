@@ -18,7 +18,9 @@ pub struct ExecuteTransactionItem {
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ExecuteTransactionsRequest {
-    /// List of transactions to execute. Transactions are executed sequentially in order.
+    /// List of transactions to execute. Transactions are executed concurrently, so their relative
+    /// execution order is not guaranteed. Send transactions that must run in a given order (for
+    /// example, ones that use the same shared object) in separate requests.
     /// For a single transaction, provide a list with one item.
     #[prost(message, repeated, tag = "1")]
     pub transactions: ::prost::alloc::vec::Vec<ExecuteTransactionItem>,
@@ -119,7 +121,8 @@ pub mod simulate_transaction_item {
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SimulateTransactionsRequest {
-    /// List of transactions to simulate. Transactions are simulated sequentially in order.
+    /// List of transactions to simulate. Each transaction is simulated independently against the
+    /// current state, so it does not see the effects of other transactions in the list.
     /// For a single transaction, provide a list with one item.
     #[prost(message, repeated, tag = "1")]
     pub transactions: ::prost::alloc::vec::Vec<SimulateTransactionItem>,
