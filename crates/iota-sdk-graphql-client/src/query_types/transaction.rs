@@ -162,7 +162,6 @@ pub(crate) struct TransactionBlocksQueryArgs {
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
 pub(crate) struct TransactionBlock {
     pub bcs: Option<Base64>,
-    pub effects: Option<TransactionBlockEffects>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]

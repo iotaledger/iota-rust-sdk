@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::types::{
     move_core::TypeTag,
-    transaction::{SignedTransaction, TransactionEffects},
+    transaction::{Transaction, TransactionEffects},
 };
 
 /// A transaction argument used in programmable transactions.
@@ -137,10 +137,13 @@ pub struct GraphQLDryRunResult {
     /// The intermediate results for each command of the dry run execution,
     /// including contents of mutated references and return values.
     pub results: Vec<GraphQLDryRunEffect>,
-    /// The transaction block representing the dry run execution.
-    pub transaction: Option<SignedTransaction>,
+    /// The transaction that was dry run, without signatures.
+    pub transaction: Option<Arc<Transaction>>,
     /// The effects of the transaction execution.
     pub effects: Option<Arc<TransactionEffects>>,
+    /// The gas price to use. This is the reference gas price, or a higher
+    /// price if an input object is congested.
+    pub suggested_gas_price: Option<u64>,
 }
 
 impl From<iota_sdk::graphql_client::DryRunResult> for GraphQLDryRunResult {
@@ -148,8 +151,9 @@ impl From<iota_sdk::graphql_client::DryRunResult> for GraphQLDryRunResult {
         GraphQLDryRunResult {
             error: value.error,
             results: value.results.into_iter().map(Into::into).collect(),
-            transaction: value.transaction.map(Into::into),
+            transaction: value.transaction.map(Into::into).map(Arc::new),
             effects: value.effects.map(Into::into).map(Arc::new),
+            suggested_gas_price: value.suggested_gas_price,
         }
     }
 }
