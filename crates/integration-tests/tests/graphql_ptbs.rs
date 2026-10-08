@@ -616,7 +616,7 @@ async fn test_move_view_call() {
     check_effects_status_success(effects);
 
     let client = GraphQLClient::new_localnet().unwrap();
-    let function = format!("{}::test_example::double", package_id.unwrap());
+    let package_id = package_id.unwrap();
 
     let assert_doubled = |result: iota_graphql_client::query_types::MoveViewResult| {
         assert_eq!(
@@ -641,7 +641,7 @@ async fn test_move_view_call() {
 
     // Typed arguments
     let result = client
-        .move_view_call(&function)
+        .move_view_call(package_id, "test_example", "double")
         .arguments((21u64,))
         .await
         .unwrap();
@@ -649,8 +649,16 @@ async fn test_move_view_call() {
 
     // Raw JSON arguments
     let result = client
-        .move_view_call_json(&function)
+        .move_view_call_json(package_id, "test_example", "double")
         .arguments(vec![serde_json::json!("21")])
+        .await
+        .unwrap();
+    assert_doubled(result);
+
+    // Appended argument
+    let result = client
+        .move_view_call(package_id, "test_example", "double")
+        .argument(21u64)
         .await
         .unwrap();
     assert_doubled(result);
