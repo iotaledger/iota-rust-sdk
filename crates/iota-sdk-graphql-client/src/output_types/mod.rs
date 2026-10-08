@@ -2,13 +2,18 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+mod normalized_move;
+
 use std::str::FromStr;
 
-use base64ct::Encoding;
 use cynic::serde;
-use iota_types::{SignedTransaction, TransactionEffects, TypeTag};
+use iota_types::{SignedTransaction, Transaction, TransactionEffects, TypeTag};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
+pub use self::normalized_move::{
+    MoveAbility, MoveEnum, MoveEnumVariant, MoveField, MoveFunction, MoveFunctionTypeParameter,
+    MoveModule, MoveModuleId, MoveStruct, MoveStructTypeParameter, MoveVisibility, OpenMoveType,
+};
 use crate::{
     error::{GraphQLError, GraphQLResult},
     query_types::{
@@ -20,21 +25,27 @@ use crate::{
 /// The result of a simulation (dry run), which includes the effects of the
 /// transaction and intermediate results for each command.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DryRunResult {
     /// The error that occurred during dry run execution, if any.
     pub error: Option<String>,
     /// The intermediate results for each command of the dry run execution,
     /// including contents of mutated references and return values.
     pub results: Vec<DryRunEffect>,
-    /// The transaction block representing the dry run execution.
-    pub transaction: Option<SignedTransaction>,
+    /// The transaction that was dry run, without signatures.
+    pub transaction: Option<Transaction>,
     /// The effects of the transaction execution.
     pub effects: Option<TransactionEffects>,
+    /// The gas price to use. This is the reference gas price, or a higher
+    /// price if an input object is congested.
+    #[serde(default, with = "iota_types::OptionReadableDisplay")]
+    pub suggested_gas_price: Option<u64>,
 }
 
 /// Effects of a single command in the dry run, including mutated references
 /// and return values.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DryRunEffect {
     /// Changes made to arguments that were mutably borrowed by this
     /// command.
@@ -45,6 +56,7 @@ pub struct DryRunEffect {
 
 /// A mutation to an argument that was mutably borrowed by a command.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DryRunMutation {
     /// The transaction argument that was mutated.
     pub input: TransactionArgument,
@@ -56,6 +68,7 @@ pub struct DryRunMutation {
 
 /// A return value from a command in the dry run.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DryRunReturn {
     /// The Move type of the return value.
     pub type_tag: TypeTag,
@@ -119,7 +132,7 @@ impl TryFrom<&GraphQLDryRunMutation> for DryRunMutation {
     fn try_from(mutation: &GraphQLDryRunMutation) -> GraphQLResult<Self> {
         let input = TransactionArgument::try_from(&mutation.input)?;
         let type_tag = TypeTag::from_str(&mutation.move_type.repr)?;
-        let bcs = base64ct::Base64::decode_vec(&mutation.bcs.0)?;
+        let bcs = crate::base64::decode(&mutation.bcs.0)?;
 
         Ok(DryRunMutation {
             input,
@@ -134,7 +147,7 @@ impl TryFrom<&GraphQLDryRunReturn> for DryRunReturn {
 
     fn try_from(return_val: &GraphQLDryRunReturn) -> GraphQLResult<Self> {
         let type_tag = TypeTag::from_str(&return_val.move_type.repr)?;
-        let bcs = base64ct::Base64::decode_vec(&return_val.bcs.0)?;
+        let bcs = crate::base64::decode(&return_val.bcs.0)?;
 
         Ok(DryRunReturn { type_tag, bcs })
     }
@@ -145,7 +158,9 @@ impl TryFrom<&crate::query_types::TransactionArgument> for TransactionArgument {
 
     fn try_from(arg: &crate::query_types::TransactionArgument) -> GraphQLResult<Self> {
         match arg {
-            crate::query_types::TransactionArgument::GasCoin(_) => Ok(TransactionArgument::GasCoin),
+            crate::query_types::TransactionArgument::GasCoin(crate::query_types::GasCoin {
+                ..
+            }) => Ok(TransactionArgument::GasCoin),
             crate::query_types::TransactionArgument::Input(input) => {
                 Ok(TransactionArgument::Input {
                     index: input.ix as u32,
@@ -165,6 +180,7 @@ impl TryFrom<&crate::query_types::TransactionArgument> for TransactionArgument {
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct TransactionDataEffects {
     pub signed_transaction: SignedTransaction,
     pub effects: TransactionEffects,
@@ -173,6 +189,7 @@ pub struct TransactionDataEffects {
 /// The name part of a dynamic field, including its type, bcs, and json
 /// representation.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DynamicFieldName {
     /// The type name of this dynamic field name
     pub type_tag: TypeTag,
@@ -184,6 +201,7 @@ pub struct DynamicFieldName {
 
 /// The value part of a dynamic field.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DynamicFieldValue {
     pub type_tag: TypeTag,
     pub bcs: Vec<u8>,
@@ -192,6 +210,7 @@ pub struct DynamicFieldValue {
 /// The output of a dynamic field query, that includes the name, value, and
 /// value's json representation.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[non_exhaustive]
 pub struct DynamicFieldOutput {
     /// The name of the dynamic field
     pub name: DynamicFieldName,
@@ -235,7 +254,9 @@ impl DynamicFieldOutput {
         }
 
         let bcs = &self.name.bcs;
-        bcs::from_bytes::<T>(bcs).map_err(Into::into)
+        bcs::from_bytes::<T>(bcs)
+            .map_err(iota_types::BcsError::new)
+            .map_err(Into::into)
     }
 
     /// Deserialize the value of the dynamic field into the specified type.
@@ -253,6 +274,8 @@ impl DynamicFieldOutput {
             });
         }
 
-        bcs::from_bytes::<T>(&dfv.bcs).map_err(Into::into)
+        bcs::from_bytes::<T>(&dfv.bcs)
+            .map_err(iota_types::BcsError::new)
+            .map_err(Into::into)
     }
 }

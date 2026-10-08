@@ -38,7 +38,8 @@ impl GraphQLClient {
     ) -> Result<GraphQLNameRegistrationPage> {
         Ok(self
             .client()
-            .iota_names_registrations(**address, pagination_filter.into())
+            .iota_names_registrations(**address)
+            .pagination(pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -52,7 +53,8 @@ impl GraphQLClient {
     ) -> Result<Option<Arc<Name>>> {
         Ok(self
             .client()
-            .iota_names_default_name(**address, format.map(Into::into))
+            .iota_names_default_name(**address)
+            .format(format.map(Into::into))
             .await?
             .map(Into::into)
             .map(Arc::new))

@@ -5,9 +5,7 @@
 //!
 //! The Rust API exposes these as a `Stream`, which has no uniffi equivalent, so
 //! each subscription is a handle object that is pulled one item at a time with
-//! `next`. The handle owns a clone of the client, so later calls to
-//! [`GraphQLClient::set_rpc_server`] do not affect a subscription already
-//! opened.
+//! `next`.
 
 use std::sync::Arc;
 
@@ -223,14 +221,13 @@ fn open_events(
     filter: Option<GraphQLSubscriptionEventFilter>,
     start_after: Option<String>,
 ) -> SubscriptionStream<iota_sdk::graphql_client::query_types::Event> {
-    let filter = filter.map(Into::into);
-    box_stream(async_stream::stream! {
-        let client = client;
-        let mut stream = std::pin::pin!(client.events_stream(filter, start_after));
-        while let Some(item) = stream.next().await {
-            yield item;
-        }
-    })
+    box_stream(
+        client
+            .events_subscription()
+            .filter(filter.map(Into::into))
+            .start_after(start_after)
+            .subscribe(),
+    )
 }
 
 /// Open the transaction stream a subscription handle reads from.
@@ -239,14 +236,13 @@ fn open_transactions(
     filter: Option<GraphQLSubscriptionTransactionFilter>,
     start_after: Option<String>,
 ) -> SubscriptionStream<iota_sdk::types::SignedTransaction> {
-    let filter = filter.map(Into::into);
-    box_stream(async_stream::stream! {
-        let client = client;
-        let mut stream = std::pin::pin!(client.transactions_stream(filter, start_after));
-        while let Some(item) = stream.next().await {
-            yield item;
-        }
-    })
+    box_stream(
+        client
+            .transactions_subscription()
+            .filter(filter.map(Into::into))
+            .start_after(start_after)
+            .subscribe(),
+    )
 }
 
 #[uniffi::export]

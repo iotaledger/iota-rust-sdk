@@ -8,7 +8,7 @@ import IotaSDK
 struct GasStationExample {
   static func main() async {
     do {
-      let client = GraphQlClient.newLocalnet()
+      let client = try GraphQlClient.newLocalnet()
       let gasStationUrl = "http://0.0.0.0:9527"
       let gasStationAuthToken = "test"
       let keypair = Ed25519PrivateKey.random()

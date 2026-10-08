@@ -28,7 +28,7 @@ struct TransactionSignerCallbackExample {
     let senderAddress = publicKey.deriveAddress()
     print("Sender address: \(senderAddress)")
 
-    let client = GraphQlClient.newLocalnet()
+    let client = try GraphQlClient.newLocalnet()
 
     // Request funds from faucet
     let faucet = FaucetClient.newLocalnet()

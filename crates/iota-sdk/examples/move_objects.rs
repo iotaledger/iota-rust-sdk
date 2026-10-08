@@ -29,17 +29,15 @@ use iota_sdk::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     let owner: Address =
         "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151".parse()?;
 
     // A page of `0x2::coin::Coin<0x2::iota::IOTA>`, decoded.
     let coins = client
-        .move_objects::<Coin<IOTA>>(
-            MoveObjectFilter::default().with_owner(owner),
-            Default::default(),
-        )
+        .move_objects::<Coin<IOTA>>()
+        .filter(MoveObjectFilter::default().with_owner(owner))
         .await?;
 
     println!("{} IOTA coin object(s):", coins.data().len());
@@ -60,10 +58,10 @@ async fn main() -> Result<()> {
     // Same query for a different mirror, paginated as a stream. Only the type
     // parameter changes.
     println!("---");
-    let mut staked = Box::pin(client.move_objects_stream::<StakedIota>(
-        MoveObjectFilter::default().with_owner(owner),
-        Default::default(),
-    ));
+    let mut staked = client
+        .move_objects::<StakedIota>()
+        .filter(MoveObjectFilter::default().with_owner(owner))
+        .stream();
     while let Some(stake) = staked.next().await {
         let stake = stake?;
         let object_ref = stake.object_ref();

@@ -70,10 +70,8 @@ impl GraphQLClient {
     ) -> Result<GraphQLDynamicFieldOutputPage> {
         Ok(self
             .client()
-            .dynamic_fields(
-                **address,
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .dynamic_fields(**address)
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())

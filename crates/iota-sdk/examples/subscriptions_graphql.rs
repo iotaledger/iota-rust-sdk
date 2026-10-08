@@ -25,7 +25,7 @@ const PATIENCE: Duration = Duration::from_secs(60);
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     // Subscriptions are served over a WebSocket that the node has to have
     // enabled
@@ -38,11 +38,13 @@ async fn main() -> Result<()> {
         return Ok(());
     }
 
-    let mut transactions = client.transactions_stream(
-        SubscriptionTransactionFilter::default()
-            .with_kind(TransactionBlockKindInput::ProgrammableTx),
-        None,
-    );
+    let mut transactions = client
+        .transactions_subscription()
+        .filter(
+            SubscriptionTransactionFilter::default()
+                .with_kind(TransactionBlockKindInput::ProgrammableTx),
+        )
+        .subscribe();
 
     println!("Waiting for {HOW_MANY} programmable transactions");
     let quiet = tokio::time::timeout(PATIENCE, async {
@@ -66,7 +68,7 @@ async fn main() -> Result<()> {
         println!("  nothing within {PATIENCE:?}");
     }
 
-    let mut events = client.events_stream(None, None);
+    let mut events = client.events_subscription().subscribe();
 
     println!("Waiting for {HOW_MANY} events");
     let quiet = tokio::time::timeout(PATIENCE, async {

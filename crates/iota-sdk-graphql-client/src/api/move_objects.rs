@@ -4,14 +4,17 @@
 //! Typed object queries, decoding each object into a Move-type mirror paired
 //! with its object reference.
 
+use std::marker::PhantomData;
+
 use futures::Stream;
 use iota_move_types::MoveObject;
 use iota_types::{Address, ObjectId, ObjectReference};
 
 use crate::{
-    GraphQLClient,
+    GraphQLClient, ListObjectsQuery,
+    api::define_query,
     error::GraphQLResult,
-    pagination::{Direction, Page, PaginationFilter},
+    pagination::{Page, PaginationFilter},
     query_types::ObjectFilter,
     streams::stream_paginated_query,
 };
@@ -76,6 +79,63 @@ impl MoveObjectFilter {
     }
 }
 
+define_query! {
+    /// Query for [`GraphQLClient::move_objects`]. Await it to send the request.
+    #[derive(Clone)]
+    pub struct ListMoveObjectsQuery<T: MoveObject> {
+        client: GraphQLClient,
+        filter: Option<MoveObjectFilter>,
+        pagination: PaginationFilter,
+        _marker: PhantomData<fn() -> T>,
+    }
+    output: GraphQLResult<Page<OwnedMoveObject<T>>>;
+}
+
+impl<T: MoveObject> ListMoveObjectsQuery<T> {
+    /// Only return the objects that match `filter`.
+    pub fn filter(mut self, filter: impl Into<Option<MoveObjectFilter>>) -> Self {
+        self.filter = filter.into();
+        self
+    }
+
+    /// Set the page to fetch.
+    pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
+        self.pagination = pagination;
+        self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<OwnedMoveObject<T>>> + Unpin
+    where
+        T: Clone + Unpin,
+    {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+    }
+
+    fn objects_query(self) -> ListObjectsQuery {
+        ListObjectsQuery::new(self.client)
+            .filter(self.filter.unwrap_or_default().into_object_filter::<T>())
+            .pagination(self.pagination)
+    }
+
+    async fn send(self) -> GraphQLResult<Page<OwnedMoveObject<T>>> {
+        let page = self.objects_query().await?;
+        let (page_info, objects) = page.into_parts();
+        let decoded = objects
+            .iter()
+            .map(|object| {
+                Ok(OwnedMoveObject {
+                    object_ref: object.object_ref(),
+                    object: T::try_from(object)?,
+                })
+            })
+            .collect::<GraphQLResult<Vec<_>>>()?;
+        Ok(Page::new(page_info, decoded))
+    }
+}
+
 impl GraphQLClient {
     /// Return a page of objects of the Move type `T`, decoded into `T` and
     /// paired with their object references.
@@ -95,47 +155,17 @@ impl GraphQLClient {
     ///
     /// ```rust,ignore
     /// let staked: Page<OwnedMoveObject<StakedIota>> = client
-    ///     .move_objects(MoveObjectFilter::default().with_owner(address), Default::default())
+    ///     .move_objects()
+    ///     .filter(MoveObjectFilter::default().with_owner(address))
     ///     .await?;
     /// ```
-    pub async fn move_objects<T: MoveObject>(
-        &self,
-        filter: impl Into<Option<MoveObjectFilter>>,
-        pagination_filter: PaginationFilter,
-    ) -> GraphQLResult<Page<OwnedMoveObject<T>>> {
-        let filter = filter.into().unwrap_or_default().into_object_filter::<T>();
-        let page = self.objects(filter, pagination_filter).await?;
-        let (page_info, objects) = page.into_parts();
-        let decoded = objects
-            .iter()
-            .map(|object| {
-                Ok(OwnedMoveObject {
-                    object_ref: object.object_ref(),
-                    object: T::try_from(object)?,
-                })
-            })
-            .collect::<GraphQLResult<Vec<_>>>()?;
-        Ok(Page::new(page_info, decoded))
-    }
-
-    /// Return a stream of objects of the Move type `T`, decoded into `T` and
-    /// paired with their object references.
-    ///
-    /// Page-by-page equivalent of [`GraphQLClient::move_objects`]; the same
-    /// decode failure ends the stream with an error.
-    pub fn move_objects_stream<'a, T>(
-        &'a self,
-        filter: impl Into<Option<MoveObjectFilter>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = GraphQLResult<OwnedMoveObject<T>>> + 'a
-    where
-        T: MoveObject + Clone + Unpin + 'a,
-    {
-        let filter = filter.into();
-        stream_paginated_query(
-            move |pag_filter| self.move_objects(filter.clone(), pag_filter),
-            streaming_direction,
-        )
+    pub fn move_objects<T: MoveObject>(&self) -> ListMoveObjectsQuery<T> {
+        ListMoveObjectsQuery {
+            client: self.clone(),
+            filter: None,
+            pagination: PaginationFilter::default(),
+            _marker: PhantomData,
+        }
     }
 }
 
@@ -145,13 +175,44 @@ mod tests {
     use iota_move_types::iota_framework::{coin::Coin, iota::IOTA};
 
     use super::*;
-    use crate::test_utils::test_client;
+    use crate::test_utils::{
+        assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+        test_client,
+    };
+
+    #[tokio::test]
+    async fn move_objects_sends_the_type_filter_and_pagination() {
+        let vars = sent_variables("ObjectsQueryFragment", |client| async move {
+            let _ = client
+                .move_objects::<Coin<IOTA>>()
+                .filter(MoveObjectFilter::default().with_owner(Address::STD))
+                .pagination(backward_page())
+                .await;
+        })
+        .await;
+        assert_eq!(vars["filter"]["owner"], Address::STD.to_string());
+        assert_eq!(
+            vars["filter"]["type"],
+            Coin::<IOTA>::struct_tag().to_string()
+        );
+        assert_backward_page(&vars);
+
+        let vars = sent_variables("ObjectsQueryFragment", |client| async move {
+            let _ = client
+                .move_objects::<Coin<IOTA>>()
+                .filter(MoveObjectFilter::default().with_owner(Address::STD))
+                .pagination(forward_page())
+                .await;
+        })
+        .await;
+        assert_forward_page(&vars);
+    }
 
     #[tokio::test]
     async fn test_move_objects_query() {
         let client = test_client();
         let coins = client
-            .move_objects::<Coin<IOTA>>(None, PaginationFilter::default())
+            .move_objects::<Coin<IOTA>>()
             .await
             .map_err(|e| {
                 format!(
@@ -172,8 +233,7 @@ mod tests {
     #[tokio::test]
     async fn test_move_objects_stream() {
         let client = test_client();
-        let mut stream =
-            Box::pin(client.move_objects_stream::<Coin<IOTA>>(None, Direction::Forward));
+        let mut stream = client.move_objects::<Coin<IOTA>>().stream();
         stream
             .next()
             .await

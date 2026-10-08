@@ -2,9 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::query_types::{
-    Address, MoveAbility, MoveFunction, MovePackageQueryFragment, OpenMoveType, PageInfo, schema,
-};
+use crate::query_types::{Address, MoveAbility, MoveFunction, OpenMoveType, PageInfo, schema};
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(
@@ -12,13 +10,13 @@ use crate::query_types::{
     graphql_type = "Query",
     variables = "NormalizedMoveModuleQueryArgs"
 )]
-pub struct NormalizedMoveModuleQueryFragment {
+pub(crate) struct NormalizedMoveModuleQueryFragment {
     #[arguments(address: $package, version: $version)]
     pub package: Option<MovePackage>,
 }
 
 #[derive(Clone, cynic::QueryVariables, Debug)]
-pub struct NormalizedMoveModuleQueryArgs<'a> {
+pub(crate) struct NormalizedMoveModuleQueryArgs<'a> {
     pub package: Address,
     pub module: &'a str,
     pub version: Option<u64>,
@@ -46,7 +44,7 @@ pub struct NormalizedMoveModuleQueryArgs<'a> {
     graphql_type = "MovePackage",
     variables = "NormalizedMoveModuleQueryArgs"
 )]
-pub struct MovePackage {
+pub(crate) struct MovePackage {
     #[arguments(name: $module)]
     pub module: Option<MoveModule>,
 }
@@ -57,7 +55,7 @@ pub struct MovePackage {
     graphql_type = "MoveModule",
     variables = "NormalizedMoveModuleQueryArgs"
 )]
-pub struct MoveModule {
+pub(crate) struct MoveModule {
     pub file_format_version: i32,
     #[arguments(after: $after_enums, before:$before_enums, first: $first_enums, last: $last_enums)]
     pub enums: Option<MoveEnumConnection>,
@@ -71,14 +69,14 @@ pub struct MoveModule {
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveStructConnection")]
-pub struct MoveStructConnection {
+pub(crate) struct MoveStructConnection {
     pub page_info: PageInfo,
     pub nodes: Vec<MoveStructQueryFragment>,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveStruct")]
-pub struct MoveStructQueryFragment {
+pub(crate) struct MoveStructQueryFragment {
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
     pub fields: Option<Vec<MoveField>>,
@@ -87,35 +85,48 @@ pub struct MoveStructQueryFragment {
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModuleConnection")]
-pub struct MoveModuleConnection {
-    pub nodes: Vec<MoveModuleQueryFragment>,
+pub(crate) struct MoveModuleConnection {
+    pub nodes: Vec<MoveModuleIdQueryFragment>,
     pub page_info: PageInfo,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveModule")]
 pub struct MoveModuleQueryFragment {
-    pub package: MovePackageQueryFragment,
+    pub package: MovePackageAddress,
     pub name: String,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "MoveModule")]
+pub(crate) struct MoveModuleIdQueryFragment {
+    pub package: MovePackageAddress,
+    pub name: String,
+}
+
+#[derive(Clone, cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "MovePackage")]
+pub struct MovePackageAddress {
+    pub address: Address,
+}
+
+#[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveFunctionConnection")]
-pub struct MoveFunctionConnection {
+pub(crate) struct MoveFunctionConnection {
     pub nodes: Vec<MoveFunction>,
     pub page_info: PageInfo,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveEnumConnection")]
-pub struct MoveEnumConnection {
+pub(crate) struct MoveEnumConnection {
     pub nodes: Vec<MoveEnum>,
     pub page_info: PageInfo,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveEnum")]
-pub struct MoveEnum {
+pub(crate) struct MoveEnum {
     pub abilities: Option<Vec<MoveAbility>>,
     pub name: String,
     pub type_parameters: Option<Vec<MoveStructTypeParameter>>,
@@ -124,14 +135,14 @@ pub struct MoveEnum {
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveEnumVariant")]
-pub struct MoveEnumVariant {
+pub(crate) struct MoveEnumVariant {
     pub fields: Option<Vec<MoveField>>,
     pub name: String,
 }
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveField")]
-pub struct MoveField {
+pub(crate) struct MoveField {
     pub name: String,
     #[cynic(rename = "type")]
     pub move_type: Option<OpenMoveType>,
@@ -139,7 +150,7 @@ pub struct MoveField {
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveStructTypeParameter")]
-pub struct MoveStructTypeParameter {
+pub(crate) struct MoveStructTypeParameter {
     pub constraints: Vec<MoveAbility>,
     pub is_phantom: bool,
 }

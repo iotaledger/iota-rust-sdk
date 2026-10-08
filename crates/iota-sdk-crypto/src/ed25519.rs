@@ -162,9 +162,7 @@ impl crate::ToFromBytes for Ed25519PrivateKey {
     fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error> {
         let bytes = bytes.as_ref();
         if bytes.len() != Self::LENGTH {
-            return Err(crate::PrivateKeyError::InvalidScheme(
-                "invalid ed25519 key length".to_string(),
-            ));
+            return Err(SignatureError::from_source("invalid ed25519 key length").into());
         }
 
         let mut arr = [0u8; Self::LENGTH];
@@ -208,9 +206,11 @@ impl crate::FromMnemonic for Ed25519PrivateKey {
     {
         use std::str::FromStr;
 
-        let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)?;
+        let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)
+            .map_err(|e| crate::PrivateKeyError::Bip39(e.to_string()))?;
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
-        let path = bip32::DerivationPath::from_str(&path)?
+        let path = bip32::DerivationPath::from_str(&path)
+            .map_err(|e| crate::PrivateKeyError::Bip32(e.to_string()))?
             .into_iter()
             .map(|c| c.0)
             .collect::<Vec<_>>();
