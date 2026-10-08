@@ -138,35 +138,6 @@ where
 }
 
 /// Creates a new `PageStream` for a paginated query.
-///
-/// ## Example
-///
-/// ```rust,ignore
-/// use futures::StreamExt;
-/// use iota_graphql_client::streams::stream_paginated_query;
-/// use iota_graphql_client::GraphQLClient;
-/// use iota_graphql_client::PaginationFilter;
-/// use iota_types::Address;
-///
-/// let client = GraphQLClient::new_testnet().unwrap();
-/// let owner = Address::STD;
-/// let mut stream = stream_paginated_query(
-///     |pagination_filter| {
-///         client
-///             .coins(owner)
-///             .pagination(pagination_filter)
-///             .into_future()
-///     },
-///     PaginationFilter::default(),
-/// );
-///
-/// while let Some(result) = stream.next().await {
-///    match result {
-///        Ok(coin) => println!("Got coin: {:?}", coin),
-///        Err(e) => eprintln!("Error: {}", e),
-///    }
-/// }
-/// ```
 pub fn stream_paginated_query<T, F, Fut>(
     query_fn: F,
     pagination: PaginationFilter,

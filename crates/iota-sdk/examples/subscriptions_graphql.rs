@@ -40,10 +40,9 @@ async fn main() -> Result<()> {
 
     let mut transactions = client
         .transactions_subscription()
-        .filter(
-            SubscriptionTransactionFilter::default()
-                .with_kind(TransactionBlockKindInput::ProgrammableTx),
-        )
+        .filter(SubscriptionTransactionFilter::Kind(
+            TransactionBlockKindInput::ProgrammableTx,
+        ))
         .subscribe();
 
     println!("Waiting for {HOW_MANY} programmable transactions");

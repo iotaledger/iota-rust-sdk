@@ -45,7 +45,9 @@ if (!receipt || receipt.sent.length === 0) {
 const startAfter = receipt.sent[0].transferTxDigest;
 
 const subscription = await client.transactionsSubscription(
-  GraphQlSubscriptionTransactionFilter.new({ signingAddress: senderAddress }),
+  GraphQlSubscriptionTransactionFilter.SigningAddress.new({
+    signingAddress: senderAddress,
+  }),
   startAfter,
 );
 

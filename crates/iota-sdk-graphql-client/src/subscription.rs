@@ -76,8 +76,8 @@ pub struct EventsSubscriptionBuilder {
 
 impl EventsSubscriptionBuilder {
     /// Only stream the events that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<SubscriptionEventFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: SubscriptionEventFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
@@ -108,7 +108,7 @@ impl EventsSubscriptionBuilder {
         } = self;
         reconnecting_subscription(
             move |cursor| {
-                let filter = filter.clone();
+                let filter = filter.clone().map(Into::into);
                 let client = client.clone();
                 async move {
                     let operation = EventsSubscription::build(EventsSubscriptionArgs {
@@ -168,8 +168,8 @@ pub struct TransactionsSubscriptionBuilder {
 
 impl TransactionsSubscriptionBuilder {
     /// Only stream the transactions that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<SubscriptionTransactionFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: SubscriptionTransactionFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
@@ -193,7 +193,7 @@ impl TransactionsSubscriptionBuilder {
         } = self;
         reconnecting_subscription(
             move |cursor| {
-                let filter = filter.clone();
+                let filter = filter.clone().map(Into::into);
                 let client = client.clone();
                 async move {
                     let operation = TransactionsSubscription::build(TransactionsSubscriptionArgs {

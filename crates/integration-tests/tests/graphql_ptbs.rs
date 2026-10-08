@@ -544,7 +544,7 @@ async fn test_events_subscription() {
     use futures::StreamExt;
 
     let client = GraphQLClient::new_localnet().unwrap();
-    let filter = SubscriptionEventFilter::default().with_emitting_module("0x3".to_owned());
+    let filter = SubscriptionEventFilter::EmittingModule("0x3".to_owned());
     let mut stream = client.events_subscription().filter(filter).subscribe();
 
     tokio::spawn(async move {

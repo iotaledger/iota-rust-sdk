@@ -54,8 +54,8 @@ define_query! {
 
 impl ListActiveValidatorsQuery {
     /// Set the epoch number. Defaults to the current epoch.
-    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
-        self.epoch_number = epoch_number.into();
+    pub fn epoch_number(mut self, epoch_number: u64) -> Self {
+        self.epoch_number = Some(epoch_number);
         self
     }
 
@@ -117,8 +117,8 @@ define_query! {
 
 impl GetReferenceGasPriceQuery {
     /// Set the epoch number. Defaults to the last known epoch.
-    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch_number.into();
+    pub fn epoch_number(mut self, epoch_number: u64) -> Self {
+        self.epoch = Some(epoch_number);
         self
     }
 
@@ -146,8 +146,8 @@ define_query! {
 
 impl GetProtocolConfigQuery {
     /// Set the protocol version. Defaults to the latest version.
-    pub fn version(mut self, version: impl Into<Option<u64>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: u64) -> Self {
+        self.version = Some(version);
         self
     }
 
