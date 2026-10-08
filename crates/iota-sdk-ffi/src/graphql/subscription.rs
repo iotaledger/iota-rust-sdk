@@ -236,7 +236,7 @@ fn open_events(
         client
             .events_subscription()
             .set_if_some(filter.map(Into::into), EventsSubscriptionBuilder::filter)
-            .start_after(start_after)
+            .set_if_some(start_after, EventsSubscriptionBuilder::start_after)
             .subscribe(),
     )
 }
@@ -254,7 +254,7 @@ fn open_transactions(
                 filter.map(Into::into),
                 TransactionsSubscriptionBuilder::filter,
             )
-            .start_after(start_after)
+            .set_if_some(start_after, TransactionsSubscriptionBuilder::start_after)
             .subscribe(),
     )
 }

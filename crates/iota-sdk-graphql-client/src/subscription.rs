@@ -90,8 +90,8 @@ impl EventsSubscriptionBuilder {
     /// A transaction counts as fully received only once an event from the next
     /// transaction arrives, so after a reconnect the events of the transaction
     /// that was being received when the connection dropped are yielded again.
-    pub fn start_after(mut self, start_after: impl Into<Option<TransactionDigest>>) -> Self {
-        self.start_after = start_after.into();
+    pub fn start_after(mut self, start_after: TransactionDigest) -> Self {
+        self.start_after = Some(start_after);
         self
     }
 
@@ -175,8 +175,8 @@ impl TransactionsSubscriptionBuilder {
 
     /// Resume from the transaction immediately following the given digest;
     /// thereafter the stream tracks its own resume point.
-    pub fn start_after(mut self, start_after: impl Into<Option<TransactionDigest>>) -> Self {
-        self.start_after = start_after.into();
+    pub fn start_after(mut self, start_after: TransactionDigest) -> Self {
+        self.start_after = Some(start_after);
         self
     }
 
