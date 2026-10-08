@@ -42,7 +42,7 @@ if (!receipt || receipt.sent.length === 0) {
 // Any of the funding digests will do: the transaction below is executed after
 // all of them, and the sender filter keeps the faucet's own transactions out of
 // the stream.
-const startAfter = receipt.sent[0].transferTxDigest.toBase58();
+const startAfter = receipt.sent[0].transferTxDigest;
 
 const subscription = await client.transactionsSubscription(
   GraphQlSubscriptionTransactionFilter.SigningAddress.new({

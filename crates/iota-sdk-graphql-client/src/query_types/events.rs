@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use iota_types::TransactionDigest;
+
 use crate::query_types::{
     Address, Base64, DateTime, GraphQLAddress, JsonValue, MoveData, MoveType, PageInfo,
     normalized_move::MoveModuleQueryFragment, schema,
@@ -75,9 +77,9 @@ impl EventFilter {
     /// Filter by the digest of the transaction emitting the event.
     pub fn with_transaction_digest(
         mut self,
-        transaction_digest: impl Into<Option<String>>,
+        transaction_digest: impl Into<Option<TransactionDigest>>,
     ) -> Self {
-        self.transaction_digest = transaction_digest.into();
+        self.transaction_digest = transaction_digest.into().map(|d| d.to_string());
         self
     }
 }

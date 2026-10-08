@@ -5,7 +5,7 @@
 //! Balance API implementation.
 
 use cynic::QueryBuilder;
-use iota_types::Address;
+use iota_types::{Address, StructTag};
 
 use crate::{
     GraphQLClient,
@@ -19,22 +19,22 @@ define_query! {
     pub struct GetBalanceQuery {
         client: GraphQLClient,
         address: Address,
-        coin_type: Option<String>,
+        coin_type: Option<StructTag>,
     }
     output: GraphQLResult<Option<u64>>;
 }
 
 impl GetBalanceQuery {
     /// Set the coin type. Defaults to `0x2::iota::IOTA`.
-    pub fn coin_type(mut self, coin_type: impl Into<String>) -> Self {
-        self.coin_type = Some(coin_type.into());
+    pub fn coin_type(mut self, coin_type: StructTag) -> Self {
+        self.coin_type = Some(coin_type);
         self
     }
 
     async fn send(self) -> GraphQLResult<Option<u64>> {
         let operation = BalanceQueryFragment::build(BalanceArgs {
             address: self.address,
-            coin_type: self.coin_type,
+            coin_type: self.coin_type.map(|t| t.to_string()),
         });
         let response = self.client.run_query(&operation).await?;
 
@@ -60,7 +60,7 @@ impl GraphQLClient {
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use iota_types::Address;
+    use iota_types::{Address, StructTag};
 
     use crate::test_utils::{sent_variables, test_client};
 
@@ -69,7 +69,7 @@ mod tests {
         let vars = sent_variables("BalanceQueryFragment", |client| async move {
             let _ = client
                 .balance(Address::STD)
-                .coin_type("0x2::iota::IOTA".to_owned())
+                .coin_type(StructTag::new_gas())
                 .await;
         })
         .await;
