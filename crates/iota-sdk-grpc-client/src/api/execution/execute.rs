@@ -38,10 +38,7 @@ impl ExecuteTransactionQuery {
     /// transaction to be included in a checkpoint. Without it, or with `0`, the
     /// server returns without waiting; it may clamp the timeout to a configured
     /// maximum.
-    pub fn checkpoint_inclusion_timeout_ms(
-        mut self,
-        checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
-    ) -> Self {
+    pub fn checkpoint_inclusion_timeout_ms(mut self, checkpoint_inclusion_timeout_ms: u64) -> Self {
         self.batch = self
             .batch
             .checkpoint_inclusion_timeout_ms(checkpoint_inclusion_timeout_ms);
@@ -79,11 +76,8 @@ impl ExecuteTransactionsQuery {
     /// executed transactions to be included in a checkpoint. Without it, or
     /// with `0`, the server returns without waiting; it may clamp the timeout
     /// to a configured maximum.
-    pub fn checkpoint_inclusion_timeout_ms(
-        mut self,
-        checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
-    ) -> Self {
-        self.checkpoint_inclusion_timeout_ms = checkpoint_inclusion_timeout_ms.into();
+    pub fn checkpoint_inclusion_timeout_ms(mut self, checkpoint_inclusion_timeout_ms: u64) -> Self {
+        self.checkpoint_inclusion_timeout_ms = Some(checkpoint_inclusion_timeout_ms);
         self
     }
 
