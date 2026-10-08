@@ -94,7 +94,7 @@ impl EventsSubscriptionBuilder {
         } = self;
         reconnecting_subscription(
             move |cursor| {
-                let filter = filter.clone();
+                let filter = filter.clone().map(Into::into);
                 let client = client.clone();
                 async move {
                     let operation = EventsSubscription::build(EventsSubscriptionArgs {
@@ -174,7 +174,7 @@ impl TransactionsSubscriptionBuilder {
         } = self;
         reconnecting_subscription(
             move |cursor| {
-                let filter = filter.clone();
+                let filter = filter.clone().map(Into::into);
                 let client = client.clone();
                 async move {
                     let operation = TransactionsSubscription::build(TransactionsSubscriptionArgs {

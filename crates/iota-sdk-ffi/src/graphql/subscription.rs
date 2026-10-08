@@ -29,52 +29,56 @@ use crate::{
     types::{address::Address, transaction::SignedTransaction},
 };
 
-/// Filter incoming events in a subscription. Exactly one field must be set.
-#[derive(Default, uniffi::Record)]
-pub struct GraphQLSubscriptionEventFilter {
+/// Filter incoming events in a subscription.
+#[derive(uniffi::Enum)]
+pub enum GraphQLSubscriptionEventFilter {
     /// Filter incoming events by emitting module, e.g. `"0x02"` (package) or
     /// `"0x02::coin"` (module).
-    #[uniffi(default = None)]
-    pub emitting_module: Option<String>,
+    EmittingModule { emitting_module: String },
 }
 
 impl From<GraphQLSubscriptionEventFilter>
     for iota_sdk::graphql_client::query_types::SubscriptionEventFilter
 {
     fn from(value: GraphQLSubscriptionEventFilter) -> Self {
-        Self::default().with_emitting_module(value.emitting_module)
+        match value {
+            GraphQLSubscriptionEventFilter::EmittingModule { emitting_module } => {
+                Self::EmittingModule(emitting_module)
+            }
+        }
     }
 }
 
-/// Filter incoming transactions in a subscription. Exactly one field must be
-/// set.
-#[derive(Default, uniffi::Record)]
-pub struct GraphQLSubscriptionTransactionFilter {
+/// Filter incoming transactions in a subscription.
+#[derive(uniffi::Enum)]
+pub enum GraphQLSubscriptionTransactionFilter {
     /// Filter incoming transactions by kind.
-    #[uniffi(default = None)]
-    pub kind: Option<GraphQLTransactionBlockKindInput>,
+    Kind {
+        kind: GraphQLTransactionBlockKindInput,
+    },
     /// Filter incoming transactions by sender address.
     ///
     /// Only the sender is compared, despite the name — a sponsored transaction
     /// is not matched by its sponsor's (gas owner's) address, even though the
     /// sponsor also signed it.
-    #[uniffi(default = None)]
-    pub signing_address: Option<Arc<Address>>,
+    SigningAddress { signing_address: Arc<Address> },
     /// Filter incoming transactions by package, module, or function name, e.g.
     /// `"0x03"`, `"0x03::iota_system"`, or
     /// `"0x03::iota_system::request_add_stake"`.
-    #[uniffi(default = None)]
-    pub function: Option<String>,
+    Function { function: String },
 }
 
 impl From<GraphQLSubscriptionTransactionFilter>
     for iota_sdk::graphql_client::query_types::SubscriptionTransactionFilter
 {
     fn from(value: GraphQLSubscriptionTransactionFilter) -> Self {
-        Self::default()
-            .with_kind(value.kind.map(Into::into))
-            .with_signing_address(value.signing_address.map(|a| a.0))
-            .with_function(value.function)
+        match value {
+            GraphQLSubscriptionTransactionFilter::Kind { kind } => Self::Kind(kind.into()),
+            GraphQLSubscriptionTransactionFilter::SigningAddress { signing_address } => {
+                Self::SigningAddress(signing_address.0)
+            }
+            GraphQLSubscriptionTransactionFilter::Function { function } => Self::Function(function),
+        }
     }
 }
 
