@@ -635,7 +635,7 @@ async fn capture(
             use base64ct::Encoding as _;
             let filter = iota_sdk::graphql_client::query_types::EventFilter::default()
                 .with_event_type((*event_type).to_string())
-                .with_transaction_digest(tx_digest.parse::<TransactionDigest>()?);
+                .with_transaction_digest(TransactionDigest::from_base58(tx_digest)?);
             let page = client.events().filter(filter).await?;
             let event = page
                 .data()

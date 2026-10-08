@@ -424,7 +424,9 @@ impl Indexer {
                 .events()
                 .filter(
                     EventFilter::default()
-                        .with_transaction_digest(transaction_digest.parse::<TransactionDigest>()?)
+                        .with_transaction_digest(TransactionDigest::from_base58(
+                            transaction_digest,
+                        )?)
                         .with_event_type(self.config.filters.event_type.clone()),
                 )
                 .pagination(PaginationFilter {
