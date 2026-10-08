@@ -8,7 +8,7 @@ use iota_sdk::grpc_client::GrpcError;
 ///
 /// See <https://grpc.io/docs/guides/status-codes/> for the meaning of each
 /// code.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, uniffi::Enum)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, uniffi::Enum)]
 pub enum GrpcStatusCode {
     Ok,
     Cancelled,
