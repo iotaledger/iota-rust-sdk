@@ -5,6 +5,7 @@
 //! Package API implementation.
 
 use cynic::QueryBuilder;
+use futures::Stream;
 use iota_types::{Address, MovePackage, Object, Version};
 
 use crate::{
@@ -19,11 +20,13 @@ use crate::{
         PackageQueryFragment, PackageVersionsArgs, PackageVersionsQueryFragment, PackagesQueryArgs,
         PackagesQueryFragment,
     },
+    streams::stream_paginated_query,
 };
 
 define_query! {
     /// Query for [`GraphQLClient::package_versions`]. Await it to send the
     /// request.
+    #[derive(Clone)]
     pub struct ListPackageVersionsQuery {
         client: GraphQLClient,
         address: Address,
@@ -39,6 +42,13 @@ impl ListPackageVersionsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<MovePackage>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     /// Only return versions after this one.
@@ -114,6 +124,7 @@ impl ListPackageVersionsQuery {
 
 define_query! {
     /// Query for [`GraphQLClient::packages`]. Await it to send the request.
+    #[derive(Clone)]
     pub struct ListPackagesQuery {
         client: GraphQLClient,
         pagination: PaginationFilter,
@@ -128,6 +139,13 @@ impl ListPackagesQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<MovePackage>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     /// Only return packages published after this checkpoint.
