@@ -14,7 +14,9 @@ use futures::stream::BoxStream;
 #[cfg(target_arch = "wasm32")]
 use futures::stream::LocalBoxStream;
 use futures::{Stream, StreamExt};
-use iota_sdk::graphql_client::error::GraphQLResult;
+use iota_sdk::graphql_client::{
+    EventsSubscriptionBuilder, TransactionsSubscriptionBuilder, error::GraphQLResult,
+};
 
 use crate::{
     error::Result,
@@ -225,8 +227,8 @@ fn open_events(
     box_stream(
         client
             .events_subscription()
-            .set_if_some(filter.map(Into::into), |query, value| query.filter(value))
-            .set_if_some(start_after, |query, value| query.start_after(value))
+            .set_if_some(filter.map(Into::into), EventsSubscriptionBuilder::filter)
+            .set_if_some(start_after, EventsSubscriptionBuilder::start_after)
             .subscribe(),
     )
 }
@@ -240,8 +242,11 @@ fn open_transactions(
     box_stream(
         client
             .transactions_subscription()
-            .set_if_some(filter.map(Into::into), |query, value| query.filter(value))
-            .set_if_some(start_after, |query, value| query.start_after(value))
+            .set_if_some(
+                filter.map(Into::into),
+                TransactionsSubscriptionBuilder::filter,
+            )
+            .set_if_some(start_after, TransactionsSubscriptionBuilder::start_after)
             .subscribe(),
     )
 }

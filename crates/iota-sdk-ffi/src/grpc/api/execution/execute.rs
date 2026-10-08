@@ -3,7 +3,9 @@
 
 //! Transaction execution API implementation.
 
-use iota_sdk::grpc_client::read_mask_fields::ExecuteTransactionReadMask;
+use iota_sdk::grpc_client::{
+    ExecuteTransactionQuery, ExecuteTransactionsQuery, read_mask_fields::ExecuteTransactionReadMask,
+};
 
 use crate::{
     error::Result,
@@ -47,9 +49,10 @@ impl GrpcClient {
         (&self
             .client()
             .execute_transaction(signed_transaction.into())
-            .set_if_some(checkpoint_inclusion_timeout_ms, |query, value| {
-                query.checkpoint_inclusion_timeout_ms(value)
-            })
+            .set_if_some(
+                checkpoint_inclusion_timeout_ms,
+                ExecuteTransactionQuery::checkpoint_inclusion_timeout_ms,
+            )
             .read_mask(crate::grpc::api::read_mask::<ExecuteTransactionReadMask, _>(read_mask))
             .await?
             .into_inner())
@@ -80,9 +83,10 @@ impl GrpcClient {
     ) -> Result<Vec<GrpcExecutedTransactionResult>> {
         self.client()
             .execute_transactions(transactions.into_iter().map(Into::into).collect())
-            .set_if_some(checkpoint_inclusion_timeout_ms, |query, value| {
-                query.checkpoint_inclusion_timeout_ms(value)
-            })
+            .set_if_some(
+                checkpoint_inclusion_timeout_ms,
+                ExecuteTransactionsQuery::checkpoint_inclusion_timeout_ms,
+            )
             .read_mask(crate::grpc::api::read_mask::<ExecuteTransactionReadMask, _>(read_mask))
             .await?
             .into_inner()

@@ -5,6 +5,8 @@
 
 use std::sync::Arc;
 
+use iota_sdk::grpc_client::GetCoinsQuery;
+
 use crate::{
     error::Result,
     grpc::client::GrpcClient,
@@ -41,12 +43,10 @@ impl GrpcClient {
             .coins(**owner)
             .set_if_some(
                 coin_type.map(|coin_type| coin_type.0.clone()),
-                |query, value| query.coin_type(value),
+                GetCoinsQuery::coin_type,
             )
-            .set_if_some(page_size, |query, value| query.page_size(value))
-            .set_if_some(page_token.map(Into::into), |query, value| {
-                query.page_token(value)
-            });
+            .set_if_some(page_size, GetCoinsQuery::page_size)
+            .set_if_some(page_token.map(Into::into), GetCoinsQuery::page_token);
         let page = query.await?.into_inner();
         Ok(GrpcCoinPage {
             coins: page
@@ -72,7 +72,7 @@ impl GrpcClient {
     ) -> Result<Vec<Arc<Coin>>> {
         let query = self.client().coins(**owner).set_if_some(
             coin_type.map(|coin_type| coin_type.0.clone()),
-            |query, value| query.coin_type(value),
+            GetCoinsQuery::coin_type,
         );
         Ok(query
             .collect(limit)

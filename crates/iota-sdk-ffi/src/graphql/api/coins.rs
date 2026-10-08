@@ -5,6 +5,8 @@
 
 use std::sync::Arc;
 
+use iota_sdk::graphql_client::ListCoinsQuery;
+
 use crate::{
     error::Result,
     graphql::{
@@ -33,9 +35,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .coins(**owner)
-            .set_if_some(coin_type.map(|t| t.0.clone()), |query, value| {
-                query.coin_type(value)
-            })
+            .set_if_some(coin_type.map(|t| t.0.clone()), ListCoinsQuery::coin_type)
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)

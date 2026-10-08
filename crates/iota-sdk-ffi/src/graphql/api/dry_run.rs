@@ -3,6 +3,8 @@
 
 //! Dry run API implementation.
 
+use iota_sdk::graphql_client::DryRunTransactionKindQuery;
+
 use crate::{
     error::Result,
     graphql::{
@@ -73,13 +75,14 @@ impl GraphQLClient {
         Ok(self
             .client()
             .dry_run_transaction_kind(&transaction_kind.0)
-            .set_if_some(metadata.sender, |query, value| query.sender(value))
-            .set_if_some(metadata.gas_budget, |query, value| query.gas_budget(value))
-            .set_if_some(metadata.gas_price, |query, value| query.gas_price(value))
-            .set_if_some(gas_objects, |query, value| query.gas_objects(value))
-            .set_if_some(metadata.gas_sponsor, |query, value| {
-                query.gas_sponsor(value)
-            })
+            .set_if_some(metadata.sender, DryRunTransactionKindQuery::sender)
+            .set_if_some(metadata.gas_budget, DryRunTransactionKindQuery::gas_budget)
+            .set_if_some(metadata.gas_price, DryRunTransactionKindQuery::gas_price)
+            .set_if_some(gas_objects, DryRunTransactionKindQuery::gas_objects)
+            .set_if_some(
+                metadata.gas_sponsor,
+                DryRunTransactionKindQuery::gas_sponsor,
+            )
             .skip_checks(skip_checks)
             .await?
             .into())

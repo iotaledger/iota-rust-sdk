@@ -5,7 +5,7 @@
 
 use std::sync::Arc;
 
-use iota_sdk::grpc_client::read_mask_fields::OwnedObjectReadMask;
+use iota_sdk::grpc_client::{ListOwnedObjectsQuery, read_mask_fields::OwnedObjectReadMask};
 
 use crate::{
     error::Result,
@@ -55,12 +55,13 @@ impl GrpcClient {
             .owned_objects(**owner)
             .set_if_some(
                 object_type.map(|object_type| object_type.0.clone()),
-                |query, value| query.object_type(value),
+                ListOwnedObjectsQuery::object_type,
             )
-            .set_if_some(page_size, |query, value| query.page_size(value))
-            .set_if_some(page_token.map(Into::into), |query, value| {
-                query.page_token(value)
-            })
+            .set_if_some(page_size, ListOwnedObjectsQuery::page_size)
+            .set_if_some(
+                page_token.map(Into::into),
+                ListOwnedObjectsQuery::page_token,
+            )
             .read_mask(crate::grpc::api::read_mask::<OwnedObjectReadMask, _>(
                 read_mask,
             ));
@@ -95,7 +96,7 @@ impl GrpcClient {
             .owned_objects(**owner)
             .set_if_some(
                 object_type.map(|object_type| object_type.0.clone()),
-                |query, value| query.object_type(value),
+                ListOwnedObjectsQuery::object_type,
             )
             .read_mask(crate::grpc::api::read_mask::<OwnedObjectReadMask, _>(
                 read_mask,

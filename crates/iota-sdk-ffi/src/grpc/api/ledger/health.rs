@@ -3,7 +3,7 @@
 
 //! Health API implementation.
 
-use iota_sdk::grpc_types::v1 as proto;
+use iota_sdk::{grpc_client::GetHealthQuery, grpc_types::v1 as proto};
 
 use crate::{error::Result, grpc::client::GrpcClient, helpers::SetIfSome};
 
@@ -37,7 +37,7 @@ impl GrpcClient {
         Ok((&self
             .client()
             .health()
-            .set_if_some(threshold_ms, |query, value| query.threshold_ms(value))
+            .set_if_some(threshold_ms, GetHealthQuery::threshold_ms)
             .await?
             .into_inner())
             .into())
