@@ -230,13 +230,16 @@ fn is_recoverable(error: &iota_sdk::graphql_client::error::GraphQLError) -> bool
 fn open_events(
     client: iota_sdk::graphql_client::GraphQLClient,
     filter: Option<GraphQLSubscriptionEventFilter>,
-    start_after: Option<iota_sdk::types::TransactionDigest>,
+    start_after: Option<Arc<TransactionDigest>>,
 ) -> SubscriptionStream<iota_sdk::graphql_client::query_types::Event> {
     box_stream(
         client
             .events_subscription()
             .set_if_some(filter.map(Into::into), EventsSubscriptionBuilder::filter)
-            .set_if_some(start_after, EventsSubscriptionBuilder::start_after)
+            .set_if_some(
+                start_after.map(|d| **d),
+                EventsSubscriptionBuilder::start_after,
+            )
             .subscribe(),
     )
 }
@@ -245,7 +248,7 @@ fn open_events(
 fn open_transactions(
     client: iota_sdk::graphql_client::GraphQLClient,
     filter: Option<GraphQLSubscriptionTransactionFilter>,
-    start_after: Option<iota_sdk::types::TransactionDigest>,
+    start_after: Option<Arc<TransactionDigest>>,
 ) -> SubscriptionStream<iota_sdk::types::SignedTransaction> {
     box_stream(
         client
@@ -254,7 +257,10 @@ fn open_transactions(
                 filter.map(Into::into),
                 TransactionsSubscriptionBuilder::filter,
             )
-            .set_if_some(start_after, TransactionsSubscriptionBuilder::start_after)
+            .set_if_some(
+                start_after.map(|d| **d),
+                TransactionsSubscriptionBuilder::start_after,
+            )
             .subscribe(),
     )
 }
@@ -285,7 +291,7 @@ impl GraphQLClient {
         start_after: Option<Arc<TransactionDigest>>,
     ) -> GraphQLEventSubscription {
         let client = (*self.client()).clone();
-        GraphQLEventSubscription::new(open_events(client, filter, start_after.map(|d| **d)))
+        GraphQLEventSubscription::new(open_events(client, filter, start_after))
     }
 
     /// Subscribe to a live stream of transactions matching the (optional)
@@ -305,10 +311,6 @@ impl GraphQLClient {
         start_after: Option<Arc<TransactionDigest>>,
     ) -> GraphQLTransactionSubscription {
         let client = (*self.client()).clone();
-        GraphQLTransactionSubscription::new(open_transactions(
-            client,
-            filter,
-            start_after.map(|d| **d),
-        ))
+        GraphQLTransactionSubscription::new(open_transactions(client, filter, start_after))
     }
 }

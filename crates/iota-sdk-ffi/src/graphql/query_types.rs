@@ -465,18 +465,7 @@ pub struct GraphQLEventFilter {
     #[uniffi(default = None)]
     pub sender: Option<Arc<Address>>,
     #[uniffi(default = None)]
-    pub transaction_digest: Option<String>,
-}
-
-impl From<iota_sdk::graphql_client::query_types::EventFilter> for GraphQLEventFilter {
-    fn from(value: iota_sdk::graphql_client::query_types::EventFilter) -> Self {
-        Self {
-            emitting_module: value.emitting_module,
-            event_type: value.event_type,
-            sender: value.sender.map(Into::into).map(Arc::new),
-            transaction_digest: value.transaction_digest,
-        }
-    }
+    pub transaction_digest: Option<Arc<TransactionDigest>>,
 }
 
 impl From<GraphQLEventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
@@ -485,7 +474,7 @@ impl From<GraphQLEventFilter> for iota_sdk::graphql_client::query_types::EventFi
             .with_emitting_module(value.emitting_module)
             .with_event_type(value.event_type)
             .with_sender(value.sender.map(|a| **a))
-            .with_transaction_digest(value.transaction_digest)
+            .with_transaction_digest(value.transaction_digest.map(|d| **d))
     }
 }
 

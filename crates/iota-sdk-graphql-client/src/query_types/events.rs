@@ -77,9 +77,9 @@ impl EventFilter {
     /// Filter by the digest of the transaction emitting the event.
     pub fn with_transaction_digest(
         mut self,
-        transaction_digest: impl Into<Option<String>>,
+        transaction_digest: impl Into<Option<TransactionDigest>>,
     ) -> Self {
-        self.transaction_digest = transaction_digest.into();
+        self.transaction_digest = transaction_digest.into().map(|d| d.to_string());
         self
     }
 }

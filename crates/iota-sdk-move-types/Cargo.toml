@@ -28,19 +28,26 @@ rustdoc-args = [
 default = []
 bcs-schema = ["dep:iota-bcs-schema", "serde"]
 serde = ["dep:bcs", "dep:serde", "dep:thiserror", "iota-types/serde"]
+u256 = ["dep:primitive-types"]
 
 [dependencies]
 # external dependencies
 bcs = { workspace = true, optional = true }
 paste = { workspace = true }
+primitive-types = { workspace = true, optional = true }
 serde = { workspace = true, features = ["derive"], optional = true }
 thiserror = { workspace = true, optional = true }
+variadics_please.workspace = true
 
 # internal dependencies
 iota-bcs-schema = { workspace = true, optional = true }
 iota-types = { workspace = true }
 
 [dev-dependencies]
+# external dependencies
+serde = { workspace = true, features = ["derive"] }
+
+# internal dependencies
 iota-bcs-schema = { workspace = true, features = ["move-shape"] }
 
 # The bytecode comparator only runs natively (it reads the fetched package
