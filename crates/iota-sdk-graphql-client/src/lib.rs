@@ -12,7 +12,7 @@ pub mod faucet;
 pub mod output_types;
 pub mod pagination;
 pub mod query_types;
-pub mod streams;
+mod streams;
 mod subscription;
 mod tls;
 mod transaction_builder_client;
