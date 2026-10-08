@@ -40,16 +40,18 @@ impl DryRunTransactionQuery {
         let Transaction::V1(v1) = &self.transaction else {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
-        let gas_objects = v1.gas_payment.objects.clone();
-        self.client
+        let mut query = self
+            .client
             .dry_run_transaction_kind(&v1.kind)
             .sender(v1.sender)
             .gas_budget(v1.gas_payment.budget)
             .gas_price(v1.gas_payment.price)
-            .gas_objects((!gas_objects.is_empty()).then_some(gas_objects))
             .gas_sponsor(v1.gas_payment.owner)
-            .skip_checks(self.skip_checks)
-            .await
+            .skip_checks(self.skip_checks);
+        if !v1.gas_payment.objects.is_empty() {
+            query = query.gas_objects(v1.gas_payment.objects.clone());
+        }
+        query.await
     }
 }
 
@@ -67,34 +69,33 @@ define_query! {
 
 impl DryRunTransactionKindQuery {
     /// Set the sender of the transaction.
-    pub fn sender(mut self, sender: impl Into<Option<Address>>) -> Self {
-        self.transaction_metadata.sender = sender.into();
+    pub fn sender(mut self, sender: Address) -> Self {
+        self.transaction_metadata.sender = Some(sender);
         self
     }
 
     /// Set the gas budget of the transaction.
-    pub fn gas_budget(mut self, gas_budget: impl Into<Option<u64>>) -> Self {
-        self.transaction_metadata.gas_budget = gas_budget.into();
+    pub fn gas_budget(mut self, gas_budget: u64) -> Self {
+        self.transaction_metadata.gas_budget = Some(gas_budget);
         self
     }
 
     /// Set the gas price of the transaction.
-    pub fn gas_price(mut self, gas_price: impl Into<Option<u64>>) -> Self {
-        self.transaction_metadata.gas_price = gas_price.into();
+    pub fn gas_price(mut self, gas_price: u64) -> Self {
+        self.transaction_metadata.gas_price = Some(gas_price);
         self
     }
 
     /// Set the objects that pay for the gas.
-    pub fn gas_objects(mut self, gas_objects: impl Into<Option<Vec<ObjectReference>>>) -> Self {
-        self.transaction_metadata.gas_objects = gas_objects
-            .into()
-            .map(|objects| objects.into_iter().map(ObjectRef::from).collect());
+    pub fn gas_objects(mut self, gas_objects: Vec<ObjectReference>) -> Self {
+        self.transaction_metadata.gas_objects =
+            Some(gas_objects.into_iter().map(ObjectRef::from).collect());
         self
     }
 
     /// Set the sponsor that pays for the gas.
-    pub fn gas_sponsor(mut self, gas_sponsor: impl Into<Option<Address>>) -> Self {
-        self.transaction_metadata.gas_sponsor = gas_sponsor.into();
+    pub fn gas_sponsor(mut self, gas_sponsor: Address) -> Self {
+        self.transaction_metadata.gas_sponsor = Some(gas_sponsor);
         self
     }
 
@@ -171,7 +172,7 @@ impl GraphQLClient {
             .as_ref()
             .and_then(|tx| tx.effects.as_ref())
             .and_then(|tx| tx.bcs.as_ref())
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| {
                 bcs::from_bytes::<TransactionEffects>(&bcs).map_err(iota_types::BcsError::new)
@@ -182,7 +183,7 @@ impl GraphQLClient {
         let transaction = txn_block
             .as_ref()
             .and_then(|tx| tx.bcs_unsigned.as_ref())
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Transaction>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?;

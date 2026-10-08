@@ -44,10 +44,10 @@ fn object_to_coin(obj: &iota_grpc_types::v1::object::Object) -> GrpcResult<Coin>
 }
 
 impl GetCoinsQuery {
-    /// Filter by coin type, the inner type `T` of `Coin<T>`. If `None`, lists
+    /// Filter by coin type, the inner type `T` of `Coin<T>`. Without it, lists
     /// all coin types (with type `0x2::coin::Coin`).
-    pub fn coin_type(mut self, coin_type: impl Into<Option<StructTag>>) -> Self {
-        self.base_request.object_type = Some(coin_object_type(coin_type.into()));
+    pub fn coin_type(mut self, coin_type: StructTag) -> Self {
+        self.base_request.object_type = Some(coin_object_type(Some(coin_type)));
         self
     }
 }
@@ -149,7 +149,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn coin_type_sets_the_coin_filter_and_none_resets_it() {
+    async fn coin_type_sets_the_coin_filter() {
         let client = GrpcClient::new("http://localhost").unwrap();
         let query = client
             .coins(Address::ZERO)
@@ -157,12 +157,6 @@ mod tests {
         assert_eq!(
             query.base_request.object_type.as_deref(),
             Some("0x2::coin::Coin<0x2::iota::IOTA>")
-        );
-
-        let query = query.coin_type(None);
-        assert_eq!(
-            query.base_request.object_type.as_deref(),
-            Some("0x2::coin::Coin")
         );
     }
 
