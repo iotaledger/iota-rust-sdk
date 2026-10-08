@@ -54,14 +54,14 @@ impl ListPackageVersionsQuery {
     }
 
     /// Only return versions after this one.
-    pub fn after_version(mut self, after_version: impl Into<Option<Version>>) -> Self {
-        self.after_version = after_version.into();
+    pub fn after_version(mut self, after_version: Version) -> Self {
+        self.after_version = Some(after_version);
         self
     }
 
     /// Only return versions before this one.
-    pub fn before_version(mut self, before_version: impl Into<Option<Version>>) -> Self {
-        self.before_version = before_version.into();
+    pub fn before_version(mut self, before_version: Version) -> Self {
+        self.before_version = Some(before_version);
         self
     }
 
@@ -154,14 +154,14 @@ impl ListPackagesQuery {
     }
 
     /// Only return packages published after this checkpoint.
-    pub fn after_checkpoint(mut self, after_checkpoint: impl Into<Option<u64>>) -> Self {
-        self.after_checkpoint = after_checkpoint.into();
+    pub fn after_checkpoint(mut self, after_checkpoint: u64) -> Self {
+        self.after_checkpoint = Some(after_checkpoint);
         self
     }
 
     /// Only return packages published before this checkpoint.
-    pub fn before_checkpoint(mut self, before_checkpoint: impl Into<Option<u64>>) -> Self {
-        self.before_checkpoint = before_checkpoint.into();
+    pub fn before_checkpoint(mut self, before_checkpoint: u64) -> Self {
+        self.before_checkpoint = Some(before_checkpoint);
         self
     }
 
@@ -245,8 +245,8 @@ struct ModulePagination {
 
 impl GetNormalizedMoveModuleQuery {
     /// Set the package version.
-    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = Some(version);
         self
     }
 
@@ -348,8 +348,8 @@ define_query! {
 impl GetPackageQuery {
     /// Set the package version. Without it, the package is loaded from the
     /// given address.
-    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = Some(version);
         self
     }
 
@@ -388,8 +388,8 @@ define_query! {
 impl GetNormalizedMoveFunctionQuery {
     /// Set the package version. Without it, the package at the given address
     /// is used.
-    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = Some(version);
         self
     }
 
@@ -408,6 +408,36 @@ impl GetNormalizedMoveFunctionQuery {
             .and_then(|p| p.module)
             .and_then(|m| m.function)
             .map(Into::into))
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::package_latest`]. Await it to send the
+    /// request.
+    pub struct GetPackageLatestQuery {
+        client: GraphQLClient,
+        address: Address,
+    }
+    output: GraphQLResult<Option<MovePackage>>;
+}
+
+impl GetPackageLatestQuery {
+    async fn send(self) -> GraphQLResult<Option<MovePackage>> {
+        let operation = LatestPackageQueryFragment::build(PackageArgs {
+            address: self.address,
+            version: None,
+        });
+
+        let response = self.client.run_query(&operation).await?;
+
+        Ok(response
+            .latest_package
+            .and_then(|x| x.bcs)
+            .map(|bcs| crate::base64::decode(&bcs.0))
+            .transpose()?
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
+            .transpose()?
+            .map(|obj| obj.data.into_package()))
     }
 }
 
@@ -448,22 +478,11 @@ impl GraphQLClient {
     /// Fetch the latest version of the package at address.
     /// This corresponds to the package with the highest version that shares its
     /// original ID with the package at address.
-    pub async fn package_latest(&self, address: Address) -> GraphQLResult<Option<MovePackage>> {
-        let operation = LatestPackageQueryFragment::build(PackageArgs {
+    pub fn package_latest(&self, address: Address) -> GetPackageLatestQuery {
+        GetPackageLatestQuery {
+            client: self.clone(),
             address,
-            version: None,
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        Ok(response
-            .latest_package
-            .and_then(|x| x.bcs)
-            .map(|bcs| crate::base64::decode(&bcs.0))
-            .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
-            .transpose()?
-            .map(|obj| obj.data.into_package()))
+        }
     }
 
     /// The Move packages that exist in the network, optionally bounded
@@ -531,6 +550,16 @@ mod tests {
             test_client,
         },
     };
+
+    #[tokio::test]
+    async fn package_latest_sends_the_address_without_a_version() {
+        let vars = sent_variables("LatestPackageQueryFragment", |client| async move {
+            let _ = client.package_latest(Address::FRAMEWORK).await;
+        })
+        .await;
+        assert_eq!(vars["address"], Address::FRAMEWORK.to_string());
+        assert!(vars["version"].is_null());
+    }
 
     #[tokio::test]
     async fn package_sends_the_address_and_version() {

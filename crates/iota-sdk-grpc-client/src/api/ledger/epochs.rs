@@ -27,10 +27,10 @@ define_query! {
 }
 
 impl GetEpochQuery {
-    /// Set the number of the epoch to query. If `None`, queries the current
+    /// Set the number of the epoch to query. Without it, queries the current
     /// epoch.
-    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch_number.into();
+    pub fn epoch_number(mut self, epoch_number: u64) -> Self {
+        self.epoch = Some(epoch_number);
         self
     }
 
@@ -196,9 +196,6 @@ mod tests {
             query.read_mask.as_str(),
             EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE).as_str()
         );
-
-        let query = query.epoch_number(None);
-        assert_eq!(query.epoch, None);
     }
 
     #[tokio::test]

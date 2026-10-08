@@ -28,8 +28,8 @@ define_query! {
 
 impl ListEventsQuery {
     /// Only return the events that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<EventFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: EventFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 

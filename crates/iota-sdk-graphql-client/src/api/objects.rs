@@ -40,8 +40,8 @@ impl ListObjectsQuery {
     }
 
     /// Only return the objects that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<ObjectFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: ObjectFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
@@ -114,8 +114,8 @@ define_query! {
 
 impl GetObjectQuery {
     /// Set the object version. Defaults to the latest version.
-    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = Some(version);
         self
     }
 
@@ -154,8 +154,8 @@ define_query! {
 
 impl GetMoveObjectContentsQuery {
     /// Set the object version. Defaults to the latest version.
-    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = Some(version);
         self
     }
 
@@ -188,8 +188,8 @@ define_query! {
 
 impl GetMoveObjectContentsBcsQuery {
     /// Set the object version. Defaults to the latest version.
-    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = Some(version);
         self
     }
 
@@ -206,6 +206,31 @@ impl GetMoveObjectContentsBcsQuery {
             .and_then(|o| o.as_move_object)
             .and_then(|o| o.contents)
             .map(|bcs| crate::base64::decode(bcs.bcs.0.as_str()))
+            .transpose()
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::object_bcs`]. Await it to send the request.
+    pub struct GetObjectBcsQuery {
+        client: GraphQLClient,
+        object_id: ObjectId,
+    }
+    output: GraphQLResult<Option<Vec<u8>>>;
+}
+
+impl GetObjectBcsQuery {
+    async fn send(self) -> GraphQLResult<Option<Vec<u8>>> {
+        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+            object_id: self.object_id,
+            version: None,
+        });
+
+        let response = self.client.run_query(&operation).await?;
+
+        response
+            .object
+            .and_then(|o| o.bcs.map(|bcs| crate::base64::decode(bcs.0.as_str())))
             .transpose()
     }
 }
@@ -242,18 +267,11 @@ impl GraphQLClient {
 
     /// Return the object's bcs content [`Vec<u8>`] based on the provided
     /// [`Address`](iota_types::Address).
-    pub async fn object_bcs(&self, object_id: ObjectId) -> GraphQLResult<Option<Vec<u8>>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+    pub fn object_bcs(&self, object_id: ObjectId) -> GetObjectBcsQuery {
+        GetObjectBcsQuery {
+            client: self.clone(),
             object_id,
-            version: None,
-        });
-
-        let response = self.run_query(&operation).await.unwrap();
-
-        response
-            .object
-            .and_then(|o| o.bcs.map(|bcs| crate::base64::decode(bcs.0.as_str())))
-            .transpose()
+        }
     }
 
     /// Return the contents JSON of an object that is a Move object.
@@ -294,6 +312,16 @@ mod tests {
             test_client,
         },
     };
+
+    #[tokio::test]
+    async fn object_bcs_sends_the_object_id_without_a_version() {
+        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+            let _ = client.object_bcs(ObjectId::SYSTEM_STATE).await;
+        })
+        .await;
+        assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
+        assert!(vars["version"].is_null());
+    }
 
     #[tokio::test]
     async fn object_queries_send_the_object_id_and_version() {

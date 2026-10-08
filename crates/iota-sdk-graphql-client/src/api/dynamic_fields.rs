@@ -14,8 +14,9 @@ use crate::{
     error::GraphQLResult,
     pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
-        DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldQueryFragment,
-        DynamicFieldsOwnerQueryFragment, DynamicObjectFieldQueryFragment,
+        Base64, DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName,
+        DynamicFieldQueryFragment, DynamicFieldsOwnerQueryFragment,
+        DynamicObjectFieldQueryFragment,
     },
     streams::PageStream,
 };
@@ -88,6 +89,72 @@ impl ListDynamicFieldsQuery {
     }
 }
 
+fn dynamic_field_name(type_tag: TypeTag, name: impl Into<NameValue>) -> DynamicFieldName {
+    DynamicFieldName {
+        type_tag: type_tag.to_string(),
+        bcs: Base64(base64ct::Base64::encode_string(&name.into().0)),
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::dynamic_field`]. Await it to send the
+    /// request.
+    pub struct GetDynamicFieldQuery {
+        client: GraphQLClient,
+        address: Address,
+        name: DynamicFieldName,
+    }
+    output: GraphQLResult<Option<DynamicFieldOutput>>;
+}
+
+impl GetDynamicFieldQuery {
+    async fn send(self) -> GraphQLResult<Option<DynamicFieldOutput>> {
+        let operation = DynamicFieldQueryFragment::build(DynamicFieldArgs {
+            address: self.address,
+            name: self.name,
+        });
+
+        let response = self.client.run_query(&operation).await?;
+
+        let result = response
+            .owner
+            .and_then(|o| o.dynamic_field)
+            .map(|df| df.try_into())
+            .transpose()?;
+
+        Ok(result)
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::dynamic_object_field`]. Await it to send the
+    /// request.
+    pub struct GetDynamicObjectFieldQuery {
+        client: GraphQLClient,
+        address: Address,
+        name: DynamicFieldName,
+    }
+    output: GraphQLResult<Option<DynamicFieldOutput>>;
+}
+
+impl GetDynamicObjectFieldQuery {
+    async fn send(self) -> GraphQLResult<Option<DynamicFieldOutput>> {
+        let operation = DynamicObjectFieldQueryFragment::build(DynamicFieldArgs {
+            address: self.address,
+            name: self.name,
+        });
+
+        let response = self.client.run_query(&operation).await?;
+
+        let result: Option<DynamicFieldOutput> = response
+            .owner
+            .and_then(|o| o.dynamic_object_field)
+            .map(|df| df.try_into())
+            .transpose()?;
+        Ok(result)
+    }
+}
+
 impl GraphQLClient {
     /// Access a dynamic field on an object using its name. Names are arbitrary
     /// Move values whose type have copy, drop, and store, and are specified
@@ -110,30 +177,17 @@ impl GraphQLClient {
     /// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
     /// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
     /// ```
-    pub async fn dynamic_field(
+    pub fn dynamic_field(
         &self,
         address: Address,
         type_tag: TypeTag,
         name: impl Into<NameValue>,
-    ) -> GraphQLResult<Option<DynamicFieldOutput>> {
-        let bcs = name.into().0;
-        let operation = DynamicFieldQueryFragment::build(DynamicFieldArgs {
+    ) -> GetDynamicFieldQuery {
+        GetDynamicFieldQuery {
+            client: self.clone(),
             address,
-            name: crate::query_types::DynamicFieldName {
-                type_tag: type_tag.to_string(),
-                bcs: crate::query_types::Base64(base64ct::Base64::encode_string(&bcs)),
-            },
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        let result = response
-            .owner
-            .and_then(|o| o.dynamic_field)
-            .map(|df| df.try_into())
-            .transpose()?;
-
-        Ok(result)
+            name: dynamic_field_name(type_tag, name),
+        }
     }
 
     /// Access a dynamic object field on an object using its name. Names are
@@ -145,29 +199,17 @@ impl GraphQLClient {
     ///
     /// This returns [`DynamicFieldOutput`] which contains the name, the value
     /// as json, and object.
-    pub async fn dynamic_object_field(
+    pub fn dynamic_object_field(
         &self,
         address: Address,
         type_tag: TypeTag,
         name: impl Into<NameValue>,
-    ) -> GraphQLResult<Option<DynamicFieldOutput>> {
-        let bcs = name.into().0;
-        let operation = DynamicObjectFieldQueryFragment::build(DynamicFieldArgs {
+    ) -> GetDynamicObjectFieldQuery {
+        GetDynamicObjectFieldQuery {
+            client: self.clone(),
             address,
-            name: crate::query_types::DynamicFieldName {
-                type_tag: type_tag.to_string(),
-                bcs: crate::query_types::Base64(base64ct::Base64::encode_string(&bcs)),
-            },
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        let result: Option<DynamicFieldOutput> = response
-            .owner
-            .and_then(|o| o.dynamic_object_field)
-            .map(|df| df.try_into())
-            .transpose()?;
-        Ok(result)
+            name: dynamic_field_name(type_tag, name),
+        }
     }
 
     /// Get a page of dynamic fields for the provided address. Note that this
@@ -193,6 +235,28 @@ mod tests {
             test_client,
         },
     };
+
+    #[tokio::test]
+    async fn dynamic_field_getters_send_the_address_and_name() {
+        let address = ObjectId::SYSTEM_STATE.into();
+        let vars = sent_variables("DynamicFieldQueryFragment", |client| async move {
+            let _ = client.dynamic_field(address, TypeTag::U64, 2u64).await;
+        })
+        .await;
+        assert_eq!(vars["address"], address.to_string());
+        assert_eq!(vars["name"]["type"], "u64");
+        assert_eq!(vars["name"]["bcs"], "AgAAAAAAAAA=");
+
+        let vars = sent_variables("DynamicObjectFieldQueryFragment", |client| async move {
+            let _ = client
+                .dynamic_object_field(address, TypeTag::U64, 2u64)
+                .await;
+        })
+        .await;
+        assert_eq!(vars["address"], address.to_string());
+        assert_eq!(vars["name"]["type"], "u64");
+        assert_eq!(vars["name"]["bcs"], "AgAAAAAAAAA=");
+    }
 
     #[tokio::test]
     async fn dynamic_fields_sends_the_address_and_pagination() {
