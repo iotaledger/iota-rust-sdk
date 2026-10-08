@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use std::{
-    future::Future,
     pin::Pin,
     task::{Context, Poll},
 };
@@ -11,171 +10,120 @@ use std::{
 use futures::Stream;
 
 use crate::{
-    error,
+    api::QueryFuture,
+    error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter},
-    query_types::PageInfo,
 };
 
-/// A stream that yields items from a paginated query with support for
-/// bidirectional pagination.
-pub struct PageStream<T, F, Fut> {
-    query_fn: F,
-    direction: Direction,
-    limit: Option<i32>,
-    start_cursor: Option<String>,
-    current_page: Option<(PageInfo, std::vec::IntoIter<T>)>,
-    current_future: Option<Pin<Box<Fut>>>,
-    finished: bool,
+#[cfg(not(target_arch = "wasm32"))]
+type PageFn<T> = Box<dyn Fn(PaginationFilter) -> QueryFuture<GraphQLResult<Page<T>>> + Send>;
+#[cfg(target_arch = "wasm32")]
+type PageFn<T> = Box<dyn Fn(PaginationFilter) -> QueryFuture<GraphQLResult<Page<T>>>>;
+
+/// A stream of the items of a list query, fetched page by page in the
+/// direction of its pagination.
+///
+/// The stream ends after yielding an error. [`PageStream::pagination`] then
+/// returns the page that failed, so passing it to the query's `pagination`
+/// and streaming again continues where this stream stopped.
+pub struct PageStream<T> {
+    query_fn: PageFn<T>,
+    pagination: PaginationFilter,
+    state: State<T>,
 }
 
-impl<T, F, Fut> PageStream<T, F, Fut> {
-    pub fn new(query_fn: F, pagination: PaginationFilter) -> Self {
+enum State<T> {
+    /// The page of `pagination` is fetched on the next poll.
+    Idle,
+    Fetching(QueryFuture<GraphQLResult<Page<T>>>),
+    /// Yielding the items of the page of `pagination`, then continuing at
+    /// `next_cursor` if there is one.
+    Yielding {
+        items: std::vec::IntoIter<T>,
+        next_cursor: Option<String>,
+    },
+    Done,
+}
+
+impl<T> PageStream<T> {
+    pub(crate) fn new(pagination: PaginationFilter, query_fn: PageFn<T>) -> Self {
         Self {
             query_fn,
-            direction: pagination.direction,
-            limit: pagination.limit,
-            start_cursor: pagination.cursor,
-            current_page: None,
-            current_future: None,
-            finished: false,
+            pagination,
+            state: State::Idle,
         }
+    }
+
+    /// The pagination of the page the stream is yielding from, or is about
+    /// to fetch.
+    ///
+    /// Streaming again from it repeats the items already yielded from that
+    /// page. After an error it is the page that failed to fetch, so no item
+    /// is repeated.
+    pub fn pagination(&self) -> &PaginationFilter {
+        &self.pagination
     }
 }
 
-impl<T, F, Fut> Stream for PageStream<T, F, Fut>
-where
-    T: Clone + Unpin,
-    F: Fn(PaginationFilter) -> Fut,
-    F: Unpin,
-    Fut: Future<Output = Result<Page<T>, error::GraphQLError>>,
-{
-    type Item = Result<T, error::GraphQLError>;
+// No field is structurally pinned: the page future is boxed.
+impl<T> Unpin for PageStream<T> {}
 
-    fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-        if self.finished {
-            return Poll::Ready(None);
-        }
+impl<T> Stream for PageStream<T> {
+    type Item = GraphQLResult<T>;
 
+    fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+        let this = self.get_mut();
         loop {
-            let direction = self.direction.clone();
-            // If we have a current page, return the next item
-            if let Some((page_info, iter)) = &mut self.current_page {
-                if let Some(item) = iter.next() {
-                    return Poll::Ready(Some(Ok(item)));
+            match &mut this.state {
+                State::Idle => {
+                    this.state = State::Fetching((this.query_fn)(this.pagination.clone()));
                 }
-
-                let should_continue = match direction {
-                    Direction::Forward => page_info.has_next_page,
-                    Direction::Backward => page_info.has_previous_page,
-                };
-                if !should_continue {
-                    self.finished = true;
-                    return Poll::Ready(None);
-                }
-            }
-
-            // Get cursor from current page
-            let current_cursor = self
-                .current_page
-                .as_ref()
-                .and_then(|(page_info, _iter)| match self.direction {
-                    Direction::Forward => page_info
-                        .has_next_page
-                        .then(|| page_info.end_cursor.clone()),
-                    Direction::Backward => page_info
-                        .has_previous_page
-                        .then(|| page_info.start_cursor.clone()),
-                })
-                .flatten();
-
-            // If there's no future yet, create one
-            if self.current_future.is_none() {
-                let current_cursor = if self.current_page.is_none() {
-                    self.start_cursor.take()
-                } else {
-                    current_cursor
-                };
-                let filter = PaginationFilter {
-                    direction: self.direction.clone(),
-                    cursor: current_cursor,
-                    limit: self.limit,
-                };
-                let future = (self.query_fn)(filter);
-                self.current_future = Some(Box::pin(future));
-            }
-
-            // Poll the future
-            match self.current_future.as_mut().unwrap().as_mut().poll(cx) {
-                Poll::Ready(Ok(page)) => {
-                    self.current_future = None;
-
-                    if page.is_empty() {
-                        self.finished = true;
-                        return Poll::Ready(None);
+                State::Fetching(future) => match future.as_mut().poll(cx) {
+                    Poll::Pending => return Poll::Pending,
+                    Poll::Ready(Err(e)) => {
+                        this.state = State::Done;
+                        return Poll::Ready(Some(Err(e)));
                     }
-
-                    let (page_info, data) = page.into_parts();
-                    // For backward pagination, we need to reverse the items
-                    let iter = match self.direction {
-                        Direction::Forward => data.into_iter(),
-                        Direction::Backward => {
-                            let mut vec = data;
-                            vec.reverse();
-                            vec.into_iter()
+                    Poll::Ready(Ok(page)) => {
+                        let (page_info, mut items) = page.into_parts();
+                        let next_cursor = match this.pagination.direction {
+                            Direction::Forward => {
+                                page_info.has_next_page.then_some(page_info.end_cursor)
+                            }
+                            Direction::Backward => {
+                                // Yield the items newest first.
+                                items.reverse();
+                                page_info
+                                    .has_previous_page
+                                    .then_some(page_info.start_cursor)
+                            }
+                        };
+                        this.state = if items.is_empty() {
+                            State::Done
+                        } else {
+                            State::Yielding {
+                                items: items.into_iter(),
+                                next_cursor: next_cursor.flatten(),
+                            }
+                        };
+                    }
+                },
+                State::Yielding { items, next_cursor } => {
+                    if let Some(item) = items.next() {
+                        return Poll::Ready(Some(Ok(item)));
+                    }
+                    this.state = match next_cursor.take() {
+                        Some(cursor) => {
+                            this.pagination.cursor = Some(cursor);
+                            State::Idle
                         }
+                        None => State::Done,
                     };
-                    self.current_page = Some((page_info, iter));
                 }
-                Poll::Ready(Err(e)) => {
-                    self.finished = true;
-                    self.current_future = None;
-                    return Poll::Ready(Some(Err(e)));
-                }
-                Poll::Pending => return Poll::Pending,
+                State::Done => return Poll::Ready(None),
             }
         }
     }
-}
-
-/// Creates a new `PageStream` for a paginated query.
-///
-/// ## Example
-///
-/// ```rust,ignore
-/// use futures::StreamExt;
-/// use iota_graphql_client::streams::stream_paginated_query;
-/// use iota_graphql_client::GraphQLClient;
-/// use iota_graphql_client::PaginationFilter;
-/// use iota_types::Address;
-///
-/// let client = GraphQLClient::new_testnet().unwrap();
-/// let owner = Address::STD;
-/// let mut stream = stream_paginated_query(
-///     |pagination_filter| {
-///         client
-///             .coins(owner)
-///             .pagination(pagination_filter)
-///             .into_future()
-///     },
-///     PaginationFilter::default(),
-/// );
-///
-/// while let Some(result) = stream.next().await {
-///    match result {
-///        Ok(coin) => println!("Got coin: {:?}", coin),
-///        Err(e) => eprintln!("Error: {}", e),
-///    }
-/// }
-/// ```
-pub fn stream_paginated_query<T, F, Fut>(
-    query_fn: F,
-    pagination: PaginationFilter,
-) -> PageStream<T, F, Fut>
-where
-    F: Fn(PaginationFilter) -> Fut,
-    Fut: Future<Output = Result<Page<T>, error::GraphQLError>>,
-{
-    PageStream::new(query_fn, pagination)
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
@@ -185,7 +133,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        error::GraphQLResult,
+        query_types::PageInfo,
         test_utils::{
             assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
         },
@@ -215,24 +163,32 @@ mod tests {
         )
     }
 
-    /// Stream `pages` in order and return the items and the requests made.
+    /// Stream `pages` in order and return the items, the requests made and
+    /// the stream's pagination once it ended.
     async fn run(
         pagination: PaginationFilter,
         pages: Vec<GraphQLResult<Page<i32>>>,
-    ) -> (Vec<GraphQLResult<i32>>, Vec<PaginationFilter>) {
+    ) -> (
+        Vec<GraphQLResult<i32>>,
+        Vec<PaginationFilter>,
+        PaginationFilter,
+    ) {
         let pages = std::sync::Mutex::new(pages.into_iter());
-        let requests = std::sync::Mutex::new(Vec::new());
-        let items = stream_paginated_query(
-            |filter: PaginationFilter| {
-                requests.lock().unwrap().push(filter);
-                let page = pages.lock().unwrap().next().expect("no page left");
-                async move { page }
-            },
+        let requests = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+        let mut stream = PageStream::new(
             pagination,
-        )
-        .collect()
-        .await;
-        (items, requests.into_inner().unwrap())
+            Box::new({
+                let requests = requests.clone();
+                move |filter: PaginationFilter| {
+                    requests.lock().unwrap().push(filter);
+                    let page = pages.lock().unwrap().next().expect("no page left");
+                    Box::pin(async move { page })
+                }
+            }),
+        );
+        let items = stream.by_ref().collect().await;
+        let requests = requests.lock().unwrap().clone();
+        (items, requests, stream.pagination().clone())
     }
 
     fn values(items: Vec<GraphQLResult<i32>>) -> Vec<i32> {
@@ -246,7 +202,7 @@ mod tests {
             cursor: Some("start".to_owned()),
             limit: Some(3),
         };
-        let (items, requests) = run(
+        let (items, requests, _) = run(
             pagination,
             vec![
                 Ok(page(vec![1, 2], true, Some("second"))),
@@ -274,7 +230,7 @@ mod tests {
             cursor: Some("start".to_owned()),
             limit: Some(3),
         };
-        let (items, requests) = run(
+        let (items, requests, _) = run(
             pagination,
             vec![
                 Ok(page(vec![3, 4], true, Some("second"))),
@@ -297,7 +253,7 @@ mod tests {
 
     #[tokio::test]
     async fn an_empty_page_ends_the_stream() {
-        let (items, requests) = run(
+        let (items, requests, _) = run(
             PaginationFilter::default(),
             vec![Ok(page(Vec::new(), true, Some("next")))],
         )
@@ -309,7 +265,7 @@ mod tests {
 
     #[tokio::test]
     async fn an_error_is_yielded_once_and_ends_the_stream() {
-        let (items, requests) = run(
+        let (items, requests, _) = run(
             PaginationFilter::default(),
             vec![Err(crate::GraphQLError::Timeout)],
         )
@@ -320,6 +276,31 @@ mod tests {
             [Err(crate::GraphQLError::Timeout)]
         ));
         assert_eq!(requests.len(), 1);
+    }
+
+    #[tokio::test]
+    async fn after_an_error_the_pagination_is_the_page_that_failed() {
+        let pagination = PaginationFilter {
+            direction: Direction::Backward,
+            cursor: Some("start".to_owned()),
+            limit: Some(3),
+        };
+        let (items, _, resume) = run(
+            pagination,
+            vec![
+                Ok(page(vec![3, 4], true, Some("second"))),
+                Err(crate::GraphQLError::Timeout),
+            ],
+        )
+        .await;
+
+        assert!(matches!(
+            items.as_slice(),
+            [Ok(4), Ok(3), Err(crate::GraphQLError::Timeout)]
+        ));
+        assert_eq!(resume.cursor.as_deref(), Some("second-backward"));
+        assert_eq!(resume.limit, Some(3));
+        assert!(matches!(resume.direction, Direction::Backward));
     }
 
     #[tokio::test]

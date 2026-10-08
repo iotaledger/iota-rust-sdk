@@ -6,7 +6,6 @@
 
 use base64ct::Encoding;
 use cynic::QueryBuilder;
-use futures::Stream;
 use iota_types::{Address, MovePackage, Object, Version};
 
 use crate::{
@@ -21,7 +20,7 @@ use crate::{
         PackageCheckpointFilter, PackageQueryFragment, PackageVersionsArgs,
         PackageVersionsQueryFragment, PackagesQueryArgs, PackagesQueryFragment,
     },
-    streams::stream_paginated_query,
+    streams::PageStream,
 };
 
 define_query! {
@@ -47,9 +46,12 @@ impl ListPackageVersionsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<MovePackage>> + Unpin {
+    pub fn stream(self) -> PageStream<MovePackage> {
         let pagination = self.pagination.clone();
-        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+        PageStream::new(
+            pagination,
+            Box::new(move |page| self.clone().pagination(page).into_future()),
+        )
     }
 
     /// Only return versions after this one.
@@ -142,9 +144,12 @@ impl ListPackagesQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<MovePackage>> + Unpin {
+    pub fn stream(self) -> PageStream<MovePackage> {
         let pagination = self.pagination.clone();
-        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+        PageStream::new(
+            pagination,
+            Box::new(move |page| self.clone().pagination(page).into_future()),
+        )
     }
 
     /// Only return packages published after this checkpoint.
