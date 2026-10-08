@@ -13,13 +13,11 @@ async def main():
         "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
 
     # `objects` is batched: it takes a list of ids and returns one result per
-    # id, in the same order, carrying either the object or the error for that
+    # id, in the same order; reading an id's result raises the error for that
     # id. The default read mask returns the reference and the BCS-decoded
     # object; pass `read_mask=[GrpcObjectField.REFERENCE()]` to skip the object.
-    result = (await client.objects([object_id]))[0]
-    if result.error is not None:
-        raise RuntimeError(f"Failed to get object: {result.error}")
-    obj = result.object.object if result.object is not None else None
+    result = (await client.objects([object_id])).get(0)
+    obj = result.object
     assert obj is not None, "Object not included in the response"
 
     print("Object ID:", obj.id())
