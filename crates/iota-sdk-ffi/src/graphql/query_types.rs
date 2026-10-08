@@ -1396,30 +1396,6 @@ pub struct GraphQLMoveModuleQuery {
     pub name: String,
 }
 
-impl From<iota_sdk::graphql_client::query_types::MoveModuleQueryFragment>
-    for GraphQLMoveModuleQuery
-{
-    fn from(value: iota_sdk::graphql_client::query_types::MoveModuleQueryFragment) -> Self {
-        Self {
-            package: Arc::new(value.package.address.into()),
-            name: value.name,
-        }
-    }
-}
-
-impl From<GraphQLMoveModuleQuery>
-    for iota_sdk::graphql_client::query_types::MoveModuleQueryFragment
-{
-    fn from(value: GraphQLMoveModuleQuery) -> Self {
-        Self {
-            package: iota_sdk::graphql_client::query_types::MovePackageAddress {
-                address: **value.package,
-            },
-            name: value.name,
-        }
-    }
-}
-
 /// A type parameter of a Move struct, with the abilities it is constrained to.
 #[derive(uniffi::Record)]
 pub struct GraphQLMoveStructTypeParameter {
