@@ -3,13 +3,10 @@
 
 //! Transactions API implementation.
 
-use std::sync::{
-    Arc,
-    atomic::{AtomicUsize, Ordering},
-};
+use std::sync::Arc;
 
 use iota_sdk::{
-    grpc_client::{GrpcResult, read_mask_fields::TransactionReadMask},
+    grpc_client::read_mask_fields::TransactionReadMask,
     grpc_types::{proto::proto_to_timestamp_ms, v1 as proto},
     transaction_builder::TransactionBuilderExecutionClient,
 };
@@ -63,86 +60,10 @@ pub struct GrpcExecutedTransaction {
     pub output_objects: Option<Vec<Arc<Object>>>,
 }
 
-/// The results of a batch of transactions, in request order. Each item is
-/// either the transaction or the error the server reported for it.
-///
-/// Read items by position with `get`, or in order with `has_next` and `next`.
-/// An item's error does not end the iteration: `next` throws it and the
-/// following call moves on to the next item. Items can be read any number of
-/// times.
-#[derive(uniffi::Object)]
-pub struct GrpcExecutedTransactionResults {
-    results: Vec<std::result::Result<GrpcExecutedTransaction, String>>,
-    cursor: AtomicUsize,
-}
-
-impl GrpcExecutedTransactionResults {
-    /// Convert the client's results, failing if a transaction the server
-    /// returned cannot be decoded.
-    pub(crate) fn new(
-        results: Vec<GrpcResult<proto::transaction::ExecutedTransaction>>,
-    ) -> Result<Self> {
-        Ok(Self {
-            results: results
-                .into_iter()
-                .map(|result| match result {
-                    Ok(transaction) => (&transaction).try_into().map(Ok),
-                    Err(error) => Ok(Err(error.to_string())),
-                })
-                .collect::<Result<_>>()?,
-            cursor: AtomicUsize::new(0),
-        })
-    }
-}
-
-#[uniffi::export]
-impl GrpcExecutedTransactionResults {
-    /// The number of items.
-    pub fn len(&self) -> u64 {
-        self.results.len() as u64
-    }
-
-    /// Whether there are no items.
-    pub fn is_empty(&self) -> bool {
-        self.results.is_empty()
-    }
-
-    /// The transaction at `index`, or an error carrying the message the
-    /// server reported for it. Errors if `index` is out of range.
-    pub fn get(&self, index: u64) -> Result<GrpcExecutedTransaction> {
-        usize::try_from(index)
-            .ok()
-            .and_then(|index| self.results.get(index))
-            .ok_or_else(|| {
-                SdkFfiError::custom(format!(
-                    "index {index} out of range for {} results",
-                    self.results.len()
-                ))
-            })?
-            .clone()
-            .map_err(SdkFfiError::custom)
-    }
-
-    /// Whether `next` has an item left to return.
-    pub fn has_next(&self) -> bool {
-        self.cursor.load(Ordering::Relaxed) < self.results.len()
-    }
-
-    /// The next transaction, or an error carrying the message the server
-    /// reported for it. Errors once every item has been returned.
-    ///
-    /// `has_next` followed by `next` is not atomic: when several threads
-    /// share the results, `next` can error as exhausted after `has_next`
-    /// returned `true`.
-    pub fn next(&self) -> Result<GrpcExecutedTransaction> {
-        let len = self.results.len();
-        let index = self.cursor.fetch_add(1, Ordering::Relaxed);
-        if index >= len {
-            self.cursor.fetch_min(len, Ordering::Relaxed);
-            return Err(SdkFfiError::custom("no results left"));
-        }
-        self.get(index as u64)
-    }
+crate::grpc_batch_results! {
+    /// The results of a batch of transactions, in request order. Each item is
+    /// either the transaction or the error the server reported for it.
+    GrpcExecutedTransactionResults(GrpcExecutedTransaction, proto::transaction::ExecutedTransaction)
 }
 
 impl TryFrom<&proto::transaction::ExecutedTransaction> for GrpcExecutedTransaction {
