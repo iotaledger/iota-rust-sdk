@@ -18,7 +18,7 @@ use crate::{
         NormalizedMoveFunctionQueryFragment, NormalizedMoveModuleQueryArgs,
         NormalizedMoveModuleQueryFragment, PackageArgs, PackageCheckpointFilter,
         PackageQueryFragment, PackageVersionsArgs, PackageVersionsQueryFragment, PackagesQueryArgs,
-        PackagesQueryFragment,
+        PackagesQueryFragment, PageInfo,
     },
 };
 
@@ -212,10 +212,6 @@ define_query! {
         package: Address,
         module: String,
         version: Option<Version>,
-        enums_pagination: PaginationFilter,
-        friends_pagination: PaginationFilter,
-        functions_pagination: PaginationFilter,
-        structs_pagination: PaginationFilter,
     }
     output: GraphQLResult<Option<MoveModule>>;
 }
@@ -227,34 +223,52 @@ struct ModulePagination {
     structs: PaginationFilterResponse,
 }
 
+/// One of a module's member lists, collected page by page.
+struct MemberList<T> {
+    items: Vec<T>,
+    cursor: Option<String>,
+    complete: bool,
+}
+
+impl<T> MemberList<T> {
+    fn new() -> Self {
+        Self {
+            items: Vec::new(),
+            cursor: None,
+            complete: false,
+        }
+    }
+
+    /// The next page of the list, or an empty page once it is complete.
+    fn pagination(&self, page_size: Option<i32>) -> PaginationFilterResponse {
+        PaginationFilterResponse {
+            after: self.cursor.clone(),
+            first: if self.complete { Some(0) } else { page_size },
+            ..Default::default()
+        }
+    }
+
+    /// Add a fetched page; `None` is an empty page.
+    fn add(&mut self, page: Option<(PageInfo, Vec<T>)>) {
+        if self.complete {
+            return;
+        }
+        let Some((page_info, nodes)) = page else {
+            self.complete = true;
+            return;
+        };
+        self.items.extend(nodes);
+        match page_info.end_cursor {
+            Some(cursor) if page_info.has_next_page => self.cursor = Some(cursor),
+            _ => self.complete = true,
+        }
+    }
+}
+
 impl GetNormalizedMoveModuleQuery {
     /// Set the package version.
     pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
         self.version = version.into();
-        self
-    }
-
-    /// Set the page of the module's enums to fetch.
-    pub fn enums_pagination(mut self, pagination: PaginationFilter) -> Self {
-        self.enums_pagination = pagination;
-        self
-    }
-
-    /// Set the page of the module's friends to fetch.
-    pub fn friends_pagination(mut self, pagination: PaginationFilter) -> Self {
-        self.friends_pagination = pagination;
-        self
-    }
-
-    /// Set the page of the module's functions to fetch.
-    pub fn functions_pagination(mut self, pagination: PaginationFilter) -> Self {
-        self.functions_pagination = pagination;
-        self
-    }
-
-    /// Set the page of the module's structs to fetch.
-    pub fn structs_pagination(mut self, pagination: PaginationFilter) -> Self {
-        self.structs_pagination = pagination;
         self
     }
 
@@ -300,22 +314,44 @@ impl GetNormalizedMoveModuleQuery {
             package,
             module,
             version,
-            enums_pagination,
-            friends_pagination,
-            functions_pagination,
-            structs_pagination,
         } = self;
-        let pagination = ModulePagination {
-            enums: client.pagination_filter(enums_pagination).await,
-            friends: client.pagination_filter(friends_pagination).await,
-            functions: client.pagination_filter(functions_pagination).await,
-            structs: client.pagination_filter(structs_pagination).await,
-        };
-        let response = client
-            .run_query(&Self::operation(package, &module, version, &pagination))
-            .await?;
+        let page_size = client
+            .pagination_filter(PaginationFilter::default())
+            .await
+            .first;
+        let mut enums = MemberList::new();
+        let mut friends = MemberList::new();
+        let mut functions = MemberList::new();
+        let mut structs = MemberList::new();
+        loop {
+            let pagination = ModulePagination {
+                enums: enums.pagination(page_size),
+                friends: friends.pagination(page_size),
+                functions: functions.pagination(page_size),
+                structs: structs.pagination(page_size),
+            };
+            let response = client
+                .run_query(&Self::operation(package, &module, version, &pagination))
+                .await?;
+            let Some(page) = response.package.and_then(|p| p.module) else {
+                return Ok(None);
+            };
+            enums.add(page.enums.map(|c| (c.page_info, c.nodes)));
+            friends.add(Some((page.friends.page_info, page.friends.nodes)));
+            functions.add(page.functions.map(|c| (c.page_info, c.nodes)));
+            structs.add(page.structs.map(|c| (c.page_info, c.nodes)));
 
-        Ok(response.package.and_then(|p| p.module).map(Into::into))
+            if enums.complete && friends.complete && functions.complete && structs.complete {
+                return MoveModule::try_from_parts(
+                    page.file_format_version,
+                    enums.items,
+                    friends.items,
+                    functions.items,
+                    structs.items,
+                )
+                .map(Some);
+            }
+        }
     }
 }
 
@@ -387,11 +423,12 @@ impl GetNormalizedMoveFunctionQuery {
             });
         let response = self.client.run_query(&operation).await?;
 
-        Ok(response
+        response
             .package
             .and_then(|p| p.module)
             .and_then(|m| m.function)
-            .map(Into::into))
+            .map(TryInto::try_into)
+            .transpose()
     }
 }
 
@@ -483,9 +520,8 @@ impl GraphQLClient {
         }
     }
 
-    /// Return the normalized Move module data for the provided module.
-    // TODO: do we want to self paginate everything and return all the data, or keep
-    // pagination options?
+    /// Return the normalized Move module data for the provided module, with
+    /// every enum, friend, function and struct, fetching more pages as needed.
     pub fn normalized_move_module(
         &self,
         package: Address,
@@ -496,10 +532,6 @@ impl GraphQLClient {
             package,
             module: module.into(),
             version: None,
-            enums_pagination: PaginationFilter::default(),
-            friends_pagination: PaginationFilter::default(),
-            functions_pagination: PaginationFilter::default(),
-            structs_pagination: PaginationFilter::default(),
         }
     }
 }
@@ -507,13 +539,11 @@ impl GraphQLClient {
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use iota_types::{Address, Version};
+    use serde_json::json;
 
-    use crate::{
-        Direction, PaginationFilter,
-        test_utils::{
-            assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
-            test_client,
-        },
+    use crate::test_utils::{
+        answered_variables, assert_backward_page, assert_forward_page, backward_page, forward_page,
+        sent_variables, test_client,
     };
 
     #[tokio::test]
@@ -614,41 +644,99 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn normalized_move_module_sends_each_pagination_to_its_field() {
-        let page = |direction, cursor: &str, limit| PaginationFilter {
-            direction,
-            cursor: Some(cursor.to_owned()),
-            limit: Some(limit),
-        };
-        let vars = sent_variables("NormalizedMoveModuleQueryFragment", |client| async move {
-            let _ = client
-                .normalized_move_module(Address::FRAMEWORK, "coin")
-                .version(Version::from_u64(4))
-                .enums_pagination(page(Direction::Forward, "enums", 1))
-                .friends_pagination(page(Direction::Backward, "friends", 2))
-                .functions_pagination(page(Direction::Forward, "functions", 3))
-                .structs_pagination(page(Direction::Backward, "structs", 5))
-                .await;
-        })
+    async fn normalized_move_module_fetches_the_next_page_of_unfinished_lists_only() {
+        fn function(name: &str) -> serde_json::Value {
+            json!({
+                "isEntry": false,
+                "name": name,
+                "parameters": [],
+                "return": [],
+                "typeParameters": [],
+                "visibility": "PUBLIC",
+            })
+        }
+        fn page(nodes: Vec<serde_json::Value>, end_cursor: Option<&str>) -> serde_json::Value {
+            json!({
+                "nodes": nodes,
+                "pageInfo": {
+                    "hasPreviousPage": false,
+                    "hasNextPage": end_cursor.is_some(),
+                    "startCursor": null,
+                    "endCursor": end_cursor,
+                },
+            })
+        }
+        fn module_response(
+            friends: serde_json::Value,
+            functions: serde_json::Value,
+            structs: serde_json::Value,
+        ) -> serde_json::Value {
+            json!({ "data": { "package": { "module": {
+                "fileFormatVersion": 7,
+                "enums": null,
+                "friends": friends,
+                "functions": functions,
+                "structs": structs,
+            }}}})
+        }
+        let struct_ = json!({
+            "abilities": ["KEY"],
+            "name": "S",
+            "fields": [{ "name": "id", "type": { "repr": "0x2::object::UID" } }],
+            "typeParameters": [],
+        });
+
+        let module = std::sync::Mutex::new(None);
+        let requests = answered_variables(
+            "NormalizedMoveModuleQueryFragment",
+            vec![
+                module_response(
+                    page(Vec::new(), None),
+                    page(vec![function("a")], Some("functions")),
+                    page(vec![struct_], None),
+                ),
+                module_response(
+                    page(Vec::new(), None),
+                    page(vec![function("b")], None),
+                    serde_json::Value::Null,
+                ),
+            ],
+            |client| {
+                let module = &module;
+                async move {
+                    let response = client
+                        .normalized_move_module(Address::FRAMEWORK, "coin")
+                        .version(Version::from_u64(4))
+                        .await;
+                    *module.lock().unwrap() = Some(response);
+                }
+            },
+        )
         .await;
-        assert_eq!(vars["package"], Address::FRAMEWORK.to_string());
-        assert_eq!(vars["module"], "coin");
-        assert_eq!(vars["version"], 4);
-        for (member, direction, limit) in [
-            ("Enums", Direction::Forward, 1),
-            ("Friends", Direction::Backward, 2),
-            ("Functions", Direction::Forward, 3),
-            ("Structs", Direction::Backward, 5),
-        ] {
-            let cursor = member.to_lowercase();
-            let (used, unused) = match direction {
-                Direction::Forward => (("after", "first"), ("before", "last")),
-                Direction::Backward => (("before", "last"), ("after", "first")),
-            };
-            assert_eq!(vars[format!("{}{member}", used.0)], cursor);
-            assert_eq!(vars[format!("{}{member}", used.1)], limit);
-            assert!(vars[format!("{}{member}", unused.0)].is_null());
-            assert!(vars[format!("{}{member}", unused.1)].is_null());
+
+        let module = module.into_inner().unwrap().unwrap().unwrap().unwrap();
+        let functions = module.functions.iter().map(|f| f.name.as_str());
+        assert_eq!(functions.collect::<Vec<_>>(), ["a", "b"]);
+        assert_eq!(module.structs.len(), 1);
+        assert!(module.enums.is_empty() && module.friends.is_empty());
+
+        let [first, second] = requests.as_slice() else {
+            panic!("expected two requests, got {requests:?}");
+        };
+        for vars in [first, second] {
+            assert_eq!(vars["package"], Address::FRAMEWORK.to_string());
+            assert_eq!(vars["module"], "coin");
+            assert_eq!(vars["version"], 4);
+        }
+        let page_size = &first["firstFunctions"];
+        for member in ["Enums", "Friends", "Functions", "Structs"] {
+            assert!(first[format!("after{member}")].is_null());
+            assert_eq!(&first[format!("first{member}")], page_size);
+        }
+        assert_eq!(second["afterFunctions"], "functions");
+        assert_eq!(&second["firstFunctions"], page_size);
+        for member in ["Enums", "Friends", "Structs"] {
+            assert_eq!(second[format!("first{member}")], 0);
         }
     }
 
