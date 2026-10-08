@@ -119,7 +119,6 @@ pub mod iota {
         dummy_field: bool,
     }
 
-    #[cfg(feature = "serde")]
     impl crate::MoveType for IOTA {
         /// `0x2::iota::IOTA`.
         fn type_tag() -> iota_types::TypeTag {
@@ -236,7 +235,6 @@ pub mod balance {
 
     /// Compositional tag: `Balance<T>` is itself a valid type argument
     /// (e.g. `TimeLock<Balance<IOTA>>`), so its tag is derived from `T`'s.
-    #[cfg(feature = "serde")]
     impl<T: crate::MoveType> crate::MoveType for Balance<T> {
         /// `0x2::balance::Balance<T>`.
         fn type_tag() -> iota_types::TypeTag {
@@ -630,6 +628,18 @@ pub mod vec_map {
             Self {
                 contents: Vec::new(),
             }
+        }
+    }
+
+    impl<K: crate::MoveType, V: crate::MoveType> crate::MoveType for VecMap<K, V> {
+        /// `0x2::vec_map::VecMap<K, V>`.
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new(
+                iota_types::Address::FRAMEWORK,
+                iota_types::Identifier::from_static("vec_map"),
+                iota_types::Identifier::from_static("VecMap"),
+                <(K, V) as crate::MoveTypes>::type_tags(),
+            )))
         }
     }
 }
