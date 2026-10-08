@@ -226,10 +226,10 @@ impl GetObjectBcsQuery {
 
         let response = self.client.run_query(&operation).await?;
 
-        Ok(response
+        response
             .object
             .and_then(|o| o.bcs.map(|bcs| crate::base64::decode(bcs.0.as_str())))
-            .transpose()?)
+            .transpose()
     }
 }
 
