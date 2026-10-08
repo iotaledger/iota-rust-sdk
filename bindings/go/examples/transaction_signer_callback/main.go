@@ -48,7 +48,8 @@ func main() {
 	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))
 
 	signer := iota_sdk.NewTransactionSigner(&AsyncSigner{Key: privateKey})
-	effects, err := builder.Execute(signer)
+	waitFor := iota_sdk.WaitForTransactionFinalized
+	effects, err := builder.Execute(signer, &waitFor)
 	if err != nil {
 		log.Fatalf("Failed to execute: %v", err)
 	}

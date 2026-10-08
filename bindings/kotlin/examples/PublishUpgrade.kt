@@ -74,8 +74,8 @@ fun main() = runBlocking {
         // Sign and execute the transaction (publish the package)
         println("> Publishing package:")
         val sigPublish = privateKey.signTransaction(txPublish)
-        val effectsPublish = client.executeTransaction(listOf(sigPublish), txPublish)
-        client.waitForTransaction(txPublish.digest(), WaitForTransaction.FINALIZED)
+        val effectsPublish =
+            client.executeTransaction(listOf(sigPublish), txPublish, WaitForTransaction.FINALIZED)
         println("Success")
 
         // Resolve UpgradeCap and PackageId via the client

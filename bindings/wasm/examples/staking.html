@@ -302,6 +302,7 @@
         Address,
         UserSignature,
         Transaction,
+        WaitForTransaction,
       } from "../dist/iota-sdk.js";
 
       // The IOTA wallet extension calls .toJSON() on the transaction object
@@ -760,7 +761,11 @@
 
           const sigBytes = fromBase64(signed.signature);
           const userSig = UserSignature.fromBytes(sigBytes.buffer);
-          const effects = await client.executeTransaction([userSig], signedTx);
+          const effects = await client.executeTransaction(
+            [userSig],
+            signedTx,
+            WaitForTransaction.Finalized,
+          );
           return effects.digest().toBase58();
         }
 

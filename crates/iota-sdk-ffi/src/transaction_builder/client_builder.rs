@@ -7,7 +7,7 @@ use crate::{
     error::Result,
     graphql::output_types::GraphQLDryRunResult,
     transaction_builder::{
-        Payment,
+        Payment, WaitForTransaction,
         gas_station::GasStation,
         ptb_arg::{MoveArg, PTBArgument},
         signer::TransactionSigner,
@@ -478,14 +478,20 @@ macro_rules! client_transaction_builder {
                 Ok($convert)
             }
 
-            /// Execute the transaction.
+            /// Execute the transaction and optionally wait for finalization.
+            ///
+            /// If the wait fails, the error is returned although the transaction was
+            /// executed, and its effects are lost. To keep them, pass no `wait_for`
+            /// and call `wait_for_transaction` on the client afterwards.
+            #[uniffi::method(default(wait_for = None))]
             pub async fn execute(
                 &self,
                 signer: &TransactionSigner,
+                wait_for: Option<WaitForTransaction>,
             ) -> Result<TransactionEffects> {
                 Ok(self
                     .read(|builder| builder.clone())
-                    .execute(signer)
+                    .execute(signer, wait_for.map(Into::into))
                     .await?
                     .into())
             }
@@ -508,22 +514,30 @@ macro_rules! client_transaction_builder {
             }
 
             /// Execute the transaction with both the sender's and the sponsor's
-            /// signature.
+            /// signature, and optionally wait for finalization.
+            ///
+            /// If the wait fails, the error is returned although the transaction was
+            /// executed, and its effects are lost. To keep them, pass no `wait_for`
+            /// and call `wait_for_transaction` on the client afterwards.
             ///
             /// Use this when you hold the sponsor's key. The sponsor's address must be
             /// set with `sponsor`, which is also where the gas coins are drawn from.
             /// When the sponsor is a service that keeps its own key and submits for
             /// you, use `execute_with_gas_station` instead.
+            #[uniffi::method(default(wait_for = None))]
             pub async fn execute_with_sponsor_signer(
                 &self,
                 signer: &TransactionSigner,
                 sponsor_signer: &TransactionSigner,
+                wait_for: Option<WaitForTransaction>,
             ) -> Result<TransactionEffects> {
                 Ok(self
                     .read(|builder| {
-                        builder
-                            .clone()
-                            .execute_with_sponsor_signer(signer, sponsor_signer)
+                        builder.clone().execute_with_sponsor_signer(
+                            signer,
+                            sponsor_signer,
+                            wait_for.map(Into::into),
+                        )
                     })
                     .await?
                     .into())

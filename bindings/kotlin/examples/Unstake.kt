@@ -23,8 +23,7 @@ fun main() = runBlocking {
         stakeBuilder.stake(PtbArgument.u64(1000000000uL), validators.data[0].address)
         val stakeTx = stakeBuilder.finish()
         val signature = privateKey.signTransaction(stakeTx)
-        client.executeTransaction(listOf(signature), stakeTx)
-        client.waitForTransaction(stakeTx.digest(), WaitForTransaction.FINALIZED)
+        client.executeTransaction(listOf(signature), stakeTx, WaitForTransaction.FINALIZED)
 
         // Unstake
         val stakedIotas =

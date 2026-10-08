@@ -6,8 +6,8 @@
 use std::{sync::Arc, time::Duration};
 
 use iota_sdk::graphql_client::{
-    ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery, ListTransactionsEffectsQuery,
-    ListTransactionsQuery, WaitForTransactionQuery,
+    ExecuteTransactionQuery, ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
+    ListTransactionsEffectsQuery, ListTransactionsQuery, WaitForTransactionQuery,
 };
 
 use crate::{
@@ -159,11 +159,16 @@ impl GraphQLClient {
     }
 
     /// Execute a transaction.
-    #[uniffi::method]
+    ///
+    /// If the wait fails, the error is returned although the transaction was
+    /// executed, and its effects are lost. To keep them, pass no `wait_for`
+    /// and call `wait_for_transaction` on the client afterwards.
+    #[uniffi::method(default(wait_for = None))]
     pub async fn execute_transaction(
         &self,
         signatures: Vec<Arc<UserSignature>>,
         transaction: &Transaction,
+        wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         Ok(self
             .client()
@@ -174,6 +179,7 @@ impl GraphQLClient {
                     .collect::<Vec<_>>(),
                 &transaction.0,
             )
+            .set_if_some(wait_for.map(Into::into), ExecuteTransactionQuery::wait_for)
             .await?
             .into())
     }

@@ -27,9 +27,8 @@ struct UnstakeExample {
       stake: PtbArgument.u64(value: 1_000_000_000), validatorAddress: validator.address)
     let stakeTx = try await stakeBuilder.finish()
     let signature = try privateKey.signTransaction(transaction: stakeTx)
-    _ = try await client.executeTransaction(signatures: [signature], transaction: stakeTx)
-    try await client.waitForTransaction(
-      digest: stakeTx.digest(), waitFor: WaitForTransaction.finalized)
+    _ = try await client.executeTransaction(
+      signatures: [signature], transaction: stakeTx, waitFor: WaitForTransaction.finalized)
 
     // Unstake
     let stakedIotas = try await client.objects(

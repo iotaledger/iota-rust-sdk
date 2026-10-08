@@ -49,8 +49,7 @@ class Program
 
         Console.WriteLine("> Publishing package:");
         var sig = privateKey.SignTransaction(tx);
-        var effects = await client.ExecuteTransaction(new[] { sig }, tx);
-        await client.WaitForTransaction(tx.Digest(), WaitForTransaction.Finalized);
+        var effects = await client.ExecuteTransaction(new[] { sig }, tx, WaitForTransaction.Finalized);
         Console.WriteLine("Success");
 
         ObjectId? upgradeCap = null;

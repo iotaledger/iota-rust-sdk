@@ -2025,11 +2025,19 @@ impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
 }
 
 impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
-    /// Execute the transaction.
+    /// Execute the transaction and optionally wait for finalization.
+    ///
+    /// If the wait fails, the error is returned although the transaction was
+    /// executed, and its effects are lost. To keep them, pass `None` and call
+    /// the client's
+    /// [`wait_for_transaction`](crate::TransactionBuilderExecutionClient::wait_for_transaction)
+    /// afterwards.
     pub async fn execute(
         mut self,
         signer: &impl TransactionSigner,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, TransactionBuilderError> {
+        let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
         let signature = signer
             .sign(&txn)
@@ -2037,7 +2045,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
             .map_err(TransactionBuilderError::signature)?;
 
         self.client
-            .execute_transaction(&[signature], &txn)
+            .execute_transaction(&[signature], &txn, wait_for)
             .await
             .map_err(TransactionBuilderError::client)
     }
@@ -2148,7 +2156,13 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     }
 
     /// Execute the transaction with both the sender's and the sponsor's
-    /// signature.
+    /// signature, and optionally wait for finalization.
+    ///
+    /// If the wait fails, the error is returned although the transaction was
+    /// executed, and its effects are lost. To keep them, pass `None` and call
+    /// the client's
+    /// [`wait_for_transaction`](crate::TransactionBuilderExecutionClient::wait_for_transaction)
+    /// afterwards.
     ///
     /// Use this when you hold the sponsor's key: both signatures are produced
     /// here and the transaction goes out through the client. The sponsor's
@@ -2160,7 +2174,9 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         mut self,
         signer: &impl TransactionSigner,
         sponsor_signer: &impl TransactionSigner,
+        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, TransactionBuilderError> {
+        let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
 
         let signatures = vec![
@@ -2175,7 +2191,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         ];
 
         self.client
-            .execute_transaction(&signatures, &txn)
+            .execute_transaction(&signatures, &txn, wait_for)
             .await
             .map_err(TransactionBuilderError::client)
     }

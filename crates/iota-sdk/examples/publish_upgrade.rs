@@ -87,9 +87,9 @@ async fn main() -> Result<()> {
     // Sign and execute the transaction (publish the package)
     println!("> Publishing package:");
     let sig = private_key.sign_transaction(&tx)?;
-    let effects = client.execute_transaction(&[sig], &tx).await?;
-    client
-        .wait_for_transaction(tx.digest(), WaitForTransaction::Finalized)
+    let effects = client
+        .execute_transaction(&[sig], &tx)
+        .wait_for(WaitForTransaction::Finalized)
         .await?;
     println!("{:?}", effects.as_v1().status);
 

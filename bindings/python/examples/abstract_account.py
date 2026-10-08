@@ -31,7 +31,7 @@ async def main():
     ).finish(client)
 
     signer = TransactionSigner.from_move_authenticator(move_authenticator)
-    effects = await builder.execute(signer)
+    effects = await builder.execute(signer, WaitForTransaction.FINALIZED)
 
     print(f"Sending IOTA via abstract account: {effects.as_v1().status()}")
 
@@ -59,9 +59,7 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
 
     # Sign and execute the transaction (publish the package)
     signer = TransactionSigner.from_ed25519(private_key)
-    effects = await builder.execute(signer)
-    await client.wait_for_transaction(effects.as_v1().transaction_digest(),
-                                      WaitForTransaction.FINALIZED)
+    effects = await builder.execute(signer, WaitForTransaction.FINALIZED)
 
     print(f"Publishing package: {effects.as_v1().status()}\n")
 
@@ -110,9 +108,7 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
     )
 
     # Sign and execute the transaction (link the authenticator)
-    effects = await builder.execute(signer)
-    await client.wait_for_transaction(effects.as_v1().transaction_digest(),
-                                      WaitForTransaction.FINALIZED)
+    effects = await builder.execute(signer, WaitForTransaction.FINALIZED)
 
     print(
         f"Linking account to authenticate method: {effects.as_v1().status()}\n")

@@ -87,8 +87,8 @@ struct PublishUpgradeExample {
     // Sign and execute the transaction (publish the package)
     print("> Publishing package:")
     let sig = try privateKey.signTransaction(transaction: tx)
-    let effects = try await client.executeTransaction(signatures: [sig], transaction: tx)
-    try await client.waitForTransaction(digest: tx.digest(), waitFor: WaitForTransaction.finalized)
+    let effects = try await client.executeTransaction(
+      signatures: [sig], transaction: tx, waitFor: WaitForTransaction.finalized)
     print("Success")
 
     // Resolve UpgradeCap and PackageId via the client

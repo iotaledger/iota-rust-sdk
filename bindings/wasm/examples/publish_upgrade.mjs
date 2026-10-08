@@ -74,8 +74,11 @@ console.log("Success");
 // Sign and execute the transaction (publish the package)
 console.log("> Publishing package:");
 let sig = privateKey.signTransaction(tx);
-let effects = await client.executeTransaction([sig], tx);
-await client.waitForTransaction(tx.digest(), WaitForTransaction.Finalized);
+let effects = await client.executeTransaction(
+  [sig],
+  tx,
+  WaitForTransaction.Finalized,
+);
 console.log("Success");
 
 // Resolve UpgradeCap and PackageId via the client

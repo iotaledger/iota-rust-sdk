@@ -939,9 +939,10 @@ mod tests {
                 &self,
                 signatures: &[iota_types::UserSignature],
                 transaction: &Transaction,
+                wait_for: impl Into<Option<crate::WaitForTransaction>>,
             ) -> Result<iota_types::TransactionEffects, Self::Error> {
                 TestClient
-                    .execute_transaction(signatures, transaction)
+                    .execute_transaction(signatures, transaction, wait_for)
                     .await
             }
 
