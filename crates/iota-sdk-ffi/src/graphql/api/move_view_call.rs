@@ -3,9 +3,12 @@
 
 use std::sync::Arc;
 
+use iota_sdk::graphql_client::MoveViewCallJsonQuery;
+
 use crate::{
     error::Result,
     graphql::{client::GraphQLClient, query_types::GraphQLMoveViewResult},
+    helpers::SetIfSome,
     move_view_call::MoveViewArg,
     types::{move_core::TypeTag, object::ObjectId},
 };
@@ -46,8 +49,8 @@ impl GraphQLClient {
         Ok(self
             .client()
             .move_view_call_json(**package, module, function)
-            .type_arguments(type_arguments)
-            .arguments(arguments)
+            .set_if_some(type_arguments, MoveViewCallJsonQuery::type_arguments)
+            .set_if_some(arguments, MoveViewCallJsonQuery::arguments)
             .await?
             .into())
     }

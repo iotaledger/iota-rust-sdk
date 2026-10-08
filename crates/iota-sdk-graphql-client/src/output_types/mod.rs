@@ -6,7 +6,6 @@ mod normalized_move;
 
 use std::str::FromStr;
 
-use base64ct::Encoding;
 use cynic::serde;
 use iota_types::{SignedTransaction, Transaction, TransactionEffects, TypeTag};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
@@ -133,7 +132,7 @@ impl TryFrom<&GraphQLDryRunMutation> for DryRunMutation {
     fn try_from(mutation: &GraphQLDryRunMutation) -> GraphQLResult<Self> {
         let input = TransactionArgument::try_from(&mutation.input)?;
         let type_tag = TypeTag::from_str(&mutation.move_type.repr)?;
-        let bcs = base64ct::Base64::decode_vec(&mutation.bcs.0)?;
+        let bcs = crate::base64::decode(&mutation.bcs.0)?;
 
         Ok(DryRunMutation {
             input,
@@ -148,7 +147,7 @@ impl TryFrom<&GraphQLDryRunReturn> for DryRunReturn {
 
     fn try_from(return_val: &GraphQLDryRunReturn) -> GraphQLResult<Self> {
         let type_tag = TypeTag::from_str(&return_val.move_type.repr)?;
-        let bcs = base64ct::Base64::decode_vec(&return_val.bcs.0)?;
+        let bcs = crate::base64::decode(&return_val.bcs.0)?;
 
         Ok(DryRunReturn { type_tag, bcs })
     }

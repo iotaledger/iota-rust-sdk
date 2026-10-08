@@ -26,14 +26,14 @@ define_query! {
 
 impl MoveViewCallJsonQuery {
     /// Set the type arguments of the Move function.
-    pub fn type_arguments(mut self, type_arguments: impl Into<Option<Vec<String>>>) -> Self {
-        self.type_arguments = type_arguments.into();
+    pub fn type_arguments(mut self, type_arguments: Vec<String>) -> Self {
+        self.type_arguments = Some(type_arguments);
         self
     }
 
     /// Set the arguments passed into the Move function, in JSON format.
-    pub fn arguments(mut self, arguments: impl Into<Option<Vec<serde_json::Value>>>) -> Self {
-        self.arguments = arguments.into();
+    pub fn arguments(mut self, arguments: Vec<serde_json::Value>) -> Self {
+        self.arguments = Some(arguments);
         self
     }
 
@@ -63,8 +63,8 @@ define_query! {
 
 impl MoveViewCallQuery {
     /// Set the type arguments of the Move function.
-    pub fn type_arguments(mut self, type_arguments: impl Into<Option<Vec<TypeTag>>>) -> Self {
-        self.type_arguments = type_arguments.into();
+    pub fn type_arguments(mut self, type_arguments: Vec<TypeTag>) -> Self {
+        self.type_arguments = Some(type_arguments);
         self
     }
 

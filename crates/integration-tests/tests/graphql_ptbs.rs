@@ -506,13 +506,13 @@ async fn test_auto_gas_pins_full_first_page_for_consolidation() {
 /// A transfer is executed on a background task once the subscription has had a
 /// moment to connect, so the live stream observes it. This exercises the
 /// WebSocket transport, payload decoding, and resume-cursor tracking shared by
-/// `events_stream`.
+/// `events_subscription`.
 #[tokio::test]
 async fn test_transactions_subscription() {
     use futures::StreamExt;
 
     let client = GraphQLClient::new_localnet().unwrap();
-    let mut stream = client.transactions_stream(None, None);
+    let mut stream = client.transactions_subscription().subscribe();
 
     tokio::spawn(async move {
         // Give the subscription time to connect before generating activity.
@@ -544,8 +544,8 @@ async fn test_events_subscription() {
     use futures::StreamExt;
 
     let client = GraphQLClient::new_localnet().unwrap();
-    let filter = SubscriptionEventFilter::default().with_emitting_module("0x3".to_owned());
-    let mut stream = client.events_stream(filter, None);
+    let filter = SubscriptionEventFilter::EmittingModule("0x3".to_owned());
+    let mut stream = client.events_subscription().filter(filter).subscribe();
 
     tokio::spawn(async move {
         // Give the subscription time to connect before generating activity.
