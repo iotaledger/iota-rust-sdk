@@ -335,11 +335,12 @@ impl ListTransactionsDataEffectsQuery {
                             "transaction bcs or effects",
                         ));
                     };
-                    let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
-                    let effects =
-                        base64ct::Base64::decode_vec(effects.bcs.as_ref().unwrap().0.as_str())?;
-                    let transaction: SenderSignedTransaction = bcs::from_bytes(&bcs)?;
-                    let effects: TransactionEffects = bcs::from_bytes(&effects)?;
+                    let bcs = crate::base64::decode(bcs.0.as_str())?;
+                    let effects = crate::base64::decode(effects.bcs.as_ref().unwrap().0.as_str())?;
+                    let transaction: SenderSignedTransaction =
+                        bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
+                    let effects: TransactionEffects =
+                        bcs::from_bytes(&effects).map_err(iota_types::BcsError::new)?;
 
                     Ok(TransactionDataEffects {
                         signed_transaction: transaction.into(),
@@ -384,8 +385,9 @@ impl ExecuteTransactionQuery {
         let response = self.client.run_query(&operation).await?;
 
         let result = response.execute_transaction_block;
-        let bcs = base64ct::Base64::decode_vec(result.effects.bcs.0.as_str())?;
-        let effects: TransactionEffects = bcs::from_bytes(&bcs)?;
+        let bcs = crate::base64::decode(result.effects.bcs.0.as_str())?;
+        let effects: TransactionEffects =
+            bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
 
         if let Some(wait_for) = self.wait_for {
             self.client
@@ -515,10 +517,12 @@ impl GraphQLClient {
 
         match response.transaction_block.map(|tx| (tx.bcs, tx.effects)) {
             Some((Some(bcs), Some(effects))) => {
-                let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
-                let effects = base64ct::Base64::decode_vec(effects.bcs.unwrap().0.as_str())?;
-                let transaction: SenderSignedTransaction = bcs::from_bytes(&bcs)?;
-                let effects: TransactionEffects = bcs::from_bytes(&effects)?;
+                let bcs = crate::base64::decode(bcs.0.as_str())?;
+                let effects = crate::base64::decode(effects.bcs.unwrap().0.as_str())?;
+                let transaction: SenderSignedTransaction =
+                    bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
+                let effects: TransactionEffects =
+                    bcs::from_bytes(&effects).map_err(iota_types::BcsError::new)?;
 
                 Ok(Some(TransactionDataEffects {
                     signed_transaction: transaction.into(),

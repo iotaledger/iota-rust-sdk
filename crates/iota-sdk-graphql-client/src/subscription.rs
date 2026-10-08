@@ -18,8 +18,8 @@ use reqwest::Url;
 
 use crate::{
     GraphQLClient,
-    client::response_to_err,
-    error::{GraphQLError, GraphQLResult},
+    client::response_to_result,
+    error::{GraphQLError, GraphQLResult, query_error},
     query_types::{
         Event, EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs,
         SubscriptionEventFilter, SubscriptionTransactionFilter,
@@ -47,6 +47,18 @@ enum Outcome<T> {
     /// A payload that carries nothing to yield (unknown union variant or an
     /// empty response).
     Skip,
+}
+
+/// Convert a subscription response to a `Result`, surfacing any `errors` as a
+/// query error. The server sends no error extensions on subscriptions, so the
+/// errors carry no `code`.
+fn subscription_response_to_result<T>(response: cynic::GraphQlResponse<T>) -> GraphQLResult<T> {
+    response_to_result(cynic::GraphQlResponse {
+        data: response.data,
+        errors: response
+            .errors
+            .map(|errors| errors.into_iter().map(query_error).collect()),
+    })
 }
 
 /// Subscription for [`GraphQLClient::events_subscription`]. Call
@@ -97,7 +109,9 @@ impl EventsSubscriptionBuilder {
                     // changes.
                     let mut current_tx: Option<String> = None;
                     let mapped = subscription.map(move |item| -> GraphQLResult<Outcome<Event>> {
-                        let data = response_to_err(item.map_err(GraphQLError::subscription)?)?;
+                        let data = subscription_response_to_result(
+                            item.map_err(GraphQLError::subscription)?,
+                        )?;
                         Ok(match data.events {
                             EventSubscriptionPayload::Event(event) => {
                                 let digest = event.transaction_digest();
@@ -171,7 +185,9 @@ impl TransactionsSubscriptionBuilder {
 
                     let mapped =
                         subscription.map(|item| -> GraphQLResult<Outcome<SignedTransaction>> {
-                            let data = response_to_err(item.map_err(GraphQLError::subscription)?)?;
+                            let data = subscription_response_to_result(
+                                item.map_err(GraphQLError::subscription)?,
+                            )?;
                             Ok(match data.transactions {
                                 TransactionBlockSubscriptionPayload::TransactionBlock(block) => {
                                     let cursor = block.digest.clone();
@@ -338,4 +354,45 @@ where
             backoff = (backoff * 2).min(MAX_BACKOFF);
         }
     })
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use cynic::{GraphQlError as CynicError, GraphQlErrorPathSegment, GraphQlResponse};
+
+    use super::*;
+
+    #[test]
+    fn errors_surface_as_query_errors_without_a_code() {
+        let response = GraphQlResponse {
+            data: None::<()>,
+            errors: Some(vec![CynicError::new(
+                "boom".to_owned(),
+                None,
+                Some(vec![GraphQlErrorPathSegment::Field("events".to_owned())]),
+                Some(Default::default()),
+            )]),
+        };
+
+        let GraphQLError::Query(errors) = subscription_response_to_result(response).unwrap_err()
+        else {
+            panic!("expected GraphQLError::Query");
+        };
+        assert_eq!(errors.len(), 1);
+        assert_eq!(errors[0].message, "boom");
+        assert_eq!(
+            errors[0].path,
+            Some(vec![GraphQlErrorPathSegment::Field("events".to_owned())])
+        );
+        assert_eq!(errors[0].extensions, None);
+    }
+
+    #[test]
+    fn data_without_errors_is_returned() {
+        let response = GraphQlResponse {
+            data: Some(1),
+            errors: None,
+        };
+        assert_eq!(subscription_response_to_result(response).unwrap(), 1);
+    }
 }

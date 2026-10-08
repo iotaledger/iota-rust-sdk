@@ -4,21 +4,20 @@
 
 //! Package API implementation.
 
-use base64ct::Encoding;
 use cynic::QueryBuilder;
 use iota_types::{Address, MovePackage, Object, Version};
 
 use crate::{
-    GraphQLClient, Page,
+    GraphQLClient, MoveFunction, MoveModule, Page,
     api::define_query,
     error::GraphQLResult,
     pagination::{PaginationFilter, PaginationFilterResponse},
     query_types::{
-        LatestPackageQueryFragment, MoveFunction, MoveModule, MovePackageVersionFilter,
-        NormalizedMoveFunctionQueryArgs, NormalizedMoveFunctionQueryFragment,
-        NormalizedMoveModuleQueryArgs, NormalizedMoveModuleQueryFragment, PackageArgs,
-        PackageCheckpointFilter, PackageQueryFragment, PackageVersionsArgs,
-        PackageVersionsQueryFragment, PackagesQueryArgs, PackagesQueryFragment,
+        LatestPackageQueryFragment, MovePackageVersionFilter, NormalizedMoveFunctionQueryArgs,
+        NormalizedMoveFunctionQueryFragment, NormalizedMoveModuleQueryArgs,
+        NormalizedMoveModuleQueryFragment, PackageArgs, PackageCheckpointFilter,
+        PackageQueryFragment, PackageVersionsArgs, PackageVersionsQueryFragment, PackagesQueryArgs,
+        PackagesQueryFragment,
     },
     streams::PageStream,
 };
@@ -109,15 +108,17 @@ impl ListPackageVersionsQuery {
             .nodes
             .iter()
             .map(|p| &p.bcs)
-            .filter_map(|b64| {
-                b64.as_ref()
-                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
-            })
-            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
-            .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
+            .map(|b| {
+                Ok(bcs::from_bytes::<Object>(b)
+                    .map_err(iota_types::BcsError::new)?
+                    .data
+                    .into_package())
+            })
+            .collect::<Result<Vec<_>, iota_types::BcsError>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -203,15 +204,17 @@ impl ListPackagesQuery {
             .nodes
             .iter()
             .map(|p| &p.bcs)
-            .filter_map(|b64| {
-                b64.as_ref()
-                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
-            })
-            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
-            .map(|b| Ok(bcs::from_bytes::<Object>(b)?.data.into_package()))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
+            .map(|b| {
+                Ok(bcs::from_bytes::<Object>(b)
+                    .map_err(iota_types::BcsError::new)?
+                    .data
+                    .into_package())
+            })
+            .collect::<Result<Vec<_>, iota_types::BcsError>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -328,7 +331,7 @@ impl GetNormalizedMoveModuleQuery {
             .run_query(&Self::operation(package, &module, version, &pagination))
             .await?;
 
-        Ok(response.package.and_then(|p| p.module))
+        Ok(response.package.and_then(|p| p.module).map(Into::into))
     }
 }
 
@@ -361,9 +364,9 @@ impl GetPackageQuery {
         Ok(response
             .package
             .and_then(|x| x.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?
             .map(|obj| obj.data.into_package()))
     }
@@ -403,7 +406,8 @@ impl GetNormalizedMoveFunctionQuery {
         Ok(response
             .package
             .and_then(|p| p.module)
-            .and_then(|m| m.function))
+            .and_then(|m| m.function)
+            .map(Into::into))
     }
 }
 
@@ -455,9 +459,9 @@ impl GraphQLClient {
         Ok(response
             .latest_package
             .and_then(|x| x.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(&bcs.0))
+            .map(|bcs| crate::base64::decode(&bcs.0))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs))
+            .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?
             .map(|obj| obj.data.into_package()))
     }

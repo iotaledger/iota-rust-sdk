@@ -2,7 +2,6 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use base64ct::Encoding;
 use iota_types::{
     ObjectId, SenderSignedTransaction, SignedTransaction, TransactionDigest, TransactionEffects,
 };
@@ -22,7 +21,7 @@ use crate::{
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockQueryFragment {
+pub(crate) struct TransactionBlockQueryFragment {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TransactionBlock>,
 }
@@ -33,7 +32,7 @@ pub struct TransactionBlockQueryFragment {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockWithEffectsQueryFragment {
+pub(crate) struct TransactionBlockWithEffectsQueryFragment {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TransactionBlockWithEffects>,
 }
@@ -44,7 +43,7 @@ pub struct TransactionBlockWithEffectsQueryFragment {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockEffectsQueryFragment {
+pub(crate) struct TransactionBlockEffectsQueryFragment {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TxBlockEffects>,
 }
@@ -55,7 +54,7 @@ pub struct TransactionBlockEffectsQueryFragment {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockCheckpointQueryFragment {
+pub(crate) struct TransactionBlockCheckpointQueryFragment {
     #[arguments(digest: $digest)]
     pub transaction_block: Option<TxBlockCheckpoint>,
 }
@@ -66,7 +65,7 @@ pub struct TransactionBlockCheckpointQueryFragment {
     graphql_type = "Query",
     variables = "TransactionBlockArgs"
 )]
-pub struct TransactionBlockIndexedQueryFragment {
+pub(crate) struct TransactionBlockIndexedQueryFragment {
     #[arguments(digest: $digest)]
     pub is_transaction_indexed_on_node: bool,
 }
@@ -77,7 +76,7 @@ pub struct TransactionBlockIndexedQueryFragment {
     graphql_type = "Query",
     variables = "TransactionBlocksQueryArgs"
 )]
-pub struct TransactionBlocksQueryFragment {
+pub(crate) struct TransactionBlocksQueryFragment {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
     pub transaction_blocks: TransactionBlockConnection,
 }
@@ -88,7 +87,7 @@ pub struct TransactionBlocksQueryFragment {
     graphql_type = "Query",
     variables = "TransactionBlocksQueryArgs"
 )]
-pub struct TransactionBlocksWithEffectsQueryFragment {
+pub(crate) struct TransactionBlocksWithEffectsQueryFragment {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
     pub transaction_blocks: TransactionBlockWithEffectsConnection,
 }
@@ -99,7 +98,7 @@ pub struct TransactionBlocksWithEffectsQueryFragment {
     graphql_type = "Query",
     variables = "TransactionBlocksQueryArgs"
 )]
-pub struct TransactionBlocksEffectsQueryFragment {
+pub(crate) struct TransactionBlocksEffectsQueryFragment {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
     pub transaction_blocks: TransactionBlockEffectsConnection,
 }
@@ -109,7 +108,7 @@ pub struct TransactionBlocksEffectsQueryFragment {
     graphql_type = "Query",
     variables = "AddressTransactionsQueryArgs"
 )]
-pub struct AddressTransactionsQueryFragment {
+pub(crate) struct AddressTransactionsQueryFragment {
     #[arguments(address: $address)]
     pub address: Option<AddressTransactionBlocksQueryFragment>,
 }
@@ -120,7 +119,7 @@ pub struct AddressTransactionsQueryFragment {
     graphql_type = "Address",
     variables = "AddressTransactionsQueryArgs"
 )]
-pub struct AddressTransactionBlocksQueryFragment {
+pub(crate) struct AddressTransactionBlocksQueryFragment {
     #[arguments(first: $first, after: $after, last: $last, before: $before, relation: $relation, filter: $filter)]
     pub transaction_blocks: TransactionBlockConnection,
 }
@@ -130,12 +129,12 @@ pub struct AddressTransactionBlocksQueryFragment {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct TransactionBlockArgs {
+pub(crate) struct TransactionBlockArgs {
     pub digest: String,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct AddressTransactionsQueryArgs {
+pub(crate) struct AddressTransactionsQueryArgs {
     pub address: Address,
     pub first: Option<i32>,
     pub after: Option<String>,
@@ -146,7 +145,7 @@ pub struct AddressTransactionsQueryArgs {
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct TransactionBlocksQueryArgs {
+pub(crate) struct TransactionBlocksQueryArgs {
     pub first: Option<i32>,
     pub after: Option<String>,
     pub last: Option<i32>,
@@ -160,39 +159,38 @@ pub struct TransactionBlocksQueryArgs {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TransactionBlock {
+pub(crate) struct TransactionBlock {
+    pub bcs: Option<Base64>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
+pub(crate) struct TransactionBlockWithEffects {
     pub bcs: Option<Base64>,
     pub effects: Option<TransactionBlockEffects>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TransactionBlockWithEffects {
-    pub bcs: Option<Base64>,
+pub(crate) struct TxBlockEffects {
     pub effects: Option<TransactionBlockEffects>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TxBlockEffects {
-    pub effects: Option<TransactionBlockEffects>,
-}
-
-#[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TxBlockCheckpoint {
+pub(crate) struct TxBlockCheckpoint {
     pub effects: Option<TransactionBlockCheckpoint>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
-pub struct TransactionBlockEffects {
+pub(crate) struct TransactionBlockEffects {
     pub bcs: Option<Base64>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockEffects")]
-pub struct TransactionBlockCheckpoint {
+pub(crate) struct TransactionBlockCheckpoint {
     pub checkpoint: Option<Checkpoint>,
 }
 
@@ -398,7 +396,7 @@ impl TransactionsFilter {
 /// The GraphQL input object, built from a [`TransactionsFilter`].
 #[derive(Clone, cynic::InputObject, Debug, Default)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockFilter")]
-pub struct TransactionBlockFilter {
+pub(crate) struct TransactionBlockFilter {
     function: Option<String>,
     kind: Option<TransactionBlockKindInput>,
     after_checkpoint: Option<u64>,
@@ -459,21 +457,21 @@ impl From<TransactionsFilter> for TransactionBlockFilter {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockConnection")]
-pub struct TransactionBlockConnection {
+pub(crate) struct TransactionBlockConnection {
     pub nodes: Vec<TransactionBlock>,
     pub page_info: PageInfo,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockConnection")]
-pub struct TransactionBlockWithEffectsConnection {
+pub(crate) struct TransactionBlockWithEffectsConnection {
     pub nodes: Vec<TransactionBlockWithEffects>,
     pub page_info: PageInfo,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockConnection")]
-pub struct TransactionBlockEffectsConnection {
+pub(crate) struct TransactionBlockEffectsConnection {
     pub nodes: Vec<TxBlockEffects>,
     pub page_info: PageInfo,
 }
@@ -484,9 +482,11 @@ impl TryFrom<TransactionBlock> for SignedTransaction {
     fn try_from(value: TransactionBlock) -> Result<Self, Self::Error> {
         let transaction = value
             .bcs
-            .map(|tx| base64ct::Base64::decode_vec(tx.0.as_str()))
+            .map(|tx| crate::base64::decode(tx.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<SenderSignedTransaction>(&bcs))
+            .map(|bcs| {
+                bcs::from_bytes::<SenderSignedTransaction>(&bcs).map_err(iota_types::BcsError::new)
+            })
             .transpose()?;
 
         if let Some(transaction) = transaction {
@@ -503,9 +503,11 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
     fn try_from(value: TxBlockEffects) -> Result<Self, Self::Error> {
         let effects = value
             .effects
-            .map(|fx| base64ct::Base64::decode_vec(fx.bcs.unwrap().0.as_str()))
+            .map(|fx| crate::base64::decode(fx.bcs.unwrap().0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<TransactionEffects>(&bcs))
+            .map(|bcs| {
+                bcs::from_bytes::<TransactionEffects>(&bcs).map_err(iota_types::BcsError::new)
+            })
             .transpose()?;
         effects.ok_or(GraphQLError::EmptyResponseField("transaction effects bcs"))
     }

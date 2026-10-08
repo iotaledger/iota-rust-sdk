@@ -33,7 +33,7 @@ pub use api::{
     epochs::{GetEpochQuery, GetEpochTotalCheckpointsQuery, GetEpochTotalTransactionBlocksQuery},
     events::ListEventsQuery,
     iota_names::{GetIotaNamesDefaultNameQuery, ListIotaNamesRegistrationsQuery},
-    move_view_call::{MoveViewCallJsonQuery, MoveViewCallQuery},
+    move_view_call::{MoveViewArg, MoveViewArgList, MoveViewCallJsonQuery, MoveViewCallQuery},
     network::{
         GetChainIdQuery, GetProtocolConfigQuery, GetReferenceGasPriceQuery,
         ListActiveValidatorsQuery,
@@ -50,7 +50,7 @@ pub use api::{
         ListTransactionsEffectsQuery, ListTransactionsQuery, WaitForTransactionQuery,
     },
 };
-pub use client::{GraphQLClient, USER_AGENT};
+pub use client::{GraphQLClient, GraphQLClientBuilder, USER_AGENT};
 pub use cynic;
 pub use error::{GraphQLError, GraphQLResult};
 pub use iota_transaction_builder::WaitForTransaction;
@@ -60,3 +60,14 @@ pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
 pub use reqwest;
 pub use subscription::{EventsSubscriptionBuilder, TransactionsSubscriptionBuilder};
+
+mod base64 {
+    use base64ct::Encoding;
+
+    use crate::error::{GraphQLError, GraphQLResult};
+
+    /// Decodes a base64 string from a response into bytes.
+    pub(crate) fn decode(input: &str) -> GraphQLResult<Vec<u8>> {
+        base64ct::Base64::decode_vec(input).map_err(|e| GraphQLError::Parse(e.into()))
+    }
+}

@@ -4,7 +4,6 @@
 
 //! Objects API implementation.
 
-use base64ct::Encoding;
 use cynic::QueryBuilder;
 use iota_types::{Object, ObjectId, Version};
 
@@ -14,7 +13,8 @@ use crate::{
     error::GraphQLResult,
     pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
-        ObjectFilter, ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
+        MoveObjectContentsBcsQueryFragment, MoveObjectContentsJsonQueryFragment, ObjectFilter,
+        ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
     },
     streams::PageStream,
 };
@@ -91,15 +91,12 @@ impl ListObjectsQuery {
             .nodes
             .iter()
             .map(|o| &o.bcs)
-            .filter_map(|b64| {
-                b64.as_ref()
-                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
-            })
-            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let objects = bcs
             .iter()
-            .map(|b| bcs::from_bytes::<iota_types::Object>(b))
-            .collect::<Result<Vec<_>, bcs::Error>>()?;
+            .map(|b| bcs::from_bytes::<iota_types::Object>(b).map_err(iota_types::BcsError::new))
+            .collect::<Result<Vec<_>, iota_types::BcsError>>()?;
 
         Ok(Page::new(page_info, objects))
     }
@@ -133,11 +130,11 @@ impl GetObjectQuery {
         let obj = response.object;
         let bcs = obj
             .and_then(|o| o.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?;
 
         let object = bcs
-            .map(|b| bcs::from_bytes::<iota_types::Object>(&b))
+            .map(|b| bcs::from_bytes::<iota_types::Object>(&b).map_err(iota_types::BcsError::new))
             .transpose()?;
 
         Ok(object)
@@ -163,7 +160,7 @@ impl GetMoveObjectContentsQuery {
     }
 
     async fn send(self) -> GraphQLResult<Option<serde_json::Value>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+        let operation = MoveObjectContentsJsonQueryFragment::build(ObjectQueryArgs {
             object_id: self.object_id,
             version: self.version.map(|v| v.as_u64()),
         });
@@ -174,7 +171,7 @@ impl GetMoveObjectContentsQuery {
             .object
             .and_then(|o| o.as_move_object)
             .and_then(|o| o.contents)
-            .and_then(|mv| mv.json))
+            .map(|mv| mv.json))
     }
 }
 
@@ -197,19 +194,19 @@ impl GetMoveObjectContentsBcsQuery {
     }
 
     async fn send(self) -> GraphQLResult<Option<Vec<u8>>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+        let operation = MoveObjectContentsBcsQueryFragment::build(ObjectQueryArgs {
             object_id: self.object_id,
             version: self.version.map(|v| v.as_u64()),
         });
 
         let response = self.client.run_query(&operation).await?;
 
-        Ok(response
+        response
             .object
             .and_then(|o| o.as_move_object)
             .and_then(|o| o.contents)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.bcs.0.as_str()))
-            .transpose()?)
+            .map(|bcs| crate::base64::decode(bcs.bcs.0.as_str()))
+            .transpose()
     }
 }
 
@@ -253,13 +250,10 @@ impl GraphQLClient {
 
         let response = self.run_query(&operation).await.unwrap();
 
-        Ok(response
+        response
             .object
-            .and_then(|o| {
-                o.bcs
-                    .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
-            })
-            .transpose()?)
+            .and_then(|o| o.bcs.map(|bcs| crate::base64::decode(bcs.0.as_str())))
+            .transpose()
     }
 
     /// Return the contents JSON of an object that is a Move object.
@@ -313,7 +307,7 @@ mod tests {
         assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
         assert_eq!(vars["version"], 3);
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsJsonQueryFragment", |client| async move {
             let _ = client
                 .move_object_contents(ObjectId::SYSTEM_STATE)
                 .version(Version::from_u64(4))
@@ -323,7 +317,7 @@ mod tests {
         assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
         assert_eq!(vars["version"], 4);
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsBcsQueryFragment", |client| async move {
             let _ = client
                 .move_object_contents_bcs(ObjectId::SYSTEM_STATE)
                 .version(Version::from_u64(5))
@@ -339,13 +333,13 @@ mod tests {
         .await;
         assert!(vars["version"].is_null());
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsJsonQueryFragment", |client| async move {
             let _ = client.move_object_contents(ObjectId::SYSTEM_STATE).await;
         })
         .await;
         assert!(vars["version"].is_null());
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsBcsQueryFragment", |client| async move {
             let _ = client
                 .move_object_contents_bcs(ObjectId::SYSTEM_STATE)
                 .await;

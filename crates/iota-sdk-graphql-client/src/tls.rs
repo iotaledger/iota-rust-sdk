@@ -11,7 +11,8 @@
 //! HTTP-only build needs no provider and reaches a plain-HTTP endpoint as-is.
 
 /// A [`reqwest::ClientBuilder`] carrying this crate's user agent and trust
-/// anchors.
+/// anchors, and a connect timeout of
+/// [`DEFAULT_CONNECT_TIMEOUT`](crate::client::DEFAULT_CONNECT_TIMEOUT).
 ///
 /// With the default features the bundled Mozilla roots are merged into the
 /// platform trust store rather than replacing it, so corporate CAs and
@@ -34,7 +35,11 @@
 #[cfg(not(target_arch = "wasm32"))]
 pub(crate) fn default_http_client_builder() -> reqwest::ClientBuilder {
     install_default_crypto_provider();
-    apply_roots(reqwest::Client::builder().user_agent(crate::client::USER_AGENT))
+    apply_roots(
+        reqwest::Client::builder()
+            .user_agent(crate::client::USER_AGENT)
+            .connect_timeout(crate::client::DEFAULT_CONNECT_TIMEOUT),
+    )
 }
 
 /// A [`reqwest::ClientBuilder`] carrying this crate's user agent.
