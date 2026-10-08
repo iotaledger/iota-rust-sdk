@@ -3,7 +3,10 @@
 
 //! Transactions API implementation.
 
-use std::sync::Arc;
+use std::sync::{
+    Arc,
+    atomic::{AtomicUsize, Ordering},
+};
 
 use iota_sdk::{
     grpc_client::{GrpcResult, read_mask_fields::TransactionReadMask},
@@ -33,7 +36,7 @@ use crate::{
 /// `InputObjectsBcs`, `OutputObjectsBcs`), or its `GrpcCheckpointResponseField`
 /// / `GrpcSimulateField` counterpart, for them to be populated; digest-only
 /// read masks populate only the digest fields.
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct GrpcExecutedTransaction {
     /// The digest of the transaction.
     pub digest: Option<Arc<TransactionDigest>>,
@@ -60,33 +63,85 @@ pub struct GrpcExecutedTransaction {
     pub output_objects: Option<Vec<Arc<Object>>>,
 }
 
-/// The result for a single transaction in a batch: either the transaction or
-/// the error the server reported for it.
-#[derive(uniffi::Record)]
-pub struct GrpcExecutedTransactionResult {
-    /// The transaction, if the server returned it.
-    pub transaction: Option<GrpcExecutedTransaction>,
-    /// The error message, if the server reported an error for this
-    /// transaction.
-    pub error: Option<String>,
+/// The results of a batch of transactions, in request order. Each item is
+/// either the transaction or the error the server reported for it.
+///
+/// Read items by position with `get`, or in order with `has_next` and `next`.
+/// An item's error does not end the iteration: `next` throws it and the
+/// following call moves on to the next item. Items can be read any number of
+/// times.
+#[derive(uniffi::Object)]
+pub struct GrpcExecutedTransactionResults {
+    results: Vec<std::result::Result<GrpcExecutedTransaction, String>>,
+    cursor: AtomicUsize,
 }
 
-impl TryFrom<GrpcResult<proto::transaction::ExecutedTransaction>>
-    for GrpcExecutedTransactionResult
-{
-    type Error = SdkFfiError;
-
-    fn try_from(value: GrpcResult<proto::transaction::ExecutedTransaction>) -> Result<Self> {
-        Ok(match value {
-            Ok(transaction) => Self {
-                transaction: Some((&transaction).try_into()?),
-                error: None,
-            },
-            Err(error) => Self {
-                transaction: None,
-                error: Some(error.to_string()),
-            },
+impl GrpcExecutedTransactionResults {
+    /// Convert the client's results, failing if a transaction the server
+    /// returned cannot be decoded.
+    pub(crate) fn new(
+        results: Vec<GrpcResult<proto::transaction::ExecutedTransaction>>,
+    ) -> Result<Self> {
+        Ok(Self {
+            results: results
+                .into_iter()
+                .map(|result| match result {
+                    Ok(transaction) => (&transaction).try_into().map(Ok),
+                    Err(error) => Ok(Err(error.to_string())),
+                })
+                .collect::<Result<_>>()?,
+            cursor: AtomicUsize::new(0),
         })
+    }
+}
+
+#[uniffi::export]
+impl GrpcExecutedTransactionResults {
+    /// The number of items.
+    pub fn len(&self) -> u64 {
+        self.results.len() as u64
+    }
+
+    /// Whether there are no items.
+    pub fn is_empty(&self) -> bool {
+        self.results.is_empty()
+    }
+
+    /// The transaction at `index`, or an error carrying the message the
+    /// server reported for it. Errors if `index` is out of range.
+    pub fn get(&self, index: u64) -> Result<GrpcExecutedTransaction> {
+        usize::try_from(index)
+            .ok()
+            .and_then(|index| self.results.get(index))
+            .ok_or_else(|| {
+                SdkFfiError::custom(format!(
+                    "index {index} out of range for {} results",
+                    self.results.len()
+                ))
+            })?
+            .clone()
+            .map_err(SdkFfiError::custom)
+    }
+
+    /// Whether `next` has an item left to return.
+    pub fn has_next(&self) -> bool {
+        self.cursor.load(Ordering::Relaxed) < self.results.len()
+    }
+
+    /// The next transaction, or an error carrying the message the server
+    /// reported for it. Errors once every item has been returned.
+    ///
+    /// `has_next` followed by `next` is not atomic: when several threads
+    /// share the results, `next` can error as exhausted after `has_next`
+    /// returned `true`.
+    pub fn next(&self) -> Result<GrpcExecutedTransaction> {
+        let len = self.results.len();
+        let index = self.cursor.fetch_add(1, Ordering::Relaxed);
+        if index >= len {
+            self.cursor.fetch_min(len, Ordering::Relaxed);
+            return Err(SdkFfiError::custom("no results left"));
+        }
+        self.get(index as u64)
     }
 }
 
@@ -186,8 +241,8 @@ impl GrpcClient {
     ///
     /// Results are returned in the same order as the input digests, one per
     /// digest. A transaction the serving node cannot return — because it is
-    /// not found or has been pruned — fails only its own result, which
-    /// carries the server's error message. A transaction the server returns
+    /// not found or has been pruned — fails only its own item, which reading
+    /// throws with the server's error message. A transaction the server returns
     /// but that cannot be decoded fails the whole call.
     ///
     /// The optional `read_mask` controls which fields the server returns.
@@ -198,18 +253,17 @@ impl GrpcClient {
         &self,
         digests: Vec<Arc<TransactionDigest>>,
         read_mask: Option<Vec<GrpcTransactionField>>,
-    ) -> Result<Vec<GrpcExecutedTransactionResult>> {
+    ) -> Result<GrpcExecutedTransactionResults> {
         let digests = digests.iter().map(|digest| ***digest).collect::<Vec<_>>();
-        self.client()
-            .transactions(digests)
-            .read_mask(crate::grpc::api::read_mask::<TransactionReadMask, _>(
-                read_mask,
-            ))
-            .await?
-            .into_inner()
-            .into_iter()
-            .map(GrpcExecutedTransactionResult::try_from)
-            .collect()
+        GrpcExecutedTransactionResults::new(
+            self.client()
+                .transactions(digests)
+                .read_mask(crate::grpc::api::read_mask::<TransactionReadMask, _>(
+                    read_mask,
+                ))
+                .await?
+                .into_inner(),
+        )
     }
 
     /// Wait for the indexing (on the node) or finalization of a transaction by
@@ -236,7 +290,7 @@ mod tests {
         types::{TransactionDigest, TransactionEffectsDigest, TransactionEventsDigest},
     };
 
-    use super::{GrpcExecutedTransaction, GrpcExecutedTransactionResult};
+    use super::{GrpcExecutedTransaction, GrpcExecutedTransactionResults};
 
     #[test]
     fn digest_only_mask_populates_the_typed_digests() {
@@ -267,11 +321,34 @@ mod tests {
     }
 
     #[test]
-    fn item_error_populates_only_the_error() {
-        let converted =
-            GrpcExecutedTransactionResult::try_from(Err(GrpcError::EmptyRequest)).unwrap();
+    fn item_error_fails_only_its_own_item() {
+        let results = GrpcExecutedTransactionResults::new(vec![
+            Err(GrpcError::EmptyRequest),
+            Ok(proto::transaction::ExecutedTransaction::default()),
+        ])
+        .unwrap();
 
-        assert!(converted.transaction.is_none());
-        assert!(converted.error.is_some());
+        assert_eq!(results.len(), 2);
+        assert!(results.get(0).is_err());
+        assert!(results.get(1).is_ok());
+        assert!(results.get(2).is_err());
+    }
+
+    #[test]
+    fn next_moves_past_errors_and_stops_at_the_end() {
+        let results = GrpcExecutedTransactionResults::new(vec![
+            Err(GrpcError::EmptyRequest),
+            Ok(proto::transaction::ExecutedTransaction::default()),
+        ])
+        .unwrap();
+
+        assert!(results.has_next());
+        assert!(results.next().is_err());
+        assert!(results.has_next());
+        assert!(results.next().is_ok());
+        assert!(!results.has_next());
+        assert!(results.next().is_err());
+        assert!(!results.has_next());
+        assert!(results.get(1).is_ok());
     }
 }
