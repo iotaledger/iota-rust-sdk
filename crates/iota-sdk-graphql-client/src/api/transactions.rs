@@ -19,7 +19,7 @@ use crate::{
     GraphQLClient, TransactionDataEffects,
     api::define_query,
     error::{GraphQLError, GraphQLResult},
-    pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
+    pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         AddressTransactionBlocksQueryFragment, AddressTransactionRelationship,
         AddressTransactionsQueryArgs, AddressTransactionsQueryFragment, ExecuteTransactionArgs,
@@ -36,6 +36,7 @@ use crate::{
 define_query! {
     /// Query for [`GraphQLClient::transactions`]. Await it to send the
     /// request.
+    #[derive(Clone)]
     pub struct ListTransactionsQuery {
         client: GraphQLClient,
         filter: Option<TransactionsFilter>,
@@ -55,6 +56,13 @@ impl ListTransactionsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     fn operation(
@@ -96,6 +104,7 @@ impl ListTransactionsQuery {
 define_query! {
     /// Query for [`GraphQLClient::address_transactions`]. Await it to send the
     /// request.
+    #[derive(Clone)]
     pub struct ListAddressTransactionsQuery {
         client: GraphQLClient,
         address: Address,
@@ -124,6 +133,13 @@ impl ListAddressTransactionsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     fn operation(
@@ -174,6 +190,7 @@ impl ListAddressTransactionsQuery {
 define_query! {
     /// Query for [`GraphQLClient::transactions_effects`]. Await it to send the
     /// request.
+    #[derive(Clone)]
     pub struct ListTransactionsEffectsQuery {
         client: GraphQLClient,
         filter: Option<TransactionsFilter>,
@@ -193,6 +210,13 @@ impl ListTransactionsEffectsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<TransactionEffects>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     fn operation(
@@ -234,6 +258,7 @@ impl ListTransactionsEffectsQuery {
 define_query! {
     /// Query for [`GraphQLClient::transactions_data_effects`]. Await it to
     /// send the request.
+    #[derive(Clone)]
     pub struct ListTransactionsDataEffectsQuery {
         client: GraphQLClient,
         filter: Option<TransactionsFilter>,
@@ -253,6 +278,13 @@ impl ListTransactionsDataEffectsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<TransactionDataEffects>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     fn operation(
@@ -294,8 +326,8 @@ impl ListTransactionsDataEffectsQuery {
                             "transaction bcs or effects",
                         ));
                     };
-                    let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
-                    let effects = base64ct::Base64::decode_vec(effects_bcs.0.as_str())?;
+                    let bcs = crate::base64::decode(bcs.0.as_str())?;
+                    let effects = crate::base64::decode(effects_bcs.0.as_str())?;
                     let transaction: SenderSignedTransaction =
                         bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
                     let effects: TransactionEffects =
@@ -344,7 +376,7 @@ impl ExecuteTransactionQuery {
         let response = self.client.run_query(&operation).await?;
 
         let result = response.execute_transaction_block;
-        let bcs = base64ct::Base64::decode_vec(result.effects.bcs.0.as_str())?;
+        let bcs = crate::base64::decode(result.effects.bcs.0.as_str())?;
         let effects: TransactionEffects =
             bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
 
@@ -479,8 +511,8 @@ impl GraphQLClient {
                 let effects_bcs = effects
                     .bcs
                     .ok_or(GraphQLError::EmptyResponseField("transaction effects bcs"))?;
-                let bcs = base64ct::Base64::decode_vec(bcs.0.as_str())?;
-                let effects = base64ct::Base64::decode_vec(effects_bcs.0.as_str())?;
+                let bcs = crate::base64::decode(bcs.0.as_str())?;
+                let effects = crate::base64::decode(effects_bcs.0.as_str())?;
                 let transaction: SenderSignedTransaction =
                     bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
                 let effects: TransactionEffects =
@@ -502,25 +534,6 @@ impl GraphQLClient {
             filter: None,
             pagination: PaginationFilter::default(),
         }
-    }
-
-    /// Get a stream of transactions' effects based on the (optional)
-    /// transaction filter.
-    pub fn transactions_effects_stream(
-        &self,
-        filter: impl Into<Option<TransactionsFilter>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = GraphQLResult<TransactionEffects>> + '_ {
-        let filter = filter.into();
-        stream_paginated_query(
-            move |pag_filter| {
-                self.transactions_effects()
-                    .filter(filter.clone())
-                    .pagination(pag_filter)
-                    .into_future()
-            },
-            streaming_direction,
-        )
     }
 
     /// Execute a transaction.

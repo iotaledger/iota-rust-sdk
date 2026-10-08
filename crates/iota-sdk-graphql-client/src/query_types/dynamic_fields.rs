@@ -4,7 +4,6 @@
 
 use std::str::FromStr;
 
-use base64ct::Encoding;
 use iota_types::TypeTag;
 
 use crate::{
@@ -131,7 +130,7 @@ impl DynamicFieldValue {
             .map(|v| {
                 Ok(crate::DynamicFieldValue {
                     type_tag: TypeTag::from_str(&v.move_type.repr)?,
-                    bcs: base64ct::Base64::decode_vec(&v.bcs.0)?,
+                    bcs: crate::base64::decode(&v.bcs.0)?,
                 })
             })
             .transpose()
@@ -156,7 +155,7 @@ impl TryFrom<DynamicField> for DynamicFieldOutput {
         Ok(DynamicFieldOutput {
             name: crate::DynamicFieldName {
                 type_tag: TypeTag::from_str(&name.move_type.repr)?,
-                bcs: base64ct::Base64::decode_vec(&name.bcs.0)?,
+                bcs: crate::base64::decode(&name.bcs.0)?,
                 json: name.json.clone(),
             },
             value_as_json: val.field_value_json(),

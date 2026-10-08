@@ -2,7 +2,6 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use base64ct::Encoding;
 use iota_types::{
     ObjectId, SenderSignedTransaction, SignedTransaction, TransactionDigest, TransactionEffects,
 };
@@ -483,7 +482,7 @@ impl TryFrom<TransactionBlock> for SignedTransaction {
     fn try_from(value: TransactionBlock) -> Result<Self, Self::Error> {
         let transaction = value
             .bcs
-            .map(|tx| base64ct::Base64::decode_vec(tx.0.as_str()))
+            .map(|tx| crate::base64::decode(tx.0.as_str()))
             .transpose()?
             .map(|bcs| {
                 bcs::from_bytes::<SenderSignedTransaction>(&bcs).map_err(iota_types::BcsError::new)
@@ -505,7 +504,7 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
         let effects = value
             .effects
             .and_then(|fx| fx.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| {
                 bcs::from_bytes::<TransactionEffects>(&bcs).map_err(iota_types::BcsError::new)

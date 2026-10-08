@@ -47,7 +47,6 @@ workspace = true
 
 [dependencies]
 # external dependencies
-async-stream.workspace = true
 async-trait = "0.1.92"
 base64ct = { workspace = true, features = ["alloc", "std"] }
 bcs.workspace = true

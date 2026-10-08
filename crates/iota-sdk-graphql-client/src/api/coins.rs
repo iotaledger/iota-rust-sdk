@@ -12,13 +12,14 @@ use crate::{
     GraphQLClient, ListObjectsQuery,
     api::define_query,
     error::GraphQLResult,
-    pagination::{Direction, Page, PaginationFilter},
+    pagination::{Page, PaginationFilter},
     query_types::{CoinMetadata, CoinMetadataArgs, CoinMetadataQueryFragment, ObjectFilter},
     streams::stream_paginated_query,
 };
 
 define_query! {
     /// Query for [`GraphQLClient::coins`]. Await it to send the request.
+    #[derive(Clone)]
     pub struct ListCoinsQuery {
         client: GraphQLClient,
         owner: Address,
@@ -39,6 +40,13 @@ impl ListCoinsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<Coin>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     fn objects_query(self) -> ListObjectsQuery {
@@ -75,6 +83,7 @@ impl ListCoinsQuery {
 
 define_query! {
     /// Query for [`GraphQLClient::gas_coins`]. Await it to send the request.
+    #[derive(Clone)]
     pub struct ListGasCoinsQuery {
         coins: ListCoinsQuery,
     }
@@ -88,46 +97,19 @@ impl ListGasCoinsQuery {
         self
     }
 
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<Coin>> + Unpin {
+        let pagination = self.coins.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+    }
+
     async fn send(self) -> GraphQLResult<Page<Coin>> {
         self.coins.send().await
     }
 }
 
 impl GraphQLClient {
-    /// Get the list of coins for the specified address as a stream.
-    ///
-    /// If `coin_type` is not provided, all coins will be returned. For IOTA
-    /// coins, pass in the coin type: `0x2::iota::IOTA`.
-    pub fn coins_stream(
-        &self,
-        address: Address,
-        coin_type: impl Into<Option<StructTag>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = GraphQLResult<Coin>> + '_ {
-        let coin_type = coin_type.into();
-        stream_paginated_query(
-            move |filter| {
-                self.coins(address)
-                    .coin_type(coin_type.clone())
-                    .pagination(filter)
-                    .into_future()
-            },
-            streaming_direction,
-        )
-    }
-
-    /// Get the list of gas coins for the specified address as a stream.
-    pub fn gas_coins_stream(
-        &self,
-        address: Address,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = GraphQLResult<Coin>> + '_ {
-        stream_paginated_query(
-            move |filter| self.gas_coins(address).pagination(filter).into_future(),
-            streaming_direction,
-        )
-    }
-
     /// Get the list of coins for the specified address. For IOTA coins, set
     /// the coin type to `0x2::iota::IOTA`.
     pub fn coins(&self, owner: Address) -> ListCoinsQuery {
@@ -172,7 +154,6 @@ mod tests {
     use tokio::time;
 
     use crate::{
-        Direction,
         client::LOCAL_HOST,
         faucet::FaucetClient,
         test_utils::{
@@ -274,7 +255,7 @@ mod tests {
         let mut num_coins = 0;
         for attempt in 0..MAX_RETRIES {
             num_coins = 0;
-            let mut stream = client.coins_stream(address, None, Direction::default());
+            let mut stream = client.coins(address).stream();
             let mut errored = false;
             while let Some(result) = stream.next().await {
                 match result {

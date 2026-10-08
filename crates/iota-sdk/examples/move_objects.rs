@@ -58,10 +58,10 @@ async fn main() -> Result<()> {
     // Same query for a different mirror, paginated as a stream. Only the type
     // parameter changes.
     println!("---");
-    let mut staked = Box::pin(client.move_objects_stream::<StakedIota>(
-        MoveObjectFilter::default().with_owner(owner),
-        Default::default(),
-    ));
+    let mut staked = client
+        .move_objects::<StakedIota>()
+        .filter(MoveObjectFilter::default().with_owner(owner))
+        .stream();
     while let Some(stake) = staked.next().await {
         let stake = stake?;
         let object_ref = stake.object_ref();
