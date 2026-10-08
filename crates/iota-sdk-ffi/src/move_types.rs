@@ -12,25 +12,23 @@
 //!   their embedded [`ValidatorSetV2`] / [`ValidatorSetV1`], [`ValidatorV1`],
 //!   [`ValidatorMetadataV1`], [`StakingPoolV1`], [`SystemParametersV1`], and
 //!   [`StorageFundV1`]), [`UnverifiedValidatorOperationCap`].
-//! - **Framework types** (`0x2`): [`IotaCoinMetadata`],
-//!   [`ImmutableCoinMetadata`], [`Clock`], [`TimelockedIotaBalance`],
-//!   [`UpgradeCap`], [`Publisher`], [`Kiosk`], [`KioskOwnerCap`],
-//!   [`KioskExtension`], [`DenyList`], [`Random`] (with [`RandomInner`]),
-//!   [`PackageMetadataV1`] (with its [`ModuleMetadataV1`] and
-//!   [`AuthenticatorMetadataV1`] records), [`ModuleMetadata`], [`TreasuryCap`],
-//!   [`RegulatedCoinMetadata`], [`DenyCapV1`], [`Display`], [`CoinManager`],
-//!   [`CoinManagerTreasuryCap`], [`CoinManagerMetadataCap`], [`Token`],
-//!   [`TokenPolicyCap`], [`TokenPolicy`], [`Config`] (with [`BoolSetting`]),
-//!   [`TransferPolicy`], [`TransferPolicyCap`], [`LabelerCap`],
-//!   [`PurchaseCap`].
+//! - **Framework types** (`0x2`): [`CoinMetadata`], [`ImmutableCoinMetadata`],
+//!   [`Clock`], [`TimelockedIotaBalance`], [`UpgradeCap`], [`Publisher`],
+//!   [`Kiosk`], [`KioskOwnerCap`], [`KioskExtension`], [`DenyList`], [`Random`]
+//!   (with [`RandomInner`]), [`PackageMetadataV1`] (with its
+//!   [`ModuleMetadataV1`] and [`AuthenticatorMetadataV1`] records),
+//!   [`ModuleMetadata`], [`TreasuryCap`], [`RegulatedCoinMetadata`],
+//!   [`DenyCapV1`], [`Display`], [`CoinManager`], [`CoinManagerTreasuryCap`],
+//!   [`CoinManagerMetadataCap`], [`Token`], [`TokenPolicyCap`],
+//!   [`TokenPolicy`], [`Config`] (with [`BoolSetting`]), [`TransferPolicy`],
+//!   [`TransferPolicyCap`], [`LabelerCap`], [`PurchaseCap`].
 //! - **Stardust types** (`0x107a`): [`Nft`], [`Irc27Metadata`],
 //!   [`BasicOutput`], [`NftOutput`], [`AliasOutput`], [`Alias`], plus the
 //!   unlock-condition records [`TimelockUnlockCondition`],
 //!   [`ExpirationUnlockCondition`], [`StorageDepositReturnUnlockCondition`].
 //!
 //! Generic Move types are exposed as their `<IOTA>` instantiations
-//! (`BasicOutput<IOTA>`, `NftOutput<IOTA>`, `AliasOutput<IOTA>`,
-//! `IotaCoinMetadata` wrapping `CoinMetadata<IOTA>`, and
+//! (`BasicOutput<IOTA>`, `NftOutput<IOTA>`, `AliasOutput<IOTA>`, and
 //! [`TimelockedIotaBalance`] wrapping `TimeLock<Balance<IOTA>>`). The
 //! `try_from_object` constructors validate the full on-chain type tag,
 //! including that the coin marker is `0x2::iota::IOTA`.
@@ -887,9 +885,9 @@ crate::ffi_move_object! {
 // 0x2 — IOTA framework
 // =====================================================================
 
-crate::ffi_move_object! {
-    /// A typed view of an on-chain `0x2::coin::CoinMetadata<IOTA>` object.
-    IotaCoinMetadata(iota_sdk::move_types::iota_framework::coin::CoinMetadata<IOTA>) {
+crate::ffi_move_object_generic! {
+    /// A typed view of an on-chain `0x2::coin::CoinMetadata<T>` object.
+    CoinMetadata(iota_sdk::move_types::iota_framework::coin::CoinMetadata<()>) {
         pub fn decimals(&self) -> u8 {
             self.0.decimals
         }
@@ -1333,22 +1331,11 @@ crate::ffi_move_object_generic! {
         }
 
         /// The coin's `CoinMetadata`, if still held by the manager.
-        pub fn metadata(&self) -> Option<Arc<IotaCoinMetadata>> {
+        pub fn metadata(&self) -> Option<Arc<CoinMetadata>> {
             self.0
                 .metadata
                 .clone()
-                .map(|m| {
-                    Arc::new(IotaCoinMetadata(
-                        iota_sdk::move_types::iota_framework::coin::CoinMetadata::new(
-                            m.id,
-                            m.decimals,
-                            m.name,
-                            m.symbol,
-                            m.description,
-                            m.icon_url,
-                        ),
-                    ))
-                })
+                .map(|m| Arc::new(CoinMetadata(m)))
         }
 
         /// Frozen fallback metadata, used only if the original metadata has
