@@ -37,7 +37,11 @@ impl TransactionBuilderLedgerClient for GraphQLClient {
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> Result<Option<Object>, Self::Error> {
-        self.object(object_id).version(version).await
+        let mut query = self.object(object_id);
+        if let Some(version) = version.into() {
+            query = query.version(version);
+        }
+        query.await
     }
 
     async fn objects(
@@ -88,7 +92,11 @@ impl TransactionBuilderLedgerClient for GraphQLClient {
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
-        self.reference_gas_price().epoch_number(epoch).await
+        let mut query = self.reference_gas_price();
+        if let Some(epoch) = epoch.into() {
+            query = query.epoch_number(epoch);
+        }
+        query.await
     }
 }
 
@@ -129,9 +137,11 @@ impl TransactionBuilderExecutionClient for GraphQLClient {
         transaction: &Transaction,
         wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Self::Error> {
-        self.execute_transaction(signatures, transaction)
-            .wait_for(wait_for)
-            .await
+        let mut query = self.execute_transaction(signatures, transaction);
+        if let Some(wait_for) = wait_for.into() {
+            query = query.wait_for(wait_for);
+        }
+        query.await
     }
 
     async fn wait_for_transaction(

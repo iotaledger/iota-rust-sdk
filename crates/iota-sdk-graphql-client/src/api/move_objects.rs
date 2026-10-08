@@ -93,8 +93,8 @@ define_query! {
 
 impl<T: MoveObject> ListMoveObjectsQuery<T> {
     /// Only return the objects that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<MoveObjectFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: MoveObjectFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
