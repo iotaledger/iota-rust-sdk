@@ -274,4 +274,15 @@ mod tests {
         assert!(converted.transaction.is_none());
         assert!(converted.error.is_some());
     }
+
+    #[test]
+    fn undecodable_item_is_an_error() {
+        let mut transaction = proto::transaction::Transaction::default();
+        transaction.bcs = Some(proto::bcs::BcsData::from(vec![0xff, 0xff]));
+
+        let mut value = proto::transaction::ExecutedTransaction::default();
+        value.transaction = Some(transaction);
+
+        assert!(GrpcExecutedTransactionResult::try_from(Ok(value)).is_err());
+    }
 }
