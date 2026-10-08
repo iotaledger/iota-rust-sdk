@@ -35,9 +35,7 @@ async fn main() -> Result<()> {
         .finish(&client)
         .await?;
 
-    let effects = builder
-        .execute(&move_authenticator, WaitForTransaction::Finalized)
-        .await?;
+    let effects = builder.execute(&move_authenticator).await?;
     println!(
         "Sending IOTA via abstract account: {:?}",
         effects.as_v1().status
@@ -73,8 +71,12 @@ async fn setup_account(client: &GraphQLClient) -> Result<ObjectId> {
         .transfer_objects(sender, [assigned("upgrade_cap")]);
 
     // Sign and execute the transaction (publish the package)
-    let effects = builder
-        .execute(&private_key, WaitForTransaction::Finalized)
+    let effects = builder.execute(&private_key).await?;
+    client
+        .wait_for_transaction(
+            effects.as_v1().transaction_digest,
+            WaitForTransaction::Finalized,
+        )
         .await?;
     println!("Publishing package: {:?}\n", effects.as_v1().status);
 
@@ -129,8 +131,12 @@ async fn setup_account(client: &GraphQLClient) -> Result<ObjectId> {
         ));
 
     // Sign and execute the transaction (link the authenticator)
-    let effects = builder
-        .execute(&private_key, WaitForTransaction::Finalized)
+    let effects = builder.execute(&private_key).await?;
+    client
+        .wait_for_transaction(
+            effects.as_v1().transaction_digest,
+            WaitForTransaction::Finalized,
+        )
         .await?;
     println!(
         "Linking account to authenticate method: {:?}\n",

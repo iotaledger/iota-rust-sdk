@@ -33,9 +33,9 @@ async fn main() -> Result<()> {
     builder.stake(1_000_000_000u64, validator.address.address);
     let stake_tx = builder.finish().await?;
     let sig = private_key.sign_transaction(&stake_tx)?;
+    client.execute_transaction(&[sig], &stake_tx).await?;
     client
-        .execute_transaction(&[sig], &stake_tx)
-        .wait_for(WaitForTransaction::Finalized)
+        .wait_for_transaction(stake_tx.digest(), WaitForTransaction::Finalized)
         .await?;
 
     // Unstake

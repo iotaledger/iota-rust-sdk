@@ -6,8 +6,8 @@
 use std::{sync::Arc, time::Duration};
 
 use iota_sdk::graphql_client::{
-    ExecuteTransactionQuery, ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
-    ListTransactionsEffectsQuery, ListTransactionsQuery, WaitForTransactionQuery,
+    ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery, ListTransactionsEffectsQuery,
+    ListTransactionsQuery, WaitForTransactionQuery,
 };
 
 use crate::{
@@ -159,12 +159,11 @@ impl GraphQLClient {
     }
 
     /// Execute a transaction.
-    #[uniffi::method(default(wait_for = None))]
+    #[uniffi::method]
     pub async fn execute_transaction(
         &self,
         signatures: Vec<Arc<UserSignature>>,
         transaction: &Transaction,
-        wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         Ok(self
             .client()
@@ -175,7 +174,6 @@ impl GraphQLClient {
                     .collect::<Vec<_>>(),
                 &transaction.0,
             )
-            .set_if_some(wait_for.map(Into::into), ExecuteTransactionQuery::wait_for)
             .await?
             .into())
     }

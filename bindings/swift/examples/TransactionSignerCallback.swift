@@ -38,7 +38,7 @@ struct TransactionSignerCallbackExample {
     _ = builder.sendIota(recipient: recipientAddress, amount: PtbArgument.u64(value: amount))
 
     let signer = TransactionSigner(signerFn: AsyncSigner(key: privateKey))
-    let effects = try await builder.execute(signer: signer, waitFor: WaitForTransaction.finalized)
+    let effects = try await builder.execute(signer: signer)
 
     print("Digest: \(hexEncode(input: effects.digest().toBytes()))")
     print("Transaction status: \(effects.asV1().status())")

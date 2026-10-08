@@ -77,8 +77,9 @@ async def main():
     # Sign and execute the transaction (publish the package)
     print("> Publishing package:")
     sig = private_key.sign_transaction(tx)
-    effects = await client.execute_transaction([sig], tx,
-                                               WaitForTransaction.FINALIZED)
+    effects = await client.execute_transaction([sig], tx)
+    await client.wait_for_transaction(tx.digest(),
+                                      WaitForTransaction.FINALIZED)
     print("Success")
 
     # Resolve UpgradeCap and PackageId via the client

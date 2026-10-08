@@ -23,8 +23,9 @@ async def main():
     stake_builder.stake(PtbArgument.u64(1000000000), validators.data[0].address)
     stake_tx = await stake_builder.finish()
     sig = private_key.sign_transaction(stake_tx)
-    await client.execute_transaction([sig], stake_tx,
-                                     WaitForTransaction.FINALIZED)
+    await client.execute_transaction([sig], stake_tx)
+    await client.wait_for_transaction(stake_tx.digest(),
+                                      WaitForTransaction.FINALIZED)
 
     # Unstake
     staked_iotas = await client.objects(filter=GraphQlObjectFilter(

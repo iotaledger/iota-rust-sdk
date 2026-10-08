@@ -43,9 +43,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	waitFor := iota_sdk.WaitForTransactionFinalized
-	if _, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{signature}, stakeTx, &waitFor); err != nil {
+	if _, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{signature}, stakeTx); err != nil {
 		log.Fatalf("Failed to stake: %v", err)
+	}
+	if err := client.WaitForTransaction(stakeTx.Digest(), iota_sdk.WaitForTransactionFinalized, nil); err != nil {
+		log.Fatalf("Failed to wait for stake transaction: %v", err)
 	}
 
 	// Unstake

@@ -29,7 +29,7 @@ fun main() = runBlocking {
                 .finish(client)
 
         val signer = TransactionSigner.fromMoveAuthenticator(moveAuthenticator)
-        val effects = builder.execute(signer, WaitForTransaction.FINALIZED)
+        val effects = builder.execute(signer)
 
         println("Sending IOTA via abstract account: ${effects.asV1().status()}")
     } catch (e: Exception) {
@@ -60,7 +60,8 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
 
     // Sign and execute the transaction (publish the package)
     val signer = TransactionSigner.fromEd25519(privateKey)
-    var effects = builder.execute(signer, WaitForTransaction.FINALIZED)
+    var effects = builder.execute(signer)
+    client.waitForTransaction(effects.asV1().transactionDigest(), WaitForTransaction.FINALIZED)
 
     println("Publishing package: ${effects.asV1().status()}\n")
 
@@ -116,7 +117,8 @@ suspend fun setupAccount(client: GraphQlClient): ObjectId {
     )
 
     // Sign and execute the transaction (link the authenticator)
-    effects = builder.execute(signer, WaitForTransaction.FINALIZED)
+    effects = builder.execute(signer)
+    client.waitForTransaction(effects.asV1().transactionDigest(), WaitForTransaction.FINALIZED)
 
     println("Linking account to authenticate method: ${effects.asV1().status()}\n")
 

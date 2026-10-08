@@ -31,11 +31,8 @@ const stakeBuilder = client.transactionBuilder(owner);
 stakeBuilder.stake(PtbArgument.u64(1000000000n), validators.data[0].address);
 const stakeTx = await stakeBuilder.finish();
 const signature = privateKey.signTransaction(stakeTx);
-await client.executeTransaction(
-  [signature],
-  stakeTx,
-  WaitForTransaction.Finalized,
-);
+await client.executeTransaction([signature], stakeTx);
+await client.waitForTransaction(stakeTx.digest(), WaitForTransaction.Finalized);
 
 // Unstake
 const stakedIotas = await client.objects(

@@ -135,13 +135,8 @@ impl TransactionBuilderExecutionClient for GraphQLClient {
         &self,
         signatures: &[UserSignature],
         transaction: &Transaction,
-        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Self::Error> {
-        let mut query = self.execute_transaction(signatures, transaction);
-        if let Some(wait_for) = wait_for.into() {
-            query = query.wait_for(wait_for);
-        }
-        query.await
+        self.execute_transaction(signatures, transaction).await
     }
 
     async fn wait_for_transaction(

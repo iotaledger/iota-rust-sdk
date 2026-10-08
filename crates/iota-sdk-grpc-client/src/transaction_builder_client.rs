@@ -209,9 +209,7 @@ impl TransactionBuilderExecutionClient for GrpcClient {
         &self,
         signatures: &[UserSignature],
         transaction: &Transaction,
-        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> Result<TransactionEffects, Self::Error> {
-        let wait_for = wait_for.into();
         let signed_transaction = SignedTransaction {
             transaction: transaction.clone(),
             signatures: signatures.to_vec(),
@@ -219,14 +217,7 @@ impl TransactionBuilderExecutionClient for GrpcClient {
         let result = GrpcClient::execute_transaction(self, signed_transaction)
             .await?
             .into_inner();
-        let effects = result.effects()?.effects()?;
-
-        if let Some(wait_for) = wait_for {
-            self.wait_for_transaction(transaction.digest(), wait_for)
-                .await?;
-        }
-
-        Ok(effects)
+        Ok(result.effects()?.effects()?)
     }
 
     async fn wait_for_transaction(

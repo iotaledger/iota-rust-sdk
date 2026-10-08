@@ -350,19 +350,11 @@ define_query! {
         client: GraphQLClient,
         signatures: Vec<String>,
         transaction: Transaction,
-        wait_for: Option<WaitForTransaction>,
     }
     output: GraphQLResult<TransactionEffects>;
 }
 
 impl ExecuteTransactionQuery {
-    /// Wait for the executed transaction to be indexed or finalized before
-    /// resolving.
-    pub fn wait_for(mut self, wait_for: WaitForTransaction) -> Self {
-        self.wait_for = Some(wait_for);
-        self
-    }
-
     async fn send(self) -> GraphQLResult<TransactionEffects> {
         let operation = ExecuteTransactionQueryFragment::build(ExecuteTransactionArgs {
             signatures: self.signatures,
@@ -377,12 +369,6 @@ impl ExecuteTransactionQuery {
         let bcs = crate::base64::decode(result.effects.bcs.0.as_str())?;
         let effects: TransactionEffects =
             bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
-
-        if let Some(wait_for) = self.wait_for {
-            self.client
-                .wait_for_transaction(self.transaction.digest(), wait_for)
-                .await?;
-        }
 
         Ok(effects)
     }
@@ -643,7 +629,6 @@ impl GraphQLClient {
             client: self.clone(),
             signatures: signatures.iter().map(|s| s.to_base64()).collect(),
             transaction: transaction.clone(),
-            wait_for: None,
         }
     }
 

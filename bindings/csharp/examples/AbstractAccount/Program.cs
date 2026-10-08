@@ -27,7 +27,7 @@ class Program
         ).Finish(client);
 
         var signer = TransactionSigner.FromMoveAuthenticator(moveAuthenticator);
-        var effects = await builder.Execute(signer, WaitForTransaction.Finalized);
+        var effects = await builder.Execute(signer);
 
         Console.WriteLine($"Sending IOTA via abstract account: {effects.AsV1().Status()}");
     }
@@ -50,7 +50,8 @@ class Program
         builder.TransferObjects(sender, new[] { PtbArgument.Assigned("upgrade_cap") });
 
         var txSigner = TransactionSigner.FromEd25519(privateKey);
-        var effects = await builder.Execute(txSigner, WaitForTransaction.Finalized);
+        var effects = await builder.Execute(txSigner);
+        await client.WaitForTransaction(effects.AsV1().TransactionDigest(), WaitForTransaction.Finalized);
 
         Console.WriteLine($"Publishing package: {effects.AsV1().Status()}\n");
 
@@ -101,7 +102,8 @@ class Program
             }
         );
 
-        var effects2 = await builder2.Execute(txSigner, WaitForTransaction.Finalized);
+        var effects2 = await builder2.Execute(txSigner);
+        await client.WaitForTransaction(effects2.AsV1().TransactionDigest(), WaitForTransaction.Finalized);
         Console.WriteLine($"Linking account to authenticate method: {effects2.AsV1().Status()}\n");
 
         return accountId;

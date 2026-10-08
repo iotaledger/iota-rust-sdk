@@ -101,10 +101,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to sign: %v", err)
 	}
-	waitFor := iota_sdk.WaitForTransactionFinalized
-	effectsPublish, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{userSigPublish}, txPublish, &waitFor)
+	effectsPublish, err := client.ExecuteTransaction([]*iota_sdk.UserSignature{userSigPublish}, txPublish)
 	if err != nil {
 		log.Fatalf("Transaction failed: %v", err)
+	}
+	if err := client.WaitForTransaction(txPublish.Digest(), iota_sdk.WaitForTransactionFinalized, nil); err != nil {
+		log.Fatalf("Failed to wait for transaction: %v", err)
 	}
 	fmt.Println("Success")
 

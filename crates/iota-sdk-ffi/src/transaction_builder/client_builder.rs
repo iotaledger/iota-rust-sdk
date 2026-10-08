@@ -7,7 +7,7 @@ use crate::{
     error::Result,
     graphql::output_types::GraphQLDryRunResult,
     transaction_builder::{
-        Payment, WaitForTransaction,
+        Payment,
         gas_station::GasStation,
         ptb_arg::{MoveArg, PTBArgument},
         signer::TransactionSigner,
@@ -478,16 +478,14 @@ macro_rules! client_transaction_builder {
                 Ok($convert)
             }
 
-            /// Execute the transaction and optionally wait for finalization.
-            #[uniffi::method(default(wait_for = None))]
+            /// Execute the transaction.
             pub async fn execute(
                 &self,
                 signer: &TransactionSigner,
-                wait_for: Option<WaitForTransaction>,
             ) -> Result<TransactionEffects> {
                 Ok(self
                     .read(|builder| builder.clone())
-                    .execute(signer, wait_for.map(Into::into))
+                    .execute(signer)
                     .await?
                     .into())
             }
@@ -510,26 +508,22 @@ macro_rules! client_transaction_builder {
             }
 
             /// Execute the transaction with both the sender's and the sponsor's
-            /// signature, and optionally wait for finalization.
+            /// signature.
             ///
             /// Use this when you hold the sponsor's key. The sponsor's address must be
             /// set with `sponsor`, which is also where the gas coins are drawn from.
             /// When the sponsor is a service that keeps its own key and submits for
             /// you, use `execute_with_gas_station` instead.
-            #[uniffi::method(default(wait_for = None))]
             pub async fn execute_with_sponsor_signer(
                 &self,
                 signer: &TransactionSigner,
                 sponsor_signer: &TransactionSigner,
-                wait_for: Option<WaitForTransaction>,
             ) -> Result<TransactionEffects> {
                 Ok(self
                     .read(|builder| {
-                        builder.clone().execute_with_sponsor_signer(
-                            signer,
-                            sponsor_signer,
-                            wait_for.map(Into::into),
-                        )
+                        builder
+                            .clone()
+                            .execute_with_sponsor_signer(signer, sponsor_signer)
                     })
                     .await?
                     .into())

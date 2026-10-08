@@ -162,7 +162,6 @@ pub trait TransactionBuilderExecutionClient: TransactionBuilderClientBase {
         &self,
         signatures: &[UserSignature],
         transaction: &Transaction,
-        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> impl std::future::Future<Output = Result<TransactionEffects, Self::Error>>;
 
     /// Wait for the indexing or finalization of a transaction by its digest.
@@ -267,9 +266,8 @@ impl<T: TransactionBuilderExecutionClient> TransactionBuilderExecutionClient for
         &self,
         signatures: &[UserSignature],
         transaction: &Transaction,
-        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> impl std::future::Future<Output = Result<TransactionEffects, Self::Error>> {
-        (*self).execute_transaction(signatures, transaction, wait_for)
+        (*self).execute_transaction(signatures, transaction)
     }
 
     fn wait_for_transaction(
@@ -358,10 +356,8 @@ impl<T: TransactionBuilderExecutionClient> TransactionBuilderExecutionClient for
         &self,
         signatures: &[UserSignature],
         transaction: &Transaction,
-        wait_for: impl Into<Option<WaitForTransaction>>,
     ) -> impl std::future::Future<Output = Result<TransactionEffects, Self::Error>> {
-        self.as_ref()
-            .execute_transaction(signatures, transaction, wait_for)
+        self.as_ref().execute_transaction(signatures, transaction)
     }
 
     fn wait_for_transaction(
@@ -531,7 +527,6 @@ pub(crate) mod test_client {
             &self,
             _signatures: &[UserSignature],
             _transaction: &Transaction,
-            _wait_for: impl Into<Option<WaitForTransaction>>,
         ) -> Result<TransactionEffects, Self::Error> {
             Err(TestClientError(
                 "TestClient cannot execute transactions".to_string(),
@@ -666,10 +661,9 @@ pub(crate) mod test_client {
             &self,
             signatures: &[iota_types::UserSignature],
             transaction: &Transaction,
-            wait_for: impl Into<Option<WaitForTransaction>>,
         ) -> Result<TransactionEffects, Self::Error> {
             crate::TestClient
-                .execute_transaction(signatures, transaction, wait_for)
+                .execute_transaction(signatures, transaction)
                 .await
         }
 

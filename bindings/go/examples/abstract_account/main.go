@@ -49,8 +49,7 @@ func main() {
 	}
 
 	signer := iota_sdk.TransactionSignerFromMoveAuthenticator(moveAuthenticator)
-	waitFor := iota_sdk.WaitForTransactionFinalized
-	effects, err := builder.Execute(signer, &waitFor)
+	effects, err := builder.Execute(signer)
 	if err != nil {
 		log.Fatalf("Failed to execute transaction: %v", err)
 	}
@@ -85,10 +84,12 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 
 	// Sign and execute the transaction (publish the package)
 	signer := iota_sdk.TransactionSignerFromEd25519(privateKey)
-	waitFor := iota_sdk.WaitForTransactionFinalized
-	effects, err := builder.Execute(signer, &waitFor)
+	effects, err := builder.Execute(signer)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute transaction: %w", err)
+	}
+	if err := client.WaitForTransaction((*effects).AsV1().TransactionDigest(), iota_sdk.WaitForTransactionFinalized, nil); err != nil {
+		return nil, fmt.Errorf("failed to wait for transaction: %w", err)
 	}
 
 	fmt.Printf("Publishing package: %v\n\n", (*effects).AsV1().Status())
@@ -157,9 +158,12 @@ func setupAccount(client *iota_sdk.GraphQlClient) (*iota_sdk.ObjectId, error) {
 	)
 
 	// Sign and execute the transaction (link the authenticator)
-	effects, err = builder.Execute(signer, &waitFor)
+	effects, err = builder.Execute(signer)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute transaction: %w", err)
+	}
+	if err := client.WaitForTransaction((*effects).AsV1().TransactionDigest(), iota_sdk.WaitForTransactionFinalized, nil); err != nil {
+		return nil, fmt.Errorf("failed to wait for transaction: %w", err)
 	}
 
 	fmt.Printf("Linking account to authenticate method: %v\n\n", (*effects).AsV1().Status())

@@ -25,7 +25,8 @@ class Program
         stakeBuilder.Stake(PtbArgument.U64(1000000000), validators.Data[0].Address);
         var stakeTx = await stakeBuilder.Finish();
         var signature = privateKey.SignTransaction(stakeTx);
-        await client.ExecuteTransaction(new[] { signature }, stakeTx, WaitForTransaction.Finalized);
+        await client.ExecuteTransaction(new[] { signature }, stakeTx);
+        await client.WaitForTransaction(stakeTx.Digest(), WaitForTransaction.Finalized);
 
         // Unstake
         var stakedIotas = await client.Objects(new GraphQlObjectFilter(TypeTag: StructTag.NewStakedIota().ToString(), Owner: owner));
