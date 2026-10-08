@@ -73,14 +73,7 @@ pub trait MoveType {
 /// the type arguments of a Move function call.
 pub trait MoveTypes {
     /// Get the type tags.
-    fn type_tags() -> Vec<iota_types::TypeTag> {
-        let mut tags = Vec::new();
-        Self::push_type_tags(&mut tags);
-        tags
-    }
-
-    /// Push the type tags onto the list.
-    fn push_type_tags(tags: &mut Vec<iota_types::TypeTag>);
+    fn type_tags() -> Vec<iota_types::TypeTag>;
 }
 
 /// A Rust mirror of a Move object that can be decoded from an

@@ -45,30 +45,37 @@ impl<T: MoveType> MoveType for Vec<T> {
 }
 
 macro_rules! impl_move_types_tuple {
-    ($($tup:ident.$idx:tt),+$(,)?) => {
+    ($($tup:ident),+) => {
         impl<$($tup),+> MoveTypes for ($($tup),+)
-        where $($tup: MoveTypes),+
+        where $($tup: MoveType),+
         {
-            fn push_type_tags(tags: &mut Vec<TypeTag>) {
-                $(
-                    $tup::push_type_tags(tags);
-                )+
+            fn type_tags() -> Vec<TypeTag> {
+                vec![$($tup::type_tag()),+]
             }
         }
     };
 }
-impl_move_types_tuple!(T1.0, T2.1);
-impl_move_types_tuple!(T1.0, T2.1, T3.2);
-impl_move_types_tuple!(T1.0, T2.1, T3.2, T4.3);
-impl_move_types_tuple!(T1.0, T2.1, T3.2, T4.3, T5.4);
+impl_move_types_tuple!(T1, T2);
+impl_move_types_tuple!(T1, T2, T3);
+impl_move_types_tuple!(T1, T2, T3, T4);
+impl_move_types_tuple!(T1, T2, T3, T4, T5);
+impl_move_types_tuple!(T1, T2, T3, T4, T5, T6);
+impl_move_types_tuple!(T1, T2, T3, T4, T5, T6, T7);
+impl_move_types_tuple!(T1, T2, T3, T4, T5, T6, T7, T8);
+impl_move_types_tuple!(T1, T2, T3, T4, T5, T6, T7, T8, T9);
+impl_move_types_tuple!(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10);
+impl_move_types_tuple!(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11);
+impl_move_types_tuple!(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12);
 
 impl MoveTypes for () {
-    fn push_type_tags(_: &mut Vec<TypeTag>) {}
+    fn type_tags() -> Vec<TypeTag> {
+        Vec::new()
+    }
 }
 
 impl<T: MoveType> MoveTypes for T {
-    fn push_type_tags(tags: &mut Vec<TypeTag>) {
-        tags.push(Self::type_tag())
+    fn type_tags() -> Vec<TypeTag> {
+        vec![T::type_tag()]
     }
 }
 
