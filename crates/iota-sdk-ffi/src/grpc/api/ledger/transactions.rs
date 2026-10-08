@@ -360,6 +360,6 @@ mod tests {
         let mut value = proto::transaction::ExecutedTransaction::default();
         value.transaction = Some(transaction);
 
-        assert!(GrpcExecutedTransactionResult::try_from(Ok(value)).is_err());
+        assert!(GrpcExecutedTransactionResults::new(vec![Ok(value)]).is_err());
     }
 }
