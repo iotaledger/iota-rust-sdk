@@ -1,8 +1,6 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use base64ct::Encoding;
-
 use crate::{
     error::GraphQLError,
     query_types::{Address, Base64, GraphQLAddress, PageInfo, schema},
@@ -100,7 +98,7 @@ impl TryFrom<NameRegistration> for iota_types::iota_names::NameRegistration {
     type Error = GraphQLError;
 
     fn try_from(value: NameRegistration) -> Result<Self, Self::Error> {
-        let bytes = base64ct::Base64::decode_vec(
+        let bytes = crate::base64::decode(
             value
                 .bcs
                 .ok_or(GraphQLError::EmptyResponseField("name registration bcs"))?

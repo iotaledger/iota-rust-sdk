@@ -4,8 +4,8 @@
 
 //! Package API implementation.
 
-use base64ct::Encoding;
 use cynic::QueryBuilder;
+use futures::Stream;
 use iota_types::{Address, MovePackage, Object, Version};
 
 use crate::{
@@ -20,11 +20,13 @@ use crate::{
         PackageQueryFragment, PackageVersionsArgs, PackageVersionsQueryFragment, PackagesQueryArgs,
         PackagesQueryFragment,
     },
+    streams::stream_paginated_query,
 };
 
 define_query! {
     /// Query for [`GraphQLClient::package_versions`]. Await it to send the
     /// request.
+    #[derive(Clone)]
     pub struct ListPackageVersionsQuery {
         client: GraphQLClient,
         address: Address,
@@ -40,6 +42,13 @@ impl ListPackageVersionsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<MovePackage>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     /// Only return versions after this one.
@@ -97,11 +106,8 @@ impl ListPackageVersionsQuery {
             .nodes
             .iter()
             .map(|p| &p.bcs)
-            .filter_map(|b64| {
-                b64.as_ref()
-                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
-            })
-            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
             .map(|b| {
@@ -118,6 +124,7 @@ impl ListPackageVersionsQuery {
 
 define_query! {
     /// Query for [`GraphQLClient::packages`]. Await it to send the request.
+    #[derive(Clone)]
     pub struct ListPackagesQuery {
         client: GraphQLClient,
         pagination: PaginationFilter,
@@ -132,6 +139,13 @@ impl ListPackagesQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<MovePackage>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     /// Only return packages published after this checkpoint.
@@ -185,11 +199,8 @@ impl ListPackagesQuery {
             .nodes
             .iter()
             .map(|p| &p.bcs)
-            .filter_map(|b64| {
-                b64.as_ref()
-                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
-            })
-            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
             .map(|b| {
@@ -348,7 +359,7 @@ impl GetPackageQuery {
         Ok(response
             .package
             .and_then(|x| x.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?
@@ -443,7 +454,7 @@ impl GraphQLClient {
         Ok(response
             .latest_package
             .and_then(|x| x.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(&bcs.0))
+            .map(|bcs| crate::base64::decode(&bcs.0))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?

@@ -43,13 +43,13 @@ pub use checkpoint::{
 #[cfg(feature = "serde")]
 pub use crypto::SignatureFromBytesError;
 pub use crypto::{
-    Bls12381PublicKey, Bls12381Signature, Ed25519PublicKey, Ed25519Signature, HashingIntentScope,
-    INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError, IntentMessage, IntentScope,
-    IntentVersion, MoveAuthenticator, MoveAuthenticatorV1, MultisigAggregatedSignature,
-    MultisigCommittee, MultisigError, MultisigMember, MultisigMemberSignature,
-    PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey, PublicKeyError,
-    PublicKeyExt, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey, Secp256r1Signature,
-    SignatureScheme, SignatureSchemeError, SimpleSignature, UserSignature,
+    Base64ParseError, Bls12381PublicKey, Bls12381Signature, Ed25519PublicKey, Ed25519Signature,
+    HashingIntentScope, INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError, IntentMessage,
+    IntentScope, IntentVersion, MoveAuthenticator, MoveAuthenticatorV1,
+    MultisigAggregatedSignature, MultisigCommittee, MultisigError, MultisigMember,
+    MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey,
+    PublicKeyError, PublicKeyExt, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
+    Secp256r1Signature, SignatureScheme, SignatureSchemeError, SimpleSignature, UserSignature,
 };
 pub use digest::{
     CertificateDigest, CheckpointContentsDigest, CheckpointDigest, ConsensusCommitDigest, Digest,
@@ -163,7 +163,6 @@ mod bcs_base64 {
     }
 
     impl_bcs_base64!(
-        MovePackageData,
         Object,
         SenderSignedTransaction,
         Transaction,

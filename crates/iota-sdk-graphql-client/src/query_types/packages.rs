@@ -36,8 +36,7 @@ pub(crate) struct PackageArgs {
 
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MovePackage")]
-pub struct MovePackageQueryFragment {
-    pub address: Address,
+pub(crate) struct MovePackageQueryFragment {
     pub bcs: Option<Base64>,
 }
 
