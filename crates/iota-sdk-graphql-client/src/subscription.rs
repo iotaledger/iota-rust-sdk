@@ -18,7 +18,7 @@ use reqwest::Url;
 
 use crate::{
     GraphQLClient,
-    client::response_to_err,
+    client::response_to_result,
     error::{GraphQLError, GraphQLResult, query_error},
     query_types::{
         Event, EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs,
@@ -52,8 +52,8 @@ enum Outcome<T> {
 /// Convert a subscription response to a `Result`, surfacing any `errors` as a
 /// query error. The server sends no error extensions on subscriptions, so the
 /// errors carry no `code`.
-fn subscription_response_to_err<T>(response: cynic::GraphQlResponse<T>) -> GraphQLResult<T> {
-    response_to_err(cynic::GraphQlResponse {
+fn subscription_response_to_result<T>(response: cynic::GraphQlResponse<T>) -> GraphQLResult<T> {
+    response_to_result(cynic::GraphQlResponse {
         data: response.data,
         errors: response
             .errors
@@ -94,7 +94,7 @@ impl GraphQLClient {
                     // changes.
                     let mut current_tx: Option<String> = None;
                     let mapped = subscription.map(move |item| -> GraphQLResult<Outcome<Event>> {
-                        let data = subscription_response_to_err(
+                        let data = subscription_response_to_result(
                             item.map_err(GraphQLError::subscription)?,
                         )?;
                         Ok(match data.events {
@@ -154,7 +154,7 @@ impl GraphQLClient {
 
                     let mapped =
                         subscription.map(|item| -> GraphQLResult<Outcome<SignedTransaction>> {
-                            let data = subscription_response_to_err(
+                            let data = subscription_response_to_result(
                                 item.map_err(GraphQLError::subscription)?,
                             )?;
                             Ok(match data.transactions {
@@ -315,7 +315,7 @@ mod tests {
             )]),
         };
 
-        let GraphQLError::Query(errors) = subscription_response_to_err(response).unwrap_err()
+        let GraphQLError::Query(errors) = subscription_response_to_result(response).unwrap_err()
         else {
             panic!("expected GraphQLError::Query");
         };
@@ -334,6 +334,6 @@ mod tests {
             data: Some(1),
             errors: None,
         };
-        assert_eq!(subscription_response_to_err(response).unwrap(), 1);
+        assert_eq!(subscription_response_to_result(response).unwrap(), 1);
     }
 }

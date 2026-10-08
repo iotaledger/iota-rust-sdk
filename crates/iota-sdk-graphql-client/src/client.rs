@@ -32,7 +32,7 @@ pub static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_P
 /// list is surfaced as a query error rather than being treated as a
 /// success. A response with neither `data` nor `errors` is reported as an empty
 /// response error instead of panicking.
-pub(crate) fn response_to_err<T>(
+pub(crate) fn response_to_result<T>(
     response: GraphQlResponse<T, ErrorExtensions>,
 ) -> GraphQLResult<T> {
     match (response.data, response.errors) {
@@ -159,7 +159,7 @@ impl GraphQLClient {
         T: serde::de::DeserializeOwned,
         V: serde::Serialize,
     {
-        response_to_err(
+        response_to_result(
             self.post_query::<GraphQlResponse<T, ErrorExtensions>>(operation)
                 .await?,
         )
@@ -199,7 +199,7 @@ impl GraphQLClient {
         &self,
         json: serde_json::Map<String, serde_json::Value>,
     ) -> GraphQLResult<serde_json::Value> {
-        response_to_err(
+        response_to_result(
             self.post_query::<GraphQlResponse<serde_json::Value, ErrorExtensions>>(&json)
                 .await?,
         )
@@ -291,7 +291,7 @@ mod tests {
     // (e.g. an oversized page request) must surface the errors instead of
     // panicking on the unreachable arm.
     #[test]
-    fn test_response_to_err_data_and_errors() {
+    fn test_response_to_result_data_and_errors() {
         let response: GraphQlResponse<serde_json::Value, ErrorExtensions> =
             serde_json::from_value(json!({
                 "data": { "epoch": null },
@@ -303,7 +303,7 @@ mod tests {
             }))
             .unwrap();
 
-        let GraphQLError::Query(errors) = response_to_err(response).unwrap_err() else {
+        let GraphQLError::Query(errors) = response_to_result(response).unwrap_err() else {
             panic!("expected GraphQLError::Query");
         };
         assert_eq!(errors.len(), 1);
@@ -318,16 +318,16 @@ mod tests {
     }
 
     #[test]
-    fn test_response_to_err_data_only() {
+    fn test_response_to_result_data_only() {
         let response: GraphQlResponse<serde_json::Value, ErrorExtensions> =
             serde_json::from_value(json!({ "data": { "epoch": 1 } })).unwrap();
 
-        let data = response_to_err(response).unwrap();
+        let data = response_to_result(response).unwrap();
         assert_eq!(data, json!({ "epoch": 1 }));
     }
 
     #[test]
-    fn test_response_to_err_errors_only() {
+    fn test_response_to_result_errors_only() {
         let response: GraphQlResponse<serde_json::Value, ErrorExtensions> =
             serde_json::from_value(json!({
                 "data": null,
@@ -335,7 +335,7 @@ mod tests {
             }))
             .unwrap();
 
-        let GraphQLError::Query(errors) = response_to_err(response).unwrap_err() else {
+        let GraphQLError::Query(errors) = response_to_result(response).unwrap_err() else {
             panic!("expected GraphQLError::Query");
         };
         assert_eq!(errors.len(), 1);
