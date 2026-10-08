@@ -1352,10 +1352,7 @@ impl From<iota_sdk::graphql_client::MoveModule> for GraphQLMoveModule {
                 .friends
                 .into_iter()
                 .map(|id| GraphQLMoveModuleQuery {
-                    package: GraphQLMovePackageQuery {
-                        address: Arc::new(id.package.into()),
-                        bcs: None,
-                    },
+                    package: Arc::new(id.package.into()),
                     name: id.name,
                 })
                 .collect(),
@@ -1374,60 +1371,9 @@ fn map_vec<T, U: From<T>>(v: Vec<T>) -> Vec<U> {
 }
 
 #[derive(uniffi::Record)]
-pub struct GraphQLMovePackageQuery {
-    pub address: Arc<Address>,
-    #[uniffi(default = None)]
-    pub bcs: Option<Base64>,
-}
-
-impl From<iota_sdk::graphql_client::query_types::MovePackageQueryFragment>
-    for GraphQLMovePackageQuery
-{
-    fn from(value: iota_sdk::graphql_client::query_types::MovePackageQueryFragment) -> Self {
-        Self {
-            address: Arc::new(value.address.into()),
-            bcs: value.bcs,
-        }
-    }
-}
-
-impl From<GraphQLMovePackageQuery>
-    for iota_sdk::graphql_client::query_types::MovePackageQueryFragment
-{
-    fn from(value: GraphQLMovePackageQuery) -> Self {
-        Self {
-            address: (**value.address),
-            bcs: value.bcs,
-        }
-    }
-}
-
-#[derive(uniffi::Record)]
 pub struct GraphQLMoveModuleQuery {
-    pub package: GraphQLMovePackageQuery,
+    pub package: Arc<Address>,
     pub name: String,
-}
-
-impl From<iota_sdk::graphql_client::query_types::MoveModuleQueryFragment>
-    for GraphQLMoveModuleQuery
-{
-    fn from(value: iota_sdk::graphql_client::query_types::MoveModuleQueryFragment) -> Self {
-        Self {
-            package: value.package.into(),
-            name: value.name,
-        }
-    }
-}
-
-impl From<GraphQLMoveModuleQuery>
-    for iota_sdk::graphql_client::query_types::MoveModuleQueryFragment
-{
-    fn from(value: GraphQLMoveModuleQuery) -> Self {
-        Self {
-            package: value.package.into(),
-            name: value.name,
-        }
-    }
 }
 
 /// A type parameter of a Move struct, with the abilities it is constrained to.

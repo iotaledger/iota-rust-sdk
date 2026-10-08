@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::query_types::{Address, Base64, MoveObjectContents, ObjectId, PageInfo, schema};
+use crate::query_types::{Address, Base64, JsonValue, ObjectId, PageInfo, schema};
 
 // ===========================================================================
 // Object(s) Queries
@@ -20,6 +20,20 @@ pub(crate) struct ObjectQueryFragment {
 pub(crate) struct ObjectsQueryFragment {
     #[arguments(after: $after, before: $before, filter: $filter, first: $first, last: $last)]
     pub objects: ObjectConnection,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectQueryArgs")]
+pub(crate) struct MoveObjectContentsJsonQueryFragment {
+    #[arguments(address: $object_id, version: $version)]
+    pub object: Option<ObjectContentsJson>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "Query", variables = "ObjectQueryArgs")]
+pub(crate) struct MoveObjectContentsBcsQueryFragment {
+    #[arguments(address: $object_id, version: $version)]
+    pub object: Option<ObjectContentsBcs>,
 }
 
 // ===========================================================================
@@ -48,8 +62,43 @@ pub(crate) struct ObjectsQueryArgs {
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Object")]
 pub(crate) struct Object {
-    pub as_move_object: Option<MoveObjectContents>,
     pub bcs: Option<Base64>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "Object")]
+pub(crate) struct ObjectContentsJson {
+    pub as_move_object: Option<MoveObjectContentsJson>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "MoveObject")]
+pub(crate) struct MoveObjectContentsJson {
+    pub contents: Option<MoveValueJson>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "MoveValue")]
+pub(crate) struct MoveValueJson {
+    pub json: JsonValue,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "Object")]
+pub(crate) struct ObjectContentsBcs {
+    pub as_move_object: Option<MoveObjectContentsBcs>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "MoveObject")]
+pub(crate) struct MoveObjectContentsBcs {
+    pub contents: Option<MoveValueBcs>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "MoveValue")]
+pub(crate) struct MoveValueBcs {
+    pub bcs: Base64,
 }
 
 #[derive(Clone, cynic::InputObject, Debug, Default)]
