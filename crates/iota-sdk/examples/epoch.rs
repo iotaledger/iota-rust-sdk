@@ -7,7 +7,7 @@ use iota_sdk::graphql_client::{GraphQLClient, error::GraphQLResult};
 async fn main() -> GraphQLResult<()> {
     let client = GraphQLClient::new_testnet()?;
 
-    let current_epoch = client.epoch(None).await?.unwrap();
+    let current_epoch = client.epoch().await?.unwrap();
     println!("Current epoch: {}", current_epoch.epoch_id);
     println!(
         "Current epoch start time: {}",
@@ -15,7 +15,8 @@ async fn main() -> GraphQLResult<()> {
     );
 
     let previous_epoch = client
-        .epoch(Some(current_epoch.epoch_id - 1))
+        .epoch()
+        .epoch_number(current_epoch.epoch_id - 1)
         .await?
         .unwrap();
     println!("Previous epoch: {}", previous_epoch.epoch_id);

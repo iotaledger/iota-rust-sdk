@@ -8,9 +8,9 @@
 use eyre::{OptionExt, Result};
 use iota_sdk::{
     graphql_client::{
-        GraphQLClient,
+        GraphQLClient, MoveAbility,
         pagination::{Direction, PaginationFilter},
-        query_types::{MoveAbility, ObjectFilter, TransactionsFilter},
+        query_types::{ObjectFilter, TransactionsFilter},
     },
     types::{Address, Input, MoveCall, MovePackage, ObjectId, Transaction, UpgradePolicy},
 };
@@ -23,7 +23,7 @@ async fn main() -> Result<()> {
 
     // Fetch package metadata and version history.
     let package = client
-        .package(package_address, None)
+        .package(package_address)
         .await?
         .ok_or_eyre("missing package")?;
     let latest_package = client
@@ -110,11 +110,11 @@ async fn main() -> Result<()> {
         };
 
         if let Some(functions) = &module.functions {
-            if functions.nodes.is_empty() {
+            if functions.data.is_empty() {
                 println!("  functions: none");
             } else {
                 println!("  functions:");
-                for function in &functions.nodes {
+                for function in &functions.data {
                     println!(
                         "    - {}",
                         format_function_signature(&function.to_string(), &package_type_prefix)
@@ -129,11 +129,11 @@ async fn main() -> Result<()> {
         }
 
         if let Some(structs) = &module.structs {
-            if structs.nodes.is_empty() {
+            if structs.data.is_empty() {
                 println!("  types: none");
             } else {
                 println!("  types:");
-                for struct_ in &structs.nodes {
+                for struct_ in &structs.data {
                     let type_tag =
                         format!("{package_type_prefix}::{module_name}::{}", struct_.name);
                     println!("    - {type_tag}");
@@ -311,7 +311,8 @@ async fn resolve_upgrade_cap_id(
             }
 
             let Some(object) = client
-                .object(changed_object.object_id, Some(effects_v1.lamport_version))
+                .object(changed_object.object_id)
+                .version(effects_v1.lamport_version)
                 .await?
             else {
                 continue;
@@ -495,7 +496,7 @@ async fn current_package_policy(client: &GraphQLClient, package_id: ObjectId) ->
         );
     };
 
-    let Some(contents) = client.move_object_contents(upgrade_cap_id, None).await? else {
+    let Some(contents) = client.move_object_contents(upgrade_cap_id).await? else {
         return Ok(
             if was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id).await? {
                 "Immutable".to_owned()

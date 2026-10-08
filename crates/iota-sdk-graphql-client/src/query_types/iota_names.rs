@@ -14,13 +14,13 @@ use crate::{
     graphql_type = "Query",
     variables = "ResolveIotaNamesAddressArgs"
 )]
-pub struct ResolveIotaNamesAddressQueryFragment {
+pub(crate) struct ResolveIotaNamesAddressQueryFragment {
     #[arguments(name: $name)]
     pub resolve_iota_names_address: Option<GraphQLAddress>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ResolveIotaNamesAddressArgs {
+pub(crate) struct ResolveIotaNamesAddressArgs {
     pub name: String,
 }
 
@@ -30,7 +30,7 @@ pub struct ResolveIotaNamesAddressArgs {
     graphql_type = "Query",
     variables = "IotaNamesRegistrationsArgs"
 )]
-pub struct IotaNamesAddressRegistrationsQueryFragment {
+pub(crate) struct IotaNamesAddressRegistrationsQueryFragment {
     #[arguments(address: $address)]
     pub address: Option<IotaNamesRegistrationsQueryFragment>,
 }
@@ -41,7 +41,7 @@ pub struct IotaNamesAddressRegistrationsQueryFragment {
     graphql_type = "Query",
     variables = "IotaNamesDefaultNameArgs"
 )]
-pub struct IotaNamesAddressDefaultNameQueryFragment {
+pub(crate) struct IotaNamesAddressDefaultNameQueryFragment {
     #[arguments(address: $address)]
     pub address: Option<IotaNamesDefaultNameQueryFragment>,
 }
@@ -52,13 +52,13 @@ pub struct IotaNamesAddressDefaultNameQueryFragment {
     graphql_type = "Address",
     variables = "IotaNamesRegistrationsArgs"
 )]
-pub struct IotaNamesRegistrationsQueryFragment {
+pub(crate) struct IotaNamesRegistrationsQueryFragment {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
     pub iota_names_registrations: NameRegistrationConnection,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct IotaNamesRegistrationsArgs {
+pub(crate) struct IotaNamesRegistrationsArgs {
     pub address: Address,
     pub after: Option<String>,
     pub before: Option<String>,
@@ -72,27 +72,27 @@ pub struct IotaNamesRegistrationsArgs {
     graphql_type = "Address",
     variables = "IotaNamesDefaultNameArgs"
 )]
-pub struct IotaNamesDefaultNameQueryFragment {
+pub(crate) struct IotaNamesDefaultNameQueryFragment {
     #[arguments(format: $format)]
     pub iota_names_default_name: Option<String>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct IotaNamesDefaultNameArgs {
+pub(crate) struct IotaNamesDefaultNameArgs {
     pub address: Address,
     pub format: Option<NameFormat>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "NameRegistrationConnection")]
-pub struct NameRegistrationConnection {
+pub(crate) struct NameRegistrationConnection {
     pub page_info: PageInfo,
     pub nodes: Vec<NameRegistration>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "NameRegistration")]
-pub struct NameRegistration {
+pub(crate) struct NameRegistration {
     pub bcs: Option<Base64>,
 }
 
@@ -107,7 +107,8 @@ impl TryFrom<NameRegistration> for iota_types::iota_names::NameRegistration {
                 .0
                 .as_str(),
         )?;
-        bcs::from_bytes::<iota_types::Object>(&bytes)?
+        bcs::from_bytes::<iota_types::Object>(&bytes)
+            .map_err(iota_types::BcsError::new)?
             .to_rust()
             .map_err(GraphQLError::deserialization)
     }
@@ -119,7 +120,7 @@ impl TryFrom<NameRegistration> for iota_types::iota_names::NameRegistration {
     graphql_type = "NameFormat",
     rename_all = "SCREAMING_SNAKE_CASE"
 )]
-pub enum NameFormat {
+pub(crate) enum NameFormat {
     At,
     Dot,
 }
