@@ -88,7 +88,7 @@ impl TryInto<CheckpointSummary> for Checkpoint {
         let bcs = self
             .bcs
             .ok_or(error::GraphQLError::EmptyResponseField("checkpoint bcs"))?;
-        let bytes = crate::error::decode_base64(&bcs.0)?;
+        let bytes = crate::base64::decode(&bcs.0)?;
         Ok(bcs::from_bytes::<CheckpointSummary>(&bytes).map_err(iota_types::BcsError::new)?)
     }
 }

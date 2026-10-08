@@ -96,10 +96,7 @@ impl ListPackageVersionsQuery {
             .nodes
             .iter()
             .map(|p| &p.bcs)
-            .filter_map(|b64| {
-                b64.as_ref()
-                    .map(|b| crate::error::decode_base64(b.0.as_str()))
-            })
+            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
@@ -184,10 +181,7 @@ impl ListPackagesQuery {
             .nodes
             .iter()
             .map(|p| &p.bcs)
-            .filter_map(|b64| {
-                b64.as_ref()
-                    .map(|b| crate::error::decode_base64(b.0.as_str()))
-            })
+            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
@@ -347,7 +341,7 @@ impl GetPackageQuery {
         Ok(response
             .package
             .and_then(|x| x.bcs)
-            .map(|bcs| crate::error::decode_base64(bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?
@@ -442,7 +436,7 @@ impl GraphQLClient {
         Ok(response
             .latest_package
             .and_then(|x| x.bcs)
-            .map(|bcs| crate::error::decode_base64(&bcs.0))
+            .map(|bcs| crate::base64::decode(&bcs.0))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?

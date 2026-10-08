@@ -31,8 +31,7 @@ pub use secp256k1::{Secp256k1PublicKey, Secp256k1Signature};
 pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
 pub use signature::{SignatureScheme, SignatureSchemeError, SimpleSignature, UserSignature};
 
-/// Error returned when parsing a fixed-length public key or signature from a
-/// base64 string.
+/// Error returned when decoding a fixed-length value from a base64 string.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
 #[non_exhaustive]
 pub enum Base64ParseError {

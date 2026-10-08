@@ -482,7 +482,7 @@ impl TryFrom<TransactionBlock> for SignedTransaction {
     fn try_from(value: TransactionBlock) -> Result<Self, Self::Error> {
         let transaction = value
             .bcs
-            .map(|tx| crate::error::decode_base64(tx.0.as_str()))
+            .map(|tx| crate::base64::decode(tx.0.as_str()))
             .transpose()?
             .map(|bcs| {
                 bcs::from_bytes::<SenderSignedTransaction>(&bcs).map_err(iota_types::BcsError::new)
@@ -503,7 +503,7 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
     fn try_from(value: TxBlockEffects) -> Result<Self, Self::Error> {
         let effects = value
             .effects
-            .map(|fx| crate::error::decode_base64(fx.bcs.unwrap().0.as_str()))
+            .map(|fx| crate::base64::decode(fx.bcs.unwrap().0.as_str()))
             .transpose()?
             .map(|bcs| {
                 bcs::from_bytes::<TransactionEffects>(&bcs).map_err(iota_types::BcsError::new)

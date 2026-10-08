@@ -252,13 +252,6 @@ impl From<AddressParseError> for GraphQLError {
     }
 }
 
-/// Decodes a base64 string from a response into bytes.
-pub(crate) fn decode_base64(input: &str) -> GraphQLResult<Vec<u8>> {
-    use base64ct::Encoding;
-
-    base64ct::Base64::decode_vec(input).map_err(|e| GraphQLError::Parse(e.into()))
-}
-
 impl From<DigestParseError> for GraphQLError {
     fn from(error: DigestParseError) -> Self {
         Self::Parse(error.into())

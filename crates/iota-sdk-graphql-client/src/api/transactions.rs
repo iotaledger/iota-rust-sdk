@@ -292,9 +292,8 @@ impl ListTransactionsDataEffectsQuery {
                             "transaction bcs or effects",
                         ));
                     };
-                    let bcs = crate::error::decode_base64(bcs.0.as_str())?;
-                    let effects =
-                        crate::error::decode_base64(effects.bcs.as_ref().unwrap().0.as_str())?;
+                    let bcs = crate::base64::decode(bcs.0.as_str())?;
+                    let effects = crate::base64::decode(effects.bcs.as_ref().unwrap().0.as_str())?;
                     let transaction: SenderSignedTransaction =
                         bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
                     let effects: TransactionEffects =
@@ -343,7 +342,7 @@ impl ExecuteTransactionQuery {
         let response = self.client.run_query(&operation).await?;
 
         let result = response.execute_transaction_block;
-        let bcs = crate::error::decode_base64(result.effects.bcs.0.as_str())?;
+        let bcs = crate::base64::decode(result.effects.bcs.0.as_str())?;
         let effects: TransactionEffects =
             bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
 
@@ -475,8 +474,8 @@ impl GraphQLClient {
 
         match response.transaction_block.map(|tx| (tx.bcs, tx.effects)) {
             Some((Some(bcs), Some(effects))) => {
-                let bcs = crate::error::decode_base64(bcs.0.as_str())?;
-                let effects = crate::error::decode_base64(effects.bcs.unwrap().0.as_str())?;
+                let bcs = crate::base64::decode(bcs.0.as_str())?;
+                let effects = crate::base64::decode(effects.bcs.unwrap().0.as_str())?;
                 let transaction: SenderSignedTransaction =
                     bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
                 let effects: TransactionEffects =

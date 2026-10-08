@@ -171,7 +171,7 @@ impl GraphQLClient {
             .as_ref()
             .and_then(|tx| tx.effects.as_ref())
             .and_then(|tx| tx.bcs.as_ref())
-            .map(|bcs| crate::error::decode_base64(bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| {
                 bcs::from_bytes::<TransactionEffects>(&bcs).map_err(iota_types::BcsError::new)
@@ -182,7 +182,7 @@ impl GraphQLClient {
         let transaction = txn_block
             .as_ref()
             .and_then(|tx| tx.bcs_unsigned.as_ref())
-            .map(|bcs| crate::error::decode_base64(bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Transaction>(&bcs).map_err(iota_types::BcsError::new))
             .transpose()?;

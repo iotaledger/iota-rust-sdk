@@ -80,10 +80,7 @@ impl ListObjectsQuery {
             .nodes
             .iter()
             .map(|o| &o.bcs)
-            .filter_map(|b64| {
-                b64.as_ref()
-                    .map(|b| crate::error::decode_base64(b.0.as_str()))
-            })
+            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let objects = bcs
             .iter()
@@ -122,7 +119,7 @@ impl GetObjectQuery {
         let obj = response.object;
         let bcs = obj
             .and_then(|o| o.bcs)
-            .map(|bcs| crate::error::decode_base64(bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?;
 
         let object = bcs
@@ -197,7 +194,7 @@ impl GetMoveObjectContentsBcsQuery {
             .object
             .and_then(|o| o.as_move_object)
             .and_then(|o| o.contents)
-            .map(|bcs| crate::error::decode_base64(bcs.bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.bcs.0.as_str()))
             .transpose()
     }
 }
@@ -262,7 +259,7 @@ impl GraphQLClient {
 
         response
             .object
-            .and_then(|o| o.bcs.map(|bcs| crate::error::decode_base64(bcs.0.as_str())))
+            .and_then(|o| o.bcs.map(|bcs| crate::base64::decode(bcs.0.as_str())))
             .transpose()
     }
 

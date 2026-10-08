@@ -98,7 +98,7 @@ impl TryFrom<NameRegistration> for iota_types::iota_names::NameRegistration {
     type Error = GraphQLError;
 
     fn try_from(value: NameRegistration) -> Result<Self, Self::Error> {
-        let bytes = crate::error::decode_base64(
+        let bytes = crate::base64::decode(
             value
                 .bcs
                 .ok_or(GraphQLError::EmptyResponseField("name registration bcs"))?

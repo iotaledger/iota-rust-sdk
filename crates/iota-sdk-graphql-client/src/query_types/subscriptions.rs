@@ -222,7 +222,7 @@ impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
     fn try_from(value: SubscriptionTransactionBlock) -> Result<Self, Self::Error> {
         let transaction = value
             .bcs
-            .map(|tx| crate::error::decode_base64(tx.0.as_str()))
+            .map(|tx| crate::base64::decode(tx.0.as_str()))
             .transpose()?
             .map(|bcs| {
                 bcs::from_bytes::<SenderSignedTransaction>(&bcs).map_err(iota_types::BcsError::new)
