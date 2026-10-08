@@ -209,11 +209,6 @@ pub enum ExecutionError {
         value_size: u64,
         max_scaled_size: u64,
     },
-    /// Built-in authenticator verification failed to verify the transaction,
-    /// which could be due to various reasons such as invalid signatures,
-    /// incorrect authentication keys, or other issues related to
-    /// transaction authentication.
-    BuiltinAuthenticatorVerificationError { reason: String },
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -395,9 +390,6 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                 value_size,
                 max_scaled_size,
             },
-            iota_sdk::types::ExecutionError::BuiltinAuthenticatorVerificationError { reason } => {
-                Self::BuiltinAuthenticatorVerificationError { reason }
-            }
             _ => unimplemented!(
                 "a new ExecutionError enum variant was added and needs to be handled"
             ),
@@ -542,9 +534,6 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 value_size,
                 max_scaled_size,
             },
-            ExecutionError::BuiltinAuthenticatorVerificationError { reason } => {
-                Self::BuiltinAuthenticatorVerificationError { reason }
-            }
         }
     }
 }
