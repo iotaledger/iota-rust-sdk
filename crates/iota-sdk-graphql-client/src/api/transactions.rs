@@ -47,8 +47,8 @@ define_query! {
 
 impl ListTransactionsQuery {
     /// Only return the transactions that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<TransactionsFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: TransactionsFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
@@ -118,14 +118,14 @@ define_query! {
 impl ListAddressTransactionsQuery {
     /// Set how the address relates to the transactions. Defaults to the
     /// transactions it sent.
-    pub fn relation(mut self, relation: impl Into<Option<AddressTransactionRelationship>>) -> Self {
-        self.relation = relation.into();
+    pub fn relation(mut self, relation: AddressTransactionRelationship) -> Self {
+        self.relation = Some(relation);
         self
     }
 
     /// Only return the transactions that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<TransactionsFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: TransactionsFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
@@ -201,8 +201,8 @@ define_query! {
 
 impl ListTransactionsEffectsQuery {
     /// Only return the transactions that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<TransactionsFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: TransactionsFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
@@ -269,8 +269,8 @@ define_query! {
 
 impl ListTransactionsDataEffectsQuery {
     /// Only return the transactions that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<TransactionsFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: TransactionsFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
@@ -358,8 +358,8 @@ define_query! {
 impl ExecuteTransactionQuery {
     /// Wait for the executed transaction to be indexed or finalized before
     /// resolving.
-    pub fn wait_for(mut self, wait_for: impl Into<Option<WaitForTransaction>>) -> Self {
-        self.wait_for = wait_for.into();
+    pub fn wait_for(mut self, wait_for: WaitForTransaction) -> Self {
+        self.wait_for = Some(wait_for);
         self
     }
 
@@ -402,8 +402,8 @@ define_query! {
 
 impl WaitForTransactionQuery {
     /// Set how long to wait. Defaults to 60s.
-    pub fn timeout(mut self, timeout: impl Into<Option<Duration>>) -> Self {
-        self.timeout = timeout.into();
+    pub fn timeout(mut self, timeout: Duration) -> Self {
+        self.timeout = Some(timeout);
         self
     }
 

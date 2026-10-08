@@ -26,8 +26,8 @@ define_query! {
 
 impl GetBalanceQuery {
     /// Set the coin type. Defaults to `0x2::iota::IOTA`.
-    pub fn coin_type(mut self, coin_type: impl Into<Option<String>>) -> Self {
-        self.coin_type = coin_type.into();
+    pub fn coin_type(mut self, coin_type: impl Into<String>) -> Self {
+        self.coin_type = Some(coin_type.into());
         self
     }
 

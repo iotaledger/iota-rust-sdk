@@ -52,14 +52,14 @@ impl ListPackageVersionsQuery {
     }
 
     /// Only return versions after this one.
-    pub fn after_version(mut self, after_version: impl Into<Option<Version>>) -> Self {
-        self.after_version = after_version.into();
+    pub fn after_version(mut self, after_version: Version) -> Self {
+        self.after_version = Some(after_version);
         self
     }
 
     /// Only return versions before this one.
-    pub fn before_version(mut self, before_version: impl Into<Option<Version>>) -> Self {
-        self.before_version = before_version.into();
+    pub fn before_version(mut self, before_version: Version) -> Self {
+        self.before_version = Some(before_version);
         self
     }
 
@@ -149,14 +149,14 @@ impl ListPackagesQuery {
     }
 
     /// Only return packages published after this checkpoint.
-    pub fn after_checkpoint(mut self, after_checkpoint: impl Into<Option<u64>>) -> Self {
-        self.after_checkpoint = after_checkpoint.into();
+    pub fn after_checkpoint(mut self, after_checkpoint: u64) -> Self {
+        self.after_checkpoint = Some(after_checkpoint);
         self
     }
 
     /// Only return packages published before this checkpoint.
-    pub fn before_checkpoint(mut self, before_checkpoint: impl Into<Option<u64>>) -> Self {
-        self.before_checkpoint = before_checkpoint.into();
+    pub fn before_checkpoint(mut self, before_checkpoint: u64) -> Self {
+        self.before_checkpoint = Some(before_checkpoint);
         self
     }
 
@@ -240,8 +240,8 @@ struct ModulePagination {
 
 impl GetNormalizedMoveModuleQuery {
     /// Set the package version.
-    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = Some(version);
         self
     }
 
@@ -343,8 +343,8 @@ define_query! {
 impl GetPackageQuery {
     /// Set the package version. Without it, the package is loaded from the
     /// given address.
-    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = Some(version);
         self
     }
 
@@ -383,8 +383,8 @@ define_query! {
 impl GetNormalizedMoveFunctionQuery {
     /// Set the package version. Without it, the package at the given address
     /// is used.
-    pub fn version(mut self, version: impl Into<Option<Version>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = Some(version);
         self
     }
 

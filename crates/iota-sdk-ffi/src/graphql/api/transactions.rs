@@ -5,6 +5,11 @@
 
 use std::{sync::Arc, time::Duration};
 
+use iota_sdk::graphql_client::{
+    ExecuteTransactionQuery, ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
+    ListTransactionsEffectsQuery, ListTransactionsQuery, WaitForTransactionQuery,
+};
+
 use crate::{
     error::Result,
     graphql::{
@@ -18,6 +23,7 @@ use crate::{
             GraphQLTransactionDataEffects, GraphQLTransactionsFilter,
         },
     },
+    helpers::SetIfSome,
     transaction_builder::WaitForTransaction,
     types::{
         address::Address,
@@ -73,7 +79,10 @@ impl GraphQLClient {
         Ok(self
             .client()
             .transactions()
-            .filter(filter.as_deref().map(Into::into))
+            .set_if_some(
+                filter.as_deref().map(Into::into),
+                ListTransactionsQuery::filter,
+            )
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
@@ -94,8 +103,14 @@ impl GraphQLClient {
         Ok(self
             .client()
             .address_transactions(**address)
-            .relation(relation.map(Into::into))
-            .filter(filter.as_deref().map(Into::into))
+            .set_if_some(
+                relation.map(Into::into),
+                ListAddressTransactionsQuery::relation,
+            )
+            .set_if_some(
+                filter.as_deref().map(Into::into),
+                ListAddressTransactionsQuery::filter,
+            )
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
@@ -112,7 +127,10 @@ impl GraphQLClient {
         Ok(self
             .client()
             .transactions_effects()
-            .filter(filter.as_deref().map(Into::into))
+            .set_if_some(
+                filter.as_deref().map(Into::into),
+                ListTransactionsEffectsQuery::filter,
+            )
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
@@ -130,7 +148,10 @@ impl GraphQLClient {
         Ok(self
             .client()
             .transactions_data_effects()
-            .filter(filter.as_deref().map(Into::into))
+            .set_if_some(
+                filter.as_deref().map(Into::into),
+                ListTransactionsDataEffectsQuery::filter,
+            )
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
@@ -154,7 +175,7 @@ impl GraphQLClient {
                     .collect::<Vec<_>>(),
                 &transaction.0,
             )
-            .wait_for(wait_for.map(Into::into))
+            .set_if_some(wait_for.map(Into::into), ExecuteTransactionQuery::wait_for)
             .await?
             .into())
     }
@@ -191,7 +212,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .wait_for_transaction(**digest, wait_for.into())
-            .timeout(timeout)
+            .set_if_some(timeout, WaitForTransactionQuery::timeout)
             .await?)
     }
 }
