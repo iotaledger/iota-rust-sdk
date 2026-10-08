@@ -187,7 +187,7 @@ pub mod nft_output {
         }
     }
 
-    impl_try_from_object_generic!(NftOutput<T>);
+    impl_try_from_object_generic!(NftOutput<phantom T>);
 }
 
 /// Types from `0x107a::stardust_upgrade_label`.
@@ -302,7 +302,7 @@ pub mod basic_output {
         }
     }
 
-    impl_try_from_object_generic!(BasicOutput<T>);
+    impl_try_from_object_generic!(BasicOutput<phantom T>);
 }
 
 /// Types from `0x107a::alias`.
@@ -407,7 +407,7 @@ pub mod alias_output {
         }
     }
 
-    impl_try_from_object_generic!(AliasOutput<T>);
+    impl_try_from_object_generic!(AliasOutput<phantom T>);
 }
 
 /// Types from `0x107a::timelock_unlock_condition`.

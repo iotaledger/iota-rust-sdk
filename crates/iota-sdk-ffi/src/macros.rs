@@ -76,9 +76,10 @@ macro_rules! ffi_move_event {
 }
 
 /// Like [`ffi_move_object`], but for a mirror with a single (phantom) type
-/// parameter. `$core` is the type instantiated at `IOTA` (a phantom marker, so
-/// the BCS layout is the same for every coin type); the object constructor
-/// validates the on-chain type parameter against a caller-provided `TypeTag`.
+/// parameter. `$core` is the type instantiated at `()` (the parameter is
+/// phantom, so the BCS layout is the same for every instantiation); the object
+/// constructor validates the on-chain type parameter against a caller-provided
+/// `TypeTag`.
 #[macro_export]
 macro_rules! ffi_move_object_generic {
     (
