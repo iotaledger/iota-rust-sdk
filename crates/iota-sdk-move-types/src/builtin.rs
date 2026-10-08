@@ -55,17 +55,7 @@ macro_rules! impl_move_types_tuple {
         }
     };
 }
-impl_move_types_tuple!(T1, T2);
-impl_move_types_tuple!(T1, T2, T3);
-impl_move_types_tuple!(T1, T2, T3, T4);
-impl_move_types_tuple!(T1, T2, T3, T4, T5);
-impl_move_types_tuple!(T1, T2, T3, T4, T5, T6);
-impl_move_types_tuple!(T1, T2, T3, T4, T5, T6, T7);
-impl_move_types_tuple!(T1, T2, T3, T4, T5, T6, T7, T8);
-impl_move_types_tuple!(T1, T2, T3, T4, T5, T6, T7, T8, T9);
-impl_move_types_tuple!(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10);
-impl_move_types_tuple!(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11);
-impl_move_types_tuple!(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12);
+variadics_please::all_tuples!(impl_move_types_tuple, 2, 15, T);
 
 impl MoveTypes for () {
     fn type_tags() -> Vec<TypeTag> {
