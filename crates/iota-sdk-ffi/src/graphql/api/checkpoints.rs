@@ -5,8 +5,6 @@
 
 use std::sync::Arc;
 
-use iota_sdk::types::CheckpointSequenceNumber;
-
 use crate::{
     error::Result,
     graphql::{
@@ -53,43 +51,5 @@ impl GraphQLClient {
             .await?
             .map(Into::into)
             .into())
-    }
-
-    /// Return the sequence number of the latest checkpoint that has been
-    /// executed.
-    pub async fn latest_checkpoint_sequence_number(
-        &self,
-    ) -> Result<Option<CheckpointSequenceNumber>> {
-        Ok(self.client().latest_checkpoint_sequence_number().await?)
-    }
-
-    /// The total number of transaction blocks in the network by the end of the
-    /// provided checkpoint digest.
-    pub async fn total_transaction_blocks_by_digest(
-        &self,
-        digest: &CheckpointDigest,
-    ) -> Result<Option<u64>> {
-        Ok(self
-            .client()
-            .total_transaction_blocks_by_digest(**digest)
-            .await?)
-    }
-
-    /// The total number of transaction blocks in the network by the end of the
-    /// provided checkpoint sequence number.
-    pub async fn total_transaction_blocks_by_sequence_number(
-        &self,
-        sequence_number: u64,
-    ) -> Result<Option<u64>> {
-        Ok(self
-            .client()
-            .total_transaction_blocks_by_sequence_number(sequence_number)
-            .await?)
-    }
-
-    /// The total number of transaction blocks in the network by the end of the
-    /// last known checkpoint.
-    pub async fn total_transaction_blocks(&self) -> Result<Option<u64>> {
-        Ok(self.client().total_transaction_blocks().await?)
     }
 }

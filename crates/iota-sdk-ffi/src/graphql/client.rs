@@ -86,11 +86,6 @@ impl GraphQLClient {
         Ok(iota_sdk::graphql_client::GraphQLClient::new_localnet()?.into())
     }
 
-    /// Lazily fetch the max page size
-    pub async fn max_page_size(&self) -> Result<i32> {
-        Ok(self.client().max_page_size().await?)
-    }
-
     /// Get the GraphQL service configuration, including complexity limits, read
     /// and mutation limits, supported versions, and others.
     pub async fn service_config(&self) -> Result<GraphQLServiceConfig> {

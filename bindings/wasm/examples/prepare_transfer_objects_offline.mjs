@@ -35,7 +35,10 @@ const [gasCoin, ...toTransfer] = coins;
 const objsToTransfer = toTransfer.map((coin) =>
   PtbArgument.objectRef(coin.objectRef()),
 );
-const gasPrice = (await client.referenceGasPrice()) ?? 100n;
+const epoch = await client.epoch();
+const gasPrice = epoch?.referenceGasPrice
+  ? BigInt(epoch.referenceGasPrice)
+  : 100n;
 
 const builder = new TransactionBuilder(fromAddress);
 builder.transferObjects(toAddress, objsToTransfer);

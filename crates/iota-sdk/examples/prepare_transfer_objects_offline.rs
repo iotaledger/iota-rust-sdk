@@ -33,7 +33,13 @@ async fn main() -> Result<()> {
         .iter()
         .map(|obj| obj.object_ref())
         .collect::<Vec<_>>();
-    let gas_price = client.reference_gas_price().await?.unwrap_or(100);
+    let gas_price = client
+        .epoch()
+        .await?
+        .and_then(|e| e.reference_gas_price)
+        .map(u64::try_from)
+        .transpose()?
+        .unwrap_or(100);
 
     let mut builder = TransactionBuilder::new(from_address);
 

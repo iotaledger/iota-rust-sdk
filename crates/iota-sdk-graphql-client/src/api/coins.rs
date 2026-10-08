@@ -153,16 +153,6 @@ impl GraphQLClient {
 
         Ok(response.coin_metadata)
     }
-
-    /// Get total supply for the coin type.
-    pub async fn total_supply(&self, coin_type: &str) -> GraphQLResult<Option<u64>> {
-        let coin_metadata = self.coin_metadata(coin_type).await?;
-
-        coin_metadata
-            .and_then(|c| c.supply)
-            .map(|c| c.try_into())
-            .transpose()
-    }
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
@@ -309,22 +299,6 @@ mod tests {
             .map_err(|e| {
                 format!(
                     "Coin metadata query failed for {} network: Error: {e}",
-                    client.rpc_server()
-                )
-            })
-            .unwrap()
-            .unwrap();
-    }
-
-    #[tokio::test]
-    async fn test_total_supply() {
-        let client = test_client();
-        client
-            .total_supply("0x2::iota::IOTA")
-            .await
-            .map_err(|e| {
-                format!(
-                    "Total supply query failed for {} network. Error: {e}",
                     client.rpc_server()
                 )
             })

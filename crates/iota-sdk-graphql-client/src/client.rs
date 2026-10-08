@@ -265,9 +265,11 @@ impl GraphQLClient {
         &self,
         pagination_filter: PaginationFilter,
     ) -> PaginationFilterResponse {
-        let limit = pagination_filter
-            .limit
-            .unwrap_or(self.max_page_size().await.unwrap_or(DEFAULT_ITEMS_PER_PAGE));
+        let limit = pagination_filter.limit.unwrap_or(
+            self.service_config()
+                .await
+                .map_or(DEFAULT_ITEMS_PER_PAGE, |cfg| cfg.max_page_size),
+        );
 
         let (after, before, first, last) = match pagination_filter.direction {
             Direction::Forward => (pagination_filter.cursor, None, Some(limit), None),
@@ -279,11 +281,6 @@ impl GraphQLClient {
             first,
             last,
         }
-    }
-
-    /// Lazily fetch the max page size
-    pub async fn max_page_size(&self) -> GraphQLResult<i32> {
-        self.service_config().await.map(|cfg| cfg.max_page_size)
     }
 }
 

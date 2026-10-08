@@ -20,20 +20,6 @@ impl GraphQLClient {
         Ok(self.client().chain_id().await?)
     }
 
-    /// Get the reference gas price for the provided epoch or the last known one
-    /// if no epoch is provided.
-    ///
-    /// This will return `Ok(None)` if the epoch requested is not available in
-    /// the GraphQL service (e.g., due to pruning).
-    #[uniffi::method(default(epoch = None))]
-    pub async fn reference_gas_price(&self, epoch: Option<u64>) -> Result<Option<u64>> {
-        Ok(self
-            .client()
-            .reference_gas_price()
-            .epoch_number(epoch)
-            .await?)
-    }
-
     /// Get the protocol configuration.
     #[uniffi::method(default(version = None))]
     pub async fn protocol_config(&self, version: Option<u64>) -> Result<GraphQLProtocolConfigs> {

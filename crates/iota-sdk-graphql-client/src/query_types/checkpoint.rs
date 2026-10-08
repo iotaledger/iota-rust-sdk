@@ -22,19 +22,6 @@ pub(crate) struct CheckpointQueryFragment {
 }
 
 #[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointArgs")]
-pub(crate) struct CheckpointTotalTxQueryFragment {
-    #[arguments(id: $id)]
-    pub checkpoint: Option<CheckpointTotalTx>,
-}
-
-#[derive(cynic::QueryFragment, Debug)]
-#[cynic(schema = "rpc", graphql_type = "Checkpoint")]
-pub(crate) struct CheckpointTotalTx {
-    pub network_total_transactions: Option<u64>,
-}
-
-#[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "CheckpointsArgs")]
 pub(crate) struct CheckpointsQueryFragment {
     #[arguments(first: $first, after: $after, last: $last, before: $before)]

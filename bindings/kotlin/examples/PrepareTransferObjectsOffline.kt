@@ -23,7 +23,7 @@ fun main() = runBlocking {
         val gasCoin = coins[0]
         val objsToTransfer = coins.drop(1).map { PtbArgument.objectRef(it.objectRef()) }
 
-        var gasPrice = client.referenceGasPrice()
+        val gasPrice = client.epoch(null)?.referenceGasPrice?.toULong()
 
         val builder = TransactionBuilder(fromAddress)
 

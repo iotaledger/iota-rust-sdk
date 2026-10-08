@@ -30,14 +30,11 @@ pub use api::{
     coins::{ListCoinsQuery, ListGasCoinsQuery},
     dry_run::{DryRunTransactionKindQuery, DryRunTransactionQuery},
     dynamic_fields::ListDynamicFieldsQuery,
-    epochs::{GetEpochQuery, GetEpochTotalCheckpointsQuery, GetEpochTotalTransactionBlocksQuery},
+    epochs::GetEpochQuery,
     events::ListEventsQuery,
     iota_names::{GetIotaNamesDefaultNameQuery, ListIotaNamesRegistrationsQuery},
     move_view_call::{MoveViewArg, MoveViewArgList, MoveViewCallJsonQuery, MoveViewCallQuery},
-    network::{
-        GetChainIdQuery, GetProtocolConfigQuery, GetReferenceGasPriceQuery,
-        ListActiveValidatorsQuery,
-    },
+    network::{GetChainIdQuery, GetProtocolConfigQuery, ListActiveValidatorsQuery},
     objects::{
         GetMoveObjectContentsBcsQuery, GetMoveObjectContentsQuery, GetObjectQuery, ListObjectsQuery,
     },

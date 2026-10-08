@@ -4,6 +4,7 @@
 //! Implementation of the transaction builder client traits for the GraphQL
 //! [`GraphQLClient`].
 
+use cynic::QueryBuilder;
 use iota_transaction_builder::{
     ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClientBase,
     TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
@@ -17,7 +18,7 @@ use iota_types::{
 use crate::{
     DryRunResult, GraphQLClient,
     pagination::{Direction, PaginationFilter},
-    query_types::ObjectFilter,
+    query_types::{EpochArgs, EpochSummaryQueryFragment, ObjectFilter},
 };
 
 impl GraphQLClient {
@@ -88,7 +89,13 @@ impl TransactionBuilderLedgerClient for GraphQLClient {
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
-        self.reference_gas_price().epoch_number(epoch).await
+        let operation = EpochSummaryQueryFragment::build(EpochArgs { id: epoch.into() });
+        self.run_query(&operation)
+            .await?
+            .epoch
+            .and_then(|e| e.reference_gas_price)
+            .map(|x| x.try_into())
+            .transpose()
     }
 }
 

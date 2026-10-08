@@ -6,7 +6,7 @@
 
 use cynic::QueryBuilder;
 use futures::Stream;
-use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};
+use iota_types::{CheckpointDigest, CheckpointSummary};
 
 use crate::{
     GraphQLClient,
@@ -14,8 +14,8 @@ use crate::{
     error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
-        CheckpointArgs, CheckpointId, CheckpointQueryFragment, CheckpointTotalTxQueryFragment,
-        CheckpointsArgs, CheckpointsQueryFragment,
+        CheckpointArgs, CheckpointId, CheckpointQueryFragment, CheckpointsArgs,
+        CheckpointsQueryFragment,
     },
     streams::stream_paginated_query,
 };
@@ -138,60 +138,6 @@ impl GraphQLClient {
             pagination: PaginationFilter::default(),
         }
     }
-
-    /// Return the sequence number of the latest checkpoint that has been
-    /// executed.
-    pub async fn latest_checkpoint_sequence_number(
-        &self,
-    ) -> GraphQLResult<Option<CheckpointSequenceNumber>> {
-        Ok(self.checkpoint().await?.map(|c| c.sequence_number))
-    }
-
-    /// The total number of transaction blocks in the network by the end of the
-    /// provided checkpoint digest.
-    pub async fn total_transaction_blocks_by_digest(
-        &self,
-        digest: CheckpointDigest,
-    ) -> GraphQLResult<Option<u64>> {
-        self.internal_total_transaction_blocks(Some(digest.to_string()), None)
-            .await
-    }
-
-    /// The total number of transaction blocks in the network by the end of the
-    /// provided checkpoint sequence number.
-    pub async fn total_transaction_blocks_by_sequence_number(
-        &self,
-        sequence_number: u64,
-    ) -> GraphQLResult<Option<u64>> {
-        self.internal_total_transaction_blocks(None, Some(sequence_number))
-            .await
-    }
-
-    /// The total number of transaction blocks in the network by the end of the
-    /// last known checkpoint.
-    pub async fn total_transaction_blocks(&self) -> GraphQLResult<Option<u64>> {
-        self.internal_total_transaction_blocks(None, None).await
-    }
-
-    /// Internal function to get the total number of transaction blocks based on
-    /// the provided checkpoint digest or sequence number.
-    async fn internal_total_transaction_blocks(
-        &self,
-        digest: Option<String>,
-        sequence_number: Option<u64>,
-    ) -> GraphQLResult<Option<u64>> {
-        let operation = CheckpointTotalTxQueryFragment::build(CheckpointArgs {
-            id: CheckpointId {
-                digest,
-                sequence_number,
-            },
-        });
-        let response = self.run_query(&operation).await?;
-
-        Ok(response
-            .checkpoint
-            .and_then(|c| c.network_total_transactions))
-    }
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
@@ -298,76 +244,6 @@ mod tests {
             !cs.is_empty(),
             "Checkpoints query returned no data for {} network",
             client.rpc_server()
-        );
-    }
-
-    #[tokio::test]
-    async fn test_latest_checkpoint_sequence_number_query() {
-        let client = test_client();
-        client
-            .latest_checkpoint_sequence_number()
-            .await
-            .map_err(|e| {
-                format!(
-                    "Latest checkpoint sequence number query failed for {} network: Error {e}",
-                    client.rpc_server()
-                )
-            })
-            .unwrap()
-            .unwrap();
-    }
-
-    #[tokio::test]
-    async fn test_total_transaction_blocks() {
-        let client = test_client();
-        let total_transaction_blocks = client
-            .total_transaction_blocks()
-            .await
-            .map_err(|e| {
-                format!(
-                    "Total transaction blocks query failed for {} network. Error: {e}",
-                    client.rpc_server()
-                )
-            })
-            .unwrap()
-            .unwrap();
-        assert!(total_transaction_blocks > 0);
-
-        let checkpoint_sequence_number = client
-            .latest_checkpoint_sequence_number()
-            .await
-            .map_err(|e| {
-                format!(
-                    "Latest checkpoint sequence number query failed for {} network. Error: {e}",
-                    client.rpc_server()
-                )
-            })
-            .unwrap()
-            .unwrap();
-        let total_transaction_blocks_by_sequence_number = client
-            .total_transaction_blocks_by_sequence_number(checkpoint_sequence_number)
-            .await
-            .unwrap()
-            .unwrap();
-        assert!(
-            total_transaction_blocks_by_sequence_number >= total_transaction_blocks,
-            "expected at least {total_transaction_blocks} transaction blocks, found {total_transaction_blocks_by_sequence_number}"
-        );
-
-        let checkpoint = client
-            .checkpoint_by_sequence_number(checkpoint_sequence_number)
-            .await
-            .unwrap()
-            .unwrap();
-
-        let total_transaction_blocks_by_digest = client
-            .total_transaction_blocks_by_digest(checkpoint.digest())
-            .await
-            .unwrap()
-            .unwrap();
-        assert_eq!(
-            total_transaction_blocks_by_sequence_number,
-            total_transaction_blocks_by_digest
         );
     }
 }

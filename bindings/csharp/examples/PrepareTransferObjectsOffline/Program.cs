@@ -28,7 +28,8 @@ class Program
             objsToTransfer.Add(PtbArgument.ObjectRef(coin.ObjectRef()));
         }
 
-        var gasPrice = await client.ReferenceGasPrice() ?? 100;
+        var epoch = await client.Epoch(null);
+        var gasPrice = epoch?.ReferenceGasPrice is string price ? ulong.Parse(price) : 100;
 
         var builder = new TransactionBuilder(fromAddress);
         builder.TransferObjects(toAddress, objsToTransfer.ToArray());

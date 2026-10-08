@@ -5,6 +5,7 @@ package main
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
@@ -48,17 +49,21 @@ func main() {
 		objsToTransfer = append(objsToTransfer, iota_sdk.PtbArgumentObjectRef(coin.ObjectRef()))
 	}
 
-	gasPrice, err := client.ReferenceGasPrice(nil)
+	epoch, err := client.Epoch(nil)
 	if err != nil {
 		log.Fatalf("Failed to get gas price: %v", err)
 	}
-	if gasPrice == nil {
-		*gasPrice = uint64(100)
+	gasPrice := uint64(100)
+	if epoch != nil && epoch.ReferenceGasPrice != nil {
+		gasPrice, err = strconv.ParseUint(*epoch.ReferenceGasPrice, 10, 64)
+		if err != nil {
+			log.Fatalf("Failed to parse gas price: %v", err)
+		}
 	}
 
 	builder := iota_sdk.NewTransactionBuilder(fromAddress)
 	builder.TransferObjects(toAddress, objsToTransfer)
-	builder.Gas([]iota_sdk.ObjectReference{gasCoin}).GasPrice(*gasPrice).GasBudget(500000000)
+	builder.Gas([]iota_sdk.ObjectReference{gasCoin}).GasPrice(gasPrice).GasBudget(500000000)
 
 	txn, err := builder.Finish()
 	if err != nil {

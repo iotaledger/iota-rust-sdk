@@ -24,7 +24,7 @@ struct PrepareTransferObjectsOfflineExample {
         userInfo: [NSLocalizedDescriptionKey: "No coins found"])
     }
     let objsToTransfer = coins.dropFirst().map { PtbArgument.objectRef(id: $0.objectRef()) }
-    let gasPrice = try await client.referenceGasPrice() ?? 100
+    let gasPrice = try await client.epoch()?.referenceGasPrice.flatMap { UInt64($0) } ?? 100
 
     let builder = TransactionBuilder(sender: fromAddress)
     _ = builder.transferObjects(

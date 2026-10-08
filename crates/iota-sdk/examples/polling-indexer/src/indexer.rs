@@ -122,9 +122,9 @@ impl Indexer {
         loop {
             let latest = self
                 .client
-                .latest_checkpoint_sequence_number()
+                .checkpoint()
                 .await?
-                .unwrap_or(0);
+                .map_or(0, |c| c.sequence_number);
 
             let upper = self
                 .config

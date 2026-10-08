@@ -36,10 +36,6 @@ pub(crate) struct EpochArgs {
 pub(crate) struct EpochSummary {
     /// The reference gas price throughout this epoch.
     pub reference_gas_price: Option<BigInt>,
-    /// The total number of checkpoints in this epoch.
-    pub total_checkpoints: Option<u64>,
-    /// The total number of transactions in this epoch.
-    pub total_transactions: Option<u64>,
 }
 
 // ===========================================================================

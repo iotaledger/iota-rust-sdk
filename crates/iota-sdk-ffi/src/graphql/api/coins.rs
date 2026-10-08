@@ -63,9 +63,4 @@ impl GraphQLClient {
             .map(GraphQLCoinMetadata::try_from)
             .transpose()
     }
-
-    /// Get total supply for the coin type.
-    pub async fn total_supply(&self, coin_type: &str) -> Result<Option<u64>> {
-        Ok(self.client().total_supply(coin_type).await?)
-    }
 }

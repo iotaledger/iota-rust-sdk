@@ -24,7 +24,10 @@ async def main():
     objs_to_transfer = [
         PtbArgument.object_ref(coin.object_ref()) for coin in coins[1:]
     ]
-    gas_price = await client.reference_gas_price() or 100
+    epoch = await client.epoch()
+    gas_price = 100
+    if epoch and epoch.reference_gas_price:
+        gas_price = int(epoch.reference_gas_price)
 
     builder = TransactionBuilder(from_address)
     builder.transfer_objects(

@@ -27,8 +27,8 @@ pub use active_validators::{Validator, ValidatorCredentials};
 pub(crate) use balance::{BalanceArgs, BalanceQueryFragment};
 pub(crate) use chain::ChainIdentifierQueryFragment;
 pub(crate) use checkpoint::{
-    CheckpointArgs, CheckpointId, CheckpointQueryFragment, CheckpointTotalTxQueryFragment,
-    CheckpointsArgs, CheckpointsQueryFragment,
+    CheckpointArgs, CheckpointId, CheckpointQueryFragment, CheckpointsArgs,
+    CheckpointsQueryFragment,
 };
 pub use coin::CoinMetadata;
 pub(crate) use coin::{CoinMetadataArgs, CoinMetadataQueryFragment};
