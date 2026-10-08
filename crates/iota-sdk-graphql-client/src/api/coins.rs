@@ -114,15 +114,16 @@ define_query! {
     /// request.
     pub struct GetCoinMetadataQuery {
         client: GraphQLClient,
-        coin_type: String,
+        coin_type: StructTag,
     }
     output: GraphQLResult<Option<CoinMetadata>>;
 }
 
 impl GetCoinMetadataQuery {
     async fn send(self) -> GraphQLResult<Option<CoinMetadata>> {
+        let coin_type = self.coin_type.to_string();
         let operation = CoinMetadataQueryFragment::build(CoinMetadataArgs {
-            coin_type: &self.coin_type,
+            coin_type: &coin_type,
         });
         let response = self.client.run_query(&operation).await?;
 
@@ -134,7 +135,7 @@ define_query! {
     /// Query for [`GraphQLClient::total_supply`]. Await it to send the request.
     pub struct GetTotalSupplyQuery {
         client: GraphQLClient,
-        coin_type: String,
+        coin_type: StructTag,
     }
     output: GraphQLResult<Option<u64>>;
 }
@@ -170,18 +171,18 @@ impl GraphQLClient {
     }
 
     /// Get the coin metadata for the coin type.
-    pub fn coin_metadata(&self, coin_type: impl Into<String>) -> GetCoinMetadataQuery {
+    pub fn coin_metadata(&self, coin_type: StructTag) -> GetCoinMetadataQuery {
         GetCoinMetadataQuery {
             client: self.clone(),
-            coin_type: coin_type.into(),
+            coin_type,
         }
     }
 
     /// Get total supply for the coin type.
-    pub fn total_supply(&self, coin_type: impl Into<String>) -> GetTotalSupplyQuery {
+    pub fn total_supply(&self, coin_type: StructTag) -> GetTotalSupplyQuery {
         GetTotalSupplyQuery {
             client: self.clone(),
-            coin_type: coin_type.into(),
+            coin_type,
         }
     }
 }
@@ -204,13 +205,13 @@ mod tests {
     #[tokio::test]
     async fn coin_metadata_and_total_supply_send_the_coin_type() {
         let vars = sent_variables("CoinMetadataQueryFragment", |client| async move {
-            let _ = client.coin_metadata("0x2::iota::IOTA").await;
+            let _ = client.coin_metadata(StructTag::new_gas()).await;
         })
         .await;
         assert_eq!(vars["coinType"], "0x2::iota::IOTA");
 
         let vars = sent_variables("CoinMetadataQueryFragment", |client| async move {
-            let _ = client.total_supply("0x2::iota::IOTA").await;
+            let _ = client.total_supply(StructTag::new_gas()).await;
         })
         .await;
         assert_eq!(vars["coinType"], "0x2::iota::IOTA");
@@ -339,7 +340,7 @@ mod tests {
     async fn test_coin_metadata_query() {
         let client = test_client();
         client
-            .coin_metadata("0x2::iota::IOTA")
+            .coin_metadata(StructTag::new_gas())
             .await
             .map_err(|e| {
                 format!(
@@ -355,7 +356,7 @@ mod tests {
     async fn test_total_supply() {
         let client = test_client();
         client
-            .total_supply("0x2::iota::IOTA")
+            .total_supply(StructTag::new_gas())
             .await
             .map_err(|e| {
                 format!(

@@ -145,7 +145,7 @@ define_query! {
     /// request.
     pub struct GetIotaNamesLookupQuery {
         client: GraphQLClient,
-        name: String,
+        name: Name,
     }
     output: GraphQLResult<Option<Address>>;
 }
@@ -153,7 +153,7 @@ define_query! {
 impl GetIotaNamesLookupQuery {
     async fn send(self) -> GraphQLResult<Option<Address>> {
         let operation = ResolveIotaNamesAddressQueryFragment::build(ResolveIotaNamesAddressArgs {
-            name: self.name,
+            name: self.name.to_string(),
         });
         let response = self.client.run_query(&operation).await?;
 
@@ -170,10 +170,10 @@ impl GetIotaNamesLookupQuery {
 
 impl GraphQLClient {
     /// Return the resolved address for the given name.
-    pub fn iota_names_lookup(&self, name: impl Into<String>) -> GetIotaNamesLookupQuery {
+    pub fn iota_names_lookup(&self, name: Name) -> GetIotaNamesLookupQuery {
         GetIotaNamesLookupQuery {
             client: self.clone(),
-            name: name.into(),
+            name,
         }
     }
 
@@ -209,7 +209,9 @@ mod tests {
         let vars = sent_variables(
             "ResolveIotaNamesAddressQueryFragment",
             |client| async move {
-                let _ = client.iota_names_lookup("example.iota").await;
+                let _ = client
+                    .iota_names_lookup("example.iota".parse().unwrap())
+                    .await;
             },
         )
         .await;

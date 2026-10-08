@@ -59,16 +59,19 @@ impl GraphQLClient {
     }
 
     /// Get the coin metadata for the coin type.
-    pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<GraphQLCoinMetadata>> {
+    pub async fn coin_metadata(
+        &self,
+        coin_type: &StructTag,
+    ) -> Result<Option<GraphQLCoinMetadata>> {
         self.client()
-            .coin_metadata(coin_type)
+            .coin_metadata(coin_type.0.clone())
             .await?
             .map(GraphQLCoinMetadata::try_from)
             .transpose()
     }
 
     /// Get total supply for the coin type.
-    pub async fn total_supply(&self, coin_type: &str) -> Result<Option<u64>> {
-        Ok(self.client().total_supply(coin_type).await?)
+    pub async fn total_supply(&self, coin_type: &StructTag) -> Result<Option<u64>> {
+        Ok(self.client().total_supply(coin_type.0.clone()).await?)
     }
 }

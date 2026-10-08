@@ -13,7 +13,7 @@ use std::{future::Future, time::Duration};
 
 use cynic::SubscriptionBuilder;
 use futures::{Stream, StreamExt};
-use iota_types::SignedTransaction;
+use iota_types::{SignedTransaction, TransactionDigest};
 use reqwest::Url;
 
 use crate::{
@@ -79,8 +79,8 @@ impl EventsSubscriptionBuilder {
 
     /// Resume from the transaction immediately following the given
     /// transaction digest; thereafter the stream tracks its own resume point.
-    pub fn start_after(mut self, start_after: impl Into<String>) -> Self {
-        self.start_after = Some(start_after.into());
+    pub fn start_after(mut self, start_after: TransactionDigest) -> Self {
+        self.start_after = Some(start_after.to_string());
         self
     }
 
@@ -159,8 +159,8 @@ impl TransactionsSubscriptionBuilder {
 
     /// Resume from the transaction immediately following the given digest;
     /// thereafter the stream tracks its own resume point.
-    pub fn start_after(mut self, start_after: impl Into<String>) -> Self {
-        self.start_after = Some(start_after.into());
+    pub fn start_after(mut self, start_after: TransactionDigest) -> Self {
+        self.start_after = Some(start_after.to_string());
         self
     }
 

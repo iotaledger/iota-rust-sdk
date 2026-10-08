@@ -2,6 +2,8 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use iota_types::TransactionDigest;
+
 use crate::query_types::{
     Address, Base64, DateTime, GraphQLAddress, JsonValue, MoveData, MoveType, PageInfo,
     normalized_move::MoveModuleQueryFragment, schema,
@@ -55,29 +57,26 @@ pub struct EventFilter {
 impl EventFilter {
     /// Filter by the module emitting the event, e.g. `"0x02"` (package) or
     /// `"0x02::coin"` (module).
-    pub fn with_emitting_module(mut self, emitting_module: impl Into<Option<String>>) -> Self {
-        self.emitting_module = emitting_module.into();
+    pub fn with_emitting_module(mut self, emitting_module: impl Into<String>) -> Self {
+        self.emitting_module = Some(emitting_module.into());
         self
     }
 
     /// Filter by event type, e.g. `"0x02::coin::CoinMetadata"`.
-    pub fn with_event_type(mut self, event_type: impl Into<Option<String>>) -> Self {
-        self.event_type = event_type.into();
+    pub fn with_event_type(mut self, event_type: impl Into<String>) -> Self {
+        self.event_type = Some(event_type.into());
         self
     }
 
     /// Filter by the address that sent the transaction emitting the event.
-    pub fn with_sender(mut self, sender: impl Into<Option<Address>>) -> Self {
-        self.sender = sender.into();
+    pub fn with_sender(mut self, sender: Address) -> Self {
+        self.sender = Some(sender);
         self
     }
 
     /// Filter by the digest of the transaction emitting the event.
-    pub fn with_transaction_digest(
-        mut self,
-        transaction_digest: impl Into<Option<String>>,
-    ) -> Self {
-        self.transaction_digest = transaction_digest.into();
+    pub fn with_transaction_digest(mut self, transaction_digest: TransactionDigest) -> Self {
+        self.transaction_digest = Some(transaction_digest.to_string());
         self
     }
 }

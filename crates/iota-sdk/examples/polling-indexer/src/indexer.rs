@@ -8,7 +8,7 @@ use iota_sdk::{
         GraphQLClient, PaginationFilter,
         query_types::{EventFilter, TransactionsFilter},
     },
-    types::{ExecutionStatus, SignedTransaction, Transaction},
+    types::{ExecutionStatus, SignedTransaction, Transaction, TransactionDigest},
 };
 use serde_json::json;
 use sqlx::PgPool;
@@ -419,14 +419,15 @@ impl Indexer {
         let mut stored = 0_u64;
 
         loop {
+            let mut filter = EventFilter::default()
+                .with_transaction_digest(TransactionDigest::from_base58(transaction_digest)?);
+            if let Some(event_type) = self.config.filters.event_type.clone() {
+                filter = filter.with_event_type(event_type);
+            }
             let event_page = self
                 .client
                 .events()
-                .filter(
-                    EventFilter::default()
-                        .with_transaction_digest(transaction_digest.to_owned())
-                        .with_event_type(self.config.filters.event_type.clone()),
-                )
+                .filter(filter)
                 .pagination(PaginationFilter {
                     limit: Some(self.config.page_size),
                     cursor: cursor.clone(),
