@@ -25,14 +25,14 @@ define_query! {
 
 impl MoveViewCallJsonQuery {
     /// Set the type arguments of the Move function.
-    pub fn type_arguments(mut self, type_arguments: impl Into<Option<Vec<String>>>) -> Self {
-        self.type_arguments = type_arguments.into();
+    pub fn type_arguments(mut self, type_arguments: Vec<String>) -> Self {
+        self.type_arguments = Some(type_arguments);
         self
     }
 
     /// Set the arguments passed into the Move function, in JSON format.
-    pub fn arguments(mut self, arguments: impl Into<Option<Vec<serde_json::Value>>>) -> Self {
-        self.arguments = arguments.into();
+    pub fn arguments(mut self, arguments: Vec<serde_json::Value>) -> Self {
+        self.arguments = Some(arguments);
         self
     }
 
@@ -62,8 +62,8 @@ define_query! {
 
 impl MoveViewCallQuery {
     /// Set the type arguments of the Move function.
-    pub fn type_arguments(mut self, type_arguments: impl Into<Option<Vec<TypeTag>>>) -> Self {
-        self.type_arguments = type_arguments.into();
+    pub fn type_arguments(mut self, type_arguments: Vec<TypeTag>) -> Self {
+        self.type_arguments = Some(type_arguments);
         self
     }
 
@@ -75,14 +75,14 @@ impl MoveViewCallQuery {
     }
 
     async fn send(self) -> GraphQLResult<MoveViewResult> {
-        let type_arguments = self
-            .type_arguments
-            .map(|tags| tags.into_iter().map(|t| t.to_string()).collect());
-        self.client
-            .move_view_call_json(self.function_name)
-            .type_arguments(type_arguments)
-            .arguments(self.arguments)
-            .await
+        let mut query = self.client.move_view_call_json(self.function_name);
+        if let Some(type_arguments) = self.type_arguments {
+            query = query.type_arguments(type_arguments.iter().map(ToString::to_string).collect());
+        }
+        if let Some(arguments) = self.arguments {
+            query = query.arguments(arguments);
+        }
+        query.await
     }
 }
 
@@ -320,7 +320,7 @@ impl MoveViewArg for serde_json::Value {
     message = "Provided value is not a valid list of Move view arguments.",
     note = "Expected a tuple, vector, array, or slice of types that implement `MoveViewArg`."
 )]
-pub trait MoveViewArgList {
+pub trait MoveViewArgList: sealed::Sealed {
     /// Convert the arguments to a vector of JSON values.
     fn to_json_vec(self) -> Vec<serde_json::Value>;
 }
@@ -356,6 +356,8 @@ where
 // Tuple implementations using a macro
 macro_rules! impl_move_view_args_tuple {
     ($(($n:tt, $T:ident)),*) => {
+        impl<$($T),+> sealed::Sealed for ($($T),+) {}
+
         impl<$($T),+> MoveViewArgList for ($($T),+)
         where $($T: MoveViewArg),+
         {
@@ -371,6 +373,15 @@ macro_rules! impl_move_view_args_tuple {
 }
 
 variadics_please::all_tuples_enumerated!(impl_move_view_args_tuple, 2, 15, T);
+
+mod sealed {
+    pub trait Sealed {}
+
+    impl<T> Sealed for (T,) {}
+    impl<T> Sealed for Vec<T> {}
+    impl<const N: usize, T> Sealed for [T; N] {}
+    impl<T> Sealed for &[T] {}
+}
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {

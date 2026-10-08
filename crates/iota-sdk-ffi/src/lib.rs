@@ -9,6 +9,7 @@
 
 use base64ct::Encoding;
 
+mod helpers;
 mod macros;
 mod stream;
 

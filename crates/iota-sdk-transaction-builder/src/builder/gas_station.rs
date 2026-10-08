@@ -91,7 +91,7 @@ pub enum GasStationError {
     VersionParsing(VersionParsingError),
     /// The transaction could not be serialized for the gas station.
     #[error("BCS serialization error: {0}")]
-    Bcs(bcs::Error),
+    Bcs(iota_types::BcsError),
 }
 
 /// The IOTA gas station, sponsoring transactions over its HTTP API.
@@ -511,7 +511,8 @@ impl GasStation {
         let url = self.endpoint(GasStationRequestKind::ExecuteTx)?;
 
         let tx_bytes = base64ct::Base64::encode_string(
-            &bcs::to_bytes(transaction).map_err(GasStationError::Bcs)?,
+            &bcs::to_bytes(transaction)
+                .map_err(|e| GasStationError::Bcs(iota_types::BcsError::new(e)))?,
         );
 
         let response = self

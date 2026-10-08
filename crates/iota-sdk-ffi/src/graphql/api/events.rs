@@ -3,7 +3,7 @@
 
 //! Events API implementation.
 
-use iota_sdk::graphql_client::pagination::Page;
+use iota_sdk::graphql_client::{ListEventsQuery, pagination::Page};
 
 use crate::{
     error::Result,
@@ -12,6 +12,7 @@ use crate::{
         pagination::GraphQLEventPage,
         query_types::{GraphQLEvent, GraphQLEventFilter, GraphQLPaginationFilter},
     },
+    helpers::SetIfSome,
 };
 
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
@@ -28,14 +29,14 @@ impl GraphQLClient {
         let (page_info, events) = self
             .client()
             .events()
-            .filter(filter.map(|f| f.into()))
+            .set_if_some(filter.map(|f| f.into()), ListEventsQuery::filter)
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .into_parts();
         let events = events
             .into_iter()
-            .map(GraphQLEvent::from)
-            .collect::<Vec<_>>();
+            .map(GraphQLEvent::try_from)
+            .collect::<Result<Vec<_>>>()?;
         Ok(Page::new(page_info, events).into())
     }
 }

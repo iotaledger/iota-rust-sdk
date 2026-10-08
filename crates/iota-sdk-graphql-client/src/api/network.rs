@@ -5,6 +5,7 @@
 //! Network API implementation.
 
 use cynic::QueryBuilder;
+use futures::Stream;
 
 use crate::{
     GraphQLClient,
@@ -16,6 +17,7 @@ use crate::{
         EpochArgs, EpochSummaryQueryFragment, ProtocolConfigQueryFragment, ProtocolConfigs,
         ProtocolVersionArgs, Validator,
     },
+    streams::stream_paginated_query,
 };
 
 define_query! {
@@ -41,6 +43,7 @@ impl GetChainIdQuery {
 define_query! {
     /// Query for [`GraphQLClient::active_validators`]. Await it to send the
     /// request.
+    #[derive(Clone)]
     pub struct ListActiveValidatorsQuery {
         client: GraphQLClient,
         epoch_number: Option<u64>,
@@ -51,8 +54,8 @@ define_query! {
 
 impl ListActiveValidatorsQuery {
     /// Set the epoch number. Defaults to the current epoch.
-    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
-        self.epoch_number = epoch_number.into();
+    pub fn epoch_number(mut self, epoch_number: u64) -> Self {
+        self.epoch_number = Some(epoch_number);
         self
     }
 
@@ -60,6 +63,13 @@ impl ListActiveValidatorsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<Validator>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     fn operation<'a>(
@@ -107,8 +117,8 @@ define_query! {
 
 impl GetReferenceGasPriceQuery {
     /// Set the epoch number. Defaults to the last known epoch.
-    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch_number.into();
+    pub fn epoch_number(mut self, epoch_number: u64) -> Self {
+        self.epoch = Some(epoch_number);
         self
     }
 
@@ -136,8 +146,8 @@ define_query! {
 
 impl GetProtocolConfigQuery {
     /// Set the protocol version. Defaults to the latest version.
-    pub fn version(mut self, version: impl Into<Option<u64>>) -> Self {
-        self.version = version.into();
+    pub fn version(mut self, version: u64) -> Self {
+        self.version = Some(version);
         self
     }
 
