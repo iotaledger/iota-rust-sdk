@@ -135,12 +135,12 @@ impl GraphQLClient {
     pub fn move_view_call_json(
         &self,
         package: impl Into<ObjectId>,
-        module: impl AsRef<str>,
-        function: impl AsRef<str>,
+        module: impl Into<String>,
+        function: impl Into<String>,
     ) -> MoveViewCallJsonQuery {
         MoveViewCallJsonQuery {
             client: self.clone(),
-            function_name: function_name(package.into(), module.as_ref(), function.as_ref()),
+            function_name: function_name(package.into(), &module.into(), &function.into()),
             type_arguments: None,
             arguments: None,
         }
@@ -196,12 +196,12 @@ impl GraphQLClient {
     pub fn move_view_call(
         &self,
         package: impl Into<ObjectId>,
-        module: impl AsRef<str>,
-        function: impl AsRef<str>,
+        module: impl Into<String>,
+        function: impl Into<String>,
     ) -> MoveViewCallQuery {
         MoveViewCallQuery {
             client: self.clone(),
-            function_name: function_name(package.into(), module.as_ref(), function.as_ref()),
+            function_name: function_name(package.into(), &module.into(), &function.into()),
             type_arguments: None,
             arguments: None,
         }
