@@ -37,7 +37,7 @@ paste = { workspace = true }
 primitive-types = { workspace = true, optional = true }
 serde = { workspace = true, features = ["derive"], optional = true }
 thiserror = { workspace = true, optional = true }
-variadics_please = { workspace = true }
+variadics_please.workspace = true
 
 # internal dependencies
 iota-bcs-schema = { workspace = true, optional = true }
