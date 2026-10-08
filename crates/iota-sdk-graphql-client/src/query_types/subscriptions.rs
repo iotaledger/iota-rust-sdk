@@ -247,3 +247,56 @@ impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
 pub(crate) struct TxBlockDigest {
     pub digest: Option<String>,
 }
+
+#[cfg(test)]
+mod tests {
+    use serde_json::{Value, json};
+
+    use super::*;
+
+    /// The `@oneOf` input must carry exactly one non-null entry.
+    fn assert_one_of(value: Value, expected: Value) {
+        assert_eq!(value, expected);
+        let object = value.as_object().unwrap();
+        assert_eq!(object.values().filter(|v| !v.is_null()).count(), 1);
+    }
+
+    #[test]
+    fn event_filter_input_sets_exactly_one_field() {
+        let input = SubscriptionEventFilterInput::from(SubscriptionEventFilter::EmittingModule(
+            "0x2::coin".to_owned(),
+        ));
+        assert_one_of(
+            serde_json::to_value(input).unwrap(),
+            json!({ "emittingModule": "0x2::coin" }),
+        );
+    }
+
+    #[test]
+    fn transaction_filter_input_sets_exactly_one_field() {
+        let kind = SubscriptionTransactionFilterInput::from(SubscriptionTransactionFilter::Kind(
+            TransactionBlockKindInput::ProgrammableTx,
+        ));
+        assert_one_of(
+            serde_json::to_value(kind).unwrap(),
+            json!({ "kind": "PROGRAMMABLE_TX" }),
+        );
+
+        let function = SubscriptionTransactionFilterInput::from(
+            SubscriptionTransactionFilter::Function("0x3".to_owned()),
+        );
+        assert_one_of(
+            serde_json::to_value(function).unwrap(),
+            json!({ "function": "0x3" }),
+        );
+
+        let address = Address::ZERO;
+        let signing = SubscriptionTransactionFilterInput::from(
+            SubscriptionTransactionFilter::SigningAddress(address),
+        );
+        assert_one_of(
+            serde_json::to_value(signing).unwrap(),
+            json!({ "signingAddress": address.to_string() }),
+        );
+    }
+}
