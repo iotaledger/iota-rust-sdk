@@ -43,7 +43,7 @@ impl NameRegistration {
 
 #[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
-pub struct Name(iota_sdk::types::iota_names::Name);
+pub struct Name(pub iota_sdk::types::iota_names::Name);
 
 #[uniffi::export]
 impl Name {

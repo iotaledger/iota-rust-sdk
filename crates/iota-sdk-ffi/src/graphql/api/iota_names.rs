@@ -24,10 +24,10 @@ use crate::{
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Return the resolved address for the given name.
-    pub async fn iota_names_lookup(&self, name: &str) -> Result<Option<Arc<Address>>> {
+    pub async fn iota_names_lookup(&self, name: &Name) -> Result<Option<Arc<Address>>> {
         Ok(self
             .client()
-            .iota_names_lookup(name)
+            .iota_names_lookup(name.0.clone())
             .await?
             .map(Into::into)
             .map(Arc::new))

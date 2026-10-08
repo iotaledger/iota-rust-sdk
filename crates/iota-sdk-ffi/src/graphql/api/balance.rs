@@ -3,10 +3,15 @@
 
 //! Balance API implementation.
 
+use std::sync::Arc;
+
 use iota_sdk::graphql_client::GetBalanceQuery;
 
 use crate::{
-    error::Result, graphql::client::GraphQLClient, helpers::SetIfSome, types::address::Address,
+    error::Result,
+    graphql::client::GraphQLClient,
+    helpers::SetIfSome,
+    types::{address::Address, move_core::StructTag},
 };
 
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
@@ -18,12 +23,12 @@ impl GraphQLClient {
     pub async fn balance(
         &self,
         address: &Address,
-        coin_type: Option<String>,
+        coin_type: Option<Arc<StructTag>>,
     ) -> Result<Option<u64>> {
         Ok(self
             .client()
             .balance(**address)
-            .set_if_some(coin_type, GetBalanceQuery::coin_type)
+            .set_if_some(coin_type.map(|t| t.0.clone()), GetBalanceQuery::coin_type)
             .await?)
     }
 }
