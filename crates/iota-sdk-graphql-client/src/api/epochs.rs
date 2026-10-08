@@ -24,8 +24,8 @@ define_query! {
 
 impl GetEpochQuery {
     /// Set the epoch number. Defaults to the last known epoch.
-    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch_number.into();
+    pub fn epoch_number(mut self, epoch_number: u64) -> Self {
+        self.epoch = Some(epoch_number);
         self
     }
 
@@ -49,8 +49,8 @@ define_query! {
 
 impl GetEpochTotalCheckpointsQuery {
     /// Set the epoch number. Defaults to the last known epoch.
-    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch_number.into();
+    pub fn epoch_number(mut self, epoch_number: u64) -> Self {
+        self.epoch = Some(epoch_number);
         self
     }
 
@@ -73,8 +73,8 @@ define_query! {
 
 impl GetEpochTotalTransactionBlocksQuery {
     /// Set the epoch number. Defaults to the last known epoch.
-    pub fn epoch_number(mut self, epoch_number: impl Into<Option<u64>>) -> Self {
-        self.epoch = epoch_number.into();
+    pub fn epoch_number(mut self, epoch_number: u64) -> Self {
+        self.epoch = Some(epoch_number);
         self
     }
 

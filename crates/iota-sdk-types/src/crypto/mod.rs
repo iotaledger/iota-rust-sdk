@@ -31,6 +31,27 @@ pub use secp256k1::{Secp256k1PublicKey, Secp256k1Signature};
 pub use secp256r1::{Secp256r1PublicKey, Secp256r1Signature};
 pub use signature::{SignatureScheme, SignatureSchemeError, SimpleSignature, UserSignature};
 
+/// Error returned when decoding a fixed-length value from a base64 string.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
+#[non_exhaustive]
+pub enum Base64ParseError {
+    /// The input is not valid base64.
+    #[error("invalid Base64 encoding")]
+    InvalidEncoding,
+    /// The decoded bytes do not have the expected length.
+    #[error("invalid Base64 length")]
+    InvalidLength,
+}
+
+impl Base64ParseError {
+    fn from_base64ct(error: base64ct::Error) -> Self {
+        match error {
+            base64ct::Error::InvalidEncoding => Self::InvalidEncoding,
+            base64ct::Error::InvalidLength => Self::InvalidLength,
+        }
+    }
+}
+
 /// Error returned when decoding a signature or authenticator from its bytes.
 #[cfg(feature = "serde")]
 #[derive(Debug, thiserror::Error)]
@@ -94,13 +115,14 @@ macro_rules! impl_base64_helper {
         struct $fromstr([u8; $base::LENGTH]);
 
         impl std::str::FromStr for $fromstr {
-            type Err = base64ct::Error;
+            type Err = Base64ParseError;
 
             fn from_str(s: &str) -> Result<Self, Self::Err> {
                 let mut buf = [0; $base::LENGTH];
-                let decoded = <base64ct::Base64 as base64ct::Encoding>::decode(s, &mut buf)?;
+                let decoded = <base64ct::Base64 as base64ct::Encoding>::decode(s, &mut buf)
+                    .map_err(Base64ParseError::from_base64ct)?;
                 if decoded.len() != $base::LENGTH {
-                    return Err(base64ct::Error::InvalidLength);
+                    return Err(Base64ParseError::InvalidLength);
                 }
                 Ok(Self(buf))
             }
@@ -135,7 +157,7 @@ macro_rules! impl_base64_helper {
         mod $test_module {
             use test_strategy::proptest;
 
-            use super::{$display, $fromstr};
+            use super::{Base64ParseError, $display, $fromstr};
 
             #[proptest]
             fn roundtrip_display_fromstr(array: $fromstr) {
@@ -158,7 +180,11 @@ macro_rules! impl_base64_helper {
             fn short_decode_errors() {
                 assert_eq!(
                     "AAAA".parse::<$fromstr>().unwrap_err(),
-                    base64ct::Error::InvalidLength
+                    Base64ParseError::InvalidLength
+                );
+                assert_eq!(
+                    "!!!!".parse::<$fromstr>().unwrap_err(),
+                    Base64ParseError::InvalidEncoding
                 );
             }
         }
