@@ -44,7 +44,7 @@ mod move_shape_compare;
 /// `0x2::coin::Coin<0x2::iota::IOTA>`.
 ///
 /// Markers like [`IOTA`](iota_framework::iota::IOTA) implement it by hand.
-/// Every [`MoveObject`] implements it automatically, so an object mirror can
+/// Every `MoveObject` implements it automatically, so an object mirror can
 /// also be a type argument, as in `Display<Coin<IOTA>>`.
 ///
 /// To use your own coin type, define an empty marker struct that derives

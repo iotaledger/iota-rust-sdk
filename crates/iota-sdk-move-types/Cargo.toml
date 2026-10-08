@@ -44,6 +44,7 @@ iota-types = { workspace = true }
 
 [dev-dependencies]
 iota-bcs-schema = { workspace = true, features = ["move-shape"] }
+serde = { workspace = true, features = ["derive"] }
 
 # The bytecode comparator only runs natively (it reads the fetched package
 # artifacts from disk; no `std::fs` on wasm32), so its parser is not built
