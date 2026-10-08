@@ -14,7 +14,8 @@ use crate::{
     error::GraphQLResult,
     pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
-        ObjectFilter, ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
+        MoveObjectContentsBcsQueryFragment, MoveObjectContentsJsonQueryFragment, ObjectFilter,
+        ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
     },
     streams::stream_paginated_query,
 };
@@ -149,7 +150,7 @@ impl GetMoveObjectContentsQuery {
     }
 
     async fn send(self) -> GraphQLResult<Option<serde_json::Value>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+        let operation = MoveObjectContentsJsonQueryFragment::build(ObjectQueryArgs {
             object_id: self.object_id,
             version: self.version.map(|v| v.as_u64()),
         });
@@ -160,7 +161,7 @@ impl GetMoveObjectContentsQuery {
             .object
             .and_then(|o| o.as_move_object)
             .and_then(|o| o.contents)
-            .and_then(|mv| mv.json))
+            .map(|mv| mv.json))
     }
 }
 
@@ -183,7 +184,7 @@ impl GetMoveObjectContentsBcsQuery {
     }
 
     async fn send(self) -> GraphQLResult<Option<Vec<u8>>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+        let operation = MoveObjectContentsBcsQueryFragment::build(ObjectQueryArgs {
             object_id: self.object_id,
             version: self.version.map(|v| v.as_u64()),
         });
@@ -314,7 +315,7 @@ mod tests {
         assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
         assert_eq!(vars["version"], 3);
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsJsonQueryFragment", |client| async move {
             let _ = client
                 .move_object_contents(ObjectId::SYSTEM_STATE)
                 .version(Version::from_u64(4))
@@ -324,7 +325,7 @@ mod tests {
         assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
         assert_eq!(vars["version"], 4);
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsBcsQueryFragment", |client| async move {
             let _ = client
                 .move_object_contents_bcs(ObjectId::SYSTEM_STATE)
                 .version(Version::from_u64(5))
@@ -340,13 +341,13 @@ mod tests {
         .await;
         assert!(vars["version"].is_null());
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsJsonQueryFragment", |client| async move {
             let _ = client.move_object_contents(ObjectId::SYSTEM_STATE).await;
         })
         .await;
         assert!(vars["version"].is_null());
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsBcsQueryFragment", |client| async move {
             let _ = client
                 .move_object_contents_bcs(ObjectId::SYSTEM_STATE)
                 .await;
