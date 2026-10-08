@@ -2,7 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::query_types::{BigInt, DateTime, ObjectId, schema};
+use crate::query_types::{BigInt, DateTime, ObjectId, ProtocolConfigs, schema};
 
 // ===========================================================================
 // Epoch Queries
@@ -68,6 +68,9 @@ pub struct Epoch {
     /// The difference between the fund inflow and outflow, representing
     /// the net amount of storage fees accumulated in this epoch.
     pub net_inflow: Option<BigInt>,
+    /// The epoch's corresponding protocol configuration, including the feature
+    /// flags and the configuration options.
+    pub protocol_configs: Option<ProtocolConfigs>,
     /// The minimum gas price that a quorum of validators are guaranteed to sign
     /// a transaction for.
     pub reference_gas_price: Option<BigInt>,
