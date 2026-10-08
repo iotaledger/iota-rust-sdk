@@ -11,6 +11,7 @@ use iota_sdk::graphql_client::query_types::{
 
 use crate::{
     error::SdkFfiError,
+    helpers::SetIfSome,
     types::{
         address::Address,
         digest::TransactionDigest,
@@ -471,10 +472,13 @@ pub struct GraphQLEventFilter {
 impl From<GraphQLEventFilter> for iota_sdk::graphql_client::query_types::EventFilter {
     fn from(value: GraphQLEventFilter) -> Self {
         Self::default()
-            .with_emitting_module(value.emitting_module)
-            .with_event_type(value.event_type)
-            .with_sender(value.sender.map(|a| **a))
-            .with_transaction_digest(value.transaction_digest.map(|d| **d))
+            .set_if_some(value.emitting_module, Self::with_emitting_module)
+            .set_if_some(value.event_type, Self::with_event_type)
+            .set_if_some(value.sender.map(|a| **a), Self::with_sender)
+            .set_if_some(
+                value.transaction_digest.map(|d| **d),
+                Self::with_transaction_digest,
+            )
     }
 }
 
@@ -570,12 +574,13 @@ impl From<iota_sdk::graphql_client::query_types::ObjectFilter> for GraphQLObject
 impl From<GraphQLObjectFilter> for iota_sdk::graphql_client::query_types::ObjectFilter {
     fn from(value: GraphQLObjectFilter) -> Self {
         Self::default()
-            .with_type(value.type_tag)
-            .with_owner(value.owner.map(|v| **v))
-            .with_object_ids(
+            .set_if_some(value.type_tag, Self::with_type)
+            .set_if_some(value.owner.map(|v| **v), Self::with_owner)
+            .set_if_some(
                 value
                     .object_ids
                     .map(|v| v.into_iter().map(|v| **v).collect()),
+                Self::with_object_ids,
             )
     }
 }
