@@ -271,12 +271,6 @@ impl From<AddressParseError> for GraphQLError {
     }
 }
 
-impl From<base64ct::Error> for GraphQLError {
-    fn from(error: base64ct::Error) -> Self {
-        Self::Parse(error.into())
-    }
-}
-
 impl From<DigestParseError> for GraphQLError {
     fn from(error: DigestParseError) -> Self {
         Self::Parse(error.into())
