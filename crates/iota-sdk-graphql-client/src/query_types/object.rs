@@ -114,20 +114,20 @@ pub struct ObjectFilter {
 impl ObjectFilter {
     /// Filter by package, module, or fully qualified type, e.g. `"0x02"`,
     /// `"0x02::coin"`, or `"0x02::coin::Coin"`.
-    pub fn with_type(mut self, type_tag: impl Into<Option<String>>) -> Self {
-        self.type_tag = type_tag.into();
+    pub fn with_type(mut self, type_tag: impl Into<String>) -> Self {
+        self.type_tag = Some(type_tag.into());
         self
     }
 
     /// Filter by the address owning the object.
-    pub fn with_owner(mut self, owner: impl Into<Option<Address>>) -> Self {
-        self.owner = owner.into();
+    pub fn with_owner(mut self, owner: Address) -> Self {
+        self.owner = Some(owner);
         self
     }
 
     /// Filter by object ids.
-    pub fn with_object_ids(mut self, object_ids: impl Into<Option<Vec<ObjectId>>>) -> Self {
-        self.object_ids = object_ids.into();
+    pub fn with_object_ids(mut self, object_ids: Vec<ObjectId>) -> Self {
+        self.object_ids = Some(object_ids);
         self
     }
 }

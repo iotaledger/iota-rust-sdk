@@ -58,14 +58,14 @@ pub struct MoveObjectFilter {
 
 impl MoveObjectFilter {
     /// Filter by the address owning the object.
-    pub fn with_owner(mut self, owner: impl Into<Option<Address>>) -> Self {
-        self.owner = owner.into();
+    pub fn with_owner(mut self, owner: Address) -> Self {
+        self.owner = Some(owner);
         self
     }
 
     /// Filter by object ids.
-    pub fn with_object_ids(mut self, object_ids: impl Into<Option<Vec<ObjectId>>>) -> Self {
-        self.object_ids = object_ids.into();
+    pub fn with_object_ids(mut self, object_ids: Vec<ObjectId>) -> Self {
+        self.object_ids = Some(object_ids);
         self
     }
 
