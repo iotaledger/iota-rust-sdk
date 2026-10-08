@@ -163,16 +163,16 @@ mod tests {
         )
     }
 
-    /// Stream `pages` in order and return the items, the requests made and
-    /// the stream's pagination once it ended.
-    async fn run(
+    /// The outcome of streaming a list of pages to its end.
+    struct Run {
+        items: Vec<GraphQLResult<i32>>,
+        requests: Vec<PaginationFilter>,
+        /// The stream's pagination once it ended.
         pagination: PaginationFilter,
-        pages: Vec<GraphQLResult<Page<i32>>>,
-    ) -> (
-        Vec<GraphQLResult<i32>>,
-        Vec<PaginationFilter>,
-        PaginationFilter,
-    ) {
+    }
+
+    /// Stream `pages` in order.
+    async fn run(pagination: PaginationFilter, pages: Vec<GraphQLResult<Page<i32>>>) -> Run {
         let pages = std::sync::Mutex::new(pages.into_iter());
         let requests = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
         let mut stream = PageStream::new(
@@ -188,7 +188,11 @@ mod tests {
         );
         let items = stream.by_ref().collect().await;
         let requests = requests.lock().unwrap().clone();
-        (items, requests, stream.pagination().clone())
+        Run {
+            items,
+            requests,
+            pagination: stream.pagination().clone(),
+        }
     }
 
     fn values(items: Vec<GraphQLResult<i32>>) -> Vec<i32> {
@@ -202,7 +206,9 @@ mod tests {
             cursor: Some("start".to_owned()),
             limit: Some(3),
         };
-        let (items, requests, _) = run(
+        let Run {
+            items, requests, ..
+        } = run(
             pagination,
             vec![
                 Ok(page(vec![1, 2], true, Some("second"))),
@@ -230,7 +236,9 @@ mod tests {
             cursor: Some("start".to_owned()),
             limit: Some(3),
         };
-        let (items, requests, _) = run(
+        let Run {
+            items, requests, ..
+        } = run(
             pagination,
             vec![
                 Ok(page(vec![3, 4], true, Some("second"))),
@@ -253,7 +261,9 @@ mod tests {
 
     #[tokio::test]
     async fn an_empty_page_ends_the_stream() {
-        let (items, requests, _) = run(
+        let Run {
+            items, requests, ..
+        } = run(
             PaginationFilter::default(),
             vec![Ok(page(Vec::new(), true, Some("next")))],
         )
@@ -265,7 +275,9 @@ mod tests {
 
     #[tokio::test]
     async fn an_error_is_yielded_once_and_ends_the_stream() {
-        let (items, requests, _) = run(
+        let Run {
+            items, requests, ..
+        } = run(
             PaginationFilter::default(),
             vec![Err(crate::GraphQLError::Timeout)],
         )
@@ -285,7 +297,11 @@ mod tests {
             cursor: Some("start".to_owned()),
             limit: Some(3),
         };
-        let (items, _, resume) = run(
+        let Run {
+            items,
+            pagination: resume,
+            ..
+        } = run(
             pagination,
             vec![
                 Ok(page(vec![3, 4], true, Some("second"))),
