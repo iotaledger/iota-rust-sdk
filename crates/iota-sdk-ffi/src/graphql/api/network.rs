@@ -3,6 +3,10 @@
 
 //! Network API implementation.
 
+use iota_sdk::graphql_client::{
+    GetProtocolConfigQuery, GetReferenceGasPriceQuery, ListActiveValidatorsQuery,
+};
+
 use crate::{
     error::Result,
     graphql::{
@@ -31,7 +35,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .reference_gas_price()
-            .set_if_some(epoch, |query, value| query.epoch_number(value))
+            .set_if_some(epoch, GetReferenceGasPriceQuery::epoch_number)
             .await?)
     }
 
@@ -41,7 +45,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .protocol_config()
-            .set_if_some(version, |query, value| query.version(value))
+            .set_if_some(version, GetProtocolConfigQuery::version)
             .await?
             .into())
     }
@@ -58,7 +62,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .active_validators()
-            .set_if_some(epoch, |query, value| query.epoch_number(value))
+            .set_if_some(epoch, ListActiveValidatorsQuery::epoch_number)
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)

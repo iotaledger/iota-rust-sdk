@@ -5,7 +5,10 @@
 
 use std::sync::Arc;
 
-use iota_sdk::{grpc_client::read_mask_fields::DynamicFieldReadMask, grpc_types::v1 as proto};
+use iota_sdk::{
+    grpc_client::{ListDynamicFieldsQuery, read_mask_fields::DynamicFieldReadMask},
+    grpc_types::v1 as proto,
+};
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -144,10 +147,11 @@ impl GrpcClient {
         let query = self
             .client()
             .dynamic_fields(**parent)
-            .set_if_some(page_size, |query, value| query.page_size(value))
-            .set_if_some(page_token.map(Into::into), |query, value| {
-                query.page_token(value)
-            })
+            .set_if_some(page_size, ListDynamicFieldsQuery::page_size)
+            .set_if_some(
+                page_token.map(Into::into),
+                ListDynamicFieldsQuery::page_token,
+            )
             .read_mask(crate::grpc::api::read_mask::<DynamicFieldReadMask, _>(
                 read_mask,
             ));

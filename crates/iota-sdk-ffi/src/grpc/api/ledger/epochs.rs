@@ -6,7 +6,7 @@
 use std::sync::Arc;
 
 use iota_sdk::{
-    grpc_client::read_mask_fields::EpochReadMask,
+    grpc_client::{GetEpochQuery, read_mask_fields::EpochReadMask},
     grpc_types::{proto::proto_to_timestamp_ms, v1 as proto},
 };
 
@@ -122,7 +122,7 @@ impl GrpcClient {
         (&self
             .client()
             .epoch()
-            .set_if_some(epoch, |query, value| query.epoch_number(value))
+            .set_if_some(epoch, GetEpochQuery::epoch_number)
             .read_mask(crate::grpc::api::read_mask::<EpochReadMask, _>(read_mask))
             .await?
             .into_inner())

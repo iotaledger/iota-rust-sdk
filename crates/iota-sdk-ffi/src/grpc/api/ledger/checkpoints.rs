@@ -7,7 +7,7 @@ use std::sync::Arc;
 
 use futures::stream::BoxStream;
 use iota_sdk::grpc_client::{
-    GrpcResult,
+    CheckpointsStreamFilteredQuery, CheckpointsStreamQuery, GetCheckpointQuery, GrpcResult,
     read_mask_fields::{
         CheckpointResponseField as SdkCheckpointResponseField, CheckpointResponseReadMask,
     },
@@ -283,11 +283,12 @@ impl GrpcClient {
             .checkpoint_latest()
             .set_if_some(
                 transactions_filter.as_deref().map(Into::into),
-                |query, value| query.transactions_filter(value),
+                GetCheckpointQuery::transactions_filter,
             )
-            .set_if_some(events_filter.as_deref().map(Into::into), |query, value| {
-                query.events_filter(value)
-            })
+            .set_if_some(
+                events_filter.as_deref().map(Into::into),
+                GetCheckpointQuery::events_filter,
+            )
             .read_mask(read_mask.clone())
             .await?
             .into_inner();
@@ -315,11 +316,12 @@ impl GrpcClient {
             .checkpoint_by_sequence_number(sequence_number)
             .set_if_some(
                 transactions_filter.as_deref().map(Into::into),
-                |query, value| query.transactions_filter(value),
+                GetCheckpointQuery::transactions_filter,
             )
-            .set_if_some(events_filter.as_deref().map(Into::into), |query, value| {
-                query.events_filter(value)
-            })
+            .set_if_some(
+                events_filter.as_deref().map(Into::into),
+                GetCheckpointQuery::events_filter,
+            )
             .read_mask(read_mask.clone())
             .await?
             .into_inner();
@@ -347,11 +349,12 @@ impl GrpcClient {
             .checkpoint_by_digest(**digest)
             .set_if_some(
                 transactions_filter.as_deref().map(Into::into),
-                |query, value| query.transactions_filter(value),
+                GetCheckpointQuery::transactions_filter,
             )
-            .set_if_some(events_filter.as_deref().map(Into::into), |query, value| {
-                query.events_filter(value)
-            })
+            .set_if_some(
+                events_filter.as_deref().map(Into::into),
+                GetCheckpointQuery::events_filter,
+            )
             .read_mask(read_mask.clone())
             .await?
             .into_inner();
@@ -391,19 +394,22 @@ impl GrpcClient {
         let stream = self
             .client()
             .checkpoints_stream()
-            .set_if_some(start_sequence_number, |query, value| {
-                query.start_sequence_number(value)
-            })
-            .set_if_some(end_sequence_number, |query, value| {
-                query.end_sequence_number(value)
-            })
+            .set_if_some(
+                start_sequence_number,
+                CheckpointsStreamQuery::start_sequence_number,
+            )
+            .set_if_some(
+                end_sequence_number,
+                CheckpointsStreamQuery::end_sequence_number,
+            )
             .set_if_some(
                 transactions_filter.as_deref().map(Into::into),
-                |query, value| query.transactions_filter(value),
+                CheckpointsStreamQuery::transactions_filter,
             )
-            .set_if_some(events_filter.as_deref().map(Into::into), |query, value| {
-                query.events_filter(value)
-            })
+            .set_if_some(
+                events_filter.as_deref().map(Into::into),
+                CheckpointsStreamQuery::events_filter,
+            )
             .read_mask(read_mask.clone())
             .await?
             .into_inner();
@@ -449,22 +455,26 @@ impl GrpcClient {
         let stream = self
             .client()
             .checkpoints_stream_filtered()
-            .set_if_some(start_sequence_number, |query, value| {
-                query.start_sequence_number(value)
-            })
-            .set_if_some(end_sequence_number, |query, value| {
-                query.end_sequence_number(value)
-            })
+            .set_if_some(
+                start_sequence_number,
+                CheckpointsStreamFilteredQuery::start_sequence_number,
+            )
+            .set_if_some(
+                end_sequence_number,
+                CheckpointsStreamFilteredQuery::end_sequence_number,
+            )
             .set_if_some(
                 transactions_filter.as_deref().map(Into::into),
-                |query, value| query.transactions_filter(value),
+                CheckpointsStreamFilteredQuery::transactions_filter,
             )
-            .set_if_some(events_filter.as_deref().map(Into::into), |query, value| {
-                query.events_filter(value)
-            })
-            .set_if_some(progress_interval_ms, |query, value| {
-                query.progress_interval_ms(value)
-            })
+            .set_if_some(
+                events_filter.as_deref().map(Into::into),
+                CheckpointsStreamFilteredQuery::events_filter,
+            )
+            .set_if_some(
+                progress_interval_ms,
+                CheckpointsStreamFilteredQuery::progress_interval_ms,
+            )
             .read_mask(read_mask.clone())
             .await?
             .into_inner();

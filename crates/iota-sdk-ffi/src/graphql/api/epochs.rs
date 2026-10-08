@@ -3,6 +3,10 @@
 
 //! Epoch API implementation.
 
+use iota_sdk::graphql_client::{
+    GetEpochQuery, GetEpochTotalCheckpointsQuery, GetEpochTotalTransactionBlocksQuery,
+};
+
 use crate::{
     error::Result,
     graphql::{client::GraphQLClient, query_types::GraphQLEpoch},
@@ -19,7 +23,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .epoch()
-            .set_if_some(epoch, |query, value| query.epoch_number(value))
+            .set_if_some(epoch, GetEpochQuery::epoch_number)
             .await?
             .map(Into::into))
     }
@@ -32,7 +36,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .epoch_total_checkpoints()
-            .set_if_some(epoch, |query, value| query.epoch_number(value))
+            .set_if_some(epoch, GetEpochTotalCheckpointsQuery::epoch_number)
             .await?)
     }
 
@@ -44,7 +48,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .epoch_total_transaction_blocks()
-            .set_if_some(epoch, |query, value| query.epoch_number(value))
+            .set_if_some(epoch, GetEpochTotalTransactionBlocksQuery::epoch_number)
             .await?)
     }
 }

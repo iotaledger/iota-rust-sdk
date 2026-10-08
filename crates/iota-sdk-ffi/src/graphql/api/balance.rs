@@ -3,6 +3,8 @@
 
 //! Balance API implementation.
 
+use iota_sdk::graphql_client::GetBalanceQuery;
+
 use crate::{
     error::Result, graphql::client::GraphQLClient, helpers::SetIfSome, types::address::Address,
 };
@@ -21,7 +23,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .balance(**address)
-            .set_if_some(coin_type, |query, value| query.coin_type(value))
+            .set_if_some(coin_type, GetBalanceQuery::coin_type)
             .await?)
     }
 }

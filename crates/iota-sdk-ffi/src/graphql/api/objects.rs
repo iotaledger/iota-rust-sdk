@@ -5,6 +5,10 @@
 
 use std::sync::Arc;
 
+use iota_sdk::graphql_client::{
+    GetMoveObjectContentsBcsQuery, GetMoveObjectContentsQuery, GetObjectQuery, ListObjectsQuery,
+};
+
 use crate::{
     error::Result,
     graphql::{
@@ -36,7 +40,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .object(**object_id)
-            .set_if_some(version.map(|v| **v), |query, value| query.version(value))
+            .set_if_some(version.map(|v| **v), GetObjectQuery::version)
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -55,7 +59,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .objects()
-            .set_if_some(filter.map(Into::into), |query, value| query.filter(value))
+            .set_if_some(filter.map(Into::into), ListObjectsQuery::filter)
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
@@ -82,7 +86,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .move_object_contents_bcs(**object_id)
-            .set_if_some(version.map(|v| **v), |query, value| query.version(value))
+            .set_if_some(version.map(|v| **v), GetMoveObjectContentsBcsQuery::version)
             .await?)
     }
 
@@ -100,7 +104,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .move_object_contents(**object_id)
-            .set_if_some(version.map(|v| **v), |query, value| query.version(value))
+            .set_if_some(version.map(|v| **v), GetMoveObjectContentsQuery::version)
             .await?)
     }
 }
