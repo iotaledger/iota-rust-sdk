@@ -6,12 +6,12 @@ mod function;
 mod module;
 
 pub(crate) use function::{NormalizedMoveFunctionQueryArgs, NormalizedMoveFunctionQueryFragment};
-pub use module::MoveModuleQueryFragment;
 pub(crate) use module::{
     MoveEnum, MoveEnumVariant, MoveField, MoveModule, MoveModuleIdQueryFragment,
     MoveStructQueryFragment, MoveStructTypeParameter, NormalizedMoveModuleQueryArgs,
     NormalizedMoveModuleQueryFragment,
 };
+pub use module::{MoveModuleQueryFragment, MovePackageAddress};
 
 use crate::query_types::schema;
 

@@ -5,12 +5,15 @@
 
 use std::sync::Arc;
 
+use iota_sdk::graphql_client::GetIotaNamesDefaultNameQuery;
+
 use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient, pagination::GraphQLNameRegistrationPage,
         query_types::GraphQLPaginationFilter,
     },
+    helpers::SetIfSome,
     types::{
         address::Address,
         iota_names::{Name, NameFormat},
@@ -54,7 +57,7 @@ impl GraphQLClient {
         Ok(self
             .client()
             .iota_names_default_name(**address)
-            .format(format.map(Into::into))
+            .set_if_some(format.map(Into::into), GetIotaNamesDefaultNameQuery::format)
             .await?
             .map(Into::into)
             .map(Arc::new))

@@ -56,18 +56,18 @@ pub(crate) use iota_names::{
 use iota_types::{Address, ObjectId};
 pub use move_view_call::MoveViewResult;
 pub(crate) use move_view_call::{MoveViewCallArgs, MoveViewCallQueryFragment};
-pub use normalized_move::MoveModuleQueryFragment;
 pub(crate) use normalized_move::{
     MoveAbility, MoveEnum, MoveEnumVariant, MoveField, MoveFunction, MoveFunctionTypeParameter,
     MoveModule, MoveModuleIdQueryFragment, MoveStructQueryFragment, MoveStructTypeParameter,
     MoveVisibility, NormalizedMoveFunctionQueryArgs, NormalizedMoveFunctionQueryFragment,
     NormalizedMoveModuleQueryArgs, NormalizedMoveModuleQueryFragment, OpenMoveType,
 };
+pub use normalized_move::{MoveModuleQueryFragment, MovePackageAddress};
 pub use object::ObjectFilter;
 pub(crate) use object::{
-    ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
+    MoveObjectContentsBcsQueryFragment, MoveObjectContentsJsonQueryFragment, ObjectQueryArgs,
+    ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
 };
-pub use packages::MovePackageQueryFragment;
 pub(crate) use packages::{
     LatestPackageQueryFragment, MovePackageVersionFilter, PackageArgs, PackageCheckpointFilter,
     PackageQueryFragment, PackageVersionsArgs, PackageVersionsQueryFragment, PackagesQueryArgs,

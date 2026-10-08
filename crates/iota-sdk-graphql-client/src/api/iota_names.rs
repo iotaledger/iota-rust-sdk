@@ -7,6 +7,7 @@
 use std::str::FromStr;
 
 use cynic::QueryBuilder;
+use futures::Stream;
 use iota_types::{
     Address,
     iota_names::{NameFormat, NameRegistration, name::Name},
@@ -23,11 +24,13 @@ use crate::{
         IotaNamesRegistrationsQueryFragment, ResolveIotaNamesAddressArgs,
         ResolveIotaNamesAddressQueryFragment,
     },
+    streams::stream_paginated_query,
 };
 
 define_query! {
     /// Query for [`GraphQLClient::iota_names_registrations`]. Await it to send
     /// the request.
+    #[derive(Clone)]
     pub struct ListIotaNamesRegistrationsQuery {
         client: GraphQLClient,
         address: Address,
@@ -41,6 +44,13 @@ impl ListIotaNamesRegistrationsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<NameRegistration>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     fn operation(
@@ -102,8 +112,8 @@ define_query! {
 
 impl GetIotaNamesDefaultNameQuery {
     /// Set the format of the returned name.
-    pub fn format(mut self, format: impl Into<Option<NameFormat>>) -> Self {
-        self.format = format.into();
+    pub fn format(mut self, format: NameFormat) -> Self {
+        self.format = Some(format);
         self
     }
 
@@ -130,13 +140,22 @@ impl GetIotaNamesDefaultNameQuery {
     }
 }
 
-impl GraphQLClient {
-    /// Return the resolved address for the given name.
-    pub async fn iota_names_lookup(&self, name: &str) -> GraphQLResult<Option<Address>> {
+define_query! {
+    /// Query for [`GraphQLClient::iota_names_lookup`]. Await it to send the
+    /// request.
+    pub struct GetIotaNamesLookupQuery {
+        client: GraphQLClient,
+        name: String,
+    }
+    output: GraphQLResult<Option<Address>>;
+}
+
+impl GetIotaNamesLookupQuery {
+    async fn send(self) -> GraphQLResult<Option<Address>> {
         let operation = ResolveIotaNamesAddressQueryFragment::build(ResolveIotaNamesAddressArgs {
-            name: name.to_owned(),
+            name: self.name,
         });
-        let response = self.run_query(&operation).await?;
+        let response = self.client.run_query(&operation).await?;
 
         let ResolveIotaNamesAddressQueryFragment {
             resolve_iota_names_address: Some(address),
@@ -146,6 +165,16 @@ impl GraphQLClient {
         };
 
         Ok(Some(address.address))
+    }
+}
+
+impl GraphQLClient {
+    /// Return the resolved address for the given name.
+    pub fn iota_names_lookup(&self, name: impl Into<String>) -> GetIotaNamesLookupQuery {
+        GetIotaNamesLookupQuery {
+            client: self.clone(),
+            name: name.into(),
+        }
     }
 
     /// Find all registration NFTs for the given address.
@@ -174,6 +203,18 @@ mod tests {
     use crate::test_utils::{
         assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
     };
+
+    #[tokio::test]
+    async fn iota_names_lookup_sends_the_name() {
+        let vars = sent_variables(
+            "ResolveIotaNamesAddressQueryFragment",
+            |client| async move {
+                let _ = client.iota_names_lookup("example.iota").await;
+            },
+        )
+        .await;
+        assert_eq!(vars["name"], "example.iota");
+    }
 
     #[tokio::test]
     async fn iota_names_default_name_sends_the_address_and_format() {

@@ -25,14 +25,14 @@ define_query! {
 
 impl MoveViewCallJsonQuery {
     /// Set the type arguments of the Move function.
-    pub fn type_arguments(mut self, type_arguments: impl Into<Option<Vec<String>>>) -> Self {
-        self.type_arguments = type_arguments.into();
+    pub fn type_arguments(mut self, type_arguments: Vec<String>) -> Self {
+        self.type_arguments = Some(type_arguments);
         self
     }
 
     /// Set the arguments passed into the Move function, in JSON format.
-    pub fn arguments(mut self, arguments: impl Into<Option<Vec<serde_json::Value>>>) -> Self {
-        self.arguments = arguments.into();
+    pub fn arguments(mut self, arguments: Vec<serde_json::Value>) -> Self {
+        self.arguments = Some(arguments);
         self
     }
 
@@ -62,8 +62,8 @@ define_query! {
 
 impl MoveViewCallQuery {
     /// Set the type arguments of the Move function.
-    pub fn type_arguments(mut self, type_arguments: impl Into<Option<Vec<TypeTag>>>) -> Self {
-        self.type_arguments = type_arguments.into();
+    pub fn type_arguments(mut self, type_arguments: Vec<TypeTag>) -> Self {
+        self.type_arguments = Some(type_arguments);
         self
     }
 
@@ -75,14 +75,14 @@ impl MoveViewCallQuery {
     }
 
     async fn send(self) -> GraphQLResult<MoveViewResult> {
-        let type_arguments = self
-            .type_arguments
-            .map(|tags| tags.into_iter().map(|t| t.to_string()).collect());
-        self.client
-            .move_view_call_json(self.function_name)
-            .type_arguments(type_arguments)
-            .arguments(self.arguments)
-            .await
+        let mut query = self.client.move_view_call_json(self.function_name);
+        if let Some(type_arguments) = self.type_arguments {
+            query = query.type_arguments(type_arguments.iter().map(ToString::to_string).collect());
+        }
+        if let Some(arguments) = self.arguments {
+            query = query.arguments(arguments);
+        }
+        query.await
     }
 }
 
