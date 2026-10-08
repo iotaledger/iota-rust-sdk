@@ -65,8 +65,8 @@ pub(crate) use normalized_move::{
 pub use normalized_move::{MoveModuleQueryFragment, MovePackageAddress};
 pub use object::ObjectFilter;
 pub(crate) use object::{
-    MoveObjectContentsQueryFragment, ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs,
-    ObjectsQueryFragment,
+    MoveObjectContentsBcsQueryFragment, MoveObjectContentsJsonQueryFragment, ObjectQueryArgs,
+    ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
 };
 pub(crate) use packages::{
     LatestPackageQueryFragment, MovePackageVersionFilter, PackageArgs, PackageCheckpointFilter,
