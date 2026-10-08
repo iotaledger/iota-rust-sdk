@@ -47,8 +47,8 @@ define_query! {
 
 impl ListTransactionsQuery {
     /// Only return the transactions that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<TransactionsFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: TransactionsFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
@@ -118,14 +118,14 @@ define_query! {
 impl ListAddressTransactionsQuery {
     /// Set how the address relates to the transactions. Defaults to the
     /// transactions it sent.
-    pub fn relation(mut self, relation: impl Into<Option<AddressTransactionRelationship>>) -> Self {
-        self.relation = relation.into();
+    pub fn relation(mut self, relation: AddressTransactionRelationship) -> Self {
+        self.relation = Some(relation);
         self
     }
 
     /// Only return the transactions that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<TransactionsFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: TransactionsFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
@@ -201,8 +201,8 @@ define_query! {
 
 impl ListTransactionsEffectsQuery {
     /// Only return the transactions that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<TransactionsFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: TransactionsFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
@@ -269,8 +269,8 @@ define_query! {
 
 impl ListTransactionsDataEffectsQuery {
     /// Only return the transactions that match `filter`.
-    pub fn filter(mut self, filter: impl Into<Option<TransactionsFilter>>) -> Self {
-        self.filter = filter.into();
+    pub fn filter(mut self, filter: TransactionsFilter) -> Self {
+        self.filter = Some(filter);
         self
     }
 
@@ -358,8 +358,8 @@ define_query! {
 impl ExecuteTransactionQuery {
     /// Wait for the executed transaction to be indexed or finalized before
     /// resolving.
-    pub fn wait_for(mut self, wait_for: impl Into<Option<WaitForTransaction>>) -> Self {
-        self.wait_for = wait_for.into();
+    pub fn wait_for(mut self, wait_for: WaitForTransaction) -> Self {
+        self.wait_for = Some(wait_for);
         self
     }
 
@@ -402,8 +402,8 @@ define_query! {
 
 impl WaitForTransactionQuery {
     /// Set how long to wait. Defaults to 60s.
-    pub fn timeout(mut self, timeout: impl Into<Option<Duration>>) -> Self {
-        self.timeout = timeout.into();
+    pub fn timeout(mut self, timeout: Duration) -> Self {
+        self.timeout = Some(timeout);
         self
     }
 
@@ -432,21 +432,148 @@ impl WaitForTransactionQuery {
     }
 }
 
-impl GraphQLClient {
-    /// Get a transaction by its digest.
-    pub async fn transaction(
-        &self,
+define_query! {
+    /// Query for [`GraphQLClient::transaction`]. Await it to send the request.
+    pub struct GetTransactionQuery {
+        client: GraphQLClient,
         digest: TransactionDigest,
-    ) -> GraphQLResult<Option<SignedTransaction>> {
+    }
+    output: GraphQLResult<Option<SignedTransaction>>;
+}
+
+impl GetTransactionQuery {
+    async fn send(self) -> GraphQLResult<Option<SignedTransaction>> {
         let operation = TransactionBlockQueryFragment::build(TransactionBlockArgs {
-            digest: digest.to_string(),
+            digest: self.digest.to_string(),
         });
-        let response = self.run_query(&operation).await?;
+        let response = self.client.run_query(&operation).await?;
 
         response
             .transaction_block
             .map(TryInto::try_into)
             .transpose()
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::transaction_effects`]. Await it to send the
+    /// request.
+    pub struct GetTransactionEffectsQuery {
+        client: GraphQLClient,
+        digest: TransactionDigest,
+    }
+    output: GraphQLResult<Option<TransactionEffects>>;
+}
+
+impl GetTransactionEffectsQuery {
+    async fn send(self) -> GraphQLResult<Option<TransactionEffects>> {
+        let operation = TransactionBlockEffectsQueryFragment::build(TransactionBlockArgs {
+            digest: self.digest.to_string(),
+        });
+        let response = self.client.run_query(&operation).await?;
+
+        response
+            .transaction_block
+            .map(TryInto::try_into)
+            .transpose()
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::transaction_data_effects`]. Await it to send
+    /// the request.
+    pub struct GetTransactionDataEffectsQuery {
+        client: GraphQLClient,
+        digest: TransactionDigest,
+    }
+    output: GraphQLResult<Option<TransactionDataEffects>>;
+}
+
+impl GetTransactionDataEffectsQuery {
+    async fn send(self) -> GraphQLResult<Option<TransactionDataEffects>> {
+        let operation = TransactionBlockWithEffectsQueryFragment::build(TransactionBlockArgs {
+            digest: self.digest.to_string(),
+        });
+        let response = self.client.run_query(&operation).await?;
+
+        match response.transaction_block.map(|tx| (tx.bcs, tx.effects)) {
+            Some((Some(bcs), Some(effects))) => {
+                let bcs = crate::base64::decode(bcs.0.as_str())?;
+                let effects = crate::base64::decode(effects.bcs.unwrap().0.as_str())?;
+                let transaction: SenderSignedTransaction =
+                    bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
+                let effects: TransactionEffects =
+                    bcs::from_bytes(&effects).map_err(iota_types::BcsError::new)?;
+
+                Ok(Some(TransactionDataEffects {
+                    signed_transaction: transaction.into(),
+                    effects,
+                }))
+            }
+            _ => Ok(None),
+        }
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::is_transaction_indexed_on_node`]. Await it to
+    /// send the request.
+    pub struct IsTransactionIndexedOnNodeQuery {
+        client: GraphQLClient,
+        digest: TransactionDigest,
+    }
+    output: GraphQLResult<bool>;
+}
+
+impl IsTransactionIndexedOnNodeQuery {
+    async fn send(self) -> GraphQLResult<bool> {
+        let operation = TransactionBlockIndexedQueryFragment::build(TransactionBlockArgs {
+            digest: self.digest.to_string(),
+        });
+        Ok(self
+            .client
+            .run_query(&operation)
+            .await?
+            .is_transaction_indexed_on_node)
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::is_transaction_finalized`]. Await it to send
+    /// the request.
+    pub struct IsTransactionFinalizedQuery {
+        client: GraphQLClient,
+        digest: TransactionDigest,
+    }
+    output: GraphQLResult<bool>;
+}
+
+impl IsTransactionFinalizedQuery {
+    async fn send(self) -> GraphQLResult<bool> {
+        let operation = TransactionBlockCheckpointQueryFragment::build(TransactionBlockArgs {
+            digest: self.digest.to_string(),
+        });
+        let response = self.client.run_query(&operation).await?;
+        if let Some(block) = response.transaction_block
+            && block
+                .effects
+                .as_ref()
+                .and_then(|e| e.checkpoint.as_ref())
+                .is_some()
+        {
+            return Ok(true);
+        }
+        Ok(false)
+    }
+}
+
+impl GraphQLClient {
+    /// Get a transaction by its digest.
+    pub fn transaction(&self, digest: TransactionDigest) -> GetTransactionQuery {
+        GetTransactionQuery {
+            client: self.clone(),
+            digest,
+        }
     }
 
     /// Get a page of transactions.
@@ -470,19 +597,11 @@ impl GraphQLClient {
     }
 
     /// Get a transaction's effects by its digest.
-    pub async fn transaction_effects(
-        &self,
-        digest: TransactionDigest,
-    ) -> GraphQLResult<Option<TransactionEffects>> {
-        let operation = TransactionBlockEffectsQueryFragment::build(TransactionBlockArgs {
-            digest: digest.to_string(),
-        });
-        let response = self.run_query(&operation).await?;
-
-        response
-            .transaction_block
-            .map(TryInto::try_into)
-            .transpose()
+    pub fn transaction_effects(&self, digest: TransactionDigest) -> GetTransactionEffectsQuery {
+        GetTransactionEffectsQuery {
+            client: self.clone(),
+            digest,
+        }
     }
 
     /// Get a page of transactions' effects.
@@ -495,30 +614,13 @@ impl GraphQLClient {
     }
 
     /// Get a transaction's data and effects by its digest.
-    pub async fn transaction_data_effects(
+    pub fn transaction_data_effects(
         &self,
         digest: TransactionDigest,
-    ) -> GraphQLResult<Option<TransactionDataEffects>> {
-        let operation = TransactionBlockWithEffectsQueryFragment::build(TransactionBlockArgs {
-            digest: digest.to_string(),
-        });
-        let response = self.run_query(&operation).await?;
-
-        match response.transaction_block.map(|tx| (tx.bcs, tx.effects)) {
-            Some((Some(bcs), Some(effects))) => {
-                let bcs = crate::base64::decode(bcs.0.as_str())?;
-                let effects = crate::base64::decode(effects.bcs.unwrap().0.as_str())?;
-                let transaction: SenderSignedTransaction =
-                    bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
-                let effects: TransactionEffects =
-                    bcs::from_bytes(&effects).map_err(iota_types::BcsError::new)?;
-
-                Ok(Some(TransactionDataEffects {
-                    signed_transaction: transaction.into(),
-                    effects,
-                }))
-            }
-            _ => Ok(None),
+    ) -> GetTransactionDataEffectsQuery {
+        GetTransactionDataEffectsQuery {
+            client: self.clone(),
+            digest,
         }
     }
 
@@ -549,36 +651,26 @@ impl GraphQLClient {
     /// on the node. This means that it can be queried by its digest and its
     /// effects will be usable for subsequent transactions. To check for
     /// full finalization, use [`Self::is_transaction_finalized`].
-    pub async fn is_transaction_indexed_on_node(
+    pub fn is_transaction_indexed_on_node(
         &self,
         digest: TransactionDigest,
-    ) -> GraphQLResult<bool> {
-        let operation = TransactionBlockIndexedQueryFragment::build(TransactionBlockArgs {
-            digest: digest.to_string(),
-        });
-        Ok(self
-            .run_query(&operation)
-            .await?
-            .is_transaction_indexed_on_node)
+    ) -> IsTransactionIndexedOnNodeQuery {
+        IsTransactionIndexedOnNodeQuery {
+            client: self.clone(),
+            digest,
+        }
     }
 
     /// Returns whether the transaction for the given digest has been included
     /// in a checkpoint (finalized).
-    pub async fn is_transaction_finalized(&self, digest: TransactionDigest) -> GraphQLResult<bool> {
-        let operation = TransactionBlockCheckpointQueryFragment::build(TransactionBlockArgs {
-            digest: digest.to_string(),
-        });
-        let response = self.run_query(&operation).await?;
-        if let Some(block) = response.transaction_block
-            && block
-                .effects
-                .as_ref()
-                .and_then(|e| e.checkpoint.as_ref())
-                .is_some()
-        {
-            return Ok(true);
+    pub fn is_transaction_finalized(
+        &self,
+        digest: TransactionDigest,
+    ) -> IsTransactionFinalizedQuery {
+        IsTransactionFinalizedQuery {
+            client: self.clone(),
+            digest,
         }
-        Ok(false)
     }
 
     /// Wait for the indexing or finalization of a transaction by its digest.
@@ -613,6 +705,53 @@ mod tests {
             test_client, test_transaction,
         },
     };
+
+    #[tokio::test]
+    async fn digest_getters_send_the_digest() {
+        let digest = test_transaction().digest();
+        let expected = digest.to_string();
+        let vars = sent_variables("TransactionBlockQueryFragment", |client| async move {
+            let _ = client.transaction(digest).await;
+        })
+        .await;
+        assert_eq!(vars["digest"], expected);
+
+        let vars = sent_variables(
+            "TransactionBlockEffectsQueryFragment",
+            |client| async move {
+                let _ = client.transaction_effects(digest).await;
+            },
+        )
+        .await;
+        assert_eq!(vars["digest"], expected);
+
+        let vars = sent_variables(
+            "TransactionBlockWithEffectsQueryFragment",
+            |client| async move {
+                let _ = client.transaction_data_effects(digest).await;
+            },
+        )
+        .await;
+        assert_eq!(vars["digest"], expected);
+
+        let vars = sent_variables(
+            "TransactionBlockIndexedQueryFragment",
+            |client| async move {
+                let _ = client.is_transaction_indexed_on_node(digest).await;
+            },
+        )
+        .await;
+        assert_eq!(vars["digest"], expected);
+
+        let vars = sent_variables(
+            "TransactionBlockCheckpointQueryFragment",
+            |client| async move {
+                let _ = client.is_transaction_finalized(digest).await;
+            },
+        )
+        .await;
+        assert_eq!(vars["digest"], expected);
+    }
 
     #[tokio::test]
     async fn execute_transaction_sends_the_signatures_and_transaction() {
