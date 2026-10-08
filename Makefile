@@ -27,9 +27,10 @@ clippy: ## Run Clippy linter
 # `iota-sdk` is left out of `cargo semver-checks`, which diffs against the
 # latest crates.io release: its latest stable one is the unrelated legacy SDK
 # that previously held the name, so it stays excluded until 3.0.0 is published.
+# `iota-sdk-client-api` has no release to diff against yet.
 .PHONY: semver-checks
 semver-checks: ## Check the published crates for breaking API changes
-	cargo semver-checks --workspace --exclude iota-sdk
+	cargo semver-checks --workspace --exclude iota-sdk --exclude iota-sdk-client-api
 
 .PHONY: test
 test: fetch-compiled-packages ## Run unit tests
@@ -58,8 +59,10 @@ test-with-localnet: package_test_example_v1.json package_test_example_v2.json ##
 .PHONY: wasm32
 wasm32: ## Check that SDK crates compile to wasm32
 	$(MAKE) -C crates/iota-sdk wasm
+	$(MAKE) -C crates/iota-sdk-client-api wasm
 	$(MAKE) -C crates/iota-sdk-crypto wasm
 	$(MAKE) -C crates/iota-sdk-graphql-client wasm
+	$(MAKE) -C crates/iota-sdk-graphql-client-next wasm
 	$(MAKE) -C crates/iota-sdk-move-types wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
 	$(MAKE) -C crates/iota-sdk-types wasm

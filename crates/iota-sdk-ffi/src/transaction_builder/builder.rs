@@ -27,12 +27,12 @@ use crate::{
 /// transaction data.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct TransactionBuilder(RwLock<iota_sdk::transaction_builder::TransactionBuilder<()>>);
+pub struct TransactionBuilder(RwLock<iota_sdk::transaction_builder::TransactionBuilder>);
 
 impl TransactionBuilder {
     fn read<F, T>(&self, f: F) -> T
     where
-        F: FnOnce(&iota_sdk::transaction_builder::TransactionBuilder<()>) -> T,
+        F: FnOnce(&iota_sdk::transaction_builder::TransactionBuilder) -> T,
     {
         let lock = self.0.read().expect("error reading from builder");
         f(&lock)
@@ -40,7 +40,7 @@ impl TransactionBuilder {
 
     fn write<F, T>(&self, f: F) -> T
     where
-        F: FnOnce(&mut iota_sdk::transaction_builder::TransactionBuilder<()>) -> T,
+        F: FnOnce(&mut iota_sdk::transaction_builder::TransactionBuilder) -> T,
     {
         let mut lock = self.0.write().expect("error writing to builder");
         f(&mut lock)

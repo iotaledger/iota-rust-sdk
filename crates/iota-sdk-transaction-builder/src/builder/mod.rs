@@ -52,10 +52,15 @@ const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
 /// Protocol-config key for the fixed base transaction cost.
 const BASE_TX_COST_FIXED_KEY: &str = "base_tx_cost_fixed";
 
+/// The client of a [`TransactionBuilder`] that has none, so every input has to
+/// be supplied by the caller.
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub struct Offline;
+
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Clone, Debug)]
 #[repr(C)]
-pub struct TransactionBuilder<C = (), L = ()> {
+pub struct TransactionBuilder<C = Offline, L = ()> {
     data: TransactionBuildData,
     client: C,
     protocol_config: Option<ProtocolConfig>,
@@ -310,7 +315,7 @@ impl TransactionBuilder {
                 assigned_results: Default::default(),
                 state_command: Default::default(),
             },
-            client: (),
+            client: Offline,
             protocol_config: None,
             last_command: PhantomData,
         }
@@ -372,7 +377,7 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
                 assigned_results: Default::default(),
                 state_command: Default::default(),
             },
-            client: (),
+            client: Offline,
             protocol_config: None,
             last_command: PhantomData,
         }
@@ -1330,7 +1335,7 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 }
 
-impl<L> TransactionBuilder<(), L> {
+impl<L> TransactionBuilder<Offline, L> {
     /// Add gas coins that will be consumed. Optional.
     ///
     /// A gas coin is paid as gas instead of being passed as an input, so it
