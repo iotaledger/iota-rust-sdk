@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::types::{
     move_core::TypeTag,
-    transaction::{SignedTransaction, TransactionEffects},
+    transaction::{Transaction, TransactionEffects},
 };
 
 /// A transaction argument used in programmable transactions.
@@ -83,15 +83,6 @@ impl From<iota_sdk::graphql_client::DryRunReturn> for GraphQLDryRunReturn {
     }
 }
 
-impl From<GraphQLDryRunReturn> for iota_sdk::graphql_client::DryRunReturn {
-    fn from(value: GraphQLDryRunReturn) -> Self {
-        iota_sdk::graphql_client::DryRunReturn {
-            type_tag: value.type_tag.0.clone(),
-            bcs: value.bcs,
-        }
-    }
-}
-
 /// A mutation to an argument that was mutably borrowed by a command.
 #[derive(uniffi::Record)]
 pub struct GraphQLDryRunMutation {
@@ -108,16 +99,6 @@ impl From<iota_sdk::graphql_client::DryRunMutation> for GraphQLDryRunMutation {
         GraphQLDryRunMutation {
             input: value.input.into(),
             type_tag: Arc::new(value.type_tag.into()),
-            bcs: value.bcs,
-        }
-    }
-}
-
-impl From<GraphQLDryRunMutation> for iota_sdk::graphql_client::DryRunMutation {
-    fn from(value: GraphQLDryRunMutation) -> Self {
-        iota_sdk::graphql_client::DryRunMutation {
-            input: value.input.into(),
-            type_tag: value.type_tag.0.clone(),
             bcs: value.bcs,
         }
     }
@@ -146,19 +127,6 @@ impl From<iota_sdk::graphql_client::DryRunEffect> for GraphQLDryRunEffect {
     }
 }
 
-impl From<GraphQLDryRunEffect> for iota_sdk::graphql_client::DryRunEffect {
-    fn from(value: GraphQLDryRunEffect) -> Self {
-        iota_sdk::graphql_client::DryRunEffect {
-            mutated_references: value
-                .mutated_references
-                .into_iter()
-                .map(Into::into)
-                .collect(),
-            return_values: value.return_values.into_iter().map(Into::into).collect(),
-        }
-    }
-}
-
 /// The result of a simulation (dry run), which includes the effects of the
 /// transaction, any errors that may have occurred, and intermediate results for
 /// each command.
@@ -169,10 +137,13 @@ pub struct GraphQLDryRunResult {
     /// The intermediate results for each command of the dry run execution,
     /// including contents of mutated references and return values.
     pub results: Vec<GraphQLDryRunEffect>,
-    /// The transaction block representing the dry run execution.
-    pub transaction: Option<SignedTransaction>,
+    /// The transaction that was dry run, without signatures.
+    pub transaction: Option<Arc<Transaction>>,
     /// The effects of the transaction execution.
     pub effects: Option<Arc<TransactionEffects>>,
+    /// The gas price to use. This is the reference gas price, or a higher
+    /// price if an input object is congested.
+    pub suggested_gas_price: Option<u64>,
 }
 
 impl From<iota_sdk::graphql_client::DryRunResult> for GraphQLDryRunResult {
@@ -180,19 +151,9 @@ impl From<iota_sdk::graphql_client::DryRunResult> for GraphQLDryRunResult {
         GraphQLDryRunResult {
             error: value.error,
             results: value.results.into_iter().map(Into::into).collect(),
-            transaction: value.transaction.map(Into::into),
+            transaction: value.transaction.map(Into::into).map(Arc::new),
             effects: value.effects.map(Into::into).map(Arc::new),
-        }
-    }
-}
-
-impl From<GraphQLDryRunResult> for iota_sdk::graphql_client::DryRunResult {
-    fn from(value: GraphQLDryRunResult) -> Self {
-        iota_sdk::graphql_client::DryRunResult {
-            error: value.error,
-            results: value.results.into_iter().map(Into::into).collect(),
-            transaction: value.transaction.map(Into::into),
-            effects: value.effects.map(|v| v.0.clone()),
+            suggested_gas_price: value.suggested_gas_price,
         }
     }
 }

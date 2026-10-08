@@ -2,69 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Core type definitions for the IOTA blockchain.
-//!
-//! [IOTA] is a next-generation smart contract platform with high throughput,
-//! low latency, and an asset-oriented programming model powered by the Move
-//! programming language. This crate provides type definitions for working with
-//! the data that makes up the IOTA blockchain.
-//!
-//! [IOTA]: https://iota.org
-//!
-//! # Feature flags
-//!
-//! This library uses a set of [feature flags] to reduce the number of
-//! dependencies and amount of compiled code. By default, no features are
-//! enabled which allows one to enable a subset specifically for their use case.
-//! Below is a list of the available feature flags.
-//!
-//! - `serde`: Enables support for serializing and deserializing types to/from
-//!   BCS utilizing [serde] library. Note: JSON serialization is NOT guaranteed
-//!   to match the IOTA monorepo's JSON-RPC format.
-//! - `rand`: Enables support for generating random instances of a number of
-//!   types via the [rand] library.
-//! - `hash`: Enables support for hashing, which is required for deriving
-//!   addresses and calculating digests for various types.
-//! - `proptest`: Enables support for the [proptest] library by providing
-//!   implementations of [proptest::arbitrary::Arbitrary] for many types.
-//!
-//! [feature flags]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-features-section
-//! [serde]: https://docs.rs/serde
-//! [rand]: https://docs.rs/rand
-//! [proptest]: https://docs.rs/proptest
-//! [proptest::arbitrary::Arbitrary]: https://docs.rs/proptest/latest/proptest/arbitrary/trait.Arbitrary.html
-//!
-//! # BCS
-//!
-//! [BCS] is the serialization format used to represent the state of the
-//! blockchain and is used extensively throughout the IOTA ecosystem. In
-//! particular the BCS format is leveraged because it _"guarantees canonical
-//! serialization, meaning that for any given data type, there is a one-to-one
-//! correspondence between in-memory values and valid byte representations."_
-//! One benefit of this property of having a canonical serialized representation
-//! is to allow different entities in the ecosystem to all agree on how a
-//! particular type should be interpreted and more importantly define a
-//! deterministic representation for hashing and signing.
-//!
-//! This library strives to guarantee that the types defined are fully
-//! BCS-compatible with the data that the network produces. The one caveat to
-//! this would be that as the IOTA protocol evolves, new type variants are added
-//! and older versions of this library may not support those newly
-//! added variants. The expectation is that the most recent release of this
-//! library will support new variants and types as they are released to IOTA's
-//! `testnet` network.
-//!
-//! The BCS serialized form of every type in this crate is specified in ABNF
-//! notation, as described by [RFC-5234], in [`bcs-schema.abnf`]. In addition to
-//! the format itself, some types have an extra layer of verification and may
-//! impose additional restrictions on valid byte representations above and
-//! beyond those already provided by BCS. In these instances the documentation
-//! for those types will clearly specify these additional restrictions.
-//!
-//! [BCS]: https://docs.rs/bcs
-//! [RFC-5234]: https://datatracker.ietf.org/doc/html/rfc5234
-//! [`bcs-schema.abnf`]: https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf
-
+#![doc = include_str!("../README.md")]
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 mod tree_display;
@@ -74,6 +12,8 @@ pub(crate) use tree_display::{TreeDisplay, TreeWriter, impl_tree_display};
 pub mod hash;
 
 mod address;
+#[cfg(feature = "serde")]
+mod bcs_error;
 mod checkpoint;
 pub mod crypto;
 mod digest;
@@ -92,6 +32,8 @@ mod validator;
 pub mod version;
 
 pub use address::{Address, AddressParseError};
+#[cfg(feature = "serde")]
+pub use bcs_error::BcsError;
 pub use checkpoint::{
     CheckpointCommitment, CheckpointContents, CheckpointContentsV1, CheckpointData,
     CheckpointSequenceNumber, CheckpointSummary, CheckpointTimestamp, CheckpointTransaction,
@@ -165,6 +107,9 @@ pub use version::{Version, VersionError};
 mod serialization_proptests;
 
 #[cfg(feature = "serde")]
+#[doc(hidden)]
+pub use _serde::OptionReadableDisplay;
+#[cfg(feature = "serde")]
 pub use bcs_base64::FromBase64Error;
 
 #[cfg(feature = "serde")]
@@ -200,8 +145,8 @@ mod bcs_base64 {
                     }
 
                     #[doc = "Deserialize a `" $type "` from BCS bytes."]
-                    pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-                        bcs::from_bytes::<Self>(bytes)
+                    pub fn from_bcs(bytes: &[u8]) -> Result<Self, crate::BcsError> {
+                        bcs::from_bytes::<Self>(bytes).map_err(crate::BcsError::new)
                     }
 
                     #[doc = "Deserialize a `" $type "` from a base64-encoded string of its BCS bytes."]
@@ -218,7 +163,6 @@ mod bcs_base64 {
     }
 
     impl_bcs_base64!(
-        MovePackageData,
         Object,
         SenderSignedTransaction,
         Transaction,
@@ -415,7 +359,7 @@ mod _serde {
     pub(crate) type ReadableDisplay =
         ::serde_with::As<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>;
 
-    pub(crate) type OptionReadableDisplay =
+    pub type OptionReadableDisplay =
         ::serde_with::As<Option<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
 
     pub(crate) type VecReadableDisplay =
