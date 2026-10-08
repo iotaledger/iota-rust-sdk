@@ -12,13 +12,12 @@ class Program
         var objectId = ObjectId.FromHex("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755");
 
         // `Objects` is batched: it takes a list of ids and returns one result per
-        // id, in the same order, carrying either the object or the error for that
+        // id, in the same order; reading an id's result throws the error for that
         // id. The default read mask returns the reference and the BCS-decoded
         // object; pass `readMask: new GrpcObjectField[] { new GrpcObjectField.Reference() }`
         // to skip the object.
-        var result = (await client.Objects(new[] { objectId }))[0];
-        if (result.Error != null) throw new InvalidOperationException($"Failed to get object: {result.Error}");
-        var obj = result.Object?.Object
+        var result = (await client.Objects(new[] { objectId })).Get(0);
+        var obj = result.Object
             ?? throw new InvalidOperationException("Object not included in the response");
 
         Console.WriteLine($"Object ID: {obj.Id()}");

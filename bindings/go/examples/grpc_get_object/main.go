@@ -22,7 +22,7 @@ func main() {
 	}
 
 	// `Objects` is batched: it takes a list of ids and returns one result per
-	// id, in the same order, carrying either the object or the error for that
+	// id, in the same order; reading an id's result returns the error for that
 	// id. The default read mask returns the reference and the BCS-decoded
 	// object; pass a read mask like
 	// `[]iota_sdk.GrpcObjectField{iota_sdk.GrpcObjectFieldReference{}}` to skip the object.
@@ -30,14 +30,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to get objects: %v", err)
 	}
-	result := results[0]
-	if result.Error != nil {
-		log.Fatalf("Failed to get object: %v", *result.Error)
+	result, err := results.Get(0)
+	if err != nil {
+		log.Fatalf("Failed to get object: %v", err)
 	}
-	if result.Object == nil || result.Object.Object == nil {
+	if result.Object == nil {
 		log.Fatal("Object not included in the response")
 	}
-	obj := *result.Object.Object
+	obj := *result.Object
 
 	fmt.Println("Object ID:", obj.Id())
 	fmt.Println("Version:", obj.Version())

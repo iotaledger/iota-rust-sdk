@@ -5,10 +5,7 @@
 
 use std::sync::Arc;
 
-use iota_sdk::{
-    grpc_client::{GrpcResult, read_mask_fields::ObjectReadMask},
-    grpc_types::v1 as proto,
-};
+use iota_sdk::{grpc_client::read_mask_fields::ObjectReadMask, grpc_types::v1 as proto};
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -38,7 +35,7 @@ pub struct GrpcObjectRequest {
 /// sub-fields (e.g. `ReferenceObjectId`) in the read mask. The `object` field
 /// is deserialized from BCS, so the read mask must include `Bcs` for it to be
 /// populated.
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct GrpcObject {
     /// The id of the object.
     pub object_id: Option<Arc<ObjectId>>,
@@ -83,40 +80,10 @@ impl TryFrom<&proto::object::Object> for GrpcObject {
     }
 }
 
-/// The result for a single object in a batch: either the object or the error
-/// the server reported for it.
-#[derive(uniffi::Record)]
-pub struct GrpcObjectResult {
-    /// The object, if the server returned it.
-    pub object: Option<GrpcObject>,
-    /// The error message, if the server reported an error for this object.
-    pub error: Option<String>,
-}
-
-impl TryFrom<GrpcResult<proto::object::Object>> for GrpcObjectResult {
-    type Error = SdkFfiError;
-
-    fn try_from(value: GrpcResult<proto::object::Object>) -> Result<Self> {
-        Ok(match value {
-            Ok(object) => Self {
-                object: Some((&object).try_into()?),
-                error: None,
-            },
-            Err(error) => Self {
-                object: None,
-                error: Some(error.to_string()),
-            },
-        })
-    }
-}
-
-fn convert_objects(
-    objects: Vec<GrpcResult<proto::object::Object>>,
-) -> Result<Vec<GrpcObjectResult>> {
-    objects
-        .into_iter()
-        .map(GrpcObjectResult::try_from)
-        .collect()
+crate::grpc_batch_results! {
+    /// The results of a batch of objects, in request order. Each item is
+    /// either the object or the error the server reported for it.
+    GrpcObjectResults(GrpcObject, proto::object::Object)
 }
 
 #[uniffi::export(async_runtime = "tokio")]
@@ -125,9 +92,9 @@ impl GrpcClient {
     ///
     /// Results are returned in the same order as the input ids, one per
     /// id. An object the serving node cannot return — because it is not
-    /// found, was deleted, or has been pruned — fails only its own result,
-    /// which carries the server's error message. An object the server returns
-    /// but that cannot be decoded fails the whole call.
+    /// found, was deleted, or has been pruned — fails only its own item,
+    /// which reading throws with the server's error message. An object the
+    /// server returns but that cannot be decoded fails the whole call.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the reference and the object are returned.
@@ -136,9 +103,9 @@ impl GrpcClient {
         &self,
         object_ids: Vec<Arc<ObjectId>>,
         read_mask: Option<Vec<GrpcObjectField>>,
-    ) -> Result<Vec<GrpcObjectResult>> {
+    ) -> Result<GrpcObjectResults> {
         let ids = object_ids.iter().map(|id| ***id).collect::<Vec<_>>();
-        convert_objects(
+        GrpcObjectResults::new(
             self.client()
                 .objects(ids)
                 .read_mask(crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask))
@@ -151,9 +118,9 @@ impl GrpcClient {
     ///
     /// Results are returned in the same order as the input requests, one per
     /// request. An object the serving node cannot return — because it is not
-    /// found, was deleted, or has been pruned — fails only its own result,
-    /// which carries the server's error message. An object the server returns
-    /// but that cannot be decoded fails the whole call.
+    /// found, was deleted, or has been pruned — fails only its own item,
+    /// which reading throws with the server's error message. An object the
+    /// server returns but that cannot be decoded fails the whole call.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the reference and the object are returned.
@@ -162,7 +129,7 @@ impl GrpcClient {
         &self,
         requests: Vec<GrpcObjectRequest>,
         read_mask: Option<Vec<GrpcObjectField>>,
-    ) -> Result<Vec<GrpcObjectResult>> {
+    ) -> Result<GrpcObjectResults> {
         let refs = requests
             .iter()
             .map(|request| {
@@ -172,7 +139,7 @@ impl GrpcClient {
                 )
             })
             .collect::<Vec<_>>();
-        convert_objects(
+        GrpcObjectResults::new(
             self.client()
                 .objects_with_versions(refs)
                 .read_mask(crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask))
@@ -193,7 +160,7 @@ mod tests {
         },
     };
 
-    use super::{GrpcObject, GrpcObjectResult};
+    use super::{GrpcObject, GrpcObjectResults};
 
     fn object() -> iota_sdk::types::Object {
         let object_id = ObjectId::from([7; 32]);
@@ -278,11 +245,16 @@ mod tests {
     }
 
     #[test]
-    fn item_error_populates_only_the_error() {
-        let converted = GrpcObjectResult::try_from(Err(GrpcError::EmptyRequest)).unwrap();
+    fn item_error_fails_only_its_own_item() {
+        let results = GrpcObjectResults::new(vec![
+            Err(GrpcError::EmptyRequest),
+            Ok(proto::object::Object::default()),
+        ])
+        .unwrap();
 
-        assert!(converted.object.is_none());
-        assert!(converted.error.is_some());
+        assert_eq!(results.len(), 2);
+        assert!(results.get(0).is_err());
+        assert!(results.get(1).is_ok());
     }
 
     #[test]
@@ -290,6 +262,6 @@ mod tests {
         let mut value = proto::object::Object::default();
         value.bcs = Some(proto::bcs::BcsData::from(vec![0xff, 0xff]));
 
-        assert!(GrpcObjectResult::try_from(Ok(value)).is_err());
+        assert!(GrpcObjectResults::new(vec![Ok(value)]).is_err());
     }
 }
