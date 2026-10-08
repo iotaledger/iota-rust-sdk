@@ -158,9 +158,9 @@ pub enum GraphQLError {
     /// The subscription transport failed.
     #[error("subscription error: {0}")]
     Subscription(#[source] BoxError),
-    /// The subscription WebSocket handshake failed in a way reconnecting
-    /// cannot fix, such as a 4xx upgrade response or a malformed request. The
-    /// stream ends after this error.
+    /// The subscription failed in a way reconnecting cannot fix, such as a 4xx
+    /// upgrade response or the server closing the connection with a protocol
+    /// error. The stream ends after this error.
     #[error("subscription rejected: {0}")]
     SubscriptionRejected(#[source] BoxError),
     /// The subscription server dropped `count` payloads before the next one

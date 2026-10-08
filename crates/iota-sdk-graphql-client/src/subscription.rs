@@ -123,9 +123,7 @@ impl EventsSubscriptionBuilder {
                     // changes.
                     let mut current_tx: Option<String> = None;
                     let mapped = subscription.map(move |item| -> GraphQLResult<Outcome<Event>> {
-                        let data = subscription_response_to_result(
-                            item.map_err(GraphQLError::subscription)?,
-                        )?;
+                        let data = subscription_response_to_result(item.map_err(ws_client_error)?)?;
                         Ok(match data.events {
                             EventSubscriptionPayload::Event(event) => {
                                 let digest = event
@@ -204,9 +202,8 @@ impl TransactionsSubscriptionBuilder {
 
                     let mapped =
                         subscription.map(|item| -> GraphQLResult<Outcome<SignedTransaction>> {
-                            let data = subscription_response_to_result(
-                                item.map_err(GraphQLError::subscription)?,
-                            )?;
+                            let data =
+                                subscription_response_to_result(item.map_err(ws_client_error)?)?;
                             Ok(match data.transactions {
                                 TransactionBlockSubscriptionPayload::TransactionBlock(block) => {
                                     let cursor = block.digest.clone();
@@ -289,7 +286,25 @@ impl GraphQLClient {
         graphql_ws_client::Client::build(connection)
             .subscribe(operation)
             .await
-            .map_err(GraphQLError::subscription)
+            .map_err(ws_client_error)
+    }
+}
+
+/// Convert a `graphql-transport-ws` protocol error into a [`GraphQLError`],
+/// as [`GraphQLError::Subscription`] only if reconnecting can fix it.
+fn ws_client_error(error: graphql_ws_client::Error) -> GraphQLError {
+    use graphql_ws_client::Error;
+
+    match error {
+        // The connection dropped or could not be written to.
+        Error::Unknown(_) | Error::Send(_) => GraphQLError::subscription(error),
+        // WebSocket close codes and the `graphql-transport-ws` codes for a
+        // connection-init timeout and a server error.
+        Error::Close(code, _) if code < 4000 || matches!(code, 4408 | 4500 | 4504) => {
+            GraphQLError::subscription(error)
+        }
+        Error::Decode(_) => GraphQLError::Deserialization(error.into()),
+        _ => GraphQLError::SubscriptionRejected(error.into()),
     }
 }
 
@@ -318,30 +333,34 @@ async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection 
 }
 
 /// Convert a failed WebSocket handshake into a [`GraphQLError`], as
-/// [`GraphQLError::SubscriptionRejected`] if retrying would fail the same way.
+/// [`GraphQLError::Subscription`] only if reconnecting can fix it.
 #[cfg(not(target_arch = "wasm32"))]
 fn handshake_error(error: tokio_tungstenite::tungstenite::Error) -> GraphQLError {
-    use tokio_tungstenite::tungstenite::{Error, http::StatusCode};
+    use tokio_tungstenite::tungstenite::{Error, error::ProtocolError, http::StatusCode};
 
-    let permanent = match &error {
-        Error::Url(_) | Error::HttpFormat(_) | Error::Tls(_) => true,
-        // A failed TLS handshake, e.g. a `wss` URL for a server that only
-        // speaks plain HTTP, or an invalid certificate.
-        Error::Io(io) => io.kind() == std::io::ErrorKind::InvalidData,
+    let transient = match &error {
+        Error::ConnectionClosed
+        | Error::AlreadyClosed
+        | Error::Protocol(
+            ProtocolError::HandshakeIncomplete | ProtocolError::ResetWithoutClosingHandshake,
+        ) => true,
+        // `InvalidData` is a failed TLS handshake, e.g. a `wss` URL for a
+        // server that only speaks plain HTTP, or an invalid certificate.
+        Error::Io(io) => io.kind() != std::io::ErrorKind::InvalidData,
         Error::Http(response) => {
             let status = response.status();
-            status.is_client_error()
-                && !matches!(
+            status.is_server_error()
+                || matches!(
                     status,
                     StatusCode::REQUEST_TIMEOUT | StatusCode::TOO_MANY_REQUESTS
                 )
         }
         _ => false,
     };
-    if permanent {
-        GraphQLError::SubscriptionRejected(error.into())
-    } else {
+    if transient {
         GraphQLError::subscription(error)
+    } else {
+        GraphQLError::SubscriptionRejected(error.into())
     }
 }
 
@@ -453,8 +472,8 @@ mod tests {
     }
 
     #[test]
-    fn handshake_error_rejects_permanent_failures_only() {
-        use tokio_tungstenite::tungstenite::{Error, http::Response};
+    fn handshake_error_retries_transient_failures_only() {
+        use tokio_tungstenite::tungstenite::{Error, error::ProtocolError, http::Response};
 
         let upgrade_response = |status: u16| {
             handshake_error(Error::Http(Box::new(
@@ -462,14 +481,12 @@ mod tests {
             )))
         };
 
-        assert!(matches!(
-            upgrade_response(404),
-            GraphQLError::SubscriptionRejected(_)
-        ));
-        assert!(matches!(
-            upgrade_response(403),
-            GraphQLError::SubscriptionRejected(_)
-        ));
+        for status in [301, 403, 404] {
+            assert!(matches!(
+                upgrade_response(status),
+                GraphQLError::SubscriptionRejected(_)
+            ));
+        }
         for status in [408, 429, 502, 503] {
             assert!(matches!(
                 upgrade_response(status),
@@ -481,8 +498,51 @@ mod tests {
             GraphQLError::SubscriptionRejected(_)
         ));
         assert!(matches!(
-            handshake_error(Error::Io(std::io::ErrorKind::ConnectionRefused.into())),
-            GraphQLError::Subscription(_)
+            handshake_error(Error::Protocol(
+                ProtocolError::SecWebSocketAcceptKeyMismatch
+            )),
+            GraphQLError::SubscriptionRejected(_)
+        ));
+        for error in [
+            Error::Io(std::io::ErrorKind::ConnectionRefused.into()),
+            Error::Protocol(ProtocolError::HandshakeIncomplete),
+            Error::ConnectionClosed,
+        ] {
+            assert!(matches!(
+                handshake_error(error),
+                GraphQLError::Subscription(_)
+            ));
+        }
+    }
+
+    #[test]
+    fn ws_client_error_retries_transient_failures_only() {
+        use graphql_ws_client::Error;
+
+        for error in [
+            Error::Unknown("connection dropped".to_owned()),
+            Error::Send("broken pipe".to_owned()),
+            Error::Close(1006, String::new()),
+            Error::Close(4500, String::new()),
+        ] {
+            assert!(matches!(
+                ws_client_error(error),
+                GraphQLError::Subscription(_)
+            ));
+        }
+        for error in [
+            Error::Close(4400, String::new()),
+            Error::Close(4403, String::new()),
+            Error::Serializing(String::new()),
+        ] {
+            assert!(matches!(
+                ws_client_error(error),
+                GraphQLError::SubscriptionRejected(_)
+            ));
+        }
+        assert!(matches!(
+            ws_client_error(Error::Decode(String::new())),
+            GraphQLError::Deserialization(_)
         ));
     }
 
