@@ -53,6 +53,9 @@ define_query! {
 
 impl GetCheckpointQuery {
     /// Set the filter to apply to transactions.
+    ///
+    /// The server rejects the call unless the read mask includes
+    /// `TRANSACTIONS` or one of its sub-fields.
     pub fn transactions_filter(
         mut self,
         transactions_filter: grpc_filter::TransactionFilter,
@@ -62,6 +65,9 @@ impl GetCheckpointQuery {
     }
 
     /// Set the filter to apply to events.
+    ///
+    /// The server rejects the call unless the read mask includes `EVENTS` or
+    /// one of its sub-fields.
     pub fn events_filter(mut self, events_filter: grpc_filter::EventFilter) -> Self {
         self.events_filter = Some(events_filter);
         self
@@ -224,6 +230,9 @@ impl CheckpointsStreamQuery {
     }
 
     /// Set the filter to apply to transactions.
+    ///
+    /// The server rejects the call unless the read mask includes
+    /// `TRANSACTIONS` or one of its sub-fields.
     pub fn transactions_filter(
         mut self,
         transactions_filter: grpc_filter::TransactionFilter,
@@ -233,6 +242,9 @@ impl CheckpointsStreamQuery {
     }
 
     /// Set the filter to apply to events.
+    ///
+    /// The server rejects the call unless the read mask includes `EVENTS` or
+    /// one of its sub-fields.
     pub fn events_filter(mut self, events_filter: grpc_filter::EventFilter) -> Self {
         self.options.events_filter = Some(events_filter);
         self
@@ -296,6 +308,9 @@ impl CheckpointsStreamFilteredQuery {
     }
 
     /// Set the filter to apply to transactions.
+    ///
+    /// The server rejects the call unless the read mask includes
+    /// `TRANSACTIONS` or one of its sub-fields.
     pub fn transactions_filter(
         mut self,
         transactions_filter: grpc_filter::TransactionFilter,
@@ -305,6 +320,9 @@ impl CheckpointsStreamFilteredQuery {
     }
 
     /// Set the filter to apply to events.
+    ///
+    /// The server rejects the call unless the read mask includes `EVENTS` or
+    /// one of its sub-fields.
     pub fn events_filter(mut self, events_filter: grpc_filter::EventFilter) -> Self {
         self.options.events_filter = Some(events_filter);
         self
@@ -517,16 +535,23 @@ impl GrpcClient {
     ///
     /// ```no_run
     /// # use iota_sdk_grpc_client::{GrpcClient, CheckpointStreamItem};
+    /// # use iota_sdk_grpc_client::read_mask_fields::CheckpointResponseField;
     /// # use iota_grpc_types::v1::filter as grpc_filter;
     /// # use futures::StreamExt;
     /// # async fn example() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = GrpcClient::new_localnet()?;
     /// // At least one filter is required
-    /// let tx_filter = grpc_filter::TransactionFilter::default();
+    /// let tx_filter = grpc_filter::TransactionFilter::default()
+    ///     .with_execution_status(grpc_filter::ExecutionStatusFilter::default().with_success(true));
     /// let mut stream = client
     ///     .checkpoints_stream_filtered()
     ///     .start_sequence_number(0)
     ///     .transactions_filter(tx_filter)
+    ///     // A transactions filter requires transactions in the read mask
+    ///     .read_mask([
+    ///         CheckpointResponseField::CHECKPOINT_SUMMARY,
+    ///         CheckpointResponseField::TRANSACTIONS,
+    ///     ])
     ///     .await?;
     ///
     /// while let Some(item) = stream.body_mut().next().await {
