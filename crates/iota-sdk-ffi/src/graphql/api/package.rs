@@ -9,8 +9,8 @@ use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::MovePackagePage,
-        query_types::{MoveFunction, MoveModule, PaginationFilter},
+        pagination::GraphQLMovePackagePage,
+        query_types::{GraphQLMoveFunction, GraphQLMoveModule, GraphQLPaginationFilter},
     },
     types::{address::Address, object::MovePackage, version::Version},
 };
@@ -37,7 +37,8 @@ impl GraphQLClient {
     ) -> Result<Option<Arc<MovePackage>>> {
         Ok(self
             .client()
-            .package(**address, version.map(|v| **v))
+            .package(**address)
+            .version(version.map(|v| **v))
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -52,16 +53,14 @@ impl GraphQLClient {
         address: &Address,
         after_version: Option<Arc<Version>>,
         before_version: Option<Arc<Version>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<MovePackagePage> {
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLMovePackagePage> {
         Ok(self
             .client()
-            .package_versions(
-                **address,
-                pagination_filter.map(Into::into).unwrap_or_default(),
-                after_version.map(|v| **v),
-                before_version.map(|v| **v),
-            )
+            .package_versions(**address)
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
+            .after_version(after_version.map(|v| **v))
+            .before_version(before_version.map(|v| **v))
             .await?
             .map(Into::into)
             .into())
@@ -91,15 +90,14 @@ impl GraphQLClient {
         &self,
         after_checkpoint: Option<u64>,
         before_checkpoint: Option<u64>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<MovePackagePage> {
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLMovePackagePage> {
         Ok(self
             .client()
-            .packages(
-                pagination_filter.map(Into::into).unwrap_or_default(),
-                after_checkpoint,
-                before_checkpoint,
-            )
+            .packages()
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
+            .after_checkpoint(after_checkpoint)
+            .before_checkpoint(before_checkpoint)
             .await?
             .map(Into::into)
             .into())
@@ -114,10 +112,11 @@ impl GraphQLClient {
         module: &str,
         function: &str,
         version: Option<Arc<Version>>,
-    ) -> Result<Option<Arc<MoveFunction>>> {
+    ) -> Result<Option<Arc<GraphQLMoveFunction>>> {
         Ok(self
             .client()
-            .normalized_move_function(**package, module, function, version.map(|v| **v))
+            .normalized_move_function(**package, module, function)
+            .version(version.map(|v| **v))
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -139,24 +138,27 @@ impl GraphQLClient {
         package: &Address,
         module: &str,
         version: Option<Arc<Version>>,
-        pagination_filter_enums: Option<PaginationFilter>,
-        pagination_filter_friends: Option<PaginationFilter>,
-        pagination_filter_functions: Option<PaginationFilter>,
-        pagination_filter_structs: Option<PaginationFilter>,
-    ) -> Result<Option<MoveModule>> {
+        pagination_filter_enums: Option<GraphQLPaginationFilter>,
+        pagination_filter_friends: Option<GraphQLPaginationFilter>,
+        pagination_filter_functions: Option<GraphQLPaginationFilter>,
+        pagination_filter_structs: Option<GraphQLPaginationFilter>,
+    ) -> Result<Option<GraphQLMoveModule>> {
         Ok(self
             .client()
-            .normalized_move_module(
-                **package,
-                module,
-                version.map(|v| **v),
-                pagination_filter_enums.map(Into::into).unwrap_or_default(),
+            .normalized_move_module(**package, module)
+            .version(version.map(|v| **v))
+            .enums_pagination(pagination_filter_enums.map(Into::into).unwrap_or_default())
+            .friends_pagination(
                 pagination_filter_friends
                     .map(Into::into)
                     .unwrap_or_default(),
+            )
+            .functions_pagination(
                 pagination_filter_functions
                     .map(Into::into)
                     .unwrap_or_default(),
+            )
+            .structs_pagination(
                 pagination_filter_structs
                     .map(Into::into)
                     .unwrap_or_default(),

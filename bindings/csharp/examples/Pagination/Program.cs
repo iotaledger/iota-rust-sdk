@@ -17,8 +17,8 @@ class Program
         {
             Console.WriteLine($"Fetching page with cursor: {nextCursor}");
             var page = await client.Objects(
-                new ObjectFilter(Owner: address),
-                new PaginationFilter(Direction.Forward, nextCursor, 1)
+                new GraphQlObjectFilter(Owner: address),
+                new GraphQlPaginationFilter(GraphQlDirection.Forward, nextCursor, 1)
             );
             allObjects.AddRange(page.Data);
 

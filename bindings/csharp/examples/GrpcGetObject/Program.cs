@@ -14,7 +14,7 @@ class Program
         // `Objects` is batched: it takes a list of ids and returns one result per
         // id, in the same order, carrying either the object or the error for that
         // id. The default read mask returns the reference and the BCS-decoded
-        // object; pass `readMask: new ObjectField[] { new ObjectField.Reference() }`
+        // object; pass `readMask: new GrpcObjectField[] { new GrpcObjectField.Reference() }`
         // to skip the object.
         var result = (await client.Objects(new[] { objectId }))[0];
         if (result.Error != null) throw new InvalidOperationException($"Failed to get object: {result.Error}");

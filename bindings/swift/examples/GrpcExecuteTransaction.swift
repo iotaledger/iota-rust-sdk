@@ -18,9 +18,10 @@ struct GrpcExecuteTransactionExample {
 
     // Request funds from faucet (the faucet client relies on GraphQL to await
     // finalization)
+    let graphQlClient = try GraphQlClient.newLocalnet()
     let faucet = FaucetClient.newLocalnet()
     _ = try await faucet.requestAndWaitForFinalized(
-      address: senderAddress, client: GraphQlClient.newLocalnet())
+      address: senderAddress, client: graphQlClient)
 
     let client = try GrpcClient.newLocalnet()
 

@@ -15,10 +15,13 @@
 //! `pub mod`. Generic Move types stay generic in Rust (with a
 //! `PhantomData<T>` placeholder for phantom parameters).
 
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
+
 #[macro_use]
 mod macros;
 
 mod packages;
+pub use iota_types;
 pub use packages::{iota_framework, iota_system, move_stdlib, stardust};
 
 // The shape machinery (this module, the `MoveShape` derives on every
@@ -104,7 +107,7 @@ pub enum FromObjectError {
     WrongType,
     /// BCS decoding of the struct contents failed.
     #[error("bcs decoding failed: {0}")]
-    Bcs(#[from] bcs::Error),
+    Bcs(#[from] iota_types::BcsError),
 }
 
 /// Decode the BCS contents of `object`, provided it is a Move struct tagged
@@ -120,7 +123,7 @@ fn decode_move_struct<T: serde::de::DeserializeOwned>(
     if move_struct.struct_tag() != expected {
         return Err(FromObjectError::WrongType);
     }
-    Ok(bcs::from_bytes(move_struct.contents())?)
+    Ok(bcs::from_bytes(move_struct.contents()).map_err(iota_types::BcsError::new)?)
 }
 
 #[cfg(all(test, feature = "serde"))]

@@ -17,7 +17,10 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	owner, err := iota_sdk.AddressFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 	if err != nil {
@@ -25,7 +28,7 @@ func main() {
 	}
 
 	stakedIotaType := "0x3::staking_pool::StakedIota"
-	page, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType, Owner: &owner}, nil)
+	page, err := client.Objects(&iota_sdk.GraphQlObjectFilter{TypeTag: &stakedIotaType, Owner: &owner}, nil)
 	if err != nil {
 		log.Fatalf("Failed to fetch StakedIota objects: %v", err)
 	}

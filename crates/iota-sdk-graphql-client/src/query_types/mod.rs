@@ -22,72 +22,79 @@ mod service_config;
 mod subscriptions;
 mod transaction;
 
-pub use active_validators::{
-    ActiveValidatorsArgs, ActiveValidatorsQuery, EpochValidator, Validator, ValidatorConnection,
-    ValidatorCredentials, ValidatorSetQuery,
+pub(crate) use active_validators::{ActiveValidatorsArgs, ActiveValidatorsQueryFragment};
+pub use active_validators::{Validator, ValidatorCredentials};
+pub(crate) use balance::{BalanceArgs, BalanceQueryFragment};
+pub(crate) use chain::ChainIdentifierQueryFragment;
+pub(crate) use checkpoint::{
+    CheckpointArgs, CheckpointId, CheckpointQueryFragment, CheckpointTotalTxQueryFragment,
+    CheckpointsArgs, CheckpointsQueryFragment,
 };
-pub use balance::{Balance, BalanceArgs, BalanceQuery, Owner};
-pub use chain::ChainIdentifierQuery;
-pub use checkpoint::{
-    CheckpointArgs, CheckpointId, CheckpointQuery, CheckpointTotalTxQuery, CheckpointsArgs,
-    CheckpointsQuery,
-};
-pub use coin::{CoinMetadata, CoinMetadataArgs, CoinMetadataQuery};
+pub use coin::CoinMetadata;
+pub(crate) use coin::{CoinMetadataArgs, CoinMetadataQueryFragment};
 use cynic::impl_scalar;
-pub use dry_run::{
-    DryRunArgs, DryRunEffect, DryRunMutation, DryRunQuery, DryRunResult, DryRunReturn, GasCoin,
-    Input, ObjectRef, ResultArg, TransactionArgument, TransactionMetadata,
+pub(crate) use dry_run::{
+    DryRunArgs, DryRunEffect, DryRunMutation, DryRunQueryFragment, DryRunReturn, GasCoin,
+    TransactionArgument,
 };
-pub use dynamic_fields::{
-    DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQuery,
-    DynamicFieldsOwnerQuery, DynamicObjectFieldQuery,
+pub use dry_run::{ObjectRef, TransactionMetadata};
+pub(crate) use dynamic_fields::{
+    DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName, DynamicFieldQueryFragment,
+    DynamicFieldsOwnerQueryFragment, DynamicObjectFieldQueryFragment,
 };
-pub use epoch::{Epoch, EpochArgs, EpochQuery, EpochSummaryQuery, ValidatorSet};
-pub use events::{Event, EventConnection, EventFilter, EventsQuery, EventsQueryArgs};
-pub use execute_transaction::{ExecuteTransactionArgs, ExecuteTransactionQuery, ExecutionResult};
-pub use iota_names::{
-    IotaNamesAddressDefaultNameQuery, IotaNamesAddressRegistrationsQuery, IotaNamesDefaultNameArgs,
-    IotaNamesDefaultNameQuery, IotaNamesRegistrationsArgs, IotaNamesRegistrationsQuery,
-    NameRegistration, NameRegistrationConnection, ResolveIotaNamesAddressArgs,
-    ResolveIotaNamesAddressQuery,
+pub use epoch::{Epoch, ValidatorSet};
+pub(crate) use epoch::{EpochArgs, EpochQueryFragment, EpochSummaryQueryFragment};
+pub use events::{Event, EventFilter};
+pub(crate) use events::{EventsQueryArgs, EventsQueryFragment};
+pub(crate) use execute_transaction::{ExecuteTransactionArgs, ExecuteTransactionQueryFragment};
+pub(crate) use iota_names::{
+    IotaNamesAddressDefaultNameQueryFragment, IotaNamesAddressRegistrationsQueryFragment,
+    IotaNamesDefaultNameArgs, IotaNamesDefaultNameQueryFragment, IotaNamesRegistrationsArgs,
+    IotaNamesRegistrationsQueryFragment, ResolveIotaNamesAddressArgs,
+    ResolveIotaNamesAddressQueryFragment,
 };
 use iota_types::{Address, ObjectId};
-pub use move_view_call::{MoveViewCallArgs, MoveViewCallQuery, MoveViewResult};
-pub use normalized_move::{
-    MoveAbility, MoveEnum, MoveEnumConnection, MoveEnumVariant, MoveField, MoveFunction,
-    MoveFunctionConnection, MoveFunctionTypeParameter, MoveModule, MoveModuleConnection,
-    MoveModuleQuery, MoveStructConnection, MoveStructQuery, MoveStructTypeParameter,
-    MoveVisibility, NormalizedMoveFunctionQuery, NormalizedMoveFunctionQueryArgs,
-    NormalizedMoveModuleQuery, NormalizedMoveModuleQueryArgs, OpenMoveType,
+pub use move_view_call::MoveViewResult;
+pub(crate) use move_view_call::{MoveViewCallArgs, MoveViewCallQueryFragment};
+pub(crate) use normalized_move::{
+    MoveAbility, MoveEnum, MoveEnumVariant, MoveField, MoveFunction, MoveFunctionTypeParameter,
+    MoveModule, MoveModuleIdQueryFragment, MoveStructQueryFragment, MoveStructTypeParameter,
+    MoveVisibility, NormalizedMoveFunctionQueryArgs, NormalizedMoveFunctionQueryFragment,
+    NormalizedMoveModuleQueryArgs, NormalizedMoveModuleQueryFragment, OpenMoveType,
 };
-pub use object::{
-    ObjectFilter, ObjectKey, ObjectQuery, ObjectQueryArgs, ObjectsQuery, ObjectsQueryArgs,
+pub use normalized_move::{MoveModuleQueryFragment, MovePackageAddress};
+pub use object::ObjectFilter;
+pub(crate) use object::{
+    MoveObjectContentsBcsQueryFragment, MoveObjectContentsJsonQueryFragment, ObjectQueryArgs,
+    ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
 };
-pub use packages::{
-    LatestPackageQuery, MovePackageConnection, MovePackageQuery, MovePackageVersionFilter,
-    PackageArgs, PackageCheckpointFilter, PackageQuery, PackageVersionsArgs, PackageVersionsQuery,
-    PackagesQuery, PackagesQueryArgs,
+pub(crate) use packages::{
+    LatestPackageQueryFragment, MovePackageVersionFilter, PackageArgs, PackageCheckpointFilter,
+    PackageQueryFragment, PackageVersionsArgs, PackageVersionsQueryFragment, PackagesQueryArgs,
+    PackagesQueryFragment,
 };
-pub use protocol_config::{
-    ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigQuery, ProtocolConfigs,
-    ProtocolVersionArgs,
-};
+pub use protocol_config::{ProtocolConfigAttr, ProtocolConfigFeatureFlag, ProtocolConfigs};
+pub(crate) use protocol_config::{ProtocolConfigQueryFragment, ProtocolVersionArgs};
 use serde_json::Value as JsonValue;
-pub use service_config::{Feature, ServiceConfig, ServiceConfigQuery};
-pub use subscriptions::{
-    EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs, Lagged,
-    SubscriptionEvent, SubscriptionEventFilter, SubscriptionTransactionBlock,
-    SubscriptionTransactionFilter, TransactionBlockSubscriptionPayload, TransactionsSubscription,
-    TransactionsSubscriptionArgs,
+pub(crate) use service_config::ServiceConfigQueryFragment;
+pub use service_config::{Feature, ServiceConfig};
+pub(crate) use subscriptions::{
+    EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs,
+    TransactionBlockSubscriptionPayload, TransactionsSubscription, TransactionsSubscriptionArgs,
+};
+pub use subscriptions::{SubscriptionEventFilter, SubscriptionTransactionFilter};
+pub(crate) use transaction::{
+    AddressTransactionBlocksQueryFragment, AddressTransactionsQueryArgs,
+    AddressTransactionsQueryFragment, TransactionBlockArgs,
+    TransactionBlockCheckpointQueryFragment, TransactionBlockEffectsQueryFragment,
+    TransactionBlockIndexedQueryFragment, TransactionBlockQueryFragment,
+    TransactionBlockWithEffectsQueryFragment, TransactionBlocksEffectsQueryFragment,
+    TransactionBlocksQueryArgs, TransactionBlocksQueryFragment,
+    TransactionBlocksWithEffectsQueryFragment,
 };
 pub use transaction::{
-    AddressTransactionBlocksQuery, AddressTransactionRelationship, AddressTransactionsQuery,
-    AddressTransactionsQueryArgs, TransactionBlock, TransactionBlockArgs,
-    TransactionBlockCheckpointQuery, TransactionBlockEffectsQuery, TransactionBlockFilter,
-    TransactionBlockIndexedQuery, TransactionBlockKindInput, TransactionBlockQuery,
-    TransactionBlockWithEffects, TransactionBlockWithEffectsQuery, TransactionBlocksEffectsQuery,
-    TransactionBlocksQuery, TransactionBlocksQueryArgs, TransactionBlocksWithEffectsQuery,
-    TransactionsFilter, TransactionsSelector,
+    AddressTransactionRelationship, TransactionBlockKindInput, TransactionsFilter,
+    TransactionsSelector,
 };
 
 use crate::error;
@@ -138,13 +145,13 @@ pub struct MoveObject {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveObject")]
-pub struct MoveObjectContents {
+pub(crate) struct MoveObjectContents {
     pub contents: Option<MoveValue>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "MoveValue")]
-pub struct MoveValue {
+pub(crate) struct MoveValue {
     #[cynic(rename = "type")]
     pub move_type: MoveType,
     pub bcs: Base64,

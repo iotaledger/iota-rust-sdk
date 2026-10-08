@@ -7,7 +7,7 @@ use std::{
     string::FromUtf8Error,
 };
 
-use cynic::GraphQlError;
+use cynic::serde::Deserialize;
 use iota_types::{
     AddressParseError, DigestParseError, TypeParseError, TypeTag, iota_names::error::IotaNamesError,
 };
@@ -36,7 +36,25 @@ fn truncated_body(bytes: &[u8]) -> String {
     body
 }
 
-fn display_graphql_errors(errors: &[GraphQlError]) -> String {
+/// A GraphQL error as reported by the server, with its [`ErrorExtensions`]
+/// decoded.
+pub type QueryError = cynic::GraphQlError<ErrorExtensions>;
+
+/// The `extensions` object of a GraphQL error returned by the server.
+#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq)]
+#[serde(crate = "cynic::serde")]
+#[non_exhaustive]
+pub struct ErrorExtensions {
+    /// Machine-readable error kind, e.g. `BAD_USER_INPUT`.
+    pub code: Option<String>,
+}
+
+/// Convert an error whose extensions were not decoded; `code` is `None`.
+pub(crate) fn query_error(error: cynic::GraphQlError) -> QueryError {
+    QueryError::new(error.message, error.locations, error.path, None)
+}
+
+fn display_graphql_errors(errors: &[QueryError]) -> String {
     errors
         .iter()
         .map(|e| e.to_string())
@@ -82,9 +100,10 @@ pub enum GraphQLError {
         #[source]
         source: serde_json::Error,
     },
-    /// The server returned errors for the query.
+    /// The server returned errors for the query. The server sends no
+    /// [`ErrorExtensions::code`] for subscription errors.
     #[error("query error: [{}]", display_graphql_errors(.0))]
-    Query(Vec<GraphQlError>),
+    Query(Vec<QueryError>),
     /// The response carried neither data nor errors.
     #[error("empty response: the server returned neither data nor errors")]
     EmptyResponse,
@@ -228,8 +247,8 @@ impl GraphQLError {
     }
 }
 
-impl From<bcs::Error> for GraphQLError {
-    fn from(error: bcs::Error) -> Self {
+impl From<iota_types::BcsError> for GraphQLError {
+    fn from(error: iota_types::BcsError) -> Self {
         Self::Deserialization(error.into())
     }
 }
@@ -258,12 +277,6 @@ impl From<base64ct::Error> for GraphQLError {
     }
 }
 
-impl From<chrono::ParseError> for GraphQLError {
-    fn from(error: chrono::ParseError) -> Self {
-        Self::Parse(error.into())
-    }
-}
-
 impl From<DigestParseError> for GraphQLError {
     fn from(error: DigestParseError) -> Self {
         Self::Parse(error.into())
@@ -288,19 +301,6 @@ impl From<FromUtf8Error> for GraphQLError {
     }
 }
 
-#[cfg(not(target_arch = "wasm32"))]
-impl From<tokio_tungstenite::tungstenite::Error> for GraphQLError {
-    fn from(error: tokio_tungstenite::tungstenite::Error) -> Self {
-        Self::Subscription(error.into())
-    }
-}
-
-impl From<graphql_ws_client::Error> for GraphQLError {
-    fn from(error: graphql_ws_client::Error) -> Self {
-        Self::Subscription(error.into())
-    }
-}
-
 #[cfg(feature = "move-types")]
 impl From<iota_move_types::FromObjectError> for GraphQLError {
     fn from(error: iota_move_types::FromObjectError) -> Self {
@@ -308,14 +308,7 @@ impl From<iota_move_types::FromObjectError> for GraphQLError {
     }
 }
 
-#[cfg(target_arch = "wasm32")]
-impl From<ws_stream_wasm::WsErr> for GraphQLError {
-    fn from(error: ws_stream_wasm::WsErr) -> Self {
-        Self::Subscription(error.into())
-    }
-}
-
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use super::*;
 
@@ -374,7 +367,9 @@ mod tests {
     fn chain_formatters_repeat_the_wrapped_message() {
         use std::error::Error as _;
 
-        let error = GraphQLError::from(bcs::from_bytes::<u64>(&[]).unwrap_err());
+        let error = GraphQLError::from(iota_types::BcsError::new(
+            bcs::from_bytes::<u64>(&[]).unwrap_err(),
+        ));
 
         assert_eq!(
             error.to_string(),

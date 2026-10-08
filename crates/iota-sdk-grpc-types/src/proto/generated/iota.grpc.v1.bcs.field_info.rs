@@ -17,6 +17,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for BcsData {}
     impl MessageFields for BcsData {
         const FIELDS: &'static [&'static MessageField] = &[Self::DATA_FIELD];
     }

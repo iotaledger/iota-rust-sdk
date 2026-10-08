@@ -18,8 +18,8 @@ use reqwest::Url;
 
 use crate::{
     GraphQLClient,
-    client::response_to_err,
-    error::{GraphQLError, GraphQLResult},
+    client::response_to_result,
+    error::{GraphQLError, GraphQLResult, query_error},
     query_types::{
         Event, EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs,
         SubscriptionEventFilter, SubscriptionTransactionFilter,
@@ -47,6 +47,18 @@ enum Outcome<T> {
     /// A payload that carries nothing to yield (unknown union variant or an
     /// empty response).
     Skip,
+}
+
+/// Convert a subscription response to a `Result`, surfacing any `errors` as a
+/// query error. The server sends no error extensions on subscriptions, so the
+/// errors carry no `code`.
+fn subscription_response_to_result<T>(response: cynic::GraphQlResponse<T>) -> GraphQLResult<T> {
+    response_to_result(cynic::GraphQlResponse {
+        data: response.data,
+        errors: response
+            .errors
+            .map(|errors| errors.into_iter().map(query_error).collect()),
+    })
 }
 
 impl GraphQLClient {
@@ -82,7 +94,9 @@ impl GraphQLClient {
                     // changes.
                     let mut current_tx: Option<String> = None;
                     let mapped = subscription.map(move |item| -> GraphQLResult<Outcome<Event>> {
-                        let data = response_to_err(item?)?;
+                        let data = subscription_response_to_result(
+                            item.map_err(GraphQLError::subscription)?,
+                        )?;
                         Ok(match data.events {
                             EventSubscriptionPayload::Event(event) => {
                                 let digest = event.transaction_digest();
@@ -140,7 +154,9 @@ impl GraphQLClient {
 
                     let mapped =
                         subscription.map(|item| -> GraphQLResult<Outcome<SignedTransaction>> {
-                            let data = response_to_err(item?)?;
+                            let data = subscription_response_to_result(
+                                item.map_err(GraphQLError::subscription)?,
+                            )?;
                             Ok(match data.transactions {
                                 TransactionBlockSubscriptionPayload::TransactionBlock(block) => {
                                     let cursor = block.digest.clone();
@@ -190,9 +206,10 @@ impl GraphQLClient {
         Operation: graphql_ws_client::graphql::GraphqlOperation + Unpin + Send + 'static,
     {
         let connection = connect(&self.ws_url()?).await?;
-        Ok(graphql_ws_client::Client::build(connection)
+        graphql_ws_client::Client::build(connection)
             .subscribe(operation)
-            .await?)
+            .await
+            .map_err(GraphQLError::subscription)
     }
 }
 
@@ -206,18 +223,25 @@ impl GraphQLClient {
 async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection + Send + 'static> {
     use tokio_tungstenite::tungstenite::{client::IntoClientRequest, http::HeaderValue};
 
-    let mut request = url.as_str().into_client_request()?;
+    let mut request = url
+        .as_str()
+        .into_client_request()
+        .map_err(GraphQLError::subscription)?;
     request.headers_mut().insert(
         "Sec-WebSocket-Protocol",
         HeaderValue::from_static(WS_PROTOCOL),
     );
-    let (connection, _response) = tokio_tungstenite::connect_async(request).await?;
+    let (connection, _response) = tokio_tungstenite::connect_async(request)
+        .await
+        .map_err(GraphQLError::subscription)?;
     Ok(connection)
 }
 
 #[cfg(target_arch = "wasm32")]
 async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection + Send + 'static> {
-    let connection = ws_stream_wasm::WsMeta::connect(url.as_str(), Some(vec![WS_PROTOCOL])).await?;
+    let connection = ws_stream_wasm::WsMeta::connect(url.as_str(), Some(vec![WS_PROTOCOL]))
+        .await
+        .map_err(GraphQLError::subscription)?;
     Ok(graphql_ws_client::ws_stream_wasm::Connection::new(connection).await)
 }
 
@@ -271,4 +295,45 @@ where
             backoff = (backoff * 2).min(MAX_BACKOFF);
         }
     })
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use cynic::{GraphQlError as CynicError, GraphQlErrorPathSegment, GraphQlResponse};
+
+    use super::*;
+
+    #[test]
+    fn errors_surface_as_query_errors_without_a_code() {
+        let response = GraphQlResponse {
+            data: None::<()>,
+            errors: Some(vec![CynicError::new(
+                "boom".to_owned(),
+                None,
+                Some(vec![GraphQlErrorPathSegment::Field("events".to_owned())]),
+                Some(Default::default()),
+            )]),
+        };
+
+        let GraphQLError::Query(errors) = subscription_response_to_result(response).unwrap_err()
+        else {
+            panic!("expected GraphQLError::Query");
+        };
+        assert_eq!(errors.len(), 1);
+        assert_eq!(errors[0].message, "boom");
+        assert_eq!(
+            errors[0].path,
+            Some(vec![GraphQlErrorPathSegment::Field("events".to_owned())])
+        );
+        assert_eq!(errors[0].extensions, None);
+    }
+
+    #[test]
+    fn data_without_errors_is_returned() {
+        let response = GraphQlResponse {
+            data: Some(1),
+            errors: None,
+        };
+        assert_eq!(subscription_response_to_result(response).unwrap(), 1);
+    }
 }

@@ -6,7 +6,6 @@ mod parse;
 
 mod identifier;
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization;
 mod struct_tag;
 mod type_tag;
@@ -36,41 +35,4 @@ pub enum TypeParseError {
     IdentifierMaxLengthExceeded { actual: usize },
     #[error(transparent)]
     Address(#[from] crate::AddressParseError),
-}
-
-impl winnow::error::ParserError<&str> for TypeParseError {
-    type Inner = Self;
-
-    fn from_input(input: &&str) -> Self {
-        Self::Parse {
-            input: (*input).to_owned(),
-            source: None,
-        }
-    }
-
-    fn into_inner(self) -> winnow::Result<Self::Inner, Self> {
-        Ok(self)
-    }
-}
-
-impl winnow::error::AddContext<&str> for TypeParseError {
-    fn add_context(
-        self,
-        _input: &&str,
-        _token_start: &<&str as winnow::stream::Stream>::Checkpoint,
-        _context: &'static str,
-    ) -> Self {
-        self
-    }
-}
-
-impl<E: std::error::Error + Send + Sync + 'static> winnow::error::FromExternalError<&str, E>
-    for TypeParseError
-{
-    fn from_external_error(input: &&str, e: E) -> Self {
-        Self::Parse {
-            input: (*input).to_owned(),
-            source: Some(Box::new(e)),
-        }
-    }
 }

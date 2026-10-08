@@ -10,7 +10,10 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewLocalnet()
+	client, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
 	owner := privateKey.PublicKey().DeriveAddress()
@@ -47,7 +50,7 @@ func main() {
 
 	// Unstake
 	stakedIotaType := iota_sdk.StructTagNewStakedIota().String()
-	stakedIotas, err := client.Objects(&iota_sdk.ObjectFilter{TypeTag: &stakedIotaType, Owner: &owner}, nil)
+	stakedIotas, err := client.Objects(&iota_sdk.GraphQlObjectFilter{TypeTag: &stakedIotaType, Owner: &owner}, nil)
 	if err != nil {
 		log.Fatalf("Failed to get staked iota: %v", err)
 	}

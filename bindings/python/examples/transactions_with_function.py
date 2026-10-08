@@ -9,7 +9,7 @@ import asyncio
 async def main():
     client = GraphQlClient.new_testnet()
     transactions = await client.transactions(
-        TransactionsFilter().with_function(
+        GraphQlTransactionsFilter().with_function(
             "0x3::iota_system::request_add_stake"),)
     for transaction in transactions.data:
         print("Digest:", transaction.transaction.digest())

@@ -8,7 +8,8 @@ use std::sync::Arc;
 use crate::{
     error::Result,
     graphql::{
-        client::GraphQLClient, pagination::NameRegistrationPage, query_types::PaginationFilter,
+        client::GraphQLClient, pagination::GraphQLNameRegistrationPage,
+        query_types::GraphQLPaginationFilter,
     },
     types::{
         address::Address,
@@ -33,11 +34,12 @@ impl GraphQLClient {
     pub async fn iota_names_registrations(
         &self,
         address: &Address,
-        pagination_filter: PaginationFilter,
-    ) -> Result<NameRegistrationPage> {
+        pagination_filter: GraphQLPaginationFilter,
+    ) -> Result<GraphQLNameRegistrationPage> {
         Ok(self
             .client()
-            .iota_names_registrations(**address, pagination_filter.into())
+            .iota_names_registrations(**address)
+            .pagination(pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -51,7 +53,8 @@ impl GraphQLClient {
     ) -> Result<Option<Arc<Name>>> {
         Ok(self
             .client()
-            .iota_names_default_name(**address, format.map(Into::into))
+            .iota_names_default_name(**address)
+            .format(format.map(Into::into))
             .await?
             .map(Into::into)
             .map(Arc::new))

@@ -30,7 +30,10 @@ func main() {
 		log.Fatalf("Failed to parse package id: %v", err)
 	}
 
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	// Fetch package metadata and version history.
 	packageOpt, err := client.Package(packageAddress, nil)
@@ -158,7 +161,7 @@ func main() {
 				hasKeyAbility := false
 				if structType.Abilities != nil {
 					for _, ability := range *structType.Abilities {
-						if ability == iota_sdk.MoveAbilityKey {
+						if ability == iota_sdk.GraphQlMoveAbilityKey {
 							hasKeyAbility = true
 							break
 						}
@@ -216,9 +219,9 @@ func stringPtr(value string) *string {
 	return &value
 }
 
-func forwardPage(cursor *string) *iota_sdk.PaginationFilter {
-	return &iota_sdk.PaginationFilter{
-		Direction: iota_sdk.DirectionForward,
+func forwardPage(cursor *string) *iota_sdk.GraphQlPaginationFilter {
+	return &iota_sdk.GraphQlPaginationFilter{
+		Direction: iota_sdk.GraphQlDirectionForward,
 		Cursor:    cursor,
 	}
 }
@@ -299,9 +302,9 @@ func printObjectSamples(client *iota_sdk.GraphQlClient, typeTag string, hasKeyAb
 
 	limit := int32(3)
 	objects, err := client.Objects(
-		&iota_sdk.ObjectFilter{TypeTag: stringPtr(typeTag)},
-		&iota_sdk.PaginationFilter{
-			Direction: iota_sdk.DirectionForward,
+		&iota_sdk.GraphQlObjectFilter{TypeTag: stringPtr(typeTag)},
+		&iota_sdk.GraphQlPaginationFilter{
+			Direction: iota_sdk.GraphQlDirectionForward,
 			Limit:     &limit,
 		},
 	)
@@ -365,10 +368,10 @@ func extractPolicy(contents string) (uint8, bool) {
 
 func resolveUpgradeCapID(client *iota_sdk.GraphQlClient, packageID *iota_sdk.ObjectId) (*iota_sdk.ObjectId, error) {
 	limit := int32(1)
-	filter := iota_sdk.NewTransactionsFilter().WithChangedObject(packageID)
+	filter := iota_sdk.NewGraphQlTransactionsFilter().WithChangedObject(packageID)
 	page, err := client.TransactionsEffects(
 		&filter,
-		&iota_sdk.PaginationFilter{Direction: iota_sdk.DirectionForward, Limit: &limit},
+		&iota_sdk.GraphQlPaginationFilter{Direction: iota_sdk.GraphQlDirectionForward, Limit: &limit},
 	)
 	if err != nil {
 		return nil, err
@@ -541,7 +544,7 @@ func usesUpgradeCapForMakeImmutable(tx *iota_sdk.Transaction, upgradeCapID *iota
 
 func wasPackagePublishedAsImmutable(client *iota_sdk.GraphQlClient, packageID *iota_sdk.ObjectId) (bool, error) {
 	var cursor *string
-	filter := iota_sdk.NewTransactionsFilter().WithChangedObject(packageID)
+	filter := iota_sdk.NewGraphQlTransactionsFilter().WithChangedObject(packageID)
 
 	for {
 		page, err := client.TransactionsDataEffects(
@@ -571,7 +574,7 @@ func wasPackagePublishedAsImmutable(client *iota_sdk.GraphQlClient, packageID *i
 
 func wasUpgradeCapUsedForMakeImmutable(client *iota_sdk.GraphQlClient, upgradeCapID *iota_sdk.ObjectId) (bool, error) {
 	var cursor *string
-	filter := iota_sdk.NewTransactionsFilter().WithInputObject(upgradeCapID)
+	filter := iota_sdk.NewGraphQlTransactionsFilter().WithInputObject(upgradeCapID)
 
 	for {
 		page, err := client.TransactionsDataEffects(

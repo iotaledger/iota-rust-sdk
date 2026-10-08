@@ -15,7 +15,7 @@ async def main():
     # `objects` is batched: it takes a list of ids and returns one result per
     # id, in the same order, carrying either the object or the error for that
     # id. The default read mask returns the reference and the BCS-decoded
-    # object; pass `read_mask=[ObjectField.REFERENCE()]` to skip the object.
+    # object; pass `read_mask=[GrpcObjectField.REFERENCE()]` to skip the object.
     result = (await client.objects([object_id]))[0]
     if result.error is not None:
         raise RuntimeError(f"Failed to get object: {result.error}")

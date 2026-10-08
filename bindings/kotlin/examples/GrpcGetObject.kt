@@ -16,7 +16,7 @@ fun main() = runBlocking {
         // `objects` is batched: it takes a list of ids and returns one result per
         // id, in the same order, carrying either the object or the error for that
         // id. The default read mask returns the reference and the BCS-decoded
-        // object; pass `readMask = listOf(ObjectField.Reference)` to skip the
+        // object; pass `readMask = listOf(GrpcObjectField.Reference)` to skip the
         // object.
         val result = client.objects(listOf(objectId))[0]
         result.error?.let { error("Failed to get object: $it") }

@@ -25,7 +25,7 @@ func main() {
 	// id, in the same order, carrying either the object or the error for that
 	// id. The default read mask returns the reference and the BCS-decoded
 	// object; pass a read mask like
-	// `[]iota_sdk.ObjectField{iota_sdk.ObjectFieldReference{}}` to skip the object.
+	// `[]iota_sdk.GrpcObjectField{iota_sdk.GrpcObjectFieldReference{}}` to skip the object.
 	results, err := client.Objects([]*iota_sdk.ObjectId{objectID}, nil)
 	if err != nil {
 		log.Fatalf("Failed to get objects: %v", err)

@@ -1,52 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! gRPC client for IOTA node operations.
-//!
-//! This crate provides a high-level client for interacting with IOTA nodes
-//! via gRPC. It wraps the low-level proto types and provides ergonomic APIs
-//! using SDK types from `iota_types`.
-//!
-//! # Example
-//!
-//! ```no_run
-//! use iota_sdk_grpc_client::{
-//!     GrpcClient,
-//!     read_mask_fields::{ObjectReadMask, TransactionReadMask},
-//! };
-//! use iota_types::{ObjectId, TransactionDigest};
-//!
-//! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
-//! let client = GrpcClient::new_localnet()?;
-//!
-//! // Get a transaction with the default field mask.
-//! // The batched reads return one result per request, so a transaction the
-//! // node cannot serve fails only its own slot.
-//! let digest: TransactionDigest = todo!();
-//! let txs = client
-//!     .transactions([digest], TransactionReadMask::default())
-//!     .await?;
-//! for tx in txs.body() {
-//!     match tx {
-//!         Ok(tx) => println!("Transaction digest: {:?}", tx.transaction()?.digest()?),
-//!         Err(e) => eprintln!("could not read transaction: {e}"),
-//!     }
-//! }
-//!
-//! // Get an object with the default field mask.
-//! let object_id: ObjectId = "0x2".parse()?;
-//! let objects = client
-//!     .objects([object_id], ObjectReadMask::default())
-//!     .await?;
-//! for object in objects.body() {
-//!     match object {
-//!         Ok(object) => println!("Object version: {:?}", object.object_reference()?.version()),
-//!         Err(e) => eprintln!("could not read object: {e}"),
-//!     }
-//! }
-//! # Ok(())
-//! # }
-//! ```
+#![doc = include_str!("../README.md")]
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 mod api;
 mod transaction_builder_client;
@@ -108,7 +64,7 @@ pub use api::{
 // Re-export types for convenience
 pub use api::{
     CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, GrpcError, GrpcResult,
-    MetadataEnvelope, Page, ProtocolError, ReadMask, RpcStatus,
+    MetadataEnvelope, Page, ProtocolError, RpcStatus,
     execution::simulate::SimulateTransactionInput,
 };
 // Re-export all read mask constants (endpoint defaults)
@@ -127,14 +83,29 @@ pub use api::{
 };
 // Re-export query builders for convenience
 pub use api::{
+    execution::{
+        execute::{ExecuteTransactionQuery, ExecuteTransactionsQuery},
+        simulate::{SimulateTransactionQuery, SimulateTransactionsQuery},
+        view::{ViewFunctionCallQuery, ViewFunctionCallsQuery},
+    },
+    ledger::{
+        checkpoints::{CheckpointsStreamFilteredQuery, CheckpointsStreamQuery, GetCheckpointQuery},
+        epochs::{GetEpochQuery, GetReferenceGasPriceQuery},
+        health::GetHealthQuery,
+        objects::{GetObjectReferencesQuery, GetObjectsQuery},
+        service_info::GetServiceInfoQuery,
+        transactions::GetTransactionsQuery,
+    },
     move_package::package_versions::ListPackageVersionsQuery,
     state::{
-        coins::GetCoinsQuery, dynamic_fields::ListDynamicFieldsQuery,
+        coin_info::GetCoinInfoQuery, coins::GetCoinsQuery, dynamic_fields::ListDynamicFieldsQuery,
         owned_objects::ListOwnedObjectsQuery,
     },
 };
 // Re-export typed read mask field enums
 pub use iota_grpc_types::read_mask_fields;
+pub use iota_grpc_types::{prost, prost_types, tonic};
+pub use iota_types;
 
 mod client;
 pub use client::{GrpcClient, InterceptedChannel};

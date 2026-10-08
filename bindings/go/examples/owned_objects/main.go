@@ -11,15 +11,18 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	address := iota_sdk.AddressZero()
 
-	objectFilter := iota_sdk.ObjectFilter{
+	objectFilter := iota_sdk.GraphQlObjectFilter{
 		Owner: &address,
 	}
-	paginationFilter := iota_sdk.PaginationFilter{
-		Direction: iota_sdk.DirectionForward,
+	paginationFilter := iota_sdk.GraphQlPaginationFilter{
+		Direction: iota_sdk.GraphQlDirectionForward,
 	}
 
 	objectsPage, err := client.Objects(&objectFilter, &paginationFilter)

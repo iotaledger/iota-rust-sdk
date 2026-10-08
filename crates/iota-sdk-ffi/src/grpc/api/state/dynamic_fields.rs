@@ -9,13 +9,13 @@ use iota_sdk::{grpc_client::read_mask_fields::DynamicFieldReadMask, grpc_types::
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::{client::GrpcClient, read_mask_fields::DynamicFieldField},
+    grpc::{client::GrpcClient, read_mask_fields::GrpcDynamicFieldField},
     types::object::{Object, ObjectId},
 };
 
 /// The kind of a dynamic field.
 #[derive(uniffi::Enum)]
-pub enum DynamicFieldKind {
+pub enum GrpcDynamicFieldKind {
     /// The kind of the dynamic field is unknown.
     Unknown,
     /// A dynamic field.
@@ -24,7 +24,7 @@ pub enum DynamicFieldKind {
     Object,
 }
 
-impl From<proto::dynamic_field::dynamic_field::DynamicFieldKind> for DynamicFieldKind {
+impl From<proto::dynamic_field::dynamic_field::DynamicFieldKind> for GrpcDynamicFieldKind {
     fn from(value: proto::dynamic_field::dynamic_field::DynamicFieldKind) -> Self {
         match value {
             proto::dynamic_field::dynamic_field::DynamicFieldKind::Field => Self::Field,
@@ -36,9 +36,9 @@ impl From<proto::dynamic_field::dynamic_field::DynamicFieldKind> for DynamicFiel
 
 /// A dynamic field of an object.
 #[derive(uniffi::Record)]
-pub struct DynamicField {
+pub struct GrpcDynamicField {
     /// The kind of the dynamic field.
-    pub kind: Option<DynamicFieldKind>,
+    pub kind: Option<GrpcDynamicFieldKind>,
     /// The id of the dynamic field's parent object.
     pub parent: Option<Arc<ObjectId>>,
     /// The id of the dynamic field object.
@@ -62,14 +62,14 @@ pub struct DynamicField {
     pub child_object: Option<Arc<Object>>,
 }
 
-impl TryFrom<&proto::dynamic_field::DynamicField> for DynamicField {
+impl TryFrom<&proto::dynamic_field::DynamicField> for GrpcDynamicField {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::dynamic_field::DynamicField) -> Result<Self> {
         Ok(Self {
             kind: value.kind.map(|kind| {
                 proto::dynamic_field::dynamic_field::DynamicFieldKind::try_from(kind)
-                    .map_or(DynamicFieldKind::Unknown, Into::into)
+                    .map_or(GrpcDynamicFieldKind::Unknown, Into::into)
             }),
             parent: value
                 .parent
@@ -117,9 +117,9 @@ impl TryFrom<&proto::dynamic_field::DynamicField> for DynamicField {
 
 /// A page of dynamic fields returned by the gRPC server.
 #[derive(uniffi::Record)]
-pub struct DynamicFieldPage {
+pub struct GrpcDynamicFieldPage {
     /// The dynamic fields returned in the page.
-    pub dynamic_fields: Vec<DynamicField>,
+    pub dynamic_fields: Vec<GrpcDynamicField>,
     /// Token to retrieve the next page. `None` when this is the last page.
     pub next_page_token: Option<Vec<u8>>,
 }
@@ -138,16 +138,18 @@ impl GrpcClient {
         parent: &ObjectId,
         page_size: Option<u32>,
         page_token: Option<Vec<u8>>,
-        read_mask: Option<Vec<DynamicFieldField>>,
-    ) -> Result<DynamicFieldPage> {
-        let query = self.client().dynamic_fields(
-            **parent,
-            page_size,
-            page_token.map(Into::into),
-            crate::grpc::api::read_mask::<DynamicFieldReadMask, _>(read_mask),
-        );
+        read_mask: Option<Vec<GrpcDynamicFieldField>>,
+    ) -> Result<GrpcDynamicFieldPage> {
+        let query = self
+            .client()
+            .dynamic_fields(**parent)
+            .page_size(page_size)
+            .page_token(page_token.map(Into::into))
+            .read_mask(crate::grpc::api::read_mask::<DynamicFieldReadMask, _>(
+                read_mask,
+            ));
         let page = query.await?.into_inner();
-        Ok(DynamicFieldPage {
+        Ok(GrpcDynamicFieldPage {
             dynamic_fields: page
                 .items
                 .iter()
@@ -167,14 +169,14 @@ impl GrpcClient {
         &self,
         parent: &ObjectId,
         limit: Option<u32>,
-        read_mask: Option<Vec<DynamicFieldField>>,
-    ) -> Result<Vec<DynamicField>> {
-        let query = self.client().dynamic_fields(
-            **parent,
-            None,
-            None,
-            crate::grpc::api::read_mask::<DynamicFieldReadMask, _>(read_mask),
-        );
+        read_mask: Option<Vec<GrpcDynamicFieldField>>,
+    ) -> Result<Vec<GrpcDynamicField>> {
+        let query =
+            self.client()
+                .dynamic_fields(**parent)
+                .read_mask(crate::grpc::api::read_mask::<DynamicFieldReadMask, _>(
+                    read_mask,
+                ));
         query
             .collect(limit)
             .await?

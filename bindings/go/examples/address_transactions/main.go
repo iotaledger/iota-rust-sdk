@@ -16,20 +16,23 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewLocalnet()
+	client, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	address, err := iota_sdk.AddressFromHex("0xa7c2cf9d8f8d95ff69d7a598c49c77acc36253f496f064a533ad306879b40bfa")
 	if err != nil {
 		log.Fatalf("Failed to parse address: %v", err)
 	}
 
-	sentFilter := iota_sdk.NewTransactionsFilter().WithSentAddress(address)
+	sentFilter := iota_sdk.NewGraphQlTransactionsFilter().WithSentAddress(address)
 	outgoing, err := client.Transactions(&sentFilter, nil)
 	if err != nil {
 		log.Fatalf("Failed to fetch outgoing transactions: %v", err)
 	}
 
-	recvFilter := iota_sdk.NewTransactionsFilter().WithRecvAddress(address)
+	recvFilter := iota_sdk.NewGraphQlTransactionsFilter().WithRecvAddress(address)
 	incoming, err := client.Transactions(&recvFilter, nil)
 	if err != nil {
 		log.Fatalf("Failed to fetch incoming transactions: %v", err)
