@@ -4,7 +4,6 @@
 
 //! Objects API implementation.
 
-use base64ct::Encoding;
 use cynic::QueryBuilder;
 use futures::Stream;
 use iota_types::{Object, ObjectId, Version};
@@ -13,15 +12,17 @@ use crate::{
     GraphQLClient,
     api::define_query,
     error::GraphQLResult,
-    pagination::{Direction, Page, PaginationFilter, PaginationFilterResponse},
+    pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
-        ObjectFilter, ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
+        MoveObjectContentsBcsQueryFragment, MoveObjectContentsJsonQueryFragment, ObjectFilter,
+        ObjectQueryArgs, ObjectQueryFragment, ObjectsQueryArgs, ObjectsQueryFragment,
     },
     streams::stream_paginated_query,
 };
 
 define_query! {
     /// Query for [`GraphQLClient::objects`]. Await it to send the request.
+    #[derive(Clone)]
     pub struct ListObjectsQuery {
         client: GraphQLClient,
         filter: Option<ObjectFilter>,
@@ -49,6 +50,13 @@ impl ListObjectsQuery {
     pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
         self.pagination = pagination;
         self
+    }
+
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<Object>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
     fn operation(
@@ -81,11 +89,8 @@ impl ListObjectsQuery {
             .nodes
             .iter()
             .map(|o| &o.bcs)
-            .filter_map(|b64| {
-                b64.as_ref()
-                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
-            })
-            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let objects = bcs
             .iter()
             .map(|b| bcs::from_bytes::<iota_types::Object>(b).map_err(iota_types::BcsError::new))
@@ -123,7 +128,7 @@ impl GetObjectQuery {
         let obj = response.object;
         let bcs = obj
             .and_then(|o| o.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?;
 
         let object = bcs
@@ -153,7 +158,7 @@ impl GetMoveObjectContentsQuery {
     }
 
     async fn send(self) -> GraphQLResult<Option<serde_json::Value>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+        let operation = MoveObjectContentsJsonQueryFragment::build(ObjectQueryArgs {
             object_id: self.object_id,
             version: self.version.map(|v| v.as_u64()),
         });
@@ -164,7 +169,7 @@ impl GetMoveObjectContentsQuery {
             .object
             .and_then(|o| o.as_move_object)
             .and_then(|o| o.contents)
-            .and_then(|mv| mv.json))
+            .map(|mv| mv.json))
     }
 }
 
@@ -187,41 +192,23 @@ impl GetMoveObjectContentsBcsQuery {
     }
 
     async fn send(self) -> GraphQLResult<Option<Vec<u8>>> {
-        let operation = ObjectQueryFragment::build(ObjectQueryArgs {
+        let operation = MoveObjectContentsBcsQueryFragment::build(ObjectQueryArgs {
             object_id: self.object_id,
             version: self.version.map(|v| v.as_u64()),
         });
 
         let response = self.client.run_query(&operation).await?;
 
-        Ok(response
+        response
             .object
             .and_then(|o| o.as_move_object)
             .and_then(|o| o.contents)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.bcs.0.as_str()))
-            .transpose()?)
+            .map(|bcs| crate::base64::decode(bcs.bcs.0.as_str()))
+            .transpose()
     }
 }
 
 impl GraphQLClient {
-    /// Return a stream of objects based on the (optional) object filter.
-    pub fn objects_stream(
-        &self,
-        filter: impl Into<Option<ObjectFilter>>,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = GraphQLResult<Object>> + '_ {
-        let filter = filter.into();
-        stream_paginated_query(
-            move |pag_filter| {
-                self.objects()
-                    .filter(filter.clone())
-                    .pagination(pag_filter)
-                    .into_future()
-            },
-            streaming_direction,
-        )
-    }
-
     /// Return an object based on the provided [`Address`](iota_types::Address).
     ///
     /// If the object does not exist (e.g., due to pruning), this will resolve
@@ -261,13 +248,10 @@ impl GraphQLClient {
 
         let response = self.run_query(&operation).await.unwrap();
 
-        Ok(response
+        response
             .object
-            .and_then(|o| {
-                o.bcs
-                    .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
-            })
-            .transpose()?)
+            .and_then(|o| o.bcs.map(|bcs| crate::base64::decode(bcs.0.as_str())))
+            .transpose()
     }
 
     /// Return the contents JSON of an object that is a Move object.
@@ -321,7 +305,7 @@ mod tests {
         assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
         assert_eq!(vars["version"], 3);
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsJsonQueryFragment", |client| async move {
             let _ = client
                 .move_object_contents(ObjectId::SYSTEM_STATE)
                 .version(Version::from_u64(4))
@@ -331,7 +315,7 @@ mod tests {
         assert_eq!(vars["objectId"], ObjectId::SYSTEM_STATE.to_string());
         assert_eq!(vars["version"], 4);
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsBcsQueryFragment", |client| async move {
             let _ = client
                 .move_object_contents_bcs(ObjectId::SYSTEM_STATE)
                 .version(Version::from_u64(5))
@@ -347,13 +331,13 @@ mod tests {
         .await;
         assert!(vars["version"].is_null());
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsJsonQueryFragment", |client| async move {
             let _ = client.move_object_contents(ObjectId::SYSTEM_STATE).await;
         })
         .await;
         assert!(vars["version"].is_null());
 
-        let vars = sent_variables("ObjectQueryFragment", |client| async move {
+        let vars = sent_variables("MoveObjectContentsBcsQueryFragment", |client| async move {
             let _ = client
                 .move_object_contents_bcs(ObjectId::SYSTEM_STATE)
                 .await;

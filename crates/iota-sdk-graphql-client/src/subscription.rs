@@ -22,8 +22,8 @@ use reqwest::Url;
 
 use crate::{
     GraphQLClient,
-    client::response_to_err,
-    error::{GraphQLError, GraphQLResult},
+    client::response_to_result,
+    error::{GraphQLError, GraphQLResult, query_error},
     query_types::{
         Event, EventSubscriptionPayload, EventsSubscription, EventsSubscriptionArgs,
         SubscriptionEventFilter, SubscriptionTransactionFilter,
@@ -53,41 +53,69 @@ enum Outcome<T> {
     Skip,
 }
 
-impl GraphQLClient {
-    /// Subscribe to a live stream of events matching the (optional) filter.
-    ///
-    /// The stream yields events as they arrive and reconnects automatically on
-    /// disconnect. `start_after` optionally resumes the stream from the
-    /// transaction immediately following the given transaction digest, which
-    /// should be the [`Event::transaction_digest`] of the last transaction
-    /// whose events were all processed — events of the transaction itself are
-    /// not emitted again. Thereafter the stream tracks its own resume point.
+/// Convert a subscription response to a `Result`, surfacing any `errors` as a
+/// query error. The server sends no error extensions on subscriptions, so the
+/// errors carry no `code`.
+fn subscription_response_to_result<T>(response: cynic::GraphQlResponse<T>) -> GraphQLResult<T> {
+    response_to_result(cynic::GraphQlResponse {
+        data: response.data,
+        errors: response
+            .errors
+            .map(|errors| errors.into_iter().map(query_error).collect()),
+    })
+}
+
+/// Subscription for [`GraphQLClient::events_subscription`]. Call
+/// [`subscribe`](Self::subscribe) to open it.
+#[must_use]
+pub struct EventsSubscriptionBuilder {
+    client: GraphQLClient,
+    filter: Option<SubscriptionEventFilter>,
+    start_after: Option<TransactionDigest>,
+}
+
+impl EventsSubscriptionBuilder {
+    /// Only stream the events that match `filter`.
+    pub fn filter(mut self, filter: impl Into<Option<SubscriptionEventFilter>>) -> Self {
+        self.filter = filter.into();
+        self
+    }
+
+    /// Resume from the transaction immediately following the given
+    /// transaction digest, which should be the [`Event::transaction_digest`]
+    /// of the last transaction whose events were all processed — events of the
+    /// transaction itself are not emitted again. Thereafter the stream tracks
+    /// its own resume point.
     ///
     /// A transaction counts as fully received only once an event from the next
     /// transaction arrives, so after a reconnect the events of the transaction
     /// that was being received when the connection dropped are yielded again.
+    pub fn start_after(mut self, start_after: impl Into<Option<TransactionDigest>>) -> Self {
+        self.start_after = start_after.into();
+        self
+    }
+
+    /// Open the subscription. The stream yields events as they arrive and
+    /// reconnects automatically on disconnect.
     ///
     /// Transport failures and [`GraphQLError::Lagged`] are yielded and the
     /// stream continues; any other error is yielded and ends the stream.
-    ///
-    /// Note: subscriptions are served over a WebSocket, which the node has to
-    /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
-    /// when it is available.
-    pub fn events_stream(
-        &self,
-        filter: impl Into<Option<SubscriptionEventFilter>>,
-        start_after: impl Into<Option<TransactionDigest>>,
-    ) -> impl Stream<Item = GraphQLResult<Event>> + Unpin + '_ {
-        let filter = filter.into();
+    pub fn subscribe(self) -> impl Stream<Item = GraphQLResult<Event>> + Unpin {
+        let Self {
+            client,
+            filter,
+            start_after,
+        } = self;
         reconnecting_subscription(
             move |cursor| {
                 let filter = filter.clone();
+                let client = client.clone();
                 async move {
                     let operation = EventsSubscription::build(EventsSubscriptionArgs {
                         start_after: cursor,
                         filter,
                     });
-                    let subscription = self.open_subscription(operation).await?;
+                    let subscription = client.open_subscription(operation).await?;
 
                     // Events from a single transaction arrive contiguously, so a transaction is
                     // only fully received once an event from the next one shows up. Advance the
@@ -95,7 +123,9 @@ impl GraphQLClient {
                     // changes.
                     let mut current_tx: Option<String> = None;
                     let mapped = subscription.map(move |item| -> GraphQLResult<Outcome<Event>> {
-                        let data = response_to_err(item.map_err(GraphQLError::subscription)?)?;
+                        let data = subscription_response_to_result(
+                            item.map_err(GraphQLError::subscription)?,
+                        )?;
                         Ok(match data.events {
                             EventSubscriptionPayload::Event(event) => {
                                 let digest = event
@@ -122,43 +152,61 @@ impl GraphQLClient {
                     Ok(mapped.boxed())
                 }
             },
-            start_after.into().map(|digest| digest.to_string()),
+            start_after.map(|digest| digest.to_string()),
         )
     }
+}
 
-    /// Subscribe to a live stream of transactions matching the (optional)
-    /// filter.
-    ///
-    /// The stream yields transactions as they arrive and reconnects
-    /// automatically on disconnect. `start_after` optionally resumes the stream
-    /// from the transaction immediately following the given digest; thereafter
-    /// the stream tracks its own resume point.
+/// Subscription for [`GraphQLClient::transactions_subscription`]. Call
+/// [`subscribe`](Self::subscribe) to open it.
+#[must_use]
+pub struct TransactionsSubscriptionBuilder {
+    client: GraphQLClient,
+    filter: Option<SubscriptionTransactionFilter>,
+    start_after: Option<TransactionDigest>,
+}
+
+impl TransactionsSubscriptionBuilder {
+    /// Only stream the transactions that match `filter`.
+    pub fn filter(mut self, filter: impl Into<Option<SubscriptionTransactionFilter>>) -> Self {
+        self.filter = filter.into();
+        self
+    }
+
+    /// Resume from the transaction immediately following the given digest;
+    /// thereafter the stream tracks its own resume point.
+    pub fn start_after(mut self, start_after: impl Into<Option<TransactionDigest>>) -> Self {
+        self.start_after = start_after.into();
+        self
+    }
+
+    /// Open the subscription. The stream yields transactions as they arrive
+    /// and reconnects automatically on disconnect.
     ///
     /// Transport failures and [`GraphQLError::Lagged`] are yielded and the
     /// stream continues; any other error is yielded and ends the stream.
-    ///
-    /// Note: subscriptions are served over a WebSocket, which the node has to
-    /// have enabled — `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
-    /// when it is available.
-    pub fn transactions_stream(
-        &self,
-        filter: impl Into<Option<SubscriptionTransactionFilter>>,
-        start_after: impl Into<Option<TransactionDigest>>,
-    ) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin + '_ {
-        let filter = filter.into();
+    pub fn subscribe(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
+        let Self {
+            client,
+            filter,
+            start_after,
+        } = self;
         reconnecting_subscription(
             move |cursor| {
                 let filter = filter.clone();
+                let client = client.clone();
                 async move {
                     let operation = TransactionsSubscription::build(TransactionsSubscriptionArgs {
                         start_after: cursor,
                         filter,
                     });
-                    let subscription = self.open_subscription(operation).await?;
+                    let subscription = client.open_subscription(operation).await?;
 
                     let mapped =
                         subscription.map(|item| -> GraphQLResult<Outcome<SignedTransaction>> {
-                            let data = response_to_err(item.map_err(GraphQLError::subscription)?)?;
+                            let data = subscription_response_to_result(
+                                item.map_err(GraphQLError::subscription)?,
+                            )?;
                             Ok(match data.transactions {
                                 TransactionBlockSubscriptionPayload::TransactionBlock(block) => {
                                     let cursor = block.digest.clone();
@@ -176,8 +224,36 @@ impl GraphQLClient {
                     Ok(mapped.boxed())
                 }
             },
-            start_after.into().map(|digest| digest.to_string()),
+            start_after.map(|digest| digest.to_string()),
         )
+    }
+}
+
+impl GraphQLClient {
+    /// Subscribe to a live stream of events.
+    ///
+    /// Note: subscriptions are served over a WebSocket, which the node has to
+    /// have enabled: `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
+    /// when it is available.
+    pub fn events_subscription(&self) -> EventsSubscriptionBuilder {
+        EventsSubscriptionBuilder {
+            client: self.clone(),
+            filter: None,
+            start_after: None,
+        }
+    }
+
+    /// Subscribe to a live stream of transactions.
+    ///
+    /// Note: subscriptions are served over a WebSocket, which the node has to
+    /// have enabled: `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
+    /// when it is available.
+    pub fn transactions_subscription(&self) -> TransactionsSubscriptionBuilder {
+        TransactionsSubscriptionBuilder {
+            client: self.clone(),
+            filter: None,
+            start_after: None,
+        }
     }
 
     /// Derive the WebSocket URL for subscriptions from the configured RPC URL,
@@ -348,6 +424,7 @@ fn is_transport_error(error: &GraphQLError) -> bool {
 mod tests {
     use std::cell::Cell;
 
+    use cynic::{GraphQlError as CynicError, GraphQlErrorPathSegment, GraphQlResponse};
     use futures::{StreamExt, stream};
 
     use super::*;
@@ -466,5 +543,39 @@ mod tests {
             *cursors.borrow(),
             [Some("start".to_owned()), Some("tx".to_owned())]
         );
+    }
+
+    #[test]
+    fn errors_surface_as_query_errors_without_a_code() {
+        let response = GraphQlResponse {
+            data: None::<()>,
+            errors: Some(vec![CynicError::new(
+                "boom".to_owned(),
+                None,
+                Some(vec![GraphQlErrorPathSegment::Field("events".to_owned())]),
+                Some(Default::default()),
+            )]),
+        };
+
+        let GraphQLError::Query(errors) = subscription_response_to_result(response).unwrap_err()
+        else {
+            panic!("expected GraphQLError::Query");
+        };
+        assert_eq!(errors.len(), 1);
+        assert_eq!(errors[0].message, "boom");
+        assert_eq!(
+            errors[0].path,
+            Some(vec![GraphQlErrorPathSegment::Field("events".to_owned())])
+        );
+        assert_eq!(errors[0].extensions, None);
+    }
+
+    #[test]
+    fn data_without_errors_is_returned() {
+        let response = GraphQlResponse {
+            data: Some(1),
+            errors: None,
+        };
+        assert_eq!(subscription_response_to_result(response).unwrap(), 1);
     }
 }

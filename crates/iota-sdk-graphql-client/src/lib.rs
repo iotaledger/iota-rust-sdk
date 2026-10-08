@@ -59,3 +59,15 @@ pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
 pub use reqwest;
+pub use subscription::{EventsSubscriptionBuilder, TransactionsSubscriptionBuilder};
+
+mod base64 {
+    use base64ct::Encoding;
+
+    use crate::error::{GraphQLError, GraphQLResult};
+
+    /// Decodes a base64 string from a response into bytes.
+    pub(crate) fn decode(input: &str) -> GraphQLResult<Vec<u8>> {
+        base64ct::Base64::decode_vec(input).map_err(|e| GraphQLError::Parse(e.into()))
+    }
+}
