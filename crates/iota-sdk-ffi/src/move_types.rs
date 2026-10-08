@@ -12,7 +12,7 @@
 //!   their embedded [`ValidatorSetV2`] / [`ValidatorSetV1`], [`ValidatorV1`],
 //!   [`ValidatorMetadataV1`], [`StakingPoolV1`], [`SystemParametersV1`], and
 //!   [`StorageFundV1`]), [`UnverifiedValidatorOperationCap`].
-//! - **Framework types** (`0x2`): [`IotaCoinMetadata`],
+//! - **Framework types** (`0x2`): [`CoinMetadata`], [`IotaCoinMetadata`],
 //!   [`ImmutableCoinMetadata`], [`Clock`], [`TimelockedIotaBalance`],
 //!   [`UpgradeCap`], [`Publisher`], [`Kiosk`], [`KioskOwnerCap`],
 //!   [`KioskExtension`], [`DenyList`], [`Random`] (with [`RandomInner`]),
@@ -912,6 +912,31 @@ crate::ffi_move_object! {
     }
 }
 
+crate::ffi_move_object_generic! {
+    /// A typed view of an on-chain `0x2::coin::CoinMetadata<T>` object.
+    CoinMetadata(iota_sdk::move_types::iota_framework::coin::CoinMetadata<()>) {
+        pub fn decimals(&self) -> u8 {
+            self.0.decimals
+        }
+
+        pub fn name(&self) -> String {
+            move_string_to_string(&self.0.name)
+        }
+
+        pub fn symbol(&self) -> String {
+            ascii_to_string(&self.0.symbol)
+        }
+
+        pub fn description(&self) -> String {
+            move_string_to_string(&self.0.description)
+        }
+
+        pub fn icon_url(&self) -> Option<String> {
+            self.0.icon_url.as_ref().map(url_to_string)
+        }
+    }
+}
+
 /// A typed view of a `0x2::coin_manager::ImmutableCoinMetadata<T>` — the
 /// frozen metadata fallback embedded in a `CoinManager`. Reachable only via
 /// `CoinManager::immutable_metadata`; it is not a standalone on-chain object.
@@ -1333,22 +1358,11 @@ crate::ffi_move_object_generic! {
         }
 
         /// The coin's `CoinMetadata`, if still held by the manager.
-        pub fn metadata(&self) -> Option<Arc<IotaCoinMetadata>> {
+        pub fn metadata(&self) -> Option<Arc<CoinMetadata>> {
             self.0
                 .metadata
                 .clone()
-                .map(|m| {
-                    Arc::new(IotaCoinMetadata(
-                        iota_sdk::move_types::iota_framework::coin::CoinMetadata::new(
-                            m.id,
-                            m.decimals,
-                            m.name,
-                            m.symbol,
-                            m.description,
-                            m.icon_url,
-                        ),
-                    ))
-                })
+                .map(|m| Arc::new(CoinMetadata(m)))
         }
 
         /// Frozen fallback metadata, used only if the original metadata has
