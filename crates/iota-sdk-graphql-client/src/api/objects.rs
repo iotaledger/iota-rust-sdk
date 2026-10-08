@@ -4,7 +4,6 @@
 
 //! Objects API implementation.
 
-use base64ct::Encoding;
 use cynic::QueryBuilder;
 use futures::Stream;
 use iota_types::{Object, ObjectId, Version};
@@ -82,11 +81,8 @@ impl ListObjectsQuery {
             .nodes
             .iter()
             .map(|o| &o.bcs)
-            .filter_map(|b64| {
-                b64.as_ref()
-                    .map(|b| base64ct::Base64::decode_vec(b.0.as_str()))
-            })
-            .collect::<Result<Vec<_>, base64ct::Error>>()?;
+            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let objects = bcs
             .iter()
             .map(|b| bcs::from_bytes::<iota_types::Object>(b).map_err(iota_types::BcsError::new))
@@ -124,7 +120,7 @@ impl GetObjectQuery {
         let obj = response.object;
         let bcs = obj
             .and_then(|o| o.bcs)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?;
 
         let object = bcs
@@ -195,12 +191,12 @@ impl GetMoveObjectContentsBcsQuery {
 
         let response = self.client.run_query(&operation).await?;
 
-        Ok(response
+        response
             .object
             .and_then(|o| o.as_move_object)
             .and_then(|o| o.contents)
-            .map(|bcs| base64ct::Base64::decode_vec(bcs.bcs.0.as_str()))
-            .transpose()?)
+            .map(|bcs| crate::base64::decode(bcs.bcs.0.as_str()))
+            .transpose()
     }
 }
 
@@ -262,13 +258,10 @@ impl GraphQLClient {
 
         let response = self.run_query(&operation).await.unwrap();
 
-        Ok(response
+        response
             .object
-            .and_then(|o| {
-                o.bcs
-                    .map(|bcs| base64ct::Base64::decode_vec(bcs.0.as_str()))
-            })
-            .transpose()?)
+            .and_then(|o| o.bcs.map(|bcs| crate::base64::decode(bcs.0.as_str())))
+            .transpose()
     }
 
     /// Return the contents JSON of an object that is a Move object.
