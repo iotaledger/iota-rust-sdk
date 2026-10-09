@@ -249,6 +249,8 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
                 "support for passkey is not enabled",
             )),
             #[cfg(feature = "passkey")]
+            // A configured verifier may also check the signer's address; the
+            // default one only checks the signature.
             UserSignature::PasskeyAuthenticator(authenticator) => self
                 .passkey_verifier()
                 .cloned()
