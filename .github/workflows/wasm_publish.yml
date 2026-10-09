@@ -104,13 +104,19 @@ jobs:
         working-directory: package
         # npm >= 11.6 refuses to publish a prerelease version without an
         # explicit --tag, so prereleases are published under `next` instead of
-        # the implicit `latest`.
+        # the implicit `latest`. Releases older than the current `latest` (from
+        # an iota-sdk/<major>.x branch) go under `v<major>-latest` so they
+        # don't replace it.
         run: |
           version=$(npm pkg get version | tr -d '"')
-          case "$version" in
-            *-*) echo "NPM_DIST_TAG=next" >> "$GITHUB_ENV" ;;
-            *) echo "NPM_DIST_TAG=latest" >> "$GITHUB_ENV" ;;
-          esac
+          latest=$(npm view "$(npm pkg get name | tr -d '"')" dist-tags.latest 2>/dev/null || true)
+          if [[ "$version" == *-* ]]; then
+            echo "NPM_DIST_TAG=next" >> "$GITHUB_ENV"
+          elif [ -n "$latest" ] && [ "$(printf '%s\n' "$latest" "$version" | sort -V | tail -n 1)" != "$version" ]; then
+            echo "NPM_DIST_TAG=v${version%%.*}-latest" >> "$GITHUB_ENV"
+          else
+            echo "NPM_DIST_TAG=latest" >> "$GITHUB_ENV"
+          fi
 
       - name: Publish to npm (dry-run)
         if: github.event_name == 'workflow_dispatch' && inputs.test_publish == true
