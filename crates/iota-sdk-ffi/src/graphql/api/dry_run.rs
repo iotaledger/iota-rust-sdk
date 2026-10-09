@@ -51,7 +51,7 @@ impl GraphQLClient {
     #[uniffi::method(default(skip_checks = false))]
     pub async fn dry_run_transaction_kind(
         &self,
-        transaction_kind: &TransactionKind,
+        transaction_kind: TransactionKind,
         transaction_metadata: GraphQLTransactionMetadata,
         skip_checks: bool,
     ) -> Result<GraphQLDryRunResult> {
@@ -74,7 +74,7 @@ impl GraphQLClient {
             .transpose()?;
         Ok(self
             .client()
-            .dry_run_transaction_kind(&transaction_kind.0)
+            .dry_run_transaction_kind(&transaction_kind.into())
             .set_if_some(metadata.sender, DryRunTransactionKindQuery::sender)
             .set_if_some(metadata.gas_budget, DryRunTransactionKindQuery::gas_budget)
             .set_if_some(metadata.gas_price, DryRunTransactionKindQuery::gas_price)
