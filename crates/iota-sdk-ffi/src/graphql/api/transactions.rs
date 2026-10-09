@@ -159,6 +159,10 @@ impl GraphQLClient {
     }
 
     /// Execute a transaction.
+    ///
+    /// If the wait fails, the error is returned although the transaction was
+    /// executed, and its effects are lost. To keep them, pass no `wait_for`
+    /// and call `wait_for_transaction` on the client afterwards.
     #[uniffi::method(default(wait_for = None))]
     pub async fn execute_transaction(
         &self,

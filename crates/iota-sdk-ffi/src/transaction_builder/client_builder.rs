@@ -479,6 +479,10 @@ macro_rules! client_transaction_builder {
             }
 
             /// Execute the transaction and optionally wait for finalization.
+            ///
+            /// If the wait fails, the error is returned although the transaction was
+            /// executed, and its effects are lost. To keep them, pass no `wait_for`
+            /// and call `wait_for_transaction` on the client afterwards.
             #[uniffi::method(default(wait_for = None))]
             pub async fn execute(
                 &self,
@@ -511,6 +515,10 @@ macro_rules! client_transaction_builder {
 
             /// Execute the transaction with both the sender's and the sponsor's
             /// signature, and optionally wait for finalization.
+            ///
+            /// If the wait fails, the error is returned although the transaction was
+            /// executed, and its effects are lost. To keep them, pass no `wait_for`
+            /// and call `wait_for_transaction` on the client afterwards.
             ///
             /// Use this when you hold the sponsor's key. The sponsor's address must be
             /// set with `sponsor`, which is also where the gas coins are drawn from.

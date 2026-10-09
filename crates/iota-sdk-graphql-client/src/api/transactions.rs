@@ -358,6 +358,10 @@ define_query! {
 impl ExecuteTransactionQuery {
     /// Wait for the executed transaction to be indexed or finalized before
     /// resolving.
+    ///
+    /// If the wait fails, the error is returned although the transaction was
+    /// executed, and its effects are lost. To keep them, don't set this and
+    /// call [`GraphQLClient::wait_for_transaction`] afterwards.
     pub fn wait_for(mut self, wait_for: WaitForTransaction) -> Self {
         self.wait_for = Some(wait_for);
         self

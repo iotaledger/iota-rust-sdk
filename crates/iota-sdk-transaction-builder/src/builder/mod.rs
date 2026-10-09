@@ -2026,6 +2026,12 @@ impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
 
 impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// Execute the transaction and optionally wait for finalization.
+    ///
+    /// If the wait fails, the error is returned although the transaction was
+    /// executed, and its effects are lost. To keep them, pass `None` and call
+    /// the client's
+    /// [`wait_for_transaction`](crate::TransactionBuilderExecutionClient::wait_for_transaction)
+    /// afterwards.
     pub async fn execute(
         mut self,
         signer: &impl TransactionSigner,
@@ -2151,6 +2157,12 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
 
     /// Execute the transaction with both the sender's and the sponsor's
     /// signature, and optionally wait for finalization.
+    ///
+    /// If the wait fails, the error is returned although the transaction was
+    /// executed, and its effects are lost. To keep them, pass `None` and call
+    /// the client's
+    /// [`wait_for_transaction`](crate::TransactionBuilderExecutionClient::wait_for_transaction)
+    /// afterwards.
     ///
     /// Use this when you hold the sponsor's key: both signatures are produced
     /// here and the transaction goes out through the client. The sponsor's
