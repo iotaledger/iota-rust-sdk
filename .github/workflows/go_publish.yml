@@ -127,11 +127,6 @@ jobs:
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY_FOR_GO_SDK }}
           fetch-depth: 0
 
-      - name: Download source and libraries archives
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          merge-multiple: true
-
       - name: Set version to input or release tag
         id: set-version
         run: |
@@ -143,12 +138,41 @@ jobs:
           version="${version#v}" # Remove leading 'v' if present
           echo "version=$version" >> $GITHUB_OUTPUT
 
+      # Releases older than the highest published major go to a `<major>.x`
+      # branch, created from that major's last tag, instead of the default branch.
+      - name: Select branch
+        id: select-branch
+        env:
+          VERSION: ${{ steps.set-version.outputs.version }}
+        run: |
+          major="${VERSION%%.*}"
+          highest=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
+          highest_major="${highest#v}"
+          highest_major="${highest_major%%.*}"
+          if [ -n "$highest" ] && [ "$major" -lt "$highest_major" ]; then
+            branch="$major.x"
+            if git ls-remote --exit-code --heads origin "$branch" > /dev/null; then
+              git checkout -B "$branch" "origin/$branch"
+            else
+              git checkout -b "$branch" "$(git tag -l "v$major.*" --sort=-v:refname | head -n 1)"
+            fi
+          else
+            branch=$(git rev-parse --abbrev-ref HEAD)
+          fi
+          echo "Pushing to $branch"
+          echo "branch=$branch" >> $GITHUB_OUTPUT
+
+      - name: Download source and libraries archives
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          merge-multiple: true
+
       - name: Tag the Go SDK
         run: |
           git config --global user.email github-actions@github.com
           git config --global user.name github-actions
           git add .
           git commit -m "Update Go SDK to version v${{ steps.set-version.outputs.version }}"
-          git push
+          git push origin "HEAD:refs/heads/${{ steps.select-branch.outputs.branch }}"
           git tag v${{ steps.set-version.outputs.version }} -m "v${{ steps.set-version.outputs.version }}"
           git push --tags
