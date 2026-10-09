@@ -1,0 +1,57 @@
+name: Create major branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      major:
+        type: string
+        required: true
+        description: The older iota-sdk major to create an iota-sdk/<major>.x branch for (e.g. 3).
+
+permissions:
+  contents: write
+
+jobs:
+  create-branch:
+    name: Create iota-sdk/${{ inputs.major }}.x
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: develop
+          fetch-depth: 0
+
+      # The branch starts from the major's last stable iota-sdk release, and
+      # only for majors develop has already moved past.
+      - name: Create the branch from the last release of the major
+        env:
+          MAJOR: ${{ inputs.major }}
+        run: |
+          if [[ ! "$MAJOR" =~ ^[0-9]+$ ]]; then
+            echo "::error::Major must be a number, not '$MAJOR'."
+            exit 1
+          fi
+          branch="iota-sdk/$MAJOR.x"
+
+          if git ls-remote --exit-code --heads origin "$branch" > /dev/null; then
+            echo "::error::$branch already exists."
+            exit 1
+          fi
+
+          develop_tag=$(git -c versionsort.suffix=- tag -l "iota-sdk-v*" --merged HEAD --sort=-v:refname | head -n 1)
+          develop_major="${develop_tag#iota-sdk-v}"
+          develop_major="${develop_major%%.*}"
+          if [ -z "$develop_tag" ] || [ "$MAJOR" -ge "$develop_major" ]; then
+            echo "::error::develop is at iota-sdk ${develop_major:-(unreleased)}.x; only older majors get a branch."
+            exit 1
+          fi
+
+          base=$(git -c versionsort.suffix=- tag -l "iota-sdk-v$MAJOR.*" --sort=-v:refname | { grep -v -- '-v[0-9.]*-' || true; } | head -n 1)
+          if [ -z "$base" ]; then
+            echo "::error::No stable iota-sdk $MAJOR.x release to branch from."
+            exit 1
+          fi
+
+          echo "Creating $branch from $base"
+          git push origin "$base^{commit}:refs/heads/$branch"
