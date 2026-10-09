@@ -113,6 +113,30 @@ pub mod string {
             Self { bytes }
         }
     }
+
+    impl TryFrom<String> for std::string::String {
+        type Error = std::string::FromUtf8Error;
+
+        fn try_from(value: String) -> Result<Self, Self::Error> {
+            Self::from_utf8(value.bytes)
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::String;
+
+        #[test]
+        fn utf8_bytes_convert() {
+            let converted = std::string::String::try_from(String::new("héllo".into()));
+            assert_eq!(converted.unwrap(), "héllo");
+        }
+
+        #[test]
+        fn invalid_utf8_is_rejected() {
+            assert!(std::string::String::try_from(String::new(vec![0xff, 0xfe])).is_err());
+        }
+    }
 }
 
 /// Types from `0x1::uq32_32`.
