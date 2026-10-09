@@ -4,7 +4,7 @@
 //! Network API implementation.
 
 use iota_sdk::graphql_client::{
-    GetProtocolConfigQuery, GetReferenceGasPriceQuery, ListActiveValidatorsQuery,
+    GetProtocolConfigQuery, GetReferenceGasPriceQuery, ListActiveValidatorsQuery, pagination::Page,
 };
 
 use crate::{
@@ -12,7 +12,7 @@ use crate::{
     graphql::{
         client::GraphQLClient,
         pagination::GraphQLValidatorPage,
-        query_types::{GraphQLPaginationFilter, GraphQLProtocolConfigs},
+        query_types::{GraphQLPaginationFilter, GraphQLProtocolConfigs, GraphQLValidator},
     },
     helpers::SetIfSome,
 };
@@ -59,13 +59,17 @@ impl GraphQLClient {
         epoch: Option<u64>,
         pagination_filter: Option<GraphQLPaginationFilter>,
     ) -> Result<GraphQLValidatorPage> {
-        Ok(self
+        let (page_info, validators) = self
             .client()
             .active_validators()
             .set_if_some(epoch, ListActiveValidatorsQuery::epoch_number)
             .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
-            .map(Into::into)
-            .into())
+            .into_parts();
+        let validators = validators
+            .into_iter()
+            .map(GraphQLValidator::try_from)
+            .collect::<Result<Vec<_>>>()?;
+        Ok(Page::new(page_info, validators).into())
     }
 }

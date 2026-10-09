@@ -732,42 +732,51 @@ pub struct GraphQLValidator {
     pub voting_power: Option<i32>,
 }
 
-impl From<iota_sdk::graphql_client::query_types::Validator> for GraphQLValidator {
-    fn from(value: iota_sdk::graphql_client::query_types::Validator) -> Self {
-        Self {
+impl TryFrom<iota_sdk::graphql_client::query_types::Validator> for GraphQLValidator {
+    type Error = SdkFfiError;
+
+    fn try_from(
+        value: iota_sdk::graphql_client::query_types::Validator,
+    ) -> Result<Self, Self::Error> {
+        Ok(Self {
             apy: value.apy,
             address: Arc::new(value.address.address.into()),
             commission_rate: value.commission_rate,
             credentials: value.credentials.map(Into::into),
             description: value.description,
             exchange_rates_size: value.exchange_rates_size,
-            gas_price: value.gas_price.map(|v| v.0.parse().unwrap()),
+            gas_price: value.gas_price.map(u64::try_from).transpose()?,
             name: value.name,
             image_url: value.image_url,
             next_epoch_commission_rate: value.next_epoch_commission_rate,
             next_epoch_credentials: value.next_epoch_credentials.map(Into::into),
-            next_epoch_gas_price: value.next_epoch_gas_price.map(|v| v.0.parse().unwrap()),
-            next_epoch_stake: value.next_epoch_stake.map(|v| v.0.parse().unwrap()),
+            next_epoch_gas_price: value.next_epoch_gas_price.map(u64::try_from).transpose()?,
+            next_epoch_stake: value.next_epoch_stake.map(u64::try_from).transpose()?,
             operation_cap: value
                 .operation_cap
-                .and_then(|o| o.bcs.map(|b| base64ct::Base64::decode_vec(&b.0).unwrap())),
+                .and_then(|o| o.bcs)
+                .map(|b| base64ct::Base64::decode_vec(&b.0))
+                .transpose()?,
             pending_pool_token_withdraw: value
                 .pending_pool_token_withdraw
-                .map(|v| v.0.parse().unwrap()),
-            pending_stake: value.pending_stake.map(|v| v.0.parse().unwrap()),
+                .map(u64::try_from)
+                .transpose()?,
+            pending_stake: value.pending_stake.map(u64::try_from).transpose()?,
             pending_total_iota_withdraw: value
                 .pending_total_iota_withdraw
-                .map(|v| v.0.parse().unwrap()),
-            pool_token_balance: value.pool_token_balance.map(|v| v.0.parse().unwrap()),
+                .map(u64::try_from)
+                .transpose()?,
+            pool_token_balance: value.pool_token_balance.map(u64::try_from).transpose()?,
             project_url: value.project_url,
-            rewards_pool: value.rewards_pool.map(|v| v.0.parse().unwrap()),
+            rewards_pool: value.rewards_pool.map(u64::try_from).transpose()?,
             staking_pool_activation_epoch: value.staking_pool_activation_epoch,
             staking_pool_id: Arc::new(value.staking_pool_id.into()),
             staking_pool_iota_balance: value
                 .staking_pool_iota_balance
-                .map(|v| v.0.parse().unwrap()),
+                .map(u64::try_from)
+                .transpose()?,
             voting_power: value.voting_power,
-        }
+        })
     }
 }
 
@@ -1681,5 +1690,74 @@ impl From<iota_sdk::graphql_client::query_types::Feature> for GraphQLFeature {
             iota_sdk::graphql_client::query_types::Feature::SystemState => Self::SystemState,
             _ => unimplemented!("a new Feature enum variant was added and needs to be handled"),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use iota_sdk::{
+        graphql_client::query_types::{Base64, BigInt, GraphQLAddress, MoveObject, Validator},
+        types::{Address, ObjectId},
+    };
+
+    use super::GraphQLValidator;
+
+    fn validator() -> Validator {
+        Validator {
+            apy: None,
+            address: GraphQLAddress {
+                address: Address::ZERO,
+            },
+            commission_rate: None,
+            credentials: None,
+            description: None,
+            exchange_rates_size: None,
+            gas_price: Some(BigInt("1000".to_owned())),
+            name: None,
+            image_url: None,
+            next_epoch_commission_rate: None,
+            next_epoch_credentials: None,
+            next_epoch_gas_price: None,
+            next_epoch_stake: None,
+            operation_cap: Some(MoveObject {
+                bcs: Some(Base64("AQID".to_owned())),
+            }),
+            pending_pool_token_withdraw: None,
+            pending_stake: None,
+            pending_total_iota_withdraw: None,
+            pool_token_balance: None,
+            project_url: None,
+            rewards_pool: None,
+            staking_pool_activation_epoch: None,
+            staking_pool_id: ObjectId::ZERO,
+            staking_pool_iota_balance: None,
+            voting_power: None,
+        }
+    }
+
+    #[test]
+    fn valid_validator_converts() {
+        let converted = GraphQLValidator::try_from(validator()).unwrap();
+
+        assert_eq!(converted.gas_price, Some(1000));
+        assert_eq!(converted.operation_cap, Some(vec![1, 2, 3]));
+    }
+
+    #[test]
+    fn malformed_big_int_is_err() {
+        let mut v = validator();
+        v.gas_price = Some(BigInt("abc".to_owned()));
+
+        assert!(GraphQLValidator::try_from(v).is_err());
+    }
+
+    #[test]
+    fn malformed_base64_is_err() {
+        let mut v = validator();
+        v.operation_cap = Some(MoveObject {
+            bcs: Some(Base64("!!!".to_owned())),
+        });
+
+        assert!(GraphQLValidator::try_from(v).is_err());
     }
 }
