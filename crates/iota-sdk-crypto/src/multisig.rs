@@ -249,9 +249,11 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
                 "support for passkey is not enabled",
             )),
             #[cfg(feature = "passkey")]
-            UserSignature::PasskeyAuthenticator(authenticator) => {
-                crate::passkey::PasskeyVerifier::default().verify(message, authenticator)
-            }
+            UserSignature::PasskeyAuthenticator(authenticator) => self
+                .passkey_verifier()
+                .cloned()
+                .unwrap_or_default()
+                .verify(message, authenticator),
             UserSignature::MoveAuthenticator(_) => Err(SignatureError::from_source(
                 "move authenticators cannot be verified",
             )),
@@ -657,6 +659,36 @@ mod tests {
                 .to_string()
                 .contains("Passkey sig not supported inside multisig"),
             "expected a passkey-not-supported error, got {error}"
+        );
+    }
+
+    /// [`UserSignatureVerifier`] applies the configured passkey verifier to
+    /// direct passkey signatures.
+    #[cfg(feature = "passkey")]
+    #[test]
+    fn user_signature_verifier_uses_passkey_verifier() {
+        const TRANSACTION: &str = "AAAAACdZawPnpJRjmVcwDu6xrIumtq5NLO+6GHbs0iGdCoD7AQ0T0TolicYERdSvyCRjSSduDZLbSpBsZBoib+lF48EBcgAAAAAAAAAgpQr/Mudl9BdzyBdkbqTlqBw4/aJ21kAD/jpJKa05im4nWWsD56SUY5lXMA7usayLprauTSzvuhh27NIhnQqA++gDAAAAAAAAgIQeAAAAAAAA";
+        const SIGNATURE: &str = "BiVJlg3liA6MaHQ0Fw9kdmBbj+SuuaKGMseZXPO6gx2XYx0AAAAAhgF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCJjaGFsbGVuZ2UiOiJXellBZmVvbHcweU15bEFheDRvbzNjVC1rdEVaM0xmenZXcURqakxKZVRvIiwib3JpZ2luIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfWICfOgpQ38QYao9Gj0/bqmWYNkuxvbuN3lz4uzFcXeVMEVivX41eC9H+tk+UnvUvKzThtf+uMLFzerU0zZLi8le4QJJsAUcyjsP/1UPAesax8UOC14M62FjAqtqaR46wR7jCg==";
+
+        let transaction: Transaction = {
+            let bytes = Base64::decode_vec(TRANSACTION).unwrap();
+            bcs::from_bytes(&bytes).unwrap()
+        };
+        let signature = UserSignature::from_base64(SIGNATURE).unwrap();
+
+        UserSignatureVerifier::new()
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+
+        let error = UserSignatureVerifier::new()
+            .with_passkey_verifier(
+                crate::passkey::PasskeyVerifier::new().with_address(Address::ZERO),
+            )
+            .verify_transaction(&transaction, &signature)
+            .unwrap_err();
+        assert!(
+            error.to_string().contains("Invalid author"),
+            "expected an invalid-author error, got {error}"
         );
     }
 
