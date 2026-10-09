@@ -53,12 +53,16 @@ pub use api::{
     },
     transactions::{
         ExecuteTransactionQuery, GetTransactionDataEffectsQuery, GetTransactionEffectsQuery,
-        GetTransactionQuery, IsTransactionFinalizedQuery, IsTransactionIndexedOnNodeQuery,
-        ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
-        ListTransactionsEffectsQuery, ListTransactionsQuery, WaitForTransactionQuery,
+        GetTransactionQuery, GetTransactionsByDigestQuery, IsTransactionFinalizedQuery,
+        IsTransactionIndexedOnNodeQuery, ListAddressTransactionsQuery,
+        ListTransactionsDataEffectsQuery, ListTransactionsEffectsQuery, ListTransactionsQuery,
+        WaitForTransactionQuery,
     },
 };
-pub use client::{GetMaxPageSizeQuery, GraphQLClient, GraphQLClientBuilder, USER_AGENT};
+pub use client::{
+    GetMaxPageSizeQuery, GetMaxQueryPayloadSizeQuery, GraphQLClient, GraphQLClientBuilder,
+    USER_AGENT,
+};
 pub use cynic;
 pub use error::{GraphQLError, GraphQLResult};
 pub use iota_transaction_builder::WaitForTransaction;

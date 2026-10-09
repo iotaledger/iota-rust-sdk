@@ -102,6 +102,18 @@ pub(crate) struct TransactionBlocksEffectsQueryFragment {
     #[arguments(first: $first, after: $after, last: $last, before: $before, filter: $filter)]
     pub transaction_blocks: TransactionBlockEffectsConnection,
 }
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(
+    schema = "rpc",
+    graphql_type = "Query",
+    variables = "TransactionsByDigestsQueryArgs"
+)]
+pub(crate) struct TransactionsByDigestsQueryFragment {
+    #[arguments(digests: $digests, limit: $limit, cursor: $cursor)]
+    pub transactions_by_digests: TransactionsByDigestsPage,
+}
+
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(
     schema = "rpc",
@@ -131,6 +143,13 @@ pub(crate) struct AddressTransactionBlocksQueryFragment {
 #[derive(cynic::QueryVariables, Debug)]
 pub(crate) struct TransactionBlockArgs {
     pub digest: String,
+}
+
+#[derive(cynic::QueryVariables, Debug)]
+pub(crate) struct TransactionsByDigestsQueryArgs {
+    pub digests: Vec<String>,
+    pub limit: Option<i32>,
+    pub cursor: Option<String>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
@@ -474,6 +493,16 @@ pub(crate) struct TransactionBlockWithEffectsConnection {
 pub(crate) struct TransactionBlockEffectsConnection {
     pub nodes: Vec<TxBlockEffects>,
     pub page_info: PageInfo,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionsByDigestsPage")]
+pub(crate) struct TransactionsByDigestsPage {
+    /// One entry per requested digest, in the order they were requested,
+    /// `None` when the transaction was not found.
+    pub nodes: Vec<Option<TransactionBlock>>,
+    pub has_next_page: bool,
+    pub end_cursor: Option<String>,
 }
 
 impl TryFrom<TransactionBlock> for SignedTransaction {
