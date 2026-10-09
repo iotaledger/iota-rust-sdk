@@ -7,9 +7,8 @@ mod module;
 
 pub(crate) use function::{NormalizedMoveFunctionQueryArgs, NormalizedMoveFunctionQueryFragment};
 pub(crate) use module::{
-    MoveEnum, MoveEnumVariant, MoveField, MoveModule, MoveModuleIdQueryFragment,
-    MoveStructQueryFragment, MoveStructTypeParameter, NormalizedMoveModuleQueryArgs,
-    NormalizedMoveModuleQueryFragment,
+    MoveEnum, MoveEnumVariant, MoveField, MoveModuleIdQueryFragment, MoveStructQueryFragment,
+    MoveStructTypeParameter, NormalizedMoveModuleQueryArgs, NormalizedMoveModuleQueryFragment,
 };
 pub use module::{MoveModuleQueryFragment, MovePackageAddress};
 

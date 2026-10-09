@@ -3,7 +3,10 @@
 
 use iota_types::Address;
 
-use crate::{Page, query_types};
+use crate::{
+    error::{GraphQLError, GraphQLResult},
+    query_types,
+};
 
 /// An ability a Move type can have.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, strum::Display)]
@@ -55,12 +58,12 @@ pub struct MoveStructTypeParameter {
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub struct MoveFunction {
-    pub is_entry: Option<bool>,
+    pub is_entry: bool,
     pub name: String,
-    pub parameters: Option<Vec<OpenMoveType>>,
-    pub return_: Option<Vec<OpenMoveType>>,
-    pub type_parameters: Option<Vec<MoveFunctionTypeParameter>>,
-    pub visibility: Option<MoveVisibility>,
+    pub parameters: Vec<OpenMoveType>,
+    pub return_: Vec<OpenMoveType>,
+    pub type_parameters: Vec<MoveFunctionTypeParameter>,
+    pub visibility: MoveVisibility,
 }
 
 /// A field of a Move struct or enum variant.
@@ -68,34 +71,34 @@ pub struct MoveFunction {
 #[non_exhaustive]
 pub struct MoveField {
     pub name: String,
-    pub move_type: Option<OpenMoveType>,
+    pub move_type: OpenMoveType,
 }
 
 /// A Move struct definition.
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub struct MoveStruct {
-    pub abilities: Option<Vec<MoveAbility>>,
+    pub abilities: Vec<MoveAbility>,
     pub name: String,
-    pub fields: Option<Vec<MoveField>>,
-    pub type_parameters: Option<Vec<MoveStructTypeParameter>>,
+    pub fields: Vec<MoveField>,
+    pub type_parameters: Vec<MoveStructTypeParameter>,
 }
 
 /// A Move enum definition.
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub struct MoveEnum {
-    pub abilities: Option<Vec<MoveAbility>>,
+    pub abilities: Vec<MoveAbility>,
     pub name: String,
-    pub type_parameters: Option<Vec<MoveStructTypeParameter>>,
-    pub variants: Option<Vec<MoveEnumVariant>>,
+    pub type_parameters: Vec<MoveStructTypeParameter>,
+    pub variants: Vec<MoveEnumVariant>,
 }
 
 /// A variant of a Move enum.
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub struct MoveEnumVariant {
-    pub fields: Option<Vec<MoveField>>,
+    pub fields: Vec<MoveField>,
     pub name: String,
 }
 
@@ -107,32 +110,27 @@ pub struct MoveModuleId {
     pub name: String,
 }
 
-/// The normalized contents of a Move module. Each list is one page of the
-/// module's items.
-#[derive(Clone, Debug)]
+/// The normalized contents of a Move module.
+#[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub struct MoveModule {
     pub file_format_version: i32,
-    pub enums: Option<Page<MoveEnum>>,
-    pub friends: Page<MoveModuleId>,
-    pub functions: Option<Page<MoveFunction>>,
-    pub structs: Option<Page<MoveStruct>>,
+    pub enums: Vec<MoveEnum>,
+    pub friends: Vec<MoveModuleId>,
+    pub functions: Vec<MoveFunction>,
+    pub structs: Vec<MoveStruct>,
 }
 
 impl std::fmt::Display for MoveFunction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if let Some(vis) = self.visibility {
-            write!(f, "{vis} ")?;
-        }
-        if self.is_entry.is_some_and(|e| e) {
+        write!(f, "{} ", self.visibility)?;
+        if self.is_entry {
             write!(f, "entry ")?;
         }
         write!(f, "{}", self.name)?;
-        if let Some(type_params) = &self.type_parameters
-            && !type_params.is_empty()
-        {
+        if !self.type_parameters.is_empty() {
             write!(f, "<")?;
-            for (i, param) in type_params.iter().enumerate() {
+            for (i, param) in self.type_parameters.iter().enumerate() {
                 if i > 0 {
                     write!(f, ", ")?;
                 }
@@ -152,42 +150,37 @@ impl std::fmt::Display for MoveFunction {
             }
             write!(f, ">")?;
         }
-        write!(f, "(")?;
-        if let Some(params) = &self.parameters {
-            write!(
-                f,
-                "{}",
-                params
-                    .iter()
-                    .map(|v| v.repr.clone())
-                    .collect::<Vec<_>>()
-                    .join(", ")
-            )?;
-        }
-        write!(f, ")")?;
-        if let Some(return_) = &self.return_
-            && !return_.is_empty()
-        {
-            if return_.len() > 1 {
-                write!(
-                    f,
-                    " -> ({})",
-                    return_
-                        .iter()
-                        .map(|v| v.repr.replace("$", "T"))
-                        .collect::<Vec<_>>()
-                        .join(", ")
-                )?;
-            } else {
-                write!(f, " -> {}", return_.first().unwrap().repr.replace("$", "T"))?;
-            }
+        write!(f, "({})", type_list(&self.parameters))?;
+        match self.return_.as_slice() {
+            [] => {}
+            [return_] => write!(f, " -> {}", type_list(std::slice::from_ref(return_)))?,
+            return_ => write!(f, " -> ({})", type_list(return_))?,
         }
         Ok(())
     }
 }
 
-fn map_vec<T, U: From<T>>(v: Option<Vec<T>>) -> Option<Vec<U>> {
-    v.map(|v| v.into_iter().map(Into::into).collect())
+/// Join `types` with `, `, naming type parameters `T0`, `T1`, ... as in the
+/// function's type parameter list.
+fn type_list(types: &[OpenMoveType]) -> String {
+    types
+        .iter()
+        .map(|v| v.repr.replace('$', "T"))
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
+/// Unwrap a field the schema marks nullable but the server always sets.
+fn required<T>(value: Option<T>, field: &'static str) -> GraphQLResult<T> {
+    value.ok_or(GraphQLError::EmptyResponseField(field))
+}
+
+fn map_vec<T, U: From<T>>(v: Vec<T>) -> Vec<U> {
+    v.into_iter().map(Into::into).collect()
+}
+
+fn try_map_vec<T, U: TryFrom<T, Error = GraphQLError>>(v: Vec<T>) -> GraphQLResult<Vec<U>> {
+    v.into_iter().map(TryInto::try_into).collect()
 }
 
 impl From<query_types::MoveAbility> for MoveAbility {
@@ -220,7 +213,7 @@ impl From<query_types::OpenMoveType> for OpenMoveType {
 impl From<query_types::MoveFunctionTypeParameter> for MoveFunctionTypeParameter {
     fn from(value: query_types::MoveFunctionTypeParameter) -> Self {
         Self {
-            constraints: value.constraints.into_iter().map(Into::into).collect(),
+            constraints: map_vec(value.constraints),
         }
     }
 }
@@ -228,62 +221,78 @@ impl From<query_types::MoveFunctionTypeParameter> for MoveFunctionTypeParameter 
 impl From<query_types::MoveStructTypeParameter> for MoveStructTypeParameter {
     fn from(value: query_types::MoveStructTypeParameter) -> Self {
         Self {
-            constraints: value.constraints.into_iter().map(Into::into).collect(),
+            constraints: map_vec(value.constraints),
             is_phantom: value.is_phantom,
         }
     }
 }
 
-impl From<query_types::MoveFunction> for MoveFunction {
-    fn from(value: query_types::MoveFunction) -> Self {
-        Self {
-            is_entry: value.is_entry,
+impl TryFrom<query_types::MoveFunction> for MoveFunction {
+    type Error = GraphQLError;
+
+    fn try_from(value: query_types::MoveFunction) -> GraphQLResult<Self> {
+        Ok(Self {
+            is_entry: required(value.is_entry, "move function isEntry")?,
             name: value.name,
-            parameters: map_vec(value.parameters),
-            return_: map_vec(value.return_),
-            type_parameters: map_vec(value.type_parameters),
-            visibility: value.visibility.map(Into::into),
-        }
+            parameters: map_vec(required(value.parameters, "move function parameters")?),
+            return_: map_vec(required(value.return_, "move function return")?),
+            type_parameters: map_vec(required(
+                value.type_parameters,
+                "move function typeParameters",
+            )?),
+            visibility: required(value.visibility, "move function visibility")?.into(),
+        })
     }
 }
 
-impl From<query_types::MoveField> for MoveField {
-    fn from(value: query_types::MoveField) -> Self {
-        Self {
+impl TryFrom<query_types::MoveField> for MoveField {
+    type Error = GraphQLError;
+
+    fn try_from(value: query_types::MoveField) -> GraphQLResult<Self> {
+        Ok(Self {
             name: value.name,
-            move_type: value.move_type.map(Into::into),
-        }
+            move_type: required(value.move_type, "move field type")?.into(),
+        })
     }
 }
 
-impl From<query_types::MoveStructQueryFragment> for MoveStruct {
-    fn from(value: query_types::MoveStructQueryFragment) -> Self {
-        Self {
-            abilities: map_vec(value.abilities),
+impl TryFrom<query_types::MoveStructQueryFragment> for MoveStruct {
+    type Error = GraphQLError;
+
+    fn try_from(value: query_types::MoveStructQueryFragment) -> GraphQLResult<Self> {
+        Ok(Self {
+            abilities: map_vec(required(value.abilities, "move struct abilities")?),
             name: value.name,
-            fields: map_vec(value.fields),
-            type_parameters: map_vec(value.type_parameters),
-        }
+            fields: try_map_vec(required(value.fields, "move struct fields")?)?,
+            type_parameters: map_vec(required(
+                value.type_parameters,
+                "move struct typeParameters",
+            )?),
+        })
     }
 }
 
-impl From<query_types::MoveEnum> for MoveEnum {
-    fn from(value: query_types::MoveEnum) -> Self {
-        Self {
-            abilities: map_vec(value.abilities),
+impl TryFrom<query_types::MoveEnum> for MoveEnum {
+    type Error = GraphQLError;
+
+    fn try_from(value: query_types::MoveEnum) -> GraphQLResult<Self> {
+        Ok(Self {
+            abilities: map_vec(required(value.abilities, "move enum abilities")?),
             name: value.name,
-            type_parameters: map_vec(value.type_parameters),
-            variants: map_vec(value.variants),
-        }
+            type_parameters: map_vec(required(value.type_parameters, "move enum typeParameters")?),
+            variants: try_map_vec(required(value.variants, "move enum variants")?)?,
+        })
     }
 }
 
-impl From<query_types::MoveEnumVariant> for MoveEnumVariant {
-    fn from(value: query_types::MoveEnumVariant) -> Self {
-        Self {
-            fields: map_vec(value.fields),
+impl TryFrom<query_types::MoveEnumVariant> for MoveEnumVariant {
+    type Error = GraphQLError;
+
+    fn try_from(value: query_types::MoveEnumVariant) -> GraphQLResult<Self> {
+        Ok(Self {
+            fields: try_map_vec(required(value.fields, "move enum variant fields")?)?,
             name: value.name,
-        }
+        })
     }
 }
 
@@ -296,20 +305,52 @@ impl From<query_types::MoveModuleIdQueryFragment> for MoveModuleId {
     }
 }
 
-impl From<query_types::MoveModule> for MoveModule {
-    fn from(value: query_types::MoveModule) -> Self {
-        Self {
-            file_format_version: value.file_format_version,
-            enums: value
-                .enums
-                .map(|c| Page::new(c.page_info, c.nodes).map(Into::into)),
-            friends: Page::new(value.friends.page_info, value.friends.nodes).map(Into::into),
-            functions: value
-                .functions
-                .map(|c| Page::new(c.page_info, c.nodes).map(Into::into)),
-            structs: value
-                .structs
-                .map(|c| Page::new(c.page_info, c.nodes).map(Into::into)),
-        }
+impl MoveModule {
+    pub(crate) fn try_from_parts(
+        file_format_version: i32,
+        enums: Vec<query_types::MoveEnum>,
+        friends: Vec<query_types::MoveModuleIdQueryFragment>,
+        functions: Vec<query_types::MoveFunction>,
+        structs: Vec<query_types::MoveStructQueryFragment>,
+    ) -> GraphQLResult<Self> {
+        Ok(Self {
+            file_format_version,
+            enums: try_map_vec(enums)?,
+            friends: map_vec(friends),
+            functions: try_map_vec(functions)?,
+            structs: try_map_vec(structs)?,
+        })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn function_display_names_type_parameters_alike_in_parameters_and_return() {
+        let repr = |repr: &str| OpenMoveType {
+            repr: repr.to_owned(),
+        };
+        let function = MoveFunction {
+            is_entry: true,
+            name: "swap".to_owned(),
+            parameters: vec![repr("$0"), repr("vector<$1>")],
+            return_: vec![repr("$1"), repr("$0")],
+            type_parameters: vec![
+                MoveFunctionTypeParameter {
+                    constraints: vec![MoveAbility::Copy, MoveAbility::Drop],
+                },
+                MoveFunctionTypeParameter {
+                    constraints: Vec::new(),
+                },
+            ],
+            visibility: MoveVisibility::Public,
+        };
+
+        assert_eq!(
+            function.to_string(),
+            "public entry swap<T0: copy + drop, T1>(T0, vector<T1>) -> (T1, T0)"
+        );
     }
 }

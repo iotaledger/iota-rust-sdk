@@ -25,9 +25,9 @@ for (const moduleId of pkg.modules().keys()) {
     console.log(`module \`${moduleId.asStr()}\` not found`);
     break;
   }
-  if (module.functions !== null) {
+  if (module.functions.length > 0) {
     console.log(`Module: ${moduleId.asStr()}`);
-    for (const fun of module.functions.nodes) {
+    for (const fun of module.functions) {
       console.log(`- ${fun}`);
     }
     console.log();

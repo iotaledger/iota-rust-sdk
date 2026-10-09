@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -124,10 +125,6 @@ func main() {
 			packageAddress,
 			moduleName,
 			nil,
-			forwardPage(nil),
-			forwardPage(nil),
-			forwardPage(nil),
-			forwardPage(nil),
 		)
 		if err != nil {
 			log.Fatalf("Failed to get module metadata for %s: %v", moduleName, err)
@@ -138,40 +135,26 @@ func main() {
 			continue
 		}
 
-		if module.Functions == nil || len(module.Functions.Nodes) == 0 {
+		if len(module.Functions) == 0 {
 			fmt.Println("  functions: none")
 		} else {
 			fmt.Println("  functions:")
-			for _, function := range module.Functions.Nodes {
+			for _, function := range module.Functions {
 				fmt.Printf("    - %s\n", formatFunctionSignature(function.String(), packagePrefix))
-			}
-			if module.Functions.PageInfo.HasNextPage {
-				fmt.Println("    - ...")
 			}
 		}
 
-		if module.Structs == nil || len(module.Structs.Nodes) == 0 {
+		if len(module.Structs) == 0 {
 			fmt.Println("  types: none")
 		} else {
 			fmt.Println("  types:")
-			for _, structType := range module.Structs.Nodes {
+			for _, structType := range module.Structs {
 				typeTag := fmt.Sprintf("%s::%s::%s", packagePrefix, moduleName, structType.Name)
 				fmt.Println("    -", typeTag)
 
-				hasKeyAbility := false
-				if structType.Abilities != nil {
-					for _, ability := range *structType.Abilities {
-						if ability == iota_sdk.GraphQlMoveAbilityKey {
-							hasKeyAbility = true
-							break
-						}
-					}
-				}
-				isGeneric := structType.TypeParameters != nil && len(*structType.TypeParameters) > 0
+				hasKeyAbility := slices.Contains(structType.Abilities, iota_sdk.GraphQlMoveAbilityKey)
+				isGeneric := len(structType.TypeParameters) > 0
 				printObjectSamples(client, typeTag, hasKeyAbility, isGeneric)
-			}
-			if module.Structs.PageInfo.HasNextPage {
-				fmt.Println("    - ...")
 			}
 		}
 
