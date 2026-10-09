@@ -1,3 +1,34 @@
+## [1.0.0-rc.1] - 2026-10-09
+
+### 🚀 Features
+
+- *(crypto)* [**breaking**] Add CommitteeChainVerifier (#1298)
+- Add scheme accessors to SimpleKeypair (#1426)
+- *(crypto)* Add BLS proof of possession (#1469)
+- *(crypto)* Encode and decode BLS private keys (#1472)
+- *(crypto)* Compare and clone BLS verifying keys (#1493)
+- *(iota-sdk-crypto)* [**breaking**] Own the signature error and signing traits (#1538)
+- Re-export iota_types from every crate that names it publicly (#1581)
+- *(types, crypto)* [**breaking**] Re-export rand_core (#1582)
+
+### 🐛 Bug Fixes
+
+- *(crypto)* Reject Bech32m checksums when decoding iotaprivkey strings (#1462)
+
+### 🚜 Refactor
+
+- Unify byte accessors as bytes()/into_bytes() (#1404)
+- *(types)* [**breaking**] Reduce the public surface of iota-sdk-types (#1473)
+- [**breaking**] Remove dead and inconsistent public API before 1.0 (#1574)
+- *(iota-sdk-crypto)* [**breaking**] Carry a String in PrivateKeyError::Bip32 and Bip39 (#1590)
+- *(iota-sdk-types)* [**breaking**] Parse SignatureScheme without strum (#1585)
+
+### ⚙️ Miscellaneous Tasks
+
+- [**breaking**] Update dependencies (#1346)
+- Drop the doc(cfg) attributes rustdoc now derives from cfg (#1600)
+- Use the README as the crate docs where it can carry them (#1602)
+
 ## [1.0.0-beta.1] - 2026-08-31
 
 ### 🚀 Features
