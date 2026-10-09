@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["CommitteeValidatorJoinEvent","CommitteeValidatorLeaveEvent","ValidatorEpochInfoEventV1","ValidatorJoinEvent","ValidatorLeaveEvent","ValidatorSetV1","ValidatorSetV2"]};

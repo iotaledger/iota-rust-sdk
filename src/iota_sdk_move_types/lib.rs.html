@@ -1,0 +1,176 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/iota-sdk-move-types/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-0c87338a.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="iota_sdk_move_types" data-themes="" data-resource-suffix="" data-rustdoc-version="1.99.0 (b940084d7 2026-09-28)" data-channel="1.99.0" data-search-js="search-cf4fc35e.js" data-stringdex-js="stringdex-b5109af9.js" data-settings-js="settings-170eb4bf.js" ><script src="../../static.files/storage-41dd4d93.js"></script><script defer src="../../static.files/src-script-813739b1.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-9f56287d.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1><div class="sub-heading">iota_sdk_move_types/</div>lib.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="comment">// Copyright (c) 2026 IOTA Stiftung
+<a href=#2 id=2 data-nosnippet>2</a>// SPDX-License-Identifier: Apache-2.0
+<a href=#3 id=3 data-nosnippet>3</a>
+<a href=#4 id=4 data-nosnippet>4</a></span><span class="doccomment">//! Rust representations of Move types used by the IOTA blockchain.
+<a href=#5 id=5 data-nosnippet>5</a>//!
+<a href=#6 id=6 data-nosnippet>6</a>//! Each top-level module corresponds to a system package, identified by the
+<a href=#7 id=7 data-nosnippet>7</a>//! address constants on [`iota_types::Address`]:
+<a href=#8 id=8 data-nosnippet>8</a>//!
+<a href=#9 id=9 data-nosnippet>9</a>//! - [`move_stdlib`]    — `0x1`, the Move standard library
+<a href=#10 id=10 data-nosnippet>10</a>//! - [`iota_framework`] — `0x2`, the IOTA framework
+<a href=#11 id=11 data-nosnippet>11</a>//! - [`iota_system`]    — `0x3`, the IOTA system package
+<a href=#12 id=12 data-nosnippet>12</a>//! - [`stardust`]       — `0x107a`, the Stardust migration package
+<a href=#13 id=13 data-nosnippet>13</a>//!
+<a href=#14 id=14 data-nosnippet>14</a>//! Inside each package, every Move source module is mirrored 1:1 as a Rust
+<a href=#15 id=15 data-nosnippet>15</a>//! `pub mod`. Generic Move types stay generic in Rust (with a
+<a href=#16 id=16 data-nosnippet>16</a>//! `PhantomData&lt;T&gt;` placeholder for phantom parameters).
+<a href=#17 id=17 data-nosnippet>17</a>
+<a href=#18 id=18 data-nosnippet>18</a></span><span class="attr">#![cfg_attr(doc_cfg, feature(doc_cfg))]
+<a href=#19 id=19 data-nosnippet>19</a>
+<a href=#20 id=20 data-nosnippet>20</a>#[macro_use]
+<a href=#21 id=21 data-nosnippet>21</a></span><span class="kw">mod </span><a href="macros.rs.html#4-139">macros</a>;
+<a href=#22 id=22 data-nosnippet>22</a>
+<a href=#23 id=23 data-nosnippet>23</a><span class="kw">mod </span><a href="packages/mod.rs.html#4-10">packages</a>;
+<a href=#24 id=24 data-nosnippet>24</a><span class="kw">pub use </span>iota_types;
+<a href=#25 id=25 data-nosnippet>25</a><span class="kw">pub use </span>packages::{<a href="packages/mod.rs.html#7">iota_framework</a>, <a href="packages/mod.rs.html#8">iota_system</a>, <a href="packages/mod.rs.html#9">move_stdlib</a>, <a href="packages/mod.rs.html#10">stardust</a>};
+<a href=#26 id=26 data-nosnippet>26</a>
+<a href=#27 id=27 data-nosnippet>27</a><span class="kw">mod </span><a href="builtin.rs.html#4-94">builtin</a>;
+<a href=#28 id=28 data-nosnippet>28</a>
+<a href=#29 id=29 data-nosnippet>29</a><span class="comment">// The shape machinery (this module, the `MoveShape` derives on every
+<a href=#30 id=30 data-nosnippet>30</a>// mirror, and the comparator below) is native-only: the comparator reads
+<a href=#31 id=31 data-nosnippet>31</a>// the fetched package artifacts from disk at test time (no `std::fs` on
+<a href=#32 id=32 data-nosnippet>32</a>// wasm32), and its checks are target-independent — running them on one
+<a href=#33 id=33 data-nosnippet>33</a>// target covers all.
+<a href=#34 id=34 data-nosnippet>34</a></span><span class="attr">#[cfg(all(test, not(target_arch = <span class="string">"wasm32"</span>)))]
+<a href=#35 id=35 data-nosnippet>35</a></span><span class="kw">mod </span>move_shape;
+<a href=#36 id=36 data-nosnippet>36</a>
+<a href=#37 id=37 data-nosnippet>37</a><span class="attr">#[cfg(all(test, feature = <span class="string">"serde"</span>, not(target_arch = <span class="string">"wasm32"</span>)))]
+<a href=#38 id=38 data-nosnippet>38</a></span><span class="kw">mod </span>move_shape_compare;
+<a href=#39 id=39 data-nosnippet>39</a>
+<a href=#40 id=40 data-nosnippet>40</a><span class="doccomment">/// A Rust type that knows its Move type tag.
+<a href=#41 id=41 data-nosnippet>41</a>///
+<a href=#42 id=42 data-nosnippet>42</a>/// The type argument `T` of a generic mirror such as `Coin&lt;T&gt;` must implement
+<a href=#43 id=43 data-nosnippet>43</a>/// this trait, so that `Coin&lt;IOTA&gt;` can check that an object really is a
+<a href=#44 id=44 data-nosnippet>44</a>/// `0x2::coin::Coin&lt;0x2::iota::IOTA&gt;`.
+<a href=#45 id=45 data-nosnippet>45</a>///
+<a href=#46 id=46 data-nosnippet>46</a>/// Markers like [`IOTA`](iota_framework::iota::IOTA) implement it by hand.
+<a href=#47 id=47 data-nosnippet>47</a>/// Every `MoveObject` implements it automatically, so an object mirror can
+<a href=#48 id=48 data-nosnippet>48</a>/// also be a type argument, as in `Display&lt;Coin&lt;IOTA&gt;&gt;`.
+<a href=#49 id=49 data-nosnippet>49</a>///
+<a href=#50 id=50 data-nosnippet>50</a>/// To use your own coin type, define an empty marker struct that derives
+<a href=#51 id=51 data-nosnippet>51</a>/// `Deserialize` and implement this trait for it:
+<a href=#52 id=52 data-nosnippet>52</a>///
+<a href=#53 id=53 data-nosnippet>53</a>/// ```
+<a href=#54 id=54 data-nosnippet>54</a>/// #[derive(serde::Deserialize)]
+<a href=#55 id=55 data-nosnippet>55</a>/// struct FOO;
+<a href=#56 id=56 data-nosnippet>56</a>///
+<a href=#57 id=57 data-nosnippet>57</a>/// impl iota_sdk_move_types::MoveType for FOO {
+<a href=#58 id=58 data-nosnippet>58</a>///     fn type_tag() -&gt; iota_types::TypeTag {
+<a href=#59 id=59 data-nosnippet>59</a>///         "0x123::foo::FOO".parse().unwrap()
+<a href=#60 id=60 data-nosnippet>60</a>///     }
+<a href=#61 id=61 data-nosnippet>61</a>/// }
+<a href=#62 id=62 data-nosnippet>62</a>/// ```
+<a href=#63 id=63 data-nosnippet>63</a>///
+<a href=#64 id=64 data-nosnippet>64</a>/// For coin types only known at runtime, use the
+<a href=#65 id=65 data-nosnippet>65</a>/// `try_from_object_with_type` constructors instead, which take the
+<a href=#66 id=66 data-nosnippet>66</a>/// expected [`TypeTag`](iota_types::TypeTag) as a value.
+<a href=#67 id=67 data-nosnippet>67</a></span><span class="kw">pub trait </span><a href="../../iota_sdk_move_types/trait.MoveType.html">MoveType</a> {
+<a href=#68 id=68 data-nosnippet>68</a>    <span class="doccomment">/// The Move type tag this type represents (e.g. `0x2::iota::IOTA`).
+<a href=#69 id=69 data-nosnippet>69</a>    </span><span class="kw">fn </span>type_tag() -&gt; iota_types::TypeTag;
+<a href=#70 id=70 data-nosnippet>70</a>}
+<a href=#71 id=71 data-nosnippet>71</a>
+<a href=#72 id=72 data-nosnippet>72</a><span class="doccomment">/// An ordered list of [`MoveType`]s: `()`, a single type, or a tuple, such as
+<a href=#73 id=73 data-nosnippet>73</a>/// the type arguments of a Move function call.
+<a href=#74 id=74 data-nosnippet>74</a></span><span class="kw">pub trait </span><a href="../../iota_sdk_move_types/trait.MoveTypes.html">MoveTypes</a> {
+<a href=#75 id=75 data-nosnippet>75</a>    <span class="doccomment">/// Get the type tags.
+<a href=#76 id=76 data-nosnippet>76</a>    </span><span class="kw">fn </span>type_tags() -&gt; <a href="https://doc.rust-lang.org/1.99.0/alloc/vec/struct.Vec.html">Vec</a>&lt;iota_types::TypeTag&gt;;
+<a href=#77 id=77 data-nosnippet>77</a>}
+<a href=#78 id=78 data-nosnippet>78</a>
+<a href=#79 id=79 data-nosnippet>79</a><span class="doccomment">/// A Rust mirror of a Move object that can be decoded from an
+<a href=#80 id=80 data-nosnippet>80</a>/// [`Object`](iota_types::Object).
+<a href=#81 id=81 data-nosnippet>81</a>///
+<a href=#82 id=82 data-nosnippet>82</a>/// [`struct_tag`](Self::struct_tag) is the type of the objects it decodes,
+<a href=#83 id=83 data-nosnippet>83</a>/// e.g. `0x2::coin::Coin&lt;0x2::iota::IOTA&gt;` for `Coin&lt;IOTA&gt;`. Every
+<a href=#84 id=84 data-nosnippet>84</a>/// `MoveObject` is also a [`MoveType`] with that same tag.
+<a href=#85 id=85 data-nosnippet>85</a></span><span class="attr">#[cfg(feature = <span class="string">"serde"</span>)]
+<a href=#86 id=86 data-nosnippet>86</a></span><span class="kw">pub trait </span><a href="../../iota_sdk_move_types/trait.MoveObject.html">MoveObject</a>:
+<a href=#87 id=87 data-nosnippet>87</a>    <a href="https://doc.rust-lang.org/1.99.0/core/marker/trait.Sized.html">Sized</a> + <span class="kw">for</span>&lt;<span class="lifetime">'a</span>&gt; <a href="https://doc.rust-lang.org/1.99.0/core/convert/trait.TryFrom.html">TryFrom</a>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>iota_types::Object, Error = <a href="#109-119">FromObjectError</a>&gt;
+<a href=#88 id=88 data-nosnippet>88</a>{
+<a href=#89 id=89 data-nosnippet>89</a>    <span class="doccomment">/// The Move struct tag of the objects this type mirrors.
+<a href=#90 id=90 data-nosnippet>90</a>    </span><span class="kw">fn </span>struct_tag() -&gt; iota_types::StructTag;
+<a href=#91 id=91 data-nosnippet>91</a>}
+<a href=#92 id=92 data-nosnippet>92</a>
+<a href=#93 id=93 data-nosnippet>93</a><span class="attr">#[cfg(feature = <span class="string">"serde"</span>)]
+<a href=#94 id=94 data-nosnippet>94</a></span><span class="kw">impl</span>&lt;T: <a href="#86-91">MoveObject</a>&gt; <a href="#67-70">MoveType</a> <span class="kw">for </span>T {
+<a href=#95 id=95 data-nosnippet>95</a>    <span class="kw">fn </span>type_tag() -&gt; iota_types::TypeTag {
+<a href=#96 id=96 data-nosnippet>96</a>        iota_types::TypeTag::Struct(<a href="https://doc.rust-lang.org/1.99.0/alloc/boxed/struct.Box.html">Box</a>::<a href="https://doc.rust-lang.org/1.99.0/alloc/boxed/struct.Box.html#method.new">new</a>(T::<a href="#90">struct_tag</a>()))
+<a href=#97 id=97 data-nosnippet>97</a>    }
+<a href=#98 id=98 data-nosnippet>98</a>}
+<a href=#99 id=99 data-nosnippet>99</a>
+<a href=#100 id=100 data-nosnippet>100</a><span class="doccomment">/// Error returned when converting an `Object` into a typed mirror.
+<a href=#101 id=101 data-nosnippet>101</a>///
+<a href=#102 id=102 data-nosnippet>102</a>/// Every mirror's `TryFrom&lt;&amp;Object&gt;` (and `try_from_object_with_type`)
+<a href=#103 id=103 data-nosnippet>103</a>/// conversion returns this on failure: the object either isn't a Move
+<a href=#104 id=104 data-nosnippet>104</a>/// struct, carries a type tag that doesn't match the expected type, or has
+<a href=#105 id=105 data-nosnippet>105</a>/// BCS contents that fail to decode.
+<a href=#106 id=106 data-nosnippet>106</a></span><span class="attr">#[cfg(feature = <span class="string">"serde"</span>)]
+<a href=#107 id=107 data-nosnippet>107</a>#[derive(<a href="https://doc.rust-lang.org/1.99.0/core/fmt/macros/derive.Debug.html">Debug</a>, thiserror::Error)]
+<a href=#108 id=108 data-nosnippet>108</a>#[non_exhaustive]
+<a href=#109 id=109 data-nosnippet>109</a></span><span class="kw">pub enum </span><a href="../../iota_sdk_move_types/enum.FromObjectError.html">FromObjectError</a> {
+<a href=#110 id=110 data-nosnippet>110</a>    <span class="doccomment">/// The object is a package, not a Move struct.
+<a href=#111 id=111 data-nosnippet>111</a>    </span><span class="attr">#[error(<span class="string">"object is not a Move struct"</span>)]
+<a href=#112 id=112 data-nosnippet>112</a>    </span>NotAMoveStruct,
+<a href=#113 id=113 data-nosnippet>113</a>    <span class="doccomment">/// The Move struct's type tag does not match the expected type.
+<a href=#114 id=114 data-nosnippet>114</a>    </span><span class="attr">#[error(<span class="string">"object's type tag does not match expected type"</span>)]
+<a href=#115 id=115 data-nosnippet>115</a>    </span>WrongType,
+<a href=#116 id=116 data-nosnippet>116</a>    <span class="doccomment">/// BCS decoding of the struct contents failed.
+<a href=#117 id=117 data-nosnippet>117</a>    </span><span class="attr">#[error(<span class="string">"bcs decoding failed: {0}"</span>)]
+<a href=#118 id=118 data-nosnippet>118</a>    </span>Bcs(<span class="attr">#[from] </span>iota_types::BcsError),
+<a href=#119 id=119 data-nosnippet>119</a>}
+<a href=#120 id=120 data-nosnippet>120</a>
+<a href=#121 id=121 data-nosnippet>121</a><span class="doccomment">/// Decode the BCS contents of `object`, provided it is a Move struct tagged
+<a href=#122 id=122 data-nosnippet>122</a>/// exactly `expected`.
+<a href=#123 id=123 data-nosnippet>123</a></span><span class="attr">#[cfg(feature = <span class="string">"serde"</span>)]
+<a href=#124 id=124 data-nosnippet>124</a></span><span class="kw">fn </span>decode_move_struct&lt;T: <a href="https://docs.rs/serde_core/1.0.229/serde_core/de/trait.DeserializeOwned.html">serde::de::DeserializeOwned</a>&gt;(
+<a href=#125 id=125 data-nosnippet>125</a>    object: <span class="kw-2">&amp;</span>iota_types::Object,
+<a href=#126 id=126 data-nosnippet>126</a>    expected: <span class="kw-2">&amp;</span>iota_types::StructTag,
+<a href=#127 id=127 data-nosnippet>127</a>) -&gt; <a class="prelude-ty" href="https://doc.rust-lang.org/1.99.0/core/result/enum.Result.html">Result</a>&lt;T, <a href="#109-119">FromObjectError</a>&gt; {
+<a href=#128 id=128 data-nosnippet>128</a>    <span class="kw">let </span>move_struct = object
+<a href=#129 id=129 data-nosnippet>129</a>        .as_opt_struct()
+<a href=#130 id=130 data-nosnippet>130</a>        .ok_or(FromObjectError::NotAMoveStruct)<span class="question-mark">?</span>;
+<a href=#131 id=131 data-nosnippet>131</a>    <span class="kw">if </span><a href="#128">move_struct</a>.struct_tag() != <a href="#126">expected</a> {
+<a href=#132 id=132 data-nosnippet>132</a>        <span class="kw">return </span><a class="prelude-val" href="https://doc.rust-lang.org/1.99.0/core/result/enum.Result.html#variant.Err">Err</a>(FromObjectError::<a href="#115">WrongType</a>);
+<a href=#133 id=133 data-nosnippet>133</a>    }
+<a href=#134 id=134 data-nosnippet>134</a>    <a class="prelude-val" href="https://doc.rust-lang.org/1.99.0/core/result/enum.Result.html#variant.Ok">Ok</a>(bcs::from_bytes(move_struct.contents()).map_err(iota_types::BcsError::new)<span class="question-mark">?</span>)
+<a href=#135 id=135 data-nosnippet>135</a>}
+<a href=#136 id=136 data-nosnippet>136</a>
+<a href=#137 id=137 data-nosnippet>137</a><span class="attr">#[cfg(all(test, feature = <span class="string">"serde"</span>))]
+<a href=#138 id=138 data-nosnippet>138</a></span><span class="kw">mod </span>tests {
+<a href=#139 id=139 data-nosnippet>139</a>    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+<a href=#140 id=140 data-nosnippet>140</a>    <span class="kw">use crate</span>::{
+<a href=#141 id=141 data-nosnippet>141</a>        iota_framework::{
+<a href=#142 id=142 data-nosnippet>142</a>            coin::{Coin, CoinMetadata},
+<a href=#143 id=143 data-nosnippet>143</a>            iota::IOTA,
+<a href=#144 id=144 data-nosnippet>144</a>        },
+<a href=#145 id=145 data-nosnippet>145</a>        iota_system::staking_pool::StakedIota,
+<a href=#146 id=146 data-nosnippet>146</a>    };
+<a href=#147 id=147 data-nosnippet>147</a>
+<a href=#148 id=148 data-nosnippet>148</a>    <span class="attr">#[test]
+<a href=#149 id=149 data-nosnippet>149</a>    </span><span class="kw">fn </span>non_generic_mirror_reports_its_move_type() {
+<a href=#150 id=150 data-nosnippet>150</a>        <span class="macro">assert_eq!</span>(
+<a href=#151 id=151 data-nosnippet>151</a>            StakedIota::struct_tag().to_string(),
+<a href=#152 id=152 data-nosnippet>152</a>            <span class="string">"0x3::staking_pool::StakedIota"
+<a href=#153 id=153 data-nosnippet>153</a>        </span>);
+<a href=#154 id=154 data-nosnippet>154</a>    }
+<a href=#155 id=155 data-nosnippet>155</a>
+<a href=#156 id=156 data-nosnippet>156</a>    <span class="attr">#[test]
+<a href=#157 id=157 data-nosnippet>157</a>    </span><span class="kw">fn </span>generic_mirror_composes_its_type_parameter() {
+<a href=#158 id=158 data-nosnippet>158</a>        <span class="macro">assert_eq!</span>(
+<a href=#159 id=159 data-nosnippet>159</a>            Coin::&lt;IOTA&gt;::struct_tag().to_string(),
+<a href=#160 id=160 data-nosnippet>160</a>            <span class="string">"0x2::coin::Coin&lt;0x2::iota::IOTA&gt;"
+<a href=#161 id=161 data-nosnippet>161</a>        </span>);
+<a href=#162 id=162 data-nosnippet>162</a>        <span class="macro">assert_eq!</span>(
+<a href=#163 id=163 data-nosnippet>163</a>            CoinMetadata::&lt;IOTA&gt;::struct_tag().to_string(),
+<a href=#164 id=164 data-nosnippet>164</a>            <span class="string">"0x2::coin::CoinMetadata&lt;0x2::iota::IOTA&gt;"
+<a href=#165 id=165 data-nosnippet>165</a>        </span>);
+<a href=#166 id=166 data-nosnippet>166</a>    }
+<a href=#167 id=167 data-nosnippet>167</a>
+<a href=#168 id=168 data-nosnippet>168</a>    <span class="attr">#[test]
+<a href=#169 id=169 data-nosnippet>169</a>    </span><span class="kw">fn </span>type_tag_wraps_struct_tag() {
+<a href=#170 id=170 data-nosnippet>170</a>        <span class="macro">assert_eq!</span>(
+<a href=#171 id=171 data-nosnippet>171</a>            Coin::&lt;IOTA&gt;::type_tag(),
+<a href=#172 id=172 data-nosnippet>172</a>            iota_types::TypeTag::Struct(Box::new(Coin::&lt;IOTA&gt;::struct_tag()))
+<a href=#173 id=173 data-nosnippet>173</a>        );
+<a href=#174 id=174 data-nosnippet>174</a>    }
+<a href=#175 id=175 data-nosnippet>175</a>}
+</code></pre></div></section></main></body></html>

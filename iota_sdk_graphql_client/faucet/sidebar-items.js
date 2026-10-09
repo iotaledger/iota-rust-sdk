@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["FAUCET_LOCAL_HOST"],"enum":["BatchSendStatusType","FaucetError"],"struct":["BatchSendStatus","CoinInfo","FaucetClient","FaucetReceipt"]};
