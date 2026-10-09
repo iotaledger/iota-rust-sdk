@@ -136,6 +136,38 @@ jobs:
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY_FOR_SWIFT_SDK }}
           fetch-depth: 0
 
+      - name: Set version to input or release tag
+        id: set-version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            version=$(echo "${{ github.event.release.tag_name }}" | sed -nr 's|iota-swift-sdk-v(.*)|\1|p')
+            echo "version=$version" >> $GITHUB_OUTPUT
+          fi
+
+      # Releases older than the highest published major go to a `<major>.x`
+      # branch, created from that major's last tag, instead of the default branch.
+      - name: Select branch
+        id: select-branch
+        env:
+          VERSION: ${{ steps.set-version.outputs.version }}
+        run: |
+          major="${VERSION%%.*}"
+          highest=$(git tag -l '[0-9]*' --sort=-v:refname | head -n 1)
+          if [ -n "$highest" ] && [ "$major" -lt "${highest%%.*}" ]; then
+            branch="$major.x"
+            if git ls-remote --exit-code --heads origin "$branch" > /dev/null; then
+              git checkout -B "$branch" "origin/$branch"
+            else
+              git checkout -b "$branch" "$(git tag -l "$major.*" --sort=-v:refname | head -n 1)"
+            fi
+          else
+            branch=$(git rev-parse --abbrev-ref HEAD)
+          fi
+          echo "Pushing to $branch"
+          echo "branch=$branch" >> $GITHUB_OUTPUT
+
       - name: Download source archive
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -152,22 +184,12 @@ jobs:
           cp dist/Package.swift Package.swift
           rm -rf Sources/CIotaSDK lib dist
 
-      - name: Set version to input or release tag
-        id: set-version
-        run: |
-          if [ -n "${{ inputs.version }}" ]; then
-            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
-          else
-            version=$(echo "${{ github.event.release.tag_name }}" | sed -nr 's|iota-swift-sdk-v(.*)|\1|p')
-            echo "version=$version" >> $GITHUB_OUTPUT
-          fi
-
       - name: Tag the Swift SDK
         run: |
           git config --global user.email github-actions@github.com
           git config --global user.name github-actions
           git add .
           git commit -m "Update Swift SDK to version ${{ steps.set-version.outputs.version }}"
-          git push
+          git push origin "HEAD:refs/heads/${{ steps.select-branch.outputs.branch }}"
           git tag ${{ steps.set-version.outputs.version }} -m "${{ steps.set-version.outputs.version }}"
           git push --tags
