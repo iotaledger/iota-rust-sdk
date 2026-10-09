@@ -2,14 +2,14 @@ name: WASM
 
 on:
   push:
-    branches: [develop]
+    branches: [develop, "iota-sdk/*.x"]
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 concurrency:
   group: wasm-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' && !startsWith(github.ref, 'refs/heads/iota-sdk/') }}
 
 permissions:
   contents: read

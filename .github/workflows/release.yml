@@ -3,7 +3,7 @@ name: Create GitHub release
 on:
   pull_request:
     types: closed
-    branches: [develop]
+    branches: [develop, "iota-sdk/*.x"]
 
 permissions:
   contents: write

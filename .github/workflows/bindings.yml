@@ -2,13 +2,13 @@ name: Bindings
 
 on:
   push:
-    branches: [develop]
+    branches: [develop, "iota-sdk/*.x"]
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
 concurrency:
   group: bindings-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' && !startsWith(github.ref, 'refs/heads/iota-sdk/') }}
 
 jobs:
   diff:
