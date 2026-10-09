@@ -113,6 +113,12 @@ pub mod string {
             Self { bytes }
         }
     }
+
+    impl crate::MoveType for String {
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new_string()))
+        }
+    }
 }
 
 /// Types from `0x1::uq32_32`.
