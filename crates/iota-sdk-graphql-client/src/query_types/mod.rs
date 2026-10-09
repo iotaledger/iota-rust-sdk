@@ -44,7 +44,7 @@ pub(crate) use dynamic_fields::{
 };
 pub use epoch::{Epoch, ValidatorSet};
 pub(crate) use epoch::{EpochArgs, EpochQueryFragment, EpochSummaryQueryFragment};
-pub use events::{Event, EventFilter};
+pub use events::{Event, EventFilter, TransactionBlockDigest};
 pub(crate) use events::{EventsQueryArgs, EventsQueryFragment};
 pub(crate) use execute_transaction::{ExecuteTransactionArgs, ExecuteTransactionQueryFragment};
 pub(crate) use iota_names::{
