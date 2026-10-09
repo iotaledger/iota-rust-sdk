@@ -3,7 +3,7 @@
 
 //! [`MoveType`] and [`MoveTypes`] impls for Rust built-in types.
 
-use iota_types::{Address, TypeTag};
+use iota_types::{Address, StructTag, TypeTag};
 
 use crate::{MoveType, MoveTypes};
 
@@ -34,7 +34,7 @@ impl_primitive_move_type!(primitive_types::U256 => U256);
 
 impl MoveType for String {
     fn type_tag() -> TypeTag {
-        TypeTag::Vector(Box::new(TypeTag::U8))
+        TypeTag::Struct(Box::new(StructTag::new_string()))
     }
 }
 
@@ -77,10 +77,22 @@ mod tests {
     #[test]
     fn vectors_nest_their_element_tag() {
         assert_eq!(Vec::<u64>::type_tag().to_string(), "vector<u64>");
-        assert_eq!(String::type_tag().to_string(), "vector<u8>");
+        assert_eq!(
+            Vec::<String>::type_tag().to_string(),
+            "vector<0x1::string::String>"
+        );
         assert_eq!(
             Vec::<Balance<IOTA>>::type_tag().to_string(),
             "vector<0x2::balance::Balance<0x2::iota::IOTA>>"
+        );
+    }
+
+    #[test]
+    fn rust_strings_and_the_string_mirror_share_a_tag() {
+        assert_eq!(String::type_tag().to_string(), "0x1::string::String");
+        assert_eq!(
+            crate::move_stdlib::string::String::type_tag(),
+            String::type_tag()
         );
     }
 
