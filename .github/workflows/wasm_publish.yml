@@ -109,7 +109,7 @@ jobs:
         # don't replace it.
         run: |
           version=$(npm pkg get version | tr -d '"')
-          latest=$(npm view "$(npm pkg get name | tr -d '"')" dist-tags.latest 2>/dev/null || true)
+          latest=$(npm view "$(npm pkg get name | tr -d '"')" dist-tags.latest 2>/dev/null)
           if [[ "$version" == *-* ]]; then
             echo "NPM_DIST_TAG=next" >> "$GITHUB_ENV"
           elif [ -n "$latest" ] && [ "$(printf '%s\n' "$latest" "$version" | sort -V | tail -n 1)" != "$version" ]; then
