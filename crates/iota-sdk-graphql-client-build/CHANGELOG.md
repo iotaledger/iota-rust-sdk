@@ -1,3 +1,22 @@
+## [1.0.0-rc.1] - 2026-10-09
+
+### 🐛 Bug Fixes
+
+- *(graphql-client)* [**breaking**] Return a GraphQLResult from the network constructors (#1638)
+
+### 🚜 Refactor
+
+- [**breaking**] Rename `Client` to `GrpcClient` and `GraphQLClient` (#1503)
+
+### ⚙️ Miscellaneous Tasks
+
+- [**breaking**] Update dependencies (#1346)
+- Sync the GraphQL schema and add a nightly drift check (#1529)
+- *(graphql)* Sync the schema with the monorepo (#1531)
+- *(graphql)* Sync the schema with the monorepo (#1639)
+- Use the README as the crate docs where it can carry them (#1602)
+- Add crates.io and docs.rs badges to all published crate READMEs (#1642)
+
 ## [1.0.0-beta.1] - 2026-08-31
 
 ### 🐛 Bug Fixes
