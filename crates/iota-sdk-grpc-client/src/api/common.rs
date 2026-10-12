@@ -474,14 +474,14 @@ pub(crate) use define_query;
 ///
 /// # Parameters
 ///
-/// - `$query_name` — name of the generated builder struct, optionally with a
+/// - `$query_name`: name of the generated builder struct, optionally with a
 ///   single bounded type parameter (e.g. `ListOwnedMoveObjectsQuery<T:
 ///   MoveObject>`) usable in `item` and `map_item`
-/// - `$service_client_type` — the tonic service client type
-/// - `$item_type` — the item type exposed by the builder
-/// - `$rpc_method` — the RPC method name on the service client
-/// - `$items_field` — the field name on the response containing the items vec
-/// - `map_item` (optional) — a fallible `fn(&ProtoItem) ->
+/// - `$service_client_type`: the tonic service client type
+/// - `$item_type`: the item type exposed by the builder
+/// - `$rpc_method`: the RPC method name on the service client
+/// - `$items_field`: the field name on the response containing the items vec
+/// - `map_item` (optional): a fallible `fn(&ProtoItem) ->
 ///   GrpcResult<$item_type>` applied to each response element. When omitted,
 ///   items are passed through unchanged (so `$item_type` must be the response
 ///   field's element type).

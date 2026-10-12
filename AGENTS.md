@@ -15,16 +15,16 @@ The **IOTA Rust SDK** is a modular software development kit for integrating with
 
 ## Critical development notes
 
-1. **NEVER make breaking changes** — this SDK is consumed externally. New fields must be optional, removals require a deprecation step first.
-2. **NEVER disable or skip tests** — all tests must pass and stay enabled.
-3. **NEVER use `#[allow(dead_code)]`, `#[allow(unused)]`, or other lint suppressions** to silence warnings — fix the underlying issue.
-4. **Types in `iota-sdk-types` must stay BCS-compatible** — verify BCS and JSON round-trips when adding or changing a type. `u64` is serialized as a string in JSON for JS safety.
-5. **Format and lint after every change** — `cargo +nightly fmt`, `dprint fmt`, and `make bindings-examples-format-check` for binding examples.
-6. **Keep pull requests small** — prefer small, focused PRs over large ones. A small diff is easier to review, easier to revert, and less likely to introduce regressions.
-7. **Split work into multiple PRs when possible** — if a change spans multiple concerns (e.g. a refactor plus a new feature, or changes across unrelated crates), split it into separate PRs. Land independent pieces incrementally rather than bundling them together. **Critically: when given multiple GitHub issues, ALWAYS create one PR per issue** — never bundle multiple issues into a single PR unless explicitly instructed or the issues are genuinely interdependent.
-8. **Write only what the diff can't say** — PR descriptions, review comments and chat replies cover the reasoning and the high-level shape of a change, never a walkthrough of the diff. See [Writing style](#writing-style); this is the most frequently ignored rule in this file.
-9. **Feature flags matter** — the umbrella `iota-sdk` gates everything behind features. Check what's enabled for the code you're modifying before assuming an item exists.
-10. **NEVER hand-edit generated gRPC types** under `crates/iota-sdk-grpc-types/src/proto/` — they are build output. Changes go into the proto sources / `update_grpc_types.sh`.
+1. **NEVER make breaking changes**: this SDK is consumed externally. New fields must be optional, removals require a deprecation step first.
+2. **NEVER disable or skip tests**: all tests must pass and stay enabled.
+3. **NEVER use `#[allow(dead_code)]`, `#[allow(unused)]`, or other lint suppressions** to silence warnings. Fix the underlying issue.
+4. **Types in `iota-sdk-types` must stay BCS-compatible**: verify BCS and JSON round-trips when adding or changing a type. `u64` is serialized as a string in JSON for JS safety.
+5. **Format and lint after every change**: `cargo +nightly fmt`, `dprint fmt`, and `make bindings-examples-format-check` for binding examples.
+6. **Keep pull requests small**: prefer small, focused PRs over large ones. A small diff is easier to review, easier to revert, and less likely to introduce regressions.
+7. **Split work into multiple PRs when possible**: if a change spans multiple concerns (e.g. a refactor plus a new feature, or changes across unrelated crates), split it into separate PRs. Land independent pieces incrementally rather than bundling them together. **Critically: when given multiple GitHub issues, ALWAYS create one PR per issue**; never bundle multiple issues into a single PR unless explicitly instructed or the issues are genuinely interdependent.
+8. **Write only what the diff can't say**: PR descriptions, review comments and chat replies cover the reasoning and the high-level shape of a change, never a walkthrough of the diff. See [Writing style](#writing-style); this is the most frequently ignored rule in this file.
+9. **Feature flags matter**: the umbrella `iota-sdk` gates everything behind features. Check what's enabled for the code you're modifying before assuming an item exists.
+10. **NEVER hand-edit generated gRPC types** under `crates/iota-sdk-grpc-types/src/proto/`. They are build output. Changes go into the proto sources / `update_grpc_types.sh`.
 
 ## Repository Structure
 
@@ -40,7 +40,7 @@ crates/
 ├── iota-sdk-grpc-proto-build/      # Build-time codegen for gRPC/protobuf types (`update_grpc_types.sh` regenerates from upstream protos)
 ├── iota-sdk-grpc-types/            # Generated gRPC/protobuf types
 ├── iota-sdk-transaction-builder/   # Fluent API for building transactions (online/offline modes)
-└── iota-sdk-types/                 # Core blockchain types (Address, ObjectId, Transaction, Checkpoint, ...) — BCS-compatible
+└── iota-sdk-types/                 # Core blockchain types (Address, ObjectId, Transaction, Checkpoint, ...), BCS-compatible
 
 bindings/
 ├── csharp/                         # C# bindings
@@ -114,14 +114,14 @@ cargo test --doc                 # Direct doc test invocation
 
 ## Writing style
 
-All prose — PR/issue descriptions, reviews, chat replies, comments, commit messages:
+All prose (PR/issue descriptions, reviews, chat replies, comments, commit messages):
 
-- One sentence naming the change, then only what the reader can't get from the diff: the problem, the reasoning, real trade-offs. Default budget: 1–3 sentences per section — spend more only on a concern the reader would miss, never to cover the diff more completely.
-- No diff inventory — no per-file bullets, no symbol lists, no restating code in prose. Applies to reasons too: a "why" whose content is visible in the diff is inventory.
-- No invented motives — never "X because Y" unless Y came from the issue or task.
-- No filler — no lead-ins, headings-for-show, verdict paragraphs, or notes about these rules. Reviews: start with the first finding, one point per comment.
-- Plain language — only terms already in the codebase or domain; never coin a label and reuse it as vocabulary.
-- Match the answer's shape to the question — an enumerable question gets a bullet list, one line per item; prose only where an item needs actual reasoning.
+- One sentence naming the change, then only what the reader can't get from the diff: the problem, the reasoning, real trade-offs. Default budget: 1–3 sentences per section; spend more only on a concern the reader would miss, never to cover the diff more completely.
+- No diff inventory: no per-file bullets, no symbol lists, no restating code in prose. Applies to reasons too: a "why" whose content is visible in the diff is inventory.
+- No invented motives: never "X because Y" unless Y came from the issue or task.
+- No filler: no lead-ins, headings-for-show, verdict paragraphs, or notes about these rules. Reviews: start with the first finding, one point per comment.
+- Plain language: only terms already in the codebase or domain; never coin a label and reuse it as vocabulary.
+- Match the answer's shape to the question: an enumerable question gets a bullet list, one line per item; prose only where an item needs actual reasoning.
 
 Before posting: delete every sentence the reader could get from the diff; repeat until a pass cuts nothing.
 
@@ -141,7 +141,7 @@ Before posting: delete every sentence the reader could get from the diff; repeat
 - **Main branch**: `develop` (not `main`)
 - **CI**: All tests must pass, no clippy warnings, proper formatting
 - Draft PRs can force CI with `[run-ci]` in the PR body
-- **PR title format**: Titles are validated in CI (`.github/workflows/pr_title.yml`) and must follow the [Conventional Commits](https://www.conventionalcommits.org/) style. Allowed types are `feat`, `fix`, `refactor`, `chore`, `upstream`, `release`, and `revert` (e.g. `feat: add new gRPC method`, `chore: update docs`). No other prefixes (such as `docs:` or `test:`) are accepted — use `chore:` for those.
+- **PR title format**: Titles are validated in CI (`.github/workflows/pr_title.yml`) and must follow the [Conventional Commits](https://www.conventionalcommits.org/) style. Allowed types are `feat`, `fix`, `refactor`, `chore`, `upstream`, `release`, and `revert` (e.g. `feat: add new gRPC method`, `chore: update docs`). No other prefixes (such as `docs:` or `test:`) are accepted. Use `chore:` for those.
 
 ## WASM Considerations
 

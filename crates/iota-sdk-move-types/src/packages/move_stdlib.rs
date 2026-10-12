@@ -37,7 +37,7 @@ pub mod ascii {
     /// Rust version of the Move `std::ascii::String` type.
     ///
     /// The Move type guarantees that all bytes are valid ASCII. This Rust
-    /// mirror does **not** enforce that invariant — it is up to the caller.
+    /// mirror does **not** enforce that invariant: it is up to the caller.
     /// Wire format: a length-prefixed byte vector.
     ///
     /// # BCS
@@ -91,7 +91,7 @@ pub mod string {
     ///
     /// The Move type holds a UTF-8 encoded byte sequence. This Rust mirror
     /// does **not** enforce that invariant. Wire format: a length-prefixed
-    /// byte vector — identical to Rust's [`struct@String`].
+    /// byte vector, identical to Rust's [`struct@String`].
     ///
     /// # BCS
     ///
@@ -235,7 +235,7 @@ pub mod option {
     ///
     /// Move encodes optional values as a `vector` of length 0 or 1. The wire
     /// format is identical to Rust's prelude [`struct@Option`], so most code
-    /// can use that instead — this mirror is provided for parity with the
+    /// can use that instead; this mirror is provided for parity with the
     /// Move source.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]

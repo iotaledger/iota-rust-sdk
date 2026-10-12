@@ -148,7 +148,7 @@ impl GraphQLClient {
     ///
     /// Returns an error if any object in the page fails to decode. The query
     /// filters on `T`'s exact type, so a failure means the on-chain type has
-    /// moved out from under the mirror rather than that one object is odd —
+    /// moved out from under the mirror rather than that one object is odd;
     /// yielding the rest of the page would hide that.
     ///
     /// # Example
@@ -229,7 +229,7 @@ mod tests {
     }
 
     /// The type filter comes from `T`, so a page reached this way holds only
-    /// objects of that type — every one of them decoded, or the call failed.
+    /// objects of that type: every one of them decoded, or the call failed.
     #[tokio::test]
     async fn test_move_objects_stream() {
         let client = test_client();

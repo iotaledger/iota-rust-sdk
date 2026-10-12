@@ -31,7 +31,7 @@ func main() {
 	}
 	end := head
 
-	// Only ask for the summary — keeps the message small. Pass nil (or
+	// Only ask for the summary, which keeps the message small. Pass nil (or
 	// compose more fields) to pull more data per checkpoint.
 	readMask := []iota_sdk.GrpcCheckpointResponseField{iota_sdk.GrpcCheckpointResponseFieldCheckpointSummary{}}
 	stream, err := client.CheckpointsStream(&start, &end, nil, nil, &readMask)
