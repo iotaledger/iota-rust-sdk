@@ -151,3 +151,7 @@ required-features = ["graphql", "move-types"]
 [[example]]
 name = "gas_station"
 required-features = ["gas-station"]
+
+[[example]]
+name = "ledger_sign_send_iota"
+required-features = ["graphql", "ledger-hid", "ledger-speculos"]

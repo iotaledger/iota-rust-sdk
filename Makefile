@@ -443,7 +443,8 @@ example:
 examples: ## Run all Rust examples
 	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer
 	@# that require external services (e.g. PostgreSQL). Run those separately.
-	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -exec basename {} .rs \;); do \
+	@# The Ledger examples need a device or the Speculos emulator.
+	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" ! -name "ledger_*" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 
