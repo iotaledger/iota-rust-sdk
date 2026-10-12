@@ -40,12 +40,12 @@ fn command(cla: u8, ins: u8, data: Vec<u8>) -> ApduCommand {
 }
 
 /// Send a single command and return the answer's data.
-fn exec(transport: &dyn Transport, apdu: ApduCommand) -> Result<Vec<u8>, LedgerError> {
+async fn exec(transport: &dyn Transport, apdu: ApduCommand) -> Result<Vec<u8>, LedgerError> {
     if apdu.data.len() > u8::MAX as usize {
         return Err(LedgerError::PayloadTooLong);
     }
     debug!("Exchanging APDU command: {}", hex::encode(apdu.to_bytes()));
-    let answer = transport.exchange(&apdu)?;
+    let answer = transport.exchange(&apdu).await?;
     match ApduError::from_status_word(answer.status_word) {
         Some(error) => Err(error.into()),
         None => Ok(answer.data),
