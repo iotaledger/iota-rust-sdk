@@ -33,15 +33,6 @@ impl LedgerSigner {
         })
     }
 
-    /// Fail with [`LedgerError::AddressMismatch`] unless the key belongs to
-    /// `address`, to catch a wrong device or derivation path.
-    pub fn with_expected_address(self, address: &Address) -> Result<Self, LedgerError> {
-        if self.address() != *address {
-            return Err(LedgerError::AddressMismatch);
-        }
-        Ok(self)
-    }
-
     /// The derivation path of the signing key.
     pub fn path(&self) -> &DerivationPath {
         &self.path
@@ -195,21 +186,6 @@ mod tests {
             block_on(signer.sign_personal_message(&PersonalMessage(b"Hello".into()))).unwrap(),
             expected
         );
-    }
-
-    #[test]
-    fn checks_the_expected_address() {
-        let public_key = Ed25519PublicKey::new([7; 32]);
-        let signer = signer(&Arc::new(Mutex::new(public_key)));
-        let signer = signer
-            .with_expected_address(&public_key.derive_address())
-            .unwrap();
-
-        let other = Ed25519PublicKey::new([8; 32]).derive_address();
-        assert!(matches!(
-            signer.with_expected_address(&other),
-            Err(LedgerError::AddressMismatch)
-        ));
     }
 
     #[test]
