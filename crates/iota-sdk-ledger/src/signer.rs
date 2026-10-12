@@ -66,6 +66,18 @@ impl LedgerSigner {
         self.ledger
     }
 
+    /// Pair the signer with a client that can fetch a transaction's input
+    /// objects, so transactions can be clear-signed without passing them.
+    ///
+    /// The transaction builder implements its `TransactionSigner` trait for
+    /// the pair when its `ledger` feature is enabled.
+    pub fn with_client<C>(self, client: C) -> LedgerSignerWithClient<C> {
+        LedgerSignerWithClient {
+            signer: self,
+            client,
+        }
+    }
+
     /// Sign a transaction without its input objects. The device only signs
     /// when blind signing is enabled in the IOTA app's settings.
     pub async fn sign_transaction(
@@ -115,6 +127,31 @@ impl LedgerSigner {
             signature,
             public_key: self.public_key,
         })
+    }
+}
+
+/// A [`LedgerSigner`] paired with a client through
+/// [`LedgerSigner::with_client`].
+#[derive(Debug)]
+pub struct LedgerSignerWithClient<C> {
+    signer: LedgerSigner,
+    client: C,
+}
+
+impl<C> LedgerSignerWithClient<C> {
+    /// The signer.
+    pub fn signer(&self) -> &LedgerSigner {
+        &self.signer
+    }
+
+    /// The client.
+    pub fn client(&self) -> &C {
+        &self.client
+    }
+
+    /// Separate the signer and the client.
+    pub fn into_parts(self) -> (LedgerSigner, C) {
+        (self.signer, self.client)
     }
 }
 

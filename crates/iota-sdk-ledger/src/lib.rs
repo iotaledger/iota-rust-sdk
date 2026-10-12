@@ -23,7 +23,7 @@ pub use crate::transport::hid::HidDeviceInfo;
 pub use crate::{
     commands::app::AppVersion,
     error::LedgerError,
-    signer::LedgerSigner,
+    signer::{LedgerSigner, LedgerSignerWithClient},
     transport::{ApduAnswer, ApduCommand, MaybeSendSync, Transport, TransportFuture},
 };
 
