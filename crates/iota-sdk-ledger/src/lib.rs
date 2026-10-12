@@ -8,12 +8,7 @@ mod commands;
 mod error;
 mod transport;
 
-use std::{
-    fmt,
-    sync::OnceLock,
-    thread,
-    time::{Duration, Instant},
-};
+use std::{fmt, sync::OnceLock};
 
 pub use iota_crypto;
 use iota_crypto::DerivationPath;
@@ -26,20 +21,22 @@ pub use crate::transport::hid::HidDeviceInfo;
 pub use crate::{
     commands::app::AppVersion,
     error::LedgerError,
-    transport::{ApduAnswer, ApduCommand, Transport},
+    transport::{ApduAnswer, ApduCommand, MaybeSendSync, Transport, TransportFuture},
 };
 
 const IOTA_APP_NAME: &str = "IOTA";
 const DASHBOARD_APP_NAME: &str = "BOLOS";
 
-/// How long to wait for the device to come back after switching apps.
-const APP_SWITCH_TIMEOUT: Duration = Duration::from_secs(10);
-const APP_SWITCH_POLL_INTERVAL: Duration = Duration::from_millis(250);
+/// How many times to reconnect while waiting for an app to start; transports
+/// pause before each attempt.
+const APP_SWITCH_ATTEMPTS: usize = 40;
 
 /// A connection to the IOTA app on a Ledger device.
 ///
-/// Every call blocks until the device answers, which for signing and address
-/// verification includes waiting for the user to confirm on the device.
+/// Every call completes once the device answers, which for signing and
+/// address verification includes waiting for the user to confirm on the
+/// device. The USB HID and Speculos transports block the thread polling the
+/// call while they wait.
 pub struct Ledger {
     transport: Box<dyn Transport>,
     version: OnceLock<AppVersion>,
@@ -66,60 +63,66 @@ impl Ledger {
     ///
     /// Speculos reports a placeholder app name unless started with
     /// `SPECULOS_APPNAME=IOTA:<version>`, so this returns `false` there.
-    pub fn is_app_open(&self) -> Result<bool, LedgerError> {
-        Ok(bolos::app_name(self.transport.as_ref())? == IOTA_APP_NAME)
+    pub async fn is_app_open(&self) -> Result<bool, LedgerError> {
+        Ok(bolos::app_name(self.transport.as_ref()).await? == IOTA_APP_NAME)
     }
 
     /// Make sure the IOTA app is running, opening it from the dashboard or
     /// closing another app first.
     ///
     /// Does nothing on transports that cannot switch apps, such as Speculos.
-    pub fn ensure_app_is_open(&mut self) -> Result<(), LedgerError> {
+    pub async fn ensure_app_is_open(&mut self) -> Result<(), LedgerError> {
         if !self.transport.can_switch_apps() {
             return Ok(());
         }
-        match bolos::app_name(self.transport.as_ref())?.as_str() {
+        match bolos::app_name(self.transport.as_ref()).await?.as_str() {
             IOTA_APP_NAME => return Ok(()),
             DASHBOARD_APP_NAME => {}
             _ => {
-                bolos::exit_app(self.transport.as_ref())?;
-                self.wait_for_app(DASHBOARD_APP_NAME)?;
+                bolos::exit_app(self.transport.as_ref()).await?;
+                self.wait_for_app(DASHBOARD_APP_NAME).await?;
             }
         }
-        bolos::open_app(self.transport.as_ref(), IOTA_APP_NAME)?;
-        self.wait_for_app(IOTA_APP_NAME)
+        bolos::open_app(self.transport.as_ref(), IOTA_APP_NAME).await?;
+        self.wait_for_app(IOTA_APP_NAME).await
     }
 
     /// Close the IOTA app and return to the dashboard.
     ///
     /// On transports that cannot switch apps, such as Speculos, this ends the
     /// emulated app.
-    pub fn exit_app(&mut self) -> Result<(), LedgerError> {
-        app::exit(self.transport.as_ref())?;
+    pub async fn exit_app(&mut self) -> Result<(), LedgerError> {
+        app::exit(self.transport.as_ref()).await?;
         if !self.transport.can_switch_apps() {
             return Ok(());
         }
-        self.wait_for_app(DASHBOARD_APP_NAME)
+        self.wait_for_app(DASHBOARD_APP_NAME).await
     }
 
     /// Read the version of the IOTA app.
-    pub fn version(&self) -> Result<AppVersion, LedgerError> {
+    pub async fn version(&self) -> Result<AppVersion, LedgerError> {
         if let Some(version) = self.version.get() {
             return Ok(*version);
         }
-        let version = app::version(self.transport.as_ref())?;
+        let version = app::version(self.transport.as_ref()).await?;
         Ok(*self.version.get_or_init(|| version))
     }
 
     /// Read the public key at `path`.
-    pub fn get_public_key(&self, path: &DerivationPath) -> Result<Ed25519PublicKey, LedgerError> {
-        app::public_key(self.transport.as_ref(), path, false)
+    pub async fn get_public_key(
+        &self,
+        path: &DerivationPath,
+    ) -> Result<Ed25519PublicKey, LedgerError> {
+        app::public_key(self.transport.as_ref(), path, false).await
     }
 
     /// Show the address at `path` on the device for the user to confirm, and
     /// return its public key.
-    pub fn verify_address(&self, path: &DerivationPath) -> Result<Ed25519PublicKey, LedgerError> {
-        app::public_key(self.transport.as_ref(), path, true)
+    pub async fn verify_address(
+        &self,
+        path: &DerivationPath,
+    ) -> Result<Ed25519PublicKey, LedgerError> {
+        app::public_key(self.transport.as_ref(), path, true).await
     }
 
     /// Sign a transaction with the key at `path`.
@@ -128,49 +131,71 @@ impl Ledger {
     /// shows what the transaction does; without them it only signs when blind
     /// signing is enabled in the app's settings. Passing objects to an app
     /// older than 1.0 fails with [`LedgerError::ClearSigningUnsupported`].
-    pub fn sign_transaction(
+    pub async fn sign_transaction(
         &self,
         path: &DerivationPath,
         transaction: &Transaction,
         objects: &[Object],
     ) -> Result<Ed25519Signature, LedgerError> {
         if !objects.is_empty() {
-            let version = self.version()?;
+            let version = self.version().await?;
             if version.major() == 0 {
                 return Err(LedgerError::ClearSigningUnsupported(version));
             }
         }
-        sign::transaction(self.transport.as_ref(), path, transaction, objects)
+        sign::transaction(self.transport.as_ref(), path, transaction, objects).await
     }
 
     /// Sign a personal message with the key at `path`.
-    pub fn sign_personal_message(
+    pub async fn sign_personal_message(
         &self,
         path: &DerivationPath,
         message: &PersonalMessage<'_>,
     ) -> Result<Ed25519Signature, LedgerError> {
-        sign::personal_message(self.transport.as_ref(), path, message)
+        sign::personal_message(self.transport.as_ref(), path, message).await
     }
 
     /// Wait until `app` runs on the device, reconnecting as the device
     /// re-enumerates after an app switch.
-    fn wait_for_app(&mut self, app: &str) -> Result<(), LedgerError> {
+    async fn wait_for_app(&mut self, app: &str) -> Result<(), LedgerError> {
         self.version = OnceLock::new();
-        let deadline = Instant::now() + APP_SWITCH_TIMEOUT;
-        loop {
-            thread::sleep(APP_SWITCH_POLL_INTERVAL);
-            let result = self
-                .transport
-                .reconnect()
-                .and_then(|()| bolos::app_name(self.transport.as_ref()));
-            let error = match result {
+        let mut error = LedgerError::DeviceNotReady;
+        for _ in 0..APP_SWITCH_ATTEMPTS {
+            if let Err(e) = self.transport.reconnect().await {
+                error = e;
+                continue;
+            }
+            match bolos::app_name(self.transport.as_ref()).await {
                 Ok(name) if name == app => return Ok(()),
-                Ok(_) => LedgerError::DeviceNotReady,
-                Err(error) => error,
-            };
-            if Instant::now() >= deadline {
-                return Err(error);
+                Ok(_) => error = LedgerError::DeviceNotReady,
+                Err(e) => error = e,
             }
         }
+        Err(error)
+    }
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use super::*;
+
+    struct NoDevice;
+
+    impl Transport for NoDevice {
+        fn exchange<'a>(&'a self, _: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer> {
+            Box::pin(async { Err(LedgerError::DeviceNotFound) })
+        }
+    }
+
+    fn assert_send<T: Send>(_: T) {}
+
+    #[test]
+    fn futures_are_send() {
+        let mut ledger = Ledger::new(NoDevice);
+        let path: DerivationPath = "m/44'/4218'/0'/0'/0'".parse().unwrap();
+        assert_send(ledger.version());
+        assert_send(ledger.get_public_key(&path));
+        assert_send(ledger.sign_personal_message(&path, &PersonalMessage(b"".into())));
+        assert_send(ledger.ensure_app_is_open());
     }
 }
