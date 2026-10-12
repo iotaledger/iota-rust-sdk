@@ -129,10 +129,10 @@ macro_rules! coin_marker_validation_tests {
             #[test]
             fn runtime_tag_escape_hatch() {
                 let object = object_with_tag(FOO_TAG, FIXTURE);
-                $ty::<IOTA>::try_from_object_with_type(&object, &foo_type_tag())
+                $ty::try_from_object_with_type(&object, &foo_type_tag())
                     .expect("explicit tag matches");
                 assert!(matches!(
-                    $ty::<IOTA>::try_from_object_with_type(&object, &IOTA::type_tag()),
+                    $ty::try_from_object_with_type(&object, &IOTA::type_tag()),
                     Err(FromObjectError::WrongType)
                 ));
             }
@@ -519,10 +519,10 @@ mod synthetic {
 
         // Escape hatch: an explicit label-type tag. Accepts the matching
         // tag and rejects a foreign one.
-        LabelerCap::<IOTA>::try_from_object_with_type(&object, &IOTA::type_tag())
+        LabelerCap::try_from_object_with_type(&object, &IOTA::type_tag())
             .expect("explicit label type matches");
         assert!(matches!(
-            LabelerCap::<IOTA>::try_from_object_with_type(&object, &foo_type_tag()),
+            LabelerCap::try_from_object_with_type(&object, &foo_type_tag()),
             Err(FromObjectError::WrongType)
         ));
 
@@ -554,10 +554,10 @@ mod synthetic {
 
         // Escape hatch: an explicit item-type tag. Accepts the matching tag
         // and rejects a foreign one.
-        PurchaseCap::<IOTA>::try_from_object_with_type(&object, &IOTA::type_tag())
+        PurchaseCap::try_from_object_with_type(&object, &IOTA::type_tag())
             .expect("explicit item type matches");
         assert!(matches!(
-            PurchaseCap::<IOTA>::try_from_object_with_type(&object, &foo_type_tag()),
+            PurchaseCap::try_from_object_with_type(&object, &foo_type_tag()),
             Err(FromObjectError::WrongType)
         ));
 

@@ -276,7 +276,7 @@ impl FaucetClient {
             .collect::<HashSet<_>>();
         for digest in tx_digests {
             client
-                .wait_for_transaction(digest, WaitForTransaction::Finalized, None)
+                .wait_for_transaction(digest, WaitForTransaction::Finalized)
                 .await?;
         }
 

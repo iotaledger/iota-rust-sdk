@@ -17,6 +17,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for Address {}
     impl MessageFields for Address {
         const FIELDS: &'static [&'static MessageField] = &[Self::ADDRESS_FIELD];
     }
@@ -55,6 +56,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ObjectId {}
     impl MessageFields for ObjectId {
         const FIELDS: &'static [&'static MessageField] = &[Self::OBJECT_ID_FIELD];
     }
@@ -93,6 +95,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for Digest {}
     impl MessageFields for Digest {
         const FIELDS: &'static [&'static MessageField] = &[Self::DIGEST_FIELD];
     }
@@ -147,6 +150,7 @@ mod _field_impls {
             message_fields: Some(Digest::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ObjectReference {}
     impl MessageFields for ObjectReference {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::OBJECT_ID_FIELD,
@@ -224,6 +228,7 @@ mod _field_impls {
     impl Owner {
         pub const KIND_ONEOF: &'static str = "kind";
     }
+    impl crate::field::sealed::Sealed for Owner {}
     impl MessageFields for Owner {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::ADDRESS_OWNER_FIELD,
@@ -280,6 +285,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for TypeTagVector {}
     impl MessageFields for TypeTagVector {
         const FIELDS: &'static [&'static MessageField] = &[Self::INNER_TYPE_FIELD];
     }
@@ -318,6 +324,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for TypeTagStruct {}
     impl MessageFields for TypeTagStruct {
         const FIELDS: &'static [&'static MessageField] = &[Self::STRUCT_TAG_FIELD];
     }
@@ -439,6 +446,7 @@ mod _field_impls {
     impl TypeTag {
         pub const TYPE_TAG_ONEOF: &'static str = "type_tag";
     }
+    impl crate::field::sealed::Sealed for TypeTag {}
     impl MessageFields for TypeTag {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::BOOL_TAG_FIELD,
@@ -530,6 +538,7 @@ mod _field_impls {
             message_fields: Some(TypeTag::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for TypeTags {}
     impl MessageFields for TypeTags {
         const FIELDS: &'static [&'static MessageField] = &[Self::TYPE_TAGS_FIELD];
     }

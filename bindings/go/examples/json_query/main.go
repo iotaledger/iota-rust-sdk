@@ -11,7 +11,10 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	queryStr := `
 		query getLatestIotaSystemState {

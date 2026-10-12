@@ -19,6 +19,8 @@ mod _field_impls {
                 message_fields: None,
             };
         }
+        impl crate::field::sealed::Sealed
+        for crate::v1::ledger_service::checkpoint_data::Progress {}
         impl MessageFields for crate::v1::ledger_service::checkpoint_data::Progress {
             const FIELDS: &'static [&'static MessageField] = &[
                 Self::LATEST_SCANNED_SEQUENCE_NUMBER_FIELD,
@@ -63,6 +65,8 @@ mod _field_impls {
                 message_fields: None,
             };
         }
+        impl crate::field::sealed::Sealed
+        for crate::v1::ledger_service::checkpoint_data::EndMarker {}
         impl MessageFields for crate::v1::ledger_service::checkpoint_data::EndMarker {
             const FIELDS: &'static [&'static MessageField] = &[
                 Self::SEQUENCE_NUMBER_FIELD,
@@ -108,6 +112,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for GetHealthRequest {}
     impl MessageFields for GetHealthRequest {
         const FIELDS: &'static [&'static MessageField] = &[Self::THRESHOLD_MS_FIELD];
     }
@@ -154,6 +159,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for GetHealthResponse {}
     impl MessageFields for GetHealthResponse {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::EXECUTED_CHECKPOINT_HEIGHT_FIELD,
@@ -199,6 +205,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for GetServiceInfoRequest {}
     impl MessageFields for GetServiceInfoRequest {
         const FIELDS: &'static [&'static MessageField] = &[Self::READ_MASK_FIELD];
     }
@@ -293,6 +300,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for GetServiceInfoResponse {}
     impl MessageFields for GetServiceInfoResponse {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::CHAIN_ID_FIELD,
@@ -375,6 +383,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::types::ObjectReference::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ObjectRequest {}
     impl MessageFields for ObjectRequest {
         const FIELDS: &'static [&'static MessageField] = &[Self::OBJECT_REF_FIELD];
     }
@@ -415,6 +424,7 @@ mod _field_impls {
             message_fields: Some(ObjectRequest::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ObjectRequests {}
     impl MessageFields for ObjectRequests {
         const FIELDS: &'static [&'static MessageField] = &[Self::REQUESTS_FIELD];
     }
@@ -469,6 +479,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for GetObjectsRequest {}
     impl MessageFields for GetObjectsRequest {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::REQUESTS_FIELD,
@@ -530,6 +541,7 @@ mod _field_impls {
     impl ObjectResult {
         pub const RESULT_ONEOF: &'static str = "result";
     }
+    impl crate::field::sealed::Sealed for ObjectResult {}
     impl MessageFields for ObjectResult {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::OBJECT_FIELD,
@@ -584,6 +596,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for GetObjectsResponse {}
     impl MessageFields for GetObjectsResponse {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::OBJECTS_FIELD,
@@ -629,6 +642,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for TransactionRequest {}
     impl MessageFields for TransactionRequest {
         const FIELDS: &'static [&'static MessageField] = &[Self::DIGEST_FIELD];
     }
@@ -667,6 +681,7 @@ mod _field_impls {
             message_fields: Some(TransactionRequest::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for TransactionRequests {}
     impl MessageFields for TransactionRequests {
         const FIELDS: &'static [&'static MessageField] = &[Self::REQUESTS_FIELD];
     }
@@ -721,6 +736,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for GetTransactionsRequest {}
     impl MessageFields for GetTransactionsRequest {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::REQUESTS_FIELD,
@@ -782,6 +798,7 @@ mod _field_impls {
     impl TransactionResult {
         pub const RESULT_ONEOF: &'static str = "result";
     }
+    impl crate::field::sealed::Sealed for TransactionResult {}
     impl MessageFields for TransactionResult {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::EXECUTED_TRANSACTION_FIELD,
@@ -840,6 +857,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for GetTransactionsResponse {}
     impl MessageFields for GetTransactionsResponse {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::TRANSACTION_RESULTS_FIELD,
@@ -936,6 +954,7 @@ mod _field_impls {
     impl GetCheckpointRequest {
         pub const CHECKPOINT_ID_ONEOF: &'static str = "checkpoint_id";
     }
+    impl crate::field::sealed::Sealed for GetCheckpointRequest {}
     impl MessageFields for GetCheckpointRequest {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::LATEST_FIELD,
@@ -1069,6 +1088,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for StreamCheckpointsRequest {}
     impl MessageFields for StreamCheckpointsRequest {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::START_SEQUENCE_NUMBER_FIELD,
@@ -1189,6 +1209,7 @@ mod _field_impls {
     impl CheckpointData {
         pub const PAYLOAD_ONEOF: &'static str = "payload";
     }
+    impl crate::field::sealed::Sealed for CheckpointData {}
     impl MessageFields for CheckpointData {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::CHECKPOINT_FIELD,
@@ -1264,6 +1285,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for GetEpochRequest {}
     impl MessageFields for GetEpochRequest {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::EPOCH_FIELD,
@@ -1309,6 +1331,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::epoch::Epoch::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for GetEpochResponse {}
     impl MessageFields for GetEpochResponse {
         const FIELDS: &'static [&'static MessageField] = &[Self::EPOCH_FIELD];
     }

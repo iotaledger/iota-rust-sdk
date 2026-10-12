@@ -55,18 +55,15 @@ impl GetCheckpointQuery {
     /// Set the filter to apply to transactions.
     pub fn transactions_filter(
         mut self,
-        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
+        transactions_filter: grpc_filter::TransactionFilter,
     ) -> Self {
-        self.transactions_filter = transactions_filter.into();
+        self.transactions_filter = Some(transactions_filter);
         self
     }
 
     /// Set the filter to apply to events.
-    pub fn events_filter(
-        mut self,
-        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
-    ) -> Self {
-        self.events_filter = events_filter.into();
+    pub fn events_filter(mut self, events_filter: grpc_filter::EventFilter) -> Self {
+        self.events_filter = Some(events_filter);
         self
     }
 
@@ -210,40 +207,34 @@ define_query! {
 }
 
 impl CheckpointsStreamQuery {
-    /// Set the first checkpoint to stream. If `None`, starts from the
+    /// Set the first checkpoint to stream. Without it, starts from the
     /// latest checkpoint.
     pub fn start_sequence_number(
         mut self,
-        start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
+        start_sequence_number: CheckpointSequenceNumber,
     ) -> Self {
-        self.options.start_sequence_number = start_sequence_number.into();
+        self.options.start_sequence_number = Some(start_sequence_number);
         self
     }
 
-    /// Set the last checkpoint to stream. If `None`, streams indefinitely.
-    pub fn end_sequence_number(
-        mut self,
-        end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
-    ) -> Self {
-        self.options.end_sequence_number = end_sequence_number.into();
+    /// Set the last checkpoint to stream. Without it, streams indefinitely.
+    pub fn end_sequence_number(mut self, end_sequence_number: CheckpointSequenceNumber) -> Self {
+        self.options.end_sequence_number = Some(end_sequence_number);
         self
     }
 
     /// Set the filter to apply to transactions.
     pub fn transactions_filter(
         mut self,
-        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
+        transactions_filter: grpc_filter::TransactionFilter,
     ) -> Self {
-        self.options.transactions_filter = transactions_filter.into();
+        self.options.transactions_filter = Some(transactions_filter);
         self
     }
 
     /// Set the filter to apply to events.
-    pub fn events_filter(
-        mut self,
-        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
-    ) -> Self {
-        self.options.events_filter = events_filter.into();
+    pub fn events_filter(mut self, events_filter: grpc_filter::EventFilter) -> Self {
+        self.options.events_filter = Some(events_filter);
         self
     }
 
@@ -288,40 +279,34 @@ define_query! {
 }
 
 impl CheckpointsStreamFilteredQuery {
-    /// Set the first checkpoint to stream. If `None`, starts from the
+    /// Set the first checkpoint to stream. Without it, starts from the
     /// latest checkpoint.
     pub fn start_sequence_number(
         mut self,
-        start_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
+        start_sequence_number: CheckpointSequenceNumber,
     ) -> Self {
-        self.options.start_sequence_number = start_sequence_number.into();
+        self.options.start_sequence_number = Some(start_sequence_number);
         self
     }
 
-    /// Set the last checkpoint to stream. If `None`, streams indefinitely.
-    pub fn end_sequence_number(
-        mut self,
-        end_sequence_number: impl Into<Option<CheckpointSequenceNumber>>,
-    ) -> Self {
-        self.options.end_sequence_number = end_sequence_number.into();
+    /// Set the last checkpoint to stream. Without it, streams indefinitely.
+    pub fn end_sequence_number(mut self, end_sequence_number: CheckpointSequenceNumber) -> Self {
+        self.options.end_sequence_number = Some(end_sequence_number);
         self
     }
 
     /// Set the filter to apply to transactions.
     pub fn transactions_filter(
         mut self,
-        transactions_filter: impl Into<Option<grpc_filter::TransactionFilter>>,
+        transactions_filter: grpc_filter::TransactionFilter,
     ) -> Self {
-        self.options.transactions_filter = transactions_filter.into();
+        self.options.transactions_filter = Some(transactions_filter);
         self
     }
 
     /// Set the filter to apply to events.
-    pub fn events_filter(
-        mut self,
-        events_filter: impl Into<Option<grpc_filter::EventFilter>>,
-    ) -> Self {
-        self.options.events_filter = events_filter.into();
+    pub fn events_filter(mut self, events_filter: grpc_filter::EventFilter) -> Self {
+        self.options.events_filter = Some(events_filter);
         self
     }
 
@@ -333,8 +318,8 @@ impl CheckpointsStreamFilteredQuery {
 
     /// Set the progress message interval in milliseconds. Defaults to
     /// 2000ms, minimum 500ms.
-    pub fn progress_interval_ms(mut self, progress_interval_ms: impl Into<Option<u32>>) -> Self {
-        self.progress_interval_ms = progress_interval_ms.into();
+    pub fn progress_interval_ms(mut self, progress_interval_ms: u32) -> Self {
+        self.progress_interval_ms = Some(progress_interval_ms);
         self
     }
 

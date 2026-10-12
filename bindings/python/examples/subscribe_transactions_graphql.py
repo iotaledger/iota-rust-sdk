@@ -27,7 +27,7 @@ async def generate_activity():
 async def main():
     client = GraphQlClient.new_localnet()
     subscription = client.transactions_subscription(
-        filter=GraphQlSubscriptionTransactionFilter(
+        filter=GraphQlSubscriptionTransactionFilter.KIND(
             kind=GraphQlTransactionBlockKindInput.PROGRAMMABLE_TX))
 
     activity = asyncio.create_task(generate_activity())

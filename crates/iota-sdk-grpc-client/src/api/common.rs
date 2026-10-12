@@ -611,17 +611,17 @@ macro_rules! define_list_query {
             }
 
             /// Set the maximum number of items per page.
-            pub fn page_size(mut self, page_size: impl Into<Option<u32>>) -> Self {
-                self.page_size = page_size.into();
+            pub fn page_size(mut self, page_size: u32) -> Self {
+                self.page_size = Some(page_size);
                 self
             }
 
             /// Set the continuation token from a previous page.
             pub fn page_token(
                 mut self,
-                page_token: impl Into<Option<::prost::bytes::Bytes>>,
+                page_token: ::prost::bytes::Bytes,
             ) -> Self {
-                self.page_token = page_token.into();
+                self.page_token = Some(page_token);
                 self
             }
 

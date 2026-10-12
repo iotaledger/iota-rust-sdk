@@ -76,9 +76,10 @@ macro_rules! ffi_move_event {
 }
 
 /// Like [`ffi_move_object`], but for a mirror with a single (phantom) type
-/// parameter. `$core` is the type instantiated at `IOTA` (a phantom marker, so
-/// the BCS layout is the same for every coin type); the object constructor
-/// validates the on-chain type parameter against a caller-provided `TypeTag`.
+/// parameter. `$core` is the type instantiated at `()` (the parameter is
+/// phantom, so the BCS layout is the same for every instantiation); the object
+/// constructor validates the on-chain type parameter against a caller-provided
+/// `TypeTag`.
 #[macro_export]
 macro_rules! ffi_move_object_generic {
     (
@@ -498,6 +499,103 @@ macro_rules! ffi_btree_map {
                 fn default() -> Self {
                     Self(::std::collections::BTreeMap::new())
                 }
+            }
+        }
+    };
+}
+
+/// Define the FFI object holding the per-item results of a gRPC batch call,
+/// each either an `$item` converted from `$proto` or the error message the
+/// server reported for it. uniffi can't carry a `Result` inside a list, so
+/// the items are read through `get` and `has_next`/`next`, which throw an
+/// item's error.
+#[macro_export]
+macro_rules! grpc_batch_results {
+    (
+        $(#[$meta:meta])*
+        $name:ident($item:ty, $proto:ty)
+    ) => {
+        $(#[$meta])*
+        ///
+        /// Read items by position with `get`, or in order with `has_next` and
+        /// `next`. An item's error does not end the iteration: `next` throws
+        /// it and the following call moves on to the next item. Items can be
+        /// read any number of times.
+        #[derive(uniffi::Object)]
+        pub struct $name {
+            results: Vec<::std::result::Result<$item, String>>,
+            cursor: ::std::sync::atomic::AtomicUsize,
+        }
+
+        impl $name {
+            /// Convert the client's results, failing if an item the server
+            /// returned cannot be decoded.
+            pub(crate) fn new(
+                results: Vec<::iota_sdk::grpc_client::GrpcResult<$proto>>,
+            ) -> $crate::error::Result<Self> {
+                Ok(Self {
+                    results: results
+                        .into_iter()
+                        .map(|result| match result {
+                            Ok(item) => <$item>::try_from(&item).map(Ok),
+                            Err(error) => Ok(Err(error.to_string())),
+                        })
+                        .collect::<$crate::error::Result<_>>()?,
+                    cursor: ::std::sync::atomic::AtomicUsize::new(0),
+                })
+            }
+        }
+
+        #[uniffi::export]
+        impl $name {
+            /// The number of items.
+            pub fn len(&self) -> u64 {
+                self.results.len() as u64
+            }
+
+            /// Whether there are no items.
+            pub fn is_empty(&self) -> bool {
+                self.results.is_empty()
+            }
+
+            /// The item at `index`, or an error carrying the message the
+            /// server reported for it. Errors if `index` is out of range.
+            pub fn get(&self, index: u64) -> $crate::error::Result<$item> {
+                usize::try_from(index)
+                    .ok()
+                    .and_then(|index| self.results.get(index))
+                    .ok_or_else(|| {
+                        $crate::error::SdkFfiError::custom(format!(
+                            "index {index} out of range for {} results",
+                            self.results.len()
+                        ))
+                    })?
+                    .clone()
+                    .map_err($crate::error::SdkFfiError::custom)
+            }
+
+            /// Whether `next` has an item left to return.
+            pub fn has_next(&self) -> bool {
+                self.cursor.load(::std::sync::atomic::Ordering::Relaxed) < self.results.len()
+            }
+
+            /// The next item, or an error carrying the message the server
+            /// reported for it. Errors once every item has been returned.
+            ///
+            /// `has_next` followed by `next` is not atomic: when several
+            /// threads share the results, `next` can error as exhausted after
+            /// `has_next` returned `true`.
+            pub fn next(&self) -> $crate::error::Result<$item> {
+                let len = self.results.len();
+                let index = self
+                    .cursor
+                    .fetch_add(1, ::std::sync::atomic::Ordering::Relaxed);
+                if index >= len {
+                    self.cursor
+                        .fetch_min(len, ::std::sync::atomic::Ordering::Relaxed);
+                    return Err($crate::error::SdkFfiError::custom("no results left"));
+                }
+                self.get(index as u64)
             }
         }
     };

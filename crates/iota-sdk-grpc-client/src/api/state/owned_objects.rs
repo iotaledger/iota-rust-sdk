@@ -38,9 +38,9 @@ define_list_query! {
 }
 
 impl ListOwnedObjectsQuery {
-    /// Filter by object type. If `None`, lists objects of all types.
-    pub fn object_type(mut self, object_type: impl Into<Option<StructTag>>) -> Self {
-        self.base_request.object_type = object_type.into().map(|t| t.to_string());
+    /// Filter by object type. Without it, lists objects of all types.
+    pub fn object_type(mut self, object_type: StructTag) -> Self {
+        self.base_request.object_type = Some(object_type.to_string());
         self
     }
 
@@ -140,7 +140,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn object_type_sets_the_type_filter_and_none_clears_it() {
+    async fn object_type_sets_the_type_filter() {
         let client = GrpcClient::new("http://localhost").unwrap();
         let query = client.owned_objects(Address::ZERO).object_type(
             "0x2::coin::Coin<0x2::iota::IOTA>"
@@ -151,9 +151,6 @@ mod tests {
             query.base_request.object_type.as_deref(),
             Some("0x2::coin::Coin<0x2::iota::IOTA>")
         );
-
-        let query = query.object_type(None);
-        assert_eq!(query.base_request.object_type, None);
     }
 
     #[tokio::test]
@@ -169,7 +166,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn page_setters_set_and_reset_the_page() {
+    async fn page_setters_set_the_page() {
         let client = GrpcClient::new("http://localhost").unwrap();
         let query = client
             .owned_objects(Address::ZERO)
@@ -177,10 +174,6 @@ mod tests {
             .page_token(prost::bytes::Bytes::from_static(b"next"));
         assert_eq!(query.page_size, Some(10));
         assert_eq!(query.page_token.as_deref(), Some(&b"next"[..]));
-
-        let query = query.page_size(None).page_token(None);
-        assert_eq!(query.page_size, None);
-        assert_eq!(query.page_token, None);
     }
 
     #[tokio::test]

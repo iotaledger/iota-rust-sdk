@@ -5,11 +5,12 @@
 
 use std::sync::Arc;
 
-use iota_sdk::grpc_types::v1 as proto;
+use iota_sdk::{grpc_client::ListPackageVersionsQuery, grpc_types::v1 as proto};
 
 use crate::{
     error::{Result, SdkFfiError},
     grpc::client::GrpcClient,
+    helpers::SetIfSome,
     types::object::ObjectId,
 };
 
@@ -72,8 +73,11 @@ impl GrpcClient {
         let query = self
             .client()
             .package_versions(**package_id)
-            .page_size(page_size)
-            .page_token(page_token.map(Into::into));
+            .set_if_some(page_size, ListPackageVersionsQuery::page_size)
+            .set_if_some(
+                page_token.map(Into::into),
+                ListPackageVersionsQuery::page_token,
+            );
         let page = query.await?.into_inner();
         Ok(GrpcPackageVersionPage {
             versions: page

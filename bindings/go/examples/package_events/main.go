@@ -11,7 +11,10 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	eventType := string("0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent")
 	eventFilter := iota_sdk.GraphQlEventFilter{

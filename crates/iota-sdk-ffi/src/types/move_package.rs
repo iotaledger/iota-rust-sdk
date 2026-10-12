@@ -60,15 +60,6 @@ impl MovePackageData {
         ))
     }
 
-    pub fn to_base64(&self) -> String {
-        self.0.to_base64()
-    }
-
-    #[uniffi::constructor]
-    pub fn from_base64(base64: &str) -> Result<Self> {
-        Ok(Self(iota_sdk::types::MovePackageData::from_base64(base64)?))
-    }
-
     pub fn to_json(&self) -> String {
         serde_json::to_string(&self.0).expect("failed to serialize move package data")
     }

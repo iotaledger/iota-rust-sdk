@@ -166,14 +166,12 @@ impl crate::ToFromBytes for Secp256k1PrivateKey {
     fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error> {
         let bytes = bytes.as_ref();
         if bytes.len() != Self::LENGTH {
-            return Err(crate::PrivateKeyError::InvalidScheme(
-                "invalid secp256k1 key length".to_string(),
-            ));
+            return Err(SignatureError::from_source("invalid secp256k1 key length").into());
         }
 
         let mut arr = [0u8; Self::LENGTH];
         arr.copy_from_slice(bytes);
-        Self::new(arr).map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
+        Ok(Self::new(arr)?)
     }
 }
 

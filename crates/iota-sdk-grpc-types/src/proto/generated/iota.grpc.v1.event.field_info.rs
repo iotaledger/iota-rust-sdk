@@ -65,6 +65,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for Event {}
     impl MessageFields for Event {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::BCS_FIELD,
@@ -135,6 +136,7 @@ mod _field_impls {
             message_fields: Some(Event::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for Events {}
     impl MessageFields for Events {
         const FIELDS: &'static [&'static MessageField] = &[Self::EVENTS_FIELD];
     }

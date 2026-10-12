@@ -5,6 +5,10 @@
 
 use std::sync::Arc;
 
+use iota_sdk::graphql_client::{
+    GetMoveObjectContentsBcsQuery, GetMoveObjectContentsQuery, GetObjectQuery, ListObjectsQuery,
+};
+
 use crate::{
     error::Result,
     graphql::{
@@ -12,6 +16,7 @@ use crate::{
         pagination::GraphQLObjectPage,
         query_types::{GraphQLObjectFilter, GraphQLPaginationFilter},
     },
+    helpers::SetIfSome,
     types::{
         object::{Object, ObjectId},
         version::Version,
@@ -34,7 +39,8 @@ impl GraphQLClient {
     ) -> Result<Option<Arc<Object>>> {
         Ok(self
             .client()
-            .object(**object_id, version.map(|v| **v))
+            .object(**object_id)
+            .set_if_some(version.map(|v| **v), GetObjectQuery::version)
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -52,10 +58,9 @@ impl GraphQLClient {
     ) -> Result<GraphQLObjectPage> {
         Ok(self
             .client()
-            .objects(
-                filter.map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .objects()
+            .set_if_some(filter.map(Into::into), ListObjectsQuery::filter)
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -80,7 +85,8 @@ impl GraphQLClient {
     ) -> Result<Option<Vec<u8>>> {
         Ok(self
             .client()
-            .move_object_contents_bcs(**object_id, version.map(|v| **v))
+            .move_object_contents_bcs(**object_id)
+            .set_if_some(version.map(|v| **v), GetMoveObjectContentsBcsQuery::version)
             .await?)
     }
 
@@ -97,7 +103,8 @@ impl GraphQLClient {
     ) -> Result<Option<serde_json::Value>> {
         Ok(self
             .client()
-            .move_object_contents(**object_id, version.map(|v| **v))
+            .move_object_contents(**object_id)
+            .set_if_some(version.map(|v| **v), GetMoveObjectContentsQuery::version)
             .await?)
     }
 }

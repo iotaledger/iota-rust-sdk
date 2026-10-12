@@ -25,7 +25,7 @@ fun main() = runBlocking {
         val client = GraphQlClient.newLocalnet()
         val subscription =
             client.transactionsSubscription(
-                GraphQlSubscriptionTransactionFilter(
+                GraphQlSubscriptionTransactionFilter.Kind(
                     kind = GraphQlTransactionBlockKindInput.PROGRAMMABLE_TX
                 )
             )

@@ -1,3 +1,37 @@
+## [1.0.0-rc.1] - 2026-10-09
+
+### 🚀 Features
+
+- *(txn-builder)* Add divide_coin (#1495)
+- *(iota-sdk-ffi)* Add wait_for_transaction to the gRPC client (#1526)
+- Re-export iota_types from every crate that names it publicly (#1581)
+
+### 🐛 Bug Fixes
+
+- *(txn-builder)* Address the state's own command, not the last one (#1496)
+- *(txn-builder)* Resolve `Receiving<ObjectId>` to `Input::Receiving`, not `ImmutableOrOwned` (#1497)
+- *(txn-builder)* Reject object-owned objects passed as owned inputs (#1539)
+
+### 🚜 Refactor
+
+- Give the transaction builder a specific error name (#1480)
+- *(txn-builder)* [**breaking**] Reduce the public surface of iota-sdk-transaction-builder (#1475)
+- *(txn-builder)* [**breaking**] Make gas sponsorship a capability the caller passes in (#1504)
+- [**breaking**] Remove dead and inconsistent public API before 1.0 (#1574)
+- *(iota-sdk-types)* [**breaking**] Drop the immutable account object from MoveAuthenticatorV1 (#1633)
+- *(graphql)* [**breaking**] Make query types private and export unnameable trait bounds (#1573)
+- [**breaking**] Replace bcs::Error in public signatures with iota_types::BcsError (#1591)
+- [**breaking**] Share MoveType between move-types and the transaction builder (#1544)
+- *(transaction-builder)* [**breaking**] Drop PTBArgumentList::push_args and push_inputs (#1661)
+
+### ⚙️ Miscellaneous Tasks
+
+- Name the enum in every exhaustiveness fallback message (#1455)
+- [**breaking**] Update dependencies (#1346)
+- Add docs.rs metadata to the crates missing it (#1595)
+- Drop the doc(cfg) attributes rustdoc now derives from cfg (#1600)
+- Use the README as the crate docs where it can carry them (#1602)
+
 ## [1.0.0-beta.1] - 2026-08-31
 
 ### 🚀 Features

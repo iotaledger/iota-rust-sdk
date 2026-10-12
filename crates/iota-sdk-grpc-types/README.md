@@ -1,5 +1,8 @@
 # iota-sdk-grpc-types
 
+[![iota-sdk-grpc-types on crates.io](https://img.shields.io/crates/v/iota-sdk-grpc-types)](https://crates.io/crates/iota-sdk-grpc-types)
+[![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-grpc-types)
+
 Protobuf/gRPC types for the IOTA blockchain, consumed by
 [`iota-sdk-grpc-client`](https://crates.io/crates/iota-sdk-grpc-client). It contains:
 

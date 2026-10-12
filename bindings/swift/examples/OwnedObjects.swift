@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct OwnedObjectsExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = try GraphQlClient.newTestnet()
     let address = Address.zero()
     let objectsPage = try await client.objects(filter: GraphQlObjectFilter(owner: address))
     print("Owned objects(\(objectsPage.data.count)):")

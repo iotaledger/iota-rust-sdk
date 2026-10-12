@@ -24,6 +24,8 @@ mod packages;
 pub use iota_types;
 pub use packages::{iota_framework, iota_system, move_stdlib, stardust};
 
+mod builtin;
+
 // The shape machinery (this module, the `MoveShape` derives on every
 // mirror, and the comparator below) is native-only: the comparator reads
 // the fetched package artifacts from disk at test time (no `std::fs` on
@@ -42,7 +44,7 @@ mod move_shape_compare;
 /// `0x2::coin::Coin<0x2::iota::IOTA>`.
 ///
 /// Markers like [`IOTA`](iota_framework::iota::IOTA) implement it by hand.
-/// Every [`MoveObject`] implements it automatically, so an object mirror can
+/// Every `MoveObject` implements it automatically, so an object mirror can
 /// also be a type argument, as in `Display<Coin<IOTA>>`.
 ///
 /// To use your own coin type, define an empty marker struct that derives
@@ -62,10 +64,16 @@ mod move_shape_compare;
 /// For coin types only known at runtime, use the
 /// `try_from_object_with_type` constructors instead, which take the
 /// expected [`TypeTag`](iota_types::TypeTag) as a value.
-#[cfg(feature = "serde")]
 pub trait MoveType {
     /// The Move type tag this type represents (e.g. `0x2::iota::IOTA`).
     fn type_tag() -> iota_types::TypeTag;
+}
+
+/// An ordered list of [`MoveType`]s: `()`, a single type, or a tuple, such as
+/// the type arguments of a Move function call.
+pub trait MoveTypes {
+    /// Get the type tags.
+    fn type_tags() -> Vec<iota_types::TypeTag>;
 }
 
 /// A Rust mirror of a Move object that can be decoded from an
@@ -107,7 +115,7 @@ pub enum FromObjectError {
     WrongType,
     /// BCS decoding of the struct contents failed.
     #[error("bcs decoding failed: {0}")]
-    Bcs(#[from] bcs::Error),
+    Bcs(#[from] iota_types::BcsError),
 }
 
 /// Decode the BCS contents of `object`, provided it is a Move struct tagged
@@ -123,7 +131,7 @@ fn decode_move_struct<T: serde::de::DeserializeOwned>(
     if move_struct.struct_tag() != expected {
         return Err(FromObjectError::WrongType);
     }
-    Ok(bcs::from_bytes(move_struct.contents())?)
+    Ok(bcs::from_bytes(move_struct.contents()).map_err(iota_types::BcsError::new)?)
 }
 
 #[cfg(all(test, feature = "serde"))]

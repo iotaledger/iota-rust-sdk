@@ -32,7 +32,10 @@ import (
 
 func main() {
 	// Create a GraphQL client connected to devnet
-	client := iota_sdk.GraphQlClientNewDevnet()
+	client, err := iota_sdk.GraphQlClientNewDevnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	// Query the chain ID
 	chainID, err := client.ChainId()
@@ -49,16 +52,16 @@ The SDK provides GraphQL client functionality to interact with IOTA:
 
 ```go
 // Connect to devnet
-client := iota_sdk.GraphQlClientNewDevnet()
+client, err := iota_sdk.GraphQlClientNewDevnet()
 
 // Connect to testnet
-client := iota_sdk.GraphQlClientNewTestnet()
+client, err := iota_sdk.GraphQlClientNewTestnet()
 
 // Connect to mainnet
-client := iota_sdk.GraphQlClientNewMainnet()
+client, err := iota_sdk.GraphQlClientNewMainnet()
 
 // Connect to a custom endpoint
-client := iota_sdk.GraphQlClientNew("https://your-endpoint.com")
+client, err := iota_sdk.GraphQlClientNew("https://your-endpoint.com")
 ```
 
 ## Examples

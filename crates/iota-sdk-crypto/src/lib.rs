@@ -2,6 +2,7 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+#![doc = include_str!("../README.md")]
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 use iota_types::{PersonalMessage, Transaction, UserSignature};
@@ -50,9 +51,20 @@ pub enum PrivateKeyError {
     /// Empty input data
     #[error("empty data: {0}")]
     EmptyData(String),
-    /// Invalid signature scheme
-    #[error("invalid signature scheme: {0}")]
-    InvalidScheme(String),
+    /// Invalid signature scheme flag or name
+    #[error(transparent)]
+    InvalidScheme(#[from] iota_types::SignatureSchemeError),
+    /// The signature scheme flag does not match the key type
+    #[error("expected signature scheme {expected:?}, got {actual:?}")]
+    SchemeMismatch {
+        /// The signature scheme of the key type
+        expected: iota_types::SignatureScheme,
+        /// The signature scheme flag found in the input
+        actual: iota_types::SignatureScheme,
+    },
+    /// Invalid private key bytes
+    #[error(transparent)]
+    InvalidKey(#[from] SignatureError),
     /// Base64 encoding/decoding error
     #[error("base64 error: {0}")]
     Base64(String),
@@ -265,14 +277,13 @@ where
             return Err(PrivateKeyError::EmptyData("flagged bytes".to_string()));
         }
 
-        let flag = iota_types::SignatureScheme::from_byte(bytes[0])
-            .map_err(|e| PrivateKeyError::InvalidScheme(format!("{e:?}")))?;
+        let flag = iota_types::SignatureScheme::from_byte(bytes[0])?;
 
         if flag != Self::SCHEME {
-            return Err(PrivateKeyError::InvalidScheme(format!(
-                "expected {:?}, got {flag:?}",
-                Self::SCHEME
-            )));
+            return Err(PrivateKeyError::SchemeMismatch {
+                expected: Self::SCHEME,
+                actual: flag,
+            });
         }
 
         let key_bytes = &bytes[1..];

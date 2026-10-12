@@ -27,7 +27,10 @@ func identifier(ident string) *iota_sdk.Identifier {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	sender := addrFromHex("0x71b4b4f171b4355ff691b7c470579cf1a926f96f724e5f9a30efc4b5f75d085e")
 

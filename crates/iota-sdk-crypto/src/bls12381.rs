@@ -131,11 +131,11 @@ impl crate::ToFromBytes for Bls12381PrivateKey {
 
     fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error> {
         let bytes = bytes.as_ref();
-        let bytes: [u8; Self::LENGTH] = bytes.try_into().map_err(|_| {
-            crate::PrivateKeyError::InvalidScheme("invalid bls12381 key length".to_string())
-        })?;
+        let bytes: [u8; Self::LENGTH] = bytes
+            .try_into()
+            .map_err(|_| SignatureError::from_source("invalid bls12381 key length"))?;
 
-        Self::new(bytes).map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
+        Ok(Self::new(bytes)?)
     }
 }
 

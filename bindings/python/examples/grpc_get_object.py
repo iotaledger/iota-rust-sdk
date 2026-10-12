@@ -12,11 +12,12 @@ async def main():
     object_id = ObjectId.from_hex(
         "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
 
-    # `objects` is batched: it takes a list of ids and returns the objects in
-    # the same order. The default read mask returns the reference and the
-    # BCS-decoded object; pass `read_mask=[GrpcObjectField.REFERENCE()]` to
-    # skip the object.
-    obj = (await client.objects([object_id]))[0].object
+    # `objects` is batched: it takes a list of ids and returns one result per
+    # id, in the same order; reading an id's result raises the error for that
+    # id. The default read mask returns the reference and the BCS-decoded
+    # object; pass `read_mask=[GrpcObjectField.REFERENCE()]` to skip the object.
+    result = (await client.objects([object_id])).get(0)
+    obj = result.object
     assert obj is not None, "Object not included in the response"
 
     print("Object ID:", obj.id())

@@ -24,9 +24,9 @@ define_query! {
 impl GetHealthQuery {
     /// Consider the node healthy only if the latest executed checkpoint
     /// timestamp is within `threshold_ms` milliseconds of the current system
-    /// time. If `None`, the server applies its default threshold (5 seconds).
-    pub fn threshold_ms(mut self, threshold_ms: impl Into<Option<u64>>) -> Self {
-        self.threshold_ms = threshold_ms.into();
+    /// time. Without it, the server applies its default threshold (5 seconds).
+    pub fn threshold_ms(mut self, threshold_ms: u64) -> Self {
+        self.threshold_ms = Some(threshold_ms);
         self
     }
 

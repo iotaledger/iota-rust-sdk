@@ -107,8 +107,8 @@ pub mod staking_pool {
     impl StakedIota {
         /// Decode a [`StakedIota`] from BCS bytes (e.g. the `contents` of an
         /// on-chain Move struct) without verifying the on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -802,8 +802,8 @@ pub mod iota_system_state_inner {
         /// stored as a dynamic field of the `0x5`
         /// [`IotaSystemState`](super::iota_system::IotaSystemState)
         /// wrapper, not as a top-level object with its own type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -906,8 +906,8 @@ pub mod iota_system {
     impl IotaSystemState {
         /// Decode an [`IotaSystemState`] from BCS bytes without verifying
         /// the on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -995,8 +995,8 @@ pub mod timelocked_staking {
         /// Decode a [`TimelockedStakedIota`] from BCS bytes (e.g. the
         /// `contents` of an on-chain Move struct) without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 

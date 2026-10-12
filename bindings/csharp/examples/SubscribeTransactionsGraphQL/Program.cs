@@ -18,7 +18,7 @@ class Program
     {
         var client = GraphQlClient.NewLocalnet();
         var subscription = client.TransactionsSubscription(
-            new GraphQlSubscriptionTransactionFilter(Kind: GraphQlTransactionBlockKindInput.ProgrammableTx)
+            new GraphQlSubscriptionTransactionFilter.Kind(GraphQlTransactionBlockKindInput.ProgrammableTx)
         );
 
         var activity = Task.Run(async () =>

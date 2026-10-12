@@ -9,7 +9,7 @@ use iota_sdk::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     let address =
         Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
@@ -19,15 +19,14 @@ async fn main() -> Result<()> {
     while let Some(cursor) = Some(next_cursor.clone()) {
         println!("Fetching page with cursor: {cursor:?}");
         let owned_objects_page = client
-            .objects(
-                ObjectFilter::default().with_owner(address),
-                PaginationFilter {
-                    cursor,
-                    // Limit to 1 to demonstrate pagination
-                    limit: Some(1),
-                    ..Default::default()
-                },
-            )
+            .objects()
+            .filter(ObjectFilter::default().with_owner(address))
+            .pagination(PaginationFilter {
+                cursor,
+                // Limit to 1 to demonstrate pagination
+                limit: Some(1),
+                ..Default::default()
+            })
             .await?;
         let (page_info, data) = owned_objects_page.into_parts();
         all_objects.extend(data);

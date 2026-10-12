@@ -8,7 +8,7 @@ use iota_sdk::{graphql_client::GraphQLClient, types::Address};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     let sender_address =
         Address::from_str("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     println!("Signing Digest: {}", tx.signing_digest_hex());
     println!("Tx Bytes: {}", tx.to_base64());
 
-    let res = client.dry_run_transaction(&tx, false).await?;
+    let res = client.dry_run_transaction(&tx).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to send gas sponsor tx: {err}");

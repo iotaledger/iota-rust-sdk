@@ -19,7 +19,10 @@ func objIdFromHex(hex string) *iota_sdk.ObjectId {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	sharedObjId := objIdFromHex("0x7cab491740d51e0d75b26bf9984e49ba2e32a2d0694cabcee605543ed13c7dec")
 

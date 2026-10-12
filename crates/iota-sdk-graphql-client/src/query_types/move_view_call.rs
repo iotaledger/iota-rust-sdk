@@ -19,7 +19,7 @@ use crate::query_types::{JsonValue, schema};
 /// JSON.
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "MoveViewCallArgs")]
-pub struct MoveViewCallQueryFragment {
+pub(crate) struct MoveViewCallQueryFragment {
     #[arguments(functionName: $function_name, typeArgs: $type_arguments, arguments: $arguments)]
     pub move_view_call: MoveViewResult,
 }
@@ -46,7 +46,7 @@ pub struct MoveViewResult {
 /// `<package_id>::<module_name>::<function_name>`,
 /// e.g., `0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4::shop::total_revenue`.
 #[derive(cynic::QueryVariables, Debug)]
-pub struct MoveViewCallArgs {
+pub(crate) struct MoveViewCallArgs {
     /// The Move function fully qualified name as
     /// `<package_id>::<module_name>::<function_name>`.
     pub function_name: String,

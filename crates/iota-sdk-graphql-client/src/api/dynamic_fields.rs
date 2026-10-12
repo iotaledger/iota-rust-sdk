@@ -11,128 +11,66 @@ use iota_types::{Address, TypeTag};
 
 use crate::{
     DynamicFieldOutput, GraphQLClient, NameValue,
+    api::define_query,
     error::GraphQLResult,
-    pagination::{Direction, Page, PaginationFilter},
+    pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
-        DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldQueryFragment,
-        DynamicFieldsOwnerQueryFragment, DynamicObjectFieldQueryFragment,
+        Base64, DynamicFieldArgs, DynamicFieldConnectionArgs, DynamicFieldName,
+        DynamicFieldQueryFragment, DynamicFieldsOwnerQueryFragment,
+        DynamicObjectFieldQueryFragment,
     },
     streams::stream_paginated_query,
 };
 
-impl GraphQLClient {
-    /// Get a stream of dynamic fields for the provided address. Note that this
-    /// will also fetch dynamic fields on wrapped objects.
-    pub fn dynamic_fields_stream(
-        &self,
+define_query! {
+    /// Query for [`GraphQLClient::dynamic_fields`]. Await it to send the
+    /// request.
+    #[derive(Clone)]
+    pub struct ListDynamicFieldsQuery {
+        client: GraphQLClient,
         address: Address,
-        streaming_direction: Direction,
-    ) -> impl Stream<Item = GraphQLResult<DynamicFieldOutput>> + '_ {
-        stream_paginated_query(
-            move |filter| self.dynamic_fields(address, filter),
-            streaming_direction,
-        )
+        pagination: PaginationFilter,
+    }
+    output: GraphQLResult<Page<DynamicFieldOutput>>;
+}
+
+impl ListDynamicFieldsQuery {
+    /// Set the page to fetch.
+    pub fn pagination(mut self, pagination: PaginationFilter) -> Self {
+        self.pagination = pagination;
+        self
     }
 
-    /// Access a dynamic field on an object using its name. Names are arbitrary
-    /// Move values whose type have copy, drop, and store, and are specified
-    /// using their type, and their BCS contents, Base64 encoded.
-    ///
-    /// The `name` argument can be either a [`BcsName`](crate::BcsName) for
-    /// passing raw bcs bytes or a type that implements Serialize.
-    ///
-    /// This returns [`DynamicFieldOutput`] which contains the name, the value
-    /// as json, and object.
-    ///
-    /// # Example
-    /// ```rust,ignore
-    /// 
-    /// let client = iota_graphql_client::GraphQLClient::new_testnet();
-    /// let address = ObjectId::system().into();
-    /// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
-    ///
-    /// # alternatively, pass in the bcs bytes
-    /// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
-    /// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
-    /// ```
-    pub async fn dynamic_field(
-        &self,
-        address: Address,
-        type_tag: TypeTag,
-        name: impl Into<NameValue>,
-    ) -> GraphQLResult<Option<DynamicFieldOutput>> {
-        let bcs = name.into().0;
-        let operation = DynamicFieldQueryFragment::build(DynamicFieldArgs {
-            address,
-            name: crate::query_types::DynamicFieldName {
-                type_tag: type_tag.to_string(),
-                bcs: crate::query_types::Base64(base64ct::Base64::encode_string(&bcs)),
-            },
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        let result = response
-            .owner
-            .and_then(|o| o.dynamic_field)
-            .map(|df| df.try_into())
-            .transpose()?;
-
-        Ok(result)
+    /// Stream every item, page by page, starting at the pagination's cursor
+    /// and in its direction, with its limit as the page size.
+    pub fn stream(self) -> impl Stream<Item = GraphQLResult<DynamicFieldOutput>> + Unpin {
+        let pagination = self.pagination.clone();
+        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
     }
 
-    /// Access a dynamic object field on an object using its name. Names are
-    /// arbitrary Move values whose type have copy, drop, and store, and are
-    /// specified using their type, and their BCS contents, Base64 encoded.
-    ///
-    /// The `name` argument can be either a [`BcsName`](crate::BcsName) for
-    /// passing raw bcs bytes or a type that implements Serialize.
-    ///
-    /// This returns [`DynamicFieldOutput`] which contains the name, the value
-    /// as json, and object.
-    pub async fn dynamic_object_field(
-        &self,
+    fn operation<'a>(
         address: Address,
-        type_tag: TypeTag,
-        name: impl Into<NameValue>,
-    ) -> GraphQLResult<Option<DynamicFieldOutput>> {
-        let bcs = name.into().0;
-        let operation = DynamicObjectFieldQueryFragment::build(DynamicFieldArgs {
-            address,
-            name: crate::query_types::DynamicFieldName {
-                type_tag: type_tag.to_string(),
-                bcs: crate::query_types::Base64(base64ct::Base64::encode_string(&bcs)),
-            },
-        });
-
-        let response = self.run_query(&operation).await?;
-
-        let result: Option<DynamicFieldOutput> = response
-            .owner
-            .and_then(|o| o.dynamic_object_field)
-            .map(|df| df.try_into())
-            .transpose()?;
-        Ok(result)
-    }
-
-    /// Get a page of dynamic fields for the provided address. Note that this
-    /// will also fetch dynamic fields on wrapped objects.
-    ///
-    /// This returns [`Page`] of [`DynamicFieldOutput`]s.
-    pub async fn dynamic_fields(
-        &self,
-        address: Address,
-        pagination_filter: PaginationFilter,
-    ) -> GraphQLResult<Page<DynamicFieldOutput>> {
-        let pagination = self.pagination_filter(pagination_filter).await;
-        let operation = DynamicFieldsOwnerQueryFragment::build(DynamicFieldConnectionArgs {
+        pagination: &'a PaginationFilterResponse,
+    ) -> cynic::Operation<DynamicFieldsOwnerQueryFragment, DynamicFieldConnectionArgs<'a>> {
+        DynamicFieldsOwnerQueryFragment::build(DynamicFieldConnectionArgs {
             address,
             after: pagination.after.as_deref(),
             before: pagination.before.as_deref(),
             first: pagination.first,
             last: pagination.last,
-        });
-        let response = self.run_query(&operation).await?;
+        })
+    }
+
+    async fn send(self) -> GraphQLResult<Page<DynamicFieldOutput>> {
+        let Self {
+            client,
+            pagination,
+            address,
+        } = self;
+        let pagination = client.pagination_filter(pagination).await;
+        let response = client
+            .run_query(&Self::operation(address, &pagination))
+            .await?;
 
         let DynamicFieldsOwnerQueryFragment { owner: Some(dfs) } = response else {
             return Ok(Page::new_empty());
@@ -149,12 +87,197 @@ impl GraphQLClient {
     }
 }
 
+fn dynamic_field_name(type_tag: TypeTag, name: impl Into<NameValue>) -> DynamicFieldName {
+    DynamicFieldName {
+        type_tag: type_tag.to_string(),
+        bcs: Base64(base64ct::Base64::encode_string(&name.into().0)),
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::dynamic_field`]. Await it to send the
+    /// request.
+    pub struct GetDynamicFieldQuery {
+        client: GraphQLClient,
+        address: Address,
+        name: DynamicFieldName,
+    }
+    output: GraphQLResult<Option<DynamicFieldOutput>>;
+}
+
+impl GetDynamicFieldQuery {
+    async fn send(self) -> GraphQLResult<Option<DynamicFieldOutput>> {
+        let operation = DynamicFieldQueryFragment::build(DynamicFieldArgs {
+            address: self.address,
+            name: self.name,
+        });
+
+        let response = self.client.run_query(&operation).await?;
+
+        let result = response
+            .owner
+            .and_then(|o| o.dynamic_field)
+            .map(|df| df.try_into())
+            .transpose()?;
+
+        Ok(result)
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::dynamic_object_field`]. Await it to send the
+    /// request.
+    pub struct GetDynamicObjectFieldQuery {
+        client: GraphQLClient,
+        address: Address,
+        name: DynamicFieldName,
+    }
+    output: GraphQLResult<Option<DynamicFieldOutput>>;
+}
+
+impl GetDynamicObjectFieldQuery {
+    async fn send(self) -> GraphQLResult<Option<DynamicFieldOutput>> {
+        let operation = DynamicObjectFieldQueryFragment::build(DynamicFieldArgs {
+            address: self.address,
+            name: self.name,
+        });
+
+        let response = self.client.run_query(&operation).await?;
+
+        let result: Option<DynamicFieldOutput> = response
+            .owner
+            .and_then(|o| o.dynamic_object_field)
+            .map(|df| df.try_into())
+            .transpose()?;
+        Ok(result)
+    }
+}
+
+impl GraphQLClient {
+    /// Access a dynamic field on an object using its name. Names are arbitrary
+    /// Move values whose type have copy, drop, and store, and are specified
+    /// using their type, and their BCS contents, Base64 encoded.
+    ///
+    /// The `name` argument can be either a [`BcsName`](crate::BcsName) for
+    /// passing raw bcs bytes or a type that implements Serialize.
+    ///
+    /// This returns [`DynamicFieldOutput`] which contains the name, the value
+    /// as json, and object.
+    ///
+    /// # Example
+    /// ```rust,ignore
+    /// 
+    /// let client = iota_graphql_client::GraphQLClient::new_testnet().unwrap();
+    /// let address = ObjectId::system().into();
+    /// let df = client.dynamic_field_with_name(address, "u64", 2u64).await.unwrap();
+    ///
+    /// # alternatively, pass in the bcs bytes
+    /// let bcs = base64ct::Base64::decode_vec("AgAAAAAAAAA=").unwrap();
+    /// let df = client.dynamic_field(address, "u64", BcsName(bcs)).await.unwrap();
+    /// ```
+    pub fn dynamic_field(
+        &self,
+        address: Address,
+        type_tag: TypeTag,
+        name: impl Into<NameValue>,
+    ) -> GetDynamicFieldQuery {
+        GetDynamicFieldQuery {
+            client: self.clone(),
+            address,
+            name: dynamic_field_name(type_tag, name),
+        }
+    }
+
+    /// Access a dynamic object field on an object using its name. Names are
+    /// arbitrary Move values whose type have copy, drop, and store, and are
+    /// specified using their type, and their BCS contents, Base64 encoded.
+    ///
+    /// The `name` argument can be either a [`BcsName`](crate::BcsName) for
+    /// passing raw bcs bytes or a type that implements Serialize.
+    ///
+    /// This returns [`DynamicFieldOutput`] which contains the name, the value
+    /// as json, and object.
+    pub fn dynamic_object_field(
+        &self,
+        address: Address,
+        type_tag: TypeTag,
+        name: impl Into<NameValue>,
+    ) -> GetDynamicObjectFieldQuery {
+        GetDynamicObjectFieldQuery {
+            client: self.clone(),
+            address,
+            name: dynamic_field_name(type_tag, name),
+        }
+    }
+
+    /// Get a page of dynamic fields for the provided address. Note that this
+    /// will also fetch dynamic fields on wrapped objects.
+    pub fn dynamic_fields(&self, address: Address) -> ListDynamicFieldsQuery {
+        ListDynamicFieldsQuery {
+            client: self.clone(),
+            address,
+            pagination: PaginationFilter::default(),
+        }
+    }
+}
+
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use base64ct::Encoding;
     use iota_types::{ObjectId, TypeTag};
 
-    use crate::{BcsName, PaginationFilter, test_utils::test_client};
+    use crate::{
+        BcsName,
+        test_utils::{
+            assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+            test_client,
+        },
+    };
+
+    #[tokio::test]
+    async fn dynamic_field_getters_send_the_address_and_name() {
+        let address = ObjectId::SYSTEM_STATE.into();
+        let vars = sent_variables("DynamicFieldQueryFragment", |client| async move {
+            let _ = client.dynamic_field(address, TypeTag::U64, 2u64).await;
+        })
+        .await;
+        assert_eq!(vars["address"], address.to_string());
+        assert_eq!(vars["name"]["type"], "u64");
+        assert_eq!(vars["name"]["bcs"], "AgAAAAAAAAA=");
+
+        let vars = sent_variables("DynamicObjectFieldQueryFragment", |client| async move {
+            let _ = client
+                .dynamic_object_field(address, TypeTag::U64, 2u64)
+                .await;
+        })
+        .await;
+        assert_eq!(vars["address"], address.to_string());
+        assert_eq!(vars["name"]["type"], "u64");
+        assert_eq!(vars["name"]["bcs"], "AgAAAAAAAAA=");
+    }
+
+    #[tokio::test]
+    async fn dynamic_fields_sends_the_address_and_pagination() {
+        let address = ObjectId::SYSTEM_STATE.into();
+        let vars = sent_variables("DynamicFieldsOwnerQueryFragment", |client| async move {
+            let _ = client
+                .dynamic_fields(address)
+                .pagination(backward_page())
+                .await;
+        })
+        .await;
+        assert_eq!(vars["address"], address.to_string());
+        assert_backward_page(&vars);
+
+        let vars = sent_variables("DynamicFieldsOwnerQueryFragment", |client| async move {
+            let _ = client
+                .dynamic_fields(address)
+                .pagination(forward_page())
+                .await;
+        })
+        .await;
+        assert_forward_page(&vars);
+    }
 
     #[tokio::test]
     async fn test_dynamic_field_query() {
@@ -187,7 +310,7 @@ mod tests {
     async fn test_dynamic_fields_query() {
         let client = test_client();
         client
-            .dynamic_fields(ObjectId::SYSTEM_STATE.into(), PaginationFilter::default())
+            .dynamic_fields(ObjectId::SYSTEM_STATE.into())
             .await
             .map_err(|e| {
                 format!(

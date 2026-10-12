@@ -62,7 +62,10 @@ func main() {
 	multisigAddress := committee.DeriveAddress()
 	log.Printf("Multisig address: %s", multisigAddress)
 
-	client := iota_sdk.GraphQlClientNewLocalnet()
+	client, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	// 5. Fund the multisig address
 	faucet := iota_sdk.FaucetClientNewLocalnet()

@@ -7,7 +7,6 @@
 //! `transactions` fields each return a union of the payload type and
 //! [`Lagged`] (emitted when the server's broker had to drop messages).
 
-use base64ct::Encoding;
 use iota_types::{SenderSignedTransaction, SignedTransaction};
 
 use crate::{
@@ -28,7 +27,7 @@ use crate::{
     graphql_type = "Subscription",
     variables = "EventsSubscriptionArgs"
 )]
-pub struct EventsSubscription {
+pub(crate) struct EventsSubscription {
     #[arguments(startAfter: $start_after, filter: $filter)]
     pub events: EventSubscriptionPayload,
 }
@@ -39,7 +38,7 @@ pub struct EventsSubscription {
     graphql_type = "Subscription",
     variables = "TransactionsSubscriptionArgs"
 )]
-pub struct TransactionsSubscription {
+pub(crate) struct TransactionsSubscription {
     #[arguments(startAfter: $start_after, filter: $filter)]
     pub transactions: TransactionBlockSubscriptionPayload,
 }
@@ -49,84 +48,89 @@ pub struct TransactionsSubscription {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct EventsSubscriptionArgs {
+pub(crate) struct EventsSubscriptionArgs {
     pub start_after: Option<String>,
-    pub filter: Option<SubscriptionEventFilter>,
+    pub filter: Option<SubscriptionEventFilterInput>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct TransactionsSubscriptionArgs {
+pub(crate) struct TransactionsSubscriptionArgs {
     pub start_after: Option<String>,
-    pub filter: Option<SubscriptionTransactionFilter>,
+    pub filter: Option<SubscriptionTransactionFilterInput>,
 }
 
 // ===========================================================================
 // Subscription filters
 // ===========================================================================
 
-/// Filter incoming events in a subscription. Exactly one field must be set
-/// (the GraphQL input is `@oneOf`).
-#[derive(Clone, cynic::InputObject, Debug, Default)]
-#[cynic(schema = "rpc", graphql_type = "SubscriptionEventFilter")]
+/// Filter incoming events in a subscription.
+///
+/// The GraphQL input is `@oneOf`, so exactly one criterion is selected.
+#[derive(Clone, Debug)]
 #[non_exhaustive]
-pub struct SubscriptionEventFilter {
+pub enum SubscriptionEventFilter {
     /// Filter incoming events by emitting module, e.g. `"0x02"` (package) or
     /// `"0x02::coin"` (module).
-    pub emitting_module: Option<String>,
+    EmittingModule(String),
 }
 
-impl SubscriptionEventFilter {
-    /// Filter incoming events by emitting module, e.g. `"0x02"` (package) or
-    /// `"0x02::coin"` (module).
-    pub fn with_emitting_module(mut self, emitting_module: impl Into<Option<String>>) -> Self {
-        self.emitting_module = emitting_module.into();
-        self
+/// The GraphQL input object, built from a [`SubscriptionEventFilter`].
+#[derive(Clone, cynic::InputObject, Debug, Default)]
+#[cynic(schema = "rpc", graphql_type = "SubscriptionEventFilter")]
+pub(crate) struct SubscriptionEventFilterInput {
+    emitting_module: Option<String>,
+}
+
+impl From<SubscriptionEventFilter> for SubscriptionEventFilterInput {
+    fn from(filter: SubscriptionEventFilter) -> Self {
+        match filter {
+            SubscriptionEventFilter::EmittingModule(module) => Self {
+                emitting_module: Some(module),
+            },
+        }
     }
 }
 
-/// Filter incoming transactions in a subscription. Exactly one field must be
-/// set (the GraphQL input is `@oneOf`).
-#[derive(Clone, cynic::InputObject, Debug, Default)]
-#[cynic(schema = "rpc", graphql_type = "SubscriptionTransactionFilter")]
+/// Filter incoming transactions in a subscription.
+///
+/// The GraphQL input is `@oneOf`, so exactly one criterion is selected.
+#[derive(Clone, Debug)]
 #[non_exhaustive]
-pub struct SubscriptionTransactionFilter {
+pub enum SubscriptionTransactionFilter {
     /// Filter incoming transactions by kind.
-    pub kind: Option<TransactionBlockKindInput>,
+    Kind(TransactionBlockKindInput),
     /// Filter incoming transactions by sender address.
     ///
     /// Only the sender is compared, despite the name — a sponsored
     /// transaction is not matched by its sponsor's (gas owner's) address,
     /// even though the sponsor also signed it.
-    pub signing_address: Option<Address>,
+    SigningAddress(Address),
     /// Filter incoming transactions by package, module, or function name, e.g.
     /// `"0x03"`, `"0x03::iota_system"`, or
     /// `"0x03::iota_system::request_add_stake"`.
-    pub function: Option<String>,
+    Function(String),
 }
 
-impl SubscriptionTransactionFilter {
-    /// Filter incoming transactions by kind.
-    pub fn with_kind(mut self, kind: impl Into<Option<TransactionBlockKindInput>>) -> Self {
-        self.kind = kind.into();
-        self
-    }
+/// The GraphQL input object, built from a [`SubscriptionTransactionFilter`].
+#[derive(Clone, cynic::InputObject, Debug, Default)]
+#[cynic(schema = "rpc", graphql_type = "SubscriptionTransactionFilter")]
+pub(crate) struct SubscriptionTransactionFilterInput {
+    kind: Option<TransactionBlockKindInput>,
+    signing_address: Option<Address>,
+    function: Option<String>,
+}
 
-    /// Filter incoming transactions by sender address.
-    ///
-    /// Only the sender is compared, despite the name — a sponsored transaction
-    /// is not matched by its sponsor's (gas owner's) address, even though the
-    /// sponsor also signed it.
-    pub fn with_signing_address(mut self, signing_address: impl Into<Option<Address>>) -> Self {
-        self.signing_address = signing_address.into();
-        self
-    }
-
-    /// Filter incoming transactions by package, module, or function name, e.g.
-    /// `"0x03"`, `"0x03::iota_system"`, or
-    /// `"0x03::iota_system::request_add_stake"`.
-    pub fn with_function(mut self, function: impl Into<Option<String>>) -> Self {
-        self.function = function.into();
-        self
+impl From<SubscriptionTransactionFilter> for SubscriptionTransactionFilterInput {
+    fn from(filter: SubscriptionTransactionFilter) -> Self {
+        let mut input = Self::default();
+        match filter {
+            SubscriptionTransactionFilter::Kind(kind) => input.kind = Some(kind),
+            SubscriptionTransactionFilter::SigningAddress(address) => {
+                input.signing_address = Some(address)
+            }
+            SubscriptionTransactionFilter::Function(function) => input.function = Some(function),
+        }
+        input
     }
 }
 
@@ -137,7 +141,7 @@ impl SubscriptionTransactionFilter {
 #[derive(cynic::InlineFragments, Debug)]
 #[cynic(schema = "rpc", graphql_type = "EventSubscriptionPayload")]
 #[non_exhaustive]
-pub enum EventSubscriptionPayload {
+pub(crate) enum EventSubscriptionPayload {
     Event(Box<SubscriptionEvent>),
     Lagged(Lagged),
     #[cynic(fallback)]
@@ -147,7 +151,7 @@ pub enum EventSubscriptionPayload {
 #[derive(cynic::InlineFragments, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlockSubscriptionPayload")]
 #[non_exhaustive]
-pub enum TransactionBlockSubscriptionPayload {
+pub(crate) enum TransactionBlockSubscriptionPayload {
     TransactionBlock(SubscriptionTransactionBlock),
     Lagged(Lagged),
     #[cynic(fallback)]
@@ -158,7 +162,7 @@ pub enum TransactionBlockSubscriptionPayload {
 /// because the subscriber could not keep up.
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Lagged")]
-pub struct Lagged {
+pub(crate) struct Lagged {
     /// Number of missed payloads since the previously emitted one.
     pub count: i32,
 }
@@ -172,7 +176,7 @@ pub struct Lagged {
 /// recovery cursor (`startAfter`).
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Event")]
-pub struct SubscriptionEvent {
+pub(crate) struct SubscriptionEvent {
     pub transaction_block: Option<TxBlockDigest>,
     pub sending_module: Option<MoveModuleQueryFragment>,
     pub sender: Option<GraphQLAddress>,
@@ -212,7 +216,7 @@ impl From<SubscriptionEvent> for Event {
 /// that a [`SignedTransaction`] is rebuilt from.
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct SubscriptionTransactionBlock {
+pub(crate) struct SubscriptionTransactionBlock {
     pub digest: Option<String>,
     pub bcs: Option<Base64>,
 }
@@ -223,9 +227,11 @@ impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
     fn try_from(value: SubscriptionTransactionBlock) -> Result<Self, Self::Error> {
         let transaction = value
             .bcs
-            .map(|tx| base64ct::Base64::decode_vec(tx.0.as_str()))
+            .map(|tx| crate::base64::decode(tx.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<SenderSignedTransaction>(&bcs))
+            .map(|bcs| {
+                bcs::from_bytes::<SenderSignedTransaction>(&bcs).map_err(iota_types::BcsError::new)
+            })
             .transpose()?;
 
         if let Some(transaction) = transaction {
@@ -238,6 +244,59 @@ impl TryFrom<SubscriptionTransactionBlock> for SignedTransaction {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
-pub struct TxBlockDigest {
+pub(crate) struct TxBlockDigest {
     pub digest: Option<String>,
+}
+
+#[cfg(test)]
+mod tests {
+    use serde_json::{Value, json};
+
+    use super::*;
+
+    /// The `@oneOf` input must carry exactly one non-null entry.
+    fn assert_one_of(value: Value, expected: Value) {
+        assert_eq!(value, expected);
+        let object = value.as_object().unwrap();
+        assert_eq!(object.values().filter(|v| !v.is_null()).count(), 1);
+    }
+
+    #[test]
+    fn event_filter_input_sets_exactly_one_field() {
+        let input = SubscriptionEventFilterInput::from(SubscriptionEventFilter::EmittingModule(
+            "0x2::coin".to_owned(),
+        ));
+        assert_one_of(
+            serde_json::to_value(input).unwrap(),
+            json!({ "emittingModule": "0x2::coin" }),
+        );
+    }
+
+    #[test]
+    fn transaction_filter_input_sets_exactly_one_field() {
+        let kind = SubscriptionTransactionFilterInput::from(SubscriptionTransactionFilter::Kind(
+            TransactionBlockKindInput::ProgrammableTx,
+        ));
+        assert_one_of(
+            serde_json::to_value(kind).unwrap(),
+            json!({ "kind": "PROGRAMMABLE_TX" }),
+        );
+
+        let function = SubscriptionTransactionFilterInput::from(
+            SubscriptionTransactionFilter::Function("0x3".to_owned()),
+        );
+        assert_one_of(
+            serde_json::to_value(function).unwrap(),
+            json!({ "function": "0x3" }),
+        );
+
+        let address = Address::ZERO;
+        let signing = SubscriptionTransactionFilterInput::from(
+            SubscriptionTransactionFilter::SigningAddress(address),
+        );
+        assert_one_of(
+            serde_json::to_value(signing).unwrap(),
+            json!({ "signingAddress": address.to_string() }),
+        );
+    }
 }

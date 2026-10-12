@@ -48,7 +48,7 @@ struct PublishUpgradeExample {
     let sender = privateKey.publicKey().deriveAddress()
     print("Sender: \(sender)")
 
-    let client = GraphQlClient.newLocalnet()
+    let client = try GraphQlClient.newLocalnet()
 
     // Fund the sender address for gas payment
     let faucet = FaucetClient.newLocalnet()

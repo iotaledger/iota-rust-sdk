@@ -25,6 +25,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for CheckpointSummary {}
     impl MessageFields for CheckpointSummary {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::DIGEST_FIELD,
@@ -78,6 +79,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for CheckpointContents {}
     impl MessageFields for CheckpointContents {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::DIGEST_FIELD,
@@ -149,6 +151,7 @@ mod _field_impls {
             ),
         };
     }
+    impl crate::field::sealed::Sealed for Checkpoint {}
     impl MessageFields for Checkpoint {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::SEQUENCE_NUMBER_FIELD,

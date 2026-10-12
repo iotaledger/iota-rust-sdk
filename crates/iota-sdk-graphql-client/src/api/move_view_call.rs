@@ -2,13 +2,117 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use cynic::QueryBuilder;
+use iota_transaction_builder::types::MoveTypes;
 use iota_types::{Address, ObjectId, ObjectReference, TypeTag};
 
 use crate::{
     GraphQLClient,
+    api::define_query,
     error::GraphQLResult,
     query_types::{MoveViewCallArgs, MoveViewCallQueryFragment, MoveViewResult},
 };
+
+define_query! {
+    /// Query for [`GraphQLClient::move_view_call_json`]. Await it to send the
+    /// request.
+    pub struct MoveViewCallJsonQuery {
+        client: GraphQLClient,
+        function_name: String,
+        type_arguments: Option<Vec<String>>,
+        arguments: Option<Vec<serde_json::Value>>,
+    }
+    output: GraphQLResult<MoveViewResult>;
+}
+
+impl MoveViewCallJsonQuery {
+    /// Set the type arguments of the Move function.
+    pub fn type_arguments(mut self, type_arguments: Vec<String>) -> Self {
+        self.type_arguments = Some(type_arguments);
+        self
+    }
+
+    /// Set the arguments passed into the Move function, in JSON format.
+    pub fn arguments(mut self, arguments: Vec<serde_json::Value>) -> Self {
+        self.arguments = Some(arguments);
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<MoveViewResult> {
+        let operation = MoveViewCallQueryFragment::build(MoveViewCallArgs {
+            function_name: self.function_name,
+            type_arguments: self.type_arguments,
+            arguments: self.arguments,
+        });
+        let response = self.client.run_query(&operation).await?;
+
+        Ok(response.move_view_call)
+    }
+}
+
+define_query! {
+    /// Query for [`GraphQLClient::move_view_call`]. Await it to send the
+    /// request.
+    pub struct MoveViewCallQuery {
+        client: GraphQLClient,
+        function_name: String,
+        type_arguments: Option<Vec<TypeTag>>,
+        arguments: Option<Vec<serde_json::Value>>,
+    }
+    output: GraphQLResult<MoveViewResult>;
+}
+
+impl MoveViewCallQuery {
+    /// Set the type arguments of the Move function.
+    pub fn type_arguments(mut self, type_arguments: Vec<TypeTag>) -> Self {
+        self.type_arguments = Some(type_arguments);
+        self
+    }
+
+    /// Set the type arguments of the Move function from Rust types, e.g.
+    /// `generics::<(u64, String)>()`.
+    pub fn generics<G: MoveTypes>(mut self) -> Self {
+        self.type_arguments = Some(G::type_tags());
+        self
+    }
+
+    /// Set the typed arguments passed into the Move function, replacing the
+    /// ones set so far. A single argument is wrapped in a list or tuple.
+    pub fn arguments(mut self, arguments: impl MoveViewArgList) -> Self {
+        self.arguments = Some(arguments.to_json_vec());
+        self
+    }
+
+    /// Append a single typed argument passed into the Move function.
+    ///
+    /// A collection is appended as one argument, i.e. a Move vector; use
+    /// [`arguments`](Self::arguments) to pass a collection as the whole
+    /// argument list.
+    pub fn argument(mut self, argument: impl MoveViewArg) -> Self {
+        self.arguments
+            .get_or_insert_default()
+            .push(argument.to_json());
+        self
+    }
+
+    async fn send(self) -> GraphQLResult<MoveViewResult> {
+        let type_arguments = self
+            .type_arguments
+            .map(|tags| tags.into_iter().map(|t| t.to_string()).collect());
+        MoveViewCallJsonQuery {
+            client: self.client,
+            function_name: self.function_name,
+            type_arguments,
+            arguments: self.arguments,
+        }
+        .await
+    }
+}
+
+/// The fully qualified name of a Move function, as
+/// `<package_id>::<module_name>::<function_name>`.
+fn function_name(package: ObjectId, module: &str, function: &str) -> String {
+    format!("{package}::{module}::{function}")
+}
 
 impl GraphQLClient {
     /// Execute a Move View Function with raw JSON arguments.
@@ -21,31 +125,25 @@ impl GraphQLClient {
     /// no transactions are submitted to the network for inclusion into the
     /// ledger.
     ///
-    /// # Arguments
-    /// * `function_name` - The Move function fully qualified name as
-    ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4::shop::total_revenue`
-    /// * `type_arguments` - The type arguments of the Move function
-    /// * `arguments` - The arguments to be passed into the Move function, in
-    ///   JSON format
+    /// The function is `function` in the module `module` of the package
+    /// `package`. Set its type arguments with
+    /// [`type_arguments`](MoveViewCallJsonQuery::type_arguments) and its JSON
+    /// arguments with [`arguments`](MoveViewCallJsonQuery::arguments).
     ///
-    /// # Returns
-    /// A `MoveViewResult` containing either execution results (return values)
-    /// or an error.
-    pub async fn move_view_call_json(
+    /// Resolves to a `MoveViewResult` containing either execution results
+    /// (return values) or an error.
+    pub fn move_view_call_json(
         &self,
-        function_name: impl Into<String>,
-        type_arguments: impl Into<Option<Vec<String>>>,
-        arguments: impl Into<Option<Vec<serde_json::Value>>>,
-    ) -> GraphQLResult<MoveViewResult> {
-        let operation = MoveViewCallQueryFragment::build(MoveViewCallArgs {
-            function_name: function_name.into(),
-            type_arguments: type_arguments.into(),
-            arguments: arguments.into(),
-        });
-        let response = self.run_query(&operation).await?;
-
-        Ok(response.move_view_call)
+        package: impl Into<ObjectId>,
+        module: impl Into<String>,
+        function: impl Into<String>,
+    ) -> MoveViewCallJsonQuery {
+        MoveViewCallJsonQuery {
+            client: self.clone(),
+            function_name: function_name(package.into(), &module.into(), &function.into()),
+            type_arguments: None,
+            arguments: None,
+        }
     }
 
     /// Execute a Move View Function.
@@ -64,46 +162,49 @@ impl GraphQLClient {
     /// not alter ledger state. Spam attacks are dealt with at the RPC level
     /// rather than execution level.
     ///
-    /// # Arguments
-    /// * `function_name` - The Move function fully qualified name as
-    ///   `<package_id>::<module_name>::<function_name>`, e.g.,
-    ///   `0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4::shop::total_revenue`
-    /// * `type_arguments` - The type arguments of the Move function
-    /// * `arguments` - The typed arguments to be passed into the Move function
+    /// The function is `function` in the module `module` of the package
+    /// `package`. Set its typed arguments with
+    /// [`arguments`](MoveViewCallQuery::arguments) and its type arguments
+    /// with [`type_arguments`](MoveViewCallQuery::type_arguments).
     ///
     /// # Example
     /// ```rust,ignore
     /// // The `view_demo` package published on testnet, and the shared
     /// // `view_demo::shop::Shop` created when it was published.
-    /// let package = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4";
+    /// let package = ObjectId::from_str(
+    ///     "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4e87f4",
+    /// )?;
     /// let shop = ObjectId::from_str(
     ///     "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20",
     /// )?;
     ///
     /// // Single argument: wrap in a list or tuple
     /// let result = client
-    ///     .move_view_call(format!("{package}::shop::total_revenue"), None, (shop,))
+    ///     .move_view_call(package, "shop", "total_revenue")
+    ///     .arguments((shop,))
+    ///     .await?;
+    ///
+    /// // Or append it
+    /// let result = client
+    ///     .move_view_call(package, "shop", "total_revenue")
+    ///     .argument(shop)
     ///     .await?;
     /// ```
     ///
-    /// # Returns
-    /// A `MoveViewResult` containing either execution results (return values)
-    /// or an error.
-    pub async fn move_view_call<A: MoveViewArgList>(
+    /// Resolves to a `MoveViewResult` containing either execution results
+    /// (return values) or an error.
+    pub fn move_view_call(
         &self,
-        function_name: impl Into<String>,
-        type_arguments: impl Into<Option<Vec<TypeTag>>>,
-        arguments: A,
-    ) -> GraphQLResult<MoveViewResult> {
-        let type_args_strings = type_arguments
-            .into()
-            .map(|tags| tags.into_iter().map(|t| t.to_string()).collect());
-        self.move_view_call_json(
-            function_name,
-            type_args_strings,
-            Some(arguments.to_json_vec()),
-        )
-        .await
+        package: impl Into<ObjectId>,
+        module: impl Into<String>,
+        function: impl Into<String>,
+    ) -> MoveViewCallQuery {
+        MoveViewCallQuery {
+            client: self.clone(),
+            function_name: function_name(package.into(), &module.into(), &function.into()),
+            type_arguments: None,
+            arguments: None,
+        }
     }
 }
 
@@ -261,7 +362,7 @@ impl MoveViewArg for serde_json::Value {
     message = "Provided value is not a valid list of Move view arguments.",
     note = "Expected a tuple, vector, array, or slice of types that implement `MoveViewArg`."
 )]
-pub trait MoveViewArgList {
+pub trait MoveViewArgList: sealed::Sealed {
     /// Convert the arguments to a vector of JSON values.
     fn to_json_vec(self) -> Vec<serde_json::Value>;
 }
@@ -297,6 +398,8 @@ where
 // Tuple implementations using a macro
 macro_rules! impl_move_view_args_tuple {
     ($(($n:tt, $T:ident)),*) => {
+        impl<$($T),+> sealed::Sealed for ($($T),+) {}
+
         impl<$($T),+> MoveViewArgList for ($($T),+)
         where $($T: MoveViewArg),+
         {
@@ -312,3 +415,101 @@ macro_rules! impl_move_view_args_tuple {
 }
 
 variadics_please::all_tuples_enumerated!(impl_move_view_args_tuple, 2, 15, T);
+
+mod sealed {
+    pub trait Sealed {}
+
+    impl<T> Sealed for (T,) {}
+    impl<T> Sealed for Vec<T> {}
+    impl<const N: usize, T> Sealed for [T; N] {}
+    impl<T> Sealed for &[T] {}
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use iota_types::{Address, ObjectId, TypeTag};
+
+    use crate::test_utils::sent_variables;
+
+    #[tokio::test]
+    async fn move_view_calls_send_the_function_type_arguments_and_arguments() {
+        let vars = sent_variables("MoveViewCallQueryFragment", |client| async move {
+            let _ = client
+                .move_view_call(Address::FRAMEWORK, "coin", "value")
+                .arguments((21u64,))
+                .type_arguments(vec![TypeTag::U64])
+                .await;
+        })
+        .await;
+        assert_eq!(
+            vars["functionName"],
+            format!("{}::coin::value", ObjectId::from(Address::FRAMEWORK))
+        );
+        assert_eq!(vars["typeArguments"], serde_json::json!(["u64"]));
+        assert_eq!(vars["arguments"], serde_json::json!(["21"]));
+
+        let vars = sent_variables("MoveViewCallQueryFragment", |client| async move {
+            let _ = client
+                .move_view_call_json(Address::FRAMEWORK, "coin", "value")
+                .type_arguments(vec!["u64".to_owned()])
+                .arguments(vec![serde_json::json!("21")])
+                .await;
+        })
+        .await;
+        assert_eq!(
+            vars["functionName"],
+            format!("{}::coin::value", ObjectId::from(Address::FRAMEWORK))
+        );
+        assert_eq!(vars["typeArguments"], serde_json::json!(["u64"]));
+        assert_eq!(vars["arguments"], serde_json::json!(["21"]));
+
+        let vars = sent_variables("MoveViewCallQueryFragment", |client| async move {
+            let _ = client
+                .move_view_call(Address::FRAMEWORK, "coin", "value")
+                .await;
+        })
+        .await;
+        assert!(vars["typeArguments"].is_null());
+        assert!(vars["arguments"].is_null());
+
+        let vars = sent_variables("MoveViewCallQueryFragment", |client| async move {
+            let _ = client
+                .move_view_call_json(Address::FRAMEWORK, "coin", "value")
+                .await;
+        })
+        .await;
+        assert!(vars["typeArguments"].is_null());
+        assert!(vars["arguments"].is_null());
+    }
+
+    #[tokio::test]
+    async fn move_view_calls_append_arguments_and_take_type_arguments_from_generics() {
+        let vars = sent_variables("MoveViewCallQueryFragment", |client| async move {
+            let _ = client
+                .move_view_call(Address::FRAMEWORK, "coin", "value")
+                .arguments((1u8, "a"))
+                .argument(u64::MAX)
+                .argument(vec![2u8, 3])
+                .generics::<(u64, String)>()
+                .await;
+        })
+        .await;
+        assert_eq!(
+            vars["arguments"],
+            serde_json::json!([1, "a", u64::MAX.to_string(), [2, 3]])
+        );
+        assert_eq!(
+            vars["typeArguments"],
+            serde_json::json!(["u64", "vector<u8>"])
+        );
+
+        let vars = sent_variables("MoveViewCallQueryFragment", |client| async move {
+            let _ = client
+                .move_view_call(Address::FRAMEWORK, "coin", "value")
+                .argument(21u64)
+                .await;
+        })
+        .await;
+        assert_eq!(vars["arguments"], serde_json::json!(["21"]));
+    }
+}

@@ -1,3 +1,62 @@
+## [1.0.0-rc.1] - 2026-10-09
+
+### 🚀 Features
+
+- *(iota-sdk-types)* Derive a transaction's balance and object changes (#1399)
+- *(crypto)* [**breaking**] Add CommitteeChainVerifier (#1298)
+- *(types)* Derive addresses from the inner signature types (#1459)
+- *(iota-sdk-types)* Add MoveVectorElemTooBig and MoveRawValueTooBig execution errors (#1306) (#1443)
+- *(crypto)* Add BLS proof of possession (#1469)
+- Impl From<T> for String for Address, Digest, and TypeTag (#1329)
+- Add typed move_objects queries for GraphQL and gRPC (#1439)
+- *(types, crypto)* [**breaking**] Re-export rand_core (#1582)
+- *(iota-sdk-types)* Add the AuthenticatorFunctionNotFound and AccountNotSharedObject execution errors
+- *(graphql)* [**breaking**] Expose the dry-run transaction and suggested gas price (#1543)
+
+### 🐛 Bug Fixes
+
+- String-serialize EndOfEpochData.epoch_supply_change in JSON (#1393)
+- Base64-encode PasskeyAuthenticator.authenticator_data in JSON (#1409)
+- *(types)* Return an error instead of panicking on short base64 input (#1465)
+- *(types)* Reject truncated MoveStruct contents on deserialize (#1466)
+- *(types)* Reject non-canonical MoveObjectType encodings (#1468)
+- Serialize iota_names::Name as its string form in JSON (#1464)
+- *(types)* Restore the length prefix on MovePackageData's BCS digest (#1523)
+- [**breaking**] String-serialize the iota_names u64s in JSON (#1463)
+- [**breaking**] String-serialize the ChangeEpoch u64 vectors in JSON (#1545)
+
+### 🚜 Refactor
+
+- Drop the get_ prefix from three accessors (#1401)
+- Unify byte accessors as bytes()/into_bytes() (#1404)
+- *(iota-sdk-types)* [**breaking**] Remove ObjectChange (#1398)
+- Name the base64 and signature decode errors (#1478)
+- *(iota-sdk-types)* Separate the package size check from `MovePackage::new`
+- *(types)* [**breaking**] Reduce the public surface of iota-sdk-types (#1473)
+- *(iota-sdk-types)* Separate the package size check from `MovePackage::new` (#1499)
+- [**breaking**] Remove dead and inconsistent public API before 1.0 (#1574)
+- *(iota-sdk-types)* [**breaking**] Replace DigestParseError::Base58 with an SDK-owned variant (#1588)
+- *(iota-sdk-types)* [**breaking**] Mark IotaNamesConfig and MissingSignatureError non-exhaustive (#1592)
+- *(iota-sdk-types)* [**breaking**] Parse SignatureScheme without strum (#1585)
+- *(iota-sdk-types)* [**breaking**] Drop the immutable account object from MoveAuthenticatorV1 (#1633)
+- *(iota-sdk-types)* [**breaking**] Replace AddressParseError::FromHex with SDK-owned variants (#1587)
+- [**breaking**] Replace bcs::Error in public signatures with iota_types::BcsError (#1591)
+- *(iota-sdk-types)* [**breaking**] Drop winnow trait impls from TypeParseError (#1586)
+- *(types)* [**breaking**] Drop the BCS helpers of MovePackageData (#1649)
+- [**breaking**] Take base64ct::Error out of the public API (#1589)
+
+### ⚙️ Miscellaneous Tasks
+
+- Bring BCS ABNF doc comments in line with the generated schema (#1485)
+- *(docs)* Point localnet instructions at iota-localnet (#1509)
+- [**breaking**] Update dependencies (#1346)
+- Drop the doc(cfg) attributes rustdoc now derives from cfg (#1600)
+- Use the README as the crate docs where it can carry them (#1602)
+
+### ◀️ Revert
+
+- *(iota-sdk-types)* Separate the package size check from `MovePackage::new` (#1499) (#1507)
+
 ## [1.0.0-beta.1] - 2026-08-31
 
 ### 🚀 Features

@@ -30,7 +30,10 @@ func main() {
 		log.Fatalf("Failed to parse package id: %v", err)
 	}
 
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	// Fetch package metadata and version history.
 	packageOpt, err := client.Package(packageAddress, nil)

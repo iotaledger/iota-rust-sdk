@@ -22,9 +22,14 @@ import (
 const deadline = 60 * time.Second
 
 func main() {
-	client := iota_sdk.GraphQlClientNewLocalnet()
-	kind := iota_sdk.GraphQlTransactionBlockKindInputProgrammableTx
-	subscription := client.TransactionsSubscription(&iota_sdk.GraphQlSubscriptionTransactionFilter{Kind: &kind}, nil)
+	client, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
+	var filter iota_sdk.GraphQlSubscriptionTransactionFilter = iota_sdk.GraphQlSubscriptionTransactionFilterKind{
+		Kind: iota_sdk.GraphQlTransactionBlockKindInputProgrammableTx,
+	}
+	subscription := client.TransactionsSubscription(&filter, nil)
 	defer subscription.Cancel()
 
 	// Cancelling unblocks a pending Next, which is what keeps the example from

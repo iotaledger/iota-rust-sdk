@@ -5,6 +5,11 @@
 
 use std::{sync::Arc, time::Duration};
 
+use iota_sdk::graphql_client::{
+    ExecuteTransactionQuery, ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
+    ListTransactionsEffectsQuery, ListTransactionsQuery, WaitForTransactionQuery,
+};
+
 use crate::{
     error::Result,
     graphql::{
@@ -18,6 +23,7 @@ use crate::{
             GraphQLTransactionDataEffects, GraphQLTransactionsFilter,
         },
     },
+    helpers::SetIfSome,
     transaction_builder::WaitForTransaction,
     types::{
         address::Address,
@@ -72,10 +78,12 @@ impl GraphQLClient {
     ) -> Result<GraphQLSignedTransactionPage> {
         Ok(self
             .client()
-            .transactions(
+            .transactions()
+            .set_if_some(
                 filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
+                ListTransactionsQuery::filter,
             )
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -94,12 +102,16 @@ impl GraphQLClient {
     ) -> Result<GraphQLSignedTransactionPage> {
         Ok(self
             .client()
-            .address_transactions(
-                **address,
+            .address_transactions(**address)
+            .set_if_some(
                 relation.map(Into::into),
-                filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
+                ListAddressTransactionsQuery::relation,
             )
+            .set_if_some(
+                filter.as_deref().map(Into::into),
+                ListAddressTransactionsQuery::filter,
+            )
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -114,10 +126,12 @@ impl GraphQLClient {
     ) -> Result<GraphQLTransactionEffectsPage> {
         Ok(self
             .client()
-            .transactions_effects(
+            .transactions_effects()
+            .set_if_some(
                 filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
+                ListTransactionsEffectsQuery::filter,
             )
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -133,10 +147,12 @@ impl GraphQLClient {
     ) -> Result<GraphQLTransactionDataEffectsPage> {
         Ok(self
             .client()
-            .transactions_data_effects(
+            .transactions_data_effects()
+            .set_if_some(
                 filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
+                ListTransactionsDataEffectsQuery::filter,
             )
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -158,8 +174,8 @@ impl GraphQLClient {
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
                 &transaction.0,
-                wait_for.map(Into::into),
             )
+            .set_if_some(wait_for.map(Into::into), ExecuteTransactionQuery::wait_for)
             .await?
             .into())
     }
@@ -195,7 +211,8 @@ impl GraphQLClient {
     ) -> Result<()> {
         Ok(self
             .client()
-            .wait_for_transaction(**digest, wait_for.into(), timeout)
+            .wait_for_transaction(**digest, wait_for.into())
+            .set_if_some(timeout, WaitForTransactionQuery::timeout)
             .await?)
     }
 }

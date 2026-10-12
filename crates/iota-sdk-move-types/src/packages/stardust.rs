@@ -52,8 +52,8 @@ pub mod irc27 {
         /// Decode an [`Irc27Metadata`] from BCS bytes without verifying any
         /// on-chain type tag (the metadata is usually nested inside an
         /// [`Nft`](super::nft::Nft), not stored as a top-level object).
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 }
@@ -114,8 +114,8 @@ pub mod nft {
     impl Nft {
         /// Decode an [`Nft`] from BCS bytes without verifying the on-chain
         /// type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -182,12 +182,12 @@ pub mod nft_output {
     {
         /// Decode a [`NftOutput<T>`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
-    impl_try_from_object_generic!(NftOutput<T>);
+    impl_try_from_object_generic!(NftOutput<phantom T>);
 }
 
 /// Types from `0x107a::stardust_upgrade_label`.
@@ -297,12 +297,12 @@ pub mod basic_output {
     {
         /// Decode a [`BasicOutput<T>`] from BCS bytes without verifying
         /// the on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
-    impl_try_from_object_generic!(BasicOutput<T>);
+    impl_try_from_object_generic!(BasicOutput<phantom T>);
 }
 
 /// Types from `0x107a::alias`.
@@ -354,8 +354,8 @@ pub mod alias {
     impl Alias {
         /// Decode an [`Alias`] from BCS bytes without verifying the on-chain
         /// type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -402,12 +402,12 @@ pub mod alias_output {
     {
         /// Decode an [`AliasOutput<T>`] from BCS bytes without verifying
         /// the on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
-    impl_try_from_object_generic!(AliasOutput<T>);
+    impl_try_from_object_generic!(AliasOutput<phantom T>);
 }
 
 /// Types from `0x107a::timelock_unlock_condition`.

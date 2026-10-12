@@ -26,7 +26,7 @@ async fn main() -> Result<()> {
     // Request funds from faucet (the faucet client relies on GraphQL to await
     // finalization)
     FaucetClient::new_localnet()
-        .request_and_wait_for_finalized(sender_address, &GraphQLClient::new_localnet())
+        .request_and_wait_for_finalized(sender_address, &GraphQLClient::new_localnet()?)
         .await?;
 
     let client = GrpcClient::new_localnet()?;

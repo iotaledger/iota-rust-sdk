@@ -87,30 +87,10 @@ where
 )]
 pub trait PTBArgumentList {
     /// Get the arguments.
-    fn args(self, ptb: &mut TransactionBuildData) -> Vec<Argument>
-    where
-        Self: Sized,
-    {
-        let mut args = Vec::new();
-        self.push_args(ptb, &mut args);
-        args
-    }
-
-    /// Push the args onto the list.
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>);
+    fn args(self, ptb: &mut TransactionBuildData) -> Vec<Argument>;
 
     /// Get the inputs.
-    fn inputs(self) -> Vec<InputKind>
-    where
-        Self: Sized,
-    {
-        let mut inputs = Vec::new();
-        self.push_inputs(&mut inputs);
-        inputs
-    }
-
-    /// Push the inputs onto the list.
-    fn push_inputs(self, args: &mut Vec<InputKind>);
+    fn inputs(self) -> Vec<InputKind>;
 }
 
 macro_rules! impl_ptb_args_tuple {
@@ -118,16 +98,12 @@ macro_rules! impl_ptb_args_tuple {
         impl<$($T),+> PTBArgumentList for ($($T),+)
         where $($T: PTBArgument),+
         {
-            fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-                $(
-                    args.push(self.$n.arg(ptb));
-                )+
+            fn args(self, ptb: &mut TransactionBuildData) -> Vec<Argument> {
+                vec![$(self.$n.arg(ptb)),+]
             }
 
-            fn push_inputs(self, args: &mut Vec<InputKind>) {
-                $(
-                    args.push(self.$n.input());
-                )+
+            fn inputs(self) -> Vec<InputKind> {
+                vec![$(self.$n.input()),+]
             }
         }
     };
@@ -136,30 +112,22 @@ macro_rules! impl_ptb_args_tuple {
 variadics_please::all_tuples_enumerated!(impl_ptb_args_tuple, 2, 15, T);
 
 impl<T: PTBArgument> PTBArgumentList for Vec<T> {
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        for input in self {
-            args.push(input.arg(ptb));
-        }
+    fn args(self, ptb: &mut TransactionBuildData) -> Vec<Argument> {
+        self.into_iter().map(|input| input.arg(ptb)).collect()
     }
 
-    fn push_inputs(self, args: &mut Vec<InputKind>) {
-        for input in self {
-            args.push(input.input());
-        }
+    fn inputs(self) -> Vec<InputKind> {
+        self.into_iter().map(PTBArgument::input).collect()
     }
 }
 
 impl<const N: usize, T: PTBArgument> PTBArgumentList for [T; N] {
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        for input in self {
-            args.push(input.arg(ptb));
-        }
+    fn args(self, ptb: &mut TransactionBuildData) -> Vec<Argument> {
+        self.into_iter().map(|input| input.arg(ptb)).collect()
     }
 
-    fn push_inputs(self, args: &mut Vec<InputKind>) {
-        for input in self {
-            args.push(input.input());
-        }
+    fn inputs(self) -> Vec<InputKind> {
+        self.into_iter().map(PTBArgument::input).collect()
     }
 }
 
@@ -167,16 +135,12 @@ impl<T> PTBArgumentList for &[T]
 where
     for<'a> &'a T: PTBArgument,
 {
-    fn push_args(self, ptb: &mut TransactionBuildData, args: &mut Vec<Argument>) {
-        for input in self {
-            args.push(input.arg(ptb));
-        }
+    fn args(self, ptb: &mut TransactionBuildData) -> Vec<Argument> {
+        self.iter().map(|input| input.arg(ptb)).collect()
     }
 
-    fn push_inputs(self, args: &mut Vec<InputKind>) {
-        for input in self {
-            args.push(input.input());
-        }
+    fn inputs(self) -> Vec<InputKind> {
+        self.iter().map(PTBArgument::input).collect()
     }
 }
 

@@ -11,7 +11,7 @@ use iota_sdk::{
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = GraphQLClient::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
 
     let private_key = Ed25519PrivateKey::random();
     let sender_address = private_key.public_key().derive_address();
@@ -45,7 +45,7 @@ async fn main() -> Result<()> {
     println!("Signing Digest: {}", tx.signing_digest_hex());
     println!("Txn Bytes: {}", tx.to_base64());
 
-    let res = client.dry_run_transaction(&tx, false).await?;
+    let res = client.dry_run_transaction(&tx).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to send tx: {err}");

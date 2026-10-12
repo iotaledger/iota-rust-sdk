@@ -39,7 +39,7 @@ async fn main() -> Result<()> {
         .owned_objects(owner)
         .object_type(iota_coin)
         .page_size(25)
-        .collect(Some(50))
+        .collect(50)
         .await?;
     println!("---");
     println!(
@@ -57,7 +57,7 @@ async fn main() -> Result<()> {
     let staked = client
         .owned_move_objects::<StakedIota>(owner)
         .page_size(25)
-        .collect(Some(50))
+        .collect(50)
         .await?;
     println!("---");
     println!("StakedIota objects ({} returned):", staked.body().len());

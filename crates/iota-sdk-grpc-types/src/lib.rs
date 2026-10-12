@@ -1,12 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! gRPC-specific versioned types for forward compatibility.
-//!
-//! These types provide versioning for gRPC streaming while positioning
-//! for future core type evolution. When core types themselves
-//! need versioning, these wrappers will evolve naturally.
-
+#![doc = include_str!("../README.md")]
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 pub mod field;

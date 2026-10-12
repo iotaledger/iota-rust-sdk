@@ -115,13 +115,17 @@ impl TransactionBuilderLedgerClient for GrpcClient {
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> Result<ObjectsPage, Self::Error> {
-        let page = self
-            .owned_objects(owner)
-            .object_type(struct_tag)
-            .page_size(limit.map(saturating_usize_to_u32))
-            .page_token(cursor.map(prost::bytes::Bytes::from))
-            .await?
-            .into_inner();
+        let mut query = self.owned_objects(owner);
+        if let Some(struct_tag) = struct_tag {
+            query = query.object_type(struct_tag);
+        }
+        if let Some(limit) = limit {
+            query = query.page_size(saturating_usize_to_u32(limit));
+        }
+        if let Some(cursor) = cursor {
+            query = query.page_token(prost::bytes::Bytes::from(cursor));
+        }
+        let page = query.await?.into_inner();
         let data = page
             .items
             .iter()
@@ -149,12 +153,13 @@ impl TransactionBuilderLedgerClient for GrpcClient {
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
-        let epoch = self
+        let mut query = self
             .epoch()
-            .epoch_number(epoch)
-            .read_mask(EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE))
-            .await?
-            .into_inner();
+            .read_mask(EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE));
+        if let Some(epoch) = epoch.into() {
+            query = query.epoch_number(epoch);
+        }
+        let epoch = query.await?.into_inner();
         Ok(epoch.reference_gas_price)
     }
 }

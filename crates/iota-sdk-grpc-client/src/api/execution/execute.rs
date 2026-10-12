@@ -38,10 +38,7 @@ impl ExecuteTransactionQuery {
     /// transaction to be included in a checkpoint. Without it, or with `0`, the
     /// server returns without waiting; it may clamp the timeout to a configured
     /// maximum.
-    pub fn checkpoint_inclusion_timeout_ms(
-        mut self,
-        checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
-    ) -> Self {
+    pub fn checkpoint_inclusion_timeout_ms(mut self, checkpoint_inclusion_timeout_ms: u64) -> Self {
         self.batch = self
             .batch
             .checkpoint_inclusion_timeout_ms(checkpoint_inclusion_timeout_ms);
@@ -79,11 +76,8 @@ impl ExecuteTransactionsQuery {
     /// executed transactions to be included in a checkpoint. Without it, or
     /// with `0`, the server returns without waiting; it may clamp the timeout
     /// to a configured maximum.
-    pub fn checkpoint_inclusion_timeout_ms(
-        mut self,
-        checkpoint_inclusion_timeout_ms: impl Into<Option<u64>>,
-    ) -> Self {
-        self.checkpoint_inclusion_timeout_ms = checkpoint_inclusion_timeout_ms.into();
+    pub fn checkpoint_inclusion_timeout_ms(mut self, checkpoint_inclusion_timeout_ms: u64) -> Self {
+        self.checkpoint_inclusion_timeout_ms = Some(checkpoint_inclusion_timeout_ms);
         self
     }
 
@@ -194,8 +188,10 @@ impl GrpcClient {
 
     /// Execute a batch of signed transactions.
     ///
-    /// Transactions are executed sequentially on the server. Each transaction
-    /// is independent — failure of one does not abort the rest.
+    /// Transactions are executed concurrently on the server, so their relative
+    /// execution order is not guaranteed. Send transactions that must run in a
+    /// given order (for example, ones that use the same shared object) in
+    /// separate batches. Failure of one transaction does not abort the rest.
     ///
     /// Returns a `Vec<GrpcResult<ExecutedTransaction>>` in the same order as
     /// the input. Each element is either the successfully executed
