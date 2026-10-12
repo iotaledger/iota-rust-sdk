@@ -1851,7 +1851,8 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// The objects `transaction` reads that a signer can show the user: its
     /// gas coins and immutable or owned inputs, at the versions it references.
     ///
-    /// Objects fetched while building are reused and the rest are fetched.
+    /// Objects fetched while building are reused, as the transaction references
+    /// them at the versions they were fetched at, and the rest are fetched.
     /// Returns none when `wanted` is false, or when any object cannot be
     /// obtained, since a partial set does not describe the transaction.
     async fn signing_objects(&self, transaction: &Transaction, wanted: bool) -> Vec<Object> {
@@ -1876,15 +1877,9 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             }
         }
 
-        let cached = |reference: &ObjectReference| {
-            self.data
-                .objects
-                .get(&reference.object_id)
-                .filter(|object| object.version() == reference.version)
-        };
         let missing = references
             .iter()
-            .filter(|reference| cached(reference).is_none())
+            .filter(|reference| !self.data.objects.contains_key(&reference.object_id))
             .map(|reference| (reference.object_id, Some(reference.version)))
             .collect::<Vec<_>>();
         let mut fetched = HashMap::new();
@@ -1903,7 +1898,9 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
         references
             .iter()
             .map(|reference| {
-                cached(reference)
+                self.data
+                    .objects
+                    .get(&reference.object_id)
                     .or_else(|| fetched.get(&reference.object_id))
                     .cloned()
             })
