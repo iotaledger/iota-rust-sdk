@@ -111,6 +111,7 @@ cargo test --doc                 # Direct doc test invocation
 - **Errors**: `thiserror` enums, `#[non_exhaustive]` at the type level
 - **Feature gating**: optional functionality lives behind features; APIs use `#[cfg(feature = "…")]`; crates enable `#![cfg_attr(doc_cfg, feature(doc_cfg))]`, which makes docs.rs show the required feature, so items need no `doc(cfg)` attribute
 - **Comments**: see [Writing style](#writing-style) below
+- **Em-dashes**: never add them to any file; use a period, comma, colon or parentheses instead
 
 ## Writing style
 
