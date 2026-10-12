@@ -10,6 +10,7 @@ mod transport;
 
 use std::{fmt, sync::OnceLock};
 
+use futures::lock::Mutex;
 pub use iota_crypto;
 use iota_crypto::DerivationPath;
 pub use iota_types;
@@ -37,8 +38,12 @@ const APP_SWITCH_ATTEMPTS: usize = 40;
 /// address verification includes waiting for the user to confirm on the
 /// device. The USB HID and Speculos transports block the thread polling the
 /// call while they wait.
+///
+/// Calls on the same `Ledger` run one at a time: each waits for the previous
+/// one to finish, since a command can take several exchanges with the device.
 pub struct Ledger {
-    transport: Box<dyn Transport>,
+    /// Locked for the whole of each command.
+    transport: Mutex<Box<dyn Transport>>,
     version: OnceLock<AppVersion>,
 }
 
@@ -54,7 +59,7 @@ impl Ledger {
     /// Communicate with the device through a custom transport.
     pub fn new<T: Transport + 'static>(transport: T) -> Self {
         Self {
-            transport: Box::new(transport),
+            transport: Mutex::new(Box::new(transport)),
             version: OnceLock::new(),
         }
     }
@@ -64,7 +69,8 @@ impl Ledger {
     /// Speculos reports a placeholder app name unless started with
     /// `SPECULOS_APPNAME=IOTA:<version>`, so this returns `false` there.
     pub async fn is_app_open(&self) -> Result<bool, LedgerError> {
-        Ok(bolos::app_name(self.transport.as_ref()).await? == IOTA_APP_NAME)
+        let transport = self.transport.lock().await;
+        Ok(bolos::app_name(transport.as_ref()).await? == IOTA_APP_NAME)
     }
 
     /// Open the IOTA app, from the dashboard or by closing another app first.
@@ -72,18 +78,21 @@ impl Ledger {
     /// Does nothing if the IOTA app is already running, or on transports that
     /// cannot switch apps, such as Speculos.
     pub async fn open_app(&mut self) -> Result<(), LedgerError> {
-        if !self.transport.can_switch_apps() {
+        if !self.transport.get_mut().can_switch_apps() {
             return Ok(());
         }
-        match bolos::app_name(self.transport.as_ref()).await?.as_str() {
+        match bolos::app_name(self.transport.get_mut().as_ref())
+            .await?
+            .as_str()
+        {
             IOTA_APP_NAME => return Ok(()),
             DASHBOARD_APP_NAME => {}
             _ => {
-                bolos::exit_app(self.transport.as_ref()).await?;
+                bolos::exit_app(self.transport.get_mut().as_ref()).await?;
                 self.wait_for_app(DASHBOARD_APP_NAME).await?;
             }
         }
-        bolos::open_app(self.transport.as_ref(), IOTA_APP_NAME).await?;
+        bolos::open_app(self.transport.get_mut().as_ref(), IOTA_APP_NAME).await?;
         self.wait_for_app(IOTA_APP_NAME).await
     }
 
@@ -92,8 +101,8 @@ impl Ledger {
     /// On transports that cannot switch apps, such as Speculos, this ends the
     /// emulated app.
     pub async fn exit_app(&mut self) -> Result<(), LedgerError> {
-        bolos::exit_app(self.transport.as_ref()).await?;
-        if !self.transport.can_switch_apps() {
+        bolos::exit_app(self.transport.get_mut().as_ref()).await?;
+        if !self.transport.get_mut().can_switch_apps() {
             return Ok(());
         }
         self.wait_for_app(DASHBOARD_APP_NAME).await
@@ -104,8 +113,8 @@ impl Ledger {
         if let Some(version) = self.version.get() {
             return Ok(*version);
         }
-        let version = app::version(self.transport.as_ref()).await?;
-        Ok(*self.version.get_or_init(|| version))
+        self.cached_version(self.transport.lock().await.as_ref())
+            .await
     }
 
     /// Read the public key at `path`.
@@ -113,7 +122,7 @@ impl Ledger {
         &self,
         path: &DerivationPath,
     ) -> Result<Ed25519PublicKey, LedgerError> {
-        app::public_key(self.transport.as_ref(), path, false).await
+        app::public_key(self.transport.lock().await.as_ref(), path, false).await
     }
 
     /// Show the address at `path` on the device for the user to confirm, and
@@ -122,7 +131,7 @@ impl Ledger {
         &self,
         path: &DerivationPath,
     ) -> Result<Ed25519PublicKey, LedgerError> {
-        app::public_key(self.transport.as_ref(), path, true).await
+        app::public_key(self.transport.lock().await.as_ref(), path, true).await
     }
 
     /// Sign a transaction with the key at `path`.
@@ -137,13 +146,14 @@ impl Ledger {
         transaction: &Transaction,
         objects: &[Object],
     ) -> Result<Ed25519Signature, LedgerError> {
+        let transport = self.transport.lock().await;
         if !objects.is_empty() {
-            let version = self.version().await?;
+            let version = self.cached_version(transport.as_ref()).await?;
             if version.major() == 0 {
                 return Err(LedgerError::ClearSigningUnsupported(version));
             }
         }
-        sign::transaction(self.transport.as_ref(), path, transaction, objects).await
+        sign::transaction(transport.as_ref(), path, transaction, objects).await
     }
 
     /// Sign a personal message with the key at `path`.
@@ -152,20 +162,31 @@ impl Ledger {
         path: &DerivationPath,
         message: &PersonalMessage<'_>,
     ) -> Result<Ed25519Signature, LedgerError> {
-        sign::personal_message(self.transport.as_ref(), path, message).await
+        sign::personal_message(self.transport.lock().await.as_ref(), path, message).await
+    }
+
+    /// Read the app version through `transport`, which the caller has locked,
+    /// unless it is cached.
+    async fn cached_version(&self, transport: &dyn Transport) -> Result<AppVersion, LedgerError> {
+        if let Some(version) = self.version.get() {
+            return Ok(*version);
+        }
+        let version = app::version(transport).await?;
+        Ok(*self.version.get_or_init(|| version))
     }
 
     /// Wait until `app` runs on the device, reconnecting as the device
     /// re-enumerates after an app switch.
     async fn wait_for_app(&mut self, app: &str) -> Result<(), LedgerError> {
         self.version = OnceLock::new();
+        let transport = self.transport.get_mut();
         let mut error = LedgerError::from(ApduError::DeviceNotReady);
         for _ in 0..APP_SWITCH_ATTEMPTS {
-            if let Err(e) = self.transport.reconnect().await {
+            if let Err(e) = transport.reconnect().await {
                 error = e;
                 continue;
             }
-            match bolos::app_name(self.transport.as_ref()).await {
+            match bolos::app_name(transport.as_ref()).await {
                 Ok(name) if name == app => return Ok(()),
                 Ok(_) => error = ApduError::DeviceNotReady.into(),
                 Err(e) => error = e,
@@ -185,6 +206,80 @@ mod tests {
         fn exchange<'a>(&'a self, _: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer> {
             Box::pin(async { Err(LedgerError::DeviceNotFound) })
         }
+    }
+
+    /// Answers public key requests through the block protocol, yielding once
+    /// before each answer, and records whether a new command starts while
+    /// another is still in progress.
+    #[derive(Default)]
+    struct FakeDevice {
+        in_progress: std::sync::Mutex<bool>,
+        interleaved: std::sync::Arc<std::sync::atomic::AtomicBool>,
+    }
+
+    impl Transport for FakeDevice {
+        fn exchange<'a>(&'a self, command: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer> {
+            Box::pin(async move {
+                yield_now().await;
+                let mut in_progress = self.in_progress.lock().unwrap();
+                let mut data = match command.data()[0] {
+                    // Start: request the path chunk by its hash
+                    0 => {
+                        if *in_progress {
+                            self.interleaved
+                                .store(true, std::sync::atomic::Ordering::SeqCst);
+                        }
+                        *in_progress = true;
+                        [&[2], &command.data()[1..33]].concat()
+                    }
+                    // Chunk received: return the public key and its address
+                    _ => {
+                        *in_progress = false;
+                        let public_key = Ed25519PublicKey::new([7; 32]);
+                        [
+                            &[1, 32][..],
+                            public_key.bytes(),
+                            &[32],
+                            public_key.derive_address().as_bytes(),
+                        ]
+                        .concat()
+                    }
+                };
+                data.extend([0x90, 0x00]);
+                ApduAnswer::from_bytes(data)
+            })
+        }
+    }
+
+    /// Return `Pending` once, so that concurrent futures get polled in between.
+    async fn yield_now() {
+        let mut yielded = false;
+        std::future::poll_fn(|cx| {
+            if yielded {
+                std::task::Poll::Ready(())
+            } else {
+                yielded = true;
+                cx.waker().wake_by_ref();
+                std::task::Poll::Pending
+            }
+        })
+        .await
+    }
+
+    #[test]
+    fn concurrent_calls_do_not_interleave() {
+        let device = FakeDevice::default();
+        let interleaved = device.interleaved.clone();
+        let ledger = Ledger::new(device);
+        let path: DerivationPath = "m/44'/4218'/0'/0'/0'".parse().unwrap();
+
+        let (a, b) = futures::executor::block_on(futures::future::join(
+            ledger.get_public_key(&path),
+            ledger.get_public_key(&path),
+        ));
+        a.unwrap();
+        b.unwrap();
+        assert!(!interleaved.load(std::sync::atomic::Ordering::SeqCst));
     }
 
     fn assert_send<T: Send>(_: T) {}
