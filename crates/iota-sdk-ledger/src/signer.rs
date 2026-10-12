@@ -9,6 +9,13 @@ use iota_types::{
 
 use crate::{Ledger, LedgerError};
 
+impl Ledger {
+    /// Sign with the key at `path`; see [`LedgerSigner::new`].
+    pub async fn into_signer(self, path: DerivationPath) -> Result<LedgerSigner, LedgerError> {
+        LedgerSigner::new(self, path).await
+    }
+}
+
 /// Signs with the key at one derivation path on a Ledger device.
 ///
 /// The device hashes the intent message itself, so the signer sends the whole
@@ -157,11 +164,7 @@ mod tests {
         let ledger = Ledger::new(FakeDevice {
             public_key: public_key.clone(),
         });
-        block_on(LedgerSigner::new(
-            ledger,
-            "m/44'/4218'/0'/0'/0'".parse().unwrap(),
-        ))
-        .unwrap()
+        block_on(ledger.into_signer("m/44'/4218'/0'/0'/0'".parse().unwrap())).unwrap()
     }
 
     fn transaction() -> Transaction {
