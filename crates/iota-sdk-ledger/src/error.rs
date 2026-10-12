@@ -17,6 +17,12 @@ pub enum LedgerError {
     /// The IOTA app is not installed on the device.
     #[error("IOTA app not found; install the IOTA app on the Ledger device")]
     AppNotFound,
+    /// The device holds a different key than expected, because another
+    /// device is connected or the derivation path is wrong.
+    #[error(
+        "address mismatch; connect the correct Ledger device or select the correct derivation path"
+    )]
+    AddressMismatch,
     /// The IOTA app cannot clear-sign the transaction, and blind signing is
     /// disabled in its settings.
     #[error(

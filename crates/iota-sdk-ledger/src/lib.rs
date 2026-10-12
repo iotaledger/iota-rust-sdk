@@ -6,6 +6,7 @@
 
 mod commands;
 mod error;
+mod signer;
 mod transport;
 
 use std::{fmt, sync::OnceLock, time::Duration};
@@ -22,6 +23,7 @@ pub use crate::transport::hid::HidDeviceInfo;
 pub use crate::{
     commands::app::AppVersion,
     error::{ApduError, LedgerError},
+    signer::LedgerSigner,
     transport::{ApduAnswer, ApduCommand, MaybeSendSync, Transport, TransportFuture},
 };
 
