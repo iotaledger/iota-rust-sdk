@@ -27,6 +27,30 @@ WebHID, can be plugged in. The USB HID and Speculos transports block the thread
 polling a call until the device answers; synchronous programs can run calls
 with an executor such as `futures::executor::block_on`.
 
+## Signing
+
+`LedgerSigner` signs with the key at one derivation path and returns the
+`UserSignature` to submit with a transaction. Passing the transaction's input
+objects lets the device show what it does; without them the device only signs
+when blind signing is enabled in the IOTA app's settings.
+
+```rust,no_run
+use iota_sdk_ledger::{Ledger, LedgerSigner, iota_types::{Object, Transaction}};
+
+async fn sign(
+    transaction: &Transaction,
+    objects: &[Object],
+) -> Result<(), Box<dyn std::error::Error>> {
+    let ledger = Ledger::native_hid()?;
+    let signer = LedgerSigner::new(ledger, "m/44'/4218'/0'/0'/0'".parse()?).await?;
+    let signature = signer
+        .sign_transaction_with_objects(transaction, objects)
+        .await?;
+    println!("{} signed: {signature:?}", signer.address());
+    Ok(())
+}
+```
+
 ## Transports
 
 - USB HID, through `Ledger::native_hid` for the first device found, or
