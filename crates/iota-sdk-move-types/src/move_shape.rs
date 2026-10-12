@@ -10,7 +10,7 @@
 //! `packages_compiled/*`, so a renamed/reordered/retyped field in either
 //! mirror fails loudly without needing an on-chain instance.
 //!
-//! Gated on `cfg(all(test, not(target_arch = "wasm32")))` — neither the
+//! Gated on `cfg(all(test, not(target_arch = "wasm32")))`: neither the
 //! trait nor the derive impls exist in release builds (the public surface
 //! of the crate is unchanged), and the shape machinery is native-only:
 //! the comparator reads the fetched artifacts from disk, and its checks
@@ -20,7 +20,7 @@ pub trait MoveShape {
     /// The Move-side struct name for this type. Defaults to the Rust
     /// ident, but using a trait const here (instead of extracting from
     /// syn at the field site) means `use ... as Alias` renames don't leak
-    /// into the comparator — `Datatype { name: <AliasOf as MoveShape>::NAME, ..
+    /// into the comparator. `Datatype { name: <AliasOf as MoveShape>::NAME, ..
     /// }` resolves through the impl on the *underlying* type.
     const NAME: &'static str;
 
@@ -64,7 +64,7 @@ pub enum Shape {
     Struct {
         fields: Vec<Field>,
     },
-    /// A reference to another named Move type — emitted for field types
+    /// A reference to another named Move type: emitted for field types
     /// like `UID` or `Balance<T>`. The derive does not know the Move module
     /// path, so only `name` + `args` are carried; the comparator matches on
     /// those (this is the same coverage `normalized::Datatype` gives us
@@ -75,7 +75,7 @@ pub enum Shape {
     },
     /// A bare type-parameter reference at position `n`.
     TypeParameter(u16),
-    /// A `PhantomData<_>` field on the Rust mirror — filtered out before
+    /// A `PhantomData<_>` field on the Rust mirror: filtered out before
     /// comparison since Move models phantom types at the struct level, not
     /// per-field.
     Phantom,

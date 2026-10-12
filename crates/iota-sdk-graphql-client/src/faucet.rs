@@ -230,7 +230,7 @@ impl FaucetClient {
                                 error!("Faucet request {request_id} was discarded");
                                 break Err(FaucetError::Discarded(request_id.clone()));
                             }
-                            // Still pending — fall through to the poll interval and retry.
+                            // Still pending: fall through to the poll interval and retry.
                             BatchSendStatusType::InProgress => {}
                         }
                     }

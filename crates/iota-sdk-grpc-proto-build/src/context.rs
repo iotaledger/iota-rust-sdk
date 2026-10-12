@@ -180,7 +180,7 @@ impl Context {
     }
 
     /// Path to the message type as prost generates it. Messages of
-    /// `from_package` that are not nested are left unqualified — the generated
+    /// `from_package` that are not nested are left unqualified: the generated
     /// file is included into that very module.
     pub(crate) fn message_path(
         &self,
@@ -221,7 +221,7 @@ impl Context {
             // same name, so the glob re-export never surfaces it.
             //
             // No proto references such a builder across packages today. Making
-            // `_field_impls` `pub` is the one-line fix if one ever does — hence
+            // `_field_impls` `pub` is the one-line fix if one ever does, hence
             // failing loudly here rather than emitting a path that does not
             // resolve.
             panic!(

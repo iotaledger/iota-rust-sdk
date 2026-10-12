@@ -215,7 +215,7 @@ impl GraphQLClient {
     ///
     /// Note: subscriptions are served over a WebSocket, which the node has to
     /// have enabled: `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
-    /// when it is available.
+    /// when it is available).
     pub fn events_subscription(&self) -> EventsSubscriptionBuilder {
         EventsSubscriptionBuilder {
             client: self.clone(),
@@ -228,7 +228,7 @@ impl GraphQLClient {
     ///
     /// Note: subscriptions are served over a WebSocket, which the node has to
     /// have enabled: `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
-    /// when it is available.
+    /// when it is available).
     pub fn transactions_subscription(&self) -> TransactionsSubscriptionBuilder {
         TransactionsSubscriptionBuilder {
             client: self.clone(),
