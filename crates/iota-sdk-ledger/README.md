@@ -35,14 +35,18 @@ objects lets the device show what it does; without them the device only signs
 when blind signing is enabled in the IOTA app's settings.
 
 ```rust,no_run
-use iota_sdk_ledger::{Ledger, LedgerSigner, iota_types::{Object, Transaction}};
+use iota_sdk_ledger::{
+    Ledger,
+    iota_types::{Object, Transaction},
+};
 
 async fn sign(
     transaction: &Transaction,
     objects: &[Object],
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let ledger = Ledger::native_hid()?;
-    let signer = LedgerSigner::new(ledger, "m/44'/4218'/0'/0'/0'".parse()?).await?;
+    let signer = Ledger::native_hid()?
+        .into_signer("m/44'/4218'/0'/0'/0'".parse()?)
+        .await?;
     let signature = signer
         .sign_transaction_with_objects(transaction, objects)
         .await?;
