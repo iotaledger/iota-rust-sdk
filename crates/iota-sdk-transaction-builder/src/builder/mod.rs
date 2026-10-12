@@ -1853,12 +1853,9 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     ///
     /// Objects fetched while building are reused, as the transaction references
     /// them at the versions they were fetched at, and the rest are fetched.
-    /// Returns none when `wanted` is false, or when any object cannot be
-    /// obtained, since a partial set does not describe the transaction.
-    async fn signing_objects(&self, transaction: &Transaction, wanted: bool) -> Vec<Object> {
-        if !wanted {
-            return Vec::new();
-        }
+    /// Returns none when any object cannot be obtained, since a partial set
+    /// does not describe the transaction.
+    async fn signing_objects(&self, transaction: &Transaction) -> Vec<Object> {
         let Transaction::V1(transaction) = transaction else {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
@@ -2105,7 +2102,11 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     ) -> Result<TransactionEffects, TransactionBuilderError> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
-        let objects = self.signing_objects(&txn, signer.uses_objects()).await;
+        let objects = if signer.uses_objects() {
+            self.signing_objects(&txn).await
+        } else {
+            Vec::new()
+        };
         let signature = signer
             .sign_with_objects(&txn, &objects)
             .await
@@ -2199,7 +2200,11 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                     txn.as_mut_v1().gas_payment.objects = objects;
                 }
 
-                let objects = self.signing_objects(&txn, signer.uses_objects()).await;
+                let objects = if signer.uses_objects() {
+                    self.signing_objects(&txn).await
+                } else {
+                    Vec::new()
+                };
                 let signature = signer
                     .sign_with_objects(&txn, &objects)
                     .await
@@ -2246,9 +2251,11 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     ) -> Result<TransactionEffects, TransactionBuilderError> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
-        let objects = self
-            .signing_objects(&txn, signer.uses_objects() || sponsor_signer.uses_objects())
-            .await;
+        let objects = if signer.uses_objects() || sponsor_signer.uses_objects() {
+            self.signing_objects(&txn).await
+        } else {
+            Vec::new()
+        };
 
         let signatures = vec![
             signer
