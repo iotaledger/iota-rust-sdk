@@ -13,8 +13,8 @@ use crate::{Ledger, LedgerError};
 ///
 /// The device hashes the intent message itself, so the signer sends the whole
 /// transaction or message rather than its digest. Before each signature it
-/// reads the public key again and fails with [`LedgerError::AddressMismatch`]
-/// if it changed, which happens when another device is connected.
+/// reads the public key again and fails with [`LedgerError::KeyChanged`] if
+/// it changed, which happens when another device is connected.
 #[derive(Debug)]
 pub struct LedgerSigner {
     ledger: Ledger,
@@ -97,7 +97,7 @@ impl LedgerSigner {
 
     async fn ensure_same_key(&self) -> Result<(), LedgerError> {
         if self.ledger.get_public_key(&self.path).await? != self.public_key {
-            return Err(LedgerError::AddressMismatch);
+            return Err(LedgerError::KeyChanged);
         }
         Ok(())
     }
@@ -196,7 +196,7 @@ mod tests {
 
         assert!(matches!(
             block_on(signer.sign_transaction(&transaction())),
-            Err(LedgerError::AddressMismatch)
+            Err(LedgerError::KeyChanged)
         ));
     }
 
