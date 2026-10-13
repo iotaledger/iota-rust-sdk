@@ -51,6 +51,8 @@ use crate::field_mask;
 // ---------------------------------------------------------------------------
 
 /// Default read mask for `get_service_info`.
+// `lowest_available_checkpoint_indexes` is left out because older nodes don't
+// know it and reject the whole request.
 pub const GET_SERVICE_INFO_READ_MASK: &str = field_mask!(
     "chain_id",
     "epoch",

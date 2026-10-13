@@ -64,6 +64,11 @@ pub struct GetServiceInfoResponse {
     /// Software version of the service. Similar to the `server` http header.
     #[prost(string, optional, tag = "8")]
     pub server: ::core::option::Option<::prost::alloc::string::String>,
+    /// The lowest checkpoint for which the transaction and event indexes are complete.
+    ///
+    /// Not in the default read mask. Unset if the node does not keep these indexes.
+    #[prost(uint64, optional, tag = "9")]
+    pub lowest_available_checkpoint_indexes: ::core::option::Option<u64>,
 }
 #[non_exhaustive]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
