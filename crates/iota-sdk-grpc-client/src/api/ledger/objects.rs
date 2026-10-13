@@ -4,7 +4,7 @@
 //! High-level API for object queries.
 
 use iota_grpc_types::{
-    read_mask_fields::{IntoReadMask, ObjectField, ObjectReadMask},
+    read_mask_fields::{ObjectField, ObjectReadMask},
     v1::{
         ledger_service::{
             GetObjectsRequest, ObjectRequest, ObjectRequests,
@@ -31,18 +31,12 @@ define_query! {
         service_client: LedgerServiceClient<InterceptedChannel>,
         max_message_size: Option<usize>,
         refs: Vec<(ObjectId, Option<Version>)>,
-        read_mask: ObjectReadMask,
     }
     output: GrpcResult<MetadataEnvelope<Vec<GrpcResult<Object>>>>;
+    read_mask: ObjectReadMask;
 }
 
 impl GetObjectsQuery {
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<ObjectReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
-        self
-    }
-
     fn request(&self) -> GetObjectsRequest {
         let requests = ObjectRequests::default().with_requests(
             self.refs

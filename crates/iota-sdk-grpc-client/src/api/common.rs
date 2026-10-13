@@ -437,7 +437,8 @@ pub struct Page<T> {
 ///
 /// The struct's [`IntoFuture`](std::future::IntoFuture) boxes the future of
 /// `send(self) -> $output`, which each invocation writes by hand in an
-/// inherent impl.
+/// inherent impl. An optional `read_mask: $mask;` adds a `read_mask: $mask`
+/// field and its `read_mask` setter.
 macro_rules! define_query {
     (
         $(#[$meta:meta])*
@@ -445,12 +446,16 @@ macro_rules! define_query {
             $($field:ident: $field_ty:ty),* $(,)?
         }
         output: $output:ty;
+        $(read_mask: $read_mask:ty;)?
     ) => {
         $(#[$meta])*
         #[must_use]
         pub struct $name $(<$generic>)? {
             $($field: $field_ty,)*
+            $(read_mask: $read_mask,)?
         }
+
+        $crate::api::define_query!(@read_mask_setter $name [$($generic: $bound)?] $($read_mask)?);
 
         impl $(<$generic: $bound + 'static>)? ::std::future::IntoFuture for $name $(<$generic>)? {
             type Output = $output;
@@ -460,6 +465,21 @@ macro_rules! define_query {
 
             fn into_future(self) -> Self::IntoFuture {
                 Box::pin(self.send())
+            }
+        }
+    };
+
+    (@read_mask_setter $name:ident [$($generic:ident: $bound:path)?]) => {};
+
+    (@read_mask_setter $name:ident [] $read_mask:ty) => {
+        impl $name {
+            /// Set the field mask controlling the returned fields.
+            pub fn read_mask(
+                mut self,
+                read_mask: impl ::iota_grpc_types::read_mask_fields::IntoReadMask<$read_mask>,
+            ) -> Self {
+                self.read_mask = read_mask.into_read_mask();
+                self
             }
         }
     };

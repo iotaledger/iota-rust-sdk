@@ -7,7 +7,7 @@ use std::borrow::Borrow;
 
 use iota_grpc_types::{
     proto::json_to_prost_stringify_numbers,
-    read_mask_fields::{IntoReadMask, ViewFunctionCallReadMask},
+    read_mask_fields::ViewFunctionCallReadMask,
     v1::{
         command::InputArgument,
         transaction_execution_service::{
@@ -32,9 +32,9 @@ define_query! {
     pub struct ViewFunctionCallQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,
         function_call: ViewFunctionCallItem,
-        read_mask: ViewFunctionCallReadMask,
     }
     output: GrpcResult<MetadataEnvelope<ViewFunctionCallOutputs>>;
+    read_mask: ViewFunctionCallReadMask;
 }
 
 impl ViewFunctionCallQuery {
@@ -55,12 +55,6 @@ impl ViewFunctionCallQuery {
                 InputArgument::default().with_json(json_to_prost_stringify_numbers(arg.borrow()))
             })
             .collect();
-        self
-    }
-
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<ViewFunctionCallReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
         self
     }
 
@@ -91,18 +85,12 @@ define_query! {
     pub struct ViewFunctionCallsQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,
         function_calls: Vec<ViewFunctionCallItem>,
-        read_mask: ViewFunctionCallReadMask,
     }
     output: GrpcResult<MetadataEnvelope<Vec<GrpcResult<ViewFunctionCallOutputs>>>>;
+    read_mask: ViewFunctionCallReadMask;
 }
 
 impl ViewFunctionCallsQuery {
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<ViewFunctionCallReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
-        self
-    }
-
     fn into_request(
         self,
     ) -> (
