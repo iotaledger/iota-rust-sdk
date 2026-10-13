@@ -43,3 +43,9 @@ pub const X_IOTA_TIMESTAMP: &str = "x-iota-timestamp";
 
 /// Server version string
 pub const X_IOTA_SERVER: &str = "x-iota-server";
+
+/// Lowest checkpoint for which the transaction and event indexes are complete.
+///
+/// Absent if the node does not keep these indexes.
+pub const X_IOTA_LOWEST_AVAILABLE_CHECKPOINT_INDEXES: &str =
+    "x-iota-lowest-available-checkpoint-indexes";
