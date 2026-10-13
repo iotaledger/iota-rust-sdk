@@ -38,6 +38,11 @@ pub struct GrpcServiceInfo {
     pub lowest_available_checkpoint_objects: Option<u64>,
     /// Software version of the service.
     pub server_version: Option<String>,
+    /// The lowest checkpoint for which the transaction and event indexes are
+    /// complete. Not in the default read mask. Unset if the node does not keep
+    /// these indexes.
+    #[uniffi(default = None)]
+    pub lowest_available_checkpoint_indexes: Option<u64>,
 }
 
 impl TryFrom<&proto::ledger_service::GetServiceInfoResponse> for GrpcServiceInfo {
@@ -62,6 +67,7 @@ impl TryFrom<&proto::ledger_service::GetServiceInfoResponse> for GrpcServiceInfo
             lowest_available_checkpoint: value.lowest_available_checkpoint,
             lowest_available_checkpoint_objects: value.lowest_available_checkpoint_objects,
             server_version: value.server.clone(),
+            lowest_available_checkpoint_indexes: value.lowest_available_checkpoint_indexes,
         })
     }
 }
