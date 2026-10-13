@@ -210,6 +210,8 @@ crate::impl_iota_verifier!(MultisigVerifier);
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct UserSignatureVerifier {
     inner: MultisigVerifier,
+    #[cfg(feature = "passkey")]
+    passkey_verifier: Option<crate::passkey::PasskeyVerifier>,
 }
 
 impl UserSignatureVerifier {
@@ -224,16 +226,16 @@ impl UserSignatureVerifier {
         mut self,
         passkey_verifier: crate::passkey::PasskeyVerifier,
     ) -> Self {
-        self.inner = self.inner.with_passkey_verifier(passkey_verifier);
+        self.passkey_verifier = Some(passkey_verifier);
         self
     }
 
     pub fn passkey_verifier(&self) -> Option<&crate::passkey::PasskeyVerifier> {
-        self.inner.passkey_verifier()
+        self.passkey_verifier.as_ref()
     }
 
     pub fn passkey_verifier_mut(&mut self) -> Option<&mut crate::passkey::PasskeyVerifier> {
-        self.inner.passkey_verifier_mut()
+        self.passkey_verifier.as_mut()
     }
 }
 
@@ -248,9 +250,9 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
             UserSignature::PasskeyAuthenticator(_) => Err(SignatureError::from_source(
                 "support for passkey is not enabled",
             )),
-            #[cfg(feature = "passkey")]
             // A configured verifier may also check the signer's address; the
             // default one only checks the signature.
+            #[cfg(feature = "passkey")]
             UserSignature::PasskeyAuthenticator(authenticator) => self
                 .passkey_verifier()
                 .cloned()
