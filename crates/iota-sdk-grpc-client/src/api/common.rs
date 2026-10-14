@@ -455,7 +455,18 @@ macro_rules! define_query {
             $(read_mask: $read_mask,)?
         }
 
-        $crate::api::define_query!(@read_mask_setter $name [$($generic: $bound)?] $($read_mask)?);
+        $(
+            impl $name {
+                /// Set the field mask controlling the returned fields.
+                pub fn read_mask(
+                    mut self,
+                    read_mask: impl ::iota_grpc_types::read_mask_fields::IntoReadMask<$read_mask>,
+                ) -> Self {
+                    self.read_mask = read_mask.into_read_mask();
+                    self
+                }
+            }
+        )?
 
         impl $(<$generic: $bound + 'static>)? ::std::future::IntoFuture for $name $(<$generic>)? {
             type Output = $output;
@@ -465,21 +476,6 @@ macro_rules! define_query {
 
             fn into_future(self) -> Self::IntoFuture {
                 Box::pin(self.send())
-            }
-        }
-    };
-
-    (@read_mask_setter $name:ident [$($generic:ident: $bound:path)?]) => {};
-
-    (@read_mask_setter $name:ident [] $read_mask:ty) => {
-        impl $name {
-            /// Set the field mask controlling the returned fields.
-            pub fn read_mask(
-                mut self,
-                read_mask: impl ::iota_grpc_types::read_mask_fields::IntoReadMask<$read_mask>,
-            ) -> Self {
-                self.read_mask = read_mask.into_read_mask();
-                self
             }
         }
     };
