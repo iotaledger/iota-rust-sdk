@@ -118,7 +118,7 @@ message GetServiceInfoResponse {
 
   // The lowest checkpoint for which the transaction and event indexes are complete.
   //
-  // Not in the default read mask. Unset if the node does not keep these indexes.
+  // Unset if the node does not keep these indexes.
   optional uint64 lowest_available_checkpoint_indexes = 9;
 }
 

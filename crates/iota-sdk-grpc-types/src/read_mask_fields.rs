@@ -454,7 +454,7 @@ define_field_paths! {
         /// The server version.
         SERVER = "server",
         /// Lowest checkpoint for which the transaction and event indexes are
-        /// complete. Not in the default read mask.
+        /// complete.
         LOWEST_AVAILABLE_CHECKPOINT_INDEXES = "lowest_available_checkpoint_indexes",
     }
 }
