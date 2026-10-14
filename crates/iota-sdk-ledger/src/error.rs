@@ -14,10 +14,13 @@ pub enum LedgerError {
     /// The IOTA app is not installed on the device.
     #[error("IOTA app not found; install the IOTA app on the Ledger device")]
     AppNotFound,
-    /// The device's key at the signer's derivation path differs from the one
-    /// the signer was created with, because another device is connected.
-    #[error("the device's key changed; reconnect the Ledger device the signer was created with")]
-    KeyChanged,
+    /// The device returns a different key for the signer's derivation path
+    /// than when the signer was created, because another device is connected
+    /// or the device was unlocked with a different seed or passphrase.
+    #[error(
+        "the device returned a different key for the signer's derivation path; connect the device and seed the signer was created with"
+    )]
+    KeyMismatch,
     /// The IOTA app cannot clear-sign the transaction, and blind signing is
     /// disabled in its settings.
     #[error(

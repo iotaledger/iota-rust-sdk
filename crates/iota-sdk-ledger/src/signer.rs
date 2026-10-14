@@ -20,8 +20,9 @@ impl Ledger {
 ///
 /// The device hashes the intent message itself, so the signer sends the whole
 /// transaction or message rather than its digest. Before each signature it
-/// reads the public key again and fails with [`LedgerError::KeyChanged`] if
-/// it changed, which happens when another device is connected.
+/// reads the public key again and fails with [`LedgerError::KeyMismatch`] if
+/// it differs, which happens when another device is connected or the device
+/// was unlocked with a different seed or passphrase.
 #[derive(Debug)]
 pub struct LedgerSigner {
     ledger: Ledger,
@@ -104,7 +105,7 @@ impl LedgerSigner {
 
     async fn ensure_same_key(&self) -> Result<(), LedgerError> {
         if self.ledger.get_public_key(&self.path).await? != self.public_key {
-            return Err(LedgerError::KeyChanged);
+            return Err(LedgerError::KeyMismatch);
         }
         Ok(())
     }
@@ -192,14 +193,14 @@ mod tests {
     }
 
     #[test]
-    fn rejects_a_changed_key() {
+    fn rejects_a_different_key() {
         let public_key = Arc::new(Mutex::new(Ed25519PublicKey::new([7; 32])));
         let signer = signer(&public_key);
         *public_key.lock().unwrap() = Ed25519PublicKey::new([8; 32]);
 
         assert!(matches!(
             block_on(signer.sign_transaction(&transaction())),
-            Err(LedgerError::KeyChanged)
+            Err(LedgerError::KeyMismatch)
         ));
     }
 
