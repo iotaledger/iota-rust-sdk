@@ -8,7 +8,7 @@ mod commands;
 mod error;
 mod transport;
 
-use std::{fmt, sync::OnceLock};
+use std::{fmt, sync::OnceLock, time::Duration};
 
 use futures::lock::Mutex;
 pub use iota_crypto;
@@ -28,9 +28,10 @@ pub use crate::{
 const IOTA_APP_NAME: &str = "IOTA";
 const DASHBOARD_APP_NAME: &str = "BOLOS";
 
-/// How many times to reconnect while waiting for an app to start; transports
-/// pause before each attempt.
+/// How many times to reconnect while waiting for an app to start.
 const APP_SWITCH_ATTEMPTS: usize = 40;
+/// How long to wait before each attempt.
+const APP_SWITCH_POLL_INTERVAL: Duration = Duration::from_millis(250);
 
 /// A connection to the IOTA app on a Ledger device.
 ///
@@ -182,6 +183,7 @@ impl Ledger {
         let transport = self.transport.get_mut();
         let mut error = LedgerError::DeviceNotReady;
         for _ in 0..APP_SWITCH_ATTEMPTS {
+            futures_timer::Delay::new(APP_SWITCH_POLL_INTERVAL).await;
             if let Err(e) = transport.reconnect().await {
                 error = e;
                 continue;
@@ -280,6 +282,46 @@ mod tests {
         a.unwrap();
         b.unwrap();
         assert!(!interleaved.load(std::sync::atomic::Ordering::SeqCst));
+    }
+
+    /// Runs the dashboard, opens the IOTA app when asked and answers with its
+    /// name only after `startup`, like a device that restarts to switch apps.
+    /// Reconnecting is instant.
+    struct SlowSwitchingDevice {
+        startup: std::time::Duration,
+        opened_at: std::sync::Mutex<Option<std::time::Instant>>,
+    }
+
+    impl Transport for SlowSwitchingDevice {
+        fn exchange<'a>(&'a self, command: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer> {
+            Box::pin(async move {
+                let mut opened_at = self.opened_at.lock().unwrap();
+                let data = match (command.cla(), command.ins()) {
+                    // app name
+                    (0xb0, 0x01) => {
+                        let started = opened_at.is_some_and(|at| at.elapsed() >= self.startup);
+                        let name: &[u8] = if started { b"IOTA" } else { b"BOLOS" };
+                        [&[1, name.len() as u8][..], name, &[0x90, 0x00]].concat()
+                    }
+                    // open app
+                    (0xe0, 0xd8) => {
+                        *opened_at = Some(std::time::Instant::now());
+                        vec![0x90, 0x00]
+                    }
+                    (cla, ins) => panic!("unexpected command {cla:#04x} {ins:#04x}"),
+                };
+                ApduAnswer::from_bytes(data)
+            })
+        }
+    }
+
+    #[test]
+    fn waits_for_the_app_between_attempts() {
+        let mut ledger = Ledger::new(SlowSwitchingDevice {
+            startup: std::time::Duration::from_millis(600),
+            opened_at: Default::default(),
+        });
+        futures::executor::block_on(ledger.ensure_app_is_open()).unwrap();
     }
 
     fn assert_send<T: Send>(_: T) {}
