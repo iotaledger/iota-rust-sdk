@@ -500,7 +500,7 @@ mod tests {
         );
         assert_eq!(
             vars["typeArguments"],
-            serde_json::json!(["u64", "vector<u8>"])
+            serde_json::json!(["u64", "0x1::string::String"])
         );
 
         let vars = sent_variables("MoveViewCallQueryFragment", |client| async move {
