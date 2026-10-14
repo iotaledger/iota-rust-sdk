@@ -66,37 +66,41 @@ directory.
 ## Feature flags
 
 The default features cover the transaction builder, the core types and all crypto schemes
-except BLS12-381. GraphQL, gRPC, Move types and gas station sponsorship are opt-in.
+except BLS12-381. GraphQL, gRPC, Move types, Ledger signing and gas station sponsorship are
+opt-in.
 
-| Feature                    | Default | Effect                                                                                    |
-| -------------------------- | ------- | ----------------------------------------------------------------------------------------- |
-| `types`                    | on      | `types` module                                                                            |
-| `serde`                    | on      | serialization of the core types                                                           |
-| `hash`                     | on      | hashing, needed to derive addresses and digests                                           |
-| `rand`                     | on      | random generation of the core types and keys                                              |
-| `proptest`                 | off     | `proptest` strategies for the core types                                                  |
-| `crypto`                   | on      | `crypto` module, with the signing and verifying traits                                    |
-| `ed25519`                  | on      | Ed25519 keys and signatures                                                               |
-| `secp256k1`                | on      | Secp256k1 keys and signatures                                                             |
-| `secp256r1`                | on      | Secp256r1 keys and signatures                                                             |
-| `passkey`                  | on      | passkey signature verification                                                            |
-| `bls12381`                 | off     | BLS12-381 keys and signatures                                                             |
-| `pem`                      | on      | DER and PEM encoding of keys                                                              |
-| `bech32`                   | on      | Bech32 encoding of private keys                                                           |
-| `mnemonic`                 | on      | key derivation from mnemonic phrases                                                      |
-| `transaction-builder`      | on      | `transaction_builder` module                                                              |
-| `gas-station`              | off     | gas sponsorship through the [IOTA gas station](https://github.com/iotaledger/gas-station) |
-| `graphql`                  | off     | `graphql_client` module                                                                   |
-| `graphql-tls-ring`         | off     | `ring` as the GraphQL client's TLS crypto provider                                        |
-| `graphql-tls-aws-lc`       | off     | `aws-lc-rs` as the GraphQL client's TLS crypto provider                                   |
-| `graphql-tls-native-roots` | off     | trust the platform certificate store for GraphQL                                          |
-| `graphql-tls-webpki-roots` | off     | trust the bundled Mozilla roots for GraphQL                                               |
-| `grpc`                     | off     | `grpc_client` and `grpc_types` modules                                                    |
-| `grpc-tls-ring`            | off     | `ring` as the gRPC client's TLS crypto provider                                           |
-| `grpc-tls-aws-lc`          | off     | `aws-lc-rs` as the gRPC client's TLS crypto provider                                      |
-| `grpc-tls-native-roots`    | off     | trust the platform certificate store for gRPC                                             |
-| `grpc-tls-webpki-roots`    | off     | trust the bundled Mozilla roots for gRPC                                                  |
-| `move-types`               | off     | `move_types` module, and typed Move object queries in the clients                         |
+| Feature                    | Default | Effect                                                                                     |
+| -------------------------- | ------- | ------------------------------------------------------------------------------------------ |
+| `types`                    | on      | `types` module                                                                             |
+| `serde`                    | on      | serialization of the core types                                                            |
+| `hash`                     | on      | hashing, needed to derive addresses and digests                                            |
+| `rand`                     | on      | random generation of the core types and keys                                               |
+| `proptest`                 | off     | `proptest` strategies for the core types                                                   |
+| `crypto`                   | on      | `crypto` module, with the signing and verifying traits                                     |
+| `ed25519`                  | on      | Ed25519 keys and signatures                                                                |
+| `secp256k1`                | on      | Secp256k1 keys and signatures                                                              |
+| `secp256r1`                | on      | Secp256r1 keys and signatures                                                              |
+| `passkey`                  | on      | passkey signature verification                                                             |
+| `bls12381`                 | off     | BLS12-381 keys and signatures                                                              |
+| `pem`                      | on      | DER and PEM encoding of keys                                                               |
+| `bech32`                   | on      | Bech32 encoding of private keys                                                            |
+| `mnemonic`                 | on      | key derivation from mnemonic phrases                                                       |
+| `transaction-builder`      | on      | `transaction_builder` module                                                               |
+| `gas-station`              | off     | gas sponsorship through the [IOTA gas station](https://github.com/iotaledger/gas-station)  |
+| `graphql`                  | off     | `graphql_client` module                                                                    |
+| `graphql-tls-ring`         | off     | `ring` as the GraphQL client's TLS crypto provider                                         |
+| `graphql-tls-aws-lc`       | off     | `aws-lc-rs` as the GraphQL client's TLS crypto provider                                    |
+| `graphql-tls-native-roots` | off     | trust the platform certificate store for GraphQL                                           |
+| `graphql-tls-webpki-roots` | off     | trust the bundled Mozilla roots for GraphQL                                                |
+| `grpc`                     | off     | `grpc_client` and `grpc_types` modules                                                     |
+| `grpc-tls-ring`            | off     | `ring` as the gRPC client's TLS crypto provider                                            |
+| `grpc-tls-aws-lc`          | off     | `aws-lc-rs` as the gRPC client's TLS crypto provider                                       |
+| `grpc-tls-native-roots`    | off     | trust the platform certificate store for gRPC                                              |
+| `grpc-tls-webpki-roots`    | off     | trust the bundled Mozilla roots for gRPC                                                   |
+| `move-types`               | off     | `move_types` module, and typed Move object queries in the clients                          |
+| `ledger`                   | off     | `ledger` module for Ledger hardware wallets, and Ledger signing in the transaction builder |
+| `ledger-hid`               | off     | Ledger devices over USB; needs `libudev` on Linux, and does not build for mobile or wasm   |
+| `ledger-speculos`          | off     | the Speculos Ledger emulator                                                               |
 
 The `graphql-tls-*` and `grpc-tls-*` features map to the `tls-*` features
 of [`iota-sdk-graphql-client`](https://crates.io/crates/iota-sdk-graphql-client) and

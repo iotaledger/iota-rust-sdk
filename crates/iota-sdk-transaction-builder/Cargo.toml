@@ -24,6 +24,7 @@ rustdoc-args = [
 [features]
 default = []
 gas-station = ["dep:base64ct", "dep:reqwest"]
+ledger = ["dep:iota-ledger", "dep:tracing"]
 test-client = []
 
 [lints]
@@ -34,11 +35,13 @@ workspace = true
 base64ct = { workspace = true, features = ["std"], optional = true }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from"] }
+iota-ledger = { workspace = true, optional = true }
 primitive-types.workspace = true
 reqwest = { workspace = true, features = ["json"], optional = true }
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
+tracing = { workspace = true, optional = true }
 variadics_please.workspace = true
 
 # internal dependencies
