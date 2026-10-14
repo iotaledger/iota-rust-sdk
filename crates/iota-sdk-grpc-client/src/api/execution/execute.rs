@@ -66,9 +66,9 @@ define_query! {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,
         transactions: Vec<SignedTransaction>,
         checkpoint_inclusion_timeout_ms: Option<u64>,
-        read_mask: ExecuteTransactionReadMask,
     }
     output: GrpcResult<MetadataEnvelope<Vec<GrpcResult<ExecutedTransaction>>>>;
+    read_mask: ExecuteTransactionReadMask;
 }
 
 impl ExecuteTransactionsQuery {
@@ -78,12 +78,6 @@ impl ExecuteTransactionsQuery {
     /// to a configured maximum.
     pub fn checkpoint_inclusion_timeout_ms(mut self, checkpoint_inclusion_timeout_ms: u64) -> Self {
         self.checkpoint_inclusion_timeout_ms = Some(checkpoint_inclusion_timeout_ms);
-        self
-    }
-
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<ExecuteTransactionReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
         self
     }
 

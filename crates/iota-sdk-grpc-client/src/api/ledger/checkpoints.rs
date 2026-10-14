@@ -46,9 +46,9 @@ define_query! {
         checkpoint_id: get_checkpoint_request::CheckpointId,
         transactions_filter: Option<grpc_filter::TransactionFilter>,
         events_filter: Option<grpc_filter::EventFilter>,
-        read_mask: CheckpointResponseReadMask,
     }
     output: GrpcResult<MetadataEnvelope<CheckpointResponse>>;
+    read_mask: CheckpointResponseReadMask;
 }
 
 impl GetCheckpointQuery {
@@ -64,12 +64,6 @@ impl GetCheckpointQuery {
     /// Set the filter to apply to events.
     pub fn events_filter(mut self, events_filter: grpc_filter::EventFilter) -> Self {
         self.events_filter = Some(events_filter);
-        self
-    }
-
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<CheckpointResponseReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
         self
     }
 

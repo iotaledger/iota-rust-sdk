@@ -4,7 +4,7 @@
 //! High-level API for epoch queries.
 
 use iota_grpc_types::{
-    read_mask_fields::{EpochField, EpochReadMask, IntoReadMask},
+    read_mask_fields::{EpochField, EpochReadMask},
     v1::{
         epoch::Epoch,
         ledger_service::{GetEpochRequest, ledger_service_client::LedgerServiceClient},
@@ -21,9 +21,9 @@ define_query! {
     pub struct GetEpochQuery {
         service_client: LedgerServiceClient<InterceptedChannel>,
         epoch: Option<u64>,
-        read_mask: EpochReadMask,
     }
     output: GrpcResult<MetadataEnvelope<Epoch>>;
+    read_mask: EpochReadMask;
 }
 
 impl GetEpochQuery {
@@ -31,12 +31,6 @@ impl GetEpochQuery {
     /// epoch.
     pub fn epoch_number(mut self, epoch_number: u64) -> Self {
         self.epoch = Some(epoch_number);
-        self
-    }
-
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<EpochReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
         self
     }
 
