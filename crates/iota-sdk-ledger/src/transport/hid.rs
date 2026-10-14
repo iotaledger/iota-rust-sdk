@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{ffi::CString, thread, time::Duration};
+use std::ffi::CString;
 
 use ledger_transport_hid::{
     LedgerHIDError, TransportNativeHID,
@@ -64,10 +64,6 @@ impl From<&DeviceInfo> for HidDeviceInfo {
         }
     }
 }
-
-/// How long to wait before each attempt to reopen the device after an app
-/// switch.
-const RECONNECT_DELAY: Duration = Duration::from_millis(250);
 
 /// Talks to a Ledger device connected over USB.
 struct HidTransport {
@@ -137,7 +133,6 @@ impl Transport for HidTransport {
     fn reconnect(&mut self) -> TransportFuture<'_, ()> {
         Box::pin(async move {
             self.device = None;
-            thread::sleep(RECONNECT_DELAY);
             let api = HidApi::new().map_err(LedgerError::transport)?;
             let ledgers = TransportNativeHID::list_ledgers(&api).collect::<Vec<_>>();
             let info = match ledgers

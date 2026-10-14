@@ -121,8 +121,7 @@ pub trait Transport: MaybeSendSync {
     /// re-establish the link, which closes on some transports.
     ///
     /// While waiting for an app to start, [`Ledger`](crate::Ledger) calls this
-    /// repeatedly until the app answers, so transports that can switch apps
-    /// should pause briefly before reconnecting.
+    /// at intervals until the app answers.
     fn reconnect(&mut self) -> TransportFuture<'_, ()> {
         Box::pin(async { Ok(()) })
     }
