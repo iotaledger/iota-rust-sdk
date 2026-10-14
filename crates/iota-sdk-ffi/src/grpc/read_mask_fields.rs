@@ -234,7 +234,7 @@ read_mask_fields! {
         /// The server version.
         SERVER,
         /// Lowest checkpoint for which the transaction and event indexes are
-        /// complete. Not in the default read mask.
+        /// complete.
         LOWEST_AVAILABLE_CHECKPOINT_INDEXES,
     }
 }

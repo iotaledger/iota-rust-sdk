@@ -39,9 +39,7 @@ pub struct GrpcServiceInfo {
     /// Software version of the service.
     pub server_version: Option<String>,
     /// The lowest checkpoint for which the transaction and event indexes are
-    /// complete. Not in the default read mask. Unset if the node does not keep
-    /// these indexes.
-    #[uniffi(default = None)]
+    /// complete. Unset if the node does not keep these indexes.
     pub lowest_available_checkpoint_indexes: Option<u64>,
 }
 
