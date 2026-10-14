@@ -61,7 +61,7 @@ enum HostToLedger {
 /// Each parameter is split into chunks that are hash-linked back to front, so
 /// the device receives only the hash of each parameter's first chunk and
 /// requests the chunks it needs by hash.
-pub(super) fn send(
+pub(super) async fn send(
     transport: &dyn Transport,
     instruction: Instruction,
     parameters: &[&[u8]],
@@ -82,7 +82,7 @@ pub(super) fn send(
 
     let mut result = Vec::new();
     loop {
-        let response = exec(transport, instruction.command(payload))?;
+        let response = exec(transport, instruction.command(payload)).await?;
         let (&request, data) = response
             .split_first()
             .ok_or_else(|| LedgerError::invalid_response("empty block protocol response"))?;

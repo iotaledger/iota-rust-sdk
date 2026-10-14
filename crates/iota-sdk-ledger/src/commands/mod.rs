@@ -27,7 +27,7 @@ fn encode_path(path: &DerivationPath) -> Result<Vec<u8>, LedgerError> {
 }
 
 /// Send a single command and return the answer's data.
-fn exec(transport: &dyn Transport, command: ApduCommand) -> Result<Vec<u8>, LedgerError> {
+async fn exec(transport: &dyn Transport, command: ApduCommand) -> Result<Vec<u8>, LedgerError> {
     if command.data.len() > u8::MAX as usize {
         return Err(LedgerError::PayloadTooLong);
     }
@@ -35,7 +35,7 @@ fn exec(transport: &dyn Transport, command: ApduCommand) -> Result<Vec<u8>, Ledg
         "Exchanging APDU command: {}",
         hex::encode(command.to_bytes())
     );
-    let answer = transport.exchange(&command)?;
+    let answer = transport.exchange(&command).await?;
     match LedgerError::from_status_word(answer.status_word) {
         Some(error) => Err(error),
         None => Ok(answer.data),

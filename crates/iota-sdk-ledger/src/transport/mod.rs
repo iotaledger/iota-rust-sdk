@@ -86,19 +86,44 @@ impl ApduAnswer {
     }
 }
 
+/// A future returned by a [`Transport`]. It is `Send` except on wasm32, where
+/// futures backed by JavaScript are not.
+#[cfg(not(target_arch = "wasm32"))]
+pub type TransportFuture<'a, T> = futures::future::BoxFuture<'a, Result<T, LedgerError>>;
+/// A future returned by a [`Transport`]. It is `Send` except on wasm32, where
+/// futures backed by JavaScript are not.
+#[cfg(target_arch = "wasm32")]
+pub type TransportFuture<'a, T> = futures::future::LocalBoxFuture<'a, Result<T, LedgerError>>;
+
+/// `Send + Sync` except on wasm32, where values backed by JavaScript are
+/// neither.
+#[cfg(not(target_arch = "wasm32"))]
+pub trait MaybeSendSync: Send + Sync {}
+#[cfg(not(target_arch = "wasm32"))]
+impl<T: Send + Sync + ?Sized> MaybeSendSync for T {}
+/// `Send + Sync` except on wasm32, where values backed by JavaScript are
+/// neither.
+#[cfg(target_arch = "wasm32")]
+pub trait MaybeSendSync {}
+#[cfg(target_arch = "wasm32")]
+impl<T: ?Sized> MaybeSendSync for T {}
+
 /// A link to a Ledger device that exchanges APDUs.
 ///
 /// The crate provides transports for USB HID (behind the `hid` feature) and
 /// the Speculos emulator (behind the `speculos` feature); implement this trait
 /// to talk to the device over another link.
-pub trait Transport: Send + Sync {
+pub trait Transport: MaybeSendSync {
     /// Send a command and wait for the device's answer.
-    fn exchange(&self, command: &ApduCommand) -> Result<ApduAnswer, LedgerError>;
+    fn exchange<'a>(&'a self, command: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer>;
 
-    /// Re-establish the link after the device switched apps, which closes
-    /// the previous connection on some transports.
-    fn reconnect(&mut self) -> Result<(), LedgerError> {
-        Ok(())
+    /// Wait for the device to come back after it switched apps, and
+    /// re-establish the link, which closes on some transports.
+    ///
+    /// While waiting for an app to start, [`Ledger`](crate::Ledger) calls this
+    /// at intervals until the app answers.
+    fn reconnect(&mut self) -> TransportFuture<'_, ()> {
+        Box::pin(async { Ok(()) })
     }
 
     /// Whether the device behind this transport can open and close apps.
