@@ -139,6 +139,7 @@ Before posting: delete every sentence the reader could get from the diff; repeat
 ## Git Workflow
 
 - **Main branch**: `develop` (not `main`)
+- **Major branches**: `iota-sdk/<major>.x` (e.g. `iota-sdk/3.x`) carries minor/patch releases for an older `iota-sdk` major, created from that major's last `iota-sdk-v*` tag when it first needs a fix. Fixes land on `develop` first and are cherry-picked onto the branch. Each package major is released from one branch only: the newest one (or `develop`) that still has it, which the Pre-publish workflow enforces
 - **CI**: All tests must pass, no clippy warnings, proper formatting
 - Draft PRs can force CI with `[run-ci]` in the PR body
 - **PR title format**: Titles are validated in CI (`.github/workflows/pr_title.yml`) and must follow the [Conventional Commits](https://www.conventionalcommits.org/) style. Allowed types are `feat`, `fix`, `refactor`, `chore`, `upstream`, `release`, and `revert` (e.g. `feat: add new gRPC method`, `chore: update docs`). No other prefixes (such as `docs:` or `test:`) are accepted — use `chore:` for those.
