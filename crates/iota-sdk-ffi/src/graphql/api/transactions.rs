@@ -33,6 +33,8 @@ use crate::{
     },
 };
 
+crate::ffi_map!(TransactionsByDigest<TransactionDigest, SignedTransaction>);
+
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
@@ -42,6 +44,23 @@ impl GraphQLClient {
         digest: &TransactionDigest,
     ) -> Result<Option<SignedTransaction>> {
         Ok(self.client().transaction(**digest).await?.map(Into::into))
+    }
+
+    /// Get transactions by their digests, including transactions that are not
+    /// checkpointed yet. Digests that were not found are absent from the
+    /// returned map.
+    pub async fn transactions_by_digest(
+        &self,
+        digests: Vec<Arc<TransactionDigest>>,
+    ) -> Result<TransactionsByDigest> {
+        let digests = digests.into_iter().map(|d| **d).collect::<Vec<_>>();
+        Ok(self
+            .client()
+            .transactions_by_digest(digests.iter().copied())
+            .await?
+            .into_iter()
+            .map(|(digest, transaction)| (Arc::new(digest.into()), transaction.into()))
+            .collect())
     }
 
     /// Get a transaction's effects by its digest.
