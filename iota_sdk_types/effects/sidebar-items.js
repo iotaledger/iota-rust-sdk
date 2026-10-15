@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["DeriveChangesError","IdOperation","InputSharedObject","ObjectChange","ObjectIn","ObjectOut","ObjectRemoveKind","TransactionEffects","UnchangedSharedKind","WriteKind"],"struct":["BalanceChange","ChangedObject","TransactionEffectsV1","UnchangedSharedObject"]};

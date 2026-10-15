@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["TransactionDenyRules","TransactionDenyRulesInnerV1","TransactionDenyRulesUpdated"]};

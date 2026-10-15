@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["Coin","CoinMetadata","DenyCapV1","RegulatedCoinMetadata","TreasuryCap"]};

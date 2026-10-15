@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["CoinManaged","CoinManager","CoinManagerMetadataCap","CoinManagerTreasuryCap","ImmutableCoinMetadata","MetadataOwnershipRenounced","TreasuryOwnershipRenounced"]};

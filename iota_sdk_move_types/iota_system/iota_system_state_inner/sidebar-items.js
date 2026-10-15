@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["IotaSystemStateV1","IotaSystemStateV2","SystemEpochInfoEventV1","SystemEpochInfoEventV2","SystemParametersV1"]};

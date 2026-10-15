@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="iota-sdk-bcs-schema"><title>iota_sdk_bcs_schema - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-0c87338a.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="iota_sdk_bcs_schema" data-themes="" data-resource-suffix="" data-rustdoc-version="1.99.0 (b940084d7 2026-09-28)" data-channel="1.99.0" data-search-js="search-cf4fc35e.js" data-stringdex-js="stringdex-b5109af9.js" data-settings-js="settings-170eb4bf.js" ><script src="../static.files/storage-41dd4d93.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-417ebf0a.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-9f56287d.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><a class="skip-main-content" href="#main-content">Skip to main content</a><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Crate iota_sdk_bcs_schema</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../iota_sdk_bcs_schema/index.html">iota_<wbr>sdk_<wbr>bcs_<wbr>schema</a><span class="version">1.0.0-rc.1</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#iota-sdk-bcs-schema" title="iota-sdk-bcs-schema">iota-sdk-bcs-schema</a><ul><li><a href="#why" title="Why">Why</a></li><li><a href="#what-it-does" title="What it does">What it does</a></li><li><a href="#usage" title="Usage">Usage</a></li><li><a href="#attributes" title="Attributes">Attributes</a></li><li><a href="#regenerating-the-schema" title="Regenerating the schema">Regenerating the schema</a></li><li><a href="#limitations" title="Limitations">Limitations</a></li></ul></li></ul><h3><a href="#derives">Crate Items</a></h3><ul class="block"><li><a href="#derives" title="Derive Macros">Derive Macros</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content" tabindex="-1"><div class="main-heading"><h1>Crate <span>iota_<wbr>sdk_<wbr>bcs_<wbr>schema</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/iota_sdk_bcs_schema/lib.rs.html#4-682">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="iota-sdk-bcs-schema"><a class="doc-anchor" href="#iota-sdk-bcs-schema">§</a>iota-sdk-bcs-schema</h2>
+<p><a href="https://crates.io/crates/iota-sdk-bcs-schema"><img src="https://img.shields.io/crates/v/iota-sdk-bcs-schema" alt="iota-sdk-bcs-schema on crates.io" /></a>
+<a href="https://docs.rs/iota-sdk-bcs-schema"><img src="https://img.shields.io/badge/docs-latest-brightgreen" alt="Documentation (latest release)" /></a></p>
+<p>A procedural macro that emits an <a href="https://datatracker.ietf.org/doc/html/rfc5234">ABNF</a> grammar fragment for each type it is derived on, so the BCS wire format can be described in a single machine-readable file.</p>
+<p>This crate is a build tool of the IOTA SDK, published only so that the <code>bcs-schema</code> feature of <code>iota-sdk-types</code> and <code>iota-sdk-move-types</code> can be enabled from crates.io. The <code>move-shape</code> feature is internal to the SDK workspace.</p>
+<h3 id="why"><a class="doc-anchor" href="#why">§</a>Why</h3>
+<p>A formal, human- and machine-readable description of the BCS wire format makes it possible to:</p>
+<ul>
+<li>build cross-language BCS parsers and validators without reimplementing the Rust types,</li>
+<li>catch accidental serialization-breaking changes at the schema level (CI diff), and</li>
+<li>fuzz the deserializer against grammar-valid inputs.</li>
+</ul>
+<h3 id="what-it-does"><a class="doc-anchor" href="#what-it-does">§</a>What it does</h3>
+<p><code>#[derive(BcsSchema)]</code> inspects the type’s fields/variants and appends an ABNF rule to <code>bcs-schema.abnf</code> at the consuming crate’s root. Supported out of the box:</p>
+<ul>
+<li>Primitives: <code>u8</code>..<code>u128</code>, <code>i64</code>, <code>bool</code>, <code>String</code>, <code>str</code></li>
+<li>Generics: <code>Option&lt;T&gt;</code>, <code>Vec&lt;T&gt;</code>, <code>Box&lt;T&gt;</code>, <code>BTreeMap&lt;K, V&gt;</code>, <code>HashMap&lt;K, V&gt;</code></li>
+<li>Fixed-size arrays <code>[u8; N]</code> and <code>[T; N]</code></li>
+<li>Tuples and unit types</li>
+<li>Structs and enums (named, tuple, and unit variants)</li>
+</ul>
+<p>Variant indices are emitted as <code>%dNN</code> literals matching the BCS variant discriminant.</p>
+<p>Two types whose names kebab-case to the same rule (e.g. <code>ObjectID</code> and <code>ObjectId</code>) are rejected at compile time. Disambiguate with <code>#[bcs_schema(name = "…")]</code> on one of them.</p>
+<h3 id="usage"><a class="doc-anchor" href="#usage">§</a>Usage</h3>
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>iota_sdk_bcs_schema::BcsSchema;
+
+<span class="attr">#[derive(serde::Serialize, serde::Deserialize, BcsSchema)]
+</span><span class="kw">struct </span>GasPayment {
+    objects: Vec&lt;ObjectReference&gt;,
+    owner: Address,
+    price: u64,
+    budget: u64,
+}</code></pre></div>
+<p>produces</p>
+<div class="example-wrap"><pre class="language-abnf"><code>gas-payment = (size *object-reference)   ; objects
+              address                    ; owner
+              u64                        ; price
+              u64                        ; budget</code></pre></div><h3 id="attributes"><a class="doc-anchor" href="#attributes">§</a>Attributes</h3><div><table><thead><tr><th>Attribute</th><th>Level</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>#[bcs_schema(name = "custom-name")]</code></td><td>Type</td><td>Override the ABNF rule name</td></tr>
+<tr><td><code>#[bcs_schema(definition = "32OCTET")]</code></td><td>Type</td><td>Replace the generated RHS with a manual definition</td></tr>
+<tr><td><code>#[bcs_schema(as_type = "u64")]</code></td><td>Field/variant</td><td>Reference a different wire type (e.g. for aliases)</td></tr>
+<tr><td><code>#[bcs_schema(skip)]</code></td><td>Field</td><td>Omit the field from the schema</td></tr>
+</tbody></table>
+</div><h3 id="regenerating-the-schema"><a class="doc-anchor" href="#regenerating-the-schema">§</a>Regenerating the schema</h3>
+<p>The macro only writes to disk when the <code>BCS_SCHEMA</code> env var is set, so normal development is unaffected:</p>
+<div class="example-wrap"><pre class="language-sh"><code># Regenerate
+BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash
+
+# Normal build — no regeneration, no recompile overhead
+cargo check --all-features</code></pre></div>
+<p><code>iota-sdk-types</code> wires this up in its own <code>build.rs</code>: when <code>BCS_SCHEMA=1</code> is set, it removes the old file and touches all <code>.rs</code> sources so every derive re-runs. Output is sorted by rule name, so two consecutive runs produce byte-identical files.</p>
+<h3 id="limitations"><a class="doc-anchor" href="#limitations">§</a>Limitations</h3>
+<ul>
+<li><code>as_type</code> and <code>definition</code> values are trusted verbatim — they are not validated against the actual <code>serde</code> impl.</li>
+<li>Custom <code>Serialize</code>/<code>Deserialize</code> impls are invisible to the macro. If the wire format diverges from the Rust layout, annotate it manually or derive on a mirror type that matches the wire format.</li>
+<li><code>serde</code> attributes (<code>skip</code>, <code>rename</code>, <code>flatten</code>, <code>tag</code>, …) are not read. Use the <code>bcs_schema</code> attributes to mirror any serde-driven differences.</li>
+</ul>
+</div></details><h2 id="derives" class="section-header">Derive Macros<a href="#derives" class="anchor">§</a></h2><dl class="item-table"><dt><a class="derive" href="derive.BcsSchema.html" title="derive iota_sdk_bcs_schema::BcsSchema">BcsSchema</a></dt></dl></section></div></main></body></html>
