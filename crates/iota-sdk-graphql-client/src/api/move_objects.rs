@@ -6,7 +6,6 @@
 
 use std::marker::PhantomData;
 
-use futures::Stream;
 use iota_move_types::MoveObject;
 use iota_types::{Address, ObjectId, ObjectReference};
 
@@ -16,7 +15,7 @@ use crate::{
     error::GraphQLResult,
     pagination::{Page, PaginationFilter},
     query_types::ObjectFilter,
-    streams::stream_paginated_query,
+    streams::PageStream,
 };
 
 /// An object of the Move type `T`, decoded into `T`.
@@ -81,7 +80,6 @@ impl MoveObjectFilter {
 
 define_query! {
     /// Query for [`GraphQLClient::move_objects`]. Await it to send the request.
-    #[derive(Clone)]
     pub struct ListMoveObjectsQuery<T: MoveObject> {
         client: GraphQLClient,
         filter: Option<MoveObjectFilter>,
@@ -89,6 +87,17 @@ define_query! {
         _marker: PhantomData<fn() -> T>,
     }
     output: GraphQLResult<Page<OwnedMoveObject<T>>>;
+}
+
+impl<T: MoveObject> Clone for ListMoveObjectsQuery<T> {
+    fn clone(&self) -> Self {
+        Self {
+            client: self.client.clone(),
+            filter: self.filter.clone(),
+            pagination: self.pagination.clone(),
+            _marker: PhantomData,
+        }
+    }
 }
 
 impl<T: MoveObject> ListMoveObjectsQuery<T> {
@@ -106,12 +115,15 @@ impl<T: MoveObject> ListMoveObjectsQuery<T> {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<OwnedMoveObject<T>>> + Unpin
+    pub fn stream(self) -> PageStream<OwnedMoveObject<T>>
     where
-        T: Clone + Unpin,
+        T: 'static,
     {
         let pagination = self.pagination.clone();
-        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+        PageStream::new(
+            pagination,
+            Box::new(move |page| self.clone().pagination(page).into_future()),
+        )
     }
 
     fn objects_query(self) -> ListObjectsQuery {
