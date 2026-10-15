@@ -3,7 +3,7 @@
 
 //! Tail recent checkpoints over gRPC.
 //!
-//! This is one of gRPC's headline features — there's no equivalent in the
+//! This is one of gRPC's headline features; there's no equivalent in the
 //! GraphQL client. We open a server-streaming RPC and pull a handful of
 //! checkpoint summaries out of it.
 

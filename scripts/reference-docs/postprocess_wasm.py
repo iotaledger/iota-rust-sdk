@@ -3,7 +3,7 @@
 typedoc emits ``<Kind>.<Name>.md`` files next to ``index.md``; the docs site
 wants the same shape as the other languages, one page per type under
 ``types/`` with an overview at the top. Pages for UniFFI plumbing are dropped,
-as in the other bindings, along with pages for deprecated declarations — the
+as in the other bindings, along with pages for deprecated declarations: the
 bindings carry a deprecated alias per renamed type, and a page holding only
 "use X instead" is not worth a sidebar entry.
 

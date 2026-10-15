@@ -6,10 +6,10 @@
 //! Each top-level module corresponds to a system package, identified by the
 //! address constants on [`iota_types::Address`]:
 //!
-//! - [`move_stdlib`]    — `0x1`, the Move standard library
-//! - [`iota_framework`] — `0x2`, the IOTA framework
-//! - [`iota_system`]    — `0x3`, the IOTA system package
-//! - [`stardust`]       — `0x107a`, the Stardust migration package
+//! - [`move_stdlib`]    : `0x1`, the Move standard library
+//! - [`iota_framework`] : `0x2`, the IOTA framework
+//! - [`iota_system`]    : `0x3`, the IOTA system package
+//! - [`stardust`]       : `0x107a`, the Stardust migration package
 //!
 //! Inside each package, every Move source module is mirrored 1:1 as a Rust
 //! `pub mod`. Generic Move types stay generic in Rust (with a
@@ -29,7 +29,7 @@ mod builtin;
 // The shape machinery (this module, the `MoveShape` derives on every
 // mirror, and the comparator below) is native-only: the comparator reads
 // the fetched package artifacts from disk at test time (no `std::fs` on
-// wasm32), and its checks are target-independent — running them on one
+// wasm32), and its checks are target-independent: running them on one
 // target covers all.
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod move_shape;

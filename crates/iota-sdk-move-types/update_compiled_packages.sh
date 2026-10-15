@@ -5,14 +5,14 @@
 # The fetched files are not committed (the directory is gitignored); the
 # `move_shape_compare` tests read them at run time to cross-check each
 # Rust mirror against its Move-side counterpart.
-# `published_api.txt` is the upstream's public-API manifest — only
+# `published_api.txt` is the upstream's public-API manifest: only
 # `public struct`/`public enum` records are kept (function-signature churn
 # is irrelevant to this crate). The nightly drift workflow diffs the
 # manifest at the pinned rev against the one at upstream `develop` HEAD,
 # applying the same filter to both.
 #
 # By default artifacts are fetched at the monorepo rev pinned by the
-# `move-binary-format` dev-dependency in this crate's Cargo.toml — the
+# `move-binary-format` dev-dependency in this crate's Cargo.toml, the
 # single source of truth for the pin, since the parser must match the
 # blobs it parses. Local runs and CI thus test the exact same bytes.
 #
