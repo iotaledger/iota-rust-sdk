@@ -40,6 +40,7 @@ on:
           - iota-sdk-types
           - iota-sdk-move-types
           - iota-sdk-crypto
+          - iota-sdk-ledger
           - iota-sdk-graphql-client-build
           - iota-sdk-grpc-types
           - iota-sdk-transaction-builder
@@ -85,6 +86,10 @@ jobs:
             echo "Invalid semver: $VERSION_OVERRIDE" >&2
             exit 1
           fi
+
+      - name: Install libudev for hidapi
+        if: startsWith(inputs.package, 'iota-sdk')
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
 
       - name: Verify the package can be published
         if: startsWith(inputs.package, 'iota-sdk')

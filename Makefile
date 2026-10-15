@@ -6,6 +6,7 @@ all:: ci ## Default target, runs the CI process
 check-features: ## Check feature flags for crates
 	$(MAKE) -C crates/iota-sdk-types check-features
 	$(MAKE) -C crates/iota-sdk-crypto check-features
+	$(MAKE) -C crates/iota-sdk-ledger check-features
 	$(MAKE) -C crates/iota-sdk-move-types check-features
 
 .PHONY: check-fmt
@@ -27,9 +28,10 @@ clippy: ## Run Clippy linter
 # `iota-sdk` is left out of `cargo semver-checks`, which diffs against the
 # latest crates.io release: its latest stable one is the unrelated legacy SDK
 # that previously held the name, so it stays excluded until 3.0.0 is published.
+# `iota-sdk-ledger` has no release to diff against until it is first published.
 .PHONY: semver-checks
 semver-checks: ## Check the published crates for breaking API changes
-	cargo semver-checks --workspace --exclude iota-sdk
+	cargo semver-checks --workspace --exclude iota-sdk --exclude iota-sdk-ledger
 
 .PHONY: test
 test: fetch-compiled-packages ## Run unit tests
