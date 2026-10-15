@@ -58,8 +58,8 @@ pub use move_view_call::MoveViewResult;
 pub(crate) use move_view_call::{MoveViewCallArgs, MoveViewCallQueryFragment};
 pub(crate) use normalized_move::{
     MoveAbility, MoveEnum, MoveEnumVariant, MoveField, MoveFunction, MoveFunctionTypeParameter,
-    MoveModule, MoveModuleIdQueryFragment, MoveStructQueryFragment, MoveStructTypeParameter,
-    MoveVisibility, NormalizedMoveFunctionQueryArgs, NormalizedMoveFunctionQueryFragment,
+    MoveModuleIdQueryFragment, MoveStructQueryFragment, MoveStructTypeParameter, MoveVisibility,
+    NormalizedMoveFunctionQueryArgs, NormalizedMoveFunctionQueryFragment,
     NormalizedMoveModuleQueryArgs, NormalizedMoveModuleQueryFragment, OpenMoveType,
 };
 pub use normalized_move::{MoveModuleQueryFragment, MovePackageAddress};
