@@ -453,6 +453,9 @@ define_field_paths! {
         LOWEST_AVAILABLE_CHECKPOINT_OBJECTS = "lowest_available_checkpoint_objects",
         /// The server version.
         SERVER = "server",
+        /// Lowest checkpoint for which the transaction and event indexes are
+        /// complete.
+        LOWEST_AVAILABLE_CHECKPOINT_INDEXES = "lowest_available_checkpoint_indexes",
     }
 }
 
@@ -838,6 +841,11 @@ mod tests {
         assert_eq!(ServiceInfoField::ALL, "*");
         assert_eq!(ServiceInfoField::CHAIN_ID, "chain_id");
         assert_eq!(ServiceInfoField::SERVER, "server");
+        assert!(
+            !GET_SERVICE_INFO_READ_MASK
+                .split(',')
+                .any(|path| path == ServiceInfoField::LOWEST_AVAILABLE_CHECKPOINT_INDEXES.as_str())
+        );
     }
 
     #[test]
