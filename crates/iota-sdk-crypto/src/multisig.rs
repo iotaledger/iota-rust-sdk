@@ -103,10 +103,13 @@ impl MultisigVerifier {
 }
 
 #[cfg(feature = "passkey")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 impl MultisigVerifier {
-    pub fn with_passkey_verifier(&mut self, passkey_verifier: crate::passkey::PasskeyVerifier) {
+    pub fn with_passkey_verifier(
+        mut self,
+        passkey_verifier: crate::passkey::PasskeyVerifier,
+    ) -> Self {
         self.passkey_verifier = Some(passkey_verifier);
+        self
     }
 
     pub fn passkey_verifier(&self) -> Option<&crate::passkey::PasskeyVerifier> {
@@ -216,10 +219,13 @@ impl UserSignatureVerifier {
 }
 
 #[cfg(feature = "passkey")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 impl UserSignatureVerifier {
-    pub fn with_passkey_verifier(&mut self, passkey_verifier: crate::passkey::PasskeyVerifier) {
-        self.inner.with_passkey_verifier(passkey_verifier);
+    pub fn with_passkey_verifier(
+        mut self,
+        passkey_verifier: crate::passkey::PasskeyVerifier,
+    ) -> Self {
+        self.inner = self.inner.with_passkey_verifier(passkey_verifier);
+        self
     }
 
     pub fn passkey_verifier(&self) -> Option<&crate::passkey::PasskeyVerifier> {
@@ -400,7 +406,7 @@ mod tests {
     use super::{MultisigAggregator, MultisigVerifier, UserSignatureVerifier};
     use crate::{
         IotaSigner, IotaVerifier, ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey,
-        secp256r1::Secp256r1PrivateKey, tests::error_chain,
+        secp256r1::Secp256r1PrivateKey,
     };
 
     /// Three deterministic private keys, one per supported signature scheme.
@@ -473,9 +479,8 @@ mod tests {
             .verify_personal_message(&msg, &UserSignature::Multisig(aggregated))
             .unwrap_err();
         assert!(
-            error_chain(&error).contains("Insufficient weight"),
-            "expected an insufficient-weight error, got {}",
-            error_chain(&error)
+            error.to_string().contains("Insufficient weight"),
+            "expected an insufficient-weight error, got {error}"
         );
     }
 
@@ -496,9 +501,10 @@ mod tests {
             .verify_personal_message(&msg, &UserSignature::Multisig(aggregated))
             .unwrap_err();
         assert!(
-            error_chain(&error).contains("Invalid address derived from pks"),
-            "expected an invalid-address error, got {}",
-            error_chain(&error)
+            error
+                .to_string()
+                .contains("Invalid address derived from pks"),
+            "expected an invalid-address error, got {error}"
         );
     }
 
@@ -530,9 +536,8 @@ mod tests {
             .verify_personal_message(&msg, &user_signature)
             .unwrap_err();
         assert!(
-            error_chain(&error).contains("signature/pubkey type mismatch"),
-            "expected an explicit scheme mismatch error, got {}",
-            error_chain(&error)
+            error.to_string().contains("signature/pubkey type mismatch"),
+            "expected an explicit scheme mismatch error, got {error}"
         );
 
         let error = MultisigVerifier::new()
@@ -540,9 +545,8 @@ mod tests {
             .verify_personal_message(&msg, &user_signature)
             .unwrap_err();
         assert!(
-            !error_chain(&error).contains("signature/pubkey type mismatch"),
-            "the scheme mismatch must only be checked with additional checks enabled, got {}",
-            error_chain(&error)
+            !error.to_string().contains("signature/pubkey type mismatch"),
+            "the scheme mismatch must only be checked with additional checks enabled, got {error}"
         );
     }
 
@@ -565,9 +569,8 @@ mod tests {
             .add_signature(k0.sign_personal_message(&msg).unwrap())
             .unwrap_err();
         assert!(
-            error_chain(&error).contains("duplicate signature"),
-            "expected a duplicate-signature error, got {}",
-            error_chain(&error)
+            error.to_string().contains("duplicate signature"),
+            "expected a duplicate-signature error, got {error}"
         );
 
         // A signer outside the committee is rejected.
@@ -576,17 +579,17 @@ mod tests {
             .add_signature(outsider.sign_personal_message(&msg).unwrap())
             .unwrap_err();
         assert!(
-            error_chain(&error).contains("does not belong to committee member"),
-            "expected a non-member error, got {}",
-            error_chain(&error)
+            error
+                .to_string()
+                .contains("does not belong to committee member"),
+            "expected a non-member error, got {error}"
         );
 
         // Still one short of the threshold.
         let error = aggregator.finish().unwrap_err();
         assert!(
-            error_chain(&error).contains("insufficient signature weight"),
-            "expected an insufficient-weight error, got {}",
-            error_chain(&error)
+            error.to_string().contains("insufficient signature weight"),
+            "expected an insufficient-weight error, got {error}"
         );
 
         // Reaching the threshold yields a signature that verifies.
@@ -615,9 +618,8 @@ mod tests {
             .verify_personal_message(&msg, &signature)
             .unwrap_err();
         assert!(
-            error_chain(&error).contains("not a multisig"),
-            "expected a not-a-multisig error, got {}",
-            error_chain(&error)
+            error.to_string().contains("not a multisig"),
+            "expected a not-a-multisig error, got {error}"
         );
     }
 
@@ -651,9 +653,10 @@ mod tests {
             .verify_personal_message(&message(), &UserSignature::Multisig(aggregated))
             .unwrap_err();
         assert!(
-            error_chain(&error).contains("Passkey sig not supported inside multisig"),
-            "expected a passkey-not-supported error, got {}",
-            error_chain(&error)
+            error
+                .to_string()
+                .contains("Passkey sig not supported inside multisig"),
+            "expected a passkey-not-supported error, got {error}"
         );
     }
 

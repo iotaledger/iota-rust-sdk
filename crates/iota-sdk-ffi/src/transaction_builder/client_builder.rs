@@ -5,7 +5,7 @@ use std::sync::{Arc, RwLock};
 
 use crate::{
     error::Result,
-    graphql::output_types::DryRunResult,
+    graphql::output_types::GraphQLDryRunResult,
     transaction_builder::{
         Payment, WaitForTransaction,
         gas_station::GasStation,
@@ -479,6 +479,10 @@ macro_rules! client_transaction_builder {
             }
 
             /// Execute the transaction and optionally wait for finalization.
+            ///
+            /// If the wait fails, the error is returned although the transaction was
+            /// executed, and its effects are lost. To keep them, pass no `wait_for`
+            /// and call `wait_for_transaction` on the client afterwards.
             #[uniffi::method(default(wait_for = None))]
             pub async fn execute(
                 &self,
@@ -512,6 +516,10 @@ macro_rules! client_transaction_builder {
             /// Execute the transaction with both the sender's and the sponsor's
             /// signature, and optionally wait for finalization.
             ///
+            /// If the wait fails, the error is returned although the transaction was
+            /// executed, and its effects are lost. To keep them, pass no `wait_for`
+            /// and call `wait_for_transaction` on the client afterwards.
+            ///
             /// Use this when you hold the sponsor's key. The sponsor's address must be
             /// set with `sponsor`, which is also where the gas coins are drawn from.
             /// When the sponsor is a service that keeps its own key and submits for
@@ -543,7 +551,7 @@ client_transaction_builder! {
     /// automatically resolve inputs. Use `finish` to finalize the transaction
     /// data.
     GraphQLTransactionBuilder: Arc<iota_sdk::graphql_client::GraphQLClient>,
-    dry_run -> DryRunResult = |result| result.into()
+    dry_run -> GraphQLDryRunResult = |result| result.into()
 }
 
 #[cfg(feature = "grpc")]
@@ -552,6 +560,6 @@ client_transaction_builder! {
     /// automatically resolve inputs. Use `finish` to finalize the transaction
     /// data.
     GrpcTransactionBuilder: Arc<iota_sdk::grpc_client::GrpcClient>,
-    dry_run -> crate::grpc::api::execution::simulate::SimulatedTransaction =
-        |result| crate::grpc::api::execution::simulate::SimulatedTransaction::try_from(&result)?
+    dry_run -> crate::grpc::api::execution::simulate::GrpcSimulatedTransaction =
+        |result| crate::grpc::api::execution::simulate::GrpcSimulatedTransaction::try_from(&result)?
 }

@@ -11,9 +11,9 @@
 //!
 //! Complex types (transactions, effects, events, objects, ...) are eagerly
 //! deserialized from their BCS representation, so the read mask must include
-//! the matching BCS field (e.g. `TransactionField::EffectsBcs`), or a field
-//! covering it such as `TransactionField::Effects` or `All`, for those record
-//! fields to be populated.
+//! the matching BCS field (e.g. `GrpcTransactionField::EffectsBcs`), or a field
+//! covering it such as `GrpcTransactionField::Effects` or `All`, for those
+//! record fields to be populated.
 
 use crate::grpc::read_mask_fields::ReadMaskField;
 
@@ -72,7 +72,7 @@ mod tests {
     };
 
     use super::{read_mask, read_mask_requests};
-    use crate::grpc::read_mask_fields::{EpochField, TransactionField};
+    use crate::grpc::read_mask_fields::{GrpcEpochField, GrpcTransactionField};
 
     #[test]
     fn read_mask_requests_matches_the_field_its_ancestors_and_sub_paths() {
@@ -96,15 +96,15 @@ mod tests {
     fn read_mask_falls_back_to_the_default_without_fields() {
         let default = EpochReadMask::default();
         assert_eq!(
-            read_mask::<EpochReadMask, EpochField>(None).as_str(),
+            read_mask::<EpochReadMask, GrpcEpochField>(None).as_str(),
             default.as_str()
         );
         assert_eq!(
-            read_mask::<EpochReadMask, EpochField>(Some(vec![])).as_str(),
+            read_mask::<EpochReadMask, GrpcEpochField>(Some(vec![])).as_str(),
             default.as_str()
         );
         assert_eq!(
-            read_mask::<EpochReadMask, _>(Some(vec![EpochField::Custom {
+            read_mask::<EpochReadMask, _>(Some(vec![GrpcEpochField::Custom {
                 path: String::new()
             }]))
             .as_str(),
@@ -115,10 +115,10 @@ mod tests {
     #[test]
     fn read_mask_normalizes_the_given_fields() {
         let mask = read_mask::<EpochReadMask, _>(Some(vec![
-            EpochField::ProtocolConfigFeatureFlags,
-            EpochField::ProtocolConfig,
-            EpochField::Epoch,
-            EpochField::Epoch,
+            GrpcEpochField::ProtocolConfigFeatureFlags,
+            GrpcEpochField::ProtocolConfig,
+            GrpcEpochField::Epoch,
+            GrpcEpochField::Epoch,
         ]));
         assert_eq!(mask.as_str(), "epoch,protocol_config");
     }
@@ -126,8 +126,8 @@ mod tests {
     #[test]
     fn read_mask_joins_the_given_fields() {
         let mask = read_mask::<EpochReadMask, _>(Some(vec![
-            EpochField::Epoch,
-            EpochField::ReferenceGasPrice,
+            GrpcEpochField::Epoch,
+            GrpcEpochField::ReferenceGasPrice,
         ]));
         assert_eq!(mask.as_str(), "epoch,reference_gas_price");
     }
@@ -136,8 +136,8 @@ mod tests {
     fn transaction_fields_build_the_mask_of_either_transaction_endpoint() {
         let fields = || {
             Some(vec![
-                TransactionField::EffectsBcs,
-                TransactionField::Checkpoint,
+                GrpcTransactionField::EffectsBcs,
+                GrpcTransactionField::Checkpoint,
             ])
         };
         assert_eq!(

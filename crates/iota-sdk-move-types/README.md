@@ -1,5 +1,8 @@
 # iota-sdk-move-types
 
+[![iota-sdk-move-types on crates.io](https://img.shields.io/crates/v/iota-sdk-move-types)](https://crates.io/crates/iota-sdk-move-types)
+[![Documentation (latest release)](https://img.shields.io/badge/docs-latest-brightgreen)](https://docs.rs/iota-sdk-move-types)
+
 Rust representations of Move types used by the IOTA blockchain.
 
 Each top-level module mirrors one on-chain system package, with every Move
@@ -16,6 +19,17 @@ The Move sources these mirror live in the [iota monorepo] under
 `crates/iota-framework`.
 
 [iota monorepo]: https://github.com/iotaledger/iota/tree/develop/crates/iota-framework
+
+## Features
+
+| Feature      | Enables                                                                        |
+| ------------ | ------------------------------------------------------------------------------ |
+| `serde`      | BCS (de)serialization of the mirrors and their `TryFrom<&Object>` constructors |
+| `bcs-schema` | `BcsSchema` derives on the mirrors (implies `serde`)                           |
+| `u256`       | `MoveType` for `primitive_types::U256`, pulling in the `primitive-types` crate |
+
+None are enabled by default. `MoveType` itself, and its impls for the Move
+primitives, `String`, `Vec<T>` and the mirrors, need no features.
 
 ## Compiled Move packages (`src/packages_compiled/`, not committed)
 

@@ -21,7 +21,7 @@
 
 use eyre::Result;
 use iota_sdk::{
-    grpc_client::{GrpcClient, read_mask_fields::ViewFunctionCallReadMask},
+    grpc_client::GrpcClient,
     grpc_types::{
         proto::json_to_prost_stringify_numbers,
         v1::{command::InputArgument, transaction_execution_service::ViewFunctionCallItem},
@@ -41,12 +41,8 @@ async fn main() -> Result<()> {
 
     // A single call, with arguments as JSON.
     let outputs = client
-        .view_function_call(
-            &format!("{PACKAGE}::shop::discounted_price"),
-            &[],
-            &[json!(100), json!(25)],
-            ViewFunctionCallReadMask::default(),
-        )
+        .view_function_call(format!("{PACKAGE}::shop::discounted_price"))
+        .call_args([json!(100), json!(25)])
         .await?;
 
     match outputs.body().return_values() {
@@ -64,23 +60,20 @@ async fn main() -> Result<()> {
     // discount over 100% so that it aborts, and a function that is not declared
     // `#[view]`.
     let results = client
-        .view_function_calls(
-            vec![
-                view_call(
-                    &format!("{PACKAGE}::shop::discounted_price"),
-                    vec![json!(100), json!(25)],
-                ),
-                view_call(
-                    &format!("{PACKAGE}::shop::discounted_price"),
-                    vec![json!(100), json!(200)],
-                ),
-                view_call(
-                    &format!("{PACKAGE}::shop::record_sale"),
-                    vec![json!(SHOP), json!(5)],
-                ),
-            ],
-            ViewFunctionCallReadMask::default(),
-        )
+        .view_function_calls(vec![
+            view_call(
+                &format!("{PACKAGE}::shop::discounted_price"),
+                vec![json!(100), json!(25)],
+            ),
+            view_call(
+                &format!("{PACKAGE}::shop::discounted_price"),
+                vec![json!(100), json!(200)],
+            ),
+            view_call(
+                &format!("{PACKAGE}::shop::record_sale"),
+                vec![json!(SHOP), json!(5)],
+            ),
+        ])
         .await?;
 
     for (call, result) in ["priced", "over-discounted", "record_sale"]

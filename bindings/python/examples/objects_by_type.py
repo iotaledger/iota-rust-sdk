@@ -9,7 +9,7 @@ import asyncio
 async def main():
     client = GraphQlClient.new_testnet()
 
-    coins = await client.objects(filter=ObjectFilter(
+    coins = await client.objects(filter=GraphQlObjectFilter(
         type_tag="0x2::coin::Coin<0x2::iota::IOTA>"))
 
     if len(coins.data) == 0:
@@ -17,7 +17,7 @@ async def main():
     else:
         print("IOTA coin object IDs:")
         for coin in coins.data:
-            print(coin.id().to_hex())
+            print(coin.id())
 
 
 if __name__ == "__main__":

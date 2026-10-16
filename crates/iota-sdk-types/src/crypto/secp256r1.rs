@@ -39,7 +39,6 @@ impl Secp256r1PublicKey {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::CryptoRng,
@@ -50,7 +49,6 @@ impl Secp256r1PublicKey {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
@@ -85,7 +83,7 @@ impl PublicKeyExt for Secp256r1PublicKey {
 }
 
 impl std::str::FromStr for Secp256r1PublicKey {
-    type Err = base64ct::Error;
+    type Err = super::Base64ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         super::Base64FromStr33::from_str(s).map(|a| Self::new(a.0))
@@ -163,7 +161,6 @@ impl Secp256r1Signature {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::CryptoRng,
@@ -174,7 +171,6 @@ impl Secp256r1Signature {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
@@ -194,7 +190,7 @@ impl Secp256r1Signature {
 }
 
 impl std::str::FromStr for Secp256r1Signature {
-    type Err = base64ct::Error;
+    type Err = super::Base64ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         super::Base64FromStr64::from_str(s).map(|a| Self::new(a.0))

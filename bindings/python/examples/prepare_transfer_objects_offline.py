@@ -17,7 +17,7 @@ async def main():
     faucet = FaucetClient.new_localnet()
     await faucet.request_and_wait_for_finalized(from_address, client)
 
-    coins = (await client.objects(ObjectFilter(owner=from_address))).data
+    coins = (await client.objects(GraphQlObjectFilter(owner=from_address))).data
     if len(coins) == 0:
         raise Exception("No coins found")
     gas_coin = coins[0]

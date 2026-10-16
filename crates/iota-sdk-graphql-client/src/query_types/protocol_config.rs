@@ -14,7 +14,7 @@ use crate::query_types::schema;
     graphql_type = "Query",
     variables = "ProtocolVersionArgs"
 )]
-pub struct ProtocolConfigQuery {
+pub(crate) struct ProtocolConfigQueryFragment {
     #[arguments(protocolVersion: $id)]
     pub protocol_config: ProtocolConfigs,
 }
@@ -24,7 +24,7 @@ pub struct ProtocolConfigQuery {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ProtocolVersionArgs {
+pub(crate) struct ProtocolVersionArgs {
     pub id: Option<u64>,
 }
 

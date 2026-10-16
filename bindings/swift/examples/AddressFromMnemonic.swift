@@ -18,7 +18,7 @@ struct AddressFromMnemonicExample {
     print("Private Key: \(ed25519Bech32)")
     print("Public Key: \(base64Encode(input: ed25519PubKey.toBytes()))")
     print("Public Key With Flag: \(base64Encode(input: ed25519Flagged))")
-    print("Address: \(ed25519Address.toHex())")
+    print("Address: \(ed25519Address)")
 
     let secp256k1Key = try Secp256k1PrivateKey.fromMnemonic(phrase: mnemonic, accountIndex: 1)
     let secp256k1Bech32 = try secp256k1Key.toBech32()
@@ -30,7 +30,7 @@ struct AddressFromMnemonicExample {
     print("Private Key: \(secp256k1Bech32)")
     print("Public Key: \(base64Encode(input: secp256k1PubKey.toBytes()))")
     print("Public Key With Flag: \(base64Encode(input: secp256k1Flagged))")
-    print("Address: \(secp256k1Address.toHex())")
+    print("Address: \(secp256k1Address)")
 
     let secp256r1Key = try Secp256r1PrivateKey.fromMnemonicWithPath(
       phrase: mnemonic, path: "m/74'/4218'/0'/0/2")
@@ -43,6 +43,6 @@ struct AddressFromMnemonicExample {
     print("Private Key: \(secp256r1Bech32)")
     print("Public Key: \(base64Encode(input: secp256r1PubKey.toBytes()))")
     print("Public Key With Flag: \(base64Encode(input: secp256r1Flagged))")
-    print("Address: \(secp256r1Address.toHex())")
+    print("Address: \(secp256r1Address)")
   }
 }

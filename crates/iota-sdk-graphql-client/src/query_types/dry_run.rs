@@ -4,34 +4,42 @@
 
 use iota_types::ObjectReference;
 
-use super::transaction::TransactionBlock;
-use crate::query_types::{Address, Base64, MoveType, ObjectId, schema};
+use super::transaction::TransactionBlockEffects;
+use crate::query_types::{Address, Base64, BigInt, MoveType, ObjectId, schema};
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "DryRunArgs")]
-pub struct DryRunQuery {
+pub(crate) struct DryRunQueryFragment {
     #[arguments(txBytes: $tx_bytes, skipChecks: $skip_checks, txMeta: $tx_meta)]
     pub dry_run_transaction_block: DryRunResult,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "DryRunResult")]
-pub struct DryRunResult {
+pub(crate) struct DryRunResult {
     pub error: Option<String>,
     pub results: Option<Vec<DryRunEffect>>,
-    pub transaction: Option<TransactionBlock>,
+    pub transaction: Option<DryRunTransactionBlock>,
+    pub suggested_gas_price: Option<BigInt>,
+}
+
+#[derive(cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
+pub struct DryRunTransactionBlock {
+    pub bcs_unsigned: Option<Base64>,
+    pub effects: Option<TransactionBlockEffects>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "DryRunEffect")]
-pub struct DryRunEffect {
+pub(crate) struct DryRunEffect {
     pub mutated_references: Option<Vec<DryRunMutation>>,
     pub return_values: Option<Vec<DryRunReturn>>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "DryRunMutation")]
-pub struct DryRunMutation {
+pub(crate) struct DryRunMutation {
     pub input: TransactionArgument,
     #[cynic(rename = "type")]
     pub move_type: MoveType,
@@ -40,7 +48,7 @@ pub struct DryRunMutation {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "DryRunReturn")]
-pub struct DryRunReturn {
+pub(crate) struct DryRunReturn {
     #[cynic(rename = "type")]
     pub move_type: MoveType,
     pub bcs: Base64,
@@ -49,7 +57,7 @@ pub struct DryRunReturn {
 #[derive(cynic::InlineFragments, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionArgument")]
 #[non_exhaustive]
-pub enum TransactionArgument {
+pub(crate) enum TransactionArgument {
     GasCoin(GasCoin),
     Input(Input),
     Result(ResultArg),
@@ -59,26 +67,26 @@ pub enum TransactionArgument {
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "GasCoin")]
-pub struct GasCoin {
+pub(crate) struct GasCoin {
     #[cynic(rename = "_")]
-    pub placeholder: Option<bool>,
+    pub _placeholder: Option<bool>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Input")]
-pub struct Input {
+pub(crate) struct Input {
     pub ix: i32,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Result")]
-pub struct ResultArg {
+pub(crate) struct ResultArg {
     pub cmd: i32,
     pub ix: Option<i32>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct DryRunArgs {
+pub(crate) struct DryRunArgs {
     pub tx_bytes: String,
     pub skip_checks: bool,
     pub tx_meta: Option<TransactionMetadata>,

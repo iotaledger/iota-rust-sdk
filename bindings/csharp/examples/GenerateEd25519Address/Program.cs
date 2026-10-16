@@ -16,6 +16,6 @@ class Program
         Console.WriteLine($"Private Key: {privateKeyBech32}");
         Console.WriteLine($"Public Key: {Iota.Base64Encode(publicKey.ToBytes())}");
         Console.WriteLine($"Public Key With Flag: {Iota.Base64Encode(flaggedPublicKey)}");
-        Console.WriteLine($"Address: {address.ToHex()}");
+        Console.WriteLine($"Address: {address}");
     }
 }

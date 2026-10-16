@@ -22,7 +22,7 @@
 //! Constants like [`CHECKPOINT_RESPONSE_SUMMARY`] or
 //! [`EXECUTED_TRANSACTION_EFFECTS`] represent the read mask field(s) required
 //! by a specific accessor method on a response type. Pass one or more of these
-//! to the endpoint's `read_mask` parameter to ensure the accessor will succeed.
+//! to the endpoint's `read_mask` setter to ensure the accessor will succeed.
 //!
 //! ### Context-dependent paths
 //!

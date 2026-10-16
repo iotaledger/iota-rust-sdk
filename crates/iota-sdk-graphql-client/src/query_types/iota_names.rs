@@ -1,8 +1,6 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use base64ct::Encoding;
-
 use crate::{
     error::GraphQLError,
     query_types::{Address, Base64, GraphQLAddress, PageInfo, schema},
@@ -14,13 +12,13 @@ use crate::{
     graphql_type = "Query",
     variables = "ResolveIotaNamesAddressArgs"
 )]
-pub struct ResolveIotaNamesAddressQuery {
+pub(crate) struct ResolveIotaNamesAddressQueryFragment {
     #[arguments(name: $name)]
     pub resolve_iota_names_address: Option<GraphQLAddress>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct ResolveIotaNamesAddressArgs {
+pub(crate) struct ResolveIotaNamesAddressArgs {
     pub name: String,
 }
 
@@ -30,9 +28,9 @@ pub struct ResolveIotaNamesAddressArgs {
     graphql_type = "Query",
     variables = "IotaNamesRegistrationsArgs"
 )]
-pub struct IotaNamesAddressRegistrationsQuery {
+pub(crate) struct IotaNamesAddressRegistrationsQueryFragment {
     #[arguments(address: $address)]
-    pub address: Option<IotaNamesRegistrationsQuery>,
+    pub address: Option<IotaNamesRegistrationsQueryFragment>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -41,9 +39,9 @@ pub struct IotaNamesAddressRegistrationsQuery {
     graphql_type = "Query",
     variables = "IotaNamesDefaultNameArgs"
 )]
-pub struct IotaNamesAddressDefaultNameQuery {
+pub(crate) struct IotaNamesAddressDefaultNameQueryFragment {
     #[arguments(address: $address)]
-    pub address: Option<IotaNamesDefaultNameQuery>,
+    pub address: Option<IotaNamesDefaultNameQueryFragment>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
@@ -52,13 +50,13 @@ pub struct IotaNamesAddressDefaultNameQuery {
     graphql_type = "Address",
     variables = "IotaNamesRegistrationsArgs"
 )]
-pub struct IotaNamesRegistrationsQuery {
+pub(crate) struct IotaNamesRegistrationsQueryFragment {
     #[arguments(after: $after, before: $before, first: $first, last: $last)]
     pub iota_names_registrations: NameRegistrationConnection,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct IotaNamesRegistrationsArgs {
+pub(crate) struct IotaNamesRegistrationsArgs {
     pub address: Address,
     pub after: Option<String>,
     pub before: Option<String>,
@@ -72,27 +70,27 @@ pub struct IotaNamesRegistrationsArgs {
     graphql_type = "Address",
     variables = "IotaNamesDefaultNameArgs"
 )]
-pub struct IotaNamesDefaultNameQuery {
+pub(crate) struct IotaNamesDefaultNameQueryFragment {
     #[arguments(format: $format)]
     pub iota_names_default_name: Option<String>,
 }
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct IotaNamesDefaultNameArgs {
+pub(crate) struct IotaNamesDefaultNameArgs {
     pub address: Address,
     pub format: Option<NameFormat>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "NameRegistrationConnection")]
-pub struct NameRegistrationConnection {
+pub(crate) struct NameRegistrationConnection {
     pub page_info: PageInfo,
     pub nodes: Vec<NameRegistration>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "NameRegistration")]
-pub struct NameRegistration {
+pub(crate) struct NameRegistration {
     pub bcs: Option<Base64>,
 }
 
@@ -100,14 +98,15 @@ impl TryFrom<NameRegistration> for iota_types::iota_names::NameRegistration {
     type Error = GraphQLError;
 
     fn try_from(value: NameRegistration) -> Result<Self, Self::Error> {
-        let bytes = base64ct::Base64::decode_vec(
+        let bytes = crate::base64::decode(
             value
                 .bcs
                 .ok_or(GraphQLError::EmptyResponseField("name registration bcs"))?
                 .0
                 .as_str(),
         )?;
-        bcs::from_bytes::<iota_types::Object>(&bytes)?
+        bcs::from_bytes::<iota_types::Object>(&bytes)
+            .map_err(iota_types::BcsError::new)?
             .to_rust()
             .map_err(GraphQLError::deserialization)
     }
@@ -119,7 +118,7 @@ impl TryFrom<NameRegistration> for iota_types::iota_names::NameRegistration {
     graphql_type = "NameFormat",
     rename_all = "SCREAMING_SNAKE_CASE"
 )]
-pub enum NameFormat {
+pub(crate) enum NameFormat {
     At,
     Dot,
 }

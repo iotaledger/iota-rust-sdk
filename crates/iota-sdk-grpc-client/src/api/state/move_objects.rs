@@ -97,13 +97,13 @@ impl GrpcClient {
     ///
     /// Returns a query builder. Await it directly for a single page (with
     /// access to `next_page_token`), or call `.collect(limit)` to auto-paginate
-    /// through all results.
+    /// through all results. Page with
+    /// [`page_size`](ListOwnedMoveObjectsQuery::page_size) and
+    /// [`page_token`](ListOwnedMoveObjectsQuery::page_token).
     ///
     /// # Parameters
     ///
     /// - `owner` - The address that owns the objects.
-    /// - `page_size` - Optional maximum number of objects per page.
-    /// - `page_token` - Optional continuation token from a previous page.
     ///
     /// # Examples
     ///
@@ -115,9 +115,7 @@ impl GrpcClient {
     /// let client = GrpcClient::new_localnet()?;
     /// let owner: Address = "0x1".parse()?;
     ///
-    /// let page = client
-    ///     .owned_move_objects::<StakedIota>(owner, None, None)
-    ///     .await?;
+    /// let page = client.owned_move_objects::<StakedIota>(owner).await?;
     /// for staked in &page.body().items {
     ///     println!(
     ///         "{}: staked {} nanos",
@@ -131,8 +129,6 @@ impl GrpcClient {
     pub fn owned_move_objects<T: MoveObject>(
         &self,
         owner: Address,
-        page_size: impl Into<Option<u32>>,
-        page_token: impl Into<Option<prost::bytes::Bytes>>,
     ) -> ListOwnedMoveObjectsQuery<T> {
         let base_request = ListOwnedObjectsRequest::default()
             .with_owner(ProtoAddress::default().with_address(Vec::from(owner)))
@@ -143,8 +139,6 @@ impl GrpcClient {
             self.state_service_client(),
             base_request,
             self.max_decoding_message_size(),
-            page_size.into(),
-            page_token.into(),
         )
     }
 }

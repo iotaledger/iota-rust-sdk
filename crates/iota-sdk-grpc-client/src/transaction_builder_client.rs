@@ -8,8 +8,7 @@ use std::time::Duration;
 
 use iota_grpc_types::{
     read_mask_fields::{
-        EpochField, EpochReadMask, ExecuteTransactionReadMask, ObjectReadMask, OwnedObjectReadMask,
-        SimulateField, SimulateReadMask, TransactionField, TransactionReadMask,
+        EpochField, EpochReadMask, SimulateField, TransactionField, TransactionReadMask,
     },
     v1::transaction_execution_service::SimulatedTransaction,
 };
@@ -78,7 +77,7 @@ impl TransactionBuilderLedgerClient for GrpcClient {
         // Default read mask (`reference` + `bcs`) provides everything needed to
         // reconstruct the SDK object.
         let response = self
-            .objects_with_versions([(object_id, version.into())], ObjectReadMask::default())
+            .objects_with_versions([(object_id, version.into())])
             .await;
 
         match single_item(response)? {
@@ -97,7 +96,7 @@ impl TransactionBuilderLedgerClient for GrpcClient {
         // Default read mask (`reference` + `bcs`) provides everything needed to
         // reconstruct the SDK objects, which `objects` returns in request
         // order.
-        self.objects_with_versions(object_ids.iter().copied(), ObjectReadMask::default())
+        self.objects_with_versions(object_ids.iter().copied())
             .await?
             .into_inner()
             .into_iter()
@@ -116,16 +115,17 @@ impl TransactionBuilderLedgerClient for GrpcClient {
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> Result<ObjectsPage, Self::Error> {
-        let page = self
-            .owned_objects(
-                owner,
-                struct_tag,
-                limit.map(saturating_usize_to_u32),
-                cursor.map(prost::bytes::Bytes::from),
-                OwnedObjectReadMask::default(),
-            )
-            .await?
-            .into_inner();
+        let mut query = self.owned_objects(owner);
+        if let Some(struct_tag) = struct_tag {
+            query = query.object_type(struct_tag);
+        }
+        if let Some(limit) = limit {
+            query = query.page_size(saturating_usize_to_u32(limit));
+        }
+        if let Some(cursor) = cursor {
+            query = query.page_token(prost::bytes::Bytes::from(cursor));
+        }
+        let page = query.await?.into_inner();
         let data = page
             .items
             .iter()
@@ -137,10 +137,8 @@ impl TransactionBuilderLedgerClient for GrpcClient {
 
     async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
         let epoch = self
-            .epoch(
-                None,
-                EpochReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES),
-            )
+            .epoch()
+            .read_mask(EpochReadMask::from(EpochField::PROTOCOL_CONFIG_ATTRIBUTES))
             .await?
             .into_inner();
         let attributes = epoch
@@ -155,13 +153,13 @@ impl TransactionBuilderLedgerClient for GrpcClient {
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> Result<Option<u64>, Self::Error> {
-        let epoch = self
-            .epoch(
-                epoch.into(),
-                EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE),
-            )
-            .await?
-            .into_inner();
+        let mut query = self
+            .epoch()
+            .read_mask(EpochReadMask::from(EpochField::REFERENCE_GAS_PRICE));
+        if let Some(epoch) = epoch.into() {
+            query = query.epoch_number(epoch);
+        }
+        let epoch = query.await?.into_inner();
         Ok(epoch.reference_gas_price)
     }
 }
@@ -176,11 +174,9 @@ impl TransactionBuilderSimulationClient for GrpcClient {
         // Simulate with relaxed checks and read the gas used from the resulting
         // effects.
         let simulated = self
-            .simulate_transaction(
-                transaction.clone(),
-                true,
-                SimulateField::EXECUTED_TRANSACTION_EFFECTS_BCS,
-            )
+            .simulate_transaction(transaction.clone())
+            .skip_checks(true)
+            .read_mask(SimulateField::EXECUTED_TRANSACTION_EFFECTS_BCS)
             .await?;
         let effects = simulated
             .into_inner()
@@ -201,11 +197,8 @@ impl TransactionBuilderSimulationClient for GrpcClient {
         skip_checks: bool,
     ) -> Result<Self::DryRunResult, Self::Error> {
         Ok(self
-            .simulate_transaction(
-                transaction.clone(),
-                skip_checks,
-                SimulateReadMask::default(),
-            )
+            .simulate_transaction(transaction.clone())
+            .skip_checks(skip_checks)
             .await?
             .into_inner())
     }
@@ -223,14 +216,9 @@ impl TransactionBuilderExecutionClient for GrpcClient {
             transaction: transaction.clone(),
             signatures: signatures.to_vec(),
         };
-        let result = GrpcClient::execute_transaction(
-            self,
-            signed_transaction,
-            None,
-            ExecuteTransactionReadMask::default(),
-        )
-        .await?
-        .into_inner();
+        let result = GrpcClient::execute_transaction(self, signed_transaction)
+            .await?
+            .into_inner();
         let effects = result.effects()?.effects()?;
 
         if let Some(wait_for) = wait_for {
@@ -267,7 +255,7 @@ impl TransactionBuilderExecutionClient for GrpcClient {
             let mut interval = tokio::time::interval(WAIT_FOR_TRANSACTION_POLL_INTERVAL);
             loop {
                 interval.tick().await;
-                let response = self.transactions([digest], mask.clone()).await;
+                let response = self.transactions([digest]).read_mask(mask.clone()).await;
 
                 // An absent transaction is not indexed yet — keep polling.
                 if let Some(tx) = single_item(response)? {
@@ -298,10 +286,8 @@ impl TransactionBuilderExecutionClient for GrpcClient {
         digest: TransactionDigest,
     ) -> Result<Option<TransactionEffects>, Self::Error> {
         let response = self
-            .transactions(
-                [digest],
-                TransactionReadMask::from(TransactionField::EFFECTS_BCS),
-            )
+            .transactions([digest])
+            .read_mask(TransactionReadMask::from(TransactionField::EFFECTS_BCS))
             .await;
 
         match single_item(response)? {
@@ -319,11 +305,7 @@ mod tests {
     use crate::api::{ProtocolError, RpcStatus};
 
     fn not_found_status() -> RpcStatus {
-        RpcStatus {
-            code: tonic::Code::NotFound.into(),
-            message: String::new(),
-            details: Vec::new(),
-        }
+        RpcStatus::new(tonic::Code::NotFound, "")
     }
 
     #[test]

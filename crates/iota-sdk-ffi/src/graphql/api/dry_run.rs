@@ -3,11 +3,15 @@
 
 //! Dry run API implementation.
 
+use iota_sdk::graphql_client::DryRunTransactionKindQuery;
+
 use crate::{
     error::Result,
     graphql::{
-        client::GraphQLClient, output_types::DryRunResult, query_types::TransactionMetadata,
+        client::GraphQLClient, output_types::GraphQLDryRunResult,
+        query_types::GraphQLTransactionMetadata,
     },
+    helpers::SetIfSome,
     types::transaction::{Transaction, TransactionKind},
 };
 
@@ -26,10 +30,11 @@ impl GraphQLClient {
         &self,
         transaction: &Transaction,
         skip_checks: bool,
-    ) -> Result<DryRunResult> {
+    ) -> Result<GraphQLDryRunResult> {
         Ok(self
             .client()
-            .dry_run_transaction(&transaction.0, skip_checks)
+            .dry_run_transaction(&transaction.0)
+            .skip_checks(skip_checks)
             .await?
             .into())
     }
@@ -47,16 +52,38 @@ impl GraphQLClient {
     pub async fn dry_run_transaction_kind(
         &self,
         transaction_kind: &TransactionKind,
-        transaction_metadata: TransactionMetadata,
+        transaction_metadata: GraphQLTransactionMetadata,
         skip_checks: bool,
-    ) -> Result<DryRunResult> {
+    ) -> Result<GraphQLDryRunResult> {
+        let metadata: iota_sdk::graphql_client::query_types::TransactionMetadata =
+            transaction_metadata.into();
+        let gas_objects = metadata
+            .gas_objects
+            .map(|objects| {
+                objects
+                    .into_iter()
+                    .map(|object| {
+                        Ok(iota_sdk::types::ObjectReference::new(
+                            object.address,
+                            iota_sdk::types::Version::from_u64(object.version),
+                            iota_sdk::types::ObjectDigest::from_base58(&object.digest)?,
+                        ))
+                    })
+                    .collect::<Result<Vec<_>>>()
+            })
+            .transpose()?;
         Ok(self
             .client()
-            .dry_run_transaction_kind(
-                &transaction_kind.0,
-                skip_checks,
-                transaction_metadata.into(),
+            .dry_run_transaction_kind(&transaction_kind.0)
+            .set_if_some(metadata.sender, DryRunTransactionKindQuery::sender)
+            .set_if_some(metadata.gas_budget, DryRunTransactionKindQuery::gas_budget)
+            .set_if_some(metadata.gas_price, DryRunTransactionKindQuery::gas_price)
+            .set_if_some(gas_objects, DryRunTransactionKindQuery::gas_objects)
+            .set_if_some(
+                metadata.gas_sponsor,
+                DryRunTransactionKindQuery::gas_sponsor,
             )
+            .skip_checks(skip_checks)
             .await?
             .into())
     }

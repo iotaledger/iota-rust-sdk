@@ -3,26 +3,20 @@
 
 //! Transaction execution API implementation.
 
-use iota_sdk::grpc_client::read_mask_fields::ExecuteTransactionReadMask;
+use iota_sdk::grpc_client::{
+    ExecuteTransactionQuery, ExecuteTransactionsQuery, read_mask_fields::ExecuteTransactionReadMask,
+};
 
 use crate::{
     error::Result,
     grpc::{
-        api::ledger::transactions::ExecutedTransaction, client::GrpcClient,
-        read_mask_fields::TransactionField,
+        api::ledger::transactions::{GrpcExecutedTransaction, GrpcExecutedTransactionResults},
+        client::GrpcClient,
+        read_mask_fields::GrpcTransactionField,
     },
+    helpers::SetIfSome,
     types::transaction::SignedTransaction,
 };
-
-/// The result of executing a single transaction in a batch: either the
-/// executed transaction or an error.
-#[derive(uniffi::Record)]
-pub struct ExecutedTransactionResult {
-    /// The executed transaction, if execution succeeded.
-    pub transaction: Option<ExecutedTransaction>,
-    /// The error message, if execution failed.
-    pub error: Option<String>,
-}
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GrpcClient {
@@ -41,15 +35,16 @@ impl GrpcClient {
         &self,
         signed_transaction: SignedTransaction,
         checkpoint_inclusion_timeout_ms: Option<u64>,
-        read_mask: Option<Vec<TransactionField>>,
-    ) -> Result<ExecutedTransaction> {
+        read_mask: Option<Vec<GrpcTransactionField>>,
+    ) -> Result<GrpcExecutedTransaction> {
         (&self
             .client()
-            .execute_transaction(
-                signed_transaction.into(),
+            .execute_transaction(signed_transaction.into())
+            .set_if_some(
                 checkpoint_inclusion_timeout_ms,
-                crate::grpc::api::read_mask::<ExecuteTransactionReadMask, _>(read_mask),
+                ExecuteTransactionQuery::checkpoint_inclusion_timeout_ms,
             )
+            .read_mask(crate::grpc::api::read_mask::<ExecuteTransactionReadMask, _>(read_mask))
             .await?
             .into_inner())
             .try_into()
@@ -57,8 +52,10 @@ impl GrpcClient {
 
     /// Execute a batch of signed transactions.
     ///
-    /// A per-transaction error does not abort the rest of the batch; each
-    /// result carries either the executed transaction or an error message.
+    /// An error the server reports for one transaction does not abort the
+    /// rest of the batch; reading that transaction's item throws the server's
+    /// error message. A transaction the server returns but
+    /// that cannot be decoded fails the whole call.
     ///
     /// If `checkpoint_inclusion_timeout_ms` is provided, the server waits up
     /// to that long for the transactions to be included in a checkpoint
@@ -73,29 +70,18 @@ impl GrpcClient {
         &self,
         transactions: Vec<SignedTransaction>,
         checkpoint_inclusion_timeout_ms: Option<u64>,
-        read_mask: Option<Vec<TransactionField>>,
-    ) -> Result<Vec<ExecutedTransactionResult>> {
-        self.client()
-            .execute_transactions(
-                transactions.into_iter().map(Into::into).collect(),
-                checkpoint_inclusion_timeout_ms,
-                crate::grpc::api::read_mask::<ExecuteTransactionReadMask, _>(read_mask),
-            )
-            .await?
-            .into_inner()
-            .into_iter()
-            .map(|result| {
-                Ok(match result {
-                    Ok(transaction) => ExecutedTransactionResult {
-                        transaction: Some((&transaction).try_into()?),
-                        error: None,
-                    },
-                    Err(error) => ExecutedTransactionResult {
-                        transaction: None,
-                        error: Some(error.to_string()),
-                    },
-                })
-            })
-            .collect()
+        read_mask: Option<Vec<GrpcTransactionField>>,
+    ) -> Result<GrpcExecutedTransactionResults> {
+        GrpcExecutedTransactionResults::new(
+            self.client()
+                .execute_transactions(transactions.into_iter().map(Into::into).collect())
+                .set_if_some(
+                    checkpoint_inclusion_timeout_ms,
+                    ExecuteTransactionsQuery::checkpoint_inclusion_timeout_ms,
+                )
+                .read_mask(crate::grpc::api::read_mask::<ExecuteTransactionReadMask, _>(read_mask))
+                .await?
+                .into_inner(),
+        )
     }
 }

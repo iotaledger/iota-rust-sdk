@@ -135,7 +135,6 @@ impl AsRef<[u8]> for PublicKey {
 }
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
     use std::str::FromStr;
 

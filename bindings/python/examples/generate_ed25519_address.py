@@ -14,7 +14,7 @@ def main():
     print(f"Private Key: {private_key_bech32}")
     print(f"Public Key: {base64_encode(public_key.to_bytes())}")
     print(f"Public Key With Flag: {base64_encode(flagged_public_key)}")
-    print(f"Address: {address.to_hex()}")
+    print(f"Address: {address}")
 
 
 if __name__ == "__main__":

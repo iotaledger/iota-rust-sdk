@@ -42,7 +42,6 @@ impl Bls12381PublicKey {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::CryptoRng,
@@ -53,7 +52,6 @@ impl Bls12381PublicKey {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
@@ -73,7 +71,7 @@ impl Bls12381PublicKey {
 }
 
 impl std::str::FromStr for Bls12381PublicKey {
-    type Err = base64ct::Error;
+    type Err = super::Base64ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         super::Base64FromStr96::from_str(s).map(|a| Self(a.0))
@@ -151,7 +149,6 @@ impl Bls12381Signature {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::CryptoRng,
@@ -162,7 +159,6 @@ impl Bls12381Signature {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
@@ -182,7 +178,7 @@ impl Bls12381Signature {
 }
 
 impl std::str::FromStr for Bls12381Signature {
-    type Err = base64ct::Error;
+    type Err = super::Base64ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         super::Base64FromStr48::from_str(s).map(|a| Self::new(a.0))

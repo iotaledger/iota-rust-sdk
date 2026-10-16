@@ -4,7 +4,7 @@
 use crate::{builder::TransactionBuildData, unresolved::Argument};
 
 /// A trait that defines an assigned result, either a string or nothing.
-pub trait AssignedResult {
+pub trait AssignedResult: sealed::Sealed {
     /// Get the assigned result argument.
     fn assigned_result(&self, ptb: &mut TransactionBuildData) -> Argument {
         Argument::Result(ptb.state_command())
@@ -39,7 +39,7 @@ impl<T: AssignedResult> AssignedResult for Option<T> {
 }
 
 /// A trait that allows tuples to be used to bind nested assigned results.
-pub trait AssignedResults {
+pub trait AssignedResults: sealed::Sealed {
     /// Push the assigned results to the PTB.
     fn push_assigned_results(self, ptb: &mut TransactionBuildData);
 }
@@ -62,6 +62,8 @@ impl<T: AssignedResult> AssignedResults for Vec<T> {
 
 macro_rules! impl_assigned_result_tuple {
     ($(($n:tt, $T:ident)),*) => {
+        impl<$($T),+> sealed::Sealed for ($($T),+) {}
+
         impl<$($T),+> AssignedResults for ($($T),+)
         where $($T: AssignedResult),+
         {
@@ -76,3 +78,13 @@ macro_rules! impl_assigned_result_tuple {
 }
 
 variadics_please::all_tuples_enumerated!(impl_assigned_result_tuple, 2, 10, T);
+
+mod sealed {
+    pub trait Sealed {}
+
+    impl Sealed for () {}
+    impl Sealed for &str {}
+    impl Sealed for String {}
+    impl<T> Sealed for Option<T> {}
+    impl<T> Sealed for Vec<T> {}
+}

@@ -11,7 +11,7 @@ class Program
     // A shared `view_demo::shop::Shop` created when the package was published.
     const string Shop = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20";
 
-    static string Describe(ViewFunctionCallOutputs outputs)
+    static string Describe(GrpcViewFunctionCallOutputs outputs)
     {
         if (outputs.ReturnValues != null)
         {
@@ -37,15 +37,15 @@ class Program
         var shop = ObjectId.FromHex(Shop);
         var results = await client.ViewFunctionCalls(new[]
         {
-            new ViewFunctionCallInput(
+            new GrpcViewFunctionCallInput(
                 $"{Package}::shop::discounted_price",
                 new TypeTag[] { },
                 new[] { MoveViewArg.U64(100), MoveViewArg.U64(25) }),
-            new ViewFunctionCallInput(
+            new GrpcViewFunctionCallInput(
                 $"{Package}::shop::discounted_price",
                 new TypeTag[] { },
                 new[] { MoveViewArg.U64(100), MoveViewArg.U64(200) }),
-            new ViewFunctionCallInput(
+            new GrpcViewFunctionCallInput(
                 $"{Package}::shop::record_sale",
                 new TypeTag[] { },
                 new[] { MoveViewArg.ObjectId(shop), MoveViewArg.U64(5) }),

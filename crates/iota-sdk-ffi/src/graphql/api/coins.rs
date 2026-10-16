@@ -5,13 +5,16 @@
 
 use std::sync::Arc;
 
+use iota_sdk::graphql_client::ListCoinsQuery;
+
 use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::CoinPage,
-        query_types::{CoinMetadata, PaginationFilter},
+        pagination::GraphQLCoinPage,
+        query_types::{GraphQLCoinMetadata, GraphQLPaginationFilter},
     },
+    helpers::SetIfSome,
     types::{address::Address, move_core::StructTag},
 };
 
@@ -26,16 +29,14 @@ impl GraphQLClient {
     pub async fn coins(
         &self,
         owner: &Address,
-        pagination_filter: Option<PaginationFilter>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
         coin_type: Option<Arc<StructTag>>,
-    ) -> Result<CoinPage> {
+    ) -> Result<GraphQLCoinPage> {
         Ok(self
             .client()
-            .coins(
-                **owner,
-                coin_type.map(|t| t.0.clone()),
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .coins(**owner)
+            .set_if_some(coin_type.map(|t| t.0.clone()), ListCoinsQuery::coin_type)
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -46,30 +47,31 @@ impl GraphQLClient {
     pub async fn gas_coins(
         &self,
         owner: &Address,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<CoinPage> {
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLCoinPage> {
         Ok(self
             .client()
-            .gas_coins(
-                **owner,
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .gas_coins(**owner)
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
     }
 
     /// Get the coin metadata for the coin type.
-    pub async fn coin_metadata(&self, coin_type: &str) -> Result<Option<CoinMetadata>> {
+    pub async fn coin_metadata(
+        &self,
+        coin_type: &StructTag,
+    ) -> Result<Option<GraphQLCoinMetadata>> {
         self.client()
-            .coin_metadata(coin_type)
+            .coin_metadata(coin_type.0.clone())
             .await?
-            .map(CoinMetadata::try_from)
+            .map(GraphQLCoinMetadata::try_from)
             .transpose()
     }
 
     /// Get total supply for the coin type.
-    pub async fn total_supply(&self, coin_type: &str) -> Result<Option<u64>> {
-        Ok(self.client().total_supply(coin_type).await?)
+    pub async fn total_supply(&self, coin_type: &StructTag) -> Result<Option<u64>> {
+        Ok(self.client().total_supply(coin_type.0.clone()).await?)
     }
 }

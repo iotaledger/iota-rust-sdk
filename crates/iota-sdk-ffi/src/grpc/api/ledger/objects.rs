@@ -9,7 +9,7 @@ use iota_sdk::{grpc_client::read_mask_fields::ObjectReadMask, grpc_types::v1 as 
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::{client::GrpcClient, read_mask_fields::ObjectField},
+    grpc::{client::GrpcClient, read_mask_fields::GrpcObjectField},
     types::{
         digest::ObjectDigest,
         object::{Object, ObjectId},
@@ -21,7 +21,7 @@ use crate::{
 /// optional version. If no version is provided, the latest version is
 /// returned.
 #[derive(uniffi::Record)]
-pub struct ObjectRequest {
+pub struct GrpcObjectRequest {
     /// The id of the object.
     pub object_id: Arc<ObjectId>,
     /// The optional version of the object.
@@ -35,7 +35,7 @@ pub struct ObjectRequest {
 /// sub-fields (e.g. `ReferenceObjectId`) in the read mask. The `object` field
 /// is deserialized from BCS, so the read mask must include `Bcs` for it to be
 /// populated.
-#[derive(uniffi::Record)]
+#[derive(Clone, uniffi::Record)]
 pub struct GrpcObject {
     /// The id of the object.
     pub object_id: Option<Arc<ObjectId>>,
@@ -80,22 +80,21 @@ impl TryFrom<&proto::object::Object> for GrpcObject {
     }
 }
 
-fn convert_objects(
-    objects: Vec<iota_sdk::grpc_client::GrpcResult<proto::object::Object>>,
-) -> Result<Vec<GrpcObject>> {
-    objects
-        .into_iter()
-        .map(|object| GrpcObject::try_from(&object?))
-        .collect()
+crate::grpc_batch_results! {
+    /// The results of a batch of objects, in request order. Each item is
+    /// either the object or the error the server reported for it.
+    GrpcObjectResults(GrpcObject, proto::object::Object)
 }
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GrpcClient {
     /// Get the latest version of objects by their ids.
     ///
-    /// Results are returned in the same order as the input ids.
-    /// If any object cannot be read — because it is not found, was deleted, or
-    /// has been pruned by the serving node — the whole call fails.
+    /// Results are returned in the same order as the input ids, one per
+    /// id. An object the serving node cannot return — because it is not
+    /// found, was deleted, or has been pruned — fails only its own item,
+    /// which reading throws with the server's error message. An object the
+    /// server returns but that cannot be decoded fails the whole call.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the reference and the object are returned.
@@ -103,15 +102,13 @@ impl GrpcClient {
     pub async fn objects(
         &self,
         object_ids: Vec<Arc<ObjectId>>,
-        read_mask: Option<Vec<ObjectField>>,
-    ) -> Result<Vec<GrpcObject>> {
+        read_mask: Option<Vec<GrpcObjectField>>,
+    ) -> Result<GrpcObjectResults> {
         let ids = object_ids.iter().map(|id| ***id).collect::<Vec<_>>();
-        convert_objects(
+        GrpcObjectResults::new(
             self.client()
-                .objects(
-                    ids,
-                    crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask),
-                )
+                .objects(ids)
+                .read_mask(crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask))
                 .await?
                 .into_inner(),
         )
@@ -119,18 +116,20 @@ impl GrpcClient {
 
     /// Get objects by their ids and optional versions.
     ///
-    /// Results are returned in the same order as the input requests.
-    /// If any object cannot be read — because it is not found, was deleted, or
-    /// has been pruned by the serving node — the whole call fails.
+    /// Results are returned in the same order as the input requests, one per
+    /// request. An object the serving node cannot return — because it is not
+    /// found, was deleted, or has been pruned — fails only its own item,
+    /// which reading throws with the server's error message. An object the
+    /// server returns but that cannot be decoded fails the whole call.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the reference and the object are returned.
     #[uniffi::method(default(read_mask = None))]
     pub async fn objects_with_versions(
         &self,
-        requests: Vec<ObjectRequest>,
-        read_mask: Option<Vec<ObjectField>>,
-    ) -> Result<Vec<GrpcObject>> {
+        requests: Vec<GrpcObjectRequest>,
+        read_mask: Option<Vec<GrpcObjectField>>,
+    ) -> Result<GrpcObjectResults> {
         let refs = requests
             .iter()
             .map(|request| {
@@ -140,12 +139,10 @@ impl GrpcClient {
                 )
             })
             .collect::<Vec<_>>();
-        convert_objects(
+        GrpcObjectResults::new(
             self.client()
-                .objects_with_versions(
-                    refs,
-                    crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask),
-                )
+                .objects_with_versions(refs)
+                .read_mask(crate::grpc::api::read_mask::<ObjectReadMask, _>(read_mask))
                 .await?
                 .into_inner(),
         )
@@ -155,6 +152,7 @@ impl GrpcClient {
 #[cfg(test)]
 mod tests {
     use iota_sdk::{
+        grpc_client::GrpcError,
         grpc_types::v1::{self as proto, versioned::VersionedObject},
         types::{
             Address, MoveObjectType, MoveStruct, ObjectData, ObjectId, Owner, StructTag,
@@ -162,7 +160,7 @@ mod tests {
         },
     };
 
-    use super::GrpcObject;
+    use super::{GrpcObject, GrpcObjectResults};
 
     fn object() -> iota_sdk::types::Object {
         let object_id = ObjectId::from([7; 32]);
@@ -244,5 +242,26 @@ mod tests {
         value.bcs = Some(proto::bcs::BcsData::from(vec![0xff, 0xff]));
 
         assert!(GrpcObject::try_from(&value).is_err());
+    }
+
+    #[test]
+    fn item_error_fails_only_its_own_item() {
+        let results = GrpcObjectResults::new(vec![
+            Err(GrpcError::EmptyRequest),
+            Ok(proto::object::Object::default()),
+        ])
+        .unwrap();
+
+        assert_eq!(results.len(), 2);
+        assert!(results.get(0).is_err());
+        assert!(results.get(1).is_ok());
+    }
+
+    #[test]
+    fn undecodable_item_is_an_error() {
+        let mut value = proto::object::Object::default();
+        value.bcs = Some(proto::bcs::BcsData::from(vec![0xff, 0xff]));
+
+        assert!(GrpcObjectResults::new(vec![Ok(value)]).is_err());
     }
 }

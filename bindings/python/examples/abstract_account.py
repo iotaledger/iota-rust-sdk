@@ -89,9 +89,9 @@ async def setup_account(client: GraphQlClient) -> ObjectId:
     if account_id is None:
         raise Exception("Missing account id")
 
-    print(f"Package ID: {package_id.to_hex()}")
-    print(f"PackageMetadataV1 ID: {package_metadata_id.to_hex()}")
-    print(f"Account ID: {account_id.to_hex()}\n")
+    print(f"Package ID: {package_id}")
+    print(f"PackageMetadataV1 ID: {package_metadata_id}")
+    print(f"Account ID: {account_id}\n")
 
     # Build the `link_auth` PTB
     builder = client.transaction_builder(sender)

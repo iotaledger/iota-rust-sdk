@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk-transaction-builder"
-version = "1.0.0-beta.1"
+version = "1.0.0-rc.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
@@ -8,9 +8,22 @@ readme = "README.md"
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "Transaction API for the IOTA Blockchain Rust SDK"
 
+[package.metadata.docs.rs]
+# To build locally:
+# RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --features gas-station --no-deps --open
+features = ["gas-station"]
+rustdoc-args = [
+  # Enable doc_cfg showing the required features.
+  "--cfg=doc_cfg",
+  # Generate links to definition in rustdoc source code pages
+  # https://github.com/rust-lang/rust/pull/84176
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
+
 [features]
 default = []
-gas-station = ["dep:reqwest"]
+gas-station = ["dep:base64ct", "dep:reqwest"]
 test-client = []
 
 [lints]
@@ -18,7 +31,7 @@ workspace = true
 
 [dependencies]
 # external dependencies
-base64ct = { workspace = true, features = ["std"] }
+base64ct = { workspace = true, features = ["std"], optional = true }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 primitive-types.workspace = true
@@ -30,6 +43,7 @@ variadics_please.workspace = true
 
 # internal dependencies
 iota-crypto = { workspace = true, features = ["ed25519", "secp256r1", "secp256k1"] }
+iota-move-types = { workspace = true, features = ["u256"] }
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]

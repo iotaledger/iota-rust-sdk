@@ -13,7 +13,7 @@ fun main() = runBlocking {
 
         val privateKey = Ed25519PrivateKey(ByteArray(32))
         val senderAddress = privateKey.publicKey().deriveAddress()
-        println("Sender address: ${senderAddress.toHex()}")
+        println("Sender address: ${senderAddress}")
 
         // Request funds from faucet (the faucet client relies on GraphQL to
         // await finalization)
@@ -44,7 +44,7 @@ fun main() = runBlocking {
 
         val executed = client.executeTransaction(signedTransaction)
 
-        println("Digest: ${hexEncode(executed.digest!!.toBytes())}")
+        println("Digest: ${executed.digest!!}")
         println("Transaction status: ${executed.effects!!.asV1().status()}")
     } catch (e: Exception) {
         e.printStackTrace()

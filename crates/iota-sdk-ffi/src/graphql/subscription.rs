@@ -5,9 +5,7 @@
 //!
 //! The Rust API exposes these as a `Stream`, which has no uniffi equivalent, so
 //! each subscription is a handle object that is pulled one item at a time with
-//! `next`. The handle owns a clone of the client, so later calls to
-//! [`GraphQLClient::set_rpc_server`] do not affect a subscription already
-//! opened.
+//! `next`.
 
 use std::sync::Arc;
 
@@ -16,64 +14,71 @@ use futures::stream::BoxStream;
 #[cfg(target_arch = "wasm32")]
 use futures::stream::LocalBoxStream;
 use futures::{Stream, StreamExt};
-use iota_sdk::graphql_client::error::GraphQLResult;
+use iota_sdk::graphql_client::{
+    EventsSubscriptionBuilder, TransactionsSubscriptionBuilder, error::GraphQLResult,
+};
 
 use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        query_types::{GraphQLEvent, TransactionBlockKindInput},
+        query_types::{GraphQLEvent, GraphQLTransactionBlockKindInput},
     },
+    helpers::SetIfSome,
     stream::StreamHandle,
-    types::{address::Address, transaction::SignedTransaction},
+    types::{address::Address, digest::TransactionDigest, transaction::SignedTransaction},
 };
 
-/// Filter incoming events in a subscription. Exactly one field must be set.
-#[derive(Default, uniffi::Record)]
-pub struct SubscriptionEventFilter {
+/// Filter incoming events in a subscription.
+#[derive(uniffi::Enum)]
+pub enum GraphQLSubscriptionEventFilter {
     /// Filter incoming events by emitting module, e.g. `"0x02"` (package) or
     /// `"0x02::coin"` (module).
-    #[uniffi(default = None)]
-    pub emitting_module: Option<String>,
+    EmittingModule { emitting_module: String },
 }
 
-impl From<SubscriptionEventFilter>
+impl From<GraphQLSubscriptionEventFilter>
     for iota_sdk::graphql_client::query_types::SubscriptionEventFilter
 {
-    fn from(value: SubscriptionEventFilter) -> Self {
-        Self::default().with_emitting_module(value.emitting_module)
+    fn from(value: GraphQLSubscriptionEventFilter) -> Self {
+        match value {
+            GraphQLSubscriptionEventFilter::EmittingModule { emitting_module } => {
+                Self::EmittingModule(emitting_module)
+            }
+        }
     }
 }
 
-/// Filter incoming transactions in a subscription. Exactly one field must be
-/// set.
-#[derive(Default, uniffi::Record)]
-pub struct SubscriptionTransactionFilter {
+/// Filter incoming transactions in a subscription.
+#[derive(uniffi::Enum)]
+pub enum GraphQLSubscriptionTransactionFilter {
     /// Filter incoming transactions by kind.
-    #[uniffi(default = None)]
-    pub kind: Option<TransactionBlockKindInput>,
+    Kind {
+        kind: GraphQLTransactionBlockKindInput,
+    },
     /// Filter incoming transactions by sender address.
     ///
     /// Only the sender is compared, despite the name — a sponsored transaction
     /// is not matched by its sponsor's (gas owner's) address, even though the
     /// sponsor also signed it.
-    #[uniffi(default = None)]
-    pub signing_address: Option<Arc<Address>>,
+    SigningAddress { signing_address: Arc<Address> },
     /// Filter incoming transactions by package, module, or function name, e.g.
     /// `"0x03"`, `"0x03::iota_system"`, or
     /// `"0x03::iota_system::request_add_stake"`.
-    #[uniffi(default = None)]
-    pub function: Option<String>,
+    Function { function: String },
 }
 
-impl From<SubscriptionTransactionFilter>
+impl From<GraphQLSubscriptionTransactionFilter>
     for iota_sdk::graphql_client::query_types::SubscriptionTransactionFilter
 {
-    fn from(value: SubscriptionTransactionFilter) -> Self {
-        Self::default()
-            .with_kind(value.kind.map(Into::into))
-            .with_signing_address(value.signing_address.map(|a| a.0))
-            .with_function(value.function)
+    fn from(value: GraphQLSubscriptionTransactionFilter) -> Self {
+        match value {
+            GraphQLSubscriptionTransactionFilter::Kind { kind } => Self::Kind(kind.into()),
+            GraphQLSubscriptionTransactionFilter::SigningAddress { signing_address } => {
+                Self::SigningAddress(signing_address.0)
+            }
+            GraphQLSubscriptionTransactionFilter::Function { function } => Self::Function(function),
+        }
     }
 }
 
@@ -185,8 +190,8 @@ macro_rules! define_subscription {
 }
 
 define_subscription!(
-    EventSubscription,
-    EventUpdate,
+    GraphQLEventSubscription,
+    GraphQLEventUpdate,
     Event,
     event,
     iota_sdk::graphql_client::query_types::Event,
@@ -194,8 +199,8 @@ define_subscription!(
     GraphQLEvent::try_from
 );
 define_subscription!(
-    TransactionSubscription,
-    TransactionUpdate,
+    GraphQLTransactionSubscription,
+    GraphQLTransactionUpdate,
     Transaction,
     transaction,
     iota_sdk::types::SignedTransaction,
@@ -220,33 +225,40 @@ fn is_recoverable(error: &iota_sdk::graphql_client::error::GraphQLError) -> bool
 /// Open the event stream a subscription handle reads from.
 fn open_events(
     client: iota_sdk::graphql_client::GraphQLClient,
-    filter: Option<SubscriptionEventFilter>,
-    start_after: Option<String>,
+    filter: Option<GraphQLSubscriptionEventFilter>,
+    start_after: Option<Arc<TransactionDigest>>,
 ) -> SubscriptionStream<iota_sdk::graphql_client::query_types::Event> {
-    let filter = filter.map(Into::into);
-    box_stream(async_stream::stream! {
-        let client = client;
-        let mut stream = std::pin::pin!(client.events_stream(filter, start_after));
-        while let Some(item) = stream.next().await {
-            yield item;
-        }
-    })
+    box_stream(
+        client
+            .events_subscription()
+            .set_if_some(filter.map(Into::into), EventsSubscriptionBuilder::filter)
+            .set_if_some(
+                start_after.map(|d| **d),
+                EventsSubscriptionBuilder::start_after,
+            )
+            .subscribe(),
+    )
 }
 
 /// Open the transaction stream a subscription handle reads from.
 fn open_transactions(
     client: iota_sdk::graphql_client::GraphQLClient,
-    filter: Option<SubscriptionTransactionFilter>,
-    start_after: Option<String>,
+    filter: Option<GraphQLSubscriptionTransactionFilter>,
+    start_after: Option<Arc<TransactionDigest>>,
 ) -> SubscriptionStream<iota_sdk::types::SignedTransaction> {
-    let filter = filter.map(Into::into);
-    box_stream(async_stream::stream! {
-        let client = client;
-        let mut stream = std::pin::pin!(client.transactions_stream(filter, start_after));
-        while let Some(item) = stream.next().await {
-            yield item;
-        }
-    })
+    box_stream(
+        client
+            .transactions_subscription()
+            .set_if_some(
+                filter.map(Into::into),
+                TransactionsSubscriptionBuilder::filter,
+            )
+            .set_if_some(
+                start_after.map(|d| **d),
+                TransactionsSubscriptionBuilder::start_after,
+            )
+            .subscribe(),
+    )
 }
 
 #[uniffi::export]
@@ -263,11 +275,11 @@ impl GraphQLClient {
     #[uniffi::method(default(filter = None, start_after = None))]
     pub fn events_subscription(
         &self,
-        filter: Option<SubscriptionEventFilter>,
-        start_after: Option<String>,
-    ) -> EventSubscription {
+        filter: Option<GraphQLSubscriptionEventFilter>,
+        start_after: Option<Arc<TransactionDigest>>,
+    ) -> GraphQLEventSubscription {
         let client = (*self.client()).clone();
-        EventSubscription::new(open_events(client, filter, start_after))
+        GraphQLEventSubscription::new(open_events(client, filter, start_after))
     }
 
     /// Subscribe to a live stream of transactions matching the (optional)
@@ -283,10 +295,10 @@ impl GraphQLClient {
     #[uniffi::method(default(filter = None, start_after = None))]
     pub fn transactions_subscription(
         &self,
-        filter: Option<SubscriptionTransactionFilter>,
-        start_after: Option<String>,
-    ) -> TransactionSubscription {
+        filter: Option<GraphQLSubscriptionTransactionFilter>,
+        start_after: Option<Arc<TransactionDigest>>,
+    ) -> GraphQLTransactionSubscription {
         let client = (*self.client()).clone();
-        TransactionSubscription::new(open_transactions(client, filter, start_after))
+        GraphQLTransactionSubscription::new(open_transactions(client, filter, start_after))
     }
 }

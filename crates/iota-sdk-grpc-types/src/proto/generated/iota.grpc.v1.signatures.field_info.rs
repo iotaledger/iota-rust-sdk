@@ -17,6 +17,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for UserSignature {}
     impl MessageFields for UserSignature {
         const FIELDS: &'static [&'static MessageField] = &[Self::BCS_FIELD];
     }
@@ -55,6 +56,7 @@ mod _field_impls {
             message_fields: Some(UserSignature::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for UserSignatures {}
     impl MessageFields for UserSignatures {
         const FIELDS: &'static [&'static MessageField] = &[Self::SIGNATURES_FIELD];
     }
@@ -93,6 +95,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ValidatorAggregatedSignature {}
     impl MessageFields for ValidatorAggregatedSignature {
         const FIELDS: &'static [&'static MessageField] = &[Self::BCS_FIELD];
     }

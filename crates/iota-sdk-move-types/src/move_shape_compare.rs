@@ -110,11 +110,6 @@ fn expected_entries() -> Vec<Entry> {
     // resolves `T` at macro-expansion time into `Shape::TypeParameter(0)`,
     // so the body of `move_shape()` never references the chosen type. `()`
     // keeps the instantiation noise-free.
-    //
-    // Note: some Rust mirrors have no production-bytecode counterpart and
-    // therefore cannot be cross-checked here — e.g. `ecdsa_k1::KeyPair` is
-    // `#[test_only]` on the Move side, so it doesn't appear in the compiled
-    // package and is intentionally omitted from this registry.
     use Package::*;
     vec![
         // -- 0x2 iota-framework -----------------------------------------------

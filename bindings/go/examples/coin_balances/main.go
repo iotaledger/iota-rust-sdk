@@ -11,7 +11,10 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	address, err := iota_sdk.AddressFromHex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 	if err != nil {
@@ -24,7 +27,7 @@ func main() {
 	}
 
 	for _, coin := range coins.Data {
-		fmt.Printf("Coin = %s, Coin Type = %s, Balance = %d\n", coin.Id().ToHex(), coin.CoinType().AsStructTag(), coin.Balance())
+		fmt.Printf("Coin = %s, Coin Type = %s, Balance = %d\n", coin.Id(), coin.CoinType().AsStructTag(), coin.Balance())
 	}
 
 	balance, err := client.Balance(address, nil)

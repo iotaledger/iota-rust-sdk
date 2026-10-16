@@ -39,16 +39,22 @@ impl UpgradePolicy {
 }
 
 impl TryFrom<u8> for UpgradePolicy {
-    type Error = ();
+    type Error = UpgradePolicyError;
     fn try_from(value: u8) -> Result<Self, Self::Error> {
         match value {
             x if x == Self::Compatible as u8 => Ok(Self::Compatible),
             x if x == Self::Additive as u8 => Ok(Self::Additive),
             x if x == Self::DepOnly as u8 => Ok(Self::DepOnly),
-            _ => Err(()),
+            _ => Err(UpgradePolicyError(value)),
         }
     }
 }
+
+/// Error returned when a byte does not correspond to a known
+/// [`UpgradePolicy`].
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, thiserror::Error)]
+#[error("invalid upgrade policy: {0}")]
+pub struct UpgradePolicyError(u8);
 
 /// Type corresponding to the output of `iota move build
 /// --dump-bytecode-as-base64`

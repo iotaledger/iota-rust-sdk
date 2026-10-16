@@ -5,19 +5,21 @@
 
 use std::sync::Arc;
 
-use iota_sdk::grpc_client::read_mask_fields::OwnedObjectReadMask;
+use iota_sdk::grpc_client::{ListOwnedObjectsQuery, read_mask_fields::OwnedObjectReadMask};
 
 use crate::{
     error::Result,
     grpc::{
-        api::ledger::objects::GrpcObject, client::GrpcClient, read_mask_fields::OwnedObjectField,
+        api::ledger::objects::GrpcObject, client::GrpcClient,
+        read_mask_fields::GrpcOwnedObjectField,
     },
+    helpers::SetIfSome,
     types::{address::Address, move_core::StructTag},
 };
 
 /// A page of objects returned by the gRPC server.
 #[derive(uniffi::Record)]
-pub struct OwnedObjectPage {
+pub struct GrpcOwnedObjectPage {
     /// The objects returned in the page.
     pub objects: Vec<GrpcObject>,
     /// Token to retrieve the next page. `None` when this is the last page.
@@ -46,17 +48,25 @@ impl GrpcClient {
         object_type: Option<Arc<StructTag>>,
         page_size: Option<u32>,
         page_token: Option<Vec<u8>>,
-        read_mask: Option<Vec<OwnedObjectField>>,
-    ) -> Result<OwnedObjectPage> {
-        let query = self.client().owned_objects(
-            **owner,
-            object_type.map(|object_type| object_type.0.clone()),
-            page_size,
-            page_token.map(Into::into),
-            crate::grpc::api::read_mask::<OwnedObjectReadMask, _>(read_mask),
-        );
+        read_mask: Option<Vec<GrpcOwnedObjectField>>,
+    ) -> Result<GrpcOwnedObjectPage> {
+        let query = self
+            .client()
+            .owned_objects(**owner)
+            .set_if_some(
+                object_type.map(|object_type| object_type.0.clone()),
+                ListOwnedObjectsQuery::object_type,
+            )
+            .set_if_some(page_size, ListOwnedObjectsQuery::page_size)
+            .set_if_some(
+                page_token.map(Into::into),
+                ListOwnedObjectsQuery::page_token,
+            )
+            .read_mask(crate::grpc::api::read_mask::<OwnedObjectReadMask, _>(
+                read_mask,
+            ));
         let page = query.await?.into_inner();
-        Ok(OwnedObjectPage {
+        Ok(GrpcOwnedObjectPage {
             objects: page
                 .items
                 .iter()
@@ -79,15 +89,18 @@ impl GrpcClient {
         owner: &Address,
         object_type: Option<Arc<StructTag>>,
         limit: Option<u32>,
-        read_mask: Option<Vec<OwnedObjectField>>,
+        read_mask: Option<Vec<GrpcOwnedObjectField>>,
     ) -> Result<Vec<GrpcObject>> {
-        let query = self.client().owned_objects(
-            **owner,
-            object_type.map(|object_type| object_type.0.clone()),
-            None,
-            None,
-            crate::grpc::api::read_mask::<OwnedObjectReadMask, _>(read_mask),
-        );
+        let query = self
+            .client()
+            .owned_objects(**owner)
+            .set_if_some(
+                object_type.map(|object_type| object_type.0.clone()),
+                ListOwnedObjectsQuery::object_type,
+            )
+            .read_mask(crate::grpc::api::read_mask::<OwnedObjectReadMask, _>(
+                read_mask,
+            ));
         query
             .collect(limit)
             .await?

@@ -15,7 +15,7 @@ async def main():
         print("Faucet receipt:")
         for coin in faucet_receipt.sent:
             print(
-                f"  Coin ID: {coin.id.to_hex()}, Amount: {coin.amount}, Digest: {coin.transfer_tx_digest.to_base58()}"
+                f"  Coin ID: {coin.id}, Amount: {coin.amount}, Digest: {coin.transfer_tx_digest}"
             )
     else:
         print("Faucet receipt: None")

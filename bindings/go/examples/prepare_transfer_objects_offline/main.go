@@ -18,7 +18,10 @@ func addrFromHex(hex string) *iota_sdk.Address {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewLocalnet()
+	client, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	privateKey := iota_sdk.Ed25519PrivateKeyRandom()
 	fromAddress := privateKey.PublicKey().DeriveAddress()
@@ -30,7 +33,7 @@ func main() {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
-	objectFilter := iota_sdk.ObjectFilter{Owner: &fromAddress}
+	objectFilter := iota_sdk.GraphQlObjectFilter{Owner: &fromAddress}
 	coinsPage, err := client.Objects(&objectFilter, nil)
 	if err != nil {
 		log.Fatalf("Failed to get owned objects: %v", err)

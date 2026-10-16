@@ -30,7 +30,9 @@ func main() {
 	}
 	fmt.Printf("First page: %d objects\n", len(page.Objects))
 	for _, obj := range page.Objects {
-		fmt.Println(" ", (*obj.ObjectId).ToHex())
+		if obj.ObjectId != nil {
+			fmt.Println(" ", *obj.ObjectId)
+		}
 	}
 	if page.NextPageToken != nil {
 		fmt.Println("  ...more pages available")
@@ -46,6 +48,8 @@ func main() {
 	fmt.Println("---")
 	fmt.Printf("Up to 50 IOTA coin objects (%d returned):\n", len(coins))
 	for _, obj := range coins {
-		fmt.Println(" ", (*obj.ObjectId).ToHex())
+		if obj.ObjectId != nil {
+			fmt.Println(" ", *obj.ObjectId)
+		}
 	}
 }

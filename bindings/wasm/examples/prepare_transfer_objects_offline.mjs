@@ -6,7 +6,7 @@ import {
   Ed25519PrivateKey,
   FaucetClient,
   GraphQlClient,
-  ObjectFilter,
+  GraphQlObjectFilter,
   PtbArgument,
   TransactionBuilder,
   initAsync,
@@ -25,8 +25,9 @@ const toAddress = Address.fromHex(
 const faucet = FaucetClient.newLocalnet();
 await faucet.requestAndWaitForFinalized(fromAddress, client);
 
-const coins = (await client.objects(ObjectFilter.new({ owner: fromAddress })))
-  .data;
+const coins = (
+  await client.objects(GraphQlObjectFilter.new({ owner: fromAddress }))
+).data;
 if (coins.length === 0) {
   throw new Error("No coins found");
 }

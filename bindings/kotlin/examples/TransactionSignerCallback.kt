@@ -19,7 +19,7 @@ fun main() = runBlocking {
         val privateKey = Ed25519PrivateKey(ByteArray(32))
         val publicKey = privateKey.publicKey()
         val senderAddress = publicKey.deriveAddress()
-        println("Sender address: ${senderAddress.toHex()}")
+        println("Sender address: ${senderAddress}")
 
         val client = GraphQlClient.newLocalnet()
 

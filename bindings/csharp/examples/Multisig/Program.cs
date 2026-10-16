@@ -42,7 +42,7 @@ class Program
 
         // 4. Derive multisig address
         var multisigAddress = committee.DeriveAddress();
-        Console.WriteLine($"Multisig address: {multisigAddress.ToHex()}");
+        Console.WriteLine($"Multisig address: {multisigAddress}");
 
         var client = GraphQlClient.NewLocalnet();
 

@@ -538,7 +538,6 @@ crate::impl_tree_display!(
 );
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 

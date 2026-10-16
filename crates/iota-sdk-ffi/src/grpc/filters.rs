@@ -7,10 +7,6 @@
 //! `CommandFilter` oneofs. Each filter is built through variant constructors;
 //! logical filters (`all`, `any`, `negation`) compose other filters, so complex
 //! predicates can be expressed as a tree.
-//!
-//! The types carry a `Grpc` prefix because `EventFilter` and `TransactionKind`
-//! already exist in the flat FFI type namespace; the rest of the family
-//! follows for consistency.
 
 use std::sync::Arc;
 

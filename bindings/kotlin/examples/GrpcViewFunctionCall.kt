@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import iota_sdk.GrpcClient
+import iota_sdk.GrpcViewFunctionCallInput
+import iota_sdk.GrpcViewFunctionCallOutputs
 import iota_sdk.MoveViewArg
 import iota_sdk.ObjectId
-import iota_sdk.ViewFunctionCallInput
-import iota_sdk.ViewFunctionCallOutputs
 import kotlinx.coroutines.runBlocking
 
 // The `view_demo` package published on testnet.
@@ -15,7 +15,7 @@ const val GRPC_VIEW_DEMO_PACKAGE =
 // A shared `view_demo::shop::Shop` created when the package was published.
 const val GRPC_VIEW_DEMO_SHOP = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20"
 
-fun describeViewOutputs(outputs: ViewFunctionCallOutputs): String {
+fun describeViewOutputs(outputs: GrpcViewFunctionCallOutputs): String {
     val returnValues = outputs.returnValues
     if (returnValues != null) {
         return "returned ${returnValues.map { it.json }}"
@@ -43,15 +43,15 @@ fun main() = runBlocking {
         val results =
             client.viewFunctionCalls(
                 listOf(
-                    ViewFunctionCallInput(
+                    GrpcViewFunctionCallInput(
                         "$GRPC_VIEW_DEMO_PACKAGE::shop::discounted_price",
                         callArgs = listOf(MoveViewArg.u64(100uL), MoveViewArg.u64(25uL)),
                     ),
-                    ViewFunctionCallInput(
+                    GrpcViewFunctionCallInput(
                         "$GRPC_VIEW_DEMO_PACKAGE::shop::discounted_price",
                         callArgs = listOf(MoveViewArg.u64(100uL), MoveViewArg.u64(200uL)),
                     ),
-                    ViewFunctionCallInput(
+                    GrpcViewFunctionCallInput(
                         "$GRPC_VIEW_DEMO_PACKAGE::shop::record_sale",
                         callArgs = listOf(MoveViewArg.objectId(shop), MoveViewArg.u64(5uL)),
                     ),

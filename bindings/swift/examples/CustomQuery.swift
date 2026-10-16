@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct CustomQueryExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = try GraphQlClient.newTestnet()
 
     let queryEpochDataStr = """
       query MyQuery($id: UInt53) {
@@ -19,12 +19,13 @@ struct CustomQueryExample {
           }
       }
       """
-    let queryEpochData = Query(queryString: queryEpochDataStr)
+    let queryEpochData = GraphQlQuery(query: queryEpochDataStr)
     let res = try await client.runQuery(query: queryEpochData)
     print(res)
 
     let variables = "{\"id\": 1}"
-    let queryEpochDataWithVariables = Query(queryString: queryEpochDataStr, variables: variables)
+    let queryEpochDataWithVariables = GraphQlQuery(
+      query: queryEpochDataStr, variables: variables)
     let res2 = try await client.runQuery(query: queryEpochDataWithVariables)
     print(res2)
 
@@ -33,7 +34,7 @@ struct CustomQueryExample {
           chainIdentifier
       }
       """
-    let queryChainId = Query(queryString: queryChainIdStr)
+    let queryChainId = GraphQlQuery(query: queryChainIdStr)
     let res3 = try await client.runQuery(query: queryChainId)
     print(res3)
   }

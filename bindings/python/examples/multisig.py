@@ -44,7 +44,7 @@ async def main():
 
     # 4. Derive multisig address
     multisig_address = committee.derive_address()
-    print(f"Multisig address: {multisig_address.to_hex()}")
+    print(f"Multisig address: {multisig_address}")
 
     client = GraphQlClient.new_localnet()
 

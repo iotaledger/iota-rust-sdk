@@ -19,7 +19,10 @@ func identifier(ident string) *iota_sdk.Identifier {
 }
 
 func main() {
-	client := iota_sdk.GraphQlClientNewLocalnet()
+	client, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 	gasStationUrl := "http://0.0.0.0:9527"
 	gasStationAuthToken := "test"
 	keypair := iota_sdk.Ed25519PrivateKeyRandom()

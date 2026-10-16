@@ -9,14 +9,14 @@ use crate::query_types::{BigInt, DateTime, ObjectId, ProtocolConfigs, schema};
 // ===========================================================================
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "EpochArgs")]
-pub struct EpochQuery {
+pub(crate) struct EpochQueryFragment {
     #[arguments(id: $id)]
     pub epoch: Option<Epoch>,
 }
 
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Query", variables = "EpochArgs")]
-pub struct EpochSummaryQuery {
+pub(crate) struct EpochSummaryQueryFragment {
     #[arguments(id: $id)]
     pub epoch: Option<EpochSummary>,
 }
@@ -26,16 +26,14 @@ pub struct EpochSummaryQuery {
 // ===========================================================================
 
 #[derive(cynic::QueryVariables, Debug)]
-pub struct EpochArgs {
+pub(crate) struct EpochArgs {
     pub id: Option<u64>,
 }
 
 /// A summary of the epoch.
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Epoch")]
-pub struct EpochSummary {
-    /// The epoch number.
-    pub epoch_id: u64,
+pub(crate) struct EpochSummary {
     /// The reference gas price throughout this epoch.
     pub reference_gas_price: Option<BigInt>,
     /// The total number of checkpoints in this epoch.

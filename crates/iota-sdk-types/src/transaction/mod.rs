@@ -15,10 +15,8 @@ mod randomness_round;
 pub use randomness_round::RandomnessRound;
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization;
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use serialization::SignedTransactionWithIntentMessage;
 
 /// Transaction
@@ -1430,7 +1428,6 @@ impl Input {
 
     /// Create a `Pure` input from a BCS-serializable value.
     #[cfg(feature = "serde")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
     pub fn pure<T: serde::Serialize>(value: &T) -> Self {
         Self::Pure(bcs::to_bytes(value).expect("value should be serializable"))
     }
@@ -1995,9 +1992,8 @@ impl crate::TreeDisplay for MoveCall {
 ///
 /// # BCS
 ///
-/// ```text
-/// claim-account-transaction = account-claim-kind
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -2020,9 +2016,8 @@ impl ClaimAccountTransaction {
 ///
 /// # BCS
 ///
-/// ```text
-/// account-claim-kind = %d00 smart-account-claim ; SmartAccount
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -2049,10 +2044,8 @@ impl AccountClaimKind {
 ///
 /// # BCS
 ///
-/// ```text
-/// smart-account-claim = u8      ; public-key-scheme
-///                       bytes   ; public-key-raw-bytes
-/// ```
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]

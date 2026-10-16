@@ -28,7 +28,7 @@ fun main() = runBlocking {
         // Unstake
         val stakedIotas =
             client.objects(
-                ObjectFilter(typeTag = StructTag.newStakedIota().toString(), owner = owner)
+                GraphQlObjectFilter(typeTag = StructTag.newStakedIota().toString(), owner = owner)
             )
         if (stakedIotas.data.isEmpty()) {
             throw Exception("no staked iotas found")

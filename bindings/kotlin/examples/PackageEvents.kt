@@ -1,10 +1,10 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import iota_sdk.Direction
-import iota_sdk.EventFilter
 import iota_sdk.GraphQlClient
-import iota_sdk.PaginationFilter
+import iota_sdk.GraphQlDirection
+import iota_sdk.GraphQlEventFilter
+import iota_sdk.GraphQlPaginationFilter
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -14,11 +14,12 @@ fun main() = runBlocking {
         val events =
             client.events(
                 filter =
-                    EventFilter(
+                    GraphQlEventFilter(
                         eventType =
                             "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"
                     ),
-                paginationFilter = PaginationFilter(direction = Direction.FORWARD, limit = 10),
+                paginationFilter =
+                    GraphQlPaginationFilter(direction = GraphQlDirection.FORWARD, limit = 10),
             )
 
         for (event in events.data) {

@@ -58,7 +58,7 @@ use std::path::PathBuf;
 
 use iota_sdk::{
     graphql_client::GraphQLClient,
-    types::{Address, ObjectId, TypeTag},
+    types::{Address, ObjectId, TransactionDigest, TypeTag},
 };
 
 /// What to capture and where to put it.
@@ -524,9 +524,9 @@ const FIXTURES: &[Fixture] = &[
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
     let network = std::env::var("IOTA_NETWORK").unwrap_or_else(|_| "mainnet".to_string());
     let client = match network.as_str() {
-        "testnet" => GraphQLClient::new_testnet(),
-        "devnet" => GraphQLClient::new_devnet(),
-        "mainnet" => GraphQLClient::new_mainnet(),
+        "testnet" => GraphQLClient::new_testnet()?,
+        "devnet" => GraphQLClient::new_devnet()?,
+        "mainnet" => GraphQLClient::new_mainnet()?,
         other => {
             return Err(format!(
                 "unknown IOTA_NETWORK={other}; expected one of: testnet, devnet, mainnet"
@@ -604,12 +604,7 @@ async fn capture(
         Source::TypeFilter(type_str) => {
             let filter = iota_sdk::graphql_client::query_types::ObjectFilter::default()
                 .with_type((*type_str).to_string());
-            let page = client
-                .objects(
-                    filter,
-                    iota_sdk::graphql_client::PaginationFilter::default(),
-                )
-                .await?;
+            let page = client.objects().filter(filter).await?;
             let object = page
                 .data()
                 .first()
@@ -625,7 +620,7 @@ async fn capture(
         Source::ObjectId(id_str) => {
             let id: ObjectId = id_str.parse()?;
             let object = client
-                .object(id, None)
+                .object(id)
                 .await?
                 .ok_or_else(|| format!("object `{id_str}` not found on this network"))?;
             let move_struct = object
@@ -640,13 +635,8 @@ async fn capture(
             use base64ct::Encoding as _;
             let filter = iota_sdk::graphql_client::query_types::EventFilter::default()
                 .with_event_type((*event_type).to_string())
-                .with_transaction_digest((*tx_digest).to_string());
-            let page = client
-                .events(
-                    filter,
-                    iota_sdk::graphql_client::PaginationFilter::default(),
-                )
-                .await?;
+                .with_transaction_digest(TransactionDigest::from_base58(tx_digest)?);
+            let page = client.events().filter(filter).await?;
             let event = page
                 .data()
                 .first()
@@ -676,12 +666,7 @@ async fn capture(
         Source::DynamicFieldName { parent, name_type } => {
             let parent_addr: Address = parent.parse::<ObjectId>()?.into();
             let want: TypeTag = name_type.parse()?;
-            let page = client
-                .dynamic_fields(
-                    parent_addr,
-                    iota_sdk::graphql_client::PaginationFilter::default(),
-                )
-                .await?;
+            let page = client.dynamic_fields(parent_addr).await?;
             let df = page
                 .data()
                 .iter()

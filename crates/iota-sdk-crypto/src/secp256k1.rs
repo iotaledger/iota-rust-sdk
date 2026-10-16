@@ -13,9 +13,8 @@ use iota_types::{
     PersonalMessage, Secp256k1PublicKey, Secp256k1Signature, SignatureScheme, SimpleSignature,
     Transaction, UserSignature,
 };
-use signature::{Signer, Verifier};
 
-use crate::{IotaVerifier, SignatureError};
+use crate::{IotaVerifier, SignatureError, Signer, Verifier};
 
 #[derive(Clone, Eq, PartialEq, zeroize::Zeroize, zeroize::ZeroizeOnDrop)]
 pub struct Secp256k1PrivateKey([u8; Self::LENGTH]);
@@ -76,6 +75,8 @@ impl Secp256k1PrivateKey {
         )
     }
 
+    #[cfg(feature = "rand")]
+    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
         R: rand_core::CryptoRng,
@@ -95,7 +96,6 @@ impl Secp256k1PrivateKey {
     /// Generate a new private key using the operating system's random number
     /// generator.
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
@@ -103,7 +103,6 @@ impl Secp256k1PrivateKey {
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
     /// format).
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
         k256::pkcs8::DecodePrivateKey::from_pkcs8_der(bytes)
             .map(Self::from_k256)
@@ -112,7 +111,6 @@ impl Secp256k1PrivateKey {
 
     /// Serialize this private key as DER-encoded PKCS#8
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use k256::pkcs8::EncodePrivateKey;
 
@@ -124,7 +122,6 @@ impl Secp256k1PrivateKey {
 
     /// Deserialize PKCS#8-encoded private key from PEM.
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
         k256::pkcs8::DecodePrivateKey::from_pkcs8_pem(s)
             .map(Self::from_k256)
@@ -133,7 +130,6 @@ impl Secp256k1PrivateKey {
 
     /// Serialize this private key as PEM-encoded PKCS#8
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePrivateKey;
 
@@ -170,14 +166,12 @@ impl crate::ToFromBytes for Secp256k1PrivateKey {
     fn from_bytes(bytes: impl AsRef<[u8]>) -> Result<Self, Self::Error> {
         let bytes = bytes.as_ref();
         if bytes.len() != Self::LENGTH {
-            return Err(crate::PrivateKeyError::InvalidScheme(
-                "invalid secp256k1 key length".to_string(),
-            ));
+            return Err(SignatureError::from_source("invalid secp256k1 key length").into());
         }
 
         let mut arr = [0u8; Self::LENGTH];
         arr.copy_from_slice(bytes);
-        Self::new(arr).map_err(|e| crate::PrivateKeyError::InvalidScheme(e.to_string()))
+        Ok(Self::new(arr)?)
     }
 }
 
@@ -218,10 +212,12 @@ impl crate::FromMnemonic for Secp256k1PrivateKey {
 
         use crate::ToFromBytes;
 
-        let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)?;
+        let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)
+            .map_err(|e| crate::PrivateKeyError::Bip39(e.to_string()))?;
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
-        let child_xprv =
-            bip32::XPrv::derive_from_path(seed, &bip32::DerivationPath::from_str(&path)?)?;
+        let child_xprv = bip32::DerivationPath::from_str(&path)
+            .and_then(|path| bip32::XPrv::derive_from_path(seed, &path))
+            .map_err(|e| crate::PrivateKeyError::Bip32(e.to_string()))?;
         Self::from_bytes(child_xprv.private_key().to_bytes())
     }
 }
@@ -276,7 +272,6 @@ impl Secp256k1VerifyingKey {
 
     /// Deserialize public key from ASN.1 DER-encoded data (binary format).
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
         k256::pkcs8::DecodePublicKey::from_public_key_der(bytes)
             .map(Self::from_k256)
@@ -285,7 +280,6 @@ impl Secp256k1VerifyingKey {
 
     /// Serialize this public key as DER-encoded data
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn to_der(&self) -> Result<Vec<u8>, SignatureError> {
         use pkcs8::EncodePublicKey;
 
@@ -297,7 +291,6 @@ impl Secp256k1VerifyingKey {
 
     /// Deserialize public key from PEM.
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn from_pem(s: &str) -> Result<Self, SignatureError> {
         k256::pkcs8::DecodePublicKey::from_public_key_pem(s)
             .map(Self::from_k256)
@@ -306,7 +299,6 @@ impl Secp256k1VerifyingKey {
 
     /// Serialize this public key into PEM
     #[cfg(feature = "pem")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "pem")))]
     pub fn to_pem(&self) -> Result<String, SignatureError> {
         use pkcs8::EncodePublicKey;
 

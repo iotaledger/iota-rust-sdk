@@ -5,7 +5,7 @@ import {
   Ed25519PrivateKey,
   FaucetClient,
   GraphQlClient,
-  ObjectFilter,
+  GraphQlObjectFilter,
   PtbArgument,
   StructTag,
   WaitForTransaction,
@@ -39,7 +39,10 @@ await client.executeTransaction(
 
 // Unstake
 const stakedIotas = await client.objects(
-  ObjectFilter.new({ typeTag: String(StructTag.newStakedIota()), owner }),
+  GraphQlObjectFilter.new({
+    typeTag: String(StructTag.newStakedIota()),
+    owner,
+  }),
 );
 if (stakedIotas.data.length === 0) {
   throw new Error("no staked iotas found");

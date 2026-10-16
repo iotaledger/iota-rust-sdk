@@ -197,18 +197,6 @@ impl From<SignedTransaction> for iota_sdk::types::SignedTransaction {
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
-/// The BCS serialized form for this type is defined by the following ABNF:
-///
-/// ```text
-/// transaction-kind    =  %d00 programmable-transaction               ; Programmable
-///                     =/ %d01 genesis-transaction                    ; Genesis
-///                     =/ %d02 consensus-commit-prologue-v1           ; ConsensusCommitPrologueV1
-///                     =/ %d03                                        ; AuthenticatorStateUpdateV1Deprecated
-///                     =/ %d04 (vector end-of-epoch-transaction-kind) ; EndOfEpoch
-///                     =/ %d05 randomness-state-update                ; RandomnessStateUpdate
-///                     =/ %d06 transaction-deny-rules-update          ; TransactionDenyRulesUpdate
-///                     =/ %d07 claim-account-transaction              ; ClaimAccount
-/// ```
 #[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
 pub struct TransactionKind(pub iota_sdk::types::TransactionKind);

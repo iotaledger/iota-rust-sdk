@@ -375,6 +375,17 @@ pub enum ExecutionError {
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         max_scaled_size: u64,
     },
+    /// The account object named by a Move authenticator has no authenticator
+    /// function: the object has no authenticator function field, or the field
+    /// cannot be read. Nothing can authenticate the transaction.
+    #[error("Account object {object_id} has no authenticator function")]
+    AuthenticatorFunctionNotFound { object_id: ObjectId },
+    /// The account object named by a Move authenticator is not a shared
+    /// object: it is immutable, or owned by an address or by another object.
+    /// An account must be shared so that a transaction carrying a Move
+    /// authenticator is ordered by consensus.
+    #[error("Account {object_id} is not a shared object")]
+    AccountNotSharedObject { object_id: ObjectId },
 }
 
 impl ExecutionError {
@@ -422,6 +433,8 @@ impl ExecutionError {
         ExecutionCanceledDueToExecutionWorkerCongestion,
         MoveVectorElemTooBig,
         MoveRawValueTooBig,
+        AuthenticatorFunctionNotFound,
+        AccountNotSharedObject,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
@@ -652,7 +665,6 @@ impl TypeArgumentError {
 }
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 

@@ -83,9 +83,9 @@ class Program
         if (packageMetadataId == null) throw new Exception("Missing package metadata id");
         if (accountId == null) throw new Exception("Missing account id");
 
-        Console.WriteLine($"Package ID: {packageId.ToHex()}");
-        Console.WriteLine($"PackageMetadataV1 ID: {packageMetadataId.ToHex()}");
-        Console.WriteLine($"Account ID: {accountId.ToHex()}\n");
+        Console.WriteLine($"Package ID: {packageId}");
+        Console.WriteLine($"PackageMetadataV1 ID: {packageMetadataId}");
+        Console.WriteLine($"Account ID: {accountId}\n");
 
         var builder2 = client.TransactionBuilder(sender);
         builder2.MoveCall(

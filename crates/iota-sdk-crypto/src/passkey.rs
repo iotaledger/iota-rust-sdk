@@ -6,9 +6,8 @@ use iota_types::{
     Address, PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, SimpleSignature, Transaction,
     UserSignature,
 };
-use signature::Verifier;
 
-use crate::{IotaVerifier, SignatureError, secp256r1::Secp256r1VerifyingKey};
+use crate::{IotaVerifier, SignatureError, Verifier, secp256r1::Secp256r1VerifyingKey};
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct PasskeyVerifier {

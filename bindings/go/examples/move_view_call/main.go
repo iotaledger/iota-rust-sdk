@@ -17,7 +17,10 @@ const packageId = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50bea4
 const shopId = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20"
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	// ===========================================================================
 	// Example 1: Using MoveViewCall() with typed arguments (primitives)
@@ -25,13 +28,20 @@ func main() {
 	fmt.Println("=== Example 1: MoveViewCall() with typed arguments (primitives) ===")
 	fmt.Println()
 
+	packageObjectId, err := iota_sdk.ObjectIdFromHex(packageId)
+	if err != nil {
+		log.Fatalf("Failed to parse package id: %v", err)
+	}
+
 	priceArgs := []*iota_sdk.MoveViewArg{
 		iota_sdk.MoveViewArgU64(100),
 		iota_sdk.MoveViewArgU64(25),
 	}
 
 	result, err := client.MoveViewCall(
-		packageId+"::shop::discounted_price",
+		packageObjectId,
+		"shop",
+		"discounted_price",
 		nil,
 		&priceArgs,
 	)
@@ -62,7 +72,9 @@ func main() {
 	}
 
 	result2, err := client.MoveViewCallJson(
-		packageId+"::shop::discounted_price",
+		packageObjectId,
+		"shop",
+		"discounted_price",
 		nil,
 		&jsonArgs,
 	)
@@ -96,7 +108,9 @@ func main() {
 	}
 
 	shopResult, err := client.MoveViewCall(
-		packageId+"::shop::sale_at",
+		packageObjectId,
+		"shop",
+		"sale_at",
 		nil,
 		&shopArgs,
 	)
@@ -125,7 +139,9 @@ func main() {
 	}
 
 	shopJsonResult, err := client.MoveViewCallJson(
-		packageId+"::shop::sale_at",
+		packageObjectId,
+		"shop",
+		"sale_at",
 		nil,
 		&shopJsonArgs,
 	)

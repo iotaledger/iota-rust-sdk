@@ -33,20 +33,20 @@ async def main():
     # declared `#[view]`. Each call runs on its own, so the rejected one does
     # not affect the others.
     results = await client.view_function_calls([
-        ViewFunctionCallInput(
+        GrpcViewFunctionCallInput(
             fq_function_name=f"{PACKAGE}::shop::discounted_price",
             call_args=[MoveViewArg.u64(100),
                        MoveViewArg.u64(25)]),
-        ViewFunctionCallInput(
+        GrpcViewFunctionCallInput(
             fq_function_name=f"{PACKAGE}::shop::discounted_price",
             call_args=[MoveViewArg.u64(100),
                        MoveViewArg.u64(200)]),
-        ViewFunctionCallInput(fq_function_name=f"{PACKAGE}::shop::record_sale",
-                              call_args=[
-                                  MoveViewArg.object_id(
-                                      ObjectId.from_hex(SHOP)),
-                                  MoveViewArg.u64(5)
-                              ]),
+        GrpcViewFunctionCallInput(
+            fq_function_name=f"{PACKAGE}::shop::record_sale",
+            call_args=[
+                MoveViewArg.object_id(ObjectId.from_hex(SHOP)),
+                MoveViewArg.u64(5)
+            ]),
     ])
 
     for name, result in zip(["priced", "over-discounted", "record_sale"],

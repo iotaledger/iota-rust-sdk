@@ -5,11 +5,15 @@
 
 use std::sync::Arc;
 
+use iota_sdk::graphql_client::GetIotaNamesDefaultNameQuery;
+
 use crate::{
     error::Result,
     graphql::{
-        client::GraphQLClient, pagination::NameRegistrationPage, query_types::PaginationFilter,
+        client::GraphQLClient, pagination::GraphQLNameRegistrationPage,
+        query_types::GraphQLPaginationFilter,
     },
+    helpers::SetIfSome,
     types::{
         address::Address,
         iota_names::{Name, NameFormat},
@@ -20,10 +24,10 @@ use crate::{
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
     /// Return the resolved address for the given name.
-    pub async fn iota_names_lookup(&self, name: &str) -> Result<Option<Arc<Address>>> {
+    pub async fn iota_names_lookup(&self, name: &Name) -> Result<Option<Arc<Address>>> {
         Ok(self
             .client()
-            .iota_names_lookup(name)
+            .iota_names_lookup(name.0.clone())
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -33,11 +37,12 @@ impl GraphQLClient {
     pub async fn iota_names_registrations(
         &self,
         address: &Address,
-        pagination_filter: PaginationFilter,
-    ) -> Result<NameRegistrationPage> {
+        pagination_filter: GraphQLPaginationFilter,
+    ) -> Result<GraphQLNameRegistrationPage> {
         Ok(self
             .client()
-            .iota_names_registrations(**address, pagination_filter.into())
+            .iota_names_registrations(**address)
+            .pagination(pagination_filter.into())
             .await?
             .map(Into::into)
             .into())
@@ -51,7 +56,8 @@ impl GraphQLClient {
     ) -> Result<Option<Arc<Name>>> {
         Ok(self
             .client()
-            .iota_names_default_name(**address, format.map(Into::into))
+            .iota_names_default_name(**address)
+            .set_if_some(format.map(Into::into), GetIotaNamesDefaultNameQuery::format)
             .await?
             .map(Into::into)
             .map(Arc::new))
