@@ -4,7 +4,7 @@
 //! High-level API for transaction simulation.
 
 use iota_grpc_types::{
-    read_mask_fields::{IntoReadMask, SimulateReadMask},
+    read_mask_fields::SimulateReadMask,
     v1::transaction_execution_service::{
         SimulateTransactionItem, SimulateTransactionsRequest, SimulatedTransaction,
         simulate_transaction_item::TransactionCheckModes,
@@ -60,9 +60,9 @@ define_query! {
     pub struct SimulateTransactionQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,
         input: SimulateTransactionInput,
-        read_mask: SimulateReadMask,
     }
     output: GrpcResult<MetadataEnvelope<SimulatedTransaction>>;
+    read_mask: SimulateReadMask;
 }
 
 impl SimulateTransactionQuery {
@@ -70,12 +70,6 @@ impl SimulateTransactionQuery {
     /// development.
     pub fn skip_checks(mut self, skip_checks: bool) -> Self {
         self.input = self.input.skip_checks(skip_checks);
-        self
-    }
-
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<SimulateReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
         self
     }
 
@@ -101,18 +95,12 @@ define_query! {
     pub struct SimulateTransactionsQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,
         transactions: Vec<SimulateTransactionInput>,
-        read_mask: SimulateReadMask,
     }
     output: GrpcResult<MetadataEnvelope<Vec<GrpcResult<SimulatedTransaction>>>>;
+    read_mask: SimulateReadMask;
 }
 
 impl SimulateTransactionsQuery {
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<SimulateReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
-        self
-    }
-
     fn into_request(
         self,
     ) -> GrpcResult<(

@@ -158,6 +158,10 @@ pub trait TransactionBuilderSimulationClient: TransactionBuilderClientBase {
 /// ([`execute`](crate::TransactionBuilder::execute)).
 pub trait TransactionBuilderExecutionClient: TransactionBuilderClientBase {
     /// Execute a transaction
+    ///
+    /// If the wait fails, the error is returned although the transaction was
+    /// executed, and its effects are lost. To keep them, pass `None` and call
+    /// [`wait_for_transaction`](Self::wait_for_transaction) afterwards.
     fn execute_transaction(
         &self,
         signatures: &[UserSignature],
