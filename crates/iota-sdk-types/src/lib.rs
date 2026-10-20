@@ -99,7 +99,7 @@ pub use transaction::{
 pub use validator::SignerBitmapError;
 pub use validator::{
     ValidatorAggregatedSignature, ValidatorCommittee, ValidatorCommitteeError,
-    ValidatorCommitteeMember, ValidatorSignature,
+    ValidatorCommitteeMember, ValidatorSignature, quorum_threshold,
 };
 pub use version::{Version, VersionError};
 

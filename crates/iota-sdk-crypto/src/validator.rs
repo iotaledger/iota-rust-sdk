@@ -46,10 +46,7 @@ impl ExtendedValidatorCommittee {
             public_key_to_index.insert(member.public_key, idx);
         }
 
-        // n - f for total stake n and tolerated faulty stake f = (n - 1) / 3,
-        // which is floor(2n / 3) + 1 without the overflow of computing 2n.
-        // `validate` has established that n is nonzero.
-        let quorum_threshold = total_weight - (total_weight - 1) / 3;
+        let quorum_threshold = iota_types::quorum_threshold(total_weight);
 
         Ok(Self {
             committee,
