@@ -46,7 +46,7 @@ impl ExtendedValidatorCommittee {
             public_key_to_index.insert(member.public_key, idx);
         }
 
-        let quorum_threshold = iota_types::quorum_threshold(total_weight);
+        let quorum_threshold = ValidatorCommittee::quorum_threshold(total_weight);
 
         Ok(Self {
             committee,
