@@ -46,8 +46,10 @@ impl ExtendedValidatorCommittee {
             public_key_to_index.insert(member.public_key, idx);
         }
 
-        // 2f+1 of the total stake, which `validate` has established is nonzero.
-        let quorum_threshold = ((total_weight - 1) / 3) * 2 + 1;
+        // n - f for total stake n and tolerated faulty stake f = (n - 1) / 3,
+        // which is floor(2n / 3) + 1 without the overflow of computing 2n.
+        // `validate` has established that n is nonzero.
+        let quorum_threshold = total_weight - (total_weight - 1) / 3;
 
         Ok(Self {
             committee,
@@ -684,6 +686,38 @@ mod tests {
 
         assert_eq!(verifier.committee.total_weight, 10_000);
         assert_eq!(verifier.committee.quorum_threshold, 6_667);
+    }
+
+    /// The threshold is `floor(2n / 3) + 1` whatever the total stake `n` is
+    /// mod 3, up to a total of `u64::MAX`.
+    #[proptest]
+    fn quorum_threshold_is_two_thirds_of_any_total_plus_one(key: Bls12381PrivateKey) {
+        for (stake, threshold) in [
+            (1, 1),
+            (2, 2),
+            (3, 3),
+            (4, 3),
+            (5, 4),
+            (6, 5),
+            (9_998, 6_666),
+            (9_999, 6_667),
+            (10_000, 6_667),
+            (u64::MAX, 12_297_829_382_473_034_411),
+        ] {
+            let verifier = ValidatorCommitteeSignatureVerifier::new(ValidatorCommittee {
+                epoch: 0,
+                members: vec![ValidatorCommitteeMember {
+                    public_key: key.public_key(),
+                    stake,
+                }],
+            })
+            .unwrap();
+
+            assert_eq!(
+                verifier.committee.quorum_threshold, threshold,
+                "total stake {stake}"
+            );
+        }
     }
 
     #[proptest]
