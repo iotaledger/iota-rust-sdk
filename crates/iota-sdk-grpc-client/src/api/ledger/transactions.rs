@@ -4,7 +4,7 @@
 //! High-level API for transaction queries.
 
 use iota_grpc_types::{
-    read_mask_fields::{IntoReadMask, TransactionReadMask},
+    read_mask_fields::TransactionReadMask,
     v1::{
         ledger_service::{
             GetTransactionsRequest, TransactionRequest, TransactionRequests,
@@ -29,18 +29,12 @@ define_query! {
         service_client: LedgerServiceClient<InterceptedChannel>,
         max_message_size: Option<usize>,
         digests: Vec<TransactionDigest>,
-        read_mask: TransactionReadMask,
     }
     output: GrpcResult<MetadataEnvelope<Vec<GrpcResult<ExecutedTransaction>>>>;
+    read_mask: TransactionReadMask;
 }
 
 impl GetTransactionsQuery {
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<TransactionReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
-        self
-    }
-
     fn request(&self) -> GetTransactionsRequest {
         let requests = TransactionRequests::default().with_requests(
             self.digests
