@@ -66,7 +66,7 @@ uniffi = { version = "0.31", features = ["cli", "tokio", "wasm-unstable-single-t
 iota-sdk = { version = "3.0.0-rc.1", path = "../iota-sdk", default-features = false, features = ["gas-station", "graphql", "graphql-tls-native-roots", "graphql-tls-ring", "graphql-tls-webpki-roots", "transaction-builder", "types", "move-types", "serde", "rand", "hash"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-rustls = { version = "0.23", default-features = false, features = ["ring"] }
+rustls = { version = "0.23.46", default-features = false, features = ["ring"] }
 webpki = { package = "rustls-webpki", version = "0.103", default-features = false }
 webpki-root-certs.workspace = true
 
