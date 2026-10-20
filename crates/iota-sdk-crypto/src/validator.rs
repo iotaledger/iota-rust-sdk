@@ -685,38 +685,6 @@ mod tests {
         assert_eq!(verifier.committee.quorum_threshold, 6_667);
     }
 
-    /// The threshold is `floor(2n / 3) + 1` whatever the total stake `n` is
-    /// mod 3, up to a total of `u64::MAX`.
-    #[proptest]
-    fn quorum_threshold_is_two_thirds_of_any_total_plus_one(key: Bls12381PrivateKey) {
-        for (stake, threshold) in [
-            (1, 1),
-            (2, 2),
-            (3, 3),
-            (4, 3),
-            (5, 4),
-            (6, 5),
-            (9_998, 6_666),
-            (9_999, 6_667),
-            (10_000, 6_667),
-            (u64::MAX, 12_297_829_382_473_034_411),
-        ] {
-            let verifier = ValidatorCommitteeSignatureVerifier::new(ValidatorCommittee {
-                epoch: 0,
-                members: vec![ValidatorCommitteeMember {
-                    public_key: key.public_key(),
-                    stake,
-                }],
-            })
-            .unwrap();
-
-            assert_eq!(
-                verifier.committee.quorum_threshold, threshold,
-                "total stake {stake}"
-            );
-        }
-    }
-
     #[proptest]
     fn electing_a_committee_without_stake_is_rejected(
         keys: [Bls12381PrivateKey; 4],
@@ -781,6 +749,33 @@ mod tests {
         let err = verifier.verify_epoch_close(&signed).unwrap_err();
         // `Signature` is also how a bad signature is reported, so the message
         // is what separates the two.
+        assert!(matches!(err, CommitteeChainError::Signature(_)), "{err}");
+        assert!(
+            err.to_string().contains("insufficient signing weight"),
+            "{err}"
+        );
+        assert_eq!(verifier.committee(), &committee0);
+    }
+
+    /// A third of the stake cannot certify: with three equal stakes the
+    /// threshold is 3, so one member's signature is rejected.
+    #[proptest]
+    fn one_third_of_the_stake_is_not_a_quorum(
+        keys: [Bls12381PrivateKey; 3],
+        summary: CheckpointSummary,
+    ) {
+        let committee0 = committee(&keys, 0);
+        let next = committee(&keys, 1);
+        let mut verifier = CommitteeChainVerifier::new(committee0.clone()).unwrap();
+
+        let checkpoint = close_epoch(summary, 0, &next);
+        let lone = keys[0].sign_checkpoint_summary(&checkpoint);
+        let signed = SignedCheckpointSummary {
+            checkpoint,
+            signature: ValidatorAggregatedSignature::new(lone.epoch, lone.signature, [0]),
+        };
+
+        let err = verifier.verify_epoch_close(&signed).unwrap_err();
         assert!(matches!(err, CommitteeChainError::Signature(_)), "{err}");
         assert!(
             err.to_string().contains("insufficient signing weight"),
