@@ -21,6 +21,7 @@ use crate::{
     TransactionBuilderLedgerClient, TransactionBuilderSimulationClient, WaitForTransaction,
     builder::{
         assigned_results::{AssignedResult, AssignedResults},
+        client::check_object_identity,
         gas_sponsor::{GasSponsor, SponsoredGas},
         ptb_arguments::PTBArgumentList,
         signer::TransactionSigner,
@@ -1705,8 +1706,8 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             return Ok(HashMap::new());
         }
         // Pairs answers with requests by position, which `objects_by_id` is
-        // documented to allow. The client is responsible for holding the server
-        // to that.
+        // documented to allow, and checks that each answer is the object
+        // requested in its position.
         let fetched = self
             .client
             .objects_by_id(&requests)
@@ -1716,9 +1717,11 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             .into_iter()
             .zip(fetched)
             .map(|((object_id, _), object)| {
-                object.map(|object| (object_id, object)).ok_or_else(|| {
+                let object = object.ok_or_else(|| {
                     TransactionBuilderError::Input(format!("missing object {object_id}"))
-                })
+                })?;
+                check_object_identity(object_id, &object)?;
+                Ok((object_id, object))
             })
             .collect()
     }
@@ -3052,6 +3055,101 @@ mod tests {
             assert!(
                 err.to_string().contains(&absent.to_string()),
                 "error should name the missing object, got: {err}"
+            );
+        }
+
+        /// Forwards to [`crate::TestClient`], but answers a request for one id
+        /// with a different object.
+        struct SwappedObjectClient {
+            requested: ObjectId,
+            answered: ObjectId,
+        }
+
+        impl crate::TransactionBuilderClientBase for SwappedObjectClient {
+            type Error = crate::TestClientError;
+        }
+
+        impl TransactionBuilderLedgerClient for SwappedObjectClient {
+            async fn object(
+                &self,
+                object_id: ObjectId,
+                version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                let object_id = if object_id == self.requested {
+                    self.answered
+                } else {
+                    object_id
+                };
+                crate::TestClient.object(object_id, version).await
+            }
+
+            async fn objects(
+                &self,
+                struct_tag: Option<StructTag>,
+                owner: Address,
+                cursor: Option<Vec<u8>>,
+                limit: Option<usize>,
+            ) -> Result<crate::ObjectsPage, Self::Error> {
+                crate::TestClient
+                    .objects(struct_tag, owner, cursor, limit)
+                    .await
+            }
+
+            async fn reference_gas_price(
+                &self,
+                epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                crate::TestClient.reference_gas_price(epoch).await
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                crate::TestClient.protocol_config().await
+            }
+        }
+
+        /// An answer carrying a different object than the one requested does
+        /// not become the input.
+        #[tokio::test]
+        async fn an_answer_for_another_object_is_rejected() {
+            let sender = Address::random();
+            let requested = object_id(5);
+            let answered = object_id(6);
+
+            let mut builder = TransactionBuilder::new(sender).with_client(SwappedObjectClient {
+                requested,
+                answered,
+            });
+            builder.transfer_objects(sender, [requested]);
+
+            let err = builder.finish_kind().await.unwrap_err();
+            let TransactionBuilderError::Input(message) = &err else {
+                panic!("expected an input error, got {err}");
+            };
+            assert!(
+                message.contains(&requested.to_string()) && message.contains(&answered.to_string()),
+                "unexpected message: {message}"
+            );
+        }
+
+        /// A Move authenticator's account is the object requested, not
+        /// another shared object the client answered with.
+        #[tokio::test]
+        async fn an_answer_for_another_account_is_rejected() {
+            let client = SwappedObjectClient {
+                requested: ObjectId::CLOCK,
+                answered: ObjectId::SYSTEM_STATE,
+            };
+
+            let err = crate::MoveAuthenticatorBuilder::new(ObjectId::CLOCK)
+                .finish(client)
+                .await
+                .unwrap_err();
+            let TransactionBuilderError::Input(message) = &err else {
+                panic!("expected an input error, got {err}");
+            };
+            assert!(
+                message.contains(&ObjectId::SYSTEM_STATE.to_string()),
+                "unexpected message: {message}"
             );
         }
     }
