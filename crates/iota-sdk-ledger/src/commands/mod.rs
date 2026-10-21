@@ -26,6 +26,19 @@ fn encode_path(path: &DerivationPath) -> Result<Vec<u8>, LedgerError> {
     Ok(bytes)
 }
 
+/// Build a command with both instruction parameters zero. The IOTA app
+/// requires zero, as command arguments travel in the data through the block
+/// protocol, and the device's operating system does not use them.
+fn command(cla: u8, ins: u8, data: Vec<u8>) -> ApduCommand {
+    ApduCommand {
+        cla,
+        ins,
+        p1: 0,
+        p2: 0,
+        data,
+    }
+}
+
 /// Send a single command and return the answer's data.
 fn exec(transport: &dyn Transport, command: ApduCommand) -> Result<Vec<u8>, LedgerError> {
     if command.data.len() > u8::MAX as usize {

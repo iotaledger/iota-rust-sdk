@@ -8,17 +8,12 @@ use std::fmt;
 use iota_crypto::DerivationPath;
 use iota_types::{Address, Ed25519PublicKey};
 
-use super::{Reader, block_protocol, encode_path, exec};
+use super::{Reader, block_protocol, command, encode_path, exec};
 use crate::{LedgerError, Transport, transport::ApduCommand};
 
 /// Instruction class of the app's commands; the app rejects any other class
 /// as a bad instruction.
 const CLA: u8 = 0x00;
-/// First instruction parameter. The app requires zero, as command arguments
-/// travel in the data through the block protocol.
-const P1: u8 = 0x00;
-/// Second instruction parameter. The app requires zero, like the first.
-const P2: u8 = 0x00;
 
 /// Status word the app returns for a derivation path outside the prefixes it
 /// allows. The app returns syscall error numbers as bare status words, here
@@ -50,13 +45,7 @@ pub(super) enum Instruction {
 
 impl Instruction {
     pub(super) fn command(self, data: Vec<u8>) -> ApduCommand {
-        ApduCommand {
-            cla: CLA,
-            ins: self as u8,
-            p1: P1,
-            p2: P2,
-            data,
-        }
+        command(CLA, self as u8, data)
     }
 }
 

@@ -4,8 +4,8 @@
 //! Commands handled by the device's operating system (BOLOS) rather than by
 //! the IOTA app.
 
-use super::{Reader, exec};
-use crate::{LedgerError, Transport, transport::ApduCommand};
+use super::{Reader, command, exec};
+use crate::{LedgerError, Transport};
 
 /// Instruction class of the commands the Ledger SDK answers inside every app
 /// and the dashboard: reading the running app's name and exiting it.
@@ -20,17 +20,6 @@ const INS_OPEN_APP: u8 = 0xd8;
 /// Status word for an invalid counter syscall error, returned when the app to
 /// open is not installed.
 const SW_INVALID_COUNTER: u16 = 0x6807;
-
-fn command(cla: u8, ins: u8, data: Vec<u8>) -> ApduCommand {
-    // Neither instruction parameter is used
-    ApduCommand {
-        cla,
-        ins,
-        p1: 0,
-        p2: 0,
-        data,
-    }
-}
 
 /// Read the name of the app running on the device; the dashboard is named
 /// `BOLOS`.
