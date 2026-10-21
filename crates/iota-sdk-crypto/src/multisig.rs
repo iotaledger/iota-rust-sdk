@@ -793,4 +793,109 @@ mod tests {
         );
         strict.verify_personal_message(&msg, &full).unwrap();
     }
+
+    /// Committee A is an equal-weight 3-of-5 and committee B gives a single
+    /// attacker key weight 3, yet both hash the same bytes into their address.
+    /// A signature from that key alone then authorizes for A's address unless
+    /// every member of a committee mixing Ed25519 with other key schemes must
+    /// sign.
+    #[test]
+    fn mixed_ed25519_address_collision() {
+        use iota_types::{
+            Ed25519PublicKey, Secp256k1PublicKey, SignatureScheme, crypto::MultisigError,
+        };
+
+        use crate::{ed25519::Ed25519VerifyingKey, secp256k1::Secp256k1VerifyingKey};
+
+        let mut k1_seed = [0u8; 32];
+        k1_seed[29..].copy_from_slice(&[5, 28, 7]);
+        let attacker_k1 = Secp256k1PrivateKey::new(k1_seed).unwrap();
+        let attacker_ed = Ed25519PrivateKey::new({
+            let mut seed = [0u8; 32];
+            seed[31] = 1;
+            seed
+        });
+        let honest = [0x33u8, 0x44, 0x55].map(|b| Ed25519PrivateKey::new([b; 32]));
+
+        // Committee A reads the last two bytes of the attacker's secp256k1 key
+        // as the weight of an Ed25519 member and the flag of the next member.
+        let k1 = attacker_k1.public_key().into_bytes();
+        assert_eq!(k1[31..], [1, SignatureScheme::Secp256k1.to_u8()]);
+        let mut a_ed = [0u8; 32];
+        a_ed[0] = SignatureScheme::Secp256k1.to_u8();
+        a_ed[1..].copy_from_slice(&k1[..31]);
+        let a_ed = Ed25519PublicKey::new(a_ed);
+        // Committee B reads the compressed-point prefix of this key as the
+        // attacker's weight of 3.
+        let mut a_k1 = [3u8; 33];
+        a_k1[1..].copy_from_slice(attacker_ed.public_key().bytes());
+        let a_k1 = Secp256k1PublicKey::new(a_k1);
+        Ed25519VerifyingKey::new(&a_ed).unwrap();
+        Secp256k1VerifyingKey::new(&a_k1).unwrap();
+
+        let honest_members: Vec<_> = honest
+            .iter()
+            .map(|key| MultisigMember::new(PublicKey::Ed25519(key.public_key()), 1))
+            .collect();
+        let committee_a = MultisigCommittee::new_unchecked(
+            [
+                MultisigMember::new(PublicKey::Ed25519(a_ed), 1),
+                MultisigMember::new(PublicKey::Secp256k1(a_k1), 1),
+            ]
+            .into_iter()
+            .chain(honest_members.clone())
+            .collect(),
+            3,
+        );
+        let committee_b = MultisigCommittee::new_unchecked(
+            [
+                MultisigMember::new(PublicKey::Secp256k1(attacker_k1.public_key()), 3),
+                MultisigMember::new(PublicKey::Ed25519(attacker_ed.public_key()), 1),
+            ]
+            .into_iter()
+            .chain(honest_members)
+            .collect(),
+            3,
+        );
+        assert_ne!(committee_a, committee_b);
+        let address = committee_a.derive_address();
+        assert_eq!(committee_b.derive_address(), address);
+
+        for committee in [&committee_a, &committee_b] {
+            let error = MultisigCommittee::new(committee.members().to_vec(), committee.threshold())
+                .unwrap_err();
+            assert!(
+                matches!(error, MultisigError::MixedEd25519Committee),
+                "expected MixedEd25519Committee, got {error:?}"
+            );
+        }
+
+        let msg = message();
+        let attacker_signature = attacker_k1.sign_personal_message(&msg).unwrap();
+        let error =
+            MultisigAggregatedSignature::new(vec![attacker_signature.clone()], committee_b.clone())
+                .unwrap_err();
+        assert!(
+            matches!(error, MultisigError::MixedEd25519CommitteeMissingSignatures),
+            "expected MixedEd25519CommitteeMissingSignatures, got {error:?}"
+        );
+
+        let forged = UserSignature::Multisig(MultisigAggregatedSignature::new_unchecked(
+            vec![MultisigMemberSignature::try_from(attacker_signature).unwrap()],
+            0b1,
+            committee_b,
+        ));
+        let verifier = MultisigVerifier::new().with_address(address);
+        verifier.verify_personal_message(&msg, &forged).unwrap();
+        let error = verifier
+            .with_require_all_signatures_for_mixed_ed25519(true)
+            .verify_personal_message(&msg, &forged)
+            .unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("requires a signature from every member"),
+            "expected a missing-signatures error, got {error}"
+        );
+    }
 }
