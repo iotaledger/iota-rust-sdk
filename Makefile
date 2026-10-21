@@ -7,7 +7,9 @@ check-features: ## Check feature flags for crates
 	$(MAKE) -C crates/iota-sdk-types check-features
 	$(MAKE) -C crates/iota-sdk-crypto check-features
 	$(MAKE) -C crates/iota-sdk-ledger check-features
+	$(MAKE) -C crates/iota-sdk-graphql-client check-features
 	$(MAKE) -C crates/iota-sdk-move-types check-features
+	$(MAKE) -C crates/iota-sdk-transaction-builder check-features
 
 .PHONY: check-fmt
 check-fmt: ## Check code formatting
