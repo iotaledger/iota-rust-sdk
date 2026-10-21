@@ -92,9 +92,9 @@ impl fmt::Display for AppVersion {
 }
 
 /// Read the app's version.
-pub(crate) fn version(transport: &dyn Transport) -> Result<AppVersion, LedgerError> {
+pub(crate) async fn version(transport: &dyn Transport) -> Result<AppVersion, LedgerError> {
     // The command takes a single empty parameter
-    let response = block_protocol::send(transport, Instruction::GetVersion, &[&[]])?;
+    let response = block_protocol::send(transport, Instruction::GetVersion, &[&[]]).await?;
     // The app name follows the version
     let [major, minor, patch] = Reader::new(&response).array()?;
     Ok(AppVersion {
@@ -106,7 +106,7 @@ pub(crate) fn version(transport: &dyn Transport) -> Result<AppVersion, LedgerErr
 
 /// Read the public key at `path`, first showing its address on the device for
 /// the user to confirm when `show_to_user` is set.
-pub(crate) fn public_key(
+pub(crate) async fn public_key(
     transport: &dyn Transport,
     path: &DerivationPath,
     show_to_user: bool,
@@ -117,6 +117,7 @@ pub(crate) fn public_key(
         Instruction::GetPublicKey
     };
     let response = block_protocol::send(transport, instruction, &[&encode_path(path)?])
+        .await
         .map_err(map_app_error)?;
 
     let mut reader = Reader::new(&response);
@@ -141,6 +142,8 @@ pub(crate) fn public_key(
 }
 
 /// Close the app.
-pub(crate) fn exit(transport: &dyn Transport) -> Result<(), LedgerError> {
-    exec(transport, Instruction::Exit.command(Vec::new())).map(drop)
+pub(crate) async fn exit(transport: &dyn Transport) -> Result<(), LedgerError> {
+    exec(transport, Instruction::Exit.command(Vec::new()))
+        .await
+        .map(drop)
 }

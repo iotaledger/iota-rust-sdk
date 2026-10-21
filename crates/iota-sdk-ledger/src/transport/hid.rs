@@ -8,7 +8,7 @@ use ledger_transport_hid::{
     hidapi::{DeviceInfo, HidApi},
 };
 
-use super::{ApduAnswer, ApduCommand, Transport};
+use super::{ApduAnswer, ApduCommand, Transport, TransportFuture};
 use crate::{Ledger, LedgerError};
 
 impl Ledger {
@@ -105,20 +105,24 @@ impl HidTransport {
 }
 
 impl Transport for HidTransport {
-    fn exchange(&self, command: &ApduCommand) -> Result<ApduAnswer, LedgerError> {
-        let device = self.device.as_ref().ok_or(LedgerError::DeviceNotFound)?;
-        let answer = device
-            .exchange(&ledger_transport::APDUCommand {
-                cla: command.cla,
-                ins: command.ins,
-                p1: command.p1,
-                p2: command.p2,
-                data: command.data.as_slice(),
+    /// Exchange the command, blocking the thread that polls the future until
+    /// the device answers.
+    fn exchange<'a>(&'a self, command: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer> {
+        Box::pin(async move {
+            let device = self.device.as_ref().ok_or(LedgerError::DeviceNotFound)?;
+            let answer = device
+                .exchange(&ledger_transport::APDUCommand {
+                    cla: command.cla,
+                    ins: command.ins,
+                    p1: command.p1,
+                    p2: command.p2,
+                    data: command.data.as_slice(),
+                })
+                .map_err(LedgerError::transport)?;
+            Ok(ApduAnswer {
+                data: answer.data().to_vec(),
+                status_word: answer.retcode(),
             })
-            .map_err(LedgerError::transport)?;
-        Ok(ApduAnswer {
-            data: answer.data().to_vec(),
-            status_word: answer.retcode(),
         })
     }
 
@@ -126,21 +130,23 @@ impl Transport for HidTransport {
     /// changes when the device switches apps, the only Ledger device
     /// connected. Ledger devices share a serial number, so with several
     /// connected the device cannot be told apart and this fails.
-    fn reconnect(&mut self) -> Result<(), LedgerError> {
-        self.device = None;
-        let api = HidApi::new().map_err(LedgerError::transport)?;
-        let ledgers = TransportNativeHID::list_ledgers(&api).collect::<Vec<_>>();
-        let info = match ledgers
-            .iter()
-            .find(|info| info.path() == self.path.as_c_str())
-        {
-            Some(info) => info,
-            None => match ledgers.as_slice() {
-                [only] => only,
-                _ => return Err(LedgerError::DeviceNotFound),
-            },
-        };
-        *self = Self::open_info(&api, info)?;
-        Ok(())
+    fn reconnect(&mut self) -> TransportFuture<'_, ()> {
+        Box::pin(async move {
+            self.device = None;
+            let api = HidApi::new().map_err(LedgerError::transport)?;
+            let ledgers = TransportNativeHID::list_ledgers(&api).collect::<Vec<_>>();
+            let info = match ledgers
+                .iter()
+                .find(|info| info.path() == self.path.as_c_str())
+            {
+                Some(info) => info,
+                None => match ledgers.as_slice() {
+                    [only] => only,
+                    _ => return Err(LedgerError::DeviceNotFound),
+                },
+            };
+            *self = Self::open_info(&api, info)?;
+            Ok(())
+        })
     }
 }
