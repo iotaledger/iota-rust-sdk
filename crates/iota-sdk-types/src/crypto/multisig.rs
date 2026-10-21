@@ -53,6 +53,12 @@ pub enum MultisigError {
     InvalidSignatureNumber,
     #[error("Invalid bitmap value: {0}")]
     InvalidBitmap(u16),
+    #[error("Multisig committee mixes Ed25519 with other key schemes")]
+    MixedEd25519Committee,
+    #[error(
+        "Multisig committee mixing Ed25519 with other key schemes requires a signature from every member"
+    )]
+    MixedEd25519CommitteeMissingSignatures,
 }
 
 /// A member in a multisig committee
@@ -128,7 +134,8 @@ impl MultisigCommittee {
     /// Unlike [`Self::new`], this performs no checks: the committee may
     /// violate any of the invariants enforced by [`Self::validate`] (zero
     /// threshold, empty or oversized member list, zero-weight members,
-    /// duplicate public keys, or a threshold exceeding the sum of weights).
+    /// duplicate public keys, a threshold exceeding the sum of weights, or
+    /// Ed25519 members mixed with members of other key schemes).
     ///
     /// Note that the order of the members is significant towards deriving the
     /// [`Address`] governed by this committee.
@@ -148,7 +155,8 @@ impl MultisigCommittee {
     ///  - contain zero or more than ten members;
     ///  - contain a member with weight 0;
     ///  - have a `threshold` greater than the sum of all member weights;
-    ///  - contain duplicate public keys.
+    ///  - contain duplicate public keys;
+    ///  - mix Ed25519 members with members of other key schemes.
     ///
     /// Note that the order of the members is significant towards deriving the
     /// [`Address`] governed by this committee.
@@ -189,6 +197,17 @@ impl MultisigCommittee {
             .map(|x| x as u8)
     }
 
+    /// Returns `true` if the committee has both Ed25519 members and members of
+    /// other key schemes.
+    pub fn is_mixed_ed25519(&self) -> bool {
+        let ed25519_members = self
+            .members
+            .iter()
+            .filter(|member| member.public_key.scheme() == SignatureScheme::Ed25519)
+            .count();
+        ed25519_members != 0 && ed25519_members != self.members.len()
+    }
+
     /// Checks if the Committee is valid.
     ///
     /// A valid committee is one that:
@@ -198,7 +217,20 @@ impl MultisigCommittee {
     ///  - No member has weight 0
     ///  - the sum of the weights of all members must be at least the threshold
     ///  - contains no duplicate members
+    ///  - does not mix Ed25519 members with members of other key schemes
     pub fn validate(&self) -> Result<(), MultisigError> {
+        self.validate_allow_mixed_ed25519()?;
+
+        if self.is_mixed_ed25519() {
+            return Err(MultisigError::MixedEd25519Committee);
+        }
+
+        Ok(())
+    }
+
+    /// Runs the checks of [`Self::validate`] except the one rejecting Ed25519
+    /// members mixed with members of other key schemes.
+    fn validate_allow_mixed_ed25519(&self) -> Result<(), MultisigError> {
         if self.threshold == 0 {
             return Err(MultisigError::ZeroThreshold);
         }
@@ -304,7 +336,9 @@ impl MultisigAggregatedSignature {
     /// [`UserSignature`]s and a [`MultisigCommittee`].
     ///
     /// Compared to [`Self::new_unchecked`], this:
-    ///  - validates `committee` via [`MultisigCommittee::validate`];
+    ///  - validates `committee` via [`MultisigCommittee::validate`], except
+    ///    that a committee mixing Ed25519 with other key schemes is accepted
+    ///    when every member provides a signature;
     ///  - converts each [`UserSignature`] into a [`MultisigMemberSignature`];
     ///  - derives the `bitmap` by locating each signature's public key in the
     ///    committee, rejecting duplicates and signatures from non-members;
@@ -323,7 +357,10 @@ impl MultisigAggregatedSignature {
             return Err(MultisigError::InvalidSignatureNumber);
         }
 
-        committee.validate()?;
+        committee.validate_allow_mixed_ed25519()?;
+        if committee.is_mixed_ed25519() && signatures.len() != committee.members.len() {
+            return Err(MultisigError::MixedEd25519CommitteeMissingSignatures);
+        }
 
         let mut bitmap = 0;
         let mut member_signatures = Vec::with_capacity(signatures.len());
@@ -358,8 +395,28 @@ impl MultisigAggregatedSignature {
     }
 
     /// Validates the structural integrity of this aggregated signature.
+    ///
+    /// A committee mixing Ed25519 with other key schemes is only accepted when
+    /// every member provides a signature.
     pub fn validate(&self) -> Result<(), MultisigError> {
-        self.committee.validate()?;
+        self.validate_allow_mixed_ed25519()?;
+
+        if self.committee.is_mixed_ed25519()
+            && self.signatures.len() != self.committee.members.len()
+        {
+            return Err(MultisigError::MixedEd25519CommitteeMissingSignatures);
+        }
+
+        Ok(())
+    }
+
+    /// Validates the structural integrity of this aggregated signature like
+    /// [`Self::validate`], but accepts a committee mixing Ed25519 with other
+    /// key schemes regardless of how many members provide a signature.
+    ///
+    /// Deserialization applies this check.
+    pub fn validate_allow_mixed_ed25519(&self) -> Result<(), MultisigError> {
+        self.committee.validate_allow_mixed_ed25519()?;
 
         if self.signatures.len() > self.committee.members.len() || self.signatures.is_empty() {
             return Err(MultisigError::InvalidSignatureNumber);
@@ -622,7 +679,7 @@ pub(crate) mod serialization {
                 committee: multisig.committee,
             };
             multisig
-                .validate()
+                .validate_allow_mixed_ed25519()
                 .map_err(|e| SignatureFromBytesError::new(format!("invalid multisig: {e}")))?;
             Ok(multisig)
         }
@@ -1159,6 +1216,87 @@ mod tests {
     }
 
     #[test]
+    fn committee_rejects_mixed_ed25519() {
+        use crate::{Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey};
+
+        let ed0 = Ed25519PublicKey::new([1; 32]);
+        let ed1 = Ed25519PublicKey::new([2; 32]);
+        let k1 = Secp256k1PublicKey::new([3; 33]);
+        let r1 = Secp256r1PublicKey::new([4; 33]);
+
+        let err = MultisigCommittee::new(
+            vec![MultisigMember::new(ed0, 1), MultisigMember::new(k1, 1)],
+            1,
+        )
+        .unwrap_err();
+        assert!(
+            matches!(err, MultisigError::MixedEd25519Committee),
+            "expected MixedEd25519Committee, got {err:?}"
+        );
+
+        MultisigCommittee::new(
+            vec![MultisigMember::new(ed0, 1), MultisigMember::new(ed1, 1)],
+            1,
+        )
+        .unwrap();
+        MultisigCommittee::new(
+            vec![MultisigMember::new(k1, 1), MultisigMember::new(r1, 1)],
+            1,
+        )
+        .unwrap();
+    }
+
+    #[test]
+    fn mixed_ed25519_aggregated_signature_requires_all_signatures() {
+        use crate::{
+            Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
+            SimpleSignature,
+        };
+
+        let ed = Ed25519PublicKey::new([1; 32]);
+        let k1 = Secp256k1PublicKey::new([3; 33]);
+        let committee = MultisigCommittee::new_unchecked(
+            vec![MultisigMember::new(ed, 1), MultisigMember::new(k1, 1)],
+            1,
+        );
+        let ed_sig = UserSignature::Simple(SimpleSignature::Ed25519 {
+            signature: Ed25519Signature::new([0; 64]),
+            public_key: ed,
+        });
+        let k1_sig = UserSignature::Simple(SimpleSignature::Secp256k1 {
+            signature: Secp256k1Signature::new([0; 64]),
+            public_key: k1,
+        });
+
+        let err =
+            MultisigAggregatedSignature::new(vec![ed_sig.clone()], committee.clone()).unwrap_err();
+        assert!(
+            matches!(err, MultisigError::MixedEd25519CommitteeMissingSignatures),
+            "expected MixedEd25519CommitteeMissingSignatures, got {err:?}"
+        );
+        MultisigAggregatedSignature::new(vec![ed_sig.clone(), k1_sig], committee.clone())
+            .unwrap()
+            .validate()
+            .unwrap();
+
+        let partial = MultisigAggregatedSignature::new_unchecked(
+            vec![MultisigMemberSignature::try_from(ed_sig).unwrap()],
+            0b1,
+            committee,
+        );
+        let err = partial.validate().unwrap_err();
+        assert!(
+            matches!(err, MultisigError::MixedEd25519CommitteeMissingSignatures),
+            "expected MixedEd25519CommitteeMissingSignatures, got {err:?}"
+        );
+        partial.validate_allow_mixed_ed25519().unwrap();
+
+        let decoded: MultisigAggregatedSignature =
+            bcs::from_bytes(&bcs::to_bytes(&partial).unwrap()).unwrap();
+        assert_eq!(partial, decoded);
+    }
+
+    #[test]
     fn new_rejects_duplicates() {
         use crate::{Ed25519PublicKey, Ed25519Signature, SimpleSignature};
 
@@ -1264,15 +1402,14 @@ mod tests {
     fn derive_address_is_stable() {
         use crate::{Address, Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey};
 
-        let committee = MultisigCommittee::new(
+        let committee = MultisigCommittee::new_unchecked(
             vec![
                 MultisigMember::new(Ed25519PublicKey::new([1; 32]), 1),
                 MultisigMember::new(Secp256k1PublicKey::new([2; 33]), 2),
                 MultisigMember::new(Secp256r1PublicKey::new([3; 33]), 3),
             ],
             2,
-        )
-        .unwrap();
+        );
 
         assert_eq!(
             committee.derive_address(),
