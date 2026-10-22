@@ -668,7 +668,7 @@ pub mod vec_map {
 
         #[test]
         fn utf8_entries_convert() {
-            let map = VecMap::new(vec[
+            let map = VecMap::new(vec![
                 Entry::new(
                     string::String::new("name".into()),
                     string::String::new("héllo".into()),
@@ -681,17 +681,11 @@ pub mod vec_map {
             let converted = VecMap::<std::string::String, std::string::String>::try_from(map);
             assert_eq!(
                 converted.unwrap(),
-                VecMap::new(vec[
+                VecMap::new(vec![
                     Entry::new("name".to_owned(), "héllo".to_owned()),
                     Entry::new("description".to_owned(), "wörld".to_owned()),
                 ])
-            assert!(VecMap::<std::string::String, std::string::String>::try_from(map).is_err());
-
-            let map = VecMap::new(vec[Entry::new(
-                string::String::new(vec[0xff, 0xfe]),
-                string::String::new("name".into()),
-            )]);
-            assert!(VecMap::<std::string::String, std::string::String>::try_from(map).is_err());
+            );
         }
 
         #[test]
@@ -699,6 +693,12 @@ pub mod vec_map {
             let map = VecMap::new(vec![Entry::new(
                 string::String::new("name".into()),
                 string::String::new(vec![0xff, 0xfe]),
+            )]);
+            assert!(VecMap::<std::string::String, std::string::String>::try_from(map).is_err());
+
+            let map = VecMap::new(vec![Entry::new(
+                string::String::new(vec![0xff, 0xfe]),
+                string::String::new("name".into()),
             )]);
             assert!(VecMap::<std::string::String, std::string::String>::try_from(map).is_err());
         }
