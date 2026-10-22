@@ -445,14 +445,6 @@ mod tests {
         )
         .unwrap_err();
     }
-}
-
-#[cfg(test)]
-mod quorum_threshold_tests {
-    #[cfg(target_arch = "wasm32")]
-    use wasm_bindgen_test::wasm_bindgen_test as test;
-
-    use super::ValidatorCommittee;
 
     #[test]
     fn quorum_threshold_is_two_thirds_of_any_total_plus_one() {
