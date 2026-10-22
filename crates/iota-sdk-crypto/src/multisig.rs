@@ -4,7 +4,8 @@
 
 use iota_types::{
     Address, MultisigAggregatedSignature, MultisigCommittee, MultisigMemberSignature, PublicKey,
-    SignatureScheme, UserSignature, crypto::ThresholdUnit,
+    SignatureScheme, UserSignature,
+    crypto::{BitmapUnit, MultisigError, ThresholdUnit},
 };
 
 use crate::{SignatureError, Verifier};
@@ -63,6 +64,8 @@ impl MultisigVerifier {
     /// [`MultisigAggregatedSignature::validate_allow_partially_signed_mixed_ed25519`].
     ///
     /// Such a multisig is still accepted when every member has signed.
+    /// [`MultisigAggregator::finish`] applies the same rule through its
+    /// verifier.
     ///
     /// Enabled by default. Must be disabled to verify signatures from protocol
     /// versions below 39 (node release 1.35).
@@ -391,6 +394,11 @@ impl MultisigAggregator {
         Ok(())
     }
 
+    /// Build the aggregated signature once the signed weight reaches the
+    /// threshold, validated like [`MultisigVerifier`] does, so with its
+    /// default settings a committee mixing Ed25519 with other key schemes
+    /// needs every member's signature. Use [`Self::verifier_mut`] to disable
+    /// that for protocol versions below 39.
     pub fn finish(&self) -> Result<MultisigAggregatedSignature, SignatureError> {
         if self.signed_weight < self.committee.threshold() {
             return Err(SignatureError::from_source(
@@ -398,14 +406,17 @@ impl MultisigAggregator {
             ));
         }
 
-        let (signatures, bitmap) = self.signatures.clone().into_iter().fold(
-            (Vec::new(), 0),
-            |(mut signatures, mut bitmap), (member_idx, signature)| {
-                bitmap |= 1 << member_idx;
-                signatures.push(signature);
-                (signatures, bitmap)
-            },
-        );
+        let mut signatures = Vec::with_capacity(self.signatures.len());
+        let mut bitmap: BitmapUnit = 0;
+        for (member_idx, signature) in self.signatures.clone() {
+            bitmap |= BitmapUnit::checked_shl(1, member_idx as u32).ok_or_else(|| {
+                SignatureError::from_source(format!(
+                    "invalid multisig: {}",
+                    MultisigError::CommitteeTooLarge(self.committee.members().len())
+                ))
+            })?;
+            signatures.push(signature);
+        }
 
         let signature =
             MultisigAggregatedSignature::new_unchecked(signatures, bitmap, self.committee.clone());
@@ -717,6 +728,52 @@ mod tests {
         UserSignatureVerifier::new()
             .verify_personal_message(&msg, &UserSignature::Multisig(aggregated))
             .unwrap();
+    }
+
+    /// [`MultisigAggregator::finish`] rejects a committee that is not valid
+    /// instead of returning a signature over it.
+    #[test]
+    fn aggregator_rejects_invalid_committee() {
+        let msg = message();
+
+        let (k0, k1, _k2) = committee_keys();
+        let duplicate = MultisigCommittee::new_unchecked(
+            vec![
+                MultisigMember::new(PublicKey::Secp256k1(k0.public_key()), 1),
+                MultisigMember::new(PublicKey::Secp256k1(k0.public_key()), 1),
+                MultisigMember::new(PublicKey::Secp256k1(k1.public_key()), 1),
+            ],
+            1,
+        );
+        let mut aggregator = MultisigAggregator::new_with_message(duplicate, &msg);
+        aggregator
+            .add_signature(k0.sign_personal_message(&msg).unwrap())
+            .unwrap();
+        let error = aggregator.finish().unwrap_err();
+        assert!(
+            error.to_string().contains("Duplicate public key"),
+            "expected a duplicate-public-key error, got {error}"
+        );
+
+        // A member index past the bitmap width is reported, not shifted out.
+        let keys: Vec<_> = (1..=17u8)
+            .map(|b| Ed25519PrivateKey::new([b; 32]))
+            .collect();
+        let too_large = MultisigCommittee::new_unchecked(
+            keys.iter()
+                .map(|key| MultisigMember::new(PublicKey::Ed25519(key.public_key()), 1))
+                .collect(),
+            1,
+        );
+        let mut aggregator = MultisigAggregator::new_with_message(too_large, &msg);
+        aggregator
+            .add_signature(keys[16].sign_personal_message(&msg).unwrap())
+            .unwrap();
+        let error = aggregator.finish().unwrap_err();
+        assert!(
+            error.to_string().contains("exceeds maximum size"),
+            "expected a committee-too-large error, got {error}"
+        );
     }
 
     /// [`UserSignatureVerifier`] accepts a plain simple signature, while the

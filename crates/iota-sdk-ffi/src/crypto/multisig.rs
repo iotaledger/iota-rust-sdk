@@ -1,7 +1,10 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::{borrow::Cow, sync::RwLock};
+use std::{
+    borrow::Cow,
+    sync::{Arc, RwLock},
+};
 
 use iota_sdk::crypto::Verifier;
 
@@ -14,46 +17,63 @@ use crate::{
     },
 };
 
-#[derive(Debug, derive_more::From, uniffi::Object)]
+#[derive(Debug, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct MultisigVerifier(pub iota_sdk::crypto::multisig::MultisigVerifier);
+pub struct MultisigVerifier(pub RwLock<iota_sdk::crypto::multisig::MultisigVerifier>);
+
+impl From<iota_sdk::crypto::multisig::MultisigVerifier> for MultisigVerifier {
+    fn from(verifier: iota_sdk::crypto::multisig::MultisigVerifier) -> Self {
+        Self(RwLock::new(verifier))
+    }
+}
 
 #[uniffi::export]
 impl MultisigVerifier {
     #[uniffi::constructor]
     pub fn new() -> Self {
-        Self(iota_sdk::crypto::multisig::MultisigVerifier::new())
+        iota_sdk::crypto::multisig::MultisigVerifier::new().into()
     }
 
     /// Reject partially signed multisigs whose committee mixes Ed25519 with
     /// other key schemes. Such a multisig is still accepted when every member
-    /// has signed.
+    /// has signed. `MultisigAggregator::finish` applies the same rule through
+    /// its verifier.
     ///
     /// Enabled by default. Must be disabled to verify signatures from protocol
     /// versions below 39 (node release 1.35).
-    pub fn with_reject_partially_signed_mixed_ed25519(&self, reject: bool) -> Self {
-        Self(
-            self.0
-                .clone()
-                .with_reject_partially_signed_mixed_ed25519(reject),
-        )
+    pub fn with_reject_partially_signed_mixed_ed25519(self: Arc<Self>, reject: bool) -> Arc<Self> {
+        {
+            let mut lock = self.0.write().expect("error writing to verifier");
+            *lock = std::mem::take(&mut *lock).with_reject_partially_signed_mixed_ed25519(reject);
+        }
+        self
     }
 
     pub fn verify(&self, message: &[u8], signature: &MultisigAggregatedSignature) -> Result<()> {
-        Ok(self.0.verify(message, &signature.0)?)
+        Ok(self
+            .0
+            .read()
+            .expect("error reading verifier")
+            .verify(message, &signature.0)?)
     }
 }
 
 /// Verifier that will verify all UserSignature variants
-#[derive(Debug, derive_more::From, uniffi::Object)]
+#[derive(Debug, uniffi::Object)]
 #[uniffi::export(Debug)]
-pub struct UserSignatureVerifier(pub iota_sdk::crypto::multisig::UserSignatureVerifier);
+pub struct UserSignatureVerifier(pub RwLock<iota_sdk::crypto::multisig::UserSignatureVerifier>);
+
+impl From<iota_sdk::crypto::multisig::UserSignatureVerifier> for UserSignatureVerifier {
+    fn from(verifier: iota_sdk::crypto::multisig::UserSignatureVerifier) -> Self {
+        Self(RwLock::new(verifier))
+    }
+}
 
 #[uniffi::export]
 impl UserSignatureVerifier {
     #[uniffi::constructor]
     pub fn new() -> Self {
-        Self(iota_sdk::crypto::multisig::UserSignatureVerifier::new())
+        iota_sdk::crypto::multisig::UserSignatureVerifier::new().into()
     }
 
     /// Reject partially signed multisigs whose committee mixes Ed25519 with
@@ -62,16 +82,20 @@ impl UserSignatureVerifier {
     ///
     /// Enabled by default. Must be disabled to verify signatures from protocol
     /// versions below 39 (node release 1.35).
-    pub fn with_reject_partially_signed_mixed_ed25519(&self, reject: bool) -> Self {
-        Self(
-            self.0
-                .clone()
-                .with_reject_partially_signed_mixed_ed25519(reject),
-        )
+    pub fn with_reject_partially_signed_mixed_ed25519(self: Arc<Self>, reject: bool) -> Arc<Self> {
+        {
+            let mut lock = self.0.write().expect("error writing to verifier");
+            *lock = std::mem::take(&mut *lock).with_reject_partially_signed_mixed_ed25519(reject);
+        }
+        self
     }
 
     pub fn verify(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
-        Ok(self.0.verify(message, &signature.0)?)
+        Ok(self
+            .0
+            .read()
+            .expect("error reading verifier")
+            .verify(message, &signature.0)?)
     }
 }
 
@@ -117,7 +141,7 @@ impl MultisigAggregator {
             .0
             .write()
             .expect("failed to write multisig aggregator")
-            .verifier_mut() = verifier.0.clone();
+            .verifier_mut() = verifier.0.read().expect("error reading verifier").clone();
     }
 
     pub fn add_signature(&self, signature: &UserSignature) -> Result<()> {
