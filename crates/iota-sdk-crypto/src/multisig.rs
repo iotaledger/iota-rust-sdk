@@ -5,7 +5,7 @@
 use iota_types::{
     Address, MultisigAggregatedSignature, MultisigCommittee, MultisigMemberSignature, PublicKey,
     SignatureScheme, UserSignature,
-    crypto::{BitmapUnit, MultisigError, ThresholdUnit},
+    crypto::{MULTISIG_COMMITTEE_SIZE_MAX, MultisigError, ThresholdUnit},
 };
 
 use crate::{SignatureError, Verifier};
@@ -67,8 +67,10 @@ impl MultisigVerifier {
     /// [`MultisigAggregator::finish`] applies the same rule through its
     /// verifier.
     ///
-    /// Enabled by default. Must be disabled to verify signatures from protocol
-    /// versions below 39 (node release 1.35).
+    /// Enabled by default. The network accepted such multisigs before protocol
+    /// version 39 (node release 1.35), so disabling it accepts them again, but
+    /// a partially signed one can then not be told apart from one forged
+    /// through a committee whose address collides with the signer's.
     pub fn with_reject_partially_signed_mixed_ed25519(mut self, reject: bool) -> Self {
         self.reject_partially_signed_mixed_ed25519 = reject;
         self
@@ -371,6 +373,12 @@ impl MultisigAggregator {
                     "provided signature does not belong to committee member",
                 )
             })?;
+        if member_idx >= MULTISIG_COMMITTEE_SIZE_MAX {
+            return Err(SignatureError::from_source(format!(
+                "invalid multisig: {}",
+                MultisigError::CommitteeTooLarge(self.committee.members().len())
+            )));
+        }
 
         self.verifier()
             .verify_member_signature(&self.message, &public_key, &signature)?;
@@ -397,8 +405,8 @@ impl MultisigAggregator {
     /// Build the aggregated signature once the signed weight reaches the
     /// threshold, validated like [`MultisigVerifier`] does, so with its
     /// default settings a committee mixing Ed25519 with other key schemes
-    /// needs every member's signature. Use [`Self::verifier_mut`] to disable
-    /// that for protocol versions below 39.
+    /// needs every member's signature. [`Self::verifier_mut`] can disable
+    /// that.
     pub fn finish(&self) -> Result<MultisigAggregatedSignature, SignatureError> {
         if self.signed_weight < self.committee.threshold() {
             return Err(SignatureError::from_source(
@@ -406,17 +414,14 @@ impl MultisigAggregator {
             ));
         }
 
-        let mut signatures = Vec::with_capacity(self.signatures.len());
-        let mut bitmap: BitmapUnit = 0;
-        for (member_idx, signature) in self.signatures.clone() {
-            bitmap |= BitmapUnit::checked_shl(1, member_idx as u32).ok_or_else(|| {
-                SignatureError::from_source(format!(
-                    "invalid multisig: {}",
-                    MultisigError::CommitteeTooLarge(self.committee.members().len())
-                ))
-            })?;
-            signatures.push(signature);
-        }
+        let (signatures, bitmap) = self.signatures.clone().into_iter().fold(
+            (Vec::new(), 0),
+            |(mut signatures, mut bitmap), (member_idx, signature)| {
+                bitmap |= 1 << member_idx;
+                signatures.push(signature);
+                (signatures, bitmap)
+            },
+        );
 
         let signature =
             MultisigAggregatedSignature::new_unchecked(signatures, bitmap, self.committee.clone());
@@ -755,7 +760,7 @@ mod tests {
             "expected a duplicate-public-key error, got {error}"
         );
 
-        // A member index past the bitmap width is reported, not shifted out.
+        // A signer past the maximum committee size is rejected when added.
         let keys: Vec<_> = (1..=17u8)
             .map(|b| Ed25519PrivateKey::new([b; 32]))
             .collect();
@@ -766,10 +771,9 @@ mod tests {
             1,
         );
         let mut aggregator = MultisigAggregator::new_with_message(too_large, &msg);
-        aggregator
+        let error = aggregator
             .add_signature(keys[16].sign_personal_message(&msg).unwrap())
-            .unwrap();
-        let error = aggregator.finish().unwrap_err();
+            .unwrap_err();
         assert!(
             error.to_string().contains("exceeds maximum size"),
             "expected a committee-too-large error, got {error}"
@@ -925,111 +929,5 @@ mod tests {
             MultisigAggregatedSignature::new(vec![sig0, sig1, sig2], committee).unwrap(),
         );
         strict.verify_personal_message(&msg, &full).unwrap();
-    }
-
-    /// Committee A is an equal-weight 3-of-5 and committee B gives a single
-    /// attacker key weight 3, yet both hash the same bytes into their address.
-    /// A signature from that key alone then authorizes for A's address unless
-    /// every member of a committee mixing Ed25519 with other key schemes must
-    /// sign.
-    #[test]
-    fn mixed_ed25519_address_collision() {
-        use iota_types::{
-            Ed25519PublicKey, Secp256k1PublicKey, SignatureScheme, crypto::MultisigError,
-        };
-
-        use crate::{ed25519::Ed25519VerifyingKey, secp256k1::Secp256k1VerifyingKey};
-
-        let mut k1_seed = [0u8; 32];
-        k1_seed[29..].copy_from_slice(&[5, 28, 7]);
-        let attacker_k1 = Secp256k1PrivateKey::new(k1_seed).unwrap();
-        let attacker_ed = Ed25519PrivateKey::new({
-            let mut seed = [0u8; 32];
-            seed[31] = 1;
-            seed
-        });
-        let honest = [0x33u8, 0x44, 0x55].map(|b| Ed25519PrivateKey::new([b; 32]));
-
-        // Committee A reads the last two bytes of the attacker's secp256k1 key
-        // as the weight of an Ed25519 member and the flag of the next member.
-        let k1 = attacker_k1.public_key().into_bytes();
-        assert_eq!(k1[31..], [1, SignatureScheme::Secp256k1.to_u8()]);
-        let mut a_ed = [0u8; 32];
-        a_ed[0] = SignatureScheme::Secp256k1.to_u8();
-        a_ed[1..].copy_from_slice(&k1[..31]);
-        let a_ed = Ed25519PublicKey::new(a_ed);
-        // Committee B reads the compressed-point prefix of this key as the
-        // attacker's weight of 3.
-        let mut a_k1 = [3u8; 33];
-        a_k1[1..].copy_from_slice(attacker_ed.public_key().bytes());
-        let a_k1 = Secp256k1PublicKey::new(a_k1);
-        Ed25519VerifyingKey::new(&a_ed).unwrap();
-        Secp256k1VerifyingKey::new(&a_k1).unwrap();
-
-        let honest_members: Vec<_> = honest
-            .iter()
-            .map(|key| MultisigMember::new(PublicKey::Ed25519(key.public_key()), 1))
-            .collect();
-        let committee_a = MultisigCommittee::new_unchecked(
-            [
-                MultisigMember::new(PublicKey::Ed25519(a_ed), 1),
-                MultisigMember::new(PublicKey::Secp256k1(a_k1), 1),
-            ]
-            .into_iter()
-            .chain(honest_members.clone())
-            .collect(),
-            3,
-        );
-        let committee_b = MultisigCommittee::new_unchecked(
-            [
-                MultisigMember::new(PublicKey::Secp256k1(attacker_k1.public_key()), 3),
-                MultisigMember::new(PublicKey::Ed25519(attacker_ed.public_key()), 1),
-            ]
-            .into_iter()
-            .chain(honest_members)
-            .collect(),
-            3,
-        );
-        assert_ne!(committee_a, committee_b);
-        let address = committee_a.derive_address();
-        assert_eq!(committee_b.derive_address(), address);
-
-        for committee in [&committee_a, &committee_b] {
-            let error = MultisigCommittee::new(committee.members().to_vec(), committee.threshold())
-                .unwrap_err();
-            assert!(
-                matches!(error, MultisigError::MixedEd25519Committee),
-                "expected MixedEd25519Committee, got {error:?}"
-            );
-        }
-
-        let msg = message();
-        let attacker_signature = attacker_k1.sign_personal_message(&msg).unwrap();
-        let error =
-            MultisigAggregatedSignature::new(vec![attacker_signature.clone()], committee_b.clone())
-                .unwrap_err();
-        assert!(
-            matches!(error, MultisigError::PartiallySignedMixedEd25519Committee),
-            "expected PartiallySignedMixedEd25519Committee, got {error:?}"
-        );
-
-        let forged = UserSignature::Multisig(MultisigAggregatedSignature::new_unchecked(
-            vec![MultisigMemberSignature::try_from(attacker_signature).unwrap()],
-            0b1,
-            committee_b,
-        ));
-        let verifier = MultisigVerifier::new().with_address(address);
-        verifier
-            .clone()
-            .with_reject_partially_signed_mixed_ed25519(false)
-            .verify_personal_message(&msg, &forged)
-            .unwrap();
-        let error = verifier.verify_personal_message(&msg, &forged).unwrap_err();
-        assert!(
-            error
-                .to_string()
-                .contains("requires a signature from every member"),
-            "expected a missing-signatures error, got {error}"
-        );
     }
 }

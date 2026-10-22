@@ -414,7 +414,7 @@ impl MultisigAggregatedSignature {
     /// [`Self::validate`], but accepts a committee mixing Ed25519 with other
     /// key schemes regardless of how many members provide a signature.
     ///
-    /// Deserialization applies this check.
+    /// BCS decoding applies this check.
     pub fn validate_allow_partially_signed_mixed_ed25519(&self) -> Result<(), MultisigError> {
         self.committee.validate_allow_mixed_ed25519()?;
 

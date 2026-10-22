@@ -39,8 +39,10 @@ impl MultisigVerifier {
     /// has signed. `MultisigAggregator::finish` applies the same rule through
     /// its verifier.
     ///
-    /// Enabled by default. Must be disabled to verify signatures from protocol
-    /// versions below 39 (node release 1.35).
+    /// Enabled by default. The network accepted such multisigs before protocol
+    /// version 39 (node release 1.35), so disabling it accepts them again, but
+    /// a partially signed one can then not be told apart from one forged
+    /// through a committee whose address collides with the signer's.
     pub fn with_reject_partially_signed_mixed_ed25519(self: Arc<Self>, reject: bool) -> Arc<Self> {
         {
             let mut lock = self.0.write().expect("error writing to verifier");
@@ -80,8 +82,10 @@ impl UserSignatureVerifier {
     /// other key schemes. Such a multisig is still accepted when every member
     /// has signed.
     ///
-    /// Enabled by default. Must be disabled to verify signatures from protocol
-    /// versions below 39 (node release 1.35).
+    /// Enabled by default. The network accepted such multisigs before protocol
+    /// version 39 (node release 1.35), so disabling it accepts them again, but
+    /// a partially signed one can then not be told apart from one forged
+    /// through a committee whose address collides with the signer's.
     pub fn with_reject_partially_signed_mixed_ed25519(self: Arc<Self>, reject: bool) -> Arc<Self> {
         {
             let mut lock = self.0.write().expect("error writing to verifier");
