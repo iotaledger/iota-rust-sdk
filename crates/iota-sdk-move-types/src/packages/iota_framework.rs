@@ -1662,6 +1662,17 @@ pub mod package {
         pub policy: u8,
     }
 
+    impl UpgradeCap {
+        pub const fn new(id: UID, package: ID, version: u64, policy: u8) -> Self {
+            Self {
+                id,
+                package,
+                version,
+                policy,
+            }
+        }
+    }
+
     #[cfg(feature = "serde")]
     impl UpgradeCap {
         /// Decode an [`UpgradeCap`] from BCS bytes without verifying the
@@ -1718,6 +1729,12 @@ pub mod package {
     pub struct UpgradeReceipt {
         pub cap: ID,
         pub package: ID,
+    }
+
+    impl UpgradeReceipt {
+        pub const fn new(cap: ID, package: ID) -> Self {
+            Self { cap, package }
+        }
     }
 }
 
@@ -2988,6 +3005,12 @@ pub mod config {
         pub const fn new(data: Option<SettingData<Value>>) -> Self {
             Self { data }
         }
+
+        /// The value [`SettingData::read_value`] reads, or `None` without
+        /// `data`.
+        pub fn read_value(&self, current_epoch: Option<iota_types::EpochId>) -> Option<&Value> {
+            self.data.as_ref()?.read_value(current_epoch)
+        }
     }
 
     /// Rust version of the Move `iota::config::SettingData<Value>` type.
@@ -3001,6 +3024,59 @@ pub mod config {
         pub newer_value_epoch: u64,
         pub newer_value: Option<Value>,
         pub older_value_opt: Option<Value>,
+    }
+
+    impl<Value> SettingData<Value> {
+        /// `newer_value` once `current_epoch` is past `newer_value_epoch`,
+        /// otherwise `older_value_opt`. Without `current_epoch`, always
+        /// `newer_value`.
+        pub fn read_value(&self, current_epoch: Option<iota_types::EpochId>) -> Option<&Value> {
+            let use_newer_value = match current_epoch {
+                Some(current_epoch) => current_epoch > self.newer_value_epoch,
+                None => true,
+            };
+            if use_newer_value {
+                self.newer_value.as_ref()
+            } else {
+                self.older_value_opt.as_ref()
+            }
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        #[cfg(target_arch = "wasm32")]
+        use wasm_bindgen_test::wasm_bindgen_test as test;
+
+        use super::*;
+
+        fn setting() -> Setting<u8> {
+            Setting::new(Some(SettingData {
+                newer_value_epoch: 5,
+                newer_value: Some(2),
+                older_value_opt: Some(1),
+            }))
+        }
+
+        #[test]
+        fn newer_value_after_its_epoch() {
+            assert_eq!(setting().read_value(Some(6)), Some(&2));
+        }
+
+        #[test]
+        fn older_value_up_to_the_newer_epoch() {
+            assert_eq!(setting().read_value(Some(5)), Some(&1));
+        }
+
+        #[test]
+        fn newer_value_without_an_epoch() {
+            assert_eq!(setting().read_value(None), Some(&2));
+        }
+
+        #[test]
+        fn nothing_without_data() {
+            assert_eq!(Setting::<u8>::new(None).read_value(None), None);
+        }
     }
 }
 
