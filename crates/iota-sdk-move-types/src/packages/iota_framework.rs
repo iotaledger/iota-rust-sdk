@@ -685,7 +685,13 @@ pub mod vec_map {
                     Entry::new("name".to_owned(), "héllo".to_owned()),
                     Entry::new("description".to_owned(), "wörld".to_owned()),
                 ])
-            );
+            assert!(VecMap::<std::string::String, std::string::String>::try_from(map).is_err());
+
+            let map = VecMap::new(vec[Entry::new(
+                string::String::new(vec[0xff, 0xfe]),
+                string::String::new("name".into()),
+            )]);
+            assert!(VecMap::<std::string::String, std::string::String>::try_from(map).is_err());
         }
 
         #[test]
