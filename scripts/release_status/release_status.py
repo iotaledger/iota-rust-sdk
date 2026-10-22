@@ -13,7 +13,8 @@ when, since that tag:
 Cargo resolves a caret requirement to the newest compatible version, so a
 compatible dependency bump reaches consumers of the published crate on its
 own; a pre-release bump such as `1.0.0-rc.1` to `1.0.0-rc.2` is compatible
-too. A dependent that needed adapting to a dependency change shows that as a
+too, while a pre-release of another version, such as `1.1.0-rc.1`, is not.
+A dependent that needed adapting to a dependency change shows that as a
 change of its own; an unchanged dependent ships the source the workspace
 already builds against the new dependency.
 
@@ -35,8 +36,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 # Files cargo generates into the package; they have no counterpart in git.
 GENERATED = {".cargo_vcs_info.json", "Cargo.lock", "Cargo.toml.orig"}
-# Leading version of a requirement such as `1.0.0-rc.1`, `0.3` or `^1`.
-VERSION = re.compile(r"\d+(?:\.\d+){0,2}")
+# Leading version of a requirement such as `1.0.0-rc.1`, `0.3` or `^1`, with
+# its pre-release tag when it has one.
+VERSION = re.compile(r"(\d+(?:\.\d+){0,2})(-[0-9A-Za-z.-]+)?")
 # Makes `--sort=v:refname` order pre-releases before the final version.
 VERSIONSORT = [
     "-c",
@@ -186,15 +188,27 @@ def requirement(dep) -> str:
     return dep if isinstance(dep, str) else dep.get("version", "")
 
 
+def parse_version(requirement: str) -> tuple[list[int], bool] | None:
+    """The major, minor and patch of a requirement, and whether it names a
+    pre-release."""
+    match = VERSION.search(requirement)
+    if not match:
+        return None
+    parts = [int(n) for n in match.group(1).split(".")]
+    return parts + [0] * (3 - len(parts)), match.group(2) is not None
+
+
 def compatible(old: str, new: str) -> bool:
     """Whether `new` lies in the caret range of `old`, as Cargo resolves it:
-    same first non-zero component and everything before it."""
-    old_match, new_match = VERSION.search(old), VERSION.search(new)
-    if not (old_match and new_match):
+    same first non-zero component and everything before it, and a pre-release
+    only when `old` already names a pre-release of that same version."""
+    old_parsed, new_parsed = parse_version(old), parse_version(new)
+    if old_parsed is None or new_parsed is None:
         return False
-    old_parts = [int(n) for n in old_match.group().split(".")] + [0, 0]
-    new_parts = [int(n) for n in new_match.group().split(".")] + [0, 0]
-    pinned = next((i for i, n in enumerate(old_parts[:3]) if n), 2) + 1
+    (old_parts, old_pre), (new_parts, new_pre) = old_parsed, new_parsed
+    if new_pre:
+        return old_pre and old_parts == new_parts
+    pinned = next((i for i, n in enumerate(old_parts) if n), 2) + 1
     return old_parts[:pinned] == new_parts[:pinned]
 
 

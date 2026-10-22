@@ -9,8 +9,8 @@ release PR is merged. A crate is marked `RELEASE` when, since that tag:
 
 - `source`: a file that `cargo package` ships changed. The commits are listed.
 - `manifest`: a `[workspace.dependencies]` entry the crate inherits moved out
-  of the caret range of the published requirement, such as a major bump, so
-  the published crate can't follow it.
+  of the caret range of the published requirement, such as a major bump or a
+  pre-release of another version, so the published crate can't follow it.
 
 Everything else is reported but ignored. Cargo resolves a caret requirement to
 the newest compatible version, so a compatible dependency bump reaches
