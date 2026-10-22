@@ -120,6 +120,10 @@ sort-derives: ## Sort `#[derive(...)]` trait lists alphabetically across the wor
 check-sort-derives: ## Check that all `#[derive(...)]` trait lists are sorted alphabetically
 	python3 scripts/sort_derives/sort_derives.py --check
 
+.PHONY: release-status
+release-status: ## List the crates that changed since their last release tag, in publish order
+	python3 scripts/release_status/release_status.py
+
 .PHONY: clean
 clean: ## Clean build artifacts
 	cargo clean
