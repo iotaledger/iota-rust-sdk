@@ -95,6 +95,8 @@ pub mod object {
 
 /// Types from `0x2::iota`.
 pub mod iota {
+    use iota_types::ObjectId;
+
     use super::coin::TreasuryCap;
 
     /// Rust version of the Move `iota::iota::IOTA` type.
@@ -142,6 +144,14 @@ pub mod iota {
     impl IotaTreasuryCap {
         pub const fn new(inner: TreasuryCap<IOTA>) -> Self {
             Self { inner }
+        }
+
+        pub fn id(&self) -> &ObjectId {
+            self.inner.id.object_id()
+        }
+
+        pub fn total_supply(&self) -> u64 {
+            self.inner.total_supply.value
         }
     }
 }
