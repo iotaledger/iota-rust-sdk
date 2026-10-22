@@ -133,6 +133,15 @@ impl MultisigVerifier {
             )),
         }
     }
+
+    fn validate(&self, signature: &MultisigAggregatedSignature) -> Result<(), SignatureError> {
+        if self.reject_partially_signed_mixed_ed25519 {
+            signature.validate()
+        } else {
+            signature.validate_allow_partially_signed_mixed_ed25519()
+        }
+        .map_err(|e| SignatureError::from_source(format!("invalid multisig: {e}")))
+    }
 }
 
 #[cfg(feature = "passkey")]
@@ -160,12 +169,7 @@ impl Verifier<MultisigAggregatedSignature> for MultisigVerifier {
         message: &[u8],
         signature: &MultisigAggregatedSignature,
     ) -> Result<(), SignatureError> {
-        if self.reject_partially_signed_mixed_ed25519 {
-            signature.validate()
-        } else {
-            signature.validate_allow_partially_signed_mixed_ed25519()
-        }
-        .map_err(|e| SignatureError::from_source(format!("invalid multisig: {e}")))?;
+        self.validate(signature)?;
 
         if let Some(address) = &self.address
             && signature.committee().derive_address() != *address
@@ -251,6 +255,14 @@ pub struct UserSignatureVerifier {
 impl UserSignatureVerifier {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    /// See [`MultisigVerifier::with_reject_partially_signed_mixed_ed25519`].
+    pub fn with_reject_partially_signed_mixed_ed25519(mut self, reject: bool) -> Self {
+        self.inner = self
+            .inner
+            .with_reject_partially_signed_mixed_ed25519(reject);
+        self
     }
 }
 
@@ -395,11 +407,11 @@ impl MultisigAggregator {
             },
         );
 
-        Ok(MultisigAggregatedSignature::new_unchecked(
-            signatures,
-            bitmap,
-            self.committee.clone(),
-        ))
+        let signature =
+            MultisigAggregatedSignature::new_unchecked(signatures, bitmap, self.committee.clone());
+        self.verifier.validate(&signature)?;
+
+        Ok(signature)
     }
 }
 
@@ -669,6 +681,44 @@ mod tests {
             .unwrap();
     }
 
+    /// [`MultisigAggregator::finish`] applies the verifier's rule for a
+    /// committee mixing Ed25519 with other key schemes.
+    #[test]
+    fn aggregator_rejects_partially_signed_mixed_ed25519() {
+        let (k0, k1, k2) = test_keys();
+        let committee = mixed_ed25519_committee_2_of_3(&k0, &k1, &k2);
+        let msg = message();
+
+        let mut aggregator = MultisigAggregator::new_with_message(committee, &msg);
+        aggregator
+            .add_signature(k0.sign_personal_message(&msg).unwrap())
+            .unwrap();
+        aggregator
+            .add_signature(k1.sign_personal_message(&msg).unwrap())
+            .unwrap();
+
+        let error = aggregator.finish().unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("requires a signature from every member"),
+            "expected a missing-signatures error, got {error}"
+        );
+
+        let mut lenient = aggregator.clone();
+        *lenient.verifier_mut() =
+            MultisigVerifier::new().with_reject_partially_signed_mixed_ed25519(false);
+        lenient.finish().unwrap();
+
+        aggregator
+            .add_signature(k2.sign_personal_message(&msg).unwrap())
+            .unwrap();
+        let aggregated = aggregator.finish().unwrap();
+        UserSignatureVerifier::new()
+            .verify_personal_message(&msg, &UserSignature::Multisig(aggregated))
+            .unwrap();
+    }
+
     /// [`UserSignatureVerifier`] accepts a plain simple signature, while the
     /// [`MultisigVerifier`] rejects anything that is not a multisig.
     #[test]
@@ -753,6 +803,10 @@ mod tests {
 
         MultisigVerifier::new()
             .with_address(aggregated.committee().derive_address())
+            .with_reject_partially_signed_mixed_ed25519(false)
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+        UserSignatureVerifier::new()
             .with_reject_partially_signed_mixed_ed25519(false)
             .verify_transaction(&transaction, &signature)
             .unwrap();

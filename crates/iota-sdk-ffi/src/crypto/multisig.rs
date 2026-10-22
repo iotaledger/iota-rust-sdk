@@ -25,6 +25,20 @@ impl MultisigVerifier {
         Self(iota_sdk::crypto::multisig::MultisigVerifier::new())
     }
 
+    /// Reject partially signed multisigs whose committee mixes Ed25519 with
+    /// other key schemes. Such a multisig is still accepted when every member
+    /// has signed.
+    ///
+    /// Enabled by default. Must be disabled to verify signatures from protocol
+    /// versions below 39 (node release 1.35).
+    pub fn with_reject_partially_signed_mixed_ed25519(&self, reject: bool) -> Self {
+        Self(
+            self.0
+                .clone()
+                .with_reject_partially_signed_mixed_ed25519(reject),
+        )
+    }
+
     pub fn verify(&self, message: &[u8], signature: &MultisigAggregatedSignature) -> Result<()> {
         Ok(self.0.verify(message, &signature.0)?)
     }
@@ -40,6 +54,20 @@ impl UserSignatureVerifier {
     #[uniffi::constructor]
     pub fn new() -> Self {
         Self(iota_sdk::crypto::multisig::UserSignatureVerifier::new())
+    }
+
+    /// Reject partially signed multisigs whose committee mixes Ed25519 with
+    /// other key schemes. Such a multisig is still accepted when every member
+    /// has signed.
+    ///
+    /// Enabled by default. Must be disabled to verify signatures from protocol
+    /// versions below 39 (node release 1.35).
+    pub fn with_reject_partially_signed_mixed_ed25519(&self, reject: bool) -> Self {
+        Self(
+            self.0
+                .clone()
+                .with_reject_partially_signed_mixed_ed25519(reject),
+        )
     }
 
     pub fn verify(&self, message: &[u8], signature: &UserSignature) -> Result<()> {
