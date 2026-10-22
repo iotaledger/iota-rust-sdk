@@ -584,6 +584,8 @@ pub mod url {
 
 /// Types from `0x2::vec_map`.
 pub mod vec_map {
+    use crate::move_stdlib::string;
+
     /// Rust version of the Move `iota::vec_map::Entry<K, V>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -640,6 +642,65 @@ pub mod vec_map {
                 iota_types::Identifier::from_static("VecMap"),
                 <(K, V) as crate::MoveTypes>::type_tags(),
             )))
+        }
+    }
+
+    impl TryFrom<VecMap<string::String, string::String>>
+        for VecMap<std::string::String, std::string::String>
+    {
+        type Error = std::string::FromUtf8Error;
+
+        fn try_from(map: VecMap<string::String, string::String>) -> Result<Self, Self::Error> {
+            map.contents
+                .into_iter()
+                .map(|entry| Ok(Entry::new(entry.key.try_into()?, entry.value.try_into()?)))
+                .collect::<Result<_, _>>()
+                .map(Self::new)
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        #[cfg(target_arch = "wasm32")]
+        use wasm_bindgen_test::wasm_bindgen_test as test;
+
+        use super::*;
+
+        #[test]
+        fn utf8_entries_convert() {
+            let map = VecMap::new(vec![
+                Entry::new(
+                    string::String::new("name".into()),
+                    string::String::new("héllo".into()),
+                ),
+                Entry::new(
+                    string::String::new("description".into()),
+                    string::String::new("wörld".into()),
+                ),
+            ]);
+            let converted = VecMap::<std::string::String, std::string::String>::try_from(map);
+            assert_eq!(
+                converted.unwrap(),
+                VecMap::new(vec![
+                    Entry::new("name".to_owned(), "héllo".to_owned()),
+                    Entry::new("description".to_owned(), "wörld".to_owned()),
+                ])
+            );
+        }
+
+        #[test]
+        fn invalid_utf8_value_is_rejected() {
+            let map = VecMap::new(vec![Entry::new(
+                string::String::new("name".into()),
+                string::String::new(vec![0xff, 0xfe]),
+            )]);
+            assert!(VecMap::<std::string::String, std::string::String>::try_from(map).is_err());
+
+            let map = VecMap::new(vec![Entry::new(
+                string::String::new(vec![0xff, 0xfe]),
+                string::String::new("name".into()),
+            )]);
+            assert!(VecMap::<std::string::String, std::string::String>::try_from(map).is_err());
         }
     }
 }
