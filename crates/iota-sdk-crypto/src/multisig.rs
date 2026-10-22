@@ -9,14 +9,27 @@ use iota_types::{
 
 use crate::{SignatureError, Verifier};
 
-#[derive(Clone, Debug, Default, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct MultisigVerifier {
     address: Option<Address>,
     #[cfg(feature = "passkey")]
     passkey_verifier: Option<crate::passkey::PasskeyVerifier>,
     accept_passkey_in_multisig: bool,
     additional_multisig_checks: bool,
-    require_all_signatures_for_mixed_ed25519: bool,
+    reject_partially_signed_mixed_ed25519: bool,
+}
+
+impl Default for MultisigVerifier {
+    fn default() -> Self {
+        Self {
+            address: None,
+            #[cfg(feature = "passkey")]
+            passkey_verifier: None,
+            accept_passkey_in_multisig: false,
+            additional_multisig_checks: false,
+            reject_partially_signed_mixed_ed25519: true,
+        }
+    }
 }
 
 impl MultisigVerifier {
@@ -34,19 +47,27 @@ impl MultisigVerifier {
         self
     }
 
+    /// Reject a member signature whose scheme differs from its member's public
+    /// key before verifying it. Such a signature fails verification either
+    /// way, so this only changes the error returned.
+    ///
+    /// Disabled by default.
     pub fn with_additional_multisig_checks(mut self, additional_checks: bool) -> Self {
         self.additional_multisig_checks = additional_checks;
         self
     }
 
-    /// Require a signature from every member when the committee mixes Ed25519
-    /// with other key schemes, by validating the aggregated signature with
-    /// [`MultisigAggregatedSignature::validate`] instead of
-    /// [`MultisigAggregatedSignature::validate_allow_mixed_ed25519`].
+    /// Reject committees mixing Ed25519 with other key schemes, by validating
+    /// the aggregated signature with [`MultisigAggregatedSignature::validate`]
+    /// instead of
+    /// [`MultisigAggregatedSignature::validate_allow_partially_signed_mixed_ed25519`].
     ///
-    /// Disabled by default.
-    pub fn with_require_all_signatures_for_mixed_ed25519(mut self, require: bool) -> Self {
-        self.require_all_signatures_for_mixed_ed25519 = require;
+    /// Such a committee is still accepted when every member has signed.
+    ///
+    /// Enabled by default. Must be disabled to verify signatures from protocol
+    /// versions below 39 (node release 1.35).
+    pub fn with_reject_partially_signed_mixed_ed25519(mut self, reject: bool) -> Self {
+        self.reject_partially_signed_mixed_ed25519 = reject;
         self
     }
 
@@ -139,10 +160,10 @@ impl Verifier<MultisigAggregatedSignature> for MultisigVerifier {
         message: &[u8],
         signature: &MultisigAggregatedSignature,
     ) -> Result<(), SignatureError> {
-        if self.require_all_signatures_for_mixed_ed25519 {
+        if self.reject_partially_signed_mixed_ed25519 {
             signature.validate()
         } else {
-            signature.validate_allow_mixed_ed25519()
+            signature.validate_allow_partially_signed_mixed_ed25519()
         }
         .map_err(|e| SignatureError::from_source(format!("invalid multisig: {e}")))?;
 
@@ -730,32 +751,34 @@ mod tests {
                 .unwrap(),
         );
 
-        UserSignatureVerifier::new()
-            .verify_transaction(&transaction, &signature)
-            .unwrap();
-
         MultisigVerifier::new()
             .with_address(aggregated.committee().derive_address())
+            .with_reject_partially_signed_mixed_ed25519(false)
             .verify_transaction(&transaction, &signature)
             .unwrap();
 
         // The committee mixes Ed25519 with other key schemes and only two of
         // its three members signed.
-        let error = MultisigVerifier::new()
-            .with_require_all_signatures_for_mixed_ed25519(true)
-            .verify_transaction(&transaction, &signature)
-            .unwrap_err();
-        assert!(
-            error
-                .to_string()
-                .contains("requires a signature from every member"),
-            "expected a missing-signatures error, got {error}"
-        );
+        for error in [
+            MultisigVerifier::new()
+                .verify_transaction(&transaction, &signature)
+                .unwrap_err(),
+            UserSignatureVerifier::new()
+                .verify_transaction(&transaction, &signature)
+                .unwrap_err(),
+        ] {
+            assert!(
+                error
+                    .to_string()
+                    .contains("requires a signature from every member"),
+                "expected a missing-signatures error, got {error}"
+            );
+        }
     }
 
-    /// A committee mixing Ed25519 with other key schemes verifies with a
-    /// subset of signatures by default, and only with a signature from every
-    /// member when all signatures are required.
+    /// A committee mixing Ed25519 with other key schemes verifies only with a
+    /// signature from every member by default, and with a subset of signatures
+    /// when mixed Ed25519 committees are not rejected.
     #[test]
     fn verify_mixed_ed25519_committee() {
         let (k0, k1, k2) = test_keys();
@@ -764,9 +787,7 @@ mod tests {
         let sig0 = k0.sign_personal_message(&msg).unwrap();
         let sig1 = k1.sign_personal_message(&msg).unwrap();
         let sig2 = k2.sign_personal_message(&msg).unwrap();
-        let strict = MultisigVerifier::new()
-            .with_address(committee.derive_address())
-            .with_require_all_signatures_for_mixed_ed25519(true);
+        let strict = MultisigVerifier::new().with_address(committee.derive_address());
 
         let partial = UserSignature::Multisig(MultisigAggregatedSignature::new_unchecked(
             vec![
@@ -778,6 +799,7 @@ mod tests {
         ));
         MultisigVerifier::new()
             .with_address(committee.derive_address())
+            .with_reject_partially_signed_mixed_ed25519(false)
             .verify_personal_message(&msg, &partial)
             .unwrap();
         let error = strict.verify_personal_message(&msg, &partial).unwrap_err();
@@ -876,8 +898,8 @@ mod tests {
             MultisigAggregatedSignature::new(vec![attacker_signature.clone()], committee_b.clone())
                 .unwrap_err();
         assert!(
-            matches!(error, MultisigError::MixedEd25519CommitteeMissingSignatures),
-            "expected MixedEd25519CommitteeMissingSignatures, got {error:?}"
+            matches!(error, MultisigError::PartiallySignedMixedEd25519Committee),
+            "expected PartiallySignedMixedEd25519Committee, got {error:?}"
         );
 
         let forged = UserSignature::Multisig(MultisigAggregatedSignature::new_unchecked(
@@ -886,11 +908,12 @@ mod tests {
             committee_b,
         ));
         let verifier = MultisigVerifier::new().with_address(address);
-        verifier.verify_personal_message(&msg, &forged).unwrap();
-        let error = verifier
-            .with_require_all_signatures_for_mixed_ed25519(true)
+        verifier
+            .clone()
+            .with_reject_partially_signed_mixed_ed25519(false)
             .verify_personal_message(&msg, &forged)
-            .unwrap_err();
+            .unwrap();
+        let error = verifier.verify_personal_message(&msg, &forged).unwrap_err();
         assert!(
             error
                 .to_string()

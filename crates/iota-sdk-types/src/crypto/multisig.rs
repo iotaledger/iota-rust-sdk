@@ -58,7 +58,7 @@ pub enum MultisigError {
     #[error(
         "Multisig committee mixing Ed25519 with other key schemes requires a signature from every member"
     )]
-    MixedEd25519CommitteeMissingSignatures,
+    PartiallySignedMixedEd25519Committee,
 }
 
 /// A member in a multisig committee
@@ -359,7 +359,7 @@ impl MultisigAggregatedSignature {
 
         committee.validate_allow_mixed_ed25519()?;
         if committee.is_mixed_ed25519() && signatures.len() != committee.members.len() {
-            return Err(MultisigError::MixedEd25519CommitteeMissingSignatures);
+            return Err(MultisigError::PartiallySignedMixedEd25519Committee);
         }
 
         let mut bitmap = 0;
@@ -399,12 +399,12 @@ impl MultisigAggregatedSignature {
     /// A committee mixing Ed25519 with other key schemes is only accepted when
     /// every member provides a signature.
     pub fn validate(&self) -> Result<(), MultisigError> {
-        self.validate_allow_mixed_ed25519()?;
+        self.validate_allow_partially_signed_mixed_ed25519()?;
 
         if self.committee.is_mixed_ed25519()
             && self.signatures.len() != self.committee.members.len()
         {
-            return Err(MultisigError::MixedEd25519CommitteeMissingSignatures);
+            return Err(MultisigError::PartiallySignedMixedEd25519Committee);
         }
 
         Ok(())
@@ -415,7 +415,7 @@ impl MultisigAggregatedSignature {
     /// key schemes regardless of how many members provide a signature.
     ///
     /// Deserialization applies this check.
-    pub fn validate_allow_mixed_ed25519(&self) -> Result<(), MultisigError> {
+    pub fn validate_allow_partially_signed_mixed_ed25519(&self) -> Result<(), MultisigError> {
         self.committee.validate_allow_mixed_ed25519()?;
 
         if self.signatures.len() > self.committee.members.len() || self.signatures.is_empty() {
@@ -679,7 +679,7 @@ pub(crate) mod serialization {
                 committee: multisig.committee,
             };
             multisig
-                .validate_allow_mixed_ed25519()
+                .validate_allow_partially_signed_mixed_ed25519()
                 .map_err(|e| SignatureFromBytesError::new(format!("invalid multisig: {e}")))?;
             Ok(multisig)
         }
@@ -1271,8 +1271,8 @@ mod tests {
         let err =
             MultisigAggregatedSignature::new(vec![ed_sig.clone()], committee.clone()).unwrap_err();
         assert!(
-            matches!(err, MultisigError::MixedEd25519CommitteeMissingSignatures),
-            "expected MixedEd25519CommitteeMissingSignatures, got {err:?}"
+            matches!(err, MultisigError::PartiallySignedMixedEd25519Committee),
+            "expected PartiallySignedMixedEd25519Committee, got {err:?}"
         );
         MultisigAggregatedSignature::new(vec![ed_sig.clone(), k1_sig], committee.clone())
             .unwrap()
@@ -1286,10 +1286,12 @@ mod tests {
         );
         let err = partial.validate().unwrap_err();
         assert!(
-            matches!(err, MultisigError::MixedEd25519CommitteeMissingSignatures),
-            "expected MixedEd25519CommitteeMissingSignatures, got {err:?}"
+            matches!(err, MultisigError::PartiallySignedMixedEd25519Committee),
+            "expected PartiallySignedMixedEd25519Committee, got {err:?}"
         );
-        partial.validate_allow_mixed_ed25519().unwrap();
+        partial
+            .validate_allow_partially_signed_mixed_ed25519()
+            .unwrap();
 
         let decoded: MultisigAggregatedSignature =
             bcs::from_bytes(&bcs::to_bytes(&partial).unwrap()).unwrap();
