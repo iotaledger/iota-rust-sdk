@@ -101,6 +101,10 @@ impl ValidatorCommittee {
     /// may be faulty. A total of zero gives a threshold of 1, which nothing can
     /// reach.
     ///
+    /// `total_stake` should be [`Self::total_stake`] of a committee that passed
+    /// [`Self::validate`]: a total that wrapped, or one from an unvalidated
+    /// committee, can give a threshold a single member reaches.
+    ///
     /// ```
     /// use iota_sdk_types::ValidatorCommittee;
     ///
