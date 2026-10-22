@@ -378,6 +378,29 @@ mod committee_tests {
             Err(ValidatorCommitteeError::DuplicatePublicKey)
         ));
     }
+
+    #[test]
+    fn quorum_threshold_is_two_thirds_of_any_total_plus_one() {
+        for (total_stake, threshold) in [
+            (0, 1),
+            (1, 1),
+            (2, 2),
+            (3, 3),
+            (4, 3),
+            (5, 4),
+            (6, 5),
+            (9_998, 6_666),
+            (9_999, 6_667),
+            (10_000, 6_667),
+            (u64::MAX, 12_297_829_382_473_034_411),
+        ] {
+            assert_eq!(
+                ValidatorCommittee::quorum_threshold(total_stake),
+                threshold,
+                "total stake {total_stake}"
+            );
+        }
+    }
 }
 
 #[cfg(all(test, feature = "serde"))]
@@ -444,28 +467,5 @@ mod tests {
             &bitmap[..bitmap.len() - 1],
         )
         .unwrap_err();
-    }
-
-    #[test]
-    fn quorum_threshold_is_two_thirds_of_any_total_plus_one() {
-        for (total_stake, threshold) in [
-            (0, 1),
-            (1, 1),
-            (2, 2),
-            (3, 3),
-            (4, 3),
-            (5, 4),
-            (6, 5),
-            (9_998, 6_666),
-            (9_999, 6_667),
-            (10_000, 6_667),
-            (u64::MAX, 12_297_829_382_473_034_411),
-        ] {
-            assert_eq!(
-                ValidatorCommittee::quorum_threshold(total_stake),
-                threshold,
-                "total stake {total_stake}"
-            );
-        }
     }
 }
