@@ -668,14 +668,23 @@ pub mod vec_map {
 
         #[test]
         fn utf8_entries_convert() {
-            let map = VecMap::new(vec![Entry::new(
-                string::String::new("name".into()),
-                string::String::new("héllo".into()),
-            )]);
+            let map = VecMap::new(vec[
+                Entry::new(
+                    string::String::new("name".into()),
+                    string::String::new("héllo".into()),
+                ),
+                Entry::new(
+                    string::String::new("description".into()),
+                    string::String::new("wörld".into()),
+                ),
+            ]);
             let converted = VecMap::<std::string::String, std::string::String>::try_from(map);
             assert_eq!(
                 converted.unwrap(),
-                VecMap::new(vec![Entry::new("name".to_owned(), "héllo".to_owned())])
+                VecMap::new(vec[
+                    Entry::new("name".to_owned(), "héllo".to_owned()),
+                    Entry::new("description".to_owned(), "wörld".to_owned()),
+                ])
             );
         }
 
