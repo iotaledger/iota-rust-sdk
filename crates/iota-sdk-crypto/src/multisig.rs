@@ -57,12 +57,12 @@ impl MultisigVerifier {
         self
     }
 
-    /// Reject committees mixing Ed25519 with other key schemes, by validating
-    /// the aggregated signature with [`MultisigAggregatedSignature::validate`]
-    /// instead of
+    /// Reject partially signed multisigs whose committee mixes Ed25519 with
+    /// other key schemes, by validating the aggregated signature with
+    /// [`MultisigAggregatedSignature::validate`] instead of
     /// [`MultisigAggregatedSignature::validate_allow_partially_signed_mixed_ed25519`].
     ///
-    /// Such a committee is still accepted when every member has signed.
+    /// Such a multisig is still accepted when every member has signed.
     ///
     /// Enabled by default. Must be disabled to verify signatures from protocol
     /// versions below 39 (node release 1.35).
