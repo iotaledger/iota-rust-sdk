@@ -266,8 +266,8 @@ impl UserSignatureVerifier {
 
     /// See [`MultisigVerifier::with_reject_partially_signed_mixed_ed25519`].
     pub fn with_reject_partially_signed_mixed_ed25519(mut self, reject: bool) -> Self {
-        self.inner = self
-            .inner
+        self.multisig_verifier = self
+            .multisig_verifier
             .with_reject_partially_signed_mixed_ed25519(reject);
         self
     }
