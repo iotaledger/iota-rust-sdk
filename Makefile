@@ -6,7 +6,9 @@ all:: ci ## Default target, runs the CI process
 check-features: ## Check feature flags for crates
 	$(MAKE) -C crates/iota-sdk-types check-features
 	$(MAKE) -C crates/iota-sdk-crypto check-features
+	$(MAKE) -C crates/iota-sdk-graphql-client check-features
 	$(MAKE) -C crates/iota-sdk-move-types check-features
+	$(MAKE) -C crates/iota-sdk-transaction-builder check-features
 
 .PHONY: check-fmt
 check-fmt: ## Check code formatting
@@ -117,6 +119,10 @@ sort-derives: ## Sort `#[derive(...)]` trait lists alphabetically across the wor
 .PHONY: check-sort-derives
 check-sort-derives: ## Check that all `#[derive(...)]` trait lists are sorted alphabetically
 	python3 scripts/sort_derives/sort_derives.py --check
+
+.PHONY: release-status
+release-status: ## List the crates that changed since their last release tag, in publish order
+	python3 scripts/release_status/release_status.py
 
 .PHONY: clean
 clean: ## Clean build artifacts
