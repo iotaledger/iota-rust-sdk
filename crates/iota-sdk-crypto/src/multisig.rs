@@ -209,7 +209,7 @@ crate::impl_iota_verifier!(MultisigVerifier);
 /// Verifier that will verify all UserSignature variants
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct UserSignatureVerifier {
-    inner: MultisigVerifier,
+    multisig_verifier: MultisigVerifier,
     #[cfg(feature = "passkey")]
     passkey_verifier: Option<crate::passkey::PasskeyVerifier>,
 }
@@ -245,7 +245,7 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
             UserSignature::Simple(signature) => {
                 crate::simple::SimpleVerifier.verify(message, signature)
             }
-            UserSignature::Multisig(signature) => self.inner.verify(message, signature),
+            UserSignature::Multisig(signature) => self.multisig_verifier.verify(message, signature),
             #[cfg(not(feature = "passkey"))]
             UserSignature::PasskeyAuthenticator(_) => Err(SignatureError::from_source(
                 "support for passkey is not enabled",
