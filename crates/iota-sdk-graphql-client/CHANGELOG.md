@@ -1,3 +1,13 @@
+## [1.0.0-rc.2] - 2026-10-23
+
+### 🐛 Bug Fixes
+
+- *(iota-sdk-move-types)* [**breaking**] Map Rust String to 0x1::string::String (#1694)
+
+### ⚙️ Miscellaneous Tasks
+
+- Require rustls 0.23.46 and ignore RUSTSEC-2026-0374 in cargo deny (#1721)
+
 ## [1.0.0-rc.1] - 2026-10-09
 
 ### 🚀 Features
