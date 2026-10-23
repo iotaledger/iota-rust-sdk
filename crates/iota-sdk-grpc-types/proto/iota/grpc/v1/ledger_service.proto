@@ -115,6 +115,11 @@ message GetServiceInfoResponse {
 
   // Software version of the service. Similar to the `server` http header.
   optional string server = 8;
+
+  // The lowest checkpoint for which the transaction and event indexes are complete.
+  //
+  // Unset if the node does not keep these indexes.
+  optional uint64 lowest_available_checkpoint_indexes = 9;
 }
 
 message ObjectRequest {
