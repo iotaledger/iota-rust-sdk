@@ -1,10 +1,10 @@
-name: Report develop CI failure to slack
+name: Report develop and major branch CI failures to slack
 
 on:
   workflow_run:
     workflows: ["*"]
     types: [completed]
-    branches: [develop]
+    branches: [develop, "iota-sdk/*.x"]
 
 jobs:
   on-failure:
