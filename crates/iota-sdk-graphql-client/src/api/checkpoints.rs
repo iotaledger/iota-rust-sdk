@@ -5,7 +5,6 @@
 //! Checkpoints API implementation.
 
 use cynic::QueryBuilder;
-use futures::Stream;
 use iota_types::{CheckpointDigest, CheckpointSequenceNumber, CheckpointSummary};
 
 use crate::{
@@ -17,7 +16,7 @@ use crate::{
         CheckpointArgs, CheckpointId, CheckpointQueryFragment, CheckpointTotalTxQueryFragment,
         CheckpointsArgs, CheckpointsQueryFragment,
     },
-    streams::stream_paginated_query,
+    streams::PageStream,
 };
 
 define_query! {
@@ -41,9 +40,12 @@ impl ListCheckpointsQuery {
     /// and in its direction, with its limit as the page size.
     /// Without a cursor this fetches every checkpoint, which may take many
     /// requests.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<CheckpointSummary>> + Unpin {
+    pub fn stream(self) -> PageStream<CheckpointSummary> {
         let pagination = self.pagination.clone();
-        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+        PageStream::new(
+            pagination,
+            Box::new(move |page| self.clone().pagination(page).into_future()),
+        )
     }
 
     fn operation<'a>(
