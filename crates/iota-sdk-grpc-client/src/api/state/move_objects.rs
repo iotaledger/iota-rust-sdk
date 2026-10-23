@@ -61,7 +61,7 @@ define_list_query! {
     ///
     /// Fails if any object fails to decode. The query filters on `T`'s exact
     /// type, so a failure means the on-chain type has moved out from under the
-    /// mirror rather than that one object is odd — yielding the rest would hide
+    /// mirror rather than that one object is odd; yielding the rest would hide
     /// that.
     pub struct ListOwnedMoveObjectsQuery<T: MoveObject> {
         service_client: StateServiceClient<InterceptedChannel>,

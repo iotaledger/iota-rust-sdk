@@ -160,7 +160,7 @@ macro_rules! define_scoped_read_mask {
         }
 
         impl From<&'static str> for $mask {
-            /// Escape hatch — build the mask from a raw comma-separated path
+            /// Escape hatch: build the mask from a raw comma-separated path
             /// string (e.g. one of the pre-computed
             /// [`read_masks`](crate::read_masks) constants). Prefer passing
             /// typed field constants when possible.
@@ -170,7 +170,7 @@ macro_rules! define_scoped_read_mask {
         }
 
         impl From<String> for $mask {
-            /// Escape hatch — build the mask from a raw comma-separated path
+            /// Escape hatch: build the mask from a raw comma-separated path
             /// string. Prefer passing typed field constants when possible.
             fn from(s: String) -> Self {
                 Self(Cow::Owned(s))
@@ -269,7 +269,7 @@ macro_rules! impl_into_read_mask {
 define_field_paths! {
     /// Field paths for `get_objects`.
     pub struct ObjectField {
-        /// Wildcard — request all object fields.
+        /// Wildcard: request all object fields.
         ALL = "*",
         /// Object reference (object_id, version, digest).
         REFERENCE = "reference",
@@ -296,7 +296,7 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `list_owned_objects` and `coins`.
     pub struct OwnedObjectField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL = "*",
         /// Object reference (object_id, version, digest).
         REFERENCE = "reference",
@@ -323,7 +323,7 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `get_transactions` and `execute_transaction(s)`.
     pub struct TransactionField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL = "*",
         /// Transaction data (all sub-fields).
         TRANSACTION = "transaction",
@@ -435,7 +435,7 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `get_service_info`.
     pub struct ServiceInfoField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL = "*",
         /// The chain ID (network identifier).
         CHAIN_ID = "chain_id",
@@ -471,7 +471,7 @@ define_field_paths! {
     /// Use [`EpochField::feature_flag`] and [`EpochField::attribute`] for
     /// individual protocol-config map entries.
     pub struct EpochField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL = "*",
         /// The epoch number.
         EPOCH = "epoch",
@@ -559,7 +559,7 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for checkpoint responses.
     pub struct CheckpointResponseField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL = "*",
         /// All checkpoint data fields.
         CHECKPOINT = "checkpoint",
@@ -601,7 +601,7 @@ define_field_paths! {
         TRANSACTIONS_EVENTS = "transactions.events",
         /// The events digest.
         TRANSACTIONS_EVENTS_DIGEST = "transactions.events.digest",
-        /// Individual events — full BCS-encoded.
+        /// Individual events: full BCS-encoded.
         TRANSACTIONS_EVENTS_EVENTS_BCS = "transactions.events.events.bcs",
         /// Checkpoint sequence number of the transaction.
         TRANSACTIONS_CHECKPOINT = "transactions.checkpoint",
@@ -651,7 +651,7 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `simulate_transaction(s)`.
     pub struct SimulateField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL = "*",
         /// The simulated executed transaction (all sub-fields).
         EXECUTED_TRANSACTION = "executed_transaction",
@@ -675,7 +675,7 @@ define_field_paths! {
         EXECUTED_TRANSACTION_EVENTS = "executed_transaction.events",
         /// The events digest.
         EXECUTED_TRANSACTION_EVENTS_DIGEST = "executed_transaction.events.digest",
-        /// Individual events — full BCS-encoded.
+        /// Individual events: full BCS-encoded.
         EXECUTED_TRANSACTION_EVENTS_EVENTS_BCS = "executed_transaction.events.events.bcs",
         /// Checkpoint sequence number that included the transaction.
         EXECUTED_TRANSACTION_CHECKPOINT = "executed_transaction.checkpoint",
@@ -729,7 +729,7 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `view_function_call(s)`.
     pub struct ViewFunctionCallField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL = "*",
         /// Execution result (all sub-fields).
         EXECUTION_RESULT = "execution_result",
@@ -767,7 +767,7 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `list_dynamic_fields`.
     pub struct DynamicFieldField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL = "*",
         /// The kind of dynamic field (field or object).
         KIND = "kind",
@@ -1027,7 +1027,7 @@ mod tests {
             Ok(())
         );
 
-        // The default names the oneof, so both arms come back — a caller that
+        // The default names the oneof, so both arms come back. A caller that
         // does not set a mask still sees a failing call's error.
         let tree = FieldMaskTree::from_field_mask(&FieldMask::from_str(mask.as_str()));
         assert!(tree.contains(ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES.as_str()));

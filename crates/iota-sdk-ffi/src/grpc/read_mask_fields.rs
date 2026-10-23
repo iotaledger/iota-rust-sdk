@@ -84,7 +84,7 @@ macro_rules! read_mask_fields {
 read_mask_fields! {
     /// Field paths for `objects` and `objects_with_versions`.
     pub enum GrpcObjectField for ObjectField {
-        /// Wildcard — request all object fields.
+        /// Wildcard: request all object fields.
         ALL,
         /// Object reference (object_id, version, digest).
         REFERENCE,
@@ -102,7 +102,7 @@ read_mask_fields! {
 read_mask_fields! {
     /// Field paths for `owned_objects` and `all_owned_objects`.
     pub enum GrpcOwnedObjectField for OwnedObjectField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL,
         /// Object reference (object_id, version, digest).
         REFERENCE,
@@ -121,7 +121,7 @@ read_mask_fields! {
     /// Field paths for `transactions`, `execute_transaction` and
     /// `execute_transactions`.
     pub enum GrpcTransactionField for TransactionField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL,
         /// Transaction data (all sub-fields).
         TRANSACTION,
@@ -215,7 +215,7 @@ read_mask_fields! {
 read_mask_fields! {
     /// Field paths for `service_info`.
     pub enum GrpcServiceInfoField for ServiceInfoField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL,
         /// The chain ID (network identifier).
         CHAIN_ID,
@@ -239,7 +239,7 @@ read_mask_fields! {
 read_mask_fields! {
     /// Field paths for `epoch`.
     pub enum GrpcEpochField for EpochField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL,
         /// The epoch number.
         EPOCH,
@@ -289,7 +289,7 @@ read_mask_fields! {
     /// `checkpoint_by_sequence_number`, `checkpoint_by_digest`,
     /// `checkpoints_stream` and `checkpoints_stream_filtered`.
     pub enum GrpcCheckpointResponseField for CheckpointResponseField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL,
         /// All checkpoint data fields.
         CHECKPOINT,
@@ -331,7 +331,7 @@ read_mask_fields! {
         TRANSACTIONS_EVENTS,
         /// The events digest.
         TRANSACTIONS_EVENTS_DIGEST,
-        /// Individual events — full BCS-encoded.
+        /// Individual events: full BCS-encoded.
         TRANSACTIONS_EVENTS_EVENTS_BCS,
         /// Checkpoint sequence number of the transaction.
         TRANSACTIONS_CHECKPOINT,
@@ -371,7 +371,7 @@ read_mask_fields! {
 read_mask_fields! {
     /// Field paths for `simulate_transaction` and `simulate_transactions`.
     pub enum GrpcSimulateField for SimulateField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL,
         /// The simulated executed transaction (all sub-fields).
         EXECUTED_TRANSACTION,
@@ -395,7 +395,7 @@ read_mask_fields! {
         EXECUTED_TRANSACTION_EVENTS,
         /// The events digest.
         EXECUTED_TRANSACTION_EVENTS_DIGEST,
-        /// Individual events — full BCS-encoded.
+        /// Individual events: full BCS-encoded.
         EXECUTED_TRANSACTION_EVENTS_EVENTS_BCS,
         /// Checkpoint sequence number that included the transaction.
         EXECUTED_TRANSACTION_CHECKPOINT,
@@ -437,7 +437,7 @@ read_mask_fields! {
 read_mask_fields! {
     /// Field paths for `view_function_call` and `view_function_calls`.
     pub enum GrpcViewFunctionCallField for ViewFunctionCallField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL,
         /// Execution result (all sub-fields).
         EXECUTION_RESULT,
@@ -465,7 +465,7 @@ read_mask_fields! {
 read_mask_fields! {
     /// Field paths for `dynamic_fields` and `all_dynamic_fields`.
     pub enum GrpcDynamicFieldField for DynamicFieldField {
-        /// Wildcard — request all fields.
+        /// Wildcard: request all fields.
         ALL,
         /// The kind of dynamic field (field or object).
         KIND,
