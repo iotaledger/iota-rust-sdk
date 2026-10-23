@@ -108,7 +108,9 @@ impl MultisigAggregatedSignature {
     /// `UserSignature`s and a `MultisigCommittee`.
     ///
     /// This:
-    ///  - validates `committee` via `MultisigCommittee::validate`;
+    ///  - validates `committee` via `MultisigCommittee::validate`, except that
+    ///    a committee mixing Ed25519 with other key schemes is accepted when
+    ///    every member provides a signature;
     ///  - converts each `UserSignature` into a `MultisigMemberSignature`;
     ///  - derives the `bitmap` by locating each signature's public key in the
     ///    committee, rejecting duplicates and signatures from non-members;
@@ -179,7 +181,8 @@ impl MultisigCommittee {
     ///  - contain zero or more than ten members;
     ///  - contain a member with weight 0;
     ///  - have a `threshold` greater than the sum of all member weights;
-    ///  - contain duplicate public keys.
+    ///  - contain duplicate public keys;
+    ///  - mix Ed25519 members with members of other key schemes.
     ///
     /// Note that the order of the members is significant towards deriving the
     /// `Address` governed by this committee.
@@ -222,6 +225,7 @@ impl MultisigCommittee {
     ///  - No member has weight 0
     ///  - the sum of the weights of all members must be at least the threshold
     ///  - contains no duplicate members
+    ///  - does not mix Ed25519 members with members of other key schemes
     pub fn validate(&self) -> Result<()> {
         Ok(self.0.validate()?)
     }
