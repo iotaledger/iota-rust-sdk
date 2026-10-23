@@ -804,6 +804,89 @@ mod tests {
         ));
     }
 
+    /// Converting a transaction whose command names an input it does not have
+    /// fails, rather than leaving an argument that could later name the gas
+    /// coin.
+    #[test]
+    fn transaction_naming_a_missing_input_is_rejected() {
+        let sender = Address::new([1; 32]);
+        let txn = Transaction::V1(iota_types::TransactionV1 {
+            kind: iota_types::TransactionKind::Programmable(iota_types::ProgrammableTransaction {
+                inputs: vec![iota_types::Input::pure(&Address::new([7; 32]))],
+                commands: vec![iota_types::Command::TransferObjects(
+                    iota_types::TransferObjects {
+                        objects: vec![iota_types::Argument::Input(1)],
+                        address: iota_types::Argument::Input(0),
+                    },
+                )],
+            }),
+            sender,
+            gas_payment: iota_types::GasPayment {
+                objects: vec![ObjectReference::new(
+                    iota_types::ObjectId::new([0x99; 32]),
+                    Version::from_u64(1),
+                    iota_types::ObjectDigest::new([0x99; 32]),
+                )],
+                owner: sender,
+                price: 1000,
+                budget: 5_000_000,
+            },
+            expiration: Default::default(),
+        });
+
+        let err = TransactionBuilder::try_from(txn).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::error::TransactionBuilderError::InvalidArgument {
+                    command: 0,
+                    argument: crate::unresolved::Argument::Input(1),
+                }
+            ),
+            "{err}"
+        );
+    }
+
+    /// The infallible conversion panics on a command naming an input the
+    /// transaction does not have.
+    #[test]
+    #[should_panic(expected = "refers to an input or result it does not have")]
+    fn converting_a_programmable_transaction_naming_a_missing_input_panics() {
+        let _ = TransactionBuilder::from(iota_types::ProgrammableTransaction {
+            inputs: Vec::new(),
+            commands: vec![iota_types::Command::TransferObjects(
+                iota_types::TransferObjects {
+                    objects: vec![iota_types::Argument::Gas],
+                    address: iota_types::Argument::Input(0),
+                },
+            )],
+        });
+    }
+
+    /// A command may only use the results of the commands before it.
+    #[test]
+    fn programmable_transaction_using_a_later_result_is_rejected() {
+        let ptb = iota_types::ProgrammableTransaction {
+            inputs: vec![iota_types::Input::pure(&1u64)],
+            commands: vec![iota_types::Command::SplitCoins(iota_types::SplitCoins {
+                coin: iota_types::Argument::Result(0),
+                amounts: vec![iota_types::Argument::Input(0)],
+            })],
+        };
+
+        let err = TransactionBuilder::try_from_programmable_transaction(ptb).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::error::TransactionBuilderError::InvalidArgument {
+                    command: 0,
+                    argument: crate::unresolved::Argument::Result(0),
+                }
+            ),
+            "{err}"
+        );
+    }
+
     #[cfg(feature = "test-client")]
     mod sponsored_execution {
         use std::sync::{
