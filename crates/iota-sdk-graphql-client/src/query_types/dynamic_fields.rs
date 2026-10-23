@@ -4,11 +4,11 @@
 
 use std::str::FromStr;
 
-use base64ct::Encoding;
 use iota_types::TypeTag;
 
 use crate::{
-    DynamicFieldOutput, error,
+    DynamicFieldOutput,
+    error::{self, GraphQLError, GraphQLResult},
     query_types::{Address, Base64, JsonValue, MoveObjectContents, MoveValue, PageInfo, schema},
 };
 
@@ -120,21 +120,20 @@ impl DynamicFieldValue {
     }
 
     /// Return the typename and bcs of this dynamic field value.
-    pub fn type_bcs(&self) -> Option<crate::DynamicFieldValue> {
-        match self {
-            DynamicFieldValue::MoveObject(mo) => {
-                mo.contents.as_ref().map(|o| crate::DynamicFieldValue {
-                    type_tag: TypeTag::from_str(&o.move_type.repr.clone())
-                        .expect("Invalid TypeTag"),
-                    bcs: base64ct::Base64::decode_vec(&o.bcs.0).expect("Invalid Base64"),
-                })
-            }
-            DynamicFieldValue::MoveValue(mv) => Some(crate::DynamicFieldValue {
-                type_tag: TypeTag::from_str(&mv.move_type.repr.clone()).expect("Invalid TypeTag"),
-                bcs: base64ct::Base64::decode_vec(&mv.bcs.0).expect("Invalid Base64"),
-            }),
+    pub fn type_bcs(&self) -> GraphQLResult<Option<crate::DynamicFieldValue>> {
+        let value = match self {
+            DynamicFieldValue::MoveObject(mo) => mo.contents.as_ref(),
+            DynamicFieldValue::MoveValue(mv) => Some(mv),
             _ => None,
-        }
+        };
+        value
+            .map(|v| {
+                Ok(crate::DynamicFieldValue {
+                    type_tag: TypeTag::from_str(&v.move_type.repr)?,
+                    bcs: crate::base64::decode(&v.bcs.0)?,
+                })
+            })
+            .transpose()
     }
 }
 
@@ -149,23 +148,23 @@ impl TryFrom<DynamicField> for DynamicFieldOutput {
     type Error = error::GraphQLError;
 
     fn try_from(val: DynamicField) -> Result<Self, Self::Error> {
-        let typetag = TypeTag::from_str(
-            val.name
-                .as_ref()
-                .expect("There should be a name in this dynamic field")
-                .move_type
-                .repr
-                .as_str(),
-        )?;
+        let name = val
+            .name
+            .as_ref()
+            .ok_or(GraphQLError::EmptyResponseField("dynamic field name"))?;
         Ok(DynamicFieldOutput {
             name: crate::DynamicFieldName {
-                type_tag: typetag,
-                bcs: base64ct::Base64::decode_vec(val.name.as_ref().unwrap().bcs.0.as_ref())
-                    .unwrap(),
-                json: val.name.as_ref().unwrap().json.clone(),
+                type_tag: TypeTag::from_str(&name.move_type.repr)?,
+                bcs: crate::base64::decode(&name.bcs.0)?,
+                json: name.json.clone(),
             },
             value_as_json: val.field_value_json(),
-            value: val.value.and_then(|x| x.type_bcs()),
+            value: val
+                .value
+                .as_ref()
+                .map(|v| v.type_bcs())
+                .transpose()?
+                .flatten(),
         })
     }
 }
