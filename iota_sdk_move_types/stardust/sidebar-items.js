@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["alias","alias_output","basic_output","expiration_unlock_condition","irc27","nft","nft_output","stardust_upgrade_label","storage_deposit_return_unlock_condition","timelock_unlock_condition"]};
