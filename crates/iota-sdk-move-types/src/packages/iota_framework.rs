@@ -51,6 +51,12 @@ pub mod object {
         }
     }
 
+    impl crate::MoveType for ID {
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new_id()))
+        }
+    }
+
     /// Rust version of the Move `iota::object::UID` type.
     ///
     /// # BCS
@@ -1223,6 +1229,14 @@ pub mod dynamic_object_field {
     impl<Name> Wrapper<Name> {
         pub const fn new(name: Name) -> Self {
             Self { name }
+        }
+    }
+
+    impl<Name: crate::MoveType> crate::MoveType for Wrapper<Name> {
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(
+                iota_types::StructTag::new_dynamic_object_field_wrapper(Name::type_tag()),
+            ))
         }
     }
 }
@@ -2761,6 +2775,12 @@ pub mod deny_list {
         pub per_type_key: Vec<u8>,
     }
 
+    impl crate::MoveType for ConfigKey {
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new_deny_list_config_key()))
+        }
+    }
+
     /// Rust version of the Move `iota::deny_list::AddressKey` type.
     ///
     /// # BCS
@@ -2775,6 +2795,14 @@ pub mod deny_list {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct AddressKey(pub Address);
+
+    impl crate::MoveType for AddressKey {
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(
+                Box::new(iota_types::StructTag::new_deny_list_address_key()),
+            )
+        }
+    }
 
     /// Rust version of the Move `iota::deny_list::GlobalPauseKey` type.
     ///
@@ -2794,6 +2822,14 @@ pub mod deny_list {
     )]
     pub struct GlobalPauseKey {
         dummy_field: bool,
+    }
+
+    impl crate::MoveType for GlobalPauseKey {
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(
+                iota_types::StructTag::new_deny_list_global_pause_key(),
+            ))
+        }
     }
 
     /// Rust version of the Move `iota::deny_list::PerTypeConfigCreated`
@@ -3048,6 +3084,14 @@ pub mod config {
     impl<Value> Setting<Value> {
         pub const fn new(data: Option<SettingData<Value>>) -> Self {
             Self { data }
+        }
+    }
+
+    impl<Value: crate::MoveType> crate::MoveType for Setting<Value> {
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new_config_setting(
+                Value::type_tag(),
+            )))
         }
     }
 
