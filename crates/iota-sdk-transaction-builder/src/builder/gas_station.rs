@@ -128,6 +128,9 @@ pub struct GasStation {
 
 impl GasStation {
     /// Start configuring a gas station reachable at `url`.
+    ///
+    /// Request paths are appended to the path of `url`, so a station served
+    /// under a path prefix is reached through that prefix.
     pub fn builder(url: Url) -> GasStationBuilder {
         GasStationBuilder {
             url,
@@ -380,8 +383,11 @@ struct ExecuteTxResponse {
 
 impl GasStation {
     fn endpoint(&self, kind: GasStationRequestKind) -> Result<Url, GasStationError> {
-        self.url
-            .join(kind.as_path())
+        let mut base = self.url.clone();
+        if !base.path().ends_with('/') {
+            base.set_path(&format!("{}/", base.path()));
+        }
+        base.join(kind.as_path())
             .map_err(GasStationError::InvalidUrl)
     }
 
@@ -623,9 +629,40 @@ pub(crate) enum GasStationRequestKind {
 impl GasStationRequestKind {
     const fn as_path(&self) -> &str {
         match self {
-            Self::ReserveGas => "/v1/reserve_gas",
-            Self::ExecuteTx => "/v1/execute_tx",
-            Self::Version => "/version",
+            Self::ReserveGas => "v1/reserve_gas",
+            Self::ExecuteTx => "v1/execute_tx",
+            Self::Version => "version",
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn endpoints_keep_the_base_path() {
+        for (base, expected) in [
+            ("http://0.0.0.0:9527", "http://0.0.0.0:9527/v1/reserve_gas"),
+            ("http://0.0.0.0:9527/", "http://0.0.0.0:9527/v1/reserve_gas"),
+            (
+                "https://example.com/gas",
+                "https://example.com/gas/v1/reserve_gas",
+            ),
+            (
+                "https://example.com/gas/",
+                "https://example.com/gas/v1/reserve_gas",
+            ),
+        ] {
+            let station = GasStation::new(base.parse().unwrap());
+            assert_eq!(
+                station
+                    .endpoint(GasStationRequestKind::ReserveGas)
+                    .unwrap()
+                    .as_str(),
+                expected,
+                "base {base}"
+            );
         }
     }
 }
