@@ -210,10 +210,13 @@ impl crate::FromMnemonic for Ed25519PrivateKey {
             .map_err(|e| crate::PrivateKeyError::Bip39(e.to_string()))?;
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
         let path = bip32::DerivationPath::from_str(&path)
-            .map_err(|e| crate::PrivateKeyError::Bip32(e.to_string()))?
-            .into_iter()
-            .map(|c| c.0)
-            .collect::<Vec<_>>();
+            .map_err(|e| crate::PrivateKeyError::Bip32(e.to_string()))?;
+        if let Some(index) = path.iter().find(|index| !index.is_hardened()) {
+            return Err(crate::PrivateKeyError::Bip32(format!(
+                "ed25519 derivation requires hardened path indices, got {index}"
+            )));
+        }
+        let path = path.into_iter().map(|c| c.0).collect::<Vec<_>>();
         Ok(Self::new(slip10_ed25519::derive_ed25519_private_key(
             &seed, &path,
         )))
