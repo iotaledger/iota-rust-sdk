@@ -45,6 +45,8 @@ pub trait GasSponsor {
     ///
     /// The transaction pays with the [`SponsoredGas`] that reservation
     /// returned, and `signature` is the sender's; the sponsor supplies its own.
+    ///
+    /// Must return the digest of `transaction`.
     fn execute_reserved(
         &self,
         reservation: Self::Reservation,

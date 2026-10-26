@@ -985,14 +985,14 @@ mod tests {
                 .execute_with_gas_sponsor(&sponsor, &signer())
                 .await
                 .unwrap_err();
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
             assert!(matches!(
                 err,
-                TransactionBuilderError::MissingTransaction(_)
+                TransactionBuilderError::MissingTransaction(digest) if digest == executed.digest()
             ));
 
             assert_eq!(owner_queries.load(Ordering::SeqCst), 0);
 
-            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
             let Transaction::V1(txn) = executed else {
                 panic!("expected a V1 transaction");
             };
@@ -1099,11 +1099,15 @@ mod tests {
                 ..Default::default()
             };
 
+            let err = offline_builder()
+                .execute_with_gas_sponsor(&sponsor, &signer())
+                .await
+                .unwrap_err();
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
             assert!(matches!(
-                offline_builder()
-                    .execute_with_gas_sponsor(&sponsor, &signer())
-                    .await,
-                Err(TransactionBuilderError::SponsorDigestMismatch { .. })
+                err,
+                TransactionBuilderError::SponsorDigestMismatch { expected, got }
+                    if expected == executed.digest() && got == TransactionDigest::ZERO
             ));
         }
     }
