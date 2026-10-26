@@ -568,6 +568,16 @@ pub mod url {
 
     impl core::error::Error for NonAsciiUrl {}
 
+    /// Converts through the `ascii::String` conversion, so it fails only on
+    /// bytes that are not UTF-8 and does not check for ASCII.
+    impl TryFrom<Url> for String {
+        type Error = std::string::FromUtf8Error;
+
+        fn try_from(value: Url) -> Result<Self, Self::Error> {
+            Self::try_from(value.url)
+        }
+    }
+
     #[cfg(test)]
     mod tests {
         #[cfg(target_arch = "wasm32")]
@@ -578,6 +588,12 @@ pub mod url {
         #[test]
         fn url_rejects_non_ascii() {
             assert!(Url::try_from_ascii("héllo").is_err());
+        }
+
+        #[test]
+        fn url_converts_into_string() {
+            let url = Url::try_from_ascii("https://iota.org").unwrap();
+            assert_eq!(String::try_from(url).unwrap(), "https://iota.org");
         }
     }
 }
