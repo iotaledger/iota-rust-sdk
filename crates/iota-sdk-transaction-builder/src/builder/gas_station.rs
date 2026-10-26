@@ -383,12 +383,7 @@ struct ExecuteTxResponse {
 
 impl GasStation {
     fn endpoint(&self, kind: GasStationRequestKind) -> Result<Url, GasStationError> {
-        let mut base = self.url.clone();
-        if !base.path().ends_with('/') {
-            base.set_path(&format!("{}/", base.path()));
-        }
-        base.join(kind.as_path())
-            .map_err(GasStationError::InvalidUrl)
+        kind.url(&self.url).map_err(GasStationError::InvalidUrl)
     }
 
     async fn gas_station_version(&self) -> Result<GasStationVersion, GasStationError> {
@@ -634,6 +629,15 @@ impl GasStationRequestKind {
             Self::Version => "version",
         }
     }
+
+    /// The URL of this request to a station reachable at `base`.
+    fn url(&self, base: &Url) -> Result<Url, <Url as FromStr>::Err> {
+        let mut base = base.clone();
+        if !base.path().ends_with('/') {
+            base.set_path(&format!("{}/", base.path()));
+        }
+        base.join(self.as_path())
+    }
 }
 
 #[cfg(test)]
@@ -654,15 +658,10 @@ mod tests {
                 "https://example.com/gas/v1/reserve_gas",
             ),
         ] {
-            let station = GasStation::new(base.parse().unwrap());
-            assert_eq!(
-                station
-                    .endpoint(GasStationRequestKind::ReserveGas)
-                    .unwrap()
-                    .as_str(),
-                expected,
-                "base {base}"
-            );
+            let url = GasStationRequestKind::ReserveGas
+                .url(&base.parse().unwrap())
+                .unwrap();
+            assert_eq!(url.as_str(), expected, "base {base}");
         }
     }
 }
