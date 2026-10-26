@@ -1849,24 +1849,33 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     }
 
     /// The objects `transaction` reads that a signer can show the user: its
-    /// gas coins and immutable or owned inputs, at the versions it references.
+    /// gas coins and immutable, owned or receiving inputs at the versions it
+    /// references, and its shared inputs, whose version the transaction leaves
+    /// to consensus.
     ///
     /// Objects fetched while building are reused, as the transaction references
-    /// them at the versions they were fetched at, and the rest are fetched.
-    /// Returns none when any object cannot be obtained, since a partial set
-    /// does not describe the transaction.
+    /// them at the versions they were fetched at, and the rest are fetched,
+    /// shared ones at their latest version. Returns none when any object cannot
+    /// be obtained, since a partial set does not describe the transaction.
     async fn signing_objects(&self, transaction: &Transaction) -> Vec<Object> {
         let Transaction::V1(transaction) = transaction else {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
-        let mut references = transaction.gas_payment.objects.clone();
+        let mut requests = transaction
+            .gas_payment
+            .objects
+            .iter()
+            .map(|reference| (reference.object_id, Some(reference.version)))
+            .collect::<Vec<_>>();
         if let TransactionKind::Programmable(programmable) = &transaction.kind {
             for input in &programmable.inputs {
                 match input {
-                    iota_types::Input::ImmutableOrOwned(reference) => references.push(*reference),
-                    iota_types::Input::Pure(_)
-                    | iota_types::Input::Shared(_)
-                    | iota_types::Input::Receiving(_) => {}
+                    iota_types::Input::ImmutableOrOwned(reference)
+                    | iota_types::Input::Receiving(reference) => {
+                        requests.push((reference.object_id, Some(reference.version)))
+                    }
+                    iota_types::Input::Shared(shared) => requests.push((shared.object_id, None)),
+                    iota_types::Input::Pure(_) => {}
                     _ => {
                         unimplemented!("a new Input enum variant was added and needs to be handled")
                     }
@@ -1874,10 +1883,10 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             }
         }
 
-        let missing = references
+        let missing = requests
             .iter()
-            .filter(|reference| !self.data.objects.contains_key(&reference.object_id))
-            .map(|reference| (reference.object_id, Some(reference.version)))
+            .filter(|(object_id, _)| !self.data.objects.contains_key(object_id))
+            .copied()
             .collect::<Vec<_>>();
         let mut fetched = HashMap::new();
         if !missing.is_empty() {
@@ -1892,13 +1901,13 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             }
         }
 
-        references
+        requests
             .iter()
-            .map(|reference| {
+            .map(|(object_id, _)| {
                 self.data
                     .objects
-                    .get(&reference.object_id)
-                    .or_else(|| fetched.get(&reference.object_id))
+                    .get(object_id)
+                    .or_else(|| fetched.get(object_id))
                     .cloned()
             })
             .collect::<Option<Vec<_>>>()

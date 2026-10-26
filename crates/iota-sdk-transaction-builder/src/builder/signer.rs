@@ -35,9 +35,11 @@ pub trait TransactionSigner {
     }
 
     /// Sign a transaction given the objects it reads: its gas coins and
-    /// immutable or owned inputs, at the versions it references. `objects` is
-    /// empty when the signer does not use them or they could not all be
-    /// obtained. The default ignores them and calls [`sign`](Self::sign).
+    /// immutable, owned or receiving inputs at the versions it references, and
+    /// its shared inputs as the builder fetched them, which may change before
+    /// the transaction executes. `objects` is empty when the signer does not
+    /// use them or they could not all be obtained. The default ignores them and
+    /// calls [`sign`](Self::sign).
     fn sign_with_objects(
         &self,
         transaction: &Transaction,
@@ -78,8 +80,10 @@ impl TransactionSigner for MoveAuthenticator {
 
 #[cfg(feature = "ledger")]
 mod ledger {
+    use std::collections::HashSet;
+
     use iota_ledger::{LedgerError, LedgerSigner};
-    use iota_types::{Object, Transaction, UserSignature};
+    use iota_types::{Input, Object, Transaction, TransactionKind, UserSignature};
 
     use super::TransactionSigner;
 
@@ -88,8 +92,8 @@ mod ledger {
     /// clear-sign, it blind-signs with a warning, which the app only allows
     /// when blind signing is enabled in its settings.
     ///
-    /// With the USB HID and Speculos transports, signing blocks the task while
-    /// the user confirms on the device.
+    /// With the Speculos transport, signing blocks the thread polling it until
+    /// the emulator answers.
     impl TransactionSigner for LedgerSigner {
         type Error = LedgerError;
 
@@ -111,7 +115,7 @@ mod ledger {
                 return self.sign_transaction(transaction).await;
             }
             match self
-                .sign_transaction_with_objects(transaction, objects)
+                .sign_transaction_with_objects(transaction, &device_objects(transaction, objects))
                 .await
             {
                 Err(LedgerError::ClearSigningUnsupported(version)) => {
@@ -123,12 +127,48 @@ mod ledger {
         }
     }
 
+    /// The objects the IOTA app can use: the gas coins and immutable or owned
+    /// inputs of `transaction`. The app finds each one it needs by hashing the
+    /// objects in order, so any other object only slows it down.
+    fn device_objects(transaction: &Transaction, objects: &[Object]) -> Vec<Object> {
+        let Transaction::V1(transaction) = transaction else {
+            unimplemented!("a new Transaction enum variant was added and needs to be handled")
+        };
+        let mut ids = transaction
+            .gas_payment
+            .objects
+            .iter()
+            .map(|reference| reference.object_id)
+            .collect::<HashSet<_>>();
+        if let TransactionKind::Programmable(programmable) = &transaction.kind {
+            for input in &programmable.inputs {
+                match input {
+                    Input::ImmutableOrOwned(reference) => {
+                        ids.insert(reference.object_id);
+                    }
+                    Input::Pure(_) | Input::Shared(_) | Input::Receiving(_) => {}
+                    _ => {
+                        unimplemented!("a new Input enum variant was added and needs to be handled")
+                    }
+                }
+            }
+        }
+        objects
+            .iter()
+            .filter(|object| ids.contains(&object.id()))
+            .cloned()
+            .collect()
+    }
+
     #[cfg(all(test, not(target_arch = "wasm32")))]
     mod tests {
         use std::sync::{Arc, Mutex};
 
         use iota_ledger::{ApduAnswer, ApduCommand, Ledger, Transport, TransportFuture};
-        use iota_types::Ed25519PublicKey;
+        use iota_types::{
+            Ed25519PublicKey, MoveStruct, ObjectData, ObjectId, Owner, StructTag,
+            TransactionDigest, Version,
+        };
 
         use super::*;
 
@@ -230,6 +270,31 @@ mod ledger {
             .await;
             assert_eq!(parameters, [2]);
         }
+
+        #[test]
+        fn sends_the_device_only_the_objects_it_can_use() {
+            let transaction = bcs::from_bytes(&hex_decode(TRANSACTION)).unwrap();
+            let gas_coin: Object = bcs::from_bytes(&hex_decode(GAS_COIN)).unwrap();
+            let contents = [&[5; ObjectId::LENGTH][..], &0u64.to_le_bytes()].concat();
+            let shared = Object::new(
+                ObjectData::Struct(
+                    MoveStruct::new(
+                        StructTag::new_gas_coin().into(),
+                        Version::from_u64(1),
+                        contents,
+                    )
+                    .unwrap(),
+                ),
+                Owner::Shared(Version::from_u64(1)),
+                TransactionDigest::ZERO,
+                0,
+            );
+
+            assert_eq!(
+                device_objects(&transaction, &[shared, gas_coin.clone()]),
+                [gas_coin]
+            );
+        }
     }
 }
 
@@ -237,7 +302,7 @@ mod ledger {
 mod tests {
     use std::sync::Mutex;
 
-    use iota_types::{Address, ObjectId, ObjectReference};
+    use iota_types::{Address, Input, ObjectId, ObjectReference, SharedObjectReference, Version};
 
     use super::*;
     use crate::{TestClient, TransactionBuilder, TransactionBuilderLedgerClient};
@@ -307,5 +372,44 @@ mod tests {
                 .any(|object| object.object_ref() == reference)
         );
         assert_eq!(objects.len(), 2);
+    }
+
+    #[tokio::test]
+    async fn execute_passes_shared_and_receiving_objects() {
+        let coin = ObjectId::from_bytes([1; ObjectId::LENGTH]).unwrap();
+        let receivable = ObjectId::from_bytes([3; ObjectId::LENGTH]).unwrap();
+        let system_state = Input::Shared(SharedObjectReference {
+            object_id: ObjectId::SYSTEM_STATE,
+            initial_shared_version: Version::from_u64(1),
+            mutable: false,
+        });
+        let mut builder = TransactionBuilder::new(Address::ZERO).with_client(TestClient);
+        builder
+            .move_call(Address::FRAMEWORK, "transfer", "public_receive")
+            .arguments((
+                coin,
+                crate::Shared(ObjectId::CLOCK),
+                system_state,
+                crate::Receiving(receivable),
+            ));
+
+        let signer = RecordingSigner::default();
+        builder.execute(&signer, None).await.unwrap_err();
+
+        // the gas coin and every object input, including the system state
+        // given by reference
+        let objects = signer.objects.lock().unwrap().take().unwrap();
+        let mut ids = objects.iter().map(Object::id).collect::<Vec<_>>();
+        ids.sort();
+        let gas_coin = ObjectId::from_bytes([0xee; ObjectId::LENGTH]).unwrap();
+        let mut expected = [
+            coin,
+            receivable,
+            gas_coin,
+            ObjectId::CLOCK,
+            ObjectId::SYSTEM_STATE,
+        ];
+        expected.sort();
+        assert_eq!(ids, expected);
     }
 }
