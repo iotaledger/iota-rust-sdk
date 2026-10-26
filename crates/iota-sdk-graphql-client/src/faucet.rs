@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tracing::{error, info};
 
-use crate::WaitForTransaction;
+use crate::{WaitForTransaction, client::without_credentials};
 
 pub const FAUCET_LOCAL_HOST: &str = "http://localhost:9123";
 
@@ -160,7 +160,8 @@ impl FaucetClient {
         let url = self.faucet_url.join("v1/gas")?;
         info!(
             "Requesting gas from faucet for address {} : {}",
-            address, url
+            address,
+            without_credentials(&url)
         );
         let resp = self
             .inner
@@ -290,7 +291,10 @@ impl FaucetClient {
     /// Possible statuses are defined in: [`BatchSendStatusType`]
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>, FaucetError> {
         let status_url = self.faucet_url.join(&format!("v1/status/{id}"))?;
-        info!("Checking status of faucet request: {status_url}");
+        info!(
+            "Checking status of faucet request: {}",
+            without_credentials(&status_url)
+        );
         let response = self.inner.get(status_url).send().await?;
 
         if response.status() == StatusCode::TOO_MANY_REQUESTS {
