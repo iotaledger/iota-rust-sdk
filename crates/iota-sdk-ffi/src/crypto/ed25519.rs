@@ -97,6 +97,9 @@ impl Ed25519PrivateKey {
 
     /// Create an instance from a mnemonic phrase and a derivation path like
     /// `"m/44'/4218'/0'/0'/0'"`
+    ///
+    /// Ed25519 keys can only be derived along hardened indices, so a path with
+    /// an unhardened index is an error.
     #[uniffi::constructor(default(password = ""))]
     pub fn from_mnemonic_with_path(phrase: &str, path: String, password: String) -> Result<Self> {
         Ok(
