@@ -23,9 +23,9 @@ async fn print_address() -> Result<(), Box<dyn std::error::Error>> {
 ```
 
 Calls are async so that transports backed by asynchronous host APIs, such as
-WebHID, can be plugged in. The USB HID and Speculos transports block the thread
-polling a call until the device answers; synchronous programs can run calls
-with an executor such as `futures::executor::block_on`.
+WebHID, can be plugged in. The Speculos transport blocks the thread polling a
+call until the emulator answers; synchronous programs can run calls with an
+executor such as `futures::executor::block_on`.
 
 ## Transports
 

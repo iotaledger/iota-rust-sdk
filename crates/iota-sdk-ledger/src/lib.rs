@@ -37,8 +37,8 @@ const APP_SWITCH_POLL_INTERVAL: Duration = Duration::from_millis(250);
 ///
 /// Every call completes once the device answers, which for signing and
 /// address verification includes waiting for the user to confirm on the
-/// device. The USB HID and Speculos transports block the thread polling the
-/// call while they wait.
+/// device. The Speculos transport blocks the thread polling the call while it
+/// waits.
 ///
 /// Calls on the same `Ledger` run one at a time: each waits for the previous
 /// one to finish, since a command can take several exchanges with the device.
