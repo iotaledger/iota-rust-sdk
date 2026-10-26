@@ -11,7 +11,7 @@ use iota_types::{Object, ObjectId, Version};
 use crate::{
     GraphQLClient,
     api::define_query,
-    error::GraphQLResult,
+    error::{GraphQLError, GraphQLResult},
     pagination::{Page, PaginationFilter, PaginationFilterResponse},
     query_types::{
         MoveObjectContentsBcsQueryFragment, MoveObjectContentsJsonQueryFragment, ObjectFilter,
@@ -88,8 +88,13 @@ impl ListObjectsQuery {
         let bcs = oc
             .nodes
             .iter()
-            .map(|o| &o.bcs)
-            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .map(|o| {
+                let b64 = o
+                    .bcs
+                    .as_ref()
+                    .ok_or(GraphQLError::EmptyResponseField("object bcs"))?;
+                crate::base64::decode(b64.0.as_str())
+            })
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let objects = bcs
             .iter()
@@ -304,10 +309,11 @@ mod tests {
     use iota_types::{Address, ObjectId, Version};
 
     use crate::{
+        error::GraphQLError,
         query_types::ObjectFilter,
         test_utils::{
             assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
-            test_client,
+            test_client, with_response,
         },
     };
 
@@ -396,6 +402,19 @@ mod tests {
         })
         .await;
         assert_forward_page(&vars);
+    }
+
+    #[tokio::test]
+    async fn objects_rejects_an_object_without_bcs() {
+        let result = with_response(
+            r#"{"data":{"objects":{"nodes":[{"bcs":null}],"pageInfo":{"hasPreviousPage":false,"hasNextPage":false,"startCursor":null,"endCursor":null}}}}"#,
+            |client| async move { client.objects().await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("object bcs"))
+        ));
     }
 
     #[tokio::test]

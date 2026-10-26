@@ -11,7 +11,7 @@ use iota_types::{Address, MovePackage, Object, Version};
 use crate::{
     GraphQLClient, MoveFunction, MoveModule, Page,
     api::define_query,
-    error::GraphQLResult,
+    error::{GraphQLError, GraphQLResult},
     pagination::{PaginationFilter, PaginationFilterResponse},
     query_types::{
         LatestPackageQueryFragment, MovePackageVersionFilter, NormalizedMoveFunctionQueryArgs,
@@ -105,8 +105,13 @@ impl ListPackageVersionsQuery {
         let bcs = pc
             .nodes
             .iter()
-            .map(|p| &p.bcs)
-            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .map(|p| {
+                let b64 = p
+                    .bcs
+                    .as_ref()
+                    .ok_or(GraphQLError::EmptyResponseField("package bcs"))?;
+                crate::base64::decode(b64.0.as_str())
+            })
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
@@ -198,8 +203,13 @@ impl ListPackagesQuery {
         let bcs = pc
             .nodes
             .iter()
-            .map(|p| &p.bcs)
-            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .map(|p| {
+                let b64 = p
+                    .bcs
+                    .as_ref()
+                    .ok_or(GraphQLError::EmptyResponseField("package bcs"))?;
+                crate::base64::decode(b64.0.as_str())
+            })
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
@@ -540,9 +550,10 @@ mod tests {
 
     use crate::{
         Direction, PaginationFilter,
+        error::GraphQLError,
         test_utils::{
             assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
-            test_client,
+            test_client, with_response,
         },
     };
 
@@ -651,6 +662,29 @@ mod tests {
         })
         .await;
         assert_forward_page(&vars);
+    }
+
+    #[tokio::test]
+    async fn package_listings_reject_a_package_without_bcs() {
+        let result = with_response(
+            r#"{"data":{"packageVersions":{"nodes":[{"bcs":null}],"pageInfo":{"hasPreviousPage":false,"hasNextPage":false,"startCursor":null,"endCursor":null}}}}"#,
+            |client| async move { client.package_versions(Address::FRAMEWORK).await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("package bcs"))
+        ));
+
+        let result = with_response(
+            r#"{"data":{"packages":{"nodes":[{"bcs":null}],"pageInfo":{"hasPreviousPage":false,"hasNextPage":false,"startCursor":null,"endCursor":null}}}}"#,
+            |client| async move { client.packages().await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("package bcs"))
+        ));
     }
 
     #[tokio::test]
