@@ -1481,14 +1481,14 @@ impl<L> TransactionBuilder<(), L> {
                     .map_err(TransactionBuilderError::signature)?;
 
                 let digest = txn.digest();
-                let got = sponsor
+                let sponsor_digest = sponsor
                     .execute_reserved(reservation, &txn, &signature)
                     .await
                     .map_err(TransactionBuilderError::gas_sponsor)?;
-                if got != digest {
+                if sponsor_digest != digest {
                     return Err(TransactionBuilderError::SponsorDigestMismatch {
                         expected: digest,
-                        got,
+                        got: sponsor_digest,
                     });
                 }
                 Ok(digest)
@@ -2145,14 +2145,14 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                     .await
                     .map_err(TransactionBuilderError::signature)?;
                 let digest = txn.digest();
-                let got = sponsor
+                let sponsor_digest = sponsor
                     .execute_reserved(reservation, &txn, &signature)
                     .await
                     .map_err(TransactionBuilderError::gas_sponsor)?;
-                if got != digest {
+                if sponsor_digest != digest {
                     return Err(TransactionBuilderError::SponsorDigestMismatch {
                         expected: digest,
-                        got,
+                        got: sponsor_digest,
                     });
                 }
 
