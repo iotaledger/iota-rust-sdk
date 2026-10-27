@@ -61,17 +61,6 @@ impl MultisigVerifier {
         self
     }
 
-    /// The verifier used for every passkey member. An address set on it must
-    /// match each passkey member, so leave it unset for a multisig with
-    /// passkey members of different addresses.
-    pub fn with_passkey_verifier(self: Arc<Self>, passkey_verifier: &PasskeyVerifier) -> Arc<Self> {
-        {
-            let mut lock = self.0.write().expect("error writing to verifier");
-            *lock = std::mem::take(&mut *lock).with_passkey_verifier(passkey_verifier.0.clone());
-        }
-        self
-    }
-
     pub fn verify(&self, message: &[u8], signature: &MultisigAggregatedSignature) -> Result<()> {
         Ok(self
             .0
