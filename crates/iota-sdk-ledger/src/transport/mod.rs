@@ -117,8 +117,8 @@ pub trait Transport: MaybeSendSync {
     /// Send a command and wait for the device's answer.
     fn exchange<'a>(&'a self, command: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer>;
 
-    /// Wait for the device to come back after it switched apps, and
-    /// re-establish the link, which closes on some transports.
+    /// Re-establish the link after the device switched apps, which closes
+    /// the previous connection on some transports.
     ///
     /// While waiting for an app to start, [`Ledger`](crate::Ledger) calls this
     /// at intervals until the app answers.
