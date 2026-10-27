@@ -1706,13 +1706,20 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             return Ok(HashMap::new());
         }
         // Pairs answers with requests by position, which `objects_by_id` is
-        // documented to allow, and checks that each answer is the object
-        // requested in its position.
+        // documented to allow, and checks that the answers are as many as the
+        // requests and that each one is the object requested in its position.
         let fetched = self
             .client
             .objects_by_id(&requests)
             .await
             .map_err(TransactionBuilderError::client)?;
+        if fetched.len() != requests.len() {
+            return Err(TransactionBuilderError::Input(format!(
+                "requested {} objects, but the client answered with {}",
+                requests.len(),
+                fetched.len()
+            )));
+        }
         requests
             .into_iter()
             .zip(fetched)
@@ -3149,6 +3156,75 @@ mod tests {
             };
             assert!(
                 message.contains(&ObjectId::SYSTEM_STATE.to_string()),
+                "unexpected message: {message}"
+            );
+        }
+
+        /// Forwards to [`crate::TestClient`], but leaves the last answer out,
+        /// so the answers no longer line up with the requests.
+        struct ShortAnswerClient;
+
+        impl crate::TransactionBuilderClientBase for ShortAnswerClient {
+            type Error = crate::TestClientError;
+        }
+
+        impl TransactionBuilderLedgerClient for ShortAnswerClient {
+            async fn object(
+                &self,
+                object_id: ObjectId,
+                version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                crate::TestClient.object(object_id, version).await
+            }
+
+            async fn objects_by_id(
+                &self,
+                object_ids: &[(ObjectId, Option<Version>)],
+            ) -> Result<Vec<Option<Object>>, Self::Error> {
+                let mut objects = crate::TestClient.objects_by_id(object_ids).await?;
+                objects.pop();
+                Ok(objects)
+            }
+
+            async fn objects(
+                &self,
+                struct_tag: Option<StructTag>,
+                owner: Address,
+                cursor: Option<Vec<u8>>,
+                limit: Option<usize>,
+            ) -> Result<crate::ObjectsPage, Self::Error> {
+                crate::TestClient
+                    .objects(struct_tag, owner, cursor, limit)
+                    .await
+            }
+
+            async fn reference_gas_price(
+                &self,
+                epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                crate::TestClient.reference_gas_price(epoch).await
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                crate::TestClient.protocol_config().await
+            }
+        }
+
+        /// Fewer answers than requests leaves the remaining requests paired
+        /// with nothing, so the answer is rejected as a whole.
+        #[tokio::test]
+        async fn an_answer_short_of_the_requests_is_rejected() {
+            let sender = Address::random();
+
+            let mut builder = TransactionBuilder::new(sender).with_client(ShortAnswerClient);
+            builder.transfer_objects(sender, [object_id(1), object_id(2)]);
+
+            let err = builder.finish_kind().await.unwrap_err();
+            let TransactionBuilderError::Input(message) = &err else {
+                panic!("expected an input error, got {err}");
+            };
+            assert!(
+                message.contains("requested 2 objects") && message.contains("answered with 1"),
                 "unexpected message: {message}"
             );
         }
