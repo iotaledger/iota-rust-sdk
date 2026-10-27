@@ -26,6 +26,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Install libudev for hidapi
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
+
       - name: rust version
         run: |
           rustc --version
@@ -90,6 +93,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install libudev for hidapi
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
       - name: doctests
         run: |
           make test-docs
