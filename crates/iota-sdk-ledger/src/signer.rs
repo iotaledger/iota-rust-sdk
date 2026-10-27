@@ -31,7 +31,7 @@ pub struct LedgerSigner {
 }
 
 impl LedgerSigner {
-    /// Read the public key at `path` and sign with it.
+    /// Read the public key at `path` so it can be used for signing.
     pub async fn new(ledger: Ledger, path: DerivationPath) -> Result<Self, LedgerError> {
         let public_key = ledger.get_public_key(&path).await?;
         Ok(Self {
