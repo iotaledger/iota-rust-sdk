@@ -151,6 +151,9 @@ impl MultisigVerifier {
 
 #[cfg(feature = "passkey")]
 impl MultisigVerifier {
+    /// The verifier used for every passkey member. An address set on it must
+    /// match each passkey member, so leave it unset for a multisig with
+    /// passkey members of different addresses.
     pub fn with_passkey_verifier(
         mut self,
         passkey_verifier: crate::passkey::PasskeyVerifier,
