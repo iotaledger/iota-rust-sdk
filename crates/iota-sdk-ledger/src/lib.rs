@@ -189,6 +189,11 @@ impl Ledger {
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
+    use iota_types::{
+        Address, GasPayment, ProgrammableTransaction, TransactionExpiration, TransactionKind,
+        TransactionV1,
+    };
+
     use super::*;
 
     struct NoDevice;
@@ -319,9 +324,27 @@ mod tests {
     fn futures_are_send() {
         let mut ledger = Ledger::new(NoDevice);
         let path: DerivationPath = "m/44'/4218'/0'/0'/0'".parse().unwrap();
+        let transaction = Transaction::V1(TransactionV1 {
+            kind: TransactionKind::Programmable(ProgrammableTransaction {
+                inputs: vec![],
+                commands: vec![],
+            }),
+            sender: Address::ZERO,
+            gas_payment: GasPayment {
+                objects: vec![],
+                owner: Address::ZERO,
+                price: 0,
+                budget: 0,
+            },
+            expiration: TransactionExpiration::None,
+        });
+        assert_send(ledger.is_app_open());
+        assert_send(ledger.open_app());
+        assert_send(ledger.exit_app());
         assert_send(ledger.version());
         assert_send(ledger.get_public_key(&path));
+        assert_send(ledger.verify_address(&path));
+        assert_send(ledger.sign_transaction(&path, &transaction, &[]));
         assert_send(ledger.sign_personal_message(&path, &PersonalMessage(b"".into())));
-        assert_send(ledger.open_app());
     }
 }
