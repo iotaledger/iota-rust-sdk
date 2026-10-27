@@ -862,6 +862,17 @@ mod tests {
             .verify_transaction(&transaction, &signature)
             .unwrap();
 
+        let UserSignature::PasskeyAuthenticator(authenticator) = &signature else {
+            panic!("expected a passkey authenticator");
+        };
+        UserSignatureVerifier::new()
+            .with_passkey_verifier(
+                crate::passkey::PasskeyVerifier::new()
+                    .with_address(authenticator.public_key().derive_address()),
+            )
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+
         let error = UserSignatureVerifier::new()
             .with_passkey_verifier(
                 crate::passkey::PasskeyVerifier::new().with_address(Address::ZERO),
