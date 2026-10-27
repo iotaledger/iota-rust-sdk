@@ -9,6 +9,7 @@ use std::{
 use iota_sdk::crypto::Verifier;
 
 use crate::{
+    crypto::passkey::PasskeyVerifier,
     error::Result,
     types::{
         crypto::multisig::{MultisigAggregatedSignature, MultisigCommittee},
@@ -47,6 +48,24 @@ impl MultisigVerifier {
         {
             let mut lock = self.0.write().expect("error writing to verifier");
             *lock = std::mem::take(&mut *lock).with_reject_partially_signed_mixed_ed25519(reject);
+        }
+        self
+    }
+
+    /// Accept passkey members inside a multisig. Disabled by default.
+    pub fn with_accept_passkey_in_multisig(self: Arc<Self>, accept: bool) -> Arc<Self> {
+        {
+            let mut lock = self.0.write().expect("error writing to verifier");
+            *lock = std::mem::take(&mut *lock).with_accept_passkey_in_multisig(accept);
+        }
+        self
+    }
+
+    /// The verifier used for passkey members.
+    pub fn with_passkey_verifier(self: Arc<Self>, passkey_verifier: &PasskeyVerifier) -> Arc<Self> {
+        {
+            let mut lock = self.0.write().expect("error writing to verifier");
+            *lock = std::mem::take(&mut *lock).with_passkey_verifier(passkey_verifier.0.clone());
         }
         self
     }
@@ -90,6 +109,33 @@ impl UserSignatureVerifier {
         {
             let mut lock = self.0.write().expect("error writing to verifier");
             *lock = std::mem::take(&mut *lock).with_reject_partially_signed_mixed_ed25519(reject);
+        }
+        self
+    }
+
+    /// Replaces the verifier used for multisig signatures, including the
+    /// setting from `with_reject_partially_signed_mixed_ed25519`.
+    pub fn with_multisig_verifier(
+        self: Arc<Self>,
+        multisig_verifier: &MultisigVerifier,
+    ) -> Arc<Self> {
+        let multisig_verifier = multisig_verifier
+            .0
+            .read()
+            .expect("error reading verifier")
+            .clone();
+        {
+            let mut lock = self.0.write().expect("error writing to verifier");
+            *lock = std::mem::take(&mut *lock).with_multisig_verifier(multisig_verifier);
+        }
+        self
+    }
+
+    /// The verifier used for passkey signatures.
+    pub fn with_passkey_verifier(self: Arc<Self>, passkey_verifier: &PasskeyVerifier) -> Arc<Self> {
+        {
+            let mut lock = self.0.write().expect("error writing to verifier");
+            *lock = std::mem::take(&mut *lock).with_passkey_verifier(passkey_verifier.0.clone());
         }
         self
     }

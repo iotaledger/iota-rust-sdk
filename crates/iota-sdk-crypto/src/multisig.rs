@@ -271,6 +271,21 @@ impl UserSignatureVerifier {
             .with_reject_partially_signed_mixed_ed25519(reject);
         self
     }
+
+    /// Replaces the verifier used for multisig signatures, including the
+    /// setting from [`Self::with_reject_partially_signed_mixed_ed25519`].
+    pub fn with_multisig_verifier(mut self, multisig_verifier: MultisigVerifier) -> Self {
+        self.multisig_verifier = multisig_verifier;
+        self
+    }
+
+    pub fn multisig_verifier(&self) -> &MultisigVerifier {
+        &self.multisig_verifier
+    }
+
+    pub fn multisig_verifier_mut(&mut self) -> &mut MultisigVerifier {
+        &mut self.multisig_verifier
+    }
 }
 
 #[cfg(feature = "passkey")]
@@ -883,6 +898,53 @@ mod tests {
             error.to_string().contains("Invalid author"),
             "expected an invalid-author error, got {error}"
         );
+    }
+
+    /// [`UserSignatureVerifier`] accepts a passkey member inside a multisig
+    /// only with a multisig verifier that accepts it.
+    #[cfg(feature = "passkey")]
+    #[test]
+    fn user_signature_verifier_uses_multisig_verifier() {
+        const TRANSACTION: &str = "AAAAACdZawPnpJRjmVcwDu6xrIumtq5NLO+6GHbs0iGdCoD7AQ0T0TolicYERdSvyCRjSSduDZLbSpBsZBoib+lF48EBcgAAAAAAAAAgpQr/Mudl9BdzyBdkbqTlqBw4/aJ21kAD/jpJKa05im4nWWsD56SUY5lXMA7usayLprauTSzvuhh27NIhnQqA++gDAAAAAAAAgIQeAAAAAAAA";
+        const SIGNATURE: &str = "BiVJlg3liA6MaHQ0Fw9kdmBbj+SuuaKGMseZXPO6gx2XYx0AAAAAhgF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCJjaGFsbGVuZ2UiOiJXellBZmVvbHcweU15bEFheDRvbzNjVC1rdEVaM0xmenZXcURqakxKZVRvIiwib3JpZ2luIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfWICfOgpQ38QYao9Gj0/bqmWYNkuxvbuN3lz4uzFcXeVMEVivX41eC9H+tk+UnvUvKzThtf+uMLFzerU0zZLi8le4QJJsAUcyjsP/1UPAesax8UOC14M62FjAqtqaR46wR7jCg==";
+
+        let transaction: Transaction = {
+            let bytes = Base64::decode_vec(TRANSACTION).unwrap();
+            bcs::from_bytes(&bytes).unwrap()
+        };
+        let UserSignature::PasskeyAuthenticator(authenticator) =
+            UserSignature::from_base64(SIGNATURE).unwrap()
+        else {
+            panic!("expected a passkey authenticator");
+        };
+        let committee = MultisigCommittee::new(
+            vec![MultisigMember::new(
+                PublicKey::Passkey(authenticator.public_key()),
+                1,
+            )],
+            1,
+        )
+        .unwrap();
+        let signature = UserSignature::Multisig(MultisigAggregatedSignature::new_unchecked(
+            vec![MultisigMemberSignature::Passkey(authenticator)],
+            0b1,
+            committee,
+        ));
+
+        let error = UserSignatureVerifier::new()
+            .verify_transaction(&transaction, &signature)
+            .unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("Passkey sig not supported inside multisig"),
+            "expected a passkey-not-supported error, got {error}"
+        );
+
+        UserSignatureVerifier::new()
+            .with_multisig_verifier(MultisigVerifier::new().with_accept_passkey_in_multisig(true))
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
     }
 
     /// Decode a hardcoded base64 transaction and the 2-of-3 multisig signature
