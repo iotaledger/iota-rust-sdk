@@ -30,8 +30,8 @@ The Move sources these mirror live in the [iota monorepo] under
 
 None are enabled by default. `MoveType` itself and its impls for the Move
 primitives, `String` and `Vec<T>` need no features. Mirrors of Move objects
-implement it through `MoveObject`, which needs `serde`; the other mirrors that
-implement it need no features.
+that implement it do so through `MoveObject`, which needs `serde`; the other mirrors
+that implement it need no features.
 
 ## Compiled Move packages (`src/packages_compiled/`, not committed)
 
