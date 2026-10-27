@@ -49,6 +49,11 @@ pub enum TransactionBuilderError {
         "sponsor {sponsor} was set on the transaction, but the gas sponsor supplies the gas payment"
     )]
     SponsorAddressConflict { sponsor: Address },
+    #[error("the gas sponsor executed transaction {got}, expected {expected}")]
+    SponsorDigestMismatch {
+        expected: TransactionDigest,
+        got: TransactionDigest,
+    },
     #[error(transparent)]
     GasSponsor(Box<dyn std::error::Error + Send + Sync>),
     #[error(transparent)]

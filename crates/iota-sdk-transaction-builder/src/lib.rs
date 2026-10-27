@@ -834,6 +834,7 @@ mod tests {
         struct RecordingSponsor {
             reserved_budget: Mutex<Option<u64>>,
             executed: Mutex<Option<Transaction>>,
+            wrong_digest: bool,
         }
 
         impl RecordingSponsor {
@@ -869,7 +870,11 @@ mod tests {
                 _signature: &iota_types::UserSignature,
             ) -> Result<TransactionDigest, Self::Error> {
                 *self.executed.lock().unwrap() = Some(transaction.clone());
-                Ok(TransactionDigest::ZERO)
+                Ok(if self.wrong_digest {
+                    TransactionDigest::ZERO
+                } else {
+                    transaction.digest()
+                })
             }
         }
 
@@ -980,14 +985,14 @@ mod tests {
                 .execute_with_gas_sponsor(&sponsor, &signer())
                 .await
                 .unwrap_err();
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
             assert!(matches!(
                 err,
-                TransactionBuilderError::MissingTransaction(_)
+                TransactionBuilderError::MissingTransaction(digest) if digest == executed.digest()
             ));
 
             assert_eq!(owner_queries.load(Ordering::SeqCst), 0);
 
-            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
             let Transaction::V1(txn) = executed else {
                 panic!("expected a V1 transaction");
             };
@@ -1038,6 +1043,72 @@ mod tests {
                 Err(TransactionBuilderError::SponsorAddressConflict { .. })
             ));
             assert!(sponsor.reserved_budget.lock().unwrap().is_none());
+        }
+
+        #[tokio::test]
+        async fn a_wrong_digest_from_the_sponsor_is_rejected() {
+            let builder = super::builder_with(TestClient);
+            let sponsor = RecordingSponsor {
+                wrong_digest: true,
+                ..Default::default()
+            };
+
+            let err = builder
+                .execute_with_gas_sponsor(&sponsor, &signer())
+                .await
+                .unwrap_err();
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
+            assert!(matches!(
+                err,
+                TransactionBuilderError::SponsorDigestMismatch { expected, got }
+                    if expected == executed.digest() && got == TransactionDigest::ZERO
+            ));
+        }
+
+        fn offline_builder() -> crate::TransactionBuilder {
+            let mut builder = crate::TransactionBuilder::new(
+                "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+                    .parse()
+                    .unwrap(),
+            );
+            builder
+                .gas_price(1000)
+                .gas_budget(7_000_000)
+                .move_call(Address::STD, "u64", "sqrt")
+                .arguments([64u64]);
+            builder
+        }
+
+        #[tokio::test]
+        async fn offline_returns_the_digest_of_the_signed_transaction() {
+            let sponsor = RecordingSponsor::default();
+
+            let digest = offline_builder()
+                .execute_with_gas_sponsor(&sponsor, &signer())
+                .await
+                .unwrap();
+
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
+            assert_eq!(digest, executed.digest());
+        }
+
+        #[tokio::test]
+        async fn offline_rejects_a_wrong_digest_from_the_sponsor() {
+            let sponsor = RecordingSponsor {
+                wrong_digest: true,
+                ..Default::default()
+            };
+
+            let err = offline_builder()
+                .execute_with_gas_sponsor(&sponsor, &signer())
+                .await
+                .unwrap_err();
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
+            assert!(matches!(
+                err,
+                TransactionBuilderError::SponsorDigestMismatch { expected, got }
+                    if expected == executed.digest() && got == TransactionDigest::ZERO
+            ));
         }
     }
 }
