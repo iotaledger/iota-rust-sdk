@@ -14,59 +14,46 @@ use iota_sdk_move_types::{
         object::ID,
     },
 };
-use iota_types::{Address, Identifier, ObjectId, StructTag, TypeTag};
-
-fn framework_tag(module: &'static str, name: &'static str, type_params: Vec<TypeTag>) -> TypeTag {
-    TypeTag::Struct(Box::new(StructTag::new(
-        Address::FRAMEWORK,
-        Identifier::from_static(module),
-        Identifier::from_static(name),
-        type_params,
-    )))
-}
+use iota_types::ObjectId;
 
 #[test]
 fn object_id_is_an_address() {
-    assert_eq!(ObjectId::type_tag(), TypeTag::Address);
+    assert_eq!(ObjectId::type_tag().to_string(), "address");
 }
 
 #[test]
 fn id() {
-    assert_eq!(ID::type_tag(), framework_tag("object", "ID", vec![]));
+    assert_eq!(ID::type_tag().to_string(), "0x2::object::ID");
 }
 
 #[test]
 fn dynamic_object_field_wrapper() {
     assert_eq!(
-        Wrapper::<ID>::type_tag(),
-        framework_tag(
-            "dynamic_object_field",
-            "Wrapper",
-            vec![framework_tag("object", "ID", vec![])]
-        )
+        Wrapper::<ID>::type_tag().to_string(),
+        "0x2::dynamic_object_field::Wrapper<0x2::object::ID>"
     );
 }
 
 #[test]
 fn deny_list_keys() {
     assert_eq!(
-        ConfigKey::type_tag(),
-        framework_tag("deny_list", "ConfigKey", vec![])
+        ConfigKey::type_tag().to_string(),
+        "0x2::deny_list::ConfigKey"
     );
     assert_eq!(
-        AddressKey::type_tag(),
-        framework_tag("deny_list", "AddressKey", vec![])
+        AddressKey::type_tag().to_string(),
+        "0x2::deny_list::AddressKey"
     );
     assert_eq!(
-        GlobalPauseKey::type_tag(),
-        framework_tag("deny_list", "GlobalPauseKey", vec![])
+        GlobalPauseKey::type_tag().to_string(),
+        "0x2::deny_list::GlobalPauseKey"
     );
 }
 
 #[test]
 fn config_setting() {
     assert_eq!(
-        Setting::<bool>::type_tag(),
-        framework_tag("config", "Setting", vec![TypeTag::Bool])
+        Setting::<bool>::type_tag().to_string(),
+        "0x2::config::Setting<bool>"
     );
 }
