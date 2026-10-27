@@ -113,8 +113,8 @@ impl Ledger {
         if let Some(version) = self.version.get() {
             return Ok(*version);
         }
-        self.cached_version(self.transport.lock().await.as_ref())
-            .await
+        let version = app::version(self.transport.lock().await.as_ref()).await?;
+        Ok(*self.version.get_or_init(|| version))
     }
 
     /// Read the public key at `path`.
@@ -146,13 +146,13 @@ impl Ledger {
         transaction: &Transaction,
         objects: &[Object],
     ) -> Result<Ed25519Signature, LedgerError> {
-        let transport = self.transport.lock().await;
         if !objects.is_empty() {
-            let version = self.cached_version(transport.as_ref()).await?;
+            let version = self.version().await?;
             if version.major() == 0 {
                 return Err(LedgerError::ClearSigningUnsupported(version));
             }
         }
+        let transport = self.transport.lock().await;
         sign::transaction(transport.as_ref(), path, transaction, objects).await
     }
 
@@ -163,16 +163,6 @@ impl Ledger {
         message: &PersonalMessage<'_>,
     ) -> Result<Ed25519Signature, LedgerError> {
         sign::personal_message(self.transport.lock().await.as_ref(), path, message).await
-    }
-
-    /// Read the app version through `transport`, which the caller has locked,
-    /// unless it is cached.
-    async fn cached_version(&self, transport: &dyn Transport) -> Result<AppVersion, LedgerError> {
-        if let Some(version) = self.version.get() {
-            return Ok(*version);
-        }
-        let version = app::version(transport).await?;
-        Ok(*self.version.get_or_init(|| version))
     }
 
     /// Wait until `app` runs on the device, reconnecting as the device
