@@ -203,9 +203,9 @@ The `ledger` feature implements `TransactionSigner` for the
 [`iota-sdk-ledger`](https://crates.io/crates/iota-sdk-ledger) `LedgerSigner`. When it executes a
 transaction, the builder passes the signer the objects the transaction reads, reusing those it
 fetched while building, and the signer sends the device the gas coins and immutable or owned inputs
-so it can show what the transaction does. When they cannot be obtained, or the IOTA app is too old
-to clear-sign, the signer blind-signs with a warning, which the app only allows when blind signing
-is enabled in its settings:
+so it can show what the transaction does; execution fails if any of them cannot be fetched. When the
+IOTA app is too old to clear-sign, the signer blind-signs with a warning, which the app only allows
+when blind signing is enabled in its settings:
 
 ```rust,ignore
 let signer = ledger.into_signer(path).await?;

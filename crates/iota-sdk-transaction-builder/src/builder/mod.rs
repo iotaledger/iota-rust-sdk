@@ -1855,9 +1855,12 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     ///
     /// Objects fetched while building are reused, as the transaction references
     /// them at the versions they were fetched at, and the rest are fetched,
-    /// shared ones at their latest version. Returns none when any object cannot
-    /// be obtained, since a partial set does not describe the transaction.
-    async fn signing_objects(&self, transaction: &Transaction) -> Vec<Object> {
+    /// shared ones at their latest version. Fails if any object cannot be
+    /// fetched.
+    async fn signing_objects(
+        &self,
+        transaction: &Transaction,
+    ) -> Result<Vec<Object>, TransactionBuilderError> {
         let Transaction::V1(transaction) = transaction else {
             unimplemented!("a new Transaction enum variant was added and needs to be handled")
         };
@@ -1890,14 +1893,15 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             .collect::<Vec<_>>();
         let mut fetched = HashMap::new();
         if !missing.is_empty() {
-            let Ok(objects) = self.client.objects_by_id(&missing).await else {
-                return Vec::new();
-            };
+            let objects = self
+                .client
+                .objects_by_id(&missing)
+                .await
+                .map_err(TransactionBuilderError::client)?;
             for ((object_id, _), object) in missing.into_iter().zip(objects) {
-                let Some(object) = object else {
-                    return Vec::new();
-                };
-                fetched.insert(object_id, object);
+                if let Some(object) = object {
+                    fetched.insert(object_id, object);
+                }
             }
         }
 
@@ -1909,9 +1913,11 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                     .get(object_id)
                     .or_else(|| fetched.get(object_id))
                     .cloned()
+                    .ok_or_else(|| {
+                        TransactionBuilderError::Input(format!("missing object {object_id}"))
+                    })
             })
-            .collect::<Option<Vec<_>>>()
-            .unwrap_or_default()
+            .collect()
     }
 
     async fn resolve_ptb(
@@ -2112,7 +2118,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
         let objects = if signer.uses_objects() {
-            self.signing_objects(&txn).await
+            self.signing_objects(&txn).await?
         } else {
             Vec::new()
         };
@@ -2210,7 +2216,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                 }
 
                 let objects = if signer.uses_objects() {
-                    self.signing_objects(&txn).await
+                    self.signing_objects(&txn).await?
                 } else {
                     Vec::new()
                 };
@@ -2261,7 +2267,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
         let objects = if signer.uses_objects() || sponsor_signer.uses_objects() {
-            self.signing_objects(&txn).await
+            self.signing_objects(&txn).await?
         } else {
             Vec::new()
         };

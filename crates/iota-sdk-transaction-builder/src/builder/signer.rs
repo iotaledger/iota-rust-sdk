@@ -38,8 +38,7 @@ pub trait TransactionSigner {
     /// immutable, owned or receiving inputs at the versions it references, and
     /// its shared inputs as the builder fetched them, which may change before
     /// the transaction executes. `objects` is empty when the signer does not
-    /// use them or they could not all be obtained. The default ignores them and
-    /// calls [`sign`](Self::sign).
+    /// use them. The default ignores them and calls [`sign`](Self::sign).
     fn sign_with_objects(
         &self,
         transaction: &Transaction,
@@ -305,7 +304,7 @@ mod tests {
     use iota_types::{Address, Input, ObjectId, ObjectReference, SharedObjectReference, Version};
 
     use super::*;
-    use crate::{TestClient, TransactionBuilder, TransactionBuilderLedgerClient};
+    use crate::{RecordingClient, TestClient, TransactionBuilder, TransactionBuilderLedgerClient};
 
     /// Records the objects it is given and returns an arbitrary signature.
     #[derive(Default)]
@@ -372,6 +371,30 @@ mod tests {
                 .any(|object| object.object_ref() == reference)
         );
         assert_eq!(objects.len(), 2);
+    }
+
+    #[tokio::test]
+    async fn execute_fails_without_signing_when_an_object_is_missing() {
+        let coin = TestClient
+            .object(ObjectId::from_bytes([1; ObjectId::LENGTH]).unwrap(), None)
+            .await
+            .unwrap()
+            .unwrap();
+        let client = RecordingClient {
+            missing: vec![coin.id()],
+            ..Default::default()
+        };
+        let mut builder = TransactionBuilder::new(Address::ZERO).with_client(client);
+        builder.transfer_objects(Address::new([2; Address::LENGTH]), [coin.object_ref()]);
+
+        let signer = RecordingSigner::default();
+        let err = builder.execute(&signer, None).await.unwrap_err();
+
+        assert!(signer.objects.lock().unwrap().is_none());
+        assert!(
+            err.to_string().contains(&coin.id().to_string()),
+            "error should name the missing object, got: {err}"
+        );
     }
 
     #[tokio::test]
