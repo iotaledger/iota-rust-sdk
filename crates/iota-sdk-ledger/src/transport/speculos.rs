@@ -12,6 +12,9 @@ use crate::{Ledger, LedgerError};
 impl Ledger {
     /// Connect to the APDU port of a Speculos emulator (by default this is
     /// `127.0.0.1:9999` in the emulator).
+    ///
+    /// Calls through this connection block the thread polling them until the
+    /// emulator answers.
     pub fn new_speculos(host: &str, port: u16) -> Self {
         Self::new(SpeculosTransport::new(host, port))
     }
