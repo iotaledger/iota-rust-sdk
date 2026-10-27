@@ -57,7 +57,7 @@ impl fmt::Display for DerivationPath {
 
 impl fmt::Debug for DerivationPath {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "DerivationPath({})", self)
+        write!(f, "DerivationPath({self})")
     }
 }
 
