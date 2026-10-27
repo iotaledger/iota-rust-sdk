@@ -6,6 +6,7 @@ all:: ci ## Default target, runs the CI process
 check-features: ## Check feature flags for crates
 	$(MAKE) -C crates/iota-sdk-types check-features
 	$(MAKE) -C crates/iota-sdk-crypto check-features
+	$(MAKE) -C crates/iota-sdk-ledger check-features
 	$(MAKE) -C crates/iota-sdk-graphql-client check-features
 	$(MAKE) -C crates/iota-sdk-move-types check-features
 	$(MAKE) -C crates/iota-sdk-transaction-builder check-features
@@ -26,9 +27,10 @@ fetch-compiled-packages: ## Fetch the compiled Move packages if missing or out o
 clippy: ## Run Clippy linter
 	cargo clippy --all-features --all-targets
 
+# `iota-sdk-ledger` has no release to diff against until it is first published.
 .PHONY: semver-checks
 semver-checks: ## Check the published crates for breaking API changes
-	cargo semver-checks --workspace
+	cargo semver-checks --workspace --exclude iota-sdk-ledger
 
 .PHONY: test
 test: fetch-compiled-packages ## Run unit tests
@@ -60,6 +62,7 @@ wasm32: ## Check that SDK crates compile to wasm32
 	$(MAKE) -C crates/iota-sdk wasm
 	$(MAKE) -C crates/iota-sdk-crypto wasm
 	$(MAKE) -C crates/iota-sdk-graphql-client wasm
+	$(MAKE) -C crates/iota-sdk-ledger wasm
 	$(MAKE) -C crates/iota-sdk-move-types wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
 	$(MAKE) -C crates/iota-sdk-types wasm
