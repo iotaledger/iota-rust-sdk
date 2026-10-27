@@ -151,6 +151,9 @@ impl MultisigVerifier {
 
 #[cfg(feature = "passkey")]
 impl MultisigVerifier {
+    /// The verifier used for every passkey member. An address set on it must
+    /// match each passkey member, so leave it unset for a multisig with
+    /// passkey members of different addresses.
     pub fn with_passkey_verifier(
         mut self,
         passkey_verifier: crate::passkey::PasskeyVerifier,
@@ -254,7 +257,9 @@ crate::impl_iota_verifier!(MultisigVerifier);
 /// Verifier that will verify all UserSignature variants
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct UserSignatureVerifier {
-    inner: MultisigVerifier,
+    multisig_verifier: MultisigVerifier,
+    #[cfg(feature = "passkey")]
+    passkey_verifier: Option<crate::passkey::PasskeyVerifier>,
 }
 
 impl UserSignatureVerifier {
@@ -264,10 +269,25 @@ impl UserSignatureVerifier {
 
     /// See [`MultisigVerifier::with_reject_partially_signed_mixed_ed25519`].
     pub fn with_reject_partially_signed_mixed_ed25519(mut self, reject: bool) -> Self {
-        self.inner = self
-            .inner
+        self.multisig_verifier = self
+            .multisig_verifier
             .with_reject_partially_signed_mixed_ed25519(reject);
         self
+    }
+
+    /// Replaces the verifier used for multisig signatures, including the
+    /// setting from [`Self::with_reject_partially_signed_mixed_ed25519`].
+    pub fn with_multisig_verifier(mut self, multisig_verifier: MultisigVerifier) -> Self {
+        self.multisig_verifier = multisig_verifier;
+        self
+    }
+
+    pub fn multisig_verifier(&self) -> &MultisigVerifier {
+        &self.multisig_verifier
+    }
+
+    pub fn multisig_verifier_mut(&mut self) -> &mut MultisigVerifier {
+        &mut self.multisig_verifier
     }
 }
 
@@ -277,16 +297,16 @@ impl UserSignatureVerifier {
         mut self,
         passkey_verifier: crate::passkey::PasskeyVerifier,
     ) -> Self {
-        self.inner = self.inner.with_passkey_verifier(passkey_verifier);
+        self.passkey_verifier = Some(passkey_verifier);
         self
     }
 
     pub fn passkey_verifier(&self) -> Option<&crate::passkey::PasskeyVerifier> {
-        self.inner.passkey_verifier()
+        self.passkey_verifier.as_ref()
     }
 
     pub fn passkey_verifier_mut(&mut self) -> Option<&mut crate::passkey::PasskeyVerifier> {
-        self.inner.passkey_verifier_mut()
+        self.passkey_verifier.as_mut()
     }
 }
 
@@ -296,15 +316,19 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
             UserSignature::Simple(signature) => {
                 crate::simple::SimpleVerifier.verify(message, signature)
             }
-            UserSignature::Multisig(signature) => self.inner.verify(message, signature),
+            UserSignature::Multisig(signature) => self.multisig_verifier.verify(message, signature),
             #[cfg(not(feature = "passkey"))]
             UserSignature::PasskeyAuthenticator(_) => Err(SignatureError::from_source(
                 "support for passkey is not enabled",
             )),
+            // A configured verifier may also check the signer's address; the
+            // default one only checks the signature.
             #[cfg(feature = "passkey")]
-            UserSignature::PasskeyAuthenticator(authenticator) => {
-                crate::passkey::PasskeyVerifier::default().verify(message, authenticator)
-            }
+            UserSignature::PasskeyAuthenticator(authenticator) => self
+                .passkey_verifier()
+                .cloned()
+                .unwrap_or_default()
+                .verify(message, authenticator),
             UserSignature::MoveAuthenticator(_) => Err(SignatureError::from_source(
                 "move authenticators cannot be verified",
             )),
@@ -836,6 +860,94 @@ mod tests {
                 .contains("Passkey sig not supported inside multisig"),
             "expected a passkey-not-supported error, got {error}"
         );
+    }
+
+    /// [`UserSignatureVerifier`] applies the configured passkey verifier to
+    /// direct passkey signatures.
+    #[cfg(feature = "passkey")]
+    #[test]
+    fn user_signature_verifier_uses_passkey_verifier() {
+        const TRANSACTION: &str = "AAAAACdZawPnpJRjmVcwDu6xrIumtq5NLO+6GHbs0iGdCoD7AQ0T0TolicYERdSvyCRjSSduDZLbSpBsZBoib+lF48EBcgAAAAAAAAAgpQr/Mudl9BdzyBdkbqTlqBw4/aJ21kAD/jpJKa05im4nWWsD56SUY5lXMA7usayLprauTSzvuhh27NIhnQqA++gDAAAAAAAAgIQeAAAAAAAA";
+        const SIGNATURE: &str = "BiVJlg3liA6MaHQ0Fw9kdmBbj+SuuaKGMseZXPO6gx2XYx0AAAAAhgF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCJjaGFsbGVuZ2UiOiJXellBZmVvbHcweU15bEFheDRvbzNjVC1rdEVaM0xmenZXcURqakxKZVRvIiwib3JpZ2luIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfWICfOgpQ38QYao9Gj0/bqmWYNkuxvbuN3lz4uzFcXeVMEVivX41eC9H+tk+UnvUvKzThtf+uMLFzerU0zZLi8le4QJJsAUcyjsP/1UPAesax8UOC14M62FjAqtqaR46wR7jCg==";
+
+        let transaction: Transaction = {
+            let bytes = Base64::decode_vec(TRANSACTION).unwrap();
+            bcs::from_bytes(&bytes).unwrap()
+        };
+        let signature = UserSignature::from_base64(SIGNATURE).unwrap();
+
+        UserSignatureVerifier::new()
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+
+        let UserSignature::PasskeyAuthenticator(authenticator) = &signature else {
+            panic!("expected a passkey authenticator");
+        };
+        UserSignatureVerifier::new()
+            .with_passkey_verifier(
+                crate::passkey::PasskeyVerifier::new()
+                    .with_address(authenticator.public_key().derive_address()),
+            )
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
+
+        let error = UserSignatureVerifier::new()
+            .with_passkey_verifier(
+                crate::passkey::PasskeyVerifier::new().with_address(Address::ZERO),
+            )
+            .verify_transaction(&transaction, &signature)
+            .unwrap_err();
+        assert!(
+            error.to_string().contains("Invalid author"),
+            "expected an invalid-author error, got {error}"
+        );
+    }
+
+    /// [`UserSignatureVerifier`] accepts a passkey member inside a multisig
+    /// only with a multisig verifier that accepts it.
+    #[cfg(feature = "passkey")]
+    #[test]
+    fn user_signature_verifier_uses_multisig_verifier() {
+        const TRANSACTION: &str = "AAAAACdZawPnpJRjmVcwDu6xrIumtq5NLO+6GHbs0iGdCoD7AQ0T0TolicYERdSvyCRjSSduDZLbSpBsZBoib+lF48EBcgAAAAAAAAAgpQr/Mudl9BdzyBdkbqTlqBw4/aJ21kAD/jpJKa05im4nWWsD56SUY5lXMA7usayLprauTSzvuhh27NIhnQqA++gDAAAAAAAAgIQeAAAAAAAA";
+        const SIGNATURE: &str = "BiVJlg3liA6MaHQ0Fw9kdmBbj+SuuaKGMseZXPO6gx2XYx0AAAAAhgF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCJjaGFsbGVuZ2UiOiJXellBZmVvbHcweU15bEFheDRvbzNjVC1rdEVaM0xmenZXcURqakxKZVRvIiwib3JpZ2luIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfWICfOgpQ38QYao9Gj0/bqmWYNkuxvbuN3lz4uzFcXeVMEVivX41eC9H+tk+UnvUvKzThtf+uMLFzerU0zZLi8le4QJJsAUcyjsP/1UPAesax8UOC14M62FjAqtqaR46wR7jCg==";
+
+        let transaction: Transaction = {
+            let bytes = Base64::decode_vec(TRANSACTION).unwrap();
+            bcs::from_bytes(&bytes).unwrap()
+        };
+        let UserSignature::PasskeyAuthenticator(authenticator) =
+            UserSignature::from_base64(SIGNATURE).unwrap()
+        else {
+            panic!("expected a passkey authenticator");
+        };
+        let committee = MultisigCommittee::new(
+            vec![MultisigMember::new(
+                PublicKey::Passkey(authenticator.public_key()),
+                1,
+            )],
+            1,
+        )
+        .unwrap();
+        let signature = UserSignature::Multisig(MultisigAggregatedSignature::new_unchecked(
+            vec![MultisigMemberSignature::Passkey(authenticator)],
+            0b1,
+            committee,
+        ));
+
+        let error = UserSignatureVerifier::new()
+            .verify_transaction(&transaction, &signature)
+            .unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("Passkey sig not supported inside multisig"),
+            "expected a passkey-not-supported error, got {error}"
+        );
+
+        UserSignatureVerifier::new()
+            .with_multisig_verifier(MultisigVerifier::new().with_accept_passkey_in_multisig(true))
+            .verify_transaction(&transaction, &signature)
+            .unwrap();
     }
 
     /// Decode a hardcoded base64 transaction and the 2-of-3 multisig signature
