@@ -73,6 +73,8 @@ pub(crate) fn without_credentials(url: &Url) -> Url {
 
 /// The GraphQL client for interacting with the IOTA blockchain.
 /// By default, it uses the `reqwest` crate as the HTTP client.
+///
+/// `Debug` prints only the server URL, without its username and password.
 #[derive(Clone)]
 pub struct GraphQLClient {
     /// The URL of the GraphQL server.
@@ -95,6 +97,8 @@ impl std::fmt::Debug for GraphQLClient {
 /// Builds a [`GraphQLClient`] on top of the default HTTP client, so that
 /// timeouts and headers can be set without losing the crate's user agent and
 /// trust anchors. Created by [`GraphQLClient::builder`].
+///
+/// `Debug` prints only the server URL, without its username and password.
 pub struct GraphQLClientBuilder {
     server: String,
     http: reqwest::ClientBuilder,

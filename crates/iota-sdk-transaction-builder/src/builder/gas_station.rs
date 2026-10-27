@@ -107,6 +107,11 @@ pub enum GasStationError {
 /// A station is configured once and reused for any number of transactions;
 /// build one with [`GasStation::builder`].
 ///
+/// `Debug` prints the URL without its username and password, shows the
+/// values of headers added through [`GasStationBuilder::header`] or
+/// [`GasStationBuilder::headers`] as `Sensitive`, and leaves out the HTTP
+/// client.
+///
 /// # Example
 ///
 /// ```no_run
@@ -178,6 +183,10 @@ impl GasStation {
 const DEFAULT_RESERVATION_DURATION: Duration = Duration::from_secs(60);
 
 /// Configures a [`GasStation`].
+///
+/// `Debug` prints the URL without its username and password, shows the
+/// values of headers added through [`Self::header`] or [`Self::headers`]
+/// as `Sensitive`, and leaves out the HTTP client.
 #[derive(Clone)]
 pub struct GasStationBuilder {
     url: Url,
