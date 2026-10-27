@@ -8,7 +8,7 @@ const HARDENED: u32 = 1 << 31;
 
 /// A BIP-32 derivation path, parsed from a string like
 /// `m/44'/4218'/0'/0'/0'`; `'` or `h` marks a hardened index.
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Eq, Hash, PartialEq)]
 pub struct DerivationPath(Vec<u32>);
 
 impl DerivationPath {
@@ -52,6 +52,12 @@ impl fmt::Display for DerivationPath {
             }
         }
         Ok(())
+    }
+}
+
+impl fmt::Debug for DerivationPath {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "DerivationPath({})", self)
     }
 }
 
