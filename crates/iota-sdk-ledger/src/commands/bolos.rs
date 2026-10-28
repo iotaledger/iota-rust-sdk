@@ -23,7 +23,7 @@ const SW_INVALID_COUNTER: u16 = 0x6807;
 
 /// Read the name of the app running on the device; the dashboard is named
 /// `BOLOS`.
-pub(crate) fn app_name(transport: &dyn Transport) -> Result<String, LedgerError> {
+pub(crate) async fn app_name(transport: &dyn Transport) -> Result<String, LedgerError> {
     // Dashboard:
     // HID => b001000000
     // HID <= 0105|424f4c4f53|05|322e302e30|9000
@@ -33,7 +33,7 @@ pub(crate) fn app_name(transport: &dyn Transport) -> Result<String, LedgerError>
     // HID => b001000000
     // HID <= 0104|494f5441|05|302e372e30|0102|9000
     // I O T A      0 . 7 . 0
-    let response = exec(transport, command(CLA_APP, INS_GET_APP_NAME, Vec::new()))?;
+    let response = exec(transport, command(CLA_APP, INS_GET_APP_NAME, Vec::new())).await?;
 
     let mut reader = Reader::new(&response);
     // The format byte is always 0x01; the app version and flags follow the
@@ -44,13 +44,15 @@ pub(crate) fn app_name(transport: &dyn Transport) -> Result<String, LedgerError>
 }
 
 /// Open `app` from the dashboard.
-pub(crate) fn open_app(transport: &dyn Transport, app: &str) -> Result<(), LedgerError> {
+pub(crate) async fn open_app(transport: &dyn Transport, app: &str) -> Result<(), LedgerError> {
     // The APDU length byte carries the name's length, so the data holds the
     // bare name
     match exec(
         transport,
         command(CLA_DASHBOARD, INS_OPEN_APP, app.as_bytes().to_vec()),
-    ) {
+    )
+    .await
+    {
         Ok(_) => Ok(()),
         Err(LedgerError::Apdu(ApduError::Other(SW_INVALID_COUNTER))) => {
             Err(LedgerError::AppNotFound)
@@ -60,6 +62,8 @@ pub(crate) fn open_app(transport: &dyn Transport, app: &str) -> Result<(), Ledge
 }
 
 /// Close the running app and return to the dashboard.
-pub(crate) fn exit_app(transport: &dyn Transport) -> Result<(), LedgerError> {
-    exec(transport, command(CLA_APP, INS_EXIT_APP, Vec::new())).map(drop)
+pub(crate) async fn exit_app(transport: &dyn Transport) -> Result<(), LedgerError> {
+    exec(transport, command(CLA_APP, INS_EXIT_APP, Vec::new()))
+        .await
+        .map(drop)
 }
