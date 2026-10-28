@@ -499,7 +499,13 @@ impl GetTransactionDataEffectsQuery {
         match response.transaction_block.map(|tx| (tx.bcs, tx.effects)) {
             Some((Some(bcs), Some(effects))) => {
                 let bcs = crate::base64::decode(bcs.0.as_str())?;
-                let effects = crate::base64::decode(effects.bcs.unwrap().0.as_str())?;
+                let effects = crate::base64::decode(
+                    effects
+                        .bcs
+                        .ok_or(GraphQLError::EmptyResponseField("package bcs"))?
+                        .0
+                        .as_str(),
+                )?;
                 let transaction: SenderSignedTransaction =
                     bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
                 let effects: TransactionEffects =
