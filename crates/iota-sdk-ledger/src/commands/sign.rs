@@ -18,7 +18,7 @@ use crate::{LedgerError, Transport};
 
 /// Sign a transaction, passing its input objects for clear signing when
 /// there are any.
-pub(crate) fn transaction(
+pub(crate) async fn transaction(
     transport: &dyn Transport,
     path: &DerivationPath,
     transaction: &Transaction,
@@ -40,20 +40,21 @@ pub(crate) fn transaction(
         &bcs_to_bytes(&transaction.intent_message())?,
         objects.as_deref(),
     )
+    .await
 }
 
 /// Sign a personal message.
-pub(crate) fn personal_message(
+pub(crate) async fn personal_message(
     transport: &dyn Transport,
     path: &DerivationPath,
     message: &PersonalMessage<'_>,
 ) -> Result<Ed25519Signature, LedgerError> {
     let message = IntentMessage::new(Intent::personal_message(), &message.0);
-    intent_message(transport, path, &bcs_to_bytes(&message)?, None)
+    intent_message(transport, path, &bcs_to_bytes(&message)?, None).await
 }
 
 /// Sign a BCS-serialized intent message; the device hashes it itself.
-fn intent_message(
+async fn intent_message(
     transport: &dyn Transport,
     path: &DerivationPath,
     intent_message: &[u8],
@@ -66,6 +67,7 @@ fn intent_message(
     let mut parameters: Vec<&[u8]> = vec![&message, &path];
     parameters.extend(packed_objects);
     let response = block_protocol::send(transport, Instruction::Sign, &parameters)
+        .await
         .map_err(app::map_app_error)?;
 
     Ok(Ed25519Signature::new(Reader::new(&response).array()?))
