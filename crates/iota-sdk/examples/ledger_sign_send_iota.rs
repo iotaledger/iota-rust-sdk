@@ -20,11 +20,11 @@ async fn main() -> Result<()> {
         Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 
     let mut ledger = if std::env::var_os("LEDGER_SIMULATOR").is_some() {
-        Ledger::speculos("127.0.0.1", 9999)
+        Ledger::new_speculos("127.0.0.1", 9999)
     } else {
-        Ledger::native_hid()?
+        Ledger::new_native_hid()?
     };
-    ledger.ensure_app_is_open().await?;
+    ledger.open_app().await?;
     let signer = ledger.into_signer("m/44'/4218'/0'/0'/0'".parse()?).await?;
     let sender_address = signer.address();
     println!("Sender address: {sender_address}");

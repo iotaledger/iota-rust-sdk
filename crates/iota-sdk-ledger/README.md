@@ -67,7 +67,7 @@ async fn sign(
 ## Using a device
 
 Install the IOTA app on the device with Ledger Live, unlock the device and
-open the app, or call `Ledger::ensure_app_is_open` to open it.
+open the app, or call `Ledger::open_app` to open it.
 
 On Linux, a regular user can only open the device once udev rules grant access
 to Ledger's USB vendor ID; install the rules from
@@ -87,9 +87,9 @@ docker run --rm -p 9999:9999 -p 5000:5000 -v "$PWD/nanosplus:/speculos/apps" \
   --apdu-port 9999 --api-port 5000 apps/iota
 ```
 
-Connect with `Ledger::speculos("127.0.0.1", 9999)`, and approve requests in the
+Connect with `Ledger::new_speculos("127.0.0.1", 9999)`, and approve requests in the
 web interface at <http://127.0.0.1:5000> or through its REST API. The emulator
-runs a single app and cannot switch apps, so `Ledger::ensure_app_is_open` does
+runs a single app and cannot switch apps, so `Ledger::open_app` does
 nothing there.
 
 ## Clear and blind signing
