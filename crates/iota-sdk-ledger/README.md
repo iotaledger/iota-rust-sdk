@@ -44,9 +44,10 @@ async fn sign(
     transaction: &Transaction,
     objects: &[Object],
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let signer = Ledger::new_native_hid()?
-        .into_signer("m/44'/4218'/0'/0'/0'".parse()?)
-        .await?;
+    let mut ledger = Ledger::new_native_hid()?;
+    ledger.open_app().await?;
+
+    let signer = ledger.into_signer("m/44'/4218'/0'/0'/0'".parse()?).await?;
     let signature = signer
         .sign_transaction_with_objects(transaction, objects)
         .await?;
