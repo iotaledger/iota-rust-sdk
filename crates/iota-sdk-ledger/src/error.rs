@@ -3,7 +3,7 @@
 
 //! Ledger errors.
 
-use iota_types::BcsError;
+use iota_types::{BcsError, ObjectId};
 
 use crate::AppVersion;
 
@@ -42,6 +42,12 @@ pub enum LedgerError {
         "the device returned a different key for the signer's derivation path; use the same device, seed and passphrase as when the signer was created"
     )]
     KeyMismatch,
+    /// The objects passed for clear signing lack an owned or immutable input
+    /// or a gas coin of the transaction at the version it references.
+    #[error(
+        "object {0} is missing from the objects passed for clear signing, or not at the version the transaction references"
+    )]
+    MissingObject(ObjectId),
     /// A command payload exceeds what the protocol can encode.
     #[error("payload is too long for the device")]
     PayloadTooLong,
