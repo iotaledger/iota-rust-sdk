@@ -80,7 +80,17 @@ pub(crate) async fn personal_message(
     path: &DerivationPath,
     message: &PersonalMessage<'_>,
 ) -> Result<Ed25519Signature, LedgerError> {
-    let message = IntentMessage::new(Intent::personal_message(), &message.0);
+    intent(transport, path, Intent::personal_message(), &message.0).await
+}
+
+/// Sign `message` under `intent`.
+pub(crate) async fn intent<T: Serialize + ?Sized>(
+    transport: &dyn Transport,
+    path: &DerivationPath,
+    intent: Intent,
+    message: &T,
+) -> Result<Ed25519Signature, LedgerError> {
+    let message = IntentMessage::new(intent, message);
     intent_message(transport, path, &bcs_to_bytes(&message)?, None).await
 }
 

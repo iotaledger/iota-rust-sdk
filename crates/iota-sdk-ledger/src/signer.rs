@@ -3,9 +3,10 @@
 
 use iota_crypto::DerivationPath;
 use iota_types::{
-    Address, Ed25519PublicKey, Ed25519Signature, Object, PersonalMessage, SimpleSignature,
+    Address, Ed25519PublicKey, Ed25519Signature, Intent, Object, PersonalMessage, SimpleSignature,
     Transaction, UserSignature,
 };
+use serde::Serialize;
 
 use crate::{Ledger, LedgerError};
 
@@ -108,6 +109,17 @@ impl LedgerSigner {
         Ok(self.user_signature(signature))
     }
 
+    /// Sign `message` under `intent`; see [`Ledger::sign_intent`].
+    pub async fn sign_intent<T: Serialize + ?Sized>(
+        &self,
+        intent: Intent,
+        message: &T,
+    ) -> Result<UserSignature, LedgerError> {
+        self.ensure_same_key().await?;
+        let signature = self.ledger.sign_intent(&self.path, intent, message).await?;
+        Ok(self.user_signature(signature))
+    }
+
     async fn ensure_same_key(&self) -> Result<(), LedgerError> {
         if self.ledger.get_public_key(&self.path).await? != self.public_key {
             return Err(LedgerError::KeyMismatch);
@@ -195,6 +207,10 @@ mod tests {
             block_on(signer.sign_personal_message(&PersonalMessage(b"Hello".into()))).unwrap(),
             expected
         );
+        assert_eq!(
+            block_on(signer.sign_intent(Intent::iota_transaction(), &transaction())).unwrap(),
+            expected
+        );
     }
 
     #[test]
@@ -221,5 +237,6 @@ mod tests {
         assert_send(signer.open_app());
         assert_send(signer.sign_transaction(&transaction));
         assert_send(signer.sign_personal_message(&PersonalMessage(b"".into())));
+        assert_send(signer.sign_intent(Intent::iota_transaction(), &transaction));
     }
 }

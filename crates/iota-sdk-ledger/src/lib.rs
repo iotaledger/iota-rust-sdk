@@ -15,7 +15,10 @@ use futures::lock::Mutex;
 pub use iota_crypto;
 use iota_crypto::DerivationPath;
 pub use iota_types;
-use iota_types::{Ed25519PublicKey, Ed25519Signature, Object, PersonalMessage, Transaction};
+use iota_types::{
+    Ed25519PublicKey, Ed25519Signature, Intent, Object, PersonalMessage, Transaction,
+};
+use serde::Serialize;
 
 use crate::commands::{app, bolos, sign};
 #[cfg(feature = "hid")]
@@ -175,6 +178,19 @@ impl Ledger {
         message: &PersonalMessage<'_>,
     ) -> Result<Ed25519Signature, LedgerError> {
         sign::personal_message(self.transport.lock().await.as_ref(), path, message).await
+    }
+
+    /// Sign `message` under `intent` with the key at `path`.
+    ///
+    /// The app shows the transactions it recognizes and personal messages, and
+    /// only signs anything else when blind signing is enabled in its settings.
+    pub async fn sign_intent<T: Serialize + ?Sized>(
+        &self,
+        path: &DerivationPath,
+        intent: Intent,
+        message: &T,
+    ) -> Result<Ed25519Signature, LedgerError> {
+        sign::intent(self.transport.lock().await.as_ref(), path, intent, message).await
     }
 
     /// Wait until `app` runs on the device, reconnecting as the device
@@ -398,5 +414,6 @@ mod tests {
         assert_send(ledger.verify_address(&path));
         assert_send(ledger.sign_transaction(&path, &transaction, &[]));
         assert_send(ledger.sign_personal_message(&path, &PersonalMessage(b"".into())));
+        assert_send(ledger.sign_intent(&path, Intent::iota_transaction(), &transaction));
     }
 }
