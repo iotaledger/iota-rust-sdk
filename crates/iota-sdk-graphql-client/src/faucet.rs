@@ -157,8 +157,7 @@ impl FaucetClient {
         }];
         let url = format!("{}v1/gas", self.faucet_url);
         info!(
-            "Requesting gas from faucet for address {} : {}v1/gas",
-            address,
+            "Requesting gas from faucet for address {address} : {}v1/gas",
             without_credentials(&self.faucet_url)
         );
         let resp = self
