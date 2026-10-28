@@ -62,6 +62,11 @@ impl LedgerSigner {
         &self.ledger
     }
 
+    /// Mutable reference to the device the signer uses.
+    pub fn ledger_mut(&mut self) -> &mut Ledger {
+        &mut self.ledger
+    }
+
     /// Return the device.
     pub fn into_ledger(self) -> Ledger {
         self.ledger
