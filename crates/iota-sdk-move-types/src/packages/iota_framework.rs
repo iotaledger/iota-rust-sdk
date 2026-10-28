@@ -147,11 +147,11 @@ pub mod iota {
         }
 
         pub fn id(&self) -> &ObjectId {
-            self.inner.id.object_id()
+            self.inner.id()
         }
 
         pub fn total_supply(&self) -> u64 {
-            self.inner.total_supply.value
+            self.inner.total_supply()
         }
     }
 }
@@ -291,6 +291,8 @@ pub mod bag {
 /// Types from `0x2::coin`.
 pub mod coin {
     use core::marker::PhantomData;
+
+    use iota_types::ObjectId;
 
     use super::{
         balance::{Balance, Supply},
@@ -444,6 +446,14 @@ pub mod coin {
     impl<T> TreasuryCap<T> {
         pub const fn new(id: UID, total_supply: Supply<T>) -> Self {
             Self { id, total_supply }
+        }
+
+        pub fn id(&self) -> &ObjectId {
+            self.id.object_id()
+        }
+
+        pub fn total_supply(&self) -> u64 {
+            self.total_supply.value()
         }
     }
 
