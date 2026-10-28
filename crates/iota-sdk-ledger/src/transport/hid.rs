@@ -119,10 +119,10 @@ impl HidTransport {
         &self,
         request: impl FnOnce(oneshot::Sender<Result<T, LedgerError>>) -> Request,
     ) -> Result<T, LedgerError> {
-        let (answer, receiver) = oneshot::channel();
+        let (sender, receiver) = oneshot::channel();
         // If the thread has stopped, the request is dropped with its sender
         // and the receiver reports that it was canceled.
-        let _ = self.requests.send(request(answer));
+        let _ = self.requests.send(request(sender));
         receiver.await.map_err(LedgerError::transport)?
     }
 }
