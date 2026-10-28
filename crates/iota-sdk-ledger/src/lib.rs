@@ -6,6 +6,7 @@
 
 mod commands;
 mod error;
+mod signer;
 mod transport;
 
 use std::{fmt, sync::OnceLock, time::Duration};
@@ -14,7 +15,10 @@ use futures::lock::Mutex;
 pub use iota_crypto;
 use iota_crypto::DerivationPath;
 pub use iota_types;
-use iota_types::{Ed25519PublicKey, Ed25519Signature, Object, PersonalMessage, Transaction};
+use iota_types::{
+    Ed25519PublicKey, Ed25519Signature, Intent, Object, PersonalMessage, Transaction,
+};
+use serde::Serialize;
 
 use crate::commands::{app, bolos, sign};
 #[cfg(feature = "hid")]
@@ -22,6 +26,7 @@ pub use crate::transport::hid::HidDeviceInfo;
 pub use crate::{
     commands::app::AppVersion,
     error::{ApduError, LedgerError},
+    signer::LedgerSigner,
     transport::{ApduAnswer, ApduCommand, MaybeSendSync, Transport, TransportFuture},
 };
 
@@ -76,15 +81,22 @@ impl Ledger {
     /// Open the IOTA app, from the dashboard or by closing another app first.
     ///
     /// Does nothing if the IOTA app is already running, or on transports that
-    /// cannot switch apps, such as Speculos.
+    /// cannot switch apps, such as Speculos. Reconnects first if the device
+    /// does not answer, as after an app was opened or closed on the device.
     pub async fn open_app(&mut self) -> Result<(), LedgerError> {
-        if !self.transport.get_mut().can_switch_apps() {
+        let transport = self.transport.get_mut();
+        if !transport.can_switch_apps() {
             return Ok(());
         }
-        match bolos::app_name(self.transport.get_mut().as_ref())
-            .await?
-            .as_str()
-        {
+        let app_name = match bolos::app_name(transport.as_ref()).await {
+            Ok(app_name) => app_name,
+            Err(_) => {
+                self.version = OnceLock::new();
+                transport.reconnect().await?;
+                bolos::app_name(transport.as_ref()).await?
+            }
+        };
+        match app_name.as_str() {
             IOTA_APP_NAME => return Ok(()),
             DASHBOARD_APP_NAME => {}
             _ => {
@@ -139,7 +151,10 @@ impl Ledger {
     /// `objects` are the transaction's input objects. With them the device
     /// shows what the transaction does; without them it only signs when blind
     /// signing is enabled in the app's settings. Passing objects to an app
-    /// older than 1.0 fails with [`LedgerError::ClearSigningUnsupported`].
+    /// older than 1.0 fails with [`LedgerError::ClearSigningUnsupported`], and
+    /// objects that lack an owned or immutable input or a gas coin at the
+    /// version the transaction references fail with
+    /// [`LedgerError::MissingObject`].
     pub async fn sign_transaction(
         &self,
         path: &DerivationPath,
@@ -163,6 +178,19 @@ impl Ledger {
         message: &PersonalMessage<'_>,
     ) -> Result<Ed25519Signature, LedgerError> {
         sign::personal_message(self.transport.lock().await.as_ref(), path, message).await
+    }
+
+    /// Sign `message` under `intent` with the key at `path`.
+    ///
+    /// The app shows the transactions it recognizes and personal messages, and
+    /// only signs anything else when blind signing is enabled in its settings.
+    pub async fn sign_intent<T: Serialize + ?Sized>(
+        &self,
+        path: &DerivationPath,
+        intent: Intent,
+        message: &T,
+    ) -> Result<Ed25519Signature, LedgerError> {
+        sign::intent(self.transport.lock().await.as_ref(), path, intent, message).await
     }
 
     /// Wait until `app` runs on the device, reconnecting as the device
@@ -318,6 +346,46 @@ mod tests {
         futures::executor::block_on(ledger.open_app()).unwrap();
     }
 
+    /// Fails every command until reconnected and runs the IOTA app after, like
+    /// a device whose app was closed and reopened on the device.
+    #[derive(Default)]
+    struct StaleConnection {
+        reconnected: bool,
+    }
+
+    impl Transport for StaleConnection {
+        fn exchange<'a>(&'a self, command: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer> {
+            Box::pin(async move {
+                if !self.reconnected {
+                    return Err(LedgerError::transport("stale connection"));
+                }
+                match (command.cla(), command.ins()) {
+                    // app name
+                    (0xb0, 0x01) => ApduAnswer::from_bytes(
+                        [
+                            &[1, IOTA_APP_NAME.len() as u8][..],
+                            IOTA_APP_NAME.as_bytes(),
+                            &[0x90, 0x00],
+                        ]
+                        .concat(),
+                    ),
+                    (cla, ins) => panic!("unexpected command {cla:#04x} {ins:#04x}"),
+                }
+            })
+        }
+
+        fn reconnect(&mut self) -> TransportFuture<'_, ()> {
+            self.reconnected = true;
+            Box::pin(async { Ok(()) })
+        }
+    }
+
+    #[test]
+    fn reconnects_when_the_device_does_not_answer() {
+        let mut ledger = Ledger::new(StaleConnection::default());
+        futures::executor::block_on(ledger.open_app()).unwrap();
+    }
+
     fn assert_send<T: Send>(_: T) {}
 
     #[test]
@@ -346,5 +414,6 @@ mod tests {
         assert_send(ledger.verify_address(&path));
         assert_send(ledger.sign_transaction(&path, &transaction, &[]));
         assert_send(ledger.sign_personal_message(&path, &PersonalMessage(b"".into())));
+        assert_send(ledger.sign_intent(&path, Intent::iota_transaction(), &transaction));
     }
 }
