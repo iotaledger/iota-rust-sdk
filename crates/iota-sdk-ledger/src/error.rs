@@ -39,7 +39,7 @@ pub enum LedgerError {
     /// than when the signer was created, because another device is connected
     /// or the device was unlocked with a different seed or passphrase.
     #[error(
-        "the device returned a different key for the signer's derivation path; connect the device and seed the signer was created with"
+        "the device returned a different key for the signer's derivation path; use the same device, seed and passphrase as when the signer was created"
     )]
     KeyMismatch,
     /// A command payload exceeds what the protocol can encode.
