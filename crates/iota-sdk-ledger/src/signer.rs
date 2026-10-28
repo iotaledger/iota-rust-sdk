@@ -66,6 +66,11 @@ impl LedgerSigner {
         self.ledger
     }
 
+    /// Open the IOTA app; see [`Ledger::open_app`].
+    pub async fn open_app(&mut self) -> Result<(), LedgerError> {
+        self.ledger.open_app().await
+    }
+
     /// Sign a transaction without its input objects. The device only signs
     /// when blind signing is enabled in the IOTA app's settings.
     pub async fn sign_transaction(
@@ -211,8 +216,9 @@ mod tests {
     #[test]
     fn futures_are_send() {
         fn assert_send<T: Send>(_: T) {}
-        let signer = signer(&Arc::new(Mutex::new(Ed25519PublicKey::new([7; 32]))));
+        let mut signer = signer(&Arc::new(Mutex::new(Ed25519PublicKey::new([7; 32]))));
         let transaction = transaction();
+        assert_send(signer.open_app());
         assert_send(signer.sign_transaction(&transaction));
         assert_send(signer.sign_personal_message(&PersonalMessage(b"".into())));
     }
