@@ -6,12 +6,15 @@ use std::{
     net::TcpStream,
 };
 
-use super::{ApduAnswer, ApduCommand, Transport};
+use super::{ApduAnswer, ApduCommand, Transport, TransportFuture};
 use crate::{Ledger, LedgerError};
 
 impl Ledger {
     /// Connect to the APDU port of a Speculos emulator (by default this is
     /// `127.0.0.1:9999` in the emulator).
+    ///
+    /// Calls through this connection block the thread polling them until the
+    /// emulator answers.
     pub fn new_speculos(host: &str, port: u16) -> Self {
         Self::new(SpeculosTransport::new(host, port))
     }
@@ -45,11 +48,13 @@ impl SpeculosTransport {
 }
 
 impl Transport for SpeculosTransport {
-    fn exchange(&self, command: &ApduCommand) -> Result<ApduAnswer, LedgerError> {
-        let mut stream = TcpStream::connect(&self.address).map_err(LedgerError::transport)?;
-        let answer =
-            Self::request(&mut stream, &command.to_bytes()).map_err(LedgerError::transport)?;
-        ApduAnswer::from_bytes(answer)
+    fn exchange<'a>(&'a self, command: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer> {
+        Box::pin(async move {
+            let mut stream = TcpStream::connect(&self.address).map_err(LedgerError::transport)?;
+            let answer =
+                Self::request(&mut stream, &command.to_bytes()).map_err(LedgerError::transport)?;
+            ApduAnswer::from_bytes(answer)
+        })
     }
 
     fn can_switch_apps(&self) -> bool {
