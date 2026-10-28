@@ -502,7 +502,7 @@ impl GetTransactionDataEffectsQuery {
                 let effects = crate::base64::decode(
                     effects
                         .bcs
-                        .ok_or(GraphQLError::EmptyResponseField("package bcs"))?
+                        .ok_or(GraphQLError::EmptyResponseField("effects bcs"))?
                         .0
                         .as_str(),
                 )?;
