@@ -202,6 +202,10 @@ mod tests {
             block_on(signer.sign_transaction(&transaction())),
             Err(LedgerError::KeyMismatch)
         ));
+        assert!(matches!(
+            block_on(signer.sign_personal_message(&PersonalMessage(b"Hello".into()))),
+            Err(LedgerError::KeyMismatch)
+        ));
     }
 
     #[test]
