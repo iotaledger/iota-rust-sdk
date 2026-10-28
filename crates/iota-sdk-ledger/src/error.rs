@@ -17,13 +17,6 @@ pub enum LedgerError {
     /// The IOTA app is not installed on the device.
     #[error("IOTA app not found; install the IOTA app on the Ledger device")]
     AppNotFound,
-    /// The device returns a different key for the signer's derivation path
-    /// than when the signer was created, because another device is connected
-    /// or the device was unlocked with a different seed or passphrase.
-    #[error(
-        "the device returned a different key for the signer's derivation path; connect the device and seed the signer was created with"
-    )]
-    KeyMismatch,
     /// The IOTA app cannot clear-sign the transaction, and blind signing is
     /// disabled in its settings.
     #[error(
@@ -42,6 +35,13 @@ pub enum LedgerError {
     /// The device's response could not be decoded.
     #[error("invalid response from the device: {0}")]
     InvalidResponse(String),
+    /// The device returns a different key for the signer's derivation path
+    /// than when the signer was created, because another device is connected
+    /// or the device was unlocked with a different seed or passphrase.
+    #[error(
+        "the device returned a different key for the signer's derivation path; connect the device and seed the signer was created with"
+    )]
+    KeyMismatch,
     /// A command payload exceeds what the protocol can encode.
     #[error("payload is too long for the device")]
     PayloadTooLong,
