@@ -90,14 +90,11 @@ hash = ["types", "iota-types/hash"]
 proptest = ["types", "iota-types/proptest"]
 
 [dependencies]
-# external dependencies
-iota-ledger = { workspace = true, optional = true }
-
-# internal dependencies
 iota-crypto = { workspace = true, optional = true }
 iota-graphql-client = { workspace = true, optional = true }
 iota-grpc-client = { workspace = true, optional = true }
 iota-grpc-types = { workspace = true, optional = true }
+iota-ledger = { workspace = true, optional = true }
 iota-move-types = { workspace = true, optional = true }
 iota-transaction-builder = { workspace = true, optional = true }
 iota-types = { workspace = true, optional = true }

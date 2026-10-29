@@ -35,7 +35,6 @@ workspace = true
 base64ct = { workspace = true, features = ["std"], optional = true }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from"] }
-iota-ledger = { workspace = true, optional = true }
 primitive-types.workspace = true
 reqwest = { workspace = true, features = ["json"], optional = true }
 serde.workspace = true
@@ -46,6 +45,7 @@ variadics_please.workspace = true
 
 # internal dependencies
 iota-crypto = { workspace = true, features = ["ed25519", "secp256r1", "secp256k1"] }
+iota-ledger = { workspace = true, optional = true }
 iota-move-types = { workspace = true, features = ["u256"] }
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
