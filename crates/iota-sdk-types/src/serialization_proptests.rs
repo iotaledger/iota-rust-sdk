@@ -77,6 +77,7 @@ serialization_test!(PasskeyAuthenticator);
 serialization_test!(PasskeyPublicKey);
 serialization_test!(MoveAuthenticator);
 serialization_test!(MoveAuthenticatorV1);
+serialization_test!(MoveAuthenticatorV2);
 serialization_test!(RandomnessRound);
 serialization_test!(Digest);
 serialization_test!(CheckpointDigest);

@@ -76,6 +76,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::hash::MissingSignatureError>();
     assert_display::<iota_sdk_types::MoveAuthenticator>();
     assert_display::<iota_sdk_types::MoveAuthenticatorV1>();
+    assert_display::<iota_sdk_types::MoveAuthenticatorV2>();
     assert_display::<iota_sdk_types::MoveCall>();
     assert_display::<iota_sdk_types::MoveLocation>();
     assert_display::<iota_sdk_types::MoveObjectType>();

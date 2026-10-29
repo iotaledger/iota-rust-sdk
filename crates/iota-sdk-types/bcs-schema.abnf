@@ -289,10 +289,15 @@ merge-coins = argument           ; coin
 misbehavior-report-digest = digest
 
 move-authenticator = %d00 move-authenticator-v1   ; V1
+                   / %d01 move-authenticator-v2   ; V2
 
 move-authenticator-digest = digest
 
 move-authenticator-v1 = (size *input)      ; call-args
+                        (size *type-tag)   ; type-args
+                        input              ; object-to-authenticate
+
+move-authenticator-v2 = (size *input)      ; call-args
                         (size *type-tag)   ; type-args
                         input              ; object-to-authenticate
 

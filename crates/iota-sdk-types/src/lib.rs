@@ -45,7 +45,7 @@ pub use crypto::SignatureFromBytesError;
 pub use crypto::{
     Base64ParseError, Bls12381PublicKey, Bls12381Signature, Ed25519PublicKey, Ed25519Signature,
     HashingIntentScope, INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError, IntentMessage,
-    IntentScope, IntentVersion, MoveAuthenticator, MoveAuthenticatorV1,
+    IntentScope, IntentVersion, MoveAuthenticator, MoveAuthenticatorV1, MoveAuthenticatorV2,
     MultisigAggregatedSignature, MultisigCommittee, MultisigError, MultisigMember,
     MultisigMemberSignature, PasskeyAuthenticator, PasskeyPublicKey, PersonalMessage, PublicKey,
     PublicKeyError, PublicKeyExt, Secp256k1PublicKey, Secp256k1Signature, Secp256r1PublicKey,
