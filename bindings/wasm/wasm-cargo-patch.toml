@@ -1,2 +1,6 @@
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom = { version = "0.3", features = ["wasm_js"] }
+
+[dependencies]
+# Must equal the wasm-bindgen-cli version the workflows install.
+wasm-bindgen = "=0.2.130"

@@ -15,7 +15,7 @@ The pipeline has two steps:
 # WASM target
 rustup target add wasm32-unknown-unknown
 
-# wasm-bindgen CLI (version must match the compiled-in library)
+# wasm-bindgen CLI (version must match the wasm-bindgen pin in wasm-cargo-patch.toml)
 cargo install wasm-bindgen-cli --version 0.2.130
 ```
 
