@@ -174,7 +174,8 @@ impl GasStation {
         Self::builder(url).build()
     }
 
-    /// The URL this station is reached at.
+    /// The URL this station is reached at, including any username and
+    /// password it was configured with.
     pub fn url(&self) -> &Url {
         &self.url
     }
