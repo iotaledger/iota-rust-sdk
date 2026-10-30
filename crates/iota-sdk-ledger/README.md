@@ -64,6 +64,44 @@ async fn sign(
   APDU port is 9999 by default.
 - Any other link, by implementing `Transport` and passing it to `Ledger::new`.
 
+## Using a device
+
+Install the IOTA app on the device with Ledger Live, unlock the device and
+open the app, or call `Ledger::open_app` to open it.
+
+On Linux, a regular user can only open the device once udev rules grant access
+to Ledger's USB vendor ID; install the rules from
+[LedgerHQ/udev-rules](https://github.com/LedgerHQ/udev-rules).
+
+## Using Speculos
+
+[Speculos](https://github.com/LedgerHQ/speculos) emulates a device running the
+IOTA app, for development and testing without hardware. The app builds for
+each device model are attached to the
+[ledger-app-iota releases](https://github.com/iotaledger/ledger-app-iota/releases);
+for a Nano S Plus, extract `nanosplus.tar.gz` and run:
+
+```sh
+docker run --rm -p 9999:9999 -p 5000:5000 -v "$PWD/nanosplus:/speculos/apps" \
+  ghcr.io/ledgerhq/speculos --model nanosp --display headless \
+  --apdu-port 9999 --api-port 5000 apps/iota
+```
+
+Connect with `Ledger::new_speculos("127.0.0.1", 9999)`, and approve requests in the
+web interface at <http://127.0.0.1:5000> or through its REST API. The emulator
+runs a single app and cannot switch apps, so `Ledger::open_app` does
+nothing there.
+
+## Clear and blind signing
+
+The IOTA app shows what a transaction does when it receives the transaction's
+input objects: pass them to `LedgerSigner::sign_transaction_with_objects`.
+Without them, or for a transaction the app cannot interpret, it signs only when
+blind signing is enabled in the app's settings, and fails with
+`LedgerError::BlindSigningDisabled` otherwise. Personal messages are shown
+too, unless they are too long for the app to display, which also needs blind
+signing.
+
 ## Features
 
 - `hid` (default): the USB HID transport, built on `hidapi`, which supports
