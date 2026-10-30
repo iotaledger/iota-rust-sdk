@@ -10,8 +10,8 @@ description = "Transaction API for the IOTA Blockchain Rust SDK"
 
 [package.metadata.docs.rs]
 # To build locally:
-# RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --features gas-station --no-deps --open
-features = ["gas-station"]
+# RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --features gas-station,ledger --no-deps --open
+features = ["gas-station", "ledger"]
 rustdoc-args = [
   # Enable doc_cfg showing the required features.
   "--cfg=doc_cfg",
@@ -24,6 +24,7 @@ rustdoc-args = [
 [features]
 default = []
 gas-station = ["dep:base64ct", "dep:reqwest"]
+ledger = ["dep:iota-ledger", "dep:tracing"]
 test-client = []
 
 [lints]
@@ -39,10 +40,12 @@ reqwest = { workspace = true, features = ["json"], optional = true }
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
+tracing = { workspace = true, optional = true }
 variadics_please.workspace = true
 
 # internal dependencies
 iota-crypto = { workspace = true, features = ["ed25519", "secp256r1", "secp256k1"] }
+iota-ledger = { workspace = true, optional = true }
 iota-move-types = { workspace = true, features = ["u256"] }
 iota-types = { workspace = true, features = ["serde", "hash"] }
 

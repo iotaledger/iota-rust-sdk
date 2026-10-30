@@ -74,6 +74,10 @@ grpc-tls-aws-lc = ["grpc", "iota-grpc-client/tls-aws-lc"]
 grpc-tls-ring = ["grpc", "iota-grpc-client/tls-ring"]
 grpc-tls-native-roots = ["grpc", "iota-grpc-client/tls-native-roots"]
 grpc-tls-webpki-roots = ["grpc", "iota-grpc-client/tls-webpki-roots"]
+# Ledger hardware wallets
+ledger = ["dep:iota-ledger", "iota-transaction-builder?/ledger"]
+ledger-hid = ["ledger", "iota-ledger/hid"]
+ledger-speculos = ["ledger", "iota-ledger/speculos"]
 # Transaction Builder
 transaction-builder = ["dep:iota-transaction-builder"]
 # Sponsorship through the IOTA gas station.
@@ -90,6 +94,7 @@ iota-crypto = { workspace = true, optional = true }
 iota-graphql-client = { workspace = true, optional = true }
 iota-grpc-client = { workspace = true, optional = true }
 iota-grpc-types = { workspace = true, optional = true }
+iota-ledger = { workspace = true, optional = true }
 iota-move-types = { workspace = true, optional = true }
 iota-transaction-builder = { workspace = true, optional = true }
 iota-types = { workspace = true, optional = true }

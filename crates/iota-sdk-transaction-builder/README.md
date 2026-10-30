@@ -197,6 +197,26 @@ used. Requests carry `Content-Type: application/json` unless a header overrides 
 
 Implement `GasSponsor` yourself to sponsor through a service this crate does not ship.
 
+## Ledger Signing
+
+The `ledger` feature implements `TransactionSigner` for the
+[`iota-sdk-ledger`](https://crates.io/crates/iota-sdk-ledger) `LedgerSigner`. When it executes a
+transaction, the builder passes the signer the objects the transaction reads, reusing those it
+fetched while building, and the signer sends the device the gas coins and immutable or owned inputs
+so it can show what the transaction does; execution fails if any of them cannot be fetched. When the
+IOTA app is too old to clear-sign, the signer blind-signs with a warning, which the app only allows
+when blind signing is enabled in its settings:
+
+```rust,ignore
+let signer = ledger.into_signer(path).await?;
+builder.execute(&signer, WaitForTransaction::Finalized).await?;
+```
+
+With the Speculos transport, signing blocks the thread polling it until the emulator answers.
+
+Signers that use the objects a transaction reads implement `uses_objects` and
+`sign_with_objects`; the others are given none.
+
 ## Traits and Helpers
 
 This crate provides several traits which enable the functionality of the builder. Often, when
