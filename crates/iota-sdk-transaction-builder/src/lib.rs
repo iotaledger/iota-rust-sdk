@@ -887,6 +887,61 @@ mod tests {
         );
     }
 
+    /// Commands that use the results of earlier commands are accepted and
+    /// survive the round trip unchanged.
+    #[test]
+    fn transaction_using_earlier_results_round_trips() {
+        let sender = Address::new([1; 32]);
+        let txn = Transaction::V1(iota_types::TransactionV1 {
+            kind: iota_types::TransactionKind::Programmable(iota_types::ProgrammableTransaction {
+                inputs: vec![
+                    iota_types::Input::pure(&1u64),
+                    iota_types::Input::pure(&Address::new([7; 32])),
+                ],
+                commands: vec![
+                    iota_types::Command::SplitCoins(iota_types::SplitCoins {
+                        coin: iota_types::Argument::Gas,
+                        amounts: vec![iota_types::Argument::Input(0)],
+                    }),
+                    iota_types::Command::SplitCoins(iota_types::SplitCoins {
+                        coin: iota_types::Argument::Gas,
+                        amounts: vec![
+                            iota_types::Argument::Input(0),
+                            iota_types::Argument::Input(0),
+                        ],
+                    }),
+                    iota_types::Command::MergeCoins(iota_types::MergeCoins {
+                        coin: iota_types::Argument::Result(0),
+                        coins_to_merge: vec![iota_types::Argument::NestedResult(1, 0)],
+                    }),
+                    iota_types::Command::TransferObjects(iota_types::TransferObjects {
+                        objects: vec![
+                            iota_types::Argument::Result(0),
+                            iota_types::Argument::NestedResult(1, 1),
+                        ],
+                        address: iota_types::Argument::Input(1),
+                    }),
+                ],
+            }),
+            sender,
+            gas_payment: iota_types::GasPayment {
+                objects: vec![ObjectReference::new(
+                    iota_types::ObjectId::new([0x99; 32]),
+                    Version::from_u64(1),
+                    iota_types::ObjectDigest::new([0x99; 32]),
+                )],
+                owner: sender,
+                price: 1000,
+                budget: 5_000_000,
+            },
+            expiration: Default::default(),
+        });
+
+        let rebuilt = TransactionBuilder::try_from(txn.clone()).unwrap();
+
+        assert_eq!(rebuilt.finish().unwrap(), txn);
+    }
+
     #[cfg(feature = "test-client")]
     mod sponsored_execution {
         use std::sync::{
