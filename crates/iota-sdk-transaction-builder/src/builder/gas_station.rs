@@ -128,6 +128,9 @@ pub struct GasStation {
 
 impl GasStation {
     /// Start configuring a gas station reachable at `url`.
+    ///
+    /// Request paths are appended to the path of `url`, so a station served
+    /// under a path prefix is reached through that prefix.
     pub fn builder(url: Url) -> GasStationBuilder {
         GasStationBuilder {
             url,
@@ -380,9 +383,7 @@ struct ExecuteTxResponse {
 
 impl GasStation {
     fn endpoint(&self, kind: GasStationRequestKind) -> Result<Url, GasStationError> {
-        self.url
-            .join(kind.as_path())
-            .map_err(GasStationError::InvalidUrl)
+        kind.url(&self.url).map_err(GasStationError::InvalidUrl)
     }
 
     async fn gas_station_version(&self) -> Result<GasStationVersion, GasStationError> {
@@ -623,9 +624,44 @@ pub(crate) enum GasStationRequestKind {
 impl GasStationRequestKind {
     const fn as_path(&self) -> &str {
         match self {
-            Self::ReserveGas => "/v1/reserve_gas",
-            Self::ExecuteTx => "/v1/execute_tx",
-            Self::Version => "/version",
+            Self::ReserveGas => "v1/reserve_gas",
+            Self::ExecuteTx => "v1/execute_tx",
+            Self::Version => "version",
+        }
+    }
+
+    /// The URL of this request to a station reachable at `base`.
+    fn url(&self, base: &Url) -> Result<Url, <Url as FromStr>::Err> {
+        let mut base = base.clone();
+        if !base.path().ends_with('/') {
+            base.set_path(&format!("{}/", base.path()));
+        }
+        base.join(self.as_path())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn endpoints_keep_the_base_path() {
+        for (base, expected) in [
+            ("http://0.0.0.0:9527", "http://0.0.0.0:9527/v1/reserve_gas"),
+            ("http://0.0.0.0:9527/", "http://0.0.0.0:9527/v1/reserve_gas"),
+            (
+                "https://example.com/gas",
+                "https://example.com/gas/v1/reserve_gas",
+            ),
+            (
+                "https://example.com/gas/",
+                "https://example.com/gas/v1/reserve_gas",
+            ),
+        ] {
+            let url = GasStationRequestKind::ReserveGas
+                .url(&base.parse().unwrap())
+                .unwrap();
+            assert_eq!(url.as_str(), expected, "base {base}");
         }
     }
 }
