@@ -61,18 +61,22 @@ impl GetMaxPageSizeQuery {
     }
 }
 
-pub(crate) fn without_credentials(url: &Url) -> Url {
+pub(crate) fn mask_credentials(url: &Url) -> Url {
     let mut url = url.clone();
     // Both setters fail only on URLs that cannot carry credentials at all.
-    let _ = url.set_username("");
-    let _ = url.set_password(None);
+    if !url.username().is_empty() {
+        let _ = url.set_username("omitted");
+    }
+    if url.password().is_some() {
+        let _ = url.set_password(Some("omitted"));
+    }
     url
 }
 
 /// The GraphQL client for interacting with the IOTA blockchain. By default, it uses the `reqwest`
 /// crate as the HTTP client.
 ///
-/// `Debug` prints only the server URL, without its username and password.
+/// `Debug` prints only the server URL, with its username and password replaced by `omitted`.
 #[derive(Clone)]
 pub struct GraphQLClient {
     /// The URL of the GraphQL server.
@@ -88,7 +92,7 @@ pub struct GraphQLClient {
 impl std::fmt::Debug for GraphQLClient {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("GraphQLClient")
-            .field("rpc", &without_credentials(&self.rpc))
+            .field("rpc", &mask_credentials(&self.rpc))
             .finish_non_exhaustive()
     }
 }
@@ -97,7 +101,7 @@ impl std::fmt::Debug for GraphQLClient {
 /// be set without losing the crate's user agent and trust anchors. Created by
 /// [`GraphQLClient::builder`].
 ///
-/// `Debug` prints only the server URL, without its username and password.
+/// `Debug` prints only the server URL, with its username and password replaced by `omitted`.
 pub struct GraphQLClientBuilder {
     server: String,
     http: reqwest::ClientBuilder,
@@ -108,7 +112,7 @@ pub struct GraphQLClientBuilder {
 impl std::fmt::Debug for GraphQLClientBuilder {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let server = match Url::parse(&self.server) {
-            Ok(url) => without_credentials(&url).to_string(),
+            Ok(url) => mask_credentials(&url).to_string(),
             Err(_) => "<invalid URL>".to_owned(),
         };
         f.debug_struct("GraphQLClientBuilder")
@@ -607,12 +611,16 @@ mod tests {
         let http = format!("{:?}", builder.http);
         assert!(!http.contains("header-secret"), "{http}");
         let debug = format!("{builder:?}");
-        assert!(debug.contains("127.0.0.1:9999"), "{debug}");
+        assert!(debug.contains("omitted:omitted@127.0.0.1:9999"), "{debug}");
         assert!(!debug.contains("secret"), "{debug}");
 
         let debug = format!("{:?}", builder.build().unwrap());
-        assert!(debug.contains("127.0.0.1"), "{debug}");
+        assert!(debug.contains(r#"username: "omitted""#), "{debug}");
+        assert!(debug.contains(r#"password: Some("omitted")"#), "{debug}");
         assert!(!debug.contains("secret"), "{debug}");
+
+        let debug = format!("{:?}", GraphQLClient::builder("http://127.0.0.1:9999"));
+        assert!(!debug.contains("omitted"), "{debug}");
 
         let debug = format!(
             "{:?}",
