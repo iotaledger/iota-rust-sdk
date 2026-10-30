@@ -1481,10 +1481,18 @@ impl<L> TransactionBuilder<(), L> {
                     .await
                     .map_err(TransactionBuilderError::signature)?;
 
-                sponsor
+                let digest = txn.digest();
+                let sponsor_digest = sponsor
                     .execute_reserved(reservation, &txn, &signature)
                     .await
-                    .map_err(TransactionBuilderError::gas_sponsor)
+                    .map_err(TransactionBuilderError::gas_sponsor)?;
+                if sponsor_digest != digest {
+                    return Err(TransactionBuilderError::SponsorDigestMismatch {
+                        expected: digest,
+                        got: sponsor_digest,
+                    });
+                }
+                Ok(digest)
             }
             _ => unimplemented!("a new Transaction enum variant was added and needs to be handled"),
         }
@@ -2146,10 +2154,17 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                     .sign(&txn)
                     .await
                     .map_err(TransactionBuilderError::signature)?;
-                let digest = sponsor
+                let digest = txn.digest();
+                let sponsor_digest = sponsor
                     .execute_reserved(reservation, &txn, &signature)
                     .await
                     .map_err(TransactionBuilderError::gas_sponsor)?;
+                if sponsor_digest != digest {
+                    return Err(TransactionBuilderError::SponsorDigestMismatch {
+                        expected: digest,
+                        got: sponsor_digest,
+                    });
+                }
 
                 self.client
                     .wait_for_transaction(digest, WaitForTransaction::Finalized)

@@ -1,3 +1,9 @@
+## [1.0.0-rc.2] - 2026-10-23
+
+### ⚙️ Miscellaneous Tasks
+
+- Document that a failed wait after execution loses the effects (#1665)
+
 ## [1.0.0-rc.1] - 2026-10-09
 
 ### 🚀 Features
