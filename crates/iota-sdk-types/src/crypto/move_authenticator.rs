@@ -19,18 +19,20 @@ use crate::{Address, Input, TypeTag, transaction::SharedObjectReference};
 #[non_exhaustive]
 pub enum MoveAuthenticator {
     V1(MoveAuthenticatorV1),
+    V2(MoveAuthenticatorV2),
     // When new variants are introduced, it is important that we consciously gate
     // version support (e.g. in transaction validity checks based on the protocol
     // config), as is done for `Transaction`.
 }
 
 impl MoveAuthenticator {
-    crate::def_is_as_into_opt!(V1(MoveAuthenticatorV1));
+    crate::def_is_as_into_opt!(V1(MoveAuthenticatorV1), V2(MoveAuthenticatorV2));
 
     /// Returns the version number of this authenticator variant.
     pub fn version(&self) -> u64 {
         match self {
             Self::V1(_) => 1,
+            Self::V2(_) => 2,
         }
     }
 
@@ -39,6 +41,7 @@ impl MoveAuthenticator {
     pub fn address(&self) -> Address {
         match self {
             Self::V1(v1) => v1.address(),
+            Self::V2(v2) => v2.address(),
         }
     }
 }
@@ -54,6 +57,38 @@ impl MoveAuthenticator {
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 pub struct MoveAuthenticatorV1 {
+    /// Input objects or primitive values
+    call_args: Vec<Input>,
+    /// Type arguments for the Move authenticate function
+    type_args: Vec<TypeTag>,
+    /// The object that is authenticated. Represents the account being the
+    /// sender of the transaction.
+    ///
+    /// Only [`Input::Shared`] is valid here; deserialization rejects any other
+    /// [`Input`] variant.
+    #[cfg_attr(
+        feature = "serde",
+        serde(deserialize_with = "deserialize_object_to_authenticate")
+    )]
+    #[cfg_attr(feature = "proptest", strategy(arb_object_to_authenticate()))]
+    object_to_authenticate: Input,
+}
+
+/// Version 2 of the [`MoveAuthenticator`].
+///
+/// It has the same fields as [`MoveAuthenticatorV1`]. The packages named by its
+/// type arguments are inputs of the authenticator, so validators load them
+/// before running it.
+///
+/// # BCS
+///
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+#[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+#[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
+pub struct MoveAuthenticatorV2 {
     /// Input objects or primitive values
     call_args: Vec<Input>,
     /// Type arguments for the Move authenticate function
@@ -87,8 +122,8 @@ where
     Ok(input)
 }
 
-/// Strategy generating only the [`Input`] variant valid for
-/// [`MoveAuthenticatorV1::object_to_authenticate`], keeping proptest-generated
+/// Strategy generating only the [`Input`] variant valid for the
+/// `object_to_authenticate` field, keeping proptest-generated
 /// values in sync with what [`deserialize_object_to_authenticate`] accepts.
 #[cfg(feature = "proptest")]
 fn arb_object_to_authenticate() -> impl proptest::strategy::Strategy<Value = Input> {
@@ -137,11 +172,52 @@ impl MoveAuthenticatorV1 {
     }
 }
 
+impl MoveAuthenticatorV2 {
+    /// Create a new move authenticator for a shared account object.
+    pub fn new(
+        call_args: Vec<Input>,
+        type_args: Vec<TypeTag>,
+        object_to_authenticate: SharedObjectReference,
+    ) -> Self {
+        Self {
+            call_args,
+            type_args,
+            object_to_authenticate: Input::Shared(object_to_authenticate),
+        }
+    }
+
+    /// Returns the address of the object being authenticated, which acts as the
+    /// sender of the transaction.
+    pub fn address(&self) -> Address {
+        match self.object_to_authenticate {
+            Input::Shared(SharedObjectReference { object_id, .. }) => object_id.into(),
+            _ => unreachable!(),
+        }
+    }
+
+    /// Returns the input objects or primitive values passed to the authenticate
+    /// function.
+    pub fn call_args(&self) -> &[Input] {
+        &self.call_args
+    }
+
+    /// Returns the type arguments for the Move authenticate function.
+    pub fn type_args(&self) -> &[TypeTag] {
+        &self.type_args
+    }
+
+    /// Returns the object that is being authenticated (the account/sender).
+    pub fn object_to_authenticate(&self) -> &Input {
+        &self.object_to_authenticate
+    }
+}
+
 impl crate::TreeDisplay for MoveAuthenticator {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.enum_name("Move Authenticator");
         match self {
             Self::V1(v1) => v1.fmt_tree(w),
+            Self::V2(v2) => v2.fmt_tree(w),
         }
     }
 }
@@ -155,7 +231,16 @@ impl crate::TreeDisplay for MoveAuthenticatorV1 {
     }
 }
 
-crate::impl_tree_display!(MoveAuthenticator, MoveAuthenticatorV1);
+impl crate::TreeDisplay for MoveAuthenticatorV2 {
+    fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
+        w.header("Move Authenticator V2")?;
+        w.children("Call Args", &self.call_args, false)?;
+        w.leaves("Type Args", &self.type_args, false)?;
+        w.child("Object to Authenticate", &self.object_to_authenticate, true)
+    }
+}
+
+crate::impl_tree_display!(MoveAuthenticator, MoveAuthenticatorV1, MoveAuthenticatorV2);
 
 #[cfg(feature = "serde")]
 mod serialization {
@@ -266,23 +351,40 @@ mod tests {
         ];
 
         for bad in bad_inputs {
-            let auth: MoveAuthenticator = MoveAuthenticatorV1 {
+            let v1: MoveAuthenticator = MoveAuthenticatorV1 {
+                call_args: vec![],
+                type_args: vec![],
+                object_to_authenticate: bad.clone(),
+            }
+            .into();
+            let v2: MoveAuthenticator = MoveAuthenticatorV2 {
                 call_args: vec![],
                 type_args: vec![],
                 object_to_authenticate: bad,
             }
             .into();
 
-            let bytes = auth.to_bytes();
-            assert!(
-                MoveAuthenticator::from_bytes(&bytes).is_err(),
-                "from_bytes accepted an invalid object_to_authenticate"
-            );
-            assert!(
-                bcs::from_bytes::<MoveAuthenticator>(&bytes[1..]).is_err(),
-                "bcs::from_bytes accepted an invalid object_to_authenticate"
-            );
+            for auth in [v1, v2] {
+                let bytes = auth.to_bytes();
+                assert!(
+                    MoveAuthenticator::from_bytes(&bytes).is_err(),
+                    "from_bytes accepted an invalid object_to_authenticate"
+                );
+                assert!(
+                    bcs::from_bytes::<MoveAuthenticator>(&bytes[1..]).is_err(),
+                    "bcs::from_bytes accepted an invalid object_to_authenticate"
+                );
+            }
         }
+    }
+
+    #[test]
+    fn version_matches_the_variant() {
+        let account = SharedObjectReference::new(ObjectId::ZERO, Version::default(), false);
+        let v1: MoveAuthenticator = MoveAuthenticatorV1::new(vec![], vec![], account).into();
+        let v2: MoveAuthenticator = MoveAuthenticatorV2::new(vec![], vec![], account).into();
+        assert_eq!(v1.version(), 1);
+        assert_eq!(v2.version(), 2);
     }
 
     #[test]
@@ -350,8 +452,9 @@ mod tests {
     }
 
     /// Synthetic fixtures exercising structural shapes absent from the on-chain
-    /// fixtures: non-empty and nested `type_arguments`, and `call_args`
-    /// containing owned / receiving / mutable-shared inputs.
+    /// fixtures: non-empty and nested `type_arguments`, `call_args`
+    /// containing owned / receiving / mutable-shared inputs, and the V2
+    /// variant.
     fn synthetic_fixtures() -> Vec<SyntheticFixture> {
         let owned = |b: u8, v: u64| {
             ObjectReference::new(
@@ -386,6 +489,21 @@ mod tests {
                 .into(),
                 b64: "BwAAAwIGAQcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgRjb2luBENvaW4BBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBGlvdGEESU9UQQABASIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiAwAAAAAAAAAA",
                 digest: "36UQmS8XFEqLJBDRpMP5WTvgsRu59TFGdr5cxJCviAc4",
+            },
+            SyntheticFixture {
+                name: "synthetic/v2-nested-type-arguments",
+                auth: MoveAuthenticatorV2::new(
+                    vec![],
+                    vec![
+                        TypeTag::U64,
+                        TypeTag::Vector(Box::new(TypeTag::U8)),
+                        TypeTag::Struct(Box::new(StructTag::new_gas_coin())),
+                    ],
+                    shared(0x22, 3, false),
+                )
+                .into(),
+                b64: "BwEAAwIGAQcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgRjb2luBENvaW4BBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBGlvdGEESU9UQQABASIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiAwAAAAAAAAAA",
+                digest: "Gr4r8jY3wwgbVXPRJ8CutEGP55xwMd5rRrqiDkvdz8Vm",
             },
             SyntheticFixture {
                 name: "synthetic/owned-and-receiving-call-args",

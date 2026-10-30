@@ -19,7 +19,7 @@ pub use intent::{
     HashingIntentScope, INTENT_PREFIX_LENGTH, Intent, IntentAppId, IntentError, IntentMessage,
     IntentScope, IntentVersion, PersonalMessage,
 };
-pub use move_authenticator::{MoveAuthenticator, MoveAuthenticatorV1};
+pub use move_authenticator::{MoveAuthenticator, MoveAuthenticatorV1, MoveAuthenticatorV2};
 pub use multisig::{
     BitmapUnit, MULTISIG_BITMAP_VALUE_MAX, MULTISIG_COMMITTEE_SIZE_MAX,
     MultisigAggregatedSignature, MultisigCommittee, MultisigError, MultisigMember,
