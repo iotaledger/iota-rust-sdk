@@ -221,6 +221,16 @@ impl crate::FromMnemonic for Ed25519PrivateKey {
         let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)
             .map_err(|e| crate::PrivateKeyError::Bip39(e.to_string()))?;
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
+        if let Some(index) = path
+            .indices()
+            .iter()
+            .map(|index| bip32::ChildNumber(*index))
+            .find(|index| !index.is_hardened())
+        {
+            return Err(crate::PrivateKeyError::Bip32(format!(
+                "ed25519 derivation requires hardened path indices, got {index}"
+            )));
+        }
         Ok(Self::new(slip10_ed25519::derive_ed25519_private_key(
             &seed,
             path.indices(),
