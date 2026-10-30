@@ -3,9 +3,28 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /// Interceptor used to add additional headers to a Request
-#[derive(Clone, Debug, Default)]
+///
+/// `Debug` prints only the header names.
+#[derive(Clone, Default)]
 pub struct HeadersInterceptor {
     headers: tonic::metadata::MetadataMap,
+}
+
+// Values added through `headers_mut` are not marked sensitive.
+impl std::fmt::Debug for HeadersInterceptor {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let names: Vec<&str> = self
+            .headers
+            .keys()
+            .map(|key| match key {
+                tonic::metadata::KeyRef::Ascii(key) => key.as_str(),
+                tonic::metadata::KeyRef::Binary(key) => key.as_str(),
+            })
+            .collect();
+        f.debug_struct("HeadersInterceptor")
+            .field("header_names", &names)
+            .finish()
+    }
 }
 
 impl HeadersInterceptor {
@@ -113,6 +132,18 @@ mod tests {
             .to_str()
             .expect("authorization header should be valid ASCII")
             .to_string()
+    }
+
+    #[test]
+    fn debug_prints_only_header_names() {
+        let mut interceptor = HeadersInterceptor::new();
+        interceptor
+            .headers_mut()
+            .insert("x-api-key", "header-secret".parse().unwrap());
+
+        let debug = format!("{interceptor:?}");
+        assert!(debug.contains("x-api-key"), "{debug}");
+        assert!(!debug.contains("header-secret"), "{debug}");
     }
 
     #[test]
