@@ -2,5 +2,5 @@
 getrandom = { version = "0.3", features = ["wasm_js"] }
 
 [dependencies]
-# Must equal the wasm-bindgen-cli version the workflows install.
+# `make wasm-bindgen-cli` installs the CLI at this version; keep the "=X.Y.Z" form.
 wasm-bindgen = "=0.2.130"
