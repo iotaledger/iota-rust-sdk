@@ -49,6 +49,13 @@ pub enum TransactionBuilderError {
         "sponsor {sponsor} was set on the transaction, but the gas sponsor supplies the gas payment"
     )]
     SponsorAddressConflict { sponsor: Address },
+    #[error("the gas sponsor executed transaction {got}, expected {expected}")]
+    SponsorDigestMismatch {
+        expected: TransactionDigest,
+        got: TransactionDigest,
+    },
+    #[error(transparent)]
+    Lookup(#[from] LookupError),
     #[error(transparent)]
     GasSponsor(Box<dyn std::error::Error + Send + Sync>),
     #[error(transparent)]
@@ -74,4 +81,35 @@ impl TransactionBuilderError {
     pub fn gas_sponsor<E: 'static + std::error::Error + Send + Sync>(e: E) -> Self {
         Self::GasSponsor(Box::new(e))
     }
+}
+
+/// A response from a [`TransactionBuilderLedgerClient`] that does not match
+/// what was requested.
+///
+/// [`TransactionBuilderLedgerClient`]: crate::TransactionBuilderLedgerClient
+#[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
+pub enum LookupError {
+    /// The client returned a different object than the one requested.
+    #[error("requested object {requested}, but the client responded with object {returned}")]
+    ObjectIdMismatch {
+        /// The object requested.
+        requested: ObjectId,
+        /// The object the client returned.
+        returned: ObjectId,
+    },
+    /// The client left a requested object out of its response.
+    #[error("the client gave no response for requested object {object_id}")]
+    MissingObject {
+        /// The object left without a response.
+        object_id: ObjectId,
+    },
+    /// The client responded with more objects than were requested.
+    #[error("requested {requested} objects, but the client responded with {returned}")]
+    ExtraObjects {
+        /// How many objects were requested.
+        requested: usize,
+        /// How many objects the client responded with.
+        returned: usize,
+    },
 }
