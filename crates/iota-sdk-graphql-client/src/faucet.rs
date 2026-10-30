@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tracing::{error, info};
 
-use crate::{WaitForTransaction, client::without_credentials};
+use crate::{WaitForTransaction, client::mask_credentials};
 
 pub const FAUCET_LOCAL_HOST: &str = "http://localhost:9123";
 
@@ -158,7 +158,7 @@ impl FaucetClient {
         let url = format!("{}v1/gas", self.faucet_url);
         info!(
             "Requesting gas from faucet for address {address} : {}v1/gas",
-            without_credentials(&self.faucet_url)
+            mask_credentials(&self.faucet_url)
         );
         let resp = self
             .inner
@@ -290,7 +290,7 @@ impl FaucetClient {
         let status_url = format!("{}v1/status/{}", self.faucet_url, id);
         info!(
             "Checking status of faucet request: {}v1/status/{id}",
-            without_credentials(&self.faucet_url)
+            mask_credentials(&self.faucet_url)
         );
         let response = self.inner.get(&status_url).send().await?;
 

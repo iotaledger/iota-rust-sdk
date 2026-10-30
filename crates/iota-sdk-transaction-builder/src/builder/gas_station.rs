@@ -44,11 +44,15 @@ pub struct VersionParsingError {
     kind: VersionParsingErrorKind,
 }
 
-fn without_credentials(url: &Url) -> Url {
+fn mask_credentials(url: &Url) -> Url {
     let mut url = url.clone();
     // Both setters fail only on URLs that cannot carry credentials at all.
-    let _ = url.set_username("");
-    let _ = url.set_password(None);
+    if !url.username().is_empty() {
+        let _ = url.set_username("omitted");
+    }
+    if url.password().is_some() {
+        let _ = url.set_password(Some("omitted"));
+    }
     url
 }
 
@@ -70,7 +74,8 @@ pub enum GasStationError {
     Request {
         /// The underlying transport error.
         source: reqwest::Error,
-        /// The URL that was requested, without its username and password.
+        /// The URL that was requested, with its username and password replaced
+        /// by `omitted`.
         gas_station_url: Url,
     },
     /// The gas station answered with something unusable.
@@ -81,7 +86,8 @@ pub enum GasStationError {
     Response {
         /// The error the gas station reported, when it reported one.
         message: Option<String>,
-        /// The URL that was requested, without its username and password.
+        /// The URL that was requested, with its username and password replaced
+        /// by `omitted`.
         gas_station_url: Url,
     },
     /// The gas station is too old for this client.
@@ -107,10 +113,10 @@ pub enum GasStationError {
 /// A station is configured once and reused for any number of transactions;
 /// build one with [`GasStation::builder`].
 ///
-/// `Debug` prints the URL without its username and password, shows the
-/// values of headers added through [`GasStationBuilder::header`] or
-/// [`GasStationBuilder::headers`] as `Sensitive`, and leaves out the HTTP
-/// client.
+/// `Debug` prints the URL with its username and password replaced by
+/// `omitted`, shows the values of headers added through
+/// [`GasStationBuilder::header`] or [`GasStationBuilder::headers`] as
+/// `Sensitive`, and leaves out the HTTP client.
 ///
 /// # Example
 ///
@@ -144,7 +150,7 @@ pub struct GasStation {
 impl std::fmt::Debug for GasStation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("GasStation")
-            .field("url", &without_credentials(&self.url))
+            .field("url", &mask_credentials(&self.url))
             .field("headers", &self.headers)
             .field("reservation_duration", &self.reservation_duration)
             .field("checked_version", &self.checked_version)
@@ -184,9 +190,9 @@ const DEFAULT_RESERVATION_DURATION: Duration = Duration::from_secs(60);
 
 /// Configures a [`GasStation`].
 ///
-/// `Debug` prints the URL without its username and password, shows the
-/// values of headers added through [`Self::header`] or [`Self::headers`]
-/// as `Sensitive`, and leaves out the HTTP client.
+/// `Debug` prints the URL with its username and password replaced by
+/// `omitted`, shows the values of headers added through [`Self::header`]
+/// or [`Self::headers`] as `Sensitive`, and leaves out the HTTP client.
 #[derive(Clone)]
 pub struct GasStationBuilder {
     url: Url,
@@ -199,7 +205,7 @@ pub struct GasStationBuilder {
 impl std::fmt::Debug for GasStationBuilder {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("GasStationBuilder")
-            .field("url", &without_credentials(&self.url))
+            .field("url", &mask_credentials(&self.url))
             .field("headers", &self.headers)
             .field("reservation_duration", &self.reservation_duration)
             .finish_non_exhaustive()
@@ -438,12 +444,12 @@ impl GasStation {
             .await
             .map_err(|e| GasStationError::Request {
                 source: e,
-                gas_station_url: without_credentials(&url),
+                gas_station_url: mask_credentials(&url),
             })?
             .error_for_status()
             .map_err(|e| GasStationError::Request {
                 source: e,
-                gas_station_url: without_credentials(&url),
+                gas_station_url: mask_credentials(&url),
             })?;
 
         // A string in the format <PKG VERSION>-<GIT REVISION>.
@@ -453,13 +459,13 @@ impl GasStation {
                 .await
                 .map_err(|_| GasStationError::Response {
                     message: None,
-                    gas_station_url: without_credentials(&url),
+                    gas_station_url: mask_credentials(&url),
                 })?
                 .to_vec(),
         )
         .map_err(|_| GasStationError::Response {
             message: None,
-            gas_station_url: without_credentials(&url),
+            gas_station_url: mask_credentials(&url),
         })?;
 
         // We only care about the version.
@@ -469,7 +475,7 @@ impl GasStation {
             .rfind('-')
             .ok_or_else(|| GasStationError::Response {
                 message: None,
-                gas_station_url: without_credentials(&url),
+                gas_station_url: mask_credentials(&url),
             })?;
         version_info.truncate(separator_idx);
 
@@ -514,12 +520,12 @@ impl GasStation {
             .await
             .map_err(|e| GasStationError::Request {
                 source: e,
-                gas_station_url: without_credentials(&url),
+                gas_station_url: mask_credentials(&url),
             })?
             .error_for_status()
             .map_err(|e| GasStationError::Request {
                 source: e,
-                gas_station_url: without_credentials(&url),
+                gas_station_url: mask_credentials(&url),
             })?;
 
         let res: ReserveGasResponse =
@@ -528,12 +534,12 @@ impl GasStation {
                 .await
                 .map_err(|e| GasStationError::Request {
                     source: e,
-                    gas_station_url: without_credentials(&url),
+                    gas_station_url: mask_credentials(&url),
                 })?;
 
         res.result.ok_or(GasStationError::Response {
             message: res.error,
-            gas_station_url: without_credentials(&url),
+            gas_station_url: mask_credentials(&url),
         })
     }
 
@@ -572,12 +578,12 @@ impl GasStation {
             .await
             .map_err(|e| GasStationError::Request {
                 source: e,
-                gas_station_url: without_credentials(&url),
+                gas_station_url: mask_credentials(&url),
             })?
             .error_for_status()
             .map_err(|e| GasStationError::Request {
                 source: e,
-                gas_station_url: without_credentials(&url),
+                gas_station_url: mask_credentials(&url),
             })?;
 
         let res: ExecuteTxResponse =
@@ -586,12 +592,12 @@ impl GasStation {
                 .await
                 .map_err(|e| GasStationError::Request {
                     source: e,
-                    gas_station_url: without_credentials(&url),
+                    gas_station_url: mask_credentials(&url),
                 })?;
 
         res.effects.ok_or(GasStationError::Response {
             message: res.error,
-            gas_station_url: without_credentials(&url),
+            gas_station_url: mask_credentials(&url),
         })
     }
 }
@@ -642,12 +648,12 @@ impl GasSponsor for GasStation {
             .get("transactionDigest")
             .ok_or_else(|| GasStationError::Response {
                 message: Some("Missing transaction digest".to_owned()),
-                gas_station_url: without_credentials(&self.url),
+                gas_station_url: mask_credentials(&self.url),
             })
             .and_then(|v| {
                 TransactionDigest::deserialize(v).map_err(|e| GasStationError::Response {
                     message: Some(e.to_string()),
-                    gas_station_url: without_credentials(&self.url),
+                    gas_station_url: mask_credentials(&self.url),
                 })
             })
     }
@@ -698,12 +704,19 @@ mod tests {
                 HeaderValue::from_static("header-secret"),
             )]);
         let debug = format!("{builder:?}");
-        assert!(debug.contains("127.0.0.1"), "{debug}");
+        assert!(debug.contains(r#"username: "omitted""#), "{debug}");
+        assert!(debug.contains(r#"password: Some("omitted")"#), "{debug}");
         assert!(!debug.contains("secret"), "{debug}");
 
         let debug = format!("{:?}", builder.build());
-        assert!(debug.contains("127.0.0.1"), "{debug}");
+        assert!(debug.contains(r#"username: "omitted""#), "{debug}");
         assert!(!debug.contains("secret"), "{debug}");
+
+        let debug = format!(
+            "{:?}",
+            GasStation::builder("http://127.0.0.1:1".parse().unwrap())
+        );
+        assert!(!debug.contains("omitted"), "{debug}");
     }
 
     #[tokio::test]
@@ -716,7 +729,7 @@ mod tests {
             .unwrap_err();
         assert!(matches!(err, GasStationError::Request { .. }), "{err:?}");
         let display = err.to_string();
-        assert!(display.contains("127.0.0.1"), "{display}");
+        assert!(display.contains("omitted:omitted@127.0.0.1"), "{display}");
         assert!(!display.contains("secret"), "{display}");
         let debug = format!("{err:?}");
         assert!(!debug.contains("secret"), "{debug}");
