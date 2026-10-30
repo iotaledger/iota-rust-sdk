@@ -24,7 +24,7 @@ pub mod staking_pool {
     ///
     /// The BCS serialized form of this type is specified in
     /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
-    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(
@@ -41,6 +41,15 @@ pub mod staking_pool {
             Self {
                 iota_amount,
                 pool_token_amount,
+            }
+        }
+
+        /// Pool tokens per IOTA, or `1.0` while `iota_amount` is zero.
+        pub fn rate(&self) -> f64 {
+            if self.iota_amount == 0 {
+                1_f64
+            } else {
+                self.pool_token_amount as f64 / self.iota_amount as f64
             }
         }
     }
@@ -187,6 +196,24 @@ pub mod staking_pool {
                 pending_pool_token_withdraw,
                 extra_fields,
             }
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        #[cfg(target_arch = "wasm32")]
+        use wasm_bindgen_test::wasm_bindgen_test as test;
+
+        use super::*;
+
+        #[test]
+        fn rate_divides_pool_tokens_by_iota() {
+            assert_eq!(PoolTokenExchangeRate::new(4, 2).rate(), 0.5);
+        }
+
+        #[test]
+        fn rate_is_one_without_iota() {
+            assert_eq!(PoolTokenExchangeRate::new(0, 7).rate(), 1.0);
         }
     }
 }
