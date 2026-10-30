@@ -10,8 +10,8 @@ description = "Transaction API for the IOTA Blockchain Rust SDK"
 
 [package.metadata.docs.rs]
 # To build locally:
-# RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --features gas-station --no-deps --open
-features = ["gas-station"]
+# RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --features gas-station,ledger --no-deps --open
+features = ["gas-station", "ledger"]
 rustdoc-args = [
   # Enable doc_cfg showing the required features.
   "--cfg=doc_cfg",
