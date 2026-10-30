@@ -21,11 +21,12 @@ use crate::{
     TransactionBuilderLedgerClient, TransactionBuilderSimulationClient, WaitForTransaction,
     builder::{
         assigned_results::{AssignedResult, AssignedResults},
+        client::check_object_identity,
         gas_sponsor::{GasSponsor, SponsoredGas},
         ptb_arguments::PTBArgumentList,
         signer::TransactionSigner,
     },
-    error::TransactionBuilderError,
+    error::{LookupError, TransactionBuilderError},
     types::{MoveType, MoveTypes},
     unresolved::{
         Argument, Command, DivideCoin, Input, InputId, InputKind, MakeMoveVector, MergeCoins,
@@ -1522,10 +1523,18 @@ impl<L> TransactionBuilder<(), L> {
                     .await
                     .map_err(TransactionBuilderError::signature)?;
 
-                sponsor
+                let digest = txn.digest();
+                let sponsor_digest = sponsor
                     .execute_reserved(reservation, &txn, &signature)
                     .await
-                    .map_err(TransactionBuilderError::gas_sponsor)
+                    .map_err(TransactionBuilderError::gas_sponsor)?;
+                if sponsor_digest != digest {
+                    return Err(TransactionBuilderError::SponsorDigestMismatch {
+                        expected: digest,
+                        got: sponsor_digest,
+                    });
+                }
+                Ok(digest)
             }
             _ => unimplemented!("a new Transaction enum variant was added and needs to be handled"),
         }
@@ -1747,20 +1756,32 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             return Ok(HashMap::new());
         }
         // Pairs answers with requests by position, which `objects_by_id` is
-        // documented to allow. The client is responsible for holding the server
-        // to that.
+        // documented to allow, and checks that each one is the object requested
+        // in its position.
         let fetched = self
             .client
             .objects_by_id(&requests)
             .await
             .map_err(TransactionBuilderError::client)?;
+        if fetched.len() > requests.len() {
+            return Err(LookupError::ExtraObjects {
+                requested: requests.len(),
+                returned: fetched.len(),
+            }
+            .into());
+        }
+        let mut fetched = fetched.into_iter();
         requests
             .into_iter()
-            .zip(fetched)
-            .map(|((object_id, _), object)| {
-                object.map(|object| (object_id, object)).ok_or_else(|| {
-                    TransactionBuilderError::Input(format!("missing object {object_id}"))
-                })
+            .map(|(object_id, _)| {
+                let object = fetched
+                    .next()
+                    .ok_or(LookupError::MissingObject { object_id })?
+                    .ok_or_else(|| {
+                        TransactionBuilderError::Input(format!("missing object {object_id}"))
+                    })?;
+                check_object_identity(object_id, &object)?;
+                Ok((object_id, object))
             })
             .collect()
     }
@@ -2178,10 +2199,17 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                     .sign(&txn)
                     .await
                     .map_err(TransactionBuilderError::signature)?;
-                let digest = sponsor
+                let digest = txn.digest();
+                let sponsor_digest = sponsor
                     .execute_reserved(reservation, &txn, &signature)
                     .await
                     .map_err(TransactionBuilderError::gas_sponsor)?;
+                if sponsor_digest != digest {
+                    return Err(TransactionBuilderError::SponsorDigestMismatch {
+                        expected: digest,
+                        got: sponsor_digest,
+                    });
+                }
 
                 self.client
                     .wait_for_transaction(digest, WaitForTransaction::Finalized)
@@ -3095,6 +3123,192 @@ mod tests {
                 err.to_string().contains(&absent.to_string()),
                 "error should name the missing object, got: {err}"
             );
+        }
+
+        /// Forwards to [`crate::TestClient`], but answers a request for one id
+        /// with a different object.
+        struct SwappedObjectClient {
+            requested: ObjectId,
+            answered: ObjectId,
+        }
+
+        impl crate::TransactionBuilderClientBase for SwappedObjectClient {
+            type Error = crate::TestClientError;
+        }
+
+        impl TransactionBuilderLedgerClient for SwappedObjectClient {
+            async fn object(
+                &self,
+                object_id: ObjectId,
+                version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                let object_id = if object_id == self.requested {
+                    self.answered
+                } else {
+                    object_id
+                };
+                crate::TestClient.object(object_id, version).await
+            }
+
+            async fn objects(
+                &self,
+                struct_tag: Option<StructTag>,
+                owner: Address,
+                cursor: Option<Vec<u8>>,
+                limit: Option<usize>,
+            ) -> Result<crate::ObjectsPage, Self::Error> {
+                crate::TestClient
+                    .objects(struct_tag, owner, cursor, limit)
+                    .await
+            }
+
+            async fn reference_gas_price(
+                &self,
+                epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                crate::TestClient.reference_gas_price(epoch).await
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                crate::TestClient.protocol_config().await
+            }
+        }
+
+        /// An answer carrying a different object than the one requested does
+        /// not become the input.
+        #[tokio::test]
+        async fn an_answer_for_another_object_is_rejected() {
+            let sender = Address::random();
+            let requested = object_id(5);
+            let answered = object_id(6);
+
+            let mut builder = TransactionBuilder::new(sender).with_client(SwappedObjectClient {
+                requested,
+                answered,
+            });
+            builder.transfer_objects(sender, [requested]);
+
+            let err = builder.finish_kind().await.unwrap_err();
+            assert!(matches!(
+                err,
+                TransactionBuilderError::Lookup(LookupError::ObjectIdMismatch {
+                    requested: r,
+                    returned: a
+                }) if r == requested && a == answered
+            ));
+        }
+
+        /// A Move authenticator's account is the object requested, not
+        /// another shared object the client answered with.
+        #[tokio::test]
+        async fn an_answer_for_another_account_is_rejected() {
+            let client = SwappedObjectClient {
+                requested: ObjectId::CLOCK,
+                answered: ObjectId::SYSTEM_STATE,
+            };
+
+            let err = crate::MoveAuthenticatorBuilder::new(ObjectId::CLOCK)
+                .finish(client)
+                .await
+                .unwrap_err();
+            assert!(matches!(
+                err,
+                TransactionBuilderError::Lookup(LookupError::ObjectIdMismatch {
+                    requested,
+                    returned
+                }) if requested == ObjectId::CLOCK && returned == ObjectId::SYSTEM_STATE
+            ));
+        }
+
+        /// Forwards to [`crate::TestClient`], but edits the answers to
+        /// `objects_by_id` so they no longer line up with the requests.
+        struct EditedAnswerClient(fn(&mut Vec<Option<Object>>));
+
+        impl crate::TransactionBuilderClientBase for EditedAnswerClient {
+            type Error = crate::TestClientError;
+        }
+
+        impl TransactionBuilderLedgerClient for EditedAnswerClient {
+            async fn object(
+                &self,
+                object_id: ObjectId,
+                version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                crate::TestClient.object(object_id, version).await
+            }
+
+            async fn objects_by_id(
+                &self,
+                object_ids: &[(ObjectId, Option<Version>)],
+            ) -> Result<Vec<Option<Object>>, Self::Error> {
+                let mut objects = crate::TestClient.objects_by_id(object_ids).await?;
+                (self.0)(&mut objects);
+                Ok(objects)
+            }
+
+            async fn objects(
+                &self,
+                struct_tag: Option<StructTag>,
+                owner: Address,
+                cursor: Option<Vec<u8>>,
+                limit: Option<usize>,
+            ) -> Result<crate::ObjectsPage, Self::Error> {
+                crate::TestClient
+                    .objects(struct_tag, owner, cursor, limit)
+                    .await
+            }
+
+            async fn reference_gas_price(
+                &self,
+                epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                crate::TestClient.reference_gas_price(epoch).await
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                crate::TestClient.protocol_config().await
+            }
+        }
+
+        /// A request the client leaves without an answer is reported by its
+        /// own id.
+        #[tokio::test]
+        async fn an_answer_short_of_the_requests_is_rejected() {
+            let sender = Address::random();
+            let unanswered = object_id(2);
+
+            let client = EditedAnswerClient(|objects| {
+                objects.pop();
+            });
+            let mut builder = TransactionBuilder::new(sender).with_client(client);
+            builder.transfer_objects(sender, [object_id(1), unanswered]);
+
+            let err = builder.finish_kind().await.unwrap_err();
+            assert!(matches!(
+                err,
+                TransactionBuilderError::Lookup(LookupError::MissingObject {
+                    object_id: id
+                }) if id == unanswered
+            ));
+        }
+
+        /// More answers than requests are rejected.
+        #[tokio::test]
+        async fn an_answer_beyond_the_requests_is_rejected() {
+            let sender = Address::random();
+
+            let client = EditedAnswerClient(|objects| objects.push(None));
+            let mut builder = TransactionBuilder::new(sender).with_client(client);
+            builder.transfer_objects(sender, [object_id(1)]);
+
+            let err = builder.finish_kind().await.unwrap_err();
+            assert!(matches!(
+                err,
+                TransactionBuilderError::Lookup(LookupError::ExtraObjects {
+                    requested: 1,
+                    returned: 2
+                })
+            ));
         }
     }
 

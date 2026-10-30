@@ -1,3 +1,10 @@
+## [1.0.0-rc.2] - 2026-10-23
+
+### 🐛 Bug Fixes
+
+- Require floor(2n/3)+1 stake for a validator quorum (#1717)
+- Forbid multisig committees mixing Ed25519 with other key schemes (#1725)
+
 ## [1.0.0-rc.1] - 2026-10-09
 
 ### 🚀 Features

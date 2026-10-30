@@ -111,6 +111,9 @@ pub mod simple;
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 pub mod multisig;
 
+mod derivation_path;
+
+pub use derivation_path::{DerivationPath, DerivationPathError};
 pub use iota_types;
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[doc(inline)]
@@ -426,6 +429,18 @@ pub trait FromMnemonic {
     ) -> Result<Self, Self::Error>
     where
         Self: Sized;
+
+    /// Create an instance from a mnemonic phrase and a parsed derivation path.
+    fn from_mnemonic_with_derivation_path(
+        phrase: &str,
+        path: &DerivationPath,
+        password: impl Into<Option<String>>,
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized,
+    {
+        Self::from_mnemonic_with_path(phrase, path.to_string(), password)
+    }
 }
 
 #[cfg(test)]
@@ -521,5 +536,47 @@ mod tests {
             assert_eq!(key.to_bech32().unwrap(), bech32);
             assert_eq!(key.public_key().derive_address().to_string(), address);
         }
+    }
+
+    #[cfg(all(
+        feature = "mnemonic",
+        feature = "ed25519",
+        feature = "secp256k1",
+        feature = "secp256r1",
+        feature = "bech32"
+    ))]
+    #[test]
+    fn test_mnemonics_with_derivation_path() {
+        use super::*;
+        use crate::{
+            ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey,
+            secp256r1::Secp256r1PrivateKey,
+        };
+
+        const MNEMONIC: &str = "film crazy soon outside stand loop subway crumble thrive popular green nuclear struggle pistol arm wife phrase warfare march wheat nephew ask sunny firm";
+
+        let path = "m/44'/4218'/1'/0'/2'".parse().unwrap();
+        let key =
+            Ed25519PrivateKey::from_mnemonic_with_derivation_path(MNEMONIC, &path, None).unwrap();
+        assert_eq!(
+            key.to_bech32().unwrap(),
+            "iotaprivkey1qzjy8v3qng6axv7hz8px5ck8u63e6ws4a727h096la7nemtjysy2yrjptnc"
+        );
+
+        let path = "m/54'/4218'/1'/0/2".parse().unwrap();
+        let key =
+            Secp256k1PrivateKey::from_mnemonic_with_derivation_path(MNEMONIC, &path, None).unwrap();
+        assert_eq!(
+            key.to_bech32().unwrap(),
+            "iotaprivkey1q8rygpxx4jh4dj9qfjtk33zrkxx30yn2kfun739de4sg42vgtftxzyprlu8"
+        );
+
+        let path = "m/74'/4218'/1'/0/2".parse().unwrap();
+        let key =
+            Secp256r1PrivateKey::from_mnemonic_with_derivation_path(MNEMONIC, &path, None).unwrap();
+        assert_eq!(
+            key.to_bech32().unwrap(),
+            "iotaprivkey1qgeth8hmds9p0up5lnpvr5m0pxamaynu2ha35vljee36t4ya3gc8wzd9rmk"
+        );
     }
 }
