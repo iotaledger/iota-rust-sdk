@@ -26,7 +26,7 @@ use crate::{
         ptb_arguments::PTBArgumentList,
         signer::TransactionSigner,
     },
-    error::TransactionBuilderError,
+    error::{LookupError, TransactionBuilderError},
     types::{MoveType, MoveTypes},
     unresolved::{
         Argument, Command, DivideCoin, Input, InputId, InputKind, MakeMoveVector, MergeCoins,
@@ -1714,27 +1714,30 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             return Ok(HashMap::new());
         }
         // Pairs answers with requests by position, which `objects_by_id` is
-        // documented to allow, and checks that the answers are as many as the
-        // requests and that each one is the object requested in its position.
+        // documented to allow, and checks that each one is the object requested
+        // in its position.
         let fetched = self
             .client
             .objects_by_id(&requests)
             .await
             .map_err(TransactionBuilderError::client)?;
-        if fetched.len() != requests.len() {
-            return Err(TransactionBuilderError::Input(format!(
-                "requested {} objects, but the client answered with {}",
-                requests.len(),
-                fetched.len()
-            )));
+        if fetched.len() > requests.len() {
+            return Err(LookupError::ExtraObjects {
+                requested: requests.len(),
+                returned: fetched.len(),
+            }
+            .into());
         }
+        let mut fetched = fetched.into_iter();
         requests
             .into_iter()
-            .zip(fetched)
-            .map(|((object_id, _), object)| {
-                let object = object.ok_or_else(|| {
-                    TransactionBuilderError::Input(format!("missing object {object_id}"))
-                })?;
+            .map(|(object_id, _)| {
+                let object = fetched
+                    .next()
+                    .ok_or(LookupError::MissingObject { object_id })?
+                    .ok_or_else(|| {
+                        TransactionBuilderError::Input(format!("missing object {object_id}"))
+                    })?;
                 check_object_identity(object_id, &object)?;
                 Ok((object_id, object))
             })
@@ -3144,13 +3147,13 @@ mod tests {
             builder.transfer_objects(sender, [requested]);
 
             let err = builder.finish_kind().await.unwrap_err();
-            let TransactionBuilderError::Input(message) = &err else {
-                panic!("expected an input error, got {err}");
-            };
-            assert!(
-                message.contains(&requested.to_string()) && message.contains(&answered.to_string()),
-                "unexpected message: {message}"
-            );
+            assert!(matches!(
+                err,
+                TransactionBuilderError::Lookup(LookupError::ObjectIdMismatch {
+                    requested: r,
+                    returned: a
+                }) if r == requested && a == answered
+            ));
         }
 
         /// A Move authenticator's account is the object requested, not
@@ -3166,24 +3169,24 @@ mod tests {
                 .finish(client)
                 .await
                 .unwrap_err();
-            let TransactionBuilderError::Input(message) = &err else {
-                panic!("expected an input error, got {err}");
-            };
-            assert!(
-                message.contains(&ObjectId::SYSTEM_STATE.to_string()),
-                "unexpected message: {message}"
-            );
+            assert!(matches!(
+                err,
+                TransactionBuilderError::Lookup(LookupError::ObjectIdMismatch {
+                    requested,
+                    returned
+                }) if requested == ObjectId::CLOCK && returned == ObjectId::SYSTEM_STATE
+            ));
         }
 
-        /// Forwards to [`crate::TestClient`], but leaves the last answer out,
-        /// so the answers no longer line up with the requests.
-        struct ShortAnswerClient;
+        /// Forwards to [`crate::TestClient`], but edits the answers to
+        /// `objects_by_id` so they no longer line up with the requests.
+        struct EditedAnswerClient(fn(&mut Vec<Option<Object>>));
 
-        impl crate::TransactionBuilderClientBase for ShortAnswerClient {
+        impl crate::TransactionBuilderClientBase for EditedAnswerClient {
             type Error = crate::TestClientError;
         }
 
-        impl TransactionBuilderLedgerClient for ShortAnswerClient {
+        impl TransactionBuilderLedgerClient for EditedAnswerClient {
             async fn object(
                 &self,
                 object_id: ObjectId,
@@ -3197,7 +3200,7 @@ mod tests {
                 object_ids: &[(ObjectId, Option<Version>)],
             ) -> Result<Vec<Option<Object>>, Self::Error> {
                 let mut objects = crate::TestClient.objects_by_id(object_ids).await?;
-                objects.pop();
+                (self.0)(&mut objects);
                 Ok(objects)
             }
 
@@ -3225,23 +3228,45 @@ mod tests {
             }
         }
 
-        /// Fewer answers than requests leaves the remaining requests paired
-        /// with nothing, so the answer is rejected as a whole.
+        /// A request the client leaves without an answer is reported by its
+        /// own id.
         #[tokio::test]
         async fn an_answer_short_of_the_requests_is_rejected() {
             let sender = Address::random();
+            let unanswered = object_id(2);
 
-            let mut builder = TransactionBuilder::new(sender).with_client(ShortAnswerClient);
-            builder.transfer_objects(sender, [object_id(1), object_id(2)]);
+            let client = EditedAnswerClient(|objects| {
+                objects.pop();
+            });
+            let mut builder = TransactionBuilder::new(sender).with_client(client);
+            builder.transfer_objects(sender, [object_id(1), unanswered]);
 
             let err = builder.finish_kind().await.unwrap_err();
-            let TransactionBuilderError::Input(message) = &err else {
-                panic!("expected an input error, got {err}");
-            };
-            assert!(
-                message.contains("requested 2 objects") && message.contains("answered with 1"),
-                "unexpected message: {message}"
-            );
+            assert!(matches!(
+                err,
+                TransactionBuilderError::Lookup(LookupError::MissingObject {
+                    object_id: id
+                }) if id == unanswered
+            ));
+        }
+
+        /// More answers than requests are rejected.
+        #[tokio::test]
+        async fn an_answer_beyond_the_requests_is_rejected() {
+            let sender = Address::random();
+
+            let client = EditedAnswerClient(|objects| objects.push(None));
+            let mut builder = TransactionBuilder::new(sender).with_client(client);
+            builder.transfer_objects(sender, [object_id(1)]);
+
+            let err = builder.finish_kind().await.unwrap_err();
+            assert!(matches!(
+                err,
+                TransactionBuilderError::Lookup(LookupError::ExtraObjects {
+                    requested: 1,
+                    returned: 2
+                })
+            ));
         }
     }
 

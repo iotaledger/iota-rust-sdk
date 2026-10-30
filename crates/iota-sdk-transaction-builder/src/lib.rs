@@ -361,7 +361,7 @@ pub use self::{
         },
         signer::TransactionSigner,
     },
-    error::TransactionBuilderError,
+    error::{LookupError, TransactionBuilderError},
     types::PureBytes,
 };
 

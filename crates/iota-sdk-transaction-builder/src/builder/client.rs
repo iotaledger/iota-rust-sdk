@@ -8,7 +8,7 @@ use iota_types::{
     UserSignature, Version,
 };
 
-use crate::error::TransactionBuilderError;
+use crate::error::{LookupError, TransactionBuilderError};
 
 /// Determines what to wait for after executing a transaction.
 #[derive(Default)]
@@ -140,10 +140,11 @@ pub(crate) fn check_object_identity(
     if object.id() == object_id {
         Ok(())
     } else {
-        Err(TransactionBuilderError::Input(format!(
-            "requested object {object_id}, but the client answered with object {}",
-            object.id()
-        )))
+        Err(LookupError::ObjectIdMismatch {
+            requested: object_id,
+            returned: object.id(),
+        }
+        .into())
     }
 }
 
