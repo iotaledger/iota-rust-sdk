@@ -54,8 +54,76 @@ on:
           - iota-wasm-sdk
 
 jobs:
+  check-branch:
+    name: Check ${{ inputs.package }} can be released from ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        if: github.ref != 'refs/heads/develop'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      # A major branch `iota-sdk/<N>.x` only releases packages whose major has
+      # moved on in develop and in every newer major branch, so that each
+      # package major is released from exactly one branch.
+      - name: Check the package major is owned by this branch
+        if: github.ref != 'refs/heads/develop'
+        env:
+          PACKAGE: ${{ inputs.package }}
+          LEVEL: ${{ inputs.level }}
+          VERSION_OVERRIDE: ${{ inputs.version }}
+        run: |
+          if [[ ! "$GITHUB_REF_NAME" =~ ^iota-sdk/([0-9]+)\.x$ ]]; then
+            echo "::error::Releases can only be made from develop or an iota-sdk/<major>.x branch."
+            exit 1
+          fi
+          branch_major="${BASH_REMATCH[1]}"
+
+          latest_major() {
+            local tag
+            tag=$(git tag -l "$PACKAGE-v*" --merged "$1" --sort=-v:refname | head -n 1)
+            [ -n "$tag" ] || return 0
+            local version="${tag#"$PACKAGE-v"}"
+            echo "${version%%.*}"
+          }
+
+          major=$(latest_major HEAD)
+          if [ -z "$major" ]; then
+            echo "::error::$PACKAGE has never been released on $GITHUB_REF_NAME; release it from develop."
+            exit 1
+          fi
+          echo "$PACKAGE is at major $major on $GITHUB_REF_NAME"
+
+          if [ -n "$VERSION_OVERRIDE" ]; then
+            if [ "${VERSION_OVERRIDE%%.*}" != "$major" ]; then
+              echo "::error::$GITHUB_REF_NAME can only release $PACKAGE $major.x, not $VERSION_OVERRIDE."
+              exit 1
+            fi
+          elif [ "$LEVEL" = "major" ]; then
+            echo "::error::Major releases are made from develop."
+            exit 1
+          fi
+
+          newer_refs=(origin/develop)
+          for ref in $(git branch -r --list 'origin/iota-sdk/*.x' --format='%(refname:short)'); do
+            ref_major="${ref#origin/iota-sdk/}"
+            ref_major="${ref_major%.x}"
+            if [ "$ref_major" -gt "$branch_major" ]; then
+              newer_refs+=("$ref")
+            fi
+          done
+
+          for ref in "${newer_refs[@]}"; do
+            if [ "$(latest_major "$ref")" = "$major" ]; then
+              echo "::error::${ref#origin/} also has $PACKAGE $major.x; release it from there instead."
+              exit 1
+            fi
+          done
+
   publish:
     name: Setup for publishing ${{ inputs.package }}
+    needs: check-branch
     permissions:
       id-token: write # Enable OIDC
       pull-requests: write
@@ -64,12 +132,6 @@ jobs:
     env:
       VERSION_OVERRIDE: ${{ inputs.version }}
     steps:
-      - name: Exit if the branch is not develop
-        if: github.ref != 'refs/heads/develop'
-        run: |
-          echo "Branch is not develop, exiting."
-          exit 0
-
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -244,7 +306,7 @@ jobs:
           crate-name: ${{ inputs.package }}
           git-user-name: "IOTA Foundation"
           git-user-email: info@iota.org
-          base-branch: develop
+          base-branch: ${{ github.ref_name }}
           pr-template-file: ./.github/release-pr-template.ejs
 
       - name: Create Pull Request
