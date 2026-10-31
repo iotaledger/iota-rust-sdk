@@ -80,6 +80,11 @@ mod _accessor_impls {
             self.server = Some(field.into());
             self
         }
+        /// Sets `lowest_available_checkpoint_indexes` with the provided value.
+        pub fn with_lowest_available_checkpoint_indexes(mut self, field: u64) -> Self {
+            self.lowest_available_checkpoint_indexes = Some(field);
+            self
+        }
     }
     impl super::ObjectRequest {
         /// Sets `object_ref` with the provided value.
