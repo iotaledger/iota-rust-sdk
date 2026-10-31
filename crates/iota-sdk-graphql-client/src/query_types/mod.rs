@@ -90,7 +90,8 @@ pub(crate) use transaction::{
     TransactionBlockIndexedQueryFragment, TransactionBlockQueryFragment,
     TransactionBlockWithEffectsQueryFragment, TransactionBlocksEffectsQueryFragment,
     TransactionBlocksQueryArgs, TransactionBlocksQueryFragment,
-    TransactionBlocksWithEffectsQueryFragment,
+    TransactionBlocksWithEffectsQueryFragment, TransactionsByDigestsQueryArgs,
+    TransactionsByDigestsQueryFragment,
 };
 pub use transaction::{
     AddressTransactionRelationship, TransactionBlockKindInput, TransactionsFilter,
