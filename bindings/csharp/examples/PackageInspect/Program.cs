@@ -93,14 +93,7 @@ class Program
         {
             Console.WriteLine($"Module: {moduleName}");
 
-            var module = await client.NormalizedMoveModule(
-                packageAddress,
-                moduleName,
-                paginationFilterEnums: ForwardPage(),
-                paginationFilterFriends: ForwardPage(),
-                paginationFilterFunctions: ForwardPage(),
-                paginationFilterStructs: ForwardPage()
-            );
+            var module = await client.NormalizedMoveModule(packageAddress, moduleName);
             if (module == null)
             {
                 Console.WriteLine("  metadata: missing");
@@ -108,48 +101,36 @@ class Program
                 continue;
             }
 
-            if (module.Functions == null || module.Functions.Nodes.Length == 0)
+            if (module.Functions.Length == 0)
             {
                 Console.WriteLine("  functions: none");
             }
             else
             {
                 Console.WriteLine("  functions:");
-                foreach (var function in module.Functions.Nodes)
+                foreach (var function in module.Functions)
                 {
                     Console.WriteLine(
                         $"    - {FormatFunctionSignature(function.ToString(), packagePrefix)}"
                     );
                 }
-                if (module.Functions.PageInfo.HasNextPage)
-                {
-                    Console.WriteLine("    - ...");
-                }
             }
 
-            if (module.Structs == null || module.Structs.Nodes.Length == 0)
+            if (module.Structs.Length == 0)
             {
                 Console.WriteLine("  types: none");
             }
             else
             {
                 Console.WriteLine("  types:");
-                foreach (var structType in module.Structs.Nodes)
+                foreach (var structType in module.Structs)
                 {
                     var typeTag = $"{packagePrefix}::{moduleName}::{structType.Name}";
                     Console.WriteLine($"    - {typeTag}");
 
-                    var hasKeyAbility =
-                        structType.Abilities != null
-                        && structType.Abilities.Contains(GraphQlMoveAbility.Key);
-                    var isGeneric =
-                        structType.TypeParameters != null
-                        && structType.TypeParameters.Length > 0;
+                    var hasKeyAbility = structType.Abilities.Contains(GraphQlMoveAbility.Key);
+                    var isGeneric = structType.TypeParameters.Length > 0;
                     await PrintObjectSamples(client, typeTag, hasKeyAbility, isGeneric);
-                }
-                if (module.Structs.PageInfo.HasNextPage)
-                {
-                    Console.WriteLine("    - ...");
                 }
             }
 

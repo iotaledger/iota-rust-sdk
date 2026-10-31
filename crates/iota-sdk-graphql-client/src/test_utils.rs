@@ -38,27 +38,55 @@ pub(crate) async fn sent_variables<Fut: Future>(
     operation: &str,
     send: impl FnOnce(GraphQLClient) -> Fut,
 ) -> serde_json::Value {
+    answered_variables(operation, vec![serde_json::json!({})], send)
+        .await
+        .remove(0)
+}
+
+/// Run `send` against a local server that answers the service config query
+/// with `{}` and the requests for `operation` with `responses` in order, and
+/// return the variables of those requests.
+pub(crate) async fn answered_variables<Fut: Future>(
+    operation: &str,
+    responses: Vec<serde_json::Value>,
+    send: impl FnOnce(GraphQLClient) -> Fut,
+) -> Vec<serde_json::Value> {
     let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
     let client = GraphQLClient::new(&format!("http://{}", listener.local_addr().unwrap())).unwrap();
     let server = async {
-        let request = async {
-            loop {
-                let request = answer_one_request(&listener).await;
-                if request["operationName"] != "ServiceConfigQueryFragment" {
-                    assert_eq!(request["operationName"], operation);
-                    break request["variables"].clone();
+        let requests = async {
+            let mut variables = Vec::new();
+            for response in responses {
+                loop {
+                    let request = answer_one_request(&listener, |request| {
+                        if request["operationName"] == "ServiceConfigQueryFragment" {
+                            serde_json::json!({})
+                        } else {
+                            response.clone()
+                        }
+                    })
+                    .await;
+                    if request["operationName"] != "ServiceConfigQueryFragment" {
+                        assert_eq!(request["operationName"], operation);
+                        variables.push(request["variables"].clone());
+                        break;
+                    }
                 }
             }
+            variables
         };
-        tokio::time::timeout(std::time::Duration::from_secs(5), request)
+        tokio::time::timeout(std::time::Duration::from_secs(5), requests)
             .await
-            .expect("no request sent")
+            .expect("not every response was requested")
     };
     let (variables, _) = tokio::join!(server, send(client));
     variables
 }
 
-async fn answer_one_request(listener: &tokio::net::TcpListener) -> serde_json::Value {
+async fn answer_one_request(
+    listener: &tokio::net::TcpListener,
+    respond: impl FnOnce(&serde_json::Value) -> serde_json::Value,
+) -> serde_json::Value {
     use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
     let (mut stream, _) = listener.accept().await.unwrap();
@@ -83,11 +111,15 @@ async fn answer_one_request(listener: &tokio::net::TcpListener) -> serde_json::V
             break request[end + 4..end + 4 + length].to_vec();
         }
     };
-    stream
-        .write_all(b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: 2\r\nconnection: close\r\n\r\n{}")
-        .await
-        .unwrap();
-    serde_json::from_slice(&body).unwrap()
+    let request: serde_json::Value = serde_json::from_slice(&body).unwrap();
+    let response = serde_json::to_vec(&respond(&request)).unwrap();
+    let head = format!(
+        "HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: {}\r\nconnection: close\r\n\r\n",
+        response.len()
+    );
+    stream.write_all(head.as_bytes()).await.unwrap();
+    stream.write_all(&response).await.unwrap();
+    request
 }
 
 pub(crate) fn forward_page() -> crate::PaginationFilter {
