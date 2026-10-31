@@ -84,6 +84,8 @@ impl EventFilter {
 #[derive(Clone, cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Event")]
 pub struct Event {
+    /// The transaction that emitted this event.
+    pub transaction_block: Option<TransactionBlockDigest>,
     pub sending_module: Option<MoveModuleQueryFragment>,
     pub sender: Option<GraphQLAddress>,
     #[cynic(rename = "type")]
@@ -92,4 +94,22 @@ pub struct Event {
     pub timestamp: Option<DateTime>,
     pub data: MoveData,
     pub json: JsonValue,
+}
+
+impl Event {
+    /// The digest of the transaction that emitted this event. Once all of
+    /// that transaction's events have been processed, it can be passed as
+    /// `start_after` to resume an events stream after it.
+    pub fn transaction_digest(&self) -> Option<TransactionDigest> {
+        self.transaction_block
+            .as_ref()
+            .and_then(|tx| tx.digest.as_deref())
+            .and_then(|digest| digest.parse().ok())
+    }
+}
+
+#[derive(Clone, cynic::QueryFragment, Debug)]
+#[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
+pub struct TransactionBlockDigest {
+    pub digest: Option<String>,
 }
