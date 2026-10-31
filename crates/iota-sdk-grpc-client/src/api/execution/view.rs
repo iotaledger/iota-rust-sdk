@@ -172,7 +172,7 @@ impl GrpcClient {
     /// Returns [`GrpcError::EmptyRequest`] if `fq_function_name` is empty.
     /// Returns [`GrpcError::Server`] if the node rejected the call (an unknown
     /// function, a wrong argument count, a non-view function). A call that ran
-    /// and *aborted* is not an error here — it comes back as
+    /// and *aborted* is not an error here: it comes back as
     /// [`ViewFunctionCallOutputs::execution_error`].
     pub fn view_function_call(&self, fq_function_name: impl Into<String>) -> ViewFunctionCallQuery {
         ViewFunctionCallQuery {
@@ -190,7 +190,7 @@ impl GrpcClient {
     /// Returns a `Vec<GrpcResult<ViewFunctionCallOutputs>>` in the same order
     /// as the input. Each element is either the outputs of that call or the
     /// per-item error the server returned for it. Note that a call which ran
-    /// and aborted lands in the `Ok` slot — the abort is reported by
+    /// and aborted lands in the `Ok` slot: the abort is reported by
     /// [`ViewFunctionCallOutputs::execution_error`]; only a call the server
     /// refused to run yields `Err`.
     ///

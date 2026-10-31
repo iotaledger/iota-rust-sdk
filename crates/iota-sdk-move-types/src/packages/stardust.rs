@@ -141,7 +141,7 @@ pub mod nft_output {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct NftOutput<T> {
-        /// A fresh UID — not the NFTID from Stardust.
+        /// A fresh UID, not the NFTID from Stardust.
         pub id: UID,
         /// The amount of coins held by the output.
         pub balance: Balance<T>,
@@ -232,7 +232,7 @@ pub mod basic_output {
     ///
     /// A basic output that carries unlock conditions and feature flags. A
     /// basic output with an expiration unlock condition must be a shared
-    /// object — that is the only way to handle the two possible addresses
+    /// object: that is the only way to handle the two possible addresses
     /// that can unlock the output. Note that the Move type has no `store`
     /// ability and no custom transfer function: callers either invoke
     /// `extract_assets` or call `receive` to obtain a `BasicOutput`.
@@ -330,7 +330,7 @@ pub mod alias {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct Alias {
-        /// The ID of the Alias — hash of the Output ID that created the
+        /// The ID of the Alias, hash of the Output ID that created the
         /// Alias Output in Stardust.
         pub id: UID,
         /// The last State Controller address assigned before the migration.
@@ -377,7 +377,7 @@ pub mod alias_output {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct AliasOutput<T> {
-        /// A fresh UID — not the AliasID from Stardust.
+        /// A fresh UID, not the AliasID from Stardust.
         pub id: UID,
         /// The amount of coins held by the output.
         pub balance: Balance<T>,

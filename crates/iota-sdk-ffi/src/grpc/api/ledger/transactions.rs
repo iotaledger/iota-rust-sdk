@@ -161,8 +161,8 @@ impl GrpcClient {
     /// Get transactions by their digests.
     ///
     /// Results are returned in the same order as the input digests, one per
-    /// digest. A transaction the serving node cannot return — because it is
-    /// not found or has been pruned — fails only its own item, which reading
+    /// digest. A transaction the serving node cannot return (because it is
+    /// not found or has been pruned) fails only its own item, which reading
     /// throws with the server's error message. A transaction the server returns
     /// but that cannot be decoded fails the whole call.
     ///

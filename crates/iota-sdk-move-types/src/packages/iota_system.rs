@@ -135,8 +135,8 @@ pub mod staking_pool {
         ///
         /// `None` while pre-active or active; `Some(epoch)` once inactive.
         pub deactivation_epoch: Option<u64>,
-        /// The total number of IOTA tokens in this pool — including the
-        /// `rewards_pool` and the principal of every `StakedIota` — updated
+        /// The total number of IOTA tokens in this pool (including the
+        /// `rewards_pool` and the principal of every `StakedIota`), updated
         /// at epoch boundaries.
         pub iota_balance: u64,
         /// Epoch stake rewards are added here at the end of each epoch.
