@@ -422,6 +422,9 @@ pub trait FromMnemonic {
     /// - Ed25519: `"m/44'/4218'/0'/0'/0'"`
     /// - Secp256k1: `"m/54'/4218'/0'/0/0"`
     /// - Secp256r1: `"m/74'/4218'/0'/0/0"`
+    ///
+    /// Ed25519 keys can only be derived along hardened indices, so an Ed25519
+    /// path with an unhardened index is an error.
     fn from_mnemonic_with_path(
         phrase: &str,
         path: String,
@@ -474,6 +477,36 @@ mod tests {
             assert_eq!(key.to_bech32().unwrap(), bech32);
             assert_eq!(key.public_key().derive_address().to_string(), address);
         }
+    }
+
+    #[cfg(all(feature = "mnemonic", feature = "ed25519"))]
+    #[test]
+    fn ed25519_mnemonic_path_with_an_unhardened_index_is_rejected() {
+        use super::*;
+        use crate::ed25519::Ed25519PrivateKey;
+
+        const MNEMONIC: &str = "film crazy soon outside stand loop subway crumble thrive popular green nuclear struggle pistol arm wife phrase warfare march wheat nephew ask sunny firm";
+
+        for path in [
+            "m/44'/4218'/0'/0/0",
+            "m/44'/4218'/0'/0'/0",
+            "m/44/4218'/0'/0'/0'",
+        ] {
+            let result =
+                Ed25519PrivateKey::from_mnemonic_with_path(MNEMONIC, path.to_owned(), None);
+            assert!(
+                matches!(result, Err(PrivateKeyError::Bip32(_))),
+                "path {path}"
+            );
+        }
+        assert!(
+            Ed25519PrivateKey::from_mnemonic_with_path(
+                MNEMONIC,
+                "m/44'/4218'/0'/0'/0'".to_owned(),
+                None
+            )
+            .is_ok()
+        );
     }
 
     #[cfg(all(feature = "mnemonic", feature = "secp256k1", feature = "bech32"))]
