@@ -84,6 +84,9 @@ make grpc   # Pull/refresh protos and regenerate types
 # BCS schema
 make bcs-schema      # Regenerate bcs-schema.abnf
 
+# Releases
+make release-status  # List the crates that changed since their last release tag, in publish order
+
 # Examples
 make examples                    # Run all Rust examples
 make bindings-examples           # Run all binding examples

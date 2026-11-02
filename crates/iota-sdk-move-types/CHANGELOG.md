@@ -1,3 +1,14 @@
+## [1.0.0-rc.2] - 2026-10-23
+
+### 🚀 Features
+
+- *(iota-sdk-move-types)* Convert a Move string into a String (#1604)
+- *(iota-sdk-move-types)* Convert a VecMap of Move strings into Strings (#1723)
+
+### 🐛 Bug Fixes
+
+- *(iota-sdk-move-types)* [**breaking**] Map Rust String to 0x1::string::String (#1694)
+
 ## [1.0.0-rc.1] - 2026-10-09
 
 ### 🚀 Features
