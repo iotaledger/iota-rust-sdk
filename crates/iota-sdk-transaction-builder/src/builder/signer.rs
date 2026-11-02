@@ -109,12 +109,13 @@ mod ledger {
             transaction: &Transaction,
             objects: &[Object],
         ) -> Result<UserSignature, Self::Error> {
-            if objects.is_empty() {
+            let device_objects = device_objects(transaction, objects);
+            if device_objects.is_empty() {
                 tracing::warn!("the transaction's objects are unavailable, blind signing instead");
                 return self.sign_transaction(transaction).await;
             }
             match self
-                .sign_transaction_with_objects(transaction, &device_objects(transaction, objects))
+                .sign_transaction_with_objects(transaction, &device_objects)
                 .await
             {
                 Err(LedgerError::ClearSigningUnsupported(version)) => {
