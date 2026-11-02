@@ -1911,8 +1911,8 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                 self.data
                     .objects
                     .get(object_id)
-                    .or_else(|| fetched.get(object_id))
                     .cloned()
+                    .or_else(|| fetched.remove(object_id))
                     .ok_or_else(|| {
                         TransactionBuilderError::Input(format!("missing object {object_id}"))
                     })
