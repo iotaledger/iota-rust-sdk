@@ -66,6 +66,12 @@ wasm32: ## Check that SDK crates compile to wasm32
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
 	$(MAKE) -C crates/iota-sdk-types wasm
 
+.PHONY: wasm-bindgen-cli
+wasm-bindgen-cli: ## Install the wasm-bindgen CLI version pinned in bindings/wasm/wasm-cargo-patch.toml
+	@version=$$(sed -n 's/^wasm-bindgen = "=\(.*\)"$$/\1/p' bindings/wasm/wasm-cargo-patch.toml); \
+	test -n "$$version" || { printf "No wasm-bindgen pin found in bindings/wasm/wasm-cargo-patch.toml\n" >&2; exit 1; }; \
+	cargo install wasm-bindgen-cli --version "$$version"
+
 # Build the full WASM bindings package for browsers.
 # Uses ubrn (uniffi-bindgen-react-native) to generate TS bindings, compile
 # to wasm32, and run wasm-bindgen. Then esbuild bundles into dist/.
