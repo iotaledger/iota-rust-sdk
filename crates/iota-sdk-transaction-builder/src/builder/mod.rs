@@ -326,21 +326,42 @@ impl TransactionBuilder {
             last_command: self.last_command,
         }
     }
-}
 
-impl From<ProgrammableTransaction> for TransactionBuilder {
-    /// Create a [`TransactionBuilder`] from a [`ProgrammableTransaction`].
+    /// Create a [`TransactionBuilder`] from a [`ProgrammableTransaction`],
+    /// returning an error if a command refers to an input the transaction does
+    /// not have or to the result of a command that does not come before it.
     ///
     /// The returned builder has the original inputs and commands but no
     /// sender, gas payment, sponsor, or expiration; the sender defaults to
     /// [`Address::ZERO`] and must be set with
     /// [`sender`](TransactionBuilder::sender) before
     /// [`finish`](TransactionBuilder::finish) is called.
-    fn from(ptb: ProgrammableTransaction) -> Self {
+    pub fn try_from_programmable_transaction(
+        ptb: ProgrammableTransaction,
+    ) -> Result<Self, TransactionBuilderError> {
         let ProgrammableTransaction {
             inputs: tx_inputs,
             commands: tx_commands,
         } = ptb;
+
+        let commands: Vec<Command> = tx_commands.into_iter().map(Command::from).collect();
+        for (index, command) in commands.iter().enumerate() {
+            for argument in command.arguments() {
+                let refers_to_existing = match *argument {
+                    Argument::Gas => true,
+                    Argument::Input(position) => position < tx_inputs.len(),
+                    Argument::Result(command) | Argument::NestedResult(command, _) => {
+                        usize::from(command) < index
+                    }
+                };
+                if !refers_to_existing {
+                    return Err(TransactionBuilderError::InvalidArgument {
+                        command: index,
+                        argument: *argument,
+                    });
+                }
+            }
+        }
 
         // Inputs are inserted with keys 0..n preserving their original index,
         // so that `Argument::Input(i)` referenced from the commands remains
@@ -359,9 +380,7 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
             })
             .collect();
 
-        let commands = tx_commands.into_iter().map(Command::from).collect();
-
-        TransactionBuilder {
+        Ok(TransactionBuilder {
             data: TransactionBuildData {
                 inputs,
                 commands,
@@ -376,7 +395,28 @@ impl From<ProgrammableTransaction> for TransactionBuilder {
             client: (),
             protocol_config: None,
             last_command: PhantomData,
-        }
+        })
+    }
+}
+
+impl From<ProgrammableTransaction> for TransactionBuilder {
+    /// Create a [`TransactionBuilder`] from a [`ProgrammableTransaction`].
+    ///
+    /// The returned builder has the original inputs and commands but no
+    /// sender, gas payment, sponsor, or expiration; the sender defaults to
+    /// [`Address::ZERO`] and must be set with
+    /// [`sender`](TransactionBuilder::sender) before
+    /// [`finish`](TransactionBuilder::finish) is called.
+    ///
+    /// # Panics
+    ///
+    /// Panics if a command refers to an input the transaction does not have or
+    /// to the result of a command that does not come before it. Use
+    /// [`try_from_programmable_transaction`](TransactionBuilder::try_from_programmable_transaction)
+    /// to get an error instead.
+    fn from(ptb: ProgrammableTransaction) -> Self {
+        Self::try_from_programmable_transaction(ptb)
+            .expect("programmable transaction refers to an input or result it does not have")
     }
 }
 
@@ -389,7 +429,9 @@ impl TryFrom<Transaction> for TransactionBuilder {
     /// produces a [`Transaction`] equal to the input.
     ///
     /// Only [`TransactionKind::Programmable`]s are supported; any
-    /// other variant returns an error.
+    /// other variant returns an error, as does a transaction whose commands
+    /// refer to an input it does not have or to the result of a command that
+    /// does not come before them.
     fn try_from(tx: Transaction) -> Result<Self, Self::Error> {
         let Transaction::V1(TransactionV1 {
             kind,
@@ -404,7 +446,7 @@ impl TryFrom<Transaction> for TransactionBuilder {
             return Err(TransactionBuilderError::UnsupportedTransactionKind);
         };
 
-        let mut builder = TransactionBuilder::from(ptb);
+        let mut builder = TransactionBuilder::try_from_programmable_transaction(ptb)?;
 
         // Gas inputs follow the programmable inputs with subsequent keys;
         // BTreeMap ordering ensures `finish` re-emits the inputs and gas

@@ -6,6 +6,8 @@
 
 use iota_types::{Address, ObjectId, TransactionDigest};
 
+use crate::unresolved::Argument;
+
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 #[allow(missing_docs)]
@@ -39,6 +41,10 @@ pub enum TransactionBuilderError {
     SharedObjectMutability(ObjectId),
     #[error("only programmable transactions can be converted into a TransactionBuilder")]
     UnsupportedTransactionKind,
+    #[error(
+        "command {command} refers to {argument:?}, which is neither an input of the transaction nor the result of an earlier command"
+    )]
+    InvalidArgument { command: usize, argument: Argument },
     #[error("Invalid account for move authenticator: {0}")]
     InvalidMoveAuthAccount(String),
     #[error("Invalid argument for move authenticator: {0}")]
