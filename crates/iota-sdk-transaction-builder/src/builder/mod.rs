@@ -1513,6 +1513,9 @@ impl<L> TransactionBuilder<(), L> {
                     .reserve_gas(&txn)
                     .await
                     .map_err(TransactionBuilderError::gas_sponsor)?;
+                if owner == txn.as_v1().sender {
+                    return Err(TransactionBuilderError::SponsorIsSender { sender: owner });
+                }
                 {
                     txn.as_mut_v1().gas_payment.owner = owner;
                     txn.as_mut_v1().gas_payment.objects = objects;
@@ -2125,7 +2128,8 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// or an address with [`sponsor`](Self::sponsor) conflicts with that and
     /// is rejected. When no budget was set with
     /// [`gas_budget`](Self::gas_budget) it is estimated by simulating the
-    /// transaction before the gas is reserved.
+    /// transaction before the gas is reserved. A reservation that names the
+    /// sender as the gas owner is rejected before the transaction is signed.
     ///
     /// # Example
     ///
@@ -2190,6 +2194,9 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                     .reserve_gas(&txn)
                     .await
                     .map_err(TransactionBuilderError::gas_sponsor)?;
+                if owner == txn.as_v1().sender {
+                    return Err(TransactionBuilderError::SponsorIsSender { sender: owner });
+                }
                 {
                     txn.as_mut_v1().gas_payment.owner = owner;
                     txn.as_mut_v1().gas_payment.objects = objects;
