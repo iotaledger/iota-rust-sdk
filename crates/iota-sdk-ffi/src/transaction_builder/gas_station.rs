@@ -37,9 +37,8 @@ impl GasStation {
         if let Some(duration) = reservation_duration {
             builder = builder.reservation_duration(duration);
         }
-        if let Some(options) = http_options {
-            builder = builder.http_client(options.build()?);
-        }
+        let http_client = http_options.unwrap_or_default().build()?;
+        builder = builder.http_client(http_client);
         for (name, values) in headers.into_iter().flatten() {
             let name: iota_sdk::transaction_builder::HeaderName =
                 name.parse().map_err(SdkFfiError::new)?;
@@ -54,5 +53,15 @@ impl GasStation {
     /// The URL this station is reached at.
     pub fn url(&self) -> String {
         self.0.url().to_string()
+    }
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use super::GasStation;
+
+    #[test]
+    fn new_without_http_options() {
+        GasStation::new("http://127.0.0.1:9527".to_owned(), None, None, None).unwrap();
     }
 }
