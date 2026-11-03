@@ -368,7 +368,8 @@ impl GetPackageQuery {
 
         Ok(response
             .package
-            .and_then(|x| x.bcs)
+            .map(|x| x.bcs.ok_or(GraphQLError::EmptyResponseField("package bcs")))
+            .transpose()?
             .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
@@ -437,7 +438,8 @@ impl GetPackageLatestQuery {
 
         Ok(response
             .latest_package
-            .and_then(|x| x.bcs)
+            .map(|x| x.bcs.ok_or(GraphQLError::EmptyResponseField("package bcs")))
+            .transpose()?
             .map(|bcs| crate::base64::decode(&bcs.0))
             .transpose()?
             .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
@@ -679,6 +681,29 @@ mod tests {
         let result = with_response(
             r#"{"data":{"packages":{"nodes":[{"bcs":null}],"pageInfo":{"hasPreviousPage":false,"hasNextPage":false,"startCursor":null,"endCursor":null}}}}"#,
             |client| async move { client.packages().await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("package bcs"))
+        ));
+    }
+
+    #[tokio::test]
+    async fn package_lookups_reject_a_package_without_bcs() {
+        let result = with_response(
+            r#"{"data":{"package":{"bcs":null}}}"#,
+            |client| async move { client.package(Address::FRAMEWORK).await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("package bcs"))
+        ));
+
+        let result = with_response(
+            r#"{"data":{"latestPackage":{"bcs":null}}}"#,
+            |client| async move { client.package_latest(Address::FRAMEWORK).await },
         )
         .await;
         assert!(matches!(

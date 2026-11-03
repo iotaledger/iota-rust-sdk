@@ -132,7 +132,8 @@ impl GetObjectQuery {
 
         let obj = response.object;
         let bcs = obj
-            .and_then(|o| o.bcs)
+            .map(|o| o.bcs.ok_or(GraphQLError::EmptyResponseField("object bcs")))
+            .transpose()?
             .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?;
 
@@ -233,7 +234,9 @@ impl GetObjectBcsQuery {
 
         response
             .object
-            .and_then(|o| o.bcs.map(|bcs| crate::base64::decode(bcs.0.as_str())))
+            .map(|o| o.bcs.ok_or(GraphQLError::EmptyResponseField("object bcs")))
+            .transpose()?
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()
     }
 }
@@ -410,6 +413,27 @@ mod tests {
             r#"{"data":{"objects":{"nodes":[{"bcs":null}],"pageInfo":{"hasPreviousPage":false,"hasNextPage":false,"startCursor":null,"endCursor":null}}}}"#,
             |client| async move { client.objects().await },
         )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("object bcs"))
+        ));
+    }
+
+    #[tokio::test]
+    async fn object_lookups_reject_an_object_without_bcs() {
+        let result = with_response(r#"{"data":{"object":{"bcs":null}}}"#, |client| async move {
+            client.object(ObjectId::SYSTEM_STATE).await
+        })
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("object bcs"))
+        ));
+
+        let result = with_response(r#"{"data":{"object":{"bcs":null}}}"#, |client| async move {
+            client.object_bcs(ObjectId::SYSTEM_STATE).await
+        })
         .await;
         assert!(matches!(
             result,
