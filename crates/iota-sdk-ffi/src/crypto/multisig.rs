@@ -122,7 +122,8 @@ impl UserSignatureVerifier {
         self
     }
 
-    /// The verifier used for passkey signatures.
+    /// The verifier used for direct passkey signatures. Passkey members of a
+    /// multisig are checked by the multisig verifier instead.
     pub fn with_passkey_verifier(self: Arc<Self>, passkey_verifier: &PasskeyVerifier) -> Arc<Self> {
         {
             let mut lock = self.0.write().expect("error writing to verifier");
