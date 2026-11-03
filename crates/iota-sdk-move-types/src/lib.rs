@@ -26,6 +26,18 @@ pub use packages::{iota_framework, iota_system, move_stdlib, stardust};
 
 mod builtin;
 
+#[cfg(feature = "serde")]
+mod _serde {
+    pub(crate) type ReadableDisplay =
+        ::serde_with::As<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>;
+
+    pub(crate) type OptionReadableDisplay =
+        ::serde_with::As<Option<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
+
+    pub(crate) type VecReadableDisplay =
+        ::serde_with::As<Vec<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
+}
+
 // The shape machinery (this module, the `MoveShape` derives on every
 // mirror, and the comparator below) is native-only: the comparator reads
 // the fetched package artifacts from disk at test time (no `std::fs` on
@@ -139,10 +151,12 @@ mod tests {
     use super::*;
     use crate::{
         iota_framework::{
+            balance::Supply,
             coin::{Coin, CoinMetadata},
             iota::IOTA,
         },
-        iota_system::staking_pool::StakedIota,
+        iota_system::{genesis::TokenAllocation, staking_pool::StakedIota},
+        move_stdlib::uq64_64::UQ64_64,
     };
 
     #[test]
@@ -171,5 +185,91 @@ mod tests {
             Coin::<IOTA>::type_tag(),
             iota_types::TypeTag::Struct(Box::new(Coin::<IOTA>::struct_tag()))
         );
+    }
+
+    #[test]
+    fn json_writes_u64_as_string() {
+        let supply = Supply::<()>::new(u64::MAX);
+        let json = serde_json::to_string(&supply).unwrap();
+        assert_eq!(json, r#"{"value":"18446744073709551615"}"#);
+        assert_eq!(serde_json::from_str::<Supply<()>>(&json).unwrap(), supply);
+    }
+
+    #[test]
+    fn json_rejects_u64_as_number() {
+        assert!(serde_json::from_str::<Supply<()>>(r#"{"value":1}"#).is_err());
+    }
+
+    #[test]
+    fn json_writes_u128_as_string() {
+        let value = UQ64_64::new(u128::MAX);
+        let json = serde_json::to_string(&value).unwrap();
+        assert_eq!(json, r#""340282366920938463463374607431768211455""#);
+        assert_eq!(serde_json::from_str::<UQ64_64>(&json).unwrap(), value);
+    }
+
+    fn allocation(expiration: Option<u64>) -> TokenAllocation {
+        TokenAllocation {
+            recipient_address: iota_types::Address::ZERO,
+            amount_nanos: 1,
+            staked_with_validator: None,
+            staked_with_timelock_expiration: expiration,
+        }
+    }
+
+    #[test]
+    fn json_writes_option_u64_as_string_or_null() {
+        let some = serde_json::to_value(allocation(Some(u64::MAX))).unwrap();
+        assert_eq!(
+            some["staked_with_timelock_expiration"],
+            serde_json::json!("18446744073709551615")
+        );
+        let none = serde_json::to_value(allocation(None)).unwrap();
+        assert_eq!(
+            none["staked_with_timelock_expiration"],
+            serde_json::Value::Null
+        );
+        assert_eq!(
+            serde_json::from_value::<TokenAllocation>(some).unwrap(),
+            allocation(Some(u64::MAX))
+        );
+        assert_eq!(
+            serde_json::from_value::<TokenAllocation>(none).unwrap(),
+            allocation(None)
+        );
+    }
+
+    #[test]
+    fn json_reads_missing_option_u64_as_none() {
+        let mut json = serde_json::to_value(allocation(None)).unwrap();
+        json.as_object_mut()
+            .unwrap()
+            .remove("staked_with_timelock_expiration");
+        assert_eq!(
+            serde_json::from_value::<TokenAllocation>(json).unwrap(),
+            allocation(None)
+        );
+    }
+
+    #[test]
+    fn json_writes_vec_u64_as_strings() {
+        #[derive(Debug, PartialEq, serde::Deserialize, serde::Serialize)]
+        struct Values {
+            #[serde(with = "crate::_serde::VecReadableDisplay")]
+            values: Vec<u64>,
+        }
+
+        let values = Values {
+            values: vec![1, u64::MAX],
+        };
+        let json = serde_json::to_string(&values).unwrap();
+        assert_eq!(json, r#"{"values":["1","18446744073709551615"]}"#);
+        assert_eq!(serde_json::from_str::<Values>(&json).unwrap(), values);
+    }
+
+    #[test]
+    fn bcs_keeps_u64_as_bytes() {
+        let bytes = bcs::to_bytes(&Supply::<()>::new(1)).unwrap();
+        assert_eq!(bytes, 1u64.to_le_bytes());
     }
 }
