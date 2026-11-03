@@ -127,7 +127,13 @@ impl UserSignatureVerifier {
     pub fn with_passkey_verifier(self: Arc<Self>, passkey_verifier: &PasskeyVerifier) -> Arc<Self> {
         {
             let mut lock = self.0.write().expect("error writing to verifier");
-            *lock = std::mem::take(&mut *lock).with_passkey_verifier(passkey_verifier.0.clone());
+            *lock = std::mem::take(&mut *lock).with_passkey_verifier(
+                passkey_verifier
+                    .0
+                    .read()
+                    .expect("error reading verifier")
+                    .clone(),
+            );
         }
         self
     }
