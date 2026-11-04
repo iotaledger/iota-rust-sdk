@@ -361,7 +361,7 @@ pub use self::{
         },
         signer::TransactionSigner,
     },
-    error::TransactionBuilderError,
+    error::{LookupError, TransactionBuilderError},
     types::PureBytes,
 };
 
@@ -804,6 +804,144 @@ mod tests {
         ));
     }
 
+    /// Converting a transaction whose command names an input it does not have
+    /// fails, rather than leaving an argument that could later name the gas
+    /// coin.
+    #[test]
+    fn transaction_naming_a_missing_input_is_rejected() {
+        let sender = Address::new([1; 32]);
+        let txn = Transaction::V1(iota_types::TransactionV1 {
+            kind: iota_types::TransactionKind::Programmable(iota_types::ProgrammableTransaction {
+                inputs: vec![iota_types::Input::pure(&Address::new([7; 32]))],
+                commands: vec![iota_types::Command::TransferObjects(
+                    iota_types::TransferObjects {
+                        objects: vec![iota_types::Argument::Input(1)],
+                        address: iota_types::Argument::Input(0),
+                    },
+                )],
+            }),
+            sender,
+            gas_payment: iota_types::GasPayment {
+                objects: vec![ObjectReference::new(
+                    iota_types::ObjectId::new([0x99; 32]),
+                    Version::from_u64(1),
+                    iota_types::ObjectDigest::new([0x99; 32]),
+                )],
+                owner: sender,
+                price: 1000,
+                budget: 5_000_000,
+            },
+            expiration: Default::default(),
+        });
+
+        let err = TransactionBuilder::try_from(txn).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::error::TransactionBuilderError::InvalidArgument {
+                    command: 0,
+                    argument: crate::unresolved::Argument::Input(1),
+                }
+            ),
+            "{err}"
+        );
+    }
+
+    /// The infallible conversion panics on a command naming an input the
+    /// transaction does not have.
+    #[test]
+    #[should_panic(expected = "refers to an input or result it does not have")]
+    fn converting_a_programmable_transaction_naming_a_missing_input_panics() {
+        let _ = TransactionBuilder::from(iota_types::ProgrammableTransaction {
+            inputs: Vec::new(),
+            commands: vec![iota_types::Command::TransferObjects(
+                iota_types::TransferObjects {
+                    objects: vec![iota_types::Argument::Gas],
+                    address: iota_types::Argument::Input(0),
+                },
+            )],
+        });
+    }
+
+    /// A command may only use the results of the commands before it.
+    #[test]
+    fn programmable_transaction_using_a_later_result_is_rejected() {
+        let ptb = iota_types::ProgrammableTransaction {
+            inputs: vec![iota_types::Input::pure(&1u64)],
+            commands: vec![iota_types::Command::SplitCoins(iota_types::SplitCoins {
+                coin: iota_types::Argument::Result(0),
+                amounts: vec![iota_types::Argument::Input(0)],
+            })],
+        };
+
+        let err = TransactionBuilder::try_from_programmable_transaction(ptb).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::error::TransactionBuilderError::InvalidArgument {
+                    command: 0,
+                    argument: crate::unresolved::Argument::Result(0),
+                }
+            ),
+            "{err}"
+        );
+    }
+
+    /// Commands that use the results of earlier commands are accepted and
+    /// survive the round trip unchanged.
+    #[test]
+    fn transaction_using_earlier_results_round_trips() {
+        let sender = Address::new([1; 32]);
+        let txn = Transaction::V1(iota_types::TransactionV1 {
+            kind: iota_types::TransactionKind::Programmable(iota_types::ProgrammableTransaction {
+                inputs: vec![
+                    iota_types::Input::pure(&1u64),
+                    iota_types::Input::pure(&Address::new([7; 32])),
+                ],
+                commands: vec![
+                    iota_types::Command::SplitCoins(iota_types::SplitCoins {
+                        coin: iota_types::Argument::Gas,
+                        amounts: vec![iota_types::Argument::Input(0)],
+                    }),
+                    iota_types::Command::SplitCoins(iota_types::SplitCoins {
+                        coin: iota_types::Argument::Gas,
+                        amounts: vec![
+                            iota_types::Argument::Input(0),
+                            iota_types::Argument::Input(0),
+                        ],
+                    }),
+                    iota_types::Command::MergeCoins(iota_types::MergeCoins {
+                        coin: iota_types::Argument::Result(0),
+                        coins_to_merge: vec![iota_types::Argument::NestedResult(1, 0)],
+                    }),
+                    iota_types::Command::TransferObjects(iota_types::TransferObjects {
+                        objects: vec![
+                            iota_types::Argument::Result(0),
+                            iota_types::Argument::NestedResult(1, 1),
+                        ],
+                        address: iota_types::Argument::Input(1),
+                    }),
+                ],
+            }),
+            sender,
+            gas_payment: iota_types::GasPayment {
+                objects: vec![ObjectReference::new(
+                    iota_types::ObjectId::new([0x99; 32]),
+                    Version::from_u64(1),
+                    iota_types::ObjectDigest::new([0x99; 32]),
+                )],
+                owner: sender,
+                price: 1000,
+                budget: 5_000_000,
+            },
+            expiration: Default::default(),
+        });
+
+        let rebuilt = TransactionBuilder::try_from(txn.clone()).unwrap();
+
+        assert_eq!(rebuilt.finish().unwrap(), txn);
+    }
+
     #[cfg(feature = "test-client")]
     mod sponsored_execution {
         use std::sync::{
@@ -834,6 +972,8 @@ mod tests {
         struct RecordingSponsor {
             reserved_budget: Mutex<Option<u64>>,
             executed: Mutex<Option<Transaction>>,
+            wrong_digest: bool,
+            owner_is_sender: bool,
         }
 
         impl RecordingSponsor {
@@ -859,7 +999,11 @@ mod tests {
             ) -> Result<(Self::Reservation, SponsoredGas), Self::Error> {
                 *self.reserved_budget.lock().unwrap() =
                     Some(transaction.as_v1().gas_payment.budget);
-                Ok((42, Self::gas()))
+                let mut gas = Self::gas();
+                if self.owner_is_sender {
+                    gas.owner = transaction.as_v1().sender;
+                }
+                Ok((42, gas))
             }
 
             async fn execute_reserved(
@@ -869,7 +1013,11 @@ mod tests {
                 _signature: &iota_types::UserSignature,
             ) -> Result<TransactionDigest, Self::Error> {
                 *self.executed.lock().unwrap() = Some(transaction.clone());
-                Ok(TransactionDigest::ZERO)
+                Ok(if self.wrong_digest {
+                    TransactionDigest::ZERO
+                } else {
+                    transaction.digest()
+                })
             }
         }
 
@@ -980,14 +1128,14 @@ mod tests {
                 .execute_with_gas_sponsor(&sponsor, &signer())
                 .await
                 .unwrap_err();
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
             assert!(matches!(
                 err,
-                TransactionBuilderError::MissingTransaction(_)
+                TransactionBuilderError::MissingTransaction(digest) if digest == executed.digest()
             ));
 
             assert_eq!(owner_queries.load(Ordering::SeqCst), 0);
 
-            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
             let Transaction::V1(txn) = executed else {
                 panic!("expected a V1 transaction");
             };
@@ -1038,6 +1186,102 @@ mod tests {
                 Err(TransactionBuilderError::SponsorAddressConflict { .. })
             ));
             assert!(sponsor.reserved_budget.lock().unwrap().is_none());
+        }
+
+        #[tokio::test]
+        async fn a_wrong_digest_from_the_sponsor_is_rejected() {
+            let builder = super::builder_with(TestClient);
+            let sponsor = RecordingSponsor {
+                wrong_digest: true,
+                ..Default::default()
+            };
+
+            let err = builder
+                .execute_with_gas_sponsor(&sponsor, &signer())
+                .await
+                .unwrap_err();
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
+            assert!(matches!(
+                err,
+                TransactionBuilderError::SponsorDigestMismatch { expected, got }
+                    if expected == executed.digest() && got == TransactionDigest::ZERO
+            ));
+        }
+
+        #[tokio::test]
+        async fn a_sponsor_naming_the_sender_as_gas_owner_is_rejected() {
+            let builder = super::builder_with(TestClient);
+            let sponsor = RecordingSponsor {
+                owner_is_sender: true,
+                ..Default::default()
+            };
+
+            assert!(matches!(
+                builder.execute_with_gas_sponsor(&sponsor, &signer()).await,
+                Err(TransactionBuilderError::SponsorIsSender { .. })
+            ));
+            assert!(sponsor.executed.lock().unwrap().is_none());
+        }
+
+        fn offline_builder() -> crate::TransactionBuilder {
+            let mut builder = crate::TransactionBuilder::new(
+                "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+                    .parse()
+                    .unwrap(),
+            );
+            builder
+                .gas_price(1000)
+                .gas_budget(7_000_000)
+                .move_call(Address::STD, "u64", "sqrt")
+                .arguments([64u64]);
+            builder
+        }
+
+        #[tokio::test]
+        async fn offline_returns_the_digest_of_the_signed_transaction() {
+            let sponsor = RecordingSponsor::default();
+
+            let digest = offline_builder()
+                .execute_with_gas_sponsor(&sponsor, &signer())
+                .await
+                .unwrap();
+
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
+            assert_eq!(digest, executed.digest());
+        }
+
+        #[tokio::test]
+        async fn offline_rejects_a_wrong_digest_from_the_sponsor() {
+            let sponsor = RecordingSponsor {
+                wrong_digest: true,
+                ..Default::default()
+            };
+
+            let err = offline_builder()
+                .execute_with_gas_sponsor(&sponsor, &signer())
+                .await
+                .unwrap_err();
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
+            assert!(matches!(
+                err,
+                TransactionBuilderError::SponsorDigestMismatch { expected, got }
+                    if expected == executed.digest() && got == TransactionDigest::ZERO
+            ));
+        }
+
+        #[tokio::test]
+        async fn offline_rejects_a_sponsor_naming_the_sender_as_gas_owner() {
+            let builder = offline_builder();
+            let sponsor = RecordingSponsor {
+                owner_is_sender: true,
+                ..Default::default()
+            };
+
+            assert!(matches!(
+                builder.execute_with_gas_sponsor(&sponsor, &signer()).await,
+                Err(TransactionBuilderError::SponsorIsSender { .. })
+            ));
+            assert!(sponsor.executed.lock().unwrap().is_none());
         }
     }
 }

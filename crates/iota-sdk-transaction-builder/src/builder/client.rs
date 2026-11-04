@@ -8,6 +8,8 @@ use iota_types::{
     UserSignature, Version,
 };
 
+use crate::error::{LookupError, TransactionBuilderError};
+
 /// Determines what to wait for after executing a transaction.
 #[derive(Default)]
 #[non_exhaustive]
@@ -127,6 +129,23 @@ pub trait TransactionBuilderLedgerClient: TransactionBuilderClientBase {
         &self,
         epoch: impl Into<Option<u64>>,
     ) -> impl std::future::Future<Output = Result<Option<u64>, Self::Error>>;
+}
+
+/// Check that `object`, as answered by a [`TransactionBuilderLedgerClient`],
+/// is the object requested as `object_id`.
+pub(crate) fn check_object_identity(
+    object_id: ObjectId,
+    object: &Object,
+) -> Result<(), TransactionBuilderError> {
+    if object.id() == object_id {
+        Ok(())
+    } else {
+        Err(LookupError::ObjectIdMismatch {
+            requested: object_id,
+            returned: object.id(),
+        }
+        .into())
+    }
 }
 
 /// Transaction simulation: dry runs and the gas budget estimation built on
