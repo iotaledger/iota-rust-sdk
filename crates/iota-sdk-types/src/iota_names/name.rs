@@ -144,24 +144,31 @@ impl Name {
 
     /// Formats a name into a string based on the available output formats.
     /// The default separator is `.`
+    ///
+    /// A name decoded from BCS is not validated. One without a second-level
+    /// name or with a top-level name other than `iota` has no AT form and is
+    /// formatted in the DOT format.
     pub fn format(&self, format: NameFormat) -> String {
-        let mut labels = self.labels.clone();
         let sep = &IOTA_NAMES_SEPARATOR_DOT.to_string();
-        labels.reverse();
 
-        if format == NameFormat::Dot {
-            // DOT format, all labels joined together with dots, including the TLN.
-            labels.join(sep)
-        } else {
-            // SAFETY: This is a safe operation because we only allow a
-            // name's label vector size to be >= 2 (see `Name::from_str`)
-            let _tln = labels.pop();
-            let sln = labels.pop().unwrap();
-
+        if format == NameFormat::At
+            && let [tln, sln, subnames @ ..] = self.labels.as_slice()
+            && tln == IOTA_NAMES_TLN
+        {
             // AT format, labels minus SLN joined together with dots, then joined to SLN
             // with @, no TLN.
-            format!("{}{IOTA_NAMES_SEPARATOR_AT}{sln}", labels.join(sep))
+            let subnames = subnames
+                .iter()
+                .rev()
+                .map(String::as_str)
+                .collect::<Vec<_>>();
+            return format!("{}{IOTA_NAMES_SEPARATOR_AT}{sln}", subnames.join(sep));
         }
+
+        // DOT format, all labels joined together with dots, including the TLN.
+        let mut labels = self.labels.clone();
+        labels.reverse();
+        labels.join(sep)
     }
 }
 
@@ -387,6 +394,22 @@ mod tests {
         name = "test.test.test.test.iota".parse::<Name>().unwrap();
         assert!(name.format(NameFormat::Dot) == "test.test.test.test.iota");
         assert!(name.format(NameFormat::At) == "test.test.test@test");
+    }
+
+    #[test]
+    fn names_without_an_at_form_format_as_dot() {
+        for (labels, expected) in [
+            (vec![], ""),
+            (vec!["iota"], "iota"),
+            (vec!["other", "test"], "test.other"),
+            (vec!["other", "test", "sub"], "sub.test.other"),
+        ] {
+            let name = Name {
+                labels: labels.into_iter().map(ToOwned::to_owned).collect(),
+            };
+            assert_eq!(name.format(NameFormat::At), expected);
+            assert_eq!(name.format(NameFormat::Dot), expected);
+        }
     }
 
     #[cfg(feature = "serde")]
