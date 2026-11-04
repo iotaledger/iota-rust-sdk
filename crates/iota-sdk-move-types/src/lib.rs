@@ -36,6 +36,53 @@ mod _serde {
 
     pub(crate) type VecReadableDisplay =
         ::serde_with::As<Vec<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
+
+    pub(crate) mod vec_map_readable_u64_values {
+        use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+        use crate::iota_framework::vec_map::{Entry, VecMap};
+
+        #[derive(Deserialize, Serialize)]
+        #[serde(rename = "VecMap")]
+        struct ReadableVecMap<K> {
+            contents: Vec<ReadableEntry<K>>,
+        }
+
+        #[derive(Deserialize, Serialize)]
+        #[serde(rename = "Entry")]
+        struct ReadableEntry<K> {
+            key: K,
+            #[serde(with = "crate::_serde::ReadableDisplay")]
+            value: u64,
+        }
+
+        pub(crate) fn serialize<K: Serialize, S: Serializer>(
+            map: &VecMap<K, u64>,
+            serializer: S,
+        ) -> Result<S::Ok, S::Error> {
+            let contents = map
+                .contents
+                .iter()
+                .map(|entry| ReadableEntry {
+                    key: &entry.key,
+                    value: entry.value,
+                })
+                .collect();
+            ReadableVecMap { contents }.serialize(serializer)
+        }
+
+        pub(crate) fn deserialize<'de, K: Deserialize<'de>, D: Deserializer<'de>>(
+            deserializer: D,
+        ) -> Result<VecMap<K, u64>, D::Error> {
+            let map = ReadableVecMap::<K>::deserialize(deserializer)?;
+            let contents = map
+                .contents
+                .into_iter()
+                .map(|entry| Entry::new(entry.key, entry.value))
+                .collect();
+            Ok(VecMap::new(contents))
+        }
+    }
 }
 
 // The shape machinery (this module, the `MoveShape` derives on every

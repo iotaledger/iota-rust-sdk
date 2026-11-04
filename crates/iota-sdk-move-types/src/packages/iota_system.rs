@@ -542,7 +542,7 @@ pub mod validator_set {
         /// threshold.
         #[cfg_attr(
             feature = "serde",
-            serde(with = "crate::iota_framework::vec_map::readable_u64_values")
+            serde(with = "crate::_serde::vec_map_readable_u64_values")
         )]
         pub at_risk_validators: VecMap<Address, u64>,
         /// Any extra fields not defined statically.
@@ -588,7 +588,7 @@ pub mod validator_set {
         /// threshold.
         #[cfg_attr(
             feature = "serde",
-            serde(with = "crate::iota_framework::vec_map::readable_u64_values")
+            serde(with = "crate::_serde::vec_map_readable_u64_values")
         )]
         pub at_risk_validators: VecMap<Address, u64>,
         /// Any extra fields not defined statically.

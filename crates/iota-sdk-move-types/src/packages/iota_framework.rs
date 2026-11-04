@@ -679,54 +679,6 @@ pub mod vec_map {
         }
     }
 
-    #[cfg(feature = "serde")]
-    pub(crate) mod readable_u64_values {
-        use serde::{Deserialize, Deserializer, Serialize, Serializer};
-
-        use super::{Entry, VecMap};
-
-        #[derive(Deserialize, Serialize)]
-        #[serde(rename = "VecMap")]
-        struct ReadableVecMap<K> {
-            contents: Vec<ReadableEntry<K>>,
-        }
-
-        #[derive(Deserialize, Serialize)]
-        #[serde(rename = "Entry")]
-        struct ReadableEntry<K> {
-            key: K,
-            #[serde(with = "crate::_serde::ReadableDisplay")]
-            value: u64,
-        }
-
-        pub(crate) fn serialize<K: Serialize, S: Serializer>(
-            map: &VecMap<K, u64>,
-            serializer: S,
-        ) -> Result<S::Ok, S::Error> {
-            let contents = map
-                .contents
-                .iter()
-                .map(|entry| ReadableEntry {
-                    key: &entry.key,
-                    value: entry.value,
-                })
-                .collect();
-            ReadableVecMap { contents }.serialize(serializer)
-        }
-
-        pub(crate) fn deserialize<'de, K: Deserialize<'de>, D: Deserializer<'de>>(
-            deserializer: D,
-        ) -> Result<VecMap<K, u64>, D::Error> {
-            let map = ReadableVecMap::<K>::deserialize(deserializer)?;
-            let contents = map
-                .contents
-                .into_iter()
-                .map(|entry| Entry::new(entry.key, entry.value))
-                .collect();
-            Ok(VecMap::new(contents))
-        }
-    }
-
     #[cfg(test)]
     mod tests {
         #[cfg(target_arch = "wasm32")]
@@ -774,7 +726,7 @@ pub mod vec_map {
         #[cfg(feature = "serde")]
         #[derive(Debug, PartialEq, serde::Deserialize, serde::Serialize)]
         struct AtRisk {
-            #[serde(with = "readable_u64_values")]
+            #[serde(with = "crate::_serde::vec_map_readable_u64_values")]
             map: VecMap<iota_types::Address, u64>,
         }
 
