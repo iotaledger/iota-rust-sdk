@@ -86,6 +86,10 @@ impl Name {
 
     /// Formats a name into a string based on the available output formats.
     /// The default separator is `.`
+    ///
+    /// A name decoded from BCS is not validated. One without a second-level
+    /// name or with a top-level name other than `iota` has no AT form and is
+    /// formatted in the DOT format.
     pub fn format(&self, format: NameFormat) -> String {
         self.0.format(format.into())
     }
