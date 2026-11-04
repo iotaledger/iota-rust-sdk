@@ -1488,6 +1488,9 @@ impl<L> TransactionBuilder<(), L> {
 
     /// Execute the transaction with its gas paid by `sponsor`, returning the
     /// transaction digest.
+    ///
+    /// A reservation that names the sender as the gas owner is rejected before
+    /// the transaction is signed.
     pub async fn execute_with_gas_sponsor(
         self,
         sponsor: &impl GasSponsor,
