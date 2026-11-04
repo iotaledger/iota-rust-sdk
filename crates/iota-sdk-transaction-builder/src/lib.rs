@@ -973,6 +973,7 @@ mod tests {
             reserved_budget: Mutex<Option<u64>>,
             executed: Mutex<Option<Transaction>>,
             wrong_digest: bool,
+            owner_is_sender: bool,
         }
 
         impl RecordingSponsor {
@@ -998,7 +999,11 @@ mod tests {
             ) -> Result<(Self::Reservation, SponsoredGas), Self::Error> {
                 *self.reserved_budget.lock().unwrap() =
                     Some(transaction.as_v1().gas_payment.budget);
-                Ok((42, Self::gas()))
+                let mut gas = Self::gas();
+                if self.owner_is_sender {
+                    gas.owner = transaction.as_v1().sender;
+                }
+                Ok((42, gas))
             }
 
             async fn execute_reserved(
@@ -1203,6 +1208,21 @@ mod tests {
             ));
         }
 
+        #[tokio::test]
+        async fn a_sponsor_naming_the_sender_as_gas_owner_is_rejected() {
+            let builder = super::builder_with(TestClient);
+            let sponsor = RecordingSponsor {
+                owner_is_sender: true,
+                ..Default::default()
+            };
+
+            assert!(matches!(
+                builder.execute_with_gas_sponsor(&sponsor, &signer()).await,
+                Err(TransactionBuilderError::SponsorIsSender { .. })
+            ));
+            assert!(sponsor.executed.lock().unwrap().is_none());
+        }
+
         fn offline_builder() -> crate::TransactionBuilder {
             let mut builder = crate::TransactionBuilder::new(
                 "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
@@ -1247,6 +1267,21 @@ mod tests {
                 TransactionBuilderError::SponsorDigestMismatch { expected, got }
                     if expected == executed.digest() && got == TransactionDigest::ZERO
             ));
+        }
+
+        #[tokio::test]
+        async fn offline_rejects_a_sponsor_naming_the_sender_as_gas_owner() {
+            let builder = offline_builder();
+            let sponsor = RecordingSponsor {
+                owner_is_sender: true,
+                ..Default::default()
+            };
+
+            assert!(matches!(
+                builder.execute_with_gas_sponsor(&sponsor, &signer()).await,
+                Err(TransactionBuilderError::SponsorIsSender { .. })
+            ));
+            assert!(sponsor.executed.lock().unwrap().is_none());
         }
     }
 }
