@@ -189,9 +189,12 @@ mod tests {
     use super::*;
     use crate::{
         iota_framework::{
+            bag::Bag,
             balance::Supply,
             coin::{Coin, CoinMetadata},
             iota::IOTA,
+            kiosk_extension::Extension,
+            object::UID,
         },
         iota_system::{genesis::TokenAllocation, staking_pool::StakedIota},
         move_stdlib::uq64_64::UQ64_64,
@@ -290,19 +293,21 @@ mod tests {
     }
 
     #[test]
-    fn json_writes_vec_u64_as_strings() {
-        #[derive(Debug, PartialEq, serde::Deserialize, serde::Serialize)]
-        struct Values {
-            #[serde(with = "iota_types::VecReadableDisplay")]
-            values: Vec<u64>,
-        }
-
-        let values = Values {
-            values: vec![1, u64::MAX],
+    fn kiosk_extension_permissions_serialize_as_string_in_json() {
+        let extension = Extension {
+            storage: Bag::new(UID::new(iota_types::ObjectId::ZERO), 0),
+            permissions: u128::MAX,
+            is_enabled: true,
         };
-        let json = serde_json::to_string(&values).unwrap();
-        assert_eq!(json, r#"{"values":["1","18446744073709551615"]}"#);
-        assert_eq!(serde_json::from_str::<Values>(&json).unwrap(), values);
+        let json = serde_json::to_value(&extension).unwrap();
+        assert_eq!(
+            json["permissions"],
+            serde_json::json!("340282366920938463463374607431768211455")
+        );
+        assert_eq!(
+            serde_json::from_value::<Extension>(json).unwrap(),
+            extension
+        );
     }
 
     #[test]
