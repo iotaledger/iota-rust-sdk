@@ -125,15 +125,14 @@ impl UserSignatureVerifier {
     /// The verifier used for direct passkey signatures. Passkey members of a
     /// multisig are checked by the multisig verifier instead.
     pub fn with_passkey_verifier(self: Arc<Self>, passkey_verifier: &PasskeyVerifier) -> Arc<Self> {
+        let passkey_verifier = passkey_verifier
+            .0
+            .read()
+            .expect("error reading verifier")
+            .clone();
         {
             let mut lock = self.0.write().expect("error writing to verifier");
-            *lock = std::mem::take(&mut *lock).with_passkey_verifier(
-                passkey_verifier
-                    .0
-                    .read()
-                    .expect("error reading verifier")
-                    .clone(),
-            );
+            *lock = std::mem::take(&mut *lock).with_passkey_verifier(passkey_verifier);
         }
         self
     }
