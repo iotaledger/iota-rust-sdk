@@ -186,7 +186,7 @@ pub mod balance {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct Supply<T> {
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub value: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -216,7 +216,7 @@ pub mod balance {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct Balance<T> {
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub value: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -270,7 +270,7 @@ pub mod bag {
         /// The ID of this bag.
         pub id: UID,
         /// The number of key-value pairs in the bag.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
     }
 
@@ -493,7 +493,7 @@ pub mod table {
         /// The ID of this table.
         pub id: UID,
         /// The number of key-value pairs in the table.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _k: PhantomData<K>,
@@ -841,7 +841,7 @@ pub mod versioned {
     )]
     pub struct Versioned {
         pub id: UID,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
     }
 
@@ -869,7 +869,7 @@ pub mod versioned {
     )]
     pub struct VersionChangeCap {
         pub versioned_id: ID,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub old_version: u64,
     }
 
@@ -937,7 +937,7 @@ pub mod clock {
         pub id: UID,
         /// The clock's timestamp. Set automatically by a system transaction
         /// every time consensus commits a schedule.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub timestamp_ms: u64,
     }
 
@@ -986,14 +986,14 @@ pub mod tx_context {
         /// Hash of the current transaction.
         pub tx_hash: Vec<u8>,
         /// The current epoch number.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
         /// Timestamp at which the epoch started.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch_timestamp_ms: u64,
         /// Counter recording the number of fresh IDs created while
         /// executing this transaction. Always 0 at the start.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub ids_created: u64,
     }
 }
@@ -1118,7 +1118,7 @@ pub mod transfer {
     )]
     pub struct Receiving<T> {
         pub id: ID,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -1154,7 +1154,7 @@ pub mod timelock {
         /// The locked object.
         pub locked: T,
         /// Epoch timestamp (ms) of when the lock expires.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub expiration_timestamp_ms: u64,
         /// Optional timelock-related label.
         pub label: Option<string::String>,
@@ -1346,7 +1346,7 @@ pub mod linked_table {
     pub struct LinkedTable<K, V> {
         pub id: UID,
         /// The number of key-value pairs in the table.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
         /// The front of the table — the key of the first entry.
         pub head: Option<K>,
@@ -1407,7 +1407,7 @@ pub mod object_table {
     )]
     pub struct ObjectTable<K, V> {
         pub id: UID,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _k: PhantomData<K>,
@@ -1446,7 +1446,7 @@ pub mod object_bag {
     )]
     pub struct ObjectBag {
         pub id: UID,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
     }
 }
@@ -1461,7 +1461,7 @@ pub mod priority_queue {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct Entry<T> {
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub priority: u64,
         pub value: T,
     }
@@ -1536,7 +1536,7 @@ pub mod authenticator_state {
     )]
     pub struct AuthenticatorState {
         pub id: UID,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
     }
 
@@ -1555,7 +1555,7 @@ pub mod authenticator_state {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct AuthenticatorStateInner {
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
         /// List of currently active JWKs.
         pub active_jwks: Vec<ActiveJwk>,
@@ -1620,7 +1620,7 @@ pub mod authenticator_state {
     pub struct ActiveJwk {
         pub jwk_id: JwkId,
         pub jwk: JWK,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
     }
 }
@@ -1789,7 +1789,7 @@ pub mod package {
         pub package: ID,
         /// (Mutable) Number of upgrades that have been applied to the
         /// original package. Initially 0.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
         /// What kind of upgrades are allowed.
         pub policy: u8,
@@ -2193,7 +2193,7 @@ pub mod coin_manager {
         /// Optional maximum supply.
         #[cfg_attr(
             feature = "serde",
-            serde(default, with = "crate::_serde::OptionReadableDisplay")
+            serde(default, with = "iota_types::OptionReadableDisplay")
         )]
         pub maximum_supply: Option<u64>,
         /// Flag indicating if the supply is considered immutable.
@@ -2452,7 +2452,7 @@ pub mod token {
         /// Name of the action — one of `transfer`, `spend`, `to_coin`,
         /// `from_coin`, or a custom action.
         pub name: string::String,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub amount: u64,
         pub sender: Address,
         /// Only present for the `transfer` action.
@@ -2542,7 +2542,7 @@ pub mod module_metadata {
         pub id: UID,
         /// The number of key-value pairs stored in the metadata's dynamic
         /// fields.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
     }
 
@@ -2715,7 +2715,7 @@ pub mod package_metadata {
         pub storage_id: ID,
         /// Runtime ID of the package — the storage ID of the first version.
         pub runtime_id: ID,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub package_version: u64,
         /// Per-module metadata, keyed by module name. Deprecated upstream in
         /// favor of a dynamic field attached to this object that maps module
@@ -2836,7 +2836,7 @@ pub mod deny_list {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct ConfigKey {
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub per_type_index: u64,
         pub per_type_key: Vec<u8>,
     }
@@ -2944,7 +2944,7 @@ pub mod transaction_deny_rules {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct TransactionDenyRulesInnerV1 {
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
         /// Addresses denied as transaction sender or gas sponsor.
         pub denied_addresses: LinkedTable<Address, bool>,
@@ -2985,7 +2985,7 @@ pub mod transaction_deny_rules {
     )]
     pub struct TransactionDenyRulesUpdated {
         /// The epoch in which the update was executed.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
         /// Addresses added to / removed from the sender-or-sponsor deny
         /// list.
@@ -3011,11 +3011,11 @@ pub mod transaction_deny_rules {
         /// Denies transactions signed with a Move authenticator.
         pub move_authenticator_disabled: bool,
         /// Deny list sizes after applying the delta.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub denied_addresses_len: u64,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub denied_objects_len: u64,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub denied_packages_len: u64,
     }
 }
@@ -3061,11 +3061,11 @@ pub mod random {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct RandomInner {
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub randomness_round: u64,
         pub random_bytes: Vec<u8>,
     }
@@ -3147,7 +3147,7 @@ pub mod config {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct SettingData<Value> {
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub newer_value_epoch: u64,
         pub newer_value: Option<Value>,
         pub older_value_opt: Option<Value>,
@@ -3295,7 +3295,7 @@ pub mod ptb_call_arg {
     )]
     pub struct ObjectRef {
         pub object_id: ID,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub sequence_number: u64,
         pub object_digest: Vec<u8>,
     }
@@ -3311,7 +3311,7 @@ pub mod ptb_call_arg {
         ImmOrOwnedObject(ObjectRef),
         SharedObject {
             id: ID,
-            #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+            #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
             initial_shared_version: u64,
             mutable: bool,
         },
@@ -3477,7 +3477,7 @@ pub mod kiosk {
         pub id: UID,
         pub kiosk_id: ID,
         pub item_id: ID,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub min_price: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -3587,7 +3587,7 @@ pub mod kiosk {
     pub struct ItemListed<T> {
         pub kiosk: ID,
         pub id: ID,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub price: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -3614,7 +3614,7 @@ pub mod kiosk {
     pub struct ItemPurchased<T> {
         pub kiosk: ID,
         pub id: ID,
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub price: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -3682,7 +3682,7 @@ pub mod kiosk_extension {
         pub storage: Bag,
         /// Bitmap of permissions. Bit 0 = `place`, bit 1 = `lock` (and
         /// `place`).
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub permissions: u128,
         /// Whether the extension can call protected actions.
         pub is_enabled: bool,
@@ -3729,7 +3729,7 @@ pub mod transfer_policy {
     pub struct TransferRequest<T> {
         pub item: ID,
         /// Amount of IOTA paid for the item.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub paid: u64,
         /// ID of the kiosk / safe the object is being sold from.
         pub from: ID,

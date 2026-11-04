@@ -28,15 +28,6 @@ mod builtin;
 
 #[cfg(feature = "serde")]
 mod _serde {
-    pub(crate) type ReadableDisplay =
-        ::serde_with::As<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>;
-
-    pub(crate) type OptionReadableDisplay =
-        ::serde_with::As<Option<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
-
-    pub(crate) type VecReadableDisplay =
-        ::serde_with::As<Vec<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
-
     pub(crate) mod vec_map_readable_u64_values {
         use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -52,7 +43,7 @@ mod _serde {
         #[serde(rename = "Entry")]
         struct ReadableEntry<K> {
             key: K,
-            #[serde(with = "crate::_serde::ReadableDisplay")]
+            #[serde(with = "iota_types::ReadableDisplay")]
             value: u64,
         }
 
@@ -302,7 +293,7 @@ mod tests {
     fn json_writes_vec_u64_as_strings() {
         #[derive(Debug, PartialEq, serde::Deserialize, serde::Serialize)]
         struct Values {
-            #[serde(with = "crate::_serde::VecReadableDisplay")]
+            #[serde(with = "iota_types::VecReadableDisplay")]
             values: Vec<u64>,
         }
 

@@ -504,7 +504,7 @@ pub mod storage_deposit_return_unlock_condition {
         pub return_address: Address,
         /// The amount of coins the consuming transaction should deposit to
         /// `return_address`.
-        #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub return_amount: u64,
     }
 
