@@ -42,7 +42,7 @@ bcs = { workspace = true, optional = true }
 paste = { workspace = true }
 primitive-types = { workspace = true, optional = true }
 serde = { workspace = true, features = ["derive"], optional = true }
-serde_with = { workspace = true, optional = true }
+serde_with = { workspace = true, features = ["alloc"], optional = true }
 thiserror = { workspace = true, optional = true }
 variadics_please.workspace = true
 
