@@ -1,3 +1,9 @@
+## [1.0.0-rc.2] - 2026-10-23
+
+### 🚜 Refactor
+
+- *(grpc-client)* Generate the read_mask setter from define_query! (#1710)
+
 ## [1.0.0-rc.1] - 2026-10-09
 
 ### 🚀 Features

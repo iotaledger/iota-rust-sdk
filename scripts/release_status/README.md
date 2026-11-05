@@ -33,6 +33,8 @@ python3 scripts/release_status/release_status.py --quiet
 python3 scripts/release_status/release_status.py --json
 ```
 
-Requires Python 3.11+ and up-to-date tags (`git fetch --tags`). Only committed
-changes count. `cargo package --list` reads the working tree, so compare from a
-checkout of the revision passed to `--rev`.
+Requires Python 3.11+. The script fast-forwards the checkout first, which also
+fetches the release tags; a checkout that can't be fast-forwarded is compared
+as is, with a warning. Only committed changes count. `cargo package --list`
+reads the working tree, so compare from a checkout of the revision passed to
+`--rev`.

@@ -61,6 +61,20 @@ def git(*args: str) -> str:
     return run("git", *args)
 
 
+def pull() -> None:
+    """Fast-forward the checkout so the versions compared are the ones on the
+    remote. Release tags sit on the fetched branch, so the fetch follows them."""
+    result = subprocess.run(
+        ["git", "pull", "--ff-only", "--quiet"], cwd=ROOT, capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        print(
+            "warning: `git pull --ff-only` failed, comparing a possibly stale checkout:\n"
+            f"{result.stderr.strip()}",
+            file=sys.stderr,
+        )
+
+
 @dataclass
 class Crate:
     name: str
@@ -278,7 +292,7 @@ def report(crates: dict[str, Crate], order: list[str], rev: str, quiet: bool) ->
         if crate.tag and not crate.version_tagged:
             print(
                 f"    no tag for {crate.version}, compared against {crate.tag}"
-                " (missing `git fetch --tags`, or the release is in flight)"
+                " (the release is in flight)"
             )
         for sha, subject in crate.commits:
             print(f"    {sha} {subject}")
@@ -329,6 +343,7 @@ def main() -> None:
     parser.add_argument("--json", action="store_true", help="print the report as JSON")
     args = parser.parse_args()
 
+    pull()
     crates = load_crates()
     order = publish_order(crates)
     for name in order:

@@ -76,9 +76,17 @@ impl TransactionBuilder {
     /// sender, gas payment, sponsor, or expiration; the sender defaults to
     /// the zero address and must be set via `sender` before `finish`
     /// is called.
+    ///
+    /// Returns an error if a command refers to an input the transaction does
+    /// not have or to the result of a command that does not come before it.
     #[uniffi::constructor]
-    pub fn from_programmable_transaction(ptb: &ProgrammableTransaction) -> Self {
-        Self(iota_sdk::transaction_builder::TransactionBuilder::from(ptb.0.clone()).into())
+    pub fn from_programmable_transaction(ptb: &ProgrammableTransaction) -> Result<Self> {
+        Ok(Self(
+            iota_sdk::transaction_builder::TransactionBuilder::try_from_programmable_transaction(
+                ptb.0.clone(),
+            )?
+            .into(),
+        ))
     }
 
     /// Use a GraphQL client to automatically resolve the transaction inputs.
