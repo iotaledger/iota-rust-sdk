@@ -77,20 +77,21 @@ to Ledger's USB vendor ID; install the rules from
 ## Using Speculos
 
 [Speculos](https://github.com/LedgerHQ/speculos) emulates a device running the
-IOTA app, for development and testing without hardware. The app builds for
-each device model are attached to the
-[ledger-app-iota releases](https://github.com/iotaledger/ledger-app-iota/releases);
-for a Nano S Plus, extract `nanosplus.tar.gz` and run:
+IOTA app, for development and testing without hardware. From the repository
+root, `make speculos-start` downloads the Nano S Plus build of the app from the
+[ledger-app-iota releases](https://github.com/iotaledger/ledger-app-iota/releases)
+and runs it in Docker; `make speculos-stop` stops it. To run it yourself,
+extract `nanosplus.tar.gz` and run:
 
 ```sh
-docker run --rm -p 9999:9999 -p 5000:5000 -v "$PWD/nanosplus:/speculos/apps" \
+docker run --rm -p 9999:9999 -p 5001:5001 -v "$PWD/nanosplus:/speculos/apps" \
   -e SPECULOS_APPNAME=IOTA:1.0.1 \
   ghcr.io/ledgerhq/speculos --model nanosp --display headless \
-  --apdu-port 9999 --api-port 5000 apps/iota
+  --apdu-port 9999 --api-port 5001 apps/iota
 ```
 
 Connect with `Ledger::new_speculos("127.0.0.1", 9999)`, and approve requests in the
-web interface at <http://127.0.0.1:5000> or through its REST API. The emulator
+web interface at <http://127.0.0.1:5001> or through its REST API. The emulator
 runs a single app and cannot switch apps, so `Ledger::open_app` does
 nothing there. `SPECULOS_APPNAME` sets the app name the emulator reports, which
 `Ledger::is_app_open` checks; set it to the version of the app you run.
