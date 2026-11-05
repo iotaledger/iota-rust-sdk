@@ -80,10 +80,8 @@ impl TransactionSigner for MoveAuthenticator {
 
 #[cfg(feature = "ledger")]
 mod ledger {
-    use std::collections::HashSet;
-
     use iota_ledger::{LedgerError, LedgerSigner};
-    use iota_types::{Input, Object, Transaction, TransactionKind, UserSignature};
+    use iota_types::{Object, Transaction, UserSignature};
 
     use super::TransactionSigner;
 
@@ -110,55 +108,18 @@ mod ledger {
             transaction: &Transaction,
             objects: &[Object],
         ) -> Result<UserSignature, Self::Error> {
-            let device_objects = device_objects(transaction, objects);
-            if device_objects.is_empty() {
+            if objects.is_empty() {
                 tracing::warn!("the transaction's objects are unavailable, blind signing instead");
                 return self.sign_transaction(transaction).await;
             }
-            match self
-                .sign_transaction_with_objects(transaction, &device_objects)
+            let version = self.ledger().version().await?;
+            if version.major() == 0 {
+                tracing::warn!("IOTA app {version} cannot clear-sign, blind signing instead");
+                return self.sign_transaction(transaction).await;
+            }
+            self.sign_transaction_with_objects(transaction, objects)
                 .await
-            {
-                Err(LedgerError::ClearSigningUnsupported(version)) => {
-                    tracing::warn!("IOTA app {version} cannot clear-sign, blind signing instead");
-                    self.sign_transaction(transaction).await
-                }
-                result => result,
-            }
         }
-    }
-
-    /// The objects the IOTA app can use: the gas coins and immutable or owned
-    /// inputs of `transaction`. The app finds each one it needs by hashing the
-    /// objects in order, so any other object only slows it down.
-    fn device_objects(transaction: &Transaction, objects: &[Object]) -> Vec<Object> {
-        let Transaction::V1(transaction) = transaction else {
-            unimplemented!("a new Transaction enum variant was added and needs to be handled")
-        };
-        let mut ids = transaction
-            .gas_payment
-            .objects
-            .iter()
-            .map(|reference| reference.object_id)
-            .collect::<HashSet<_>>();
-        if let TransactionKind::Programmable(programmable) = &transaction.kind {
-            for input in &programmable.inputs {
-                match input {
-                    Input::ImmutableOrOwned(reference) => {
-                        ids.insert(reference.object_id);
-                    }
-                    Input::Pure(_) | Input::Shared(_) | Input::Receiving(_) => {}
-                    _ => {
-                        unimplemented!("a new Input enum variant was added and needs to be handled")
-                    }
-                }
-            }
-        }
-        objects
-            .iter()
-            .filter(|object| ids.contains(&object.id()))
-            .cloned()
-            .collect()
     }
 
     #[cfg(all(test, not(target_arch = "wasm32")))]
@@ -184,6 +145,7 @@ mod ledger {
         struct FakeDevice {
             version: [u8; 3],
             sign_parameters: Arc<Mutex<Vec<usize>>>,
+            public_key_reads: Arc<Mutex<usize>>,
         }
 
         impl Transport for FakeDevice {
@@ -192,13 +154,16 @@ mod ledger {
                     let public_key = Ed25519PublicKey::new([7; 32]);
                     let result = match command.ins() {
                         0x00 => self.version.to_vec(),
-                        0x02 => [
-                            &[32][..],
-                            public_key.bytes(),
-                            &[32],
-                            public_key.derive_address().as_bytes(),
-                        ]
-                        .concat(),
+                        0x02 => {
+                            *self.public_key_reads.lock().unwrap() += 1;
+                            [
+                                &[32][..],
+                                public_key.bytes(),
+                                &[32],
+                                public_key.derive_address().as_bytes(),
+                            ]
+                            .concat()
+                        }
                         0x03 => {
                             // The start request is a tag byte and one hash per
                             // parameter
@@ -213,14 +178,24 @@ mod ledger {
             }
         }
 
-        async fn sign_parameters(
+        /// What the signer asked the device while running `sign`.
+        struct Requests {
+            /// The number of parameters of each signing request.
+            sign_parameters: Vec<usize>,
+            /// The public key reads, including the one creating the signer.
+            public_key_reads: usize,
+        }
+
+        async fn requests(
             version: [u8; 3],
             sign: impl AsyncFnOnce(LedgerSigner, Transaction, Object),
-        ) -> Vec<usize> {
+        ) -> Requests {
             let sign_parameters = Arc::new(Mutex::new(Vec::new()));
+            let public_key_reads = Arc::new(Mutex::new(0));
             let signer = Ledger::new(FakeDevice {
                 version,
                 sign_parameters: sign_parameters.clone(),
+                public_key_reads: public_key_reads.clone(),
             })
             .into_signer("m/44'/4218'/0'/0'/0'".parse().unwrap())
             .await
@@ -228,7 +203,10 @@ mod ledger {
             let transaction = bcs::from_bytes(&hex_decode(TRANSACTION)).unwrap();
             let gas_coin = bcs::from_bytes(&hex_decode(GAS_COIN)).unwrap();
             sign(signer, transaction, gas_coin).await;
-            sign_parameters.lock().unwrap().clone()
+            Requests {
+                sign_parameters: sign_parameters.lock().unwrap().clone(),
+                public_key_reads: *public_key_reads.lock().unwrap(),
+            }
         }
 
         fn hex_decode(hex: &str) -> Vec<u8> {
@@ -240,42 +218,41 @@ mod ledger {
 
         #[tokio::test]
         async fn blind_signs_without_objects() {
-            let parameters = sign_parameters([1, 0, 1], async |signer, transaction, _| {
+            let requests = requests([1, 0, 1], async |signer, transaction, _| {
                 signer.sign(&transaction).await.unwrap();
                 signer.sign_with_objects(&transaction, &[]).await.unwrap();
             })
             .await;
-            assert_eq!(parameters, [2, 2]);
+            assert_eq!(requests.sign_parameters, [2, 2]);
         }
 
         #[tokio::test]
         async fn clear_signs_with_objects() {
-            let parameters = sign_parameters([1, 0, 1], async |signer, transaction, gas_coin| {
+            let requests = requests([1, 0, 1], async |signer, transaction, gas_coin| {
                 signer
                     .sign_with_objects(&transaction, &[gas_coin])
                     .await
                     .unwrap();
             })
             .await;
-            assert_eq!(parameters, [3]);
+            assert_eq!(requests.sign_parameters, [3]);
         }
 
         #[tokio::test]
         async fn blind_signs_when_the_app_cannot_clear_sign() {
-            let parameters = sign_parameters([0, 9, 2], async |signer, transaction, gas_coin| {
+            let requests = requests([0, 9, 2], async |signer, transaction, gas_coin| {
                 signer
                     .sign_with_objects(&transaction, &[gas_coin])
                     .await
                     .unwrap();
             })
             .await;
-            assert_eq!(parameters, [2]);
+            assert_eq!(requests.sign_parameters, [2]);
+            assert_eq!(requests.public_key_reads, 2);
         }
 
-        #[test]
-        fn sends_the_device_only_the_objects_it_can_use() {
-            let transaction = bcs::from_bytes(&hex_decode(TRANSACTION)).unwrap();
-            let gas_coin: Object = bcs::from_bytes(&hex_decode(GAS_COIN)).unwrap();
+        #[tokio::test]
+        async fn clear_signs_with_objects_the_app_cannot_use() {
             let contents = [&[5; ObjectId::LENGTH][..], &0u64.to_le_bytes()].concat();
             let shared = Object::new(
                 ObjectData::Struct(
@@ -290,11 +267,14 @@ mod ledger {
                 TransactionDigest::ZERO,
                 0,
             );
-
-            assert_eq!(
-                device_objects(&transaction, &[shared, gas_coin.clone()]),
-                [gas_coin]
-            );
+            let requests = requests([1, 0, 1], async |signer, transaction, gas_coin| {
+                signer
+                    .sign_with_objects(&transaction, &[shared, gas_coin])
+                    .await
+                    .unwrap();
+            })
+            .await;
+            assert_eq!(requests.sign_parameters, [3]);
         }
     }
 }
