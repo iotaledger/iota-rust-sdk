@@ -50,7 +50,8 @@ impl GasStation {
         Ok(Arc::new(Self(builder.build())))
     }
 
-    /// The URL this station is reached at.
+    /// The URL this station is reached at, including any username and
+    /// password it was configured with.
     pub fn url(&self) -> String {
         self.0.url().to_string()
     }
