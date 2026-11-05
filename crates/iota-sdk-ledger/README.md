@@ -31,8 +31,9 @@ executor such as `futures::executor::block_on`.
 
 `LedgerSigner` signs with the key at one derivation path and returns the
 `UserSignature` to submit with a transaction. Passing the transaction's input
-objects lets the device show what it does; without them the device only signs
-when blind signing is enabled in the IOTA app's settings.
+objects lets the device show what it does; without them, or with an IOTA app
+older than 1.0, the device only signs when blind signing is enabled in the IOTA
+app's settings.
 
 ```rust,no_run
 use iota_sdk_ledger::{
