@@ -1,0 +1,9 @@
+name: "Start Speculos"
+description: "Starts the Speculos emulator running the IOTA Ledger app on a Nano S Plus via run_speculos.sh"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Start Speculos
+      shell: bash
+      run: ./run_speculos.sh start
