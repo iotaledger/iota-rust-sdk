@@ -212,7 +212,7 @@ GO_LIB_DIR := $(GO_TARGET_DIR)/release
 # (sets LIB_EXT, used to locate libiota_sdk_ffi). Set FFI_BUILD_ARGS to pass
 # extra cargo arguments.
 define build_binding
-cargo build -p iota-sdk-ffi --lib --release $(FFI_BUILD_ARGS); \
+cargo build -p iota-sdk-ffi --lib --release --features ledger-hid $(FFI_BUILD_ARGS); \
 case "$$(uname -s)" in \
 	Darwin)   LIB_EXT=".dylib" ;; \
 	Linux)    LIB_EXT=".so" ;; \
