@@ -18,7 +18,7 @@ name = "iota_sdk_ffi"
 crate-type = ["lib", "cdylib"]
 
 [features]
-default = ["crypto", "bls12381", "grpc"]
+default = ["crypto", "bls12381", "grpc", "ledger"]
 # TLS so the HTTPS constructors work out of the box; webpki roots because
 # Android cannot reach the platform store without a JNI handshake.
 grpc = [
@@ -37,6 +37,11 @@ crypto = [
   "iota-sdk/secp256r1",
 ]
 bls12381 = ["iota-sdk/bls12381"]
+# Ledger devices, reached through the Speculos emulator.
+ledger = ["iota-sdk/ledger", "iota-sdk/ledger-speculos"]
+# Ledger devices attached over USB. `hidapi` only builds for desktop platforms,
+# so the Android, iOS and WASM builds leave this out.
+ledger-hid = ["ledger", "iota-sdk/ledger-hid"]
 # Return maps keyed by an object as an FFI map object instead of a native map.
 # Enable for bindings whose language compares map keys by identity: Go, and the
 # WASM/TypeScript bindings. See `ffi_map!` in `src/macros.rs`.
@@ -58,6 +63,7 @@ primitive-types.workspace = true
 reqwest = { workspace = true, features = ["rustls-no-provider", "json"] }
 serde.workspace = true
 serde_json.workspace = true
+thiserror.workspace = true
 tokio = { workspace = true, features = ["time", "sync"] }
 # wasm-unstable-single-threaded relaxes Send+Sync checks on wasm32 targets only
 uniffi = { version = "0.31", features = ["cli", "tokio", "wasm-unstable-single-threaded", "scaffolding-ffi-buffer-fns"] }
