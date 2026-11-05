@@ -1,7 +1,8 @@
 """Approves a review on Speculos through its REST API.
 
-Waits for a screen starting with FIRST, presses right until a screen starting
-with TARGET, then presses both buttons on it:
+Waits for the first screen of the review, presses right until the screen
+that approves it, then presses both buttons on that screen. Both are given as
+the start of the screen's text:
 
     python3 approve.py Review "Sign transaction"
 
@@ -10,6 +11,7 @@ exit: this script only presses buttons, so it never competes with the
 program's connection to the emulator.
 """
 
+import argparse
 import json
 import os
 import sys
@@ -38,20 +40,23 @@ def press(button):
 
 
 def main():
-    first, target = sys.argv[1], sys.argv[2]
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("review_screen", help="start of the review's first screen")
+    parser.add_argument("approve_screen", help="start of the screen that approves the review")
+    args = parser.parse_args()
 
     deadline = time.monotonic() + START_TIMEOUT
-    while not screen().startswith(first):
+    while not screen().startswith(args.review_screen):
         if time.monotonic() > deadline:
             sys.exit(f"review did not start; screen: {screen()}")
         time.sleep(0.1)
 
     for _ in range(MAX_PRESSES):
-        if screen().startswith(target):
+        if screen().startswith(args.approve_screen):
             press("both")
             return
         press("right")
-    sys.exit(f"{target!r} not found; screen: {screen()}")
+    sys.exit(f"{args.approve_screen!r} not found; screen: {screen()}")
 
 
 if __name__ == "__main__":
