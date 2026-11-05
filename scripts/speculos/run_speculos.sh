@@ -8,7 +8,8 @@ SPECULOS_IMAGE="ghcr.io/ledgerhq/speculos:v0.27.1"
 CONTAINER_NAME="speculos"
 APDU_PORT=9999
 API_PORT=5001
-APP_DIR="$(pwd)/target/speculos/ledger-app-iota-v$LEDGER_APP_VERSION"
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+APP_DIR="$REPO_ROOT/target/speculos/ledger-app-iota-v$LEDGER_APP_VERSION"
 
 if [ "$1" == "start" ]; then
     if [ ! -f "$APP_DIR/nanosplus/iota" ]; then

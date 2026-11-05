@@ -79,14 +79,14 @@ jobs:
       - name: Run the examples
         run: make examples
 
-      - uses: ./.github/actions/start-speculos
+      - name: Start Speculos
+        run: ./scripts/speculos/run_speculos.sh start
 
       - name: Run the Ledger example on Speculos
         env:
           LEDGER_SIMULATOR: "1"
         run: |
-          cargo build --all-features --example ledger_sign_send_iota
-          python3 .github/actions/start-speculos/approve.py Review "Sign transaction" &
+          python3 scripts/speculos/approve.py Review "Sign transaction" &
           approver=$!
           make example ledger_sign_send_iota
           wait $approver
