@@ -88,6 +88,8 @@ pub struct TransactionBuildData {
     /// and left alone by any command added afterwards, so that the state's methods keep addressing
     /// their own command.
     state_command: Option<u16>,
+    /// Objects fetched while resolving, for signers that use them.
+    objects: HashMap<ObjectId, Object>,
 }
 
 impl TransactionBuildData {
@@ -363,6 +365,7 @@ impl TransactionBuilder {
                 expiration: Default::default(),
                 assigned_results: Default::default(),
                 state_command: Default::default(),
+                objects: Default::default(),
             },
             client: (),
             protocol_config: None,
@@ -442,6 +445,7 @@ impl TransactionBuilder {
                 expiration: Default::default(),
                 assigned_results: Default::default(),
                 state_command: Default::default(),
+                objects: Default::default(),
             },
             client: (),
             protocol_config: None,
@@ -1551,7 +1555,7 @@ impl<L> TransactionBuilder<(), L> {
                     return Err(TransactionBuilderError::MissingGasBudget);
                 }
 
-                execute_sponsored_v1(txn, sponsor, signer).await
+                execute_sponsored_v1(txn, sponsor, signer, async |_| Ok(Vec::new())).await
             }
             _ => unimplemented!("a new Transaction enum variant was added and needs to be handled"),
         }
@@ -1703,7 +1707,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                 })?;
             let owner = self.data.sponsor.unwrap_or(self.data.sender);
             let target_budget = self.data.gas_budget;
-            let mut selected: Vec<(u64, ObjectReference)> = Vec::new();
+            let mut selected: Vec<(u64, Object)> = Vec::new();
             let mut cursor: Option<Vec<u8>> = None;
             loop {
                 let page = self
@@ -1718,14 +1722,13 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                     let Ok(coin) = Coin::try_from_object(&obj) else {
                         continue;
                     };
-                    let entry = (coin.balance(), obj.object_ref());
+                    let entry = (coin.balance(), obj);
                     // A coin that changed between pages can be served again at a newer version;
                     // keep only the newest one.
-                    match selected
-                        .iter_mut()
-                        .find(|(_, r)| r.object_id == entry.1.object_id)
-                    {
-                        Some(existing) if existing.1.version < entry.1.version => *existing = entry,
+                    match selected.iter_mut().find(|(_, o)| o.id() == entry.1.id()) {
+                        Some(existing) if existing.1.version() < entry.1.version() => {
+                            *existing = entry
+                        }
                         Some(_) => {}
                         None => selected.push(entry),
                     }
@@ -1748,11 +1751,12 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
 
             // Add all selected coins as gas inputs (without early break): the extra balance gets
             // consolidated by gas smashing during execution.
-            for (_, obj_ref) in selected {
+            for (_, obj) in selected {
                 self.set_input(
-                    InputKind::Input(iota_types::Input::ImmutableOrOwned(obj_ref)),
+                    InputKind::Input(iota_types::Input::ImmutableOrOwned(obj.object_ref())),
                     true,
                 );
+                self.data.objects.insert(obj.id(), obj);
             }
         }
         Ok(())
@@ -1923,7 +1927,80 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
             .collect();
         let kind =
             iota_types::TransactionKind::Programmable(ProgrammableTransaction { inputs, commands });
+        self.data.objects.extend(objects);
         Ok((kind, gas))
+    }
+
+    /// The objects `transaction` reads that a signer can show the user: its
+    /// gas coins and immutable, owned or receiving inputs at the versions it
+    /// references, and its shared inputs, whose version the transaction leaves
+    /// to consensus.
+    ///
+    /// Objects fetched while building are reused, as the transaction references
+    /// them at the versions they were fetched at, and the rest are fetched,
+    /// shared ones at their latest version. Fails if any object cannot be
+    /// fetched.
+    async fn signing_objects(
+        &self,
+        transaction: &Transaction,
+    ) -> Result<Vec<Object>, TransactionBuilderError> {
+        let Transaction::V1(transaction) = transaction else {
+            unimplemented!("a new Transaction enum variant was added and needs to be handled")
+        };
+        let mut requests = transaction
+            .gas_payment
+            .objects
+            .iter()
+            .map(|reference| (reference.object_id, Some(reference.version)))
+            .collect::<Vec<_>>();
+        if let TransactionKind::Programmable(programmable) = &transaction.kind {
+            for input in &programmable.inputs {
+                match input {
+                    iota_types::Input::ImmutableOrOwned(reference)
+                    | iota_types::Input::Receiving(reference) => {
+                        requests.push((reference.object_id, Some(reference.version)))
+                    }
+                    iota_types::Input::Shared(shared) => requests.push((shared.object_id, None)),
+                    iota_types::Input::Pure(_) => {}
+                    _ => {
+                        unimplemented!("a new Input enum variant was added and needs to be handled")
+                    }
+                }
+            }
+        }
+
+        let missing = requests
+            .iter()
+            .filter(|(object_id, _)| !self.data.objects.contains_key(object_id))
+            .copied()
+            .collect::<Vec<_>>();
+        let mut fetched = HashMap::new();
+        if !missing.is_empty() {
+            let objects = self
+                .client
+                .objects_by_id(&missing)
+                .await
+                .map_err(TransactionBuilderError::client)?;
+            for ((object_id, _), object) in missing.into_iter().zip(objects) {
+                if let Some(object) = object {
+                    fetched.insert(object_id, object);
+                }
+            }
+        }
+
+        requests
+            .iter()
+            .map(|(object_id, _)| {
+                self.data
+                    .objects
+                    .get(object_id)
+                    .cloned()
+                    .or_else(|| fetched.remove(object_id))
+                    .ok_or_else(|| {
+                        TransactionBuilderError::Input(format!("missing object {object_id}"))
+                    })
+            })
+            .collect()
     }
 
     async fn resolve_ptb(
@@ -2126,8 +2203,13 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     ) -> Result<TransactionEffects, TransactionBuilderError> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
+        let objects = if signer.uses_objects() {
+            self.signing_objects(&txn).await?
+        } else {
+            Vec::new()
+        };
         let signature = signer
-            .sign(&txn)
+            .sign_with_objects(&txn, &objects)
             .await
             .map_err(TransactionBuilderError::signature)?;
 
@@ -2208,7 +2290,14 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                     txn.as_mut_v1().gas_payment.budget = budget;
                 };
 
-                let digest = execute_sponsored_v1(txn, sponsor, signer).await?;
+                let digest = execute_sponsored_v1(txn, sponsor, signer, async |txn| {
+                    if signer.uses_objects() {
+                        self.signing_objects(txn).await
+                    } else {
+                        Ok(Vec::new())
+                    }
+                })
+                .await?;
 
                 self.client
                     .wait_for_transaction(digest, WaitForTransaction::Finalized)
@@ -2245,14 +2334,19 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     ) -> Result<TransactionEffects, TransactionBuilderError> {
         let wait_for = wait_for.into();
         let txn = self.finish_internal().await?;
+        let objects = if signer.uses_objects() || sponsor_signer.uses_objects() {
+            self.signing_objects(&txn).await?
+        } else {
+            Vec::new()
+        };
 
         let signatures = vec![
             signer
-                .sign(&txn)
+                .sign_with_objects(&txn, &objects)
                 .await
                 .map_err(TransactionBuilderError::signature)?,
             sponsor_signer
-                .sign(&txn)
+                .sign_with_objects(&txn, &objects)
                 .await
                 .map_err(TransactionBuilderError::signature)?,
         ];
@@ -2345,12 +2439,14 @@ impl<C> TransactionBuilder<C, DivideCoin> {
     }
 }
 
-/// Reserve gas for a V1 `txn` from `sponsor`, sign it and have the sponsor execute it, returning
-/// the digest of the signed transaction.
+/// Reserve gas for a V1 `txn` from `sponsor`, sign it with the objects `signing_objects` returns
+/// for the transaction with its gas set, and have the sponsor execute it, returning the digest of
+/// the signed transaction.
 async fn execute_sponsored_v1(
     mut txn: Transaction,
     sponsor: &impl GasSponsor,
     signer: &impl TransactionSigner,
+    signing_objects: impl AsyncFnOnce(&Transaction) -> Result<Vec<Object>, TransactionBuilderError>,
 ) -> Result<TransactionDigest, TransactionBuilderError> {
     let (reservation, SponsoredGas { owner, objects }) = sponsor
         .reserve_gas(&txn)
@@ -2364,8 +2460,9 @@ async fn execute_sponsored_v1(
         txn.as_mut_v1().gas_payment.objects = objects;
     }
 
+    let objects = signing_objects(&txn).await?;
     let signature = signer
-        .sign(&txn)
+        .sign_with_objects(&txn, &objects)
         .await
         .map_err(TransactionBuilderError::signature)?;
 

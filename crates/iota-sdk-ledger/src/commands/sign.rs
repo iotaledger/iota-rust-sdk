@@ -3,7 +3,7 @@
 
 //! Signing with the IOTA app.
 
-use std::collections::HashSet;
+use std::collections::HashMap;
 
 use iota_crypto::DerivationPath;
 use iota_types::{
@@ -30,7 +30,7 @@ pub(crate) async fn transaction(
     let objects = if objects.is_empty() {
         None
     } else {
-        check_objects(transaction, objects)?;
+        let objects = referenced_objects(transaction, objects)?;
         let count = u32::try_from(objects.len()).map_err(|_| LedgerError::PayloadTooLong)?;
         let mut packed = count.to_le_bytes().to_vec();
         for object in objects {
@@ -47,10 +47,14 @@ pub(crate) async fn transaction(
     .await
 }
 
-/// Check that `objects` hold every owned or immutable input and gas coin of
-/// `transaction` at the version it references, as the device looks them up by
-/// digest.
-fn check_objects(transaction: &Transaction, objects: &[Object]) -> Result<(), LedgerError> {
+/// The objects among `objects` that `transaction` references as an owned or
+/// immutable input or a gas coin, in the order it references them, as the
+/// device looks them up by digest. Fails if any of them is missing or at
+/// another version.
+fn referenced_objects<'a>(
+    transaction: &Transaction,
+    objects: &'a [Object],
+) -> Result<Vec<&'a Object>, LedgerError> {
     let transaction = match transaction {
         Transaction::V1(transaction) => transaction,
         _ => unimplemented!("a new Transaction enum variant was added and needs to be handled"),
@@ -59,19 +63,24 @@ fn check_objects(transaction: &Transaction, objects: &[Object]) -> Result<(), Le
         TransactionKind::Programmable(programmable) => programmable.inputs.as_slice(),
         _ => &[],
     };
-    let digests = objects.iter().map(Object::digest).collect::<HashSet<_>>();
-    let missing = inputs
+    let by_digest = objects
+        .iter()
+        .map(|object| (object.digest(), object))
+        .collect::<HashMap<_, _>>();
+    inputs
         .iter()
         .filter_map(|input| match input {
             Input::ImmutableOrOwned(reference) => Some(reference),
             _ => None,
         })
         .chain(&transaction.gas_payment.objects)
-        .find(|reference| !digests.contains(reference.digest()));
-    match missing {
-        Some(reference) => Err(LedgerError::MissingObject(*reference.object_id())),
-        None => Ok(()),
-    }
+        .map(|reference| {
+            by_digest
+                .get(reference.digest())
+                .copied()
+                .ok_or(LedgerError::MissingObject(*reference.object_id()))
+        })
+        .collect()
 }
 
 /// Sign a personal message.
@@ -175,16 +184,20 @@ mod tests {
     }
 
     #[test]
-    fn accepts_every_referenced_object_among_others() {
+    fn keeps_only_the_referenced_objects() {
         let (input, gas) = (coin(1, 1), coin(2, 1));
-        check_objects(&transaction(&input, &gas), &[coin(3, 1), gas, input]).unwrap();
+        let objects = [coin(3, 1), gas.clone(), input.clone()];
+        assert_eq!(
+            referenced_objects(&transaction(&input, &gas), &objects).unwrap(),
+            [&input, &gas]
+        );
     }
 
     #[test]
     fn rejects_a_missing_gas_coin() {
         let (input, gas) = (coin(1, 1), coin(2, 1));
         assert!(matches!(
-            check_objects(&transaction(&input, &gas), &[input]),
+            referenced_objects(&transaction(&input, &gas), &[input]),
             Err(LedgerError::MissingObject(id)) if id == gas.id()
         ));
     }
@@ -193,7 +206,7 @@ mod tests {
     fn rejects_an_input_at_another_version() {
         let (input, gas) = (coin(1, 1), coin(2, 1));
         assert!(matches!(
-            check_objects(&transaction(&input, &gas), &[coin(1, 2), gas]),
+            referenced_objects(&transaction(&input, &gas), &[coin(1, 2), gas]),
             Err(LedgerError::MissingObject(id)) if id == input.id()
         ));
     }
