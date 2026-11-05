@@ -25,12 +25,13 @@ if [ "$1" == "start" ]; then
     docker run -d --name "$CONTAINER_NAME" \
         -p "$APDU_PORT:$APDU_PORT" -p "$API_PORT:$API_PORT" \
         -v "$APP_DIR/nanosplus:/speculos/apps" \
+        -e "SPECULOS_APPNAME=IOTA:$LEDGER_APP_VERSION" \
         "$SPECULOS_IMAGE" --model nanosp --display headless \
         --apdu-port "$APDU_PORT" --api-port "$API_PORT" apps/iota
 
     echo "Waiting for Speculos to be ready..."
     success=false
-    for i in {1..60}; do
+    for _ in {1..60}; do
         sleep 1
         if curl --silent --fail "http://127.0.0.1:$API_PORT/events?currentscreenonly=true" >/dev/null 2>&1; then
             success=true
