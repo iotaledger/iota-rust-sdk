@@ -84,6 +84,7 @@ for a Nano S Plus, extract `nanosplus.tar.gz` and run:
 
 ```sh
 docker run --rm -p 9999:9999 -p 5000:5000 -v "$PWD/nanosplus:/speculos/apps" \
+  -e SPECULOS_APPNAME=IOTA:1.0.1 \
   ghcr.io/ledgerhq/speculos --model nanosp --display headless \
   --apdu-port 9999 --api-port 5000 apps/iota
 ```
@@ -91,7 +92,8 @@ docker run --rm -p 9999:9999 -p 5000:5000 -v "$PWD/nanosplus:/speculos/apps" \
 Connect with `Ledger::new_speculos("127.0.0.1", 9999)`, and approve requests in the
 web interface at <http://127.0.0.1:5000> or through its REST API. The emulator
 runs a single app and cannot switch apps, so `Ledger::open_app` does
-nothing there.
+nothing there. `SPECULOS_APPNAME` sets the app name the emulator reports, which
+`Ledger::is_app_open` checks; set it to the version of the app you run.
 
 ## Clear and blind signing
 
