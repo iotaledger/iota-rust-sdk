@@ -43,7 +43,7 @@ pub(crate) async fn sent_variables<Fut: Future>(
     let server = async {
         let request = async {
             loop {
-                let request = answer_one_request(&listener).await;
+                let request = answer_one_request(&listener, "{}").await;
                 if request["operationName"] != "ServiceConfigQueryFragment" {
                     assert_eq!(request["operationName"], operation);
                     break request["variables"].clone();
@@ -58,7 +58,28 @@ pub(crate) async fn sent_variables<Fut: Future>(
     variables
 }
 
-async fn answer_one_request(listener: &tokio::net::TcpListener) -> serde_json::Value {
+/// Run `send` against a local server that answers every request with
+/// `response`, and return what `send` returns.
+pub(crate) async fn with_response<Fut: Future>(
+    response: &'static str,
+    send: impl FnOnce(GraphQLClient) -> Fut,
+) -> Fut::Output {
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let client = GraphQLClient::new(&format!("http://{}", listener.local_addr().unwrap())).unwrap();
+    let server = tokio::spawn(async move {
+        loop {
+            answer_one_request(&listener, response).await;
+        }
+    });
+    let output = send(client).await;
+    server.abort();
+    output
+}
+
+async fn answer_one_request(
+    listener: &tokio::net::TcpListener,
+    response: &str,
+) -> serde_json::Value {
     use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
     let (mut stream, _) = listener.accept().await.unwrap();
@@ -83,10 +104,11 @@ async fn answer_one_request(listener: &tokio::net::TcpListener) -> serde_json::V
             break request[end + 4..end + 4 + length].to_vec();
         }
     };
-    stream
-        .write_all(b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: 2\r\nconnection: close\r\n\r\n{}")
-        .await
-        .unwrap();
+    let reply = format!(
+        "HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: {}\r\nconnection: close\r\n\r\n{response}",
+        response.len()
+    );
+    stream.write_all(reply.as_bytes()).await.unwrap();
     serde_json::from_slice(&body).unwrap()
 }
 
