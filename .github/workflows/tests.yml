@@ -83,6 +83,7 @@ jobs:
         run: ./scripts/speculos/run_speculos.sh start
 
       - name: Run the Ledger example on Speculos
+        timeout-minutes: 10
         env:
           LEDGER_SIMULATOR: "1"
         run: |
