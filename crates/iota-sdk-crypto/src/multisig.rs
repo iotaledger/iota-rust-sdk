@@ -293,6 +293,8 @@ impl UserSignatureVerifier {
 
 #[cfg(feature = "passkey")]
 impl UserSignatureVerifier {
+    /// The verifier used for direct passkey signatures. Passkey members of a
+    /// multisig are checked by the [`MultisigVerifier`] instead.
     pub fn with_passkey_verifier(
         mut self,
         passkey_verifier: crate::passkey::PasskeyVerifier,

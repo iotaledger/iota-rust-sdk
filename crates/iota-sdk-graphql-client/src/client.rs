@@ -176,25 +176,25 @@ impl GraphQLClient {
     }
 
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
-    /// {MAINNET_HOST}.
+    /// <https://graphql.mainnet.iota.cafe>.
     pub fn new_mainnet() -> GraphQLResult<Self> {
         Self::new(MAINNET_HOST)
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
-    /// {TESTNET_HOST}.
+    /// <https://graphql.testnet.iota.cafe>.
     pub fn new_testnet() -> GraphQLResult<Self> {
         Self::new(TESTNET_HOST)
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
-    /// {DEVNET_HOST}.
+    /// <https://graphql.devnet.iota.cafe>.
     pub fn new_devnet() -> GraphQLResult<Self> {
         Self::new(DEVNET_HOST)
     }
 
     /// Create a new GraphQL client connected to a `localnet` GraphQL server:
-    /// {LOCAL_HOST}.
+    /// <http://localhost:9125/graphql>.
     pub fn new_localnet() -> GraphQLResult<Self> {
         Self::new(LOCAL_HOST)
     }
