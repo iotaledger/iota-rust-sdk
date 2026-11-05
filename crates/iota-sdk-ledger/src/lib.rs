@@ -150,10 +150,11 @@ impl Ledger {
     ///
     /// `objects` are the transaction's input objects. With them the device
     /// shows what the transaction does; without them it only signs when blind
-    /// signing is enabled in the app's settings. Passing objects to an app
-    /// older than 1.0 fails with [`LedgerError::ClearSigningUnsupported`], and
-    /// objects that lack an owned or immutable input or a gas coin at the
-    /// version the transaction references fail with
+    /// signing is enabled in the app's settings. Only the owned or immutable
+    /// inputs and gas coins at the versions the transaction references are
+    /// sent, and any other object is left out. Passing objects to an app older
+    /// than 1.0 fails with [`LedgerError::ClearSigningUnsupported`], and
+    /// objects that lack one of those inputs or gas coins fail with
     /// [`LedgerError::MissingObject`].
     pub async fn sign_transaction(
         &self,

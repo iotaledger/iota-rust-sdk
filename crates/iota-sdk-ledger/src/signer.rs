@@ -82,12 +82,25 @@ impl LedgerSigner {
     }
 
     /// Sign a transaction, passing its input objects so the device can show
-    /// what the transaction does instead of requiring blind signing.
+    /// what the transaction does instead of requiring blind signing. An IOTA
+    /// app older than 1.0 cannot use them, so with one the signer blind-signs
+    /// with a warning.
     pub async fn sign_transaction_with_objects(
         &self,
         transaction: &Transaction,
         objects: &[Object],
     ) -> Result<UserSignature, LedgerError> {
+        let objects = if objects.is_empty() {
+            objects
+        } else {
+            let version = self.ledger.version().await?;
+            if version.major() == 0 {
+                tracing::warn!("IOTA app {version} cannot clear-sign, blind signing instead");
+                &[]
+            } else {
+                objects
+            }
+        };
         self.ensure_same_key().await?;
         let signature = self
             .ledger
@@ -146,12 +159,29 @@ mod tests {
 
     /// An IOTA plain transfer from the IOTA app's ragger tests.
     const TRANSACTION: &str = "00000100201b3669e321893ee49c387a08fc251dbfff37cd2a981e6c473a5b2afde19d363e010101000100000f58eb1351454d623a6a4366198d6cd5aa4a12a12a3caefb501476e06d8bd5b6011eec6c32ef36467331fb7b088b4acb1ce46f736354308e03ff6ce913a42734e2860000000000000020c7ebc6c4430b3cf7e58d75ab53ddb9180274def63b1ab5619fbdb7096cdbd7120f58eb1351454d623a6a4366198d6cd5aa4a12a12a3caefb501476e06d8bd5b6e80300000000000040420f000000000000";
+    /// The gas coin of [`TRANSACTION`], from the same tests.
+    const GAS_COIN: &str = "00018600000000000000281eec6c32ef36467331fb7b088b4acb1ce46f736354308e03ff6ce913a42734e2005ed0b200000000000f58eb1351454d623a6a4366198d6cd5aa4a12a12a3caefb501476e06d8bd5b620a7e7993dd298e10fb373fb708b9f9005be1963c6f074b202bbe7a7cf9d75d717b0f50e0000000000";
     const SIGNATURE: [u8; 64] = [9; 64];
 
     /// Answers every command with its final result at once, using whichever
-    /// key is currently set.
+    /// key is currently set, and records how many parameters each signing
+    /// request carries: three when the input objects are sent, two otherwise.
     struct FakeDevice {
+        version: [u8; 3],
         public_key: Arc<Mutex<Ed25519PublicKey>>,
+        public_key_reads: Arc<Mutex<usize>>,
+        sign_parameters: Arc<Mutex<Vec<usize>>>,
+    }
+
+    impl FakeDevice {
+        fn new(version: [u8; 3], public_key: &Arc<Mutex<Ed25519PublicKey>>) -> Self {
+            Self {
+                version,
+                public_key: public_key.clone(),
+                public_key_reads: Default::default(),
+                sign_parameters: Default::default(),
+            }
+        }
     }
 
     impl Transport for FakeDevice {
@@ -160,17 +190,25 @@ mod tests {
                 let public_key = *self.public_key.lock().unwrap();
                 let result = match command.ins() {
                     // version
-                    0x00 => vec![1, 0, 1],
+                    0x00 => self.version.to_vec(),
                     // public key
-                    0x02 => [
-                        &[32][..],
-                        public_key.bytes(),
-                        &[32],
-                        public_key.derive_address().as_bytes(),
-                    ]
-                    .concat(),
-                    // sign
-                    0x03 => SIGNATURE.to_vec(),
+                    0x02 => {
+                        *self.public_key_reads.lock().unwrap() += 1;
+                        [
+                            &[32][..],
+                            public_key.bytes(),
+                            &[32],
+                            public_key.derive_address().as_bytes(),
+                        ]
+                        .concat()
+                    }
+                    // sign; the start request is a tag byte and one hash per
+                    // parameter
+                    0x03 => {
+                        let parameters = (command.data().len() - 1) / 32;
+                        self.sign_parameters.lock().unwrap().push(parameters);
+                        SIGNATURE.to_vec()
+                    }
                     ins => panic!("unexpected instruction {ins:#04x}"),
                 };
                 ApduAnswer::from_bytes([&[1][..], &result, &[0x90, 0x00]].concat())
@@ -179,9 +217,7 @@ mod tests {
     }
 
     fn signer(public_key: &Arc<Mutex<Ed25519PublicKey>>) -> LedgerSigner {
-        let ledger = Ledger::new(FakeDevice {
-            public_key: public_key.clone(),
-        });
+        let ledger = Ledger::new(FakeDevice::new([1, 0, 1], public_key));
         block_on(ledger.into_signer("m/44'/4218'/0'/0'/0'".parse().unwrap())).unwrap()
     }
 
@@ -227,6 +263,28 @@ mod tests {
             block_on(signer.sign_personal_message(&PersonalMessage(b"Hello".into()))),
             Err(LedgerError::KeyMismatch)
         ));
+    }
+
+    #[test]
+    fn blind_signs_when_the_app_cannot_clear_sign() {
+        let device = FakeDevice::new(
+            [0, 9, 2],
+            &Arc::new(Mutex::new(Ed25519PublicKey::new([7; 32]))),
+        );
+        let (public_key_reads, sign_parameters) = (
+            device.public_key_reads.clone(),
+            device.sign_parameters.clone(),
+        );
+        let signer =
+            block_on(Ledger::new(device).into_signer("m/44'/4218'/0'/0'/0'".parse().unwrap()))
+                .unwrap();
+        let gas_coin: Object = bcs::from_bytes(&hex::decode(GAS_COIN).unwrap()).unwrap();
+
+        block_on(signer.sign_transaction_with_objects(&transaction(), &[gas_coin])).unwrap();
+
+        assert_eq!(*sign_parameters.lock().unwrap(), [2]);
+        // once creating the signer and once before signing
+        assert_eq!(*public_key_reads.lock().unwrap(), 2);
     }
 
     #[test]
