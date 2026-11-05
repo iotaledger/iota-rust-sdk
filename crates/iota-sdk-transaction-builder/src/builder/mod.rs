@@ -1480,7 +1480,7 @@ impl<L> TransactionBuilder<(), L> {
                 }
 
                 let signature = signer
-                    .sign(&txn)
+                    .sign_with_objects(&txn, &[])
                     .await
                     .map_err(TransactionBuilderError::signature)?;
 

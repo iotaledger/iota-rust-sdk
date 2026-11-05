@@ -38,7 +38,8 @@ pub trait TransactionSigner {
     /// immutable, owned or receiving inputs at the versions it references, and
     /// its shared inputs as the builder fetched them, which may change before
     /// the transaction executes. `objects` is empty when the signer does not
-    /// use them. The default ignores them and calls [`sign`](Self::sign).
+    /// use them or the builder has no client to fetch them. The default
+    /// ignores them and calls [`sign`](Self::sign).
     fn sign_with_objects(
         &self,
         transaction: &Transaction,
