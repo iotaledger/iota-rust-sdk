@@ -429,10 +429,10 @@ impl MultisigAggregator {
     }
 
     /// Build the aggregated signature once the signed weight reaches the
-    /// threshold, validated like [`MultisigVerifier`] does, so with its
-    /// default settings a committee mixing Ed25519 with other key schemes
-    /// needs every member's signature. [`Self::verifier_mut`] can disable
-    /// that.
+    /// threshold, verified like [`MultisigVerifier`] does, so with its default
+    /// settings a committee mixing Ed25519 with other key schemes needs every
+    /// member's signature and a passkey signature is rejected.
+    /// [`Self::verifier_mut`] can change that.
     pub fn finish(&self) -> Result<MultisigAggregatedSignature, SignatureError> {
         if self.signed_weight < self.committee.threshold() {
             return Err(SignatureError::from_source(
@@ -451,7 +451,7 @@ impl MultisigAggregator {
 
         let signature =
             MultisigAggregatedSignature::new_unchecked(signatures, bitmap, self.committee.clone());
-        self.verifier.validate(&signature)?;
+        self.verifier.verify(&self.message, &signature)?;
 
         Ok(signature)
     }
@@ -806,6 +806,36 @@ mod tests {
         );
     }
 
+    /// [`MultisigAggregator::finish`] applies the address bound on its
+    /// verifier.
+    #[test]
+    fn aggregator_rejects_wrong_address() {
+        let (k0, k1, k2) = committee_keys();
+        let committee = committee_2_of_3(&k0, &k1, &k2);
+        let msg = message();
+
+        let mut aggregator = MultisigAggregator::new_with_message(committee.clone(), &msg);
+        aggregator
+            .add_signature(k0.sign_personal_message(&msg).unwrap())
+            .unwrap();
+        aggregator
+            .add_signature(k2.sign_personal_message(&msg).unwrap())
+            .unwrap();
+
+        *aggregator.verifier_mut() = MultisigVerifier::new().with_address(Address::ZERO);
+        let error = aggregator.finish().unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("Invalid address derived from pks"),
+            "expected an invalid-address error, got {error}"
+        );
+
+        *aggregator.verifier_mut() =
+            MultisigVerifier::new().with_address(committee.derive_address());
+        aggregator.finish().unwrap();
+    }
+
     /// [`UserSignatureVerifier`] accepts a plain simple signature, while the
     /// [`MultisigVerifier`] rejects anything that is not a multisig.
     #[test]
@@ -949,6 +979,49 @@ mod tests {
         UserSignatureVerifier::new()
             .with_multisig_verifier(MultisigVerifier::new().with_accept_passkey_in_multisig(true))
             .verify_transaction(&transaction, &signature)
+            .unwrap();
+    }
+
+    /// [`MultisigAggregator::finish`] rejects a passkey member unless its
+    /// verifier accepts passkeys inside a multisig.
+    #[cfg(feature = "passkey")]
+    #[test]
+    fn aggregator_rejects_passkey_member_unless_accepted() {
+        const TRANSACTION: &str = "AAAAACdZawPnpJRjmVcwDu6xrIumtq5NLO+6GHbs0iGdCoD7AQ0T0TolicYERdSvyCRjSSduDZLbSpBsZBoib+lF48EBcgAAAAAAAAAgpQr/Mudl9BdzyBdkbqTlqBw4/aJ21kAD/jpJKa05im4nWWsD56SUY5lXMA7usayLprauTSzvuhh27NIhnQqA++gDAAAAAAAAgIQeAAAAAAAA";
+        const SIGNATURE: &str = "BiVJlg3liA6MaHQ0Fw9kdmBbj+SuuaKGMseZXPO6gx2XYx0AAAAAhgF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCJjaGFsbGVuZ2UiOiJXellBZmVvbHcweU15bEFheDRvbzNjVC1rdEVaM0xmenZXcURqakxKZVRvIiwib3JpZ2luIjoiaHR0cDovL2xvY2FsaG9zdDo1MTczIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfWICfOgpQ38QYao9Gj0/bqmWYNkuxvbuN3lz4uzFcXeVMEVivX41eC9H+tk+UnvUvKzThtf+uMLFzerU0zZLi8le4QJJsAUcyjsP/1UPAesax8UOC14M62FjAqtqaR46wR7jCg==";
+
+        let transaction: Transaction = {
+            let bytes = Base64::decode_vec(TRANSACTION).unwrap();
+            bcs::from_bytes(&bytes).unwrap()
+        };
+        let signature = UserSignature::from_base64(SIGNATURE).unwrap();
+        let UserSignature::PasskeyAuthenticator(authenticator) = &signature else {
+            panic!("expected a passkey authenticator");
+        };
+        let committee = MultisigCommittee::new(
+            vec![MultisigMember::new(
+                PublicKey::Passkey(authenticator.public_key()),
+                1,
+            )],
+            1,
+        )
+        .unwrap();
+
+        let mut aggregator = MultisigAggregator::new_with_transaction(committee, &transaction);
+        aggregator.add_signature(signature).unwrap();
+        let error = aggregator.finish().unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("Passkey sig not supported inside multisig"),
+            "expected a passkey-not-supported error, got {error}"
+        );
+
+        *aggregator.verifier_mut() = MultisigVerifier::new().with_accept_passkey_in_multisig(true);
+        let aggregated = aggregator.finish().unwrap();
+        UserSignatureVerifier::new()
+            .with_multisig_verifier(MultisigVerifier::new().with_accept_passkey_in_multisig(true))
+            .verify_transaction(&transaction, &UserSignature::Multisig(aggregated))
             .unwrap();
     }
 
