@@ -115,9 +115,9 @@ impl TransactionSignerFn for MoveAuthenticator {
 /// An async signer implementation which wraps a `TransactionSignerFn`
 /// definition, which can be used to sign a transaction with a callback.
 #[derive(uniffi::Object)]
-pub struct TransactionSigner(Inner);
+pub struct TransactionSigner(TransactionSignerInner);
 
-enum Inner {
+enum TransactionSignerInner {
     Fn(Arc<dyn TransactionSignerFn>),
     /// Kept apart from `Fn` because the builder passes it the transaction's
     /// objects.
@@ -130,19 +130,21 @@ enum Inner {
 impl TransactionSigner {
     #[uniffi::constructor]
     pub fn new(signer_fn: Arc<dyn TransactionSignerFn>) -> Self {
-        Self(Inner::Fn(signer_fn))
+        Self(TransactionSignerInner::Fn(signer_fn))
     }
 
     #[uniffi::constructor]
     pub fn from_move_authenticator(auth: Arc<MoveAuthenticator>) -> Self {
-        Self(Inner::Fn(auth))
+        Self(TransactionSignerInner::Fn(auth))
     }
 
     pub async fn sign(&self, txn: Arc<Transaction>) -> Result<Arc<UserSignature>> {
         match &self.0 {
-            Inner::Fn(signer_fn) => Ok(signer_fn.sign(txn).await?.signature),
+            TransactionSignerInner::Fn(signer_fn) => Ok(signer_fn.sign(txn).await?.signature),
             #[cfg(feature = "ledger")]
-            Inner::Ledger(signer) => Ok(Arc::new(signer.sign_transaction(&txn).await?)),
+            TransactionSignerInner::Ledger(signer) => {
+                Ok(Arc::new(signer.sign_transaction(&txn).await?))
+            }
         }
     }
 }
@@ -152,22 +154,22 @@ impl TransactionSigner {
 impl TransactionSigner {
     #[uniffi::constructor]
     pub fn from_ed25519(key: Arc<crate::crypto::ed25519::Ed25519PrivateKey>) -> Self {
-        Self(Inner::Fn(key))
+        Self(TransactionSignerInner::Fn(key))
     }
 
     #[uniffi::constructor]
     pub fn from_secp256k1(key: Arc<crate::crypto::secp256k1::Secp256k1PrivateKey>) -> Self {
-        Self(Inner::Fn(key))
+        Self(TransactionSignerInner::Fn(key))
     }
 
     #[uniffi::constructor]
     pub fn from_secp256r1(key: Arc<crate::crypto::secp256r1::Secp256r1PrivateKey>) -> Self {
-        Self(Inner::Fn(key))
+        Self(TransactionSignerInner::Fn(key))
     }
 
     #[uniffi::constructor]
     pub fn from_keypair(key: Arc<crate::crypto::simple::SimpleKeypair>) -> Self {
-        Self(Inner::Fn(key))
+        Self(TransactionSignerInner::Fn(key))
     }
 }
 
@@ -181,7 +183,7 @@ impl TransactionSigner {
     /// settings.
     #[uniffi::constructor]
     pub fn from_ledger(signer: Arc<crate::ledger::LedgerSigner>) -> Self {
-        Self(Inner::Ledger(signer))
+        Self(TransactionSignerInner::Ledger(signer))
     }
 }
 
@@ -214,7 +216,7 @@ impl iota_sdk::transaction_builder::TransactionSigner for TransactionSigner {
 
     #[cfg(feature = "ledger")]
     fn uses_objects(&self) -> bool {
-        matches!(self.0, Inner::Ledger(_))
+        matches!(self.0, TransactionSignerInner::Ledger(_))
     }
 
     #[cfg(feature = "ledger")]
@@ -224,10 +226,10 @@ impl iota_sdk::transaction_builder::TransactionSigner for TransactionSigner {
         objects: &[iota_sdk::types::Object],
     ) -> std::result::Result<iota_sdk::types::UserSignature, Self::Error> {
         match &self.0 {
-            Inner::Fn(_) => {
+            TransactionSignerInner::Fn(_) => {
                 iota_sdk::transaction_builder::TransactionSigner::sign(self, transaction).await
             }
-            Inner::Ledger(signer) => {
+            TransactionSignerInner::Ledger(signer) => {
                 iota_sdk::transaction_builder::TransactionSigner::sign_with_objects(
                     &signer.0,
                     transaction,
