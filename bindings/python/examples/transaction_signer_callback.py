@@ -15,6 +15,12 @@ class AsyncSigner(TransactionSignerFn):
         return TransactionSignerFnOutput(
             signature=self.key.sign_transaction(transaction))
 
+    def uses_objects(self):
+        return False
+
+    async def sign_with_objects(self, transaction: Transaction, objects):
+        return await self.sign(transaction)
+
 
 async def main():
     amount = 1000

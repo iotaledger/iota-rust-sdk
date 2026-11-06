@@ -14,6 +14,16 @@ final class AsyncSigner: TransactionSignerFn, @unchecked Sendable {
   func sign(transaction: Transaction) async throws -> TransactionSignerFnOutput {
     return TransactionSignerFnOutput(signature: try key.signTransaction(transaction: transaction))
   }
+
+  func usesObjects() -> Bool {
+    return false
+  }
+
+  func signWithObjects(transaction: Transaction, objects: [Object]) async throws
+    -> TransactionSignerFnOutput
+  {
+    return try await sign(transaction: transaction)
+  }
 }
 
 @main
