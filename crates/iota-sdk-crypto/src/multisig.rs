@@ -431,7 +431,7 @@ impl MultisigAggregator {
     /// Build the aggregated signature once the signed weight reaches the
     /// threshold, verified like [`MultisigVerifier`] does, so with its default
     /// settings a committee mixing Ed25519 with other key schemes needs every
-    /// member's signature and a passkey member is rejected.
+    /// member's signature and a passkey signature is rejected.
     /// [`Self::verifier_mut`] can change that.
     pub fn finish(&self) -> Result<MultisigAggregatedSignature, SignatureError> {
         if self.signed_weight < self.committee.threshold() {
