@@ -12,7 +12,7 @@ and opens or closes the app.
 use iota_sdk_ledger::{Ledger, iota_crypto::DerivationPath};
 
 async fn print_address() -> Result<(), Box<dyn std::error::Error>> {
-    let mut ledger = Ledger::new_native_hid()?;
+    let ledger = Ledger::new_native_hid()?;
     ledger.open_app().await?;
 
     let path: DerivationPath = "m/44'/4218'/0'/0'/0'".parse()?;
@@ -45,7 +45,7 @@ async fn sign(
     transaction: &Transaction,
     objects: &[Object],
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let mut ledger = Ledger::new_native_hid()?;
+    let ledger = Ledger::new_native_hid()?;
     ledger.open_app().await?;
 
     let signer = ledger.into_signer("m/44'/4218'/0'/0'/0'".parse()?).await?;

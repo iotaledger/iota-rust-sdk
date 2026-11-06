@@ -19,7 +19,7 @@ async fn main() -> Result<()> {
     let recipient_address =
         Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
 
-    let mut ledger = if std::env::var_os("LEDGER_SIMULATOR").is_some() {
+    let ledger = if std::env::var_os("LEDGER_SIMULATOR").is_some() {
         Ledger::new_speculos("127.0.0.1", 9999)
     } else {
         Ledger::new_native_hid()?
