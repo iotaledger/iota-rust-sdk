@@ -8,7 +8,7 @@ use iota_types::{
 };
 use serde::Serialize;
 
-use crate::{Ledger, LedgerError};
+use crate::{Ledger, LedgerError, commands::sign};
 
 impl Ledger {
     /// Sign with the key at `path`; see [`LedgerSigner::new`].
@@ -62,11 +62,6 @@ impl LedgerSigner {
         &self.ledger
     }
 
-    /// Mutable reference to the device the signer uses.
-    pub fn ledger_mut(&mut self) -> &mut Ledger {
-        &mut self.ledger
-    }
-
     /// Return the device.
     pub fn into_ledger(self) -> Ledger {
         self.ledger
@@ -90,10 +85,11 @@ impl LedgerSigner {
         transaction: &Transaction,
         objects: &[Object],
     ) -> Result<UserSignature, LedgerError> {
+        let mut device = self.ledger.device.lock().await;
         let objects = if objects.is_empty() {
             objects
         } else {
-            let version = self.ledger.version().await?;
+            let version = device.version().await?;
             if version.major() == 0 {
                 tracing::warn!("IOTA app {version} cannot clear-sign, blind signing instead");
                 &[]
@@ -101,9 +97,10 @@ impl LedgerSigner {
                 objects
             }
         };
-        self.ensure_same_key().await?;
-        let signature = self
-            .ledger
+        device
+            .ensure_public_key(&self.path, &self.public_key)
+            .await?;
+        let signature = device
             .sign_transaction(&self.path, transaction, objects)
             .await?;
         Ok(self.user_signature(signature))
@@ -114,11 +111,12 @@ impl LedgerSigner {
         &self,
         message: &PersonalMessage<'_>,
     ) -> Result<UserSignature, LedgerError> {
-        self.ensure_same_key().await?;
-        let signature = self
-            .ledger
-            .sign_personal_message(&self.path, message)
+        let device = self.ledger.device.lock().await;
+        device
+            .ensure_public_key(&self.path, &self.public_key)
             .await?;
+        let signature =
+            sign::personal_message(device.transport.as_ref(), &self.path, message).await?;
         Ok(self.user_signature(signature))
     }
 
@@ -128,16 +126,13 @@ impl LedgerSigner {
         intent: Intent,
         message: &T,
     ) -> Result<UserSignature, LedgerError> {
-        self.ensure_same_key().await?;
-        let signature = self.ledger.sign_intent(&self.path, intent, message).await?;
+        let device = self.ledger.device.lock().await;
+        device
+            .ensure_public_key(&self.path, &self.public_key)
+            .await?;
+        let signature =
+            sign::intent(device.transport.as_ref(), &self.path, intent, message).await?;
         Ok(self.user_signature(signature))
-    }
-
-    async fn ensure_same_key(&self) -> Result<(), LedgerError> {
-        if self.ledger.get_public_key(&self.path).await? != self.public_key {
-            return Err(LedgerError::KeyMismatch);
-        }
-        Ok(())
     }
 
     fn user_signature(&self, signature: Ed25519Signature) -> UserSignature {
@@ -285,6 +280,89 @@ mod tests {
         assert_eq!(*sign_parameters.lock().unwrap(), [2]);
         // once creating the signer and once before signing
         assert_eq!(*public_key_reads.lock().unwrap(), 2);
+    }
+
+    /// Wraps [`FakeDevice`], returning `Pending` once before each answer and
+    /// logging each command's instruction.
+    struct LoggingDevice {
+        inner: FakeDevice,
+        log: Arc<Mutex<Vec<String>>>,
+    }
+
+    impl Transport for LoggingDevice {
+        fn exchange<'a>(&'a self, command: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer> {
+            Box::pin(async move {
+                self.log
+                    .lock()
+                    .unwrap()
+                    .push(format!("{:#04x}", command.ins()));
+                let mut yielded = false;
+                std::future::poll_fn(|cx| {
+                    if yielded {
+                        std::task::Poll::Ready(())
+                    } else {
+                        yielded = true;
+                        cx.waker().wake_by_ref();
+                        std::task::Poll::Pending
+                    }
+                })
+                .await;
+                self.inner.exchange(command).await
+            })
+        }
+    }
+
+    /// Logs when it is woken, which for a task waiting on the device happens
+    /// as the lock is released.
+    struct LogWake(Arc<Mutex<Vec<String>>>);
+
+    impl futures::task::ArcWake for LogWake {
+        fn wake_by_ref(arc_self: &Arc<Self>) {
+            arc_self.0.lock().unwrap().push("unlocked".to_owned());
+        }
+    }
+
+    #[test]
+    fn keeps_the_device_locked_between_the_key_check_and_the_signature() {
+        use std::{future::Future, task::Context};
+
+        let log = Arc::new(Mutex::new(Vec::new()));
+        let device = LoggingDevice {
+            inner: FakeDevice::new(
+                [1, 0, 1],
+                &Arc::new(Mutex::new(Ed25519PublicKey::new([7; 32]))),
+            ),
+            log: log.clone(),
+        };
+        let signer =
+            block_on(Ledger::new(device).into_signer("m/44'/4218'/0'/0'/0'".parse().unwrap()))
+                .unwrap();
+        let clone = signer.ledger().clone();
+        log.lock().unwrap().clear();
+
+        // Start signing until the device holds the key request, then queue a
+        // command on the clone behind it.
+        let message = PersonalMessage(b"Hello".into());
+        let mut signing = Box::pin(signer.sign_personal_message(&message));
+        let noop = futures::task::noop_waker();
+        assert!(
+            signing
+                .as_mut()
+                .poll(&mut Context::from_waker(&noop))
+                .is_pending()
+        );
+        let mut waiting = Box::pin(clone.get_public_key(signer.path()));
+        let log_wake = futures::task::waker(Arc::new(LogWake(log.clone())));
+        assert!(
+            waiting
+                .as_mut()
+                .poll(&mut Context::from_waker(&log_wake))
+                .is_pending()
+        );
+
+        block_on(signing).unwrap();
+
+        assert_eq!(*log.lock().unwrap(), ["0x02", "0x03", "unlocked"]);
     }
 
     #[test]
