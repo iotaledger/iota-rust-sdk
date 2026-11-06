@@ -6,12 +6,15 @@ use std::sync::Arc;
 use iota_sdk::ledger::{ApduError, iota_crypto::DerivationPath};
 use tokio::sync::{RwLock, RwLockMappedWriteGuard, RwLockReadGuard, RwLockWriteGuard};
 
-use crate::types::{
-    address::Address,
-    crypto::{Ed25519PublicKey, intent::PersonalMessage},
-    object::Object,
-    signature::UserSignature,
-    transaction::Transaction,
+use crate::{
+    transaction_builder::signer::{TransactionSignerFn, TransactionSignerFnOutput},
+    types::{
+        address::Address,
+        crypto::{Ed25519PublicKey, intent::PersonalMessage},
+        object::Object,
+        signature::UserSignature,
+        transaction::Transaction,
+    },
 };
 
 /// Error returned when communicating with a Ledger device fails.
@@ -230,7 +233,7 @@ impl Ledger {
 /// Use `TransactionSigner.from_ledger` to sign with it through the transaction
 /// builder, which passes it the transaction's objects so the device shows what
 /// the transaction does.
-#[derive(uniffi::Object)]
+#[derive(Debug, uniffi::Object)]
 pub struct LedgerSigner(pub(crate) iota_sdk::ledger::LedgerSigner);
 
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
@@ -285,6 +288,44 @@ impl LedgerSigner {
         message: &PersonalMessage,
     ) -> Result<UserSignature, LedgerError> {
         Ok(self.0.sign_personal_message(&message.0).await?.into())
+    }
+}
+
+#[cfg_attr(not(target_arch = "wasm32"), async_trait::async_trait)]
+#[cfg_attr(target_arch = "wasm32", async_trait::async_trait(?Send))]
+impl TransactionSignerFn for LedgerSigner {
+    async fn sign(
+        &self,
+        transaction: Arc<Transaction>,
+    ) -> crate::error::Result<TransactionSignerFnOutput> {
+        let signature = self.0.sign_transaction(&transaction.0).await?;
+        Ok(TransactionSignerFnOutput {
+            signature: Arc::new(signature.into()),
+        })
+    }
+
+    fn uses_objects(&self) -> bool {
+        true
+    }
+
+    async fn sign_with_objects(
+        &self,
+        transaction: Arc<Transaction>,
+        objects: Vec<Arc<Object>>,
+    ) -> crate::error::Result<TransactionSignerFnOutput> {
+        let objects = objects
+            .iter()
+            .map(|object| object.0.clone())
+            .collect::<Vec<_>>();
+        let signature = iota_sdk::transaction_builder::TransactionSigner::sign_with_objects(
+            &self.0,
+            &transaction.0,
+            &objects,
+        )
+        .await?;
+        Ok(TransactionSignerFnOutput {
+            signature: Arc::new(signature.into()),
+        })
     }
 }
 

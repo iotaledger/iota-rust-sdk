@@ -18,6 +18,14 @@ func (signer *AsyncSigner) Sign(transaction *iota_sdk.Transaction) (iota_sdk.Tra
 	return iota_sdk.TransactionSignerFnOutput{Signature: signature}, err
 }
 
+func (signer *AsyncSigner) UsesObjects() bool {
+	return false
+}
+
+func (signer *AsyncSigner) SignWithObjects(transaction *iota_sdk.Transaction, objects []*iota_sdk.Object) (iota_sdk.TransactionSignerFnOutput, error) {
+	return signer.Sign(transaction)
+}
+
 func main() {
 	recipientAddress, err := iota_sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 	if err != nil {
