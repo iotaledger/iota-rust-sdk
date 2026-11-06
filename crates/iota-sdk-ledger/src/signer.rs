@@ -282,6 +282,89 @@ mod tests {
         assert_eq!(*public_key_reads.lock().unwrap(), 2);
     }
 
+    /// Wraps [`FakeDevice`], returning `Pending` once before each answer and
+    /// logging each command's instruction.
+    struct LoggingDevice {
+        inner: FakeDevice,
+        log: Arc<Mutex<Vec<String>>>,
+    }
+
+    impl Transport for LoggingDevice {
+        fn exchange<'a>(&'a self, command: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer> {
+            Box::pin(async move {
+                self.log
+                    .lock()
+                    .unwrap()
+                    .push(format!("{:#04x}", command.ins()));
+                let mut yielded = false;
+                std::future::poll_fn(|cx| {
+                    if yielded {
+                        std::task::Poll::Ready(())
+                    } else {
+                        yielded = true;
+                        cx.waker().wake_by_ref();
+                        std::task::Poll::Pending
+                    }
+                })
+                .await;
+                self.inner.exchange(command).await
+            })
+        }
+    }
+
+    /// Logs when it is woken, which for a task waiting on the device happens
+    /// as the lock is released.
+    struct LogWake(Arc<Mutex<Vec<String>>>);
+
+    impl futures::task::ArcWake for LogWake {
+        fn wake_by_ref(arc_self: &Arc<Self>) {
+            arc_self.0.lock().unwrap().push("unlocked".to_owned());
+        }
+    }
+
+    #[test]
+    fn keeps_the_device_locked_between_the_key_check_and_the_signature() {
+        use std::{future::Future, task::Context};
+
+        let log = Arc::new(Mutex::new(Vec::new()));
+        let device = LoggingDevice {
+            inner: FakeDevice::new(
+                [1, 0, 1],
+                &Arc::new(Mutex::new(Ed25519PublicKey::new([7; 32]))),
+            ),
+            log: log.clone(),
+        };
+        let signer =
+            block_on(Ledger::new(device).into_signer("m/44'/4218'/0'/0'/0'".parse().unwrap()))
+                .unwrap();
+        let clone = signer.ledger().clone();
+        log.lock().unwrap().clear();
+
+        // Start signing until the device holds the key request, then queue a
+        // command on the clone behind it.
+        let message = PersonalMessage(b"Hello".into());
+        let mut signing = Box::pin(signer.sign_personal_message(&message));
+        let noop = futures::task::noop_waker();
+        assert!(
+            signing
+                .as_mut()
+                .poll(&mut Context::from_waker(&noop))
+                .is_pending()
+        );
+        let mut waiting = Box::pin(clone.get_public_key(signer.path()));
+        let log_wake = futures::task::waker(Arc::new(LogWake(log.clone())));
+        assert!(
+            waiting
+                .as_mut()
+                .poll(&mut Context::from_waker(&log_wake))
+                .is_pending()
+        );
+
+        block_on(signing).unwrap();
+
+        assert_eq!(*log.lock().unwrap(), ["0x02", "0x03", "unlocked"]);
+    }
+
     #[test]
     fn futures_are_send() {
         fn assert_send<T: Send>(_: T) {}
