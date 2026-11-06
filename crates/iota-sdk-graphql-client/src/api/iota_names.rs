@@ -7,7 +7,6 @@
 use std::str::FromStr;
 
 use cynic::QueryBuilder;
-use futures::Stream;
 use iota_types::{
     Address,
     iota_names::{NameFormat, NameRegistration, name::Name},
@@ -24,7 +23,7 @@ use crate::{
         IotaNamesRegistrationsQueryFragment, ResolveIotaNamesAddressArgs,
         ResolveIotaNamesAddressQueryFragment,
     },
-    streams::stream_paginated_query,
+    streams::PageStream,
 };
 
 define_query! {
@@ -48,9 +47,12 @@ impl ListIotaNamesRegistrationsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<NameRegistration>> + Unpin {
+    pub fn stream(self) -> PageStream<NameRegistration> {
         let pagination = self.pagination.clone();
-        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+        PageStream::new(
+            pagination,
+            Box::new(move |page| self.clone().pagination(page).into_future()),
+        )
     }
 
     fn operation(
