@@ -38,7 +38,7 @@ crypto = [
 ]
 bls12381 = ["iota-sdk/bls12381"]
 # Ledger devices, reached through the Speculos emulator.
-ledger = ["iota-sdk/ledger", "iota-sdk/ledger-speculos"]
+ledger = ["dep:thiserror", "iota-sdk/ledger", "iota-sdk/ledger-speculos"]
 # Ledger devices attached over USB. `hidapi` only builds for desktop platforms,
 # so the Android, iOS and WASM builds leave this out.
 ledger-hid = ["ledger", "iota-sdk/ledger-hid"]
@@ -63,7 +63,7 @@ primitive-types.workspace = true
 reqwest = { workspace = true, features = ["rustls-no-provider", "json"] }
 serde.workspace = true
 serde_json.workspace = true
-thiserror.workspace = true
+thiserror = { workspace = true, optional = true }
 tokio = { workspace = true, features = ["time", "sync"] }
 # wasm-unstable-single-threaded relaxes Send+Sync checks on wasm32 targets only
 uniffi = { version = "0.31", features = ["cli", "tokio", "wasm-unstable-single-threaded", "scaffolding-ffi-buffer-fns"] }
