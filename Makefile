@@ -55,6 +55,14 @@ test-with-localnet: package_test_example_v1.json package_test_example_v2.json ##
 	cargo nextest run -p iota-sdk-graphql-client -p integration-tests
 	cargo nextest run --no-default-features -p iota-sdk-graphql-client
 
+.PHONY: speculos-start
+speculos-start: ## Start the Speculos emulator with the IOTA Ledger app
+	./scripts/speculos/run_speculos.sh start
+
+.PHONY: speculos-stop
+speculos-stop: ## Stop the Speculos emulator
+	./scripts/speculos/run_speculos.sh stop
+
 # Verify that individual SDK crates compile to wasm32-unknown-unknown.
 # This is a quick compatibility check, not the full WASM bindings build.
 .PHONY: wasm32
