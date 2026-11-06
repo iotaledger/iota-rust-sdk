@@ -73,6 +73,16 @@ impl GetServiceInfoResponse {
             .as_deref()
             .ok_or_else(|| TryFromProtoError::missing(Self::SERVER_FIELD.name))
     }
+
+    /// Get the lowest checkpoint for which the transaction and event indexes
+    /// are complete.
+    pub fn checkpoint_indexes_lowest(
+        &self,
+    ) -> Result<iota_types::CheckpointSequenceNumber, TryFromProtoError> {
+        self.lowest_available_checkpoint_indexes.ok_or_else(|| {
+            TryFromProtoError::missing(Self::LOWEST_AVAILABLE_CHECKPOINT_INDEXES_FIELD.name)
+        })
+    }
 }
 
 // ObjectResult

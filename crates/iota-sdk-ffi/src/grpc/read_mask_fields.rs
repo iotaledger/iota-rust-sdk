@@ -233,6 +233,9 @@ read_mask_fields! {
         LOWEST_AVAILABLE_CHECKPOINT_OBJECTS,
         /// The server version.
         SERVER,
+        /// Lowest checkpoint for which the transaction and event indexes are
+        /// complete.
+        LOWEST_AVAILABLE_CHECKPOINT_INDEXES,
     }
 }
 
