@@ -1385,6 +1385,11 @@ pub enum Input {
     /// A move object that is attempted to be received in this transaction.
     // TODO add discussion around what receiving is
     Receiving(ObjectReference),
+    /// A transaction this transaction depends on.
+    ///
+    /// The transaction is valid only once the named transaction executed
+    /// successfully, in the current epoch, and no command may use this input.
+    TransactionDependency(TransactionDigest),
 }
 
 impl Input {
@@ -1413,7 +1418,8 @@ impl Input {
         Pure(Vec<u8>),
         ImmutableOrOwned(ObjectReference),
         Shared(SharedObjectReference),
-        Receiving(ObjectReference)
+        Receiving(ObjectReference),
+        TransactionDependency(TransactionDigest)
     );
 
     /// Create a `Pure` input from a BCS-serializable value.
@@ -1427,7 +1433,7 @@ impl Input {
     /// Returns `None` for `Pure` inputs.
     pub fn opt_object_id(&self) -> Option<&ObjectId> {
         match self {
-            Self::Pure { .. } => None,
+            Self::Pure { .. } | Self::TransactionDependency(_) => None,
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(&obj_ref.object_id),
             Self::Shared(SharedObjectReference { object_id, .. }) => Some(object_id),
         }
@@ -1470,6 +1476,10 @@ impl crate::TreeDisplay for Input {
             Self::Receiving(obj_ref) => {
                 w.header("Receiving")?;
                 w.inline_child(obj_ref)
+            }
+            Self::TransactionDependency(digest) => {
+                w.header("Transaction Dependency")?;
+                w.leaf("Digest", digest, true)
             }
         }
     }

@@ -4,7 +4,7 @@
 
 use thiserror::Error;
 
-use super::{Address, Digest, Identifier, ObjectId};
+use super::{Address, Digest, Identifier, ObjectId, TransactionDigest};
 
 /// The status of an executed Transaction
 ///
@@ -386,6 +386,12 @@ pub enum ExecutionError {
     /// authenticator is ordered by consensus.
     #[error("Account {object_id} is not a shared object")]
     AccountNotSharedObject { object_id: ObjectId },
+    /// The transaction named as a dependency did not execute successfully, so
+    /// this transaction was cancelled before running any command.
+    #[error(
+        "Transaction {dependency} that this transaction depends on did not execute successfully"
+    )]
+    TransactionDependencyFailed { dependency: TransactionDigest },
 }
 
 impl ExecutionError {
@@ -435,6 +441,7 @@ impl ExecutionError {
         MoveRawValueTooBig,
         AuthenticatorFunctionNotFound,
         AccountNotSharedObject,
+        TransactionDependencyFailed,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
