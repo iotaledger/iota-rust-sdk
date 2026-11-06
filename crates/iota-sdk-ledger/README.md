@@ -92,8 +92,9 @@ docker run --rm -p 9999:9999 -p 5000:5000 -v "$PWD/nanosplus:/speculos/apps" \
 Connect with `Ledger::new_speculos("127.0.0.1", 9999)`, and approve requests in the
 web interface at <http://127.0.0.1:5000> or through its REST API. The emulator
 runs a single app and cannot switch apps, so `Ledger::open_app` does
-nothing there. `SPECULOS_APPNAME` sets the app name the emulator reports, which
-`Ledger::is_app_open` checks; set it to the version of the app you run.
+nothing there. `SPECULOS_APPNAME` sets the app name and version the emulator
+reports, as `<name>:<version>`; the name must be `IOTA` for
+`Ledger::is_app_open` to return true, while the version is not checked.
 
 ## Clear and blind signing
 
