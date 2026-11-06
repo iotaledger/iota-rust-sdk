@@ -107,7 +107,7 @@ jobs:
         if: inputs.package == 'iota-csharp-sdk'
         run: |
           git fetch --tags
-          LATEST_TAG=$(git tag -l "*iota-csharp-sdk*" --sort=-v:refname | head -n 1)
+          LATEST_TAG=$(git tag -l "iota-csharp-sdk-v*" --merged HEAD --sort=-v:refname | head -n 1)
           if [ -z "$LATEST_TAG" ]; then
             LATEST_TAG="iota-csharp-sdk-v0.0.0"
           fi
@@ -129,7 +129,7 @@ jobs:
         if: inputs.package == 'iota-go-sdk'
         run: |
           git fetch --tags
-          LATEST_TAG=$(git tag -l "*iota-go-sdk*" --sort=-v:refname | head -n 1)
+          LATEST_TAG=$(git tag -l "iota-go-sdk-v*" --merged HEAD --sort=-v:refname | head -n 1)
           if [ -z "$LATEST_TAG" ]; then
             LATEST_TAG="iota-go-sdk-v0.0.0"
           fi
@@ -195,7 +195,7 @@ jobs:
         if: inputs.package == 'iota-swift-sdk'
         run: |
           git fetch --tags
-          LATEST_TAG=$(git tag -l "*iota-swift-sdk*" --sort=-v:refname | head -n 1)
+          LATEST_TAG=$(git tag -l "iota-swift-sdk-v*" --merged HEAD --sort=-v:refname | head -n 1)
           if [ -z "$LATEST_TAG" ]; then
             LATEST_TAG="iota-swift-sdk-v0.0.0"
           fi
