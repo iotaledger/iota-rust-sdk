@@ -6,6 +6,7 @@ all:: ci ## Default target, runs the CI process
 check-features: ## Check feature flags for crates
 	$(MAKE) -C crates/iota-sdk-types check-features
 	$(MAKE) -C crates/iota-sdk-crypto check-features
+	$(MAKE) -C crates/iota-sdk-ledger check-features
 	$(MAKE) -C crates/iota-sdk-graphql-client check-features
 	$(MAKE) -C crates/iota-sdk-move-types check-features
 	$(MAKE) -C crates/iota-sdk-transaction-builder check-features
@@ -29,9 +30,10 @@ clippy: ## Run Clippy linter
 # `iota-sdk` is left out of `cargo semver-checks`, which diffs against the
 # latest crates.io release: its latest stable one is the unrelated legacy SDK
 # that previously held the name, so it stays excluded until 3.0.0 is published.
+# `iota-sdk-ledger` has no release to diff against until it is first published.
 .PHONY: semver-checks
 semver-checks: ## Check the published crates for breaking API changes
-	cargo semver-checks --workspace --exclude iota-sdk
+	cargo semver-checks --workspace --exclude iota-sdk --exclude iota-sdk-ledger
 
 .PHONY: test
 test: fetch-compiled-packages ## Run unit tests
@@ -55,6 +57,14 @@ package_%.json: crates/integration-tests/%/Move.toml crates/integration-tests/%/
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
 	cargo nextest run -p iota-sdk-graphql-client -p integration-tests
 
+.PHONY: speculos-start
+speculos-start: ## Start the Speculos emulator with the IOTA Ledger app
+	./scripts/speculos/run_speculos.sh start
+
+.PHONY: speculos-stop
+speculos-stop: ## Stop the Speculos emulator
+	./scripts/speculos/run_speculos.sh stop
+
 # Verify that individual SDK crates compile to wasm32-unknown-unknown.
 # This is a quick compatibility check, not the full WASM bindings build.
 .PHONY: wasm32
@@ -62,6 +72,7 @@ wasm32: ## Check that SDK crates compile to wasm32
 	$(MAKE) -C crates/iota-sdk wasm
 	$(MAKE) -C crates/iota-sdk-crypto wasm
 	$(MAKE) -C crates/iota-sdk-graphql-client wasm
+	$(MAKE) -C crates/iota-sdk-ledger wasm
 	$(MAKE) -C crates/iota-sdk-move-types wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
 	$(MAKE) -C crates/iota-sdk-types wasm
@@ -446,7 +457,8 @@ example:
 examples: ## Run all Rust examples
 	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer
 	@# that require external services (e.g. PostgreSQL). Run those separately.
-	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -exec basename {} .rs \;); do \
+	@# The Ledger examples need a device or the Speculos emulator.
+	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" ! -name "ledger_*" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 
