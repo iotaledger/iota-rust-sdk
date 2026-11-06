@@ -9,7 +9,7 @@ mod error;
 mod signer;
 mod transport;
 
-use std::{fmt, sync::OnceLock, time::Duration};
+use std::{fmt, sync::Arc, time::Duration};
 
 use futures::lock::Mutex;
 pub use iota_crypto;
@@ -44,18 +44,31 @@ const APP_SWITCH_POLL_INTERVAL: Duration = Duration::from_millis(250);
 /// address verification includes waiting for the user to confirm on the
 /// device.
 ///
-/// Calls on the same `Ledger` run one at a time: each waits for the previous
-/// one to finish, since a command can take several exchanges with the device.
+/// Cloning a `Ledger` gives another handle to the same connection, not a new
+/// connection: switching apps through one clone affects every other. Calls run
+/// one at a time across all clones: each waits for the previous one to finish,
+/// since a command can take several exchanges with the device.
+#[derive(Clone)]
 pub struct Ledger {
     /// Locked for the whole of each command.
-    transport: Mutex<Box<dyn Transport>>,
-    version: OnceLock<AppVersion>,
+    device: Arc<Mutex<Device>>,
+}
+
+/// The state every clone of a [`Ledger`] shares.
+struct Device {
+    transport: Box<dyn Transport>,
+    /// The IOTA app's version, read once and cleared when the device switches
+    /// apps.
+    version: Option<AppVersion>,
 }
 
 impl fmt::Debug for Ledger {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // A command in progress holds the lock, so the version is left out
+        // while one runs rather than waiting for it.
+        let version = self.device.try_lock().and_then(|device| device.version);
         f.debug_struct("Ledger")
-            .field("version", &self.version.get())
+            .field("version", &version)
             .finish_non_exhaustive()
     }
 }
@@ -64,8 +77,10 @@ impl Ledger {
     /// Communicate with the device through a custom transport.
     pub fn new<T: Transport + 'static>(transport: T) -> Self {
         Self {
-            transport: Mutex::new(Box::new(transport)),
-            version: OnceLock::new(),
+            device: Arc::new(Mutex::new(Device {
+                transport: Box::new(transport),
+                version: None,
+            })),
         }
     }
 
@@ -74,8 +89,8 @@ impl Ledger {
     /// Speculos reports a placeholder app name unless started with
     /// `SPECULOS_APPNAME=IOTA:<version>`, so this returns `false` there.
     pub async fn is_app_open(&self) -> Result<bool, LedgerError> {
-        let transport = self.transport.lock().await;
-        Ok(bolos::app_name(transport.as_ref()).await? == IOTA_APP_NAME)
+        let device = self.device.lock().await;
+        Ok(bolos::app_name(device.transport.as_ref()).await? == IOTA_APP_NAME)
     }
 
     /// Open the IOTA app, from the dashboard or by closing another app first.
@@ -83,50 +98,47 @@ impl Ledger {
     /// Does nothing if the IOTA app is already running, or on transports that
     /// cannot switch apps, such as Speculos. Reconnects first if the device
     /// does not answer, as after an app was opened or closed on the device.
-    pub async fn open_app(&mut self) -> Result<(), LedgerError> {
-        let transport = self.transport.get_mut();
-        if !transport.can_switch_apps() {
+    pub async fn open_app(&self) -> Result<(), LedgerError> {
+        let mut device = self.device.lock().await;
+        if !device.transport.can_switch_apps() {
             return Ok(());
         }
-        let app_name = match bolos::app_name(transport.as_ref()).await {
+        let app_name = match bolos::app_name(device.transport.as_ref()).await {
             Ok(app_name) => app_name,
             Err(_) => {
-                self.version = OnceLock::new();
-                transport.reconnect().await?;
-                bolos::app_name(transport.as_ref()).await?
+                device.version = None;
+                device.transport.reconnect().await?;
+                bolos::app_name(device.transport.as_ref()).await?
             }
         };
         match app_name.as_str() {
             IOTA_APP_NAME => return Ok(()),
             DASHBOARD_APP_NAME => {}
             _ => {
-                bolos::exit_app(self.transport.get_mut().as_ref()).await?;
-                self.wait_for_app(DASHBOARD_APP_NAME).await?;
+                bolos::exit_app(device.transport.as_ref()).await?;
+                device.wait_for_app(DASHBOARD_APP_NAME).await?;
             }
         }
-        bolos::open_app(self.transport.get_mut().as_ref(), IOTA_APP_NAME).await?;
-        self.wait_for_app(IOTA_APP_NAME).await
+        bolos::open_app(device.transport.as_ref(), IOTA_APP_NAME).await?;
+        device.wait_for_app(IOTA_APP_NAME).await
     }
 
     /// Close the app running on the device and return to the dashboard.
     ///
     /// On transports that cannot switch apps, such as Speculos, this ends the
     /// emulated app.
-    pub async fn exit_app(&mut self) -> Result<(), LedgerError> {
-        bolos::exit_app(self.transport.get_mut().as_ref()).await?;
-        if !self.transport.get_mut().can_switch_apps() {
+    pub async fn exit_app(&self) -> Result<(), LedgerError> {
+        let mut device = self.device.lock().await;
+        bolos::exit_app(device.transport.as_ref()).await?;
+        if !device.transport.can_switch_apps() {
             return Ok(());
         }
-        self.wait_for_app(DASHBOARD_APP_NAME).await
+        device.wait_for_app(DASHBOARD_APP_NAME).await
     }
 
     /// Read the version of the IOTA app.
     pub async fn version(&self) -> Result<AppVersion, LedgerError> {
-        if let Some(version) = self.version.get() {
-            return Ok(*version);
-        }
-        let version = app::version(self.transport.lock().await.as_ref()).await?;
-        Ok(*self.version.get_or_init(|| version))
+        self.device.lock().await.version().await
     }
 
     /// Read the public key at `path`.
@@ -134,7 +146,8 @@ impl Ledger {
         &self,
         path: &DerivationPath,
     ) -> Result<Ed25519PublicKey, LedgerError> {
-        app::public_key(self.transport.lock().await.as_ref(), path, false).await
+        let device = self.device.lock().await;
+        app::public_key(device.transport.as_ref(), path, false).await
     }
 
     /// Show the address at `path` on the device for the user to confirm, and
@@ -143,7 +156,8 @@ impl Ledger {
         &self,
         path: &DerivationPath,
     ) -> Result<Ed25519PublicKey, LedgerError> {
-        app::public_key(self.transport.lock().await.as_ref(), path, true).await
+        let device = self.device.lock().await;
+        app::public_key(device.transport.as_ref(), path, true).await
     }
 
     /// Sign a transaction with the key at `path`.
@@ -162,14 +176,16 @@ impl Ledger {
         transaction: &Transaction,
         objects: &[Object],
     ) -> Result<Ed25519Signature, LedgerError> {
+        // Hold the lock from the version check to the signature, so that no
+        // clone switches apps in between.
+        let mut device = self.device.lock().await;
         if !objects.is_empty() {
-            let version = self.version().await?;
+            let version = device.version().await?;
             if version.major() == 0 {
                 return Err(LedgerError::ClearSigningUnsupported(version));
             }
         }
-        let transport = self.transport.lock().await;
-        sign::transaction(transport.as_ref(), path, transaction, objects).await
+        sign::transaction(device.transport.as_ref(), path, transaction, objects).await
     }
 
     /// Sign a personal message with the key at `path`.
@@ -178,7 +194,8 @@ impl Ledger {
         path: &DerivationPath,
         message: &PersonalMessage<'_>,
     ) -> Result<Ed25519Signature, LedgerError> {
-        sign::personal_message(self.transport.lock().await.as_ref(), path, message).await
+        let device = self.device.lock().await;
+        sign::personal_message(device.transport.as_ref(), path, message).await
     }
 
     /// Sign `message` under `intent` with the key at `path`.
@@ -191,22 +208,33 @@ impl Ledger {
         intent: Intent,
         message: &T,
     ) -> Result<Ed25519Signature, LedgerError> {
-        sign::intent(self.transport.lock().await.as_ref(), path, intent, message).await
+        let device = self.device.lock().await;
+        sign::intent(device.transport.as_ref(), path, intent, message).await
+    }
+}
+
+impl Device {
+    async fn version(&mut self) -> Result<AppVersion, LedgerError> {
+        if let Some(version) = self.version {
+            return Ok(version);
+        }
+        let version = app::version(self.transport.as_ref()).await?;
+        self.version = Some(version);
+        Ok(version)
     }
 
     /// Wait until `app` runs on the device, reconnecting as the device
     /// re-enumerates after an app switch.
     async fn wait_for_app(&mut self, app: &str) -> Result<(), LedgerError> {
-        self.version = OnceLock::new();
-        let transport = self.transport.get_mut();
+        self.version = None;
         let mut error = LedgerError::from(ApduError::DeviceNotReady);
         for _ in 0..APP_SWITCH_ATTEMPTS {
             futures_timer::Delay::new(APP_SWITCH_POLL_INTERVAL).await;
-            if let Err(e) = transport.reconnect().await {
+            if let Err(e) = self.transport.reconnect().await {
                 error = e;
                 continue;
             }
-            match bolos::app_name(transport.as_ref()).await {
+            match bolos::app_name(self.transport.as_ref()).await {
                 Ok(name) if name == app => return Ok(()),
                 Ok(_) => error = ApduError::DeviceNotReady.into(),
                 Err(e) => error = e,
@@ -292,15 +320,16 @@ mod tests {
     }
 
     #[test]
-    fn concurrent_calls_do_not_interleave() {
+    fn concurrent_calls_on_clones_do_not_interleave() {
         let device = FakeDevice::default();
         let interleaved = device.interleaved.clone();
         let ledger = Ledger::new(device);
+        let clone = ledger.clone();
         let path: DerivationPath = "m/44'/4218'/0'/0'/0'".parse().unwrap();
 
         let (a, b) = futures::executor::block_on(futures::future::join(
             ledger.get_public_key(&path),
-            ledger.get_public_key(&path),
+            clone.get_public_key(&path),
         ));
         a.unwrap();
         b.unwrap();
@@ -340,7 +369,7 @@ mod tests {
 
     #[test]
     fn waits_for_the_app_between_attempts() {
-        let mut ledger = Ledger::new(SlowSwitchingDevice {
+        let ledger = Ledger::new(SlowSwitchingDevice {
             startup: std::time::Duration::from_millis(600),
             opened_at: Default::default(),
         });
@@ -383,7 +412,7 @@ mod tests {
 
     #[test]
     fn reconnects_when_the_device_does_not_answer() {
-        let mut ledger = Ledger::new(StaleConnection::default());
+        let ledger = Ledger::new(StaleConnection::default());
         futures::executor::block_on(ledger.open_app()).unwrap();
     }
 
@@ -391,7 +420,7 @@ mod tests {
 
     #[test]
     fn futures_are_send() {
-        let mut ledger = Ledger::new(NoDevice);
+        let ledger = Ledger::new(NoDevice);
         let path: DerivationPath = "m/44'/4218'/0'/0'/0'".parse().unwrap();
         let transaction = Transaction::V1(TransactionV1 {
             kind: TransactionKind::Programmable(ProgrammableTransaction {
