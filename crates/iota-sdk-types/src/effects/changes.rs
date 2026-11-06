@@ -104,8 +104,8 @@ impl crate::TreeDisplay for BalanceChange {
 /// version, digest and owner, and the object sets report the version each
 /// changed object ends at.
 ///
-/// There is no kind for a mutated package, so a system package upgrade — which
-/// keeps its id and is therefore a mutate — is not reported at all.
+/// There is no kind for a mutated package, so a system package upgrade (which
+/// keeps its id and is therefore a mutate) is not reported at all.
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub enum ObjectChange {
@@ -248,11 +248,11 @@ impl TransactionEffectsV1 {
     /// For a failed transaction only the gas charge is reported, which needs no
     /// objects; a transaction that names no gas object reports nothing.
     /// `mocked_object` excludes an object mocked during simulation, which is
-    /// in neither object set — today that is the gas coin a local run mints.
+    /// in neither object set: today that is the gas coin a local run mints.
     /// Object changes have no equivalent, so a mocked object that is not a coin
     /// still errors there.
     ///
-    /// Errors if any object these effects name is missing from the sets — a
+    /// Errors if any object these effects name is missing from the sets: a
     /// missing input coin would corrupt the delta of any coin whose output is
     /// present.
     pub fn balance_changes<'a>(
@@ -327,7 +327,7 @@ impl TransactionEffectsV1 {
     /// must hold them at the versions
     /// [`TransactionEffectsV1::modified_at_versions`] gives.
     ///
-    /// Errors if an object these effects name is missing from the sets —
+    /// Errors if an object these effects name is missing from the sets:
     /// skipping it would drop a change from the result.
     pub fn object_changes<'a>(
         &self,

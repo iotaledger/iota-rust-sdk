@@ -11,7 +11,7 @@
 //! per type.
 //!
 //! The struct tag comes from the [`StructTag`] constructor derived from the
-//! mirror's name as `new_<name:snake>` — the same `paste` snake-casing that
+//! mirror's name as `new_<name:snake>`, the same `paste` snake-casing that
 //! generated that constructor in the first place, applied to the same
 //! identifier. `TryFrom<&Object>` accepts exactly the tag `struct_tag` returns.
 //!

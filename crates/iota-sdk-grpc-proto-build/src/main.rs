@@ -8,18 +8,17 @@
 //! committed, so a run that changes the output fails the build. The pipeline
 //! is:
 //!
-//! 1. [`discover_proto_files`] — collect the `.proto` sources in a stable
-//!    order.
-//! 2. [`compile_proto_files`] — compile them with `protox` into a descriptor
+//! 1. [`discover_proto_files`]: collect the `.proto` sources in a stable order.
+//! 2. [`compile_proto_files`]: compile them with `protox` into a descriptor
 //!    pool (name resolution, options) and a file descriptor set.
-//! 3. [`generate_tonic`] — prost/tonic structs, clients and servers.
-//! 4. [`add_license_headers`] — license headers and `super::google` rewrites on
+//! 3. [`generate_tonic`]: prost/tonic structs, clients and servers.
+//! 4. [`add_license_headers`]: license headers and `super::google` rewrites on
 //!    the files prost just wrote.
-//! 5. Accessor generation — `with_`/`set_`/getter methods driven by the
+//! 5. Accessor generation: `with_`/`set_`/getter methods driven by the
 //!    `iota.grpc.*_accessors` proto options.
 //! 6. Service method paths, then field constants and `MessageFields` impls,
 //!    which together back read masks and field path builders.
-//! 7. [`verify_generated_files_committed`] — fail if the output drifted from
+//! 7. [`verify_generated_files_committed`]: fail if the output drifted from
 //!    what is committed.
 
 mod codegen;
@@ -44,7 +43,7 @@ use crate::context::Context;
 ///
 /// Known gap, deliberately left alone:
 /// `.iota.grpc.v1.types.TypeTagVector.inner_type` is boxed by prost and missing
-/// here. No accessor is generated for it, so the omission is inert — adding it
+/// here. No accessor is generated for it, so the omission is inert. Adding it
 /// would change generated output.
 const PROST_BOXED_FIELDS: &[&str] = &[
     ".iota.grpc.v1.filter.EventFilter.negation",
@@ -155,7 +154,7 @@ fn discover_proto_files(proto_dir: &Path) -> Vec<PathBuf> {
         .unwrap();
     // `walkdir` traversal order depends on the OS (and is non-deterministic on
     // Linux), so sort the paths to keep `compile_protos` output stable across
-    // runs — without this, messages from different .proto files in the same
+    // runs. Without this, messages from different .proto files in the same
     // package can swap positions in the generated module.
     proto_files.sort();
 

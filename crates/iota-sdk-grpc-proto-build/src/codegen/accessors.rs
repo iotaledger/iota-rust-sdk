@@ -57,7 +57,7 @@ fn map_entry_fields(
 /// every accessor generated for it.
 ///
 /// Deliberately not [`FieldDescriptor::supports_presence`], which is also true
-/// for scalar members of a oneof — prost keeps those in the oneof enum rather
+/// for scalar members of a oneof: prost keeps those in the oneof enum rather
 /// than an `Option`.
 fn is_optional(field: &FieldDescriptorProto) -> bool {
     if field.proto3_optional.unwrap_or(false) {

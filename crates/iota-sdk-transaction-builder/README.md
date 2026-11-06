@@ -173,7 +173,7 @@ default behaviors for each metadata value.
 A transaction's gas can be paid by someone other than its sender, in two ways depending on who
 holds the sponsor's key.
 
-When you hold it, set the sponsor's address with `sponsor` — the gas coins are drawn from it — and
+When you hold it, set the sponsor's address with `sponsor` (the gas coins are drawn from it) and
 call `execute_with_sponsor_signer`, which signs as both parties and submits through the client.
 
 When a service holds it, pass a `GasSponsor` to `execute_with_gas_sponsor`. It supplies the whole
@@ -181,8 +181,8 @@ gas payment and submits the transaction itself, so the sender's own coins are ne
 setting gas coins or a `sponsor` address on the same builder is rejected.
 
 `GasStation` implements `GasSponsor` for the [IOTA gas station](https://github.com/iotaledger/gas-station)
-and is enabled by the `gas-station` feature. A station is configured once — with its URL and,
-typically, an authorization header — and reused for any number of transactions:
+and is enabled by the `gas-station` feature. A station is configured once (with its URL and,
+typically, an authorization header) and reused for any number of transactions:
 
 ```rust,ignore
 use iota_sdk_transaction_builder::{GasStation, HeaderValue, header::AUTHORIZATION};

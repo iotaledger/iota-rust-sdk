@@ -150,7 +150,7 @@ message ObjectResult {
   option (iota.grpc.message_accessors) = "with";
 
   // The outcome for a single `ObjectRequest`: either the object, or the status
-  // saying why the node could not serve it — for example `NOT_FOUND` when the
+  // saying why the node could not serve it, for example `NOT_FOUND` when the
   // object never existed, was deleted, or has been pruned.
   oneof result {
     iota.grpc.v1.object.Object object = 1;
@@ -200,7 +200,7 @@ message TransactionResult {
   option (iota.grpc.message_accessors) = "with";
 
   // The outcome for a single `TransactionRequest`: either the transaction, or
-  // the status saying why the node could not serve it — `NOT_FOUND` when the
+  // the status saying why the node could not serve it: `NOT_FOUND` when the
   // node does not have the transaction, or `FAILED_PRECONDITION` when it has the
   // transaction but an object a requested field needs has been pruned.
   oneof result {
