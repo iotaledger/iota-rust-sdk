@@ -436,6 +436,65 @@ mod tests {
         futures::executor::block_on(ledger.open_app()).unwrap();
     }
 
+    /// Runs the IOTA app at `version` until told to exit, and counts version
+    /// requests.
+    struct UpdatableDevice(std::sync::Arc<std::sync::Mutex<UpdatableDeviceState>>);
+
+    struct UpdatableDeviceState {
+        app: &'static str,
+        version: [u8; 3],
+        version_reads: usize,
+    }
+
+    impl Transport for UpdatableDevice {
+        fn exchange<'a>(&'a self, command: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer> {
+            Box::pin(async move {
+                let mut state = self.0.lock().unwrap();
+                let data = match (command.cla(), command.ins()) {
+                    // app name
+                    (0xb0, 0x01) => {
+                        [&[1, state.app.len() as u8][..], state.app.as_bytes()].concat()
+                    }
+                    // exit app
+                    (0xb0, 0xa7) => {
+                        state.app = DASHBOARD_APP_NAME;
+                        vec![]
+                    }
+                    // version, as a final block protocol result
+                    (0x00, 0x00) => {
+                        state.version_reads += 1;
+                        [&[1][..], &state.version].concat()
+                    }
+                    (cla, ins) => panic!("unexpected command {cla:#04x} {ins:#04x}"),
+                };
+                ApduAnswer::from_bytes([&data[..], &[0x90, 0x00]].concat())
+            })
+        }
+    }
+
+    #[test]
+    fn clones_share_the_version_until_one_switches_apps() {
+        use futures::executor::block_on;
+
+        let state = std::sync::Arc::new(std::sync::Mutex::new(UpdatableDeviceState {
+            app: IOTA_APP_NAME,
+            version: [0, 9, 2],
+            version_reads: 0,
+        }));
+        let ledger = Ledger::new(UpdatableDevice(state.clone()));
+        let clone = ledger.clone();
+
+        assert_eq!(block_on(ledger.version()).unwrap().to_string(), "0.9.2");
+        assert_eq!(block_on(clone.version()).unwrap().to_string(), "0.9.2");
+        assert_eq!(state.lock().unwrap().version_reads, 1);
+
+        state.lock().unwrap().version = [1, 0, 0];
+        block_on(clone.exit_app()).unwrap();
+
+        assert_eq!(block_on(ledger.version()).unwrap().to_string(), "1.0.0");
+        assert_eq!(state.lock().unwrap().version_reads, 2);
+    }
+
     fn assert_send<T: Send>(_: T) {}
 
     #[test]
