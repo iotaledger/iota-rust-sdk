@@ -20,6 +20,8 @@ pub mod graphql;
 #[cfg(feature = "grpc")]
 pub mod grpc;
 pub mod http;
+#[cfg(feature = "ledger")]
+pub mod ledger;
 pub mod move_types;
 pub mod move_view_call;
 pub mod transaction_builder;

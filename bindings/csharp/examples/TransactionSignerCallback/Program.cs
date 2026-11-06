@@ -17,6 +17,16 @@ class AsyncSigner : TransactionSignerFn
         var signature = _key.SignTransaction(transaction);
         return Task.FromResult(new TransactionSignerFnOutput(signature));
     }
+
+    public bool UsesObjects()
+    {
+        return false;
+    }
+
+    public Task<TransactionSignerFnOutput> SignWithObjects(Transaction transaction, IotaSdk.Object[] objects)
+    {
+        return Sign(transaction);
+    }
 }
 
 class Program

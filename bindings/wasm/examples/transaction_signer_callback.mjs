@@ -26,6 +26,14 @@ class AsyncSigner {
       signature: this.key.signTransaction(transaction),
     });
   }
+
+  usesObjects() {
+    return false;
+  }
+
+  async signWithObjects(transaction, objects) {
+    return this.sign(transaction);
+  }
 }
 
 const amount = 1000n;

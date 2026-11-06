@@ -8,6 +8,13 @@ class AsyncSigner(val key: Ed25519PrivateKey) : TransactionSignerFn {
     override suspend fun sign(transaction: Transaction): TransactionSignerFnOutput {
         return TransactionSignerFnOutput(key.signTransaction(transaction))
     }
+
+    override fun usesObjects(): Boolean = false
+
+    override suspend fun signWithObjects(
+        transaction: Transaction,
+        objects: List<Object>,
+    ): TransactionSignerFnOutput = sign(transaction)
 }
 
 fun main() = runBlocking {
