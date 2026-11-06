@@ -10,7 +10,7 @@ use crate::{Identifier, ObjectId, ObjectReference};
 mod input_argument {
     use super::*;
     use crate::{
-        Version,
+        TransactionDigest, Version,
         transaction::{Input, SharedObjectReference},
     };
 
@@ -31,6 +31,8 @@ mod input_argument {
         Shared(SharedObjectReference),
         /// A move object that is attempted to be received in this transaction.
         Receiving(ObjectReference),
+        /// A transaction this transaction depends on.
+        TransactionDependency(TransactionDigest),
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
@@ -38,6 +40,7 @@ mod input_argument {
     enum CallArg {
         Pure(#[serde(with = "::serde_with::As::<::serde_with::Bytes>")] Vec<u8>),
         Object(ObjectArg),
+        TransactionDependency(TransactionDigest),
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
@@ -65,6 +68,9 @@ mod input_argument {
                     }
                     Input::Shared(shared) => ReadableInput::Shared(shared),
                     Input::Receiving(object_ref) => ReadableInput::Receiving(object_ref),
+                    Input::TransactionDependency(digest) => {
+                        ReadableInput::TransactionDependency(digest)
+                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -85,6 +91,7 @@ mod input_argument {
                     Input::Receiving(object_ref) => {
                         CallArg::Object(ObjectArg::Receiving(object_ref))
                     }
+                    Input::TransactionDependency(digest) => CallArg::TransactionDependency(digest),
                 };
                 binary.serialize(serializer)
             }
@@ -104,6 +111,9 @@ mod input_argument {
                     }
                     ReadableInput::Shared(shared) => Input::Shared(shared),
                     ReadableInput::Receiving(object_ref) => Input::Receiving(object_ref),
+                    ReadableInput::TransactionDependency(digest) => {
+                        Input::TransactionDependency(digest)
+                    }
                 })
             } else {
                 CallArg::deserialize(deserializer).map(|binary| match binary {
@@ -123,6 +133,7 @@ mod input_argument {
                     CallArg::Object(ObjectArg::Receiving(object_ref)) => {
                         Input::Receiving(object_ref)
                     }
+                    CallArg::TransactionDependency(digest) => Input::TransactionDependency(digest),
                 })
             }
         }
