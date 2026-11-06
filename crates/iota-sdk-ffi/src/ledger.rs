@@ -4,7 +4,6 @@
 use std::sync::Arc;
 
 use iota_sdk::ledger::{ApduError, iota_crypto::DerivationPath};
-use tokio::sync::{RwLock, RwLockMappedWriteGuard, RwLockReadGuard, RwLockWriteGuard};
 
 use crate::{
     transaction_builder::signer::{TransactionSignerFn, TransactionSignerFnOutput},
@@ -113,32 +112,14 @@ impl From<iota_sdk::ledger::AppVersion> for LedgerAppVersion {
 ///
 /// Every call completes once the device answers, which for address
 /// verification includes waiting for the user to confirm on the device. Calls
-/// on the same `Ledger` run one at a time.
-///
-/// `into_signer` moves the connection into a `LedgerSigner`, after which every
-/// call on this `Ledger` fails.
+/// on the same `Ledger`, including through the `LedgerSigner`s created from
+/// it, run one at a time.
 #[derive(uniffi::Object)]
-pub struct Ledger(RwLock<Option<iota_sdk::ledger::Ledger>>);
-
-impl Ledger {
-    fn moved() -> LedgerError {
-        LedgerError::Other("the Ledger connection was moved into a LedgerSigner".to_owned())
-    }
-
-    async fn read(&self) -> Result<RwLockReadGuard<'_, iota_sdk::ledger::Ledger>, LedgerError> {
-        RwLockReadGuard::try_map(self.0.read().await, Option::as_ref).map_err(|_| Self::moved())
-    }
-
-    async fn write(
-        &self,
-    ) -> Result<RwLockMappedWriteGuard<'_, iota_sdk::ledger::Ledger>, LedgerError> {
-        RwLockWriteGuard::try_map(self.0.write().await, Option::as_mut).map_err(|_| Self::moved())
-    }
-}
+pub struct Ledger(iota_sdk::ledger::Ledger);
 
 impl From<iota_sdk::ledger::Ledger> for Ledger {
     fn from(ledger: iota_sdk::ledger::Ledger) -> Self {
-        Self(RwLock::new(Some(ledger)))
+        Self(ledger)
     }
 }
 
@@ -169,58 +150,48 @@ impl Ledger {
     /// Speculos reports a placeholder app name unless started with
     /// `SPECULOS_APPNAME=IOTA:<version>`, so this returns `false` there.
     pub async fn is_app_open(&self) -> Result<bool, LedgerError> {
-        Ok(self.read().await?.is_app_open().await?)
+        Ok(self.0.is_app_open().await?)
     }
 
     /// Open the IOTA app, from the dashboard or by closing another app first.
     ///
     /// Does nothing if the IOTA app is already running, or on Speculos.
     pub async fn open_app(&self) -> Result<(), LedgerError> {
-        Ok(self.write().await?.open_app().await?)
+        Ok(self.0.open_app().await?)
     }
 
     /// Close the app running on the device and return to the dashboard.
     ///
     /// On Speculos, this ends the emulated app.
     pub async fn exit_app(&self) -> Result<(), LedgerError> {
-        Ok(self.write().await?.exit_app().await?)
+        Ok(self.0.exit_app().await?)
     }
 
     /// Read the version of the IOTA app.
     pub async fn version(&self) -> Result<LedgerAppVersion, LedgerError> {
-        Ok(self.read().await?.version().await?.into())
+        Ok(self.0.version().await?.into())
     }
 
     /// Read the public key at a derivation path such as
     /// `m/44'/4218'/0'/0'/0'`.
     pub async fn get_public_key(&self, path: String) -> Result<Ed25519PublicKey, LedgerError> {
         let path = parse_path(&path)?;
-        Ok(self.read().await?.get_public_key(&path).await?.into())
+        Ok(self.0.get_public_key(&path).await?.into())
     }
 
     /// Show the address at a derivation path on the device for the user to
     /// confirm, and return its public key.
     pub async fn verify_address(&self, path: String) -> Result<Ed25519PublicKey, LedgerError> {
         let path = parse_path(&path)?;
-        Ok(self.read().await?.verify_address(&path).await?.into())
+        Ok(self.0.verify_address(&path).await?.into())
     }
 
     /// Sign with the key at a derivation path such as `m/44'/4218'/0'/0'/0'`.
     ///
-    /// The connection moves into the returned signer, so this `Ledger` cannot
-    /// be used afterwards. If reading the public key fails, it stays usable.
+    /// The signer shares this `Ledger`'s connection, which stays usable.
     pub async fn into_signer(&self, path: String) -> Result<LedgerSigner, LedgerError> {
         let path = parse_path(&path)?;
-        let mut ledger = self.0.write().await;
-        // Creating the signer drops the connection when it fails, so first
-        // check that the device answers.
-        ledger
-            .as_ref()
-            .ok_or_else(Self::moved)?
-            .get_public_key(&path)
-            .await?;
-        let ledger = ledger.take().ok_or_else(Self::moved)?;
-        Ok(LedgerSigner(ledger.into_signer(path).await?))
+        Ok(LedgerSigner(self.0.clone().into_signer(path).await?))
     }
 }
 
@@ -380,7 +351,7 @@ mod tests {
     }
 
     #[test]
-    fn into_signer_keeps_the_connection_when_the_device_does_not_answer() {
+    fn ledger_stays_usable_after_into_signer() {
         let (ledger, connected) = ledger(false);
         assert!(matches!(
             block_on(ledger.into_signer(PATH.to_owned())),
@@ -389,10 +360,7 @@ mod tests {
 
         connected.store(true, std::sync::atomic::Ordering::SeqCst);
         block_on(ledger.into_signer(PATH.to_owned())).unwrap();
-        assert!(matches!(
-            block_on(ledger.version()),
-            Err(LedgerError::Other(_))
-        ));
+        block_on(ledger.version()).unwrap();
     }
 
     #[test]
