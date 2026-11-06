@@ -16,6 +16,7 @@ use crate::types::{
 
 /// Error returned when communicating with a Ledger device fails.
 #[derive(Debug, thiserror::Error, uniffi::Error)]
+#[non_exhaustive]
 #[uniffi(flat_error)]
 pub enum LedgerError {
     /// The user rejected the request on the device.
