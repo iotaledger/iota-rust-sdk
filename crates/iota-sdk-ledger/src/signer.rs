@@ -8,7 +8,7 @@ use iota_types::{
 };
 use serde::Serialize;
 
-use crate::{Ledger, LedgerError};
+use crate::{Ledger, LedgerError, commands::sign};
 
 impl Ledger {
     /// Sign with the key at `path`; see [`LedgerSigner::new`].
@@ -85,10 +85,11 @@ impl LedgerSigner {
         transaction: &Transaction,
         objects: &[Object],
     ) -> Result<UserSignature, LedgerError> {
+        let mut device = self.ledger.device.lock().await;
         let objects = if objects.is_empty() {
             objects
         } else {
-            let version = self.ledger.version().await?;
+            let version = device.version().await?;
             if version.major() == 0 {
                 tracing::warn!("IOTA app {version} cannot clear-sign, blind signing instead");
                 &[]
@@ -96,9 +97,10 @@ impl LedgerSigner {
                 objects
             }
         };
-        self.ensure_same_key().await?;
-        let signature = self
-            .ledger
+        device
+            .ensure_public_key(&self.path, &self.public_key)
+            .await?;
+        let signature = device
             .sign_transaction(&self.path, transaction, objects)
             .await?;
         Ok(self.user_signature(signature))
@@ -109,11 +111,12 @@ impl LedgerSigner {
         &self,
         message: &PersonalMessage<'_>,
     ) -> Result<UserSignature, LedgerError> {
-        self.ensure_same_key().await?;
-        let signature = self
-            .ledger
-            .sign_personal_message(&self.path, message)
+        let device = self.ledger.device.lock().await;
+        device
+            .ensure_public_key(&self.path, &self.public_key)
             .await?;
+        let signature =
+            sign::personal_message(device.transport.as_ref(), &self.path, message).await?;
         Ok(self.user_signature(signature))
     }
 
@@ -123,16 +126,13 @@ impl LedgerSigner {
         intent: Intent,
         message: &T,
     ) -> Result<UserSignature, LedgerError> {
-        self.ensure_same_key().await?;
-        let signature = self.ledger.sign_intent(&self.path, intent, message).await?;
+        let device = self.ledger.device.lock().await;
+        device
+            .ensure_public_key(&self.path, &self.public_key)
+            .await?;
+        let signature =
+            sign::intent(device.transport.as_ref(), &self.path, intent, message).await?;
         Ok(self.user_signature(signature))
-    }
-
-    async fn ensure_same_key(&self) -> Result<(), LedgerError> {
-        if self.ledger.get_public_key(&self.path).await? != self.public_key {
-            return Err(LedgerError::KeyMismatch);
-        }
-        Ok(())
     }
 
     fn user_signature(&self, signature: Ed25519Signature) -> UserSignature {

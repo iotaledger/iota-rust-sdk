@@ -44,10 +44,9 @@ const APP_SWITCH_POLL_INTERVAL: Duration = Duration::from_millis(250);
 /// address verification includes waiting for the user to confirm on the
 /// device.
 ///
-/// Cloning a `Ledger` gives another handle to the same connection, not a new
-/// connection: switching apps through one clone affects every other. Calls run
-/// one at a time across all clones: each waits for the previous one to finish,
-/// since a command can take several exchanges with the device.
+/// Clones share one connection, and calls across them run one at a time: each
+/// waits for the previous one to finish, since a command can take several
+/// exchanges with the device.
 #[derive(Clone)]
 pub struct Ledger {
     /// Locked for the whole of each command.
@@ -64,8 +63,7 @@ struct Device {
 
 impl fmt::Debug for Ledger {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        // A command in progress holds the lock, so the version is left out
-        // while one runs rather than waiting for it.
+        // Left out while a command holds the lock.
         let version = self.device.try_lock().and_then(|device| device.version);
         f.debug_struct("Ledger")
             .field("version", &version)
@@ -176,16 +174,11 @@ impl Ledger {
         transaction: &Transaction,
         objects: &[Object],
     ) -> Result<Ed25519Signature, LedgerError> {
-        // Hold the lock from the version check to the signature, so that no
-        // clone switches apps in between.
-        let mut device = self.device.lock().await;
-        if !objects.is_empty() {
-            let version = device.version().await?;
-            if version.major() == 0 {
-                return Err(LedgerError::ClearSigningUnsupported(version));
-            }
-        }
-        sign::transaction(device.transport.as_ref(), path, transaction, objects).await
+        self.device
+            .lock()
+            .await
+            .sign_transaction(path, transaction, objects)
+            .await
     }
 
     /// Sign a personal message with the key at `path`.
@@ -221,6 +214,34 @@ impl Device {
         let version = app::version(self.transport.as_ref()).await?;
         self.version = Some(version);
         Ok(version)
+    }
+
+    /// Fail with [`LedgerError::KeyMismatch`] unless the key at `path` is
+    /// `expected`.
+    async fn ensure_public_key(
+        &self,
+        path: &DerivationPath,
+        expected: &Ed25519PublicKey,
+    ) -> Result<(), LedgerError> {
+        if app::public_key(self.transport.as_ref(), path, false).await? != *expected {
+            return Err(LedgerError::KeyMismatch);
+        }
+        Ok(())
+    }
+
+    async fn sign_transaction(
+        &mut self,
+        path: &DerivationPath,
+        transaction: &Transaction,
+        objects: &[Object],
+    ) -> Result<Ed25519Signature, LedgerError> {
+        if !objects.is_empty() {
+            let version = self.version().await?;
+            if version.major() == 0 {
+                return Err(LedgerError::ClearSigningUnsupported(version));
+            }
+        }
+        sign::transaction(self.transport.as_ref(), path, transaction, objects).await
     }
 
     /// Wait until `app` runs on the device, reconnecting as the device
