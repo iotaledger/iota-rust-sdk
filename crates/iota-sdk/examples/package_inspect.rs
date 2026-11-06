@@ -83,7 +83,6 @@ async fn main() -> Result<()> {
 
     // Inspect normalized modules, functions, types, and sample key objects.
     println!("Package contents:");
-    let module_page = forward_page(None);
     let package_type_prefix = package.id.to_hex();
 
     let mut module_names = package
@@ -98,10 +97,6 @@ async fn main() -> Result<()> {
 
         let Some(module) = client
             .normalized_move_module(package_address, module_name)
-            .enums_pagination(module_page.clone())
-            .friends_pagination(module_page.clone())
-            .functions_pagination(module_page.clone())
-            .structs_pagination(module_page.clone())
             .await?
         else {
             println!("  metadata: missing");
@@ -109,51 +104,29 @@ async fn main() -> Result<()> {
             continue;
         };
 
-        if let Some(functions) = &module.functions {
-            if functions.data.is_empty() {
-                println!("  functions: none");
-            } else {
-                println!("  functions:");
-                for function in &functions.data {
-                    println!(
-                        "    - {}",
-                        format_function_signature(&function.to_string(), &package_type_prefix)
-                    );
-                }
-                if functions.page_info.has_next_page {
-                    println!("    - ...");
-                }
-            }
-        } else {
+        if module.functions.is_empty() {
             println!("  functions: none");
+        } else {
+            println!("  functions:");
+            for function in &module.functions {
+                println!(
+                    "    - {}",
+                    format_function_signature(&function.to_string(), &package_type_prefix)
+                );
+            }
         }
 
-        if let Some(structs) = &module.structs {
-            if structs.data.is_empty() {
-                println!("  types: none");
-            } else {
-                println!("  types:");
-                for struct_ in &structs.data {
-                    let type_tag =
-                        format!("{package_type_prefix}::{module_name}::{}", struct_.name);
-                    println!("    - {type_tag}");
-                    let has_key_ability = struct_.abilities.as_ref().is_some_and(|abilities| {
-                        abilities
-                            .iter()
-                            .any(|ability| matches!(ability, MoveAbility::Key))
-                    });
-                    let is_generic = struct_
-                        .type_parameters
-                        .as_ref()
-                        .is_some_and(|parameters| !parameters.is_empty());
-                    print_object_samples(&client, &type_tag, has_key_ability, is_generic).await?;
-                }
-                if structs.page_info.has_next_page {
-                    println!("    - ...");
-                }
-            }
-        } else {
+        if module.structs.is_empty() {
             println!("  types: none");
+        } else {
+            println!("  types:");
+            for struct_ in &module.structs {
+                let type_tag = format!("{package_type_prefix}::{module_name}::{}", struct_.name);
+                println!("    - {type_tag}");
+                let has_key_ability = struct_.abilities.contains(&MoveAbility::Key);
+                let is_generic = !struct_.type_parameters.is_empty();
+                print_object_samples(&client, &type_tag, has_key_ability, is_generic).await?;
+            }
         }
 
         println!();

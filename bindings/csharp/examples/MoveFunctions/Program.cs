@@ -25,10 +25,10 @@ class Program
                 Console.WriteLine($"module `{moduleId.AsStr()}` not found");
                 return;
             }
-            if (module.Functions != null)
+            if (module.Functions.Length > 0)
             {
                 Console.WriteLine($"Module: {moduleId.AsStr()}");
-                foreach (var fun in module.Functions.Nodes)
+                foreach (var fun in module.Functions)
                 {
                     Console.WriteLine($"- {fun.ToString()}");
                 }

@@ -25,9 +25,9 @@ fun main() = runBlocking {
                 return@runBlocking
             }
             val fns = module.functions
-            if (fns != null) {
+            if (fns.isNotEmpty()) {
                 println("Module: ${moduleId.asStr()}")
-                for (func in fns.nodes) {
+                for (func in fns) {
                     println("- ${func.toString()}")
                 }
                 println()
