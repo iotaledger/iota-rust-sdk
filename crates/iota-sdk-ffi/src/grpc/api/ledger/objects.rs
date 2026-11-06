@@ -152,7 +152,7 @@ impl GrpcClient {
 #[cfg(test)]
 mod tests {
     use iota_sdk::{
-        grpc_client::GrpcError,
+        grpc_client::{GrpcError, RpcStatus},
         grpc_types::v1::{self as proto, versioned::VersionedObject},
         types::{
             Address, MoveObjectType, MoveStruct, ObjectData, ObjectId, Owner, StructTag,
@@ -161,6 +161,7 @@ mod tests {
     };
 
     use super::{GrpcObject, GrpcObjectResults};
+    use crate::grpc::status::GrpcStatusCode;
 
     fn object() -> iota_sdk::types::Object {
         let object_id = ObjectId::from([7; 32]);
@@ -254,7 +255,23 @@ mod tests {
 
         assert_eq!(results.len(), 2);
         assert!(results.get(0).is_err());
+        assert!(results.error_code(0).unwrap().is_none());
         assert!(results.get(1).is_ok());
+        assert!(results.error_code(1).unwrap().is_none());
+    }
+
+    #[test]
+    fn server_item_error_carries_its_status_code() {
+        let mut status = RpcStatus::default();
+        status.code = 5;
+        let results = GrpcObjectResults::new(vec![Err(GrpcError::Server(status))]).unwrap();
+
+        assert!(results.get(0).is_err());
+        assert_eq!(
+            results.error_code(0).unwrap(),
+            Some(GrpcStatusCode::NotFound)
+        );
+        assert!(results.error_code(1).is_err());
     }
 
     #[test]
