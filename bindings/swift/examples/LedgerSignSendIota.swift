@@ -27,8 +27,8 @@ struct LedgerSignSendIotaExample {
     let client = try GraphQlClient.newLocalnet()
 
     // Request funds from faucet
-    let faucet = FaucetClient.newLocalnet()
-    _ = try await faucet.requestAndWaitForFinalized(address: senderAddress, client: client)
+    _ = try await FaucetClient.newLocalnet().requestAndWaitForFinalized(
+      address: senderAddress, client: client)
 
     let builder = client.transactionBuilder(sender: senderAddress)
     _ = builder.sendIota(recipient: recipientAddress, amount: PtbArgument.u64(value: amount))
@@ -38,8 +38,7 @@ struct LedgerSignSendIotaExample {
     print("Review and approve the transaction on the device")
     let effects = try await builder.execute(
       signer: TransactionSigner.fromLedger(signer: signer), waitFor: WaitForTransaction.finalized)
-
-    print("Digest: \(hexEncode(input: effects.digest().toBytes()))")
+    print("Digest: \(effects.digest().toBase58())")
     print("Transaction status: \(effects.asV1().status())")
   }
 }

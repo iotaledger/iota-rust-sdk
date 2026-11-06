@@ -25,8 +25,7 @@ class Program
         var client = GraphQlClient.NewLocalnet();
 
         // Request funds from faucet
-        var faucet = FaucetClient.NewLocalnet();
-        await faucet.RequestAndWaitForFinalized(senderAddress, client);
+        await FaucetClient.NewLocalnet().RequestAndWaitForFinalized(senderAddress, client);
 
         var builder = client.TransactionBuilder(senderAddress);
         builder.SendIota(recipientAddress, PtbArgument.U64(amount));
@@ -35,8 +34,7 @@ class Program
         // device shows the transfer instead of asking to blind-sign
         Console.WriteLine("Review and approve the transaction on the device");
         var effects = await builder.Execute(TransactionSigner.FromLedger(signer), WaitForTransaction.Finalized);
-
-        Console.WriteLine($"Digest: {Iota.HexEncode(effects.Digest().ToBytes())}");
+        Console.WriteLine($"Digest: {effects.Digest().ToBase58()}");
         Console.WriteLine($"Transaction status: {effects.AsV1().Status()}");
     }
 }
