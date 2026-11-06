@@ -67,8 +67,9 @@ impl LedgerSigner {
         self.ledger
     }
 
-    /// Sign a transaction without its input objects. The device only signs
-    /// when blind signing is enabled in the IOTA app's settings.
+    /// Sign a transaction without its input objects. Fails with
+    /// [`LedgerError::BlindSigningDisabled`] if blind signing is disabled in
+    /// the IOTA app's settings.
     pub async fn sign_transaction(
         &self,
         transaction: &Transaction,
@@ -76,10 +77,9 @@ impl LedgerSigner {
         self.sign_transaction_with_objects(transaction, &[]).await
     }
 
-    /// Sign a transaction, passing its input objects so the device can show
-    /// what the transaction does instead of requiring blind signing. An IOTA
-    /// app older than 1.0 cannot use them, so with one the signer blind-signs
-    /// with a warning.
+    /// Sign a transaction, passing its input objects so the device can
+    /// clear-sign it. With an IOTA app older than 1.0, it logs a warning and
+    /// blind-signs.
     pub async fn sign_transaction_with_objects(
         &self,
         transaction: &Transaction,
