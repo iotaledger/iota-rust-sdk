@@ -189,7 +189,7 @@ impl Ledger {
     /// Sign with the key at a derivation path such as `m/44'/4218'/0'/0'/0'`.
     ///
     /// The signer shares this `Ledger`'s connection, which stays usable.
-    pub async fn into_signer(&self, path: String) -> Result<LedgerSigner, LedgerError> {
+    pub async fn signer(&self, path: String) -> Result<LedgerSigner, LedgerError> {
         let path = parse_path(&path)?;
         Ok(LedgerSigner(self.0.clone().into_signer(path).await?))
     }
@@ -352,22 +352,22 @@ mod tests {
     }
 
     #[test]
-    fn ledger_stays_usable_after_into_signer() {
+    fn ledger_stays_usable_after_creating_a_signer() {
         let (ledger, connected) = ledger(false);
         assert!(matches!(
-            block_on(ledger.into_signer(PATH.to_owned())),
+            block_on(ledger.signer(PATH.to_owned())),
             Err(LedgerError::DeviceNotFound(_))
         ));
 
         connected.store(true, std::sync::atomic::Ordering::SeqCst);
-        block_on(ledger.into_signer(PATH.to_owned())).unwrap();
+        block_on(ledger.signer(PATH.to_owned())).unwrap();
         block_on(ledger.version()).unwrap();
     }
 
     #[test]
     fn transaction_signer_asks_for_objects() {
         let (ledger, _) = ledger(true);
-        let signer = block_on(ledger.into_signer(PATH.to_owned())).unwrap();
+        let signer = block_on(ledger.signer(PATH.to_owned())).unwrap();
         assert!(TransactionSigner::from_ledger(Arc::new(signer)).uses_objects());
     }
 }
