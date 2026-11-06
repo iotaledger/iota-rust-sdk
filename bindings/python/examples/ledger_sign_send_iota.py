@@ -28,8 +28,8 @@ async def main():
     client = GraphQlClient.new_localnet()
 
     # Request funds from faucet
-    faucet = FaucetClient.new_localnet()
-    await faucet.request_and_wait_for_finalized(sender_address, client)
+    await FaucetClient.new_localnet().request_and_wait_for_finalized(
+        sender_address, client)
 
     builder = client.transaction_builder(sender_address)
     builder.send_iota(recipient_address, PtbArgument.u64(amount))
@@ -39,8 +39,7 @@ async def main():
     print("Review and approve the transaction on the device")
     effects = await builder.execute(TransactionSigner.from_ledger(signer),
                                     WaitForTransaction.FINALIZED)
-
-    print(f"Digest: {hex_encode(effects.digest().to_bytes())}")
+    print(f"Digest: {effects.digest().to_base58()}")
     print(f"Transaction status: {effects.as_v1().status()}")
 
 

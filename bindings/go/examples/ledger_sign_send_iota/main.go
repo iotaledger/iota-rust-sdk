@@ -13,6 +13,8 @@ import (
 )
 
 func main() {
+	// Amount to send in nanos
+	amount := uint64(1000)
 	recipientAddress, err := iota_sdk.AddressFromHex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")
 	if err != nil {
 		log.Fatalf("Failed to parse recipient address: %v", err)
@@ -43,14 +45,12 @@ func main() {
 	}
 
 	// Request funds from faucet
-	faucet := iota_sdk.FaucetClientNewLocalnet()
-	_, err = faucet.RequestAndWaitForFinalized(senderAddress, client)
-	if err != nil {
+	if _, err := iota_sdk.FaucetClientNewLocalnet().RequestAndWaitForFinalized(senderAddress, client); err != nil {
 		log.Fatalf("Failed to request faucet: %v", err)
 	}
 
 	builder := client.TransactionBuilder(senderAddress)
-	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(1000))
+	builder.SendIota(recipientAddress, iota_sdk.PtbArgumentU64(amount))
 
 	// The builder passes the signer the coins the transaction spends, so the
 	// device shows the transfer instead of asking to blind-sign
@@ -60,6 +60,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to execute: %v", err)
 	}
-	log.Printf("Digest: %s", iota_sdk.HexEncode((*effects).Digest().ToBytes()))
+	log.Printf("Digest: %s", (*effects).Digest().ToBase58())
 	log.Printf("Transaction status: %v", (*effects).AsV1().Status())
 }
