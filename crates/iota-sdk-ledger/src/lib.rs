@@ -44,9 +44,8 @@ const APP_SWITCH_POLL_INTERVAL: Duration = Duration::from_millis(250);
 /// address verification includes waiting for the user to confirm on the
 /// device.
 ///
-/// Clones share one connection, and calls across them run one at a time: each
-/// waits for the previous one to finish, since a command can take several
-/// exchanges with the device.
+/// Calls on the same `Ledger` run one at a time: each waits for the previous
+/// one to finish, since a command can take several exchanges with the device.
 #[derive(Clone)]
 pub struct Ledger {
     /// Locked for the whole of each command.
