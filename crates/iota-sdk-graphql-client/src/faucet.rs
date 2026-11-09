@@ -33,8 +33,11 @@ pub enum FaucetError {
     #[error("Faucet request timed out")]
     TimedOut,
     #[error(
-        "Faucet request scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass \
+        "Faucet URL scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass \
          your own client to `new_with_reqwest_client`"
+    )]
+    #[deprecated(
+        note = "no longer returned: a request that needs TLS `reqwest` lacks fails with `Reqwest`"
     )]
     TlsUnavailable(String),
     #[error(
@@ -43,17 +46,6 @@ pub enum FaucetError {
     TooManyRequests,
     #[error("Faucet service is currently overloaded or unavailable. Please try again later.")]
     Unavailable,
-}
-
-impl FaucetError {
-    /// Classify an error from sending a request, reporting a missing TLS
-    /// backend as [`Self::TlsUnavailable`].
-    fn from_send(err: reqwest::Error) -> Self {
-        match crate::tls::tls_unavailable(&err) {
-            Some(scheme) => Self::TlsUnavailable(scheme),
-            None => Self::Reqwest(err),
-        }
-    }
 }
 
 pub struct FaucetClient {
@@ -171,8 +163,7 @@ impl FaucetClient {
             .header("content-type", "application/json")
             .json(&json_body)
             .send()
-            .await
-            .map_err(FaucetError::from_send)?;
+            .await?;
         match resp.status() {
             StatusCode::ACCEPTED | StatusCode::CREATED => {
                 let faucet_resp: FaucetResponse = resp.json().await?;
@@ -295,12 +286,7 @@ impl FaucetClient {
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>, FaucetError> {
         let status_url = format!("{}v1/status/{}", self.faucet_url, id);
         info!("Checking status of faucet request: {status_url}");
-        let response = self
-            .inner
-            .get(&status_url)
-            .send()
-            .await
-            .map_err(FaucetError::from_send)?;
+        let response = self.inner.get(&status_url).send().await?;
 
         if response.status() == StatusCode::TOO_MANY_REQUESTS {
             return Err(FaucetError::TooManyRequests);

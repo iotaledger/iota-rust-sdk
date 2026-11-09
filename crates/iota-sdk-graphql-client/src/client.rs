@@ -237,8 +237,7 @@ impl GraphQLClient {
             .post(self.rpc_server().clone())
             .json(body)
             .send()
-            .await
-            .map_err(GraphQLError::from_send)?;
+            .await?;
         let status = resp.status();
         let url = resp.url().clone();
         let bytes = resp.bytes().await?;

@@ -143,8 +143,10 @@ pub enum GraphQLError {
     /// The RPC URL scheme is not usable for subscriptions.
     #[error("unsupported RPC scheme `{0}` for subscriptions, expected http, https, ws or wss")]
     UnsupportedSubscriptionScheme(String),
-    /// A request to the RPC URL needs TLS, which this build's `reqwest` does
-    /// not have.
+    /// The RPC URL needs TLS, which this build does not have.
+    #[deprecated(
+        note = "no longer returned: a request that needs TLS `reqwest` lacks fails with `Request`"
+    )]
     #[error(
         "scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass your own \
          client to `new_with_reqwest_client`"
@@ -209,15 +211,6 @@ impl HttpResponse {
 }
 
 impl GraphQLError {
-    /// Classify an error from sending a request, reporting a missing TLS
-    /// backend as [`GraphQLError::TlsUnavailable`].
-    pub(crate) fn from_send(err: reqwest::Error) -> Self {
-        match crate::tls::tls_unavailable(&err) {
-            Some(scheme) => Self::TlsUnavailable(scheme),
-            None => Self::Request(err),
-        }
-    }
-
     /// Build a [`GraphQLError::Http`] from a non-success response, retaining a
     /// truncated, UTF-8-lossy snapshot of the body.
     pub(crate) fn http(
