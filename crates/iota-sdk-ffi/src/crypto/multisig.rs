@@ -178,6 +178,8 @@ impl MultisigAggregator {
         )
     }
 
+    /// Returns a copy of the current verifier; changes to it are not applied
+    /// to the aggregator. Use `set_verifier` to change it.
     pub fn verifier(&self) -> MultisigVerifier {
         self.0
             .read()
