@@ -1488,6 +1488,9 @@ impl<L> TransactionBuilder<(), L> {
 
     /// Execute the transaction with its gas paid by `sponsor`, returning the
     /// transaction digest.
+    ///
+    /// A reservation that names the sender as the gas owner is rejected before
+    /// the transaction is signed.
     pub async fn execute_with_gas_sponsor(
         self,
         sponsor: &impl GasSponsor,
@@ -1499,7 +1502,7 @@ impl<L> TransactionBuilder<(), L> {
             });
         }
 
-        let mut txn = self.finish()?;
+        let txn = self.finish()?;
         match &txn {
             Transaction::V1(txn_v1) => {
                 if !txn_v1.gas_payment.objects.is_empty() {
@@ -1509,32 +1512,7 @@ impl<L> TransactionBuilder<(), L> {
                     return Err(TransactionBuilderError::MissingGasBudget);
                 }
 
-                let (reservation, SponsoredGas { owner, objects }) = sponsor
-                    .reserve_gas(&txn)
-                    .await
-                    .map_err(TransactionBuilderError::gas_sponsor)?;
-                {
-                    txn.as_mut_v1().gas_payment.owner = owner;
-                    txn.as_mut_v1().gas_payment.objects = objects;
-                }
-
-                let signature = signer
-                    .sign(&txn)
-                    .await
-                    .map_err(TransactionBuilderError::signature)?;
-
-                let digest = txn.digest();
-                let sponsor_digest = sponsor
-                    .execute_reserved(reservation, &txn, &signature)
-                    .await
-                    .map_err(TransactionBuilderError::gas_sponsor)?;
-                if sponsor_digest != digest {
-                    return Err(TransactionBuilderError::SponsorDigestMismatch {
-                        expected: digest,
-                        got: sponsor_digest,
-                    });
-                }
-                Ok(digest)
+                execute_sponsored_v1(txn, sponsor, signer).await
             }
             _ => unimplemented!("a new Transaction enum variant was added and needs to be handled"),
         }
@@ -2125,7 +2103,8 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
     /// or an address with [`sponsor`](Self::sponsor) conflicts with that and
     /// is rejected. When no budget was set with
     /// [`gas_budget`](Self::gas_budget) it is estimated by simulating the
-    /// transaction before the gas is reserved.
+    /// transaction before the gas is reserved. A reservation that names the
+    /// sender as the gas owner is rejected before the transaction is signed.
     ///
     /// # Example
     ///
@@ -2186,30 +2165,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                     txn.as_mut_v1().gas_payment.budget = budget;
                 };
 
-                let (reservation, SponsoredGas { owner, objects }) = sponsor
-                    .reserve_gas(&txn)
-                    .await
-                    .map_err(TransactionBuilderError::gas_sponsor)?;
-                {
-                    txn.as_mut_v1().gas_payment.owner = owner;
-                    txn.as_mut_v1().gas_payment.objects = objects;
-                }
-
-                let signature = signer
-                    .sign(&txn)
-                    .await
-                    .map_err(TransactionBuilderError::signature)?;
-                let digest = txn.digest();
-                let sponsor_digest = sponsor
-                    .execute_reserved(reservation, &txn, &signature)
-                    .await
-                    .map_err(TransactionBuilderError::gas_sponsor)?;
-                if sponsor_digest != digest {
-                    return Err(TransactionBuilderError::SponsorDigestMismatch {
-                        expected: digest,
-                        got: sponsor_digest,
-                    });
-                }
+                let digest = execute_sponsored_v1(txn, sponsor, signer).await?;
 
                 self.client
                     .wait_for_transaction(digest, WaitForTransaction::Finalized)
@@ -2349,6 +2305,44 @@ impl<C> TransactionBuilder<C, DivideCoin> {
             .type_tags([type_tag])
             .reset()
     }
+}
+
+/// Reserve gas for a V1 `txn` from `sponsor`, sign it and have the sponsor
+/// execute it, returning the digest of the signed transaction.
+async fn execute_sponsored_v1(
+    mut txn: Transaction,
+    sponsor: &impl GasSponsor,
+    signer: &impl TransactionSigner,
+) -> Result<TransactionDigest, TransactionBuilderError> {
+    let (reservation, SponsoredGas { owner, objects }) = sponsor
+        .reserve_gas(&txn)
+        .await
+        .map_err(TransactionBuilderError::gas_sponsor)?;
+    if owner == txn.as_v1().sender {
+        return Err(TransactionBuilderError::SponsorIsSender { sender: owner });
+    }
+    {
+        txn.as_mut_v1().gas_payment.owner = owner;
+        txn.as_mut_v1().gas_payment.objects = objects;
+    }
+
+    let signature = signer
+        .sign(&txn)
+        .await
+        .map_err(TransactionBuilderError::signature)?;
+
+    let digest = txn.digest();
+    let sponsor_digest = sponsor
+        .execute_reserved(reservation, &txn, &signature)
+        .await
+        .map_err(TransactionBuilderError::gas_sponsor)?;
+    if sponsor_digest != digest {
+        return Err(TransactionBuilderError::SponsorDigestMismatch {
+            expected: digest,
+            got: sponsor_digest,
+        });
+    }
+    Ok(digest)
 }
 
 #[cfg(test)]
