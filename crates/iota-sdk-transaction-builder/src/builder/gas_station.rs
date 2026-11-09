@@ -130,7 +130,8 @@ impl GasStation {
     /// Start configuring a gas station reachable at `url`.
     ///
     /// Request paths are appended to the path of `url`, so a station served
-    /// under a path prefix is reached through that prefix.
+    /// under a path prefix is reached through that prefix. The query of `url`
+    /// is sent with every request.
     pub fn builder(url: Url) -> GasStationBuilder {
         GasStationBuilder {
             url,
@@ -636,7 +637,9 @@ impl GasStationRequestKind {
         if !base.path().ends_with('/') {
             base.set_path(&format!("{}/", base.path()));
         }
-        base.join(self.as_path())
+        let mut url = base.join(self.as_path())?;
+        url.set_query(base.query());
+        Ok(url)
     }
 }
 
@@ -656,6 +659,10 @@ mod tests {
             (
                 "https://example.com/gas/",
                 "https://example.com/gas/v1/reserve_gas",
+            ),
+            (
+                "https://example.com/gas?key=abc",
+                "https://example.com/gas/v1/reserve_gas?key=abc",
             ),
         ] {
             let url = GasStationRequestKind::ReserveGas
