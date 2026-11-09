@@ -11,7 +11,7 @@ use serde::Serialize;
 use crate::{Ledger, LedgerError, commands::sign};
 
 impl Ledger {
-    /// Sign with the key at `path`; see [`LedgerSigner::new`].
+    /// Create a signer for the key at `path`; see [`LedgerSigner::new`].
     pub async fn into_signer(self, path: DerivationPath) -> Result<LedgerSigner, LedgerError> {
         LedgerSigner::new(self, path).await
     }

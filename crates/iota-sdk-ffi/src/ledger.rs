@@ -186,7 +186,8 @@ impl Ledger {
         Ok(self.0.verify_address(&path).await?.into())
     }
 
-    /// Sign with the key at a derivation path such as `m/44'/4218'/0'/0'/0'`.
+    /// Create a signer for the key at a derivation path such as
+    /// `m/44'/4218'/0'/0'/0'`, reading its public key from the device.
     ///
     /// The signer shares this `Ledger`'s connection, which stays usable.
     pub async fn signer(&self, path: String) -> Result<LedgerSigner, LedgerError> {
