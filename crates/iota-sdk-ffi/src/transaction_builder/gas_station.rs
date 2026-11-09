@@ -25,7 +25,8 @@ impl GasStation {
     /// describes the HTTP client the requests go out on.
     ///
     /// Request paths are appended to the path of `url`, so a station served
-    /// under a path prefix is reached through that prefix.
+    /// under a path prefix is reached through that prefix. The query of `url`
+    /// is sent with every request.
     #[uniffi::constructor(default(reservation_duration = None, headers = None, http_options = None))]
     pub fn new(
         url: String,
