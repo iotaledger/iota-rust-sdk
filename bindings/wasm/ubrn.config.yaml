@@ -23,8 +23,6 @@ web:
   features:
     - crypto
     - bls12381
-    # Without `ledger-hid`: hidapi does not build for wasm32.
-    - ledger
     # TypeScript cannot key a native map by an object.
     - map-objects
 
