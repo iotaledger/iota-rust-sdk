@@ -117,13 +117,7 @@ impl GraphQLClientBuilder {
     }
 
     /// Build the client.
-    ///
-    /// An `https` or `wss` address is rejected on a build without a crypto
-    /// provider, as with [`GraphQLClient::new`].
     pub fn build(self) -> GraphQLResult<GraphQLClient> {
-        if let Some(scheme) = crate::tls::unsupported_scheme(&self.server) {
-            return Err(GraphQLError::TlsUnavailable(scheme));
-        }
         GraphQLClient::new_with_reqwest_client(&self.server, self.http.build()?)
     }
 }
@@ -134,13 +128,7 @@ impl GraphQLClient {
     /// The HTTP client is built for you, trusting the platform store plus the
     /// bundled Mozilla roots. Use [`Self::new_with_reqwest_client`] to supply
     /// your own.
-    ///
-    /// An `https` or `wss` address is rejected on a build without a crypto
-    /// provider, since no request to it could succeed. See the crate README.
     pub fn new(server: &str) -> GraphQLResult<Self> {
-        if let Some(scheme) = crate::tls::unsupported_scheme(server) {
-            return Err(GraphQLError::TlsUnavailable(scheme));
-        }
         Self::new_with_reqwest_client(server, crate::tls::default_http_client_builder().build()?)
     }
 
@@ -249,7 +237,8 @@ impl GraphQLClient {
             .post(self.rpc_server().clone())
             .json(body)
             .send()
-            .await?;
+            .await
+            .map_err(GraphQLError::from_send)?;
         let status = resp.status();
         let url = resp.url().clone();
         let bytes = resp.bytes().await?;

@@ -118,69 +118,72 @@ fn apply_roots(builder: reqwest::ClientBuilder) -> reqwest::ClientBuilder {
     builder
 }
 
-/// The scheme of `server` when this build cannot reach it, or `None` when it
-/// can.
+/// The scheme of the request `err` failed, when it failed because `reqwest`
+/// was built without TLS, or `None` for any other failure.
 ///
-/// Without a provider feature `reqwest` is built with no TLS, so an `https` or
-/// `wss` URL fails at request time with a transport error that names neither
-/// TLS nor the feature that would enable it. Reporting it from the constructor
-/// puts the cause where the caller can act on it.
-///
-/// A URL that does not parse is left for the caller's own parse to report.
+/// Whether `reqwest` has TLS is decided by every crate in the build, not by
+/// this crate's features alone, so it is only known once a request to an
+/// `https` URL has failed for that reason. `reqwest` reports that as a connect
+/// error naming neither TLS nor the feature that would enable it, so it is
+/// recognised by the message `hyper-util` gives it.
 #[cfg(all(
     not(target_arch = "wasm32"),
     not(any(feature = "tls-ring", feature = "tls-aws-lc"))
 ))]
-pub(crate) fn unsupported_scheme(server: &str) -> Option<String> {
-    let scheme = reqwest::Url::parse(server).ok()?.scheme().to_owned();
-    matches!(scheme.as_str(), "https" | "wss").then_some(scheme)
+pub(crate) fn tls_unavailable(err: &reqwest::Error) -> Option<String> {
+    const NO_TLS: &str = "invalid URL, scheme is not http";
+
+    let scheme = err.url()?.scheme();
+    let mut source = std::error::Error::source(err);
+    while let Some(cause) = source {
+        if cause.to_string() == NO_TLS {
+            return Some(scheme.to_owned());
+        }
+        source = cause.source();
+    }
+    None
 }
 
-/// Every scheme this crate accepts is reachable once TLS is compiled in, and on
-/// wasm32 the browser provides it.
+/// With a provider feature `reqwest` always has TLS, and on wasm32 the browser
+/// provides it.
 #[cfg(any(target_arch = "wasm32", feature = "tls-ring", feature = "tls-aws-lc"))]
-pub(crate) fn unsupported_scheme(_server: &str) -> Option<String> {
+pub(crate) fn tls_unavailable(_err: &reqwest::Error) -> Option<String> {
     None
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use super::unsupported_scheme;
+    use super::tls_unavailable;
 
-    #[test]
-    fn plain_schemes_need_no_tls() {
-        assert_eq!(unsupported_scheme("http://127.0.0.1:9125"), None);
-        assert_eq!(unsupported_scheme("ws://127.0.0.1:9125"), None);
+    /// Send a request to a local port nothing listens on, so that it fails
+    /// without leaving the machine.
+    async fn failed_request(scheme: &str) -> reqwest::Error {
+        super::default_http_client_builder()
+            .build()
+            .unwrap()
+            .get(format!("{scheme}://127.0.0.1:1"))
+            .send()
+            .await
+            .unwrap_err()
     }
 
-    #[test]
-    fn unparsable_url_is_left_to_the_caller() {
-        assert_eq!(unsupported_scheme("not a url"), None);
+    #[tokio::test]
+    async fn plain_http_failure_is_not_a_tls_failure() {
+        assert_eq!(tls_unavailable(&failed_request("http").await), None);
     }
 
-    #[cfg(all(
-        not(target_arch = "wasm32"),
-        not(any(feature = "tls-ring", feature = "tls-aws-lc"))
-    ))]
-    #[test]
-    fn tls_schemes_are_rejected_without_a_provider() {
+    #[cfg(not(any(feature = "tls-ring", feature = "tls-aws-lc")))]
+    #[tokio::test]
+    async fn https_without_tls_is_reported() {
         assert_eq!(
-            unsupported_scheme("https://graphql.testnet.iota.cafe").as_deref(),
+            tls_unavailable(&failed_request("https").await).as_deref(),
             Some("https")
         );
-        assert_eq!(
-            unsupported_scheme("wss://graphql.testnet.iota.cafe").as_deref(),
-            Some("wss")
-        );
     }
 
-    #[cfg(any(target_arch = "wasm32", feature = "tls-ring", feature = "tls-aws-lc"))]
-    #[test]
-    fn tls_schemes_are_accepted_with_a_provider() {
-        assert_eq!(
-            unsupported_scheme("https://graphql.testnet.iota.cafe"),
-            None
-        );
-        assert_eq!(unsupported_scheme("wss://graphql.testnet.iota.cafe"), None);
+    #[cfg(any(feature = "tls-ring", feature = "tls-aws-lc"))]
+    #[tokio::test]
+    async fn https_failure_with_tls_is_not_a_tls_failure() {
+        assert_eq!(tls_unavailable(&failed_request("https").await), None);
     }
 }

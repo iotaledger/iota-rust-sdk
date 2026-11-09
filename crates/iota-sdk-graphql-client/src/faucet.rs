@@ -33,7 +33,7 @@ pub enum FaucetError {
     #[error("Faucet request timed out")]
     TimedOut,
     #[error(
-        "Faucet URL scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass \
+        "Faucet request scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass \
          your own client to `new_with_reqwest_client`"
     )]
     TlsUnavailable(String),
@@ -43,6 +43,17 @@ pub enum FaucetError {
     TooManyRequests,
     #[error("Faucet service is currently overloaded or unavailable. Please try again later.")]
     Unavailable,
+}
+
+impl FaucetError {
+    /// Classify an error from sending a request, reporting a missing TLS
+    /// backend as [`Self::TlsUnavailable`].
+    fn from_send(err: reqwest::Error) -> Self {
+        match crate::tls::tls_unavailable(&err) {
+            Some(scheme) => Self::TlsUnavailable(scheme),
+            None => Self::Reqwest(err),
+        }
+    }
 }
 
 pub struct FaucetClient {
@@ -103,13 +114,7 @@ impl FaucetClient {
     /// The HTTP client is built for you, trusting the platform store plus the
     /// bundled Mozilla roots. Use [`Self::new_with_reqwest_client`] to supply
     /// your own.
-    ///
-    /// An `https` URL is rejected on a build without a crypto provider, since
-    /// no request to it could succeed. See the crate README.
     pub fn new(faucet_url: &str) -> Result<Self, FaucetError> {
-        if let Some(scheme) = crate::tls::unsupported_scheme(faucet_url) {
-            return Err(FaucetError::TlsUnavailable(scheme));
-        }
         Self::new_with_reqwest_client(
             faucet_url,
             crate::tls::default_http_client_builder().build()?,
@@ -166,7 +171,8 @@ impl FaucetClient {
             .header("content-type", "application/json")
             .json(&json_body)
             .send()
-            .await?;
+            .await
+            .map_err(FaucetError::from_send)?;
         match resp.status() {
             StatusCode::ACCEPTED | StatusCode::CREATED => {
                 let faucet_resp: FaucetResponse = resp.json().await?;
@@ -289,7 +295,12 @@ impl FaucetClient {
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>, FaucetError> {
         let status_url = format!("{}v1/status/{}", self.faucet_url, id);
         info!("Checking status of faucet request: {status_url}");
-        let response = self.inner.get(&status_url).send().await?;
+        let response = self
+            .inner
+            .get(&status_url)
+            .send()
+            .await
+            .map_err(FaucetError::from_send)?;
 
         if response.status() == StatusCode::TOO_MANY_REQUESTS {
             return Err(FaucetError::TooManyRequests);
