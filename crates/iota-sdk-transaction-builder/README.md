@@ -192,8 +192,26 @@ let station = GasStation::builder("http://0.0.0.0:9527".parse()?)
     .build();
 ```
 
-Pass `http_client` to control timeouts, proxies or TLS roots; otherwise reqwest's defaults are
-used. Requests carry `Content-Type: application/json` unless a header overrides it.
+Pass `http_client` to control timeouts, proxies or TLS roots; otherwise the station builds its own
+client from the TLS features below. Requests carry `Content-Type: application/json` unless a header
+overrides it.
+
+### TLS
+
+The features below configure the gas station's default HTTP client and are all off by default, so
+on its own the station reaches only `http` addresses. `iota-sdk-graphql-client` enables the
+matching feature here for each of its own `tls-*` features.
+
+| Feature            | Effect                                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tls-ring`         | `ring` as the `rustls` crypto provider                                                                                                                        |
+| `tls-aws-lc`       | `aws-lc-rs` instead; `tls-ring` wins if both are on                                                                                                           |
+| `tls-native-roots` | trust the platform store; its effect is to merge rather than replace when `tls-webpki-roots` is also on                                                       |
+| `tls-webpki-roots` | add the bundled Mozilla roots, merged into the platform store when `tls-native-roots` is also on. Android cannot merge them, so it uses the bundled set alone |
+
+If another crate in the build enables `reqwest`'s `rustls-no-provider` feature, the default client
+needs a crypto provider: enable `tls-ring` or `tls-aws-lc`, install one for the process before
+building the station, or pass your own client.
 
 Implement `GasSponsor` yourself to sponsor through a service this crate does not ship.
 

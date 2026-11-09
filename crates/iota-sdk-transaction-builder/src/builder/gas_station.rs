@@ -173,8 +173,8 @@ impl GasStationBuilder {
     /// Send requests with this HTTP client instead of a default one.
     ///
     /// Set this to control timeouts, proxies, TLS roots or connection pooling;
-    /// without it the station builds a [`reqwest::Client`] with reqwest's own
-    /// defaults.
+    /// without it the station builds a [`reqwest::Client`] from this crate's
+    /// TLS features. See the crate README.
     pub fn http_client(mut self, client: reqwest::Client) -> Self {
         self.http_client = Some(client);
         self
@@ -215,7 +215,11 @@ impl GasStationBuilder {
 
         GasStation {
             url,
-            http_client: http_client.unwrap_or_default(),
+            http_client: http_client.unwrap_or_else(|| {
+                crate::builder::tls::default_http_client_builder()
+                    .build()
+                    .expect("failed to build the default gas station HTTP client")
+            }),
             headers,
             reservation_duration,
             checked_version: OnceLock::new(),
@@ -670,5 +674,13 @@ mod tests {
                 .unwrap();
             assert_eq!(url.as_str(), expected, "base {base}");
         }
+    }
+
+    /// Without an installed provider, building a `reqwest` client with
+    /// `rustls-no-provider` panics, so this covers the station installing one.
+    #[cfg(any(feature = "tls-ring", feature = "tls-aws-lc"))]
+    #[test]
+    fn default_client_builds_without_an_installed_provider() {
+        GasStation::new("https://example.com/gas".parse().unwrap());
     }
 }

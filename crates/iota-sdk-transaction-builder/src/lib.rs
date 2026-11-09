@@ -238,7 +238,8 @@
 //! ```
 //!
 //! Pass [http_client](GasStationBuilder::http_client) to control timeouts,
-//! proxies or TLS roots; otherwise reqwest's defaults are used. Requests carry
+//! proxies or TLS roots; otherwise the client is built from this crate's TLS
+//! features, described in the crate README. Requests carry
 //! `Content-Type: application/json` unless a header overrides it.
 //!
 //! Implement [GasSponsor] yourself to sponsor through a service this crate does

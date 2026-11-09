@@ -25,6 +25,11 @@ rustdoc-args = [
 default = []
 gas-station = ["dep:base64ct", "dep:reqwest"]
 test-client = []
+# TLS for the gas station's default HTTP client; see README.md.
+tls-aws-lc = ["dep:rustls", "reqwest?/rustls-no-provider", "rustls/aws-lc-rs"]
+tls-native-roots = []
+tls-ring = ["dep:rustls", "reqwest?/rustls-no-provider", "rustls/ring"]
+tls-webpki-roots = ["dep:webpki-root-certs"]
 
 [lints]
 workspace = true
@@ -50,7 +55,9 @@ iota-types = { workspace = true, features = ["serde", "hash"] }
 tokio = { workspace = true, features = ["macros", "rt"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+rustls = { version = "0.23.46", default-features = false, optional = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }
+webpki-root-certs = { workspace = true, optional = true }
 
 [dev-dependencies]
 # external dependencies
