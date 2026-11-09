@@ -28,11 +28,16 @@ concurrency:
 jobs:
   generate:
     if: (!github.event.pull_request.draft || contains(github.event.pull_request.body, '[run-ci]'))
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
         language: [python, go, kotlin, csharp, swift, wasm]
+        include:
+          # ubuntu-latest moved to Ubuntu 26.04, which swift-actions/setup-swift
+          # rejects. Drop the pin once setup-swift supports it.
+          - language: swift
+            os: ubuntu-24.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
