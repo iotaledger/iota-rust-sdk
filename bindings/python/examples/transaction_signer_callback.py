@@ -6,6 +6,10 @@ from lib.iota_sdk import *
 import asyncio
 
 
+# A signer implemented in the host language. This one wraps a local key, which
+# needs nothing but the transaction, so it opts out of the objects the builder
+# fetches for a signer that shows the transaction to its user, such as a
+# hardware wallet.
 class AsyncSigner(TransactionSignerFn):
 
     def __init__(self, key: Ed25519PrivateKey):
@@ -18,6 +22,8 @@ class AsyncSigner(TransactionSignerFn):
     def uses_objects(self):
         return False
 
+    # Never called for a signer whose `uses_objects` returns false; the
+    # interface still requires it.
     async def sign_with_objects(self, transaction: Transaction, objects):
         return await self.sign(transaction)
 

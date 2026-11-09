@@ -4,6 +4,10 @@
 import Foundation
 import IotaSDK
 
+// A signer implemented in the host language. This one wraps a local key, which
+// needs nothing but the transaction, so it opts out of the objects the builder
+// fetches for a signer that shows the transaction to its user, such as a
+// hardware wallet.
 final class AsyncSigner: TransactionSignerFn, @unchecked Sendable {
   let key: Ed25519PrivateKey
 
@@ -19,6 +23,8 @@ final class AsyncSigner: TransactionSignerFn, @unchecked Sendable {
     return false
   }
 
+  // Never called for a signer whose `usesObjects` returns false; the
+  // interface still requires it.
   func signWithObjects(transaction: Transaction, objects: [Object]) async throws
     -> TransactionSignerFnOutput
   {

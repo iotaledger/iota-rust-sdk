@@ -3,6 +3,10 @@
 
 using IotaSdk;
 
+// A signer implemented in the host language. This one wraps a local key, which
+// needs nothing but the transaction, so it opts out of the objects the builder
+// fetches for a signer that shows the transaction to its user, such as a
+// hardware wallet.
 class AsyncSigner : TransactionSignerFn
 {
     private Ed25519PrivateKey _key;
@@ -23,6 +27,8 @@ class AsyncSigner : TransactionSignerFn
         return false;
     }
 
+    // Never called for a signer whose `UsesObjects` returns false; the
+    // interface still requires it.
     public Task<TransactionSignerFnOutput> SignWithObjects(Transaction transaction, IotaSdk.Object[] objects)
     {
         return Sign(transaction);

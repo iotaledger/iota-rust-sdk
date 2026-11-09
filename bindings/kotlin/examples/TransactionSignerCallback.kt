@@ -4,6 +4,10 @@
 import iota_sdk.*
 import kotlinx.coroutines.runBlocking
 
+// A signer implemented in the host language. This one wraps a local key, which
+// needs nothing but the transaction, so it opts out of the objects the builder
+// fetches for a signer that shows the transaction to its user, such as a
+// hardware wallet.
 class AsyncSigner(val key: Ed25519PrivateKey) : TransactionSignerFn {
     override suspend fun sign(transaction: Transaction): TransactionSignerFnOutput {
         return TransactionSignerFnOutput(key.signTransaction(transaction))
@@ -11,6 +15,8 @@ class AsyncSigner(val key: Ed25519PrivateKey) : TransactionSignerFn {
 
     override fun usesObjects(): Boolean = false
 
+    // Never called for a signer whose `usesObjects` returns false; the
+    // interface still requires it.
     override suspend fun signWithObjects(
         transaction: Transaction,
         objects: List<Object>,
