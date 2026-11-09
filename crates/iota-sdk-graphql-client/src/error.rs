@@ -144,9 +144,7 @@ pub enum GraphQLError {
     #[error("unsupported RPC scheme `{0}` for subscriptions, expected http, https, ws or wss")]
     UnsupportedSubscriptionScheme(String),
     /// The RPC URL needs TLS, which this build does not have.
-    #[deprecated(
-        note = "no longer returned: a request that needs TLS `reqwest` lacks fails with `Request`"
-    )]
+    #[deprecated(note = "no longer returned; an `https` request without TLS fails with `Request`")]
     #[error(
         "scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass your own \
          client to `new_with_reqwest_client`"
