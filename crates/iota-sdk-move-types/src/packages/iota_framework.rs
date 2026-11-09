@@ -3108,14 +3108,6 @@ pub mod config {
         }
     }
 
-    impl<Value: crate::MoveType> crate::MoveType for Setting<Value> {
-        fn type_tag() -> iota_types::TypeTag {
-            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new_config_setting(
-                Value::type_tag(),
-            )))
-        }
-    }
-
     /// Rust version of the Move `iota::config::SettingData<Value>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]

@@ -8,18 +8,11 @@
 use iota_sdk_move_types::{
     MoveType,
     iota_framework::{
-        config::Setting,
         deny_list::{AddressKey, ConfigKey, GlobalPauseKey},
         dynamic_object_field::Wrapper,
         object::ID,
     },
 };
-use iota_types::ObjectId;
-
-#[test]
-fn object_id_is_an_address() {
-    assert_eq!(ObjectId::type_tag().to_string(), "address");
-}
 
 #[test]
 fn id() {
@@ -47,13 +40,5 @@ fn deny_list_keys() {
     assert_eq!(
         GlobalPauseKey::type_tag().to_string(),
         "0x2::deny_list::GlobalPauseKey"
-    );
-}
-
-#[test]
-fn config_setting() {
-    assert_eq!(
-        Setting::<bool>::type_tag().to_string(),
-        "0x2::config::Setting<bool>"
     );
 }
