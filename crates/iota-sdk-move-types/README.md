@@ -22,11 +22,11 @@ The Move sources these mirror live in the [iota monorepo] under
 
 ## Features
 
-| Feature      | Enables                                                                        |
-| ------------ | ------------------------------------------------------------------------------ |
-| `serde`      | BCS (de)serialization of the mirrors and their `TryFrom<&Object>` constructors |
-| `bcs-schema` | `BcsSchema` derives on the mirrors (implies `serde`)                           |
-| `u256`       | `MoveType` for `primitive_types::U256`, pulling in the `primitive-types` crate |
+| Feature      | Enables                                                                                 |
+| ------------ | --------------------------------------------------------------------------------------- |
+| `serde`      | BCS and JSON (de)serialization of the mirrors and their `TryFrom<&Object>` constructors |
+| `bcs-schema` | `BcsSchema` derives on the mirrors (implies `serde`)                                    |
+| `u256`       | `MoveType` for `primitive_types::U256`, pulling in the `primitive-types` crate          |
 
 None are enabled by default. `MoveType` itself and its impls for the Move
 primitives, `String` and `Vec<T>` need no features. Mirrors of Move objects

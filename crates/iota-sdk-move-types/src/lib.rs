@@ -26,6 +26,56 @@ pub use packages::{iota_framework, iota_system, move_stdlib, stardust};
 
 mod builtin;
 
+#[cfg(feature = "serde")]
+mod _serde {
+    pub(crate) mod vec_map_readable_u64_values {
+        use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+        use crate::iota_framework::vec_map::{Entry, VecMap};
+
+        #[derive(Deserialize, Serialize)]
+        #[serde(rename = "VecMap")]
+        struct ReadableVecMap<K> {
+            contents: Vec<ReadableEntry<K>>,
+        }
+
+        #[derive(Deserialize, Serialize)]
+        #[serde(rename = "Entry")]
+        struct ReadableEntry<K> {
+            key: K,
+            #[serde(with = "iota_types::ReadableDisplay")]
+            value: u64,
+        }
+
+        pub(crate) fn serialize<K: Serialize, S: Serializer>(
+            map: &VecMap<K, u64>,
+            serializer: S,
+        ) -> Result<S::Ok, S::Error> {
+            let contents = map
+                .contents
+                .iter()
+                .map(|entry| ReadableEntry {
+                    key: &entry.key,
+                    value: entry.value,
+                })
+                .collect();
+            ReadableVecMap { contents }.serialize(serializer)
+        }
+
+        pub(crate) fn deserialize<'de, K: Deserialize<'de>, D: Deserializer<'de>>(
+            deserializer: D,
+        ) -> Result<VecMap<K, u64>, D::Error> {
+            let map = ReadableVecMap::<K>::deserialize(deserializer)?;
+            let contents = map
+                .contents
+                .into_iter()
+                .map(|entry| Entry::new(entry.key, entry.value))
+                .collect();
+            Ok(VecMap::new(contents))
+        }
+    }
+}
+
 // The shape machinery (this module, the `MoveShape` derives on every
 // mirror, and the comparator below) is native-only: the comparator reads
 // the fetched package artifacts from disk at test time (no `std::fs` on
@@ -139,10 +189,15 @@ mod tests {
     use super::*;
     use crate::{
         iota_framework::{
+            bag::Bag,
+            balance::Supply,
             coin::{Coin, CoinMetadata},
             iota::IOTA,
+            kiosk_extension::Extension,
+            object::UID,
         },
-        iota_system::staking_pool::StakedIota,
+        iota_system::{genesis::TokenAllocation, staking_pool::StakedIota},
+        move_stdlib::uq64_64::UQ64_64,
     };
 
     #[test]
@@ -171,5 +226,93 @@ mod tests {
             Coin::<IOTA>::type_tag(),
             iota_types::TypeTag::Struct(Box::new(Coin::<IOTA>::struct_tag()))
         );
+    }
+
+    #[test]
+    fn json_writes_u64_as_string() {
+        let supply = Supply::<()>::new(u64::MAX);
+        let json = serde_json::to_string(&supply).unwrap();
+        assert_eq!(json, r#"{"value":"18446744073709551615"}"#);
+        assert_eq!(serde_json::from_str::<Supply<()>>(&json).unwrap(), supply);
+    }
+
+    #[test]
+    fn json_rejects_u64_as_number() {
+        assert!(serde_json::from_str::<Supply<()>>(r#"{"value":1}"#).is_err());
+    }
+
+    #[test]
+    fn json_writes_u128_as_string() {
+        let value = UQ64_64::new(u128::MAX);
+        let json = serde_json::to_string(&value).unwrap();
+        assert_eq!(json, r#""340282366920938463463374607431768211455""#);
+        assert_eq!(serde_json::from_str::<UQ64_64>(&json).unwrap(), value);
+    }
+
+    fn allocation(expiration: Option<u64>) -> TokenAllocation {
+        TokenAllocation {
+            recipient_address: iota_types::Address::ZERO,
+            amount_nanos: 1,
+            staked_with_validator: None,
+            staked_with_timelock_expiration: expiration,
+        }
+    }
+
+    #[test]
+    fn json_writes_option_u64_as_string_or_null() {
+        let some = serde_json::to_value(allocation(Some(u64::MAX))).unwrap();
+        assert_eq!(
+            some["staked_with_timelock_expiration"],
+            serde_json::json!("18446744073709551615")
+        );
+        let none = serde_json::to_value(allocation(None)).unwrap();
+        assert_eq!(
+            none["staked_with_timelock_expiration"],
+            serde_json::Value::Null
+        );
+        assert_eq!(
+            serde_json::from_value::<TokenAllocation>(some).unwrap(),
+            allocation(Some(u64::MAX))
+        );
+        assert_eq!(
+            serde_json::from_value::<TokenAllocation>(none).unwrap(),
+            allocation(None)
+        );
+    }
+
+    #[test]
+    fn json_reads_missing_option_u64_as_none() {
+        let mut json = serde_json::to_value(allocation(None)).unwrap();
+        json.as_object_mut()
+            .unwrap()
+            .remove("staked_with_timelock_expiration");
+        assert_eq!(
+            serde_json::from_value::<TokenAllocation>(json).unwrap(),
+            allocation(None)
+        );
+    }
+
+    #[test]
+    fn kiosk_extension_permissions_serialize_as_string_in_json() {
+        let extension = Extension {
+            storage: Bag::new(UID::new(iota_types::ObjectId::ZERO), 0),
+            permissions: u128::MAX,
+            is_enabled: true,
+        };
+        let json = serde_json::to_value(&extension).unwrap();
+        assert_eq!(
+            json["permissions"],
+            serde_json::json!("340282366920938463463374607431768211455")
+        );
+        assert_eq!(
+            serde_json::from_value::<Extension>(json).unwrap(),
+            extension
+        );
+    }
+
+    #[test]
+    fn bcs_keeps_u64_as_bytes() {
+        let bytes = bcs::to_bytes(&Supply::<()>::new(1)).unwrap();
+        assert_eq!(bytes, 1u64.to_le_bytes());
     }
 }
