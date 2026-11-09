@@ -52,6 +52,7 @@ pub mod object {
     }
 
     impl crate::MoveType for ID {
+        /// `0x2::object::ID`.
         fn type_tag() -> iota_types::TypeTag {
             iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new_id()))
         }
@@ -1249,6 +1250,7 @@ pub mod dynamic_object_field {
     }
 
     impl<Name: crate::MoveType> crate::MoveType for Wrapper<Name> {
+        /// `0x2::dynamic_object_field::Wrapper<Name>`.
         fn type_tag() -> iota_types::TypeTag {
             iota_types::TypeTag::Struct(Box::new(
                 iota_types::StructTag::new_dynamic_object_field_wrapper(Name::type_tag()),
@@ -2792,6 +2794,7 @@ pub mod deny_list {
     }
 
     impl crate::MoveType for ConfigKey {
+        /// `0x2::deny_list::ConfigKey`.
         fn type_tag() -> iota_types::TypeTag {
             iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new_deny_list_config_key()))
         }
@@ -2813,6 +2816,7 @@ pub mod deny_list {
     pub struct AddressKey(pub Address);
 
     impl crate::MoveType for AddressKey {
+        /// `0x2::deny_list::AddressKey`.
         fn type_tag() -> iota_types::TypeTag {
             iota_types::TypeTag::Struct(
                 Box::new(iota_types::StructTag::new_deny_list_address_key()),
@@ -2841,6 +2845,7 @@ pub mod deny_list {
     }
 
     impl crate::MoveType for GlobalPauseKey {
+        /// `0x2::deny_list::GlobalPauseKey`.
         fn type_tag() -> iota_types::TypeTag {
             iota_types::TypeTag::Struct(Box::new(
                 iota_types::StructTag::new_deny_list_global_pause_key(),
