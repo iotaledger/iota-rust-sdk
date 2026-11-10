@@ -27,6 +27,8 @@ jobs:
               - ".github/workflows/bindings.yml"
               - "bindings/**"
               - "crates/iota-sdk-ffi/**"
+              - "Makefile"
+              - "scripts/speculos/**"
 
   csharp:
     if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
@@ -62,6 +64,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make csharp-examples
+      - name: Run the Ledger example on Speculos
+        timeout-minutes: 10
+        run: make ledger-example lang=csharp
       # Release example requires IotaSdk package to be published first
       # - name: Run the release example
       #   run: make csharp-release-example
@@ -84,6 +89,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make go-examples
+      - name: Run the Ledger example on Speculos
+        timeout-minutes: 10
+        run: make ledger-example lang=go
       - name: Run the release example
         run: make go-release-example
 
@@ -107,6 +115,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make kotlin-examples
+      - name: Run the Ledger example on Speculos
+        timeout-minutes: 10
+        run: make ledger-example lang=kotlin
       - name: Run the release example
         run: make kotlin-release-example
 
@@ -128,6 +139,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make python-examples
+      - name: Run the Ledger example on Speculos
+        timeout-minutes: 10
+        run: make ledger-example lang=python
       - name: Run the release example
         run: make python-release-example
 
@@ -151,6 +165,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make swift-examples
+      - name: Run the Ledger example on Speculos
+        timeout-minutes: 10
+        run: make ledger-example lang=swift
 
   # Separate macOS job: the XCFramework binary target in the published
   # iota-sdk-swift package can only be consumed on Apple platforms.
