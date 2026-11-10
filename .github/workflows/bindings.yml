@@ -27,6 +27,7 @@ jobs:
               - ".github/workflows/bindings.yml"
               - "bindings/**"
               - "crates/iota-sdk-ffi/**"
+              - "Makefile"
               - "scripts/speculos/**"
 
   csharp:
