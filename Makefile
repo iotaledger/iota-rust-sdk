@@ -453,6 +453,12 @@ example:
 	@# `move-types`) build and run; extra features are additive.
 	@cargo run --all-features --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
 
+.PHONY: ledger-example
+ledger-example: speculos-start ## Run the Ledger example on Speculos. Usage: make ledger-example [lang=go|kotlin|python|csharp|swift] (default: Rust)
+	@python3 scripts/speculos/approve.py Review "Sign transaction" & approver=$$!; \
+	LEDGER_SIMULATOR=1 $(MAKE) $(if $(lang),$(lang)-)example ledger_sign_send_iota || { kill $$approver; exit 1; }; \
+	wait $$approver
+
 .PHONY: examples
 examples: ## Run all Rust examples
 	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer

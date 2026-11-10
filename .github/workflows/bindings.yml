@@ -64,17 +64,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make csharp-examples
-      - name: Start Speculos
-        run: ./scripts/speculos/run_speculos.sh start
       - name: Run the Ledger example on Speculos
         timeout-minutes: 10
-        env:
-          LEDGER_SIMULATOR: "1"
-        run: |
-          python3 scripts/speculos/approve.py Review "Sign transaction" &
-          approver=$!
-          make csharp-example ledger_sign_send_iota
-          wait $approver
+        run: make ledger-example lang=csharp
       # Release example requires IotaSdk package to be published first
       # - name: Run the release example
       #   run: make csharp-release-example
@@ -97,17 +89,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make go-examples
-      - name: Start Speculos
-        run: ./scripts/speculos/run_speculos.sh start
       - name: Run the Ledger example on Speculos
         timeout-minutes: 10
-        env:
-          LEDGER_SIMULATOR: "1"
-        run: |
-          python3 scripts/speculos/approve.py Review "Sign transaction" &
-          approver=$!
-          make go-example ledger_sign_send_iota
-          wait $approver
+        run: make ledger-example lang=go
       - name: Run the release example
         run: make go-release-example
 
@@ -131,17 +115,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make kotlin-examples
-      - name: Start Speculos
-        run: ./scripts/speculos/run_speculos.sh start
       - name: Run the Ledger example on Speculos
         timeout-minutes: 10
-        env:
-          LEDGER_SIMULATOR: "1"
-        run: |
-          python3 scripts/speculos/approve.py Review "Sign transaction" &
-          approver=$!
-          make kotlin-example ledger_sign_send_iota
-          wait $approver
+        run: make ledger-example lang=kotlin
       - name: Run the release example
         run: make kotlin-release-example
 
@@ -163,17 +139,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make python-examples
-      - name: Start Speculos
-        run: ./scripts/speculos/run_speculos.sh start
       - name: Run the Ledger example on Speculos
         timeout-minutes: 10
-        env:
-          LEDGER_SIMULATOR: "1"
-        run: |
-          python3 scripts/speculos/approve.py Review "Sign transaction" &
-          approver=$!
-          make python-example ledger_sign_send_iota
-          wait $approver
+        run: make ledger-example lang=python
       - name: Run the release example
         run: make python-release-example
 
@@ -197,17 +165,9 @@ jobs:
       - uses: ./.github/actions/start-local-network
       - name: Run the examples
         run: make swift-examples
-      - name: Start Speculos
-        run: ./scripts/speculos/run_speculos.sh start
       - name: Run the Ledger example on Speculos
         timeout-minutes: 10
-        env:
-          LEDGER_SIMULATOR: "1"
-        run: |
-          python3 scripts/speculos/approve.py Review "Sign transaction" &
-          approver=$!
-          make swift-example ledger_sign_send_iota
-          wait $approver
+        run: make ledger-example lang=swift
 
   # Separate macOS job: the XCFramework binary target in the published
   # iota-sdk-swift package can only be consumed on Apple platforms.

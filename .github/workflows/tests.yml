@@ -79,18 +79,9 @@ jobs:
       - name: Run the examples
         run: make examples
 
-      - name: Start Speculos
-        run: ./scripts/speculos/run_speculos.sh start
-
       - name: Run the Ledger example on Speculos
         timeout-minutes: 10
-        env:
-          LEDGER_SIMULATOR: "1"
-        run: |
-          python3 scripts/speculos/approve.py Review "Sign transaction" &
-          approver=$!
-          make example ledger_sign_send_iota
-          wait $approver
+        run: make ledger-example
 
       - name: Run the release example
         run: make rust-release-example
