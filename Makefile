@@ -427,7 +427,7 @@ wasm-example:
 
 .PHONY: wasm-examples
 wasm-examples: ## Run all WASM bindings examples
-	@for example in $$(find bindings/wasm/examples -name "*.mjs" -not -name "_*" -not -path "*/release/*" -exec basename {} .mjs \;); do \
+	@for example in $$(find bindings/wasm/examples -name "*.mjs" -not -name "_*" -not -name "ledger_*" -not -path "*/release/*" -exec basename {} .mjs \;); do \
 		$(MAKE) wasm-example "$$example" || exit $$?; \
 	done
 
@@ -454,7 +454,7 @@ example:
 	@cargo run --all-features --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
 
 .PHONY: ledger-example
-ledger-example: speculos-start ## Run the Ledger example on Speculos. Usage: make ledger-example [lang=go|kotlin|python|csharp|swift] (default: Rust)
+ledger-example: speculos-start ## Run the Ledger example on Speculos. Usage: make ledger-example [lang=go|kotlin|python|csharp|swift|wasm] (default: Rust)
 	@python3 scripts/speculos/approve.py Review "Sign transaction" & approver=$$!; \
 	LEDGER_SIMULATOR=1 $(MAKE) $(if $(lang),$(lang)-)example ledger_sign_send_iota || { kill $$approver; exit 1; }; \
 	wait $$approver
