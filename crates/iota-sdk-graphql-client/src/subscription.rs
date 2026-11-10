@@ -242,17 +242,18 @@ impl GraphQLClient {
     ///
     /// Unless one was set with
     /// [`with_subscription_url`](Self::with_subscription_url), it is the
-    /// `subscriptions` endpoint next to the RPC URL, keeping any path prefix
-    /// and the query: `https://host/iota/graphql` subscribes at
-    /// `wss://host/iota/subscriptions`.
+    /// `subscriptions` endpoint under the RPC URL, as the server routes it,
+    /// keeping the query: `https://host/graphql` subscribes at
+    /// `wss://host/graphql/subscriptions`.
     fn ws_url(&self) -> GraphQLResult<Url> {
         let mut url = match &self.subscription_url {
             Some(url) => url.clone(),
             None => {
-                let mut base = self.rpc.clone();
-                base.set_path(self.rpc.path().trim_end_matches('/'));
-                let mut url = base.join("subscriptions")?;
-                url.set_query(self.rpc.query());
+                let mut url = self.rpc.clone();
+                url.set_path(&format!(
+                    "{}/subscriptions",
+                    self.rpc.path().trim_end_matches('/')
+                ));
                 url
             }
         };
@@ -382,7 +383,7 @@ mod tests {
     }
 
     #[test]
-    fn ws_url_sits_next_to_the_rpc_url() {
+    fn ws_url_sits_under_the_rpc_url() {
         for (rpc, expected) in [
             (
                 "https://graphql.testnet.iota.cafe",
@@ -390,23 +391,26 @@ mod tests {
             ),
             (
                 "http://127.0.0.1:9125/graphql",
-                "ws://127.0.0.1:9125/subscriptions",
+                "ws://127.0.0.1:9125/graphql/subscriptions",
             ),
             (
                 "http://127.0.0.1:9125/graphql/",
-                "ws://127.0.0.1:9125/subscriptions",
+                "ws://127.0.0.1:9125/graphql/subscriptions",
             ),
             (
-                "https://example.com/iota/graphql",
-                "wss://example.com/iota/subscriptions",
+                "https://example.com/graphql/v1",
+                "wss://example.com/graphql/v1/subscriptions",
             ),
             (
                 "https://example.com/iota/graphql?key=abc",
-                "wss://example.com/iota/subscriptions?key=abc",
+                "wss://example.com/iota/graphql/subscriptions?key=abc",
             ),
         ] {
-            let client = client(rpc);
-            assert_eq!(client.ws_url().unwrap().as_str(), expected, "rpc {rpc}");
+            assert_eq!(
+                client(rpc).ws_url().unwrap().as_str(),
+                expected,
+                "rpc {rpc}"
+            );
         }
     }
 

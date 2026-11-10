@@ -179,7 +179,7 @@ impl GraphQLClient {
     }
 
     /// Connect subscriptions to `url` instead of the `subscriptions` endpoint
-    /// next to the RPC URL. An `http` or `https` URL is upgraded to `ws` or
+    /// under the RPC URL. An `http` or `https` URL is upgraded to `ws` or
     /// `wss`.
     pub fn with_subscription_url(mut self, url: Url) -> Self {
         self.subscription_url = Some(url);
