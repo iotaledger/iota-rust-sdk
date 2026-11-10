@@ -63,7 +63,8 @@ is exported if you want it) and no bundled roots, so it trusts whatever your
 Subscriptions do not go through the supplied client: their WebSocket trusts
 the roots chosen by this crate's features, and the client's proxies and
 headers do not apply to it. Without a provider feature, subscribing over `wss`
-fails.
+needs a rustls crypto provider installed for the process, and trusts the
+Mozilla roots bundled with `tokio-tungstenite`.
 
 ## Usage
 

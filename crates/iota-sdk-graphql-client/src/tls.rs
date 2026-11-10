@@ -5,11 +5,10 @@
 //! [`reqwest::Client`], and for the WebSocket that subscriptions use.
 //!
 //! The crypto provider and the trust anchors are both chosen by feature.
-//! `tls-ring` and `tls-aws-lc` are what turn on `reqwest`'s and
-//! `tokio-tungstenite`'s TLS, and they turn it on without a provider so that
-//! neither choice is made on our behalf. Without either of them both are built
-//! with no TLS at all, so an HTTP-only build needs no provider and reaches a
-//! plain-HTTP endpoint as-is.
+//! `tls-ring` and `tls-aws-lc` are what turn on `reqwest`'s own TLS, and they
+//! turn it on with `rustls-no-provider` so that neither choice is made on our
+//! behalf. Without either of them `reqwest` is built with no TLS at all, so an
+//! HTTP-only build needs no provider and reaches a plain-HTTP endpoint as-is.
 
 /// A [`reqwest::ClientBuilder`] carrying this crate's user agent and trust
 /// anchors, and a connect timeout of

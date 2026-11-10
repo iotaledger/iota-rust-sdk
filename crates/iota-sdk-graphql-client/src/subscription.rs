@@ -291,16 +291,29 @@ async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection 
         HeaderValue::from_static(WS_PROTOCOL),
     );
     #[cfg(any(feature = "tls-ring", feature = "tls-aws-lc"))]
-    let connecting = {
+    let connector = {
         let tls = crate::tls::websocket_tls_config().map_err(GraphQLError::subscription)?;
-        let connector = tokio_tungstenite::Connector::Rustls(std::sync::Arc::new(tls));
-        tokio_tungstenite::connect_async_tls_with_config(request, None, false, Some(connector))
+        Some(tokio_tungstenite::Connector::Rustls(std::sync::Arc::new(
+            tls,
+        )))
     };
-    // Without a provider feature this crate builds `tokio-tungstenite` with no
-    // TLS, so a `wss` URL fails here with its own error.
+    // Without a provider feature `tokio-tungstenite` builds its own rustls
+    // configuration, which panics unless a provider is installed for the
+    // process.
     #[cfg(not(any(feature = "tls-ring", feature = "tls-aws-lc")))]
-    let connecting = tokio_tungstenite::connect_async(request);
-    let (connection, _response) = connecting.await.map_err(GraphQLError::subscription)?;
+    let connector = {
+        if url.scheme() == "wss" && rustls::crypto::CryptoProvider::get_default().is_none() {
+            return Err(GraphQLError::subscription(
+                "`wss` needs a rustls crypto provider: enable the `tls-ring` or `tls-aws-lc` \
+                 feature, or install one for the process",
+            ));
+        }
+        None
+    };
+    let (connection, _response) =
+        tokio_tungstenite::connect_async_tls_with_config(request, None, false, connector)
+            .await
+            .map_err(GraphQLError::subscription)?;
     Ok(connection)
 }
 

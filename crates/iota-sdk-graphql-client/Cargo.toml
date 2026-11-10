@@ -26,19 +26,15 @@ rustdoc-args = [
 default = ["tls-native-roots", "tls-ring", "tls-webpki-roots"]
 move-types = ["dep:iota-move-types"]
 tls-aws-lc = [
-  "dep:rustls",
   "dep:rustls-platform-verifier",
   "reqwest/rustls-no-provider",
   "rustls/aws-lc-rs",
-  "tokio-tungstenite/rustls-tls-webpki-roots",
 ]
 tls-native-roots = []
 tls-ring = [
-  "dep:rustls",
   "dep:rustls-platform-verifier",
   "reqwest/rustls-no-provider",
   "rustls/ring",
-  "tokio-tungstenite/rustls-tls-webpki-roots",
 ]
 tls-webpki-roots = ["dep:webpki-root-certs"]
 
@@ -72,7 +68,7 @@ iota-types = { workspace = true, features = ["serde", "hash"] }
 # target, so `graphql-ws-client` picks up a different integration on each.
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 graphql-ws-client = { workspace = true, features = ["tungstenite-0.28"] }
-rustls = { version = "0.23.46", default-features = false, optional = true }
+rustls = { version = "0.23.46", default-features = false }
 rustls-platform-verifier = { version = "0.7", optional = true }
 tokio-tungstenite.workspace = true
 webpki-root-certs = { workspace = true, optional = true }
