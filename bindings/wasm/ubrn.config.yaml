@@ -23,6 +23,9 @@ web:
   features:
     - crypto
     - bls12381
+    # Only through a `LedgerTransport` implemented in JavaScript: wasm32 has
+    # neither `hidapi` nor the TCP sockets of the Speculos transport.
+    - ledger
     # TypeScript cannot key a native map by an object.
     - map-objects
 
