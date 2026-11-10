@@ -18,7 +18,7 @@ class Program
             ? Ledger.Speculos("127.0.0.1", 9999)
             : Ledger.NativeHid();
         await ledger.OpenApp();
-        var signer = await ledger.IntoSigner("m/44'/4218'/0'/0'/0'");
+        var signer = await ledger.Signer("m/44'/4218'/0'/0'/0'");
         var senderAddress = signer.Address();
         Console.WriteLine($"Sender address: {senderAddress}");
 

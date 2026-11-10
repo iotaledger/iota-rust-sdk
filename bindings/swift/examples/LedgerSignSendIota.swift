@@ -20,7 +20,7 @@ struct LedgerSignSendIotaExample {
       ? Ledger.speculos(host: "127.0.0.1", port: 9999)
       : try Ledger.nativeHid()
     try await ledger.openApp()
-    let signer = try await ledger.intoSigner(path: "m/44'/4218'/0'/0'/0'")
+    let signer = try await ledger.signer(path: "m/44'/4218'/0'/0'/0'")
     let senderAddress = signer.address()
     print("Sender address: \(senderAddress)")
 

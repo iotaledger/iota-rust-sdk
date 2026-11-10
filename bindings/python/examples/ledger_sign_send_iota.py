@@ -21,7 +21,7 @@ async def main():
     else:
         ledger = Ledger.native_hid()
     await ledger.open_app()
-    signer = await ledger.into_signer("m/44'/4218'/0'/0'/0'")
+    signer = await ledger.signer("m/44'/4218'/0'/0'/0'")
     sender_address = signer.address()
     print(f"Sender address: {sender_address}")
 

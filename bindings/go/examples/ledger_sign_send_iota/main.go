@@ -32,7 +32,7 @@ func main() {
 	if err := ledger.OpenApp(); err != nil {
 		log.Fatalf("Failed to open the IOTA app: %v", err)
 	}
-	signer, err := ledger.IntoSigner("m/44'/4218'/0'/0'/0'")
+	signer, err := ledger.Signer("m/44'/4218'/0'/0'/0'")
 	if err != nil {
 		log.Fatalf("Failed to create the signer: %v", err)
 	}

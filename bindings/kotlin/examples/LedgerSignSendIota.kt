@@ -20,7 +20,7 @@ fun main() = runBlocking {
             Ledger.nativeHid()
         }
     ledger.openApp()
-    val signer = ledger.intoSigner("m/44'/4218'/0'/0'/0'")
+    val signer = ledger.signer("m/44'/4218'/0'/0'/0'")
     val senderAddress = signer.address()
     println("Sender address: ${senderAddress}")
 
