@@ -204,7 +204,8 @@ impl Ledger {
     /// `127.0.0.1:9999` in the emulator).
     ///
     /// Calls through this connection block the thread running them until the
-    /// emulator answers, and fail on the web, which has no TCP sockets.
+    /// emulator answers, and fail in the WASM bindings, which have no TCP
+    /// sockets.
     #[uniffi::constructor]
     pub fn speculos(host: String, port: u16) -> Self {
         iota_sdk::ledger::Ledger::new_speculos(&host, port).into()
