@@ -174,11 +174,11 @@ impl TransactionSigner {
 #[cfg(feature = "ledger")]
 #[uniffi::export]
 impl TransactionSigner {
-    /// Sign with a Ledger device. The transaction builder passes the signer
-    /// the transaction's objects so the device shows what the transaction
-    /// does; without them, or with an IOTA app older than 1.0, it blind-signs,
-    /// which the app only allows when blind signing is enabled in its
-    /// settings.
+    /// Create a transaction signer that signs with a Ledger device. The
+    /// transaction builder passes it the transaction's objects so the device
+    /// shows what the transaction does; without them, or with an IOTA app older
+    /// than 1.0, it blind-signs, which the app only allows when blind signing
+    /// is enabled in its settings.
     #[uniffi::constructor]
     pub fn from_ledger(signer: Arc<crate::ledger::LedgerSigner>) -> Self {
         Self(signer as Arc<_>)
