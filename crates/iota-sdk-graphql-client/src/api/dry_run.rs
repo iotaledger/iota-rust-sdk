@@ -299,6 +299,7 @@ mod tests {
     }
 
     // This needs the transaction builder to be able to be tested properly
+    #[cfg(any(feature = "tls-ring", feature = "tls-aws-lc"))]
     #[tokio::test]
     async fn test_dry_run() {
         let client = GraphQLClient::new_testnet().unwrap();
