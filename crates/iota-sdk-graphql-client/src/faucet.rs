@@ -32,11 +32,11 @@ pub enum FaucetError {
     StatusCode(StatusCode),
     #[error("Faucet request timed out")]
     TimedOut,
+    #[deprecated(note = "no longer returned; an `https` request without TLS fails with `Reqwest`")]
     #[error(
         "Faucet URL scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass \
          your own client to `new_with_reqwest_client`"
     )]
-    #[deprecated(note = "no longer returned; an `https` request without TLS fails with `Reqwest`")]
     TlsUnavailable(String),
     #[error(
         "Faucet service received too many requests from this IP address. Please try again later."
