@@ -290,9 +290,17 @@ async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection 
         "Sec-WebSocket-Protocol",
         HeaderValue::from_static(WS_PROTOCOL),
     );
-    let (connection, _response) = tokio_tungstenite::connect_async(request)
-        .await
-        .map_err(GraphQLError::subscription)?;
+    #[cfg(any(feature = "tls-ring", feature = "tls-aws-lc"))]
+    let connecting = {
+        let tls = crate::tls::websocket_tls_config().map_err(GraphQLError::subscription)?;
+        let connector = tokio_tungstenite::Connector::Rustls(std::sync::Arc::new(tls));
+        tokio_tungstenite::connect_async_tls_with_config(request, None, false, Some(connector))
+    };
+    // Without a provider feature this crate builds `tokio-tungstenite` with no
+    // TLS, so a `wss` URL fails here with its own error.
+    #[cfg(not(any(feature = "tls-ring", feature = "tls-aws-lc")))]
+    let connecting = tokio_tungstenite::connect_async(request);
+    let (connection, _response) = connecting.await.map_err(GraphQLError::subscription)?;
     Ok(connection)
 }
 

@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //! Client construction for the constructors that build their own
-//! [`reqwest::Client`].
+//! [`reqwest::Client`], and for the WebSocket that subscriptions use.
 //!
 //! The crypto provider and the trust anchors are both chosen by feature.
-//! `tls-ring` and `tls-aws-lc` are what turn on `reqwest`'s own TLS, and they
-//! turn it on with `rustls-no-provider` so that neither choice is made on our
-//! behalf. Without either of them `reqwest` is built with no TLS at all, so an
-//! HTTP-only build needs no provider and reaches a plain-HTTP endpoint as-is.
+//! `tls-ring` and `tls-aws-lc` are what turn on `reqwest`'s and
+//! `tokio-tungstenite`'s TLS, and they turn it on without a provider so that
+//! neither choice is made on our behalf. Without either of them both are built
+//! with no TLS at all, so an HTTP-only build needs no provider and reaches a
+//! plain-HTTP endpoint as-is.
 
 /// A [`reqwest::ClientBuilder`] carrying this crate's user agent and trust
 /// anchors, and a connect timeout of
@@ -118,6 +119,108 @@ fn apply_roots(builder: reqwest::ClientBuilder) -> reqwest::ClientBuilder {
     builder
 }
 
+/// The rustls configuration subscriptions open `wss` connections with,
+/// trusting the same roots as [`default_http_client_builder`].
+///
+/// `tokio-tungstenite` has no access to `reqwest`'s configuration, so the
+/// verifier is rebuilt here from the same features: the platform verifier, with
+/// the bundled roots merged in where `reqwest` merges them, or the bundled
+/// roots alone where it uses them alone.
+#[cfg(all(
+    not(target_arch = "wasm32"),
+    any(feature = "tls-ring", feature = "tls-aws-lc")
+))]
+pub(crate) fn websocket_tls_config() -> Result<rustls::ClientConfig, rustls::Error> {
+    install_default_crypto_provider();
+    let provider = rustls::crypto::CryptoProvider::get_default()
+        .cloned()
+        .unwrap_or_else(|| std::sync::Arc::new(default_crypto_provider()));
+    let builder = rustls::ClientConfig::builder_with_provider(provider.clone())
+        .with_safe_default_protocol_versions()?;
+    Ok(websocket_verification(builder, provider)?.with_no_client_auth())
+}
+
+/// The provider [`install_default_crypto_provider`] installs, for when another
+/// one cannot be read back.
+#[cfg(all(not(target_arch = "wasm32"), feature = "tls-ring"))]
+fn default_crypto_provider() -> rustls::crypto::CryptoProvider {
+    rustls::crypto::ring::default_provider()
+}
+
+#[cfg(all(
+    not(target_arch = "wasm32"),
+    feature = "tls-aws-lc",
+    not(feature = "tls-ring")
+))]
+fn default_crypto_provider() -> rustls::crypto::CryptoProvider {
+    rustls::crypto::aws_lc_rs::default_provider()
+}
+
+/// The bundled roots merged into the platform verifier.
+#[cfg(all(
+    not(target_arch = "wasm32"),
+    any(feature = "tls-ring", feature = "tls-aws-lc"),
+    feature = "tls-webpki-roots",
+    feature = "tls-native-roots",
+    any(all(unix, not(target_os = "android")), target_os = "windows")
+))]
+fn websocket_verification(
+    builder: rustls::ConfigBuilder<rustls::ClientConfig, rustls::WantsVerifier>,
+    provider: std::sync::Arc<rustls::crypto::CryptoProvider>,
+) -> Result<
+    rustls::ConfigBuilder<rustls::ClientConfig, rustls::client::WantsClientCert>,
+    rustls::Error,
+> {
+    let verifier = rustls_platform_verifier::Verifier::new_with_extra_roots(
+        webpki_root_certs::TLS_SERVER_ROOT_CERTS.iter().cloned(),
+        provider,
+    )?;
+    Ok(builder
+        .dangerous()
+        .with_custom_certificate_verifier(std::sync::Arc::new(verifier)))
+}
+
+/// The bundled roots alone.
+#[cfg(all(
+    not(target_arch = "wasm32"),
+    any(feature = "tls-ring", feature = "tls-aws-lc"),
+    feature = "tls-webpki-roots",
+    not(all(
+        feature = "tls-native-roots",
+        any(all(unix, not(target_os = "android")), target_os = "windows")
+    ))
+))]
+fn websocket_verification(
+    builder: rustls::ConfigBuilder<rustls::ClientConfig, rustls::WantsVerifier>,
+    _provider: std::sync::Arc<rustls::crypto::CryptoProvider>,
+) -> Result<
+    rustls::ConfigBuilder<rustls::ClientConfig, rustls::client::WantsClientCert>,
+    rustls::Error,
+> {
+    let mut roots = rustls::RootCertStore::empty();
+    roots.add_parsable_certificates(webpki_root_certs::TLS_SERVER_ROOT_CERTS.iter().cloned());
+    Ok(builder.with_root_certificates(roots))
+}
+
+/// The platform verifier alone.
+#[cfg(all(
+    not(target_arch = "wasm32"),
+    any(feature = "tls-ring", feature = "tls-aws-lc"),
+    not(feature = "tls-webpki-roots")
+))]
+fn websocket_verification(
+    builder: rustls::ConfigBuilder<rustls::ClientConfig, rustls::WantsVerifier>,
+    provider: std::sync::Arc<rustls::crypto::CryptoProvider>,
+) -> Result<
+    rustls::ConfigBuilder<rustls::ClientConfig, rustls::client::WantsClientCert>,
+    rustls::Error,
+> {
+    let verifier = rustls_platform_verifier::Verifier::new(provider)?;
+    Ok(builder
+        .dangerous()
+        .with_custom_certificate_verifier(std::sync::Arc::new(verifier)))
+}
+
 /// The scheme of `server` when this build cannot reach it, or `None` when it
 /// can.
 ///
@@ -172,6 +275,12 @@ mod tests {
             unsupported_scheme("wss://graphql.testnet.iota.cafe").as_deref(),
             Some("wss")
         );
+    }
+
+    #[cfg(any(feature = "tls-ring", feature = "tls-aws-lc"))]
+    #[test]
+    fn websocket_tls_config_builds() {
+        super::websocket_tls_config().unwrap();
     }
 
     #[cfg(any(target_arch = "wasm32", feature = "tls-ring", feature = "tls-aws-lc"))]
