@@ -12,7 +12,6 @@ import {
   Address,
   FaucetClient,
   GraphQlClient,
-  hexEncode,
   initAsync,
   Ledger,
   PtbArgument,
@@ -86,5 +85,5 @@ const effects = await builder.execute(
   TransactionSigner.fromLedger(signer),
   WaitForTransaction.Finalized,
 );
-console.log(`Digest: ${hexEncode(effects.digest().toBytes())}`);
+console.log(`Digest: ${effects.digest().toBase58()}`);
 console.log(`Transaction status: ${effects.asV1().status().tag}`);
