@@ -16,6 +16,10 @@ import {
 
 await initAsync();
 
+// A signer implemented in the host language. This one wraps a local key, which
+// needs nothing but the transaction, so it opts out of the objects the builder
+// fetches for a signer that shows the transaction to its user, such as a
+// hardware wallet.
 class AsyncSigner {
   constructor(key) {
     this.key = key;
@@ -25,6 +29,16 @@ class AsyncSigner {
     return TransactionSignerFnOutput.new({
       signature: this.key.signTransaction(transaction),
     });
+  }
+
+  usesObjects() {
+    return false;
+  }
+
+  // Never called for a signer whose `usesObjects` returns false; the
+  // interface still requires it.
+  async signWithObjects(transaction, objects) {
+    return this.sign(transaction);
   }
 }
 

@@ -25,6 +25,9 @@ jobs:
         with:
           key: swift-source
 
+      - name: Install libudev for hidapi
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
+
       - name: Generate Swift bindings
         run: make swift
 
