@@ -27,6 +27,7 @@ jobs:
               - ".github/workflows/bindings.yml"
               - "bindings/**"
               - "crates/iota-sdk-ffi/**"
+              - "scripts/speculos/**"
 
   csharp:
     if: (!cancelled() && needs.diff.outputs.isBindings == 'true')
