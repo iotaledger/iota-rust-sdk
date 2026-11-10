@@ -32,6 +32,9 @@ jobs:
       - name: Install uniffi-bindgen-cs
         run: make install-uniffi-bindgen-cs
 
+      - name: Install libudev for hidapi
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
+
       - name: Generate C# bindings
         run: make csharp
 

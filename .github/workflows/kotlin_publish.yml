@@ -133,6 +133,9 @@ jobs:
         with:
           key: kotlin-publish
 
+      - name: Install libudev for hidapi
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
+
       - name: Generate Kotlin bindings
         run: make kotlin
 
