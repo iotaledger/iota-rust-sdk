@@ -17,7 +17,7 @@ test:
 
 .PHONY: wasm
 wasm:
-	cargo check --no-default-features --target wasm32-unknown-unknown
+	cargo check --no-default-features --features speculos --target wasm32-unknown-unknown
 
 %:
 	$(MAKE) -C ../.. $@

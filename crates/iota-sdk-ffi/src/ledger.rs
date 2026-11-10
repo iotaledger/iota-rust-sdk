@@ -3,7 +3,10 @@
 
 use std::sync::Arc;
 
-use iota_sdk::ledger::{ApduError, iota_crypto::DerivationPath};
+use iota_sdk::ledger::{
+    ApduAnswer, ApduCommand, ApduError, MaybeSendSync, Transport, TransportFuture,
+    iota_crypto::DerivationPath,
+};
 
 use crate::{
     transaction_builder::signer::{TransactionSignerFn, TransactionSignerFnOutput},
@@ -90,6 +93,68 @@ fn new_native_hid() -> Result<iota_sdk::ledger::Ledger, LedgerError> {
     ))
 }
 
+/// Error a `LedgerTransport` fails to exchange a command with.
+// Not `LedgerError`: uniffi cannot pass a flat error from the host language to
+// Rust.
+#[derive(Debug, thiserror::Error, uniffi::Error)]
+#[non_exhaustive]
+pub enum LedgerTransportError {
+    /// No Ledger device is connected.
+    #[error("Ledger device not found; connect the device")]
+    DeviceNotFound,
+    /// Any other failure.
+    // Not `message`, which the Kotlin bindings cannot compile: it collides
+    // with `Throwable.message`.
+    #[error("{reason}")]
+    Other { reason: String },
+}
+
+// uniffi reports any other exception a transport throws through this.
+impl From<uniffi::UnexpectedUniFFICallbackError> for LedgerTransportError {
+    fn from(error: uniffi::UnexpectedUniFFICallbackError) -> Self {
+        Self::Other {
+            reason: error.reason,
+        }
+    }
+}
+
+impl From<LedgerTransportError> for iota_sdk::ledger::LedgerError {
+    fn from(error: LedgerTransportError) -> Self {
+        match error {
+            LedgerTransportError::DeviceNotFound => Self::DeviceNotFound,
+            LedgerTransportError::Other { reason } => Self::transport(reason),
+        }
+    }
+}
+
+/// A link to a Ledger device implemented in the host language, for the links
+/// the SDK does not provide: Bluetooth through Ledger's mobile SDKs, or WebHID
+/// and WebUSB in the browser.
+#[uniffi::export(with_foreign)]
+#[cfg_attr(not(target_arch = "wasm32"), async_trait::async_trait)]
+#[cfg_attr(target_arch = "wasm32", async_trait::async_trait(?Send))]
+pub trait LedgerTransport: MaybeSendSync {
+    /// Send an APDU command (`cla ins p1 p2 len data`) to the device and
+    /// return its answer: the response payload followed by the two-byte
+    /// status word.
+    ///
+    /// Opening or closing an app closes the link on some transports. `Ledger`
+    /// then calls this at intervals until the app answers, so re-establish a
+    /// closed link here.
+    async fn exchange(&self, apdu: Vec<u8>) -> Result<Vec<u8>, LedgerTransportError>;
+}
+
+struct ForeignTransport(Arc<dyn LedgerTransport>);
+
+impl Transport for ForeignTransport {
+    fn exchange<'a>(&'a self, command: &'a ApduCommand) -> TransportFuture<'a, ApduAnswer> {
+        Box::pin(async move {
+            let answer = self.0.exchange(command.to_bytes()).await?;
+            ApduAnswer::from_bytes(answer)
+        })
+    }
+}
+
 /// The version of the IOTA app running on a Ledger device.
 #[derive(uniffi::Record)]
 pub struct LedgerAppVersion {
@@ -139,10 +204,23 @@ impl Ledger {
     /// `127.0.0.1:9999` in the emulator).
     ///
     /// Calls through this connection block the thread running them until the
-    /// emulator answers.
+    /// emulator answers, and fail in the WASM bindings, which have no TCP
+    /// sockets.
     #[uniffi::constructor]
     pub fn speculos(host: String, port: u16) -> Self {
         iota_sdk::ledger::Ledger::new_speculos(&host, port).into()
+    }
+
+    /// Communicate with the device through a transport implemented in the
+    /// host language.
+    ///
+    /// `open_app` closes whichever other app the transport reports as
+    /// running, so do not call it on an emulator that reports a placeholder
+    /// app name, such as Speculos started without
+    /// `SPECULOS_APPNAME=IOTA:<version>`: it ends the emulated app.
+    #[uniffi::constructor]
+    pub fn from_transport(transport: Arc<dyn LedgerTransport>) -> Self {
+        iota_sdk::ledger::Ledger::new(ForeignTransport(transport)).into()
     }
 
     /// Check whether the IOTA app is the app running on the device.
@@ -155,7 +233,8 @@ impl Ledger {
 
     /// Open the IOTA app, from the dashboard or by closing another app first.
     ///
-    /// Does nothing if the IOTA app is already running, or on Speculos.
+    /// Does nothing if the IOTA app is already running, or on a `speculos`
+    /// connection.
     pub async fn open_app(&self) -> Result<(), LedgerError> {
         Ok(self.0.open_app().await?)
     }
@@ -370,5 +449,70 @@ mod tests {
         let (ledger, _) = ledger(true);
         let signer = block_on(ledger.signer(PATH.to_owned())).unwrap();
         assert!(TransactionSigner::from_ledger(Arc::new(signer)).uses_objects());
+    }
+
+    /// Implements the transport the way a host language does: records the
+    /// commands it receives and answers each with `answer`.
+    struct HostTransport {
+        received: std::sync::Mutex<Vec<Vec<u8>>>,
+        answer: fn() -> Result<Vec<u8>, LedgerTransportError>,
+    }
+
+    #[async_trait::async_trait]
+    impl LedgerTransport for HostTransport {
+        async fn exchange(&self, apdu: Vec<u8>) -> Result<Vec<u8>, LedgerTransportError> {
+            self.received.lock().unwrap().push(apdu);
+            (self.answer)()
+        }
+    }
+
+    fn host_transport(answer: fn() -> Result<Vec<u8>, LedgerTransportError>) -> Arc<HostTransport> {
+        Arc::new(HostTransport {
+            received: Default::default(),
+            answer,
+        })
+    }
+
+    #[test]
+    fn host_transport_exchanges_commands_as_sent_over_the_wire() {
+        // Version 1.0.1 as a final block protocol result, then the status word
+        let transport = host_transport(|| Ok(vec![1, 1, 0, 1, 0x90, 0x00]));
+        let ledger = Ledger::from_transport(transport.clone());
+
+        let version = block_on(ledger.version()).unwrap();
+        assert_eq!((version.major, version.minor, version.patch), (1, 0, 1));
+        // cla, ins, p1, p2 and length, then the block protocol start byte and
+        // the hash that stands for an empty parameter
+        assert_eq!(
+            *transport.received.lock().unwrap(),
+            [[&[0, 0, 0, 0, 33, 0][..], &[0; 32]].concat()]
+        );
+    }
+
+    #[test]
+    fn host_transport_errors_reach_the_caller() {
+        let ledger =
+            Ledger::from_transport(host_transport(|| Err(LedgerTransportError::DeviceNotFound)));
+        assert!(matches!(
+            block_on(ledger.version()),
+            Err(LedgerError::DeviceNotFound(_))
+        ));
+
+        let ledger = Ledger::from_transport(host_transport(|| {
+            Err(LedgerTransportError::Other {
+                reason: "link closed".to_owned(),
+            })
+        }));
+        assert!(matches!(
+            block_on(ledger.version()),
+            Err(LedgerError::Other(message)) if message == "link closed"
+        ));
+
+        // A status word other than success
+        let ledger = Ledger::from_transport(host_transport(|| Ok(vec![0x55, 0x15])));
+        assert!(matches!(
+            block_on(ledger.version()),
+            Err(LedgerError::DeviceLocked(_))
+        ));
     }
 }
