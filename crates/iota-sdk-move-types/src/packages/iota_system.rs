@@ -32,7 +32,9 @@ pub mod staking_pool {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct PoolTokenExchangeRate {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub iota_amount: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub pool_token_amount: u64,
     }
 
@@ -74,6 +76,7 @@ pub mod staking_pool {
         /// ID of the staking pool we are staking with.
         pub pool_id: ID,
         /// The epoch at which the stake becomes active.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub stake_activation_epoch: u64,
         /// The staked IOTA tokens.
         #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
@@ -139,30 +142,43 @@ pub mod staking_pool {
         /// The epoch at which this pool became active.
         ///
         /// `None` while pre-active; `Some(epoch)` once active or inactive.
+        #[cfg_attr(
+            feature = "serde",
+            serde(default, with = "iota_types::OptionReadableDisplay")
+        )]
         pub activation_epoch: Option<u64>,
         /// The epoch at which this pool ceased to be active.
         ///
         /// `None` while pre-active or active; `Some(epoch)` once inactive.
+        #[cfg_attr(
+            feature = "serde",
+            serde(default, with = "iota_types::OptionReadableDisplay")
+        )]
         pub deactivation_epoch: Option<u64>,
         /// The total number of IOTA tokens in this pool — including the
         /// `rewards_pool` and the principal of every `StakedIota` — updated
         /// at epoch boundaries.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub iota_balance: u64,
         /// Epoch stake rewards are added here at the end of each epoch.
         pub rewards_pool: Balance<IOTA>,
         /// Total number of pool tokens issued by the pool.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub pool_token_balance: u64,
         /// Exchange-rate history keyed by epoch number, starting from the
         /// `activation_epoch` and capturing the rate at the start of each
         /// epoch (after the previous epoch's rewards are deposited).
         pub exchange_rates: Table<u64, PoolTokenExchangeRate>,
         /// Pending stake amount for this epoch, emptied at epoch boundaries.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub pending_stake: u64,
         /// Pending stake withdrawn during the current epoch, including both
         /// principal and rewards; emptied at epoch boundaries.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub pending_total_iota_withdraw: u64,
         /// Pending pool tokens withdrawn during the current epoch, emptied
         /// at epoch boundaries.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub pending_pool_token_withdraw: u64,
         /// Any extra fields not defined statically.
         pub extra_fields: Bag,
@@ -235,8 +251,11 @@ pub mod voting_power {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct VotingPowerInfoV1 {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub validator_index: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub voting_power: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub stake: u64,
     }
 
@@ -427,22 +446,28 @@ pub mod validator {
         pub metadata: ValidatorMetadataV1,
         /// The voting power of this validator, which may differ from its
         /// stake amount.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub voting_power: u64,
         /// The ID of this validator's current valid
         /// `UnverifiedValidatorOperationCap`.
         pub operation_cap_id: ID,
         /// Gas price quote, updated only at end of epoch.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub gas_price: u64,
         /// Staking pool for this validator.
         pub staking_pool: StakingPoolV1,
         /// Commission rate of the validator, in basis points.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub commission_rate: u64,
         /// Total amount of stake that would be active in the next epoch.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub next_epoch_stake: u64,
         /// This validator's gas price quote for the next epoch.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub next_epoch_gas_price: u64,
         /// The commission rate of the validator starting next epoch, in
         /// basis points.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub next_epoch_commission_rate: u64,
         /// Any extra fields not defined statically.
         pub extra_fields: Bag,
@@ -466,7 +491,9 @@ pub mod validator {
         pub pool_id: ID,
         pub validator_address: Address,
         pub staker_address: Address,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub amount: u64,
     }
 
@@ -488,9 +515,13 @@ pub mod validator {
         pub pool_id: ID,
         pub validator_address: Address,
         pub staker_address: Address,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub stake_activation_epoch: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub unstaking_epoch: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub principal_amount: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub reward_amount: u64,
     }
 }
@@ -517,6 +548,7 @@ pub mod validator_set {
     pub struct ValidatorSetV1 {
         /// Total stake from all active validators at the beginning of the
         /// epoch.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub total_stake: u64,
         /// The current list of active validators.
         pub active_validators: Vec<ValidatorV1>,
@@ -524,6 +556,7 @@ pub mod validator_set {
         /// at the end of the epoch.
         pub pending_active_validators: TableVec<ValidatorV1>,
         /// Removal requests; each element is an index into `active_validators`.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::VecReadableDisplay"))]
         pub pending_removals: Vec<u64>,
         /// Staking-pool-ID → validator address.
         pub staking_pool_mappings: Table<ID, Address>,
@@ -534,6 +567,10 @@ pub mod validator_set {
         pub validator_candidates: Table<Address, Validator>,
         /// Number of epochs each validator has had stake below the low-stake
         /// threshold.
+        #[cfg_attr(
+            feature = "serde",
+            serde(with = "crate::_serde::vec_map_readable_u64_values")
+        )]
         pub at_risk_validators: VecMap<Address, u64>,
         /// Any extra fields not defined statically.
         pub extra_fields: Bag,
@@ -554,16 +591,19 @@ pub mod validator_set {
     pub struct ValidatorSetV2 {
         /// Total stake from all committee validators at the beginning of the
         /// epoch.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub total_stake: u64,
         /// The current list of active validators.
         pub active_validators: Vec<ValidatorV1>,
         /// Subset of validators responsible for consensus; each element is
         /// an index into `active_validators`.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::VecReadableDisplay"))]
         pub committee_members: Vec<u64>,
         /// New validator candidates added during the current epoch; processed
         /// at the end of the epoch.
         pub pending_active_validators: TableVec<ValidatorV1>,
         /// Removal requests; each element is an index into `active_validators`.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::VecReadableDisplay"))]
         pub pending_removals: Vec<u64>,
         /// Staking-pool-ID → validator address.
         pub staking_pool_mappings: Table<ID, Address>,
@@ -573,6 +613,10 @@ pub mod validator_set {
         pub validator_candidates: Table<Address, Validator>,
         /// Number of epochs each validator has had stake below the low-stake
         /// threshold.
+        #[cfg_attr(
+            feature = "serde",
+            serde(with = "crate::_serde::vec_map_readable_u64_values")
+        )]
         pub at_risk_validators: VecMap<Address, u64>,
         /// Any extra fields not defined statically.
         pub extra_fields: Bag,
@@ -593,15 +637,22 @@ pub mod validator_set {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct ValidatorEpochInfoEventV1 {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
         pub validator_address: Address,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub reference_gas_survey_quote: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub stake: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub voting_power: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub commission_rate: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub pool_staking_reward: u64,
         pub pool_token_exchange_rate: PoolTokenExchangeRate,
         pub tallying_rule_reporters: Vec<Address>,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub tallying_rule_global_score: u64,
     }
 
@@ -620,6 +671,7 @@ pub mod validator_set {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct ValidatorJoinEvent {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
         pub validator_address: Address,
         pub staking_pool_id: ID,
@@ -640,6 +692,7 @@ pub mod validator_set {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct ValidatorLeaveEvent {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
         pub validator_address: Address,
         pub staking_pool_id: ID,
@@ -661,6 +714,7 @@ pub mod validator_set {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct CommitteeValidatorJoinEvent {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
         pub validator_address: Address,
         pub staking_pool_id: ID,
@@ -681,6 +735,7 @@ pub mod validator_set {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct CommitteeValidatorLeaveEvent {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
         pub validator_address: Address,
         pub staking_pool_id: ID,
@@ -722,21 +777,28 @@ pub mod iota_system_state_inner {
     )]
     pub struct SystemParametersV1 {
         /// The duration of an epoch, in milliseconds.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch_duration_ms: u64,
         /// Minimum number of active validators at any moment.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub min_validator_count: u64,
         /// Maximum number of active validators at any moment.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub max_validator_count: u64,
         /// Lower bound on the amount of stake required to become a validator.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub min_validator_joining_stake: u64,
         /// Validators with stake below this threshold are considered to have
         /// low stake and may be removed from the validator set.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub validator_low_stake_threshold: u64,
         /// Validators with stake below this threshold are removed immediately
         /// at epoch change with no grace period.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub validator_very_low_stake_threshold: u64,
         /// A validator can have stake below `validator_low_stake_threshold`
         /// for this many epochs before being removed.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub validator_low_stake_grace_period: u64,
         /// Any extra fields not defined statically.
         pub extra_fields: Bag,
@@ -754,10 +816,13 @@ pub mod iota_system_state_inner {
     )]
     pub struct IotaSystemStateV1 {
         /// The current epoch ID, starting from 0.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
         /// The current protocol version, starting from 1.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub protocol_version: u64,
         /// The current version of the system state data structure type.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub system_state_version: u64,
         /// The IOTA `TreasuryCap`.
         pub iota_treasury_cap: IotaTreasuryCap,
@@ -770,6 +835,7 @@ pub mod iota_system_state_inner {
         /// Capability to perform privileged IOTA system operations.
         pub iota_system_admin_cap: IotaSystemAdminCap,
         /// The reference gas price for the current epoch.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub reference_gas_price: u64,
         /// Validator → set of validators that have reported it. Persists
         /// across epochs.
@@ -778,9 +844,12 @@ pub mod iota_system_state_inner {
         pub safe_mode: bool,
         pub safe_mode_storage_charges: Balance<IOTA>,
         pub safe_mode_computation_rewards: Balance<IOTA>,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub safe_mode_storage_rebates: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub safe_mode_non_refundable_storage_fee: u64,
         /// Unix timestamp of the current epoch start.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch_start_timestamp_ms: u64,
         /// Any extra fields not defined statically.
         pub extra_fields: Bag,
@@ -801,22 +870,30 @@ pub mod iota_system_state_inner {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct IotaSystemStateV2 {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub protocol_version: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub system_state_version: u64,
         pub iota_treasury_cap: IotaTreasuryCap,
         pub validators: ValidatorSetV2,
         pub storage_fund: StorageFundV1,
         pub parameters: SystemParametersV1,
         pub iota_system_admin_cap: IotaSystemAdminCap,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub reference_gas_price: u64,
         pub validator_report_records: VecMap<Address, VecSet<Address>>,
         pub safe_mode: bool,
         pub safe_mode_storage_charges: Balance<IOTA>,
         pub safe_mode_computation_charges: Balance<IOTA>,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub safe_mode_computation_charges_burned: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub safe_mode_storage_rebates: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub safe_mode_non_refundable_storage_fee: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch_start_timestamp_ms: u64,
         pub extra_fields: Bag,
     }
@@ -849,16 +926,27 @@ pub mod iota_system_state_inner {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct SystemEpochInfoEventV1 {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub protocol_version: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub reference_gas_price: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub total_stake: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub storage_charge: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub storage_rebate: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub storage_fund_balance: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub total_gas_fees: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub total_stake_rewards_distributed: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub burnt_tokens_amount: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub minted_tokens_amount: u64,
     }
 
@@ -880,16 +968,27 @@ pub mod iota_system_state_inner {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct SystemEpochInfoEventV2 {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub protocol_version: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub total_stake: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub storage_charge: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub storage_rebate: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub storage_fund_balance: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub total_gas_fees: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub total_stake_rewards_distributed: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub burnt_tokens_amount: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub minted_tokens_amount: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub tips_amount: u64,
     }
 }
@@ -920,6 +1019,7 @@ pub mod iota_system {
     )]
     pub struct IotaSystemState {
         pub id: UID,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
     }
 
@@ -1002,6 +1102,7 @@ pub mod timelocked_staking {
         /// A self-custodial object holding the staked IOTA tokens.
         pub staked_iota: StakedIota,
         /// Epoch timestamp (ms) of when the lock expires.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub expiration_timestamp_ms: u64,
         /// Optional timelock-related label.
         pub label: Option<string::String>,
@@ -1054,7 +1155,9 @@ pub mod genesis {
         pub image_url: Vec<u8>,
         pub project_url: Vec<u8>,
         pub iota_address: Address,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub gas_price: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub commission_rate: u64,
         pub authority_public_key: Vec<u8>,
         pub proof_of_possession: Vec<u8>,
@@ -1080,13 +1183,21 @@ pub mod genesis {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct GenesisChainParameters {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub protocol_version: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub chain_start_timestamp_ms: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch_duration_ms: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub max_validator_count: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub min_validator_joining_stake: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub validator_low_stake_threshold: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub validator_very_low_stake_threshold: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub validator_low_stake_grace_period: u64,
     }
 
@@ -1105,12 +1216,17 @@ pub mod genesis {
     )]
     pub struct TokenAllocation {
         pub recipient_address: Address,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub amount_nanos: u64,
         /// Indicates whether this allocation should be staked at genesis and
         /// with which validator.
         pub staked_with_validator: Option<Address>,
         /// Indicates whether this allocation should be staked with a
         /// timelock at genesis, and the timelock's expiration.
+        #[cfg_attr(
+            feature = "serde",
+            serde(default, with = "iota_types::OptionReadableDisplay")
+        )]
         pub staked_with_timelock_expiration: Option<u64>,
     }
 
@@ -1129,6 +1245,7 @@ pub mod genesis {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct TokenDistributionSchedule {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub pre_minted_supply: u64,
         pub allocations: Vec<TokenAllocation>,
     }
