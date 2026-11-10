@@ -28,3 +28,7 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+## Ledger
+
+Signing with a Ledger hardware wallet is described in the [Ledger section](https://github.com/iotaledger/iota-rust-sdk/tree/develop/bindings/python#ledger) of the repository's Python README.
