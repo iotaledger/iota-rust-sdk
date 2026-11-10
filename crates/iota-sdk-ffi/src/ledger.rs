@@ -213,6 +213,11 @@ impl Ledger {
 
     /// Communicate with the device through a transport implemented in the
     /// host language.
+    ///
+    /// `open_app` closes whichever other app the transport reports as
+    /// running, so do not call it on an emulator that reports a placeholder
+    /// app name, such as Speculos started without
+    /// `SPECULOS_APPNAME=IOTA:<version>`: it ends the emulated app.
     #[uniffi::constructor]
     pub fn from_transport(transport: Arc<dyn LedgerTransport>) -> Self {
         iota_sdk::ledger::Ledger::new(ForeignTransport(transport)).into()
