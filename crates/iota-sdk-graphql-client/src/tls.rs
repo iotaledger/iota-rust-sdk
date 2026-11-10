@@ -35,11 +35,35 @@
 #[cfg(not(target_arch = "wasm32"))]
 pub(crate) fn default_http_client_builder() -> reqwest::ClientBuilder {
     install_default_crypto_provider();
-    apply_roots(
+    without_proxy_unless_tls(apply_roots(
         reqwest::Client::builder()
             .user_agent(crate::client::USER_AGENT)
             .connect_timeout(crate::client::DEFAULT_CONNECT_TIMEOUT),
-    )
+    ))
+}
+
+/// Ignore the proxies set in the environment when neither `tls-ring` nor
+/// `tls-aws-lc` is enabled.
+///
+/// A `reqwest` without TLS cannot tunnel an `https` request through a proxy, so
+/// it forwards the request to the proxy unencrypted and accepts the proxy's
+/// reply as the server's.
+#[cfg(all(
+    not(target_arch = "wasm32"),
+    not(any(feature = "tls-ring", feature = "tls-aws-lc"))
+))]
+fn without_proxy_unless_tls(builder: reqwest::ClientBuilder) -> reqwest::ClientBuilder {
+    builder.no_proxy()
+}
+
+/// With a provider feature `reqwest` tunnels `https` through a proxy, so the
+/// proxies set in the environment are kept.
+#[cfg(all(
+    not(target_arch = "wasm32"),
+    any(feature = "tls-ring", feature = "tls-aws-lc")
+))]
+fn without_proxy_unless_tls(builder: reqwest::ClientBuilder) -> reqwest::ClientBuilder {
+    builder
 }
 
 /// A [`reqwest::ClientBuilder`] carrying this crate's user agent.

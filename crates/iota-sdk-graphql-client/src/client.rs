@@ -387,6 +387,36 @@ mod tests {
             .unwrap();
     }
 
+    /// Without a provider feature `reqwest` may have no TLS, and would then
+    /// send an `https` request to a proxy unencrypted.
+    #[cfg(not(any(feature = "tls-ring", feature = "tls-aws-lc")))]
+    #[tokio::test]
+    async fn https_skips_the_environment_proxy_without_tls() {
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        // SAFETY: nextest runs each test in its own process, so no other thread
+        // reads the environment meanwhile.
+        unsafe {
+            std::env::set_var(
+                "HTTPS_PROXY",
+                format!("http://{}", listener.local_addr().unwrap()),
+            )
+        };
+
+        let client = GraphQLClient::new("https://graphql.testnet.iota.cafe").unwrap();
+        // The listener never answers, so a request that reached it would hang.
+        let _ = tokio::time::timeout(
+            Duration::from_millis(500),
+            client.run_query_from_json(Default::default()),
+        )
+        .await;
+        assert!(
+            tokio::time::timeout(Duration::from_millis(200), listener.accept())
+                .await
+                .is_err(),
+            "the request went to the proxy"
+        );
+    }
+
     async fn bind() -> (TcpListener, String) {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let url = format!("http://{}/graphql", listener.local_addr().unwrap());
