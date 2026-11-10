@@ -126,6 +126,13 @@ command-argument-error = %d00           ; TypeMismatch
                        / %d10           ; InvalidObjectByMutRef
                        / %d11           ; SharedObjectOperationNotAllowed
                        / %d12           ; InvalidArgumentArity
+                       / %d13           ; InvalidTransferObject
+                       / %d14           ; InvalidMakeMoveVecNonObjectArgument
+                       / %d15           ; ArgumentWithoutValue
+                       / %d16           ; CannotMoveBorrowedValue
+                       / %d17           ; CannotWriteToExtendedReference
+                       / %d18           ; InvalidReferenceArgument
+                       / %d19           ; InvalidTxContext
 
 compressed-struct-tag = %d00 struct-tag   ; Other
                       / %d01              ; GasCoin

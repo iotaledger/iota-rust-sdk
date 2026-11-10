@@ -571,6 +571,51 @@ pub enum CommandArgumentError {
         multiple arguments."
     )]
     InvalidArgumentArity,
+    /// Object passed to TransferObjects does not have public transfer (the `store` ability).
+    #[error(
+        "Object passed to TransferObject does not have public transfer, i.e. the `store` \
+        ability"
+    )]
+    InvalidTransferObject,
+    /// First argument to MakeMoveVec is not an object while no element type was specified.
+    #[error(
+        "First argument to MakeMoveVec is not an object. If no type is specified for MakeMoveVec, \
+        all arguments must be the same object type."
+    )]
+    InvalidMakeMoveVecNonObjectArgument,
+    /// The argument location does not hold a value.
+    #[error("Specified argument location does not have a value and cannot be used")]
+    ArgumentWithoutValue,
+    /// A borrowed value was used in a position that moves it.
+    #[error(
+        "Cannot move a borrowed value. The value's type does resulted in this argument usage \
+        being inferred as a move. This is likely due to the type not having the `copy` ability; \
+        although in rare cases, it could also be this is the last usage of a value without the \
+        `drop` ability."
+    )]
+    CannotMoveBorrowedValue,
+    /// A write to an argument location that is still borrowed through an extended reference.
+    #[error(
+        "Cannot write to an argument location that is still borrowed, and where that borrow \
+        is an extension of that reference. This is likely due to this argument being used in a \
+        Move call that returns a reference, and that reference is used in a later command."
+    )]
+    CannotWriteToExtendedReference,
+    /// A reference argument conflicts with another argument or an extended reference.
+    #[error(
+        "The argument specified cannot be used as a reference argument in the Move call. Either \
+        the argument is a mutable reference and it conflicts with another argument to the call, \
+        or the argument is mutable and another reference extends it and will be used in a later \
+        command."
+    )]
+    InvalidReferenceArgument,
+    /// `TxContext` is used in a way the function signature rules do not allow.
+    #[error(
+        "Invalid usage of TxContext in the function signature. TxContext can only be used by \
+        reference, `&TxContext` or `&mut TxContext`. If used mutably, it must be the only \
+        TxContext parameter, and TxContext can never be returned from a Move call."
+    )]
+    InvalidTxContext,
 }
 
 impl CommandArgumentError {
