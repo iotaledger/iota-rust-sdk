@@ -22,6 +22,8 @@ const FAUCET_POLL_INTERVAL: Duration = Duration::from_secs(2);
 pub enum FaucetError {
     #[error("Cannot fetch request status due to a bad gateway.")]
     BadGateway,
+    #[error("Faucet request {0} was discarded")]
+    Discarded(String),
     #[error("Invalid faucet URL: {0}")]
     InvalidUrl(#[from] url::ParseError),
     #[error("Faucet request was unsuccessful: {0}")]
@@ -123,8 +125,13 @@ impl FaucetClient {
         faucet_url: &str,
         client: reqwest::Client,
     ) -> Result<Self, FaucetError> {
+        let mut faucet_url = Url::parse(faucet_url)?;
+        if !faucet_url.path().ends_with('/') {
+            let path = format!("{}/", faucet_url.path());
+            faucet_url.set_path(&path);
+        }
         Ok(FaucetClient {
-            faucet_url: Url::parse(faucet_url)?,
+            faucet_url,
             inner: client,
         })
     }
@@ -150,7 +157,7 @@ impl FaucetClient {
                 "recipient": &address
             }
         }];
-        let url = format!("{}v1/gas", self.faucet_url);
+        let url = self.faucet_url.join("v1/gas")?;
         info!(
             "Requesting gas from faucet for address {} : {}",
             address, url
@@ -192,7 +199,8 @@ impl FaucetClient {
     /// Request gas from the faucet and wait until the request is completed and
     /// token is transferred. Returns `FaucetReceipt` if the request is
     /// successful, which contains the list of tokens transferred, and the
-    /// transaction digest.
+    /// transaction digest. Returns [`FaucetError::Discarded`] if the faucet
+    /// discards the request.
     ///
     /// Note that the faucet is heavily rate-limited, so calling repeatedly the
     /// faucet would likely result in a 429 code or 502 code.
@@ -219,10 +227,8 @@ impl FaucetClient {
                                 break Ok::<_, FaucetError>(status_response);
                             }
                             BatchSendStatusType::Discarded => {
-                                break Ok(BatchSendStatus {
-                                    status: BatchSendStatusType::Discarded,
-                                    transferred_gas_objects: None,
-                                });
+                                error!("Faucet request {request_id} was discarded");
+                                break Err(FaucetError::Discarded(request_id.clone()));
                             }
                             // Still pending — fall through to the poll interval and retry.
                             BatchSendStatusType::InProgress => {}
@@ -282,9 +288,9 @@ impl FaucetClient {
     ///
     /// Possible statuses are defined in: [`BatchSendStatusType`]
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>, FaucetError> {
-        let status_url = format!("{}v1/status/{}", self.faucet_url, id);
+        let status_url = self.faucet_url.join(&format!("v1/status/{id}"))?;
         info!("Checking status of faucet request: {status_url}");
-        let response = self.inner.get(&status_url).send().await?;
+        let response = self.inner.get(status_url).send().await?;
 
         if response.status() == StatusCode::TOO_MANY_REQUESTS {
             return Err(FaucetError::TooManyRequests);
@@ -295,5 +301,30 @@ impl FaucetClient {
         let json = response.json::<BatchStatusFaucetResponse>().await?;
 
         Ok(json.status)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn gas_url(base: &str) -> String {
+        FaucetClient::new(base)
+            .unwrap()
+            .faucet_url
+            .join("v1/gas")
+            .unwrap()
+            .to_string()
+    }
+
+    #[test]
+    fn endpoints_keep_the_base_path() {
+        assert_eq!(gas_url("http://host:9123"), "http://host:9123/v1/gas");
+        assert_eq!(gas_url("http://host:9123/"), "http://host:9123/v1/gas");
+        assert_eq!(gas_url("https://host/faucet"), "https://host/faucet/v1/gas");
+        assert_eq!(
+            gas_url("https://host/faucet/"),
+            "https://host/faucet/v1/gas"
+        );
     }
 }
