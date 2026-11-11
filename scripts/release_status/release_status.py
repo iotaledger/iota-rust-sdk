@@ -18,6 +18,11 @@ A dependent that needed adapting to a dependency change shows that as a
 change of its own; an unchanged dependent ships the source the workspace
 already builds against the new dependency.
 
+The one exception is the BCS schema of `iota-sdk-types`: when its
+`bcs-schema.abnf` changed since a release of the gRPC types, gRPC client or
+GraphQL client, that crate is due for a minor release even if its own files
+didn't change.
+
 Crates are printed in publish order.
 """
 
@@ -48,6 +53,10 @@ VERSIONSORT = [
     "-c",
     "versionsort.suffix=-rc",
 ]
+# The BCS schema of `iota-sdk-types`, and the crates that need a minor release
+# whenever it changed since their own release.
+SCHEMA = "crates/iota-sdk-types/bcs-schema.abnf"
+SCHEMA_DEPENDENTS = {"iota-sdk-graphql-client", "iota-sdk-grpc-client", "iota-sdk-grpc-types"}
 
 
 def run(*cmd: str) -> str:
@@ -98,6 +107,9 @@ class Crate:
     manifest: dict[str, tuple[str, bool]] = field(default_factory=dict)
     # In-workspace dependencies that are due for a release themselves.
     deps_due: list[str] = field(default_factory=list)
+    # (short hash, subject) of the commits touching `SCHEMA`, when it differs
+    # from the tag and the crate is one of `SCHEMA_DEPENDENTS`.
+    schema_commits: list[tuple[str, str]] = field(default_factory=list)
 
     @property
     def manifest_incompatible(self) -> bool:
@@ -105,7 +117,14 @@ class Crate:
 
     @property
     def due(self) -> bool:
-        return self.tag is None or bool(self.commits or self.manifest_incompatible)
+        return self.tag is None or bool(
+            self.commits or self.manifest_incompatible or self.schema_commits
+        )
+
+    @property
+    def level(self) -> str | None:
+        """The bump the release has to be at least, when something forces one."""
+        return "minor" if self.schema_commits else None
 
     @property
     def reasons(self) -> list[str]:
@@ -116,6 +135,8 @@ class Crate:
             reasons.append("source")
         if self.manifest_incompatible:
             reasons.append("manifest")
+        if self.schema_commits:
+            reasons.append("schema")
         if reasons:
             return reasons
         ignored = []
@@ -267,8 +288,18 @@ def inspect_crate(crate: Crate, rev: str, crates: dict[str, Crate]) -> None:
         if old.get(key) != new.get(key):
             crate.manifest[key] = describe_change(old.get(key), new.get(key))
 
+    if crate.name in SCHEMA_DEPENDENTS and git("diff", "--name-only", crate.tag, rev, "--", SCHEMA):
+        log = git("log", "--format=%h %s", f"{crate.tag}..{rev}", "--", SCHEMA)
+        crate.schema_commits = [tuple(line.split(" ", 1)) for line in log.splitlines()]
+
     # Dependencies are inspected first (publish order), so their verdict is final.
     crate.deps_due = [dep for dep in sorted(crate.deps) if crates[dep].due]
+
+
+def verdict(crate: Crate) -> str:
+    if not crate.due:
+        return "ok"
+    return f"RELEASE ({crate.level})" if crate.level else "RELEASE"
 
 
 def report(crates: dict[str, Crate], order: list[str], rev: str, quiet: bool) -> None:
@@ -276,14 +307,15 @@ def report(crates: dict[str, Crate], order: list[str], rev: str, quiet: bool) ->
     print(f"Changes since each crate's release tag, up to {rev} ({short})\n")
     name_width = max(len(name) for name in order)
     version_width = max(len(c.version) for c in crates.values())
+    verdicts = {name: verdict(crates[name]) for name in order}
+    verdict_width = max(len(v) for v in verdicts.values())
     for name in order:
         crate = crates[name]
-        verdict = "RELEASE" if crate.due else "ok"
         columns = [
             f"{name:<{name_width}}",
             f"{crate.version:<{version_width}}",
             f"{crate.tag_date or '-':<10}",
-            f"{verdict:<7}",
+            f"{verdicts[name]:<{verdict_width}}",
             ", ".join(crate.reasons),
         ]
         print("  ".join(columns).rstrip())
@@ -296,6 +328,10 @@ def report(crates: dict[str, Crate], order: list[str], rev: str, quiet: bool) ->
             )
         for sha, subject in crate.commits:
             print(f"    {sha} {subject}")
+        if crate.schema_commits:
+            print(f"    {SCHEMA} changed, release at least a minor bump:")
+            for sha, subject in crate.schema_commits:
+                print(f"      {sha} {subject}")
         for key, (change, _) in crate.manifest.items():
             print(f"    workspace dependency {key}: {change}")
         if crate.deps_due:
@@ -318,6 +354,7 @@ def to_json(crates: dict[str, Crate], order: list[str]) -> list[dict]:
                 "tag_date": crate.tag_date,
                 "version_tagged": crate.version_tagged,
                 "due": crate.due,
+                "level": crate.level,
                 "reasons": crate.reasons,
                 "commits": [{"sha": sha, "subject": subject} for sha, subject in crate.commits],
                 "changed": crate.changed,
@@ -327,6 +364,9 @@ def to_json(crates: dict[str, Crate], order: list[str]) -> list[dict]:
                     for key, (change, compatible) in crate.manifest.items()
                 },
                 "dependencies_due": crate.deps_due,
+                "schema_commits": [
+                    {"sha": sha, "subject": subject} for sha, subject in crate.schema_commits
+                ],
             }
         )
     return entries

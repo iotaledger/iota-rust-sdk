@@ -11,6 +11,11 @@ release PR is merged. A crate is marked `RELEASE` when, since that tag:
 - `manifest`: a `[workspace.dependencies]` entry the crate inherits moved out
   of the caret range of the published requirement, such as a major bump or a
   pre-release of another version, so the published crate can't follow it.
+- `schema`: `crates/iota-sdk-types/bcs-schema.abnf` changed. This only applies
+  to `iota-sdk-grpc-types`, `iota-sdk-grpc-client` and
+  `iota-sdk-graphql-client`, which are then marked `RELEASE (minor)`: their
+  release has to be at least a minor bump. The commits touching the schema are
+  listed, and `--json` reports the bump as `level`.
 
 Everything else is reported but ignored. Cargo resolves a caret requirement to
 the newest compatible version, so a compatible dependency bump reaches
