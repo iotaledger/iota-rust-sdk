@@ -27,8 +27,13 @@ const MAX_ERROR_BODY_BYTES: usize = 512;
 /// Render a response body as a truncated, UTF-8-lossy string suitable for
 /// inclusion in an error message.
 fn truncated_body(bytes: &[u8]) -> String {
-    let truncated = bytes.len() > MAX_ERROR_BODY_BYTES;
-    let slice = &bytes[..bytes.len().min(MAX_ERROR_BODY_BYTES)];
+    truncated(bytes, MAX_ERROR_BODY_BYTES)
+}
+
+/// Render the first `max` bytes of `bytes` as a UTF-8-lossy string.
+pub(crate) fn truncated(bytes: &[u8], max: usize) -> String {
+    let truncated = bytes.len() > max;
+    let slice = &bytes[..bytes.len().min(max)];
     let mut body = String::from_utf8_lossy(slice).into_owned();
     if truncated {
         body.push_str("… (truncated)");

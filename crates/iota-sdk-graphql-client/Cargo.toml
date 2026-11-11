@@ -81,6 +81,7 @@ iota-types = { workspace = true, features = ["serde", "rand", "hash"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 tokio = { workspace = true, features = ["io-util", "macros", "net", "rt-multi-thread", "time"] }
+tracing-subscriber = { workspace = true, features = ["registry"] }
 
 [build-dependencies]
 iota-graphql-client-build.workspace = true
