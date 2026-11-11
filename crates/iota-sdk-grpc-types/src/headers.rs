@@ -47,4 +47,4 @@ pub const X_IOTA_SERVER: &str = "x-iota-server";
 /// Lowest `iota-sdk-grpc-client` version able to decode the server's
 /// responses, as a semantic version. Clients below it fail their calls
 /// instead of decoding wire values they do not know.
-pub const X_IOTA_MIN_SDK_VERSION: &str = "x-iota-min-sdk-version";
+pub const X_MIN_IOTA_SDK_GRPC_CLIENT_VERSION: &str = "x-min-iota-sdk-grpc-client-version";
