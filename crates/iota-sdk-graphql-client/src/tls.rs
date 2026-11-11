@@ -35,11 +35,35 @@
 #[cfg(not(target_arch = "wasm32"))]
 pub(crate) fn default_http_client_builder() -> reqwest::ClientBuilder {
     install_default_crypto_provider();
-    apply_roots(
+    without_proxy_unless_tls(apply_roots(
         reqwest::Client::builder()
             .user_agent(crate::client::USER_AGENT)
             .connect_timeout(crate::client::DEFAULT_CONNECT_TIMEOUT),
-    )
+    ))
+}
+
+/// Ignore the proxies set in the environment when neither `tls-ring` nor
+/// `tls-aws-lc` is enabled.
+///
+/// A `reqwest` without TLS cannot tunnel an `https` request through a proxy, so
+/// it forwards the request to the proxy unencrypted and accepts the proxy's
+/// reply as the server's.
+#[cfg(all(
+    not(target_arch = "wasm32"),
+    not(any(feature = "tls-ring", feature = "tls-aws-lc"))
+))]
+fn without_proxy_unless_tls(builder: reqwest::ClientBuilder) -> reqwest::ClientBuilder {
+    builder.no_proxy()
+}
+
+/// With a provider feature `reqwest` tunnels `https` through a proxy, so the
+/// proxies set in the environment are kept.
+#[cfg(all(
+    not(target_arch = "wasm32"),
+    any(feature = "tls-ring", feature = "tls-aws-lc")
+))]
+fn without_proxy_unless_tls(builder: reqwest::ClientBuilder) -> reqwest::ClientBuilder {
+    builder
 }
 
 /// A [`reqwest::ClientBuilder`] carrying this crate's user agent.
@@ -220,75 +244,14 @@ fn websocket_verification(
         .with_custom_certificate_verifier(std::sync::Arc::new(verifier)))
 }
 
-/// The scheme of `server` when this build cannot reach it, or `None` when it
-/// can.
-///
-/// Without a provider feature `reqwest` is built with no TLS, so an `https` or
-/// `wss` URL fails at request time with a transport error that names neither
-/// TLS nor the feature that would enable it. Reporting it from the constructor
-/// puts the cause where the caller can act on it.
-///
-/// A URL that does not parse is left for the caller's own parse to report.
 #[cfg(all(
+    test,
     not(target_arch = "wasm32"),
-    not(any(feature = "tls-ring", feature = "tls-aws-lc"))
+    any(feature = "tls-ring", feature = "tls-aws-lc")
 ))]
-pub(crate) fn unsupported_scheme(server: &str) -> Option<String> {
-    let scheme = reqwest::Url::parse(server).ok()?.scheme().to_owned();
-    matches!(scheme.as_str(), "https" | "wss").then_some(scheme)
-}
-
-/// Every scheme this crate accepts is reachable once TLS is compiled in, and on
-/// wasm32 the browser provides it.
-#[cfg(any(target_arch = "wasm32", feature = "tls-ring", feature = "tls-aws-lc"))]
-pub(crate) fn unsupported_scheme(_server: &str) -> Option<String> {
-    None
-}
-
-#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use super::unsupported_scheme;
-
-    #[test]
-    fn plain_schemes_need_no_tls() {
-        assert_eq!(unsupported_scheme("http://127.0.0.1:9125"), None);
-        assert_eq!(unsupported_scheme("ws://127.0.0.1:9125"), None);
-    }
-
-    #[test]
-    fn unparsable_url_is_left_to_the_caller() {
-        assert_eq!(unsupported_scheme("not a url"), None);
-    }
-
-    #[cfg(all(
-        not(target_arch = "wasm32"),
-        not(any(feature = "tls-ring", feature = "tls-aws-lc"))
-    ))]
-    #[test]
-    fn tls_schemes_are_rejected_without_a_provider() {
-        assert_eq!(
-            unsupported_scheme("https://graphql.testnet.iota.cafe").as_deref(),
-            Some("https")
-        );
-        assert_eq!(
-            unsupported_scheme("wss://graphql.testnet.iota.cafe").as_deref(),
-            Some("wss")
-        );
-    }
-
-    #[cfg(any(feature = "tls-ring", feature = "tls-aws-lc"))]
     #[test]
     fn websocket_tls_config_builds() {
         super::websocket_tls_config().unwrap();
-    }
-
-    #[cfg(any(target_arch = "wasm32", feature = "tls-ring", feature = "tls-aws-lc"))]
-    #[test]
-    fn tls_schemes_are_accepted_with_a_provider() {
-        assert_eq!(
-            unsupported_scheme("https://graphql.testnet.iota.cafe"),
-            None
-        );
-        assert_eq!(unsupported_scheme("wss://graphql.testnet.iota.cafe"), None);
     }
 }
