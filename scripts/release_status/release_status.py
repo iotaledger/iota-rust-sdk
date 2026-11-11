@@ -19,9 +19,9 @@ change of its own; an unchanged dependent ships the source the workspace
 already builds against the new dependency.
 
 The one exception is the BCS schema of `iota-sdk-types`: when its
-`bcs-schema.abnf` changed since a release of the gRPC types, gRPC client or
-GraphQL client, that crate is due for a minor release even if its own files
-didn't change.
+`bcs-schema.abnf` changed since a release of the gRPC client or GraphQL
+client, that crate is due for a minor release even if its own files didn't
+change.
 
 Crates are printed in publish order.
 """
@@ -56,7 +56,7 @@ VERSIONSORT = [
 # The BCS schema of `iota-sdk-types`, and the crates that need a minor release
 # whenever it changed since their own release.
 SCHEMA = "crates/iota-sdk-types/bcs-schema.abnf"
-SCHEMA_DEPENDENTS = {"iota-sdk-graphql-client", "iota-sdk-grpc-client", "iota-sdk-grpc-types"}
+SCHEMA_DEPENDENTS = {"iota-sdk-graphql-client", "iota-sdk-grpc-client"}
 
 
 def run(*cmd: str) -> str:
