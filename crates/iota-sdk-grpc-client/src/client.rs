@@ -146,7 +146,7 @@ impl GrpcClient {
     pub fn ledger_service_client(&self) -> LedgerServiceClient<InterceptedChannel> {
         self.configure_client(LedgerServiceClient::with_interceptor(
             self.channel.clone(),
-            self.headers.clone(),
+            self.interceptor(),
         ))
     }
 
@@ -156,7 +156,7 @@ impl GrpcClient {
     ) -> TransactionExecutionServiceClient<InterceptedChannel> {
         self.configure_client(TransactionExecutionServiceClient::with_interceptor(
             self.channel.clone(),
-            self.headers.clone(),
+            self.interceptor(),
         ))
     }
 
@@ -164,7 +164,7 @@ impl GrpcClient {
     pub fn state_service_client(&self) -> StateServiceClient<InterceptedChannel> {
         self.configure_client(StateServiceClient::with_interceptor(
             self.channel.clone(),
-            self.headers.clone(),
+            self.interceptor(),
         ))
     }
 
@@ -172,8 +172,12 @@ impl GrpcClient {
     pub fn move_package_service_client(&self) -> MovePackageServiceClient<InterceptedChannel> {
         self.configure_client(MovePackageServiceClient::with_interceptor(
             self.channel.clone(),
-            self.headers.clone(),
+            self.interceptor(),
         ))
+    }
+
+    fn interceptor(&self) -> HeadersInterceptor {
+        self.headers.clone().with_server_address(self.uri.host())
     }
 
     /// Apply common client configuration (compression, message size limits).
