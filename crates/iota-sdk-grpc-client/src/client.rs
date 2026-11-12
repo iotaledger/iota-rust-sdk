@@ -121,13 +121,26 @@ impl GrpcClient {
         &self.uri
     }
 
-    // /// Get a reference to the underlying channel.
-    // ///
-    // /// This can be useful for creating additional service clients that aren't
-    // /// yet integrated into GrpcClient.
-    // pub fn channel(&self) -> &tonic::transport::Channel {
-    //     &self.channel
-    // }
+    /// Get a reference to the underlying channel.
+    ///
+    /// This can be useful for creating additional service clients that aren't
+    /// yet integrated into GrpcClient.
+    pub fn channel(&self) -> &tonic::transport::Channel {
+        &self.channel
+    }
+
+    /// Get the underlying channel, checked against the node's minimum SDK
+    /// version.
+    ///
+    /// This can be useful for creating additional service clients that aren't
+    /// yet integrated into GrpcClient. Wrap it with the client's [`headers`]
+    /// via the service client's `with_interceptor` to also send the configured
+    /// headers.
+    ///
+    /// [`headers`]: GrpcClient::headers
+    pub fn checked_channel(&self) -> SdkVersionCheck<tonic::transport::Channel> {
+        SdkVersionCheck::new(self.channel.clone())
+    }
 
     pub fn headers(&self) -> &HeadersInterceptor {
         &self.headers
@@ -150,7 +163,7 @@ impl GrpcClient {
     /// Get a ledger service client.
     pub fn ledger_service_client(&self) -> LedgerServiceClient<InterceptedChannel> {
         self.configure_client(LedgerServiceClient::with_interceptor(
-            self.channel(),
+            self.checked_channel(),
             self.headers.clone(),
         ))
     }
@@ -160,7 +173,7 @@ impl GrpcClient {
         &self,
     ) -> TransactionExecutionServiceClient<InterceptedChannel> {
         self.configure_client(TransactionExecutionServiceClient::with_interceptor(
-            self.channel(),
+            self.checked_channel(),
             self.headers.clone(),
         ))
     }
@@ -168,7 +181,7 @@ impl GrpcClient {
     /// Get a state service client.
     pub fn state_service_client(&self) -> StateServiceClient<InterceptedChannel> {
         self.configure_client(StateServiceClient::with_interceptor(
-            self.channel(),
+            self.checked_channel(),
             self.headers.clone(),
         ))
     }
@@ -176,22 +189,9 @@ impl GrpcClient {
     /// Get a move package service client.
     pub fn move_package_service_client(&self) -> MovePackageServiceClient<InterceptedChannel> {
         self.configure_client(MovePackageServiceClient::with_interceptor(
-            self.channel(),
+            self.checked_channel(),
             self.headers.clone(),
         ))
-    }
-
-    /// Get the underlying channel, checked against the node's minimum SDK
-    /// version.
-    ///
-    /// This can be useful for creating additional service clients that aren't
-    /// yet integrated into Client. Wrap it with the client's [`headers`] via
-    /// the service client's `with_interceptor` to also send the configured
-    /// headers.
-    ///
-    /// [`headers`]: Client::headers
-    pub fn channel(&self) -> SdkVersionCheck<tonic::transport::Channel> {
-        SdkVersionCheck::new(self.channel.clone())
     }
 
     /// Apply common client configuration (compression, message size limits).
