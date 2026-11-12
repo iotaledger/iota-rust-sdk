@@ -193,8 +193,9 @@ let station = GasStation::builder("http://0.0.0.0:9527".parse()?)
 ```
 
 Pass `http_client` to control timeouts, proxies or TLS roots; otherwise `GasStationBuilder::build`
-creates a client from the TLS features below. Requests carry `Content-Type: application/json` unless
-a header overrides it.
+creates a client from the TLS features below, and `GasStationBuilder::try_build` returns an error
+instead of panicking when that client cannot be built. Requests carry
+`Content-Type: application/json` unless a header overrides it.
 
 ### TLS
 
@@ -211,7 +212,7 @@ matching feature here for each of its own `tls-*` features.
 
 If another crate in the build enables `reqwest`'s `rustls-no-provider` feature, the default client
 needs a crypto provider: enable `tls-ring` or `tls-aws-lc`, install one for the process before
-calling `GasStationBuilder::build`, or pass your own client.
+building the station, or pass your own client.
 
 Implement `GasSponsor` yourself to sponsor through a service this crate does not ship.
 

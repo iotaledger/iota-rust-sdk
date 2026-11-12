@@ -238,9 +238,30 @@
 //! ```
 //!
 //! Pass [http_client](GasStationBuilder::http_client) to control timeouts,
-//! proxies or TLS roots; otherwise the client is built from this crate's TLS
-//! features, described in the crate README. Requests carry
+//! proxies or TLS roots; otherwise [build](GasStationBuilder::build) creates a
+//! client from the TLS features below, and
+//! [try_build](GasStationBuilder::try_build) returns an error instead of
+//! panicking when that client cannot be built. Requests carry
 //! `Content-Type: application/json` unless a header overrides it.
+//!
+//! ### TLS
+//!
+//! The features below configure the gas station's default HTTP client and are
+//! all off by default, so on its own [GasStation] reaches only `http`
+//! addresses. `iota-sdk-graphql-client` enables the matching feature here for
+//! each of its own `tls-*` features.
+//!
+//! | Feature            | Effect |
+//! | ------------------ | ------ |
+//! | `tls-ring`         | `ring` as the `rustls` crypto provider |
+//! | `tls-aws-lc`       | `aws-lc-rs` instead; `tls-ring` wins if both are on |
+//! | `tls-native-roots` | trust the platform store; its effect is to merge rather than replace when `tls-webpki-roots` is also on |
+//! | `tls-webpki-roots` | add the bundled Mozilla roots, merged into the platform store when `tls-native-roots` is also on. Android cannot merge them, so it uses the bundled set alone |
+//!
+//! If another crate in the build enables `reqwest`'s `rustls-no-provider`
+//! feature, the default client needs a crypto provider: enable `tls-ring` or
+//! `tls-aws-lc`, install one for the process before building the station, or
+//! pass your own client.
 //!
 //! Implement [GasSponsor] yourself to sponsor through a service this crate does
 //! not ship.

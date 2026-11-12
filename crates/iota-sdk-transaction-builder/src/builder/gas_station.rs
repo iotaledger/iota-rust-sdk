@@ -92,6 +92,9 @@ pub enum GasStationError {
     /// The transaction could not be serialized for the gas station.
     #[error("BCS serialization error: {0}")]
     Bcs(iota_types::BcsError),
+    /// The default HTTP client could not be built.
+    #[error("failed to build the gas station HTTP client: {0}")]
+    HttpClient(reqwest::Error),
 }
 
 /// The IOTA gas station, sponsoring transactions over its HTTP API.
@@ -142,8 +145,20 @@ impl GasStation {
     }
 
     /// A gas station at `url` with no headers and a default HTTP client.
+    ///
+    /// # Panics
+    ///
+    /// Panics where [`try_new`](Self::try_new) returns an error.
     pub fn new(url: Url) -> Self {
         Self::builder(url).build()
+    }
+
+    /// A gas station at `url` with no headers and a default HTTP client, or an
+    /// error if the default client cannot be built.
+    ///
+    /// See [`GasStationBuilder::try_build`].
+    pub fn try_new(url: Url) -> Result<Self, GasStationError> {
+        Self::builder(url).try_build()
     }
 
     /// The URL this station is reached at.
@@ -174,7 +189,7 @@ impl GasStationBuilder {
     ///
     /// Set this to control timeouts, proxies, TLS roots or connection pooling;
     /// without it the station builds a [`reqwest::Client`] from this crate's
-    /// TLS features. See the crate README.
+    /// `tls-*` features.
     pub fn http_client(mut self, client: reqwest::Client) -> Self {
         self.http_client = Some(client);
         self
@@ -202,7 +217,24 @@ impl GasStationBuilder {
     }
 
     /// Build the gas station.
+    ///
+    /// # Panics
+    ///
+    /// Panics where [`try_build`](Self::try_build) returns an error.
     pub fn build(self) -> GasStation {
+        self.try_build()
+            .expect("failed to build the default gas station HTTP client")
+    }
+
+    /// Build the gas station, or return an error if no
+    /// [`http_client`](Self::http_client) was set and the default one cannot
+    /// be built.
+    ///
+    /// Building the default client fails when its certificate verifier cannot
+    /// be created, such as with `tls-ring` or `tls-aws-lc` but without
+    /// `tls-webpki-roots` on a system whose trust store is empty. This happens
+    /// for `http` stations too.
+    pub fn try_build(self) -> Result<GasStation, GasStationError> {
         let Self {
             url,
             http_client,
@@ -213,17 +245,20 @@ impl GasStationBuilder {
             .entry(reqwest::header::CONTENT_TYPE)
             .or_insert_with(|| HeaderValue::from_static("application/json"));
 
-        GasStation {
+        let http_client = match http_client {
+            Some(client) => client,
+            None => crate::builder::tls::default_http_client_builder()
+                .build()
+                .map_err(GasStationError::HttpClient)?,
+        };
+
+        Ok(GasStation {
             url,
-            http_client: http_client.unwrap_or_else(|| {
-                crate::builder::tls::default_http_client_builder()
-                    .build()
-                    .expect("failed to build the default gas station HTTP client")
-            }),
+            http_client,
             headers,
             reservation_duration,
             checked_version: OnceLock::new(),
-        }
+        })
     }
 }
 
