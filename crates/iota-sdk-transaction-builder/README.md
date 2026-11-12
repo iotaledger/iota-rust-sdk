@@ -192,14 +192,14 @@ let station = GasStation::builder("http://0.0.0.0:9527".parse()?)
     .build();
 ```
 
-Pass `http_client` to control timeouts, proxies or TLS roots; otherwise the station builds its own
-client from the TLS features below. Requests carry `Content-Type: application/json` unless a header
-overrides it.
+Pass `http_client` to control timeouts, proxies or TLS roots; otherwise `GasStationBuilder::build`
+creates a client from the TLS features below. Requests carry `Content-Type: application/json` unless
+a header overrides it.
 
 ### TLS
 
 The features below configure the gas station's default HTTP client and are all off by default, so
-on its own the station reaches only `http` addresses. `iota-sdk-graphql-client` enables the
+on its own `GasStation` reaches only `http` addresses. `iota-sdk-graphql-client` enables the
 matching feature here for each of its own `tls-*` features.
 
 | Feature            | Effect                                                                                                                                                        |
@@ -211,7 +211,7 @@ matching feature here for each of its own `tls-*` features.
 
 If another crate in the build enables `reqwest`'s `rustls-no-provider` feature, the default client
 needs a crypto provider: enable `tls-ring` or `tls-aws-lc`, install one for the process before
-building the station, or pass your own client.
+calling `GasStationBuilder::build`, or pass your own client.
 
 Implement `GasSponsor` yourself to sponsor through a service this crate does not ship.
 
