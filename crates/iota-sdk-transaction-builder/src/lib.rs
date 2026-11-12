@@ -581,7 +581,7 @@ mod tests {
             atomic::{AtomicUsize, Ordering},
         };
 
-        use iota_types::{Object, ObjectId, StructTag, Transaction, Version};
+        use iota_types::{Object, ObjectId, Owner, StructTag, Transaction, Version};
 
         use crate::{
             ObjectsPage, ProtocolConfig, TestClient, TestClientError, TransactionBuilderClientBase,
@@ -610,7 +610,7 @@ mod tests {
             async fn objects(
                 &self,
                 _struct_tag: Option<StructTag>,
-                _owner: iota_types::Address,
+                owner: iota_types::Address,
                 cursor: Option<Vec<u8>>,
                 _limit: Option<usize>,
             ) -> Result<ObjectsPage, Self::Error> {
@@ -618,6 +618,12 @@ mod tests {
                 let page = cursor.map_or(0, |c| c[0]);
                 let coin_id = ObjectId::from_bytes([0xa0 + page; ObjectId::LENGTH]).unwrap();
                 let coin = TestClient.object(coin_id, None).await?.unwrap();
+                let coin = Object::new(
+                    coin.data().clone(),
+                    Owner::Address(owner),
+                    coin.previous_transaction(),
+                    coin.storage_rebate(),
+                );
                 Ok(ObjectsPage {
                     data: vec![coin],
                     next_cursor: (page < 2).then(|| vec![page + 1]),
