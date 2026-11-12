@@ -215,7 +215,7 @@ named_object_id!(
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
-#[derive(Clone, uniffi::Record)]
+#[derive(Clone, Debug, Eq, PartialEq, uniffi::Record)]
 pub struct ObjectReference {
     object_id: Arc<ObjectId>,
     version: Arc<Version>,
