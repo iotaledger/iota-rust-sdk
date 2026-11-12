@@ -32,6 +32,7 @@ pub enum FaucetError {
     StatusCode(StatusCode),
     #[error("Faucet request timed out")]
     TimedOut,
+    #[deprecated(note = "no longer returned; an `https` request without TLS fails with `Reqwest`")]
     #[error(
         "Faucet URL scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass \
          your own client to `new_with_reqwest_client`"
@@ -103,13 +104,7 @@ impl FaucetClient {
     /// The HTTP client is built for you, trusting the platform store plus the
     /// bundled Mozilla roots. Use [`Self::new_with_reqwest_client`] to supply
     /// your own.
-    ///
-    /// An `https` URL is rejected on a build without a crypto provider, since
-    /// no request to it could succeed. See the crate README.
     pub fn new(faucet_url: &str) -> Result<Self, FaucetError> {
-        if let Some(scheme) = crate::tls::unsupported_scheme(faucet_url) {
-            return Err(FaucetError::TlsUnavailable(scheme));
-        }
         Self::new_with_reqwest_client(
             faucet_url,
             crate::tls::default_http_client_builder().build()?,
