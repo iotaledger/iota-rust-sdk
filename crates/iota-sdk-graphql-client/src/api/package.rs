@@ -11,7 +11,7 @@ use iota_types::{Address, MovePackage, Object, Version};
 use crate::{
     GraphQLClient, MoveFunction, MoveModule, Page,
     api::define_query,
-    error::GraphQLResult,
+    error::{GraphQLError, GraphQLResult},
     pagination::{PaginationFilter, PaginationFilterResponse},
     query_types::{
         LatestPackageQueryFragment, MovePackageVersionFilter, NormalizedMoveFunctionQueryArgs,
@@ -110,13 +110,8 @@ impl ListPackageVersionsQuery {
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
-            .map(|b| {
-                Ok(bcs::from_bytes::<Object>(b)
-                    .map_err(iota_types::BcsError::new)?
-                    .data
-                    .into_package())
-            })
-            .collect::<Result<Vec<_>, iota_types::BcsError>>()?;
+            .map(|b| package_from_bcs(b))
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -203,13 +198,8 @@ impl ListPackagesQuery {
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
-            .map(|b| {
-                Ok(bcs::from_bytes::<Object>(b)
-                    .map_err(iota_types::BcsError::new)?
-                    .data
-                    .into_package())
-            })
-            .collect::<Result<Vec<_>, iota_types::BcsError>>()?;
+            .map(|b| package_from_bcs(b))
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -356,14 +346,13 @@ impl GetPackageQuery {
 
         let response = self.client.run_query(&operation).await?;
 
-        Ok(response
+        response
             .package
             .and_then(|x| x.bcs)
             .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
-            .transpose()?
-            .map(|obj| obj.data.into_package()))
+            .map(|bcs| package_from_bcs(&bcs))
+            .transpose()
     }
 }
 
@@ -425,14 +414,13 @@ impl GetPackageLatestQuery {
 
         let response = self.client.run_query(&operation).await?;
 
-        Ok(response
+        response
             .latest_package
             .and_then(|x| x.bcs)
             .map(|bcs| crate::base64::decode(&bcs.0))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
-            .transpose()?
-            .map(|obj| obj.data.into_package()))
+            .map(|bcs| package_from_bcs(&bcs))
+            .transpose()
     }
 }
 
@@ -532,6 +520,15 @@ impl GraphQLClient {
             structs_pagination: PaginationFilter::default(),
         }
     }
+}
+
+/// Decode an object's BCS and return it as a package.
+fn package_from_bcs(bcs: &[u8]) -> GraphQLResult<MovePackage> {
+    bcs::from_bytes::<Object>(bcs)
+        .map_err(iota_types::BcsError::new)?
+        .data
+        .into_opt_package()
+        .ok_or_else(|| GraphQLError::Deserialization("object is not a package".into()))
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
