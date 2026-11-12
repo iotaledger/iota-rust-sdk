@@ -212,7 +212,7 @@ matching feature here for each of its own `tls-*` features.
 
 If another crate in the build enables `reqwest`'s `rustls-no-provider` feature, the default client
 needs a crypto provider: enable `tls-ring` or `tls-aws-lc`, install one for the process before
-building the station, or pass your own client.
+calling `GasStationBuilder::build` or `GasStationBuilder::try_build`, or pass your own client.
 
 Implement `GasSponsor` yourself to sponsor through a service this crate does not ship.
 
