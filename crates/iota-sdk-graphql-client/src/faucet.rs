@@ -255,7 +255,8 @@ impl FaucetClient {
     /// Request gas from the faucet and wait until the request is completed and
     /// token is transferred and finalized on the ledger. Returns
     /// `FaucetReceipt` if the request is successful, which contains the
-    /// list of tokens transferred, and the transaction digest.
+    /// list of tokens transferred, and the transaction digest. Returns
+    /// [`FaucetError::Discarded`] if the faucet discards the request.
     ///
     /// This is a convenience method that combines `request_and_wait` and
     /// waiting for the funding transactions to be finalized using the provided
