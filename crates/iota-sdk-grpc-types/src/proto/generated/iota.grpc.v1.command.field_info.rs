@@ -10,6 +10,7 @@ mod _field_impls {
     pub mod argument {
         use super::*;
         impl crate::v1::command::argument::Unknown {}
+        impl crate::field::sealed::Sealed for crate::v1::command::argument::Unknown {}
         impl MessageFields for crate::v1::command::argument::Unknown {
             const FIELDS: &'static [&'static MessageField] = &[];
         }
@@ -35,6 +36,7 @@ mod _field_impls {
             }
         }
         impl crate::v1::command::argument::GasCoin {}
+        impl crate::field::sealed::Sealed for crate::v1::command::argument::GasCoin {}
         impl MessageFields for crate::v1::command::argument::GasCoin {
             const FIELDS: &'static [&'static MessageField] = &[];
         }
@@ -69,6 +71,7 @@ mod _field_impls {
                 message_fields: None,
             };
         }
+        impl crate::field::sealed::Sealed for crate::v1::command::argument::Input {}
         impl MessageFields for crate::v1::command::argument::Input {
             const FIELDS: &'static [&'static MessageField] = &[Self::INDEX_FIELD];
         }
@@ -115,6 +118,7 @@ mod _field_impls {
                 message_fields: None,
             };
         }
+        impl crate::field::sealed::Sealed for crate::v1::command::argument::Result {}
         impl MessageFields for crate::v1::command::argument::Result {
             const FIELDS: &'static [&'static MessageField] = &[
                 Self::INDEX_FIELD,
@@ -192,6 +196,7 @@ mod _field_impls {
     impl Argument {
         pub const KIND_ONEOF: &'static str = "kind";
     }
+    impl crate::field::sealed::Sealed for Argument {}
     impl MessageFields for Argument {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::UNKNOWN_FIELD,
@@ -272,6 +277,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for CommandOutput {}
     impl MessageFields for CommandOutput {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::ARGUMENT_FIELD,
@@ -338,6 +344,7 @@ mod _field_impls {
     impl InputArgument {
         pub const INPUT_ONEOF: &'static str = "input";
     }
+    impl crate::field::sealed::Sealed for InputArgument {}
     impl MessageFields for InputArgument {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::BCS_FIELD,
@@ -384,6 +391,7 @@ mod _field_impls {
             message_fields: Some(CommandOutput::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for CommandOutputs {}
     impl MessageFields for CommandOutputs {
         const FIELDS: &'static [&'static MessageField] = &[Self::OUTPUTS_FIELD];
     }
@@ -430,6 +438,7 @@ mod _field_impls {
             message_fields: Some(CommandOutput::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for CommandResult {}
     impl MessageFields for CommandResult {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::MUTATED_BY_REF_FIELD,
@@ -475,6 +484,7 @@ mod _field_impls {
             message_fields: Some(CommandResult::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for CommandResults {}
     impl MessageFields for CommandResults {
         const FIELDS: &'static [&'static MessageField] = &[Self::RESULTS_FIELD];
     }

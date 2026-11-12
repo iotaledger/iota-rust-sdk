@@ -13,7 +13,7 @@
 
 #![cfg(feature = "serde")]
 use iota_sdk_move_types::{
-    FromObjectError, MoveType,
+    FromObjectError, MoveObject, MoveType,
     iota_framework::{
         balance::Balance,
         clock::Clock,
@@ -112,6 +112,14 @@ macro_rules! coin_marker_validation_tests {
                 ));
             }
 
+            /// The tag the mirror advertises has to be the one it accepts,
+            /// including the type parameter.
+            #[test]
+            fn struct_tag_matches_the_type_it_decodes() {
+                assert_eq!($ty::<IOTA>::struct_tag().to_string(), IOTA_TAG);
+                assert_eq!($ty::<Foo>::struct_tag().to_string(), FOO_TAG);
+            }
+
             #[test]
             fn marker_trait_works_for_custom_coins() {
                 let object = object_with_tag(FOO_TAG, FIXTURE);
@@ -121,10 +129,10 @@ macro_rules! coin_marker_validation_tests {
             #[test]
             fn runtime_tag_escape_hatch() {
                 let object = object_with_tag(FOO_TAG, FIXTURE);
-                $ty::<IOTA>::try_from_object_with_type(&object, &foo_type_tag())
+                $ty::try_from_object_with_type(&object, &foo_type_tag())
                     .expect("explicit tag matches");
                 assert!(matches!(
-                    $ty::<IOTA>::try_from_object_with_type(&object, &IOTA::type_tag()),
+                    $ty::try_from_object_with_type(&object, &IOTA::type_tag()),
                     Err(FromObjectError::WrongType)
                 ));
             }
@@ -267,6 +275,12 @@ macro_rules! object_tag_validation_tests {
             fn accepts_matching_tag() {
                 let object = object_with_tag($tag, FIXTURE);
                 <$ty>::try_from(&object).expect("tag matches");
+            }
+
+            /// The tag the mirror advertises has to be the one it accepts.
+            #[test]
+            fn struct_tag_matches_the_type_it_decodes() {
+                assert_eq!(<$ty>::struct_tag().to_string(), $tag);
             }
 
             #[test]
@@ -505,10 +519,10 @@ mod synthetic {
 
         // Escape hatch: an explicit label-type tag. Accepts the matching
         // tag and rejects a foreign one.
-        LabelerCap::<IOTA>::try_from_object_with_type(&object, &IOTA::type_tag())
+        LabelerCap::try_from_object_with_type(&object, &IOTA::type_tag())
             .expect("explicit label type matches");
         assert!(matches!(
-            LabelerCap::<IOTA>::try_from_object_with_type(&object, &foo_type_tag()),
+            LabelerCap::try_from_object_with_type(&object, &foo_type_tag()),
             Err(FromObjectError::WrongType)
         ));
 
@@ -540,10 +554,10 @@ mod synthetic {
 
         // Escape hatch: an explicit item-type tag. Accepts the matching tag
         // and rejects a foreign one.
-        PurchaseCap::<IOTA>::try_from_object_with_type(&object, &IOTA::type_tag())
+        PurchaseCap::try_from_object_with_type(&object, &IOTA::type_tag())
             .expect("explicit item type matches");
         assert!(matches!(
-            PurchaseCap::<IOTA>::try_from_object_with_type(&object, &foo_type_tag()),
+            PurchaseCap::try_from_object_with_type(&object, &foo_type_tag()),
             Err(FromObjectError::WrongType)
         ));
 

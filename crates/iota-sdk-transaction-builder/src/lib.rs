@@ -148,8 +148,6 @@
 //!   to spend.
 //! - [gas_price](TransactionBuilder::gas_price): Set the gas price.
 //! - [sponsor](TransactionBuilder::sponsor): Set the gas sponsor address.
-//! - [gas_station_sponsor](TransactionBuilder::gas_station_sponsor): Set the
-//!   gas station URL. See [Gas Station](crate#gas-station) for more info.
 //! - [expiration](TransactionBuilder::expiration): Set the transaction
 //!   expiration epoch.
 //!
@@ -203,22 +201,48 @@
 //! - Gas Budget: A dry run will be used to estimate.
 //! - Gas Price: The current reference gas price.
 //!
-//! ## Gas Station
+//! ## Gas Sponsorship
 //!
-//! The Transaction Builder supports executing via a
-//! [Gas Station](https://github.com/iotaledger/gas-station). To do so, the URL
-//! must be provided via
-//! [gas_station_sponsor](TransactionBuilder::gas_station_sponsor). Additional
-//! configuration can then be provided via
-//! [gas_reservation_duration](TransactionBuilder::gas_reservation_duration) and
-//! [add_gas_station_header](TransactionBuilder::add_gas_station_header).
+//! A transaction's gas can be paid by someone other than its sender, in two
+//! ways depending on who holds the sponsor's key.
 //!
-//! By default the request will contain the header `Content-Type:
-//! application/json`
+//! When you hold it, set the sponsor's address with
+//! [sponsor](TransactionBuilder::sponsor) — the gas coins are drawn from it —
+//! and call
+//! [execute_with_sponsor_signer](TransactionBuilder::execute_with_sponsor_signer),
+//! which signs as both parties and submits through the client.
 //!
-//! When this data has been set, calling [execute](TransactionBuilder::execute)
-//! will request gas from and send the resulting transaction to this endpoint
-//! instead of using the client.
+//! When a service holds it, pass a [GasSponsor] to
+//! [execute_with_gas_sponsor](TransactionBuilder::execute_with_gas_sponsor). It
+//! supplies the whole gas payment and submits the transaction itself, so the
+//! sender's own coins are never looked up; setting gas coins or a
+//! [sponsor](TransactionBuilder::sponsor) address on the same builder is
+//! rejected.
+//!
+//! [GasStation] implements [GasSponsor] for the
+//! [IOTA gas station](https://github.com/iotaledger/gas-station) and is enabled
+//! by the `gas-station` feature. A station is configured once — with its URL
+//! and, typically, an authorization header — and reused for any number of
+//! transactions:
+//!
+//! ```no_run
+//! # use iota_sdk_transaction_builder::GasStation;
+//! use iota_sdk_transaction_builder::{HeaderValue, header::AUTHORIZATION};
+//!
+//! # fn main() -> eyre::Result<()> {
+//! let station = GasStation::builder("http://0.0.0.0:9527".parse()?)
+//!     .header(AUTHORIZATION, HeaderValue::from_static("Bearer token"))
+//!     .build();
+//! # Ok(())
+//! # }
+//! ```
+//!
+//! Pass [http_client](GasStationBuilder::http_client) to control timeouts,
+//! proxies or TLS roots; otherwise reqwest's defaults are used. Requests carry
+//! `Content-Type: application/json` unless a header overrides it.
+//!
+//! Implement [GasSponsor] yourself to sponsor through a service this crate does
+//! not ship.
 //!
 //! ## Traits and Helpers
 //!
@@ -296,6 +320,7 @@
 //! }
 //! ```
 
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
 #![warn(missing_docs)]
 #![deny(unreachable_pub)]
 
@@ -305,23 +330,38 @@ pub mod types;
 #[allow(missing_docs)]
 pub mod unresolved;
 
+pub use iota_types;
+// Re-exported so that configuring a gas station does not require depending on
+// reqwest directly.
+#[cfg(feature = "gas-station")]
+pub use reqwest::{
+    Url, header,
+    header::{HeaderMap, HeaderName, HeaderValue},
+};
+
 #[cfg(feature = "test-client")]
 pub use self::builder::client::test_client::{RecordingClient, TestClient, TestClientError};
+#[cfg(feature = "gas-station")]
+pub use self::builder::gas_station::{
+    GasStation, GasStationBuilder, GasStationError, GasStationVersion, VersionParsingError,
+};
 pub use self::{
     builder::{
         TransactionBuildData, TransactionBuilder,
+        assigned_results::{AssignedResult, AssignedResults},
         client::{
             ObjectsPage, ProtocolConfig, TransactionBuilderClient, TransactionBuilderClientBase,
             TransactionBuilderExecutionClient, TransactionBuilderLedgerClient,
             TransactionBuilderSimulationClient, WaitForTransaction,
         },
+        gas_sponsor::{GasSponsor, SponsoredGas},
         move_authenticator::MoveAuthenticatorBuilder,
         ptb_arguments::{
             Assigned, PTBArgument, PTBArgumentList, Receiving, Shared, SharedMut, assigned,
         },
         signer::TransactionSigner,
     },
-    error::TransactionBuilderError,
+    error::{LookupError, TransactionBuilderError},
     types::PureBytes,
 };
 
@@ -354,7 +394,7 @@ mod tests {
         use iota_types::{Object, ObjectId, StructTag, Version};
 
         use crate::{
-            ObjectsPage, TestClient, TestClientError, TransactionBuilderClientBase,
+            ObjectsPage, ProtocolConfig, TestClient, TestClientError, TransactionBuilderClientBase,
             TransactionBuilderLedgerClient,
         };
 
@@ -392,6 +432,10 @@ mod tests {
             ) -> Result<Option<u64>, Self::Error> {
                 self.0.reference_gas_price(epoch).await
             }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                self.0.protocol_config().await
+            }
         }
 
         #[tokio::test]
@@ -423,7 +467,7 @@ mod tests {
         use iota_types::{Object, ObjectId, StructTag, Transaction, Version};
 
         use crate::{
-            ObjectsPage, TestClient, TestClientError, TransactionBuilderClientBase,
+            ObjectsPage, ProtocolConfig, TestClient, TestClientError, TransactionBuilderClientBase,
             TransactionBuilderLedgerClient, TransactionBuilderSimulationClient,
         };
 
@@ -459,6 +503,10 @@ mod tests {
                 epoch: impl Into<Option<u64>>,
             ) -> Result<Option<u64>, Self::Error> {
                 self.0.reference_gas_price(epoch).await
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                self.0.protocol_config().await
             }
         }
 
@@ -536,7 +584,7 @@ mod tests {
         use iota_types::{Object, ObjectId, StructTag, Transaction, Version};
 
         use crate::{
-            ObjectsPage, TestClient, TestClientError, TransactionBuilderClientBase,
+            ObjectsPage, ProtocolConfig, TestClient, TestClientError, TransactionBuilderClientBase,
             TransactionBuilderLedgerClient, TransactionBuilderSimulationClient,
         };
 
@@ -581,6 +629,10 @@ mod tests {
                 epoch: impl Into<Option<u64>>,
             ) -> Result<Option<u64>, Self::Error> {
                 TestClient.reference_gas_price(epoch).await
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                TestClient.protocol_config().await
             }
         }
 
@@ -665,7 +717,7 @@ mod tests {
             coin_digest.parse().unwrap(),
         );
 
-        let recipient = Address::random_with(rand::thread_rng());
+        let recipient = Address::random();
 
         let result = tx.clone().finish();
         assert!(result.is_err());
@@ -693,7 +745,7 @@ mod tests {
         let sponsor: Address = "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
             .parse()
             .unwrap();
-        let recipient = Address::random_with(rand::thread_rng());
+        let recipient = Address::random();
         let coin = ObjectReference::new(
             "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4"
                 .parse()
@@ -737,10 +789,10 @@ mod tests {
         // A non-programmable Transaction kind should not be accepted.
         let txn = Transaction::V1(iota_types::TransactionV1 {
             kind: iota_types::TransactionKind::AuthenticatorStateUpdateV1Deprecated,
-            sender: Address::random_with(rand::thread_rng()),
+            sender: Address::random(),
             gas_payment: iota_types::GasPayment {
                 objects: vec![],
-                owner: Address::random_with(rand::thread_rng()),
+                owner: Address::random(),
                 price: 0,
                 budget: 0,
             },
@@ -750,5 +802,486 @@ mod tests {
             TransactionBuilder::try_from(txn),
             Err(crate::error::TransactionBuilderError::UnsupportedTransactionKind)
         ));
+    }
+
+    /// Converting a transaction whose command names an input it does not have
+    /// fails, rather than leaving an argument that could later name the gas
+    /// coin.
+    #[test]
+    fn transaction_naming_a_missing_input_is_rejected() {
+        let sender = Address::new([1; 32]);
+        let txn = Transaction::V1(iota_types::TransactionV1 {
+            kind: iota_types::TransactionKind::Programmable(iota_types::ProgrammableTransaction {
+                inputs: vec![iota_types::Input::pure(&Address::new([7; 32]))],
+                commands: vec![iota_types::Command::TransferObjects(
+                    iota_types::TransferObjects {
+                        objects: vec![iota_types::Argument::Input(1)],
+                        address: iota_types::Argument::Input(0),
+                    },
+                )],
+            }),
+            sender,
+            gas_payment: iota_types::GasPayment {
+                objects: vec![ObjectReference::new(
+                    iota_types::ObjectId::new([0x99; 32]),
+                    Version::from_u64(1),
+                    iota_types::ObjectDigest::new([0x99; 32]),
+                )],
+                owner: sender,
+                price: 1000,
+                budget: 5_000_000,
+            },
+            expiration: Default::default(),
+        });
+
+        let err = TransactionBuilder::try_from(txn).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::error::TransactionBuilderError::InvalidArgument {
+                    command: 0,
+                    argument: crate::unresolved::Argument::Input(1),
+                }
+            ),
+            "{err}"
+        );
+    }
+
+    /// The infallible conversion panics on a command naming an input the
+    /// transaction does not have.
+    #[test]
+    #[should_panic(expected = "refers to an input or result it does not have")]
+    fn converting_a_programmable_transaction_naming_a_missing_input_panics() {
+        let _ = TransactionBuilder::from(iota_types::ProgrammableTransaction {
+            inputs: Vec::new(),
+            commands: vec![iota_types::Command::TransferObjects(
+                iota_types::TransferObjects {
+                    objects: vec![iota_types::Argument::Gas],
+                    address: iota_types::Argument::Input(0),
+                },
+            )],
+        });
+    }
+
+    /// A command may only use the results of the commands before it.
+    #[test]
+    fn programmable_transaction_using_a_later_result_is_rejected() {
+        let ptb = iota_types::ProgrammableTransaction {
+            inputs: vec![iota_types::Input::pure(&1u64)],
+            commands: vec![iota_types::Command::SplitCoins(iota_types::SplitCoins {
+                coin: iota_types::Argument::Result(0),
+                amounts: vec![iota_types::Argument::Input(0)],
+            })],
+        };
+
+        let err = TransactionBuilder::try_from_programmable_transaction(ptb).unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::error::TransactionBuilderError::InvalidArgument {
+                    command: 0,
+                    argument: crate::unresolved::Argument::Result(0),
+                }
+            ),
+            "{err}"
+        );
+    }
+
+    /// Commands that use the results of earlier commands are accepted and
+    /// survive the round trip unchanged.
+    #[test]
+    fn transaction_using_earlier_results_round_trips() {
+        let sender = Address::new([1; 32]);
+        let txn = Transaction::V1(iota_types::TransactionV1 {
+            kind: iota_types::TransactionKind::Programmable(iota_types::ProgrammableTransaction {
+                inputs: vec![
+                    iota_types::Input::pure(&1u64),
+                    iota_types::Input::pure(&Address::new([7; 32])),
+                ],
+                commands: vec![
+                    iota_types::Command::SplitCoins(iota_types::SplitCoins {
+                        coin: iota_types::Argument::Gas,
+                        amounts: vec![iota_types::Argument::Input(0)],
+                    }),
+                    iota_types::Command::SplitCoins(iota_types::SplitCoins {
+                        coin: iota_types::Argument::Gas,
+                        amounts: vec![
+                            iota_types::Argument::Input(0),
+                            iota_types::Argument::Input(0),
+                        ],
+                    }),
+                    iota_types::Command::MergeCoins(iota_types::MergeCoins {
+                        coin: iota_types::Argument::Result(0),
+                        coins_to_merge: vec![iota_types::Argument::NestedResult(1, 0)],
+                    }),
+                    iota_types::Command::TransferObjects(iota_types::TransferObjects {
+                        objects: vec![
+                            iota_types::Argument::Result(0),
+                            iota_types::Argument::NestedResult(1, 1),
+                        ],
+                        address: iota_types::Argument::Input(1),
+                    }),
+                ],
+            }),
+            sender,
+            gas_payment: iota_types::GasPayment {
+                objects: vec![ObjectReference::new(
+                    iota_types::ObjectId::new([0x99; 32]),
+                    Version::from_u64(1),
+                    iota_types::ObjectDigest::new([0x99; 32]),
+                )],
+                owner: sender,
+                price: 1000,
+                budget: 5_000_000,
+            },
+            expiration: Default::default(),
+        });
+
+        let rebuilt = TransactionBuilder::try_from(txn.clone()).unwrap();
+
+        assert_eq!(rebuilt.finish().unwrap(), txn);
+    }
+
+    #[cfg(feature = "test-client")]
+    mod sponsored_execution {
+        use std::sync::{
+            Arc, Mutex,
+            atomic::{AtomicUsize, Ordering},
+        };
+
+        use iota_crypto::ed25519::Ed25519PrivateKey;
+        use iota_types::{
+            Address, Object, ObjectId, ObjectReference, StructTag, Transaction, TransactionDigest,
+            Version,
+        };
+
+        use crate::{
+            GasSponsor, ObjectsPage, ProtocolConfig, SponsoredGas, TestClient, TestClientError,
+            TransactionBuilderClientBase, TransactionBuilderExecutionClient,
+            TransactionBuilderLedgerClient, TransactionBuilderSimulationClient,
+            error::TransactionBuilderError,
+        };
+
+        const SPONSOR: &str = "0x3fbe60d0bb1a0a4e9e0e5e0b52c4be0fbcb0c1c0a0b5e0d0c0b0a0908070605e";
+        const SPONSOR_COIN: &str =
+            "0x8a7d6c5b4e3f2a1908172635445362718091a2b3c4d5e6f708192a3b4c5d6e7f";
+
+        /// Records what the builder asked the sponsor for and what it handed
+        /// over to be executed.
+        #[derive(Default)]
+        struct RecordingSponsor {
+            reserved_budget: Mutex<Option<u64>>,
+            executed: Mutex<Option<Transaction>>,
+            wrong_digest: bool,
+            owner_is_sender: bool,
+        }
+
+        impl RecordingSponsor {
+            fn gas() -> SponsoredGas {
+                SponsoredGas {
+                    owner: SPONSOR.parse().unwrap(),
+                    objects: vec![ObjectReference::new(
+                        SPONSOR_COIN.parse().unwrap(),
+                        Version::from_u64(7),
+                        iota_types::ObjectDigest::ZERO,
+                    )],
+                }
+            }
+        }
+
+        impl GasSponsor for RecordingSponsor {
+            type Error = TestClientError;
+            type Reservation = u64;
+
+            async fn reserve_gas(
+                &self,
+                transaction: &Transaction,
+            ) -> Result<(Self::Reservation, SponsoredGas), Self::Error> {
+                *self.reserved_budget.lock().unwrap() =
+                    Some(transaction.as_v1().gas_payment.budget);
+                let mut gas = Self::gas();
+                if self.owner_is_sender {
+                    gas.owner = transaction.as_v1().sender;
+                }
+                Ok((42, gas))
+            }
+
+            async fn execute_reserved(
+                &self,
+                _reservation: Self::Reservation,
+                transaction: &Transaction,
+                _signature: &iota_types::UserSignature,
+            ) -> Result<TransactionDigest, Self::Error> {
+                *self.executed.lock().unwrap() = Some(transaction.clone());
+                Ok(if self.wrong_digest {
+                    TransactionDigest::ZERO
+                } else {
+                    transaction.digest()
+                })
+            }
+        }
+
+        /// Forwards to [`TestClient`] but counts the owner-coin queries, so a
+        /// test can show the sender's coins were never looked up.
+        struct CountingClient(Arc<AtomicUsize>);
+
+        impl TransactionBuilderClientBase for CountingClient {
+            type Error = TestClientError;
+        }
+
+        impl TransactionBuilderLedgerClient for CountingClient {
+            async fn object(
+                &self,
+                object_id: ObjectId,
+                version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                TestClient.object(object_id, version).await
+            }
+
+            async fn objects(
+                &self,
+                struct_tag: Option<StructTag>,
+                owner: Address,
+                cursor: Option<Vec<u8>>,
+                limit: Option<usize>,
+            ) -> Result<ObjectsPage, Self::Error> {
+                self.0.fetch_add(1, Ordering::SeqCst);
+                TestClient.objects(struct_tag, owner, cursor, limit).await
+            }
+
+            async fn reference_gas_price(
+                &self,
+                epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                TestClient.reference_gas_price(epoch).await
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                TestClient.protocol_config().await
+            }
+        }
+
+        impl TransactionBuilderSimulationClient for CountingClient {
+            type DryRunResult = ();
+
+            async fn estimate_transaction_budget(
+                &self,
+                transaction: &Transaction,
+            ) -> Result<Option<u64>, Self::Error> {
+                TestClient.estimate_transaction_budget(transaction).await
+            }
+
+            async fn dry_run_transaction(
+                &self,
+                transaction: &Transaction,
+                skip_checks: bool,
+            ) -> Result<Self::DryRunResult, Self::Error> {
+                TestClient
+                    .dry_run_transaction(transaction, skip_checks)
+                    .await
+            }
+        }
+
+        impl TransactionBuilderExecutionClient for CountingClient {
+            async fn execute_transaction(
+                &self,
+                signatures: &[iota_types::UserSignature],
+                transaction: &Transaction,
+                wait_for: impl Into<Option<crate::WaitForTransaction>>,
+            ) -> Result<iota_types::TransactionEffects, Self::Error> {
+                TestClient
+                    .execute_transaction(signatures, transaction, wait_for)
+                    .await
+            }
+
+            async fn wait_for_transaction(
+                &self,
+                digest: TransactionDigest,
+                wait_for: crate::WaitForTransaction,
+            ) -> Result<(), Self::Error> {
+                TestClient.wait_for_transaction(digest, wait_for).await
+            }
+
+            async fn transaction_effects(
+                &self,
+                digest: TransactionDigest,
+            ) -> Result<Option<iota_types::TransactionEffects>, Self::Error> {
+                TestClient.transaction_effects(digest).await
+            }
+        }
+
+        fn signer() -> Ed25519PrivateKey {
+            Ed25519PrivateKey::new([9; 32])
+        }
+
+        /// The sponsor's payment replaces the sender's, and the sender's own
+        /// coins are never queried to build it.
+        #[tokio::test]
+        async fn the_sponsor_supplies_the_whole_gas_payment() {
+            let owner_queries = Arc::new(AtomicUsize::new(0));
+            let builder = super::builder_with(CountingClient(owner_queries.clone()));
+            let sponsor = RecordingSponsor::default();
+
+            // TestClient reports no effects, so the refetch after execution is
+            // what fails; everything up to the sponsor call already happened.
+            let err = builder
+                .execute_with_gas_sponsor(&sponsor, &signer())
+                .await
+                .unwrap_err();
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
+            assert!(matches!(
+                err,
+                TransactionBuilderError::MissingTransaction(digest) if digest == executed.digest()
+            ));
+
+            assert_eq!(owner_queries.load(Ordering::SeqCst), 0);
+
+            let Transaction::V1(txn) = executed else {
+                panic!("expected a V1 transaction");
+            };
+            let expected = RecordingSponsor::gas();
+            assert_eq!(txn.gas_payment.owner, expected.owner);
+            assert_eq!(txn.gas_payment.objects, expected.objects);
+            // TestClient's estimate, reserved and then paid with.
+            assert_eq!(*sponsor.reserved_budget.lock().unwrap(), Some(50_000_000));
+            assert_eq!(txn.gas_payment.budget, 50_000_000);
+        }
+
+        #[tokio::test]
+        async fn a_set_budget_is_reserved_as_is() {
+            let mut builder = super::builder_with(TestClient);
+            builder.gas_budget(7_000_000);
+            let sponsor = RecordingSponsor::default();
+
+            let _ = builder.execute_with_gas_sponsor(&sponsor, &signer()).await;
+
+            assert_eq!(*sponsor.reserved_budget.lock().unwrap(), Some(7_000_000));
+        }
+
+        #[tokio::test]
+        async fn gas_coins_set_on_the_builder_are_rejected() {
+            let mut builder = super::builder_with(TestClient);
+            builder.gas([
+                "0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4"
+                    .parse::<ObjectId>()
+                    .unwrap(),
+            ]);
+            let sponsor = RecordingSponsor::default();
+
+            assert!(matches!(
+                builder.execute_with_gas_sponsor(&sponsor, &signer()).await,
+                Err(TransactionBuilderError::SponsorGasConflict)
+            ));
+            assert!(sponsor.reserved_budget.lock().unwrap().is_none());
+        }
+
+        #[tokio::test]
+        async fn a_sponsor_address_set_on_the_builder_is_rejected() {
+            let mut builder = super::builder_with(TestClient);
+            builder.sponsor(SPONSOR.parse().unwrap());
+            let sponsor = RecordingSponsor::default();
+
+            assert!(matches!(
+                builder.execute_with_gas_sponsor(&sponsor, &signer()).await,
+                Err(TransactionBuilderError::SponsorAddressConflict { .. })
+            ));
+            assert!(sponsor.reserved_budget.lock().unwrap().is_none());
+        }
+
+        #[tokio::test]
+        async fn a_wrong_digest_from_the_sponsor_is_rejected() {
+            let builder = super::builder_with(TestClient);
+            let sponsor = RecordingSponsor {
+                wrong_digest: true,
+                ..Default::default()
+            };
+
+            let err = builder
+                .execute_with_gas_sponsor(&sponsor, &signer())
+                .await
+                .unwrap_err();
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
+            assert!(matches!(
+                err,
+                TransactionBuilderError::SponsorDigestMismatch { expected, got }
+                    if expected == executed.digest() && got == TransactionDigest::ZERO
+            ));
+        }
+
+        #[tokio::test]
+        async fn a_sponsor_naming_the_sender_as_gas_owner_is_rejected() {
+            let builder = super::builder_with(TestClient);
+            let sponsor = RecordingSponsor {
+                owner_is_sender: true,
+                ..Default::default()
+            };
+
+            assert!(matches!(
+                builder.execute_with_gas_sponsor(&sponsor, &signer()).await,
+                Err(TransactionBuilderError::SponsorIsSender { .. })
+            ));
+            assert!(sponsor.executed.lock().unwrap().is_none());
+        }
+
+        fn offline_builder() -> crate::TransactionBuilder {
+            let mut builder = crate::TransactionBuilder::new(
+                "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+                    .parse()
+                    .unwrap(),
+            );
+            builder
+                .gas_price(1000)
+                .gas_budget(7_000_000)
+                .move_call(Address::STD, "u64", "sqrt")
+                .arguments([64u64]);
+            builder
+        }
+
+        #[tokio::test]
+        async fn offline_returns_the_digest_of_the_signed_transaction() {
+            let sponsor = RecordingSponsor::default();
+
+            let digest = offline_builder()
+                .execute_with_gas_sponsor(&sponsor, &signer())
+                .await
+                .unwrap();
+
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
+            assert_eq!(digest, executed.digest());
+        }
+
+        #[tokio::test]
+        async fn offline_rejects_a_wrong_digest_from_the_sponsor() {
+            let sponsor = RecordingSponsor {
+                wrong_digest: true,
+                ..Default::default()
+            };
+
+            let err = offline_builder()
+                .execute_with_gas_sponsor(&sponsor, &signer())
+                .await
+                .unwrap_err();
+            let executed = sponsor.executed.lock().unwrap().clone().unwrap();
+            assert!(matches!(
+                err,
+                TransactionBuilderError::SponsorDigestMismatch { expected, got }
+                    if expected == executed.digest() && got == TransactionDigest::ZERO
+            ));
+        }
+
+        #[tokio::test]
+        async fn offline_rejects_a_sponsor_naming_the_sender_as_gas_owner() {
+            let builder = offline_builder();
+            let sponsor = RecordingSponsor {
+                owner_is_sender: true,
+                ..Default::default()
+            };
+
+            assert!(matches!(
+                builder.execute_with_gas_sponsor(&sponsor, &signer()).await,
+                Err(TransactionBuilderError::SponsorIsSender { .. })
+            ));
+            assert!(sponsor.executed.lock().unwrap().is_none());
+        }
     }
 }

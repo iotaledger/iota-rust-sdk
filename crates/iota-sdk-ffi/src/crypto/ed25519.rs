@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use iota_sdk::crypto::{FromMnemonic, ToFromBech32, ToFromBytes};
-use rand::rngs::OsRng;
 
 use crate::{
     error::{Result, SdkFfiError},
@@ -41,9 +40,7 @@ impl Ed25519PrivateKey {
 
     #[uniffi::constructor]
     pub fn random() -> Self {
-        Self(iota_sdk::crypto::ed25519::Ed25519PrivateKey::random_with(
-            OsRng,
-        ))
+        Self(iota_sdk::crypto::ed25519::Ed25519PrivateKey::random())
     }
 
     /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
@@ -100,6 +97,9 @@ impl Ed25519PrivateKey {
 
     /// Create an instance from a mnemonic phrase and a derivation path like
     /// `"m/44'/4218'/0'/0'/0'"`
+    ///
+    /// Ed25519 keys can only be derived along hardened indices, so a path with
+    /// an unhardened index is an error.
     #[uniffi::constructor(default(password = ""))]
     pub fn from_mnemonic_with_path(phrase: &str, path: String, password: String) -> Result<Self> {
         Ok(

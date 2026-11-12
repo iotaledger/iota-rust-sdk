@@ -22,5 +22,5 @@ func main() {
 	fmt.Println("Private Key:", privateKeyBech32)
 	fmt.Println("Public Key:", iota_sdk.Base64Encode(publicKey.ToBytes()))
 	fmt.Println("Public Key With Flag:", iota_sdk.Base64Encode(flaggedPublicKey))
-	fmt.Println("Address:", address.ToHex())
+	fmt.Println("Address:", address)
 }

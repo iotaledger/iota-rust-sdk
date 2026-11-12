@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk-grpc-types"
-version = "1.0.0-beta.1"
+version = "1.0.0-rc.1"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
@@ -10,6 +10,19 @@ description = "gRPC/protobuf types for the IOTA Blockchain"
 
 [lints]
 workspace = true
+
+[package.metadata.docs.rs]
+# To build locally:
+# RUSTDOCFLAGS="--cfg=doc_cfg -Zunstable-options --generate-link-to-definition" RUSTC_BOOTSTRAP=1 cargo doc --all-features --no-deps --open
+all-features = true
+rustdoc-args = [
+  # Enable doc_cfg showing the required features.
+  "--cfg=doc_cfg",
+  # Generate links to definition in rustdoc source code pages
+  # https://github.com/rust-lang/rust/pull/84176
+  "-Zunstable-options",
+  "--generate-link-to-definition",
+]
 
 [dependencies]
 # external dependencies

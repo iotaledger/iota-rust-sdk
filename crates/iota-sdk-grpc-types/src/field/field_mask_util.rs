@@ -202,6 +202,8 @@ mod tests {
     #[test]
     fn test_validate() {
         struct Foo;
+        impl crate::field::sealed::Sealed for Foo {}
+
         impl MessageFields for Foo {
             const FIELDS: &'static [&'static MessageField] = &[
                 &MessageField::new("bar").with_message_fields(Bar::FIELDS),
@@ -209,6 +211,8 @@ mod tests {
             ];
         }
         struct Bar;
+
+        impl crate::field::sealed::Sealed for Bar {}
 
         impl MessageFields for Bar {
             const FIELDS: &'static [&'static MessageField] = &[
@@ -266,9 +270,13 @@ mod tests {
             message_fields: None,
         };
 
+        impl crate::field::sealed::Sealed for MapWrapper {}
+
         impl MessageFields for MapWrapper {
             const FIELDS: &'static [&'static MessageField] = &[MAP_FIELD];
         }
+
+        impl crate::field::sealed::Sealed for Outer {}
 
         impl MessageFields for Outer {
             const FIELDS: &'static [&'static MessageField] = &[
@@ -311,9 +319,13 @@ mod tests {
         struct CmdResults;
         struct ExecError;
 
+        impl crate::field::sealed::Sealed for CmdResults {}
+
         impl MessageFields for CmdResults {
             const FIELDS: &'static [&'static MessageField] = &[&MessageField::new("bcs")];
         }
+
+        impl crate::field::sealed::Sealed for ExecError {}
 
         impl MessageFields for ExecError {
             const FIELDS: &'static [&'static MessageField] = &[
@@ -321,6 +333,8 @@ mod tests {
                 &MessageField::new("command_index"),
             ];
         }
+
+        impl crate::field::sealed::Sealed for Msg {}
 
         impl MessageFields for Msg {
             const FIELDS: &'static [&'static MessageField] = &[

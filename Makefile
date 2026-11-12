@@ -6,7 +6,9 @@ all:: ci ## Default target, runs the CI process
 check-features: ## Check feature flags for crates
 	$(MAKE) -C crates/iota-sdk-types check-features
 	$(MAKE) -C crates/iota-sdk-crypto check-features
+	$(MAKE) -C crates/iota-sdk-graphql-client check-features
 	$(MAKE) -C crates/iota-sdk-move-types check-features
+	$(MAKE) -C crates/iota-sdk-transaction-builder check-features
 
 .PHONY: check-fmt
 check-fmt: ## Check code formatting
@@ -34,7 +36,7 @@ semver-checks: ## Check the published crates for breaking API changes
 .PHONY: test
 test: fetch-compiled-packages ## Run unit tests
 	cargo nextest run --all-features --workspace \
-		--exclude iota-sdk-ffi --exclude iota-sdk-graphql-client --exclude integration-tests \
+		--exclude iota-sdk-graphql-client --exclude integration-tests \
 		--exclude iota-sdk-grpc-client --exclude polling-indexer --exclude capture-move-type-fixtures
 	cargo nextest run --no-default-features -p iota-sdk-grpc-client
 
@@ -52,6 +54,7 @@ package_%.json: crates/integration-tests/%/Move.toml crates/integration-tests/%/
 .PHONY: test-with-localnet
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
 	cargo nextest run -p iota-sdk-graphql-client -p integration-tests
+	cargo nextest run --no-default-features -p iota-sdk-graphql-client
 
 # Verify that individual SDK crates compile to wasm32-unknown-unknown.
 # This is a quick compatibility check, not the full WASM bindings build.
@@ -63,6 +66,12 @@ wasm32: ## Check that SDK crates compile to wasm32
 	$(MAKE) -C crates/iota-sdk-move-types wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
 	$(MAKE) -C crates/iota-sdk-types wasm
+
+.PHONY: wasm-bindgen-cli
+wasm-bindgen-cli: ## Install the wasm-bindgen CLI version pinned in bindings/wasm/wasm-cargo-patch.toml
+	@version=$$(sed -n 's/^wasm-bindgen = "=\(.*\)"$$/\1/p' bindings/wasm/wasm-cargo-patch.toml); \
+	test -n "$$version" || { printf "No wasm-bindgen pin found in bindings/wasm/wasm-cargo-patch.toml\n" >&2; exit 1; }; \
+	cargo install wasm-bindgen-cli --version "$$version"
 
 # Build the full WASM bindings package for browsers.
 # Uses ubrn (uniffi-bindgen-react-native) to generate TS bindings, compile
@@ -117,6 +126,10 @@ sort-derives: ## Sort `#[derive(...)]` trait lists alphabetically across the wor
 .PHONY: check-sort-derives
 check-sort-derives: ## Check that all `#[derive(...)]` trait lists are sorted alphabetically
 	python3 scripts/sort_derives/sort_derives.py --check
+
+.PHONY: release-status
+release-status: ## List the crates that changed since their last release tag, in publish order
+	python3 scripts/release_status/release_status.py
 
 .PHONY: clean
 clean: ## Clean build artifacts
@@ -238,16 +251,11 @@ csharp: ## Build C# bindings
 	cp target/release/libiota_sdk_ffi$${LIB_EXT} bindings/csharp/src/IotaSdk/; \
 	mv bindings/csharp/src/IotaSdk/iota_sdk_ffi.cs bindings/csharp/src/IotaSdk/IotaSdk.cs
 	@# Fix common compilation issues in generated bindings
-	@# byte[][length] -> byte[length][]: NordSecurity/uniffi-bindgen-cs#147
-	sed -i.bak 's/new byte\[\]\[(length)\]/new byte[(length)][]/' bindings/csharp/src/IotaSdk/IotaSdk.cs
-	sed -i.bak '/class Validator.*: IDisposable/,/^}/ { s/FFIObjectUtil\.DisposeAll(/\/\/ FFIObjectUtil.DisposeAll(/; }' bindings/csharp/src/IotaSdk/IotaSdk.cs
-	@# Object? / Object -> object? / object: NordSecurity/uniffi-bindgen-cs#169
+	@# Object? -> object?: NordSecurity/uniffi-bindgen-cs#169
 	sed -i.bak 's/params Object?\[\]/params object?[]/' bindings/csharp/src/IotaSdk/IotaSdk.cs
 	sed -i.bak 's/void Dispose(Object?/void Dispose(object?/' bindings/csharp/src/IotaSdk/IotaSdk.cs
-	sed -i.bak 's/Object lock_ = new Object();/object lock_ = new object();/' bindings/csharp/src/IotaSdk/IotaSdk.cs
 	@# String.Format -> string.Format: NordSecurity/uniffi-bindgen-cs#170
 	sed -i.bak 's/String\.Format/string.Format/g' bindings/csharp/src/IotaSdk/IotaSdk.cs
-	sed -i.bak 's/IotaSdkFfiMethods/Iota/g' bindings/csharp/src/IotaSdk/IotaSdk.cs
 	rm bindings/csharp/src/IotaSdk/IotaSdk.cs.bak
 
 .PHONY: go-example
@@ -439,8 +447,7 @@ example:
 examples: ## Run all Rust examples
 	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer
 	@# that require external services (e.g. PostgreSQL). Run those separately.
-	@# TODO(#1363): Re-enable Move View call over gRPC examples
-	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -not -name "grpc_move_view_call.rs" -exec basename {} .rs \;); do \
+	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 

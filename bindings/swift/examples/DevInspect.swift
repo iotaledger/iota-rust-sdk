@@ -7,7 +7,7 @@ import IotaSDK
 @main
 struct DevInspectExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = try GraphQlClient.newTestnet()
 
     let sender = Address.zero()
 
@@ -108,7 +108,7 @@ struct DevInspectExample {
         let returnValue = lastEffect.returnValues[0]
         if returnValue.typeTag.isAddress() && returnValue.bcs.count == 32 {
           let resolvedAddress = try Address.fromBytes(bytes: returnValue.bcs)
-          print("Resolved address: \(resolvedAddress.toHex())")
+          print("Resolved address: \(resolvedAddress)")
         } else {
           print(
             "Last result is not an address type or has wrong length: \(returnValue.bcs.count)"

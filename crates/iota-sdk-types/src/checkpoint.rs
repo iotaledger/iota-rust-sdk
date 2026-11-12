@@ -538,7 +538,6 @@ crate::impl_tree_display!(
 );
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -672,7 +671,7 @@ mod serialization {
 
         #[test]
         fn signed_checkpoint_fixture() {
-            // Checkpoint summaries created from a local network (iota start command)
+            // Checkpoint summaries created from a local network (iota-localnet start).
             // http://localhost:9000/api/v1/checkpoints to see the list of checkpoints
             // To get the data of checkpoint 1 as base64, use:
             // curl -s http://localhost:9000/api/v1/checkpoints/1 -H "Accept: application/bcs" | base64

@@ -8,12 +8,16 @@ import IotaSDK
 struct GasStationExample {
   static func main() async {
     do {
-      let client = GraphQlClient.newLocalnet()
+      let client = try GraphQlClient.newLocalnet()
       let gasStationUrl = "http://0.0.0.0:9527"
       let gasStationAuthToken = "test"
       let keypair = Ed25519PrivateKey.random()
       let sender = keypair.publicKey().deriveAddress()
       let signer = TransactionSigner.fromEd25519(key: keypair)
+
+      let gasStation = try GasStation(
+        url: gasStationUrl,
+        headers: ["Authorization": ["Bearer \(gasStationAuthToken)"]])
 
       let builder = client.transactionBuilder(sender: sender)
 
@@ -24,11 +28,7 @@ struct GasStationExample {
         arguments: [PtbArgument.u64(value: 64)]
       )
 
-      _ = builder.gasStationSponsor(
-        url: gasStationUrl,
-        headers: ["Authorization": ["Bearer \(gasStationAuthToken)"]])
-
-      let res = try await builder.execute(signer: signer)
+      let res = try await builder.executeWithGasStation(gasStation: gasStation, signer: signer)
 
       print(res)
 

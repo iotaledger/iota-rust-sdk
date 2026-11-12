@@ -15,6 +15,6 @@ struct GenerateEd25519AddressExample {
     print("Private Key: \(privateKeyBech32)")
     print("Public Key: \(base64Encode(input: publicKey.toBytes()))")
     print("Public Key With Flag: \(base64Encode(input: flaggedPublicKey))")
-    print("Address: \(address.toHex())")
+    print("Address: \(address)")
   }
 }

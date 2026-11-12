@@ -18,7 +18,7 @@
 # With this example it is necessary to run a localnet:
 #
 # ```sh
-# iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
+# iota-localnet start --with-faucet --with-graphql --committee-size 1 --force-regenesis
 # ```
 
 from lib.iota_sdk import *
@@ -42,12 +42,12 @@ async def main():
     dependencies = package_data.dependencies()
     print(f"Dependencies: {len(dependencies)}")
     digest = package_data.digest()
-    print(f"Digest: {digest.to_base58()}")
+    print(f"Digest: {digest}")
 
     # Create a random private key to derive a sender address and for signing
     private_key = Ed25519PrivateKey.random()
     sender = private_key.public_key().derive_address()
-    print(f"Sender: {sender.to_hex()}")
+    print(f"Sender: {sender}")
 
     client = GraphQlClient.new_localnet()
 
@@ -89,17 +89,17 @@ async def main():
             object_id = changed_obj.object_id
             obj = await client.object(object_id, None)
             if obj is None:
-                raise Exception(f"Missing object {object_id.to_hex()}")
+                raise Exception(f"Missing object {object_id}")
             if obj.as_struct().struct_type == StructTag.new_upgrade_cap():
-                print(f"UpgradeCap: {object_id.to_hex()}")
+                print(f"UpgradeCap: {object_id}")
                 print(
-                    f"UpgradeCapOwner: {changed_obj.output_state.owner.as_address().to_hex()}"
+                    f"UpgradeCapOwner: {changed_obj.output_state.owner.as_address()}"
                 )
                 upgrade_cap = object_id
 
         elif changed_obj.output_state.is_package_write():
             package_id = changed_obj.object_id
-            print(f"Package ID: {package_id.to_hex()}")
+            print(f"Package ID: {package_id}")
             version = changed_obj.output_state.version
             print(f"Package version: {version}")
 
@@ -164,7 +164,7 @@ async def main():
     # Print the new package version (should now be 2)
     for changed_obj in effects.as_v1().changed_objects():
         if changed_obj.output_state.is_package_write():
-            print(f"New Package ID: {changed_obj.object_id.to_hex()}")
+            print(f"New Package ID: {changed_obj.object_id}")
             print(f"New Package version: {changed_obj.output_state.version}")
 
 

@@ -35,7 +35,9 @@ use crate::{
     derive_more::From,
     Eq,
     Hash,
+    Ord,
     PartialEq,
+    PartialOrd,
     uniffi::Object,
 )]
 #[uniffi::export(Debug, Display, Eq, Hash)]
@@ -432,7 +434,7 @@ impl From<TypeOrigin> for iota_sdk::types::TypeOrigin {
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
-#[derive(Clone, uniffi::Record)]
+#[derive(Clone, Debug, uniffi::Record)]
 pub struct UpgradeInfo {
     /// ID of the upgraded package
     pub upgraded_id: Arc<ObjectId>,
@@ -458,12 +460,15 @@ impl From<UpgradeInfo> for iota_sdk::types::UpgradeInfo {
     }
 }
 
-crate::ffi_map! {
-    ModuleMap<Identifier, Vec<u8>>
+crate::ffi_btree_map! {
+    /// A package's modules, keyed by module name.
+    ModuleMap<Arc<Identifier>, Vec<u8>>
 }
 
-crate::ffi_map! {
-    LinkageMap<ObjectId, UpgradeInfo>
+crate::ffi_btree_map! {
+    /// The version of each package a package depends on, keyed by the
+    /// dependency's runtime ID.
+    LinkageMap<Arc<ObjectId>, UpgradeInfo>
 }
 
 /// A move package

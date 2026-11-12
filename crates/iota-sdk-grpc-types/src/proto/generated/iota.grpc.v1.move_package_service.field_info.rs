@@ -41,6 +41,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ListPackageVersionsRequest {}
     impl MessageFields for ListPackageVersionsRequest {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::PACKAGE_ID_FIELD,
@@ -105,6 +106,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ListPackageVersionsResponse {}
     impl MessageFields for ListPackageVersionsResponse {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::VERSIONS_FIELD,
@@ -166,6 +168,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for PackageVersion {}
     impl MessageFields for PackageVersion {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::ORIGINAL_ID_FIELD,

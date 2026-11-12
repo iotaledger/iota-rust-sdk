@@ -30,9 +30,12 @@ func main() {
 	}
 	publicKey := privateKey.PublicKey()
 	senderAddress := publicKey.DeriveAddress()
-	log.Printf("Sender address: %s", senderAddress.ToHex())
+	log.Printf("Sender address: %s", senderAddress)
 
-	client := iota_sdk.GraphQlClientNewLocalnet()
+	client, err := iota_sdk.GraphQlClientNewLocalnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	// Request funds from faucet
 	faucet := iota_sdk.FaucetClientNewLocalnet()

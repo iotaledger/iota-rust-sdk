@@ -1,6 +1,6 @@
 # polling-indexer
 
-Polling-based custom indexer example built on top of `iota_sdk::graphql_client::Client`.
+Polling-based custom indexer example built on top of `iota_sdk::graphql_client::GraphQLClient`.
 
 This example demonstrates a polling indexer flow with:
 

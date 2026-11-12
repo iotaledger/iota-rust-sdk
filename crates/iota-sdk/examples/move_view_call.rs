@@ -4,7 +4,7 @@
 use std::str::FromStr;
 
 use iota_sdk::{
-    graphql_client::{Client, error::Result},
+    graphql_client::{GraphQLClient, error::GraphQLResult},
     types::ObjectId,
 };
 
@@ -14,8 +14,9 @@ const PACKAGE: &str = "0x533074f8e22e8ce1330d7e9d67c18966abb5a3d58dc2e2deea50e50
 const SHOP: &str = "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20";
 
 #[tokio::main]
-async fn main() -> Result<()> {
-    let client = Client::new_testnet();
+async fn main() -> GraphQLResult<()> {
+    let client = GraphQLClient::new_testnet()?;
+    let package = ObjectId::from_str(PACKAGE)?;
 
     // ===========================================================================
     // Example 1: Using move_view_call() with typed arguments (primitives)
@@ -23,11 +24,8 @@ async fn main() -> Result<()> {
     println!("=== Example 1: move_view_call() with typed arguments (primitives) ===\n");
 
     let result = client
-        .move_view_call(
-            format!("{PACKAGE}::shop::discounted_price"),
-            None,
-            (100u64, 25u64),
-        )
+        .move_view_call(package, "shop", "discounted_price")
+        .arguments((100u64, 25u64))
         .await?;
 
     if let Some(error) = result.error {
@@ -44,11 +42,10 @@ async fn main() -> Result<()> {
     println!("\n=== Example 2: move_view_call_json() with JSON values (primitives) ===\n");
 
     let result = client
-        .move_view_call_json(
-            format!("{PACKAGE}::shop::discounted_price"),
-            None,
+        .move_view_call_json(package, "shop", "discounted_price")
+        .arguments(
             // `u64` is passed as a string so large values survive JSON.
-            Some(vec![serde_json::json!("100"), serde_json::json!("25")]),
+            vec![serde_json::json!("100"), serde_json::json!("25")],
         )
         .await?;
 
@@ -66,11 +63,8 @@ async fn main() -> Result<()> {
     println!("\n=== Example 3: move_view_call() with typed arguments (shared object) ===\n");
 
     let result = client
-        .move_view_call(
-            format!("{PACKAGE}::shop::sale_at"),
-            None,
-            (ObjectId::from_str(SHOP)?, 1u64),
-        )
+        .move_view_call(package, "shop", "sale_at")
+        .arguments((ObjectId::from_str(SHOP)?, 1u64))
         .await?;
 
     if let Some(error) = result.error {
@@ -87,11 +81,8 @@ async fn main() -> Result<()> {
     println!("\n=== Example 4: move_view_call_json() with JSON values (shared object) ===\n");
 
     let result = client
-        .move_view_call_json(
-            format!("{PACKAGE}::shop::sale_at"),
-            None,
-            Some(vec![serde_json::json!(SHOP), serde_json::json!("1")]),
-        )
+        .move_view_call_json(package, "shop", "sale_at")
+        .arguments(vec![serde_json::json!(SHOP), serde_json::json!("1")])
         .await?;
 
     if let Some(error) = result.error {
@@ -100,6 +91,25 @@ async fn main() -> Result<()> {
         println!("Shop JSON Results: {results:?}");
     } else {
         println!("No shop JSON results");
+    }
+
+    // ===========================================================================
+    // Example 5: Using move_view_call() with arguments appended one at a time
+    // ===========================================================================
+    println!("\n=== Example 5: move_view_call() with arguments appended one at a time ===\n");
+
+    let result = client
+        .move_view_call(package, "shop", "sale_at")
+        .argument(ObjectId::from_str(SHOP)?)
+        .argument(1u64)
+        .await?;
+
+    if let Some(error) = result.error {
+        println!("Appended Arguments Error: {error}");
+    } else if let Some(results) = result.results {
+        println!("Appended Arguments Results: {results:?}");
+    } else {
+        println!("No appended arguments results");
     }
 
     Ok(())

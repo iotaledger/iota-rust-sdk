@@ -3,7 +3,8 @@
 
 use crate::{
     graphql::query_types::{
-        DynamicFieldOutput, Epoch, GraphQLEvent, PageInfo, TransactionDataEffects, Validator,
+        GraphQLDynamicFieldOutput, GraphQLEpoch, GraphQLEvent, GraphQLPageInfo,
+        GraphQLTransactionDataEffects, GraphQLValidator,
     },
     types::{
         checkpoint::CheckpointSummary,
@@ -21,7 +22,7 @@ macro_rules! define_paged_record {
         pub struct $id {
             /// Information about the page, such as the cursor and whether there are
             /// more pages.
-            pub page_info: PageInfo,
+            pub page_info: GraphQLPageInfo,
             /// The data returned by the server.
             pub data: Vec<$type_>,
         }
@@ -37,12 +38,15 @@ macro_rules! define_paged_record {
     };
 }
 
-define_paged_record!(SignedTransactionPage, SignedTransaction);
-define_paged_record!(TransactionDataEffectsPage, TransactionDataEffects);
-define_paged_record!(DynamicFieldOutputPage, DynamicFieldOutput);
-define_paged_record!(EventPage, GraphQLEvent);
-define_paged_record!(EpochPage, Epoch);
-define_paged_record!(ValidatorPage, Validator);
+define_paged_record!(GraphQLSignedTransactionPage, SignedTransaction);
+define_paged_record!(
+    GraphQLTransactionDataEffectsPage,
+    GraphQLTransactionDataEffects
+);
+define_paged_record!(GraphQLDynamicFieldOutputPage, GraphQLDynamicFieldOutput);
+define_paged_record!(GraphQLEventPage, GraphQLEvent);
+define_paged_record!(GraphQLEpochPage, GraphQLEpoch);
+define_paged_record!(GraphQLValidatorPage, GraphQLValidator);
 
 macro_rules! define_paged_object {
     ($id:ident, $type_:ty) => {
@@ -51,7 +55,7 @@ macro_rules! define_paged_object {
         pub struct $id {
             /// Information about the page, such as the cursor and whether there are
             /// more pages.
-            pub page_info: PageInfo,
+            pub page_info: GraphQLPageInfo,
             /// The data returned by the server.
             pub data: Vec<std::sync::Arc<$type_>>,
         }
@@ -72,9 +76,9 @@ macro_rules! define_paged_object {
     };
 }
 
-define_paged_object!(CoinPage, Coin);
-define_paged_object!(ObjectPage, Object);
-define_paged_object!(TransactionEffectsPage, TransactionEffects);
-define_paged_object!(MovePackagePage, MovePackage);
-define_paged_object!(CheckpointSummaryPage, CheckpointSummary);
-define_paged_object!(NameRegistrationPage, NameRegistration);
+define_paged_object!(GraphQLCoinPage, Coin);
+define_paged_object!(GraphQLObjectPage, Object);
+define_paged_object!(GraphQLTransactionEffectsPage, TransactionEffects);
+define_paged_object!(GraphQLMovePackagePage, MovePackage);
+define_paged_object!(GraphQLCheckpointSummaryPage, CheckpointSummary);
+define_paged_object!(GraphQLNameRegistrationPage, NameRegistration);

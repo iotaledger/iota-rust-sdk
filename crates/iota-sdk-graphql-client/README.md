@@ -8,27 +8,73 @@ It provides a set of APIs for querying the blockchain for information such as ch
 reference gas price, protocol configuration, service configuration, checkpoint, epoch,
 executing transactions and more.
 
-# Design Principles
+## Design Principles
 
 1. **Type Safety**: The client uses the `cynic` library to generate types from the schema. This ensures that the queries are type-safe.
 1. **Convenience**: The client provides a set of APIs for common queries such as chain identifier, reference gas price, protocol configuration, service configuration, checkpoint, epoch, executing transactions and more.
 1. **Custom Queries**: The client provides a way to run custom queries using the `cynic` library.
 
-# Usage
+## TLS
 
-## Connecting to a GraphQL server
+HTTPS is verified with `rustls`. Every axis has a default, so reaching the public networks needs no setup.
 
-Instantiate a client with [`Client::new(server: &str)`] or use one of the predefined functions for different networks [`Client`].
+| Feature            | Default | Effect                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tls-ring`         | on      | `ring` as the `rustls` crypto provider                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `tls-aws-lc`       | off     | `aws-lc-rs` instead; builds a C library, so it needs a C toolchain and `libclang` on targets without prebuilt bindings. `tls-ring` wins if both are on — `rustls` cannot be asked to choose.                                                                                                                                                                                                                                                                                           |
+| neither provider   | —       | HTTP-only: `reqwest` is built without TLS, nothing verifies certificates, the root features below are ignored, a request to an `https` address fails unless another crate in the build enables `reqwest`'s TLS, and proxies set in the environment are ignored, since a `reqwest` without TLS would send `https` requests to them unencrypted. Set a proxy through `GraphQLClient::builder(..).configure(..)` or your own client if you need one. The build to use against a localnet. |
+| `tls-native-roots` | on      | trust the platform store. Alone it changes nothing, since that is already `reqwest`'s default; its effect is to merge rather than replace when `tls-webpki-roots` is also on.                                                                                                                                                                                                                                                                                                          |
+| `tls-webpki-roots` | on      | add the bundled Mozilla roots, merged into the platform store when `tls-native-roots` is also on. Merging is a union, not a fallback: a CA the platform has deliberately distrusted is still accepted if the bundled set carries it. Turn off `tls-native-roots` if the bundled set should be authoritative.                                                                                                                                                                           |
+| neither roots      | —       | the platform store alone. `reqwest` constructs its verifier eagerly, before it knows whether a request uses TLS, so on Linux an empty system store fails the build even for plain-HTTP use — which is what the bundled roots otherwise prevent.                                                                                                                                                                                                                                        |
+
+Android always uses the bundled roots alone: it cannot merge the two, and its
+platform verifier aborts the process unless the application performs a JNI
+handshake this crate cannot do on its behalf. On wasm32 none of this applies —
+the browser owns certificate verification.
+
+### Bringing your own client
+
+`Client::new_with_reqwest_client` takes a `reqwest::Client` you built yourself, for
+pinning a certificate set, choosing a different TLS backend, or setting proxies
+and timeouts. Because this crate selects the rustls crypto provider itself
+rather than letting `reqwest` hard-wire aws-lc-rs, a build with a provider
+feature panics unless a provider has been installed for the process. Install one
+first — the first caller wins, so this is a no-op if the application has already
+chosen:
 
 ```rust, ignore
-use iota_graphql_client::Client;
+use iota_graphql_client::GraphQLClient;
+
+rustls::crypto::ring::default_provider().install_default().ok();
+
+let http = reqwest::Client::builder()
+    .timeout(std::time::Duration::from_secs(5))
+    .build()?;
+let client = Client::new_with_reqwest_client("https://graphql.testnet.iota.cafe", http)?;
+```
+
+Such a client has none of this crate's own defaults: no user agent (`USER_AGENT`
+is exported if you want it) and no bundled roots, so it trusts whatever your
+`reqwest` features chose. An HTTP-only build has nothing to install, since
+`reqwest` is built without TLS and its builder needs no provider; reaching
+`https://` from one means enabling a provider feature here, or turning on
+`reqwest`'s TLS in your own manifest.
+
+## Usage
+
+### Connecting to a GraphQL server
+
+Instantiate a client with [`GraphQLClient::new(server: &str)`] or use one of the predefined functions for different networks [`GraphQLClient`].
+
+```rust, ignore
+use iota_graphql_client::GraphQLClient;
 use eyre::Result;
 
 #[tokio::main]
 async fn main() -> Result<()> {
 
    // Connect to the mainnet GraphQL server
-   let client = Client::new_mainnet();
+   let client = GraphQLClient::new_mainnet()?;
    let chain_id = client.chain_id().await?;
    println!("{:?}", chain_id);
 
@@ -36,11 +82,11 @@ async fn main() -> Result<()> {
 }
 ```
 
-## Requesting gas from the faucet
+### Requesting gas from the faucet
 
 The client provides an API to request gas from the faucet. The `request_and_wait` function sends a request to the faucet and waits until the transaction is confirmed. The function returns the transaction details if the request is successful.
 
-### Example for a local network.
+#### Example for a local network.
 
 The testnet and devnet faucets are only available through the web interface, so `FaucetClient` can only be used with a local or custom faucet service.
 
@@ -67,7 +113,7 @@ async fn main() -> Result<()> {
 }
 ```
 
-### Example for custom faucet service.
+#### Example for custom faucet service.
 
 Note that this `FaucetClient` is explicitly designed to work with two endpoints: `v1/gas`, and `v1/status`. When passing in the custom faucet URL, skip the final endpoint and only pass in the top-level url (e.g., `http://localhost:9123`).
 
@@ -93,7 +139,7 @@ async fn main() -> Result<()> {
 }
 ```
 
-## Custom Queries
+### Custom Queries
 
 There are several options for running custom queries.
 
@@ -159,7 +205,7 @@ use cynic::QueryBuilder;
 
 use iota_graphql_client::{
     query_types::{schema, BigInt},
-    Client,
+    GraphQLClient,
 };
 use iota_types::Address;
 
@@ -199,7 +245,7 @@ pub struct ChainIdQuery {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let mut client = Client::new_devnet();
+    let mut client = GraphQLClient::new_devnet()?;
 
     // Query the data for the last known epoch. Note that id variable is None, so last epoch data
     // will be returned.

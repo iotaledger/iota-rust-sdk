@@ -51,7 +51,7 @@ bindings/
 └── wasm/                           # WASM/TypeScript bindings (browser + Node)
 ```
 
-The `iota-sdk` umbrella crate exposes the other crates via modules gated by feature flags: `crypto`, `graphql` (→ `graphql_client`), `grpc` (→ `grpc_client` + `grpc_types`), `move-types` (→ `move_types`), `txn-builder` (→ `transaction_builder`), and `types`. `grpc` and `move-types` are opt-in (not in `default`); `graphql`, `crypto`, `types`, `txn-builder` are on by default.
+The `iota-sdk` umbrella crate exposes the other crates via modules gated by feature flags: `crypto`, `graphql` (→ `graphql_client`), `grpc` (→ `grpc_client` + `grpc_types`), `move-types` (→ `move_types`), `transaction-builder` (→ `transaction_builder`), and `types`. `grpc` and `move-types` are opt-in (not in `default`); `graphql`, `crypto`, `types`, `transaction-builder` are on by default.
 
 ## Build & Test Commands
 
@@ -84,6 +84,9 @@ make grpc   # Pull/refresh protos and regenerate types
 # BCS schema
 make bcs-schema      # Regenerate bcs-schema.abnf
 
+# Releases
+make release-status  # List the crates that changed since their last release tag, in publish order
+
 # Examples
 make examples                    # Run all Rust examples
 make bindings-examples           # Run all binding examples
@@ -109,7 +112,7 @@ cargo test --doc                 # Direct doc test invocation
 - **Linting**: Clippy with warnings as errors (`-Dwarnings`)
 - **Naming**: crates `iota-sdk-*`, modules `snake_case`, types `PascalCase`, constants `UPPER_SNAKE_CASE`
 - **Errors**: `thiserror` enums, `#[non_exhaustive]` at the type level
-- **Feature gating**: optional functionality lives behind features; APIs use `#[cfg(feature = "…")]` and `#[cfg_attr(doc_cfg, doc(cfg(feature = "…")))]` for docs.rs visibility
+- **Feature gating**: optional functionality lives behind features; APIs use `#[cfg(feature = "…")]`; crates enable `#![cfg_attr(doc_cfg, feature(doc_cfg))]`, which makes docs.rs show the required feature, so items need no `doc(cfg)` attribute
 - **Comments**: see [Writing style](#writing-style) below
 
 ## Writing style
@@ -141,7 +144,7 @@ Before posting: delete every sentence the reader could get from the diff; repeat
 - **Main branch**: `develop` (not `main`)
 - **CI**: All tests must pass, no clippy warnings, proper formatting
 - Draft PRs can force CI with `[run-ci]` in the PR body
-- **PR title format**: Titles are validated in CI (`.github/workflows/pr_title.yml`) and must follow the [Conventional Commits](https://www.conventionalcommits.org/) style. Allowed types are `feat`, `fix`, `refactor`, `chore`, `upstream`, and `release` (e.g. `feat: add new gRPC method`, `chore: update docs`). No other prefixes (such as `docs:` or `test:`) are accepted — use `chore:` for those.
+- **PR title format**: Titles are validated in CI (`.github/workflows/pr_title.yml`) and must follow the [Conventional Commits](https://www.conventionalcommits.org/) style. Allowed types are `feat`, `fix`, `refactor`, `chore`, `upstream`, `release`, and `revert` (e.g. `feat: add new gRPC method`, `chore: update docs`). No other prefixes (such as `docs:` or `test:`) are accepted — use `chore:` for those.
 
 ## WASM Considerations
 

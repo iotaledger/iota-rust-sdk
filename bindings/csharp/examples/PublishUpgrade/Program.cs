@@ -21,11 +21,11 @@ class Program
         var packageData = MovePackageData.FromJson(packageDataJson);
         Console.WriteLine($"Modules: {packageData.Modules().Length}");
         Console.WriteLine($"Dependencies: {packageData.Dependencies().Length}");
-        Console.WriteLine($"Digest: {packageData.Digest().ToBase58()}");
+        Console.WriteLine($"Digest: {packageData.Digest()}");
 
         var privateKey = Ed25519PrivateKey.Random();
         var sender = privateKey.PublicKey().DeriveAddress();
-        Console.WriteLine($"Sender: {sender.ToHex()}");
+        Console.WriteLine($"Sender: {sender}");
 
         var client = GraphQlClient.NewLocalnet();
 
@@ -60,19 +60,19 @@ class Program
             {
                 var objectId = changedObj.ObjectId;
                 var obj = await client.Object(objectId, null);
-                if (obj == null) throw new Exception($"Missing object {objectId.ToHex()}");
+                if (obj == null) throw new Exception($"Missing object {objectId}");
 
                 if (obj.AsStruct().StructType.Equals(StructTag.NewUpgradeCap()))
                 {
-                    Console.WriteLine($"UpgradeCap: {objectId.ToHex()}");
-                    Console.WriteLine($"UpgradeCapOwner: {objWrite.Owner.AsAddress().ToHex()}");
+                    Console.WriteLine($"UpgradeCap: {objectId}");
+                    Console.WriteLine($"UpgradeCapOwner: {objWrite.Owner.AsAddress()}");
                     upgradeCap = objectId;
                 }
             }
             else if (changedObj.OutputState is ObjectOut.PackageWrite pkgWrite)
             {
                 packageId = changedObj.ObjectId;
-                Console.WriteLine($"Package ID: {packageId.ToHex()}");
+                Console.WriteLine($"Package ID: {packageId}");
                 Console.WriteLine($"Package version: {pkgWrite.Version}");
             }
         }
@@ -131,7 +131,7 @@ class Program
         {
             if (changedObj.OutputState is ObjectOut.PackageWrite pkgWrite2)
             {
-                Console.WriteLine($"New Package ID: {changedObj.ObjectId.ToHex()}");
+                Console.WriteLine($"New Package ID: {changedObj.ObjectId}");
                 Console.WriteLine($"New Package version: {pkgWrite2.Version}");
             }
         }

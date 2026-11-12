@@ -79,9 +79,9 @@ async function setupAccount(client) {
     throw new Error("Missing package metadata id");
   if (accountId === null) throw new Error("Missing account id");
 
-  console.log(`Package ID: ${packageId.toHex()}`);
-  console.log(`PackageMetadataV1 ID: ${packageMetadataId.toHex()}`);
-  console.log(`Account ID: ${accountId.toHex()}\n`);
+  console.log(`Package ID: ${packageId}`);
+  console.log(`PackageMetadataV1 ID: ${packageMetadataId}`);
+  console.log(`Account ID: ${accountId}\n`);
 
   // Build the `link_auth` PTB
   builder = client.transactionBuilder(sender);

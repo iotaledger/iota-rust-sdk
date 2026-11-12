@@ -8,7 +8,7 @@ use serde::Deserialize;
 
 #[derive(Clone, Debug, Parser)]
 #[command(name = "polling-indexer")]
-#[command(about = "Custom polling indexer using iota_sdk::graphql_client::Client")]
+#[command(about = "Custom polling indexer using iota_sdk::graphql_client::GraphQLClient")]
 pub struct Cli {
     #[arg(
         long,

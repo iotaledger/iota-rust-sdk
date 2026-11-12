@@ -16,7 +16,6 @@ use crate::{
 };
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct Name {
     // Labels of the name, in reverse order
     labels: Vec<String>,
@@ -145,24 +144,31 @@ impl Name {
 
     /// Formats a name into a string based on the available output formats.
     /// The default separator is `.`
+    ///
+    /// A name decoded from BCS is not validated. One without a second-level
+    /// name or with a top-level name other than `iota` has no AT form and is
+    /// formatted in the DOT format.
     pub fn format(&self, format: NameFormat) -> String {
-        let mut labels = self.labels.clone();
         let sep = &IOTA_NAMES_SEPARATOR_DOT.to_string();
-        labels.reverse();
 
-        if format == NameFormat::Dot {
-            // DOT format, all labels joined together with dots, including the TLN.
-            labels.join(sep)
-        } else {
-            // SAFETY: This is a safe operation because we only allow a
-            // name's label vector size to be >= 2 (see `Name::from_str`)
-            let _tln = labels.pop();
-            let sln = labels.pop().unwrap();
-
+        if format == NameFormat::At
+            && let [tln, sln, subnames @ ..] = self.labels.as_slice()
+            && tln == IOTA_NAMES_TLN
+        {
             // AT format, labels minus SLN joined together with dots, then joined to SLN
             // with @, no TLN.
-            format!("{}{IOTA_NAMES_SEPARATOR_AT}{sln}", labels.join(sep))
+            let subnames = subnames
+                .iter()
+                .rev()
+                .map(String::as_str)
+                .collect::<Vec<_>>();
+            return format!("{}{IOTA_NAMES_SEPARATOR_AT}{sln}", subnames.join(sep));
         }
+
+        // DOT format, all labels joined together with dots, including the TLN.
+        let mut labels = self.labels.clone();
+        labels.reverse();
+        labels.join(sep)
     }
 }
 
@@ -172,6 +178,59 @@ impl Name {
 pub enum NameFormat {
     At,
     Dot,
+}
+
+#[cfg(feature = "serde")]
+mod serialization {
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use serde_with::{DeserializeAs, SerializeAs};
+
+    use super::*;
+
+    /// Binary shape: the historical derived struct encoding, which on-chain
+    /// `Field<Name, _>` object contents are deserialized with.
+    #[derive(serde::Serialize)]
+    #[serde(rename = "Name")]
+    struct BinaryNameRef<'a> {
+        labels: &'a Vec<String>,
+    }
+
+    #[derive(serde::Deserialize)]
+    #[serde(rename = "Name")]
+    struct BinaryName {
+        labels: Vec<String>,
+    }
+
+    impl Serialize for Name {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            if serializer.is_human_readable() {
+                serde_with::DisplayFromStr::serialize_as(self, serializer)
+            } else {
+                BinaryNameRef {
+                    labels: &self.labels,
+                }
+                .serialize(serializer)
+            }
+        }
+    }
+
+    impl<'de> Deserialize<'de> for Name {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            if deserializer.is_human_readable() {
+                serde_with::DisplayFromStr::deserialize_as(deserializer)
+            } else {
+                BinaryName::deserialize(deserializer).map(|name| Name {
+                    labels: name.labels,
+                })
+            }
+        }
+    }
 }
 
 /// Converts @label ending to label{separator}iota ending.
@@ -335,5 +394,49 @@ mod tests {
         name = "test.test.test.test.iota".parse::<Name>().unwrap();
         assert!(name.format(NameFormat::Dot) == "test.test.test.test.iota");
         assert!(name.format(NameFormat::At) == "test.test.test@test");
+    }
+
+    #[test]
+    fn names_without_an_at_form_format_as_dot() {
+        for (labels, expected) in [
+            (vec![], ""),
+            (vec!["iota"], "iota"),
+            (vec!["other", "test"], "test.other"),
+            (vec!["other", "test", "sub"], "sub.test.other"),
+        ] {
+            let name = Name {
+                labels: labels.into_iter().map(ToOwned::to_owned).collect(),
+            };
+            assert_eq!(name.format(NameFormat::At), expected);
+            assert_eq!(name.format(NameFormat::Dot), expected);
+        }
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn serializes_as_display_string_in_json() {
+        let name = "example.iota".parse::<Name>().unwrap();
+
+        let json = serde_json::to_value(&name).unwrap();
+        assert_eq!(json, "example.iota");
+        let restored: Name = serde_json::from_value(json).unwrap();
+        assert_eq!(restored, name);
+
+        // JSON deserialization now validates: not enough labels.
+        assert!(serde_json::from_value::<Name>(serde_json::json!("iota")).is_err());
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn bcs_shape_is_the_bare_labels_vector() {
+        let name = "example.iota".parse::<Name>().unwrap();
+
+        let bcs = bcs::to_bytes(&name).unwrap();
+        assert_eq!(
+            bcs,
+            bcs::to_bytes(&vec!["iota".to_owned(), "example".to_owned()]).unwrap()
+        );
+        let restored: Name = bcs::from_bytes(&bcs).unwrap();
+        assert_eq!(restored, name);
     }
 }

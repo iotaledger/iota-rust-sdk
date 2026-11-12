@@ -8,9 +8,9 @@
 use eyre::{OptionExt, Result};
 use iota_sdk::{
     graphql_client::{
-        Client,
+        GraphQLClient, MoveAbility,
         pagination::{Direction, PaginationFilter},
-        query_types::{MoveAbility, ObjectFilter, TransactionsFilter},
+        query_types::{ObjectFilter, TransactionsFilter},
     },
     types::{Address, Input, MoveCall, MovePackage, ObjectId, Transaction, UpgradePolicy},
 };
@@ -19,11 +19,11 @@ use iota_sdk::{
 async fn main() -> Result<()> {
     let package_id = "0x6f727ea576a00036657fff0ae3a6d7c8171b178bf35112d6b83b2a6272cc5f0d";
     let package_address = Address::from_hex(package_id)?;
-    let client = Client::new_testnet();
+    let client = GraphQLClient::new_testnet()?;
 
     // Fetch package metadata and version history.
     let package = client
-        .package(package_address, None)
+        .package(package_address)
         .await?
         .ok_or_eyre("missing package")?;
     let latest_package = client
@@ -97,15 +97,11 @@ async fn main() -> Result<()> {
         println!("Module: {module_name}");
 
         let Some(module) = client
-            .normalized_move_module(
-                package_address,
-                module_name,
-                None,
-                module_page.clone(),
-                module_page.clone(),
-                module_page.clone(),
-                module_page.clone(),
-            )
+            .normalized_move_module(package_address, module_name)
+            .enums_pagination(module_page.clone())
+            .friends_pagination(module_page.clone())
+            .functions_pagination(module_page.clone())
+            .structs_pagination(module_page.clone())
             .await?
         else {
             println!("  metadata: missing");
@@ -114,11 +110,11 @@ async fn main() -> Result<()> {
         };
 
         if let Some(functions) = &module.functions {
-            if functions.nodes.is_empty() {
+            if functions.data.is_empty() {
                 println!("  functions: none");
             } else {
                 println!("  functions:");
-                for function in &functions.nodes {
+                for function in &functions.data {
                     println!(
                         "    - {}",
                         format_function_signature(&function.to_string(), &package_type_prefix)
@@ -133,11 +129,11 @@ async fn main() -> Result<()> {
         }
 
         if let Some(structs) = &module.structs {
-            if structs.nodes.is_empty() {
+            if structs.data.is_empty() {
                 println!("  types: none");
             } else {
                 println!("  types:");
-                for struct_ in &structs.nodes {
+                for struct_ in &structs.data {
                     let type_tag =
                         format!("{package_type_prefix}::{module_name}::{}", struct_.name);
                     println!("    - {type_tag}");
@@ -209,7 +205,7 @@ fn format_function_signature(signature: &str, package_type_prefix: &str) -> Stri
 }
 
 async fn fetch_package_versions(
-    client: &Client,
+    client: &GraphQLClient,
     package_address: Address,
 ) -> Result<Vec<MovePackage>> {
     let mut packages = Vec::new();
@@ -217,7 +213,8 @@ async fn fetch_package_versions(
 
     loop {
         let page = client
-            .package_versions(package_address, forward_page(cursor.clone()), None, None)
+            .package_versions(package_address)
+            .pagination(forward_page(cursor.clone()))
             .await?;
 
         packages.extend(page.data);
@@ -234,7 +231,7 @@ async fn fetch_package_versions(
 }
 
 async fn print_object_samples(
-    client: &Client,
+    client: &GraphQLClient,
     type_tag: &str,
     has_key_ability: bool,
     is_generic: bool,
@@ -249,13 +246,12 @@ async fn print_object_samples(
     }
 
     let objects = client
-        .objects(
-            ObjectFilter::default().with_type(type_tag.to_owned()),
-            PaginationFilter {
-                limit: Some(3),
-                ..forward_page(None)
-            },
-        )
+        .objects()
+        .filter(ObjectFilter::default().with_type(type_tag.to_owned()))
+        .pagination(PaginationFilter {
+            limit: Some(3),
+            ..forward_page(None)
+        })
         .await?;
 
     if objects.data.is_empty() {
@@ -278,7 +274,7 @@ fn format_policy_name(policy: u8) -> String {
         Ok(UpgradePolicy::Compatible) => "Compatible".to_owned(),
         Ok(UpgradePolicy::Additive) => "Additive".to_owned(),
         Ok(UpgradePolicy::DepOnly) => "Dependency-only".to_owned(),
-        Ok(_) | Err(()) => format!("Unknown ({policy})"),
+        Ok(_) | Err(_) => format!("Unknown ({policy})"),
     }
 }
 
@@ -292,16 +288,18 @@ fn extract_policy_value(contents: &serde_json::Value) -> Option<u8> {
     }
 }
 
-async fn resolve_upgrade_cap_id(client: &Client, package_id: ObjectId) -> Result<Option<ObjectId>> {
+async fn resolve_upgrade_cap_id(
+    client: &GraphQLClient,
+    package_id: ObjectId,
+) -> Result<Option<ObjectId>> {
     let effects_page = client
-        .transactions_effects(
-            TransactionsFilter::default().with_changed_object(package_id),
-            PaginationFilter {
-                direction: Direction::Forward,
-                cursor: None,
-                limit: Some(1),
-            },
-        )
+        .transactions_effects()
+        .filter(TransactionsFilter::default().with_changed_object(package_id))
+        .pagination(PaginationFilter {
+            direction: Direction::Forward,
+            cursor: None,
+            limit: Some(1),
+        })
         .await?;
 
     for effects in effects_page.data {
@@ -313,7 +311,8 @@ async fn resolve_upgrade_cap_id(client: &Client, package_id: ObjectId) -> Result
             }
 
             let Some(object) = client
-                .object(changed_object.object_id, Some(effects_v1.lamport_version))
+                .object(changed_object.object_id)
+                .version(effects_v1.lamport_version)
                 .await?
             else {
                 continue;
@@ -427,15 +426,17 @@ fn uses_upgrade_cap_for_make_immutable(tx: &Transaction, upgrade_cap_id: ObjectI
     })
 }
 
-async fn was_package_published_as_immutable(client: &Client, package_id: ObjectId) -> Result<bool> {
+async fn was_package_published_as_immutable(
+    client: &GraphQLClient,
+    package_id: ObjectId,
+) -> Result<bool> {
     let mut cursor = None;
 
     loop {
         let page = client
-            .transactions_data_effects(
-                TransactionsFilter::default().with_changed_object(package_id),
-                forward_page(cursor.clone()),
-            )
+            .transactions_data_effects()
+            .filter(TransactionsFilter::default().with_changed_object(package_id))
+            .pagination(forward_page(cursor.clone()))
             .await?;
 
         if page
@@ -455,17 +456,16 @@ async fn was_package_published_as_immutable(client: &Client, package_id: ObjectI
 }
 
 async fn was_upgrade_cap_used_for_make_immutable(
-    client: &Client,
+    client: &GraphQLClient,
     upgrade_cap_id: ObjectId,
 ) -> Result<bool> {
     let mut cursor = None;
 
     loop {
         let page = client
-            .transactions_data_effects(
-                TransactionsFilter::default().with_input_object(upgrade_cap_id),
-                forward_page(cursor.clone()),
-            )
+            .transactions_data_effects()
+            .filter(TransactionsFilter::default().with_input_object(upgrade_cap_id))
+            .pagination(forward_page(cursor.clone()))
             .await?;
 
         if page.data.iter().any(|tx_data| {
@@ -485,7 +485,7 @@ async fn was_upgrade_cap_used_for_make_immutable(
     }
 }
 
-async fn current_package_policy(client: &Client, package_id: ObjectId) -> Result<String> {
+async fn current_package_policy(client: &GraphQLClient, package_id: ObjectId) -> Result<String> {
     let Some(upgrade_cap_id) = resolve_upgrade_cap_id(client, package_id).await? else {
         return Ok(
             if was_package_published_as_immutable(client, package_id).await? {
@@ -496,7 +496,7 @@ async fn current_package_policy(client: &Client, package_id: ObjectId) -> Result
         );
     };
 
-    let Some(contents) = client.move_object_contents(upgrade_cap_id, None).await? else {
+    let Some(contents) = client.move_object_contents(upgrade_cap_id).await? else {
         return Ok(
             if was_upgrade_cap_used_for_make_immutable(client, upgrade_cap_id).await? {
                 "Immutable".to_owned()

@@ -18,6 +18,15 @@ pub mod rpc {
     }
 
     impl Status {
+        /// Create a status with the given code and message and no details.
+        pub fn new<T: Into<String>>(code: tonic::Code, message: T) -> Self {
+            Self {
+                code: code.into(),
+                message: message.into(),
+                details: Vec::new(),
+            }
+        }
+
         /// Convert to a [`tonic::Status`], preserving code, message, and
         /// details.
         ///

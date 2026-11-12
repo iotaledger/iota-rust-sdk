@@ -15,5 +15,5 @@ fun main() {
     println("Private Key: ${privateKeyBech32}")
     println("Public Key: ${base64Encode(publicKey.toBytes())}")
     println("Public Key With Flag: ${base64Encode(flaggedPublicKey)}")
-    println("Address: ${address.toHex()}")
+    println("Address: ${address}")
 }

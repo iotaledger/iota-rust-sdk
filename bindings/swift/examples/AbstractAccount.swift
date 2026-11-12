@@ -10,7 +10,7 @@ let abstractAccountPrecompiledPackage =
 @main
 struct AbstractAccountExample {
   static func main() async throws {
-    let client = GraphQlClient.newLocalnet()
+    let client = try GraphQlClient.newLocalnet()
     let accountId = try await setupAccount(client: client)
     let fromAddress = accountId.toAddress()
     let toAddress = try Address.fromHex(
@@ -123,9 +123,9 @@ struct AbstractAccountExample {
         userInfo: [NSLocalizedDescriptionKey: "Missing account id"])
     }
 
-    print("Package ID: \(packageId.toHex())")
-    print("PackageMetadataV1 ID: \(packageMetadataId.toHex())")
-    print("Account ID: \(accountId.toHex())\n")
+    print("Package ID: \(packageId)")
+    print("PackageMetadataV1 ID: \(packageMetadataId)")
+    print("Account ID: \(accountId)\n")
 
     // Build the `link_auth` PTB
     let linkBuilder = client.transactionBuilder(sender: sender)

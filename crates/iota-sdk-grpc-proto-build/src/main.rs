@@ -180,6 +180,8 @@ fn generate_tonic(proto_dir: &Path, proto_files: &[PathBuf], out_dir: &Path) {
         .bytes(".")
         .message_attribute(".iota.grpc", "#[non_exhaustive]")
         .enum_attribute(".iota.grpc", "#[non_exhaustive]")
+        .message_attribute(".google.rpc", "#[non_exhaustive]")
+        .enum_attribute(".google.rpc", "#[non_exhaustive]")
         .btree_map(".")
         .out_dir(out_dir)
         .compile_protos(proto_files, &[proto_dir.to_path_buf()])

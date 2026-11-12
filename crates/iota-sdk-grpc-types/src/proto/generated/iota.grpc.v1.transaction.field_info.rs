@@ -25,6 +25,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for Transaction {}
     impl MessageFields for Transaction {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::DIGEST_FIELD,
@@ -78,6 +79,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for TransactionEffects {}
     impl MessageFields for TransactionEffects {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::DIGEST_FIELD,
@@ -131,6 +133,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::event::Event::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for TransactionEvents {}
     impl MessageFields for TransactionEvents {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::DIGEST_FIELD,
@@ -248,6 +251,7 @@ mod _field_impls {
             message_fields: Some(ObjectChange::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ExecutedTransaction {}
     impl MessageFields for ExecutedTransaction {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::TRANSACTION_FIELD,
@@ -353,6 +357,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for BalanceChange {}
     impl MessageFields for BalanceChange {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::OWNER_FIELD,
@@ -403,6 +408,7 @@ mod _field_impls {
             message_fields: Some(BalanceChange::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for BalanceChanges {}
     impl MessageFields for BalanceChanges {
         const FIELDS: &'static [&'static MessageField] = &[Self::BALANCE_CHANGES_FIELD];
     }
@@ -465,6 +471,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ObjectChangePublished {}
     impl MessageFields for ObjectChangePublished {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::PACKAGE_ID_FIELD,
@@ -568,6 +575,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ObjectChangeMutated {}
     impl MessageFields for ObjectChangeMutated {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::SENDER_FIELD,
@@ -662,6 +670,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ObjectChangeDeleted {}
     impl MessageFields for ObjectChangeDeleted {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::SENDER_FIELD,
@@ -741,6 +750,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ObjectChangeWrapped {}
     impl MessageFields for ObjectChangeWrapped {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::SENDER_FIELD,
@@ -836,6 +846,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ObjectChangeUnwrapped {}
     impl MessageFields for ObjectChangeUnwrapped {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::SENDER_FIELD,
@@ -941,6 +952,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::types::Digest::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ObjectChangeCreated {}
     impl MessageFields for ObjectChangeCreated {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::SENDER_FIELD,
@@ -1049,6 +1061,7 @@ mod _field_impls {
     impl ObjectChange {
         pub const KIND_ONEOF: &'static str = "kind";
     }
+    impl crate::field::sealed::Sealed for ObjectChange {}
     impl MessageFields for ObjectChange {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::PUBLISHED_FIELD,
@@ -1115,6 +1128,7 @@ mod _field_impls {
             message_fields: Some(ObjectChange::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ObjectChanges {}
     impl MessageFields for ObjectChanges {
         const FIELDS: &'static [&'static MessageField] = &[Self::OBJECT_CHANGES_FIELD];
     }
@@ -1153,6 +1167,7 @@ mod _field_impls {
             message_fields: Some(ExecutedTransaction::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ExecutedTransactions {}
     impl MessageFields for ExecutedTransactions {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::EXECUTED_TRANSACTIONS_FIELD,

@@ -115,6 +115,7 @@ macro_rules! get_inner_field {
 pub(crate) use get_inner_field;
 
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum GrpcConversionError {
     UnsupportedArgumentType { arg_type: String },
     BcsSerializationFailed { message: String },

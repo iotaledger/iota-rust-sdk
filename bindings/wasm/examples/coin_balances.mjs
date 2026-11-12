@@ -14,7 +14,7 @@ const address = Address.fromHex(
 const coins = await client.coins(address);
 for (const coin of coins.data) {
   console.log(
-    `Coin = ${coin.id().toHex()}, Coin Type = ${coin.coinType().asStructTag()}, Balance = ${coin.balance()}`,
+    `Coin = ${coin.id()}, Coin Type = ${coin.coinType().asStructTag()}, Balance = ${coin.balance()}`,
   );
 }
 

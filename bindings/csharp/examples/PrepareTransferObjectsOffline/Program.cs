@@ -16,7 +16,7 @@ class Program
         var faucet = FaucetClient.NewLocalnet();
         await faucet.RequestAndWaitForFinalized(fromAddress, client);
 
-        var coins = (await client.Objects(filter: new ObjectFilter(Owner: fromAddress))).Data;
+        var coins = (await client.Objects(filter: new GraphQlObjectFilter(Owner: fromAddress))).Data;
         if (coins.Length == 0)
         {
             throw new Exception("No coins found");

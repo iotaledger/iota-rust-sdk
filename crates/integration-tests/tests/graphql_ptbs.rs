@@ -6,7 +6,7 @@ use std::time::Duration;
 use eyre::Context;
 use iota_crypto::ed25519::Ed25519PrivateKey;
 use iota_graphql_client::{
-    Client, Direction,
+    Direction, GraphQLClient,
     faucet::{CoinInfo, FaucetClient},
     pagination::PaginationFilter,
     query_types::SubscriptionEventFilter,
@@ -41,7 +41,7 @@ fn move_package_data(file: &str) -> MovePackageData {
 
 /// Generate a random private key and its corresponding address
 fn helper_address_pk() -> (Address, Ed25519PrivateKey) {
-    let pk = Ed25519PrivateKey::random_with(rand::thread_rng());
+    let pk = Ed25519PrivateKey::random();
     let address = pk.public_key().derive_address();
     (address, pk)
 }
@@ -59,13 +59,13 @@ fn helper_address_pk() -> (Address, Ed25519PrivateKey) {
 /// NB! This assumes that these tests run on a network whose faucet returns
 /// 5 coins per each faucet request.
 async fn helper_setup() -> (
-    TransactionBuilder<Client>,
+    TransactionBuilder<GraphQLClient>,
     Address,
     Ed25519PrivateKey,
     Vec<CoinInfo>,
 ) {
     let (address, pk) = helper_address_pk();
-    let client = Client::new_localnet();
+    let client = GraphQLClient::new_localnet().unwrap();
     let mut tx = TransactionBuilder::new(address).with_client(client.clone());
     let coins = FaucetClient::new_localnet()
         .request_and_wait(address)
@@ -75,11 +75,8 @@ async fn helper_setup() -> (
         .sent;
     let tx_digest = coins.first().unwrap().transfer_tx_digest;
     client
-        .wait_for_transaction(
-            tx_digest,
-            WaitForTransaction::Finalized,
-            Duration::from_secs(60),
-        )
+        .wait_for_transaction(tx_digest, WaitForTransaction::Finalized)
+        .timeout(Duration::from_secs(60))
         .await
         .unwrap();
 
@@ -109,27 +106,24 @@ async fn test_transfer_obj_execution() {
     let (mut tx, _, pk, coins) = helper_setup().await;
 
     // get the object information from the client
-    let client = Client::new_localnet();
+    let client = GraphQLClient::new_localnet().unwrap();
     let coin = coins.first().unwrap().id;
-    let recipient = Address::random_with(rand::thread_rng());
+    let recipient = Address::random();
     tx.transfer_objects(recipient, [coin]);
 
     let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
 
     // check that recipient has 1 coin
-    let recipient_coins = client
-        .coins(recipient, None, PaginationFilter::default())
-        .await
-        .unwrap();
+    let recipient_coins = client.coins(recipient).await.unwrap();
     assert_eq!(recipient_coins.data().len(), 1);
 }
 
 #[tokio::test]
 async fn test_move_call() {
     // Check that `0x1::option::is_none` move call works when passing `1`
-    // set up the sender, gas object, gas budget, and gas price and return the pk to
-    // sign
+    // set up the sender, gas object, gas budget, and gas price and return the
+    // pk to sign
     let (mut tx, _, pk, _) = helper_setup().await;
     tx.move_call(Address::STD, "option", "is_none")
         .generics::<u64>()
@@ -141,23 +135,20 @@ async fn test_move_call() {
 
 #[tokio::test]
 async fn test_split_transfer() {
-    let client = Client::new_localnet();
+    let client = GraphQLClient::new_localnet().unwrap();
     let (mut tx, _, pk, _) = helper_setup().await;
 
     // transfer 1 IOTA from Gas coin
     let gas = tx.get_gas()[0];
     tx.split_coins(gas, [1_000_000_000u64]).assign("coin");
-    let recipient = Address::random_with(rand::thread_rng());
+    let recipient = Address::random();
     tx.transfer_objects(recipient, [assigned("coin")]);
 
     let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
 
     // check that recipient has 1 coin
-    let recipient_coins = client
-        .coins(recipient, None, PaginationFilter::default())
-        .await
-        .unwrap();
+    let recipient_coins = client.coins(recipient).await.unwrap();
     assert_eq!(recipient_coins.data().len(), 1);
 }
 
@@ -204,11 +195,49 @@ async fn test_merge_coins() {
     check_effects_status_success(effects);
 
     // check that there are two coins
-    let coins_after = client
-        .coins(address, None, PaginationFilter::default())
-        .await
-        .unwrap();
+    let coins_after = client.coins(address).await.unwrap();
     assert_eq!(coins_after.data().len(), 2);
+}
+
+/// The counterpart to `test_split_without_transfer_should_fail`: the coins
+/// `divide_coins` produces are transferred to the sender by the framework, so
+/// the transaction succeeds without a transfer command.
+#[tokio::test]
+async fn test_divide_coins() {
+    const PARTS: u64 = 4;
+
+    let (mut tx, address, pk, coins) = helper_setup().await;
+    let client = tx.get_client().clone();
+
+    let coin = coins.first().unwrap();
+    let share = coin.amount / PARTS;
+
+    tx.divide_coin(coin.id, PARTS);
+
+    let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
+    check_effects_status_success(effects);
+
+    let owned = client.coins(address).await.unwrap();
+
+    // PARTS - 1 coins that the sender did not have before, of an equal share
+    // each, and none of them transferred by the transaction itself.
+    let new_coins = owned
+        .data()
+        .iter()
+        .filter(|c| !coins.iter().any(|faucet_coin| faucet_coin.id == *c.id()))
+        .collect::<Vec<_>>();
+    assert_eq!(new_coins.len(), PARTS as usize - 1);
+    for new_coin in new_coins {
+        assert_eq!(new_coin.balance(), share);
+    }
+
+    // The divided coin keeps its own share plus the remainder of the division.
+    let divided = owned
+        .data()
+        .iter()
+        .find(|c| *c.id() == coin.id)
+        .expect("the divided coin is still owned by the sender");
+    assert_eq!(divided.balance(), coin.amount - share * (PARTS - 1));
 }
 
 #[tokio::test]
@@ -273,11 +302,11 @@ async fn test_upgrade() {
     }
     check_effects_status_success(effects);
 
-    let client = Client::new_localnet();
+    let client = GraphQLClient::new_localnet().unwrap();
     let mut tx = client.transaction_builder(address);
     let mut upgrade_cap = None;
     for o in created_objs {
-        let obj = client.object(o, None).await.unwrap().unwrap();
+        let obj = client.object(o).await.unwrap().unwrap();
         match obj.object_type() {
             ObjectType::Struct(x) if x.name() == "UpgradeCap" => {
                 upgrade_cap = Some(obj.id());
@@ -336,7 +365,7 @@ async fn test_auto_gas_selection_with_many_coins() {
     check_effects_status_success(tx.execute(&pk, WaitForTransaction::Finalized).await);
 
     let mut tx2 = TransactionBuilder::new(sender).with_client(client);
-    let recipient = Address::random_with(rand::thread_rng());
+    let recipient = Address::random();
     tx2.send_iota(recipient, 1_000u64);
     check_effects_status_success(tx2.execute(&pk, WaitForTransaction::Finalized).await);
 }
@@ -369,20 +398,17 @@ async fn test_manual_gas_pin_consolidates_255_coins() {
     );
     check_effects_status_success(tx.execute(&pk, WaitForTransaction::Finalized).await);
 
-    async fn list_coins(client: &Client, owner: Address) -> Vec<(ObjectId, u64)> {
+    async fn list_coins(client: &GraphQLClient, owner: Address) -> Vec<(ObjectId, u64)> {
         let mut out = Vec::new();
         let mut cursor = None;
         loop {
             let page = client
-                .coins(
-                    owner,
-                    None,
-                    PaginationFilter {
-                        direction: Direction::Forward,
-                        cursor: cursor.clone(),
-                        limit: None,
-                    },
-                )
+                .coins(owner)
+                .pagination(PaginationFilter {
+                    direction: Direction::Forward,
+                    cursor: cursor.clone(),
+                    limit: None,
+                })
                 .await
                 .unwrap();
             out.extend(page.data().iter().map(|c| (*c.id(), c.balance())));
@@ -409,7 +435,7 @@ async fn test_manual_gas_pin_consolidates_255_coins() {
     );
 
     let mut tx2 = TransactionBuilder::new(sender).with_client(client.clone());
-    let recipient = Address::random_with(rand::thread_rng());
+    let recipient = Address::random();
     tx2.gas(split_ids)
         .gas_budget(GAS_BUDGET)
         .send_iota(recipient, 1_000u64);
@@ -459,7 +485,7 @@ async fn test_auto_gas_pins_full_first_page_for_consolidation() {
     // Build (but don't execute) a fresh tx without pinning gas. The
     // resolved transaction reveals what auto-gas picked.
     let mut tx2 = TransactionBuilder::new(sender).with_client(client.clone());
-    let recipient = Address::random_with(rand::thread_rng());
+    let recipient = Address::random();
     tx2.gas_budget(GAS_BUDGET);
     tx2.send_iota(recipient, 1u64);
     let Transaction::V1(resolved) = tx2.finish().await.unwrap() else {
@@ -480,13 +506,13 @@ async fn test_auto_gas_pins_full_first_page_for_consolidation() {
 /// A transfer is executed on a background task once the subscription has had a
 /// moment to connect, so the live stream observes it. This exercises the
 /// WebSocket transport, payload decoding, and resume-cursor tracking shared by
-/// `events_stream`.
+/// `events_subscription`.
 #[tokio::test]
 async fn test_transactions_subscription() {
     use futures::StreamExt;
 
-    let client = Client::new_localnet();
-    let mut stream = client.transactions_stream(None, None);
+    let client = GraphQLClient::new_localnet().unwrap();
+    let mut stream = client.transactions_subscription().subscribe();
 
     tokio::spawn(async move {
         // Give the subscription time to connect before generating activity.
@@ -494,7 +520,7 @@ async fn test_transactions_subscription() {
         let (mut tx, _, pk, _) = helper_setup().await;
         let gas = tx.get_gas()[0];
         tx.split_coins(gas, [1_000_000_000u64]).assign("coin");
-        let recipient = Address::random_with(rand::thread_rng());
+        let recipient = Address::random();
         tx.transfer_objects(recipient, [assigned("coin")]);
         let _ = tx.execute(&pk, WaitForTransaction::Finalized).await;
     });
@@ -517,15 +543,16 @@ async fn test_transactions_subscription() {
 async fn test_events_subscription() {
     use futures::StreamExt;
 
-    let client = Client::new_localnet();
-    let filter = SubscriptionEventFilter::default().with_emitting_module("0x3".to_owned());
-    let mut stream = client.events_stream(filter, None);
+    let client = GraphQLClient::new_localnet().unwrap();
+    let filter = SubscriptionEventFilter::EmittingModule("0x3".to_owned());
+    let mut stream = client.events_subscription().filter(filter).subscribe();
 
     tokio::spawn(async move {
         // Give the subscription time to connect before generating activity.
         tokio::time::sleep(Duration::from_secs(2)).await;
-        let validator = Client::new_localnet()
-            .active_validators(None, PaginationFilter::default())
+        let validator = GraphQLClient::new_localnet()
+            .unwrap()
+            .active_validators()
             .await
             .unwrap()
             .data()
@@ -588,8 +615,8 @@ async fn test_move_view_call() {
     }
     check_effects_status_success(effects);
 
-    let client = Client::new_localnet();
-    let function = format!("{}::test_example::double", package_id.unwrap());
+    let client = GraphQLClient::new_localnet().unwrap();
+    let package_id = package_id.unwrap();
 
     let assert_doubled = |result: iota_graphql_client::query_types::MoveViewResult| {
         assert_eq!(
@@ -614,14 +641,24 @@ async fn test_move_view_call() {
 
     // Typed arguments
     let result = client
-        .move_view_call(&function, None, (21u64,))
+        .move_view_call(package_id, "test_example", "double")
+        .arguments((21u64,))
         .await
         .unwrap();
     assert_doubled(result);
 
     // Raw JSON arguments
     let result = client
-        .move_view_call_json(&function, None, Some(vec![serde_json::json!("21")]))
+        .move_view_call_json(package_id, "test_example", "double")
+        .arguments(vec![serde_json::json!("21")])
+        .await
+        .unwrap();
+    assert_doubled(result);
+
+    // Appended argument
+    let result = client
+        .move_view_call(package_id, "test_example", "double")
+        .argument(21u64)
         .await
         .unwrap();
     assert_doubled(result);

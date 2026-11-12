@@ -27,7 +27,7 @@ async def main():
                                      WaitForTransaction.FINALIZED)
 
     # Unstake
-    staked_iotas = await client.objects(filter=ObjectFilter(
+    staked_iotas = await client.objects(filter=GraphQlObjectFilter(
         type_tag=str(StructTag.new_staked_iota()), owner=owner))
     if len(staked_iotas.data) == 0:
         raise Exception("no staked iotas found")

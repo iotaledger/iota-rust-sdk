@@ -8,7 +8,7 @@
 // a send_iota transaction, signs with only 2 of the 3 keys, aggregates,
 // and executes.
 //
-// Requires a running localnet (`iota start --force-regenesis`).
+// Requires a running localnet (`iota-localnet start --force-regenesis`).
 
 import {
   Address,
@@ -57,7 +57,7 @@ const committee = new MultisigCommittee(
 
 // 4. Derive multisig address.
 const multisigAddress = committee.deriveAddress();
-console.log(`Multisig address: ${multisigAddress.toHex()}`);
+console.log(`Multisig address: ${multisigAddress}`);
 
 const client = GraphQlClient.newLocalnet();
 

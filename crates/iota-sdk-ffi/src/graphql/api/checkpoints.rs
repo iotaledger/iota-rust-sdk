@@ -10,7 +10,8 @@ use iota_sdk::types::CheckpointSequenceNumber;
 use crate::{
     error::Result,
     graphql::{
-        client::GraphQLClient, pagination::CheckpointSummaryPage, query_types::PaginationFilter,
+        client::GraphQLClient, pagination::GraphQLCheckpointSummaryPage,
+        query_types::GraphQLPaginationFilter,
     },
     types::{checkpoint::CheckpointSummary, digest::CheckpointDigest},
 };
@@ -27,27 +28,28 @@ impl GraphQLClient {
         digest: Option<Arc<CheckpointDigest>>,
         sequence_number: Option<u64>,
     ) -> Result<Option<Arc<CheckpointSummary>>> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .checkpoint(digest.map(|d| **d), sequence_number)
-            .await?
-            .map(Into::into)
-            .map(Arc::new))
+        let client = self.client();
+        let query = match (digest, sequence_number) {
+            (None, None) => client.checkpoint(),
+            (Some(digest), None) => client.checkpoint_by_digest(**digest),
+            (None, Some(sequence_number)) => client.checkpoint_by_sequence_number(sequence_number),
+            (Some(_), Some(_)) => Err(iota_sdk::graphql_client::GraphQLError::InvalidArgument(
+                "either digest or sequence_number can be provided, but not both",
+            ))?,
+        };
+        Ok(query.await?.map(Into::into).map(Arc::new))
     }
 
     /// Get a page of `CheckpointSummary` for the provided parameters.
     #[uniffi::method(default(pagination_filter = None))]
     pub async fn checkpoints(
         &self,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<CheckpointSummaryPage> {
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLCheckpointSummaryPage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .checkpoints(pagination_filter.map(Into::into).unwrap_or_default())
+            .client()
+            .checkpoints()
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -58,12 +60,7 @@ impl GraphQLClient {
     pub async fn latest_checkpoint_sequence_number(
         &self,
     ) -> Result<Option<CheckpointSequenceNumber>> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .latest_checkpoint_sequence_number()
-            .await?)
+        Ok(self.client().latest_checkpoint_sequence_number().await?)
     }
 
     /// The total number of transaction blocks in the network by the end of the
@@ -73,9 +70,7 @@ impl GraphQLClient {
         digest: &CheckpointDigest,
     ) -> Result<Option<u64>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .total_transaction_blocks_by_digest(**digest)
             .await?)
     }
@@ -87,9 +82,7 @@ impl GraphQLClient {
         sequence_number: u64,
     ) -> Result<Option<u64>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .total_transaction_blocks_by_sequence_number(sequence_number)
             .await?)
     }
@@ -97,6 +90,6 @@ impl GraphQLClient {
     /// The total number of transaction blocks in the network by the end of the
     /// last known checkpoint.
     pub async fn total_transaction_blocks(&self) -> Result<Option<u64>> {
-        Ok(self.0.read().await.total_transaction_blocks().await?)
+        Ok(self.client().total_transaction_blocks().await?)
     }
 }

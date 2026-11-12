@@ -10,8 +10,8 @@ class Program
         var client = GraphQlClient.NewTestnet();
 
         var events = await client.Events(
-            new EventFilter(EventType: "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"),
-            new PaginationFilter(Direction.Forward, null, 10)
+            new GraphQlEventFilter(EventType: "0x7fff6e95f385349bec98d17121ab2bfa3e134f2f0b1ccefc270313415f7835ea::registry::NameRecordAddedEvent"),
+            new GraphQlPaginationFilter(GraphQlDirection.Forward, null, 10)
         );
 
         foreach (var evt in events.Data)

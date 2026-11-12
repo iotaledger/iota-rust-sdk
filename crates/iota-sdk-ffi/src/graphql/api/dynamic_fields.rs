@@ -7,8 +7,8 @@ use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::DynamicFieldOutputPage,
-        query_types::{DynamicFieldOutput, PaginationFilter},
+        pagination::GraphQLDynamicFieldOutputPage,
+        query_types::{GraphQLDynamicFieldOutput, GraphQLPaginationFilter},
     },
     types::{address::Address, move_core::TypeTag},
 };
@@ -22,18 +22,16 @@ impl GraphQLClient {
     ///
     /// The `name` argument is a json serialized type.
     ///
-    /// This returns `DynamicFieldOutput` which contains the name, the value
-    /// as json, and object.
+    /// This returns `GraphQLDynamicFieldOutput` which contains the name, the
+    /// value as json, and object.
     pub async fn dynamic_field(
         &self,
         address: &Address,
         type_tag: &TypeTag,
         name: serde_json::Value,
-    ) -> Result<Option<DynamicFieldOutput>> {
+    ) -> Result<Option<GraphQLDynamicFieldOutput>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .dynamic_field(**address, type_tag.0.clone(), name)
             .await?
             .map(Into::into))
@@ -45,18 +43,16 @@ impl GraphQLClient {
     ///
     /// The `name` argument is a json serialized type.
     ///
-    /// This returns `DynamicFieldOutput` which contains the name, the value
-    /// as json, and object.
+    /// This returns `GraphQLDynamicFieldOutput` which contains the name, the
+    /// value as json, and object.
     pub async fn dynamic_object_field(
         &self,
         address: &Address,
         type_tag: &TypeTag,
         name: serde_json::Value,
-    ) -> Result<Option<DynamicFieldOutput>> {
+    ) -> Result<Option<GraphQLDynamicFieldOutput>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .dynamic_object_field(**address, type_tag.0.clone(), name)
             .await?
             .map(Into::into))
@@ -65,21 +61,17 @@ impl GraphQLClient {
     /// Get a page of dynamic fields for the provided address. Note that this
     /// will also fetch dynamic fields on wrapped objects.
     ///
-    /// This returns a page of `DynamicFieldOutput`s.
+    /// This returns a page of `GraphQLDynamicFieldOutput`s.
     #[uniffi::method(default(pagination_filter = None))]
     pub async fn dynamic_fields(
         &self,
         address: &Address,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<DynamicFieldOutputPage> {
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLDynamicFieldOutputPage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .dynamic_fields(
-                **address,
-                pagination_filter.map(Into::into).unwrap_or_default(),
-            )
+            .client()
+            .dynamic_fields(**address)
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())

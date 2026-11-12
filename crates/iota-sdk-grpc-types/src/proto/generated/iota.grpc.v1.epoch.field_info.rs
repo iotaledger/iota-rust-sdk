@@ -25,6 +25,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ValidatorCommitteeMember {}
     impl MessageFields for ValidatorCommitteeMember {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::PUBLIC_KEY_FIELD,
@@ -70,6 +71,7 @@ mod _field_impls {
             message_fields: Some(ValidatorCommitteeMember::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ValidatorCommitteeMembers {}
     impl MessageFields for ValidatorCommitteeMembers {
         const FIELDS: &'static [&'static MessageField] = &[Self::MEMBERS_FIELD];
     }
@@ -116,6 +118,7 @@ mod _field_impls {
             message_fields: Some(ValidatorCommitteeMembers::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for ValidatorCommittee {}
     impl MessageFields for ValidatorCommittee {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::EPOCH_FIELD,
@@ -161,6 +164,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ProtocolFeatureFlags {}
     impl MessageFields for ProtocolFeatureFlags {
         const FIELDS: &'static [&'static MessageField] = &[Self::FLAGS_FIELD];
     }
@@ -199,6 +203,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ProtocolAttributes {}
     impl MessageFields for ProtocolAttributes {
         const FIELDS: &'static [&'static MessageField] = &[Self::ATTRIBUTES_FIELD];
     }
@@ -253,6 +258,7 @@ mod _field_impls {
             message_fields: None,
         };
     }
+    impl crate::field::sealed::Sealed for ProtocolConfig {}
     impl MessageFields for ProtocolConfig {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::PROTOCOL_VERSION_FIELD,
@@ -375,6 +381,7 @@ mod _field_impls {
             message_fields: Some(EpochCloseProof::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for Epoch {}
     impl MessageFields for Epoch {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::EPOCH_FIELD,
@@ -484,6 +491,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for EpochCloseProof {}
     impl MessageFields for EpochCloseProof {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::CHECKPOINT_FIELD,

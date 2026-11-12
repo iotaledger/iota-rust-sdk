@@ -1,7 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-import { GraphQlClient, Query, initAsync } from "@iota/sdk-wasm";
+import { GraphQlClient, GraphQlQuery, initAsync } from "@iota/sdk-wasm";
 
 await initAsync();
 
@@ -133,5 +133,5 @@ const queryStr = `
   }
 `;
 
-const res = await client.runQuery(Query.new({ queryString: queryStr }));
+const res = await client.runQuery(GraphQlQuery.new({ query: queryStr }));
 console.log(res);

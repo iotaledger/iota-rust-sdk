@@ -30,7 +30,7 @@ import IotaSDK
 @main
 struct ChainIdExample {
     static func main() async throws {
-        let client = GraphQlClient.newDevnet()
+        let client = try GraphQlClient.newDevnet()
 
         let chainId = try await client.chainId()
         print("Chain ID:", chainId)
@@ -44,13 +44,13 @@ The SDK provides GraphQL client functionality to interact with IOTA:
 
 ```swift
 // Connect to devnet
-let client = GraphQlClient.newDevnet()
+let client = try GraphQlClient.newDevnet()
 
 // Connect to testnet
-let client = GraphQlClient.newTestnet()
+let client = try GraphQlClient.newTestnet()
 
 // Connect to mainnet
-let client = GraphQlClient.newMainnet()
+let client = try GraphQlClient.newMainnet()
 
 // Connect to a custom endpoint
 let client = GraphQlClient.new(url: "https://your-endpoint.com")

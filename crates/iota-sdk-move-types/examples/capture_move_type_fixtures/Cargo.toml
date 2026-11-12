@@ -13,4 +13,4 @@ base64ct = { workspace = true, features = ["alloc", "std"] }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 
 # internal dependencies
-iota-sdk = { workspace = true, features = ["graphql", "types"] }
+iota-sdk = { workspace = true, features = ["graphql", "graphql-tls-native-roots", "graphql-tls-ring", "graphql-tls-webpki-roots", "types"] }

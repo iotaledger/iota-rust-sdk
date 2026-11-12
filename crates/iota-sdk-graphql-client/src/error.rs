@@ -7,7 +7,7 @@ use std::{
     string::FromUtf8Error,
 };
 
-use cynic::GraphQlError;
+use cynic::serde::Deserialize;
 use iota_types::{
     AddressParseError, DigestParseError, TypeParseError, TypeTag, iota_names::error::IotaNamesError,
 };
@@ -17,7 +17,7 @@ use crate::faucet::FaucetError;
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
-pub type Result<T, E = Error> = std::result::Result<T, E>;
+pub type GraphQLResult<T> = std::result::Result<T, GraphQLError>;
 
 /// Maximum number of body bytes retained in an HTTP/decode error. Load
 /// balancer and gateway pages can be hundreds of KB, so the body is truncated
@@ -36,7 +36,25 @@ fn truncated_body(bytes: &[u8]) -> String {
     body
 }
 
-fn display_graphql_errors(errors: &[GraphQlError]) -> String {
+/// A GraphQL error as reported by the server, with its [`ErrorExtensions`]
+/// decoded.
+pub type QueryError = cynic::GraphQlError<ErrorExtensions>;
+
+/// The `extensions` object of a GraphQL error returned by the server.
+#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq)]
+#[serde(crate = "cynic::serde")]
+#[non_exhaustive]
+pub struct ErrorExtensions {
+    /// Machine-readable error kind, e.g. `BAD_USER_INPUT`.
+    pub code: Option<String>,
+}
+
+/// Convert an error whose extensions were not decoded; `code` is `None`.
+pub(crate) fn query_error(error: cynic::GraphQlError) -> QueryError {
+    QueryError::new(error.message, error.locations, error.path, None)
+}
+
+fn display_graphql_errors(errors: &[QueryError]) -> String {
     errors
         .iter()
         .map(|e| e.to_string())
@@ -54,7 +72,7 @@ fn display_graphql_errors(errors: &[GraphQlError]) -> String {
 /// self-contained and the cause stays matchable.
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
-pub enum Error {
+pub enum GraphQLError {
     /// The request could not be sent, or the response could not be read.
     #[error("request error: {0}")]
     Request(#[from] reqwest::Error),
@@ -82,9 +100,10 @@ pub enum Error {
         #[source]
         source: serde_json::Error,
     },
-    /// The server returned errors for the query.
+    /// The server returned errors for the query. The server sends no
+    /// [`ErrorExtensions::code`] for subscription errors.
     #[error("query error: [{}]", display_graphql_errors(.0))]
-    Query(Vec<GraphQlError>),
+    Query(Vec<QueryError>),
     /// The response carried neither data nor errors.
     #[error("empty response: the server returned neither data nor errors")]
     EmptyResponse,
@@ -124,6 +143,13 @@ pub enum Error {
     /// The RPC URL scheme is not usable for subscriptions.
     #[error("unsupported RPC scheme `{0}` for subscriptions, expected http, https, ws or wss")]
     UnsupportedSubscriptionScheme(String),
+    /// The RPC URL needs TLS, which this build does not have.
+    #[deprecated(note = "no longer returned; an `https` request without TLS fails with `Request`")]
+    #[error(
+        "scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass your own \
+         client to `new_with_reqwest_client`"
+    )]
+    TlsUnavailable(String),
     /// The operation did not complete within its deadline.
     #[error("timed out")]
     Timeout,
@@ -140,7 +166,7 @@ pub enum Error {
     Lagged { count: u32 },
 }
 
-/// The HTTP response a [`Error::Http`] or [`Error::Json`] was
+/// The HTTP response a [`GraphQLError::Http`] or [`GraphQLError::Json`] was
 /// raised for.
 #[derive(Debug)]
 pub struct HttpResponse {
@@ -182,8 +208,8 @@ impl HttpResponse {
     }
 }
 
-impl Error {
-    /// Build a [`Error::Http`] from a non-success response, retaining a
+impl GraphQLError {
+    /// Build a [`GraphQLError::Http`] from a non-success response, retaining a
     /// truncated, UTF-8-lossy snapshot of the body.
     pub(crate) fn http(
         url: Url,
@@ -196,7 +222,7 @@ impl Error {
         }
     }
 
-    /// Build a [`Error::Json`] from a response whose body is not valid
+    /// Build a [`GraphQLError::Json`] from a response whose body is not valid
     /// JSON, retaining a truncated, UTF-8-lossy snapshot of the body.
     pub(crate) fn json(
         url: Url,
@@ -222,94 +248,69 @@ impl Error {
     }
 }
 
-impl From<bcs::Error> for Error {
-    fn from(error: bcs::Error) -> Self {
+impl From<iota_types::BcsError> for GraphQLError {
+    fn from(error: iota_types::BcsError) -> Self {
         Self::Deserialization(error.into())
     }
 }
 
-impl From<url::ParseError> for Error {
+impl From<url::ParseError> for GraphQLError {
     fn from(error: url::ParseError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<ParseIntError> for Error {
+impl From<ParseIntError> for GraphQLError {
     fn from(error: ParseIntError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<AddressParseError> for Error {
+impl From<AddressParseError> for GraphQLError {
     fn from(error: AddressParseError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<base64ct::Error> for Error {
-    fn from(error: base64ct::Error) -> Self {
-        Self::Parse(error.into())
-    }
-}
-
-impl From<chrono::ParseError> for Error {
-    fn from(error: chrono::ParseError) -> Self {
-        Self::Parse(error.into())
-    }
-}
-
-impl From<DigestParseError> for Error {
+impl From<DigestParseError> for GraphQLError {
     fn from(error: DigestParseError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<TryFromIntError> for Error {
+impl From<TryFromIntError> for GraphQLError {
     fn from(error: TryFromIntError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<TypeParseError> for Error {
+impl From<TypeParseError> for GraphQLError {
     fn from(error: TypeParseError) -> Self {
         Self::Parse(error.into())
     }
 }
 
-impl From<FromUtf8Error> for Error {
+impl From<FromUtf8Error> for GraphQLError {
     fn from(error: FromUtf8Error) -> Self {
         Self::Parse(error.into())
     }
 }
 
-#[cfg(not(target_arch = "wasm32"))]
-impl From<tokio_tungstenite::tungstenite::Error> for Error {
-    fn from(error: tokio_tungstenite::tungstenite::Error) -> Self {
-        Self::Subscription(error.into())
+#[cfg(feature = "move-types")]
+impl From<iota_move_types::FromObjectError> for GraphQLError {
+    fn from(error: iota_move_types::FromObjectError) -> Self {
+        Self::Deserialization(error.into())
     }
 }
 
-impl From<graphql_ws_client::Error> for Error {
-    fn from(error: graphql_ws_client::Error) -> Self {
-        Self::Subscription(error.into())
-    }
-}
-
-#[cfg(target_arch = "wasm32")]
-impl From<ws_stream_wasm::WsErr> for Error {
-    fn from(error: ws_stream_wasm::WsErr) -> Self {
-        Self::Subscription(error.into())
-    }
-}
-
-#[cfg(test)]
+#[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use super::*;
 
     #[test]
     fn http_error_surfaces_status_body_and_decode_target() {
         let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
-        let error = Error::http(
+        let error = GraphQLError::http(
             url,
             StatusCode::TOO_MANY_REQUESTS,
             b"Too Many Requests",
@@ -322,7 +323,7 @@ mod tests {
         );
         // The status stays inspectable instead of only being rendered.
         assert!(
-            matches!(error, Error::Http { response } if response.status == StatusCode::TOO_MANY_REQUESTS)
+            matches!(error, GraphQLError::Http { response } if response.status == StatusCode::TOO_MANY_REQUESTS)
         );
     }
 
@@ -332,7 +333,7 @@ mod tests {
 
         let url = Url::parse("https://graphql.devnet.iota.cafe").unwrap();
         let serde_error = serde_json::from_slice::<serde_json::Value>(b"not json").unwrap_err();
-        let error = Error::json(
+        let error = GraphQLError::json(
             url,
             StatusCode::OK,
             b"not json",
@@ -361,7 +362,9 @@ mod tests {
     fn chain_formatters_repeat_the_wrapped_message() {
         use std::error::Error as _;
 
-        let error = Error::from(bcs::from_bytes::<u64>(&[]).unwrap_err());
+        let error = GraphQLError::from(iota_types::BcsError::new(
+            bcs::from_bytes::<u64>(&[]).unwrap_err(),
+        ));
 
         assert_eq!(
             error.to_string(),

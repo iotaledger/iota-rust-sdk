@@ -179,14 +179,23 @@ impl std::fmt::Display for TypeTag {
     }
 }
 
+impl From<TypeTag> for String {
+    fn from(value: TypeTag) -> Self {
+        value.to_string()
+    }
+}
+
+impl From<&TypeTag> for String {
+    fn from(value: &TypeTag) -> Self {
+        value.to_string()
+    }
+}
+
 impl std::str::FromStr for TypeTag {
     type Err = TypeParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use winnow::Parser;
-        crate::move_core::parse::parse_type_tag
-            .parse(s)
-            .map_err(|e| e.into_inner())
+        crate::move_core::parse::parse_complete(crate::move_core::parse::parse_type_tag, s)
     }
 }
 

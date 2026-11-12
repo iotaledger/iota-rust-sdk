@@ -7,7 +7,7 @@ import IotaSDK
 struct Example {
   static func main() async throws {
     // Create a GraphQL client connected to devnet
-    let client = GraphQlClient.newTestnet()
+    let client = try GraphQlClient.newTestnet()
 
     // Query the chain ID
     let chainId = try await client.chainId()

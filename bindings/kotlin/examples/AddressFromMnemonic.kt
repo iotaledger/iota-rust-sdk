@@ -20,7 +20,7 @@ fun main() {
     println("Private Key: ${privateKeyEd25519Bech32}")
     println("Public Key: ${base64Encode(publicKeyEd25519.toBytes())}")
     println("Public Key With Flag: ${base64Encode(flaggedPublicKeyEd25519)}")
-    println("Address: ${addressEd25519.toHex()}")
+    println("Address: ${addressEd25519}")
 
     val privateKeySecp256k1 = Secp256k1PrivateKey.fromMnemonic(MNEMONIC, 1uL)
     val privateKeySecp256k1Bech32 = privateKeySecp256k1.toBech32()
@@ -32,7 +32,7 @@ fun main() {
     println("Private Key: ${privateKeySecp256k1Bech32}")
     println("Public Key: ${base64Encode(publicKeySecp256k1.toBytes())}")
     println("Public Key With Flag: ${base64Encode(flaggedPublicKeySecp256k1)}")
-    println("Address: ${addressSecp256k1.toHex()}")
+    println("Address: ${addressSecp256k1}")
 
     val privateKeySecp256r1 =
         Secp256r1PrivateKey.fromMnemonicWithPath(MNEMONIC, "m/74'/4218'/0'/0/2")
@@ -45,5 +45,5 @@ fun main() {
     println("Private Key: ${privateKeySecp256r1Bech32}")
     println("Public Key: ${base64Encode(publicKeySecp256r1.toBytes())}")
     println("Public Key With Flag: ${base64Encode(flaggedPublicKeySecp256r1)}")
-    println("Address: ${addressSecp256r1.toHex()}")
+    println("Address: ${addressSecp256r1}")
 }

@@ -11,7 +11,10 @@ import (
 )
 
 func main() {
-	client := iota_sdk.GraphQlClientNewTestnet()
+	client, err := iota_sdk.GraphQlClientNewTestnet()
+	if err != nil {
+		log.Fatalf("Failed to create GraphQL client: %v", err)
+	}
 
 	queryEpochDataStr := `
 	query MyQuery($id: UInt53) {
@@ -24,8 +27,8 @@ func main() {
 		}
 	}`
 
-	queryEpochData := iota_sdk.Query{
-		QueryString: queryEpochDataStr,
+	queryEpochData := iota_sdk.GraphQlQuery{
+		Query: queryEpochDataStr,
 	}
 	res1, err := client.RunQuery(queryEpochData)
 	if err != nil {
@@ -36,9 +39,9 @@ func main() {
 	variablesJson := `{"id": 1}`
 	variables := string(variablesJson)
 
-	queryEpochDataWithVariables := iota_sdk.Query{
-		QueryString: queryEpochDataStr,
-		Variables:   &variables,
+	queryEpochDataWithVariables := iota_sdk.GraphQlQuery{
+		Query:     queryEpochDataStr,
+		Variables: &variables,
 	}
 	res2, err := client.RunQuery(queryEpochDataWithVariables)
 	if err != nil {
@@ -50,8 +53,8 @@ func main() {
 	query MyQuery {
 		chainIdentifier
 	}`
-	queryChainId := iota_sdk.Query{
-		QueryString: queryChainIdStr,
+	queryChainId := iota_sdk.GraphQlQuery{
+		Query: queryChainIdStr,
 	}
 	res3, err := client.RunQuery(queryChainId)
 	if err != nil {

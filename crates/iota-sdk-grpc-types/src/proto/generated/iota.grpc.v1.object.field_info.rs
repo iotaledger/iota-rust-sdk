@@ -25,6 +25,7 @@ mod _field_impls {
             message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for Object {}
     impl MessageFields for Object {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::REFERENCE_FIELD,
@@ -70,6 +71,7 @@ mod _field_impls {
             message_fields: Some(Object::FIELDS),
         };
     }
+    impl crate::field::sealed::Sealed for Objects {}
     impl MessageFields for Objects {
         const FIELDS: &'static [&'static MessageField] = &[Self::OBJECTS_FIELD];
     }

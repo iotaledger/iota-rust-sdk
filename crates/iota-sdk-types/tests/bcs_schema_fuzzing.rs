@@ -15,7 +15,7 @@
 
 use std::collections::HashMap;
 
-use rand::{RngCore, SeedableRng, rngs::StdRng};
+use rand::{Rng, SeedableRng, rngs::StdRng};
 use serde::{Serialize, de::DeserializeOwned};
 
 // ─── Grammar AST ─────────────────────────────────────────────────────────────

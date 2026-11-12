@@ -18,7 +18,7 @@
 //! With this example it is necessary to run a localnet:
 //!
 //! ```sh
-//! iota start --with-faucet --with-graphql --committee-size 1 --force-regenesis
+//! iota-localnet start --with-faucet --with-graphql --committee-size 1 --force-regenesis
 //! ```
 
 use std::env::var;
@@ -26,7 +26,7 @@ use std::env::var;
 use eyre::{Result, bail};
 use iota_sdk::{
     crypto::{IotaSigner, ed25519::Ed25519PrivateKey},
-    graphql_client::{Client, WaitForTransaction, faucet::FaucetClient},
+    graphql_client::{GraphQLClient, WaitForTransaction, faucet::FaucetClient},
     transaction_builder::{TransactionBuilder, assigned},
     types::{Address, MovePackageData, ObjectId, ObjectOut, UpgradePolicy},
 };
@@ -50,7 +50,7 @@ async fn main() -> Result<()> {
     let private_key = Ed25519PrivateKey::random();
     let sender = private_key.public_key().derive_address();
     println!("Sender: {sender}");
-    let client = Client::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
 
     // Fund the sender address for gas payment
     let faucet = FaucetClient::new_localnet();
@@ -75,7 +75,7 @@ async fn main() -> Result<()> {
 
     // Perform a dry-run first to check if everything is correct
     println!("> Publishing package (dry run):");
-    let result = client.dry_run_transaction(&tx, false).await?;
+    let result = client.dry_run_transaction(&tx).await?;
     if let Some(err) = result.error {
         bail!("Dry run failed: {err}");
     }
@@ -88,7 +88,8 @@ async fn main() -> Result<()> {
     println!("> Publishing package:");
     let sig = private_key.sign_transaction(&tx)?;
     let effects = client
-        .execute_transaction(&[sig], &tx, WaitForTransaction::Finalized)
+        .execute_transaction(&[sig], &tx)
+        .wait_for(WaitForTransaction::Finalized)
         .await?;
     println!("{:?}", effects.as_v1().status);
 
@@ -99,7 +100,7 @@ async fn main() -> Result<()> {
         match changed_obj.output_state {
             ObjectOut::ObjectWrite { owner, .. } => {
                 let object_id = changed_obj.object_id;
-                let Some(obj) = client.object(object_id, None).await? else {
+                let Some(obj) = client.object(object_id).await? else {
                     bail!("Missing object {object_id}");
                 };
                 if obj.as_struct().object_type().is_upgrade_cap() {
@@ -148,7 +149,7 @@ async fn main() -> Result<()> {
 
     // Perform a dry-run first to check if everything is correct
     println!("> Upgrading package (dry run):");
-    let result = client.dry_run_transaction(&tx, false).await?;
+    let result = client.dry_run_transaction(&tx).await?;
     if let Some(err) = result.error {
         bail!("Dry run failed: {err}");
     }
@@ -160,7 +161,7 @@ async fn main() -> Result<()> {
     // Sign and execute the transaction (upgrade the package)
     println!("> Upgrading package:");
     let sig = private_key.sign_transaction(&tx)?;
-    let effects = client.execute_transaction(&[sig], &tx, None).await?;
+    let effects = client.execute_transaction(&[sig], &tx).await?;
     println!("{:?}", effects.as_v1().status);
 
     // Print the new package version (should now be 2)

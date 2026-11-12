@@ -9,4 +9,6 @@
 pub mod coin_info;
 pub mod coins;
 pub mod dynamic_fields;
+#[cfg(feature = "move-types")]
+pub mod move_objects;
 pub mod owned_objects;

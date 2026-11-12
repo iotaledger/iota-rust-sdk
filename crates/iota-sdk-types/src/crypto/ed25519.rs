@@ -37,10 +37,9 @@ impl Ed25519PublicKey {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
-        R: rand_core::RngCore + rand_core::CryptoRng,
+        R: rand_core::CryptoRng,
     {
         let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
         rng.fill_bytes(&mut buf);
@@ -48,9 +47,8 @@ impl Ed25519PublicKey {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::random_with(rand_core::OsRng)
+        Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
     /// Return the underlying byte array of an Ed25519PublicKey.
@@ -83,7 +81,7 @@ impl PublicKeyExt for Ed25519PublicKey {
 }
 
 impl std::str::FromStr for Ed25519PublicKey {
-    type Err = base64ct::Error;
+    type Err = super::Base64ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         super::Base64FromStr32::from_str(s).map(|a| Self::new(a.0))
@@ -161,10 +159,9 @@ impl Ed25519Signature {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random_with<R>(mut rng: R) -> Self
     where
-        R: rand_core::RngCore + rand_core::CryptoRng,
+        R: rand_core::CryptoRng,
     {
         let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
         rng.fill_bytes(&mut buf);
@@ -172,9 +169,8 @@ impl Ed25519Signature {
     }
 
     #[cfg(feature = "rand")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
     pub fn random() -> Self {
-        Self::random_with(rand_core::OsRng)
+        Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
     /// Return the underlying byte array of an Ed25519Signature.
@@ -192,7 +188,7 @@ impl Ed25519Signature {
 }
 
 impl std::str::FromStr for Ed25519Signature {
-    type Err = base64ct::Error;
+    type Err = super::Base64ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         super::Base64FromStr64::from_str(s).map(|a| Self::new(a.0))

@@ -3,18 +3,29 @@
 
 //! Epoch API implementation.
 
-use std::{collections::HashMap, sync::Arc};
+use std::sync::Arc;
 
 use iota_sdk::{
-    grpc_client::read_mask_fields::EpochReadMask,
+    grpc_client::{GetEpochQuery, read_mask_fields::EpochReadMask},
     grpc_types::{proto::proto_to_timestamp_ms, v1 as proto},
 };
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::client::GrpcClient,
+    grpc::{client::GrpcClient, read_mask_fields::GrpcEpochField},
+    helpers::SetIfSome,
     types::validator::ValidatorCommittee,
 };
+
+crate::ffi_btree_map! {
+    /// The status of each protocol feature flag, keyed by flag name.
+    GrpcFeatureFlagMap<String, bool>
+}
+
+crate::ffi_btree_map! {
+    /// The value of each protocol attribute, keyed by attribute name.
+    GrpcAttributeMap<String, String>
+}
 
 /// The protocol config of an epoch.
 #[derive(uniffi::Record)]
@@ -22,32 +33,36 @@ pub struct GrpcProtocolConfig {
     /// The protocol version.
     pub protocol_version: Option<u64>,
     /// Map of feature flags to their status.
-    pub feature_flags: HashMap<String, bool>,
+    pub feature_flags: Arc<GrpcFeatureFlagMap>,
     /// Map of attribute names to their values.
-    pub attributes: HashMap<String, String>,
+    pub attributes: Arc<GrpcAttributeMap>,
 }
 
 impl From<&proto::epoch::ProtocolConfig> for GrpcProtocolConfig {
     fn from(value: &proto::epoch::ProtocolConfig) -> Self {
         Self {
             protocol_version: value.protocol_version,
-            feature_flags: value
-                .feature_flags
-                .as_ref()
-                .map(|flags| flags.flags.clone().into_iter().collect())
-                .unwrap_or_default(),
-            attributes: value
-                .attributes
-                .as_ref()
-                .map(|attributes| attributes.attributes.clone().into_iter().collect())
-                .unwrap_or_default(),
+            feature_flags: Arc::new(
+                value
+                    .feature_flags
+                    .as_ref()
+                    .map(|flags| flags.flags.clone().into_iter().collect())
+                    .unwrap_or_default(),
+            ),
+            attributes: Arc::new(
+                value
+                    .attributes
+                    .as_ref()
+                    .map(|attributes| attributes.attributes.clone().into_iter().collect())
+                    .unwrap_or_default(),
+            ),
         }
     }
 }
 
 /// Information about an epoch.
 #[derive(uniffi::Record)]
-pub struct EpochInfo {
+pub struct GrpcEpochInfo {
     /// The epoch id.
     pub epoch: Option<u64>,
     /// The committee governing the epoch.
@@ -69,7 +84,7 @@ pub struct EpochInfo {
     pub protocol_config: Option<GrpcProtocolConfig>,
 }
 
-impl TryFrom<&proto::epoch::Epoch> for EpochInfo {
+impl TryFrom<&proto::epoch::Epoch> for GrpcEpochInfo {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::epoch::Epoch) -> Result<Self> {
@@ -102,14 +117,13 @@ impl GrpcClient {
     pub async fn epoch(
         &self,
         epoch: Option<u64>,
-        read_mask: Option<Vec<String>>,
-    ) -> Result<EpochInfo> {
+        read_mask: Option<Vec<GrpcEpochField>>,
+    ) -> Result<GrpcEpochInfo> {
         (&self
             .client()
-            .epoch(
-                epoch,
-                crate::grpc::api::read_mask::<EpochReadMask>(&read_mask),
-            )
+            .epoch()
+            .set_if_some(epoch, GetEpochQuery::epoch_number)
+            .read_mask(crate::grpc::api::read_mask::<EpochReadMask, _>(read_mask))
             .await?
             .into_inner())
             .try_into()

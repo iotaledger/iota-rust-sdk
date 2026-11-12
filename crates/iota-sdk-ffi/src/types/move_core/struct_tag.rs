@@ -179,22 +179,6 @@ macro_rules! export_struct_tag_from_type_tag_ctors {
     } }
 }
 
-macro_rules! export_struct_tag_from_struct_tag_ctors {
-    ($($name:ident),+ $(,)?) => { paste::paste! {
-        #[uniffi::export]
-        impl StructTag {$(
-            #[uniffi::constructor]
-            pub fn [< new_ $name:snake >](struct_tag: &StructTag) -> Self {
-                Self(iota_sdk::types::StructTag::[< new_ $name:snake >](struct_tag.0.clone()))
-            }
-
-            pub fn [< is_ $name:snake >](&self) -> bool {
-                self.0.[< is_ $name:snake >]()
-            }
-        )+}
-    } }
-}
-
 export_struct_tag_ctors!(
     AsciiString,
     Clock,
@@ -243,8 +227,6 @@ export_struct_tag_from_type_tag_ctors!(
     BasicOutput,
     NftOutput,
     AliasOutput,
-);
-export_struct_tag_from_struct_tag_ctors!(
     CoinManager,
     CoinMetadata,
     DisplayCreated,

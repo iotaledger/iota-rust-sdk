@@ -11,8 +11,8 @@ use iota_types::{
 };
 
 use crate::{
-    PTBArgumentList, TransactionBuilderLedgerClient, error::TransactionBuilderError,
-    types::MoveTypes, unresolved::InputKind,
+    PTBArgumentList, TransactionBuilderLedgerClient, builder::client::check_object_identity,
+    error::TransactionBuilderError, types::MoveTypes, unresolved::InputKind,
 };
 
 /// A function call to authorize a transaction via move.
@@ -68,6 +68,7 @@ impl MoveAuthenticatorBuilder {
             .ok_or_else(|| {
                 TransactionBuilderError::Input(format!("missing account {}", self.account_id))
             })?;
+        check_object_identity(self.account_id, &account)?;
 
         let mut call_args = Vec::new();
         for input in self.call_args {
@@ -85,6 +86,7 @@ impl MoveAuthenticatorBuilder {
                                 "missing object {object_id}"
                             ))
                         })?;
+                    check_object_identity(object_id, &obj)?;
                     if !obj.owner().is_immutable() {
                         return Err(TransactionBuilderError::InvalidMoveAuthArg(
                             "call arguments must not be owned".to_owned(),
@@ -107,6 +109,7 @@ impl MoveAuthenticatorBuilder {
                                 "missing object {object_id}"
                             ))
                         })?;
+                    check_object_identity(object_id, &obj)?;
 
                     let Owner::Shared(version) = obj.owner() else {
                         return Err(TransactionBuilderError::InvalidMoveAuthArg(format!(
@@ -128,30 +131,19 @@ impl MoveAuthenticatorBuilder {
                 InputKind::Input(input) => input.clone(),
             })
         }
-        Ok(match account.owner() {
-            Owner::Immutable => {
-                MoveAuthenticator::V1(MoveAuthenticatorV1::new_with_immutable_account_object(
-                    call_args,
-                    self.type_args,
-                    account.object_ref(),
-                ))
-            }
-            Owner::Shared(version) => {
-                MoveAuthenticator::V1(MoveAuthenticatorV1::new_with_shared_account_object(
-                    call_args,
-                    self.type_args,
-                    SharedObjectReference {
-                        object_id: account.id(),
-                        initial_shared_version: *version,
-                        mutable: false,
-                    },
-                ))
-            }
-            _ => {
-                return Err(TransactionBuilderError::InvalidMoveAuthAccount(
-                    "account must be immutable or shared".to_owned(),
-                ));
-            }
-        })
+        let Owner::Shared(version) = account.owner() else {
+            return Err(TransactionBuilderError::InvalidMoveAuthAccount(
+                "account must be shared".to_owned(),
+            ));
+        };
+        Ok(MoveAuthenticator::V1(MoveAuthenticatorV1::new(
+            call_args,
+            self.type_args,
+            SharedObjectReference {
+                object_id: account.id(),
+                initial_shared_version: *version,
+                mutable: false,
+            },
+        )))
     }
 }

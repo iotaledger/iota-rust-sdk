@@ -93,6 +93,29 @@ impl ValidatorCommittee {
             })
             .ok_or(ValidatorCommitteeError::StakeOverflow)
     }
+
+    /// The stake a quorum of a committee with `total_stake` needs: more than
+    /// two thirds of it, `floor(2 * total_stake / 3) + 1`.
+    ///
+    /// Any two quorums then overlap in more than the third of the stake that
+    /// may be faulty. A total of zero gives a threshold of 1, which nothing can
+    /// reach.
+    ///
+    /// `total_stake` should be [`Self::total_stake`] of a committee that passed
+    /// [`Self::validate`]: a total that wrapped, or one from an unvalidated
+    /// committee, can give a threshold a single member reaches.
+    ///
+    /// ```
+    /// use iota_sdk_types::ValidatorCommittee;
+    ///
+    /// assert_eq!(ValidatorCommittee::quorum_threshold(10_000), 6_667);
+    /// assert_eq!(ValidatorCommittee::quorum_threshold(9_998), 6_666);
+    /// ```
+    pub const fn quorum_threshold(total_stake: StakeUnit) -> StakeUnit {
+        // Widened so the doubling cannot overflow; the result is at most the
+        // larger of `total_stake` and 1, so it fits back.
+        (total_stake as u128 * 2 / 3 + 1) as StakeUnit
+    }
 }
 
 impl crate::TreeDisplay for ValidatorCommittee {
@@ -157,7 +180,6 @@ pub struct ValidatorAggregatedSignature {
 
 /// Error returned when a signer bitmap cannot be read.
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 #[derive(Debug, thiserror::Error)]
 #[error("invalid signer bitmap: {0}")]
 #[non_exhaustive]
@@ -187,7 +209,6 @@ impl ValidatorAggregatedSignature {
     ///
     /// [RoaringBitmap serialized form]: https://github.com/RoaringBitmap/RoaringFormatSpec
     #[cfg(feature = "serde")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
     pub fn from_signer_bitmap(
         epoch: EpochId,
         signature: Bls12381Signature,
@@ -216,7 +237,6 @@ impl ValidatorAggregatedSignature {
     ///
     /// [RoaringBitmap serialized form]: https://github.com/RoaringBitmap/RoaringFormatSpec
     #[cfg(feature = "serde")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
     pub fn signer_bitmap(&self) -> Vec<u8> {
         let mut bytes = Vec::with_capacity(self.bitmap.serialized_size());
         self.bitmap
@@ -361,6 +381,29 @@ mod committee_tests {
             ValidatorCommittee::new(0, vec![member(1, 5_000), member(1, 5_000)]),
             Err(ValidatorCommitteeError::DuplicatePublicKey)
         ));
+    }
+
+    #[test]
+    fn quorum_threshold_is_two_thirds_of_any_total_plus_one() {
+        for (total_stake, threshold) in [
+            (0, 1),
+            (1, 1),
+            (2, 2),
+            (3, 3),
+            (4, 3),
+            (5, 4),
+            (6, 5),
+            (9_998, 6_666),
+            (9_999, 6_667),
+            (10_000, 6_667),
+            (u64::MAX, 12_297_829_382_473_034_411),
+        ] {
+            assert_eq!(
+                ValidatorCommittee::quorum_threshold(total_stake),
+                threshold,
+                "total stake {total_stake}"
+            );
+        }
     }
 }
 

@@ -12,13 +12,13 @@ use iota_sdk::{
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::client::GrpcClient,
+    grpc::{client::GrpcClient, read_mask_fields::GrpcServiceInfoField},
     types::digest::Digest,
 };
 
 /// Information about the gRPC service and the node serving it.
 #[derive(uniffi::Record)]
-pub struct ServiceInfo {
+pub struct GrpcServiceInfo {
     /// The chain identifier of the chain that the node is on, which is the
     /// digest of the genesis checkpoint.
     pub chain_id: Option<Arc<Digest>>,
@@ -40,7 +40,7 @@ pub struct ServiceInfo {
     pub server_version: Option<String>,
 }
 
-impl TryFrom<&proto::ledger_service::GetServiceInfoResponse> for ServiceInfo {
+impl TryFrom<&proto::ledger_service::GetServiceInfoResponse> for GrpcServiceInfo {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::ledger_service::GetServiceInfoResponse) -> Result<Self> {
@@ -72,11 +72,15 @@ impl GrpcClient {
     ///
     /// The optional `read_mask` controls which fields the server returns.
     #[uniffi::method(default(read_mask = None))]
-    pub async fn service_info(&self, read_mask: Option<Vec<String>>) -> Result<ServiceInfo> {
+    pub async fn service_info(
+        &self,
+        read_mask: Option<Vec<GrpcServiceInfoField>>,
+    ) -> Result<GrpcServiceInfo> {
         (&self
             .client()
-            .service_info(crate::grpc::api::read_mask::<ServiceInfoReadMask>(
-                &read_mask,
+            .service_info()
+            .read_mask(crate::grpc::api::read_mask::<ServiceInfoReadMask, _>(
+                read_mask,
             ))
             .await?
             .into_inner())

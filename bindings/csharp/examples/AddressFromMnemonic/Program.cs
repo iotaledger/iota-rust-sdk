@@ -19,7 +19,7 @@ class Program
         Console.WriteLine($"Private Key: {privateKeyBech321}");
         Console.WriteLine($"Public Key: {Iota.Base64Encode(publicKey1.ToBytes())}");
         Console.WriteLine($"Public Key With Flag: {Iota.Base64Encode(flaggedPublicKey1)}");
-        Console.WriteLine($"Address: {address1.ToHex()}");
+        Console.WriteLine($"Address: {address1}");
 
         var privateKey2 = Secp256k1PrivateKey.FromMnemonic(mnemonic, 1);
         var privateKeyBech322 = privateKey2.ToBech32();
@@ -31,7 +31,7 @@ class Program
         Console.WriteLine($"Private Key: {privateKeyBech322}");
         Console.WriteLine($"Public Key: {Iota.Base64Encode(publicKey2.ToBytes())}");
         Console.WriteLine($"Public Key With Flag: {Iota.Base64Encode(flaggedPublicKey2)}");
-        Console.WriteLine($"Address: {address2.ToHex()}");
+        Console.WriteLine($"Address: {address2}");
 
         var privateKey3 = Secp256r1PrivateKey.FromMnemonicWithPath(mnemonic, "m/74'/4218'/0'/0/2");
         var privateKeyBech323 = privateKey3.ToBech32();
@@ -43,6 +43,6 @@ class Program
         Console.WriteLine($"Private Key: {privateKeyBech323}");
         Console.WriteLine($"Public Key: {Iota.Base64Encode(publicKey3.ToBytes())}");
         Console.WriteLine($"Public Key With Flag: {Iota.Base64Encode(flaggedPublicKey3)}");
-        Console.WriteLine($"Address: {address3.ToHex()}");
+        Console.WriteLine($"Address: {address3}");
     }
 }

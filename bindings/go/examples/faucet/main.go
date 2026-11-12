@@ -27,8 +27,7 @@ func main() {
 		fmt.Println("Faucet receipt:")
 		for _, coin := range faucetReceipt.Sent {
 			coinIdHex := coin.Id.ToHex()
-			digestBase58 := coin.TransferTxDigest.ToBase58()
-			fmt.Printf("  Coin ID: %s, Amount: %d, Digest: %s\n", coinIdHex, coin.Amount, digestBase58)
+			fmt.Printf("  Coin ID: %s, Amount: %d, Digest: %s\n", coinIdHex, coin.Amount, coin.TransferTxDigest)
 		}
 	} else {
 		fmt.Println("Faucet receipt: nil")

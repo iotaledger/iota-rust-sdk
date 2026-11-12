@@ -28,7 +28,7 @@ class Program
         await client.ExecuteTransaction(new[] { signature }, stakeTx, WaitForTransaction.Finalized);
 
         // Unstake
-        var stakedIotas = await client.Objects(new ObjectFilter(TypeTag: StructTag.NewStakedIota().ToString(), Owner: owner));
+        var stakedIotas = await client.Objects(new GraphQlObjectFilter(TypeTag: StructTag.NewStakedIota().ToString(), Owner: owner));
         if (stakedIotas.Data.Length == 0)
         {
             throw new Exception("no staked iotas found");

@@ -5,13 +5,19 @@
 
 use std::sync::Arc;
 
+use iota_sdk::graphql_client::{
+    GetNormalizedMoveFunctionQuery, GetNormalizedMoveModuleQuery, GetPackageQuery,
+    ListPackageVersionsQuery, ListPackagesQuery,
+};
+
 use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::MovePackagePage,
-        query_types::{MoveFunction, MoveModule, PaginationFilter},
+        pagination::GraphQLMovePackagePage,
+        query_types::{GraphQLMoveFunction, GraphQLMoveModule, GraphQLPaginationFilter},
     },
+    helpers::SetIfSome,
     types::{address::Address, object::MovePackage, version::Version},
 };
 
@@ -36,10 +42,9 @@ impl GraphQLClient {
         version: Option<Arc<Version>>,
     ) -> Result<Option<Arc<MovePackage>>> {
         Ok(self
-            .0
-            .read()
-            .await
-            .package(**address, version.map(|v| **v))
+            .client()
+            .package(**address)
+            .set_if_some(version.map(|v| **v), GetPackageQuery::version)
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -54,17 +59,19 @@ impl GraphQLClient {
         address: &Address,
         after_version: Option<Arc<Version>>,
         before_version: Option<Arc<Version>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<MovePackagePage> {
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLMovePackagePage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .package_versions(
-                **address,
-                pagination_filter.map(Into::into).unwrap_or_default(),
+            .client()
+            .package_versions(**address)
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
+            .set_if_some(
                 after_version.map(|v| **v),
+                ListPackageVersionsQuery::after_version,
+            )
+            .set_if_some(
                 before_version.map(|v| **v),
+                ListPackageVersionsQuery::before_version,
             )
             .await?
             .map(Into::into)
@@ -76,9 +83,7 @@ impl GraphQLClient {
     /// original ID with the package at address.
     pub async fn package_latest(&self, address: &Address) -> Result<Option<Arc<MovePackage>>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .package_latest(**address)
             .await?
             .map(Into::into)
@@ -97,17 +102,14 @@ impl GraphQLClient {
         &self,
         after_checkpoint: Option<u64>,
         before_checkpoint: Option<u64>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<MovePackagePage> {
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLMovePackagePage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .packages(
-                pagination_filter.map(Into::into).unwrap_or_default(),
-                after_checkpoint,
-                before_checkpoint,
-            )
+            .client()
+            .packages()
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
+            .set_if_some(after_checkpoint, ListPackagesQuery::after_checkpoint)
+            .set_if_some(before_checkpoint, ListPackagesQuery::before_checkpoint)
             .await?
             .map(Into::into)
             .into())
@@ -122,12 +124,14 @@ impl GraphQLClient {
         module: &str,
         function: &str,
         version: Option<Arc<Version>>,
-    ) -> Result<Option<Arc<MoveFunction>>> {
+    ) -> Result<Option<Arc<GraphQLMoveFunction>>> {
         Ok(self
-            .0
-            .read()
-            .await
-            .normalized_move_function(**package, module, function, version.map(|v| **v))
+            .client()
+            .normalized_move_function(**package, module, function)
+            .set_if_some(
+                version.map(|v| **v),
+                GetNormalizedMoveFunctionQuery::version,
+            )
             .await?
             .map(Into::into)
             .map(Arc::new))
@@ -149,26 +153,27 @@ impl GraphQLClient {
         package: &Address,
         module: &str,
         version: Option<Arc<Version>>,
-        pagination_filter_enums: Option<PaginationFilter>,
-        pagination_filter_friends: Option<PaginationFilter>,
-        pagination_filter_functions: Option<PaginationFilter>,
-        pagination_filter_structs: Option<PaginationFilter>,
-    ) -> Result<Option<MoveModule>> {
+        pagination_filter_enums: Option<GraphQLPaginationFilter>,
+        pagination_filter_friends: Option<GraphQLPaginationFilter>,
+        pagination_filter_functions: Option<GraphQLPaginationFilter>,
+        pagination_filter_structs: Option<GraphQLPaginationFilter>,
+    ) -> Result<Option<GraphQLMoveModule>> {
         Ok(self
-            .0
-            .read()
-            .await
-            .normalized_move_module(
-                **package,
-                module,
-                version.map(|v| **v),
-                pagination_filter_enums.map(Into::into).unwrap_or_default(),
+            .client()
+            .normalized_move_module(**package, module)
+            .set_if_some(version.map(|v| **v), GetNormalizedMoveModuleQuery::version)
+            .enums_pagination(pagination_filter_enums.map(Into::into).unwrap_or_default())
+            .friends_pagination(
                 pagination_filter_friends
                     .map(Into::into)
                     .unwrap_or_default(),
+            )
+            .functions_pagination(
                 pagination_filter_functions
                     .map(Into::into)
                     .unwrap_or_default(),
+            )
+            .structs_pagination(
                 pagination_filter_structs
                     .map(Into::into)
                     .unwrap_or_default(),

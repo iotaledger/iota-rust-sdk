@@ -4,14 +4,14 @@
 use eyre::Result;
 use iota_sdk::{
     crypto::ed25519::Ed25519PrivateKey,
-    graphql_client::{Client, faucet::FaucetClient},
+    graphql_client::{GraphQLClient, faucet::FaucetClient},
     transaction_builder::{TransactionBuilder, assigned, unresolved::Argument},
     types::Address,
 };
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let client = Client::new_localnet();
+    let client = GraphQLClient::new_localnet()?;
 
     let private_key = Ed25519PrivateKey::random();
     let sender_address = private_key.public_key().derive_address();
@@ -45,7 +45,7 @@ async fn main() -> Result<()> {
     println!("Signing Digest: {}", tx.signing_digest_hex());
     println!("Txn Bytes: {}", tx.to_base64());
 
-    let res = client.dry_run_transaction(&tx, false).await?;
+    let res = client.dry_run_transaction(&tx).await?;
 
     if let Some(err) = res.error {
         eyre::bail!("Failed to send tx: {err}");

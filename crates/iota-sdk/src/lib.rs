@@ -1,7 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! The IOTA Rust SDK
+#![doc = include_str!("../README.md")]
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 #[cfg(feature = "crypto")]
 pub use iota_crypto as crypto;
@@ -13,7 +14,7 @@ pub use iota_grpc_client as grpc_client;
 pub use iota_grpc_types as grpc_types;
 #[cfg(feature = "move-types")]
 pub use iota_move_types as move_types;
-#[cfg(feature = "txn-builder")]
+#[cfg(feature = "transaction-builder")]
 pub use iota_transaction_builder as transaction_builder;
 #[cfg(feature = "types")]
 pub use iota_types as types;

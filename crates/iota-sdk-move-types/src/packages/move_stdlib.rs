@@ -22,6 +22,7 @@ pub mod fixed_point32 {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct FixedPoint32 {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub value: u64,
     }
 
@@ -61,6 +62,16 @@ pub mod ascii {
         }
     }
 
+    /// Fails only on bytes that are not UTF-8: like the mirror itself, the
+    /// conversion does not check for ASCII, so non-ASCII UTF-8 converts too.
+    impl TryFrom<String> for std::string::String {
+        type Error = std::string::FromUtf8Error;
+
+        fn try_from(value: String) -> Result<Self, Self::Error> {
+            Self::from_utf8(value.bytes)
+        }
+    }
+
     /// Rust version of the Move `std::ascii::Char` type.
     ///
     /// # BCS
@@ -81,6 +92,31 @@ pub mod ascii {
     impl Char {
         pub const fn new(byte: u8) -> Self {
             Self { byte }
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        #[cfg(target_arch = "wasm32")]
+        use wasm_bindgen_test::wasm_bindgen_test as test;
+
+        use super::String;
+
+        #[test]
+        fn ascii_bytes_convert() {
+            let converted = std::string::String::try_from(String::new("hello".into()));
+            assert_eq!(converted.unwrap(), "hello");
+        }
+
+        #[test]
+        fn non_utf8_is_rejected() {
+            assert!(std::string::String::try_from(String::new(vec![0xff])).is_err());
+        }
+
+        #[test]
+        fn non_ascii_utf8_converts() {
+            let converted = std::string::String::try_from(String::new("héllo".into()));
+            assert_eq!(converted.unwrap(), "héllo");
         }
     }
 }
@@ -113,6 +149,36 @@ pub mod string {
             Self { bytes }
         }
     }
+
+    impl crate::MoveType for String {
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new_string()))
+        }
+    }
+
+    impl TryFrom<String> for std::string::String {
+        type Error = std::string::FromUtf8Error;
+
+        fn try_from(value: String) -> Result<Self, Self::Error> {
+            Self::from_utf8(value.bytes)
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::String;
+
+        #[test]
+        fn utf8_bytes_convert() {
+            let converted = std::string::String::try_from(String::new("héllo".into()));
+            assert_eq!(converted.unwrap(), "héllo");
+        }
+
+        #[test]
+        fn invalid_utf8_is_rejected() {
+            assert!(std::string::String::try_from(String::new(vec![0xff, 0xfe])).is_err());
+        }
+    }
 }
 
 /// Types from `0x1::uq32_32`.
@@ -133,7 +199,9 @@ pub mod uq32_32 {
         all(test, not(target_arch = "wasm32")),
         derive(iota_bcs_schema::MoveShape)
     )]
-    pub struct UQ32_32(pub u64);
+    pub struct UQ32_32(
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))] pub u64,
+    );
 
     impl UQ32_32 {
         pub const fn new(value: u64) -> Self {
@@ -160,7 +228,9 @@ pub mod uq64_64 {
         all(test, not(target_arch = "wasm32")),
         derive(iota_bcs_schema::MoveShape)
     )]
-    pub struct UQ64_64(pub u128);
+    pub struct UQ64_64(
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))] pub u128,
+    );
 
     impl UQ64_64 {
         pub const fn new(value: u128) -> Self {
@@ -185,6 +255,7 @@ pub mod bit_vector {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct BitVector {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub length: u64,
         pub bit_field: Vec<bool>,
     }

@@ -1,7 +1,7 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{Address, Input, ObjectReference, TypeTag, transaction::SharedObjectReference};
+use crate::{Address, Input, TypeTag, transaction::SharedObjectReference};
 
 /// MoveAuthenticator is a signature variant that enables a method of
 /// authentication through Move code. This type represents the data received
@@ -61,8 +61,8 @@ pub struct MoveAuthenticatorV1 {
     /// The object that is authenticated. Represents the account being the
     /// sender of the transaction.
     ///
-    /// Only [`Input::ImmutableOrOwned`] and [`Input::Shared`] are valid here;
-    /// deserialization rejects any other [`Input`] variant.
+    /// Only [`Input::Shared`] is valid here; deserialization rejects any other
+    /// [`Input`] variant.
     #[cfg_attr(
         feature = "serde",
         serde(deserialize_with = "deserialize_object_to_authenticate")
@@ -72,51 +72,34 @@ pub struct MoveAuthenticatorV1 {
 }
 
 /// Deserializes [`MoveAuthenticatorV1::object_to_authenticate`], rejecting any
-/// [`Input`] variant other than [`Input::ImmutableOrOwned`] or
-/// [`Input::Shared`].
+/// [`Input`] variant other than [`Input::Shared`].
 #[cfg(feature = "serde")]
 fn deserialize_object_to_authenticate<'de, D>(deserializer: D) -> Result<Input, D::Error>
 where
     D: serde::Deserializer<'de>,
 {
     let input = <Input as serde::Deserialize>::deserialize(deserializer)?;
-    if !matches!(input, Input::ImmutableOrOwned(_) | Input::Shared(_)) {
+    if !matches!(input, Input::Shared(_)) {
         return Err(serde::de::Error::custom(
-            "object_to_authenticate must be an immutable/owned or shared object",
+            "object_to_authenticate must be a shared object",
         ));
     }
     Ok(input)
 }
 
-/// Strategy generating only the [`Input`] variants valid for
+/// Strategy generating only the [`Input`] variant valid for
 /// [`MoveAuthenticatorV1::object_to_authenticate`], keeping proptest-generated
 /// values in sync with what [`deserialize_object_to_authenticate`] accepts.
 #[cfg(feature = "proptest")]
 fn arb_object_to_authenticate() -> impl proptest::strategy::Strategy<Value = Input> {
     use proptest::prelude::*;
 
-    prop_oneof![
-        any::<ObjectReference>().prop_map(Input::ImmutableOrOwned),
-        any::<SharedObjectReference>().prop_map(Input::Shared),
-    ]
+    any::<SharedObjectReference>().prop_map(Input::Shared)
 }
 
 impl MoveAuthenticatorV1 {
-    /// Create a new move authenticator with an immutable object.
-    pub fn new_with_immutable_account_object(
-        call_args: Vec<Input>,
-        type_args: Vec<TypeTag>,
-        object_to_authenticate: ObjectReference,
-    ) -> Self {
-        Self {
-            call_args,
-            type_args,
-            object_to_authenticate: Input::ImmutableOrOwned(object_to_authenticate),
-        }
-    }
-
-    /// Create a new move authenticator with a shared object.
-    pub fn new_with_shared_account_object(
+    /// Create a new move authenticator for a shared account object.
+    pub fn new(
         call_args: Vec<Input>,
         type_args: Vec<TypeTag>,
         object_to_authenticate: SharedObjectReference,
@@ -132,8 +115,7 @@ impl MoveAuthenticatorV1 {
     /// sender of the transaction.
     pub fn address(&self) -> Address {
         match self.object_to_authenticate {
-            Input::ImmutableOrOwned(ObjectReference { object_id, .. })
-            | Input::Shared(SharedObjectReference { object_id, .. }) => object_id.into(),
+            Input::Shared(SharedObjectReference { object_id, .. }) => object_id.into(),
             _ => unreachable!(),
         }
     }
@@ -176,7 +158,6 @@ impl crate::TreeDisplay for MoveAuthenticatorV1 {
 crate::impl_tree_display!(MoveAuthenticator, MoveAuthenticatorV1);
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization {
 
     use super::*;
@@ -212,7 +193,7 @@ mod tests {
     use base64ct::{Base64, Encoding};
 
     use super::*;
-    use crate::{ObjectDigest, ObjectId, SignatureScheme, StructTag, Version};
+    use crate::{ObjectDigest, ObjectId, ObjectReference, SignatureScheme, StructTag, Version};
 
     #[cfg(feature = "proptest")]
     #[test_strategy::proptest]
@@ -223,14 +204,10 @@ mod tests {
     }
 
     fn make_simple_authenticator() -> MoveAuthenticator {
-        MoveAuthenticatorV1::new_with_immutable_account_object(
+        MoveAuthenticatorV1::new(
             vec![],
             vec![],
-            ObjectReference {
-                object_id: ObjectId::ZERO,
-                version: Version::default(),
-                digest: ObjectDigest::MIN,
-            },
+            SharedObjectReference::new(ObjectId::ZERO, Version::default(), false),
         )
         .into()
     }
@@ -276,6 +253,11 @@ mod tests {
         // them.
         let bad_inputs = [
             Input::Pure(vec![1, 2, 3]),
+            Input::ImmutableOrOwned(ObjectReference {
+                object_id: ObjectId::ZERO,
+                version: Version::default(),
+                digest: ObjectDigest::MIN,
+            }),
             Input::Receiving(ObjectReference {
                 object_id: ObjectId::ZERO,
                 version: Version::default(),
@@ -368,9 +350,8 @@ mod tests {
     }
 
     /// Synthetic fixtures exercising structural shapes absent from the on-chain
-    /// fixtures: an owned (`ImmutableOrOwned`) object to authenticate,
-    /// non-empty and nested `type_arguments`, and `call_args` containing
-    /// owned / receiving / mutable-shared inputs.
+    /// fixtures: non-empty and nested `type_arguments`, and `call_args`
+    /// containing owned / receiving / mutable-shared inputs.
     fn synthetic_fixtures() -> Vec<SyntheticFixture> {
         let owned = |b: u8, v: u64| {
             ObjectReference::new(
@@ -392,19 +373,8 @@ mod tests {
 
         vec![
             SyntheticFixture {
-                name: "synthetic/owned-object-to-authenticate",
-                auth: MoveAuthenticatorV1::new_with_immutable_account_object(
-                    vec![],
-                    vec![],
-                    owned(0x11, 7),
-                )
-                .into(),
-                b64: "BwAAAAEAEREREREREREREREREREREREREREREREREREREREREREHAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                digest: "C3YqVQTCABN3t2bZqv9vbJfVroEA4Bd1t2EvesuxGiMX",
-            },
-            SyntheticFixture {
                 name: "synthetic/nested-type-arguments",
-                auth: MoveAuthenticatorV1::new_with_shared_account_object(
+                auth: MoveAuthenticatorV1::new(
                     vec![],
                     vec![
                         TypeTag::U64,
@@ -419,7 +389,7 @@ mod tests {
             },
             SyntheticFixture {
                 name: "synthetic/owned-and-receiving-call-args",
-                auth: MoveAuthenticatorV1::new_with_shared_account_object(
+                auth: MoveAuthenticatorV1::new(
                     vec![Input::ImmutableOrOwned(owned(0x33, 1)), receiving(0x44, 2)],
                     vec![],
                     shared(0x55, 9, false),
@@ -429,19 +399,19 @@ mod tests {
                 digest: "FBYGx2eA5qqFPwG6H1aoe4Psrj7w66TF7VnibULUdT9S",
             },
             SyntheticFixture {
-                name: "synthetic/mutable-shared-call-arg-owned-target",
-                auth: MoveAuthenticatorV1::new_with_immutable_account_object(
+                name: "synthetic/mutable-shared-call-arg",
+                auth: MoveAuthenticatorV1::new(
                     vec![Input::Shared(shared(0x66, 5, true))],
                     vec![],
-                    owned(0x77, 8),
+                    shared(0x77, 8, false),
                 )
                 .into(),
-                b64: "BwABAQFmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZgUAAAAAAAAAAQABAHd3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3CAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-                digest: "6y4vmN1UG2ncjNwRpoH7xw5fGmRmkRDTduKWLf9VNZXB",
+                b64: "BwABAQFmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZgUAAAAAAAAAAQABAXd3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3CAAAAAAAAAAA",
+                digest: "5aMFcXLC79PsSAxf7iwhW4w9dvQCDLVQtz4eorXEJxnD",
             },
             SyntheticFixture {
                 name: "synthetic/kitchen-sink",
-                auth: MoveAuthenticatorV1::new_with_immutable_account_object(
+                auth: MoveAuthenticatorV1::new(
                     vec![
                         Input::Pure(vec![1, 2, 3, 4]),
                         Input::ImmutableOrOwned(owned(0x88, 10)),
@@ -452,11 +422,11 @@ mod tests {
                         TypeTag::Address,
                         TypeTag::Struct(Box::new(StructTag::new_gas_coin())),
                     ],
-                    owned(0xbb, 13),
+                    shared(0xbb, 13, false),
                 )
                 .into(),
-                b64: "BwAEAAQBAgMEAQCIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiAoAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQGZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmQsAAAAAAAAAAQECqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqoMAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIEBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBGNvaW4EQ29pbgEHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIEaW90YQRJT1RBAAEAu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7sNAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-                digest: "9btfpDWStq2SBr6FeQuK1WwgPHdgajd3fipwwqr65ce7",
+                b64: "BwAEAAQBAgMEAQCIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiAoAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQGZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmQsAAAAAAAAAAQECqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqoMAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIEBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACBGNvaW4EQ29pbgEHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIEaW90YQRJT1RBAAEBu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7sNAAAAAAAAAAA=",
+                digest: "AoN1LfZgpgFY8HiSCdrcuecohsaj8VAWvHh1TFXkvwsr",
             },
         ]
     }
@@ -479,12 +449,14 @@ mod tests {
             "{name}: re-serialization mismatch"
         );
 
-        // Raw BCS of the tail into the inner enum agrees with the flag-aware path.
+        // Raw BCS of the tail into the inner enum agrees with the flag-aware
+        // path.
         let auth_from_bcs = bcs::from_bytes::<MoveAuthenticator>(&bytes[1..])
             .unwrap_or_else(|e| panic!("{name}: bcs::from_bytes: {e:?}"));
 
         // Mirror of the raw-BCS decode path: encoding the inner enum reproduces
-        // the flag-stripped tail (`to_bytes` is just this prefixed with the flag).
+        // the flag-stripped tail (`to_bytes` is just this prefixed with the
+        // flag).
         assert_eq!(
             bcs::to_bytes(&auth_from_bytes)
                 .expect("BCS serialization should not fail")

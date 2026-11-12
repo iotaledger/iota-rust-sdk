@@ -4,10 +4,9 @@
 
 //! Transaction Builder errors.
 
-use base64ct::Error as Base64Error;
-use iota_types::{ObjectId, TransactionDigest};
+use iota_types::{Address, ObjectId, TransactionDigest};
 
-use crate::builder::gas_station::{GasStationVersion, VersionParsingError};
+use crate::unresolved::Argument;
 
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
@@ -28,68 +27,45 @@ pub enum TransactionBuilderError {
     },
     #[error("only one command can transfer the gas coin")]
     GasCoinTransferredMoreThanOnce,
-    #[error("BCS serialization error: {0}")]
-    Bcs(bcs::Error),
-    #[error("Decoding error: {0}")]
-    Decoding(#[from] Base64Error),
-    #[error("Missing object id")]
-    MissingObjectId,
-    #[error("Missing version for object {0}")]
-    MissingVersion(ObjectId),
-    #[error("Missing digest for object {0}")]
-    MissingDigest(ObjectId),
     #[error("Missing transaction for digest {0}")]
     MissingTransaction(TransactionDigest),
-    #[error("Missing gas objects")]
-    MissingGasObjects,
     #[error("Missing gas budget")]
     MissingGasBudget,
     #[error("Missing gas price")]
     MissingGasPrice,
-    #[error("Missing object kind for object {0}")]
-    MissingObjectKind(ObjectId),
-    #[error("Missing initial shared version for object {0}")]
-    MissingInitialSharedVersion(ObjectId),
-    #[error("Missing pure value")]
-    MissingPureValue,
-    #[error("Missing gas station data")]
-    MissingGasStationData,
+    #[error("Missing protocol value: {name}")]
+    MissingProtocolValue { name: String },
+    #[error("Invalid protocol value: {name} = {value}")]
+    InvalidProtocolValue { name: String, value: String },
     #[error("Unknown shared object mutability for object {0}")]
     SharedObjectMutability(ObjectId),
-    #[error("Unsupported literal")]
-    UnsupportedLiteral,
     #[error("only programmable transactions can be converted into a TransactionBuilder")]
     UnsupportedTransactionKind,
+    #[error(
+        "command {command} refers to {argument:?}, which is neither an input of the transaction nor the result of an earlier command"
+    )]
+    InvalidArgument { command: usize, argument: Argument },
     #[error("Invalid account for move authenticator: {0}")]
     InvalidMoveAuthAccount(String),
     #[error("Invalid argument for move authenticator: {0}")]
     InvalidMoveAuthArg(String),
-    #[error(transparent)]
-    InvalidUrl(<reqwest::Url as std::str::FromStr>::Err),
-    #[error("Request to gas station `{gas_station_url}` failed: {source}")]
-    GasStationRequest {
-        source: reqwest::Error,
-        gas_station_url: reqwest::Url,
-    },
-    #[
-        error("Invalid gas station response from {gas_station_url}{}", 
-        .message.as_deref().map(|msg| format!(": {msg}")).unwrap_or_default())
-    ]
-    GasStationResponse {
-        message: Option<String>,
-        gas_station_url: reqwest::Url,
-    },
+    #[error("gas coins were set on the transaction, but the gas sponsor supplies the gas payment")]
+    SponsorGasConflict,
     #[error(
-        "invalid gas-station version: got version `{version}`, but at least version `{min_required_version}` is required"
+        "sponsor {sponsor} was set on the transaction, but the gas sponsor supplies the gas payment"
     )]
-    InvalidGasStationVersion {
-        /// The minimum IOTA gas-station version needed for this operation.
-        min_required_version: GasStationVersion,
-        /// The actual IOTA gas-station's version.
-        version: GasStationVersion,
+    SponsorAddressConflict { sponsor: Address },
+    #[error("the gas sponsor named the sender {sender} as the gas owner")]
+    SponsorIsSender { sender: Address },
+    #[error("the gas sponsor executed transaction {got}, expected {expected}")]
+    SponsorDigestMismatch {
+        expected: TransactionDigest,
+        got: TransactionDigest,
     },
     #[error(transparent)]
-    VersionParsing(VersionParsingError),
+    Lookup(#[from] LookupError),
+    #[error(transparent)]
+    GasSponsor(Box<dyn std::error::Error + Send + Sync>),
     #[error(transparent)]
     Signature(Box<dyn std::error::Error + Send + Sync>),
     #[error(transparent)]
@@ -108,4 +84,40 @@ impl TransactionBuilderError {
     pub fn signature<E: 'static + std::error::Error + Send + Sync>(e: E) -> Self {
         Self::Signature(Box::new(e))
     }
+
+    /// Create a gas sponsor error
+    pub fn gas_sponsor<E: 'static + std::error::Error + Send + Sync>(e: E) -> Self {
+        Self::GasSponsor(Box::new(e))
+    }
+}
+
+/// A response from a [`TransactionBuilderLedgerClient`] that does not match
+/// what was requested.
+///
+/// [`TransactionBuilderLedgerClient`]: crate::TransactionBuilderLedgerClient
+#[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
+pub enum LookupError {
+    /// The client returned a different object than the one requested.
+    #[error("requested object {requested}, but the client responded with object {returned}")]
+    ObjectIdMismatch {
+        /// The object requested.
+        requested: ObjectId,
+        /// The object the client returned.
+        returned: ObjectId,
+    },
+    /// The client left a requested object out of its response.
+    #[error("the client gave no response for requested object {object_id}")]
+    MissingObject {
+        /// The object left without a response.
+        object_id: ObjectId,
+    },
+    /// The client responded with more objects than were requested.
+    #[error("requested {requested} objects, but the client responded with {returned}")]
+    ExtraObjects {
+        /// How many objects were requested.
+        requested: usize,
+        /// How many objects the client responded with.
+        returned: usize,
+    },
 }

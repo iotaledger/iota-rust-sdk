@@ -148,7 +148,6 @@ impl AsRef<[u8]> for PasskeyPublicKey {
 }
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) mod serialization {
     use std::borrow::Cow;
 

@@ -17,7 +17,7 @@ def main():
     print(f"Private Key: {private_key_bech32}")
     print(f"Public Key: {base64_encode(public_key.to_bytes())}")
     print(f"Public Key With Flag: {base64_encode(flagged_public_key)}")
-    print(f"Address: {address.to_hex()}")
+    print(f"Address: {address}")
 
     private_key = Secp256k1PrivateKey.from_mnemonic(MNEMONIC, 1)
     private_key_bech32 = private_key.to_bech32()
@@ -29,7 +29,7 @@ def main():
     print(f"Private Key: {private_key_bech32}")
     print(f"Public Key: {base64_encode(public_key.to_bytes())}")
     print(f"Public Key With Flag: {base64_encode(flagged_public_key)}")
-    print(f"Address: {address.to_hex()}")
+    print(f"Address: {address}")
 
     private_key = Secp256r1PrivateKey.from_mnemonic_with_path(
         MNEMONIC, "m/74'/4218'/0'/0/2")
@@ -42,7 +42,7 @@ def main():
     print(f"Private Key: {private_key_bech32}")
     print(f"Public Key: {base64_encode(public_key.to_bytes())}")
     print(f"Public Key With Flag: {base64_encode(flagged_public_key)}")
-    print(f"Address: {address.to_hex()}")
+    print(f"Address: {address}")
 
 
 if __name__ == "__main__":

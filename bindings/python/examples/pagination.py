@@ -16,11 +16,11 @@ async def main():
     while True:
         print(f"Fetching page with cursor: {next_cursor}")
         page = await client.objects(
-            ObjectFilter(owner=address),
+            GraphQlObjectFilter(owner=address),
             # Limit to 1 to demonstrate pagination
-            PaginationFilter(direction=Direction.FORWARD,
-                             cursor=next_cursor,
-                             limit=1),
+            GraphQlPaginationFilter(direction=GraphQlDirection.FORWARD,
+                                    cursor=next_cursor,
+                                    limit=1),
         )
         all_objects.extend(page.data)
         if page.page_info.has_next_page:
@@ -29,7 +29,7 @@ async def main():
             break
     print(f"{len(all_objects)} objects fetched:")
     for obj_id in all_objects:
-        print(obj_id.id().to_hex())
+        print(obj_id.id())
 
 
 if __name__ == "__main__":

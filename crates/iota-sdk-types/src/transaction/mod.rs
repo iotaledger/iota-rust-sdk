@@ -14,10 +14,8 @@ mod randomness_round;
 pub use randomness_round::RandomnessRound;
 
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 mod serialization;
 #[cfg(feature = "serde")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
 pub(crate) use serialization::SignedTransactionWithIntentMessage;
 
 /// Transaction
@@ -1139,6 +1137,7 @@ pub struct ChangeEpochV3 {
     pub system_packages: Vec<SystemPackage>,
     /// Vector of active validator indices eligible to take part in committee
     /// selection because they support the new, target protocol version.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::VecReadableDisplay"))]
     pub eligible_active_validators: Vec<u64>,
 }
 
@@ -1219,9 +1218,11 @@ pub struct ChangeEpochV4 {
     pub system_packages: Vec<SystemPackage>,
     /// Vector of active validator indices eligible to take part in committee
     /// selection because they support the new, target protocol version.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::VecReadableDisplay"))]
     pub eligible_active_validators: Vec<u64>,
     /// Vector of scores relative to the past epoch performance of each
     /// validator, ordered by the past epoch's validator index.
+    #[cfg_attr(feature = "serde", serde(with = "crate::_serde::VecReadableDisplay"))]
     pub scores: Vec<u64>,
     /// Whether to adjust validator rewards based on score.
     pub adjust_rewards_by_score: bool,
@@ -1417,7 +1418,6 @@ impl Input {
 
     /// Create a `Pure` input from a BCS-serializable value.
     #[cfg(feature = "serde")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
     pub fn pure<T: serde::Serialize>(value: &T) -> Self {
         Self::Pure(bcs::to_bytes(value).expect("value should be serializable"))
     }

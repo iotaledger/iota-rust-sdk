@@ -15,11 +15,66 @@
 //! `pub mod`. Generic Move types stay generic in Rust (with a
 //! `PhantomData<T>` placeholder for phantom parameters).
 
+#![cfg_attr(doc_cfg, feature(doc_cfg))]
+
 #[macro_use]
 mod macros;
 
 mod packages;
+pub use iota_types;
 pub use packages::{iota_framework, iota_system, move_stdlib, stardust};
+
+mod builtin;
+
+#[cfg(feature = "serde")]
+mod _serde {
+    pub(crate) mod vec_map_readable_u64_values {
+        use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+        use crate::iota_framework::vec_map::{Entry, VecMap};
+
+        #[derive(Deserialize, Serialize)]
+        #[serde(rename = "VecMap")]
+        struct ReadableVecMap<K> {
+            contents: Vec<ReadableEntry<K>>,
+        }
+
+        #[derive(Deserialize, Serialize)]
+        #[serde(rename = "Entry")]
+        struct ReadableEntry<K> {
+            key: K,
+            #[serde(with = "iota_types::ReadableDisplay")]
+            value: u64,
+        }
+
+        pub(crate) fn serialize<K: Serialize, S: Serializer>(
+            map: &VecMap<K, u64>,
+            serializer: S,
+        ) -> Result<S::Ok, S::Error> {
+            let contents = map
+                .contents
+                .iter()
+                .map(|entry| ReadableEntry {
+                    key: &entry.key,
+                    value: entry.value,
+                })
+                .collect();
+            ReadableVecMap { contents }.serialize(serializer)
+        }
+
+        pub(crate) fn deserialize<'de, K: Deserialize<'de>, D: Deserializer<'de>>(
+            deserializer: D,
+        ) -> Result<VecMap<K, u64>, D::Error> {
+            let map = ReadableVecMap::<K>::deserialize(deserializer)?;
+            let contents = map
+                .contents
+                .into_iter()
+                .map(|entry| Entry::new(entry.key, entry.value))
+                .collect();
+            Ok(VecMap::new(contents))
+        }
+    }
+}
 
 // The shape machinery (this module, the `MoveShape` derives on every
 // mirror, and the comparator below) is native-only: the comparator reads
@@ -32,23 +87,18 @@ mod move_shape;
 #[cfg(all(test, feature = "serde", not(target_arch = "wasm32")))]
 mod move_shape_compare;
 
-/// A Rust type that knows the Move type tag it represents.
+/// A Rust type that knows its Move type tag.
 ///
-/// Generic mirrors like [`iota_framework::coin::CoinMetadata`] or
-/// [`stardust::basic_output::BasicOutput`] take a marker type (e.g.
-/// [`iota_framework::iota::IOTA`]) as their phantom type argument. Implementing
-/// this trait declares which on-chain type the marker represents, which
-/// lets the `try_from_object` constructors verify the object's type tag
-/// against `T`. The marker is phantom, so the BCS bytes of e.g. a
-/// `BasicOutput<IOTA>` and a `BasicOutput<OTHER>` are identical — the type
-/// tag is the only place the coin type is recorded, and without this check
-/// one would silently decode as the other.
+/// The type argument `T` of a generic mirror such as `Coin<T>` must implement
+/// this trait, so that `Coin<IOTA>` can check that an object really is a
+/// `0x2::coin::Coin<0x2::iota::IOTA>`.
 ///
-/// To decode objects holding your own coin type, define an empty marker
-/// struct and implement this trait for it. The `try_from_object`
-/// constructors also require `T: serde::de::DeserializeOwned` (an artifact
-/// of the serde derive on the generic mirrors — the phantom marker itself
-/// is never deserialized), so derive `Deserialize` as well:
+/// Markers like [`IOTA`](iota_framework::iota::IOTA) implement it by hand.
+/// Every `MoveObject` implements it automatically, so an object mirror can
+/// also be a type argument, as in `Display<Coin<IOTA>>`.
+///
+/// To use your own coin type, define an empty marker struct that derives
+/// `Deserialize` and implement this trait for it:
 ///
 /// ```
 /// #[derive(serde::Deserialize)]
@@ -64,10 +114,37 @@ mod move_shape_compare;
 /// For coin types only known at runtime, use the
 /// `try_from_object_with_type` constructors instead, which take the
 /// expected [`TypeTag`](iota_types::TypeTag) as a value.
-#[cfg(feature = "serde")]
 pub trait MoveType {
     /// The Move type tag this type represents (e.g. `0x2::iota::IOTA`).
     fn type_tag() -> iota_types::TypeTag;
+}
+
+/// An ordered list of [`MoveType`]s: `()`, a single type, or a tuple, such as
+/// the type arguments of a Move function call.
+pub trait MoveTypes {
+    /// Get the type tags.
+    fn type_tags() -> Vec<iota_types::TypeTag>;
+}
+
+/// A Rust mirror of a Move object that can be decoded from an
+/// [`Object`](iota_types::Object).
+///
+/// [`struct_tag`](Self::struct_tag) is the type of the objects it decodes,
+/// e.g. `0x2::coin::Coin<0x2::iota::IOTA>` for `Coin<IOTA>`. Every
+/// `MoveObject` is also a [`MoveType`] with that same tag.
+#[cfg(feature = "serde")]
+pub trait MoveObject:
+    Sized + for<'a> TryFrom<&'a iota_types::Object, Error = FromObjectError>
+{
+    /// The Move struct tag of the objects this type mirrors.
+    fn struct_tag() -> iota_types::StructTag;
+}
+
+#[cfg(feature = "serde")]
+impl<T: MoveObject> MoveType for T {
+    fn type_tag() -> iota_types::TypeTag {
+        iota_types::TypeTag::Struct(Box::new(T::struct_tag()))
+    }
 }
 
 /// Error returned when converting an `Object` into a typed mirror.
@@ -88,5 +165,154 @@ pub enum FromObjectError {
     WrongType,
     /// BCS decoding of the struct contents failed.
     #[error("bcs decoding failed: {0}")]
-    Bcs(#[from] bcs::Error),
+    Bcs(#[from] iota_types::BcsError),
+}
+
+/// Decode the BCS contents of `object`, provided it is a Move struct tagged
+/// exactly `expected`.
+#[cfg(feature = "serde")]
+fn decode_move_struct<T: serde::de::DeserializeOwned>(
+    object: &iota_types::Object,
+    expected: &iota_types::StructTag,
+) -> Result<T, FromObjectError> {
+    let move_struct = object
+        .as_opt_struct()
+        .ok_or(FromObjectError::NotAMoveStruct)?;
+    if move_struct.struct_tag() != expected {
+        return Err(FromObjectError::WrongType);
+    }
+    Ok(bcs::from_bytes(move_struct.contents()).map_err(iota_types::BcsError::new)?)
+}
+
+#[cfg(all(test, feature = "serde"))]
+mod tests {
+    use super::*;
+    use crate::{
+        iota_framework::{
+            bag::Bag,
+            balance::Supply,
+            coin::{Coin, CoinMetadata},
+            iota::IOTA,
+            kiosk_extension::Extension,
+            object::UID,
+        },
+        iota_system::{genesis::TokenAllocation, staking_pool::StakedIota},
+        move_stdlib::uq64_64::UQ64_64,
+    };
+
+    #[test]
+    fn non_generic_mirror_reports_its_move_type() {
+        assert_eq!(
+            StakedIota::struct_tag().to_string(),
+            "0x3::staking_pool::StakedIota"
+        );
+    }
+
+    #[test]
+    fn generic_mirror_composes_its_type_parameter() {
+        assert_eq!(
+            Coin::<IOTA>::struct_tag().to_string(),
+            "0x2::coin::Coin<0x2::iota::IOTA>"
+        );
+        assert_eq!(
+            CoinMetadata::<IOTA>::struct_tag().to_string(),
+            "0x2::coin::CoinMetadata<0x2::iota::IOTA>"
+        );
+    }
+
+    #[test]
+    fn type_tag_wraps_struct_tag() {
+        assert_eq!(
+            Coin::<IOTA>::type_tag(),
+            iota_types::TypeTag::Struct(Box::new(Coin::<IOTA>::struct_tag()))
+        );
+    }
+
+    #[test]
+    fn json_writes_u64_as_string() {
+        let supply = Supply::<()>::new(u64::MAX);
+        let json = serde_json::to_string(&supply).unwrap();
+        assert_eq!(json, r#"{"value":"18446744073709551615"}"#);
+        assert_eq!(serde_json::from_str::<Supply<()>>(&json).unwrap(), supply);
+    }
+
+    #[test]
+    fn json_rejects_u64_as_number() {
+        assert!(serde_json::from_str::<Supply<()>>(r#"{"value":1}"#).is_err());
+    }
+
+    #[test]
+    fn json_writes_u128_as_string() {
+        let value = UQ64_64::new(u128::MAX);
+        let json = serde_json::to_string(&value).unwrap();
+        assert_eq!(json, r#""340282366920938463463374607431768211455""#);
+        assert_eq!(serde_json::from_str::<UQ64_64>(&json).unwrap(), value);
+    }
+
+    fn allocation(expiration: Option<u64>) -> TokenAllocation {
+        TokenAllocation {
+            recipient_address: iota_types::Address::ZERO,
+            amount_nanos: 1,
+            staked_with_validator: None,
+            staked_with_timelock_expiration: expiration,
+        }
+    }
+
+    #[test]
+    fn json_writes_option_u64_as_string_or_null() {
+        let some = serde_json::to_value(allocation(Some(u64::MAX))).unwrap();
+        assert_eq!(
+            some["staked_with_timelock_expiration"],
+            serde_json::json!("18446744073709551615")
+        );
+        let none = serde_json::to_value(allocation(None)).unwrap();
+        assert_eq!(
+            none["staked_with_timelock_expiration"],
+            serde_json::Value::Null
+        );
+        assert_eq!(
+            serde_json::from_value::<TokenAllocation>(some).unwrap(),
+            allocation(Some(u64::MAX))
+        );
+        assert_eq!(
+            serde_json::from_value::<TokenAllocation>(none).unwrap(),
+            allocation(None)
+        );
+    }
+
+    #[test]
+    fn json_reads_missing_option_u64_as_none() {
+        let mut json = serde_json::to_value(allocation(None)).unwrap();
+        json.as_object_mut()
+            .unwrap()
+            .remove("staked_with_timelock_expiration");
+        assert_eq!(
+            serde_json::from_value::<TokenAllocation>(json).unwrap(),
+            allocation(None)
+        );
+    }
+
+    #[test]
+    fn kiosk_extension_permissions_serialize_as_string_in_json() {
+        let extension = Extension {
+            storage: Bag::new(UID::new(iota_types::ObjectId::ZERO), 0),
+            permissions: u128::MAX,
+            is_enabled: true,
+        };
+        let json = serde_json::to_value(&extension).unwrap();
+        assert_eq!(
+            json["permissions"],
+            serde_json::json!("340282366920938463463374607431768211455")
+        );
+        assert_eq!(
+            serde_json::from_value::<Extension>(json).unwrap(),
+            extension
+        );
+    }
+
+    #[test]
+    fn bcs_keeps_u64_as_bytes() {
+        let bytes = bcs::to_bytes(&Supply::<()>::new(1)).unwrap();
+        assert_eq!(bytes, 1u64.to_le_bytes());
+    }
 }

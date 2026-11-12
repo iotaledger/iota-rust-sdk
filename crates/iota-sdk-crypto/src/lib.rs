@@ -2,10 +2,47 @@
 // Modifications Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+#![doc = include_str!("../README.md")]
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
 use iota_types::{PersonalMessage, Transaction, UserSignature};
-pub use signature::{Error as SignatureError, Signer, Verifier};
+
+/// Error returned when signing or verifying fails, or when a key cannot be
+/// decoded. Its `Display` output states the reason.
+#[derive(Debug, thiserror::Error)]
+#[error(transparent)]
+pub struct SignatureError(Box<dyn std::error::Error + Send + Sync + 'static>);
+
+impl SignatureError {
+    /// Create an error from a message or from an underlying error.
+    pub fn from_source(
+        source: impl Into<Box<dyn std::error::Error + Send + Sync + 'static>>,
+    ) -> Self {
+        Self(source.into())
+    }
+}
+
+/// Sign a message, producing a signature of type `S`.
+pub trait Signer<S> {
+    /// Sign `msg`, returning an error if signing fails.
+    fn try_sign(&self, msg: &[u8]) -> Result<S, SignatureError>;
+
+    /// Sign `msg`.
+    ///
+    /// # Panics
+    ///
+    /// Panics if signing fails; use [`Signer::try_sign`] to handle the error.
+    fn sign(&self, msg: &[u8]) -> S {
+        self.try_sign(msg)
+            .unwrap_or_else(|e| panic!("signature operation failed: {e}"))
+    }
+}
+
+/// Verify a signature of type `S` over a message.
+pub trait Verifier<S> {
+    /// Verify that `signature` is a valid signature over `message`.
+    fn verify(&self, message: &[u8], signature: &S) -> Result<(), SignatureError>;
+}
 
 /// Error type for private key encoding/decoding operations
 #[derive(Debug, thiserror::Error)]
@@ -14,9 +51,20 @@ pub enum PrivateKeyError {
     /// Empty input data
     #[error("empty data: {0}")]
     EmptyData(String),
-    /// Invalid signature scheme
-    #[error("invalid signature scheme: {0}")]
-    InvalidScheme(String),
+    /// Invalid signature scheme flag or name
+    #[error(transparent)]
+    InvalidScheme(#[from] iota_types::SignatureSchemeError),
+    /// The signature scheme flag does not match the key type
+    #[error("expected signature scheme {expected:?}, got {actual:?}")]
+    SchemeMismatch {
+        /// The signature scheme of the key type
+        expected: iota_types::SignatureScheme,
+        /// The signature scheme flag found in the input
+        actual: iota_types::SignatureScheme,
+    },
+    /// Invalid private key bytes
+    #[error(transparent)]
+    InvalidKey(#[from] SignatureError),
     /// Base64 encoding/decoding error
     #[error("base64 error: {0}")]
     Base64(String),
@@ -26,63 +74,53 @@ pub enum PrivateKeyError {
     /// HRP (Human Readable Part) error
     #[error("bech32 HRP error: {0}")]
     Bech32Hrp(String),
+    /// BIP-32 derivation path or key derivation error
     #[cfg(feature = "mnemonic")]
     #[error("mnemonic error: {0}")]
-    Bip32(#[from] bip32::Error),
+    Bip32(String),
+    /// BIP-39 mnemonic phrase error
     #[cfg(feature = "mnemonic")]
     #[error("mnemonic error: {0}")]
-    Bip39(#[from] bip39::Error),
+    Bip39(String),
 }
 
 #[cfg(feature = "bls12381")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "bls12381")))]
 pub mod bls12381;
 
 #[cfg(feature = "bls12381")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "bls12381")))]
 pub mod validator;
 
 #[cfg(feature = "ed25519")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "ed25519")))]
 pub mod ed25519;
 
 #[cfg(feature = "mnemonic")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "mnemonic")))]
 pub mod mnemonic;
 
 #[cfg(feature = "secp256k1")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "secp256k1")))]
 pub mod secp256k1;
 
 #[cfg(feature = "secp256r1")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "secp256r1")))]
 pub mod secp256r1;
 
 #[cfg(feature = "passkey")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "passkey")))]
 pub mod passkey;
 
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
-#[cfg_attr(
-    doc_cfg,
-    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
-)]
 pub mod simple;
 
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
-#[cfg_attr(
-    doc_cfg,
-    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
-)]
 pub mod multisig;
 
+mod derivation_path;
+
+pub use derivation_path::{DerivationPath, DerivationPathError};
+pub use iota_types;
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
-#[cfg_attr(
-    doc_cfg,
-    doc(cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",)))
-)]
 #[doc(inline)]
 pub use multisig::UserSignatureVerifier;
+#[cfg(feature = "rand")]
+#[cfg_attr(doc_cfg, doc(cfg(feature = "rand")))]
+pub use rand_core;
 
 /// Interface for signing user transactions and messages in IOTA
 ///
@@ -170,7 +208,6 @@ pub(crate) use impl_iota_verifier;
 
 /// Bech32 prefix for IOTA private keys
 #[cfg(feature = "bech32")]
-#[cfg_attr(doc_cfg, doc(cfg(feature = "bech32")))]
 pub const IOTA_PRIV_KEY_PREFIX: &str = "iotaprivkey";
 
 #[cfg(feature = "mnemonic")]
@@ -243,14 +280,13 @@ where
             return Err(PrivateKeyError::EmptyData("flagged bytes".to_string()));
         }
 
-        let flag = iota_types::SignatureScheme::from_byte(bytes[0])
-            .map_err(|e| PrivateKeyError::InvalidScheme(format!("{e:?}")))?;
+        let flag = iota_types::SignatureScheme::from_byte(bytes[0])?;
 
         if flag != Self::SCHEME {
-            return Err(PrivateKeyError::InvalidScheme(format!(
-                "expected {:?}, got {flag:?}",
-                Self::SCHEME
-            )));
+            return Err(PrivateKeyError::SchemeMismatch {
+                expected: Self::SCHEME,
+                actual: flag,
+            });
         }
 
         let key_bytes = &bytes[1..];
@@ -266,15 +302,6 @@ where
     feature = "secp256r1",
     feature = "secp256k1",
 ))]
-#[cfg_attr(
-    doc_cfg,
-    doc(cfg(any(
-        feature = "bls12381",
-        feature = "ed25519",
-        feature = "secp256r1",
-        feature = "secp256k1",
-    )))
-)]
 pub trait ToFromBase64 {
     type Error;
 
@@ -395,6 +422,9 @@ pub trait FromMnemonic {
     /// - Ed25519: `"m/44'/4218'/0'/0'/0'"`
     /// - Secp256k1: `"m/54'/4218'/0'/0/0"`
     /// - Secp256r1: `"m/74'/4218'/0'/0/0"`
+    ///
+    /// Ed25519 keys can only be derived along hardened indices, so an Ed25519
+    /// path with an unhardened index is an error.
     fn from_mnemonic_with_path(
         phrase: &str,
         path: String,
@@ -402,6 +432,18 @@ pub trait FromMnemonic {
     ) -> Result<Self, Self::Error>
     where
         Self: Sized;
+
+    /// Create an instance from a mnemonic phrase and a parsed derivation path.
+    fn from_mnemonic_with_derivation_path(
+        phrase: &str,
+        path: &DerivationPath,
+        password: impl Into<Option<String>>,
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized,
+    {
+        Self::from_mnemonic_with_path(phrase, path.to_string(), password)
+    }
 }
 
 #[cfg(test)]
@@ -435,6 +477,36 @@ mod tests {
             assert_eq!(key.to_bech32().unwrap(), bech32);
             assert_eq!(key.public_key().derive_address().to_string(), address);
         }
+    }
+
+    #[cfg(all(feature = "mnemonic", feature = "ed25519"))]
+    #[test]
+    fn ed25519_mnemonic_path_with_an_unhardened_index_is_rejected() {
+        use super::*;
+        use crate::ed25519::Ed25519PrivateKey;
+
+        const MNEMONIC: &str = "film crazy soon outside stand loop subway crumble thrive popular green nuclear struggle pistol arm wife phrase warfare march wheat nephew ask sunny firm";
+
+        for path in [
+            "m/44'/4218'/0'/0/0",
+            "m/44'/4218'/0'/0'/0",
+            "m/44/4218'/0'/0'/0'",
+        ] {
+            let result =
+                Ed25519PrivateKey::from_mnemonic_with_path(MNEMONIC, path.to_owned(), None);
+            assert!(
+                matches!(result, Err(PrivateKeyError::Bip32(_))),
+                "path {path}"
+            );
+        }
+        assert!(
+            Ed25519PrivateKey::from_mnemonic_with_path(
+                MNEMONIC,
+                "m/44'/4218'/0'/0'/0'".to_owned(),
+                None
+            )
+            .is_ok()
+        );
     }
 
     #[cfg(all(feature = "mnemonic", feature = "secp256k1", feature = "bech32"))]
@@ -497,5 +569,47 @@ mod tests {
             assert_eq!(key.to_bech32().unwrap(), bech32);
             assert_eq!(key.public_key().derive_address().to_string(), address);
         }
+    }
+
+    #[cfg(all(
+        feature = "mnemonic",
+        feature = "ed25519",
+        feature = "secp256k1",
+        feature = "secp256r1",
+        feature = "bech32"
+    ))]
+    #[test]
+    fn test_mnemonics_with_derivation_path() {
+        use super::*;
+        use crate::{
+            ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey,
+            secp256r1::Secp256r1PrivateKey,
+        };
+
+        const MNEMONIC: &str = "film crazy soon outside stand loop subway crumble thrive popular green nuclear struggle pistol arm wife phrase warfare march wheat nephew ask sunny firm";
+
+        let path = "m/44'/4218'/1'/0'/2'".parse().unwrap();
+        let key =
+            Ed25519PrivateKey::from_mnemonic_with_derivation_path(MNEMONIC, &path, None).unwrap();
+        assert_eq!(
+            key.to_bech32().unwrap(),
+            "iotaprivkey1qzjy8v3qng6axv7hz8px5ck8u63e6ws4a727h096la7nemtjysy2yrjptnc"
+        );
+
+        let path = "m/54'/4218'/1'/0/2".parse().unwrap();
+        let key =
+            Secp256k1PrivateKey::from_mnemonic_with_derivation_path(MNEMONIC, &path, None).unwrap();
+        assert_eq!(
+            key.to_bech32().unwrap(),
+            "iotaprivkey1q8rygpxx4jh4dj9qfjtk33zrkxx30yn2kfun739de4sg42vgtftxzyprlu8"
+        );
+
+        let path = "m/74'/4218'/1'/0/2".parse().unwrap();
+        let key =
+            Secp256r1PrivateKey::from_mnemonic_with_derivation_path(MNEMONIC, &path, None).unwrap();
+        assert_eq!(
+            key.to_bech32().unwrap(),
+            "iotaprivkey1qgeth8hmds9p0up5lnpvr5m0pxamaynu2ha35vljee36t4ya3gc8wzd9rmk"
+        );
     }
 }

@@ -1,3 +1,52 @@
+## [3.0.0-rc.1] - 2026-10-09
+
+### 🚀 Features
+
+- *(grpc)* View_function_call (#1291)
+- Add the gRPC client to the FFI bindings (#1477)
+- [**breaking**] Hold at most one complex transaction filter (#1461)
+- Add gRPC transaction execution and simulation to the FFI bindings (#1498)
+- Add gRPC checkpoint reads, streams and filters to the FFI bindings (#1511)
+- Add gRPC view function calls to the FFI bindings (#1517)
+- Add typed move_objects queries for GraphQL and gRPC (#1439)
+- *(graphql-client)* [**breaking**] Append Move view call arguments and take the function by package, module and name (#1353)
+
+### 🐛 Bug Fixes
+
+- *(graphql)* Don't drop GraphQL errors (#1546)
+- *(iota-sdk)* [**breaking**] Route rand, ed25519 and move-types serde through the umbrella features (#1596)
+- *(graphql-client)* [**breaking**] Return a GraphQLResult from the network constructors (#1638)
+
+### 🚜 Refactor
+
+- Align gRPC client method naming with the GraphQL client (#1408)
+- *(types)* [**breaking**] Reduce the public surface of iota-sdk-types (#1473)
+- [**breaking**] Rename `Client` to `GrpcClient` and `GraphQLClient` (#1503)
+- Give the GraphQL client a specific error name (#1482)
+- *(txn-builder)* [**breaking**] Make gas sponsorship a capability the caller passes in (#1504)
+- *(grpc-client)* [**breaking**] Move the list queries' optional inputs to setters (#1554)
+- *(grpc-client)* [**breaking**] Move the read masks and `skip_checks` to setters (#1555)
+- *(grpc-client)* [**breaking**] Move the optional inputs of checkpoints, execution, epoch and health to setters (#1556)
+- *(grpc-client)* [**breaking**] Move the checkpoint streams' inputs to setters (#1557)
+- [**breaking**] Remove dead and inconsistent public API before 1.0 (#1574)
+- *(graphql-client)* [**breaking**] Return query objects from the paginated methods (#1569)
+- *(graphql-client)* [**breaking**] Return query objects from the methods with optional inputs (#1575)
+- *(graphql)* [**breaking**] Make query types private and export unnameable trait bounds (#1573)
+- *(graphql-client)* [**breaking**] Stream from the list queries and turn the subscriptions into builders (#1576)
+- *(graphql)* [**breaking**] Subscription filters to enum-based API (#1644)
+- *(graphql-client)* [**breaking**] Take SDK types instead of strings (#1654)
+- *(graphql-client)* [**breaking**] Take plain values in the filter builders (#1656)
+
+### ⚙️ Miscellaneous Tasks
+
+- Run the flaky examples against localnet (#1471)
+- Rename gRPC examples to use a grpc_ prefix (#1487)
+- *(docs)* Point localnet instructions at iota-localnet (#1509)
+- *(iota-sdk)* [**breaking**] Rename `txn-builder` feature to `transaction-builder` (#1515)
+- [**breaking**] Update dependencies (#1346)
+- Add docs.rs metadata to the crates missing it (#1595)
+- *(iota-sdk)* Add a README and use it as the crate docs (#1603)
+
 ## [3.0.0-beta.1] - 2026-08-31
 
 ### 🚀 Features

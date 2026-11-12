@@ -38,7 +38,9 @@ message ExecuteTransactionItem {
 message ExecuteTransactionsRequest {
   option (iota.grpc.message_accessors) = "with";
 
-  // List of transactions to execute. Transactions are executed sequentially in order.
+  // List of transactions to execute. Transactions are executed concurrently, so their relative
+  // execution order is not guaranteed. Send transactions that must run in a given order (for
+  // example, ones that use the same shared object) in separate requests.
   // For a single transaction, provide a list with one item.
   repeated ExecuteTransactionItem transactions = 1;
 
@@ -94,7 +96,8 @@ message SimulateTransactionItem {
 message SimulateTransactionsRequest {
   option (iota.grpc.message_accessors) = "with";
 
-  // List of transactions to simulate. Transactions are simulated sequentially in order.
+  // List of transactions to simulate. Each transaction is simulated independently against the
+  // current state, so it does not see the effects of other transactions in the list.
   // For a single transaction, provide a list with one item.
   repeated SimulateTransactionItem transactions = 1;
 

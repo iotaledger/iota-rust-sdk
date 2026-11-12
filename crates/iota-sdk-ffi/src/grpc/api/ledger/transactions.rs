@@ -8,13 +8,15 @@ use std::sync::Arc;
 use iota_sdk::{
     grpc_client::read_mask_fields::TransactionReadMask,
     grpc_types::{proto::proto_to_timestamp_ms, v1 as proto},
+    transaction_builder::TransactionBuilderExecutionClient,
 };
 
 use crate::{
     error::{Result, SdkFfiError},
-    grpc::client::GrpcClient,
+    grpc::{client::GrpcClient, read_mask_fields::GrpcTransactionField},
+    transaction_builder::WaitForTransaction,
     types::{
-        digest::{Digest, TransactionDigest},
+        digest::{TransactionDigest, TransactionEffectsDigest, TransactionEventsDigest},
         events::TransactionEvents,
         object::Object,
         signature::UserSignature,
@@ -26,23 +28,25 @@ use crate::{
 /// events and objects.
 ///
 /// The `transaction`, `effects`, `events`, and input/output object fields are
-/// deserialized from BCS, so the read mask must include the corresponding
-/// `bcs` sub-fields for them to be populated; digest-only read masks populate
-/// only the digest fields.
-#[derive(uniffi::Record)]
-pub struct ExecutedTransaction {
+/// deserialized from BCS, so the read mask must include the matching
+/// `GrpcTransactionField` (`TransactionBcs`, `EffectsBcs`, `EventsEventsBcs`,
+/// `InputObjectsBcs`, `OutputObjectsBcs`), or its `GrpcCheckpointResponseField`
+/// / `GrpcSimulateField` counterpart, for them to be populated; digest-only
+/// read masks populate only the digest fields.
+#[derive(Clone, uniffi::Record)]
+pub struct GrpcExecutedTransaction {
     /// The digest of the transaction.
-    pub digest: Option<Arc<Digest>>,
+    pub digest: Option<Arc<TransactionDigest>>,
     /// The transaction itself.
     pub transaction: Option<Arc<Transaction>>,
     /// The user signatures that authorized the execution of the transaction.
     pub signatures: Option<Vec<Arc<UserSignature>>>,
     /// The digest of the transaction effects.
-    pub effects_digest: Option<Arc<Digest>>,
+    pub effects_digest: Option<Arc<TransactionEffectsDigest>>,
     /// The effects of the transaction.
     pub effects: Option<Arc<TransactionEffects>>,
     /// The digest of the transaction events.
-    pub events_digest: Option<Arc<Digest>>,
+    pub events_digest: Option<Arc<TransactionEventsDigest>>,
     /// The events emitted by the transaction, if any.
     pub events: Option<Arc<TransactionEvents>>,
     /// The sequence number of the checkpoint that includes the transaction.
@@ -56,7 +60,13 @@ pub struct ExecutedTransaction {
     pub output_objects: Option<Vec<Arc<Object>>>,
 }
 
-impl TryFrom<&proto::transaction::ExecutedTransaction> for ExecutedTransaction {
+crate::grpc_batch_results! {
+    /// The results of a batch of transactions, in request order. Each item is
+    /// either the transaction or the error the server reported for it.
+    GrpcExecutedTransactionResults(GrpcExecutedTransaction, proto::transaction::ExecutedTransaction)
+}
+
+impl TryFrom<&proto::transaction::ExecutedTransaction> for GrpcExecutedTransaction {
     type Error = SdkFfiError;
 
     fn try_from(value: &proto::transaction::ExecutedTransaction) -> Result<Self> {
@@ -65,7 +75,7 @@ impl TryFrom<&proto::transaction::ExecutedTransaction> for ExecutedTransaction {
                 .transaction
                 .as_ref()
                 .and_then(|transaction| transaction.digest.as_ref())
-                .map(iota_sdk::types::Digest::try_from)
+                .map(iota_sdk::types::TransactionDigest::try_from)
                 .transpose()?
                 .map(Into::into)
                 .map(Arc::new),
@@ -93,7 +103,7 @@ impl TryFrom<&proto::transaction::ExecutedTransaction> for ExecutedTransaction {
                 .effects
                 .as_ref()
                 .and_then(|effects| effects.digest.as_ref())
-                .map(iota_sdk::types::Digest::try_from)
+                .map(iota_sdk::types::TransactionEffectsDigest::try_from)
                 .transpose()?
                 .map(Into::into)
                 .map(Arc::new),
@@ -109,7 +119,7 @@ impl TryFrom<&proto::transaction::ExecutedTransaction> for ExecutedTransaction {
                 .events
                 .as_ref()
                 .and_then(|events| events.digest.as_ref())
-                .map(iota_sdk::types::Digest::try_from)
+                .map(iota_sdk::types::TransactionEventsDigest::try_from)
                 .transpose()?
                 .map(Into::into)
                 .map(Arc::new),
@@ -150,9 +160,11 @@ impl TryFrom<&proto::transaction::ExecutedTransaction> for ExecutedTransaction {
 impl GrpcClient {
     /// Get transactions by their digests.
     ///
-    /// Results are returned in the same order as the input digests.
-    /// If any transaction cannot be read — because it is not found or has been
-    /// pruned by the serving node — the whole call fails.
+    /// Results are returned in the same order as the input digests, one per
+    /// digest. A transaction the serving node cannot return — because it is
+    /// not found or has been pruned — fails only its own item, which reading
+    /// throws with the server's error message. A transaction the server returns
+    /// but that cannot be decoded fails the whole call.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the transaction, signatures, checkpoint, and timestamp are
@@ -161,18 +173,114 @@ impl GrpcClient {
     pub async fn transactions(
         &self,
         digests: Vec<Arc<TransactionDigest>>,
-        read_mask: Option<Vec<String>>,
-    ) -> Result<Vec<ExecutedTransaction>> {
+        read_mask: Option<Vec<GrpcTransactionField>>,
+    ) -> Result<GrpcExecutedTransactionResults> {
         let digests = digests.iter().map(|digest| ***digest).collect::<Vec<_>>();
-        self.client()
-            .transactions(
-                digests,
-                crate::grpc::api::read_mask::<TransactionReadMask>(&read_mask),
-            )
-            .await?
-            .into_inner()
-            .into_iter()
-            .map(|transaction| ExecutedTransaction::try_from(&transaction?))
-            .collect()
+        GrpcExecutedTransactionResults::new(
+            self.client()
+                .transactions(digests)
+                .read_mask(crate::grpc::api::read_mask::<TransactionReadMask, _>(
+                    read_mask,
+                ))
+                .await?
+                .into_inner(),
+        )
+    }
+
+    /// Wait for the indexing (on the node) or finalization of a transaction by
+    /// its digest, polling the node until then. Returns an error after 60s.
+    pub async fn wait_for_transaction(
+        &self,
+        digest: &TransactionDigest,
+        wait_for: WaitForTransaction,
+    ) -> Result<()> {
+        Ok(TransactionBuilderExecutionClient::wait_for_transaction(
+            &self.client(),
+            **digest,
+            wait_for.into(),
+        )
+        .await?)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use iota_sdk::{
+        grpc_client::GrpcError,
+        grpc_types::v1 as proto,
+        types::{TransactionDigest, TransactionEffectsDigest, TransactionEventsDigest},
+    };
+
+    use super::{GrpcExecutedTransaction, GrpcExecutedTransactionResults};
+
+    #[test]
+    fn digest_only_mask_populates_the_typed_digests() {
+        let transaction_digest = TransactionDigest::from([1; 32]);
+        let effects_digest = TransactionEffectsDigest::from([2; 32]);
+        let events_digest = TransactionEventsDigest::from([3; 32]);
+
+        let mut transaction = proto::transaction::Transaction::default();
+        transaction.digest = Some(transaction_digest.into());
+        let mut effects = proto::transaction::TransactionEffects::default();
+        effects.digest = Some(effects_digest.into());
+        let mut events = proto::transaction::TransactionEvents::default();
+        events.digest = Some(events_digest.into());
+
+        let mut value = proto::transaction::ExecutedTransaction::default();
+        value.transaction = Some(transaction);
+        value.effects = Some(effects);
+        value.events = Some(events);
+
+        let converted = GrpcExecutedTransaction::try_from(&value).unwrap();
+
+        assert_eq!(converted.digest.unwrap().0, transaction_digest);
+        assert_eq!(converted.effects_digest.unwrap().0, effects_digest);
+        assert_eq!(converted.events_digest.unwrap().0, events_digest);
+        assert!(converted.transaction.is_none());
+        assert!(converted.effects.is_none());
+        assert!(converted.events.is_none());
+    }
+
+    #[test]
+    fn item_error_fails_only_its_own_item() {
+        let results = GrpcExecutedTransactionResults::new(vec![
+            Err(GrpcError::EmptyRequest),
+            Ok(proto::transaction::ExecutedTransaction::default()),
+        ])
+        .unwrap();
+
+        assert_eq!(results.len(), 2);
+        assert!(results.get(0).is_err());
+        assert!(results.get(1).is_ok());
+        assert!(results.get(2).is_err());
+    }
+
+    #[test]
+    fn next_moves_past_errors_and_stops_at_the_end() {
+        let results = GrpcExecutedTransactionResults::new(vec![
+            Err(GrpcError::EmptyRequest),
+            Ok(proto::transaction::ExecutedTransaction::default()),
+        ])
+        .unwrap();
+
+        assert!(results.has_next());
+        assert!(results.next().is_err());
+        assert!(results.has_next());
+        assert!(results.next().is_ok());
+        assert!(!results.has_next());
+        assert!(results.next().is_err());
+        assert!(!results.has_next());
+        assert!(results.get(1).is_ok());
+    }
+
+    #[test]
+    fn undecodable_item_is_an_error() {
+        let mut transaction = proto::transaction::Transaction::default();
+        transaction.bcs = Some(proto::bcs::BcsData::from(vec![0xff, 0xff]));
+
+        let mut value = proto::transaction::ExecutedTransaction::default();
+        value.transaction = Some(transaction);
+
+        assert!(GrpcExecutedTransactionResults::new(vec![Ok(value)]).is_err());
     }
 }

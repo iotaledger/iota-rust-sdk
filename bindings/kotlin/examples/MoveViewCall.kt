@@ -22,10 +22,11 @@ fun main() = runBlocking {
         println("=== Example 1: moveViewCall() with typed arguments (primitives) ===")
         println()
 
+        val packageId = ObjectId.fromHex(VIEW_DEMO_PACKAGE)
         val priceArgs = listOf(MoveViewArg.u64(100uL), MoveViewArg.u64(25uL))
 
         val priceResult =
-            client.moveViewCall("$VIEW_DEMO_PACKAGE::shop::discounted_price", null, priceArgs)
+            client.moveViewCall(packageId, "shop", "discounted_price", null, priceArgs)
 
         if (priceResult.error != null) {
             println("Error: ${priceResult.error}")
@@ -45,7 +46,9 @@ fun main() = runBlocking {
         // `u64` is passed as a string so large values survive JSON.
         val priceJsonResult =
             client.moveViewCallJson(
-                "$VIEW_DEMO_PACKAGE::shop::discounted_price",
+                packageId,
+                "shop",
+                "discounted_price",
                 null,
                 listOf("\"100\"", "\"25\""),
             )
@@ -69,7 +72,7 @@ fun main() = runBlocking {
 
         val shopArgs = listOf(MoveViewArg.objectId(objectId), MoveViewArg.u64(1uL))
 
-        val shopResult = client.moveViewCall("$VIEW_DEMO_PACKAGE::shop::sale_at", null, shopArgs)
+        val shopResult = client.moveViewCall(packageId, "shop", "sale_at", null, shopArgs)
 
         if (shopResult.error != null) {
             println("Shop Error: ${shopResult.error}")
@@ -88,7 +91,9 @@ fun main() = runBlocking {
 
         val shopJsonResult =
             client.moveViewCallJson(
-                "$VIEW_DEMO_PACKAGE::shop::sale_at",
+                packageId,
+                "shop",
+                "sale_at",
                 null,
                 listOf("\"$VIEW_DEMO_SHOP\"", "\"1\""),
             )

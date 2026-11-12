@@ -1,9 +1,13 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::sync::{PoisonError, RwLock};
+use std::sync::{Arc, PoisonError, RwLock};
 
-use crate::error::Result;
+use crate::{
+    error::Result,
+    transaction_builder::{builder::TransactionBuilder, client_builder::GrpcTransactionBuilder},
+    types::address::Address,
+};
 
 /// The tokio runtime that backs the gRPC channels.
 ///
@@ -25,11 +29,11 @@ fn tokio_runtime() -> &'static tokio::runtime::Runtime {
 
 /// The gRPC client for interacting with the IOTA blockchain.
 #[derive(uniffi::Object)]
-pub struct GrpcClient(RwLock<iota_sdk::grpc_client::Client>);
+pub struct GrpcClient(RwLock<iota_sdk::grpc_client::GrpcClient>);
 
 impl GrpcClient {
     /// A handle on the current client configuration.
-    pub(crate) fn client(&self) -> iota_sdk::grpc_client::Client {
+    pub(crate) fn client(&self) -> iota_sdk::grpc_client::GrpcClient {
         self.0
             .read()
             .unwrap_or_else(PoisonError::into_inner)
@@ -38,7 +42,7 @@ impl GrpcClient {
 
     fn update(
         &self,
-        f: impl FnOnce(iota_sdk::grpc_client::Client) -> iota_sdk::grpc_client::Client,
+        f: impl FnOnce(iota_sdk::grpc_client::GrpcClient) -> iota_sdk::grpc_client::GrpcClient,
     ) {
         let mut client = self.0.write().unwrap_or_else(PoisonError::into_inner);
         *client = f(client.clone());
@@ -51,7 +55,7 @@ impl GrpcClient {
     #[uniffi::constructor]
     pub fn new(uri: String) -> Result<Self> {
         let _guard = tokio_runtime().enter();
-        Ok(Self(RwLock::new(iota_sdk::grpc_client::Client::new(
+        Ok(Self(RwLock::new(iota_sdk::grpc_client::GrpcClient::new(
             uri.as_str(),
         )?)))
     }
@@ -61,7 +65,7 @@ impl GrpcClient {
     pub fn new_mainnet() -> Result<Self> {
         let _guard = tokio_runtime().enter();
         Ok(Self(RwLock::new(
-            iota_sdk::grpc_client::Client::new_mainnet()?,
+            iota_sdk::grpc_client::GrpcClient::new_mainnet()?,
         )))
     }
 
@@ -70,7 +74,7 @@ impl GrpcClient {
     pub fn new_testnet() -> Result<Self> {
         let _guard = tokio_runtime().enter();
         Ok(Self(RwLock::new(
-            iota_sdk::grpc_client::Client::new_testnet()?,
+            iota_sdk::grpc_client::GrpcClient::new_testnet()?,
         )))
     }
 
@@ -79,7 +83,7 @@ impl GrpcClient {
     pub fn new_devnet() -> Result<Self> {
         let _guard = tokio_runtime().enter();
         Ok(Self(RwLock::new(
-            iota_sdk::grpc_client::Client::new_devnet()?,
+            iota_sdk::grpc_client::GrpcClient::new_devnet()?,
         )))
     }
 
@@ -89,7 +93,7 @@ impl GrpcClient {
     pub fn new_localnet() -> Result<Self> {
         let _guard = tokio_runtime().enter();
         Ok(Self(RwLock::new(
-            iota_sdk::grpc_client::Client::new_localnet()?,
+            iota_sdk::grpc_client::GrpcClient::new_localnet()?,
         )))
     }
 
@@ -117,5 +121,11 @@ impl GrpcClient {
         self.update(|client| {
             client.with_max_decoding_message_size(usize::try_from(limit).unwrap_or(usize::MAX))
         });
+    }
+
+    /// Create a new transaction builder with the given sender address, backed
+    /// by this client.
+    pub fn transaction_builder(self: Arc<Self>, sender: &Address) -> GrpcTransactionBuilder {
+        TransactionBuilder::new(sender).with_grpc_client(self)
     }
 }

@@ -1,13 +1,15 @@
 import com.ncorti.ktfmt.gradle.tasks.*
 import java.util.Base64
 import org.gradle.api.tasks.bundling.Jar
+import org.jetbrains.dokka.gradle.formats.DokkaFormatPlugin
+import org.jetbrains.dokka.gradle.internal.InternalDokkaGradlePluginApi
 
 plugins {
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.serialization") version "2.2.21"
-    id("com.ncorti.ktfmt.gradle") version "0.25.0"
-    id("com.vanniktech.maven.publish") version "0.30.0"
-    id("org.jetbrains.dokka") version "1.9.20"
+    kotlin("jvm") version "2.4.10"
+    kotlin("plugin.serialization") version "2.4.10"
+    id("com.ncorti.ktfmt.gradle") version "0.27.0"
+    id("com.vanniktech.maven.publish") version "0.37.0"
+    id("org.jetbrains.dokka") version "2.2.0"
     application
     signing
 }
@@ -19,9 +21,9 @@ version = "1.0.0-beta.1"
 repositories { mavenCentral() }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-    implementation("net.java.dev.jna:jna:5.13.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
+    implementation("net.java.dev.jna:jna:5.19.1")
 }
 
 kotlin { jvmToolchain(21) }
@@ -66,11 +68,26 @@ tasks.register<JavaExec>("example") {
     )
 }
 
+// Dokka only ships HTML and Javadoc publications; GFM, which the reference
+// docs are built from, has to be registered as a format plugin. The format
+// cannot be called "gfm": Dokka keeps that name for its removed v1 tasks.
+@OptIn(InternalDokkaGradlePluginApi::class)
+abstract class DokkaMarkdownPlugin : DokkaFormatPlugin(formatName = "markdown") {
+    override fun DokkaFormatPlugin.DokkaFormatPluginContext.configure() {
+        project.dependencies {
+            dokkaPlugin(dokka("gfm-plugin"))
+            formatDependencies.dokkaPublicationPluginClasspathApiOnly.dependencies.addLater(
+                dokka("gfm-template-processing-plugin")
+            )
+        }
+    }
+}
+
+apply<DokkaMarkdownPlugin>()
+
 // API reference generation (scripts/reference-docs/generate.sh): document
 // only the generated bindings under lib/, not the examples.
-tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
-    dokkaSourceSets { named("main") { sourceRoots.setFrom(file("lib")) } }
-}
+dokka { dokkaSourceSets.named("main") { sourceRoots.setFrom(file("lib")) } }
 
 // lib/ is both a Kotlin source dir and a resources dir, so the sources jar
 // would see the native library twice; it does not belong in a sources
@@ -87,6 +104,7 @@ sourceSets {
         kotlin {
             srcDirs("lib", "examples")
             exclude("android-demo/**")
+            exclude("release/**")
         }
         resources {
             srcDir("lib")
@@ -133,16 +151,17 @@ tasks.register("compileWithErrors") {
 }
 
 mavenPublishing {
-    publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
     signAllPublications()
 
     // Keep the javadoc jar empty: with the Dokka plugin applied the default
-    // would switch to building it from dokkaHtml, putting Dokka analysis on
-    // the release path (Dokka is only used for the Reference Docs workflow).
+    // would switch to building it from the Dokka HTML publication, putting
+    // Dokka analysis on the release path (Dokka is only used for the
+    // Reference Docs workflow).
     configure(
         com.vanniktech.maven.publish.KotlinJvm(
             javadocJar = com.vanniktech.maven.publish.JavadocJar.Empty(),
-            sourcesJar = true,
+            sourcesJar = com.vanniktech.maven.publish.SourcesJar.Sources(),
         )
     )
 

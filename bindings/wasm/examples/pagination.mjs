@@ -3,10 +3,10 @@
 
 import {
   Address,
-  Direction,
+  GraphQlDirection,
   GraphQlClient,
-  ObjectFilter,
-  PaginationFilter,
+  GraphQlObjectFilter,
+  GraphQlPaginationFilter,
   initAsync,
 } from "@iota/sdk-wasm";
 
@@ -22,10 +22,10 @@ let nextCursor = undefined;
 while (true) {
   console.log(`Fetching page with cursor: ${nextCursor}`);
   const page = await client.objects(
-    ObjectFilter.new({ owner: address }),
+    GraphQlObjectFilter.new({ owner: address }),
     // Limit to 1 to demonstrate pagination
-    PaginationFilter.new({
-      direction: Direction.Forward,
+    GraphQlPaginationFilter.new({
+      direction: GraphQlDirection.Forward,
       cursor: nextCursor,
       limit: 1,
     }),

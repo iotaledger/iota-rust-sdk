@@ -51,6 +51,13 @@ pub mod object {
         }
     }
 
+    impl crate::MoveType for ID {
+        /// `0x2::object::ID`.
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new_id()))
+        }
+    }
+
     /// Rust version of the Move `iota::object::UID` type.
     ///
     /// # BCS
@@ -95,6 +102,8 @@ pub mod object {
 
 /// Types from `0x2::iota`.
 pub mod iota {
+    use iota_types::ObjectId;
+
     use super::coin::TreasuryCap;
 
     /// Rust version of the Move `iota::iota::IOTA` type.
@@ -119,7 +128,6 @@ pub mod iota {
         dummy_field: bool,
     }
 
-    #[cfg(feature = "serde")]
     impl crate::MoveType for IOTA {
         /// `0x2::iota::IOTA`.
         fn type_tag() -> iota_types::TypeTag {
@@ -143,6 +151,14 @@ pub mod iota {
     impl IotaTreasuryCap {
         pub const fn new(inner: TreasuryCap<IOTA>) -> Self {
             Self { inner }
+        }
+
+        pub fn id(&self) -> &ObjectId {
+            self.inner.id()
+        }
+
+        pub fn total_supply(&self) -> u64 {
+            self.inner.total_supply()
         }
     }
 }
@@ -187,6 +203,7 @@ pub mod balance {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct Supply<T> {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub value: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -216,6 +233,7 @@ pub mod balance {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct Balance<T> {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub value: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -236,7 +254,6 @@ pub mod balance {
 
     /// Compositional tag: `Balance<T>` is itself a valid type argument
     /// (e.g. `TimeLock<Balance<IOTA>>`), so its tag is derived from `T`'s.
-    #[cfg(feature = "serde")]
     impl<T: crate::MoveType> crate::MoveType for Balance<T> {
         /// `0x2::balance::Balance<T>`.
         fn type_tag() -> iota_types::TypeTag {
@@ -270,6 +287,7 @@ pub mod bag {
         /// The ID of this bag.
         pub id: UID,
         /// The number of key-value pairs in the bag.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
     }
 
@@ -283,6 +301,8 @@ pub mod bag {
 /// Types from `0x2::coin`.
 pub mod coin {
     use core::marker::PhantomData;
+
+    use iota_types::ObjectId;
 
     use super::{
         balance::{Balance, Supply},
@@ -318,12 +338,12 @@ pub mod coin {
     {
         /// Decode a [`Coin<T>`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
-    impl_try_from_object_generic!(Coin<T>);
+    impl_try_from_object_generic!(Coin<phantom T>);
 
     /// Rust version of the Move `iota::coin::CoinMetadata<T>` type.
     ///
@@ -379,12 +399,12 @@ pub mod coin {
     {
         /// Decode a [`CoinMetadata<T>`] from BCS bytes without verifying
         /// the on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
-    impl_try_from_object_generic!(CoinMetadata<T>);
+    impl_try_from_object_generic!(CoinMetadata<phantom T>);
 
     /// Rust version of the Move `iota::coin::RegulatedCoinMetadata<T>` type.
     ///
@@ -417,7 +437,7 @@ pub mod coin {
         }
     }
 
-    impl_try_from_object_generic!(RegulatedCoinMetadata<T>);
+    impl_try_from_object_generic!(RegulatedCoinMetadata<phantom T>);
 
     /// Rust version of the Move `iota::coin::TreasuryCap<T>` type.
     ///
@@ -437,9 +457,17 @@ pub mod coin {
         pub const fn new(id: UID, total_supply: Supply<T>) -> Self {
             Self { id, total_supply }
         }
+
+        pub fn id(&self) -> &ObjectId {
+            self.id.object_id()
+        }
+
+        pub fn total_supply(&self) -> u64 {
+            self.total_supply.value()
+        }
     }
 
-    impl_try_from_object_generic!(TreasuryCap<T>);
+    impl_try_from_object_generic!(TreasuryCap<phantom T>);
 
     /// Rust version of the Move `iota::coin::DenyCapV1<T>` type.
     ///
@@ -469,7 +497,7 @@ pub mod coin {
         }
     }
 
-    impl_try_from_object_generic!(DenyCapV1<T>);
+    impl_try_from_object_generic!(DenyCapV1<phantom T>);
 }
 
 /// Types from `0x2::table`.
@@ -492,6 +520,7 @@ pub mod table {
         /// The ID of this table.
         pub id: UID,
         /// The number of key-value pairs in the table.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _k: PhantomData<K>,
@@ -570,6 +599,16 @@ pub mod url {
 
     impl core::error::Error for NonAsciiUrl {}
 
+    /// Converts through the `ascii::String` conversion, so it fails only on
+    /// bytes that are not UTF-8 and does not check for ASCII.
+    impl TryFrom<Url> for String {
+        type Error = std::string::FromUtf8Error;
+
+        fn try_from(value: Url) -> Result<Self, Self::Error> {
+            Self::try_from(value.url)
+        }
+    }
+
     #[cfg(test)]
     mod tests {
         #[cfg(target_arch = "wasm32")]
@@ -581,11 +620,19 @@ pub mod url {
         fn url_rejects_non_ascii() {
             assert!(Url::try_from_ascii("héllo").is_err());
         }
+
+        #[test]
+        fn url_converts_into_string() {
+            let url = Url::try_from_ascii("https://iota.org").unwrap();
+            assert_eq!(String::try_from(url).unwrap(), "https://iota.org");
+        }
     }
 }
 
 /// Types from `0x2::vec_map`.
 pub mod vec_map {
+    use crate::move_stdlib::string;
+
     /// Rust version of the Move `iota::vec_map::Entry<K, V>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -630,6 +677,113 @@ pub mod vec_map {
             Self {
                 contents: Vec::new(),
             }
+        }
+    }
+
+    impl<K: crate::MoveType, V: crate::MoveType> crate::MoveType for VecMap<K, V> {
+        /// `0x2::vec_map::VecMap<K, V>`.
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new(
+                iota_types::Address::FRAMEWORK,
+                iota_types::Identifier::from_static("vec_map"),
+                iota_types::Identifier::from_static("VecMap"),
+                <(K, V) as crate::MoveTypes>::type_tags(),
+            )))
+        }
+    }
+
+    impl TryFrom<VecMap<string::String, string::String>>
+        for VecMap<std::string::String, std::string::String>
+    {
+        type Error = std::string::FromUtf8Error;
+
+        fn try_from(map: VecMap<string::String, string::String>) -> Result<Self, Self::Error> {
+            map.contents
+                .into_iter()
+                .map(|entry| Ok(Entry::new(entry.key.try_into()?, entry.value.try_into()?)))
+                .collect::<Result<_, _>>()
+                .map(Self::new)
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        #[cfg(target_arch = "wasm32")]
+        use wasm_bindgen_test::wasm_bindgen_test as test;
+
+        use super::*;
+
+        #[test]
+        fn utf8_entries_convert() {
+            let map = VecMap::new(vec![
+                Entry::new(
+                    string::String::new("name".into()),
+                    string::String::new("héllo".into()),
+                ),
+                Entry::new(
+                    string::String::new("description".into()),
+                    string::String::new("wörld".into()),
+                ),
+            ]);
+            let converted = VecMap::<std::string::String, std::string::String>::try_from(map);
+            assert_eq!(
+                converted.unwrap(),
+                VecMap::new(vec![
+                    Entry::new("name".to_owned(), "héllo".to_owned()),
+                    Entry::new("description".to_owned(), "wörld".to_owned()),
+                ])
+            );
+        }
+
+        #[test]
+        fn invalid_utf8_value_is_rejected() {
+            let map = VecMap::new(vec![Entry::new(
+                string::String::new("name".into()),
+                string::String::new(vec![0xff, 0xfe]),
+            )]);
+            assert!(VecMap::<std::string::String, std::string::String>::try_from(map).is_err());
+
+            let map = VecMap::new(vec![Entry::new(
+                string::String::new(vec![0xff, 0xfe]),
+                string::String::new("name".into()),
+            )]);
+            assert!(VecMap::<std::string::String, std::string::String>::try_from(map).is_err());
+        }
+
+        #[cfg(feature = "serde")]
+        #[derive(Debug, PartialEq, serde::Deserialize, serde::Serialize)]
+        struct AtRisk {
+            #[serde(with = "crate::_serde::vec_map_readable_u64_values")]
+            map: VecMap<iota_types::Address, u64>,
+        }
+
+        #[cfg(feature = "serde")]
+        fn at_risk(value: u64) -> AtRisk {
+            AtRisk {
+                map: VecMap::new(vec![Entry::new(iota_types::Address::ZERO, value)]),
+            }
+        }
+
+        #[cfg(feature = "serde")]
+        #[test]
+        fn json_writes_u64_map_values_as_strings() {
+            let value = at_risk(u64::MAX);
+            let json = serde_json::to_value(&value).unwrap();
+            assert_eq!(
+                json["map"]["contents"][0]["value"],
+                serde_json::json!("18446744073709551615")
+            );
+            assert_eq!(serde_json::from_value::<AtRisk>(json).unwrap(), value);
+        }
+
+        #[cfg(feature = "serde")]
+        #[test]
+        fn bcs_keeps_u64_map_values_as_bytes() {
+            let derived = VecMap::new(vec![Entry::new(iota_types::Address::ZERO, 7u64)]);
+            assert_eq!(
+                bcs::to_bytes(&at_risk(7)).unwrap(),
+                bcs::to_bytes(&derived).unwrap()
+            );
         }
     }
 }
@@ -714,6 +868,7 @@ pub mod versioned {
     )]
     pub struct Versioned {
         pub id: UID,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
     }
 
@@ -741,6 +896,7 @@ pub mod versioned {
     )]
     pub struct VersionChangeCap {
         pub versioned_id: ID,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub old_version: u64,
     }
 
@@ -808,6 +964,7 @@ pub mod clock {
         pub id: UID,
         /// The clock's timestamp. Set automatically by a system transaction
         /// every time consensus commits a schedule.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub timestamp_ms: u64,
     }
 
@@ -821,8 +978,8 @@ pub mod clock {
     impl Clock {
         /// Decode a [`Clock`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -856,11 +1013,14 @@ pub mod tx_context {
         /// Hash of the current transaction.
         pub tx_hash: Vec<u8>,
         /// The current epoch number.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
         /// Timestamp at which the epoch started.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch_timestamp_ms: u64,
         /// Counter recording the number of fresh IDs created while
         /// executing this transaction. Always 0 at the start.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub ids_created: u64,
     }
 }
@@ -897,25 +1057,6 @@ pub mod intent {
                 app_id,
             }
         }
-    }
-}
-
-/// Types from `0x2::ecdsa_k1`.
-pub mod ecdsa_k1 {
-    /// Rust version of the Move `iota::ecdsa_k1::KeyPair` type.
-    // The Move-side `KeyPair` struct is `#[test_only]`, so it's absent
-    // from the compiled package and cannot participate in the
-    // `move_shape_compare` cross-check. No `MoveShape` derive here.
-    /// # BCS
-    ///
-    /// The BCS serialized form of this type is specified in
-    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
-    #[derive(Clone, Debug, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    pub struct KeyPair {
-        pub private_key: Vec<u8>,
-        pub public_key: Vec<u8>,
     }
 }
 
@@ -1004,6 +1145,7 @@ pub mod transfer {
     )]
     pub struct Receiving<T> {
         pub id: ID,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -1039,6 +1181,7 @@ pub mod timelock {
         /// The locked object.
         pub locked: T,
         /// Epoch timestamp (ms) of when the lock expires.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub expiration_timestamp_ms: u64,
         /// Optional timelock-related label.
         pub label: Option<string::String>,
@@ -1067,8 +1210,8 @@ pub mod timelock {
     {
         /// Decode a [`TimeLock<T>`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -1079,7 +1222,7 @@ pub mod timelock {
 pub mod borrow {
     use iota_types::Address;
 
-    use super::object::{ID, UID};
+    use super::object::ID;
 
     /// Rust version of the Move `iota::borrow::Referent<T>` type.
     ///
@@ -1121,23 +1264,6 @@ pub mod borrow {
     pub struct Borrow {
         pub r#ref: Address,
         pub obj: ID,
-    }
-
-    /// Rust version of the Move `iota::borrow::Test` type.
-    ///
-    /// The Move-side `Test` struct is `#[test_only]`, so it doesn't ship
-    /// in the compiled package and can't participate in the
-    /// `move_shape_compare` cross-check. No `MoveShape` derive here.
-    ///
-    /// # BCS
-    ///
-    /// The BCS serialized form of this type is specified in
-    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
-    #[derive(Clone, Debug, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    pub struct Test {
-        pub id: UID,
     }
 }
 
@@ -1190,6 +1316,15 @@ pub mod dynamic_object_field {
             Self { name }
         }
     }
+
+    impl<Name: crate::MoveType> crate::MoveType for Wrapper<Name> {
+        /// `0x2::dynamic_object_field::Wrapper<Name>`.
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(
+                iota_types::StructTag::new_dynamic_object_field_wrapper(Name::type_tag()),
+            ))
+        }
+    }
 }
 
 /// Types from `0x2::labeler`.
@@ -1223,7 +1358,7 @@ pub mod labeler {
         }
     }
 
-    impl_try_from_object_generic!(LabelerCap<L>);
+    impl_try_from_object_generic!(LabelerCap<phantom L>);
 }
 
 /// Types from `0x2::linked_table`.
@@ -1247,6 +1382,7 @@ pub mod linked_table {
     pub struct LinkedTable<K, V> {
         pub id: UID,
         /// The number of key-value pairs in the table.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
         /// The front of the table — the key of the first entry.
         pub head: Option<K>,
@@ -1307,6 +1443,7 @@ pub mod object_table {
     )]
     pub struct ObjectTable<K, V> {
         pub id: UID,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _k: PhantomData<K>,
@@ -1345,6 +1482,7 @@ pub mod object_bag {
     )]
     pub struct ObjectBag {
         pub id: UID,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
     }
 }
@@ -1359,6 +1497,7 @@ pub mod priority_queue {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct Entry<T> {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub priority: u64,
         pub value: T,
     }
@@ -1433,6 +1572,7 @@ pub mod authenticator_state {
     )]
     pub struct AuthenticatorState {
         pub id: UID,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
     }
 
@@ -1451,6 +1591,7 @@ pub mod authenticator_state {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct AuthenticatorStateInner {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
         /// List of currently active JWKs.
         pub active_jwks: Vec<ActiveJwk>,
@@ -1515,6 +1656,7 @@ pub mod authenticator_state {
     pub struct ActiveJwk {
         pub jwk_id: JwkId,
         pub jwk: JWK,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
     }
 }
@@ -1566,7 +1708,7 @@ pub mod display {
         }
     }
 
-    impl_try_from_object_generic!(Display<T>);
+    impl_try_from_object_generic!(Display<phantom T>);
 
     /// Rust version of the Move `iota::display::DisplayCreated<T>` event
     /// type.
@@ -1655,8 +1797,8 @@ pub mod package {
     impl Publisher {
         /// Decode a [`Publisher`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -1683,17 +1825,29 @@ pub mod package {
         pub package: ID,
         /// (Mutable) Number of upgrades that have been applied to the
         /// original package. Initially 0.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
         /// What kind of upgrades are allowed.
         pub policy: u8,
+    }
+
+    impl UpgradeCap {
+        pub const fn new(id: UID, package: ID, version: u64, policy: u8) -> Self {
+            Self {
+                id,
+                package,
+                version,
+                policy,
+            }
+        }
     }
 
     #[cfg(feature = "serde")]
     impl UpgradeCap {
         /// Decode an [`UpgradeCap`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -1744,6 +1898,12 @@ pub mod package {
     pub struct UpgradeReceipt {
         pub cap: ID,
         pub package: ID,
+    }
+
+    impl UpgradeReceipt {
+        pub const fn new(cap: ID, package: ID) -> Self {
+            Self { cap, package }
+        }
     }
 }
 
@@ -2084,6 +2244,10 @@ pub mod coin_manager {
         /// the original metadata is frozen.
         pub immutable_metadata: Option<ImmutableCoinMetadata<T>>,
         /// Optional maximum supply.
+        #[cfg_attr(
+            feature = "serde",
+            serde(default, with = "iota_types::OptionReadableDisplay")
+        )]
         pub maximum_supply: Option<u64>,
         /// Flag indicating if the supply is considered immutable.
         pub supply_immutable: bool,
@@ -2091,7 +2255,7 @@ pub mod coin_manager {
         pub metadata_immutable: bool,
     }
 
-    impl_try_from_object_generic!(CoinManager<T>);
+    impl_try_from_object_generic!(CoinManager<phantom T>);
 
     /// Rust version of the Move
     /// `iota::coin_manager::CoinManagerTreasuryCap<T>` type.
@@ -2116,7 +2280,7 @@ pub mod coin_manager {
         }
     }
 
-    impl_try_from_object_generic!(CoinManagerTreasuryCap<T>);
+    impl_try_from_object_generic!(CoinManagerTreasuryCap<phantom T>);
 
     /// Rust version of the Move
     /// `iota::coin_manager::CoinManagerMetadataCap<T>` type.
@@ -2141,7 +2305,7 @@ pub mod coin_manager {
         }
     }
 
-    impl_try_from_object_generic!(CoinManagerMetadataCap<T>);
+    impl_try_from_object_generic!(CoinManagerMetadataCap<phantom T>);
 
     /// Rust version of the Move
     /// `iota::coin_manager::ImmutableCoinMetadata<T>` type.
@@ -2269,7 +2433,7 @@ pub mod token {
         }
     }
 
-    impl_try_from_object_generic!(Token<T>);
+    impl_try_from_object_generic!(Token<phantom T>);
 
     /// Rust version of the Move `iota::token::TokenPolicyCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2295,7 +2459,7 @@ pub mod token {
         }
     }
 
-    impl_try_from_object_generic!(TokenPolicyCap<T>);
+    impl_try_from_object_generic!(TokenPolicyCap<phantom T>);
 
     /// Rust version of the Move `iota::token::TokenPolicy<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2328,7 +2492,7 @@ pub mod token {
         }
     }
 
-    impl_try_from_object_generic!(TokenPolicy<T>);
+    impl_try_from_object_generic!(TokenPolicy<phantom T>);
 
     /// Rust version of the Move `iota::token::ActionRequest<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2341,6 +2505,7 @@ pub mod token {
         /// Name of the action — one of `transfer`, `spend`, `to_coin`,
         /// `from_coin`, or a custom action.
         pub name: string::String,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub amount: u64,
         pub sender: Address,
         /// Only present for the `transfer` action.
@@ -2401,69 +2566,6 @@ pub mod token {
     }
 }
 
-/// Types from `0x2::test_scenario`.
-///
-/// The Move-side `test_scenario` module is annotated `#[test_only]`, so
-/// none of its structs ship in the compiled package — they're omitted
-/// from the `move_shape_compare` cross-check and therefore don't carry the
-/// `MoveShape` derive.
-pub mod test_scenario {
-    use iota_types::Address;
-
-    use super::{object::ID, tx_context::TxContext, vec_map::VecMap};
-
-    /// Rust version of the Move `iota::test_scenario::Scenario` type.
-    ///
-    /// Mocks a multi-transaction IOTA execution in a single Move test
-    /// procedure.
-    ///
-    /// # BCS
-    ///
-    /// The BCS serialized form of this type is specified in
-    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
-    #[derive(Clone, Debug, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    pub struct Scenario {
-        pub txn_number: u64,
-        pub ctx: TxContext,
-    }
-
-    /// Rust version of the Move `iota::test_scenario::TxContextBuilder` type.
-    ///
-    /// # BCS
-    ///
-    /// The BCS serialized form of this type is specified in
-    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
-    #[derive(Clone, Debug, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
-    pub struct TxContextBuilder {
-        pub sender: Address,
-        pub epoch: u64,
-        pub epoch_timestamp_ms: u64,
-        pub ids_created: u64,
-        pub rgp: Option<u64>,
-        pub gas_price: u64,
-        pub gas_budget: u64,
-        pub sponsor: Option<Address>,
-    }
-
-    /// Rust version of the Move `iota::test_scenario::TransactionEffects` type.
-    #[derive(Clone, Debug, Eq, PartialEq)]
-    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
-    pub struct TransactionEffects {
-        pub created: Vec<ID>,
-        pub written: Vec<ID>,
-        pub deleted: Vec<ID>,
-        pub transferred_to_account: VecMap<ID, Address>,
-        pub transferred_to_object: VecMap<ID, ID>,
-        pub shared: Vec<ID>,
-        pub frozen: Vec<ID>,
-        pub num_user_events: u64,
-    }
-}
-
 /// Types from `0x2::module_metadata`.
 pub mod module_metadata {
     use super::object::UID;
@@ -2493,6 +2595,7 @@ pub mod module_metadata {
         pub id: UID,
         /// The number of key-value pairs stored in the metadata's dynamic
         /// fields.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
     }
 
@@ -2665,6 +2768,7 @@ pub mod package_metadata {
         pub storage_id: ID,
         /// Runtime ID of the package — the storage ID of the first version.
         pub runtime_id: ID,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub package_version: u64,
         /// Per-module metadata, keyed by module name. Deprecated upstream in
         /// favor of a dynamic field attached to this object that maps module
@@ -2785,8 +2889,16 @@ pub mod deny_list {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct ConfigKey {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub per_type_index: u64,
         pub per_type_key: Vec<u8>,
+    }
+
+    impl crate::MoveType for ConfigKey {
+        /// `0x2::deny_list::ConfigKey`.
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(iota_types::StructTag::new_deny_list_config_key()))
+        }
     }
 
     /// Rust version of the Move `iota::deny_list::AddressKey` type.
@@ -2803,6 +2915,15 @@ pub mod deny_list {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct AddressKey(pub Address);
+
+    impl crate::MoveType for AddressKey {
+        /// `0x2::deny_list::AddressKey`.
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(
+                Box::new(iota_types::StructTag::new_deny_list_address_key()),
+            )
+        }
+    }
 
     /// Rust version of the Move `iota::deny_list::GlobalPauseKey` type.
     ///
@@ -2822,6 +2943,15 @@ pub mod deny_list {
     )]
     pub struct GlobalPauseKey {
         dummy_field: bool,
+    }
+
+    impl crate::MoveType for GlobalPauseKey {
+        /// `0x2::deny_list::GlobalPauseKey`.
+        fn type_tag() -> iota_types::TypeTag {
+            iota_types::TypeTag::Struct(Box::new(
+                iota_types::StructTag::new_deny_list_global_pause_key(),
+            ))
+        }
     }
 
     /// Rust version of the Move `iota::deny_list::PerTypeConfigCreated`
@@ -2892,6 +3022,7 @@ pub mod transaction_deny_rules {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct TransactionDenyRulesInnerV1 {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
         /// Addresses denied as transaction sender or gas sponsor.
         pub denied_addresses: LinkedTable<Address, bool>,
@@ -2932,6 +3063,7 @@ pub mod transaction_deny_rules {
     )]
     pub struct TransactionDenyRulesUpdated {
         /// The epoch in which the update was executed.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
         /// Addresses added to / removed from the sender-or-sponsor deny
         /// list.
@@ -2957,8 +3089,11 @@ pub mod transaction_deny_rules {
         /// Denies transactions signed with a Move authenticator.
         pub move_authenticator_disabled: bool,
         /// Deny list sizes after applying the delta.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub denied_addresses_len: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub denied_objects_len: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub denied_packages_len: u64,
     }
 }
@@ -3004,8 +3139,11 @@ pub mod random {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct RandomInner {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub randomness_round: u64,
         pub random_bytes: Vec<u8>,
     }
@@ -3060,7 +3198,7 @@ pub mod config {
         }
     }
 
-    impl_try_from_object_generic!(Config<WriteCap>);
+    impl_try_from_object_generic!(Config<phantom WriteCap>);
 
     /// Rust version of the Move `iota::config::Setting<Value>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -3077,6 +3215,12 @@ pub mod config {
         pub const fn new(data: Option<SettingData<Value>>) -> Self {
             Self { data }
         }
+
+        /// The value [`SettingData::read_value`] reads, or `None` without
+        /// `data`.
+        pub fn read_value(&self, current_epoch: Option<iota_types::EpochId>) -> Option<&Value> {
+            self.data.as_ref()?.read_value(current_epoch)
+        }
     }
 
     /// Rust version of the Move `iota::config::SettingData<Value>` type.
@@ -3087,9 +3231,63 @@ pub mod config {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct SettingData<Value> {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub newer_value_epoch: u64,
         pub newer_value: Option<Value>,
         pub older_value_opt: Option<Value>,
+    }
+
+    impl<Value> SettingData<Value> {
+        /// `newer_value` once `current_epoch` is past `newer_value_epoch`,
+        /// otherwise `older_value_opt`. Without `current_epoch`, always
+        /// `newer_value`.
+        pub fn read_value(&self, current_epoch: Option<iota_types::EpochId>) -> Option<&Value> {
+            let use_newer_value = match current_epoch {
+                Some(current_epoch) => current_epoch > self.newer_value_epoch,
+                None => true,
+            };
+            if use_newer_value {
+                self.newer_value.as_ref()
+            } else {
+                self.older_value_opt.as_ref()
+            }
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        #[cfg(target_arch = "wasm32")]
+        use wasm_bindgen_test::wasm_bindgen_test as test;
+
+        use super::*;
+
+        fn setting() -> Setting<u8> {
+            Setting::new(Some(SettingData {
+                newer_value_epoch: 5,
+                newer_value: Some(2),
+                older_value_opt: Some(1),
+            }))
+        }
+
+        #[test]
+        fn newer_value_after_its_epoch() {
+            assert_eq!(setting().read_value(Some(6)), Some(&2));
+        }
+
+        #[test]
+        fn older_value_up_to_the_newer_epoch() {
+            assert_eq!(setting().read_value(Some(5)), Some(&1));
+        }
+
+        #[test]
+        fn newer_value_without_an_epoch() {
+            assert_eq!(setting().read_value(None), Some(&2));
+        }
+
+        #[test]
+        fn nothing_without_data() {
+            assert_eq!(Setting::<u8>::new(None).read_value(None), None);
+        }
     }
 }
 
@@ -3234,6 +3432,7 @@ pub mod ptb_call_arg {
     )]
     pub struct ObjectRef {
         pub object_id: ID,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub sequence_number: u64,
         pub object_digest: Vec<u8>,
     }
@@ -3249,6 +3448,7 @@ pub mod ptb_call_arg {
         ImmOrOwnedObject(ObjectRef),
         SharedObject {
             id: ID,
+            #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
             initial_shared_version: u64,
             mutable: bool,
         },
@@ -3367,8 +3567,8 @@ pub mod kiosk {
     impl Kiosk {
         /// Decode a [`Kiosk`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -3396,8 +3596,8 @@ pub mod kiosk {
     impl KioskOwnerCap {
         /// Decode a [`KioskOwnerCap`] from BCS bytes without verifying the
         /// on-chain type tag.
-        pub fn from_bcs(bytes: &[u8]) -> Result<Self, bcs::Error> {
-            bcs::from_bytes(bytes)
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
@@ -3414,6 +3614,7 @@ pub mod kiosk {
         pub id: UID,
         pub kiosk_id: ID,
         pub item_id: ID,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub min_price: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -3431,7 +3632,7 @@ pub mod kiosk {
         }
     }
 
-    impl_try_from_object_generic!(PurchaseCap<T>);
+    impl_try_from_object_generic!(PurchaseCap<phantom T>);
 
     /// Rust version of the Move `iota::kiosk::Borrow` type.
     ///
@@ -3523,6 +3724,7 @@ pub mod kiosk {
     pub struct ItemListed<T> {
         pub kiosk: ID,
         pub id: ID,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub price: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -3549,6 +3751,7 @@ pub mod kiosk {
     pub struct ItemPurchased<T> {
         pub kiosk: ID,
         pub id: ID,
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub price: u64,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -3616,6 +3819,7 @@ pub mod kiosk_extension {
         pub storage: Bag,
         /// Bitmap of permissions. Bit 0 = `place`, bit 1 = `lock` (and
         /// `place`).
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub permissions: u128,
         /// Whether the extension can call protected actions.
         pub is_enabled: bool,
@@ -3662,6 +3866,7 @@ pub mod transfer_policy {
     pub struct TransferRequest<T> {
         pub item: ID,
         /// Amount of IOTA paid for the item.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub paid: u64,
         /// ID of the kiosk / safe the object is being sold from.
         pub from: ID,
@@ -3713,7 +3918,7 @@ pub mod transfer_policy {
         }
     }
 
-    impl_try_from_object_generic!(TransferPolicy<T>);
+    impl_try_from_object_generic!(TransferPolicy<phantom T>);
 
     /// Rust version of the Move
     /// `iota::transfer_policy::TransferPolicyCap<T>` type.
@@ -3740,7 +3945,7 @@ pub mod transfer_policy {
         }
     }
 
-    impl_try_from_object_generic!(TransferPolicyCap<T>);
+    impl_try_from_object_generic!(TransferPolicyCap<phantom T>);
 
     /// Rust version of the Move
     /// `iota::transfer_policy::TransferPolicyCreated<T>` event.

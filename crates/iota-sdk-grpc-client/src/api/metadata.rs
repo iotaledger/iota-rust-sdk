@@ -20,7 +20,7 @@ use crate::ResponseExt;
 /// # Example
 ///
 /// ```ignore
-/// let response = client.health(None).await?;
+/// let response = client.health().await?;
 ///
 /// // Access body fields
 /// println!("{:?}", response.body().executed_checkpoint_height);

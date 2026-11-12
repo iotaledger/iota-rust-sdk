@@ -5,16 +5,26 @@
 
 use std::{sync::Arc, time::Duration};
 
+use iota_sdk::graphql_client::{
+    ExecuteTransactionQuery, ListAddressTransactionsQuery, ListTransactionsDataEffectsQuery,
+    ListTransactionsEffectsQuery, ListTransactionsQuery, WaitForTransactionQuery,
+};
+
 use crate::{
     error::Result,
     graphql::{
         client::GraphQLClient,
-        pagination::{SignedTransactionPage, TransactionDataEffectsPage, TransactionEffectsPage},
+        pagination::{
+            GraphQLSignedTransactionPage, GraphQLTransactionDataEffectsPage,
+            GraphQLTransactionEffectsPage,
+        },
         query_types::{
-            AddressTransactionRelationship, PaginationFilter, TransactionDataEffects,
-            TransactionsFilter,
+            GraphQLAddressTransactionRelationship, GraphQLPaginationFilter,
+            GraphQLTransactionDataEffects, GraphQLTransactionsFilter,
         },
     },
+    helpers::SetIfSome,
+    transaction_builder::WaitForTransaction,
     types::{
         address::Address,
         digest::TransactionDigest,
@@ -22,41 +32,6 @@ use crate::{
         transaction::{SignedTransaction, Transaction, TransactionEffects},
     },
 };
-
-/// Determines what to wait for after executing a transaction.
-///
-/// Users should almost always use WaitForTransaction::Finalized (the default).
-/// The GraphQL client interacts with the indexer, not the fullnode directly.
-/// Using WaitForTransaction::IndexedOnNode only guarantees the transaction is
-/// indexed on the fullnode (meaning you can submit transactions that reference
-/// objects created by this transaction), but subsequent queries using the
-/// transaction ID can still fail until the transaction is indexed on the
-/// indexer.
-#[derive(uniffi::Enum)]
-pub enum WaitForTransaction {
-    /// Indicates that the transaction effects will be usable in subsequent
-    /// transactions (you can reference objects created by this transaction),
-    /// and that the transaction itself is indexed on the fullnode.
-    ///
-    /// **Warning:** This does not guarantee the transaction is indexed on the
-    /// indexer. Since the GraphQL client queries the indexer, subsequent
-    /// queries with this transaction ID may still fail. Prefer
-    /// WaitForTransaction::Finalized unless you have a specific reason to use
-    /// this.
-    IndexedOnNode,
-    /// Indicates that the transaction has been included in a checkpoint, and
-    /// all queries may include it.
-    Finalized,
-}
-
-impl From<WaitForTransaction> for iota_sdk::graphql_client::WaitForTransaction {
-    fn from(value: WaitForTransaction) -> Self {
-        match value {
-            WaitForTransaction::IndexedOnNode => Self::IndexedOnNode,
-            WaitForTransaction::Finalized => Self::Finalized,
-        }
-    }
-}
 
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
@@ -66,13 +41,7 @@ impl GraphQLClient {
         &self,
         digest: &TransactionDigest,
     ) -> Result<Option<SignedTransaction>> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .transaction(**digest)
-            .await?
-            .map(Into::into))
+        Ok(self.client().transaction(**digest).await?.map(Into::into))
     }
 
     /// Get a transaction's effects by its digest.
@@ -81,9 +50,7 @@ impl GraphQLClient {
         digest: &TransactionDigest,
     ) -> Result<Option<Arc<TransactionEffects>>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .transaction_effects(**digest)
             .await?
             .map(Into::into)
@@ -94,11 +61,9 @@ impl GraphQLClient {
     pub async fn transaction_data_effects(
         &self,
         digest: &TransactionDigest,
-    ) -> Result<Option<TransactionDataEffects>> {
+    ) -> Result<Option<GraphQLTransactionDataEffects>> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .transaction_data_effects(**digest)
             .await?
             .map(Into::into))
@@ -108,17 +73,17 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions(
         &self,
-        filter: Option<Arc<TransactionsFilter>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<SignedTransactionPage> {
+        filter: Option<Arc<GraphQLTransactionsFilter>>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLSignedTransactionPage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .transactions(
+            .client()
+            .transactions()
+            .set_if_some(
                 filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
+                ListTransactionsQuery::filter,
             )
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -131,20 +96,22 @@ impl GraphQLClient {
     pub async fn address_transactions(
         &self,
         address: &Address,
-        relation: Option<AddressTransactionRelationship>,
-        filter: Option<Arc<TransactionsFilter>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<SignedTransactionPage> {
+        relation: Option<GraphQLAddressTransactionRelationship>,
+        filter: Option<Arc<GraphQLTransactionsFilter>>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLSignedTransactionPage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .address_transactions(
-                **address,
+            .client()
+            .address_transactions(**address)
+            .set_if_some(
                 relation.map(Into::into),
-                filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
+                ListAddressTransactionsQuery::relation,
             )
+            .set_if_some(
+                filter.as_deref().map(Into::into),
+                ListAddressTransactionsQuery::filter,
+            )
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -154,17 +121,17 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_effects(
         &self,
-        filter: Option<Arc<TransactionsFilter>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<TransactionEffectsPage> {
+        filter: Option<Arc<GraphQLTransactionsFilter>>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLTransactionEffectsPage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .transactions_effects(
+            .client()
+            .transactions_effects()
+            .set_if_some(
                 filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
+                ListTransactionsEffectsQuery::filter,
             )
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
@@ -175,23 +142,27 @@ impl GraphQLClient {
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_data_effects(
         &self,
-        filter: Option<Arc<TransactionsFilter>>,
-        pagination_filter: Option<PaginationFilter>,
-    ) -> Result<TransactionDataEffectsPage> {
+        filter: Option<Arc<GraphQLTransactionsFilter>>,
+        pagination_filter: Option<GraphQLPaginationFilter>,
+    ) -> Result<GraphQLTransactionDataEffectsPage> {
         Ok(self
-            .0
-            .read()
-            .await
-            .transactions_data_effects(
+            .client()
+            .transactions_data_effects()
+            .set_if_some(
                 filter.as_deref().map(Into::into),
-                pagination_filter.map(Into::into).unwrap_or_default(),
+                ListTransactionsDataEffectsQuery::filter,
             )
+            .pagination(pagination_filter.map(Into::into).unwrap_or_default())
             .await?
             .map(Into::into)
             .into())
     }
 
     /// Execute a transaction.
+    ///
+    /// If the wait fails, the error is returned although the transaction was
+    /// executed, and its effects are lost. To keep them, pass no `wait_for`
+    /// and call `wait_for_transaction` on the client afterwards.
     #[uniffi::method(default(wait_for = None))]
     pub async fn execute_transaction(
         &self,
@@ -200,17 +171,15 @@ impl GraphQLClient {
         wait_for: Option<WaitForTransaction>,
     ) -> Result<TransactionEffects> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .execute_transaction(
                 &signatures
                     .into_iter()
                     .map(|s| s.0.clone())
                     .collect::<Vec<_>>(),
                 &transaction.0,
-                wait_for.map(Into::into),
             )
+            .set_if_some(wait_for.map(Into::into), ExecuteTransactionQuery::wait_for)
             .await?
             .into())
     }
@@ -222,9 +191,7 @@ impl GraphQLClient {
     #[uniffi::method]
     pub async fn is_transaction_indexed_on_node(&self, digest: &TransactionDigest) -> Result<bool> {
         Ok(self
-            .0
-            .read()
-            .await
+            .client()
             .is_transaction_indexed_on_node(**digest)
             .await?)
     }
@@ -233,12 +200,7 @@ impl GraphQLClient {
     /// in a checkpoint (finalized).
     #[uniffi::method]
     pub async fn is_transaction_finalized(&self, digest: &TransactionDigest) -> Result<bool> {
-        Ok(self
-            .0
-            .read()
-            .await
-            .is_transaction_finalized(**digest)
-            .await?)
+        Ok(self.client().is_transaction_finalized(**digest).await?)
     }
 
     /// Wait for the indexing (on the node, not the indexer) or finalization of
@@ -252,10 +214,9 @@ impl GraphQLClient {
         timeout: Option<Duration>,
     ) -> Result<()> {
         Ok(self
-            .0
-            .read()
-            .await
-            .wait_for_transaction(**digest, wait_for.into(), timeout)
+            .client()
+            .wait_for_transaction(**digest, wait_for.into())
+            .set_if_some(timeout, WaitForTransactionQuery::timeout)
             .await?)
     }
 }

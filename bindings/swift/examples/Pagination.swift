@@ -6,7 +6,7 @@ import IotaSDK
 @main
 struct PaginationExample {
   static func main() async throws {
-    let client = GraphQlClient.newTestnet()
+    let client = try GraphQlClient.newTestnet()
     let address = try Address.fromHex(
       hex: "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")
 
@@ -15,10 +15,10 @@ struct PaginationExample {
     while true {
       print("Fetching page with cursor: \(nextCursor ?? "nil")")
       let page = try await client.objects(
-        filter: ObjectFilter(owner: address),
+        filter: GraphQlObjectFilter(owner: address),
         // Limit to 1 to demonstrate pagination
-        paginationFilter: PaginationFilter(
-          direction: Direction.forward,
+        paginationFilter: GraphQlPaginationFilter(
+          direction: GraphQlDirection.forward,
           cursor: nextCursor,
           limit: 1)
       )
@@ -31,7 +31,7 @@ struct PaginationExample {
     }
     print("\(allObjects.count) objects fetched:")
     for obj in allObjects {
-      print(obj.id().toHex())
+      print(obj.id())
     }
   }
 }
