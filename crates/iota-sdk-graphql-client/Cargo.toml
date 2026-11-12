@@ -42,6 +42,7 @@ cynic.workspace = true
 derive_more = { workspace = true, features = ["from"] }
 futures.workspace = true
 reqwest = { workspace = true, features = ["json"] }
+semver = "1.0"
 serde.workspace = true
 serde_json.workspace = true
 strum = { workspace = true, features = ["derive"] }

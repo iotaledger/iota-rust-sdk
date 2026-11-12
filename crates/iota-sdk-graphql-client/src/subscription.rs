@@ -290,9 +290,10 @@ async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection 
         "Sec-WebSocket-Protocol",
         HeaderValue::from_static(WS_PROTOCOL),
     );
-    let (connection, _response) = tokio_tungstenite::connect_async(request)
+    let (connection, response) = tokio_tungstenite::connect_async(request)
         .await
         .map_err(GraphQLError::subscription)?;
+    crate::sdk_version::check_min_sdk_version(response.headers())?;
     Ok(connection)
 }
 

@@ -13,6 +13,7 @@ use crate::{
     error::{ErrorExtensions, GraphQLError, GraphQLResult},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
     query_types::{ServiceConfig, ServiceConfigQueryFragment},
+    sdk_version::check_min_sdk_version,
 };
 
 pub(crate) const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
@@ -238,6 +239,7 @@ impl GraphQLClient {
             .json(body)
             .send()
             .await?;
+        check_min_sdk_version(resp.headers())?;
         let status = resp.status();
         let url = resp.url().clone();
         let bytes = resp.bytes().await?;
@@ -476,6 +478,36 @@ mod tests {
             panic!("expected a request error, got {err:?}");
         };
         assert!(err.is_timeout(), "{err:?}");
+    }
+
+    #[tokio::test]
+    async fn rejects_response_from_node_requiring_newer_sdk() {
+        let (listener, url) = bind().await;
+        let _server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            let mut buf = vec![0; 4096];
+            let _ = socket.read(&mut buf).await.unwrap();
+            // The body is not JSON, so decoding it would fail differently.
+            socket
+                .write_all(
+                    b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\n\
+                      x-min-iota-sdk-graphql-client-version: 999.0.0\r\n\
+                      content-length: 3\r\n\r\nnot",
+                )
+                .await
+                .unwrap();
+        });
+
+        let client = GraphQLClient::new(&url).unwrap();
+        let err = client
+            .run_query_from_json(Default::default())
+            .await
+            .unwrap_err();
+        let GraphQLError::IncompatibleSdkVersion { minimum, current } = err else {
+            panic!("expected an incompatible SDK version error, got {err:?}");
+        };
+        assert_eq!(minimum, "999.0.0");
+        assert_eq!(current, crate::VERSION);
     }
 
     #[test]

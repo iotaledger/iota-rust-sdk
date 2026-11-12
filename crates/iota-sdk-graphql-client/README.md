@@ -82,6 +82,10 @@ async fn main() -> Result<()> {
 }
 ```
 
+### Node compatibility
+
+Every node response names the lowest `iota-sdk-graphql-client` version able to decode it. An older client fails the request with `GraphQLError::IncompatibleSdkVersion` before decoding any data; upgrade the crate to resolve it. In the browser, subscriptions skip this check, since a browser `WebSocket` does not expose the handshake headers.
+
 ### Requesting gas from the faucet
 
 The client provides an API to request gas from the faucet. The `request_and_wait` function sends a request to the faucet and waits until the transaction is confirmed. The function returns the transaction details if the request is successful.
