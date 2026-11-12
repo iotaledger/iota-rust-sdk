@@ -62,9 +62,7 @@ impl GraphQLClient {
     /// the `subscriptions` endpoint under the RPC URL. An `http` or `https` URL
     /// is upgraded to `ws` or `wss`.
     pub fn with_subscription_url(&self, url: String) -> Result<Arc<Self>> {
-        let client = (*self.0)
-            .clone()
-            .with_subscription_url(url.parse().map_err(SdkFfiError::new)?);
+        let client = (*self.0).clone().with_subscription_url(&url)?;
         Ok(Arc::new(client.into()))
     }
 

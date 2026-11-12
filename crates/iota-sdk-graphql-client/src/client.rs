@@ -169,9 +169,9 @@ impl GraphQLClient {
     /// Connect subscriptions to `url` instead of the `subscriptions` endpoint
     /// under the RPC URL. An `http` or `https` URL is upgraded to `ws` or
     /// `wss`.
-    pub fn with_subscription_url(mut self, url: Url) -> Self {
-        self.subscription_url = Some(url);
-        self
+    pub fn with_subscription_url(mut self, url: &str) -> GraphQLResult<Self> {
+        self.subscription_url = Some(Url::parse(url)?);
+        Ok(self)
     }
 
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:

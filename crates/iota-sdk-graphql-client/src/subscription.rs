@@ -417,7 +417,8 @@ mod tests {
     #[test]
     fn ws_url_uses_the_url_set() {
         let client = client("https://example.com/graphql")
-            .with_subscription_url("https://ws.example.com/live".parse().unwrap());
+            .with_subscription_url("https://ws.example.com/live")
+            .unwrap();
         assert_eq!(
             client.ws_url().unwrap().as_str(),
             "wss://ws.example.com/live"
@@ -427,7 +428,8 @@ mod tests {
     #[test]
     fn ws_url_rejects_other_schemes() {
         let client = client("https://example.com/graphql")
-            .with_subscription_url("ftp://example.com/live".parse().unwrap());
+            .with_subscription_url("ftp://example.com/live")
+            .unwrap();
         assert!(matches!(
             client.ws_url(),
             Err(GraphQLError::UnsupportedSubscriptionScheme(scheme)) if scheme == "ftp"
