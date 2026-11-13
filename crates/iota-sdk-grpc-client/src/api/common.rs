@@ -23,6 +23,7 @@ use iota_types::{ObjectId, TransactionDigest, Version};
 use serde::Serialize;
 
 use super::MetadataEnvelope;
+use crate::sdk_version::IncompatibleSdkVersion;
 
 /// Errors that can occur during gRPC client API operations.
 #[derive(Debug, thiserror::Error)]
@@ -56,6 +57,11 @@ pub enum GrpcError {
     /// gRPC transport or protocol error.
     #[error("grpc error: {0}")]
     Grpc(Box<tonic::Status>),
+
+    /// The node requires a newer `iota-sdk-grpc-client` than this one, so the
+    /// response was rejected before its body was decoded. Upgrade the crate.
+    #[error("node requires iota-sdk-grpc-client >= {minimum}, this client is {current}")]
+    IncompatibleSdkVersion { minimum: String, current: String },
 }
 
 impl GrpcError {
@@ -87,6 +93,14 @@ impl From<TryFromProtoError> for GrpcError {
 
 impl From<tonic::Status> for GrpcError {
     fn from(status: tonic::Status) -> Self {
+        if let Some(error) = std::error::Error::source(&status)
+            .and_then(|source| source.downcast_ref::<IncompatibleSdkVersion>())
+        {
+            return GrpcError::IncompatibleSdkVersion {
+                minimum: error.minimum.to_string(),
+                current: error.current.to_string(),
+            };
+        }
         GrpcError::Grpc(Box::new(status))
     }
 }
@@ -109,6 +123,9 @@ impl From<GrpcError> for tonic::Status {
                 tonic::Status::internal("stream ended unexpectedly: has_next was true")
             }
             GrpcError::Grpc(status) => *status,
+            error @ GrpcError::IncompatibleSdkVersion { .. } => {
+                tonic::Status::failed_precondition(error.to_string())
+            }
         }
     }
 }

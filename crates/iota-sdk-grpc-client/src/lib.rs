@@ -115,3 +115,6 @@ pub use response_ext::ResponseExt;
 
 mod interceptors;
 pub use interceptors::HeadersInterceptor;
+
+mod sdk_version;
+pub use sdk_version::{SdkVersionCheck, VERSION};
