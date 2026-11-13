@@ -319,13 +319,15 @@ impl ListTransactionsDataEffectsQuery {
             txc.nodes
                 .into_iter()
                 .map(|node| {
-                    let (Some(bcs), Some(effects)) = (node.bcs, node.effects) else {
+                    let (Some(bcs), Some(effects_bcs)) =
+                        (node.bcs, node.effects.and_then(|effects| effects.bcs))
+                    else {
                         return Err(GraphQLError::EmptyResponseField(
                             "transaction bcs or effects",
                         ));
                     };
                     let bcs = crate::base64::decode(bcs.0.as_str())?;
-                    let effects = crate::base64::decode(effects.bcs.as_ref().unwrap().0.as_str())?;
+                    let effects = crate::base64::decode(effects_bcs.0.as_str())?;
                     let transaction: SenderSignedTransaction =
                         bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
                     let effects: TransactionEffects =
@@ -498,8 +500,11 @@ impl GetTransactionDataEffectsQuery {
 
         match response.transaction_block.map(|tx| (tx.bcs, tx.effects)) {
             Some((Some(bcs), Some(effects))) => {
+                let effects_bcs = effects
+                    .bcs
+                    .ok_or(GraphQLError::EmptyResponseField("transaction effects bcs"))?;
                 let bcs = crate::base64::decode(bcs.0.as_str())?;
-                let effects = crate::base64::decode(effects.bcs.unwrap().0.as_str())?;
+                let effects = crate::base64::decode(effects_bcs.0.as_str())?;
                 let transaction: SenderSignedTransaction =
                     bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
                 let effects: TransactionEffects =
@@ -702,7 +707,7 @@ mod tests {
         query_types::{AddressTransactionRelationship, TransactionsFilter},
         test_utils::{
             assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
-            test_client, test_transaction,
+            test_client, test_transaction, with_response,
         },
     };
 
@@ -934,6 +939,43 @@ mod tests {
         })
         .await;
         assert_forward_page(&vars);
+    }
+
+    #[tokio::test]
+    async fn effects_queries_reject_effects_without_bcs() {
+        let digest = test_transaction().digest();
+
+        let result = with_response(
+            r#"{"data":{"transactionBlock":{"effects":{"bcs":null}}}}"#,
+            |client| async move { client.transaction_effects(digest).await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("transaction effects bcs"))
+        ));
+
+        let result = with_response(
+            r#"{"data":{"transactionBlock":{"bcs":"AA==","effects":{"bcs":null}}}}"#,
+            |client| async move { client.transaction_data_effects(digest).await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("transaction effects bcs"))
+        ));
+
+        let result = with_response(
+            r#"{"data":{"transactionBlocks":{"nodes":[{"bcs":"AA==","effects":{"bcs":null}}],"pageInfo":{"hasPreviousPage":false,"hasNextPage":false,"startCursor":null,"endCursor":null}}}}"#,
+            |client| async move { client.transactions_data_effects().await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField(
+                "transaction bcs or effects"
+            ))
+        ));
     }
 
     #[tokio::test]
