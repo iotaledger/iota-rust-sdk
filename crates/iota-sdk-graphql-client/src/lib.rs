@@ -12,6 +12,7 @@ pub mod faucet;
 pub mod output_types;
 pub mod pagination;
 pub mod query_types;
+mod sdk_version;
 mod streams;
 mod subscription;
 mod tls;
@@ -67,6 +68,7 @@ pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
 pub use reqwest;
+pub use sdk_version::{VERSION, X_MIN_IOTA_SDK_GRAPHQL_CLIENT_VERSION};
 pub use subscription::{EventsSubscriptionBuilder, TransactionsSubscriptionBuilder};
 
 mod base64 {
