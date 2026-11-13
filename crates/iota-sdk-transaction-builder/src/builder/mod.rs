@@ -1678,6 +1678,14 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                     .await
                     .map_err(TransactionBuilderError::client)?;
                 for obj in page.data {
+                    if *obj.owner() != Owner::Address(owner) {
+                        return Err(LookupError::GasCoinOwnerMismatch {
+                            object_id: obj.id(),
+                            requested: owner,
+                            returned: *obj.owner(),
+                        }
+                        .into());
+                    }
                     if unusable_object_ids.contains(&obj.id()) {
                         continue;
                     }
@@ -3075,6 +3083,74 @@ mod tests {
             async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
                 crate::TestClient.protocol_config().await
             }
+        }
+
+        /// Forwards to [`crate::TestClient`], but answers gas selection with
+        /// coins owned by `owner` instead of the requested owner.
+        struct ForeignGasClient {
+            owner: Address,
+        }
+
+        impl crate::TransactionBuilderClientBase for ForeignGasClient {
+            type Error = crate::TestClientError;
+        }
+
+        impl TransactionBuilderLedgerClient for ForeignGasClient {
+            async fn object(
+                &self,
+                object_id: ObjectId,
+                version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                crate::TestClient.object(object_id, version).await
+            }
+
+            async fn objects(
+                &self,
+                struct_tag: Option<StructTag>,
+                _owner: Address,
+                cursor: Option<Vec<u8>>,
+                limit: Option<usize>,
+            ) -> Result<crate::ObjectsPage, Self::Error> {
+                crate::TestClient
+                    .objects(struct_tag, self.owner, cursor, limit)
+                    .await
+            }
+
+            async fn reference_gas_price(
+                &self,
+                epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                crate::TestClient.reference_gas_price(epoch).await
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                crate::TestClient.protocol_config().await
+            }
+        }
+
+        /// Gas selection rejects a coin owned by someone other than the gas
+        /// owner it asked for.
+        #[tokio::test]
+        async fn a_gas_coin_with_another_owner_is_rejected() {
+            let sender = Address::random();
+            let other = Address::random();
+
+            let mut builder =
+                TransactionBuilder::new(sender).with_client(ForeignGasClient { owner: other });
+            builder.transfer_objects(sender, [object_id(5)]);
+
+            let err = builder.finish_with_budget(1_000_000).await.unwrap_err();
+            assert!(
+                matches!(
+                    err,
+                    TransactionBuilderError::Lookup(LookupError::GasCoinOwnerMismatch {
+                        requested,
+                        returned: Owner::Address(returned),
+                        ..
+                    }) if requested == sender && returned == other
+                ),
+                "expected GasCoinOwnerMismatch, got {err}"
+            );
         }
 
         /// An object owned by another object cannot be an owned input.
