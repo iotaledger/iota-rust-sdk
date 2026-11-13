@@ -10,7 +10,7 @@ By default rewrites files in place. With `--check` only reports files that
 would change and exits non-zero if any are found (used by CI).
 
 Generated proto files under `crates/iota-sdk-grpc-types/src/proto/` are
-skipped — they must never be hand-edited.
+skipped: they must never be hand-edited.
 """
 
 import argparse

@@ -6,10 +6,10 @@
 The IOTA gRPC client provides access to the IOTA blockchain via gRPC. It wraps the low-level proto
 types and provides ergonomic APIs using SDK types from `iota_types`, on top of four service clients:
 
-- **Ledger Service** — query blocks, transactions, and ledger state
-- **Execution Service** — execute transactions and dry-run operations
-- **State Service** — query on-chain objects and state
-- **Move Package Service** — query and interact with Move packages
+- **Ledger Service**: query blocks, transactions, and ledger state
+- **Execution Service**: execute transactions and dry-run operations
+- **State Service**: query on-chain objects and state
+- **Move Package Service**: query and interact with Move packages
 
 ## Usage
 
@@ -48,10 +48,10 @@ The defaults reach them with no setup.
 | ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------- |
 | `tls-ring`         | on      | `ring` as the `rustls` crypto provider                                                                                    |
 | `tls-aws-lc`       | off     | `aws-lc-rs` instead; builds a C library, so it needs a C toolchain. `tls-ring` wins if both are on.                       |
-| neither provider   | —       | HTTP-only: `GrpcClient::new` rejects an `https://` address. The build to use against a localnet.                          |
+| neither provider   | -       | HTTP-only: `GrpcClient::new` rejects an `https://` address. The build to use against a localnet.                          |
 | `tls-native-roots` | on      | trust the platform certificate store. `GrpcClient::new` fails for an `https://` address if the store has no certificates. |
 | `tls-webpki-roots` | off     | trust the bundled Mozilla roots, merged into the platform store when `tls-native-roots` is also on                        |
-| neither roots      | —       | HTTP-only, as with no provider                                                                                            |
+| neither roots      | -       | HTTP-only, as with no provider                                                                                            |
 
 A crypto provider the application has installed as the process default
 (`rustls::crypto::CryptoProvider::install_default`) is used instead of the one the features select.

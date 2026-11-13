@@ -224,7 +224,7 @@ pub mod balance {
 
     /// Rust version of the Move `iota::balance::Balance<T>` type.
     ///
-    /// A storable balance — the inner struct of a `Coin` type. Can be used
+    /// A storable balance: the inner struct of a `Coin` type. Can be used
     /// to store coins which don't need the `key` ability.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
@@ -993,7 +993,7 @@ pub mod tx_context {
     /// Rust version of the Move `iota::tx_context::TxContext` type.
     ///
     /// Information about the transaction currently being executed. Not
-    /// constructible from user code — created by the VM and passed to the
+    /// constructible from user code: created by the VM and passed to the
     /// transaction entrypoint as `&mut TxContext`.
     ///
     /// # BCS
@@ -1384,9 +1384,9 @@ pub mod linked_table {
         /// The number of key-value pairs in the table.
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
-        /// The front of the table — the key of the first entry.
+        /// The front of the table: the key of the first entry.
         pub head: Option<K>,
-        /// The back of the table — the key of the last entry.
+        /// The back of the table: the key of the last entry.
         pub tail: Option<K>,
         #[cfg_attr(feature = "serde", serde(skip))]
         _v: PhantomData<V>,
@@ -1856,7 +1856,7 @@ pub mod package {
     /// Rust version of the Move `iota::package::UpgradeTicket` type.
     ///
     /// Permission to perform a particular upgrade. An `UpgradeCap` can
-    /// only issue one ticket at a time — the ticket is a hot potato.
+    /// only issue one ticket at a time; the ticket is a hot potato.
     ///
     /// # BCS
     ///
@@ -2502,7 +2502,7 @@ pub mod token {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct ActionRequest<T> {
-        /// Name of the action — one of `transfer`, `spend`, `to_coin`,
+        /// Name of the action: one of `transfer`, `spend`, `to_coin`,
         /// `from_coin`, or a custom action.
         pub name: string::String,
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
@@ -2766,7 +2766,7 @@ pub mod package_metadata {
         pub id: UID,
         /// Storage ID of the package represented by this metadata.
         pub storage_id: ID,
-        /// Runtime ID of the package — the storage ID of the first version.
+        /// Runtime ID of the package: the storage ID of the first version.
         pub runtime_id: ID,
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub package_version: u64,
@@ -3011,7 +3011,7 @@ pub mod transaction_deny_rules {
     /// Rust version of the Move
     /// `iota::transaction_deny_rules::TransactionDenyRulesInnerV1` type.
     ///
-    /// The deny lists are `LinkedTable` membership sets — the `bool` value
+    /// The deny lists are `LinkedTable` membership sets: the `bool` value
     /// is always `true` and never read. Each entry is its own child object,
     /// so the sets are enumerated by walking the linked keys with
     /// child-object reads, not by decoding this struct.
@@ -3554,7 +3554,7 @@ pub mod kiosk {
     )]
     pub struct Kiosk {
         pub id: UID,
-        /// Balance of the Kiosk — all profits from sales go here.
+        /// Balance of the Kiosk: all profits from sales go here.
         pub profits: Balance<IOTA>,
         /// Always points to the `sender` of the transaction; can be
         /// changed by calling `set_owner` with the owner cap.

@@ -5,7 +5,7 @@
 //! compared against the canonical Move definition parsed from a compiled
 //! `packages_compiled` blob.
 //!
-//! The blobs are not committed — `update_compiled_packages.sh` fetches them
+//! The blobs are not committed: `update_compiled_packages.sh` fetches them
 //! into the gitignored `src/packages_compiled/` directory at the monorepo
 //! rev pinned by the `move-binary-format` dependency (`make test` does this
 //! automatically when they are missing or out of date). They are read at
@@ -27,7 +27,7 @@ use crate::{
 };
 
 // ---------------------------------------------------------------------------
-// Compiled package blobs (fetched, not committed — see module docs)
+// Compiled package blobs (fetched, not committed; see module docs)
 // ---------------------------------------------------------------------------
 
 /// Read a fetched artifact from `src/packages_compiled/`.
@@ -106,7 +106,7 @@ macro_rules! entry {
 }
 
 fn expected_entries() -> Vec<Entry> {
-    // For generic mirrors, the type argument is irrelevant — the derive
+    // For generic mirrors, the type argument is irrelevant: the derive
     // resolves `T` at macro-expansion time into `Shape::TypeParameter(0)`,
     // so the body of `move_shape()` never references the chosen type. `()`
     // keeps the instantiation noise-free.
@@ -1196,7 +1196,7 @@ fn check_struct(
         }
     };
 
-    // Drop Rust-side phantom fields (e.g. `PhantomData<T>`) — Move models
+    // Drop Rust-side phantom fields (e.g. `PhantomData<T>`): Move models
     // phantom type params at the struct level, not as fields.
     let rust_fields: Vec<&Field> = rust_fields
         .iter()
@@ -1205,7 +1205,7 @@ fn check_struct(
 
     if rust_fields.len() != move_def.fields.len() {
         return Err(format!(
-            "{move_module}::{move_struct}: field count mismatch — Rust has {} (after phantom filter), Move has {}",
+            "{move_module}::{move_struct}: field count mismatch: Rust has {} (after phantom filter), Move has {}",
             rust_fields.len(),
             move_def.fields.len()
         ));
@@ -1215,7 +1215,7 @@ fn check_struct(
         let move_name: &str = mf.name.as_ref().as_str();
         if rf.name != move_name {
             return Err(format!(
-                "{move_module}::{move_struct}: field name mismatch — Rust `{}` vs Move `{}`",
+                "{move_module}::{move_struct}: field name mismatch: Rust `{}` vs Move `{}`",
                 rf.name, move_name
             ));
         }
@@ -1244,7 +1244,7 @@ fn check_enum(
 
     if rust_variants.len() != move_def.variants.len() {
         return Err(format!(
-            "{move_module}::{move_enum}: variant count mismatch — Rust has {}, Move has {}",
+            "{move_module}::{move_enum}: variant count mismatch: Rust has {}, Move has {}",
             rust_variants.len(),
             move_def.variants.len()
         ));
@@ -1254,7 +1254,7 @@ fn check_enum(
         let move_variant_name: &str = mv.name.as_ref().as_str();
         if rv.name != move_variant_name {
             return Err(format!(
-                "{move_module}::{move_enum}: variant name mismatch — Rust `{}` vs Move `{}`",
+                "{move_module}::{move_enum}: variant name mismatch: Rust `{}` vs Move `{}`",
                 rv.name, move_variant_name
             ));
         }
@@ -1266,7 +1266,7 @@ fn check_enum(
             .collect();
         if rust_fields.len() != mv.fields.len() {
             return Err(format!(
-                "{move_module}::{move_enum}::{}: field count mismatch — Rust has {} (after phantom filter), Move has {}",
+                "{move_module}::{move_enum}::{}: field count mismatch: Rust has {} (after phantom filter), Move has {}",
                 rv.name,
                 rust_fields.len(),
                 mv.fields.len()
@@ -1276,7 +1276,7 @@ fn check_enum(
             let move_field_name: &str = mf.name.as_ref().as_str();
             if rf.name != move_field_name {
                 return Err(format!(
-                    "{move_module}::{move_enum}::{}: field name mismatch — Rust `{}` vs Move `{}`",
+                    "{move_module}::{move_enum}::{}: field name mismatch: Rust `{}` vs Move `{}`",
                     rv.name, rf.name, move_field_name
                 ));
             }
@@ -1303,7 +1303,7 @@ fn check_type(
 ) -> Result<(), String> {
     let mismatch = || {
         Err(format!(
-            "{module}::{struct_name}.{field}: shape mismatch — Rust `{rust:?}` vs Move `{move_ty:?}`"
+            "{module}::{struct_name}.{field}: shape mismatch: Rust `{rust:?}` vs Move `{move_ty:?}`"
         ))
     };
 
@@ -1340,7 +1340,7 @@ fn check_type(
         (Shape::Address, Type::Address) => Ok(()),
         (Shape::Vector(a), Type::Vector(b)) => check_type(module, struct_name, field, a, b),
         (Shape::TypeParameter(n), Type::TypeParameter(m)) if *n == *m => Ok(()),
-        // Named types are matched by name + type-arg arity only — the derive
+        // Named types are matched by name + type-arg arity only: the derive
         // can't see Move module paths, so two same-named, same-arity types in
         // different modules (e.g. `vec_map::Entry<K, V>` vs a hypothetical
         // two-param `Entry` elsewhere) would cross-match at a reference site.
@@ -1352,12 +1352,12 @@ fn check_type(
             let move_name: &str = d.name.as_ref().as_str();
             if *name != move_name {
                 return Err(format!(
-                    "{module}::{struct_name}.{field}: datatype name mismatch — Rust `{name}` vs Move `{move_name}`"
+                    "{module}::{struct_name}.{field}: datatype name mismatch: Rust `{name}` vs Move `{move_name}`"
                 ));
             }
             if args.len() != d.type_arguments.len() {
                 return Err(format!(
-                    "{module}::{struct_name}.{field}: type-arg arity mismatch — Rust {} vs Move {}",
+                    "{module}::{struct_name}.{field}: type-arg arity mismatch: Rust {} vs Move {}",
                     args.len(),
                     d.type_arguments.len()
                 ));
@@ -1377,7 +1377,7 @@ fn check_type(
 
 #[test]
 fn shapes_match() {
-    // Load each package once, keyed by its `Package` variant — every entry
+    // Load each package once, keyed by its `Package` variant: every entry
     // routes to the right blob without re-parsing.
     let entries = expected_entries();
     let mut by_package: std::collections::HashMap<
@@ -1442,13 +1442,13 @@ fn shapes_match() {
     }
 }
 
-/// Parse `published_api.txt` — the manifest of every public
+/// Parse `published_api.txt` (the manifest of every public
 /// `struct`/`enum` across the four system packages, fetched at the pinned
-/// monorepo rev — into the set of `(address, module, name)` keys.
+/// monorepo rev) into the set of `(address, module, name)` keys.
 ///
 /// `move_types_drift_nightly` flags when upstream `develop` drifts from the
 /// pin; [`registry_matches_published_api`] in turn keeps [`expected_entries`]
-/// in sync with the manifest — so every published type has a registered
+/// in sync with the manifest, so every published type has a registered
 /// mirror that [`shapes_match`] then cross-checks.
 ///
 /// The file stores one record per three lines: the type name, its kind
@@ -1492,8 +1492,8 @@ fn registered_types() -> std::collections::BTreeSet<(String, String, String)> {
 
 /// Every published Move type must have a registered mirror, and every
 /// registered entry must correspond to a real published type. Without this
-/// guard a new mirror could be added but left out of [`expected_entries`] —
-/// silently skipping its shape check — or an upstream type could go unmirrored
+/// guard a new mirror could be added but left out of [`expected_entries`]
+/// (silently skipping its shape check), or an upstream type could go unmirrored
 /// entirely, leaving [`shapes_match`]'s "exhaustive" claim unenforced.
 #[test]
 fn registry_matches_published_api() {
@@ -1535,7 +1535,7 @@ fn registry_matches_published_api() {
 // comparator that regressed to always returning `Ok(())` would still pass it.
 // Each test below starts from a real Move definition and the mirror's
 // known-good `move_shape()`, mutates exactly one thing, and asserts the
-// comparator now rejects it — one case per branch the comparator protects.
+// comparator now rejects it, one case per branch the comparator protects.
 
 fn struct_fields(shape: Shape) -> Vec<Field> {
     match shape {
