@@ -24,7 +24,7 @@ pub enum FaucetError {
     BadGateway,
     #[error("Faucet request {0} was discarded")]
     Discarded(String),
-    #[error("Invalid faucet request id `{0}`: only ASCII letters, digits and `-` are allowed")]
+    #[error("Invalid faucet request id `{0}`: expected a UUID")]
     InvalidRequestId(String),
     #[error("Invalid faucet URL: {0}")]
     InvalidUrl(#[from] url::ParseError),
@@ -292,10 +292,11 @@ impl FaucetClient {
     /// Possible statuses are defined in: [`BatchSendStatusType`]
     ///
     /// Returns [`FaucetError::InvalidRequestId`] without sending a request if
-    /// `id` is empty or contains anything other than ASCII letters, digits and
-    /// `-`. A reply that carries the faucet's error message and no status
-    /// returns [`FaucetError::Request`] with that message, and any other
-    /// unsuccessful HTTP status returns an error.
+    /// `id` is empty or contains anything other than ASCII letters, digits,
+    /// `-`, `{`, `}` and `:`, which covers the UUID forms the faucet accepts.
+    /// A reply that carries the faucet's error message and no status returns
+    /// [`FaucetError::Request`] with that message, and any other unsuccessful
+    /// HTTP status returns an error.
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>, FaucetError> {
         let status_url = self.status_url(&id)?;
         info!("Checking status of faucet request: {status_url}");
@@ -333,7 +334,11 @@ impl FaucetClient {
     }
 
     fn status_url(&self, id: &str) -> Result<Url, FaucetError> {
-        if id.is_empty() || !id.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'-') {
+        if id.is_empty()
+            || !id
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'{' | b'}' | b':'))
+        {
             return Err(FaucetError::InvalidRequestId(id.to_owned()));
         }
         Ok(self.faucet_url.join(&format!("v1/status/{id}"))?)
@@ -444,6 +449,20 @@ mod tests {
                 .unwrap()
                 .as_str(),
             "https://host/faucet/v1/status/11111111-2222-3333-4444-555555555555"
+        );
+        assert_eq!(
+            client
+                .status_url("{11111111-2222-3333-4444-555555555555}")
+                .unwrap()
+                .as_str(),
+            "https://host/faucet/v1/status/%7B11111111-2222-3333-4444-555555555555%7D"
+        );
+        assert_eq!(
+            client
+                .status_url("urn:uuid:11111111-2222-3333-4444-555555555555")
+                .unwrap()
+                .as_str(),
+            "https://host/faucet/v1/status/urn:uuid:11111111-2222-3333-4444-555555555555"
         );
         for id in [
             "",
