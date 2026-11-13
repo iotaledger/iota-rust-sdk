@@ -294,20 +294,43 @@ impl FaucetClient {
     /// Returns [`FaucetError::InvalidRequestId`] without sending a request if
     /// `id` is empty or contains anything other than ASCII letters, digits,
     /// `-`, `{`, `}` and `:`, which covers the UUID forms the faucet accepts.
+    /// A reply that carries the faucet's error message and no status returns
+    /// [`FaucetError::Request`] with that message, and any other unsuccessful
+    /// HTTP status returns an error.
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>, FaucetError> {
         let status_url = self.status_url(&id)?;
         info!("Checking status of faucet request: {status_url}");
         let response = self.inner.get(status_url).send().await?;
 
-        if response.status() == StatusCode::TOO_MANY_REQUESTS {
-            return Err(FaucetError::TooManyRequests);
-        } else if response.status() == StatusCode::BAD_GATEWAY {
-            return Err(FaucetError::BadGateway);
+        let status_code = response.status();
+        match status_code {
+            StatusCode::TOO_MANY_REQUESTS => return Err(FaucetError::TooManyRequests),
+            StatusCode::BAD_GATEWAY => return Err(FaucetError::BadGateway),
+            StatusCode::SERVICE_UNAVAILABLE => return Err(FaucetError::Unavailable),
+            _ => {}
+        }
+
+        if !status_code.is_success() {
+            let error = response
+                .json::<BatchStatusFaucetResponse>()
+                .await
+                .ok()
+                .and_then(|json| json.error);
+            error!("Faucet status request was unsuccessful: {status_code}");
+            return Err(error.map_or(FaucetError::StatusCode(status_code), FaucetError::Request));
         }
 
         let json = response.json::<BatchStatusFaucetResponse>().await?;
-
-        Ok(json.status)
+        match json {
+            BatchStatusFaucetResponse {
+                status: None,
+                error: Some(error),
+            } => {
+                error!("Faucet status request was unsuccessful: {error}");
+                Err(FaucetError::Request(error))
+            }
+            json => Ok(json.status),
+        }
     }
 
     fn status_url(&self, id: &str) -> Result<Url, FaucetError> {
@@ -344,6 +367,77 @@ mod tests {
             gas_url("https://host/faucet/"),
             "https://host/faucet/v1/gas"
         );
+    }
+
+    /// Answer one `request_status` call with `status_line` and `body`.
+    #[cfg(not(target_arch = "wasm32"))]
+    async fn status_reply(
+        status_line: &str,
+        body: &str,
+    ) -> Result<Option<BatchSendStatus>, FaucetError> {
+        use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let client =
+            FaucetClient::new(&format!("http://{}", listener.local_addr().unwrap())).unwrap();
+        let server = async {
+            let (mut stream, _) = listener.accept().await.unwrap();
+            let mut request = Vec::new();
+            while !request.windows(4).any(|w| w == b"\r\n\r\n") {
+                let mut chunk = [0; 4096];
+                let read = stream.read(&mut chunk).await.unwrap();
+                assert!(read > 0, "connection closed before the request headers");
+                request.extend_from_slice(&chunk[..read]);
+            }
+            let response = format!(
+                "HTTP/1.1 {status_line}\r\ncontent-type: application/json\r\ncontent-length: {}\r\nconnection: close\r\n\r\n{body}",
+                body.len()
+            );
+            stream.write_all(response.as_bytes()).await.unwrap();
+        };
+        let (_, result) = tokio::join!(
+            server,
+            client.request_status("11111111-2222-3333-4444-555555555555".to_owned())
+        );
+        result
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    #[tokio::test]
+    async fn request_status_reports_the_faucet_error() {
+        let body = r#"{"status":null,"error":"task not found"}"#;
+        for status_line in ["500 Internal Server Error", "201 Created"] {
+            assert!(
+                matches!(
+                    status_reply(status_line, body).await,
+                    Err(FaucetError::Request(error)) if error == "task not found"
+                ),
+                "{status_line}"
+            );
+        }
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    #[tokio::test]
+    async fn request_status_rejects_an_unsuccessful_status() {
+        assert!(matches!(
+            status_reply("404 Not Found", "not json").await,
+            Err(FaucetError::StatusCode(StatusCode::NOT_FOUND))
+        ));
+        assert!(matches!(
+            status_reply("503 Service Unavailable", "").await,
+            Err(FaucetError::Unavailable)
+        ));
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
+    #[tokio::test]
+    async fn request_status_returns_the_status() {
+        let status = status_reply("201 Created", r#"{"status":{"status":"INPROGRESS"}}"#)
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(status.status, BatchSendStatusType::InProgress);
     }
 
     #[test]
