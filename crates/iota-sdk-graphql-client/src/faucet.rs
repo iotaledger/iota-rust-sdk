@@ -24,6 +24,8 @@ pub enum FaucetError {
     BadGateway,
     #[error("Faucet request {0} was discarded")]
     Discarded(String),
+    #[error("Invalid faucet request id `{0}`: only ASCII letters, digits and `-` are allowed")]
+    InvalidRequestId(String),
     #[error("Invalid faucet URL: {0}")]
     InvalidUrl(#[from] url::ParseError),
     #[error("Faucet request was unsuccessful: {0}")]
@@ -288,8 +290,12 @@ impl FaucetClient {
     /// Check the faucet request status.
     ///
     /// Possible statuses are defined in: [`BatchSendStatusType`]
+    ///
+    /// Returns [`FaucetError::InvalidRequestId`] without sending a request if
+    /// `id` is empty or contains anything other than ASCII letters, digits and
+    /// `-`.
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>, FaucetError> {
-        let status_url = self.faucet_url.join(&format!("v1/status/{id}"))?;
+        let status_url = self.status_url(&id)?;
         info!("Checking status of faucet request: {status_url}");
         let response = self.inner.get(status_url).send().await?;
 
@@ -302,6 +308,13 @@ impl FaucetClient {
         let json = response.json::<BatchStatusFaucetResponse>().await?;
 
         Ok(json.status)
+    }
+
+    fn status_url(&self, id: &str) -> Result<Url, FaucetError> {
+        if id.is_empty() || !id.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'-') {
+            return Err(FaucetError::InvalidRequestId(id.to_owned()));
+        }
+        Ok(self.faucet_url.join(&format!("v1/status/{id}"))?)
     }
 }
 
@@ -327,5 +340,33 @@ mod tests {
             gas_url("https://host/faucet/"),
             "https://host/faucet/v1/gas"
         );
+    }
+
+    #[test]
+    fn status_url_takes_the_id_as_one_segment() {
+        let client = FaucetClient::new("https://host/faucet").unwrap();
+        assert_eq!(
+            client
+                .status_url("11111111-2222-3333-4444-555555555555")
+                .unwrap()
+                .as_str(),
+            "https://host/faucet/v1/status/11111111-2222-3333-4444-555555555555"
+        );
+        for id in [
+            "",
+            ".",
+            "..",
+            "../../graphql",
+            "x?y=1",
+            "x#frag",
+            "a\nb",
+            "a/b",
+            "a%2Fb",
+        ] {
+            assert!(
+                matches!(client.status_url(id), Err(FaucetError::InvalidRequestId(_))),
+                "{id:?} was accepted"
+            );
+        }
     }
 }
