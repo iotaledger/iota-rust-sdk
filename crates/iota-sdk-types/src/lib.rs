@@ -108,7 +108,7 @@ mod serialization_proptests;
 
 #[cfg(feature = "serde")]
 #[doc(hidden)]
-pub use _serde::OptionReadableDisplay;
+pub use _serde::{OptionReadableDisplay, ReadableDisplay, VecReadableDisplay};
 #[cfg(feature = "serde")]
 pub use bcs_base64::FromBase64Error;
 
@@ -356,13 +356,13 @@ mod _serde {
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use serde_with::{Bytes, DeserializeAs, SerializeAs};
 
-    pub(crate) type ReadableDisplay =
+    pub type ReadableDisplay =
         ::serde_with::As<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>;
 
     pub type OptionReadableDisplay =
         ::serde_with::As<Option<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
 
-    pub(crate) type VecReadableDisplay =
+    pub type VecReadableDisplay =
         ::serde_with::As<Vec<::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr>>>;
 
     pub(crate) type ReadableBase64Encoded =

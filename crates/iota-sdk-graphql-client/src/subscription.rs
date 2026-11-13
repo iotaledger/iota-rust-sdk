@@ -237,10 +237,26 @@ impl GraphQLClient {
         }
     }
 
-    /// Derive the WebSocket URL for subscriptions from the configured RPC URL,
-    /// upgrading the scheme (`http` → `ws`, `https` → `wss`).
+    /// The WebSocket URL for subscriptions, upgrading the scheme (`http` →
+    /// `ws`, `https` → `wss`).
+    ///
+    /// Unless one was set with
+    /// [`with_subscription_url`](Self::with_subscription_url), it is the
+    /// `subscriptions` endpoint under the RPC URL, as the server routes it,
+    /// keeping the query: `https://host/graphql` subscribes at
+    /// `wss://host/graphql/subscriptions`.
     fn ws_url(&self) -> GraphQLResult<Url> {
-        let mut url = self.rpc.clone();
+        let mut url = match &self.subscription_url {
+            Some(url) => url.clone(),
+            None => {
+                let mut url = self.rpc.clone();
+                url.set_path(&format!(
+                    "{}/subscriptions",
+                    self.rpc.path().trim_end_matches('/')
+                ));
+                url
+            }
+        };
         match url.scheme() {
             "https" => url.set_scheme("wss"),
             "http" => url.set_scheme("ws"),
@@ -252,7 +268,6 @@ impl GraphQLClient {
             }
         }
         .map_err(|_| GraphQLError::subscription("failed to derive the WebSocket URL"))?;
-        url.set_path("/subscriptions");
         Ok(url)
     }
 
@@ -361,6 +376,65 @@ mod tests {
     use cynic::{GraphQlError as CynicError, GraphQlErrorPathSegment, GraphQlResponse};
 
     use super::*;
+
+    fn client(rpc: &str) -> GraphQLClient {
+        let http = crate::tls::default_http_client_builder().build().unwrap();
+        GraphQLClient::new_with_reqwest_client(rpc, http).unwrap()
+    }
+
+    #[test]
+    fn ws_url_sits_under_the_rpc_url() {
+        for (rpc, expected) in [
+            (
+                "https://graphql.testnet.iota.cafe",
+                "wss://graphql.testnet.iota.cafe/subscriptions",
+            ),
+            (
+                "http://127.0.0.1:9125/graphql",
+                "ws://127.0.0.1:9125/graphql/subscriptions",
+            ),
+            (
+                "http://127.0.0.1:9125/graphql/",
+                "ws://127.0.0.1:9125/graphql/subscriptions",
+            ),
+            (
+                "https://example.com/graphql/v1",
+                "wss://example.com/graphql/v1/subscriptions",
+            ),
+            (
+                "https://example.com/iota/graphql?key=abc",
+                "wss://example.com/iota/graphql/subscriptions?key=abc",
+            ),
+        ] {
+            assert_eq!(
+                client(rpc).ws_url().unwrap().as_str(),
+                expected,
+                "rpc {rpc}"
+            );
+        }
+    }
+
+    #[test]
+    fn ws_url_uses_the_url_set() {
+        let client = client("https://example.com/graphql")
+            .with_subscription_url("https://ws.example.com/live")
+            .unwrap();
+        assert_eq!(
+            client.ws_url().unwrap().as_str(),
+            "wss://ws.example.com/live"
+        );
+    }
+
+    #[test]
+    fn ws_url_rejects_other_schemes() {
+        let client = client("https://example.com/graphql")
+            .with_subscription_url("ftp://example.com/live")
+            .unwrap();
+        assert!(matches!(
+            client.ws_url(),
+            Err(GraphQLError::UnsupportedSubscriptionScheme(scheme)) if scheme == "ftp"
+        ));
+    }
 
     #[test]
     fn errors_surface_as_query_errors_without_a_code() {
