@@ -1678,7 +1678,10 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                     .await
                     .map_err(TransactionBuilderError::client)?;
                 for obj in page.data {
-                    if unusable_object_ids.contains(&obj.id()) {
+                    let id = obj.id();
+                    if unusable_object_ids.contains(&id)
+                        || selected.iter().any(|(_, r)| r.object_id == id)
+                    {
                         continue;
                     }
                     let Ok(coin) = Coin::try_from_object(&obj) else {
