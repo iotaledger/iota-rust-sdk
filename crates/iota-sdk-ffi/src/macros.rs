@@ -505,10 +505,10 @@ macro_rules! ffi_btree_map {
 }
 
 /// Define the FFI object holding the per-item results of a gRPC batch call,
-/// each either an `$item` converted from `$proto` or the error message the
-/// server reported for it. uniffi can't carry a `Result` inside a list, so
-/// the items are read through `get` and `has_next`/`next`, which throw an
-/// item's error.
+/// each either an `$item` converted from `$proto` or the error the server
+/// reported for it. uniffi can't carry a `Result` inside a list, so the items
+/// are read through `get` and `has_next`/`next`, which throw an item's error,
+/// and `error_code` exposes the gRPC status code of that error.
 #[macro_export]
 macro_rules! grpc_batch_results {
     (
@@ -523,7 +523,12 @@ macro_rules! grpc_batch_results {
         /// read any number of times.
         #[derive(uniffi::Object)]
         pub struct $name {
-            results: Vec<::std::result::Result<$item, String>>,
+            results: Vec<
+                ::std::result::Result<
+                    $item,
+                    (String, Option<$crate::grpc::status::GrpcStatusCode>),
+                >,
+            >,
             cursor: ::std::sync::atomic::AtomicUsize,
         }
 
@@ -538,11 +543,34 @@ macro_rules! grpc_batch_results {
                         .into_iter()
                         .map(|result| match result {
                             Ok(item) => <$item>::try_from(&item).map(Ok),
-                            Err(error) => Ok(Err(error.to_string())),
+                            Err(error) => Ok(Err((
+                                error.to_string(),
+                                $crate::grpc::status::GrpcStatusCode::of(&error),
+                            ))),
                         })
                         .collect::<$crate::error::Result<_>>()?,
                     cursor: ::std::sync::atomic::AtomicUsize::new(0),
                 })
+            }
+
+            fn result(
+                &self,
+                index: u64,
+            ) -> $crate::error::Result<
+                &::std::result::Result<
+                    $item,
+                    (String, Option<$crate::grpc::status::GrpcStatusCode>),
+                >,
+            > {
+                usize::try_from(index)
+                    .ok()
+                    .and_then(|index| self.results.get(index))
+                    .ok_or_else(|| {
+                        $crate::error::SdkFfiError::custom(format!(
+                            "index {index} out of range for {} results",
+                            self.results.len()
+                        ))
+                    })
             }
         }
 
@@ -561,17 +589,19 @@ macro_rules! grpc_batch_results {
             /// The item at `index`, or an error carrying the message the
             /// server reported for it. Errors if `index` is out of range.
             pub fn get(&self, index: u64) -> $crate::error::Result<$item> {
-                usize::try_from(index)
-                    .ok()
-                    .and_then(|index| self.results.get(index))
-                    .ok_or_else(|| {
-                        $crate::error::SdkFfiError::custom(format!(
-                            "index {index} out of range for {} results",
-                            self.results.len()
-                        ))
-                    })?
+                self.result(index)?
                     .clone()
-                    .map_err($crate::error::SdkFfiError::custom)
+                    .map_err(|(message, _)| $crate::error::SdkFfiError::custom(message))
+            }
+
+            /// The gRPC status code of the error the server reported for the
+            /// item at `index`, or `None` if the item succeeded or its error
+            /// carries no status code. Errors if `index` is out of range.
+            pub fn error_code(
+                &self,
+                index: u64,
+            ) -> $crate::error::Result<Option<$crate::grpc::status::GrpcStatusCode>> {
+                Ok(self.result(index)?.as_ref().err().and_then(|(_, code)| *code))
             }
 
             /// Whether `next` has an item left to return.
