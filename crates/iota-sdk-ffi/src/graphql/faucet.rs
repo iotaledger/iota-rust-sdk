@@ -103,6 +103,10 @@ impl FaucetClient {
     /// Check the faucet request status.
     ///
     /// Possible statuses are defined in: `FaucetBatchSendStatusType`
+    ///
+    /// Returns an error without sending a request if `id` is empty or contains
+    /// anything other than ASCII letters, digits, `-`, `{`, `}` and `:`, which
+    /// covers the UUID forms the faucet accepts.
     pub async fn request_status(&self, id: String) -> Result<Option<FaucetBatchSendStatus>> {
         Ok(self
             .0
