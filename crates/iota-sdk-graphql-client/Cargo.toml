@@ -25,10 +25,23 @@ rustdoc-args = [
 # TLS crypto provider and trust anchors; see README.md.
 default = ["tls-native-roots", "tls-ring", "tls-webpki-roots"]
 move-types = ["dep:iota-move-types"]
-tls-aws-lc = ["dep:rustls", "reqwest/rustls-no-provider", "rustls/aws-lc-rs"]
-tls-native-roots = []
-tls-ring = ["dep:rustls", "reqwest/rustls-no-provider", "rustls/ring"]
-tls-webpki-roots = ["dep:webpki-root-certs"]
+tls-aws-lc = [
+  "dep:rustls",
+  "iota-transaction-builder/tls-aws-lc",
+  "reqwest/rustls-no-provider",
+  "rustls/aws-lc-rs",
+]
+tls-native-roots = ["iota-transaction-builder/tls-native-roots"]
+tls-ring = [
+  "dep:rustls",
+  "iota-transaction-builder/tls-ring",
+  "reqwest/rustls-no-provider",
+  "rustls/ring",
+]
+tls-webpki-roots = [
+  "dep:webpki-root-certs",
+  "iota-transaction-builder/tls-webpki-roots",
+]
 
 [lints]
 workspace = true
