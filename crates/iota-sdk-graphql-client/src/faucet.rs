@@ -34,7 +34,9 @@ pub enum FaucetError {
     StatusCode(StatusCode),
     #[error("Faucet request timed out")]
     TimedOut,
-    #[deprecated(note = "no longer returned; an `https` request without TLS fails with `Reqwest`")]
+    #[deprecated(
+        note = "no longer returned; an `https` request without TLS fails with `Reqwest` unless a proxy is set"
+    )]
     #[error(
         "Faucet URL scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass \
          your own client to `new_with_reqwest_client`"
