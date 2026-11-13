@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["STARDUST_UPGRADE_LABEL"]};

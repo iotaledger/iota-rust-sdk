@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["GraphQLTransactionArgument"],"struct":["GraphQLDryRunEffect","GraphQLDryRunMutation","GraphQLDryRunResult","GraphQLDryRunReturn"]};

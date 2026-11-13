@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["GraphQLEventUpdate","GraphQLSubscriptionEventFilter","GraphQLSubscriptionTransactionFilter","GraphQLTransactionUpdate"],"struct":["GraphQLEventSubscription","GraphQLTransactionSubscription"]};
