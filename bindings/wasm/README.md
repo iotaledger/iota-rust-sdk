@@ -93,6 +93,51 @@ console.log("Chain ID:", chainId);
 
 See [`examples/chain_id.html`](examples/chain_id.html) for a complete browser example.
 
+## Ledger
+
+`Ledger` connects to the IOTA app on a Ledger hardware wallet, and a `LedgerSigner` signs transactions and personal messages with the key at one derivation path.
+
+WASM can open neither USB devices nor TCP sockets, so `Ledger.nativeHid` and the calls on a `Ledger.speculos` connection fail. The device is reached through a `LedgerTransport` implemented in JavaScript and passed to `Ledger.fromTransport`: its `exchange` method receives an APDU command and returns the device's answer, which ends with the two-byte status word, both as an `ArrayBuffer`.
+
+### Browser
+
+Ledger's WebHID and WebUSB transports exchange the same bytes, as a Node.js `Buffer`. With [`@ledgerhq/hw-transport-webhid`](https://www.npmjs.com/package/@ledgerhq/hw-transport-webhid), in a Chromium-based browser:
+
+```javascript
+import TransportWebHID from "@ledgerhq/hw-transport-webhid";
+
+// Asks the user to select the device the first time, which the browser
+// only allows in response to a user action such as a click
+const device = await TransportWebHID.create();
+const ledger = Ledger.fromTransport({
+  async exchange(apdu) {
+    const answer = await device.exchange(Buffer.from(apdu));
+    return new Uint8Array(answer).buffer;
+  },
+});
+const signer = await ledger.signer("m/44'/4218'/0'/0'/0'");
+
+const builder = client.transactionBuilder(signer.address());
+builder.sendIota(recipientAddress, PtbArgument.u64(1000n));
+const effects = await builder.execute(
+  TransactionSigner.fromLedger(signer),
+  WaitForTransaction.Finalized,
+);
+```
+
+- Install the IOTA app on the device with Ledger Live, unlock the device and open the app. `openApp` can open it instead, but that disconnects the device, so the transport's `exchange` then has to connect again.
+- On Linux, install the udev rules from [LedgerHQ/udev-rules](https://github.com/LedgerHQ/udev-rules) so that the browser can open the device.
+
+### Speculos
+
+[Speculos](https://github.com/LedgerHQ/speculos) emulates a device running the IOTA app, for development without hardware. From the repository root, `make speculos-start` runs it in Docker and `make speculos-stop` stops it; [Using Speculos](../../crates/iota-sdk-ledger/README.md#using-speculos) describes running it yourself. Requests are approved in the emulator's web interface at <http://127.0.0.1:5001>.
+
+Under Node, a transport over a TCP socket reaches the emulator's APDU port, as in the [`ledger_sign_send_iota`](examples/ledger_sign_send_iota.mjs) example. With a local network running, `make ledger-example lang=wasm` starts the emulator, runs the example on it and approves the transaction.
+
+### Clear and blind signing
+
+The IOTA app shows what a transaction does when it can work that out from the transaction and its input objects. The transaction builder passes them to a `TransactionSigner.fromLedger` signer; `LedgerSigner.signTransaction` sends none, and `signTransactionWithObjects` takes them as an argument. A transaction the app cannot interpret is only signed when blind signing is enabled in the app's settings. Otherwise the device tells the user so, and `LedgerSigner` then fails with `LedgerError.BlindSigningDisabled`.
+
 ## File layout
 
 ```

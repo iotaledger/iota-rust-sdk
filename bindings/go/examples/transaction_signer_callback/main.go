@@ -9,6 +9,9 @@ import (
 	"github.com/iotaledger/iota-rust-sdk/bindings/go/iota_sdk"
 )
 
+// AsyncSigner is a signer implemented in Go. It wraps a local key, which needs
+// nothing but the transaction, so it opts out of the objects the builder fetches
+// for a signer that shows the transaction to its user, such as a hardware wallet.
 type AsyncSigner struct {
 	Key *iota_sdk.Ed25519PrivateKey
 }
@@ -16,6 +19,16 @@ type AsyncSigner struct {
 func (signer *AsyncSigner) Sign(transaction *iota_sdk.Transaction) (iota_sdk.TransactionSignerFnOutput, error) {
 	signature, err := signer.Key.SignTransaction(transaction)
 	return iota_sdk.TransactionSignerFnOutput{Signature: signature}, err
+}
+
+func (signer *AsyncSigner) UsesObjects() bool {
+	return false
+}
+
+// SignWithObjects is never called for a signer whose UsesObjects returns
+// false; the interface still requires it.
+func (signer *AsyncSigner) SignWithObjects(transaction *iota_sdk.Transaction, objects []*iota_sdk.Object) (iota_sdk.TransactionSignerFnOutput, error) {
+	return signer.Sign(transaction)
 }
 
 func main() {
