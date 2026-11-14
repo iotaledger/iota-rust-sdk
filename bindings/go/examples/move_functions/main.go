@@ -35,10 +35,6 @@ func main() {
 			packageAddress,
 			moduleId.AsStr(),
 			nil,
-			nil,
-			nil,
-			nil,
-			nil,
 		)
 		if err != nil {
 			log.Fatalf("Failed to get module: %v", err)
@@ -47,9 +43,9 @@ func main() {
 			log.Fatalf("Module: %v not found", moduleId.AsStr())
 		}
 		module := *moduleOpt
-		if module.Functions != nil {
+		if len(module.Functions) > 0 {
 			fmt.Println("Module:", moduleId.AsStr())
-			for _, fun := range module.Functions.Nodes {
+			for _, fun := range module.Functions {
 				fmt.Println("- ", fun.String())
 			}
 			fmt.Println()

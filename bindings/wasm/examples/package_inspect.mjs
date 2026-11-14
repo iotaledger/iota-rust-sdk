@@ -363,45 +363,32 @@ const moduleNames = pkg
 
 for (const moduleName of moduleNames) {
   console.log(`Module: ${moduleName}`);
-  const module = await client.normalizedMoveModule(
-    packageAddress,
-    moduleName,
-    undefined,
-    forwardPage(),
-    forwardPage(),
-    forwardPage(),
-    forwardPage(),
-  );
+  const module = await client.normalizedMoveModule(packageAddress, moduleName);
   if (module === null) {
     console.log("  metadata: missing\n");
     continue;
   }
-  if (module.functions === null || module.functions.nodes.length === 0) {
+  if (module.functions.length === 0) {
     console.log("  functions: none");
   } else {
     console.log("  functions:");
-    for (const fun of module.functions.nodes) {
+    for (const fun of module.functions) {
       console.log(
         `    - ${formatFunctionSignature(String(fun), packagePrefix)}`,
       );
     }
-    if (module.functions.pageInfo.hasNextPage) console.log("    - ...");
   }
-  if (module.structs === null || module.structs.nodes.length === 0) {
+  if (module.structs.length === 0) {
     console.log("  types: none");
   } else {
     console.log("  types:");
-    for (const struct_ of module.structs.nodes) {
+    for (const struct_ of module.structs) {
       const typeTag = `${packagePrefix}::${moduleName}::${struct_.name}`;
       console.log(`    - ${typeTag}`);
-      const hasKeyAbility =
-        struct_.abilities !== null &&
-        struct_.abilities.includes(GraphQlMoveAbility.Key);
-      const isGeneric =
-        struct_.typeParameters !== null && struct_.typeParameters.length > 0;
+      const hasKeyAbility = struct_.abilities.includes(GraphQlMoveAbility.Key);
+      const isGeneric = struct_.typeParameters.length > 0;
       await printObjectSamples(client, typeTag, hasKeyAbility, isGeneric);
     }
-    if (module.structs.pageInfo.hasNextPage) console.log("    - ...");
   }
   console.log();
 }

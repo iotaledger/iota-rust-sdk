@@ -137,47 +137,19 @@ impl GraphQLClient {
             .map(Arc::new))
     }
 
-    /// Return the normalized Move module data for the provided module.
-    // TODO: do we want to self paginate everything and return all the data, or keep pagination
-    // options?
-    #[expect(clippy::too_many_arguments)]
-    #[uniffi::method(default(
-        version = None,
-        pagination_filter_enums = None,
-        pagination_filter_friends = None,
-        pagination_filter_functions = None,
-        pagination_filter_structs = None,
-    ))]
+    /// Return the normalized Move module data for the provided module, with
+    /// every enum, friend, function and struct, fetching more pages as needed.
+    #[uniffi::method(default(version = None))]
     pub async fn normalized_move_module(
         &self,
         package: &Address,
         module: &str,
         version: Option<Arc<Version>>,
-        pagination_filter_enums: Option<GraphQLPaginationFilter>,
-        pagination_filter_friends: Option<GraphQLPaginationFilter>,
-        pagination_filter_functions: Option<GraphQLPaginationFilter>,
-        pagination_filter_structs: Option<GraphQLPaginationFilter>,
     ) -> Result<Option<GraphQLMoveModule>> {
         Ok(self
             .client()
             .normalized_move_module(**package, module)
             .set_if_some(version.map(|v| **v), GetNormalizedMoveModuleQuery::version)
-            .enums_pagination(pagination_filter_enums.map(Into::into).unwrap_or_default())
-            .friends_pagination(
-                pagination_filter_friends
-                    .map(Into::into)
-                    .unwrap_or_default(),
-            )
-            .functions_pagination(
-                pagination_filter_functions
-                    .map(Into::into)
-                    .unwrap_or_default(),
-            )
-            .structs_pagination(
-                pagination_filter_structs
-                    .map(Into::into)
-                    .unwrap_or_default(),
-            )
             .await?
             .map(Into::into))
     }

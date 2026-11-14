@@ -27,9 +27,9 @@ struct MoveFunctionsExample {
         print("module `\(moduleId.asStr())` not found")
         return
       }
-      if let functions = module.functions {
+      if !module.functions.isEmpty {
         print("Module: \(moduleId.asStr())")
-        for fun in functions.nodes {
+        for fun in module.functions {
           print("- \(fun)")
         }
         print()
