@@ -17,8 +17,9 @@ bool    = %d00   ; false
 
 bytes   = size *OCTET
 
-call-arg = %d00 bytes        ; Pure
-         / %d01 object-arg   ; Object
+call-arg = %d00 bytes                ; Pure
+         / %d01 object-arg           ; Object
+         / %d02 transaction-digest   ; TransactionDependency
 
 canceled-transaction = transaction-digest           ; digest
                        (size *version-assignment)   ; version-assignments
@@ -226,6 +227,7 @@ execution-error = %d00                               ; InsufficientGas
                 / %d42 u64 u64                       ; MoveRawValueTooBig
                 / %d43 object-id                     ; AuthenticatorFunctionNotFound
                 / %d44 object-id                     ; AccountNotSharedObject
+                / %d45 transaction-digest            ; TransactionDependencyFailed
 
 execution-status = %d00                                     ; Success
                  / %d01 execution-error (%d00 / %d01 u64)   ; Failure

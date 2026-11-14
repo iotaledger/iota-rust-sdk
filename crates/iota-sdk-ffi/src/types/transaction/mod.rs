@@ -345,6 +345,14 @@ impl Input {
     pub fn new_receiving(object_ref: ObjectReference) -> Self {
         Self(iota_sdk::types::Input::Receiving(object_ref.into()))
     }
+
+    /// A transaction this transaction depends on: the transaction is valid
+    /// only once the named transaction executed successfully, in the current
+    /// epoch, and no command may use this input.
+    #[uniffi::constructor]
+    pub fn new_transaction_dependency(digest: &TransactionDigest) -> Self {
+        Self(iota_sdk::types::Input::TransactionDependency(digest.0))
+    }
 }
 
 /// A single command in a programmable transaction.
