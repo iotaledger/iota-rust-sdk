@@ -136,4 +136,8 @@ impl<T> ResponseExt for MetadataEnvelope<T> {
     fn server_version(&self) -> Option<&str> {
         self.metadata.server_version()
     }
+
+    fn lowest_available_checkpoint_indexes(&self) -> Option<u64> {
+        self.metadata.lowest_available_checkpoint_indexes()
+    }
 }

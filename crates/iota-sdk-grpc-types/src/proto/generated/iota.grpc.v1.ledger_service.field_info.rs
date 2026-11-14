@@ -299,6 +299,14 @@ mod _field_impls {
             is_map: false,
             message_fields: None,
         };
+        pub const LOWEST_AVAILABLE_CHECKPOINT_INDEXES_FIELD: &'static MessageField = &MessageField {
+            name: "lowest_available_checkpoint_indexes",
+            json_name: "lowestAvailableCheckpointIndexes",
+            number: 9i32,
+            is_optional: true,
+            is_map: false,
+            message_fields: None,
+        };
     }
     impl crate::field::sealed::Sealed for GetServiceInfoResponse {}
     impl MessageFields for GetServiceInfoResponse {
@@ -311,6 +319,7 @@ mod _field_impls {
             Self::LOWEST_AVAILABLE_CHECKPOINT_FIELD,
             Self::LOWEST_AVAILABLE_CHECKPOINT_OBJECTS_FIELD,
             Self::SERVER_FIELD,
+            Self::LOWEST_AVAILABLE_CHECKPOINT_INDEXES_FIELD,
         ];
     }
     impl GetServiceInfoResponse {
@@ -370,6 +379,14 @@ mod _field_impls {
         }
         pub fn server(mut self) -> String {
             self.path.push(GetServiceInfoResponse::SERVER_FIELD.name);
+            self.finish()
+        }
+        pub fn lowest_available_checkpoint_indexes(mut self) -> String {
+            self.path
+                .push(
+                    GetServiceInfoResponse::LOWEST_AVAILABLE_CHECKPOINT_INDEXES_FIELD
+                        .name,
+                );
             self.finish()
         }
     }
