@@ -8,7 +8,6 @@ use std::time::Duration;
 
 use base64ct::Encoding;
 use cynic::{MutationBuilder, QueryBuilder};
-use futures::Stream;
 use iota_transaction_builder::WaitForTransaction;
 use iota_types::{
     Address, SenderSignedTransaction, SignedTransaction, Transaction, TransactionDigest,
@@ -30,7 +29,7 @@ use crate::{
         TransactionBlocksQueryArgs, TransactionBlocksQueryFragment,
         TransactionBlocksWithEffectsQueryFragment, TransactionsFilter,
     },
-    streams::stream_paginated_query,
+    streams::PageStream,
 };
 
 define_query! {
@@ -60,9 +59,12 @@ impl ListTransactionsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
+    pub fn stream(self) -> PageStream<SignedTransaction> {
         let pagination = self.pagination.clone();
-        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+        PageStream::new(
+            pagination,
+            Box::new(move |page| self.clone().pagination(page).into_future()),
+        )
     }
 
     fn operation(
@@ -137,9 +139,12 @@ impl ListAddressTransactionsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
+    pub fn stream(self) -> PageStream<SignedTransaction> {
         let pagination = self.pagination.clone();
-        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+        PageStream::new(
+            pagination,
+            Box::new(move |page| self.clone().pagination(page).into_future()),
+        )
     }
 
     fn operation(
@@ -214,9 +219,12 @@ impl ListTransactionsEffectsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<TransactionEffects>> + Unpin {
+    pub fn stream(self) -> PageStream<TransactionEffects> {
         let pagination = self.pagination.clone();
-        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+        PageStream::new(
+            pagination,
+            Box::new(move |page| self.clone().pagination(page).into_future()),
+        )
     }
 
     fn operation(
@@ -282,9 +290,12 @@ impl ListTransactionsDataEffectsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<TransactionDataEffects>> + Unpin {
+    pub fn stream(self) -> PageStream<TransactionDataEffects> {
         let pagination = self.pagination.clone();
-        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+        PageStream::new(
+            pagination,
+            Box::new(move |page| self.clone().pagination(page).into_future()),
+        )
     }
 
     fn operation(
