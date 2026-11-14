@@ -655,6 +655,12 @@ impl GrpcClient {
                             }.into()))?;
                         }
 
+                        tracing::debug!(
+                            sequence_number,
+                            transactions = current_transactions.len(),
+                            events = current_events.len(),
+                            "checkpoint reassembled"
+                        );
                         let response = CheckpointResponse {
                             sequence_number,
                             summary: current_summary.take(),
@@ -668,6 +674,10 @@ impl GrpcClient {
                     }
 
                     Some(checkpoint_data::Payload::Progress(progress)) => {
+                        tracing::debug!(
+                            latest_scanned_sequence_number = progress.latest_scanned_sequence_number,
+                            "checkpoint stream progress"
+                        );
                         yield CheckpointStreamItem::Progress {
                             latest_scanned_sequence_number: progress.latest_scanned_sequence_number,
                         };

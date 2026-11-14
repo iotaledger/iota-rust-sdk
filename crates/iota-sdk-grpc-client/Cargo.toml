@@ -23,6 +23,7 @@ serde_json.workspace = true
 thiserror.workspace = true
 tokio = { workspace = true, features = ["time"] }
 tonic = { workspace = true, features = ["zstd"] }
+tracing.workspace = true
 
 # internal dependencies
 iota-grpc-types.workspace = true
@@ -53,3 +54,4 @@ move-types = ["dep:iota-move-types"]
 
 [dev-dependencies]
 tokio = { workspace = true, features = ["macros", "rt"] }
+tracing-subscriber = { workspace = true, features = ["registry"] }
