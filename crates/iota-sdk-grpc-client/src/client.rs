@@ -123,8 +123,11 @@ impl GrpcClient {
 
     /// Get a reference to the underlying channel.
     ///
-    /// This can be useful for creating additional service clients that aren't
-    /// yet integrated into GrpcClient.
+    /// Responses on this channel are not checked against the node's minimum
+    /// SDK version. To create additional service clients that aren't yet
+    /// integrated into GrpcClient, use [`checked_channel`] instead.
+    ///
+    /// [`checked_channel`]: GrpcClient::checked_channel
     pub fn channel(&self) -> &tonic::transport::Channel {
         &self.channel
     }
