@@ -10,7 +10,7 @@ use std::{
     task::{Context, Poll},
 };
 
-use iota_grpc_types::headers::X_MIN_IOTA_SDK_GRPC_CLIENT_VERSION;
+use iota_grpc_types::headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN;
 use iota_sdk_grpc_client::{GrpcClient, GrpcError, VERSION};
 use tonic::{
     Code,
@@ -42,7 +42,7 @@ impl<B> Service<http::Request<B>> for NotFoundWithMinimum {
         let response = http::Response::builder()
             .header("content-type", "application/grpc")
             .header("grpc-status", (Code::NotFound as i32).to_string())
-            .header(X_MIN_IOTA_SDK_GRPC_CLIENT_VERSION, self.0.as_str())
+            .header(X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN, self.0.as_str())
             .body(Body::empty())
             .unwrap();
         std::future::ready(Ok(response))

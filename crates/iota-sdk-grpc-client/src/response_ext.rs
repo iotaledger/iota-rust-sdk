@@ -74,7 +74,7 @@ impl ResponseExt for http::header::HeaderMap {
     }
 
     fn min_iota_sdk_grpc_client_version(&self) -> Option<&str> {
-        self.get(headers::X_MIN_IOTA_SDK_GRPC_CLIENT_VERSION)
+        self.get(headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN)
             .and_then(|h| h.to_str().ok())
     }
 }

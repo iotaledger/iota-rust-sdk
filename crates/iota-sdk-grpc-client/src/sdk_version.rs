@@ -5,7 +5,7 @@
 //!
 //! The node stamps every gRPC response with the lowest `iota-sdk-grpc-client`
 //! version able to decode its wire types, in the
-//! [`X_MIN_IOTA_SDK_GRPC_CLIENT_VERSION`](headers::X_MIN_IOTA_SDK_GRPC_CLIENT_VERSION) header. The
+//! [`X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN`](headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN) header. The
 //! check runs on the response headers, before any body is decoded, so an
 //! outdated client fails with a clear error instead of tripping over a wire
 //! value it does not know.
@@ -105,7 +105,7 @@ fn check_min_sdk_version(
     current: &Version,
 ) -> Result<(), tonic::Status> {
     let Some(minimum) = response_headers
-        .get(headers::X_MIN_IOTA_SDK_GRPC_CLIENT_VERSION)
+        .get(headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN)
         .and_then(|value| value.to_str().ok())
         .and_then(|value| Version::parse(value).ok())
     else {
@@ -155,7 +155,7 @@ mod tests {
     fn headers_with_minimum(minimum: &str) -> http::HeaderMap {
         let mut headers = http::HeaderMap::new();
         headers.insert(
-            headers::X_MIN_IOTA_SDK_GRPC_CLIENT_VERSION,
+            headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN,
             http::HeaderValue::from_str(minimum).unwrap(),
         );
         headers
