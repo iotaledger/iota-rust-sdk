@@ -12,7 +12,7 @@ use iota_grpc_types::v1::{
 };
 use tonic::codec::CompressionEncoding;
 
-use crate::{api::GrpcResult, interceptors::HeadersInterceptor, sdk_version::SdkVersionCheck};
+use crate::{api::GrpcResult, interceptors::HeadersInterceptor, sdk_version::CheckedChannel};
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
@@ -25,7 +25,7 @@ pub(crate) const LOCAL_HOST: &str = "http://localhost:50051";
 /// checked against the node's minimum SDK version and carrying the configured
 /// headers.
 pub type InterceptedChannel = tonic::service::interceptor::InterceptedService<
-    SdkVersionCheck<tonic::transport::Channel>,
+    CheckedChannel<tonic::transport::Channel>,
     HeadersInterceptor,
 >;
 
@@ -138,8 +138,8 @@ impl GrpcClient {
     /// headers.
     ///
     /// [`headers`]: GrpcClient::headers
-    pub fn checked_channel(&self) -> SdkVersionCheck<tonic::transport::Channel> {
-        SdkVersionCheck::new(self.channel.clone())
+    pub fn checked_channel(&self) -> CheckedChannel<tonic::transport::Channel> {
+        CheckedChannel::new(self.channel.clone())
     }
 
     pub fn headers(&self) -> &HeadersInterceptor {

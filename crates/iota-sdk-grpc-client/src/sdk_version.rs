@@ -56,12 +56,12 @@ impl std::error::Error for IncompatibleSdkVersion {}
 /// A response without the header, or with one that is not a semantic version,
 /// passes unchanged.
 #[derive(Clone, Debug)]
-pub struct SdkVersionCheck<S> {
+pub struct CheckedChannel<S> {
     inner: S,
     current: Version,
 }
 
-impl<S> SdkVersionCheck<S> {
+impl<S> CheckedChannel<S> {
     pub(crate) fn new(inner: S) -> Self {
         // `CARGO_PKG_VERSION` comes from this crate's manifest, which cargo
         // only accepts with a valid semantic version.
@@ -74,7 +74,7 @@ impl<S> SdkVersionCheck<S> {
     }
 }
 
-impl<S, ReqBody, ResBody> Service<http::Request<ReqBody>> for SdkVersionCheck<S>
+impl<S, ReqBody, ResBody> Service<http::Request<ReqBody>> for CheckedChannel<S>
 where
     S: Service<http::Request<ReqBody>, Response = http::Response<ResBody>>,
     S::Error: Into<BoxError>,
@@ -165,7 +165,7 @@ mod tests {
         response_headers: http::HeaderMap,
         current: &str,
     ) -> Result<http::Response<()>, BoxError> {
-        let mut service = SdkVersionCheck::with_current_version(
+        let mut service = CheckedChannel::with_current_version(
             FixedHeaders(response_headers),
             Version::parse(current).unwrap(),
         );
