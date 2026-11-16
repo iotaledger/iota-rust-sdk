@@ -72,6 +72,8 @@ pub struct GraphQLClient {
     /// The reqwest client.
     pub(crate) inner: reqwest::Client,
     pub(crate) service_config: Arc<OnceLock<ServiceConfig>>,
+    /// The URL subscriptions connect to, when set explicitly.
+    pub(crate) subscription_url: Option<Url>,
 }
 
 /// Builds a [`GraphQLClient`] on top of the default HTTP client, so that
@@ -160,7 +162,16 @@ impl GraphQLClient {
             rpc: reqwest::Url::parse(server)?,
             inner: client,
             service_config: Default::default(),
+            subscription_url: None,
         })
+    }
+
+    /// Connect subscriptions to `url` instead of the `subscriptions` endpoint
+    /// under the RPC URL. An `http` or `https` URL is upgraded to `ws` or
+    /// `wss`.
+    pub fn with_subscription_url(mut self, url: &str) -> GraphQLResult<Self> {
+        self.subscription_url = Some(Url::parse(url)?);
+        Ok(self)
     }
 
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
