@@ -585,22 +585,39 @@ impl proptest::arbitrary::Arbitrary for MultisigCommittee {
     fn arbitrary_with(_args: Self::Parameters) -> Self::Strategy {
         use proptest::{collection::vec, prelude::*};
 
-        vec(
-            (any::<PublicKey>(), 1u8..=WeightUnit::MAX),
-            1..=MULTISIG_COMMITTEE_SIZE_MAX,
-        )
-        .prop_flat_map(|raw_members| {
-            let mut members: Vec<MultisigMember> = Vec::with_capacity(raw_members.len());
-            for (public_key, weight) in raw_members {
-                if !members.iter().any(|m| m.public_key == public_key) {
-                    members.push(MultisigMember { public_key, weight });
+        use crate::{Ed25519PublicKey, PasskeyPublicKey, Secp256k1PublicKey, Secp256r1PublicKey};
+
+        any::<bool>()
+            .prop_flat_map(|only_ed25519| {
+                let public_key = if only_ed25519 {
+                    any::<Ed25519PublicKey>()
+                        .prop_map(PublicKey::Ed25519)
+                        .boxed()
+                } else {
+                    prop_oneof![
+                        any::<Secp256k1PublicKey>().prop_map(PublicKey::Secp256k1),
+                        any::<Secp256r1PublicKey>().prop_map(PublicKey::Secp256r1),
+                        any::<PasskeyPublicKey>().prop_map(PublicKey::Passkey),
+                    ]
+                    .boxed()
+                };
+                vec(
+                    (public_key, 1u8..=WeightUnit::MAX),
+                    1..=MULTISIG_COMMITTEE_SIZE_MAX,
+                )
+            })
+            .prop_flat_map(|raw_members| {
+                let mut members: Vec<MultisigMember> = Vec::with_capacity(raw_members.len());
+                for (public_key, weight) in raw_members {
+                    if !members.iter().any(|m| m.public_key == public_key) {
+                        members.push(MultisigMember { public_key, weight });
+                    }
                 }
-            }
-            let sum: ThresholdUnit = members.iter().map(|m| m.weight as ThresholdUnit).sum();
-            (Just(members), 1..=sum)
-        })
-        .prop_map(|(members, threshold)| Self { members, threshold })
-        .boxed()
+                let sum: ThresholdUnit = members.iter().map(|m| m.weight as ThresholdUnit).sum();
+                (Just(members), 1..=sum)
+            })
+            .prop_map(|(members, threshold)| Self { members, threshold })
+            .boxed()
     }
 }
 
@@ -1483,5 +1500,46 @@ mod tests {
         assert_eq!(aggregated.bitmap(), 0b11);
         assert_eq!(aggregated.signatures().len(), 2);
         assert_eq!(aggregated.indices().unwrap(), vec![0, 1]);
+    }
+
+    #[cfg(feature = "proptest")]
+    mod proptests {
+        use std::collections::BTreeSet;
+
+        use proptest::{prelude::*, strategy::ValueTree, test_runner::TestRunner};
+        use test_strategy::proptest;
+
+        use super::*;
+
+        #[proptest]
+        fn any_committee_validates(committee: MultisigCommittee) {
+            committee.validate().unwrap();
+        }
+
+        #[proptest]
+        fn any_aggregated_signature_validates(signature: MultisigAggregatedSignature) {
+            signature.validate().unwrap();
+        }
+
+        #[test]
+        fn any_committee_draws_every_key_scheme() {
+            let mut runner = TestRunner::deterministic();
+            let strategy = any::<MultisigCommittee>();
+            let mut schemes = BTreeSet::new();
+            for _ in 0..64 {
+                let committee = strategy.new_tree(&mut runner).unwrap().current();
+                assert!(!committee.is_mixed_ed25519());
+                schemes.extend(committee.members.iter().map(|m| m.public_key.scheme()));
+            }
+            assert_eq!(
+                schemes,
+                BTreeSet::from([
+                    SignatureScheme::Ed25519,
+                    SignatureScheme::Secp256k1,
+                    SignatureScheme::Secp256r1,
+                    SignatureScheme::PasskeyAuthenticator,
+                ])
+            );
+        }
     }
 }
