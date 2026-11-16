@@ -84,7 +84,7 @@ async fn main() -> Result<()> {
 
 ### Node compatibility
 
-Every node response names the lowest `iota-sdk-graphql-client` version able to decode it. An older client fails the request with `GraphQLError::IncompatibleSdkVersion` before decoding any data; upgrade the crate to resolve it. In the browser, subscriptions skip this check, since a browser `WebSocket` does not expose the handshake headers.
+Nodes send the lowest `iota-sdk-graphql-client` version able to decode their responses. When this crate is older, requests fail with `GraphQLError::IncompatibleSdkVersion` before any data is decoded; upgrade the crate to resolve it. Responses from nodes that send no minimum are not checked, and in the browser neither are subscriptions, since a browser `WebSocket` does not expose the handshake headers.
 
 ### Requesting gas from the faucet
 
