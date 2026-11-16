@@ -44,7 +44,7 @@ fn check_against(response_headers: &HeaderMap, current: &Version) -> GraphQLResu
         return Ok(());
     };
 
-    if *current >= minimum {
+    if current.cmp_precedence(&minimum).is_ge() {
         return Ok(());
     }
 
@@ -101,6 +101,16 @@ mod tests {
     #[test]
     fn fails_when_client_is_older_pre_release() {
         let error = check(&headers_with_minimum("1.0.0-beta.2"), "1.0.0-beta.1").unwrap_err();
+        assert!(
+            matches!(error, GraphQLError::IncompatibleSdkVersion { .. }),
+            "{error:?}"
+        );
+    }
+
+    #[test]
+    fn ignores_build_metadata() {
+        check(&headers_with_minimum("1.2.3+build"), "1.2.3").unwrap();
+        let error = check(&headers_with_minimum("1.2.4+build"), "1.2.3").unwrap_err();
         assert!(
             matches!(error, GraphQLError::IncompatibleSdkVersion { .. }),
             "{error:?}"
