@@ -68,7 +68,7 @@ pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
 pub use reqwest;
-pub use sdk_version::{VERSION, X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN};
+pub use sdk_version::{CRATE_VERSION, X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN};
 pub use subscription::{EventsSubscriptionBuilder, TransactionsSubscriptionBuilder};
 
 mod base64 {

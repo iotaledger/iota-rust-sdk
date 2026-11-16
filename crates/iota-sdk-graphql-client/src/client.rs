@@ -507,7 +507,7 @@ mod tests {
             panic!("expected an incompatible SDK version error, got {err:?}");
         };
         assert_eq!(minimum, "999.0.0");
-        assert_eq!(current, crate::VERSION);
+        assert_eq!(current, crate::CRATE_VERSION);
     }
 
     #[test]

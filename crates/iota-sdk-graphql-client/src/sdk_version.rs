@@ -16,7 +16,7 @@ use crate::error::{GraphQLError, GraphQLResult};
 
 /// Version of this crate, which the node's minimum SDK version is compared
 /// against.
-pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+pub const CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// Lowest `iota-sdk-graphql-client` version able to decode the server's
 /// responses, as a semantic version. Clients below it fail their requests
@@ -31,7 +31,7 @@ pub const X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN: &str = "x-iota-sdk-graphql-clie
 pub(crate) fn check_min_sdk_version(response_headers: &HeaderMap) -> GraphQLResult<()> {
     // `CARGO_PKG_VERSION` comes from this crate's manifest, which cargo only
     // accepts with a valid semantic version.
-    let current = Version::parse(VERSION).expect("CARGO_PKG_VERSION is a valid version");
+    let current = Version::parse(CRATE_VERSION).expect("CARGO_PKG_VERSION is a valid version");
     check_against(response_headers, &current)
 }
 
@@ -119,6 +119,6 @@ mod tests {
 
     #[test]
     fn crate_version_is_valid_semver() {
-        Version::parse(VERSION).unwrap();
+        Version::parse(CRATE_VERSION).unwrap();
     }
 }
