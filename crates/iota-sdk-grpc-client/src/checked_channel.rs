@@ -112,7 +112,7 @@ fn check_min_sdk_version(
         return Ok(());
     };
 
-    if *current >= minimum {
+    if current.cmp_precedence(&minimum).is_ge() {
         return Ok(());
     }
 
@@ -246,6 +246,17 @@ mod tests {
         assert_eq!(status.server_version(), Some("iota-node/1.37.0"));
         assert!(status.metadata().get("grpc-status").is_none());
         assert!(status.metadata().get("grpc-message").is_none());
+    }
+
+    #[tokio::test]
+    async fn ignores_build_metadata() {
+        call_with(headers_with_minimum("1.2.3+build"), "1.2.3")
+            .await
+            .unwrap();
+        let error = call_with(headers_with_minimum("1.2.4+build"), "1.2.3")
+            .await
+            .unwrap_err();
+        incompatible_error(error);
     }
 
     #[tokio::test]
