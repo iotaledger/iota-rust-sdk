@@ -11,8 +11,8 @@ use iota_types::{
 };
 
 use crate::{
-    PTBArgumentList, TransactionBuilderLedgerClient, error::TransactionBuilderError,
-    types::MoveTypes, unresolved::InputKind,
+    PTBArgumentList, TransactionBuilderLedgerClient, builder::client::check_object_identity,
+    error::TransactionBuilderError, types::MoveTypes, unresolved::InputKind,
 };
 
 /// A function call to authorize a transaction via move.
@@ -68,6 +68,7 @@ impl MoveAuthenticatorBuilder {
             .ok_or_else(|| {
                 TransactionBuilderError::Input(format!("missing account {}", self.account_id))
             })?;
+        check_object_identity(self.account_id, &account)?;
 
         let mut call_args = Vec::new();
         for input in self.call_args {
@@ -85,6 +86,7 @@ impl MoveAuthenticatorBuilder {
                                 "missing object {object_id}"
                             ))
                         })?;
+                    check_object_identity(object_id, &obj)?;
                     if !obj.owner().is_immutable() {
                         return Err(TransactionBuilderError::InvalidMoveAuthArg(
                             "call arguments must not be owned".to_owned(),
@@ -107,6 +109,7 @@ impl MoveAuthenticatorBuilder {
                                 "missing object {object_id}"
                             ))
                         })?;
+                    check_object_identity(object_id, &obj)?;
 
                     let Owner::Shared(version) = obj.owner() else {
                         return Err(TransactionBuilderError::InvalidMoveAuthArg(format!(
@@ -125,7 +128,7 @@ impl MoveAuthenticatorBuilder {
                         "call arguments must not be receiving".to_owned(),
                     ));
                 }
-                InputKind::Input(input) => input.clone(),
+                InputKind::Input(input) => input,
             })
         }
         let Owner::Shared(version) = account.owner() else {

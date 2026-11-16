@@ -23,6 +23,7 @@
 /// are the top-level type by which all the information is committed to transitively via cryptographic
 /// hashes included in the summary. `CheckpointSummary`s are signed and certified by a quorum of
 /// the validator committee in a given epoch to allow verification of the chain's state.
+#[allow(clippy::all)]
 #[non_exhaustive]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CheckpointSummary {
@@ -34,6 +35,7 @@ pub struct CheckpointSummary {
     pub bcs: ::core::option::Option<super::bcs::BcsData>,
 }
 /// The committed to contents of a checkpoint.
+#[allow(clippy::all)]
 #[non_exhaustive]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct CheckpointContents {
@@ -44,6 +46,7 @@ pub struct CheckpointContents {
     #[prost(message, optional, tag = "2")]
     pub bcs: ::core::option::Option<super::bcs::BcsData>,
 }
+#[allow(clippy::all)]
 #[non_exhaustive]
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct Checkpoint {

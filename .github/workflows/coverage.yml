@@ -88,6 +88,7 @@ jobs:
           cargo llvm-cov --ignore-run-fail --no-report nextest --all-features --workspace \
             --exclude iota-sdk-graphql-client-build --exclude iota-sdk-grpc-client
           cargo llvm-cov --ignore-run-fail --no-report nextest --no-default-features -p iota-sdk-grpc-client
+          cargo llvm-cov --ignore-run-fail --no-report nextest --no-default-features -p iota-sdk-graphql-client
 
           echo "Merging .profraw files."
           find target/llvm-cov-target -name '*.profraw' -print0 | xargs -0 $LLVM_PROFDATA merge \

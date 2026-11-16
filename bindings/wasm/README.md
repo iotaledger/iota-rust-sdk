@@ -15,8 +15,8 @@ The pipeline has two steps:
 # WASM target
 rustup target add wasm32-unknown-unknown
 
-# wasm-bindgen CLI (version must match the compiled-in library)
-cargo install wasm-bindgen-cli --version 0.2.128
+# wasm-bindgen CLI, at the version pinned in wasm-cargo-patch.toml (run from the repository root)
+make wasm-bindgen-cli
 ```
 
 The binding generator (`uniffi-bindgen-react-native`) is installed as an npm dependency and invoked via `npx`.

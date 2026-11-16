@@ -58,29 +58,37 @@ impl GraphQLClient {
         )
     }
 
+    /// A copy of this client whose subscriptions connect to `url` instead of
+    /// the `subscriptions` endpoint under the RPC URL. An `http` or `https` URL
+    /// is upgraded to `ws` or `wss`.
+    pub fn with_subscription_url(&self, url: String) -> Result<Arc<Self>> {
+        let client = (*self.0).clone().with_subscription_url(&url)?;
+        Ok(Arc::new(client.into()))
+    }
+
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
-    /// {MAINNET_HOST}.
+    /// <https://graphql.mainnet.iota.cafe>.
     #[uniffi::constructor]
     pub fn new_mainnet() -> Result<Self> {
         Ok(iota_sdk::graphql_client::GraphQLClient::new_mainnet()?.into())
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
-    /// {TESTNET_HOST}.
+    /// <https://graphql.testnet.iota.cafe>.
     #[uniffi::constructor]
     pub fn new_testnet() -> Result<Self> {
         Ok(iota_sdk::graphql_client::GraphQLClient::new_testnet()?.into())
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
-    /// {DEVNET_HOST}.
+    /// <https://graphql.devnet.iota.cafe>.
     #[uniffi::constructor]
     pub fn new_devnet() -> Result<Self> {
         Ok(iota_sdk::graphql_client::GraphQLClient::new_devnet()?.into())
     }
 
     /// Create a new GraphQL client connected to the `localhost` GraphQL server:
-    /// {DEFAULT_LOCAL_HOST}.
+    /// <http://localhost:9125/graphql>.
     #[uniffi::constructor]
     pub fn new_localnet() -> Result<Self> {
         Ok(iota_sdk::graphql_client::GraphQLClient::new_localnet()?.into())

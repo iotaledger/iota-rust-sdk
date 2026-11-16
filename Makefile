@@ -54,6 +54,7 @@ package_%.json: crates/integration-tests/%/Move.toml crates/integration-tests/%/
 .PHONY: test-with-localnet
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
 	cargo nextest run -p iota-sdk-graphql-client -p integration-tests
+	cargo nextest run --no-default-features -p iota-sdk-graphql-client
 
 # Verify that individual SDK crates compile to wasm32-unknown-unknown.
 # This is a quick compatibility check, not the full WASM bindings build.
@@ -65,6 +66,12 @@ wasm32: ## Check that SDK crates compile to wasm32
 	$(MAKE) -C crates/iota-sdk-move-types wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
 	$(MAKE) -C crates/iota-sdk-types wasm
+
+.PHONY: wasm-bindgen-cli
+wasm-bindgen-cli: ## Install the wasm-bindgen CLI version pinned in bindings/wasm/wasm-cargo-patch.toml
+	@version=$$(sed -n 's/^wasm-bindgen = "=\(.*\)"$$/\1/p' bindings/wasm/wasm-cargo-patch.toml); \
+	test -n "$$version" || { printf "No wasm-bindgen pin found in bindings/wasm/wasm-cargo-patch.toml\n" >&2; exit 1; }; \
+	cargo install wasm-bindgen-cli --version "$$version"
 
 # Build the full WASM bindings package for browsers.
 # Uses ubrn (uniffi-bindgen-react-native) to generate TS bindings, compile

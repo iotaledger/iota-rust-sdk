@@ -70,7 +70,7 @@ blst = { version = "0.3.17", optional = true }
 # ed25519 PKCS#8/PEM codec (see the `pem` feature)
 ed25519 = { version = "3.0", optional = true }
 # ed25519, secp256r1 and secp256k1 signing/verification backend
-fastcrypto = { version = "=0.1.11", optional = true }
+fastcrypto = { version = "=0.1.12", optional = true }
 # OS RNG behind the `random()` constructors
 getrandom_4 = { workspace = true, optional = true }
 # secp256k1 PKCS#8/PEM codec (see the `pem` feature)
@@ -93,7 +93,7 @@ iota-types = { workspace = true, features = ["hash", "serde"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 # On wasm32 fastcrypto needs getrandom's "js" backend, enabled by its "wasm" feature.
-fastcrypto = { version = "=0.1.11", optional = true, features = ["wasm"] }
+fastcrypto = { version = "=0.1.12", optional = true, features = ["wasm"] }
 
 [dev-dependencies]
 # external dependencies

@@ -11,6 +11,11 @@ release PR is merged. A crate is marked `RELEASE` when, since that tag:
 - `manifest`: a `[workspace.dependencies]` entry the crate inherits moved out
   of the caret range of the published requirement, such as a major bump or a
   pre-release of another version, so the published crate can't follow it.
+- `schema`: `crates/iota-sdk-types/bcs-schema.abnf` changed. This only applies
+  to `iota-sdk-grpc-client` and `iota-sdk-graphql-client`, which are then
+  marked `RELEASE (minor)`: their release has to be at least a minor bump. The
+  commits touching the schema are listed, and `--json` reports the bump as
+  `level`.
 
 Everything else is reported but ignored. Cargo resolves a caret requirement to
 the newest compatible version, so a compatible dependency bump reaches
@@ -33,6 +38,8 @@ python3 scripts/release_status/release_status.py --quiet
 python3 scripts/release_status/release_status.py --json
 ```
 
-Requires Python 3.11+ and up-to-date tags (`git fetch --tags`). Only committed
-changes count. `cargo package --list` reads the working tree, so compare from a
-checkout of the revision passed to `--rev`.
+Requires Python 3.11+. The script fast-forwards the checkout first, which also
+fetches the release tags; a checkout that can't be fast-forwarded is compared
+as is, with a warning. Only committed changes count. `cargo package --list`
+reads the working tree, so compare from a checkout of the revision passed to
+`--rev`.

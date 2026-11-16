@@ -128,6 +128,25 @@ impl Command {
             _ => &[],
         }
     }
+
+    /// Every argument of this command.
+    pub(crate) fn arguments(&self) -> impl Iterator<Item = &Argument> {
+        let (single, list): (Option<&Argument>, &[Argument]) = match self {
+            Command::MoveCall(MoveCall { arguments, .. }) => (None, arguments),
+            Command::TransferObjects(TransferObjects { objects, address }) => {
+                (Some(address), objects)
+            }
+            Command::SplitCoins(SplitCoins { coin, amounts }) => (Some(coin), amounts),
+            Command::MergeCoins(MergeCoins {
+                coin,
+                coins_to_merge,
+            }) => (Some(coin), coins_to_merge),
+            Command::Publish(_) => (None, &[]),
+            Command::MakeMoveVector(MakeMoveVector { elements, .. }) => (None, elements),
+            Command::Upgrade(Upgrade { ticket, .. }) => (Some(ticket), &[]),
+        };
+        single.into_iter().chain(list)
+    }
 }
 
 impl From<iota_types::Command> for Command {

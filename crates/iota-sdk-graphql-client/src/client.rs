@@ -72,6 +72,8 @@ pub struct GraphQLClient {
     /// The reqwest client.
     pub(crate) inner: reqwest::Client,
     pub(crate) service_config: Arc<OnceLock<ServiceConfig>>,
+    /// The URL subscriptions connect to, when set explicitly.
+    pub(crate) subscription_url: Option<Url>,
 }
 
 /// Builds a [`GraphQLClient`] on top of the default HTTP client, so that
@@ -117,13 +119,7 @@ impl GraphQLClientBuilder {
     }
 
     /// Build the client.
-    ///
-    /// An `https` or `wss` address is rejected on a build without a crypto
-    /// provider, as with [`GraphQLClient::new`].
     pub fn build(self) -> GraphQLResult<GraphQLClient> {
-        if let Some(scheme) = crate::tls::unsupported_scheme(&self.server) {
-            return Err(GraphQLError::TlsUnavailable(scheme));
-        }
         GraphQLClient::new_with_reqwest_client(&self.server, self.http.build()?)
     }
 }
@@ -134,13 +130,7 @@ impl GraphQLClient {
     /// The HTTP client is built for you, trusting the platform store plus the
     /// bundled Mozilla roots. Use [`Self::new_with_reqwest_client`] to supply
     /// your own.
-    ///
-    /// An `https` or `wss` address is rejected on a build without a crypto
-    /// provider, since no request to it could succeed. See the crate README.
     pub fn new(server: &str) -> GraphQLResult<Self> {
-        if let Some(scheme) = crate::tls::unsupported_scheme(server) {
-            return Err(GraphQLError::TlsUnavailable(scheme));
-        }
         Self::new_with_reqwest_client(server, crate::tls::default_http_client_builder().build()?)
     }
 
@@ -172,29 +162,38 @@ impl GraphQLClient {
             rpc: reqwest::Url::parse(server)?,
             inner: client,
             service_config: Default::default(),
+            subscription_url: None,
         })
     }
 
+    /// Connect subscriptions to `url` instead of the `subscriptions` endpoint
+    /// under the RPC URL. An `http` or `https` URL is upgraded to `ws` or
+    /// `wss`.
+    pub fn with_subscription_url(mut self, url: &str) -> GraphQLResult<Self> {
+        self.subscription_url = Some(Url::parse(url)?);
+        Ok(self)
+    }
+
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
-    /// {MAINNET_HOST}.
+    /// <https://graphql.mainnet.iota.cafe>.
     pub fn new_mainnet() -> GraphQLResult<Self> {
         Self::new(MAINNET_HOST)
     }
 
     /// Create a new GraphQL client connected to the `testnet` GraphQL server:
-    /// {TESTNET_HOST}.
+    /// <https://graphql.testnet.iota.cafe>.
     pub fn new_testnet() -> GraphQLResult<Self> {
         Self::new(TESTNET_HOST)
     }
 
     /// Create a new GraphQL client connected to the `devnet` GraphQL server:
-    /// {DEVNET_HOST}.
+    /// <https://graphql.devnet.iota.cafe>.
     pub fn new_devnet() -> GraphQLResult<Self> {
         Self::new(DEVNET_HOST)
     }
 
     /// Create a new GraphQL client connected to a `localnet` GraphQL server:
-    /// {LOCAL_HOST}.
+    /// <http://localhost:9125/graphql>.
     pub fn new_localnet() -> GraphQLResult<Self> {
         Self::new(LOCAL_HOST)
     }
@@ -397,6 +396,36 @@ mod tests {
                 )
             })
             .unwrap();
+    }
+
+    /// Without a provider feature `reqwest` may have no TLS, and would then
+    /// send an `https` request to a proxy unencrypted.
+    #[cfg(not(any(feature = "tls-ring", feature = "tls-aws-lc")))]
+    #[tokio::test]
+    async fn https_skips_the_environment_proxy_without_tls() {
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        // SAFETY: nextest runs each test in its own process, so no other thread
+        // reads the environment meanwhile.
+        unsafe {
+            std::env::set_var(
+                "HTTPS_PROXY",
+                format!("http://{}", listener.local_addr().unwrap()),
+            )
+        };
+
+        let client = GraphQLClient::new("https://graphql.testnet.iota.cafe").unwrap();
+        // The listener never answers, so a request that reached it would hang.
+        let _ = tokio::time::timeout(
+            Duration::from_millis(500),
+            client.run_query_from_json(Default::default()),
+        )
+        .await;
+        assert!(
+            tokio::time::timeout(Duration::from_millis(200), listener.accept())
+                .await
+                .is_err(),
+            "the request went to the proxy"
+        );
     }
 
     async fn bind() -> (TcpListener, String) {
