@@ -1,83 +1,199 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Calls through `GrpcClient` against a local server that answers every call
-//! with an error and a given minimum SDK version.
+//! Calls through `GrpcClient` against a local ledger service that sends a
+//! given minimum SDK version. `service_info` succeeds and every other call
+//! fails with `NOT_FOUND`.
 
 use std::{
     convert::Infallible,
-    future::Ready,
+    pin::Pin,
     task::{Context, Poll},
 };
 
 use iota_grpc_types::{
-    headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN, v1::ledger_service::GetServiceInfoRequest,
+    headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN,
+    v1::ledger_service::{
+        CheckpointData, GetCheckpointRequest, GetEpochRequest, GetEpochResponse, GetHealthRequest,
+        GetHealthResponse, GetObjectsRequest, GetObjectsResponse, GetServiceInfoRequest,
+        GetServiceInfoResponse, GetTransactionsRequest, GetTransactionsResponse,
+        StreamCheckpointsRequest,
+        ledger_service_server::{LedgerService, LedgerServiceServer},
+    },
 };
 use iota_sdk_grpc_client::{CRATE_VERSION, GrpcClient, GrpcError, ResponseExt};
 use tonic::{
-    Code,
+    Code, Request, Response, Status,
     body::Body,
+    codegen::{async_trait, tokio_stream::Empty},
     server::NamedService,
     transport::{Server, server::TcpIncoming},
 };
 use tower_service::Service;
 
-/// Ledger service answering every call with `NOT_FOUND` and the given
-/// minimum SDK version.
-#[derive(Clone)]
-struct NotFoundWithMinimum(String);
+const CHAIN: &str = "fake-chain";
 
-impl NamedService for NotFoundWithMinimum {
-    const NAME: &'static str = "iota.grpc.v1.ledger_service.LedgerService";
+struct FakeLedger;
+
+#[async_trait]
+impl LedgerService for FakeLedger {
+    type GetObjectsStream = Empty<Result<GetObjectsResponse, Status>>;
+    type GetTransactionsStream = Empty<Result<GetTransactionsResponse, Status>>;
+    type GetCheckpointStream = Empty<Result<CheckpointData, Status>>;
+    type StreamCheckpointsStream = Empty<Result<CheckpointData, Status>>;
+
+    async fn get_service_info(
+        &self,
+        _request: Request<GetServiceInfoRequest>,
+    ) -> Result<Response<GetServiceInfoResponse>, Status> {
+        Ok(Response::new(
+            GetServiceInfoResponse::default().with_chain(CHAIN),
+        ))
+    }
+
+    async fn get_health(
+        &self,
+        _request: Request<GetHealthRequest>,
+    ) -> Result<Response<GetHealthResponse>, Status> {
+        Err(Status::not_found("fake"))
+    }
+
+    async fn get_objects(
+        &self,
+        _request: Request<GetObjectsRequest>,
+    ) -> Result<Response<Self::GetObjectsStream>, Status> {
+        Err(Status::not_found("fake"))
+    }
+
+    async fn get_transactions(
+        &self,
+        _request: Request<GetTransactionsRequest>,
+    ) -> Result<Response<Self::GetTransactionsStream>, Status> {
+        Err(Status::not_found("fake"))
+    }
+
+    async fn get_checkpoint(
+        &self,
+        _request: Request<GetCheckpointRequest>,
+    ) -> Result<Response<Self::GetCheckpointStream>, Status> {
+        Err(Status::not_found("fake"))
+    }
+
+    async fn stream_checkpoints(
+        &self,
+        _request: Request<StreamCheckpointsRequest>,
+    ) -> Result<Response<Self::StreamCheckpointsStream>, Status> {
+        Err(Status::not_found("fake"))
+    }
+
+    async fn get_epoch(
+        &self,
+        _request: Request<GetEpochRequest>,
+    ) -> Result<Response<GetEpochResponse>, Status> {
+        Err(Status::not_found("fake"))
+    }
 }
 
-impl<B> Service<http::Request<B>> for NotFoundWithMinimum {
+/// Adds the minimum SDK version header to every response of `inner`, as the
+/// node does.
+#[derive(Clone)]
+struct WithMinimum<S> {
+    inner: S,
+    minimum: String,
+}
+
+impl<S: NamedService> NamedService for WithMinimum<S> {
+    const NAME: &'static str = S::NAME;
+}
+
+impl<S> Service<http::Request<Body>> for WithMinimum<S>
+where
+    S: Service<http::Request<Body>, Response = http::Response<Body>, Error = Infallible>,
+    S::Future: Send + 'static,
+{
     type Response = http::Response<Body>;
     type Error = Infallible;
-    type Future = Ready<Result<Self::Response, Self::Error>>;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Infallible>> + Send>>;
 
-    fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        Poll::Ready(Ok(()))
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Infallible>> {
+        self.inner.poll_ready(cx)
     }
 
-    fn call(&mut self, _request: http::Request<B>) -> Self::Future {
-        let response = http::Response::builder()
-            .header("content-type", "application/grpc")
-            .header("grpc-status", (Code::NotFound as i32).to_string())
-            .header(X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN, self.0.as_str())
-            .body(Body::empty())
-            .unwrap();
-        std::future::ready(Ok(response))
+    fn call(&mut self, request: http::Request<Body>) -> Self::Future {
+        let response = self.inner.call(request);
+        let minimum = http::HeaderValue::from_str(&self.minimum).unwrap();
+        Box::pin(async move {
+            let mut response = response.await?;
+            response
+                .headers_mut()
+                .insert(X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN, minimum);
+            Ok(response)
+        })
     }
 }
 
-/// Starts a server answering with `minimum` and returns a client for it.
+/// Starts a fake node sending `minimum` and returns a client for it.
 fn client_for_node_with_minimum(minimum: impl Into<String>) -> GrpcClient {
     let incoming = TcpIncoming::bind("127.0.0.1:0".parse().unwrap()).unwrap();
     let address = incoming.local_addr().unwrap();
     tokio::spawn(
         Server::builder()
-            .add_service(NotFoundWithMinimum(minimum.into()))
+            .add_service(WithMinimum {
+                inner: LedgerServiceServer::new(FakeLedger),
+                minimum: minimum.into(),
+            })
             .serve_with_incoming(incoming),
     );
     GrpcClient::new(format!("http://{address}")).unwrap()
 }
 
+/// A minimum newer than this crate.
+fn newer_minimum() -> String {
+    let current = semver::Version::parse(CRATE_VERSION).unwrap();
+    semver::Version::new(current.major + 1, 0, 0).to_string()
+}
+
+fn assert_incompatible(error: &GrpcError, minimum: &str) {
+    assert!(
+        matches!(
+            error,
+            GrpcError::IncompatibleSdkVersion { minimum: m, current: c }
+                if m == minimum && c == CRATE_VERSION
+        ),
+        "unexpected error: {error:?}"
+    );
+}
+
 #[tokio::test]
 async fn older_client_gets_the_version_error() {
-    let current = semver::Version::parse(CRATE_VERSION).unwrap();
-    let minimum = semver::Version::new(current.major + 1, 0, 0).to_string();
+    let minimum = newer_minimum();
     let client = client_for_node_with_minimum(minimum.clone());
 
     let error = client.service_info().await.unwrap_err();
 
-    assert!(
-        matches!(
-            &error,
-            GrpcError::IncompatibleSdkVersion { minimum: m, current: c }
-                if *m == minimum && c == CRATE_VERSION
-        ),
-        "unexpected error: {error:?}"
+    assert_incompatible(&error, &minimum);
+}
+
+#[tokio::test]
+async fn older_client_gets_the_version_error_in_place_of_the_node_error() {
+    let minimum = newer_minimum();
+    let client = client_for_node_with_minimum(minimum.clone());
+
+    let error = client.health().await.unwrap_err();
+
+    assert_incompatible(&error, &minimum);
+}
+
+#[tokio::test]
+async fn supported_client_gets_the_response() {
+    let client = client_for_node_with_minimum(CRATE_VERSION);
+
+    let response = client.service_info().await.unwrap();
+
+    assert_eq!(response.body().chain.as_deref(), Some(CHAIN));
+    assert_eq!(
+        response.iota_sdk_grpc_client_version_min(),
+        Some(CRATE_VERSION)
     );
 }
 
@@ -85,7 +201,7 @@ async fn older_client_gets_the_version_error() {
 async fn supported_client_gets_the_node_error() {
     let client = client_for_node_with_minimum(CRATE_VERSION);
 
-    let error = client.service_info().await.unwrap_err();
+    let error = client.health().await.unwrap_err();
 
     assert!(
         matches!(&error, GrpcError::Grpc(status) if status.code() == Code::NotFound),
@@ -95,8 +211,7 @@ async fn supported_client_gets_the_node_error() {
 
 #[tokio::test]
 async fn service_client_status_carries_the_minimum() {
-    let current = semver::Version::parse(CRATE_VERSION).unwrap();
-    let minimum = semver::Version::new(current.major + 1, 0, 0).to_string();
+    let minimum = newer_minimum();
     let client = client_for_node_with_minimum(minimum.clone());
 
     let status = client
