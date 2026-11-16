@@ -491,7 +491,7 @@ mod tests {
             socket
                 .write_all(
                     b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\n\
-                      x-min-iota-sdk-graphql-client-version: 999.0.0\r\n\
+                      x-iota-sdk-graphql-client-version-min: 999.0.0\r\n\
                       content-length: 3\r\n\r\nnot",
                 )
                 .await

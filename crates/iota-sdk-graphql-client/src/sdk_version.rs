@@ -5,7 +5,7 @@
 //!
 //! The node's GraphQL service stamps every response with the lowest
 //! `iota-sdk-graphql-client` version able to decode it, in the
-//! [`X_MIN_IOTA_SDK_GRAPHQL_CLIENT_VERSION`] header. The check runs on the
+//! [`X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN`] header. The check runs on the
 //! response headers, before any body is decoded, so an outdated client fails
 //! with a clear error instead of tripping over a value it does not know.
 
@@ -21,7 +21,7 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 /// Lowest `iota-sdk-graphql-client` version able to decode the server's
 /// responses, as a semantic version. Clients below it fail their requests
 /// instead of decoding values they do not know.
-pub const X_MIN_IOTA_SDK_GRAPHQL_CLIENT_VERSION: &str = "x-min-iota-sdk-graphql-client-version";
+pub const X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN: &str = "x-iota-sdk-graphql-client-version-min";
 
 /// Fails with [`GraphQLError::IncompatibleSdkVersion`] when the response
 /// headers name a minimum SDK version newer than this crate.
@@ -37,7 +37,7 @@ pub(crate) fn check_min_sdk_version(response_headers: &HeaderMap) -> GraphQLResu
 
 fn check_against(response_headers: &HeaderMap, current: &Version) -> GraphQLResult<()> {
     let Some(minimum) = response_headers
-        .get(X_MIN_IOTA_SDK_GRAPHQL_CLIENT_VERSION)
+        .get(X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN)
         .and_then(|value| value.to_str().ok())
         .and_then(|value| Version::parse(value).ok())
     else {
@@ -63,7 +63,7 @@ mod tests {
     fn headers_with_minimum(minimum: &str) -> HeaderMap {
         let mut headers = HeaderMap::new();
         headers.insert(
-            X_MIN_IOTA_SDK_GRAPHQL_CLIENT_VERSION,
+            X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN,
             HeaderValue::from_str(minimum).unwrap(),
         );
         headers
