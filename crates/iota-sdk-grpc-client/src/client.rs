@@ -131,8 +131,9 @@ impl GrpcClient {
         &self.channel
     }
 
-    /// Get the underlying channel, checked against the node's minimum SDK
-    /// version.
+    /// Get the underlying channel, failing any call whose response names a
+    /// minimum SDK version newer than [`CRATE_VERSION`](crate::CRATE_VERSION),
+    /// the version of this crate.
     ///
     /// This can be useful for creating additional service clients that aren't
     /// yet integrated into GrpcClient. Wrap it with the client's
