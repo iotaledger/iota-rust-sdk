@@ -114,7 +114,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ### Node compatibility
 
-Every node response names the lowest `iota-sdk-grpc-client` version able to decode it. An older client fails the call with `GrpcError::IncompatibleSdkVersion` before decoding any data; upgrade the crate to resolve it.
+Nodes send the lowest `iota-sdk-grpc-client` version able to decode their responses. When this crate is older, `GrpcClient` calls fail with `GrpcError::IncompatibleSdkVersion` and service client calls fail with a `FAILED_PRECONDITION` status, before any data is decoded; upgrade the crate to resolve it. Responses from nodes that send no minimum are not checked, and neither are calls over `GrpcClient::channel()`.
 
 ### Service examples
 
