@@ -10,8 +10,10 @@ use std::{
     task::{Context, Poll},
 };
 
-use iota_grpc_types::headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN;
-use iota_sdk_grpc_client::{CRATE_VERSION, GrpcClient, GrpcError};
+use iota_grpc_types::{
+    headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN, v1::ledger_service::GetServiceInfoRequest,
+};
+use iota_sdk_grpc_client::{CRATE_VERSION, GrpcClient, GrpcError, ResponseExt};
 use tonic::{
     Code,
     body::Body,
@@ -88,5 +90,24 @@ async fn supported_client_gets_the_node_error() {
     assert!(
         matches!(&error, GrpcError::Grpc(status) if status.code() == Code::NotFound),
         "unexpected error: {error:?}"
+    );
+}
+
+#[tokio::test]
+async fn service_client_status_carries_the_minimum() {
+    let current = semver::Version::parse(CRATE_VERSION).unwrap();
+    let minimum = semver::Version::new(current.major + 1, 0, 0).to_string();
+    let client = client_for_node_with_minimum(minimum.clone());
+
+    let status = client
+        .ledger_service_client()
+        .get_service_info(GetServiceInfoRequest::default())
+        .await
+        .unwrap_err();
+
+    assert_eq!(status.code(), Code::FailedPrecondition);
+    assert_eq!(
+        status.iota_sdk_grpc_client_version_min(),
+        Some(minimum.as_str())
     );
 }

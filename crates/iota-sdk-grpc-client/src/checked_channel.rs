@@ -120,7 +120,14 @@ fn check_min_sdk_version(
         minimum,
         current: current.clone(),
     };
-    let mut status = tonic::Status::failed_precondition(error.to_string());
+    let mut metadata = tonic::metadata::MetadataMap::from_headers(response_headers.clone());
+    // The node's own status for the call, when it failed; this status replaces
+    // it.
+    for reserved in ["grpc-status", "grpc-message", "grpc-status-details-bin"] {
+        metadata.remove(reserved);
+    }
+    let mut status =
+        tonic::Status::with_metadata(tonic::Code::FailedPrecondition, error.to_string(), metadata);
     status.set_source(Arc::new(error));
     Err(status)
 }
@@ -130,6 +137,7 @@ mod tests {
     use std::convert::Infallible;
 
     use super::*;
+    use crate::ResponseExt;
 
     /// Inner service answering every request with a fixed set of response
     /// headers.
@@ -218,6 +226,26 @@ mod tests {
             .await
             .unwrap_err();
         incompatible_error(error);
+    }
+
+    #[tokio::test]
+    async fn failed_check_keeps_the_response_headers_but_not_the_node_status() {
+        let mut response_headers = headers_with_minimum("1.3.0");
+        response_headers.insert(
+            headers::X_IOTA_SERVER,
+            http::HeaderValue::from_static("iota-node/1.37.0"),
+        );
+        response_headers.insert("grpc-status", http::HeaderValue::from_static("5"));
+        response_headers.insert("grpc-message", http::HeaderValue::from_static("not found"));
+
+        let error = call_with(response_headers, "1.2.9").await.unwrap_err();
+        let status = tonic::Status::from_error(error);
+
+        assert_eq!(status.code(), tonic::Code::FailedPrecondition);
+        assert_eq!(status.iota_sdk_grpc_client_version_min(), Some("1.3.0"));
+        assert_eq!(status.server_version(), Some("iota-node/1.37.0"));
+        assert!(status.metadata().get("grpc-status").is_none());
+        assert!(status.metadata().get("grpc-message").is_none());
     }
 
     #[tokio::test]
