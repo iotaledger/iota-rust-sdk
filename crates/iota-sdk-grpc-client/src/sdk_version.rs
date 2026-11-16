@@ -26,7 +26,7 @@ type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
 /// Version of this crate, which the node's minimum SDK version is compared
 /// against.
-pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+pub const CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// The node requires a newer `iota-sdk-grpc-client` than the one in use.
 ///
@@ -65,7 +65,7 @@ impl<S> SdkVersionCheck<S> {
     pub(crate) fn new(inner: S) -> Self {
         // `CARGO_PKG_VERSION` comes from this crate's manifest, which cargo
         // only accepts with a valid semantic version.
-        let current = Version::parse(VERSION).expect("CARGO_PKG_VERSION is a valid version");
+        let current = Version::parse(CRATE_VERSION).expect("CARGO_PKG_VERSION is a valid version");
         Self::with_current_version(inner, current)
     }
 
@@ -234,6 +234,6 @@ mod tests {
 
     #[test]
     fn crate_version_is_valid_semver() {
-        Version::parse(VERSION).unwrap();
+        Version::parse(CRATE_VERSION).unwrap();
     }
 }

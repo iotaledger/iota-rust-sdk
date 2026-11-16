@@ -11,7 +11,7 @@ use std::{
 };
 
 use iota_grpc_types::headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN;
-use iota_sdk_grpc_client::{GrpcClient, GrpcError, VERSION};
+use iota_sdk_grpc_client::{CRATE_VERSION, GrpcClient, GrpcError};
 use tonic::{
     Code,
     body::Body,
@@ -63,7 +63,7 @@ fn client_for_node_with_minimum(minimum: impl Into<String>) -> GrpcClient {
 
 #[tokio::test]
 async fn older_client_gets_the_version_error() {
-    let current = semver::Version::parse(VERSION).unwrap();
+    let current = semver::Version::parse(CRATE_VERSION).unwrap();
     let minimum = semver::Version::new(current.major + 1, 0, 0).to_string();
     let client = client_for_node_with_minimum(minimum.clone());
 
@@ -73,7 +73,7 @@ async fn older_client_gets_the_version_error() {
         matches!(
             &error,
             GrpcError::IncompatibleSdkVersion { minimum: m, current: c }
-                if *m == minimum && c == VERSION
+                if *m == minimum && c == CRATE_VERSION
         ),
         "unexpected error: {error:?}"
     );
@@ -81,7 +81,7 @@ async fn older_client_gets_the_version_error() {
 
 #[tokio::test]
 async fn supported_client_gets_the_node_error() {
-    let client = client_for_node_with_minimum(VERSION);
+    let client = client_for_node_with_minimum(CRATE_VERSION);
 
     let error = client.service_info().await.unwrap_err();
 
