@@ -125,9 +125,8 @@ impl GrpcClient {
     ///
     /// Responses on this channel are not checked against the node's minimum
     /// SDK version. To create additional service clients that aren't yet
-    /// integrated into GrpcClient, use [`checked_channel`] instead.
-    ///
-    /// [`checked_channel`]: GrpcClient::checked_channel
+    /// integrated into GrpcClient, use
+    /// [`checked_channel`](GrpcClient::checked_channel) instead.
     pub fn channel(&self) -> &tonic::transport::Channel {
         &self.channel
     }
@@ -136,11 +135,9 @@ impl GrpcClient {
     /// version.
     ///
     /// This can be useful for creating additional service clients that aren't
-    /// yet integrated into GrpcClient. Wrap it with the client's [`headers`]
-    /// via the service client's `with_interceptor` to also send the configured
-    /// headers.
-    ///
-    /// [`headers`]: GrpcClient::headers
+    /// yet integrated into GrpcClient. Wrap it with the client's
+    /// [`headers`](GrpcClient::headers) via the service client's
+    /// `with_interceptor` to also send the configured headers.
     pub fn checked_channel(&self) -> CheckedChannel<tonic::transport::Channel> {
         CheckedChannel::new(self.channel.clone())
     }
