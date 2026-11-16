@@ -12,7 +12,7 @@ use iota_grpc_types::v1::{
 };
 use tonic::codec::CompressionEncoding;
 
-use crate::{api::GrpcResult, interceptors::HeadersInterceptor, sdk_version::CheckedChannel};
+use crate::{api::GrpcResult, checked_channel::CheckedChannel, interceptors::HeadersInterceptor};
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 

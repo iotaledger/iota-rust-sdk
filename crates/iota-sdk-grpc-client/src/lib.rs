@@ -116,5 +116,5 @@ pub use response_ext::ResponseExt;
 mod interceptors;
 pub use interceptors::HeadersInterceptor;
 
-mod sdk_version;
-pub use sdk_version::{CRATE_VERSION, CheckedChannel};
+mod checked_channel;
+pub use checked_channel::{CRATE_VERSION, CheckedChannel};

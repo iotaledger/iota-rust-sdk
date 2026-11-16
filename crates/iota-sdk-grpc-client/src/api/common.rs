@@ -23,7 +23,7 @@ use iota_types::{ObjectId, TransactionDigest, Version};
 use serde::Serialize;
 
 use super::MetadataEnvelope;
-use crate::sdk_version::IncompatibleSdkVersion;
+use crate::checked_channel::IncompatibleSdkVersion;
 
 /// Errors that can occur during gRPC client API operations.
 #[derive(Debug, thiserror::Error)]
