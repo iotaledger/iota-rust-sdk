@@ -46,6 +46,16 @@ pub const X_IOTA_SERVER: &str = "x-iota-server";
 
 /// Lowest checkpoint for which the transaction and event indexes are complete.
 ///
+/// Use it for queries that search transactions or events by a filter, such as
+/// the sender or the event type (for example the JSON-RPC
+/// `iotax_queryTransactionBlocks` and `iotax_queryEvents`). To fetch
+/// checkpoints, transactions or events by sequence number or digest, use
+/// [`X_IOTA_LOWEST_AVAILABLE_CHECKPOINT`].
+///
+/// It can be higher than [`X_IOTA_LOWEST_AVAILABLE_CHECKPOINT`], for example
+/// while the node fills in index history after an index rebuild, or when it
+/// keeps fewer epochs of indexes than of checkpoints.
+///
 /// Absent if the node does not keep these indexes.
 pub const X_IOTA_LOWEST_AVAILABLE_CHECKPOINT_INDEXES: &str =
     "x-iota-lowest-available-checkpoint-indexes";
