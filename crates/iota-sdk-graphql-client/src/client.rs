@@ -540,6 +540,30 @@ mod tests {
         .await;
     }
 
+    #[tokio::test]
+    async fn accepts_response_from_node_supporting_this_sdk() {
+        let (listener, url) = bind().await;
+        let _server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            let mut buf = vec![0; 4096];
+            let _ = socket.read(&mut buf).await.unwrap();
+            let response = format!(
+                "HTTP/1.1 200 OK\r\ncontent-type: application/json\r\n\
+                 x-iota-sdk-graphql-client-version-min: {}\r\n\
+                 content-length: 11\r\n\r\n{{\"data\":{{}}}}",
+                crate::CRATE_VERSION
+            );
+            socket.write_all(response.as_bytes()).await.unwrap();
+        });
+
+        let client = GraphQLClient::new(&url).unwrap();
+        let data = client
+            .run_query_from_json(Default::default())
+            .await
+            .unwrap();
+        assert_eq!(data, json!({}));
+    }
+
     #[test]
     fn builder_rejects_invalid_url() {
         assert!(GraphQLClient::builder("not a url").build().is_err());
