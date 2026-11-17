@@ -12,7 +12,7 @@ use iota_graphql_client::{
     query_types::SubscriptionEventFilter,
 };
 use iota_transaction_builder::{
-    PTBArgument, TransactionBuilder, WaitForTransaction, assigned, error::TransactionBuilderError,
+    TransactionBuilder, WaitForTransaction, assigned, error::TransactionBuilderError,
     unresolved::Argument,
 };
 use iota_types::{
@@ -135,8 +135,11 @@ async fn test_move_call() {
 
 /// Execute `0x1::u256::try_as_u128(value)` and unwrap its result. The second
 /// command aborts if the `u256` Move read does not fit in a `u128`.
-async fn execute_u256_as_u128(value: impl PTBArgument) -> ExecutionStatus {
+async fn execute_u256_as_u128(
+    value: impl FnOnce(&mut TransactionBuilder<GraphQLClient>) -> Argument,
+) -> ExecutionStatus {
     let (mut tx, _, pk, _) = helper_setup().await;
+    let value = value(&mut tx);
     let as_u128 = tx
         .move_call(Address::STD, "u256", "try_as_u128")
         .arguments([value])
@@ -160,23 +163,36 @@ async fn execute_u256_as_u128(value: impl PTBArgument) -> ExecutionStatus {
 #[tokio::test]
 async fn test_u256_argument() {
     // 2^112, which fits in a `u128`.
-    let mut two_pow_112 = [0; U256::LENGTH];
-    two_pow_112[14] = 1;
-    let two_pow_112 = U256::from_le_bytes(two_pow_112);
+    let two_pow_112 = primitive_types::U256::one() << 112;
+    let two_pow_112_bytes = two_pow_112.to_little_endian();
 
-    assert_eq!(
-        execute_u256_as_u128(U256::ONE).await,
-        ExecutionStatus::Success
-    );
-    assert_eq!(
-        execute_u256_as_u128(two_pow_112).await,
-        ExecutionStatus::Success
-    );
+    // Passed as an argument, both `u256` types reach Move as the number
+    // passed.
+    for value in [primitive_types::U256::one(), two_pow_112] {
+        assert_eq!(
+            execute_u256_as_u128(|tx| tx.apply_argument(value)).await,
+            ExecutionStatus::Success,
+            "primitive_types::U256 {value}"
+        );
+    }
+    for value in [U256::ONE, U256::from_le_bytes(two_pow_112_bytes)] {
+        assert_eq!(
+            execute_u256_as_u128(|tx| tx.apply_argument(value)).await,
+            ExecutionStatus::Success,
+            "U256 argument {value}"
+        );
+        assert_eq!(
+            execute_u256_as_u128(|tx| tx.pure(value)).await,
+            ExecutionStatus::Success,
+            "U256 through pure {value}"
+        );
+    }
 
-    // A `u256` used to be sent as the BCS of its hex string. For most values
+    // Through serde a `primitive_types::U256` is sent as the BCS of its hex
+    // string, as the argument was too before it was fixed. For most values
     // that is not 32 bytes long, so the argument of the first command is
     // rejected.
-    let status = execute_u256_as_u128("0x1").await;
+    let status = execute_u256_as_u128(|tx| tx.pure(primitive_types::U256::one())).await;
     assert!(
         matches!(
             status,
@@ -191,7 +207,7 @@ async fn test_u256_argument() {
     // The hex string of 2^112 is 32 bytes long with its length prefix, so it
     // is accepted as another number, one too large for a `u128`: the second
     // command aborts.
-    let status = execute_u256_as_u128(format!("0x1{}", "0".repeat(28))).await;
+    let status = execute_u256_as_u128(|tx| tx.pure(two_pow_112)).await;
     assert!(
         matches!(
             status,

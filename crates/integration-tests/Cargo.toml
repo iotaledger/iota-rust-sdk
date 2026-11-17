@@ -12,6 +12,7 @@ description = "Integration tests for the IOTA Rust SDK"
 # external dependencies
 eyre.workspace = true
 futures.workspace = true
+primitive-types.workspace = true
 serde_json.workspace = true
 tokio.workspace = true
 
