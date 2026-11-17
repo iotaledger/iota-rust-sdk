@@ -34,3 +34,66 @@ impl_simple_move_arg!(u64);
 impl_simple_move_arg!(u128);
 impl_simple_move_arg!(U256);
 impl_simple_move_arg!(Address);
+
+#[cfg(test)]
+mod tests {
+    use iota_types::{Input, TransactionKind};
+
+    use super::*;
+    use crate::TransactionBuilder;
+
+    fn u256_values() -> [U256; 5] {
+        [
+            U256::zero(),
+            U256::one(),
+            U256::from(1_000_000_000_000_000_000u64),
+            // Encodes to 32 bytes as a string too, so only the content tells
+            // the two encodings apart.
+            U256::one() << 112,
+            U256::MAX,
+        ]
+    }
+
+    /// Move reads a `u256` as 32 little-endian bytes.
+    #[test]
+    fn u256_pure_bytes_are_32_little_endian_bytes() {
+        for value in u256_values() {
+            let expected = value.to_little_endian().to_vec();
+            assert_eq!(value.pure_bytes().0, expected, "u256 {value}");
+            assert_eq!((&value).pure_bytes().0, expected, "&u256 {value}");
+        }
+    }
+
+    /// A `vector<u256>` is a ULEB128 length followed by 32 bytes per element.
+    #[test]
+    fn u256_vector_pure_bytes() {
+        let values = u256_values();
+        let mut expected = vec![values.len() as u8];
+        for value in values {
+            expected.extend_from_slice(&value.to_little_endian());
+        }
+        assert_eq!(values.to_vec().pure_bytes().0, expected);
+    }
+
+    /// The pure input of a built transaction carries the same 32 bytes.
+    #[test]
+    fn u256_move_call_argument() {
+        for value in u256_values() {
+            let mut builder = TransactionBuilder::new(Address::ZERO);
+            builder
+                .move_call(Address::STD, "u256", "sqrt")
+                .arguments([value]);
+            builder.gas_price(1000).gas_budget(1_000_000);
+            let transaction = builder.finish().unwrap();
+
+            let TransactionKind::Programmable(ptb) = &transaction.as_v1().kind else {
+                panic!("expected a programmable transaction");
+            };
+            assert_eq!(
+                ptb.inputs,
+                [Input::Pure(value.to_little_endian().to_vec())],
+                "u256 {value}"
+            );
+        }
+    }
+}
