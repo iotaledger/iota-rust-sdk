@@ -13,20 +13,23 @@ use winnow::{
 
 use crate::{Address, Identifier, StructTag, TypeParseError, TypeTag};
 
-type ModalResult<O> = winnow::ModalResult<O, InnerError>;
+type ModalResult<'a, O> = winnow::ModalResult<O, InnerError<'a>>;
 
-/// Parser error that wraps the public [`TypeParseError`].
+/// Parser error that becomes the public [`TypeParseError`].
 #[derive(Debug)]
-pub(crate) struct InnerError(TypeParseError);
+pub(crate) enum InnerError<'a> {
+    /// The input where parsing stopped. It is borrowed because the parser
+    /// builds this error for every alternative it rejects, and only the last
+    /// one is returned.
+    Parse(&'a str),
+    Other(TypeParseError),
+}
 
-impl ParserError<&str> for InnerError {
+impl<'a> ParserError<&'a str> for InnerError<'a> {
     type Inner = Self;
 
-    fn from_input(input: &&str) -> Self {
-        Self(TypeParseError::Parse {
-            input: (*input).to_owned(),
-            source: None,
-        })
+    fn from_input(input: &&'a str) -> Self {
+        Self::Parse(input)
     }
 
     fn into_inner(self) -> winnow::Result<Self::Inner, Self> {
@@ -36,10 +39,16 @@ impl ParserError<&str> for InnerError {
 
 /// Runs `parser` over the whole of `input`.
 pub(crate) fn parse_complete<'a, O>(
-    mut parser: impl Parser<&'a str, O, ErrMode<InnerError>>,
+    mut parser: impl Parser<&'a str, O, ErrMode<InnerError<'a>>>,
     input: &'a str,
 ) -> Result<O, TypeParseError> {
-    parser.parse(input).map_err(|e| e.into_inner().0)
+    parser.parse(input).map_err(|e| match e.into_inner() {
+        InnerError::Parse(input) => TypeParseError::Parse {
+            input: input.to_owned(),
+            source: None,
+        },
+        InnerError::Other(error) => error,
+    })
 }
 
 /// Maximum length in bytes of a Move [`Identifier`].
@@ -48,7 +57,7 @@ pub const MAX_IDENTIFIER_LENGTH: usize = 128;
 pub const MAX_TYPE_TAG_NESTING: usize = 16;
 
 /// ALLOWED_IDENTIFIERS = r"(?:[a-zA-Z][a-zA-Z0-9_]*)|(?:_[a-zA-Z0-9_]+)";
-pub(crate) fn parse_identifier(input: &mut &str) -> ModalResult<Identifier> {
+pub(crate) fn parse_identifier<'a>(input: &mut &'a str) -> ModalResult<'a, Identifier> {
     alt((
         "<SELF>",
         (one_of(|c: char| c.is_alpha()), valid_remainder(0)).take(),
@@ -57,7 +66,7 @@ pub(crate) fn parse_identifier(input: &mut &str) -> ModalResult<Identifier> {
     .parse_next(input)
     .and_then(|s| {
         if s.len() > MAX_IDENTIFIER_LENGTH {
-            return Err(ErrMode::Cut(InnerError(
+            return Err(ErrMode::Cut(InnerError::Other(
                 TypeParseError::IdentifierMaxLengthExceeded { actual: s.len() },
             )));
         }
@@ -66,30 +75,30 @@ pub(crate) fn parse_identifier(input: &mut &str) -> ModalResult<Identifier> {
     .map(Identifier::new_unchecked)
 }
 
-fn valid_remainder<'a>(minimum: usize) -> impl FnMut(&mut &'a str) -> ModalResult<&'a str> {
+fn valid_remainder<'a>(minimum: usize) -> impl FnMut(&mut &'a str) -> ModalResult<'a, &'a str> {
     move |input: &mut &'a str| {
         take_while(minimum.., (b'_', b'a'..=b'z', b'A'..=b'Z', b'0'..=b'9')).parse_next(input)
     }
 }
 
-pub(crate) fn parse_address(input: &mut &str) -> ModalResult<Address> {
+pub(crate) fn parse_address<'a>(input: &mut &'a str) -> ModalResult<'a, Address> {
     ("0x", take_while(1.., AsChar::is_hex_digit))
         .take()
         .parse_next(input)
         .and_then(|s| {
             Address::from_prefixed_short_hex(s)
-                .map_err(|e| ErrMode::Cut(InnerError(TypeParseError::Address(e))))
+                .map_err(|e| ErrMode::Cut(InnerError::Other(TypeParseError::Address(e))))
         })
 }
 
-pub(crate) fn parse_type_tag(input: &mut &str) -> ModalResult<TypeTag> {
+pub(crate) fn parse_type_tag<'a>(input: &mut &'a str) -> ModalResult<'a, TypeTag> {
     parse_type_tag_impl(0).parse_next(input)
 }
 
-fn parse_type_tag_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<TypeTag> {
-    move |input: &mut &str| {
+fn parse_type_tag_impl<'a>(depth: usize) -> impl FnMut(&mut &'a str) -> ModalResult<'a, TypeTag> {
+    move |input: &mut &'a str| {
         if depth > MAX_TYPE_TAG_NESTING {
-            return Err(ErrMode::Cut(InnerError(
+            return Err(ErrMode::Cut(InnerError::Other(
                 TypeParseError::NestingLimitExceeded,
             )));
         }
@@ -118,12 +127,14 @@ fn parse_type_tag_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<Typ
     }
 }
 
-pub(crate) fn parse_struct_tag(input: &mut &str) -> ModalResult<StructTag> {
+pub(crate) fn parse_struct_tag<'a>(input: &mut &'a str) -> ModalResult<'a, StructTag> {
     parse_struct_tag_impl(0).parse_next(input)
 }
 
-fn parse_struct_tag_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<StructTag> {
-    move |input: &mut &str| {
+fn parse_struct_tag_impl<'a>(
+    depth: usize,
+) -> impl FnMut(&mut &'a str) -> ModalResult<'a, StructTag> {
+    move |input: &mut &'a str| {
         let (address, _, module, _, name) = (
             parse_address,
             "::",
@@ -146,8 +157,8 @@ fn parse_struct_tag_impl(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<S
     }
 }
 
-fn parse_generics(depth: usize) -> impl FnMut(&mut &str) -> ModalResult<Vec<TypeTag>> {
-    move |input: &mut &str| {
+fn parse_generics<'a>(depth: usize) -> impl FnMut(&mut &'a str) -> ModalResult<'a, Vec<TypeTag>> {
+    move |input: &mut &'a str| {
         separated(
             1..,
             delimited(multispace0, parse_type_tag_impl(depth + 1), multispace0),
@@ -370,6 +381,22 @@ mod tests {
             matches!(err, TypeParseError::NestingLimitExceeded),
             "{err:?}"
         );
+    }
+
+    #[test]
+    fn test_parse_error_message_shortens_the_input() {
+        let input = format!("0x1::Foo::Bar<{}", "!".repeat(1_000_000));
+        let err = input.parse::<StructTag>().unwrap_err();
+        assert!(
+            matches!(&err, TypeParseError::Parse { input: rest, .. } if input.ends_with(rest.as_str())),
+            "{err:?}"
+        );
+        let message = err.to_string();
+        assert!(message.len() < 200, "{} bytes", message.len());
+        assert!(message.contains("bytes)"), "{message}");
+
+        let err = "u64 extra".parse::<TypeTag>().unwrap_err();
+        assert_eq!(err.to_string(), "failed to parse  extra: unknown error");
     }
 
     #[test]
