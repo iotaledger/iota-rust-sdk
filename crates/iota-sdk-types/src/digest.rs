@@ -72,6 +72,13 @@ impl Digest {
 
     /// Decodes a digest from a Base58 encoded string.
     pub fn from_base58<T: AsRef<[u8]>>(base58: T) -> Result<Self, DigestParseError> {
+        let base58 = base58.as_ref();
+        // No digest encodes to more, so longer input is rejected without decoding.
+        if base58.len() > MAX_BASE58_LENGTH {
+            return Err(DigestParseError::InvalidBase58Length {
+                actual: base58.len(),
+            });
+        }
         let bytes = bs58::decode(base58).into_vec().map_err(|e| {
             match e {
                 bs58::decode::Error::InvalidCharacter { index, .. }
@@ -290,7 +297,12 @@ pub enum DigestParseError {
     InvalidByteLength { actual: usize },
     #[error("invalid Base58 string")]
     InvalidBase58,
+    #[error("invalid digest Base58 length: expected at most {MAX_BASE58_LENGTH}, got {actual}")]
+    InvalidBase58Length { actual: usize },
 }
+
+/// Length of the longest Base58 encoding of a [`Digest`].
+const MAX_BASE58_LENGTH: usize = 44;
 
 // Don't implement like the other digest type since this isn't intended to be
 // serialized
@@ -639,12 +651,28 @@ mod tests {
     #[test]
     fn parse_too_long_base58() {
         // Create a string that would decode to more than 32 bytes
-        let long_base58 = "1".repeat(100);
+        let long_base58 = "1".repeat(40);
         let result = Digest::from_base58(&long_base58);
         assert_eq!(
             result,
-            Err(DigestParseError::InvalidByteLength { actual: 100 })
+            Err(DigestParseError::InvalidByteLength { actual: 40 })
         );
+
+        let long_base58 = "1".repeat(MAX_BASE58_LENGTH + 1);
+        let result = Digest::from_base58(&long_base58);
+        assert_eq!(
+            result,
+            Err(DigestParseError::InvalidBase58Length {
+                actual: MAX_BASE58_LENGTH + 1
+            })
+        );
+    }
+
+    #[test]
+    fn longest_base58_encoding_parses() {
+        let base58 = Digest::new([0xff; Digest::LENGTH]).to_base58();
+        assert_eq!(base58.len(), MAX_BASE58_LENGTH);
+        assert!(Digest::from_base58(&base58).is_ok());
     }
 
     #[test]
