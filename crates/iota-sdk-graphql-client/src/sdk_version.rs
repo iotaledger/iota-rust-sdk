@@ -94,7 +94,7 @@ mod tests {
         assert_eq!(current, "1.2.9");
         assert_eq!(
             error.to_string(),
-            "node requires iota-sdk-graphql-client >= 1.3.0, this client is 1.2.9"
+            "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-graphql-client >= 1.3.0, this SDK uses 1.2.9)"
         );
     }
 

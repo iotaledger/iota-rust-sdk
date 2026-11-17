@@ -167,7 +167,9 @@ pub enum GraphQLError {
     /// The node requires a newer `iota-sdk-graphql-client` than this one, so
     /// the response was rejected before its body was decoded. Upgrade the
     /// crate.
-    #[error("node requires iota-sdk-graphql-client >= {minimum}, this client is {current}")]
+    #[error(
+        "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-graphql-client >= {minimum}, this SDK uses {current})"
+    )]
     IncompatibleSdkVersion { minimum: String, current: String },
 }
 
