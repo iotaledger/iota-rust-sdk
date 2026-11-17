@@ -70,9 +70,6 @@ winnow = "1.0"
 # internal dependencies
 iota-bcs-schema = { workspace = true, optional = true }
 
-[build-dependencies]
-filetime = "0.2"
-
 [dev-dependencies]
 bcs.workspace = true
 eyre.workspace = true
