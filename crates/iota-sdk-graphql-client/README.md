@@ -84,7 +84,7 @@ async fn main() -> Result<()> {
 
 ### Node compatibility
 
-Nodes send the lowest `iota-sdk-graphql-client` version able to decode their responses. When this crate is older, requests fail with `GraphQLError::OutdatedClientError` before any data is decoded; upgrade the crate to resolve it. Responses from nodes that send no minimum are not checked. In the browser, queries are only checked when the node lets pages on other origins read the header through CORS, and subscriptions are not checked, since a browser `WebSocket` does not expose the handshake headers.
+Nodes send the lowest `iota-sdk-graphql-client` version able to decode their responses. When this crate is older, queries fail with `GraphQLError::OutdatedClientError` before any data is decoded, and subscriptions yield that error once and end; upgrade the crate to resolve it. Responses from nodes that send no minimum are not checked. On wasm, subscriptions are not checked, since a JavaScript `WebSocket` does not expose the handshake headers, and in the browser a query to a node on another origin is only checked if the node exposes the header through CORS.
 
 ### Requesting gas from the faucet
 
