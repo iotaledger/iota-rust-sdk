@@ -17,8 +17,6 @@ pub trait ResponseExt: sealed::Sealed {
     fn lowest_available_checkpoint(&self) -> Option<u64>;
     fn lowest_available_checkpoint_objects(&self) -> Option<u64>;
     fn server_version(&self) -> Option<&str>;
-    /// Lowest `iota-sdk-grpc-client` version the server supports, or `None`
-    /// when the server does not send it.
     fn iota_sdk_grpc_client_version_min(&self) -> Option<&str>;
 }
 
