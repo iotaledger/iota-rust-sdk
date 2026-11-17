@@ -31,7 +31,7 @@ async fn main() -> Result<()> {
         let (page_info, data) = owned_objects_page.into_parts();
         all_objects.extend(data);
         if page_info.has_next_page {
-            next_cursor = page_info.end_cursor.clone();
+            next_cursor = page_info.end_cursor;
         } else {
             break;
         }

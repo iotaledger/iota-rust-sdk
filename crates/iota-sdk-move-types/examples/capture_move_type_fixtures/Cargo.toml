@@ -7,6 +7,9 @@ publish = false
 repository = "https://github.com/iotaledger/iota-rust-sdk/"
 description = "Capture real on-chain BCS fixtures for the Move types mirrored by iota-sdk-move-types"
 
+[lints]
+workspace = true
+
 [dependencies]
 # external dependencies
 base64ct = { workspace = true, features = ["alloc", "std"] }
