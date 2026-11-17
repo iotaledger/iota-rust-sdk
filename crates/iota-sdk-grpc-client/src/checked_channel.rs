@@ -33,12 +33,12 @@ pub const CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 /// Attached as the source of the `FAILED_PRECONDITION` status a failed check
 /// produces, so the high-level API can surface it as its own error variant.
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub(crate) struct IncompatibleSdkVersion {
+pub(crate) struct OutdatedClientError {
     pub(crate) minimum: Version,
     pub(crate) current: Version,
 }
 
-impl fmt::Display for IncompatibleSdkVersion {
+impl fmt::Display for OutdatedClientError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
@@ -48,7 +48,7 @@ impl fmt::Display for IncompatibleSdkVersion {
     }
 }
 
-impl std::error::Error for IncompatibleSdkVersion {}
+impl std::error::Error for OutdatedClientError {}
 
 /// gRPC channel wrapper that fails a call when the node's minimum SDK version
 /// is newer than this crate.
@@ -116,7 +116,7 @@ fn check_min_sdk_version(
         return Ok(());
     }
 
-    let error = IncompatibleSdkVersion {
+    let error = OutdatedClientError {
         minimum,
         current: current.clone(),
     };
@@ -180,11 +180,11 @@ mod tests {
         service.call(http::Request::new(())).await
     }
 
-    fn incompatible_error(error: BoxError) -> IncompatibleSdkVersion {
+    fn outdated_client_error(error: BoxError) -> OutdatedClientError {
         let status = tonic::Status::from_error(error);
         assert_eq!(status.code(), tonic::Code::FailedPrecondition);
         std::error::Error::source(&status)
-            .and_then(|source| source.downcast_ref::<IncompatibleSdkVersion>())
+            .and_then(|source| source.downcast_ref::<OutdatedClientError>())
             .expect("status carries the version error as its source")
             .clone()
     }
@@ -211,7 +211,7 @@ mod tests {
         let error = call_with(headers_with_minimum("1.3.0"), "1.2.9")
             .await
             .unwrap_err();
-        let error = incompatible_error(error);
+        let error = outdated_client_error(error);
         assert_eq!(error.minimum, Version::parse("1.3.0").unwrap());
         assert_eq!(error.current, Version::parse("1.2.9").unwrap());
         assert_eq!(
@@ -225,7 +225,7 @@ mod tests {
         let error = call_with(headers_with_minimum("1.0.0-beta.2"), "1.0.0-beta.1")
             .await
             .unwrap_err();
-        incompatible_error(error);
+        outdated_client_error(error);
     }
 
     #[tokio::test]
@@ -256,7 +256,7 @@ mod tests {
         let error = call_with(headers_with_minimum("1.2.4+build"), "1.2.3")
             .await
             .unwrap_err();
-        incompatible_error(error);
+        outdated_client_error(error);
     }
 
     #[tokio::test]

@@ -153,11 +153,11 @@ fn newer_minimum() -> String {
     semver::Version::new(current.major + 1, 0, 0).to_string()
 }
 
-fn assert_incompatible(error: &GrpcError, minimum: &str) {
+fn assert_outdated_client(error: &GrpcError, minimum: &str) {
     assert!(
         matches!(
             error,
-            GrpcError::IncompatibleSdkVersion { minimum: m, current: c }
+            GrpcError::OutdatedClientError { minimum: m, current: c }
                 if m == minimum && c == CRATE_VERSION
         ),
         "unexpected error: {error:?}"
@@ -171,7 +171,7 @@ async fn older_client_gets_the_version_error() {
 
     let error = client.service_info().await.unwrap_err();
 
-    assert_incompatible(&error, &minimum);
+    assert_outdated_client(&error, &minimum);
 }
 
 #[tokio::test]
@@ -181,7 +181,7 @@ async fn older_client_gets_the_version_error_in_place_of_the_node_error() {
 
     let error = client.health().await.unwrap_err();
 
-    assert_incompatible(&error, &minimum);
+    assert_outdated_client(&error, &minimum);
 }
 
 #[tokio::test]
