@@ -516,8 +516,8 @@ mod tests {
     #[tokio::test]
     async fn handshake_rejects_node_requiring_newer_sdk() {
         let err = connect_to_node_with_minimum("999.0.0").await.unwrap_err();
-        let GraphQLError::IncompatibleSdkVersion { minimum, current } = err else {
-            panic!("expected an incompatible SDK version error, got {err:?}");
+        let GraphQLError::OutdatedClientError { minimum, current } = err else {
+            panic!("expected an outdated client error, got {err:?}");
         };
         assert_eq!(minimum, "999.0.0");
         assert_eq!(current, crate::CRATE_VERSION);
