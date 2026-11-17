@@ -31,7 +31,8 @@ pub struct GetHealthResponse {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetServiceInfoRequest {
     /// Mask specifying which ServiceInfo fields to read.
-    /// If no mask is specified, defaults to `chain_id,epoch,checkpoint_height`.
+    /// If no mask is specified, defaults to
+    /// `chain_id,epoch,executed_checkpoint_height,executed_checkpoint_timestamp,lowest_available_checkpoint,lowest_available_checkpoint_objects`.
     #[prost(message, optional, tag = "1")]
     pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
 }

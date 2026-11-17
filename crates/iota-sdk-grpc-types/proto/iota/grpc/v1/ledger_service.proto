@@ -80,7 +80,8 @@ message GetServiceInfoRequest {
   option (iota.grpc.message_accessors) = "with";
 
   // Mask specifying which ServiceInfo fields to read.
-  // If no mask is specified, defaults to `chain_id,epoch,checkpoint_height`.
+  // If no mask is specified, defaults to
+  // `chain_id,epoch,executed_checkpoint_height,executed_checkpoint_timestamp,lowest_available_checkpoint,lowest_available_checkpoint_objects`.
   optional google.protobuf.FieldMask read_mask = 1;
 }
 
