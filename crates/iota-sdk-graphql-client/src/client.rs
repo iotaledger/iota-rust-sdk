@@ -13,7 +13,7 @@ use crate::{
     error::{ErrorExtensions, GraphQLError, GraphQLResult},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
     query_types::{ServiceConfig, ServiceConfigQueryFragment},
-    sdk_version::check_min_sdk_version,
+    version_check::check_client_version,
 };
 
 pub(crate) const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
@@ -250,7 +250,7 @@ impl GraphQLClient {
             .json(body)
             .send()
             .await?;
-        check_min_sdk_version(resp.headers())?;
+        check_client_version(resp.headers())?;
         let status = resp.status();
         let url = resp.url().clone();
         let bytes = resp.bytes().await?;

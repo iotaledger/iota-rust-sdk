@@ -28,7 +28,7 @@ pub const X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN: &str = "x-iota-sdk-graphql-clie
 ///
 /// A response without the header, or with one that is not a semantic version,
 /// passes.
-pub(crate) fn check_min_sdk_version(response_headers: &HeaderMap) -> GraphQLResult<()> {
+pub(crate) fn check_client_version(response_headers: &HeaderMap) -> GraphQLResult<()> {
     // `CARGO_PKG_VERSION` comes from this crate's manifest, which cargo only
     // accepts with a valid semantic version.
     let current = Version::parse(CRATE_VERSION).expect("CARGO_PKG_VERSION is a valid version");
