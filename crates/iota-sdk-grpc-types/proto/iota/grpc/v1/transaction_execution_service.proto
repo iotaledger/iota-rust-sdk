@@ -102,6 +102,8 @@ message SimulateTransactionsRequest {
   repeated SimulateTransactionItem transactions = 1;
 
   // Mask specifying which fields to read, applied to each SimulatedTransaction in the response.
+  // If no mask is specified, defaults to
+  // `executed_transaction.transaction,executed_transaction.effects,executed_transaction.events,executed_transaction.input_objects,executed_transaction.output_objects,suggested_gas_price,execution_result`.
   optional google.protobuf.FieldMask read_mask = 2;
 }
 
