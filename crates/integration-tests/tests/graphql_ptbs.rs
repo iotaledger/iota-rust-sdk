@@ -12,12 +12,12 @@ use iota_graphql_client::{
     query_types::SubscriptionEventFilter,
 };
 use iota_transaction_builder::{
-    TransactionBuilder, WaitForTransaction, assigned, error::TransactionBuilderError,
+    PTBArgument, TransactionBuilder, WaitForTransaction, assigned, error::TransactionBuilderError,
     unresolved::Argument,
 };
 use iota_types::{
     Address, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectType, Transaction,
-    TransactionEffects, UpgradePolicy,
+    TransactionEffects, U256, UpgradePolicy,
 };
 
 /// This is used to read the json file that contains the modules/deps/digest
@@ -131,6 +131,77 @@ async fn test_move_call() {
 
     let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
+}
+
+/// Execute `0x1::u256::try_as_u128(value)` and unwrap its result. The second
+/// command aborts if the `u256` Move read does not fit in a `u128`.
+async fn execute_u256_as_u128(value: impl PTBArgument) -> ExecutionStatus {
+    let (mut tx, _, pk, _) = helper_setup().await;
+    let as_u128 = tx
+        .move_call(Address::STD, "u256", "try_as_u128")
+        .arguments([value])
+        .result();
+    tx.move_call(Address::STD, "option", "destroy_some")
+        .generics::<u128>()
+        .arguments([as_u128]);
+
+    match tx
+        .execute(&pk, WaitForTransaction::Finalized)
+        .await
+        .unwrap()
+    {
+        TransactionEffects::V1(v1) => v1.status,
+        _ => unimplemented!(
+            "a new TransactionEffects enum variant was added and needs to be handled"
+        ),
+    }
+}
+
+#[tokio::test]
+async fn test_u256_argument() {
+    // 2^112, which fits in a `u128`.
+    let mut two_pow_112 = [0; U256::LENGTH];
+    two_pow_112[14] = 1;
+    let two_pow_112 = U256::from_le_bytes(two_pow_112);
+
+    assert_eq!(
+        execute_u256_as_u128(U256::ONE).await,
+        ExecutionStatus::Success
+    );
+    assert_eq!(
+        execute_u256_as_u128(two_pow_112).await,
+        ExecutionStatus::Success
+    );
+
+    // A `u256` used to be sent as the BCS of its hex string. For most values
+    // that is not 32 bytes long, so the argument of the first command is
+    // rejected.
+    let status = execute_u256_as_u128("0x1").await;
+    assert!(
+        matches!(
+            status,
+            ExecutionStatus::Failure {
+                command: Some(0),
+                ..
+            }
+        ),
+        "{status:?}"
+    );
+
+    // The hex string of 2^112 is 32 bytes long with its length prefix, so it
+    // is accepted as another number, one too large for a `u128`: the second
+    // command aborts.
+    let status = execute_u256_as_u128(format!("0x1{}", "0".repeat(28))).await;
+    assert!(
+        matches!(
+            status,
+            ExecutionStatus::Failure {
+                command: Some(1),
+                ..
+            }
+        ),
+        "{status:?}"
+    );
 }
 
 #[tokio::test]
