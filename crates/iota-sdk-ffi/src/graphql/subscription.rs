@@ -131,8 +131,9 @@ macro_rules! define_subscription {
 
         /// A live subscription.
         ///
-        /// Call `next` in a loop to receive updates; it only returns `None` once
-        /// `cancel` has been called, since the subscription itself never ends.
+        /// Call `next` in a loop to receive updates; it returns `None` once
+        /// `cancel` has been called, or after it raised the error saying the
+        /// node requires a newer SDK. The subscription never ends otherwise.
         #[derive(uniffi::Object)]
         pub struct $name(StreamHandle<SubscriptionStream<$item>>);
 
@@ -141,14 +142,17 @@ macro_rules! define_subscription {
         impl $name {
             /// Wait for the next update.
             ///
-            /// Returns `None` once the subscription has been canceled.
+            /// Returns `None` once the subscription has been canceled, or
+            /// after raising the error saying the node requires a newer SDK.
             /// Concurrent calls are serialized; there is no ordering guarantee
             /// between them.
             ///
             /// Raises for errors the subscription cannot recover from by
             /// itself, such as a rejected filter. The subscription stays
             /// usable afterwards, so a caller that considers the error
-            /// transient can keep calling `next`.
+            /// transient can keep calling `next`; the exception is the error
+            /// saying the node requires a newer SDK, after which `next`
+            /// returns `None`.
             pub async fn next(&self) -> Result<Option<$update>> {
                 match self.0.next().await {
                     Some(Ok(item)) => Ok(Some($update::$variant {

@@ -5,9 +5,11 @@
 //! a WebSocket (`graphql-transport-ws`).
 //!
 //! Unlike the paginated `events` / `transactions` page methods, these stream
-//! data as it arrives and never terminate on their own. The stream
-//! transparently reconnects on disconnect, resuming from the last item it
-//! delivered via the subscription's `startAfter` cursor.
+//! data as it arrives. The stream transparently reconnects on disconnect,
+//! resuming from the last item it delivered via the subscription's
+//! `startAfter` cursor. It only ends after yielding
+//! [`GraphQLError::IncompatibleSdkVersion`], since reconnecting would fail the
+//! same way until the SDK is upgraded.
 
 use std::{future::Future, time::Duration};
 
@@ -85,7 +87,8 @@ impl EventsSubscriptionBuilder {
     }
 
     /// Open the subscription. The stream yields events as they arrive and
-    /// reconnects automatically on disconnect.
+    /// reconnects automatically on disconnect. It ends after yielding
+    /// [`GraphQLError::IncompatibleSdkVersion`].
     pub fn subscribe(self) -> impl Stream<Item = GraphQLResult<Event>> + Unpin {
         let Self {
             client,
@@ -165,7 +168,8 @@ impl TransactionsSubscriptionBuilder {
     }
 
     /// Open the subscription. The stream yields transactions as they arrive
-    /// and reconnects automatically on disconnect.
+    /// and reconnects automatically on disconnect. It ends after yielding
+    /// [`GraphQLError::IncompatibleSdkVersion`].
     pub fn subscribe(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
         let Self {
             client,
@@ -324,8 +328,9 @@ async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection 
 ///
 /// `connect` is called with the current resume cursor on every (re)connection
 /// and must yield a stream of decoded [`Outcome`]s. Connection and transport
-/// errors are surfaced to the consumer and then trigger a backed-off reconnect;
-/// the stream itself never terminates.
+/// errors are surfaced to the consumer and then trigger a backed-off reconnect.
+/// The stream only ends after yielding
+/// [`GraphQLError::IncompatibleSdkVersion`].
 fn reconnecting_subscription<'a, T, C, Fut, S>(
     connect: C,
     initial_cursor: Option<String>,
@@ -364,7 +369,13 @@ where
                         }
                     }
                 }
-                Err(error) => yield Err(error),
+                Err(error) => {
+                    let incompatible = matches!(error, GraphQLError::IncompatibleSdkVersion { .. });
+                    yield Err(error);
+                    if incompatible {
+                        return;
+                    }
+                }
             }
             crate::wait::sleep(backoff).await;
             backoff = (backoff * 2).min(MAX_BACKOFF);
@@ -517,6 +528,53 @@ mod tests {
         connect_to_node_with_minimum(crate::CRATE_VERSION)
             .await
             .unwrap();
+    }
+
+    /// Collects what a reconnecting subscription yields while every connection
+    /// attempt fails with `error`, and how often it tried to connect.
+    async fn subscription_failing_to_connect(
+        error: fn() -> GraphQLError,
+    ) -> (Vec<GraphQLError>, usize) {
+        let attempts = std::cell::Cell::new(0);
+        let stream = reconnecting_subscription(
+            |_| {
+                attempts.set(attempts.get() + 1);
+                async move { Err::<futures::stream::Empty<GraphQLResult<Outcome<()>>>, _>(error()) }
+            },
+            None,
+        );
+        // Long enough for one reconnect, short enough to stop a stream that
+        // keeps reconnecting.
+        let errors = stream
+            .take_until(tokio::time::sleep(INITIAL_BACKOFF * 2))
+            .map(|item| item.unwrap_err())
+            .collect()
+            .await;
+        (errors, attempts.get())
+    }
+
+    #[tokio::test]
+    async fn subscription_ends_when_node_requires_newer_sdk() {
+        let (errors, attempts) =
+            subscription_failing_to_connect(|| GraphQLError::IncompatibleSdkVersion {
+                minimum: "999.0.0".to_owned(),
+                current: crate::CRATE_VERSION.to_owned(),
+            })
+            .await;
+        assert_eq!(attempts, 1);
+        assert!(
+            matches!(errors[..], [GraphQLError::IncompatibleSdkVersion { .. }]),
+            "{errors:?}"
+        );
+    }
+
+    #[tokio::test]
+    async fn subscription_reconnects_after_other_connection_errors() {
+        let (errors, attempts) =
+            subscription_failing_to_connect(|| GraphQLError::subscription("connection refused"))
+                .await;
+        assert_eq!(attempts, 2);
+        assert_eq!(errors.len(), 2, "{errors:?}");
     }
 
     #[test]
