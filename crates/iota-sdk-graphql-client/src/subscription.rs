@@ -8,7 +8,7 @@
 //! data as it arrives. The stream transparently reconnects on disconnect,
 //! resuming from the last item it delivered via the subscription's
 //! `startAfter` cursor. It only ends after yielding
-//! [`GraphQLError::IncompatibleSdkVersion`], since reconnecting would fail the
+//! [`GraphQLError::OutdatedClientError`], since reconnecting would fail the
 //! same way until the SDK is upgraded.
 
 use std::{future::Future, time::Duration};
@@ -88,7 +88,7 @@ impl EventsSubscriptionBuilder {
 
     /// Open the subscription. The stream yields events as they arrive and
     /// reconnects automatically on disconnect. It ends after yielding
-    /// [`GraphQLError::IncompatibleSdkVersion`].
+    /// [`GraphQLError::OutdatedClientError`].
     pub fn subscribe(self) -> impl Stream<Item = GraphQLResult<Event>> + Unpin {
         let Self {
             client,
@@ -169,7 +169,7 @@ impl TransactionsSubscriptionBuilder {
 
     /// Open the subscription. The stream yields transactions as they arrive
     /// and reconnects automatically on disconnect. It ends after yielding
-    /// [`GraphQLError::IncompatibleSdkVersion`].
+    /// [`GraphQLError::OutdatedClientError`].
     pub fn subscribe(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
         let Self {
             client,
@@ -330,7 +330,7 @@ async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection 
 /// and must yield a stream of decoded [`Outcome`]s. Connection and transport
 /// errors are surfaced to the consumer and then trigger a backed-off reconnect.
 /// The stream only ends after yielding
-/// [`GraphQLError::IncompatibleSdkVersion`].
+/// [`GraphQLError::OutdatedClientError`].
 fn reconnecting_subscription<'a, T, C, Fut, S>(
     connect: C,
     initial_cursor: Option<String>,
@@ -370,9 +370,9 @@ where
                     }
                 }
                 Err(error) => {
-                    let incompatible = matches!(error, GraphQLError::IncompatibleSdkVersion { .. });
+                    let outdated = matches!(error, GraphQLError::OutdatedClientError { .. });
                     yield Err(error);
-                    if incompatible {
+                    if outdated {
                         return;
                     }
                 }
@@ -556,14 +556,14 @@ mod tests {
     #[tokio::test]
     async fn subscription_ends_when_node_requires_newer_sdk() {
         let (errors, attempts) =
-            subscription_failing_to_connect(|| GraphQLError::IncompatibleSdkVersion {
+            subscription_failing_to_connect(|| GraphQLError::OutdatedClientError {
                 minimum: "999.0.0".to_owned(),
                 current: crate::CRATE_VERSION.to_owned(),
             })
             .await;
         assert_eq!(attempts, 1);
         assert!(
-            matches!(errors[..], [GraphQLError::IncompatibleSdkVersion { .. }]),
+            matches!(errors[..], [GraphQLError::OutdatedClientError { .. }]),
             "{errors:?}"
         );
     }
