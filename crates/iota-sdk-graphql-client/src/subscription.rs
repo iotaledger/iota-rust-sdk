@@ -375,6 +375,10 @@ where
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use cynic::{GraphQlError as CynicError, GraphQlErrorPathSegment, GraphQlResponse};
+    use tokio_tungstenite::tungstenite::{
+        handshake::server::{Callback, ErrorResponse, Request, Response},
+        http::HeaderValue,
+    };
 
     use super::*;
 
@@ -460,6 +464,59 @@ mod tests {
             Some(vec![GraphQlErrorPathSegment::Field("events".to_owned())])
         );
         assert_eq!(errors[0].extensions, None);
+    }
+
+    /// Server side of the WebSocket handshake: accepts the subprotocol and
+    /// sends its minimum SDK version.
+    struct NodeWithMinimum(&'static str);
+
+    impl Callback for NodeWithMinimum {
+        fn on_request(
+            self,
+            _request: &Request,
+            mut response: Response,
+        ) -> Result<Response, ErrorResponse> {
+            let headers = response.headers_mut();
+            headers.insert(
+                "Sec-WebSocket-Protocol",
+                HeaderValue::from_static(WS_PROTOCOL),
+            );
+            headers.insert(
+                crate::X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN,
+                HeaderValue::from_static(self.0),
+            );
+            Ok(response)
+        }
+    }
+
+    /// Opens a WebSocket to a node whose handshake response carries `minimum`
+    /// in the minimum SDK version header.
+    async fn connect_to_node_with_minimum(minimum: &'static str) -> GraphQLResult<()> {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let url = Url::parse(&format!("ws://{}", listener.local_addr().unwrap())).unwrap();
+        let _server = tokio::spawn(async move {
+            let (socket, _) = listener.accept().await.unwrap();
+            let _ = tokio_tungstenite::accept_hdr_async(socket, NodeWithMinimum(minimum)).await;
+        });
+
+        connect(&url).await.map(drop)
+    }
+
+    #[tokio::test]
+    async fn handshake_rejects_node_requiring_newer_sdk() {
+        let err = connect_to_node_with_minimum("999.0.0").await.unwrap_err();
+        let GraphQLError::IncompatibleSdkVersion { minimum, current } = err else {
+            panic!("expected an incompatible SDK version error, got {err:?}");
+        };
+        assert_eq!(minimum, "999.0.0");
+        assert_eq!(current, crate::CRATE_VERSION);
+    }
+
+    #[tokio::test]
+    async fn handshake_accepts_node_supporting_this_sdk() {
+        connect_to_node_with_minimum(crate::CRATE_VERSION)
+            .await
+            .unwrap();
     }
 
     #[test]

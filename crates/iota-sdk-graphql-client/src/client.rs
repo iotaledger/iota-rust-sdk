@@ -491,22 +491,15 @@ mod tests {
         assert!(err.is_timeout(), "{err:?}");
     }
 
-    #[tokio::test]
-    async fn rejects_response_from_node_requiring_newer_sdk() {
+    /// Runs a query against a node answering with `response` and asserts that
+    /// it fails because the node requires `iota-sdk-graphql-client` 999.0.0.
+    async fn assert_query_rejected_for_newer_sdk(response: &'static [u8]) {
         let (listener, url) = bind().await;
         let _server = tokio::spawn(async move {
             let (mut socket, _) = listener.accept().await.unwrap();
             let mut buf = vec![0; 4096];
             let _ = socket.read(&mut buf).await.unwrap();
-            // The body is not JSON, so decoding it would fail differently.
-            socket
-                .write_all(
-                    b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\n\
-                      x-iota-sdk-graphql-client-version-min: 999.0.0\r\n\
-                      content-length: 3\r\n\r\nnot",
-                )
-                .await
-                .unwrap();
+            socket.write_all(response).await.unwrap();
         });
 
         let client = GraphQLClient::new(&url).unwrap();
@@ -519,6 +512,29 @@ mod tests {
         };
         assert_eq!(minimum, "999.0.0");
         assert_eq!(current, crate::CRATE_VERSION);
+    }
+
+    #[tokio::test]
+    async fn rejects_response_from_node_requiring_newer_sdk() {
+        // The body is not JSON, so decoding it would fail differently.
+        assert_query_rejected_for_newer_sdk(
+            b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\n\
+              x-iota-sdk-graphql-client-version-min: 999.0.0\r\n\
+              content-length: 3\r\n\r\nnot",
+        )
+        .await;
+    }
+
+    #[tokio::test]
+    async fn rejects_error_response_from_node_requiring_newer_sdk() {
+        // Without the check, the status would fail the query with
+        // `GraphQLError::Http`.
+        assert_query_rejected_for_newer_sdk(
+            b"HTTP/1.1 500 Internal Server Error\r\ncontent-type: text/plain\r\n\
+              x-iota-sdk-graphql-client-version-min: 999.0.0\r\n\
+              content-length: 4\r\n\r\nboom",
+        )
+        .await;
     }
 
     #[test]
