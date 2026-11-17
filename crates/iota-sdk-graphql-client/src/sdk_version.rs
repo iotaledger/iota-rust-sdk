@@ -23,7 +23,7 @@ pub const CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 /// instead of decoding values they do not know.
 pub const X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN: &str = "x-iota-sdk-graphql-client-version-min";
 
-/// Fails with [`GraphQLError::IncompatibleSdkVersion`] when the response
+/// Fails with [`GraphQLError::OutdatedClientError`] when the response
 /// headers name a minimum SDK version newer than this crate.
 ///
 /// A response without the header, or with one that is not a semantic version,
@@ -48,7 +48,7 @@ fn check_against(response_headers: &HeaderMap, current: &Version) -> GraphQLResu
         return Ok(());
     }
 
-    Err(GraphQLError::IncompatibleSdkVersion {
+    Err(GraphQLError::OutdatedClientError {
         minimum: minimum.to_string(),
         current: current.to_string(),
     })
@@ -87,8 +87,8 @@ mod tests {
     #[test]
     fn fails_when_client_is_older() {
         let error = check(&headers_with_minimum("1.3.0"), "1.2.9").unwrap_err();
-        let GraphQLError::IncompatibleSdkVersion { minimum, current } = &error else {
-            panic!("expected GraphQLError::IncompatibleSdkVersion, got {error:?}");
+        let GraphQLError::OutdatedClientError { minimum, current } = &error else {
+            panic!("expected GraphQLError::OutdatedClientError, got {error:?}");
         };
         assert_eq!(minimum, "1.3.0");
         assert_eq!(current, "1.2.9");
@@ -102,7 +102,7 @@ mod tests {
     fn fails_when_client_is_older_pre_release() {
         let error = check(&headers_with_minimum("1.0.0-beta.2"), "1.0.0-beta.1").unwrap_err();
         assert!(
-            matches!(error, GraphQLError::IncompatibleSdkVersion { .. }),
+            matches!(error, GraphQLError::OutdatedClientError { .. }),
             "{error:?}"
         );
     }
@@ -112,7 +112,7 @@ mod tests {
         check(&headers_with_minimum("1.2.3+build"), "1.2.3").unwrap();
         let error = check(&headers_with_minimum("1.2.4+build"), "1.2.3").unwrap_err();
         assert!(
-            matches!(error, GraphQLError::IncompatibleSdkVersion { .. }),
+            matches!(error, GraphQLError::OutdatedClientError { .. }),
             "{error:?}"
         );
     }
