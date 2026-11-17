@@ -32,8 +32,21 @@ impl_simple_move_arg!(u16);
 impl_simple_move_arg!(u32);
 impl_simple_move_arg!(u64);
 impl_simple_move_arg!(u128);
-impl_simple_move_arg!(U256);
 impl_simple_move_arg!(Address);
+
+// Move reads a `u256` as 32 little-endian bytes, while the serde form of
+// `primitive_types::U256` is a hex string.
+impl MoveArg for &U256 {
+    fn pure_bytes(self) -> PureBytes {
+        PureBytes(self.to_little_endian().to_vec())
+    }
+}
+
+impl MoveArg for U256 {
+    fn pure_bytes(self) -> PureBytes {
+        (&self).pure_bytes()
+    }
+}
 
 #[cfg(test)]
 mod tests {
