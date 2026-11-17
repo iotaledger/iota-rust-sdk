@@ -43,8 +43,8 @@ pub(crate) fn parse_complete<'a, O>(
     input: &'a str,
 ) -> Result<O, TypeParseError> {
     parser.parse(input).map_err(|e| match e.into_inner() {
-        InnerError::Parse(input) => TypeParseError::Parse {
-            input: input.to_owned(),
+        InnerError::Parse(rest) => TypeParseError::Parse {
+            input: rest.to_owned(),
             source: None,
         },
         InnerError::Other(error) => error,
@@ -176,6 +176,7 @@ mod tests {
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
     use super::*;
+    use crate::move_core::MAX_ERROR_INPUT_LENGTH;
 
     #[test]
     fn test_type_tag() {
@@ -385,18 +386,43 @@ mod tests {
 
     #[test]
     fn test_parse_error_message_shortens_the_input() {
-        let input = format!("0x1::Foo::Bar<{}", "!".repeat(1_000_000));
-        let err = input.parse::<StructTag>().unwrap_err();
+        let rest = format!("<{}", "!".repeat(1_000_000));
+        let err = format!("0x1::Foo::Bar{rest}")
+            .parse::<StructTag>()
+            .unwrap_err();
         assert!(
-            matches!(&err, TypeParseError::Parse { input: rest, .. } if input.ends_with(rest.as_str())),
-            "{err:?}"
+            matches!(&err, TypeParseError::Parse { input, .. } if *input == rest),
+            "{err}"
         );
         let message = err.to_string();
-        assert!(message.len() < 200, "{} bytes", message.len());
-        assert!(message.contains("bytes)"), "{message}");
+        assert_eq!(
+            message,
+            format!(
+                "failed to parse <{}... (1000001 bytes): unknown error",
+                "!".repeat(MAX_ERROR_INPUT_LENGTH - 1)
+            )
+        );
+        let debug = format!("{err:?}");
+        assert!(debug.len() < 250, "{} bytes", debug.len());
 
-        let err = "u64 extra".parse::<TypeTag>().unwrap_err();
-        assert_eq!(err.to_string(), "failed to parse  extra: unknown error");
+        // The cut falls inside the two-byte `é`, which is left out.
+        let rest = format!(
+            "{}é{}",
+            "!".repeat(MAX_ERROR_INPUT_LENGTH - 1),
+            "!".repeat(10)
+        );
+        let err = format!("u64{rest}").parse::<TypeTag>().unwrap_err();
+        assert_eq!(
+            err.to_string(),
+            format!(
+                "failed to parse {}... ({} bytes): unknown error",
+                "!".repeat(MAX_ERROR_INPUT_LENGTH - 1),
+                rest.len()
+            )
+        );
+
+        let err = "u64\nextra".parse::<TypeTag>().unwrap_err();
+        assert_eq!(err.to_string(), "failed to parse \\nextra: unknown error");
     }
 
     #[test]
