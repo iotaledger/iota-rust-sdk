@@ -369,13 +369,11 @@ where
                         }
                     }
                 }
-                Err(error) => {
-                    let outdated = matches!(error, GraphQLError::OutdatedClient { .. });
+                Err(error @ GraphQLError::OutdatedClient { .. }) => {
                     yield Err(error);
-                    if outdated {
-                        return;
-                    }
+                    return;
                 }
+                Err(error) => yield Err(error),
             }
             crate::wait::sleep(backoff).await;
             backoff = (backoff * 2).min(MAX_BACKOFF);
