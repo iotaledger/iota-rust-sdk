@@ -42,7 +42,7 @@ impl fmt::Display for IncompatibleSdkVersion {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "node requires iota-sdk-grpc-client >= {}, this client is {}",
+            "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-grpc-client >= {}, this SDK uses {})",
             self.minimum, self.current
         )
     }
@@ -216,7 +216,7 @@ mod tests {
         assert_eq!(error.current, Version::parse("1.2.9").unwrap());
         assert_eq!(
             error.to_string(),
-            "node requires iota-sdk-grpc-client >= 1.3.0, this client is 1.2.9"
+            "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-grpc-client >= 1.3.0, this SDK uses 1.2.9)"
         );
     }
 

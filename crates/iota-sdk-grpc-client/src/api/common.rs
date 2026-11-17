@@ -60,7 +60,9 @@ pub enum GrpcError {
 
     /// The node requires a newer `iota-sdk-grpc-client` than this one, so the
     /// response was rejected before its body was decoded. Upgrade the crate.
-    #[error("node requires iota-sdk-grpc-client >= {minimum}, this client is {current}")]
+    #[error(
+        "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-grpc-client >= {minimum}, this SDK uses {current})"
+    )]
     IncompatibleSdkVersion { minimum: String, current: String },
 }
 
