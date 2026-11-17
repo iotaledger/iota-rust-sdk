@@ -24,12 +24,21 @@ mod _field_impls {
             is_map: false,
             message_fields: Some(crate::v1::bcs::BcsData::FIELDS),
         };
+        pub const JSON_FIELD: &'static MessageField = &MessageField {
+            name: "json",
+            json_name: "json",
+            number: 3i32,
+            is_optional: true,
+            is_map: false,
+            message_fields: None,
+        };
     }
     impl crate::field::sealed::Sealed for Object {}
     impl MessageFields for Object {
         const FIELDS: &'static [&'static MessageField] = &[
             Self::REFERENCE_FIELD,
             Self::BCS_FIELD,
+            Self::JSON_FIELD,
         ];
     }
     impl Object {
@@ -59,6 +68,10 @@ mod _field_impls {
         pub fn bcs(mut self) -> crate::v1::bcs::BcsDataFieldPathBuilder {
             self.path.push(Object::BCS_FIELD.name);
             crate::v1::bcs::BcsDataFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn json(mut self) -> String {
+            self.path.push(Object::JSON_FIELD.name);
+            self.finish()
         }
     }
     impl Objects {

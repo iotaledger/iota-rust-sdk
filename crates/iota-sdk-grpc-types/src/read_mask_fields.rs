@@ -281,6 +281,8 @@ define_field_paths! {
         REFERENCE_DIGEST = "reference.digest",
         /// The full BCS-encoded object.
         BCS = "bcs",
+        /// JSON rendering of the object's Move contents.
+        JSON = "json",
     }
 }
 
@@ -308,6 +310,8 @@ define_field_paths! {
         REFERENCE_DIGEST = "reference.digest",
         /// The full BCS-encoded object.
         BCS = "bcs",
+        /// JSON rendering of the object's Move contents.
+        JSON = "json",
     }
 }
 
@@ -787,6 +791,8 @@ define_field_paths! {
         FIELD_OBJECT = "field_object",
         /// The full child object (sub-fields match `get_objects`).
         CHILD_OBJECT = "child_object",
+        /// JSON rendering of the field name.
+        JSON_NAME = "json_name",
     }
 }
 
@@ -809,6 +815,7 @@ mod tests {
         assert_eq!(ObjectField::REFERENCE, "reference");
         assert_eq!(ObjectField::REFERENCE_OBJECT_ID, "reference.object_id");
         assert_eq!(ObjectField::BCS, "bcs");
+        assert_eq!(ObjectField::JSON, "json");
     }
 
     #[test]
@@ -946,6 +953,7 @@ mod tests {
         assert_eq!(DynamicFieldField::KIND, "kind");
         assert_eq!(DynamicFieldField::NAME, "name");
         assert_eq!(DynamicFieldField::CHILD_OBJECT, "child_object");
+        assert_eq!(DynamicFieldField::JSON_NAME, "json_name");
     }
 
     #[test]

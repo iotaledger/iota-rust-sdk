@@ -6,6 +6,8 @@ syntax = "proto3";
 
 package iota.grpc.v1.dynamic_field;
 
+import "google/protobuf/struct.proto";
+
 import "iota/grpc/options.proto";
 import "iota/grpc/v1/bcs.proto";
 import "iota/grpc/v1/object.proto";
@@ -60,4 +62,7 @@ message DynamicField {
 
   // The object itself when a child is a dynamic object field.
   optional iota.grpc.v1.object.Object child_object = 9;
+
+  // JSON rendering of the dynamic field's "name".
+  optional google.protobuf.Value json_name = 10;
 }

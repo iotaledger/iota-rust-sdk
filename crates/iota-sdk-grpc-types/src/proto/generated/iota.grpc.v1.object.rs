@@ -6,7 +6,7 @@
 /// An object on the IOTA blockchain.
 #[allow(clippy::all)]
 #[non_exhaustive]
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Object {
     /// Reference to this object.
     #[prost(message, optional, tag = "1")]
@@ -14,6 +14,9 @@ pub struct Object {
     /// This Object serialized as BCS.
     #[prost(message, optional, tag = "2")]
     pub bcs: ::core::option::Option<super::bcs::BcsData>,
+    /// JSON rendering of the object's Move contents.
+    #[prost(message, optional, tag = "3")]
+    pub json: ::core::option::Option<::prost_types::Value>,
 }
 /// A list of objects.
 #[allow(clippy::all)]

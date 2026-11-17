@@ -107,4 +107,16 @@ impl Object {
     pub fn object(&self) -> Result<iota_types::Object, TryFromProtoError> {
         self.try_into()
     }
+
+    /// Get the JSON rendering of the object's Move contents.
+    ///
+    /// **Read mask:** `"json"` (see [`OBJECT_JSON`]).
+    ///
+    /// [`OBJECT_JSON`]: crate::read_masks::OBJECT_JSON
+    pub fn json(&self) -> Result<serde_json::Value, TryFromProtoError> {
+        self.json
+            .as_ref()
+            .map(crate::proto::prost_to_json)
+            .ok_or_else(|| TryFromProtoError::missing(Object::JSON_FIELD.name))
+    }
 }
