@@ -170,7 +170,7 @@ pub enum GraphQLError {
     #[error(
         "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-graphql-client >= {minimum}, this SDK uses {current})"
     )]
-    OutdatedClientError { minimum: String, current: String },
+    OutdatedClient { minimum: String, current: String },
 }
 
 /// The HTTP response a [`GraphQLError::Http`] or [`GraphQLError::Json`] was

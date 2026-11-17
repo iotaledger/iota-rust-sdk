@@ -507,7 +507,7 @@ mod tests {
             .run_query_from_json(Default::default())
             .await
             .unwrap_err();
-        let GraphQLError::OutdatedClientError { minimum, current } = err else {
+        let GraphQLError::OutdatedClient { minimum, current } = err else {
             panic!("expected an outdated client error, got {err:?}");
         };
         assert_eq!(minimum, "999.0.0");
