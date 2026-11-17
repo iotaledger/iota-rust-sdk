@@ -157,7 +157,7 @@ fn assert_outdated_client(error: &GrpcError, minimum: &str) {
     assert!(
         matches!(
             error,
-            GrpcError::OutdatedClientError { minimum: m, current: c }
+            GrpcError::OutdatedClient { minimum: m, current: c }
                 if m == minimum && c == CRATE_VERSION
         ),
         "unexpected error: {error:?}"

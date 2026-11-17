@@ -63,7 +63,7 @@ pub enum GrpcError {
     #[error(
         "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-grpc-client >= {minimum}, this SDK uses {current})"
     )]
-    OutdatedClientError { minimum: String, current: String },
+    OutdatedClient { minimum: String, current: String },
 }
 
 impl GrpcError {
@@ -98,7 +98,7 @@ impl From<tonic::Status> for GrpcError {
         if let Some(error) = std::error::Error::source(&status)
             .and_then(|source| source.downcast_ref::<OutdatedClientError>())
         {
-            return GrpcError::OutdatedClientError {
+            return GrpcError::OutdatedClient {
                 minimum: error.minimum.to_string(),
                 current: error.current.to_string(),
             };
@@ -125,7 +125,7 @@ impl From<GrpcError> for tonic::Status {
                 tonic::Status::internal("stream ended unexpectedly: has_next was true")
             }
             GrpcError::Grpc(status) => *status,
-            error @ GrpcError::OutdatedClientError { .. } => {
+            error @ GrpcError::OutdatedClient { .. } => {
                 tonic::Status::failed_precondition(error.to_string())
             }
         }
