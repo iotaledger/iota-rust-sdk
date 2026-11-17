@@ -76,6 +76,13 @@ impl GetServiceInfoResponse {
 
     /// Get the lowest checkpoint for which the transaction and event indexes
     /// are complete.
+    ///
+    /// The field is not in the default read mask, so request
+    /// [`ServiceInfoField::LOWEST_AVAILABLE_CHECKPOINT_INDEXES`] explicitly.
+    /// Otherwise this returns the same error as on a node that does not keep
+    /// these indexes.
+    ///
+    /// [`ServiceInfoField::LOWEST_AVAILABLE_CHECKPOINT_INDEXES`]: crate::read_mask_fields::ServiceInfoField::LOWEST_AVAILABLE_CHECKPOINT_INDEXES
     pub fn checkpoint_indexes_lowest(
         &self,
     ) -> Result<iota_types::CheckpointSequenceNumber, TryFromProtoError> {
