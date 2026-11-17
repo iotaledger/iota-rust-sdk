@@ -3,13 +3,12 @@
 
 //! Types for use with the transaction builder.
 
-use iota_types::Address;
+use iota_types::{Address, U256};
 
 mod move_arg;
 
 pub use iota_move_types::{MoveType, MoveTypes};
 pub use move_arg::{MoveArg, MoveArgCollection, PureBytes};
-use primitive_types::U256;
 
 macro_rules! impl_simple_move_arg {
     ($rust_ty:ident) => {
@@ -32,17 +31,25 @@ impl_simple_move_arg!(u16);
 impl_simple_move_arg!(u32);
 impl_simple_move_arg!(u64);
 impl_simple_move_arg!(u128);
+impl_simple_move_arg!(U256);
 impl_simple_move_arg!(Address);
 
-// Move reads a `u256` as 32 little-endian bytes, while the serde form of
-// `primitive_types::U256` is a hex string.
-impl MoveArg for &U256 {
+/// Deprecated: use [`iota_types::U256`].
+///
+/// The serde form of `primitive_types::U256` is a hex string, not the 32
+/// little-endian bytes Move reads a `u256` in. It is only encoded correctly
+/// when passed as an argument itself, not through
+/// [`pure`](crate::TransactionBuilder::pure) or as a field of a type
+/// serialized with serde.
+impl MoveArg for &primitive_types::U256 {
     fn pure_bytes(self) -> PureBytes {
         PureBytes(self.to_little_endian().to_vec())
     }
 }
 
-impl MoveArg for U256 {
+/// Deprecated: use [`iota_types::U256`]. See the impl for
+/// `&primitive_types::U256`.
+impl MoveArg for primitive_types::U256 {
     fn pure_bytes(self) -> PureBytes {
         (&self).pure_bytes()
     }
@@ -56,22 +63,34 @@ mod tests {
     use crate::TransactionBuilder;
 
     fn u256_values() -> [U256; 5] {
+        // 2^112 as a hex string is 32 bytes long too, so only the content
+        // tells it apart from the 32 little-endian bytes.
+        let mut two_pow_112 = [0; U256::LENGTH];
+        two_pow_112[14] = 1;
         [
-            U256::zero(),
-            U256::one(),
+            U256::ZERO,
+            U256::ONE,
             U256::from(1_000_000_000_000_000_000u64),
-            // Encodes to 32 bytes as a string too, so only the content tells
-            // the two encodings apart.
-            U256::one() << 112,
+            U256::from_le_bytes(two_pow_112),
             U256::MAX,
         ]
+    }
+
+    /// The pure inputs of a transaction built from `builder`.
+    fn pure_inputs(mut builder: TransactionBuilder) -> Vec<Input> {
+        builder.gas_price(1000).gas_budget(1_000_000);
+        let transaction = builder.finish().unwrap();
+        let TransactionKind::Programmable(ptb) = &transaction.as_v1().kind else {
+            panic!("expected a programmable transaction");
+        };
+        ptb.inputs.clone()
     }
 
     /// Move reads a `u256` as 32 little-endian bytes.
     #[test]
     fn u256_pure_bytes_are_32_little_endian_bytes() {
         for value in u256_values() {
-            let expected = value.to_little_endian().to_vec();
+            let expected = value.to_le_bytes().to_vec();
             assert_eq!(value.pure_bytes().0, expected, "u256 {value}");
             assert_eq!((&value).pure_bytes().0, expected, "&u256 {value}");
         }
@@ -83,7 +102,7 @@ mod tests {
         let values = u256_values();
         let mut expected = vec![values.len() as u8];
         for value in values {
-            expected.extend_from_slice(&value.to_little_endian());
+            expected.extend_from_slice(&value.to_le_bytes());
         }
         assert_eq!(values.to_vec().pure_bytes().0, expected);
     }
@@ -96,16 +115,50 @@ mod tests {
             builder
                 .move_call(Address::STD, "u256", "sqrt")
                 .arguments([value]);
-            builder.gas_price(1000).gas_budget(1_000_000);
-            let transaction = builder.finish().unwrap();
-
-            let TransactionKind::Programmable(ptb) = &transaction.as_v1().kind else {
-                panic!("expected a programmable transaction");
-            };
             assert_eq!(
-                ptb.inputs,
-                [Input::Pure(value.to_little_endian().to_vec())],
+                pure_inputs(builder),
+                [Input::Pure(value.to_le_bytes().to_vec())],
                 "u256 {value}"
+            );
+        }
+    }
+
+    /// `pure` and serde structs encode a `U256` like a Move argument.
+    #[test]
+    fn u256_through_serde() {
+        #[derive(serde::Serialize)]
+        struct Wrapper {
+            value: U256,
+        }
+
+        for value in u256_values() {
+            let mut builder = TransactionBuilder::new(Address::ZERO);
+            builder.pure(value);
+            assert_eq!(
+                pure_inputs(builder),
+                [Input::Pure(value.to_le_bytes().to_vec())],
+                "u256 {value}"
+            );
+            assert_eq!(
+                bcs::to_bytes(&Wrapper { value }).unwrap(),
+                value.to_le_bytes(),
+                "u256 {value}"
+            );
+        }
+    }
+
+    /// A `primitive_types::U256` argument is encoded like a [`U256`].
+    #[test]
+    fn primitive_types_u256_pure_bytes() {
+        for value in u256_values() {
+            let expected = value.to_le_bytes().to_vec();
+            let primitive = primitive_types::U256::from_little_endian(&value.to_le_bytes());
+            assert_eq!(primitive.pure_bytes().0, expected, "u256 {value}");
+            assert_eq!((&primitive).pure_bytes().0, expected, "&u256 {value}");
+            assert_eq!(
+                vec![primitive; 2].pure_bytes().0,
+                [&[2][..], &expected, &expected].concat(),
+                "vector<u256> {value}"
             );
         }
     }

@@ -3,7 +3,7 @@
 
 //! [`MoveType`] and [`MoveTypes`] impls for Rust built-in types.
 
-use iota_types::{Address, StructTag, TypeTag};
+use iota_types::{Address, StructTag, TypeTag, U256};
 
 use crate::{MoveType, MoveTypes};
 
@@ -26,11 +26,18 @@ impl_primitive_move_type!(
     u32 => U32,
     u64 => U64,
     u128 => U128,
+    U256 => U256,
     Address => Address,
 );
 
+/// Deprecated: use [`iota_types::U256`], which needs no feature and has the
+/// BCS form Move reads a `u256` in.
 #[cfg(feature = "u256")]
-impl_primitive_move_type!(primitive_types::U256 => U256);
+impl MoveType for primitive_types::U256 {
+    fn type_tag() -> TypeTag {
+        TypeTag::U256
+    }
+}
 
 impl MoveType for String {
     fn type_tag() -> TypeTag {

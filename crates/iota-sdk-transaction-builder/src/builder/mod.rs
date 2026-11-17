@@ -259,6 +259,10 @@ impl TransactionBuildData {
     }
 
     /// Add a pure input
+    ///
+    /// The value is serialized with serde, so a `u256` has to be an
+    /// [`iota_types::U256`]: a `primitive_types::U256` serializes as a hex
+    /// string, which Move does not read as a `u256`.
     pub fn pure<T: Serialize>(&mut self, value: T) -> Argument {
         // This serialization should never fail, so we will forego error propagation
         // here for convenience
@@ -550,6 +554,10 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Add a pure input
+    ///
+    /// The value is serialized with serde, so a `u256` has to be an
+    /// [`iota_types::U256`]: a `primitive_types::U256` serializes as a hex
+    /// string, which Move does not read as a `u256`.
     pub fn pure<T: Serialize>(&mut self, value: T) -> Argument {
         self.data.pure(value)
     }
