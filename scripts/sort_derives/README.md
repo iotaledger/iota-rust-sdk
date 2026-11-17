@@ -19,7 +19,7 @@ python3 scripts/sort_derives/sort_derives.py --check
 ```
 
 Multi-line derives keep their per-trait layout; single-line derives stay single-line.
-Run `make fmt` afterwards — rustfmt may re-flow short derive lists onto a single
+Run `make fmt` afterwards: rustfmt may re-flow short derive lists onto a single
 line, but it never reorders the traits.
 
 ## Enforcement

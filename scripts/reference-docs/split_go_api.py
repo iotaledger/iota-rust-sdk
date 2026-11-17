@@ -21,7 +21,7 @@ import common
 
 ANCHOR_RE = re.compile(r'^<a name="([^"]+)"></a>(.*)$')
 HEADING_RE = re.compile(r"^(#{2,4}) (.+)$")
-# gomarkdoc link form: [text](<#anchor>) — also matches without angle brackets.
+# gomarkdoc link form: [text](<#anchor>), also matches without angle brackets.
 LINK_RE = re.compile(r"\]\(<?#([A-Za-z0-9_.]+)>?\)")
 MD_LINK_RE = re.compile(r"\[([^\]]*)\]\([^)]*\)")
 

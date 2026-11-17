@@ -16,10 +16,10 @@ jobs:
   drift-check:
     # Diffs the type surface of `crates/iota-framework/published_api.txt`
     # in the iota monorepo between the pinned rev (the `move-binary-format`
-    # rev in `crates/iota-sdk-move-types/Cargo.toml` — what PR CI and local
+    # rev in `crates/iota-sdk-move-types/Cargo.toml`, what PR CI and local
     # runs test against) and the monorepo's `develop` HEAD. A failure means
     # upstream added/removed/renamed a public Move type since the pin was
-    # last bumped — add/update the Rust mirrors, bump the rev, and open a
+    # last bumped. Add/update the Rust mirrors, bump the rev, and open a
     # PR; that PR's own CI then validates the mirrors against the new rev.
     #
     # Unrelated PRs are intentionally NOT affected by upstream drift: they
@@ -32,12 +32,12 @@ jobs:
 
       - name: Fetch artifacts at the pinned rev
         # Resolves the pin from Cargo.toml and writes the filtered manifest
-        # to src/packages_compiled/published_api.txt — and doubles as a
+        # to src/packages_compiled/published_api.txt, and doubles as a
         # daily smoke test of the fetch script itself.
         run: bash crates/iota-sdk-move-types/update_compiled_packages.sh
 
       - name: Fetch published_api.txt at develop HEAD
-        # Keep only `public struct`/`public enum` records — function churn
+        # Keep only `public struct`/`public enum` records. Function churn
         # is irrelevant to a crate that mirrors Move *types*. Same filter
         # as crates/iota-sdk-move-types/update_compiled_packages.sh.
         run: |

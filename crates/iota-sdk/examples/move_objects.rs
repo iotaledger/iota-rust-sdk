@@ -9,7 +9,7 @@
 //! every object in the page arrives decoded, so neither the type string nor
 //! the decode step appears here.
 //!
-//! Because the type comes from `T`, [`MoveObjectFilter`] has no type field —
+//! Because the type comes from `T`, [`MoveObjectFilter`] has no type field:
 //! there is no second place to set it and nothing to disagree about.
 //!
 //! A decode failure fails the whole page rather than skipping the object: the

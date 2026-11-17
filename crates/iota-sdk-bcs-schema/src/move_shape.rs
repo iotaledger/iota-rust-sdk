@@ -4,8 +4,8 @@
 //! Implementation of `#[derive(MoveShape)]`.
 //!
 //! Emits an `impl crate::move_shape::MoveShape for T` whose `move_shape()`
-//! returns a [`crate::move_shape::Shape`] mirroring the BCS wire layout of `T`
-//! — comparable against a Move struct's `normalized::Type` so a drifted Rust
+//! returns a [`crate::move_shape::Shape`] mirroring the BCS wire layout of `T`,
+//! comparable against a Move struct's `normalized::Type` so a drifted Rust
 //! mirror fails loudly at test time.
 //!
 //! Resolution strategy mirrors Move's `normalized::Type`:
@@ -14,13 +14,13 @@
 //! - `PhantomData<_>` becomes `Shape::Phantom` (filtered before comparison).
 //! - A bare reference to one of the struct's own generic type parameters
 //!   becomes `Shape::TypeParameter(idx)`.
-//! - Anything else — a named type like `UID` or `Balance<T>` — becomes
+//! - Anything else (a named type like `UID` or `Balance<T>`) becomes
 //!   `Shape::Datatype { name, args }`. The macro does **not** delegate to `<Ty
 //!   as MoveShape>::move_shape()`, so nested struct bodies are not inlined;
 //!   verify those by giving each named type its own registry entry.
 //!
 //! Because nothing in the emitted body dispatches through a trait method
-//! at runtime, no `T: MoveShape` bound is added to the impl — type
+//! at runtime, no `T: MoveShape` bound is added to the impl: type
 //! parameters are resolved purely at macro-expansion time.
 //!
 //! The emitted code assumes the trait + ADT live at `crate::move_shape` in the
@@ -173,7 +173,7 @@ fn type_to_shape_expr(ty: &Type, type_params: &[&syn::Ident]) -> TokenStream2 {
             _ => {}
         }
 
-        // Bare reference to one of the struct's own generic type parameters —
+        // Bare reference to one of the struct's own generic type parameters:
         // single-segment path, no generic args, matching ident.
         if tp.qself.is_none()
             && tp.path.segments.len() == 1
@@ -186,7 +186,7 @@ fn type_to_shape_expr(ty: &Type, type_params: &[&syn::Ident]) -> TokenStream2 {
 
         // Anything else: a named type. Resolve the Move-side name through
         // the trait const (`<Ty as MoveShape>::NAME`) so `use ... as Alias`
-        // renames don't leak into the comparator — the dispatch goes to
+        // renames don't leak into the comparator: the dispatch goes to
         // the impl on the *underlying* type. Generic arguments are still
         // lowered statically through this same function.
         let args_expr = match &seg.arguments {
@@ -211,7 +211,7 @@ fn type_to_shape_expr(ty: &Type, type_params: &[&syn::Ident]) -> TokenStream2 {
         };
     }
 
-    // Unknown / non-path type — give the comparator something to choke on
+    // Unknown / non-path type: give the comparator something to choke on
     // rather than silently passing.
     quote! { crate::move_shape::Shape::Datatype { name: "<unsupported>", args: ::std::vec![] } }
 }

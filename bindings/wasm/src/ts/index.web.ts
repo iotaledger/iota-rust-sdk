@@ -13,7 +13,7 @@ import * as bg from "./wasm-bindgen/index_bg.js";
  * @param input - One of:
  *   - `string` or `URL`: location of the `.wasm` binary to fetch (browser).
  *   - `ArrayBuffer` or `Uint8Array`: raw `.wasm` bytes (Node.js, where
- *     `fetch('file://…')` isn't reliably supported — pass
+ *     `fetch('file://…')` isn't reliably supported; pass
  *     `fs.readFileSync(...)` instead).
  *   - omitted: defaults to `index_bg.wasm` resolved relative to this JS module.
  */

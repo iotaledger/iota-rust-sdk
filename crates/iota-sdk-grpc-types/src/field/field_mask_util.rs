@@ -97,7 +97,7 @@ impl FieldMaskUtil for FieldMask {
                         None => return true,
                         Some(remainder) => {
                             // Don't recurse through oneofs again at the same
-                            // level — the remainder should match a real field.
+                            // level. The remainder should match a real field.
                             oneofs = &[];
                             path = remainder;
                         }

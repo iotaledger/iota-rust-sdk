@@ -106,7 +106,7 @@ pub struct GetObjectsRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ObjectResult {
     /// The outcome for a single `ObjectRequest`: either the object, or the status
-    /// saying why the node could not serve it — for example `NOT_FOUND` when the
+    /// saying why the node could not serve it, for example `NOT_FOUND` when the
     /// object never existed, was deleted, or has been pruned.
     #[prost(oneof = "object_result::Result", tags = "1, 2")]
     pub result: ::core::option::Option<object_result::Result>,
@@ -114,7 +114,7 @@ pub struct ObjectResult {
 /// Nested message and enum types in `ObjectResult`.
 pub mod object_result {
     /// The outcome for a single `ObjectRequest`: either the object, or the status
-    /// saying why the node could not serve it — for example `NOT_FOUND` when the
+    /// saying why the node could not serve it, for example `NOT_FOUND` when the
     /// object never existed, was deleted, or has been pruned.
     #[allow(clippy::all)]
     #[non_exhaustive]
@@ -173,7 +173,7 @@ pub struct GetTransactionsRequest {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransactionResult {
     /// The outcome for a single `TransactionRequest`: either the transaction, or
-    /// the status saying why the node could not serve it — `NOT_FOUND` when the
+    /// the status saying why the node could not serve it: `NOT_FOUND` when the
     /// node does not have the transaction, or `FAILED_PRECONDITION` when it has the
     /// transaction but an object a requested field needs has been pruned.
     #[prost(oneof = "transaction_result::Result", tags = "1, 2")]
@@ -182,7 +182,7 @@ pub struct TransactionResult {
 /// Nested message and enum types in `TransactionResult`.
 pub mod transaction_result {
     /// The outcome for a single `TransactionRequest`: either the transaction, or
-    /// the status saying why the node could not serve it — `NOT_FOUND` when the
+    /// the status saying why the node could not serve it: `NOT_FOUND` when the
     /// node does not have the transaction, or `FAILED_PRECONDITION` when it has the
     /// transaction but an object a requested field needs has been pruned.
     #[allow(clippy::all)]

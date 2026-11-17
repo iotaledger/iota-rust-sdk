@@ -91,8 +91,8 @@ impl GrpcClient {
     /// Get the latest version of objects by their ids.
     ///
     /// Results are returned in the same order as the input ids, one per
-    /// id. An object the serving node cannot return — because it is not
-    /// found, was deleted, or has been pruned — fails only its own item,
+    /// id. An object the serving node cannot return (because it is not
+    /// found, was deleted, or has been pruned) fails only its own item,
     /// which reading throws with the server's error message. An object the
     /// server returns but that cannot be decoded fails the whole call.
     ///
@@ -117,8 +117,8 @@ impl GrpcClient {
     /// Get objects by their ids and optional versions.
     ///
     /// Results are returned in the same order as the input requests, one per
-    /// request. An object the serving node cannot return — because it is not
-    /// found, was deleted, or has been pruned — fails only its own item,
+    /// request. An object the serving node cannot return (because it is not
+    /// found, was deleted, or has been pruned) fails only its own item,
     /// which reading throws with the server's error message. An object the
     /// server returns but that cannot be decoded fails the whole call.
     ///

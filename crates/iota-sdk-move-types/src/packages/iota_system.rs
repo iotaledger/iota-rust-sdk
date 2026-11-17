@@ -155,8 +155,8 @@ pub mod staking_pool {
             serde(default, with = "iota_types::OptionReadableDisplay")
         )]
         pub deactivation_epoch: Option<u64>,
-        /// The total number of IOTA tokens in this pool — including the
-        /// `rewards_pool` and the principal of every `StakedIota` — updated
+        /// The total number of IOTA tokens in this pool (including the
+        /// `rewards_pool` and the principal of every `StakedIota`), updated
         /// at epoch boundaries.
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub iota_balance: u64,

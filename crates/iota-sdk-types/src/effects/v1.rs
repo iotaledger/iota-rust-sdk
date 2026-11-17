@@ -627,7 +627,7 @@ mod tests {
 
     /// The six object sets are selected by mutually exclusive combinations of
     /// input state, output state and id operation, so together they report each
-    /// changed object at most once — for any effects, not only well-formed
+    /// changed object at most once, for any effects, not only well-formed
     /// ones. The fixtures cover the other half, that real effects leave none
     /// out.
     #[proptest]

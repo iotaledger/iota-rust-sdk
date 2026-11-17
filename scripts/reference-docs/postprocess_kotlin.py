@@ -84,8 +84,8 @@ def rewrite_links(text: str) -> str:
         path = target.split("#", 1)[0]
         # Links to dropped member pages keep their text only (the target is
         # emptied here and the brackets removed in a second pass). Only links
-        # whose basename is exactly index.md survive — endswith would wrongly
-        # match member pages like state-index.md.
+        # whose basename is exactly index.md survive (endswith would wrongly
+        # match member pages like state-index.md).
         if path.split("/")[-1] != "index.md":
             return "]()"
         return f"]({decode_path(path)})"
