@@ -56,6 +56,6 @@ pub const X_IOTA_SERVER: &str = "x-iota-server";
 /// while the node fills in index history after an index rebuild, or when it
 /// keeps fewer epochs of indexes than of checkpoints.
 ///
-/// Absent if the node does not keep these indexes.
+/// Absent if the node does not serve the JSON-RPC API.
 pub const X_IOTA_LOWEST_AVAILABLE_CHECKPOINT_INDEXES: &str =
     "x-iota-lowest-available-checkpoint-indexes";

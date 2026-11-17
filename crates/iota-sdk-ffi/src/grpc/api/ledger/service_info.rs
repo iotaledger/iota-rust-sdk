@@ -39,7 +39,7 @@ pub struct GrpcServiceInfo {
     /// Software version of the service.
     pub server_version: Option<String>,
     /// The lowest checkpoint for which the transaction and event indexes are
-    /// complete. Unset if the node does not keep these indexes.
+    /// complete. Unset if the node does not serve the JSON-RPC API.
     pub lowest_available_checkpoint_indexes: Option<u64>,
 }
 

@@ -79,8 +79,8 @@ impl GetServiceInfoResponse {
     ///
     /// The field is not in the default read mask, so request
     /// [`ServiceInfoField::LOWEST_AVAILABLE_CHECKPOINT_INDEXES`] explicitly.
-    /// Otherwise this returns the same error as on a node that does not keep
-    /// these indexes.
+    /// Otherwise this returns the same error as on a node that does not serve
+    /// the JSON-RPC API.
     ///
     /// [`ServiceInfoField::LOWEST_AVAILABLE_CHECKPOINT_INDEXES`]: crate::read_mask_fields::ServiceInfoField::LOWEST_AVAILABLE_CHECKPOINT_INDEXES
     pub fn checkpoint_indexes_lowest(
