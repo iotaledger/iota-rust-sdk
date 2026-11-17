@@ -530,8 +530,9 @@ mod tests {
             .unwrap();
     }
 
-    /// Collects what a reconnecting subscription yields while every connection
-    /// attempt fails with `error`, and how often it tried to connect.
+    /// Runs a reconnecting subscription whose every connection attempt fails
+    /// with `error`. Returns its first two items, or fewer if it ends first,
+    /// and how often it tried to connect.
     async fn subscription_failing_to_connect(
         error: fn() -> GraphQLError,
     ) -> (Vec<GraphQLError>, usize) {
@@ -543,13 +544,17 @@ mod tests {
             },
             None,
         );
-        // Long enough for one reconnect, short enough to stop a stream that
-        // keeps reconnecting.
-        let errors = stream
-            .take_until(tokio::time::sleep(INITIAL_BACKOFF * 2))
-            .map(|item| item.unwrap_err())
-            .collect()
-            .await;
+        // Only stops a stream that neither ends nor yields; two items take one
+        // backoff.
+        let errors = tokio::time::timeout(
+            Duration::from_secs(5),
+            stream
+                .take(2)
+                .map(|item| item.unwrap_err())
+                .collect::<Vec<_>>(),
+        )
+        .await
+        .expect("the subscription neither ended nor yielded two items");
         (errors, attempts.get())
     }
 
