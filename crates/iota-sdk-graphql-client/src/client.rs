@@ -240,6 +240,9 @@ impl GraphQLClient {
     /// POST a JSON-serializable GraphQL request body and decode the JSON
     /// response, surfacing the HTTP status and a truncated body on any non-2xx
     /// response or on a decode failure.
+    ///
+    /// Fails with [`GraphQLError::OutdatedClient`] first when the node requires
+    /// a newer client.
     async fn post_query<R>(&self, body: &impl serde::Serialize) -> GraphQLResult<R>
     where
         R: serde::de::DeserializeOwned,
