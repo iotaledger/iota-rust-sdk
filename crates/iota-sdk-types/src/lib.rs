@@ -23,6 +23,7 @@ mod execution_status;
 pub mod framework;
 mod gas;
 pub mod iota_names;
+pub mod key_proof;
 mod move_core;
 mod move_package;
 mod object;

@@ -540,6 +540,105 @@ mod type_digest {
 }
 
 #[cfg(feature = "serde")]
+mod nonce {
+    use super::Hasher;
+    use crate::{GasPayment, ObjectId, ObjectReference, Transaction};
+
+    /// Where a transaction nonce comes from. Its BCS variant number is the
+    /// first byte hashed, so nonces from two sources never have the same
+    /// bytes. A later source is a new variant, added at the end.
+    #[derive(serde::Serialize)]
+    enum NonceSource<'a> {
+        GasCoin(&'a ObjectReference),
+    }
+
+    impl NonceSource<'_> {
+        fn nonce(&self) -> [u8; 32] {
+            let mut hasher = Hasher::new();
+            bcs::serialize_into(&mut hasher, self).expect("bcs serialization failed");
+            hasher.finalize().into_bytes()
+        }
+    }
+
+    impl GasPayment {
+        /// Returns the nonce of a transaction with this gas payment, or `None`
+        /// if it has none.
+        ///
+        /// The nonce is the Blake2b256 hash of the BCS bytes of the first gas
+        /// coin's reference, as the transaction lists it, after one byte for
+        /// the gas coin source. At most one executed transaction lists a given
+        /// coin version, so at most one has a given nonce. It does not name
+        /// the network. A gas payment with no coins, or whose first coin has
+        /// the zero ID (system transactions), has no nonce.
+        ///
+        /// Validators compute it to check key proofs, so its result for a
+        /// given gas payment must never change.
+        pub fn nonce(&self) -> Option<[u8; 32]> {
+            let gas_coin = self.objects.first()?;
+            (gas_coin.object_id() != &ObjectId::ZERO)
+                .then(|| NonceSource::GasCoin(gas_coin).nonce())
+        }
+    }
+
+    impl Transaction {
+        /// Returns the nonce of this transaction, or `None` if it has none.
+        /// See [`GasPayment::nonce`].
+        pub fn nonce(&self) -> Option<[u8; 32]> {
+            match self {
+                Self::V1(transaction) => transaction.gas_payment.nonce(),
+            }
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use crate::{
+            Address, Digest, GasPayment, ObjectDigest, ObjectId, ObjectReference, Version,
+        };
+
+        fn gas_payment(objects: Vec<ObjectReference>) -> GasPayment {
+            GasPayment {
+                objects,
+                owner: Address::ZERO,
+                price: 1000,
+                budget: 1_000_000,
+            }
+        }
+
+        fn gas_coin(id: [u8; 32]) -> ObjectReference {
+            ObjectReference::new(
+                ObjectId::new(id),
+                Version::from_u64(42),
+                ObjectDigest::new([0x22; Digest::LENGTH]),
+            )
+        }
+
+        // The expected bytes are the Blake2b256 hash of
+        // 0x00 || 0x11 * 32 || 42u64 (little-endian) || 0x20 || 0x22 * 32,
+        // computed outside this crate. The value must never change.
+        #[test]
+        fn nonce_of_a_fixed_gas_coin() {
+            let nonce = gas_payment(vec![gas_coin([0x11; 32]), gas_coin([0x33; 32])]).nonce();
+
+            assert_eq!(
+                nonce.map(hex::encode).as_deref(),
+                Some("39d2ed96b7a160ff74b50a57de17a67b61053a9cead0ec25191d7231bcf08cbd"),
+            );
+        }
+
+        #[test]
+        fn no_nonce_without_a_gas_coin() {
+            assert_eq!(gas_payment(vec![]).nonce(), None);
+        }
+
+        #[test]
+        fn no_nonce_for_the_zero_id_coin_of_system_transactions() {
+            assert_eq!(gas_payment(vec![gas_coin([0; 32])]).nonce(), None);
+        }
+    }
+}
+
+#[cfg(feature = "serde")]
 mod signing_message {
     use crate::{
         Intent, IntentMessage, IntentScope, PersonalMessage, SigningDigest, Transaction,
