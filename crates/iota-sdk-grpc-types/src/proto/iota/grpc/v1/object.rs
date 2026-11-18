@@ -119,6 +119,17 @@ impl Object {
             .map(crate::proto::prost_to_json)
             .ok_or_else(|| TryFromProtoError::missing(Object::JSON_FIELD.name))
     }
+
+    /// Get the object's on-chain Display template render.
+    ///
+    /// **Read mask:** `"display"` (see [`OBJECT_DISPLAY`]).
+    ///
+    /// [`OBJECT_DISPLAY`]: crate::read_masks::OBJECT_DISPLAY
+    pub fn display(&self) -> Result<&Display, TryFromProtoError> {
+        self.display
+            .as_ref()
+            .ok_or_else(|| TryFromProtoError::missing(Object::DISPLAY_FIELD.name))
+    }
 }
 
 // Convenience methods for the Display template render.
