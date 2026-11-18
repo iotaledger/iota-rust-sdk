@@ -13,7 +13,7 @@ workspace = true
 
 [features]
 # Unstable APIs that may change or be removed in any release.
-experimental = []
+unstable = []
 
 [dependencies]
 cynic-codegen = "3.14.0"

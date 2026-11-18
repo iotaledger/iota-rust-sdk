@@ -30,7 +30,7 @@ bcs-schema = ["dep:iota-bcs-schema", "serde"]
 serde = ["dep:bcs", "dep:serde", "dep:thiserror", "iota-types/serde"]
 u256 = ["dep:primitive-types"]
 # Unstable APIs that may change or be removed in any release.
-experimental = []
+unstable = []
 
 [dependencies]
 # external dependencies

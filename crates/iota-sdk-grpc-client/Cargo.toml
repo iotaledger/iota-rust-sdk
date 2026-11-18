@@ -51,7 +51,7 @@ tls-native-roots = ["tonic/tls-native-roots"]
 tls-webpki-roots = ["tonic/tls-webpki-roots"]
 move-types = ["dep:iota-move-types"]
 # Unstable APIs that may change or be removed in any release.
-experimental = []
+unstable = []
 
 [dev-dependencies]
 tokio = { workspace = true, features = ["macros", "rt"] }

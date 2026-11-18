@@ -39,7 +39,7 @@ rand = ["dep:getrandom_4", "dep:rand_core"]
 hash = ["dep:blake2"]
 proptest = ["dep:proptest", "dep:test-strategy", "serde"]
 # Unstable APIs that may change or be removed in any release.
-experimental = []
+unstable = []
 
 [dependencies]
 # external dependencies

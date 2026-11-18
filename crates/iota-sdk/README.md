@@ -97,7 +97,7 @@ except BLS12-381. GraphQL, gRPC, Move types and gas station sponsorship are opt-
 | `grpc-tls-native-roots`    | off     | trust the platform certificate store for gRPC                                             |
 | `grpc-tls-webpki-roots`    | off     | trust the bundled Mozilla roots for gRPC                                                  |
 | `move-types`               | off     | `move_types` module, and typed Move object queries in the clients                         |
-| `experimental`             | off     | unstable APIs that may change or be removed in any release                                |
+| `unstable`                 | off     | unstable APIs that may change or be removed in any release                                |
 
 The `graphql-tls-*` and `grpc-tls-*` features map to the `tls-*` features
 of [`iota-sdk-graphql-client`](https://crates.io/crates/iota-sdk-graphql-client) and
