@@ -7,6 +7,7 @@ syntax = "proto3";
 package iota.grpc.v1.object;
 
 import "google/protobuf/struct.proto";
+import "google/rpc/status.proto";
 
 import "iota/grpc/options.proto";
 import "iota/grpc/v1/bcs.proto";
@@ -26,10 +27,22 @@ message Object {
 
 // Rendering of an object's on-chain Display template.
 message Display {
-  // Rendered Display fields; a field that failed to render is null (see `errors`).
-  optional google.protobuf.Value output = 1;
-  // Map of Display field name to error message for fields that failed to render.
-  optional google.protobuf.Value errors = 2;
+  // Each Display field name mapped to its rendered value or the error it hit.
+  map<string, DisplayFieldResult> fields = 1;
+  // Set only when the whole template could not be resolved, so no per-field
+  // results apply (for example the type's `Display` object is missing or
+  // failed to load).
+  optional google.rpc.Status error = 2;
+}
+
+// The outcome of rendering one Display field: the rendered value or its error.
+message DisplayFieldResult {
+  option (iota.grpc.message_accessors) = "with";
+
+  oneof result {
+    string value = 1;
+    google.rpc.Status error = 2;
+  }
 }
 
 // A list of objects.

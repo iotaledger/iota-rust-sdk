@@ -370,8 +370,7 @@ pub const OBJECT_BCS: &str = "bcs";
 pub const OBJECT_JSON: &str = "json";
 
 /// Read mask for the object's on-chain Display template render
-/// ([`Display::output()`](crate::v1::object::Display::output) /
-/// [`Display::errors()`](crate::v1::object::Display::errors)).
+/// ([`Object::display()`](crate::v1::object::Object::display)).
 pub const OBJECT_DISPLAY: &str = "display";
 
 // ---------------------------------------------------------------------------
