@@ -20,8 +20,14 @@ message Object {
   // This Object serialized as BCS.
   optional iota.grpc.v1.bcs.BcsData bcs = 2;
   // JSON rendering of the object's Move contents.
+  // Requires server-side Move type-layout resolution, so it is populated only
+  // when named explicitly in the read mask — a bare parent or `*` wildcard does
+  // not include it — and is bounded by the server's maximum JSON size.
   optional google.protobuf.Value json = 3;
   // Rendering of the object's on-chain Display template, when its type has one.
+  // Requires resolving the type's Display template and field layouts, so it is
+  // populated only when named explicitly in the read mask — a bare parent or `*`
+  // wildcard does not include it.
   optional Display display = 4;
 }
 

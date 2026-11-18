@@ -15,9 +15,15 @@ pub struct Object {
     #[prost(message, optional, tag = "2")]
     pub bcs: ::core::option::Option<super::bcs::BcsData>,
     /// JSON rendering of the object's Move contents.
+    /// Requires server-side Move type-layout resolution, so it is populated only
+    /// when named explicitly in the read mask — a bare parent or `*` wildcard does
+    /// not include it — and is bounded by the server's maximum JSON size.
     #[prost(message, optional, tag = "3")]
     pub json: ::core::option::Option<::prost_types::Value>,
     /// Rendering of the object's on-chain Display template, when its type has one.
+    /// Requires resolving the type's Display template and field layouts, so it is
+    /// populated only when named explicitly in the read mask — a bare parent or `*`
+    /// wildcard does not include it.
     #[prost(message, optional, tag = "4")]
     pub display: ::core::option::Option<Display>,
 }

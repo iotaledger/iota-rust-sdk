@@ -64,5 +64,8 @@ message DynamicField {
   optional iota.grpc.v1.object.Object child_object = 9;
 
   // JSON rendering of the dynamic field's "name".
+  // Requires server-side Move type-layout resolution, so it is populated only
+  // when named explicitly in the read mask — a bare parent or `*` wildcard does
+  // not include it — and is bounded by the server's maximum JSON size.
   optional google.protobuf.Value json_name = 10;
 }

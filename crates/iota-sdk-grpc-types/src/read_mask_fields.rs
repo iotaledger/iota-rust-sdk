@@ -27,6 +27,11 @@
 //! ```
 //!
 //! Mixing the wrong field type with the wrong endpoint is a compile error.
+//!
+//! The server-rendered JSON fields (`json`, `display`, `json_name`,
+//! `json_contents`, and command-output `json`) require Move type-layout
+//! resolution on the node, so they are populated only when named explicitly —
+//! a parent path or the `*` wildcard does not include them.
 
 use std::borrow::Cow;
 
@@ -269,7 +274,8 @@ macro_rules! impl_into_read_mask {
 define_field_paths! {
     /// Field paths for `get_objects`.
     pub struct ObjectField {
-        /// Wildcard — request all object fields.
+        /// Wildcard — request all object fields except the server-rendered
+        /// `json`/`display`, which must be named explicitly.
         ALL = "*",
         /// Object reference (object_id, version, digest).
         REFERENCE = "reference",

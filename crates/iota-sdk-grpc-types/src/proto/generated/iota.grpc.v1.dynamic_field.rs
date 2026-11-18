@@ -49,6 +49,9 @@ pub struct DynamicField {
     #[prost(message, optional, tag = "9")]
     pub child_object: ::core::option::Option<super::object::Object>,
     /// JSON rendering of the dynamic field's "name".
+    /// Requires server-side Move type-layout resolution, so it is populated only
+    /// when named explicitly in the read mask — a bare parent or `*` wildcard does
+    /// not include it — and is bounded by the server's maximum JSON size.
     #[prost(message, optional, tag = "10")]
     pub json_name: ::core::option::Option<::prost_types::Value>,
 }
