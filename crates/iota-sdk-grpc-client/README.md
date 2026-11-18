@@ -112,6 +112,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
+### Node compatibility
+
+Nodes send the lowest `iota-sdk-grpc-client` version able to decode their responses. When this crate is older, `GrpcClient` calls fail with `GrpcError::OutdatedClient` and service client calls fail with a `FAILED_PRECONDITION` status, before any data is decoded (`GrpcError::from(status)` turns that status into `GrpcError::OutdatedClient`); upgrade the crate to resolve it. The check runs on the response, so a transaction sent for execution may have been executed even though the call failed. Responses from nodes that send no minimum are not checked, and neither are calls over `GrpcClient::channel()`.
+
 ### Service examples
 
 Each service client exposes methods corresponding to the gRPC service definition. See the crate documentation for the full list of available methods.

@@ -29,6 +29,8 @@ tls-aws-lc = ["dep:rustls", "reqwest/rustls-no-provider", "rustls/aws-lc-rs"]
 tls-native-roots = []
 tls-ring = ["dep:rustls", "reqwest/rustls-no-provider", "rustls/ring"]
 tls-webpki-roots = ["dep:webpki-root-certs"]
+# Unstable APIs that may change or be removed in any release.
+unstable = []
 
 [lints]
 workspace = true

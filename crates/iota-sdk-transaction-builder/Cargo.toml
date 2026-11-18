@@ -25,6 +25,8 @@ rustdoc-args = [
 default = []
 gas-station = ["dep:base64ct", "dep:reqwest"]
 test-client = []
+# Unstable APIs that may change or be removed in any release.
+unstable = []
 
 [lints]
 workspace = true
