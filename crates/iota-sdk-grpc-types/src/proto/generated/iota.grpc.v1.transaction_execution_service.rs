@@ -71,7 +71,7 @@ pub struct ExecuteTransactionsResponse {
 /// A single transaction to simulate, along with simulation options.
 #[allow(clippy::all)]
 #[non_exhaustive]
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SimulateTransactionItem {
     #[prost(message, optional, tag = "1")]
     pub transaction: ::core::option::Option<super::transaction::Transaction>,
