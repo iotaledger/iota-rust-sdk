@@ -18,9 +18,7 @@ type ModalResult<'a, O> = winnow::ModalResult<O, InnerError<'a>>;
 /// Parser error that becomes the public [`TypeParseError`].
 #[derive(Debug)]
 pub(crate) enum InnerError<'a> {
-    /// The input where parsing stopped. It is borrowed because the parser
-    /// builds this error for every alternative it rejects, and only the last
-    /// one is returned.
+    /// The input where parsing stopped.
     Parse(&'a str),
     Other(TypeParseError),
 }
@@ -420,6 +418,9 @@ mod tests {
                 rest.len()
             )
         );
+
+        let err = "0x1::m::S<\"x\\>".parse::<StructTag>().unwrap_err();
+        assert_eq!(err.to_string(), "failed to parse <\"x\\>: unknown error");
 
         let err = "u64\nextra".parse::<TypeTag>().unwrap_err();
         assert_eq!(err.to_string(), "failed to parse \\nextra: unknown error");

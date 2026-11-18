@@ -298,7 +298,7 @@ pub enum DigestParseError {
     #[error("invalid Base58 string")]
     InvalidBase58,
     #[error(
-        "invalid digest Base58 length: expected at most {MAX_BASE58_LENGTH} bytes, got {actual}"
+        "invalid digest Base58 length: expected at most {MAX_BASE58_LENGTH} characters, got {actual}"
     )]
     InvalidBase58Length { actual: usize },
 }

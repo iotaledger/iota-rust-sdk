@@ -66,16 +66,20 @@ struct ErrorInput<'a>(&'a str);
 
 impl std::fmt::Display for ErrorInput<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        use std::fmt::Write;
+
         let input = self.0;
-        if input.len() <= MAX_ERROR_INPUT_LENGTH {
-            return write!(f, "{}", input.escape_debug());
-        }
         let end = input.floor_char_boundary(MAX_ERROR_INPUT_LENGTH);
-        write!(
-            f,
-            "{}... ({} bytes)",
-            input[..end].escape_debug(),
-            input.len()
-        )
+        for c in input[..end].chars() {
+            if c.is_control() {
+                write!(f, "{}", c.escape_debug())?;
+            } else {
+                f.write_char(c)?;
+            }
+        }
+        if end < input.len() {
+            write!(f, "... ({} bytes)", input.len())?;
+        }
+        Ok(())
     }
 }
