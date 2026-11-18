@@ -14,7 +14,7 @@ use tonic::codec::CompressionEncoding;
 
 use crate::{api::GrpcResult, checked_channel::CheckedChannel, interceptors::HeadersInterceptor};
 
-type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
+pub(crate) type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
 pub(crate) const MAINNET_HOST: &str = "https://grpc.mainnet.iota.cafe:443";
 pub(crate) const TESTNET_HOST: &str = "https://grpc.testnet.iota.cafe:443";

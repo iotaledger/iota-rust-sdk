@@ -22,7 +22,7 @@ use iota_grpc_types::headers;
 use semver::Version;
 use tower_service::Service;
 
-type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
+use crate::client::BoxError;
 
 /// Version of this crate, which the node's minimum SDK version is compared
 /// against.
