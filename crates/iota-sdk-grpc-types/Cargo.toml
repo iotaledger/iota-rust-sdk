@@ -24,6 +24,10 @@ rustdoc-args = [
   "--generate-link-to-definition",
 ]
 
+[features]
+# Unstable APIs that may change or be removed in any release.
+experimental = []
+
 [dependencies]
 # external dependencies
 bcs.workspace = true

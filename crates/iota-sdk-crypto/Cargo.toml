@@ -55,6 +55,8 @@ bls12381 = [
   "dep:zeroize",
 ]
 mnemonic = ["dep:bip32", "dep:bip39", "dep:slip10_ed25519"]
+# Unstable APIs that may change or be removed in any release.
+experimental = []
 
 [dependencies]
 # external dependencies

@@ -13,6 +13,8 @@ proc-macro = true
 
 [features]
 move-shape = []
+# Unstable APIs that may change or be removed in any release.
+experimental = []
 
 [dependencies]
 proc-macro2.workspace = true
