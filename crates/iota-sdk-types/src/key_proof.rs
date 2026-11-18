@@ -4,7 +4,7 @@
 //! The text a key holder signs to approve attaching their public key to a
 //! `SmartAccount`.
 
-use crate::{Address, Digest};
+use crate::Address;
 
 /// The `check` line: the function that checks the proof, at the framework
 /// address written as Move writes type names.
@@ -22,7 +22,7 @@ const CHECK_V1: &str = "00000000000000000000000000000000000000000000000000000000
 /// Validators compute the same text to check the proof, so the result for
 /// given values must never change. A new text is a new function.
 pub fn key_proof_message_v1(
-    chain_identifier: &Digest,
+    chain_identifier: &[u8; 32],
     account: &Address,
     new_account: bool,
     nonce: &[u8; 32],
@@ -30,7 +30,7 @@ pub fn key_proof_message_v1(
 ) -> String {
     format!(
         "check: {CHECK_V1}\nnetwork: {}\naccount: {}\nnew account: {new_account}\nnonce: {}\nvalid until epoch: {valid_until_epoch}",
-        hex::encode(chain_identifier.bytes()),
+        hex::encode(chain_identifier),
         account.to_hex(),
         hex::encode(nonce),
     )
@@ -39,7 +39,7 @@ pub fn key_proof_message_v1(
 #[cfg(test)]
 mod tests {
     use super::key_proof_message_v1;
-    use crate::{Address, Digest};
+    use crate::Address;
 
     fn bytes32(hex: &str) -> [u8; 32] {
         hex::decode(hex).unwrap().try_into().unwrap()
@@ -50,9 +50,7 @@ mod tests {
     #[test]
     fn message_of_the_design_example() {
         let message = key_proof_message_v1(
-            &Digest::new(bytes32(
-                "2304aa976b1765b020886e8b5c7369e169bc779154b9c3efb4dd15c6039c0679",
-            )),
+            &bytes32("2304aa976b1765b020886e8b5c7369e169bc779154b9c3efb4dd15c6039c0679"),
             &Address::from_hex(
                 "0xf9e4f7f66304ca332d20636b5358b0b9297afbc7428bc107fc5dbc64fb204125",
             )
@@ -76,7 +74,7 @@ mod tests {
     #[test]
     fn message_for_an_existing_account_with_a_short_address() {
         let message = key_proof_message_v1(
-            &Digest::ZERO,
+            &[0; 32],
             &Address::from_short_hex("0x2").unwrap(),
             false,
             &[0xab; 32],
