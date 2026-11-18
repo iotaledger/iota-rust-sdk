@@ -27,6 +27,7 @@ The Move sources these mirror live in the [iota monorepo] under
 | `serde`      | BCS and JSON (de)serialization of the mirrors and their `TryFrom<&Object>` constructors |
 | `bcs-schema` | `BcsSchema` derives on the mirrors (implies `serde`)                                    |
 | `u256`       | `MoveType` for `primitive_types::U256`, pulling in the `primitive-types` crate          |
+| `unstable`   | unstable APIs that may change or be removed in any release                              |
 
 None are enabled by default. `MoveType` itself and its impls for the Move
 primitives, `String` and `Vec<T>` need no features. Mirrors of Move objects
