@@ -93,8 +93,11 @@ impl From<TryFromProtoError> for GrpcError {
 
 impl From<tonic::Status> for GrpcError {
     fn from(status: tonic::Status) -> Self {
-        if let Some(error) = std::error::Error::source(&status)
-            .and_then(|source| source.downcast_ref::<OutdatedClientError>())
+        // A layer wrapped around the channel, such as tower's `Buffer`, can put
+        // its own error between the status and the version error.
+        if let Some(error) =
+            std::iter::successors(std::error::Error::source(&status), |error| error.source())
+                .find_map(|error| error.downcast_ref::<OutdatedClientError>())
         {
             return GrpcError::OutdatedClient(error.clone());
         }

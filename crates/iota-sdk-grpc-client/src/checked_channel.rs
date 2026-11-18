@@ -293,6 +293,39 @@ mod tests {
             .unwrap();
     }
 
+    /// Error of a layer wrapped around the channel, holding the channel's
+    /// error as its source, as tower's `Buffer` does.
+    #[derive(Debug)]
+    struct LayerError(BoxError);
+
+    impl fmt::Display for LayerError {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.write_str("layer error")
+        }
+    }
+
+    impl std::error::Error for LayerError {
+        fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+            Some(&*self.0)
+        }
+    }
+
+    #[tokio::test]
+    async fn version_error_is_found_behind_a_wrapping_layer() {
+        let error = call_with(headers_with_minimum("1.3.0"), "1.2.9")
+            .await
+            .unwrap_err();
+        let status = tonic::Status::from_error(Box::new(LayerError(error)));
+
+        let error = crate::GrpcError::from(status);
+
+        assert!(
+            matches!(&error, crate::GrpcError::OutdatedClient(error)
+                if error.minimum() == &Version::parse("1.3.0").unwrap()),
+            "unexpected error: {error:?}"
+        );
+    }
+
     #[test]
     fn crate_version_is_valid_semver() {
         Version::parse(CRATE_VERSION).unwrap();
