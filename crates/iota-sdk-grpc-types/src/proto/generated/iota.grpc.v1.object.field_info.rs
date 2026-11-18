@@ -93,8 +93,8 @@ mod _field_impls {
             json_name: "fields",
             number: 1i32,
             is_optional: false,
-            is_map: true,
-            message_fields: None,
+            is_map: false,
+            message_fields: Some(DisplayField::FIELDS),
         };
         pub const ERROR_FIELD: &'static MessageField = &MessageField {
             name: "error",
@@ -132,20 +132,28 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
-        pub fn fields(mut self) -> String {
+        pub fn fields(mut self) -> DisplayFieldFieldPathBuilder {
             self.path.push(Display::FIELDS_FIELD.name);
-            self.finish()
+            DisplayFieldFieldPathBuilder::new_with_base(self.path)
         }
         pub fn error(mut self) -> String {
             self.path.push(Display::ERROR_FIELD.name);
             self.finish()
         }
     }
-    impl DisplayFieldResult {
+    impl DisplayField {
+        pub const NAME_FIELD: &'static MessageField = &MessageField {
+            name: "name",
+            json_name: "name",
+            number: 1i32,
+            is_optional: false,
+            is_map: false,
+            message_fields: None,
+        };
         pub const VALUE_FIELD: &'static MessageField = &MessageField {
             name: "value",
             json_name: "value",
-            number: 1i32,
+            number: 2i32,
             is_optional: false,
             is_map: false,
             message_fields: None,
@@ -153,32 +161,33 @@ mod _field_impls {
         pub const ERROR_FIELD: &'static MessageField = &MessageField {
             name: "error",
             json_name: "error",
-            number: 2i32,
+            number: 3i32,
             is_optional: false,
             is_map: false,
             message_fields: None,
         };
     }
-    impl DisplayFieldResult {
+    impl DisplayField {
         pub const RESULT_ONEOF: &'static str = "result";
     }
-    impl crate::field::sealed::Sealed for DisplayFieldResult {}
-    impl MessageFields for DisplayFieldResult {
+    impl crate::field::sealed::Sealed for DisplayField {}
+    impl MessageFields for DisplayField {
         const FIELDS: &'static [&'static MessageField] = &[
+            Self::NAME_FIELD,
             Self::VALUE_FIELD,
             Self::ERROR_FIELD,
         ];
         const ONEOFS: &'static [&'static str] = &["result"];
     }
-    impl DisplayFieldResult {
-        pub fn path_builder() -> DisplayFieldResultFieldPathBuilder {
-            DisplayFieldResultFieldPathBuilder::new()
+    impl DisplayField {
+        pub fn path_builder() -> DisplayFieldFieldPathBuilder {
+            DisplayFieldFieldPathBuilder::new()
         }
     }
-    pub struct DisplayFieldResultFieldPathBuilder {
+    pub struct DisplayFieldFieldPathBuilder {
         path: Vec<&'static str>,
     }
-    impl DisplayFieldResultFieldPathBuilder {
+    impl DisplayFieldFieldPathBuilder {
         #[allow(clippy::new_without_default)]
         pub fn new() -> Self {
             Self { path: Default::default() }
@@ -190,12 +199,16 @@ mod _field_impls {
         pub fn finish(self) -> String {
             self.path.join(".")
         }
+        pub fn name(mut self) -> String {
+            self.path.push(DisplayField::NAME_FIELD.name);
+            self.finish()
+        }
         pub fn value(mut self) -> String {
-            self.path.push(DisplayFieldResult::VALUE_FIELD.name);
+            self.path.push(DisplayField::VALUE_FIELD.name);
             self.finish()
         }
         pub fn error(mut self) -> String {
-            self.path.push(DisplayFieldResult::ERROR_FIELD.name);
+            self.path.push(DisplayField::ERROR_FIELD.name);
             self.finish()
         }
     }

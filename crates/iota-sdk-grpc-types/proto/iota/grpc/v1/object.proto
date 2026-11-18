@@ -27,21 +27,26 @@ message Object {
 
 // Rendering of an object's on-chain Display template.
 message Display {
-  // Each Display field name mapped to its rendered value or the error it hit.
-  map<string, DisplayFieldResult> fields = 1;
+  option (iota.grpc.message_accessors) = "with";
+
+  // The rendered Display fields, in the order defined by the template.
+  repeated DisplayField fields = 1;
   // Set only when the whole template could not be resolved, so no per-field
   // results apply (for example the type's `Display` object is missing or
   // failed to load).
   optional google.rpc.Status error = 2;
 }
 
-// The outcome of rendering one Display field: the rendered value or its error.
-message DisplayFieldResult {
+// One Display field: its name and either the rendered value or the error it hit.
+message DisplayField {
   option (iota.grpc.message_accessors) = "with";
 
+  // The Display field name.
+  string name = 1;
+  // The field's rendered value, or the error that prevented rendering it.
   oneof result {
-    string value = 1;
-    google.rpc.Status error = 2;
+    string value = 2;
+    google.rpc.Status error = 3;
   }
 }
 

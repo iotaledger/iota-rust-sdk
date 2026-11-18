@@ -26,35 +26,37 @@ pub struct Object {
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Display {
-    /// Each Display field name mapped to its rendered value or the error it hit.
-    #[prost(btree_map = "string, message", tag = "1")]
-    pub fields: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        DisplayFieldResult,
-    >,
+    /// The rendered Display fields, in the order defined by the template.
+    #[prost(message, repeated, tag = "1")]
+    pub fields: ::prost::alloc::vec::Vec<DisplayField>,
     /// Set only when the whole template could not be resolved, so no per-field
     /// results apply (for example the type's `Display` object is missing or
     /// failed to load).
     #[prost(message, optional, tag = "2")]
     pub error: ::core::option::Option<crate::google::rpc::Status>,
 }
-/// The outcome of rendering one Display field: the rendered value or its error.
+/// One Display field: its name and either the rendered value or the error it hit.
 #[allow(clippy::all)]
 #[non_exhaustive]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DisplayFieldResult {
-    #[prost(oneof = "display_field_result::Result", tags = "1, 2")]
-    pub result: ::core::option::Option<display_field_result::Result>,
+pub struct DisplayField {
+    /// The Display field name.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The field's rendered value, or the error that prevented rendering it.
+    #[prost(oneof = "display_field::Result", tags = "2, 3")]
+    pub result: ::core::option::Option<display_field::Result>,
 }
-/// Nested message and enum types in `DisplayFieldResult`.
-pub mod display_field_result {
+/// Nested message and enum types in `DisplayField`.
+pub mod display_field {
+    /// The field's rendered value, or the error that prevented rendering it.
     #[allow(clippy::all)]
     #[non_exhaustive]
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Result {
-        #[prost(string, tag = "1")]
+        #[prost(string, tag = "2")]
         Value(::prost::alloc::string::String),
-        #[prost(message, tag = "2")]
+        #[prost(message, tag = "3")]
         Error(crate::google::rpc::Status),
     }
 }
