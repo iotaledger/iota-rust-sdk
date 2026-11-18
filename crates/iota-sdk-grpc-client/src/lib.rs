@@ -104,7 +104,7 @@ pub use api::{
 };
 // Re-export typed read mask field enums
 pub use iota_grpc_types::read_mask_fields;
-pub use iota_grpc_types::{prost, prost_types, tonic};
+pub use iota_grpc_types::{headers, prost, prost_types, tonic};
 pub use iota_types;
 
 mod client;

@@ -5,7 +5,7 @@
 //!
 //! The node stamps every gRPC response with the lowest `iota-sdk-grpc-client`
 //! version able to decode its wire types, in the
-//! [`X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN`](iota_grpc_types::headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN) header. The
+//! [`X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN`](crate::headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN) header. The
 //! check runs on the response headers, before any body is decoded, so an
 //! outdated client fails with a clear error instead of tripping over a wire
 //! value it does not know.
