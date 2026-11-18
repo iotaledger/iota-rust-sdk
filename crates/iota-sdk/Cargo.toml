@@ -78,6 +78,17 @@ grpc-tls-webpki-roots = ["grpc", "iota-grpc-client/tls-webpki-roots"]
 transaction-builder = ["dep:iota-transaction-builder"]
 # Sponsorship through the IOTA gas station.
 gas-station = ["transaction-builder", "iota-transaction-builder/gas-station"]
+# TLS for the gas station's default HTTP client; `graphql-tls-*` enable these too.
+gas-station-tls-aws-lc = ["gas-station", "iota-transaction-builder/tls-aws-lc"]
+gas-station-tls-native-roots = [
+  "gas-station",
+  "iota-transaction-builder/tls-native-roots",
+]
+gas-station-tls-ring = ["gas-station", "iota-transaction-builder/tls-ring"]
+gas-station-tls-webpki-roots = [
+  "gas-station",
+  "iota-transaction-builder/tls-webpki-roots",
+]
 # Types
 types = ["dep:iota-types"]
 serde = ["types", "iota-types/serde", "iota-move-types?/serde"]
