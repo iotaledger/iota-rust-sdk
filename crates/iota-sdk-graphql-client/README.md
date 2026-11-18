@@ -16,7 +16,7 @@ executing transactions and more.
 
 ## TLS
 
-HTTPS is verified with `rustls`. Every axis has a default, so reaching the public networks needs no setup.
+HTTPS and the WebSocket that subscriptions use are verified with `rustls`, both from the features below. Every axis has a default, so reaching the public networks needs no setup.
 
 | Feature            | Default | Effect                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | ------------------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -59,6 +59,12 @@ is exported if you want it) and no bundled roots, so it trusts whatever your
 `reqwest` is built without TLS and its builder needs no provider; reaching
 `https://` from one means enabling a provider feature here, or turning on
 `reqwest`'s TLS in your own manifest.
+
+Subscriptions do not go through the supplied client: their WebSocket trusts
+the roots chosen by this crate's features, and the client's proxies and
+headers do not apply to it. Without a provider feature, subscribing over `wss`
+needs a rustls crypto provider installed for the process, and trusts the
+Mozilla roots bundled with `tokio-tungstenite`.
 
 ## Usage
 

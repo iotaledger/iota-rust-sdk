@@ -157,6 +157,9 @@ impl GraphQLClient {
     /// The client is used as given: the SDK does not set its user agent, so
     /// callers who want to be identifiable should apply [`USER_AGENT`]
     /// themselves.
+    ///
+    /// Subscriptions do not use the client: their WebSocket is configured from
+    /// this crate's TLS features. See the crate README.
     pub fn new_with_reqwest_client(server: &str, client: reqwest::Client) -> GraphQLResult<Self> {
         Ok(Self {
             rpc: reqwest::Url::parse(server)?,
