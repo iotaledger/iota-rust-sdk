@@ -11,7 +11,6 @@
 //! value it does not know.
 
 use std::{
-    fmt,
     future::Future,
     pin::Pin,
     sync::Arc,
@@ -33,7 +32,10 @@ pub const CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 /// produces. [`GrpcError::from`](crate::GrpcError) turns such a status into
 /// [`GrpcError::OutdatedClient`](crate::GrpcError::OutdatedClient), which tells
 /// it apart from a `FAILED_PRECONDITION` sent by the node.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, thiserror::Error)]
+#[error(
+    "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-grpc-client >= {minimum}, this SDK uses {current})"
+)]
 pub struct OutdatedClientError {
     minimum: String,
     current: String,
@@ -62,18 +64,6 @@ impl OutdatedClientError {
         status
     }
 }
-
-impl fmt::Display for OutdatedClientError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-grpc-client >= {}, this SDK uses {})",
-            self.minimum, self.current
-        )
-    }
-}
-
-impl std::error::Error for OutdatedClientError {}
 
 /// gRPC channel wrapper that fails a call when the node's minimum SDK version
 /// is newer than this crate.
@@ -162,7 +152,7 @@ fn check_min_sdk_version(
 
 #[cfg(test)]
 mod tests {
-    use std::convert::Infallible;
+    use std::{convert::Infallible, fmt};
 
     use iota_grpc_types::headers;
 
