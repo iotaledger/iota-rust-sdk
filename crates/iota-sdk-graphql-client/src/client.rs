@@ -241,8 +241,8 @@ impl GraphQLClient {
     /// response, surfacing the HTTP status and a truncated body on any non-2xx
     /// response or on a decode failure.
     ///
-    /// Fails with [`GraphQLError::OutdatedClient`] first when the node requires
-    /// a newer client.
+    /// Fails with [`GraphQLError::OutdatedClient`] first when the indexer
+    /// requires a newer client.
     async fn post_query<R>(&self, body: &impl serde::Serialize) -> GraphQLResult<R>
     where
         R: serde::de::DeserializeOwned,
@@ -494,8 +494,9 @@ mod tests {
         assert!(err.is_timeout(), "{err:?}");
     }
 
-    /// Runs a query against a node answering with `response` and asserts that
-    /// it fails because the node requires `iota-sdk-graphql-client` 999.0.0.
+    /// Runs a query against an indexer answering with `response` and asserts
+    /// that it fails because the indexer requires `iota-sdk-graphql-client`
+    /// 999.0.0.
     async fn assert_query_rejected_for_newer_sdk(response: &'static [u8]) {
         let (listener, url) = bind().await;
         let _server = tokio::spawn(async move {

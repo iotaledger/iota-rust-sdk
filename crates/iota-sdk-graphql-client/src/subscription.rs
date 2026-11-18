@@ -498,8 +498,8 @@ mod tests {
         }
     }
 
-    /// Opens a WebSocket to a node whose handshake response carries `minimum`
-    /// in the minimum SDK version header.
+    /// Opens a WebSocket to an indexer whose handshake response carries
+    /// `minimum` in the minimum SDK version header.
     async fn connect_to_node_with_minimum(minimum: &'static str) -> GraphQLResult<()> {
         let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
         let url = Url::parse(&format!("ws://{}", listener.local_addr().unwrap())).unwrap();

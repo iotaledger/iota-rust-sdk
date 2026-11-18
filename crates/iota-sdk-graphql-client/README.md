@@ -84,7 +84,7 @@ async fn main() -> Result<()> {
 
 ### Indexer compatibility
 
-Indexers send the lowest `iota-sdk-graphql-client` version able to decode their responses. When this crate is older, queries fail with `GraphQLError::OutdatedClient` before any data is decoded, and subscriptions yield that error once and end; upgrade the crate to resolve it. The check runs on the response, so a transaction sent for execution may have been executed even though the call failed. Responses from indexers that send no minimum are not checked. On wasm, subscriptions are not checked, since a JavaScript `WebSocket` does not expose the handshake headers, and in the browser a query to a indexer on another origin is only checked if the indexer exposes the header through CORS.
+Indexers send the lowest `iota-sdk-graphql-client` version able to decode their responses. When this crate is older, queries fail with `GraphQLError::OutdatedClient` before any data is decoded, and subscriptions yield that error once and end; upgrade the crate to resolve it. The check runs on the response, so a transaction sent for execution may have been executed even though the call failed. Responses from indexers that send no minimum are not checked. On wasm, subscriptions are not checked, since a JavaScript `WebSocket` does not expose the handshake headers, and in the browser a query to an indexer on another origin is only checked if the indexer exposes the header through CORS.
 
 ### Requesting gas from the faucet
 

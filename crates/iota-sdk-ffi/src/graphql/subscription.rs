@@ -132,7 +132,7 @@ macro_rules! define_subscription {
         /// A live subscription.
         ///
         /// Call `next` in a loop to receive updates. It returns `None` once
-        /// `cancel` has been called. If the node requires a newer SDK, `next`
+        /// `cancel` has been called. If the indexer requires a newer SDK, `next`
         /// raises that error and the subscription ends: later calls return
         /// `None`. The subscription never ends otherwise.
         #[derive(uniffi::Object)]
@@ -151,7 +151,7 @@ macro_rules! define_subscription {
             /// itself, such as a rejected filter. The subscription stays
             /// usable afterwards, so a caller that considers the error
             /// transient can keep calling `next`. The exception is the error
-            /// whose message starts with "the node requires a newer IOTA
+            /// whose message starts with "the indexer requires a newer IOTA
             /// SDK": the subscription ends with it, and later calls return
             /// `None`.
             pub async fn next(&self) -> Result<Option<$update>> {

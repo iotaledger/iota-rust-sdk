@@ -1,9 +1,9 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Rejects responses from a node that requires a newer SDK than this one.
+//! Rejects responses from an indexer that requires a newer SDK than this one.
 //!
-//! The node's GraphQL service stamps every response with the lowest
+//! The indexer's GraphQL service stamps every response with the lowest
 //! `iota-sdk-graphql-client` version able to decode it, in the
 //! [`X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN`] header. The check runs on the
 //! response headers, before any body is decoded, so an outdated client fails
@@ -14,7 +14,7 @@ use semver::Version;
 
 use crate::error::{GraphQLError, GraphQLResult};
 
-/// Version of this crate, which the node's minimum SDK version is compared
+/// Version of this crate, which the indexer's minimum SDK version is compared
 /// against.
 pub const CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -94,7 +94,7 @@ mod tests {
         assert_eq!(current, "1.2.9");
         assert_eq!(
             error.to_string(),
-            "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-graphql-client >= 1.3.0, this SDK uses 1.2.9)"
+            "the indexer requires a newer IOTA SDK, upgrade it (needs iota-sdk-graphql-client >= 1.3.0, this SDK uses 1.2.9)"
         );
     }
 

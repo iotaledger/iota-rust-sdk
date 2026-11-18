@@ -166,17 +166,17 @@ pub enum GraphQLError {
     /// error.
     #[error("subscription lagged: {count} payload(s) dropped by the server")]
     Lagged { count: u32 },
-    /// The node requires a newer `iota-sdk-graphql-client` than this one.
+    /// The indexer requires a newer `iota-sdk-graphql-client` than this one.
     ///
     /// Raised on a query response or a subscription handshake, before anything
-    /// is decoded. The node has still processed the request, so a transaction
-    /// sent for execution may have been executed. A subscription ends after
-    /// this error. Upgrade the crate.
+    /// is decoded. The indexer has still processed the request, so a
+    /// transaction sent for execution may have been executed. A
+    /// subscription ends after this error. Upgrade the crate.
     #[error(
-        "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-graphql-client >= {minimum}, this SDK uses {current})"
+        "the indexer requires a newer IOTA SDK, upgrade it (needs iota-sdk-graphql-client >= {minimum}, this SDK uses {current})"
     )]
     OutdatedClient {
-        /// The lowest `iota-sdk-graphql-client` version the node accepts.
+        /// The lowest `iota-sdk-graphql-client` version the indexer accepts.
         minimum: String,
         /// The version of this crate.
         current: String,
