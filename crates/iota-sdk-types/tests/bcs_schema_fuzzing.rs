@@ -405,15 +405,27 @@ impl TestHarness {
         // The override generators are wired into gen_expr so they fire whenever the
         // named rule is referenced at any depth, fixing all cascade types too.
         let mut overrides: Overrides = Default::default();
-        overrides.insert("checkpoint-contents", Self::gen_checkpoint_contents);
+        overrides.insert("checkpoint-contents-v1", Self::gen_checkpoint_contents_v1);
         overrides.insert("user-signature", Self::gen_user_signature);
+        overrides.insert("simple-signature", Self::gen_simple_signature);
+        overrides.insert("passkey-authenticator", Self::gen_passkey_authenticator);
+        overrides.insert("multisig-committee", Self::gen_multisig_committee);
+        overrides.insert(
+            "multisig-aggregated-signature",
+            Self::gen_multisig_aggregated_signature,
+        );
+        overrides.insert(
+            "multisig-member-signature",
+            Self::gen_multisig_member_signature,
+        );
+        overrides.insert("move-authenticator-v1", Self::gen_move_authenticator_v1);
         overrides.insert(
             "validator-aggregated-signature",
             Self::gen_validator_aggregated_signature,
         );
         overrides.insert(
-            "checkpoint-transaction",
-            Self::generate_checkpoint_transaction,
+            "intent-signed-transaction",
+            Self::gen_intent_signed_transaction,
         );
         overrides.insert("move-struct", Self::gen_move_struct);
         overrides.insert("deny-rule-set", Self::gen_deny_rule_set);
@@ -444,56 +456,28 @@ impl TestHarness {
         self.gen_expr(expr, 0)
     }
 
-    /// Generate a valid `checkpoint-transaction` in BCS wire form.
-    fn generate_checkpoint_transaction(&mut self) -> Vec<u8> {
-        // Intent
-        let mut out = vec![
-            0x01, // V1 enum discriminant
-            0x00, // Intent scope = TransactionData
-            0x00, // Intent version = V0
-            0x00, // Intent app ID = Iota
-        ];
-
-        // Signed Transaction
+    /// Generate a valid `intent-signed-transaction` in BCS wire form.
+    ///
+    /// The deserializer only accepts the intent of transaction data (scope
+    /// `TransactionData`, version `V0`, app id `Iota`), which the grammar
+    /// cannot express. The rest is `signed-transaction`.
+    fn gen_intent_signed_transaction(&mut self) -> Vec<u8> {
+        let mut out = vec![0x00, 0x00, 0x00];
         out.extend(self.generate("signed-transaction"));
-        // Transaction Effects
-        out.extend(self.generate("transaction-effects"));
-        // Transaction Events (optional)
-        let opt = self.rng.next_u32() & 1 == 0;
-        if opt {
-            out.push(0x01);
-            out.extend(self.generate("transaction-events"));
-        } else {
-            out.push(0x00);
-        }
-        // Input objects
-        let count = (self.rng.next_u32() as usize) % 6;
-        out.extend(encode_uleb128(count as u64));
-        for _ in 0..count {
-            out.extend(self.generate("object"));
-        }
-        // Output objects
-        let count = (self.rng.next_u32() as usize) % 6;
-        out.extend(encode_uleb128(count as u64));
-        for _ in 0..count {
-            out.extend(self.generate("object"));
-        }
         out
     }
 
-    /// Generate a valid `checkpoint-contents` in BCS wire form.
+    /// Generate a valid `checkpoint-contents-v1` in BCS wire form.
     ///
-    /// The binary format is: `%d00` (V1 discriminant) + two parallel vectors of
-    /// the *same* length. The deserializer enforces this length invariant, so
-    /// the two vectors must be generated in sync.
-    fn gen_checkpoint_contents(&mut self) -> Vec<u8> {
+    /// The binary format is two parallel vectors of the *same* length. The
+    /// deserializer enforces this length invariant, so the two vectors must be
+    /// generated in sync.
+    fn gen_checkpoint_contents_v1(&mut self) -> Vec<u8> {
         let count = (self.rng.next_u32() as usize) % 6;
-        let mut out = vec![0x00]; // V1 enum discriminant
-        // First vector: (digest, digest) pairs — one pair per transaction
-        out.extend(encode_uleb128(count as u64));
+        // First vector: the execution digests of each transaction
+        let mut out = encode_uleb128(count as u64);
         for _ in 0..count {
-            out.extend(self.generate("digest"));
-            out.extend(self.generate("digest"));
+            out.extend(self.generate("execution-digests"));
         }
         // Second vector: (vector user-signature) — same count
         out.extend(encode_uleb128(count as u64));
@@ -501,7 +485,7 @@ impl TestHarness {
             let n_sigs = (self.rng.next_u32() as usize) % 4;
             out.extend(encode_uleb128(n_sigs as u64));
             for _ in 0..n_sigs {
-                out.extend(self.gen_user_signature());
+                out.extend(self.generate("user-signature"));
             }
         }
         out
@@ -509,15 +493,137 @@ impl TestHarness {
 
     /// Generate a valid `user-signature` in BCS wire form.
     ///
-    /// BCS `bytes` = ULEB128(97) + [0x00 scheme flag] + [64 Ed25519 sig] + [32
-    /// pubkey].
+    /// The grammar gives it as `bytes`; the content of those bytes is a
+    /// `user-signature-body`.
     fn gen_user_signature(&mut self) -> Vec<u8> {
-        const PAYLOAD_LEN: usize = 1 + 64 + 32; // scheme byte + sig + pubkey
-        let mut out = encode_uleb128(PAYLOAD_LEN as u64);
-        out.push(0x00); // Ed25519 scheme flag
-        let mut buf = vec![0u8; 64 + 32];
-        self.rng.fill_bytes(&mut buf);
-        out.extend(buf);
+        self.gen_bytes_of("user-signature-body")
+    }
+
+    /// Generate a valid `simple-signature` in BCS wire form.
+    ///
+    /// The grammar gives it as `bytes`; the content of those bytes is a
+    /// `simple-signature-body`.
+    fn gen_simple_signature(&mut self) -> Vec<u8> {
+        self.gen_bytes_of("simple-signature-body")
+    }
+
+    /// Generate `rule` and wrap it as BCS `bytes`, behind its length.
+    fn gen_bytes_of(&mut self, rule: &str) -> Vec<u8> {
+        let body = self.generate(rule);
+        let mut out = encode_uleb128(body.len() as u64);
+        out.extend(body);
+        out
+    }
+
+    /// Generate a valid `passkey-authenticator` in BCS wire form.
+    ///
+    /// The deserializer only accepts a secp256r1 `simple-signature`, and
+    /// client data JSON of type `webauthn.get` whose challenge is a 32-byte
+    /// digest in unpadded base64url.
+    fn gen_passkey_authenticator(&mut self) -> Vec<u8> {
+        use base64ct::{Base64UrlUnpadded, Encoding};
+
+        let mut out = self.gen_prim(PrimKind::Bytes); // authenticator-data
+        let mut challenge = [0u8; 32];
+        self.rng.fill_bytes(&mut challenge);
+        let client_data_json = format!(
+            r#"{{"type":"webauthn.get","challenge":"{}","origin":"https://example.com"}}"#,
+            Base64UrlUnpadded::encode_string(&challenge)
+        );
+        out.extend(encode_uleb128(client_data_json.len() as u64));
+        out.extend(client_data_json.into_bytes());
+        let mut signature = vec![0x02]; // Secp256r1 scheme flag
+        signature.extend(self.generate("secp256r1-signature"));
+        signature.extend(self.generate("secp256r1-public-key"));
+        out.extend(encode_uleb128(signature.len() as u64));
+        out.extend(signature);
+        out
+    }
+
+    /// Generate a valid `multisig-committee` in BCS wire form.
+    ///
+    /// The deserializer rejects a committee with no members, a member of
+    /// weight zero, or a threshold of zero or above the total weight.
+    fn gen_multisig_committee(&mut self) -> Vec<u8> {
+        let count = 1 + (self.rng.next_u32() as usize) % 5;
+        let mut out = encode_uleb128(count as u64);
+        let mut total_weight: u16 = 0;
+        for _ in 0..count {
+            let mut member = self.generate("multisig-member");
+            let weight = member.last_mut().expect("a member ends with its weight");
+            *weight = (*weight).max(1);
+            total_weight += u16::from(*weight);
+            out.extend(member);
+        }
+        let threshold = 1 + (self.rng.next_u32() as u16) % total_weight;
+        out.extend(threshold.to_le_bytes());
+        out
+    }
+
+    /// Generate a valid `multisig-aggregated-signature` in BCS wire form.
+    ///
+    /// The deserializer requires one signature per bit set in the bitmap, at
+    /// least one, and no bit past the last committee member.
+    fn gen_multisig_aggregated_signature(&mut self) -> Vec<u8> {
+        let committee = self.generate("multisig-committee");
+        // The committee has fewer than 128 members, so its ULEB128 length is
+        // its first byte.
+        let members = u32::from(committee[0]);
+        let mut bitmap = (self.rng.next_u32() as u16) & ((1 << members) - 1) as u16;
+        if bitmap == 0 {
+            bitmap = 1;
+        }
+        let mut out = encode_uleb128(u64::from(bitmap.count_ones()));
+        for _ in 0..bitmap.count_ones() {
+            out.extend(self.generate("multisig-member-signature"));
+        }
+        out.extend(bitmap.to_le_bytes());
+        out.extend(committee);
+        out
+    }
+
+    /// Generate a valid `multisig-member-signature` in BCS wire form.
+    ///
+    /// The grammar gives the `Passkey` variant as `bytes`; their content is
+    /// the passkey scheme flag followed by a `passkey-authenticator`.
+    fn gen_multisig_member_signature(&mut self) -> Vec<u8> {
+        const PASSKEY: u8 = 0x04;
+        let expr = self
+            .grammar
+            .get("multisig-member-signature")
+            .cloned()
+            .expect("multisig-member-signature rule");
+        let out = self.gen_expr(expr, 0);
+        if out[0] != PASSKEY {
+            return out;
+        }
+        let mut authenticator = vec![0x06]; // PasskeyAuthenticator scheme flag
+        authenticator.extend(self.generate("passkey-authenticator"));
+        let mut out = vec![PASSKEY];
+        out.extend(encode_uleb128(authenticator.len() as u64));
+        out.extend(authenticator);
+        out
+    }
+
+    /// Generate a valid `move-authenticator-v1` in BCS wire form.
+    ///
+    /// The deserializer only accepts a shared object as the object to
+    /// authenticate.
+    fn gen_move_authenticator_v1(&mut self) -> Vec<u8> {
+        let count = (self.rng.next_u32() as usize) % 6;
+        let mut out = encode_uleb128(count as u64);
+        for _ in 0..count {
+            out.extend(self.generate("input"));
+        }
+        let count = (self.rng.next_u32() as usize) % 6;
+        out.extend(encode_uleb128(count as u64));
+        for _ in 0..count {
+            out.extend(self.generate("type-tag"));
+        }
+        out.extend([0x01, 0x01]); // Input::Object, ObjectArg::Shared
+        out.extend(self.generate("object-id"));
+        out.extend(self.rng.next_u64().to_le_bytes()); // version
+        out.push((self.rng.next_u32() & 1) as u8); // mutable
         out
     }
 
@@ -805,6 +911,7 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<Bls12381PublicKey>("bls12381-public-key");
     test.check_rule::<Bls12381Signature>("bls12381-signature");
     test.check_rule::<CanceledTransaction>("canceled-transaction");
+    test.check_rule::<CertificateDigest>("certificate-digest");
     test.check_rule::<ChangeEpoch>("change-epoch");
     test.check_rule::<ChangedObject>("changed-object");
     test.check_rule::<CheckpointCommitment>("checkpoint-commitment");
@@ -835,6 +942,8 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<Intent>("intent");
     test.check_rule::<MakeMoveVector>("make-move-vector");
     test.check_rule::<MergeCoins>("merge-coins");
+    test.check_rule::<MisbehaviorReportDigest>("misbehavior-report-digest");
+    test.check_rule::<MoveAuthenticatorDigest>("move-authenticator-digest");
     test.check_rule::<MoveCall>("move-call");
     test.check_rule::<MoveLocation>("move-location");
     test.check_rule::<Object>("object");
@@ -847,8 +956,10 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<ProgrammableTransaction>("programmable-transaction");
     test.check_rule::<Publish>("publish");
     test.check_rule::<RandomnessStateUpdate>("randomness-state-update");
+    test.check_rule::<SenderSignedDataDigest>("sender-signed-data-digest");
     test.check_rule::<SignedCheckpointSummary>("signed-checkpoint-summary");
     test.check_rule::<SignedTransaction>("signed-transaction");
+    test.check_rule::<SimpleSignature>("simple-signature");
     test.check_rule::<SplitCoins>("split-coins");
     test.check_rule::<StructTag>("struct-tag");
     test.check_rule::<SystemPackage>("system-package");
