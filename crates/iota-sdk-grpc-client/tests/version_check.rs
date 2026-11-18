@@ -1,9 +1,9 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Calls through `GrpcClient` against a local ledger service that sends a
-//! given minimum SDK version. `service_info` succeeds and every other call
-//! fails with `NOT_FOUND`.
+//! Calls against a local ledger service that sends a given minimum SDK
+//! version. `service_info` succeeds and every other call fails with
+//! `NOT_FOUND`.
 
 use std::{
     convert::Infallible,
@@ -18,16 +18,20 @@ use iota_grpc_types::{
         GetHealthResponse, GetObjectsRequest, GetObjectsResponse, GetServiceInfoRequest,
         GetServiceInfoResponse, GetTransactionsRequest, GetTransactionsResponse,
         StreamCheckpointsRequest,
+        ledger_service_client::LedgerServiceClient,
         ledger_service_server::{LedgerService, LedgerServiceServer},
     },
 };
-use iota_sdk_grpc_client::{CRATE_VERSION, GrpcClient, GrpcError, ResponseExt};
+use iota_sdk_grpc_client::{
+    CRATE_VERSION, CheckedChannel, GrpcClient, GrpcError, HeadersInterceptor, InterceptedChannel,
+    ResponseExt,
+};
 use tonic::{
     Code, Request, Response, Status,
     body::Body,
     codegen::{async_trait, tokio_stream::Empty},
     server::NamedService,
-    transport::{Server, server::TcpIncoming},
+    transport::{Endpoint, Server, server::TcpIncoming},
 };
 use tower_service::Service;
 
@@ -132,8 +136,8 @@ where
     }
 }
 
-/// Starts a fake node sending `minimum` and returns a client for it.
-fn client_for_node_with_minimum(minimum: impl Into<String>) -> GrpcClient {
+/// Starts a fake node sending `minimum` and returns its URI.
+fn node_with_minimum(minimum: impl Into<String>) -> String {
     let incoming = TcpIncoming::bind("127.0.0.1:0".parse().unwrap()).unwrap();
     let address = incoming.local_addr().unwrap();
     tokio::spawn(
@@ -144,7 +148,12 @@ fn client_for_node_with_minimum(minimum: impl Into<String>) -> GrpcClient {
             })
             .serve_with_incoming(incoming),
     );
-    GrpcClient::new(format!("http://{address}")).unwrap()
+    format!("http://{address}")
+}
+
+/// Starts a fake node sending `minimum` and returns a client for it.
+fn client_for_node_with_minimum(minimum: impl Into<String>) -> GrpcClient {
+    GrpcClient::new(node_with_minimum(minimum)).unwrap()
 }
 
 /// A minimum newer than this crate.
@@ -238,4 +247,24 @@ async fn service_client_status_carries_the_minimum() {
         status.iota_sdk_grpc_client_version_min(),
         Some(minimum.as_str())
     );
+}
+
+#[tokio::test]
+async fn service_client_on_own_channel_gets_the_version_error() {
+    let minimum = newer_minimum();
+    let channel = Endpoint::from_shared(node_with_minimum(minimum.clone()))
+        .unwrap()
+        .connect_lazy();
+    let mut service_client: LedgerServiceClient<InterceptedChannel> =
+        LedgerServiceClient::with_interceptor(
+            CheckedChannel::new(channel),
+            HeadersInterceptor::new(),
+        );
+
+    let status = service_client
+        .get_service_info(GetServiceInfoRequest::default())
+        .await
+        .unwrap_err();
+
+    assert_outdated_client(&GrpcError::from(status), &minimum);
 }

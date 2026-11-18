@@ -87,7 +87,14 @@ pub struct CheckedChannel<S> {
 }
 
 impl<S> CheckedChannel<S> {
-    pub(crate) fn new(inner: S) -> Self {
+    /// Wraps `inner`, failing any call whose response names a minimum crate
+    /// version newer than [`CRATE_VERSION`].
+    ///
+    /// Use it to check service clients built on a channel of your own, such as
+    /// one with custom TLS or a proxy. A [`GrpcClient`](crate::GrpcClient)
+    /// hands out its own channel already wrapped through
+    /// [`checked_channel`](crate::GrpcClient::checked_channel).
+    pub fn new(inner: S) -> Self {
         // `CARGO_PKG_VERSION` comes from this crate's manifest, which cargo
         // only accepts with a valid semantic version.
         let current = Version::parse(CRATE_VERSION).expect("CARGO_PKG_VERSION is a valid version");
