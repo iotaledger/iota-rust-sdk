@@ -5,7 +5,7 @@
 //!
 //! The node stamps every gRPC response with the lowest `iota-sdk-grpc-client`
 //! version able to decode its wire types, in the
-//! [`X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN`](headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN) header. The
+//! [`X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN`](iota_grpc_types::headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN) header. The
 //! check runs on the response headers, before any body is decoded, so an
 //! outdated client fails with a clear error instead of tripping over a wire
 //! value it does not know.
@@ -18,11 +18,10 @@ use std::{
     task::{Context, Poll},
 };
 
-use iota_grpc_types::headers;
 use semver::Version;
 use tower_service::Service;
 
-use crate::client::BoxError;
+use crate::{ResponseExt, client::BoxError};
 
 /// Version of this crate, which the node's minimum SDK version is compared
 /// against.
@@ -105,8 +104,7 @@ fn check_min_sdk_version(
     current: &Version,
 ) -> Result<(), tonic::Status> {
     let Some(minimum) = response_headers
-        .get(headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN)
-        .and_then(|value| value.to_str().ok())
+        .iota_sdk_grpc_client_version_min()
         .and_then(|value| Version::parse(value).ok())
     else {
         return Ok(());
@@ -136,8 +134,9 @@ fn check_min_sdk_version(
 mod tests {
     use std::convert::Infallible;
 
+    use iota_grpc_types::headers;
+
     use super::*;
-    use crate::ResponseExt;
 
     /// Inner service answering every request with a fixed set of response
     /// headers.
