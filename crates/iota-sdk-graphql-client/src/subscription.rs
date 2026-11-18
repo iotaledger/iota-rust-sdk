@@ -477,9 +477,9 @@ mod tests {
 
     /// Server side of the WebSocket handshake: accepts the subprotocol and
     /// sends its minimum SDK version.
-    struct NodeWithMinimum(&'static str);
+    struct IndexerWithMinimum(&'static str);
 
-    impl Callback for NodeWithMinimum {
+    impl Callback for IndexerWithMinimum {
         fn on_request(
             self,
             _request: &Request,
@@ -500,20 +500,22 @@ mod tests {
 
     /// Opens a WebSocket to an indexer whose handshake response carries
     /// `minimum` in the minimum SDK version header.
-    async fn connect_to_node_with_minimum(minimum: &'static str) -> GraphQLResult<()> {
+    async fn connect_to_indexer_with_minimum(minimum: &'static str) -> GraphQLResult<()> {
         let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
         let url = Url::parse(&format!("ws://{}", listener.local_addr().unwrap())).unwrap();
         let _server = tokio::spawn(async move {
             let (socket, _) = listener.accept().await.unwrap();
-            let _ = tokio_tungstenite::accept_hdr_async(socket, NodeWithMinimum(minimum)).await;
+            let _ = tokio_tungstenite::accept_hdr_async(socket, IndexerWithMinimum(minimum)).await;
         });
 
         connect(&url).await.map(drop)
     }
 
     #[tokio::test]
-    async fn handshake_rejects_node_requiring_newer_sdk() {
-        let err = connect_to_node_with_minimum("999.0.0").await.unwrap_err();
+    async fn handshake_rejects_indexer_requiring_newer_sdk() {
+        let err = connect_to_indexer_with_minimum("999.0.0")
+            .await
+            .unwrap_err();
         let GraphQLError::OutdatedClient { minimum, current } = err else {
             panic!("expected an outdated client error, got {err:?}");
         };
@@ -522,8 +524,8 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn handshake_accepts_node_supporting_this_sdk() {
-        connect_to_node_with_minimum(crate::CRATE_VERSION)
+    async fn handshake_accepts_indexer_supporting_this_sdk() {
+        connect_to_indexer_with_minimum(crate::CRATE_VERSION)
             .await
             .unwrap();
     }
@@ -557,7 +559,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn subscription_ends_when_node_requires_newer_sdk() {
+    async fn subscription_ends_when_indexer_requires_newer_sdk() {
         let (errors, attempts) = subscription_failing_to_connect(|| GraphQLError::OutdatedClient {
             minimum: "999.0.0".to_owned(),
             current: crate::CRATE_VERSION.to_owned(),

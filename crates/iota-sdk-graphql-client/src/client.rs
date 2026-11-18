@@ -519,7 +519,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn rejects_response_from_node_requiring_newer_sdk() {
+    async fn rejects_response_from_indexer_requiring_newer_sdk() {
         // The body is not JSON, so decoding it would fail differently.
         assert_query_rejected_for_newer_sdk(
             b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\n\
@@ -530,7 +530,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn rejects_error_response_from_node_requiring_newer_sdk() {
+    async fn rejects_error_response_from_indexer_requiring_newer_sdk() {
         // Without the check, the status would fail the query with
         // `GraphQLError::Http`.
         assert_query_rejected_for_newer_sdk(
@@ -542,7 +542,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn accepts_response_from_node_supporting_this_sdk() {
+    async fn accepts_response_from_indexer_supporting_this_sdk() {
         let (listener, url) = bind().await;
         let _server = tokio::spawn(async move {
             let (mut socket, _) = listener.accept().await.unwrap();
