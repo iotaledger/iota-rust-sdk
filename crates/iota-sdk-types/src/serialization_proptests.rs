@@ -121,6 +121,7 @@ serialization_test!(Owner);
 serialization_test!(TypeOrigin);
 serialization_test!(UpgradeInfo);
 serialization_test!(ObjectId);
+#[cfg(feature = "unstable")]
 serialization_test!(AccountClaimKind);
 serialization_test!(Argument);
 serialization_test!(ChangeEpoch);
@@ -130,6 +131,7 @@ serialization_test!(ChangeEpochV4);
 serialization_test!(Command);
 serialization_test!(ConsensusCommitPrologueV1);
 serialization_test!(CanceledTransaction);
+#[cfg(feature = "unstable")]
 serialization_test!(ClaimAccountTransaction);
 serialization_test!(ConsensusDeterminedVersionAssignments);
 serialization_test!(VersionAssignment);
@@ -146,6 +148,7 @@ serialization_test!(Publish);
 serialization_test!(RandomnessStateUpdate);
 serialization_test!(SignedTransaction);
 serialization_test!(SenderSignedTransaction);
+#[cfg(feature = "unstable")]
 serialization_test!(SmartAccountClaim);
 serialization_test!(SplitCoins);
 serialization_test!(SystemPackage);

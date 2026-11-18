@@ -3,17 +3,21 @@
 
 use std::sync::Arc;
 
+#[cfg(feature = "unstable")]
+use crate::types::{
+    crypto::{multisig::MultisigCommittee, public_key::PublicKey},
+    signature::SignatureScheme,
+};
 use crate::{
     error::Result,
     types::{
         address::Address,
         checkpoint::{CheckpointTimestamp, EpochId, ProtocolVersion},
-        crypto::{multisig::MultisigCommittee, public_key::PublicKey},
         digest::{ConsensusCommitDigest, TransactionDigest, TransactionEffectsDigest},
         events::Event,
         move_core::{Identifier, TypeTag},
         object::{GenesisObject, ObjectId, ObjectReference},
-        signature::{SignatureScheme, UserSignature},
+        signature::UserSignature,
         transaction::v1::TransactionEffectsV1,
         version::Version,
     },
@@ -252,7 +256,11 @@ impl TransactionKind {
             iota_sdk::types::TransactionKind::new_transaction_deny_rules_update(transaction.into()),
         )
     }
+}
 
+#[cfg(feature = "unstable")]
+#[uniffi::export]
+impl TransactionKind {
     /// Create a `TransactionKind` for a claim-account transaction.
     #[uniffi::constructor]
     pub fn new_claim_account(tx: &ClaimAccountTransaction) -> Self {
@@ -1591,10 +1599,12 @@ impl EndOfEpochTransactionKind {
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[cfg(feature = "unstable")]
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct ClaimAccountTransaction(pub iota_sdk::types::ClaimAccountTransaction);
 
+#[cfg(feature = "unstable")]
 #[uniffi::export]
 impl ClaimAccountTransaction {
     /// Create a `ClaimAccountTransaction` that claims a smart account.
@@ -1617,10 +1627,12 @@ impl ClaimAccountTransaction {
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[cfg(feature = "unstable")]
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct AccountClaimKind(pub iota_sdk::types::AccountClaimKind);
 
+#[cfg(feature = "unstable")]
 #[uniffi::export]
 impl AccountClaimKind {
     /// Create an `AccountClaimKind` that claims a smart account.
@@ -1655,6 +1667,7 @@ impl AccountClaimKind {
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[cfg(feature = "unstable")]
 #[derive(Clone, uniffi::Record)]
 pub struct SmartAccountClaim {
     /// Signature-scheme flag of the public key for the address being claimed:
@@ -1669,6 +1682,7 @@ pub struct SmartAccountClaim {
     pub public_key_raw_bytes: Vec<u8>,
 }
 
+#[cfg(feature = "unstable")]
 impl From<iota_sdk::types::SmartAccountClaim> for SmartAccountClaim {
     fn from(value: iota_sdk::types::SmartAccountClaim) -> Self {
         Self {
@@ -1678,6 +1692,7 @@ impl From<iota_sdk::types::SmartAccountClaim> for SmartAccountClaim {
     }
 }
 
+#[cfg(feature = "unstable")]
 impl From<SmartAccountClaim> for iota_sdk::types::SmartAccountClaim {
     fn from(value: SmartAccountClaim) -> Self {
         Self {
@@ -1690,6 +1705,7 @@ impl From<SmartAccountClaim> for iota_sdk::types::SmartAccountClaim {
 /// Create a `SmartAccountClaim` of the address derived from `public_key`, which
 /// is the address a transaction signed by the corresponding private key is sent
 /// from.
+#[cfg(feature = "unstable")]
 #[uniffi::export]
 pub fn smart_account_claim_new(public_key: &PublicKey) -> SmartAccountClaim {
     iota_sdk::types::SmartAccountClaim::new(&public_key.0).into()
@@ -1697,6 +1713,7 @@ pub fn smart_account_claim_new(public_key: &PublicKey) -> SmartAccountClaim {
 
 /// Create a `SmartAccountClaim` of the address derived from `committee`, which
 /// is the address a transaction signed by that committee is sent from.
+#[cfg(feature = "unstable")]
 #[uniffi::export]
 pub fn smart_account_claim_new_multisig(committee: &MultisigCommittee) -> SmartAccountClaim {
     iota_sdk::types::SmartAccountClaim::new_multisig(&committee.0).into()
@@ -1706,6 +1723,7 @@ pub fn smart_account_claim_new_multisig(committee: &MultisigCommittee) -> SmartA
 ///
 /// Fails if the claim's scheme flag is not a known signature scheme, which is
 /// possible for a claim that was decoded rather than built here.
+#[cfg(feature = "unstable")]
 #[uniffi::export]
 pub fn smart_account_claim_signature_scheme(claim: SmartAccountClaim) -> Result<SignatureScheme> {
     let claim: iota_sdk::types::SmartAccountClaim = claim.into();
@@ -1984,8 +2002,7 @@ crate::export_iota_types_bcs_conversion!(
     DenyRuleSet,
     TransactionDenyRulesUpdate,
     GasPayment,
-    TransactionExpiration,
-    SmartAccountClaim
+    TransactionExpiration
 );
 crate::export_iota_types_objects_bcs_conversion!(
     Transaction,
@@ -2011,8 +2028,6 @@ crate::export_iota_types_objects_bcs_conversion!(
     TransactionEffects,
     Argument,
     MoveCall,
-    ClaimAccountTransaction,
-    AccountClaimKind,
 );
 crate::export_iota_types_json_conversion!(
     SignedTransaction,
@@ -2020,8 +2035,7 @@ crate::export_iota_types_json_conversion!(
     DenyRuleSet,
     TransactionDenyRulesUpdate,
     GasPayment,
-    TransactionExpiration,
-    SmartAccountClaim
+    TransactionExpiration
 );
 crate::export_iota_types_objects_json_conversion!(
     Transaction,
@@ -2047,8 +2061,6 @@ crate::export_iota_types_objects_json_conversion!(
     TransactionEffects,
     Argument,
     MoveCall,
-    ClaimAccountTransaction,
-    AccountClaimKind,
 );
 crate::export_iota_types_display!(
     SignedTransaction,
@@ -2057,8 +2069,7 @@ crate::export_iota_types_display!(
     TransactionDenyRulesUpdate,
     GasPayment,
     SharedObjectReference,
-    TransactionExpiration,
-    SmartAccountClaim
+    TransactionExpiration
 );
 crate::export_iota_types_objects_display!(
     Transaction,
@@ -2086,7 +2097,20 @@ crate::export_iota_types_objects_display!(
     EndOfEpochTransactionKind,
     TransactionEffects,
     Argument,
-    MoveCall,
-    ClaimAccountTransaction,
-    AccountClaimKind
+    MoveCall
 );
+
+#[cfg(feature = "unstable")]
+crate::export_iota_types_bcs_conversion!(SmartAccountClaim);
+#[cfg(feature = "unstable")]
+crate::export_iota_types_objects_bcs_conversion!(ClaimAccountTransaction, AccountClaimKind);
+
+#[cfg(feature = "unstable")]
+crate::export_iota_types_json_conversion!(SmartAccountClaim);
+#[cfg(feature = "unstable")]
+crate::export_iota_types_objects_json_conversion!(ClaimAccountTransaction, AccountClaimKind);
+
+#[cfg(feature = "unstable")]
+crate::export_iota_types_display!(SmartAccountClaim);
+#[cfg(feature = "unstable")]
+crate::export_iota_types_objects_display!(ClaimAccountTransaction, AccountClaimKind);

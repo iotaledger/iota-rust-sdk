@@ -779,6 +779,7 @@ fn grammar_driven_fuzzing() {
 
     let mut test = TestHarness::new();
 
+    #[cfg(feature = "unstable")]
     test.check_rule::<AccountClaimKind>("account-claim-kind");
     test.check_rule::<Address>("address");
     test.check_rule::<Argument>("argument");
@@ -792,6 +793,7 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<CheckpointData>("checkpoint-data");
     test.check_rule::<CheckpointSummary>("checkpoint-summary");
     test.check_rule::<CheckpointTransaction>("checkpoint-transaction");
+    #[cfg(feature = "unstable")]
     test.check_rule::<ClaimAccountTransaction>("claim-account-transaction");
     test.check_rule::<Command>("command");
     test.check_rule::<CommandArgumentError>("command-argument-error");
@@ -830,6 +832,7 @@ fn grammar_driven_fuzzing() {
     test.check_rule::<RandomnessStateUpdate>("randomness-state-update");
     test.check_rule::<SignedCheckpointSummary>("signed-checkpoint-summary");
     test.check_rule::<SignedTransaction>("signed-transaction");
+    #[cfg(feature = "unstable")]
     test.check_rule::<SmartAccountClaim>("smart-account-claim");
     test.check_rule::<SplitCoins>("split-coins");
     test.check_rule::<StructTag>("struct-tag");

@@ -7,9 +7,10 @@ use std::collections::BTreeSet;
 use super::{
     Address, CheckpointTimestamp, ConsensusCommitDigest, EpochId, Event, GenesisObject, Identifier,
     Intent, IntentMessage, MoveAuthenticator, ObjectId, ObjectReference, ProtocolVersion,
-    PublicKey, SignatureScheme, TransactionDigest, TypeTag, UserSignature, Version,
+    TransactionDigest, TypeTag, UserSignature, Version,
 };
-use crate::SignatureSchemeError;
+#[cfg(feature = "unstable")]
+use crate::{PublicKey, SignatureScheme, SignatureSchemeError};
 
 mod randomness_round;
 pub use randomness_round::RandomnessRound;
@@ -534,6 +535,7 @@ pub enum TransactionKind {
     /// Update of the on-chain transaction deny rules
     TransactionDenyRulesUpdate(TransactionDenyRulesUpdate),
     /// User transaction claiming the sender's address as an account object.
+    #[cfg(feature = "unstable")]
     ClaimAccount(ClaimAccountTransaction),
 }
 
@@ -548,7 +550,6 @@ impl TransactionKind {
         Programmable(ProgrammableTransaction),
         Genesis(GenesisTransaction),
         EndOfEpoch(Vec<EndOfEpochTransactionKind>),
-        ClaimAccount(ClaimAccountTransaction),
     }
 
     /// Create a [`TransactionKind::Programmable`].
@@ -581,11 +582,6 @@ impl TransactionKind {
         Self::TransactionDenyRulesUpdate(transaction)
     }
 
-    /// Create a [`TransactionKind::ClaimAccount`].
-    pub fn new_claim_account(tx: ClaimAccountTransaction) -> Self {
-        Self::ClaimAccount(tx)
-    }
-
     /// Returns `true` if this is a system transaction.
     pub fn is_system(&self) -> bool {
         match self {
@@ -595,7 +591,9 @@ impl TransactionKind {
             | TransactionKind::RandomnessStateUpdate(_)
             | TransactionKind::TransactionDenyRulesUpdate(_)
             | TransactionKind::EndOfEpoch(_) => true,
-            TransactionKind::Programmable(_) | TransactionKind::ClaimAccount(_) => false,
+            TransactionKind::Programmable(_) => false,
+            #[cfg(feature = "unstable")]
+            TransactionKind::ClaimAccount(_) => false,
         }
     }
 
@@ -616,6 +614,16 @@ impl TransactionKind {
     }
 }
 
+#[cfg(feature = "unstable")]
+impl TransactionKind {
+    crate::def_is_as_into_opt!(ClaimAccount(ClaimAccountTransaction));
+
+    /// Create a [`TransactionKind::ClaimAccount`].
+    pub fn new_claim_account(tx: ClaimAccountTransaction) -> Self {
+        Self::ClaimAccount(tx)
+    }
+}
+
 impl crate::TreeDisplay for TransactionKind {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.enum_name("Transaction Kind");
@@ -632,6 +640,7 @@ impl crate::TreeDisplay for TransactionKind {
             }
             Self::RandomnessStateUpdate(v) => v.fmt_tree(w),
             Self::TransactionDenyRulesUpdate(v) => v.fmt_tree(w),
+            #[cfg(feature = "unstable")]
             Self::ClaimAccount(v) => v.fmt_tree(w),
         }
     }
@@ -1994,6 +2003,7 @@ impl crate::TreeDisplay for MoveCall {
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[cfg(feature = "unstable")]
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -2003,6 +2013,7 @@ pub struct ClaimAccountTransaction {
     pub kind: AccountClaimKind,
 }
 
+#[cfg(feature = "unstable")]
 impl ClaimAccountTransaction {
     /// Creates a [`ClaimAccountTransaction`] that claims a `SmartAccount`.
     pub fn new_smart_account(claim: SmartAccountClaim) -> Self {
@@ -2018,6 +2029,7 @@ impl ClaimAccountTransaction {
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[cfg(feature = "unstable")]
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -2028,6 +2040,7 @@ pub enum AccountClaimKind {
     SmartAccount(SmartAccountClaim),
 }
 
+#[cfg(feature = "unstable")]
 impl AccountClaimKind {
     crate::def_is_as_into_opt!(SmartAccount(SmartAccountClaim));
 }
@@ -2046,6 +2059,7 @@ impl AccountClaimKind {
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+#[cfg(feature = "unstable")]
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -2068,6 +2082,7 @@ pub struct SmartAccountClaim {
     pub public_key_raw_bytes: Vec<u8>,
 }
 
+#[cfg(feature = "unstable")]
 impl SmartAccountClaim {
     /// Creates a claim of the address derived from `public_key`, which is the
     /// address a transaction signed by the corresponding private key is sent
@@ -2110,6 +2125,7 @@ impl SmartAccountClaim {
     }
 }
 
+#[cfg(feature = "unstable")]
 impl crate::TreeDisplay for ClaimAccountTransaction {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Claim Account Transaction")?;
@@ -2117,6 +2133,7 @@ impl crate::TreeDisplay for ClaimAccountTransaction {
     }
 }
 
+#[cfg(feature = "unstable")]
 impl crate::TreeDisplay for AccountClaimKind {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.enum_name("Account Claim Kind");
@@ -2129,6 +2146,7 @@ impl crate::TreeDisplay for AccountClaimKind {
     }
 }
 
+#[cfg(feature = "unstable")]
 impl crate::TreeDisplay for SmartAccountClaim {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.header("Smart Account Claim")?;
@@ -2172,12 +2190,12 @@ crate::impl_tree_display!(
     MakeMoveVector,
     Upgrade,
     MoveCall,
-    ClaimAccountTransaction,
-    AccountClaimKind,
-    SmartAccountClaim,
 );
 
-#[cfg(test)]
+#[cfg(feature = "unstable")]
+crate::impl_tree_display!(ClaimAccountTransaction, AccountClaimKind, SmartAccountClaim);
+
+#[cfg(all(test, feature = "unstable"))]
 mod tests {
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;

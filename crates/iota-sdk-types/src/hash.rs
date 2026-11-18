@@ -539,7 +539,7 @@ mod type_digest {
     }
 }
 
-#[cfg(feature = "serde")]
+#[cfg(all(feature = "serde", feature = "unstable"))]
 mod nonce {
     use super::Hasher;
     use crate::{GasPayment, ObjectId, ObjectReference, Transaction};

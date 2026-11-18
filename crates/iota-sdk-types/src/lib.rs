@@ -23,6 +23,7 @@ mod execution_status;
 pub mod framework;
 mod gas;
 pub mod iota_names;
+#[cfg(feature = "unstable")]
 pub mod key_proof;
 mod move_core;
 mod move_package;
@@ -87,13 +88,14 @@ pub use object_id::ObjectId;
 pub use rand_core;
 #[cfg(feature = "serde")]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
+#[cfg(feature = "unstable")]
+pub use transaction::{AccountClaimKind, ClaimAccountTransaction, SmartAccountClaim};
 pub use transaction::{
-    AccountClaimKind, Argument, CanceledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3,
-    ChangeEpochV4, ClaimAccountTransaction, Command, ConsensusCommitPrologueV1,
-    ConsensusDeterminedVersionAssignments, DenyRuleSet, EndOfEpochTransactionKind, GasPayment,
-    GenesisTransaction, Input, MakeMoveVector, MergeCoins, MoveCall, ProgrammableTransaction,
-    Publish, RandomnessRound, RandomnessStateUpdate, SenderSignedTransaction,
-    SharedObjectReference, SignedTransaction, SmartAccountClaim, SplitCoins, SystemPackage,
+    Argument, CanceledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
+    Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, DenyRuleSet,
+    EndOfEpochTransactionKind, GasPayment, GenesisTransaction, Input, MakeMoveVector, MergeCoins,
+    MoveCall, ProgrammableTransaction, Publish, RandomnessRound, RandomnessStateUpdate,
+    SenderSignedTransaction, SharedObjectReference, SignedTransaction, SplitCoins, SystemPackage,
     Transaction, TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind, TransactionV1,
     TransferObjects, Upgrade, VersionAssignment,
 };

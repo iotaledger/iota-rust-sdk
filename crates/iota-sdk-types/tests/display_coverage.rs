@@ -14,6 +14,7 @@ fn assert_display<T: std::fmt::Display>() {}
 
 #[test]
 fn every_public_type_implements_display() {
+    #[cfg(feature = "unstable")]
     assert_display::<iota_sdk_types::AccountClaimKind>();
     assert_display::<iota_sdk_types::Address>();
     assert_display::<iota_sdk_types::AddressParseError>();
@@ -36,6 +37,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::CheckpointSummary>();
     assert_display::<iota_sdk_types::CheckpointTransaction>();
     assert_display::<iota_sdk_types::CheckpointTransactionInfo>();
+    #[cfg(feature = "unstable")]
     assert_display::<iota_sdk_types::ClaimAccountTransaction>();
     assert_display::<iota_sdk_types::Coin>();
     assert_display::<iota_sdk_types::framework::CoinFromObjectError>();
@@ -131,6 +133,7 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::SignedCheckpointSummary>();
     assert_display::<iota_sdk_types::SignedTransaction>();
     assert_display::<iota_sdk_types::SimpleSignature>();
+    #[cfg(feature = "unstable")]
     assert_display::<iota_sdk_types::SmartAccountClaim>();
     assert_display::<iota_sdk_types::SplitCoins>();
     assert_display::<iota_sdk_types::StructTag>();
