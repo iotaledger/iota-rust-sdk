@@ -385,6 +385,10 @@ define_field_paths! {
         INPUT_OBJECTS_REFERENCE_DIGEST = "input_objects.reference.digest",
         /// The full BCS-encoded input object.
         INPUT_OBJECTS_BCS = "input_objects.bcs",
+        /// JSON rendering of the input object's Move contents.
+        INPUT_OBJECTS_JSON = "input_objects.json",
+        /// Rendering of the input object's on-chain Display template.
+        INPUT_OBJECTS_DISPLAY = "input_objects.display",
         /// Output objects (all sub-fields).
         OUTPUT_OBJECTS = "output_objects",
         /// Output object reference (object_id, version, digest).
@@ -397,6 +401,10 @@ define_field_paths! {
         OUTPUT_OBJECTS_REFERENCE_DIGEST = "output_objects.reference.digest",
         /// The full BCS-encoded output object.
         OUTPUT_OBJECTS_BCS = "output_objects.bcs",
+        /// JSON rendering of the output object's Move contents.
+        OUTPUT_OBJECTS_JSON = "output_objects.json",
+        /// Rendering of the output object's on-chain Display template.
+        OUTPUT_OBJECTS_DISPLAY = "output_objects.display",
         /// Balance changes (all sub-fields).
         BALANCE_CHANGES = "balance_changes",
         /// The owner whose balance changed.
@@ -619,10 +627,18 @@ define_field_paths! {
         TRANSACTIONS_INPUT_OBJECTS = "transactions.input_objects",
         /// The full BCS-encoded input object.
         TRANSACTIONS_INPUT_OBJECTS_BCS = "transactions.input_objects.bcs",
+        /// JSON rendering of the input object's Move contents.
+        TRANSACTIONS_INPUT_OBJECTS_JSON = "transactions.input_objects.json",
+        /// Rendering of the input object's on-chain Display template.
+        TRANSACTIONS_INPUT_OBJECTS_DISPLAY = "transactions.input_objects.display",
         /// Output objects (all sub-fields).
         TRANSACTIONS_OUTPUT_OBJECTS = "transactions.output_objects",
         /// The full BCS-encoded output object.
         TRANSACTIONS_OUTPUT_OBJECTS_BCS = "transactions.output_objects.bcs",
+        /// JSON rendering of the output object's Move contents.
+        TRANSACTIONS_OUTPUT_OBJECTS_JSON = "transactions.output_objects.json",
+        /// Rendering of the output object's on-chain Display template.
+        TRANSACTIONS_OUTPUT_OBJECTS_DISPLAY = "transactions.output_objects.display",
         /// Balance changes (all sub-fields).
         TRANSACTIONS_BALANCE_CHANGES = "transactions.balance_changes",
         /// Object changes (all sub-fields).
@@ -693,10 +709,18 @@ define_field_paths! {
         EXECUTED_TRANSACTION_INPUT_OBJECTS = "executed_transaction.input_objects",
         /// The full BCS-encoded input object.
         EXECUTED_TRANSACTION_INPUT_OBJECTS_BCS = "executed_transaction.input_objects.bcs",
+        /// JSON rendering of the input object's Move contents.
+        EXECUTED_TRANSACTION_INPUT_OBJECTS_JSON = "executed_transaction.input_objects.json",
+        /// Rendering of the input object's on-chain Display template.
+        EXECUTED_TRANSACTION_INPUT_OBJECTS_DISPLAY = "executed_transaction.input_objects.display",
         /// Output objects (all sub-fields).
         EXECUTED_TRANSACTION_OUTPUT_OBJECTS = "executed_transaction.output_objects",
         /// The full BCS-encoded output object.
         EXECUTED_TRANSACTION_OUTPUT_OBJECTS_BCS = "executed_transaction.output_objects.bcs",
+        /// JSON rendering of the output object's Move contents.
+        EXECUTED_TRANSACTION_OUTPUT_OBJECTS_JSON = "executed_transaction.output_objects.json",
+        /// Rendering of the output object's on-chain Display template.
+        EXECUTED_TRANSACTION_OUTPUT_OBJECTS_DISPLAY = "executed_transaction.output_objects.display",
         /// Balance changes (all sub-fields).
         EXECUTED_TRANSACTION_BALANCE_CHANGES = "executed_transaction.balance_changes",
         /// Object changes (all sub-fields).
@@ -832,6 +856,11 @@ mod tests {
         assert_eq!(TransactionField::EVENTS_EVENTS_BCS, "events.events.bcs");
         assert_eq!(TransactionField::CHECKPOINT, "checkpoint");
         assert_eq!(TransactionField::INPUT_OBJECTS_BCS, "input_objects.bcs");
+        assert_eq!(TransactionField::INPUT_OBJECTS_JSON, "input_objects.json");
+        assert_eq!(
+            TransactionField::OUTPUT_OBJECTS_DISPLAY,
+            "output_objects.display"
+        );
         assert_eq!(TransactionField::OUTPUT_OBJECTS_BCS, "output_objects.bcs");
         assert_eq!(TransactionField::BALANCE_CHANGES, "balance_changes");
         assert_eq!(
