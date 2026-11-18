@@ -17,6 +17,21 @@ pub struct Object {
     /// JSON rendering of the object's Move contents.
     #[prost(message, optional, tag = "3")]
     pub json: ::core::option::Option<::prost_types::Value>,
+    /// Rendering of the object's on-chain Display template, when its type has one.
+    #[prost(message, optional, tag = "4")]
+    pub display: ::core::option::Option<Display>,
+}
+/// Rendering of an object's on-chain Display template.
+#[allow(clippy::all)]
+#[non_exhaustive]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Display {
+    /// Rendered Display fields; a field that failed to render is null (see `errors`).
+    #[prost(message, optional, tag = "1")]
+    pub output: ::core::option::Option<::prost_types::Value>,
+    /// Map of Display field name to error message for fields that failed to render.
+    #[prost(message, optional, tag = "2")]
+    pub errors: ::core::option::Option<::prost_types::Value>,
 }
 /// A list of objects.
 #[allow(clippy::all)]

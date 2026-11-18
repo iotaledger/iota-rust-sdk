@@ -20,6 +20,16 @@ message Object {
   optional iota.grpc.v1.bcs.BcsData bcs = 2;
   // JSON rendering of the object's Move contents.
   optional google.protobuf.Value json = 3;
+  // Rendering of the object's on-chain Display template, when its type has one.
+  optional Display display = 4;
+}
+
+// Rendering of an object's on-chain Display template.
+message Display {
+  // Rendered Display fields; a field that failed to render is null (see `errors`).
+  optional google.protobuf.Value output = 1;
+  // Map of Display field name to error message for fields that failed to render.
+  optional google.protobuf.Value errors = 2;
 }
 
 // A list of objects.

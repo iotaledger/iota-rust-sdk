@@ -32,6 +32,14 @@ mod _field_impls {
             is_map: false,
             message_fields: None,
         };
+        pub const DISPLAY_FIELD: &'static MessageField = &MessageField {
+            name: "display",
+            json_name: "display",
+            number: 4i32,
+            is_optional: true,
+            is_map: false,
+            message_fields: Some(Display::FIELDS),
+        };
     }
     impl crate::field::sealed::Sealed for Object {}
     impl MessageFields for Object {
@@ -39,6 +47,7 @@ mod _field_impls {
             Self::REFERENCE_FIELD,
             Self::BCS_FIELD,
             Self::JSON_FIELD,
+            Self::DISPLAY_FIELD,
         ];
     }
     impl Object {
@@ -71,6 +80,64 @@ mod _field_impls {
         }
         pub fn json(mut self) -> String {
             self.path.push(Object::JSON_FIELD.name);
+            self.finish()
+        }
+        pub fn display(mut self) -> DisplayFieldPathBuilder {
+            self.path.push(Object::DISPLAY_FIELD.name);
+            DisplayFieldPathBuilder::new_with_base(self.path)
+        }
+    }
+    impl Display {
+        pub const OUTPUT_FIELD: &'static MessageField = &MessageField {
+            name: "output",
+            json_name: "output",
+            number: 1i32,
+            is_optional: true,
+            is_map: false,
+            message_fields: None,
+        };
+        pub const ERRORS_FIELD: &'static MessageField = &MessageField {
+            name: "errors",
+            json_name: "errors",
+            number: 2i32,
+            is_optional: true,
+            is_map: false,
+            message_fields: None,
+        };
+    }
+    impl crate::field::sealed::Sealed for Display {}
+    impl MessageFields for Display {
+        const FIELDS: &'static [&'static MessageField] = &[
+            Self::OUTPUT_FIELD,
+            Self::ERRORS_FIELD,
+        ];
+    }
+    impl Display {
+        pub fn path_builder() -> DisplayFieldPathBuilder {
+            DisplayFieldPathBuilder::new()
+        }
+    }
+    pub struct DisplayFieldPathBuilder {
+        path: Vec<&'static str>,
+    }
+    impl DisplayFieldPathBuilder {
+        #[allow(clippy::new_without_default)]
+        pub fn new() -> Self {
+            Self { path: Default::default() }
+        }
+        #[doc(hidden)]
+        pub fn new_with_base(base: Vec<&'static str>) -> Self {
+            Self { path: base }
+        }
+        pub fn finish(self) -> String {
+            self.path.join(".")
+        }
+        pub fn output(mut self) -> String {
+            self.path.push(Display::OUTPUT_FIELD.name);
+            self.finish()
+        }
+        pub fn errors(mut self) -> String {
+            self.path.push(Display::ERRORS_FIELD.name);
             self.finish()
         }
     }

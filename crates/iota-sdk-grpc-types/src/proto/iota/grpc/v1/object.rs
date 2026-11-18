@@ -120,3 +120,30 @@ impl Object {
             .ok_or_else(|| TryFromProtoError::missing(Object::JSON_FIELD.name))
     }
 }
+
+// Convenience methods for the Display template render.
+impl Display {
+    /// Get the rendered Display fields (a field that failed to render is null).
+    ///
+    /// **Read mask:** `"display"` (see [`OBJECT_DISPLAY`]).
+    ///
+    /// [`OBJECT_DISPLAY`]: crate::read_masks::OBJECT_DISPLAY
+    pub fn output(&self) -> Result<serde_json::Value, TryFromProtoError> {
+        self.output
+            .as_ref()
+            .map(crate::proto::prost_to_json)
+            .ok_or_else(|| TryFromProtoError::missing(Display::OUTPUT_FIELD.name))
+    }
+
+    /// Get the Display fields that failed to render, mapped to error messages.
+    ///
+    /// **Read mask:** `"display"` (see [`OBJECT_DISPLAY`]).
+    ///
+    /// [`OBJECT_DISPLAY`]: crate::read_masks::OBJECT_DISPLAY
+    pub fn errors(&self) -> Result<serde_json::Value, TryFromProtoError> {
+        self.errors
+            .as_ref()
+            .map(crate::proto::prost_to_json)
+            .ok_or_else(|| TryFromProtoError::missing(Display::ERRORS_FIELD.name))
+    }
+}

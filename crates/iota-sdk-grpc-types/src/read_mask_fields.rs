@@ -283,6 +283,8 @@ define_field_paths! {
         BCS = "bcs",
         /// JSON rendering of the object's Move contents.
         JSON = "json",
+        /// Rendering of the object's on-chain Display template.
+        DISPLAY = "display",
     }
 }
 
@@ -312,6 +314,8 @@ define_field_paths! {
         BCS = "bcs",
         /// JSON rendering of the object's Move contents.
         JSON = "json",
+        /// Rendering of the object's on-chain Display template.
+        DISPLAY = "display",
     }
 }
 
@@ -816,6 +820,7 @@ mod tests {
         assert_eq!(ObjectField::REFERENCE_OBJECT_ID, "reference.object_id");
         assert_eq!(ObjectField::BCS, "bcs");
         assert_eq!(ObjectField::JSON, "json");
+        assert_eq!(ObjectField::DISPLAY, "display");
     }
 
     #[test]
