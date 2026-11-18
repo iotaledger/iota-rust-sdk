@@ -30,11 +30,37 @@ pub const CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 /// The node requires a newer `iota-sdk-grpc-client` than the one in use.
 ///
 /// Attached as the source of the `FAILED_PRECONDITION` status a failed check
-/// produces, so the high-level API can surface it as its own error variant.
+/// produces. [`GrpcError::from`](crate::GrpcError) turns such a status into
+/// [`GrpcError::OutdatedClient`](crate::GrpcError::OutdatedClient), which tells
+/// it apart from a `FAILED_PRECONDITION` sent by the node.
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub(crate) struct OutdatedClientError {
-    pub(crate) minimum: Version,
-    pub(crate) current: Version,
+pub struct OutdatedClientError {
+    minimum: Version,
+    current: Version,
+}
+
+impl OutdatedClientError {
+    /// The lowest `iota-sdk-grpc-client` version the node accepts.
+    pub fn minimum(&self) -> &Version {
+        &self.minimum
+    }
+
+    /// The version of the `iota-sdk-grpc-client` in use.
+    pub fn current(&self) -> &Version {
+        &self.current
+    }
+
+    /// The `FAILED_PRECONDITION` status for this error, with this error as its
+    /// source.
+    pub(crate) fn into_status(self, metadata: tonic::metadata::MetadataMap) -> tonic::Status {
+        let mut status = tonic::Status::with_metadata(
+            tonic::Code::FailedPrecondition,
+            self.to_string(),
+            metadata,
+        );
+        status.set_source(Arc::new(self));
+        status
+    }
 }
 
 impl fmt::Display for OutdatedClientError {
@@ -124,10 +150,7 @@ fn check_min_sdk_version(
     for reserved in ["grpc-status", "grpc-message", "grpc-status-details-bin"] {
         metadata.remove(reserved);
     }
-    let mut status =
-        tonic::Status::with_metadata(tonic::Code::FailedPrecondition, error.to_string(), metadata);
-    status.set_source(Arc::new(error));
-    Err(status)
+    Err(error.into_status(metadata))
 }
 
 #[cfg(test)]

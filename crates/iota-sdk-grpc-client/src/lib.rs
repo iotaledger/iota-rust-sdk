@@ -117,4 +117,4 @@ mod interceptors;
 pub use interceptors::HeadersInterceptor;
 
 mod checked_channel;
-pub use checked_channel::{CRATE_VERSION, CheckedChannel};
+pub use checked_channel::{CRATE_VERSION, CheckedChannel, OutdatedClientError};

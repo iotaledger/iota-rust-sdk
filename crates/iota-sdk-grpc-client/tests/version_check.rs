@@ -157,8 +157,9 @@ fn assert_outdated_client(error: &GrpcError, minimum: &str) {
     assert!(
         matches!(
             error,
-            GrpcError::OutdatedClient { minimum: m, current: c }
-                if m == minimum && c == CRATE_VERSION
+            GrpcError::OutdatedClient(error)
+                if error.minimum().to_string() == minimum
+                    && error.current().to_string() == CRATE_VERSION
         ),
         "unexpected error: {error:?}"
     );
@@ -182,6 +183,18 @@ async fn older_client_gets_the_version_error_in_place_of_the_node_error() {
     let error = client.health().await.unwrap_err();
 
     assert_outdated_client(&error, &minimum);
+}
+
+#[tokio::test]
+async fn version_error_survives_a_round_trip_through_status() {
+    let minimum = newer_minimum();
+    let client = client_for_node_with_minimum(minimum.clone());
+
+    let error = client.service_info().await.unwrap_err();
+    let status = Status::from(error);
+
+    assert_eq!(status.code(), Code::FailedPrecondition);
+    assert_outdated_client(&GrpcError::from(status), &minimum);
 }
 
 #[tokio::test]
