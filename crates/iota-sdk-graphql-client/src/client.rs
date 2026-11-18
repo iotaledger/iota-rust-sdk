@@ -13,6 +13,7 @@ use crate::{
     error::{ErrorExtensions, GraphQLError, GraphQLResult},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
     query_types::{ServiceConfig, ServiceConfigQueryFragment},
+    version_check::check_client_version,
 };
 
 pub(crate) const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
@@ -239,6 +240,9 @@ impl GraphQLClient {
     /// POST a JSON-serializable GraphQL request body and decode the JSON
     /// response, surfacing the HTTP status and a truncated body on any non-2xx
     /// response or on a decode failure.
+    ///
+    /// Fails with [`GraphQLError::OutdatedClient`] first when the indexer
+    /// requires a newer client.
     async fn post_query<R>(&self, body: &impl serde::Serialize) -> GraphQLResult<R>
     where
         R: serde::de::DeserializeOwned,
@@ -249,6 +253,7 @@ impl GraphQLClient {
             .json(body)
             .send()
             .await?;
+        check_client_version(resp.headers())?;
         let status = resp.status();
         let url = resp.url().clone();
         let bytes = resp.bytes().await?;
@@ -487,6 +492,77 @@ mod tests {
             panic!("expected a request error, got {err:?}");
         };
         assert!(err.is_timeout(), "{err:?}");
+    }
+
+    /// Runs a query against an indexer answering with `response` and asserts
+    /// that it fails because the indexer requires `iota-sdk-graphql-client`
+    /// 999.0.0.
+    async fn assert_query_rejected_for_newer_sdk(response: &'static [u8]) {
+        let (listener, url) = bind().await;
+        let _server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            let mut buf = vec![0; 4096];
+            let _ = socket.read(&mut buf).await.unwrap();
+            socket.write_all(response).await.unwrap();
+        });
+
+        let client = GraphQLClient::new(&url).unwrap();
+        let err = client
+            .run_query_from_json(Default::default())
+            .await
+            .unwrap_err();
+        let GraphQLError::OutdatedClient { minimum, current } = err else {
+            panic!("expected an outdated client error, got {err:?}");
+        };
+        assert_eq!(minimum, "999.0.0");
+        assert_eq!(current, crate::CRATE_VERSION);
+    }
+
+    #[tokio::test]
+    async fn rejects_response_from_indexer_requiring_newer_sdk() {
+        // The body is not JSON, so decoding it would fail differently.
+        assert_query_rejected_for_newer_sdk(
+            b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\n\
+              x-iota-sdk-graphql-client-version-min: 999.0.0\r\n\
+              content-length: 3\r\n\r\nnot",
+        )
+        .await;
+    }
+
+    #[tokio::test]
+    async fn rejects_error_response_from_indexer_requiring_newer_sdk() {
+        // Without the check, the status would fail the query with
+        // `GraphQLError::Http`.
+        assert_query_rejected_for_newer_sdk(
+            b"HTTP/1.1 500 Internal Server Error\r\ncontent-type: text/plain\r\n\
+              x-iota-sdk-graphql-client-version-min: 999.0.0\r\n\
+              content-length: 4\r\n\r\nboom",
+        )
+        .await;
+    }
+
+    #[tokio::test]
+    async fn accepts_response_from_indexer_supporting_this_sdk() {
+        let (listener, url) = bind().await;
+        let _server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            let mut buf = vec![0; 4096];
+            let _ = socket.read(&mut buf).await.unwrap();
+            let response = format!(
+                "HTTP/1.1 200 OK\r\ncontent-type: application/json\r\n\
+                 x-iota-sdk-graphql-client-version-min: {}\r\n\
+                 content-length: 11\r\n\r\n{{\"data\":{{}}}}",
+                crate::CRATE_VERSION
+            );
+            socket.write_all(response.as_bytes()).await.unwrap();
+        });
+
+        let client = GraphQLClient::new(&url).unwrap();
+        let data = client
+            .run_query_from_json(Default::default())
+            .await
+            .unwrap();
+        assert_eq!(data, json!({}));
     }
 
     #[test]
