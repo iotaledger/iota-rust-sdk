@@ -35,18 +35,18 @@ pub const CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 /// it apart from a `FAILED_PRECONDITION` sent by the node.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct OutdatedClientError {
-    minimum: Version,
-    current: Version,
+    minimum: String,
+    current: String,
 }
 
 impl OutdatedClientError {
     /// The lowest `iota-sdk-grpc-client` version the node accepts.
-    pub fn minimum(&self) -> &Version {
+    pub fn minimum(&self) -> &str {
         &self.minimum
     }
 
     /// The version of the `iota-sdk-grpc-client` in use.
-    pub fn current(&self) -> &Version {
+    pub fn current(&self) -> &str {
         &self.current
     }
 
@@ -148,8 +148,8 @@ fn check_min_sdk_version(
     }
 
     let error = OutdatedClientError {
-        minimum,
-        current: current.clone(),
+        minimum: minimum.to_string(),
+        current: current.to_string(),
     };
     let mut metadata = tonic::metadata::MetadataMap::from_headers(response_headers.clone());
     // The node's own status for the call, when it failed; this status replaces
@@ -241,8 +241,8 @@ mod tests {
             .await
             .unwrap_err();
         let error = outdated_client_error(error);
-        assert_eq!(error.minimum, Version::parse("1.3.0").unwrap());
-        assert_eq!(error.current, Version::parse("1.2.9").unwrap());
+        assert_eq!(error.minimum(), "1.3.0");
+        assert_eq!(error.current(), "1.2.9");
         assert_eq!(
             error.to_string(),
             "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-grpc-client >= 1.3.0, this SDK uses 1.2.9)"
@@ -328,7 +328,7 @@ mod tests {
 
         assert!(
             matches!(&error, crate::GrpcError::OutdatedClient(error)
-                if error.minimum() == &Version::parse("1.3.0").unwrap()),
+                if error.minimum() == "1.3.0"),
             "unexpected error: {error:?}"
         );
     }
