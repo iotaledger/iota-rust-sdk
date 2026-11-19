@@ -130,6 +130,14 @@ impl FieldMaskTree {
 
     pub fn to_field_mask(&self) -> FieldMask {
         let mut paths = Vec::new();
+        // The tree-level wildcard selects every field at the root. It needs an
+        // explicit `*` entry only when the root also carries explicit-only
+        // leaves (e.g. `[*, json]`), which would otherwise serialize to just
+        // the leaves and read back as "only those fields". A bare wildcard is
+        // left as empty paths — the conventional "all fields" mask — as before.
+        if self.wildcard && !self.root.children.is_empty() {
+            paths.push(FIELD_PATH_WILDCARD.to_owned());
+        }
         Self::collect_field_paths(&self.root, &mut String::new(), &mut paths);
         FieldMask { paths }
     }
@@ -542,6 +550,27 @@ mod tests {
         let mut tree = FieldMaskTree::default();
         tree.add_field_path_with_exceptions("*", EXC);
         assert!(tree.explicit_children().next().is_none());
+    }
+
+    #[test]
+    fn star_wildcard_with_explicit_leaf_round_trips() {
+        let mut tree = FieldMaskTree::default();
+        for path in ["*", "json"] {
+            tree.add_field_path_with_exceptions(path, EXC);
+        }
+        // Serialization keeps the wildcard alongside the explicit-only leaf,
+        // rather than collapsing to just `json` (which would read as "only
+        // json" and drop everything else).
+        assert_eq!(tree.to_string(), "*,json");
+
+        // Re-parsing with the same exceptions yields the same selection.
+        let reparsed = FieldMaskTree::from_field_mask_with_exceptions(&tree.to_field_mask(), EXC);
+        assert!(reparsed.contains("reference"));
+        let kids: Vec<&str> = reparsed.explicit_children().collect();
+        assert_eq!(kids, vec!["json"]);
+
+        // A bare wildcard still serializes to the empty "all fields" mask.
+        assert!(FieldMaskTree::new_wildcard().to_field_mask().paths.is_empty());
     }
 
     #[test]
