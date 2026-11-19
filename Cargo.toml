@@ -43,7 +43,6 @@ graphql-ws-client = { version = "0.13", default-features = false, features = ["c
 hex = "0.4.3"
 js-sys = "0.3"
 paste = "1.0.15"
-primitive-types = { version = "0.14", features = ["impl-serde"] }
 proc-macro2 = "1"
 proptest = { version = "1.11.0", default-features = false }
 prost = "0.14"
