@@ -42,7 +42,8 @@ macro_rules! field_mask {
 /// subsumed by broader (ancestor) paths.
 ///
 /// A path `"a.b"` is subsumed by `"a"` because requesting `"a"` already
-/// includes all of its sub-fields. Exact duplicates are also removed.
+/// includes all of its sub-fields, and every ordinary path is subsumed by the
+/// `"*"` wildcard. Exact duplicates are also removed.
 ///
 /// A path that names a server-rendered field
 /// ([`field::SERVER_RENDERED_FIELD_NAMES`]) in any component is **not**
@@ -69,11 +70,20 @@ macro_rules! field_mask {
 ///     field_mask_normalize("output_objects,output_objects.display.fields"),
 ///     "output_objects,output_objects.display.fields"
 /// );
+/// // The `*` wildcard subsumes ordinary siblings, in either order...
+/// assert_eq!(field_mask_normalize("*,reference"), "*");
+/// assert_eq!(field_mask_normalize("reference,*"), "*");
+/// // ...but a server-rendered path still survives alongside it.
+/// assert_eq!(
+///     field_mask_normalize("*,output_objects.json"),
+///     "*,output_objects.json"
+/// );
 /// ```
 pub fn field_mask_normalize(mask: &str) -> String {
     let mut paths: Vec<&str> = mask.split(',').filter(|s| !s.is_empty()).collect();
-    // Sort by length so broader (shorter) paths are processed first.
-    paths.sort_by_key(|p| p.len());
+    // Process the `*` wildcard first (it subsumes every ordinary path), then
+    // shorter paths before longer ones so a parent is seen before its children.
+    paths.sort_by_key(|p| (*p != field::FIELD_PATH_WILDCARD, p.len()));
 
     let mut result: Vec<&str> = Vec::new();
     for path in paths {
@@ -83,8 +93,9 @@ pub fn field_mask_normalize(mask: &str) -> String {
         let subsumed = result.iter().any(|&kept| {
             path == kept
                 || (!explicit_only
-                    && path.starts_with(kept)
-                    && path.as_bytes().get(kept.len()) == Some(&b'.'))
+                    && (kept == field::FIELD_PATH_WILDCARD
+                        || (path.starts_with(kept)
+                            && path.as_bytes().get(kept.len()) == Some(&b'.'))))
         });
         if !subsumed {
             result.push(path);
