@@ -29,6 +29,9 @@ impl Digest {
     /// A constant representing the length of a digest in bytes.
     pub const LENGTH: usize = 32;
 
+    /// Length of the longest Base58 encoding of a digest.
+    const MAX_BASE58_LENGTH: usize = 44;
+
     /// A constant representing a zero digest.
     pub const ZERO: Self = Self([0; Self::LENGTH]);
 
@@ -74,7 +77,7 @@ impl Digest {
     pub fn from_base58<T: AsRef<[u8]>>(base58: T) -> Result<Self, DigestParseError> {
         let base58 = base58.as_ref();
         // No digest encodes to more, so longer input is rejected without decoding.
-        if base58.len() > MAX_BASE58_LENGTH {
+        if base58.len() > Self::MAX_BASE58_LENGTH {
             return Err(DigestParseError::InvalidBase58Length {
                 actual: base58.len(),
             });
@@ -298,13 +301,11 @@ pub enum DigestParseError {
     #[error("invalid Base58 string")]
     InvalidBase58,
     #[error(
-        "invalid digest Base58 length: expected at most {MAX_BASE58_LENGTH} characters, got {actual}"
+        "invalid digest Base58 length: expected at most {} characters, got {actual}",
+        Digest::MAX_BASE58_LENGTH
     )]
     InvalidBase58Length { actual: usize },
 }
-
-/// Length of the longest Base58 encoding of a [`Digest`].
-const MAX_BASE58_LENGTH: usize = 44;
 
 // Don't implement like the other digest type since this isn't intended to be
 // serialized
@@ -660,12 +661,12 @@ mod tests {
             Err(DigestParseError::InvalidByteLength { actual: 40 })
         );
 
-        let long_base58 = "1".repeat(MAX_BASE58_LENGTH + 1);
+        let long_base58 = "1".repeat(Digest::MAX_BASE58_LENGTH + 1);
         let result = Digest::from_base58(&long_base58);
         assert_eq!(
             result,
             Err(DigestParseError::InvalidBase58Length {
-                actual: MAX_BASE58_LENGTH + 1
+                actual: Digest::MAX_BASE58_LENGTH + 1
             })
         );
     }
@@ -673,7 +674,7 @@ mod tests {
     #[test]
     fn longest_base58_encoding_parses() {
         let base58 = Digest::new([0xff; Digest::LENGTH]).to_base58();
-        assert_eq!(base58.len(), MAX_BASE58_LENGTH);
+        assert_eq!(base58.len(), Digest::MAX_BASE58_LENGTH);
         assert!(Digest::from_base58(&base58).is_ok());
     }
 
