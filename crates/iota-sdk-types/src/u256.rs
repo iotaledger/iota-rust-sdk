@@ -70,6 +70,7 @@ macro_rules! impl_from_primitive {
         )+
     };
 }
+
 impl_from_primitive!(u8, u16, u32, u64, u128);
 
 impl std::str::FromStr for U256 {
