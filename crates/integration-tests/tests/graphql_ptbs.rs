@@ -17,7 +17,7 @@ use iota_transaction_builder::{
 };
 use iota_types::{
     Address, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectType, Transaction,
-    TransactionEffects, UpgradePolicy,
+    TransactionEffects, U256, UpgradePolicy,
 };
 
 /// This is used to read the json file that contains the modules/deps/digest
@@ -131,6 +131,53 @@ async fn test_move_call() {
 
     let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
+}
+
+/// Execute `0x1::u256::try_as_u128(value)` and unwrap its result. The second
+/// command aborts if the `u256` Move read does not fit in a `u128`.
+async fn execute_u256_as_u128(
+    value: impl FnOnce(&mut TransactionBuilder<GraphQLClient>) -> Argument,
+) -> ExecutionStatus {
+    let (mut tx, _, pk, _) = helper_setup().await;
+    let value = value(&mut tx);
+    let as_u128 = tx
+        .move_call(Address::STD, "u256", "try_as_u128")
+        .arguments([value])
+        .result();
+    tx.move_call(Address::STD, "option", "destroy_some")
+        .generics::<u128>()
+        .arguments([as_u128]);
+
+    match tx
+        .execute(&pk, WaitForTransaction::Finalized)
+        .await
+        .unwrap()
+    {
+        TransactionEffects::V1(v1) => v1.status,
+        _ => unimplemented!(
+            "a new TransactionEffects enum variant was added and needs to be handled"
+        ),
+    }
+}
+
+#[tokio::test]
+async fn test_u256_argument() {
+    // 2^112, which fits in a `u128`.
+    let mut two_pow_112 = [0; U256::LENGTH];
+    two_pow_112[14] = 1;
+
+    for value in [U256::ONE, U256::from_le_bytes(two_pow_112)] {
+        assert_eq!(
+            execute_u256_as_u128(|tx| tx.apply_argument(value)).await,
+            ExecutionStatus::Success,
+            "U256 argument {value}"
+        );
+        assert_eq!(
+            execute_u256_as_u128(|tx| tx.pure(value)).await,
+            ExecutionStatus::Success,
+            "U256 through pure {value}"
+        );
+    }
 }
 
 #[tokio::test]
