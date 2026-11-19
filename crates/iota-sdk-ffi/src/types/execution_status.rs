@@ -5,7 +5,11 @@ use std::sync::Arc;
 
 use iota_sdk::types::Identifier;
 
-use crate::types::{address::Address, digest::Digest, object::ObjectId};
+use crate::types::{
+    address::Address,
+    digest::{Digest, TransactionDigest},
+    object::ObjectId,
+};
 
 /// The status of an executed Transaction
 ///
@@ -218,6 +222,9 @@ pub enum ExecutionError {
     /// An account must be shared so that a transaction carrying a Move
     /// authenticator is ordered by consensus.
     AccountNotSharedObject { object_id: Arc<ObjectId> },
+    /// The transaction named as a dependency did not execute successfully, so
+    /// this transaction failed without running its commands.
+    TransactionDependencyFailed { dependency: Arc<TransactionDigest> },
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another
@@ -409,6 +416,11 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                     object_id: Arc::new(object_id.into()),
                 }
             }
+            iota_sdk::types::ExecutionError::TransactionDependencyFailed { dependency } => {
+                Self::TransactionDependencyFailed {
+                    dependency: Arc::new(dependency.into()),
+                }
+            }
             _ => unimplemented!(
                 "a new ExecutionError enum variant was added and needs to be handled"
             ),
@@ -561,6 +573,11 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             ExecutionError::AccountNotSharedObject { object_id } => Self::AccountNotSharedObject {
                 object_id: **object_id,
             },
+            ExecutionError::TransactionDependencyFailed { dependency } => {
+                Self::TransactionDependencyFailed {
+                    dependency: **dependency,
+                }
+            }
         }
     }
 }
@@ -878,3 +895,23 @@ crate::export_iota_types_display!(
     TypeArgumentError
 );
 crate::export_iota_types_objects_display!(ExecutionErrorWrapper);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn transaction_dependency_failed_converts_both_ways() {
+        let error = iota_sdk::types::ExecutionError::TransactionDependencyFailed {
+            dependency: iota_sdk::types::TransactionDigest::new([7; 32]),
+        };
+
+        let ffi_error = ExecutionError::from(error.clone());
+
+        assert!(matches!(
+            ffi_error,
+            ExecutionError::TransactionDependencyFailed { .. }
+        ));
+        assert_eq!(iota_sdk::types::ExecutionError::from(ffi_error), error);
+    }
+}
