@@ -499,7 +499,7 @@ release-examples: ## Run all release examples
 .PHONY: bcs-schema
 bcs-schema: ## Regenerate bcs-schema.abnf
 	@printf "Regenerating bcs-schema.abnf...\n"
-	@BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash,unstable || exit $$?
+	@BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash || exit $$?
 	@BCS_SCHEMA=1 cargo check -p iota-sdk-move-types --features bcs-schema || exit $$?
 
 .PHONY: grpc
