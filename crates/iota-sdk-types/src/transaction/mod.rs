@@ -2036,7 +2036,7 @@ impl ClaimAccountTransaction {
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum AccountClaimKind {
-    /// Create an `iota::smart_account::SmartAccount` at the claimed address.
+    /// Create an `iota::smart_account::SmartAccount` for the claimed address.
     SmartAccount(SmartAccountClaim),
 }
 
