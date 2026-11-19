@@ -22,6 +22,10 @@ const FAUCET_POLL_INTERVAL: Duration = Duration::from_secs(2);
 pub enum FaucetError {
     #[error("Cannot fetch request status due to a bad gateway.")]
     BadGateway,
+    #[error("Faucet request {0} was discarded")]
+    Discarded(String),
+    #[error("Invalid faucet request id `{0}`: expected a UUID")]
+    InvalidRequestId(String),
     #[error("Invalid faucet URL: {0}")]
     InvalidUrl(#[from] url::ParseError),
     #[error("Faucet request was unsuccessful: {0}")]
@@ -32,7 +36,9 @@ pub enum FaucetError {
     StatusCode(StatusCode),
     #[error("Faucet request timed out")]
     TimedOut,
-    #[deprecated(note = "no longer returned; an `https` request without TLS fails with `Reqwest`")]
+    #[deprecated(
+        note = "no longer returned; an `https` request without TLS fails with `Reqwest` unless a proxy is set"
+    )]
     #[error(
         "Faucet URL scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass \
          your own client to `new_with_reqwest_client`"
@@ -123,8 +129,13 @@ impl FaucetClient {
         faucet_url: &str,
         client: reqwest::Client,
     ) -> Result<Self, FaucetError> {
+        let mut faucet_url = Url::parse(faucet_url)?;
+        if !faucet_url.path().ends_with('/') {
+            let path = format!("{}/", faucet_url.path());
+            faucet_url.set_path(&path);
+        }
         Ok(FaucetClient {
-            faucet_url: Url::parse(faucet_url)?,
+            faucet_url,
             inner: client,
         })
     }
@@ -150,8 +161,8 @@ impl FaucetClient {
                 "recipient": &address
             }
         }];
-        let url = format!("{}v1/gas", self.faucet_url);
-        debug!(address, "url.full" = url, "requesting gas from faucet");
+        let url = self.faucet_url.join("v1/gas")?;
+        debug!(address, "url.full" = %url, "requesting gas from faucet");
         let resp = self
             .inner
             .post(url)
@@ -184,7 +195,8 @@ impl FaucetClient {
     /// Request gas from the faucet and wait until the request is completed and
     /// token is transferred. Returns `FaucetReceipt` if the request is
     /// successful, which contains the list of tokens transferred, and the
-    /// transaction digest.
+    /// transaction digest. Returns [`FaucetError::Discarded`] if the faucet
+    /// discards the request.
     ///
     /// Note that the faucet is heavily rate-limited, so calling repeatedly the
     /// faucet would likely result in a 429 code or 502 code.
@@ -211,10 +223,8 @@ impl FaucetClient {
                                 break Ok::<_, FaucetError>(status_response);
                             }
                             BatchSendStatusType::Discarded => {
-                                break Ok(BatchSendStatus {
-                                    status: BatchSendStatusType::Discarded,
-                                    transferred_gas_objects: None,
-                                });
+                                debug!(request_id, "faucet request discarded");
+                                break Err(FaucetError::Discarded(request_id.clone()));
                             }
                             // Still pending — fall through to the poll interval and retry.
                             BatchSendStatusType::InProgress => {}
@@ -242,7 +252,8 @@ impl FaucetClient {
     /// Request gas from the faucet and wait until the request is completed and
     /// token is transferred and finalized on the ledger. Returns
     /// `FaucetReceipt` if the request is successful, which contains the
-    /// list of tokens transferred, and the transaction digest.
+    /// list of tokens transferred, and the transaction digest. Returns
+    /// [`FaucetError::Discarded`] if the faucet discards the request.
     ///
     /// This is a convenience method that combines `request_and_wait` and
     /// waiting for the funding transactions to be finalized using the provided
@@ -274,10 +285,14 @@ impl FaucetClient {
     /// Check the faucet request status.
     ///
     /// Possible statuses are defined in: [`BatchSendStatusType`]
+    ///
+    /// Returns [`FaucetError::InvalidRequestId`] without sending a request if
+    /// `id` is empty or contains anything other than ASCII letters, digits,
+    /// `-`, `{`, `}` and `:`, which covers the UUID forms the faucet accepts.
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>, FaucetError> {
-        let status_url = format!("{}v1/status/{}", self.faucet_url, id);
-        debug!("url.full" = status_url, "checking faucet request status");
-        let response = self.inner.get(&status_url).send().await?;
+        let status_url = self.status_url(&id)?;
+        debug!("url.full" = %status_url, "checking faucet request status");
+        let response = self.inner.get(status_url).send().await?;
 
         if response.status() == StatusCode::TOO_MANY_REQUESTS {
             return Err(FaucetError::TooManyRequests);
@@ -288,5 +303,83 @@ impl FaucetClient {
         let json = response.json::<BatchStatusFaucetResponse>().await?;
 
         Ok(json.status)
+    }
+
+    fn status_url(&self, id: &str) -> Result<Url, FaucetError> {
+        if id.is_empty()
+            || !id
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'{' | b'}' | b':'))
+        {
+            return Err(FaucetError::InvalidRequestId(id.to_owned()));
+        }
+        Ok(self.faucet_url.join(&format!("v1/status/{id}"))?)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn gas_url(base: &str) -> String {
+        FaucetClient::new(base)
+            .unwrap()
+            .faucet_url
+            .join("v1/gas")
+            .unwrap()
+            .to_string()
+    }
+
+    #[test]
+    fn endpoints_keep_the_base_path() {
+        assert_eq!(gas_url("http://host:9123"), "http://host:9123/v1/gas");
+        assert_eq!(gas_url("http://host:9123/"), "http://host:9123/v1/gas");
+        assert_eq!(gas_url("https://host/faucet"), "https://host/faucet/v1/gas");
+        assert_eq!(
+            gas_url("https://host/faucet/"),
+            "https://host/faucet/v1/gas"
+        );
+    }
+
+    #[test]
+    fn status_url_takes_the_id_as_one_segment() {
+        let client = FaucetClient::new("https://host/faucet").unwrap();
+        assert_eq!(
+            client
+                .status_url("11111111-2222-3333-4444-555555555555")
+                .unwrap()
+                .as_str(),
+            "https://host/faucet/v1/status/11111111-2222-3333-4444-555555555555"
+        );
+        assert_eq!(
+            client
+                .status_url("{11111111-2222-3333-4444-555555555555}")
+                .unwrap()
+                .as_str(),
+            "https://host/faucet/v1/status/%7B11111111-2222-3333-4444-555555555555%7D"
+        );
+        assert_eq!(
+            client
+                .status_url("urn:uuid:11111111-2222-3333-4444-555555555555")
+                .unwrap()
+                .as_str(),
+            "https://host/faucet/v1/status/urn:uuid:11111111-2222-3333-4444-555555555555"
+        );
+        for id in [
+            "",
+            ".",
+            "..",
+            "../../graphql",
+            "x?y=1",
+            "x#frag",
+            "a\nb",
+            "a/b",
+            "a%2Fb",
+        ] {
+            assert!(
+                matches!(client.status_url(id), Err(FaucetError::InvalidRequestId(_))),
+                "{id:?} was accepted"
+            );
+        }
     }
 }

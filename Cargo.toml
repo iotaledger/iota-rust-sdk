@@ -52,6 +52,7 @@ quote = "1"
 rand = "0.10.2"
 rand_core = "0.10.1"
 reqwest = { version = "0.13", default-features = false }
+semver = "1.0.20"
 serde = "1.0.229"
 serde_json = "1.0.151"
 strum = "0.28.0"
@@ -76,7 +77,6 @@ iota-crypto = { version = "1.0.0-rc.2", package = "iota-sdk-crypto", path = "cra
 iota-graphql-client = { version = "1.0.0-rc.2", package = "iota-sdk-graphql-client", path = "crates/iota-sdk-graphql-client", default-features = false }
 iota-graphql-client-build = { version = "1.0.0-rc.1", package = "iota-sdk-graphql-client-build", path = "crates/iota-sdk-graphql-client-build", default-features = false }
 iota-grpc-client = { version = "1.0.0-rc.2", package = "iota-sdk-grpc-client", path = "crates/iota-sdk-grpc-client", default-features = false }
-iota-grpc-proto-build = { version = "0.0.1-alpha.1", package = "iota-sdk-grpc-proto-build", path = "crates/iota-sdk-grpc-proto-build", default-features = false }
 iota-grpc-types = { version = "1.0.0-rc.1", package = "iota-sdk-grpc-types", path = "crates/iota-sdk-grpc-types", default-features = false }
 iota-move-types = { version = "1.0.0-rc.2", package = "iota-sdk-move-types", path = "crates/iota-sdk-move-types", default-features = false }
 iota-sdk = { version = "3.0.0-rc.1", package = "iota-sdk", path = "crates/iota-sdk", default-features = false }

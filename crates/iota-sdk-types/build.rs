@@ -34,13 +34,16 @@ fn touch_all_rs(dir: &Path) {
     let Ok(entries) = std::fs::read_dir(dir) else {
         return;
     };
-    let now = filetime::FileTime::now();
+    let now = std::time::SystemTime::now();
     for entry in entries.flatten() {
         let path = entry.path();
         if path.is_dir() {
             touch_all_rs(&path);
         } else if path.extension().is_some_and(|ext| ext == "rs") {
-            let _ = filetime::set_file_mtime(&path, now);
+            let _ = std::fs::File::options()
+                .write(true)
+                .open(&path)
+                .and_then(|file| file.set_modified(now));
         }
     }
 }
