@@ -111,9 +111,8 @@ impl Object {
 
     /// Get the JSON rendering of the object's Move contents.
     ///
-    /// **Read mask:** `"json"` (see [`OBJECT_JSON`]).
-    ///
-    /// [`OBJECT_JSON`]: crate::read_masks::OBJECT_JSON
+    /// **Read mask:** `"json"` (see
+    /// [`OBJECT_JSON`](crate::read_masks::OBJECT_JSON)).
     pub fn json(&self) -> Result<serde_json::Value, TryFromProtoError> {
         self.json
             .as_ref()
@@ -123,9 +122,8 @@ impl Object {
 
     /// Get the object's on-chain Display template render.
     ///
-    /// **Read mask:** `"display"` (see [`OBJECT_DISPLAY`]).
-    ///
-    /// [`OBJECT_DISPLAY`]: crate::read_masks::OBJECT_DISPLAY
+    /// **Read mask:** `"display"` (see
+    /// [`OBJECT_DISPLAY`](crate::read_masks::OBJECT_DISPLAY)).
     pub fn display(&self) -> Result<&Display, TryFromProtoError> {
         self.display
             .as_ref()

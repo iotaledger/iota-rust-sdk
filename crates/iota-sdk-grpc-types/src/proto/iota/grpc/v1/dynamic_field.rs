@@ -11,9 +11,8 @@ use crate::proto::TryFromProtoError;
 impl DynamicField {
     /// Get the JSON rendering of the dynamic field's "name".
     ///
-    /// **Read mask:** `"json_name"` (see [`DYNAMIC_FIELD_JSON_NAME`]).
-    ///
-    /// [`DYNAMIC_FIELD_JSON_NAME`]: crate::read_masks::DYNAMIC_FIELD_JSON_NAME
+    /// **Read mask:** `"json_name"` (see
+    /// [`DYNAMIC_FIELD_JSON_NAME`](crate::read_masks::DYNAMIC_FIELD_JSON_NAME)).
     pub fn json_name(&self) -> Result<serde_json::Value, TryFromProtoError> {
         self.json_name
             .as_ref()
