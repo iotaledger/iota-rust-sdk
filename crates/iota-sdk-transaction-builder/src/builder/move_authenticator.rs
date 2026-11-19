@@ -128,6 +128,7 @@ impl MoveAuthenticatorBuilder {
                         "call arguments must not be receiving".to_owned(),
                     ));
                 }
+                #[cfg(feature = "unstable")]
                 InputKind::Input(Input::TransactionDependency(_)) => {
                     return Err(TransactionBuilderError::InvalidMoveAuthArg(
                         "call arguments must not be a transaction dependency".to_owned(),

@@ -3,6 +3,8 @@
 
 use std::sync::{Arc, RwLock};
 
+#[cfg(feature = "unstable")]
+use crate::types::digest::TransactionDigest;
 use crate::{
     error::Result,
     graphql::output_types::GraphQLDryRunResult,
@@ -14,7 +16,7 @@ use crate::{
     },
     types::{
         address::Address,
-        digest::{Digest, TransactionDigest},
+        digest::Digest,
         move_core::{Identifier, TypeTag},
         move_package::{MovePackageData, UpgradePolicy},
         object::ObjectId,
@@ -102,22 +104,6 @@ macro_rules! client_transaction_builder {
             pub fn expiration(self: Arc<Self>, epoch: u64) -> Arc<Self> {
                 self.write(|builder| {
                     builder.expiration(epoch);
-                });
-                self
-            }
-
-            /// Make the transaction depend on the transaction `digest`: it
-            /// executes only after `digest` executed successfully in the
-            /// current epoch.
-            ///
-            /// The transaction must also have an epoch expiration, set with
-            /// `expiration`. Calling this again replaces the digest.
-            pub fn transaction_dependency(
-                self: Arc<Self>,
-                digest: &TransactionDigest,
-            ) -> Arc<Self> {
-                self.write(|builder| {
-                    builder.transaction_dependency(digest.0);
                 });
                 self
             }
@@ -557,6 +543,26 @@ macro_rules! client_transaction_builder {
                     })
                     .await?
                     .into())
+            }
+        }
+
+        #[cfg(feature = "unstable")]
+        #[uniffi::export]
+        impl $name {
+            /// Make the transaction depend on the transaction `digest`: it
+            /// executes only after `digest` executed successfully in the
+            /// current epoch.
+            ///
+            /// The transaction must also have an epoch expiration, set with
+            /// `expiration`. Calling this again replaces the digest.
+            pub fn transaction_dependency(
+                self: Arc<Self>,
+                digest: &TransactionDigest,
+            ) -> Arc<Self> {
+                self.write(|builder| {
+                    builder.transaction_dependency(digest.0);
+                });
+                self
             }
         }
     };

@@ -5,11 +5,9 @@ use std::sync::Arc;
 
 use iota_sdk::types::Identifier;
 
-use crate::types::{
-    address::Address,
-    digest::{Digest, TransactionDigest},
-    object::ObjectId,
-};
+#[cfg(feature = "unstable")]
+use crate::types::digest::TransactionDigest;
+use crate::types::{address::Address, digest::Digest, object::ObjectId};
 
 /// The status of an executed Transaction
 ///
@@ -224,6 +222,7 @@ pub enum ExecutionError {
     AccountNotSharedObject { object_id: Arc<ObjectId> },
     /// The transaction named as a dependency did not execute successfully, so
     /// this transaction failed without running its commands.
+    #[cfg(feature = "unstable")]
     TransactionDependencyFailed { dependency: Arc<TransactionDigest> },
 }
 
@@ -416,6 +415,7 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                     object_id: Arc::new(object_id.into()),
                 }
             }
+            #[cfg(feature = "unstable")]
             iota_sdk::types::ExecutionError::TransactionDependencyFailed { dependency } => {
                 Self::TransactionDependencyFailed {
                     dependency: Arc::new(dependency.into()),
@@ -573,6 +573,7 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
             ExecutionError::AccountNotSharedObject { object_id } => Self::AccountNotSharedObject {
                 object_id: **object_id,
             },
+            #[cfg(feature = "unstable")]
             ExecutionError::TransactionDependencyFailed { dependency } => {
                 Self::TransactionDependencyFailed {
                     dependency: **dependency,
@@ -896,7 +897,7 @@ crate::export_iota_types_display!(
 );
 crate::export_iota_types_objects_display!(ExecutionErrorWrapper);
 
-#[cfg(test)]
+#[cfg(all(test, feature = "unstable"))]
 mod tests {
     use super::*;
 

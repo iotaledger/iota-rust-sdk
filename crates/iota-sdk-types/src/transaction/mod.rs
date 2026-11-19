@@ -1395,6 +1395,7 @@ pub enum Input {
     /// transaction writes is therefore admitted only once the named
     /// transaction has executed on that validator; until then it is rejected
     /// with a retriable error.
+    #[cfg(feature = "unstable")]
     TransactionDependency(TransactionDigest),
 }
 
@@ -1424,8 +1425,7 @@ impl Input {
         Pure(Vec<u8>),
         ImmutableOrOwned(ObjectReference),
         Shared(SharedObjectReference),
-        Receiving(ObjectReference),
-        TransactionDependency(TransactionDigest)
+        Receiving(ObjectReference)
     );
 
     /// Create a `Pure` input from a BCS-serializable value.
@@ -1439,7 +1439,9 @@ impl Input {
     /// Returns `None` for `Pure` and `TransactionDependency` inputs.
     pub fn opt_object_id(&self) -> Option<&ObjectId> {
         match self {
-            Self::Pure { .. } | Self::TransactionDependency(_) => None,
+            Self::Pure { .. } => None,
+            #[cfg(feature = "unstable")]
+            Self::TransactionDependency(_) => None,
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(&obj_ref.object_id),
             Self::Shared(SharedObjectReference { object_id, .. }) => Some(object_id),
         }
@@ -1463,6 +1465,11 @@ impl Input {
     }
 }
 
+#[cfg(feature = "unstable")]
+impl Input {
+    crate::def_is_as_into_opt!(TransactionDependency(TransactionDigest));
+}
+
 impl crate::TreeDisplay for Input {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.enum_name("Input");
@@ -1483,6 +1490,7 @@ impl crate::TreeDisplay for Input {
                 w.header("Receiving")?;
                 w.inline_child(obj_ref)
             }
+            #[cfg(feature = "unstable")]
             Self::TransactionDependency(digest) => {
                 w.header("Transaction Dependency")?;
                 w.leaf("Digest", digest, true)

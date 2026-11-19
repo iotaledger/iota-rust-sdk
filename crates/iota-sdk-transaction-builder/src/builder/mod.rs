@@ -226,6 +226,7 @@ impl TransactionBuildData {
 
     /// Check that there is at most one transaction dependency input and that
     /// no command uses it.
+    #[cfg(feature = "unstable")]
     fn check_transaction_dependency(&self) -> Result<(), TransactionBuilderError> {
         let mut dependencies = self
             .inputs
@@ -253,6 +254,7 @@ impl TransactionBuildData {
 
     /// Check that a transaction with a transaction dependency input has an
     /// epoch expiration.
+    #[cfg(feature = "unstable")]
     fn check_transaction_dependency_expiration(&self) -> Result<(), TransactionBuilderError> {
         if !matches!(self.expiration, TransactionExpiration::Epoch(_))
             && self.inputs.values().any(Input::is_transaction_dependency)
@@ -292,6 +294,7 @@ impl TransactionBuildData {
     /// The transaction must also have an epoch expiration, set with
     /// [`expiration`](Self::expiration). Calling this again replaces the
     /// digest.
+    #[cfg(feature = "unstable")]
     pub fn transaction_dependency(&mut self, digest: TransactionDigest) -> &mut Self {
         let dependency = InputKind::Input(iota_types::Input::TransactionDependency(digest));
         if let Some(input) = self
@@ -603,6 +606,7 @@ impl<C, L> TransactionBuilder<C, L> {
     /// The transaction must also have an epoch expiration, set with
     /// [`expiration`](Self::expiration). Calling this again replaces the
     /// digest.
+    #[cfg(feature = "unstable")]
     pub fn transaction_dependency(&mut self, digest: TransactionDigest) -> &mut Self {
         self.data.transaction_dependency(digest);
         self
@@ -1501,7 +1505,9 @@ impl<L> TransactionBuilder<(), L> {
 
     /// Convert this builder into a transaction.
     pub fn finish(mut self) -> Result<Transaction, TransactionBuilderError> {
+        #[cfg(feature = "unstable")]
         self.data.check_transaction_dependency()?;
+        #[cfg(feature = "unstable")]
         self.data.check_transaction_dependency_expiration()?;
         let Some(price) = self.data.gas_price else {
             return Err(TransactionBuilderError::MissingGasPrice);
@@ -1958,7 +1964,9 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
         &mut self,
         default_gas: bool,
     ) -> Result<Transaction, TransactionBuilderError> {
+        #[cfg(feature = "unstable")]
         self.data.check_transaction_dependency()?;
+        #[cfg(feature = "unstable")]
         self.data.check_transaction_dependency_expiration()?;
         if default_gas {
             self.select_default_gas().await?;
@@ -2008,10 +2016,12 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// so this costs nothing beyond resolving the inputs. Any gas set with
     /// [`gas`](Self::gas) or [`gas_refs`](Self::gas_refs), and the sponsor,
     /// price, budget and expiration, are not part of a
-    /// [`TransactionKind`] and are dropped. If a
-    /// [`transaction_dependency`](Self::transaction_dependency) is set, the
-    /// transaction made from the kind needs an epoch expiration.
-    ///
+    /// [`TransactionKind`] and are dropped.
+    #[cfg_attr(
+        feature = "unstable",
+        doc = "If a [`transaction_dependency`](Self::transaction_dependency) is set, the",
+        doc = "transaction made from the kind needs an epoch expiration."
+    )]
     /// # Example
     ///
     /// ```
@@ -2039,6 +2049,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// # }
     /// ```
     pub async fn finish_kind(mut self) -> Result<TransactionKind, TransactionBuilderError> {
+        #[cfg(feature = "unstable")]
         self.data.check_transaction_dependency()?;
         let (kind, _gas) = self.resolve_kind().await?;
         Ok(kind)
@@ -3482,6 +3493,7 @@ mod tests {
     /// The network rejects a transaction with more than one transaction
     /// dependency input, with a command that uses one, or with one but no
     /// epoch expiration.
+    #[cfg(feature = "unstable")]
     mod transaction_dependency {
         use super::*;
 

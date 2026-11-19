@@ -345,7 +345,11 @@ impl Input {
     pub fn new_receiving(object_ref: ObjectReference) -> Self {
         Self(iota_sdk::types::Input::Receiving(object_ref.into()))
     }
+}
 
+#[cfg(feature = "unstable")]
+#[uniffi::export]
+impl Input {
     /// A transaction this transaction depends on: the transaction is valid
     /// only once the named transaction executed successfully, in the current
     /// epoch, and no command may use this input.

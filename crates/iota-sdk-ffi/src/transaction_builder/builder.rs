@@ -148,18 +148,6 @@ impl TransactionBuilder {
         self
     }
 
-    /// Make the transaction depend on the transaction `digest`: it executes
-    /// only after `digest` executed successfully in the current epoch.
-    ///
-    /// The transaction must also have an epoch expiration, set with
-    /// `expiration`. Calling this again replaces the digest.
-    pub fn transaction_dependency(self: Arc<Self>, digest: &TransactionDigest) -> Arc<Self> {
-        self.write(|builder| {
-            builder.transaction_dependency(digest.0);
-        });
-        self
-    }
-
     // Commands
 
     /// Call a Move function with the given arguments.
@@ -546,5 +534,21 @@ impl TransactionBuilder {
             self.read(|builder| builder.clone().with_client(Arc::new(client.client())))
                 .into(),
         )
+    }
+}
+
+#[cfg(feature = "unstable")]
+#[uniffi::export]
+impl TransactionBuilder {
+    /// Make the transaction depend on the transaction `digest`: it executes
+    /// only after `digest` executed successfully in the current epoch.
+    ///
+    /// The transaction must also have an epoch expiration, set with
+    /// `expiration`. Calling this again replaces the digest.
+    pub fn transaction_dependency(self: Arc<Self>, digest: &TransactionDigest) -> Arc<Self> {
+        self.write(|builder| {
+            builder.transaction_dependency(digest.0);
+        });
+        self
     }
 }

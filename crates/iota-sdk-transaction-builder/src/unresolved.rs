@@ -38,7 +38,9 @@ impl Input {
             | InputKind::Shared { object_id, .. }
             | InputKind::Receiving(object_id) => Some(object_id),
             InputKind::Input(input) => match input {
-                iota_types::Input::Pure(..) | iota_types::Input::TransactionDependency(_) => None,
+                iota_types::Input::Pure(..) => None,
+                #[cfg(feature = "unstable")]
+                iota_types::Input::TransactionDependency(_) => None,
                 iota_types::Input::ImmutableOrOwned(ObjectReference { object_id, .. })
                 | iota_types::Input::Shared(SharedObjectReference { object_id, .. })
                 | iota_types::Input::Receiving(ObjectReference { object_id, .. }) => {
@@ -49,6 +51,7 @@ impl Input {
         }
     }
 
+    #[cfg(feature = "unstable")]
     pub(crate) fn is_transaction_dependency(&self) -> bool {
         matches!(
             self.kind,

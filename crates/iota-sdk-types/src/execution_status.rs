@@ -4,7 +4,9 @@
 
 use thiserror::Error;
 
-use super::{Address, Digest, Identifier, ObjectId, TransactionDigest};
+#[cfg(feature = "unstable")]
+use super::TransactionDigest;
+use super::{Address, Digest, Identifier, ObjectId};
 
 /// The status of an executed Transaction
 ///
@@ -388,6 +390,9 @@ pub enum ExecutionError {
     AccountNotSharedObject { object_id: ObjectId },
     /// The transaction named as a dependency did not execute successfully, so
     /// this transaction failed without running its commands.
+    // Keep this variant last while it is gated: BCS tags follow variant order,
+    // so a variant after it would get another tag without `unstable`.
+    #[cfg(feature = "unstable")]
     #[error(
         "Transaction {dependency} that this transaction depends on did not execute successfully"
     )]
@@ -441,12 +446,16 @@ impl ExecutionError {
         MoveRawValueTooBig,
         AuthenticatorFunctionNotFound,
         AccountNotSharedObject,
-        TransactionDependencyFailed,
     );
 
     pub fn command_argument_error(kind: CommandArgumentError, argument: u16) -> Self {
         Self::CommandArgumentError { argument, kind }
     }
+}
+
+#[cfg(feature = "unstable")]
+impl ExecutionError {
+    crate::def_is!(TransactionDependencyFailed);
 }
 
 /// Location in move bytecode where an error occurred

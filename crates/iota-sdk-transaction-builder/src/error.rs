@@ -45,8 +45,10 @@ pub enum TransactionBuilderError {
         "command {command} refers to {argument:?}, which is neither an input of the transaction nor the result of an earlier command"
     )]
     InvalidArgument { command: usize, argument: Argument },
+    #[cfg(feature = "unstable")]
     #[error("a transaction can have at most one transaction dependency input")]
     MultipleTransactionDependencies,
+    #[cfg(feature = "unstable")]
     #[error(
         "argument {argument_index} of command {command} is the transaction dependency input, which no command may use"
     )]
@@ -54,6 +56,7 @@ pub enum TransactionBuilderError {
         command: usize,
         argument_index: usize,
     },
+    #[cfg(feature = "unstable")]
     #[error("a transaction with a transaction dependency input must set an epoch expiration")]
     TransactionDependencyRequiresExpiration,
     #[error("Invalid account for move authenticator: {0}")]
