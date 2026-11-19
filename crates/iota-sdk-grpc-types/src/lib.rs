@@ -44,10 +44,14 @@ macro_rules! field_mask {
 /// A path `"a.b"` is subsumed by `"a"` because requesting `"a"` already
 /// includes all of its sub-fields. Exact duplicates are also removed.
 ///
-/// A path whose leaf is a server-rendered field
-/// ([`field::SERVER_RENDERED_FIELD_NAMES`]) is **not** subsumed by its parent:
-/// the server renders these only when named explicitly, so
-/// `"output_objects,output_objects.json"` keeps both paths.
+/// A path that names a server-rendered field
+/// ([`field::SERVER_RENDERED_FIELD_NAMES`]) in any component is **not**
+/// subsumed by its parent: the server renders these only when named explicitly,
+/// so `"output_objects,output_objects.json"` keeps both paths. Matching any
+/// component (not just the leaf) also keeps a sub-path into one, such as
+/// `"output_objects.display.fields"`, in step with
+/// [`field::FieldMaskTree`]. These names are reserved for server-rendered
+/// fields, so no ordinary path is caught.
 ///
 /// # Examples
 /// ```
@@ -60,6 +64,10 @@ macro_rules! field_mask {
 ///     field_mask_normalize("output_objects,output_objects.json"),
 ///     "output_objects,output_objects.json"
 /// );
+/// assert_eq!(
+///     field_mask_normalize("output_objects,output_objects.display.fields"),
+///     "output_objects,output_objects.display.fields"
+/// );
 /// ```
 pub fn field_mask_normalize(mask: &str) -> String {
     let mut paths: Vec<&str> = mask.split(',').filter(|s| !s.is_empty()).collect();
@@ -68,8 +76,9 @@ pub fn field_mask_normalize(mask: &str) -> String {
 
     let mut result: Vec<&str> = Vec::new();
     for path in paths {
-        let leaf = path.rsplit(field::FIELD_SEPARATOR).next().unwrap_or(path);
-        let explicit_only = field::SERVER_RENDERED_FIELD_NAMES.contains(&leaf);
+        let explicit_only = path
+            .split(field::FIELD_SEPARATOR)
+            .any(|component| field::SERVER_RENDERED_FIELD_NAMES.contains(&component));
         let subsumed = result.iter().any(|&kept| {
             path == kept
                 || (!explicit_only
