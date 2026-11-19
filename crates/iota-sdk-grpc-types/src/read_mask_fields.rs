@@ -39,7 +39,7 @@
 //! A leaf may be requested on its own or alongside a parent — both are kept, so
 //! `[OUTPUT_OBJECTS, OUTPUT_OBJECTS_JSON]` selects every output-object field
 //! *and* the rendered `json`. (The leaf is preserved by
-//! [`field_mask_normalize`](crate::field_mask_normalize) /
+//! [`field_mask_normalize`] /
 //! [`field::SERVER_RENDERED_FIELD_NAMES`](crate::field::SERVER_RENDERED_FIELD_NAMES)
 //! rather than being collapsed into the parent.)
 
