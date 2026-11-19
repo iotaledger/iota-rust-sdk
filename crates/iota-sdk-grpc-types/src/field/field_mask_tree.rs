@@ -64,19 +64,29 @@ impl FieldMaskTree {
     /// output_objects.json]` selects every output-object field **and** the
     /// rendered `json`.
     pub fn add_field_path_with_exceptions(&mut self, path: &str, exceptions: &[&str]) -> &mut Self {
-        if self.wildcard || !is_valid_path(path) {
+        if !is_valid_path(path) {
             return self;
         }
 
         if path == FIELD_PATH_WILDCARD {
             self.wildcard = true;
-            self.root.children.clear();
+            // The `*` wildcard covers every ordinary field, but not the
+            // explicit-only leaves — keep any already selected.
+            self.root.children.retain(|name, child| {
+                exceptions.contains(&name.as_str()) || child.selects_exception(exceptions)
+            });
             return self;
         }
 
         // The leaf decides whether an ancestor wildcard subsumes this path.
         let leaf = path.rsplit(FIELD_SEPARATOR).next().unwrap_or(path);
         let keep_under_wildcard = exceptions.contains(&leaf);
+
+        // The tree-level `*` wildcard subsumes any ordinary path, but an
+        // explicit-only leaf is still added (to the root) alongside it.
+        if self.wildcard && !keep_under_wildcard {
+            return self;
+        }
 
         let mut node = &mut self.root;
         let mut components = path.split(FIELD_SEPARATOR).peekable();
@@ -510,6 +520,28 @@ mod tests {
             .unwrap();
         let kids: Vec<&str> = output_objects.explicit_children().collect();
         assert_eq!(kids, vec!["json"]);
+    }
+
+    #[test]
+    fn explicit_only_leaf_survives_the_star_wildcard() {
+        // `[*, json]` / `[json, *]` — the wildcard plus an explicit-only leaf.
+        for order in [["*", "json"], ["json", "*"]] {
+            let mut tree = FieldMaskTree::default();
+            for path in order {
+                tree.add_field_path_with_exceptions(path, EXC);
+            }
+            // The wildcard still selects every ordinary field...
+            assert!(tree.contains("reference"));
+            assert!(tree.contains("bcs"));
+            // ...and the explicit-only leaf is reported to the gate.
+            let kids: Vec<&str> = tree.explicit_children().collect();
+            assert_eq!(kids, vec!["json"]);
+        }
+
+        // A bare `*` still selects no explicit-only field.
+        let mut tree = FieldMaskTree::default();
+        tree.add_field_path_with_exceptions("*", EXC);
+        assert!(tree.explicit_children().next().is_none());
     }
 
     #[test]
