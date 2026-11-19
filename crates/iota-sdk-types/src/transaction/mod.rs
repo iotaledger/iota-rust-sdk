@@ -2097,7 +2097,6 @@ impl SmartAccountClaim {
     /// The committee is carried BCS encoded, the form the chain decodes it
     /// from.
     #[cfg(feature = "serde")]
-    #[cfg_attr(doc_cfg, doc(cfg(feature = "serde")))]
     pub fn new_multisig(committee: &crate::MultisigCommittee) -> Self {
         Self::new_unchecked(
             SignatureScheme::Multisig,

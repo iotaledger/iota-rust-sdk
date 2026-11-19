@@ -10,14 +10,17 @@ use crate::Address;
 /// address written as `StructTag` displays it.
 const CHECK_V1: &str = "0x2::smart_account_builtin_auth::verify_key_proof";
 
-/// Returns the text a key holder signs, as an IOTA personal message, to
-/// approve attaching their key to a `SmartAccount`.
+/// Returns the text a key holder signs to approve attaching their key to a
+/// `SmartAccount`. The signature is over the UTF-8 bytes of the text, as an
+/// IOTA personal message.
 ///
-/// `chain_identifier` is the digest of the genesis checkpoint, as gRPC's
-/// `ResponseExt::chain_id()` returns it. `account` is the account the key is
-/// attached to, or the transaction sender when `new_account` is `true`.
-/// `nonce` is the nonce of the transaction that attaches the key, and the
-/// proof is valid up to and including `valid_until_epoch`.
+/// - `chain_identifier`: the digest of the genesis checkpoint, as gRPC's
+///   `ResponseExt::chain_id()` returns it.
+/// - `account`: the account the key is attached to, or the transaction sender
+///   when `new_account` is `true`.
+/// - `new_account`: whether the account is new.
+/// - `nonce`: the nonce of the transaction that attaches the key.
+/// - `valid_until_epoch`: the last epoch in which the proof is valid.
 ///
 /// Validators compute the same text to check the proof, so the result for
 /// given values must never change. A new text is a new function.
