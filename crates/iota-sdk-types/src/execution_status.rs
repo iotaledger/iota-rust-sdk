@@ -387,7 +387,7 @@ pub enum ExecutionError {
     #[error("Account {object_id} is not a shared object")]
     AccountNotSharedObject { object_id: ObjectId },
     /// The transaction named as a dependency did not execute successfully, so
-    /// this transaction was cancelled before running any command.
+    /// this transaction failed without running its commands.
     #[error(
         "Transaction {dependency} that this transaction depends on did not execute successfully"
     )]

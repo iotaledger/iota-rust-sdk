@@ -1436,7 +1436,7 @@ impl Input {
 
     /// Returns the object id referenced by this input, if any.
     ///
-    /// Returns `None` for `Pure` inputs.
+    /// Returns `None` for `Pure` and `TransactionDependency` inputs.
     pub fn opt_object_id(&self) -> Option<&ObjectId> {
         match self {
             Self::Pure { .. } | Self::TransactionDependency(_) => None,
