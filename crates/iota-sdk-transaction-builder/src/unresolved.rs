@@ -37,17 +37,7 @@ impl Input {
             InputKind::ImmutableOrOwned(object_id)
             | InputKind::Shared { object_id, .. }
             | InputKind::Receiving(object_id) => Some(object_id),
-            InputKind::Input(input) => match input {
-                iota_types::Input::Pure(..) => None,
-                #[cfg(feature = "unstable")]
-                iota_types::Input::TransactionDependency(_) => None,
-                iota_types::Input::ImmutableOrOwned(ObjectReference { object_id, .. })
-                | iota_types::Input::Shared(SharedObjectReference { object_id, .. })
-                | iota_types::Input::Receiving(ObjectReference { object_id, .. }) => {
-                    Some(object_id)
-                }
-                _ => unimplemented!("a new Input enum variant was added and needs to be handled"),
-            },
+            InputKind::Input(input) => input.opt_object_id(),
         }
     }
 

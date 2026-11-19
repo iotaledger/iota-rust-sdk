@@ -2501,6 +2501,41 @@ mod tests {
         ));
     }
 
+    /// Gas selection finds the coins that commands name by the object id of
+    /// each input.
+    #[test]
+    fn resolved_inputs_report_their_object_id() {
+        let object_ref = ObjectReference::new(
+            ObjectId::new([1; ObjectId::LENGTH]),
+            Version::from_u64(2),
+            ObjectDigest::new([3; 32]),
+        );
+        let shared = SharedObjectReference {
+            object_id: ObjectId::CLOCK,
+            initial_shared_version: Version::from_u64(1),
+            mutable: false,
+        };
+        let object_id = |input| {
+            Input::new(InputKind::Input(input), false)
+                .object_id()
+                .copied()
+        };
+
+        assert_eq!(object_id(iota_types::Input::Pure(vec![1])), None);
+        assert_eq!(
+            object_id(iota_types::Input::ImmutableOrOwned(object_ref)),
+            Some(object_ref.object_id)
+        );
+        assert_eq!(
+            object_id(iota_types::Input::Receiving(object_ref)),
+            Some(object_ref.object_id)
+        );
+        assert_eq!(
+            object_id(iota_types::Input::Shared(shared)),
+            Some(ObjectId::CLOCK)
+        );
+    }
+
     /// Verify that `TryFrom<Transaction>` preserves input ordering: non-gas
     /// inputs occupy `BTreeMap` keys `0..n` matching their original positions,
     /// gas inputs follow with keys `n..n+m`, and `Argument::Input(i)` indices
