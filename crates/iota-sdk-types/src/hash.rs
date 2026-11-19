@@ -573,6 +573,12 @@ mod nonce {
         ///
         /// Validators compute it to check key proofs, so its result for a
         /// given gas payment must never change.
+        ///
+        /// A node runs a dry run or dev-inspect of a transaction without a gas
+        /// coin with a mock gas coin, so the simulation reads a different
+        /// nonce than the transaction will have with its real gas coin. Pick
+        /// the gas coin before asking a key holder to sign over the nonce, and
+        /// simulate with that coin.
         pub fn nonce(&self) -> Option<[u8; 32]> {
             let gas_coin = self.objects.first()?;
             (gas_coin.object_id() != &ObjectId::ZERO)
