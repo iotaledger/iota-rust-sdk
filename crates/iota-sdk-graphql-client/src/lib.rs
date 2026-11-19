@@ -16,6 +16,7 @@ mod streams;
 mod subscription;
 mod tls;
 mod transaction_builder_client;
+mod version_check;
 mod wait;
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
@@ -68,6 +69,7 @@ pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
 pub use reqwest;
 pub use subscription::{EventsSubscriptionBuilder, TransactionsSubscriptionBuilder};
+pub use version_check::{CRATE_VERSION, X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN};
 
 mod base64 {
     use base64ct::Encoding;

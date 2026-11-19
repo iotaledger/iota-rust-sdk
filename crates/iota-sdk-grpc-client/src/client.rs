@@ -12,17 +12,22 @@ use iota_grpc_types::v1::{
 };
 use tonic::codec::CompressionEncoding;
 
-use crate::{api::GrpcResult, interceptors::HeadersInterceptor};
+use crate::{api::GrpcResult, checked_channel::CheckedChannel, interceptors::HeadersInterceptor};
 
-type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
+pub(crate) type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
 pub(crate) const MAINNET_HOST: &str = "https://grpc.mainnet.iota.cafe:443";
 pub(crate) const TESTNET_HOST: &str = "https://grpc.testnet.iota.cafe:443";
 pub(crate) const DEVNET_HOST: &str = "https://grpc.devnet.iota.cafe:443";
 pub(crate) const LOCAL_HOST: &str = "http://localhost:50051";
 
-pub type InterceptedChannel =
-    tonic::service::interceptor::InterceptedService<tonic::transport::Channel, HeadersInterceptor>;
+/// Channel handed to the service clients: the shared transport channel,
+/// checked against the node's minimum SDK version and carrying the configured
+/// headers.
+pub type InterceptedChannel = tonic::service::interceptor::InterceptedService<
+    CheckedChannel<tonic::transport::Channel>,
+    HeadersInterceptor,
+>;
 
 /// gRPC client factory for IOTA gRPC operations.
 #[derive(Clone)]
@@ -118,10 +123,24 @@ impl GrpcClient {
 
     /// Get a reference to the underlying channel.
     ///
-    /// This can be useful for creating additional service clients that aren't
-    /// yet integrated into GrpcClient.
+    /// Responses on this channel are not checked against the node's minimum
+    /// SDK version. To create additional service clients that aren't yet
+    /// integrated into GrpcClient, use
+    /// [`checked_channel`](GrpcClient::checked_channel) instead.
     pub fn channel(&self) -> &tonic::transport::Channel {
         &self.channel
+    }
+
+    /// Get the underlying channel, failing any call whose response names a
+    /// minimum SDK version newer than [`CRATE_VERSION`](crate::CRATE_VERSION),
+    /// the version of this crate.
+    ///
+    /// This can be useful for creating additional service clients that aren't
+    /// yet integrated into GrpcClient. Wrap it with the client's
+    /// [`headers`](GrpcClient::headers) via the service client's
+    /// `with_interceptor` to also send the configured headers.
+    pub fn checked_channel(&self) -> CheckedChannel<tonic::transport::Channel> {
+        CheckedChannel::new(self.channel.clone())
     }
 
     pub fn headers(&self) -> &HeadersInterceptor {
@@ -145,7 +164,7 @@ impl GrpcClient {
     /// Get a ledger service client.
     pub fn ledger_service_client(&self) -> LedgerServiceClient<InterceptedChannel> {
         self.configure_client(LedgerServiceClient::with_interceptor(
-            self.channel.clone(),
+            self.checked_channel(),
             self.headers.clone(),
         ))
     }
@@ -155,7 +174,7 @@ impl GrpcClient {
         &self,
     ) -> TransactionExecutionServiceClient<InterceptedChannel> {
         self.configure_client(TransactionExecutionServiceClient::with_interceptor(
-            self.channel.clone(),
+            self.checked_channel(),
             self.headers.clone(),
         ))
     }
@@ -163,7 +182,7 @@ impl GrpcClient {
     /// Get a state service client.
     pub fn state_service_client(&self) -> StateServiceClient<InterceptedChannel> {
         self.configure_client(StateServiceClient::with_interceptor(
-            self.channel.clone(),
+            self.checked_channel(),
             self.headers.clone(),
         ))
     }
@@ -171,7 +190,7 @@ impl GrpcClient {
     /// Get a move package service client.
     pub fn move_package_service_client(&self) -> MovePackageServiceClient<InterceptedChannel> {
         self.configure_client(MovePackageServiceClient::with_interceptor(
-            self.channel.clone(),
+            self.checked_channel(),
             self.headers.clone(),
         ))
     }
