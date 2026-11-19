@@ -134,7 +134,7 @@ impl proptest::arbitrary::Arbitrary for U256 {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "proptest"))]
 mod tests {
     use std::str::FromStr;
 
