@@ -17,9 +17,9 @@
 ///
 /// # BCS
 ///
-/// The BCS serialized form of this type is its 32 little-endian bytes, the
-/// form Move reads a `u256` in. In human-readable formats it is a decimal
-/// string.
+/// The BCS serialized form of this type is specified in
+/// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
+/// In human-readable formats it is a decimal string.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(
     feature = "bcs-schema",
@@ -139,13 +139,54 @@ impl proptest::arbitrary::Arbitrary for U256 {
     }
 }
 
-#[cfg(all(test, feature = "proptest"))]
+#[cfg(test)]
 mod tests {
+    #[cfg(feature = "proptest")]
+    mod proptests {
+        use std::str::FromStr;
+
+        use num_bigint::BigUint;
+        use proptest::prelude::*;
+        use test_strategy::proptest;
+
+        use super::super::{U256, U256ParseError};
+
+        #[proptest]
+        fn decimal_matches_big_integer(value: U256) {
+            let expected = BigUint::from_bytes_le(&value.to_le_bytes()).to_str_radix(10);
+            assert_eq!(value.to_string(), expected);
+            assert_eq!(U256::from_str(&expected), Ok(value));
+        }
+
+        #[proptest]
+        fn too_large_numbers_are_rejected(
+            #[strategy(proptest::collection::vec(any::<u8>(), 32..64))] mut bytes: Vec<u8>,
+        ) {
+            // Set a bit above the 256th.
+            bytes.push(1);
+            let too_large = BigUint::from_bytes_le(&bytes).to_str_radix(10);
+            assert_eq!(U256::from_str(&too_large), Err(U256ParseError::Overflow));
+        }
+
+        #[cfg(feature = "serde")]
+        #[proptest]
+        fn bcs_is_32_little_endian_bytes(value: U256) {
+            let bytes = bcs::to_bytes(&value).unwrap();
+            assert_eq!(bytes, value.to_le_bytes());
+            assert_eq!(bcs::from_bytes::<U256>(&bytes).unwrap(), value);
+        }
+
+        #[cfg(feature = "serde")]
+        #[proptest]
+        fn json_is_a_decimal_string(value: U256) {
+            let json = serde_json::to_value(value).unwrap();
+            assert_eq!(json, serde_json::Value::String(value.to_string()));
+            assert_eq!(serde_json::from_value::<U256>(json).unwrap(), value);
+        }
+    }
+
     use std::str::FromStr;
 
-    use num_bigint::BigUint;
-    use proptest::prelude::*;
-    use test_strategy::proptest;
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
 
@@ -214,39 +255,6 @@ mod tests {
         assert!(U256::from_le_bytes(high) > U256::from(u128::MAX));
         assert!(U256::ZERO < U256::ONE);
         assert!(U256::ONE < U256::MAX);
-    }
-
-    #[proptest]
-    fn decimal_matches_big_integer(value: U256) {
-        let expected = BigUint::from_bytes_le(&value.to_le_bytes()).to_str_radix(10);
-        assert_eq!(value.to_string(), expected);
-        assert_eq!(U256::from_str(&expected), Ok(value));
-    }
-
-    #[proptest]
-    fn too_large_numbers_are_rejected(
-        #[strategy(proptest::collection::vec(any::<u8>(), 32..64))] mut bytes: Vec<u8>,
-    ) {
-        // Set a bit above the 256th.
-        bytes.push(1);
-        let too_large = BigUint::from_bytes_le(&bytes).to_str_radix(10);
-        assert_eq!(U256::from_str(&too_large), Err(U256ParseError::Overflow));
-    }
-
-    #[cfg(feature = "serde")]
-    #[proptest]
-    fn bcs_is_32_little_endian_bytes(value: U256) {
-        let bytes = bcs::to_bytes(&value).unwrap();
-        assert_eq!(bytes, value.to_le_bytes());
-        assert_eq!(bcs::from_bytes::<U256>(&bytes).unwrap(), value);
-    }
-
-    #[cfg(feature = "serde")]
-    #[proptest]
-    fn json_is_a_decimal_string(value: U256) {
-        let json = serde_json::to_value(value).unwrap();
-        assert_eq!(json, serde_json::Value::String(value.to_string()));
-        assert_eq!(serde_json::from_value::<U256>(json).unwrap(), value);
     }
 
     #[cfg(feature = "serde")]
