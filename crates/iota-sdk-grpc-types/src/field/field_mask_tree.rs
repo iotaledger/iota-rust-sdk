@@ -288,7 +288,12 @@ impl FieldMaskTree {
         for component in path.split(FIELD_SEPARATOR) {
             match node.children.get(component) {
                 Some(child) => {
-                    region_wildcard = child.wildcard;
+                    // A wildcard anywhere up the path selects everything below
+                    // it, so once the region is a wildcard it stays one: an
+                    // explicit (non-wildcard) node under a wildcard ancestor
+                    // carries extra explicit-only leaves but does not narrow the
+                    // ancestor's "select all".
+                    region_wildcard = region_wildcard || child.wildcard;
                     node = child;
                 }
                 // No explicit child: if the region is a wildcard the path is
@@ -528,6 +533,37 @@ mod tests {
             .unwrap();
         let kids: Vec<&str> = output_objects.explicit_children().collect();
         assert_eq!(kids, vec!["json"]);
+
+        // The wildcard from the bare `transactions` parent must still cover the
+        // nested object's ordinary fields, even though `output_objects` is an
+        // explicit (non-wildcard) node that only carries the `json` leaf. A
+        // descent that dropped the ancestor wildcard would return every
+        // object empty.
+        assert!(output_objects.contains("reference"));
+        assert!(output_objects.contains("bcs"));
+        assert!(output_objects.contains("json"));
+    }
+
+    #[test]
+    fn wildcard_ancestor_survives_a_two_level_subtree_descent() {
+        // Mirrors the server's `mask.subtree("events").subtree("events")` on a
+        // read mask of `[events, events.events.json_contents]`: the bare outer
+        // `events` is a wildcard, the inner `events` is an explicit node that
+        // only carries the `json_contents` leaf. Descending twice must not lose
+        // the outer wildcard, or every ordinary event field is dropped.
+        let mut tree = FieldMaskTree::default();
+        tree.add_field_path_with_exceptions("events", &["json_contents"]);
+        tree.add_field_path_with_exceptions("events.events.json_contents", &["json_contents"]);
+
+        let inner = tree.subtree("events").unwrap().subtree("events").unwrap();
+        // The outer wildcard still selects the ordinary event fields...
+        assert!(inner.contains("sender"));
+        assert!(inner.contains("module"));
+        assert!(inner.contains("event_type"));
+        // ...and the explicit-only leaf is still reported to the gate.
+        assert!(inner.contains("json_contents"));
+        let kids: Vec<&str> = inner.explicit_children().collect();
+        assert_eq!(kids, vec!["json_contents"]);
     }
 
     #[test]
