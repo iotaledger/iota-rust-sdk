@@ -317,9 +317,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `list_owned_objects` and `coins`.
     pub struct OwnedObjectField {
-        /// Wildcard — request all fields except the server-rendered ones
-        /// (`json`/`display`/`json_name`/`json_contents`), which must be named
-        /// explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this
+        /// message has, which must be named explicitly (see the module docs).
         ALL = "*",
         /// Object reference (object_id, version, digest).
         REFERENCE = "reference",
@@ -350,9 +349,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `get_transactions` and `execute_transaction(s)`.
     pub struct TransactionField {
-        /// Wildcard — request all fields except the server-rendered ones
-        /// (`json`/`display`/`json_name`/`json_contents`), which must be named
-        /// explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this
+        /// message has, which must be named explicitly (see the module docs).
         ALL = "*",
         /// Transaction data (all sub-fields).
         TRANSACTION = "transaction",
@@ -472,9 +470,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `get_service_info`.
     pub struct ServiceInfoField {
-        /// Wildcard — request all fields except the server-rendered ones
-        /// (`json`/`display`/`json_name`/`json_contents`), which must be named
-        /// explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this
+        /// message has, which must be named explicitly (see the module docs).
         ALL = "*",
         /// The chain ID (network identifier).
         CHAIN_ID = "chain_id",
@@ -510,9 +507,8 @@ define_field_paths! {
     /// Use [`EpochField::feature_flag`] and [`EpochField::attribute`] for
     /// individual protocol-config map entries.
     pub struct EpochField {
-        /// Wildcard — request all fields except the server-rendered ones
-        /// (`json`/`display`/`json_name`/`json_contents`), which must be named
-        /// explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this
+        /// message has, which must be named explicitly (see the module docs).
         ALL = "*",
         /// The epoch number.
         EPOCH = "epoch",
@@ -600,9 +596,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for checkpoint responses.
     pub struct CheckpointResponseField {
-        /// Wildcard — request all fields except the server-rendered ones
-        /// (`json`/`display`/`json_name`/`json_contents`), which must be named
-        /// explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this
+        /// message has, which must be named explicitly (see the module docs).
         ALL = "*",
         /// All checkpoint data fields.
         CHECKPOINT = "checkpoint",
@@ -702,9 +697,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `simulate_transaction(s)`.
     pub struct SimulateField {
-        /// Wildcard — request all fields except the server-rendered ones
-        /// (`json`/`display`/`json_name`/`json_contents`), which must be named
-        /// explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this
+        /// message has, which must be named explicitly (see the module docs).
         ALL = "*",
         /// The simulated executed transaction (all sub-fields).
         EXECUTED_TRANSACTION = "executed_transaction",
@@ -791,9 +785,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `view_function_call(s)`.
     pub struct ViewFunctionCallField {
-        /// Wildcard — request all fields except the server-rendered ones
-        /// (`json`/`display`/`json_name`/`json_contents`), which must be named
-        /// explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this
+        /// message has, which must be named explicitly (see the module docs).
         ALL = "*",
         /// Execution result (all sub-fields except the server-rendered
         /// command-output `json`).
@@ -832,9 +825,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `list_dynamic_fields`.
     pub struct DynamicFieldField {
-        /// Wildcard — request all fields except the server-rendered ones
-        /// (`json`/`display`/`json_name`/`json_contents`), which must be named
-        /// explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this
+        /// message has, which must be named explicitly (see the module docs).
         ALL = "*",
         /// The kind of dynamic field (field or object).
         KIND = "kind",

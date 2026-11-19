@@ -50,8 +50,9 @@ macro_rules! field_mask {
 /// so `"output_objects,output_objects.json"` keeps both paths. Matching any
 /// component (not just the leaf) also keeps a sub-path into one, such as
 /// `"output_objects.display.fields"`, in step with
-/// [`field::FieldMaskTree`]. These names are reserved for server-rendered
-/// fields, so no ordinary path is caught.
+/// [`field::FieldMaskTree`]. Within the response messages a read mask selects,
+/// these names belong only to the server-rendered fields, so no ordinary path
+/// is caught.
 ///
 /// # Examples
 /// ```

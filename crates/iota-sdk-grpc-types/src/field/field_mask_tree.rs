@@ -66,9 +66,11 @@ impl FieldMaskTree {
     ///
     /// Matching any component, not just the leaf, keeps a sub-path into an
     /// explicit-only field — `display.fields` names the rendered `display` —
-    /// and makes the result independent of the order paths are added. These
-    /// names are reserved for server-rendered fields, so no ordinary field
-    /// is caught.
+    /// and makes the result independent of the order paths are added. This is
+    /// safe because within the response messages a read mask selects, these
+    /// names belong only to the server-rendered fields, so no ordinary field is
+    /// caught. (The same-named request-side field `InputArgument.json` is never
+    /// a read-mask target.)
     pub fn add_field_path_with_exceptions(&mut self, path: &str, exceptions: &[&str]) -> &mut Self {
         if !is_valid_path(path) {
             return self;
@@ -657,6 +659,38 @@ mod tests {
                 .paths
                 .is_empty()
         );
+    }
+
+    #[test]
+    fn star_wildcard_survives_subtree_descent_to_a_nested_explicit_leaf() {
+        // A tree-level `*` combined with a nested explicit-only path: the
+        // wildcard must propagate through `subtree()` descent into the nested
+        // object (so ordinary fields stay selected) while the leaf is still
+        // surfaced to the gate. This is the `*` counterpart of the ancestor-
+        // wildcard descent that regressed before.
+        let mut tree = FieldMaskTree::default();
+        tree.add_field_path_with_exceptions("*", EXC);
+        tree.add_field_path_with_exceptions("output_objects.json", EXC);
+
+        let objects = tree.subtree("output_objects").unwrap();
+        assert!(objects.contains("reference"));
+        assert!(objects.contains("bcs"));
+        let kids: Vec<&str> = objects.explicit_children().collect();
+        assert_eq!(kids, vec!["json"]);
+
+        // Two levels deep, descended via two `subtree()` calls.
+        let mut tree = FieldMaskTree::default();
+        tree.add_field_path_with_exceptions("*", EXC);
+        tree.add_field_path_with_exceptions("transactions.output_objects.json", EXC);
+
+        let objects = tree
+            .subtree("transactions")
+            .unwrap()
+            .subtree("output_objects")
+            .unwrap();
+        assert!(objects.contains("reference"));
+        let kids: Vec<&str> = objects.explicit_children().collect();
+        assert_eq!(kids, vec!["json"]);
     }
 
     #[test]
