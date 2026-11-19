@@ -4,7 +4,6 @@
 use std::sync::Arc;
 
 use iota_sdk::transaction_builder::{Assigned, PureBytes, Receiving, Shared, SharedMut, assigned};
-use primitive_types::U256;
 
 use crate::{
     error::Result,
@@ -25,7 +24,7 @@ pub enum MoveArg {
     U32(u32),
     U64(u64),
     U128(u128),
-    U256(U256),
+    U256(iota_sdk::types::U256),
     String(String),
     Option(Option<Arc<MoveArg>>),
     Vector(Vec<MoveArg>),
@@ -92,7 +91,7 @@ impl MoveArg {
 
     #[uniffi::constructor]
     pub fn u256(value: String) -> Result<Self> {
-        Ok(Self::U256(U256::from_dec_str(&value)?))
+        Ok(Self::U256(value.parse()?))
     }
 
     #[uniffi::constructor]

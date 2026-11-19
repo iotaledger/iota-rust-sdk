@@ -516,6 +516,8 @@ u128    = 16OCTET
 
 u16     = 2OCTET
 
+u256 = 32OCTET
+
 u32     = 4OCTET
 
 u64     = 8OCTET
