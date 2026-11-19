@@ -28,6 +28,8 @@ Below is a list of the available feature flags.
   addresses and calculating digests for various types.
 - `proptest`: Enables support for the [proptest] library by providing
   implementations of [proptest::arbitrary::Arbitrary] for many types.
+- `unstable`: Enables unstable APIs that may change or be removed in any
+  release.
 
 [feature flags]: https://doc.rust-lang.org/cargo/reference/manifest.html#the-features-section
 [serde]: https://docs.rs/serde

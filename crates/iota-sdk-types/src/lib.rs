@@ -28,6 +28,7 @@ mod move_package;
 mod object;
 mod object_id;
 mod transaction;
+mod u256;
 mod validator;
 pub mod version;
 
@@ -95,6 +96,7 @@ pub use transaction::{
     Transaction, TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind, TransactionV1,
     TransferObjects, Upgrade, VersionAssignment,
 };
+pub use u256::{U256, U256ParseError};
 #[cfg(feature = "serde")]
 pub use validator::SignerBitmapError;
 pub use validator::{

@@ -15,11 +15,13 @@
 //! 3. [`generate_tonic`] — prost/tonic structs, clients and servers.
 //! 4. [`add_license_headers`] — license headers and `super::google` rewrites on
 //!    the files prost just wrote.
-//! 5. Accessor generation — `with_`/`set_`/getter methods driven by the
+//! 5. [`remove_eq_hash_derives`] — drop prost's automatic `Eq`/`Hash` from the
+//!    messages listed in [`STRIP_EQ_HASH_MESSAGES`].
+//! 6. Accessor generation — `with_`/`set_`/getter methods driven by the
 //!    `iota.grpc.*_accessors` proto options.
-//! 6. Service method paths, then field constants and `MessageFields` impls,
+//! 7. Service method paths, then field constants and `MessageFields` impls,
 //!    which together back read masks and field path builders.
-//! 7. [`verify_generated_files_committed`] — fail if the output drifted from
+//! 8. [`verify_generated_files_committed`] — fail if the output drifted from
 //!    what is committed.
 
 mod codegen;
@@ -27,9 +29,12 @@ mod context;
 mod extern_paths;
 mod ident;
 
-use std::path::{Path, PathBuf};
+use std::{
+    collections::{BTreeSet, HashMap},
+    path::{Path, PathBuf},
+};
 
-use prost_reflect::DescriptorPool;
+use prost_reflect::{DescriptorPool, Kind};
 
 use crate::context::Context;
 
@@ -76,6 +81,26 @@ const BOXED_TYPES_ACCESSOR: &[&str] = &[
     ".iota.grpc.v1.types.TypeTag.vector_tag",
 ];
 
+/// Messages whose automatic `Eq`/`Hash` derives are stripped after generation.
+///
+/// prost derives `Eq, Hash` for every message whose fields are all hashable.
+/// For these BCS carriers the digest is the identity, so the derives add
+/// nothing; dropping them now keeps a later decoded `json`
+/// (`google.protobuf.Value`, which holds an `f64` and is not hashable) field
+/// from silently removing the derives and breaking downstream `Eq`/`Hash` uses.
+///
+/// Only the intended roots are listed; [`eq_hash_strip_closure`] extends the
+/// set to every message that transitively contains one, since those would
+/// otherwise still derive `Eq`/`Hash` around a now-non-`Eq` field and fail to
+/// compile.
+///
+/// Entries are fully-qualified proto names so a message is addressed by its own
+/// package, never by a bare name that another package could share.
+const STRIP_EQ_HASH_MESSAGES: &[&str] = &[
+    "iota.grpc.v1.transaction.Transaction",
+    "iota.grpc.v1.transaction.TransactionEffects",
+];
+
 fn main() {
     let root_dir = PathBuf::from(std::env!("CARGO_MANIFEST_DIR"));
 
@@ -101,6 +126,11 @@ fn main() {
 
     generate_tonic(&proto_dir, &proto_files, &out_dir);
     add_license_headers(&out_dir);
+    remove_eq_hash_derives(
+        &out_dir,
+        &descriptor_pool,
+        &eq_hash_strip_closure(&descriptor_pool, STRIP_EQ_HASH_MESSAGES),
+    );
 
     codegen::generate_service_methods::generate_service_method_paths(&descriptor_pool, &out_dir);
 
@@ -227,6 +257,99 @@ fn add_license_headers(out_dir: &Path) {
                 .to_string();
             std::fs::write(&path, content).unwrap();
         }
+    }
+}
+
+/// Expands the configured roots to every message that transitively contains one
+/// of them through a message-typed field.
+///
+/// A container that currently derives `Eq`/`Hash` must lose them too, otherwise
+/// the derive would require `Eq`/`Hash` on a field whose type no longer has
+/// them. Walking the containment graph here keeps [`STRIP_EQ_HASH_MESSAGES`] to
+/// the intended roots instead of a hand-maintained list of every container.
+fn eq_hash_strip_closure(pool: &DescriptorPool, roots: &[&str]) -> BTreeSet<String> {
+    // Reverse containment edges, keyed by fully-qualified name: message -> the
+    // messages that hold it in a field.
+    let mut containers: HashMap<String, Vec<String>> = HashMap::new();
+    for message in pool.all_messages() {
+        for field in message.fields() {
+            if let Kind::Message(field_type) = field.kind() {
+                containers
+                    .entry(field_type.full_name().to_owned())
+                    .or_default()
+                    .push(message.full_name().to_owned());
+            }
+        }
+    }
+
+    let mut closure = BTreeSet::new();
+    let mut pending: Vec<String> = roots
+        .iter()
+        .map(|root| {
+            assert!(
+                pool.get_message_by_name(root).is_some(),
+                "STRIP_EQ_HASH_MESSAGES names `{root}`, which is not a message in the proto set"
+            );
+            (*root).to_owned()
+        })
+        .collect();
+    while let Some(message) = pending.pop() {
+        if closure.insert(message.clone())
+            && let Some(parents) = containers.get(&message)
+        {
+            pending.extend(parents.iter().cloned());
+        }
+    }
+    closure
+}
+
+/// Removes `Eq` and `Hash` from the derive list of each given message.
+///
+/// See [`STRIP_EQ_HASH_MESSAGES`] for why. Each message is resolved through the
+/// descriptor pool to its own generated file (`<package>.rs`) and struct name,
+/// so a name shared by another package cannot be matched by mistake. Within
+/// that file the derive directly above the struct is rewritten: `Eq` and `Hash`
+/// are dropped and every other derive is kept, whatever the set or order. A
+/// message that no longer derives them (for example once it gains a
+/// non-hashable field) is left unchanged. The struct must appear exactly once
+/// in the file, so a nested type sharing the name fails the build rather than
+/// having the wrong struct stripped.
+fn remove_eq_hash_derives(out_dir: &Path, pool: &DescriptorPool, messages: &BTreeSet<String>) {
+    for message in messages {
+        let descriptor = pool
+            .get_message_by_name(message)
+            .expect("closure members are message names taken from the descriptor pool");
+        let struct_name = descriptor.name();
+        let path = out_dir.join(format!("{}.rs", descriptor.package_name()));
+
+        let derive = regex::Regex::new(&format!(
+            r"#\[derive\(([^)]*)\)\]\npub struct {} \{{",
+            regex::escape(struct_name)
+        ))
+        .unwrap();
+
+        let content = std::fs::read_to_string(&path)
+            .unwrap_or_else(|e| panic!("reading {} for `{message}`: {e}", path.display()));
+
+        let captures = derive.captures_iter(&content).collect::<Vec<_>>();
+        assert!(
+            captures.len() == 1,
+            "expected exactly one `pub struct {struct_name}` with a derive in {}, found {}; \
+             `{message}` needs module-aware matching",
+            path.display(),
+            captures.len()
+        );
+
+        let kept = captures[0][1]
+            .split(',')
+            .map(str::trim)
+            .filter(|derive| !matches!(*derive, "" | "Eq" | "Hash"))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let replacement = format!("#[derive({kept})]\npub struct {struct_name} {{");
+
+        let content = derive.replace(&content, regex::NoExpand(&replacement));
+        std::fs::write(&path, content.as_bytes()).unwrap();
     }
 }
 
