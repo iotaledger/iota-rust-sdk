@@ -641,6 +641,8 @@ define_field_paths! {
         TRANSACTIONS_EVENTS_DIGEST = "transactions.events.digest",
         /// Individual events — full BCS-encoded.
         TRANSACTIONS_EVENTS_EVENTS_BCS = "transactions.events.events.bcs",
+        /// The JSON-encoded contents of the event.
+        TRANSACTIONS_EVENTS_EVENTS_JSON_CONTENTS = "transactions.events.events.json_contents",
         /// Checkpoint sequence number of the transaction.
         TRANSACTIONS_CHECKPOINT = "transactions.checkpoint",
         /// Timestamp of the transaction.
@@ -724,6 +726,9 @@ define_field_paths! {
         EXECUTED_TRANSACTION_EVENTS_DIGEST = "executed_transaction.events.digest",
         /// Individual events — full BCS-encoded.
         EXECUTED_TRANSACTION_EVENTS_EVENTS_BCS = "executed_transaction.events.events.bcs",
+        /// The JSON-encoded contents of the event.
+        EXECUTED_TRANSACTION_EVENTS_EVENTS_JSON_CONTENTS =
+            "executed_transaction.events.events.json_contents",
         /// Checkpoint sequence number that included the transaction.
         EXECUTED_TRANSACTION_CHECKPOINT = "executed_transaction.checkpoint",
         /// Timestamp of the transaction.
@@ -753,14 +758,21 @@ define_field_paths! {
         /// Execution result (all sub-fields except the server-rendered
         /// command-output `json`).
         EXECUTION_RESULT = "execution_result",
-        /// Per-command results (on success, all sub-fields).
+        /// Per-command results (on success, all sub-fields except the
+        /// server-rendered command-output `json`).
         EXECUTION_RESULT_COMMAND_RESULTS = "execution_result.command_results",
         /// Objects mutated by reference.
         EXECUTION_RESULT_COMMAND_RESULTS_MUTATED_BY_REF =
             "execution_result.command_results.mutated_by_ref",
+        /// Objects mutated by reference, rendered as JSON.
+        EXECUTION_RESULT_COMMAND_RESULTS_MUTATED_BY_REF_JSON =
+            "execution_result.command_results.mutated_by_ref.json",
         /// Return values from the command.
         EXECUTION_RESULT_COMMAND_RESULTS_RETURN_VALUES =
             "execution_result.command_results.return_values",
+        /// Return values from the command, rendered as JSON.
+        EXECUTION_RESULT_COMMAND_RESULTS_RETURN_VALUES_JSON =
+            "execution_result.command_results.return_values.json",
         /// Execution error details (on failure, all sub-fields).
         EXECUTION_RESULT_EXECUTION_ERROR = "execution_result.execution_error",
         /// The BCS-encoded error kind.
@@ -842,12 +854,24 @@ define_field_paths! {
         VALUE = "value",
         /// The Move type of the value.
         VALUE_TYPE = "value_type",
-        /// The full field object (sub-fields match `get_objects`, so its
-        /// server-rendered `json`/`display` must be named explicitly).
+        /// The full field object (all sub-fields except the server-rendered
+        /// `json`/`display`; sub-fields match `get_objects`).
         FIELD_OBJECT = "field_object",
-        /// The full child object (sub-fields match `get_objects`, so its
-        /// server-rendered `json`/`display` must be named explicitly).
+        /// The full BCS-encoded field object.
+        FIELD_OBJECT_BCS = "field_object.bcs",
+        /// JSON rendering of the field object's Move contents.
+        FIELD_OBJECT_JSON = "field_object.json",
+        /// Rendering of the field object's on-chain Display template.
+        FIELD_OBJECT_DISPLAY = "field_object.display",
+        /// The full child object (all sub-fields except the server-rendered
+        /// `json`/`display`; sub-fields match `get_objects`).
         CHILD_OBJECT = "child_object",
+        /// The full BCS-encoded child object.
+        CHILD_OBJECT_BCS = "child_object.bcs",
+        /// JSON rendering of the child object's Move contents.
+        CHILD_OBJECT_JSON = "child_object.json",
+        /// Rendering of the child object's on-chain Display template.
+        CHILD_OBJECT_DISPLAY = "child_object.display",
         /// JSON rendering of the field name.
         JSON_NAME = "json_name",
     }
@@ -975,6 +999,10 @@ mod tests {
             CheckpointResponseField::TRANSACTIONS_OBJECT_CHANGES,
             "transactions.object_changes"
         );
+        assert_eq!(
+            CheckpointResponseField::TRANSACTIONS_EVENTS_EVENTS_JSON_CONTENTS,
+            "transactions.events.events.json_contents"
+        );
         assert_eq!(CheckpointResponseField::EVENTS, "events");
         assert_eq!(CheckpointResponseField::EVENTS_BCS, "events.bcs");
         assert_eq!(
@@ -1005,6 +1033,18 @@ mod tests {
             "executed_transaction.events.events.bcs"
         );
         assert_eq!(
+            SimulateField::EXECUTED_TRANSACTION_EVENTS_EVENTS_JSON_CONTENTS,
+            "executed_transaction.events.events.json_contents"
+        );
+        assert_eq!(
+            SimulateField::EXECUTION_RESULT_COMMAND_RESULTS_MUTATED_BY_REF_JSON,
+            "execution_result.command_results.mutated_by_ref.json"
+        );
+        assert_eq!(
+            SimulateField::EXECUTION_RESULT_COMMAND_RESULTS_RETURN_VALUES_JSON,
+            "execution_result.command_results.return_values.json"
+        );
+        assert_eq!(
             SimulateField::EXECUTED_TRANSACTION_OBJECT_CHANGES,
             "executed_transaction.object_changes"
         );
@@ -1015,7 +1055,18 @@ mod tests {
         assert_eq!(DynamicFieldField::ALL, "*");
         assert_eq!(DynamicFieldField::KIND, "kind");
         assert_eq!(DynamicFieldField::NAME, "name");
+        assert_eq!(DynamicFieldField::FIELD_OBJECT, "field_object");
+        assert_eq!(DynamicFieldField::FIELD_OBJECT_JSON, "field_object.json");
+        assert_eq!(
+            DynamicFieldField::FIELD_OBJECT_DISPLAY,
+            "field_object.display"
+        );
         assert_eq!(DynamicFieldField::CHILD_OBJECT, "child_object");
+        assert_eq!(DynamicFieldField::CHILD_OBJECT_JSON, "child_object.json");
+        assert_eq!(
+            DynamicFieldField::CHILD_OBJECT_DISPLAY,
+            "child_object.display"
+        );
         assert_eq!(DynamicFieldField::JSON_NAME, "json_name");
     }
 
@@ -1103,6 +1154,68 @@ mod tests {
         let tree = FieldMaskTree::from_field_mask(&FieldMask::from_str(mask.as_str()));
         assert!(tree.contains(ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES.as_str()));
         assert!(tree.contains(ViewFunctionCallField::EXECUTION_RESULT_EXECUTION_ERROR.as_str()));
+    }
+
+    /// The server-rendered fields are explicit-only, so a caller must be able
+    /// to name them; these paths must resolve, or the field is silently
+    /// dropped instead of rendered.
+    #[test]
+    fn simulate_field_paths_resolve_against_the_simulated_transaction_message() {
+        use crate::{
+            field::{FieldMask, FieldMaskUtil},
+            v1::transaction_execution_service::SimulatedTransaction,
+        };
+
+        for path in [
+            SimulateField::EXECUTED_TRANSACTION_EVENTS_EVENTS_JSON_CONTENTS,
+            SimulateField::EXECUTED_TRANSACTION_INPUT_OBJECTS_JSON,
+            SimulateField::EXECUTED_TRANSACTION_OUTPUT_OBJECTS_DISPLAY,
+            SimulateField::EXECUTION_RESULT_COMMAND_RESULTS_MUTATED_BY_REF_JSON,
+            SimulateField::EXECUTION_RESULT_COMMAND_RESULTS_RETURN_VALUES_JSON,
+        ] {
+            assert_eq!(
+                FieldMask::from_str(path.as_str()).validate::<SimulatedTransaction>(),
+                Ok(()),
+                "{path} does not resolve against SimulatedTransaction"
+            );
+        }
+    }
+
+    // Checkpoint read masks name the per-transaction fields under `transactions`
+    // (the field is `executed_transactions` on the message), so they are checked
+    // by the endpoint's own path validator rather than `MessageFields`. The
+    // event sub-path is the same one proven against `ExecutedTransaction` above
+    // via `SimulatedTransaction`; here we pin the string the server expects.
+    #[test]
+    fn checkpoint_response_transaction_event_json_contents_path() {
+        assert_eq!(
+            CheckpointResponseField::TRANSACTIONS_EVENTS_EVENTS_JSON_CONTENTS,
+            "transactions.events.events.json_contents"
+        );
+    }
+
+    #[test]
+    fn dynamic_field_field_paths_resolve_against_the_dynamic_field_message() {
+        use crate::{
+            field::{FieldMask, FieldMaskUtil},
+            v1::dynamic_field::DynamicField,
+        };
+
+        for path in [
+            DynamicFieldField::JSON_NAME,
+            DynamicFieldField::FIELD_OBJECT_BCS,
+            DynamicFieldField::FIELD_OBJECT_JSON,
+            DynamicFieldField::FIELD_OBJECT_DISPLAY,
+            DynamicFieldField::CHILD_OBJECT_BCS,
+            DynamicFieldField::CHILD_OBJECT_JSON,
+            DynamicFieldField::CHILD_OBJECT_DISPLAY,
+        ] {
+            assert_eq!(
+                FieldMask::from_str(path.as_str()).validate::<DynamicField>(),
+                Ok(()),
+                "{path} does not resolve against DynamicField"
+            );
+        }
     }
 
     #[test]
