@@ -92,7 +92,7 @@ impl std::str::FromStr for U256 {
 
 impl std::fmt::Display for U256 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(&self.0.to_str_radix(10))
+        f.pad_integral(true, "", &self.0.to_str_radix(10))
     }
 }
 
@@ -181,6 +181,15 @@ mod tests {
         assert_eq!(U256::from_str("0001"), Ok(U256::ONE));
         assert_eq!(U256::from_str(MAX), Ok(U256::MAX));
         assert_eq!(U256::MAX.to_string(), MAX);
+        assert_eq!(
+            format!(
+                "{:08}|{:>6}|{:.2}",
+                U256::from(12345u64),
+                U256::ONE,
+                U256::from(12345u64)
+            ),
+            "00012345|     1|12345"
+        );
 
         assert_eq!(U256::from_str(""), Err(U256ParseError::Empty));
         assert_eq!(U256::from_str(MAX_PLUS_ONE), Err(U256ParseError::Overflow));
