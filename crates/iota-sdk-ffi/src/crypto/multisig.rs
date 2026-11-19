@@ -105,7 +105,9 @@ impl UserSignatureVerifier {
     }
 
     /// Replaces the verifier used for multisig signatures, including the
-    /// setting from `with_reject_partially_signed_mixed_ed25519`.
+    /// setting from `with_reject_partially_signed_mixed_ed25519`. Copies the
+    /// current settings of `multisig_verifier`; later changes to it are not
+    /// picked up.
     pub fn with_multisig_verifier(
         self: Arc<Self>,
         multisig_verifier: &MultisigVerifier,
@@ -123,7 +125,9 @@ impl UserSignatureVerifier {
     }
 
     /// The verifier used for direct passkey signatures. Passkey members of a
-    /// multisig are checked by the multisig verifier instead.
+    /// multisig are checked by the multisig verifier instead. Copies the
+    /// current settings of `passkey_verifier`; later changes to it, such as
+    /// `with_address`, are not picked up.
     pub fn with_passkey_verifier(self: Arc<Self>, passkey_verifier: &PasskeyVerifier) -> Arc<Self> {
         let passkey_verifier = passkey_verifier
             .0
@@ -174,6 +178,8 @@ impl MultisigAggregator {
         )
     }
 
+    /// Returns a copy of the current verifier; changes to it are not applied
+    /// to the aggregator. Use `set_verifier` to change it.
     pub fn verifier(&self) -> MultisigVerifier {
         self.0
             .read()
@@ -183,6 +189,8 @@ impl MultisigAggregator {
             .into()
     }
 
+    /// Copies the current settings of `verifier`; later changes to it are not
+    /// picked up.
     pub fn set_verifier(&self, verifier: &MultisigVerifier) {
         *self
             .0

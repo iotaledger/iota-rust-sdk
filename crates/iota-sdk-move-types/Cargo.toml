@@ -29,6 +29,8 @@ default = []
 bcs-schema = ["dep:iota-bcs-schema", "serde"]
 serde = ["dep:bcs", "dep:serde", "dep:thiserror", "iota-types/serde"]
 u256 = ["dep:primitive-types"]
+# Unstable APIs that may change or be removed in any release.
+unstable = []
 
 [dependencies]
 # external dependencies
@@ -46,6 +48,7 @@ iota-types = { workspace = true }
 [dev-dependencies]
 # external dependencies
 serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true
 
 # internal dependencies
 iota-bcs-schema = { workspace = true, features = ["move-shape"] }
@@ -60,6 +63,3 @@ move-binary-format = { git = "https://github.com/iotaledger/iota.git", rev = "f9
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
 wasm-bindgen-test.workspace = true
-
-[build-dependencies]
-filetime = "0.2"

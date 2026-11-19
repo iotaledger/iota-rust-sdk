@@ -5,9 +5,11 @@
 //! a WebSocket (`graphql-transport-ws`).
 //!
 //! Unlike the paginated `events` / `transactions` page methods, these stream
-//! data as it arrives and never terminate on their own. The stream
-//! transparently reconnects on disconnect, resuming from the last item it
-//! delivered via the subscription's `startAfter` cursor.
+//! data as it arrives. The stream transparently reconnects on disconnect,
+//! resuming from the last item it delivered via the subscription's
+//! `startAfter` cursor. It only ends after yielding
+//! [`GraphQLError::OutdatedClient`], since reconnecting would fail the
+//! same way until the SDK is upgraded.
 
 use std::{future::Future, time::Duration};
 
@@ -85,7 +87,8 @@ impl EventsSubscriptionBuilder {
     }
 
     /// Open the subscription. The stream yields events as they arrive and
-    /// reconnects automatically on disconnect.
+    /// reconnects automatically on disconnect. It ends after yielding
+    /// [`GraphQLError::OutdatedClient`].
     pub fn subscribe(self) -> impl Stream<Item = GraphQLResult<Event>> + Unpin {
         let Self {
             client,
@@ -165,7 +168,8 @@ impl TransactionsSubscriptionBuilder {
     }
 
     /// Open the subscription. The stream yields transactions as they arrive
-    /// and reconnects automatically on disconnect.
+    /// and reconnects automatically on disconnect. It ends after yielding
+    /// [`GraphQLError::OutdatedClient`].
     pub fn subscribe(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
         let Self {
             client,
@@ -237,10 +241,26 @@ impl GraphQLClient {
         }
     }
 
-    /// Derive the WebSocket URL for subscriptions from the configured RPC URL,
-    /// upgrading the scheme (`http` → `ws`, `https` → `wss`).
+    /// The WebSocket URL for subscriptions, upgrading the scheme (`http` →
+    /// `ws`, `https` → `wss`).
+    ///
+    /// Unless one was set with
+    /// [`with_subscription_url`](Self::with_subscription_url), it is the
+    /// `subscriptions` endpoint under the RPC URL, as the server routes it,
+    /// keeping the query: `https://host/graphql` subscribes at
+    /// `wss://host/graphql/subscriptions`.
     fn ws_url(&self) -> GraphQLResult<Url> {
-        let mut url = self.rpc.clone();
+        let mut url = match &self.subscription_url {
+            Some(url) => url.clone(),
+            None => {
+                let mut url = self.rpc.clone();
+                url.set_path(&format!(
+                    "{}/subscriptions",
+                    self.rpc.path().trim_end_matches('/')
+                ));
+                url
+            }
+        };
         match url.scheme() {
             "https" => url.set_scheme("wss"),
             "http" => url.set_scheme("ws"),
@@ -252,7 +272,6 @@ impl GraphQLClient {
             }
         }
         .map_err(|_| GraphQLError::subscription("failed to derive the WebSocket URL"))?;
-        url.set_path("/subscriptions");
         Ok(url)
     }
 
@@ -290,9 +309,10 @@ async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection 
         "Sec-WebSocket-Protocol",
         HeaderValue::from_static(WS_PROTOCOL),
     );
-    let (connection, _response) = tokio_tungstenite::connect_async(request)
+    let (connection, response) = tokio_tungstenite::connect_async(request)
         .await
         .map_err(GraphQLError::subscription)?;
+    crate::version_check::check_client_version(response.headers())?;
     Ok(connection)
 }
 
@@ -308,8 +328,9 @@ async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection 
 ///
 /// `connect` is called with the current resume cursor on every (re)connection
 /// and must yield a stream of decoded [`Outcome`]s. Connection and transport
-/// errors are surfaced to the consumer and then trigger a backed-off reconnect;
-/// the stream itself never terminates.
+/// errors are surfaced to the consumer and then trigger a backed-off reconnect.
+/// The stream only ends after yielding
+/// [`GraphQLError::OutdatedClient`].
 fn reconnecting_subscription<'a, T, C, Fut, S>(
     connect: C,
     initial_cursor: Option<String>,
@@ -348,6 +369,10 @@ where
                         }
                     }
                 }
+                Err(error @ GraphQLError::OutdatedClient { .. }) => {
+                    yield Err(error);
+                    return;
+                }
                 Err(error) => yield Err(error),
             }
             crate::wait::sleep(backoff).await;
@@ -359,8 +384,71 @@ where
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use cynic::{GraphQlError as CynicError, GraphQlErrorPathSegment, GraphQlResponse};
+    use tokio_tungstenite::tungstenite::{
+        handshake::server::{Callback, ErrorResponse, Request, Response},
+        http::HeaderValue,
+    };
 
     use super::*;
+
+    fn client(rpc: &str) -> GraphQLClient {
+        let http = crate::tls::default_http_client_builder().build().unwrap();
+        GraphQLClient::new_with_reqwest_client(rpc, http).unwrap()
+    }
+
+    #[test]
+    fn ws_url_sits_under_the_rpc_url() {
+        for (rpc, expected) in [
+            (
+                "https://graphql.testnet.iota.cafe",
+                "wss://graphql.testnet.iota.cafe/subscriptions",
+            ),
+            (
+                "http://127.0.0.1:9125/graphql",
+                "ws://127.0.0.1:9125/graphql/subscriptions",
+            ),
+            (
+                "http://127.0.0.1:9125/graphql/",
+                "ws://127.0.0.1:9125/graphql/subscriptions",
+            ),
+            (
+                "https://example.com/graphql/v1",
+                "wss://example.com/graphql/v1/subscriptions",
+            ),
+            (
+                "https://example.com/iota/graphql?key=abc",
+                "wss://example.com/iota/graphql/subscriptions?key=abc",
+            ),
+        ] {
+            assert_eq!(
+                client(rpc).ws_url().unwrap().as_str(),
+                expected,
+                "rpc {rpc}"
+            );
+        }
+    }
+
+    #[test]
+    fn ws_url_uses_the_url_set() {
+        let client = client("https://example.com/graphql")
+            .with_subscription_url("https://ws.example.com/live")
+            .unwrap();
+        assert_eq!(
+            client.ws_url().unwrap().as_str(),
+            "wss://ws.example.com/live"
+        );
+    }
+
+    #[test]
+    fn ws_url_rejects_other_schemes() {
+        let client = client("https://example.com/graphql")
+            .with_subscription_url("ftp://example.com/live")
+            .unwrap();
+        assert!(matches!(
+            client.ws_url(),
+            Err(GraphQLError::UnsupportedSubscriptionScheme(scheme)) if scheme == "ftp"
+        ));
+    }
 
     #[test]
     fn errors_surface_as_query_errors_without_a_code() {
@@ -385,6 +473,112 @@ mod tests {
             Some(vec![GraphQlErrorPathSegment::Field("events".to_owned())])
         );
         assert_eq!(errors[0].extensions, None);
+    }
+
+    /// Server side of the WebSocket handshake: accepts the subprotocol and
+    /// sends its minimum SDK version.
+    struct IndexerWithMinimum(&'static str);
+
+    impl Callback for IndexerWithMinimum {
+        fn on_request(
+            self,
+            _request: &Request,
+            mut response: Response,
+        ) -> Result<Response, ErrorResponse> {
+            let headers = response.headers_mut();
+            headers.insert(
+                "Sec-WebSocket-Protocol",
+                HeaderValue::from_static(WS_PROTOCOL),
+            );
+            headers.insert(
+                crate::X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN,
+                HeaderValue::from_static(self.0),
+            );
+            Ok(response)
+        }
+    }
+
+    /// Opens a WebSocket to an indexer whose handshake response carries
+    /// `minimum` in the minimum SDK version header.
+    async fn connect_to_indexer_with_minimum(minimum: &'static str) -> GraphQLResult<()> {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let url = Url::parse(&format!("ws://{}", listener.local_addr().unwrap())).unwrap();
+        let _server = tokio::spawn(async move {
+            let (socket, _) = listener.accept().await.unwrap();
+            let _ = tokio_tungstenite::accept_hdr_async(socket, IndexerWithMinimum(minimum)).await;
+        });
+
+        connect(&url).await.map(drop)
+    }
+
+    #[tokio::test]
+    async fn handshake_rejects_indexer_requiring_newer_sdk() {
+        let err = connect_to_indexer_with_minimum("999.0.0")
+            .await
+            .unwrap_err();
+        let GraphQLError::OutdatedClient { minimum, current } = err else {
+            panic!("expected an outdated client error, got {err:?}");
+        };
+        assert_eq!(minimum, "999.0.0");
+        assert_eq!(current, crate::CRATE_VERSION);
+    }
+
+    #[tokio::test]
+    async fn handshake_accepts_indexer_supporting_this_sdk() {
+        connect_to_indexer_with_minimum(crate::CRATE_VERSION)
+            .await
+            .unwrap();
+    }
+
+    /// Runs a reconnecting subscription whose every connection attempt fails
+    /// with `error`. Returns its first two items, or fewer if it ends first,
+    /// and how often it tried to connect.
+    async fn subscription_failing_to_connect(
+        error: fn() -> GraphQLError,
+    ) -> (Vec<GraphQLError>, usize) {
+        let attempts = std::cell::Cell::new(0);
+        let stream = reconnecting_subscription(
+            |_| {
+                attempts.set(attempts.get() + 1);
+                async move { Err::<futures::stream::Empty<GraphQLResult<Outcome<()>>>, _>(error()) }
+            },
+            None,
+        );
+        // Only stops a stream that neither ends nor yields; two items take one
+        // backoff.
+        let errors = tokio::time::timeout(
+            Duration::from_secs(5),
+            stream
+                .take(2)
+                .map(|item| item.unwrap_err())
+                .collect::<Vec<_>>(),
+        )
+        .await
+        .expect("the subscription neither ended nor yielded two items");
+        (errors, attempts.get())
+    }
+
+    #[tokio::test]
+    async fn subscription_ends_when_indexer_requires_newer_sdk() {
+        let (errors, attempts) = subscription_failing_to_connect(|| GraphQLError::OutdatedClient {
+            minimum: "999.0.0".to_owned(),
+            current: crate::CRATE_VERSION.to_owned(),
+        })
+        .await;
+        assert_eq!(attempts, 1);
+        assert!(
+            matches!(errors[..], [GraphQLError::OutdatedClient { .. }]),
+            "{errors:?}"
+        );
+    }
+
+    #[tokio::test]
+    async fn subscription_reconnects_after_other_connection_errors() {
+        let (errors, attempts) =
+            subscription_failing_to_connect(|| GraphQLError::subscription("connection refused"))
+                .await;
+        assert_eq!(attempts, 2);
+        assert_eq!(errors.len(), 2, "{errors:?}");
     }
 
     #[test]

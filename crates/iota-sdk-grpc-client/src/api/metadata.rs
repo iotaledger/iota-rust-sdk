@@ -136,4 +136,8 @@ impl<T> ResponseExt for MetadataEnvelope<T> {
     fn server_version(&self) -> Option<&str> {
         self.metadata.server_version()
     }
+
+    fn iota_sdk_grpc_client_version_min(&self) -> Option<&str> {
+        self.metadata.iota_sdk_grpc_client_version_min()
+    }
 }

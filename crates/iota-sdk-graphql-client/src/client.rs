@@ -13,6 +13,7 @@ use crate::{
     error::{ErrorExtensions, GraphQLError, GraphQLResult},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
     query_types::{ServiceConfig, ServiceConfigQueryFragment},
+    version_check::check_client_version,
 };
 
 pub(crate) const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
@@ -72,6 +73,8 @@ pub struct GraphQLClient {
     /// The reqwest client.
     pub(crate) inner: reqwest::Client,
     pub(crate) service_config: Arc<OnceLock<ServiceConfig>>,
+    /// The URL subscriptions connect to, when set explicitly.
+    pub(crate) subscription_url: Option<Url>,
 }
 
 /// Builds a [`GraphQLClient`] on top of the default HTTP client, so that
@@ -117,13 +120,7 @@ impl GraphQLClientBuilder {
     }
 
     /// Build the client.
-    ///
-    /// An `https` or `wss` address is rejected on a build without a crypto
-    /// provider, as with [`GraphQLClient::new`].
     pub fn build(self) -> GraphQLResult<GraphQLClient> {
-        if let Some(scheme) = crate::tls::unsupported_scheme(&self.server) {
-            return Err(GraphQLError::TlsUnavailable(scheme));
-        }
         GraphQLClient::new_with_reqwest_client(&self.server, self.http.build()?)
     }
 }
@@ -134,13 +131,7 @@ impl GraphQLClient {
     /// The HTTP client is built for you, trusting the platform store plus the
     /// bundled Mozilla roots. Use [`Self::new_with_reqwest_client`] to supply
     /// your own.
-    ///
-    /// An `https` or `wss` address is rejected on a build without a crypto
-    /// provider, since no request to it could succeed. See the crate README.
     pub fn new(server: &str) -> GraphQLResult<Self> {
-        if let Some(scheme) = crate::tls::unsupported_scheme(server) {
-            return Err(GraphQLError::TlsUnavailable(scheme));
-        }
         Self::new_with_reqwest_client(server, crate::tls::default_http_client_builder().build()?)
     }
 
@@ -172,7 +163,16 @@ impl GraphQLClient {
             rpc: reqwest::Url::parse(server)?,
             inner: client,
             service_config: Default::default(),
+            subscription_url: None,
         })
+    }
+
+    /// Connect subscriptions to `url` instead of the `subscriptions` endpoint
+    /// under the RPC URL. An `http` or `https` URL is upgraded to `ws` or
+    /// `wss`.
+    pub fn with_subscription_url(mut self, url: &str) -> GraphQLResult<Self> {
+        self.subscription_url = Some(Url::parse(url)?);
+        Ok(self)
     }
 
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
@@ -240,6 +240,9 @@ impl GraphQLClient {
     /// POST a JSON-serializable GraphQL request body and decode the JSON
     /// response, surfacing the HTTP status and a truncated body on any non-2xx
     /// response or on a decode failure.
+    ///
+    /// Fails with [`GraphQLError::OutdatedClient`] first when the indexer
+    /// requires a newer client.
     async fn post_query<R>(&self, body: &impl serde::Serialize) -> GraphQLResult<R>
     where
         R: serde::de::DeserializeOwned,
@@ -250,6 +253,7 @@ impl GraphQLClient {
             .json(body)
             .send()
             .await?;
+        check_client_version(resp.headers())?;
         let status = resp.status();
         let url = resp.url().clone();
         let bytes = resp.bytes().await?;
@@ -399,6 +403,36 @@ mod tests {
             .unwrap();
     }
 
+    /// Without a provider feature `reqwest` may have no TLS, and would then
+    /// send an `https` request to a proxy unencrypted.
+    #[cfg(not(any(feature = "tls-ring", feature = "tls-aws-lc")))]
+    #[tokio::test]
+    async fn https_skips_the_environment_proxy_without_tls() {
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        // SAFETY: nextest runs each test in its own process, so no other thread
+        // reads the environment meanwhile.
+        unsafe {
+            std::env::set_var(
+                "HTTPS_PROXY",
+                format!("http://{}", listener.local_addr().unwrap()),
+            )
+        };
+
+        let client = GraphQLClient::new("https://graphql.testnet.iota.cafe").unwrap();
+        // The listener never answers, so a request that reached it would hang.
+        let _ = tokio::time::timeout(
+            Duration::from_millis(500),
+            client.run_query_from_json(Default::default()),
+        )
+        .await;
+        assert!(
+            tokio::time::timeout(Duration::from_millis(200), listener.accept())
+                .await
+                .is_err(),
+            "the request went to the proxy"
+        );
+    }
+
     async fn bind() -> (TcpListener, String) {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let url = format!("http://{}/graphql", listener.local_addr().unwrap());
@@ -458,6 +492,77 @@ mod tests {
             panic!("expected a request error, got {err:?}");
         };
         assert!(err.is_timeout(), "{err:?}");
+    }
+
+    /// Runs a query against an indexer answering with `response` and asserts
+    /// that it fails because the indexer requires `iota-sdk-graphql-client`
+    /// 999.0.0.
+    async fn assert_query_rejected_for_newer_sdk(response: &'static [u8]) {
+        let (listener, url) = bind().await;
+        let _server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            let mut buf = vec![0; 4096];
+            let _ = socket.read(&mut buf).await.unwrap();
+            socket.write_all(response).await.unwrap();
+        });
+
+        let client = GraphQLClient::new(&url).unwrap();
+        let err = client
+            .run_query_from_json(Default::default())
+            .await
+            .unwrap_err();
+        let GraphQLError::OutdatedClient { minimum, current } = err else {
+            panic!("expected an outdated client error, got {err:?}");
+        };
+        assert_eq!(minimum, "999.0.0");
+        assert_eq!(current, crate::CRATE_VERSION);
+    }
+
+    #[tokio::test]
+    async fn rejects_response_from_indexer_requiring_newer_sdk() {
+        // The body is not JSON, so decoding it would fail differently.
+        assert_query_rejected_for_newer_sdk(
+            b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\n\
+              x-iota-sdk-graphql-client-version-min: 999.0.0\r\n\
+              content-length: 3\r\n\r\nnot",
+        )
+        .await;
+    }
+
+    #[tokio::test]
+    async fn rejects_error_response_from_indexer_requiring_newer_sdk() {
+        // Without the check, the status would fail the query with
+        // `GraphQLError::Http`.
+        assert_query_rejected_for_newer_sdk(
+            b"HTTP/1.1 500 Internal Server Error\r\ncontent-type: text/plain\r\n\
+              x-iota-sdk-graphql-client-version-min: 999.0.0\r\n\
+              content-length: 4\r\n\r\nboom",
+        )
+        .await;
+    }
+
+    #[tokio::test]
+    async fn accepts_response_from_indexer_supporting_this_sdk() {
+        let (listener, url) = bind().await;
+        let _server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            let mut buf = vec![0; 4096];
+            let _ = socket.read(&mut buf).await.unwrap();
+            let response = format!(
+                "HTTP/1.1 200 OK\r\ncontent-type: application/json\r\n\
+                 x-iota-sdk-graphql-client-version-min: {}\r\n\
+                 content-length: 11\r\n\r\n{{\"data\":{{}}}}",
+                crate::CRATE_VERSION
+            );
+            socket.write_all(response.as_bytes()).await.unwrap();
+        });
+
+        let client = GraphQLClient::new(&url).unwrap();
+        let data = client
+            .run_query_from_json(Default::default())
+            .await
+            .unwrap();
+        assert_eq!(data, json!({}));
     }
 
     #[test]

@@ -22,6 +22,7 @@ pub mod fixed_point32 {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct FixedPoint32 {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub value: u64,
     }
 
@@ -198,7 +199,9 @@ pub mod uq32_32 {
         all(test, not(target_arch = "wasm32")),
         derive(iota_bcs_schema::MoveShape)
     )]
-    pub struct UQ32_32(pub u64);
+    pub struct UQ32_32(
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))] pub u64,
+    );
 
     impl UQ32_32 {
         pub const fn new(value: u64) -> Self {
@@ -225,7 +228,9 @@ pub mod uq64_64 {
         all(test, not(target_arch = "wasm32")),
         derive(iota_bcs_schema::MoveShape)
     )]
-    pub struct UQ64_64(pub u128);
+    pub struct UQ64_64(
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))] pub u128,
+    );
 
     impl UQ64_64 {
         pub const fn new(value: u128) -> Self {
@@ -250,6 +255,7 @@ pub mod bit_vector {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct BitVector {
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub length: u64,
         pub bit_field: Vec<bool>,
     }
