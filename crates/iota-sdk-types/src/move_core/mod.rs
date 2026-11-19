@@ -43,7 +43,7 @@ impl std::fmt::Debug for TypeParseError {
         match self {
             Self::Parse { input, source } => f
                 .debug_struct("Parse")
-                .field("input", &format_args!("\"{}\"", ErrorInput(input)))
+                .field("input", &DebugInput(input))
                 .field("source", source)
                 .finish(),
             Self::NestingLimitExceeded => f.write_str("NestingLimitExceeded"),
@@ -59,6 +59,22 @@ impl std::fmt::Debug for TypeParseError {
 /// Maximum number of bytes of the unparsed input that a
 /// [`TypeParseError::Parse`] message shows.
 const MAX_ERROR_INPUT_LENGTH: usize = 128;
+
+/// Shows the unparsed input in debug output: cut to
+/// [`MAX_ERROR_INPUT_LENGTH`] bytes and escaped like a `str`.
+struct DebugInput<'a>(&'a str);
+
+impl std::fmt::Debug for DebugInput<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let input = self.0;
+        let end = input.floor_char_boundary(MAX_ERROR_INPUT_LENGTH);
+        std::fmt::Debug::fmt(&input[..end], f)?;
+        if end < input.len() {
+            write!(f, "... ({} bytes)", input.len())?;
+        }
+        Ok(())
+    }
+}
 
 /// Shows the unparsed input in an error message: cut to
 /// [`MAX_ERROR_INPUT_LENGTH`] bytes, with control characters escaped.

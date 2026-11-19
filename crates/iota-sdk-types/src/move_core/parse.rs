@@ -402,7 +402,13 @@ mod tests {
             )
         );
         let debug = format!("{err:?}");
-        assert!(debug.len() < 250, "{} bytes", debug.len());
+        assert!(
+            debug.starts_with(&format!(
+                "Parse {{ input: \"<{}\"... (1000001 bytes),",
+                "!".repeat(MAX_ERROR_INPUT_LENGTH - 1)
+            )),
+            "{debug}"
+        );
 
         // The cut falls inside the two-byte `é`, which is left out.
         let rest = format!(
@@ -422,6 +428,10 @@ mod tests {
 
         let err = "0x1::m::S<\"x\\>".parse::<StructTag>().unwrap_err();
         assert_eq!(err.to_string(), "failed to parse <\"x\\>: unknown error");
+        assert_eq!(
+            format!("{err:?}"),
+            r#"Parse { input: "<\"x\\>", source: None }"#
+        );
 
         let err = "u64\nextra".parse::<TypeTag>().unwrap_err();
         assert_eq!(err.to_string(), "failed to parse \\nextra: unknown error");
