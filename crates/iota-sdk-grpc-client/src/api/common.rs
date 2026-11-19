@@ -23,6 +23,7 @@ use iota_types::{ObjectId, TransactionDigest, Version};
 use serde::Serialize;
 
 use super::MetadataEnvelope;
+use crate::checked_channel::OutdatedClientError;
 
 /// Errors that can occur during gRPC client API operations.
 #[derive(Debug, thiserror::Error)]
@@ -56,6 +57,11 @@ pub enum GrpcError {
     /// gRPC transport or protocol error.
     #[error("grpc error: {0}")]
     Grpc(Box<tonic::Status>),
+
+    /// The node requires a newer `iota-sdk-grpc-client` than this one, so the
+    /// response was rejected before its body was decoded. Upgrade the crate.
+    #[error(transparent)]
+    OutdatedClient(OutdatedClientError),
 }
 
 impl GrpcError {
@@ -87,6 +93,14 @@ impl From<TryFromProtoError> for GrpcError {
 
 impl From<tonic::Status> for GrpcError {
     fn from(status: tonic::Status) -> Self {
+        // A layer wrapped around the channel, such as tower's `Buffer`, can put
+        // its own error between the status and the version error.
+        if let Some(error) =
+            std::iter::successors(std::error::Error::source(&status), |error| error.source())
+                .find_map(|error| error.downcast_ref::<OutdatedClientError>())
+        {
+            return GrpcError::OutdatedClient(error.clone());
+        }
         GrpcError::Grpc(Box::new(status))
     }
 }
@@ -109,6 +123,7 @@ impl From<GrpcError> for tonic::Status {
                 tonic::Status::internal("stream ended unexpectedly: has_next was true")
             }
             GrpcError::Grpc(status) => *status,
+            GrpcError::OutdatedClient(error) => error.into_status(Default::default()),
         }
     }
 }

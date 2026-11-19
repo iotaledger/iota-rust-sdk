@@ -135,6 +135,8 @@ pub struct SimulateTransactionsRequest {
     #[prost(message, repeated, tag = "1")]
     pub transactions: ::prost::alloc::vec::Vec<SimulateTransactionItem>,
     /// Mask specifying which fields to read, applied to each SimulatedTransaction in the response.
+    /// If no mask is specified, defaults to
+    /// `executed_transaction.transaction,executed_transaction.effects,executed_transaction.events,executed_transaction.input_objects,executed_transaction.output_objects,suggested_gas_price,execution_result`.
     #[prost(message, optional, tag = "2")]
     pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
 }

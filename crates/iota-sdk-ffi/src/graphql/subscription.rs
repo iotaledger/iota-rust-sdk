@@ -131,8 +131,10 @@ macro_rules! define_subscription {
 
         /// A live subscription.
         ///
-        /// Call `next` in a loop to receive updates; it only returns `None` once
-        /// `cancel` has been called, since the subscription itself never ends.
+        /// Call `next` in a loop to receive updates. It returns `None` once
+        /// `cancel` has been called. If the indexer requires a newer SDK, `next`
+        /// raises that error and the subscription ends: later calls return
+        /// `None`. The subscription never ends otherwise.
         #[derive(uniffi::Object)]
         pub struct $name(StreamHandle<SubscriptionStream<$item>>);
 
@@ -148,7 +150,10 @@ macro_rules! define_subscription {
             /// Raises for errors the subscription cannot recover from by
             /// itself, such as a rejected filter. The subscription stays
             /// usable afterwards, so a caller that considers the error
-            /// transient can keep calling `next`.
+            /// transient can keep calling `next`. The exception is the error
+            /// whose message starts with "the indexer requires a newer IOTA
+            /// SDK": the subscription ends with it, and later calls return
+            /// `None`.
             pub async fn next(&self) -> Result<Option<$update>> {
                 match self.0.next().await {
                     Some(Ok(item)) => Ok(Some($update::$variant {
