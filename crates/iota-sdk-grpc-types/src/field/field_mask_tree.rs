@@ -570,7 +570,12 @@ mod tests {
         assert_eq!(kids, vec!["json"]);
 
         // A bare wildcard still serializes to the empty "all fields" mask.
-        assert!(FieldMaskTree::new_wildcard().to_field_mask().paths.is_empty());
+        assert!(
+            FieldMaskTree::new_wildcard()
+                .to_field_mask()
+                .paths
+                .is_empty()
+        );
     }
 
     #[test]
