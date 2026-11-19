@@ -1389,6 +1389,12 @@ pub enum Input {
     ///
     /// The transaction is valid only once the named transaction executed
     /// successfully, in the current epoch, and no command may use this input.
+    ///
+    /// A validator authenticates a transaction against its current state. A
+    /// transaction whose Move authenticator reads state that the named
+    /// transaction writes is therefore admitted only once the named
+    /// transaction has executed on that validator; until then it is rejected
+    /// with a retriable error.
     TransactionDependency(TransactionDigest),
 }
 
