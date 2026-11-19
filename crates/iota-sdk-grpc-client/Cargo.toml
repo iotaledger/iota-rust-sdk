@@ -18,11 +18,13 @@ base64 = "0.23"
 futures.workspace = true
 http = "1.5"
 prost.workspace = true
+semver.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
 tokio = { workspace = true, features = ["time"] }
 tonic = { workspace = true, features = ["zstd"] }
+tower-service = "0.3"
 tracing.workspace = true
 
 # internal dependencies
@@ -51,6 +53,8 @@ tls-ring = ["tonic/tls-ring"]
 tls-native-roots = ["tonic/tls-native-roots"]
 tls-webpki-roots = ["tonic/tls-webpki-roots"]
 move-types = ["dep:iota-move-types"]
+# Unstable APIs that may change or be removed in any release.
+unstable = []
 
 [dev-dependencies]
 tokio = { workspace = true, features = ["macros", "rt"] }

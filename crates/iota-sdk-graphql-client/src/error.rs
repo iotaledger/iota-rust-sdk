@@ -144,7 +144,9 @@ pub enum GraphQLError {
     #[error("unsupported RPC scheme `{0}` for subscriptions, expected http, https, ws or wss")]
     UnsupportedSubscriptionScheme(String),
     /// The RPC URL needs TLS, which this build does not have.
-    #[deprecated(note = "no longer returned; an `https` request without TLS fails with `Request`")]
+    #[deprecated(
+        note = "no longer returned; an `https` request without TLS fails with `Request` unless a proxy is set"
+    )]
     #[error(
         "scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass your own \
          client to `new_with_reqwest_client`"
@@ -164,6 +166,21 @@ pub enum GraphQLError {
     /// error.
     #[error("subscription lagged: {count} payload(s) dropped by the server")]
     Lagged { count: u32 },
+    /// The indexer requires a newer `iota-sdk-graphql-client` than this one.
+    ///
+    /// Raised on a query response or a subscription handshake, before anything
+    /// is decoded. The indexer has still processed the request, so a
+    /// transaction sent for execution may have been executed. A
+    /// subscription ends after this error. Upgrade the crate.
+    #[error(
+        "the indexer requires a newer IOTA SDK, upgrade it (needs iota-sdk-graphql-client >= {minimum}, this SDK uses {current})"
+    )]
+    OutdatedClient {
+        /// The lowest `iota-sdk-graphql-client` version the indexer accepts.
+        minimum: String,
+        /// The version of this crate.
+        current: String,
+    },
 }
 
 /// The HTTP response a [`GraphQLError::Http`] or [`GraphQLError::Json`] was

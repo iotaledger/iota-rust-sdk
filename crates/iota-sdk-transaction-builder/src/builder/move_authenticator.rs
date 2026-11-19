@@ -128,7 +128,7 @@ impl MoveAuthenticatorBuilder {
                         "call arguments must not be receiving".to_owned(),
                     ));
                 }
-                InputKind::Input(input) => input.clone(),
+                InputKind::Input(input) => input,
             })
         }
         let Owner::Shared(version) = account.owner() else {

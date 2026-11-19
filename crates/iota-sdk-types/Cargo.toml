@@ -38,6 +38,8 @@ serde = [
 rand = ["dep:getrandom_4", "dep:rand_core"]
 hash = ["dep:blake2"]
 proptest = ["dep:proptest", "dep:test-strategy", "serde"]
+# Unstable APIs that may change or be removed in any release.
+unstable = []
 
 [dependencies]
 # external dependencies
@@ -69,9 +71,6 @@ winnow = "1.0"
 
 # internal dependencies
 iota-bcs-schema = { workspace = true, optional = true }
-
-[build-dependencies]
-filetime = "0.2"
 
 [dev-dependencies]
 bcs.workspace = true
