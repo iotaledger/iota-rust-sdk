@@ -55,14 +55,20 @@ impl FieldMaskTree {
     ///
     /// Normally a parent path subsumes its children, so `[a, a.b]` normalizes
     /// to `a` and the node at `a` is a plain wildcard. For an explicit-only
-    /// field — one the server renders only when named by its leaf (`json`,
+    /// field — one the server renders only when named explicitly (`json`,
     /// `display`, `json_name`, `json_contents`) — that collapse would
-    /// silently drop the request. When the leaf of `path` is in
+    /// silently drop the request. When any component of `path` is in
     /// `exceptions`, it is kept alongside the parent instead: the parent
     /// node stays a wildcard (so its ordinary fields are still selected)
-    /// and additionally carries the explicit leaf, so `[output_objects,
+    /// and additionally carries the explicit path, so `[output_objects,
     /// output_objects.json]` selects every output-object field **and** the
     /// rendered `json`.
+    ///
+    /// Matching any component, not just the leaf, keeps a sub-path into an
+    /// explicit-only field — `display.fields` names the rendered `display` —
+    /// and makes the result independent of the order paths are added. These
+    /// names are reserved for server-rendered fields, so no ordinary field
+    /// is caught.
     pub fn add_field_path_with_exceptions(&mut self, path: &str, exceptions: &[&str]) -> &mut Self {
         if !is_valid_path(path) {
             return self;
@@ -78,12 +84,15 @@ impl FieldMaskTree {
             return self;
         }
 
-        // The leaf decides whether an ancestor wildcard subsumes this path.
-        let leaf = path.rsplit(FIELD_SEPARATOR).next().unwrap_or(path);
-        let keep_under_wildcard = exceptions.contains(&leaf);
+        // An explicit-only field anywhere in the path keeps it from being
+        // subsumed by an ancestor wildcard. Matching any component (not just the
+        // leaf) also keeps a sub-path into such a field, e.g. `display.fields`.
+        let keep_under_wildcard = path
+            .split(FIELD_SEPARATOR)
+            .any(|component| exceptions.contains(&component));
 
         // The tree-level `*` wildcard subsumes any ordinary path, but an
-        // explicit-only leaf is still added (to the root) alongside it.
+        // explicit-only path is still added (to the root) alongside it.
         if self.wildcard && !keep_under_wildcard {
             return self;
         }
@@ -92,7 +101,7 @@ impl FieldMaskTree {
         let mut components = path.split(FIELD_SEPARATOR).peekable();
         while let Some(component) = components.next() {
             // An ancestor that already selects everything below it subsumes this
-            // path — unless the path targets an explicit-only leaf, which a
+            // path — unless the path names an explicit-only field, which a
             // wildcard does not include.
             if node.wildcard && !keep_under_wildcard {
                 return self;
@@ -104,7 +113,7 @@ impl FieldMaskTree {
             if is_last {
                 node.wildcard = true;
                 // Drop sub-selections now subsumed by this wildcard, but keep any
-                // that still target an explicit-only leaf.
+                // that still name an explicit-only field.
                 node.children.retain(|name, child| {
                     exceptions.contains(&name.as_str()) || child.selects_exception(exceptions)
                 });
@@ -564,6 +573,42 @@ mod tests {
         assert!(inner.contains("json_contents"));
         let kids: Vec<&str> = inner.explicit_children().collect();
         assert_eq!(kids, vec!["json_contents"]);
+    }
+
+    #[test]
+    fn explicit_only_message_subpath_survives_in_any_order() {
+        // `display` is a server-rendered message, so a sub-path such as
+        // `display.fields` still names it. It must survive a parent or `*`
+        // wildcard regardless of the order the paths are added — matching only
+        // the leaf (`fields`) would drop it in one order.
+        for order in [
+            ["output_objects", "output_objects.display.fields"],
+            ["output_objects.display.fields", "output_objects"],
+        ] {
+            let mut tree = FieldMaskTree::default();
+            for path in order {
+                tree.add_field_path_with_exceptions(path, EXC);
+            }
+            // The parent wildcard still selects ordinary fields...
+            assert!(tree.contains("output_objects.reference"));
+            // ...and the display sub-path is preserved, so the gate sees it.
+            let objects = tree.subtree("output_objects").unwrap();
+            let kids: Vec<&str> = objects.explicit_children().collect();
+            assert_eq!(kids, vec!["display"], "order {order:?}");
+            assert!(objects.contains("display.fields"));
+        }
+
+        // Same under the tree-level `*` wildcard.
+        for order in [["*", "display.fields"], ["display.fields", "*"]] {
+            let mut tree = FieldMaskTree::default();
+            for path in order {
+                tree.add_field_path_with_exceptions(path, EXC);
+            }
+            assert!(tree.contains("reference"));
+            let kids: Vec<&str> = tree.explicit_children().collect();
+            assert_eq!(kids, vec!["display"], "order {order:?}");
+            assert!(tree.contains("display.fields"));
+        }
     }
 
     #[test]
