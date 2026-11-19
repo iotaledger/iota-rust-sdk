@@ -42,7 +42,18 @@ macro_rules! field_mask {
 /// subsumed by broader (ancestor) paths.
 ///
 /// A path `"a.b"` is subsumed by `"a"` because requesting `"a"` already
-/// includes all of its sub-fields. Exact duplicates are also removed.
+/// includes all of its sub-fields, and every ordinary path is subsumed by the
+/// `"*"` wildcard. Exact duplicates are also removed.
+///
+/// A path that names a server-rendered field
+/// ([`field::SERVER_RENDERED_FIELD_NAMES`]) in any component is **not**
+/// subsumed by its parent: the server renders these only when named explicitly,
+/// so `"output_objects,output_objects.json"` keeps both paths. Matching any
+/// component (not just the leaf) also keeps a sub-path into one, such as
+/// `"output_objects.display.fields"`, in step with
+/// [`field::FieldMaskTree`]. Within the response messages a read mask selects,
+/// these names belong only to the server-rendered fields, so no ordinary path
+/// is caught.
 ///
 /// # Examples
 /// ```
@@ -51,17 +62,40 @@ macro_rules! field_mask {
 /// assert_eq!(field_mask_normalize("effects,effects.bcs"), "effects");
 /// assert_eq!(field_mask_normalize("effects.bcs,effects"), "effects");
 /// assert_eq!(field_mask_normalize("a,b.c,b"), "a,b");
+/// assert_eq!(
+///     field_mask_normalize("output_objects,output_objects.json"),
+///     "output_objects,output_objects.json"
+/// );
+/// assert_eq!(
+///     field_mask_normalize("output_objects,output_objects.display.fields"),
+///     "output_objects,output_objects.display.fields"
+/// );
+/// // The `*` wildcard subsumes ordinary siblings, in either order...
+/// assert_eq!(field_mask_normalize("*,reference"), "*");
+/// assert_eq!(field_mask_normalize("reference,*"), "*");
+/// // ...but a server-rendered path still survives alongside it.
+/// assert_eq!(
+///     field_mask_normalize("*,output_objects.json"),
+///     "*,output_objects.json"
+/// );
 /// ```
 pub fn field_mask_normalize(mask: &str) -> String {
     let mut paths: Vec<&str> = mask.split(',').filter(|s| !s.is_empty()).collect();
-    // Sort by length so broader (shorter) paths are processed first.
-    paths.sort_by_key(|p| p.len());
+    // Process the `*` wildcard first (it subsumes every ordinary path), then
+    // shorter paths before longer ones so a parent is seen before its children.
+    paths.sort_by_key(|p| (*p != field::FIELD_PATH_WILDCARD, p.len()));
 
     let mut result: Vec<&str> = Vec::new();
     for path in paths {
+        let explicit_only = path
+            .split(field::FIELD_SEPARATOR)
+            .any(|component| field::SERVER_RENDERED_FIELD_NAMES.contains(&component));
         let subsumed = result.iter().any(|&kept| {
             path == kept
-                || (path.starts_with(kept) && path.as_bytes().get(kept.len()) == Some(&b'.'))
+                || (!explicit_only
+                    && (kept == field::FIELD_PATH_WILDCARD
+                        || (path.starts_with(kept)
+                            && path.as_bytes().get(kept.len()) == Some(&b'.'))))
         });
         if !subsumed {
             result.push(path);
