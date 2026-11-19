@@ -21,6 +21,11 @@
 /// form Move reads a `u256` in. In human-readable formats it is a decimal
 /// string.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[cfg_attr(
+    feature = "bcs-schema",
+    derive(iota_bcs_schema::BcsSchema),
+    bcs_schema(definition = "32OCTET")
+)]
 pub struct U256(bnum::BUintD8<{ Self::LENGTH }>);
 
 impl U256 {
