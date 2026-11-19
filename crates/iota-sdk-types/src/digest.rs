@@ -291,17 +291,17 @@ impl<'de> serde_with::DeserializeAs<'de, [u8; Digest::LENGTH]> for ReadableDiges
 #[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
 #[non_exhaustive]
 pub enum DigestParseError {
-    #[error("invalid Base58 character at position {index}")]
+    #[error("invalid base58 character at position {index}")]
     InvalidBase58Character { index: usize },
     #[error(
         "invalid digest byte length: expected {}, got {actual}",
         Digest::LENGTH
     )]
     InvalidByteLength { actual: usize },
-    #[error("invalid Base58 string")]
+    #[error("invalid base58 string")]
     InvalidBase58,
     #[error(
-        "invalid digest Base58 length: expected at most {} characters, got {actual}",
+        "invalid digest base58 length: expected at most {} characters, got {actual}",
         Digest::MAX_BASE58_LENGTH
     )]
     InvalidBase58Length { actual: usize },
