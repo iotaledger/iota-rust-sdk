@@ -15,7 +15,8 @@ use crate::{Address, Identifier, StructTag, TypeParseError, TypeTag};
 
 type ModalResult<'a, O> = winnow::ModalResult<O, InnerError<'a>>;
 
-/// Parser error that becomes the public [`TypeParseError`].
+/// Error returned by the parsers, converted into the public [`TypeParseError`]
+/// by [`parse_complete`].
 #[derive(Debug)]
 pub(crate) enum InnerError<'a> {
     /// The input where parsing stopped.
