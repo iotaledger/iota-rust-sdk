@@ -18,7 +18,24 @@ pub struct FieldMaskTree {
 
 #[derive(Clone, Debug, Default)]
 struct Node {
+    /// This node selects every field below it (a bare path terminated here).
+    ///
+    /// A node can be both a wildcard and carry explicit children: that is how
+    /// "all of a parent, **plus** an explicit-only field" is represented (see
+    /// [`FieldMaskTree::add_field_path_with_exceptions`]).
+    wildcard: bool,
     children: BTreeMap<String, Node>,
+}
+
+impl Node {
+    /// Whether this subtree selects any explicit-only leaf — a path whose final
+    /// component is one of `exceptions`. Such a selection is not covered by an
+    /// ancestor wildcard, so it must survive when a parent becomes a wildcard.
+    fn selects_exception(&self, exceptions: &[&str]) -> bool {
+        self.children.iter().any(|(name, child)| {
+            exceptions.contains(&name.as_str()) || child.selects_exception(exceptions)
+        })
+    }
 }
 
 impl FieldMaskTree {
@@ -30,6 +47,23 @@ impl FieldMaskTree {
     }
 
     pub fn add_field_path(&mut self, path: &str) -> &mut Self {
+        self.add_field_path_with_exceptions(path, &[])
+    }
+
+    /// Adds `path`, treating any field named in `exceptions` as **not** covered
+    /// by an ancestor wildcard.
+    ///
+    /// Normally a parent path subsumes its children, so `[a, a.b]` normalizes
+    /// to `a` and the node at `a` is a plain wildcard. For an explicit-only
+    /// field — one the server renders only when named by its leaf (`json`,
+    /// `display`, `json_name`, `json_contents`) — that collapse would
+    /// silently drop the request. When the leaf of `path` is in
+    /// `exceptions`, it is kept alongside the parent instead: the parent
+    /// node stays a wildcard (so its ordinary fields are still selected)
+    /// and additionally carries the explicit leaf, so `[output_objects,
+    /// output_objects.json]` selects every output-object field **and** the
+    /// rendered `json`.
+    pub fn add_field_path_with_exceptions(&mut self, path: &str, exceptions: &[&str]) -> &mut Self {
         if self.wildcard || !is_valid_path(path) {
             return self;
         }
@@ -40,51 +74,65 @@ impl FieldMaskTree {
             return self;
         }
 
-        let root = std::ptr::from_ref(&self.root);
+        // The leaf decides whether an ancestor wildcard subsumes this path.
+        let leaf = path.rsplit(FIELD_SEPARATOR).next().unwrap_or(path);
+        let keep_under_wildcard = exceptions.contains(&leaf);
+
         let mut node = &mut self.root;
-        let mut create_new_branch = false;
-        for component in path.split(FIELD_SEPARATOR) {
-            if !create_new_branch && !std::ptr::eq(root, node) && node.children.is_empty() {
+        let mut components = path.split(FIELD_SEPARATOR).peekable();
+        while let Some(component) = components.next() {
+            // An ancestor that already selects everything below it subsumes this
+            // path — unless the path targets an explicit-only leaf, which a
+            // wildcard does not include.
+            if node.wildcard && !keep_under_wildcard {
                 return self;
             }
 
-            node = node
-                .children
-                .entry(component.to_owned())
-                .or_insert_with(|| {
-                    create_new_branch = true;
-                    Node::default()
-                });
-        }
+            let is_last = components.peek().is_none();
+            node = node.children.entry(component.to_owned()).or_default();
 
-        node.children.clear();
+            if is_last {
+                node.wildcard = true;
+                // Drop sub-selections now subsumed by this wildcard, but keep any
+                // that still target an explicit-only leaf.
+                node.children.retain(|name, child| {
+                    exceptions.contains(&name.as_str()) || child.selects_exception(exceptions)
+                });
+            }
+        }
         self
     }
 
     pub fn from_field_mask(mask: &FieldMask) -> Self {
+        Self::from_field_mask_with_exceptions(mask, &[])
+    }
+
+    /// Builds a tree from `mask`, keeping explicit-only leaves (those named in
+    /// `exceptions`) alongside any parent path, per
+    /// [`add_field_path_with_exceptions`](Self::add_field_path_with_exceptions).
+    pub fn from_field_mask_with_exceptions(mask: &FieldMask, exceptions: &[&str]) -> Self {
         let mut tree = Self::default();
         for path in &mask.paths {
-            tree.add_field_path(path);
+            tree.add_field_path_with_exceptions(path, exceptions);
         }
         tree
     }
 
     pub fn to_field_mask(&self) -> FieldMask {
-        if self.root.children.is_empty() {
-            return FieldMask::default();
-        }
-
         let mut paths = Vec::new();
         Self::collect_field_paths(&self.root, &mut String::new(), &mut paths);
         FieldMask { paths }
     }
 
     fn collect_field_paths(node: &Node, path: &mut String, paths: &mut Vec<String>) {
-        if node.children.is_empty() {
+        // A node that selects everything below it contributes its own path (the
+        // empty path is the tree root, which is never emitted).
+        if node.wildcard && !path.is_empty() {
             paths.push(path.clone());
-            return;
         }
 
+        // Explicit children — sub-selections and explicit-only extras — each
+        // contribute their own paths.
         let parent_path_len = path.len();
         for (part, child) in node.children.iter() {
             if path.is_empty() {
@@ -125,9 +173,8 @@ impl FieldMaskTree {
 
         let mut node = &self.root;
         for component in path.split(FIELD_SEPARATOR) {
-            // If this isn't the root node, and there are no sub-paths, then this path has
-            // been matched and we can return a hit
-            if !std::ptr::eq(node, &self.root) && node.children.is_empty() {
+            // If this node selects everything below it, any deeper path is a hit.
+            if node.wildcard {
                 return true;
             }
 
@@ -138,10 +185,22 @@ impl FieldMaskTree {
             }
         }
 
-        // We found a matching node for this path. This node may be empty or have leaf
-        // children. In either case the provided patch is a "match" and is
-        // contained by this tree.
+        // We found a matching node for this path. This node may be a wildcard or
+        // have explicit children. In either case the provided path is a "match"
+        // and is contained by this tree.
         true
+    }
+
+    /// The explicitly named child fields of this (sub)tree, whether or not the
+    /// node is also a wildcard.
+    ///
+    /// Unlike [`map_keys`](Self::map_keys) — which reports `None`/"no filter"
+    /// for a wildcard — this still lists a wildcard node's explicit-only
+    /// extras (an `output_objects.json` leaf selected alongside a bare
+    /// `output_objects`). It is what the server's explicit-only field gate
+    /// reads.
+    pub fn explicit_children(&self) -> impl Iterator<Item = &str> {
+        self.root.children.keys().map(String::as_str)
     }
 
     /// Returns the explicit map keys requested in this subtree, or `None` if
@@ -202,23 +261,30 @@ impl FieldMaskTree {
             return None;
         }
 
-        if self.wildcard {
-            return Some(self.clone());
-        }
-
         let mut node = &self.root;
+        // Whether the region at the current node is selected whole. The
+        // tree-level wildcard makes the root such a region; otherwise a node's
+        // own `wildcard` flag does. A wildcard node may still carry explicit
+        // children, so matching children is tried first.
+        let mut region_wildcard = self.wildcard;
         for component in path.split(FIELD_SEPARATOR) {
-            node = node.children.get(component)?;
+            match node.children.get(component) {
+                Some(child) => {
+                    region_wildcard = child.wildcard;
+                    node = child;
+                }
+                // No explicit child: if the region is a wildcard the path is
+                // covered wholesale, otherwise it is not selected at all.
+                None => {
+                    return region_wildcard.then(Self::new_wildcard);
+                }
+            }
         }
 
-        if std::ptr::eq(node, &self.root) {
-            None
-        } else {
-            Some(Self {
-                wildcard: node.children.is_empty(),
-                root: node.clone(),
-            })
-        }
+        Some(Self {
+            wildcard: region_wildcard,
+            root: node.clone(),
+        })
     }
 }
 
@@ -371,5 +437,87 @@ mod tests {
         tree.add_field_path("feature_flags.other_field");
         let subtree = tree.subtree("feature_flags").unwrap();
         assert!(subtree.map_field_filter("flags").is_none());
+    }
+
+    const EXC: &[&str] = &["json", "display"];
+
+    #[test]
+    fn explicit_only_leaf_survives_its_parent() {
+        // "parent + explicit-only child" keeps both, in either insertion order.
+        for order in [
+            ["output_objects", "output_objects.json"],
+            ["output_objects.json", "output_objects"],
+        ] {
+            let mut tree = FieldMaskTree::default();
+            for path in order {
+                tree.add_field_path_with_exceptions(path, EXC);
+            }
+            assert_eq!(tree.to_string(), "output_objects,output_objects.json");
+
+            // The parent still selects its ordinary fields...
+            assert!(tree.contains("output_objects.reference"));
+            assert!(tree.contains("output_objects.bcs"));
+            assert!(tree.contains("output_objects.json"));
+
+            // ...and the gate sees the explicit-only child even though the node
+            // is a wildcard (where `map_keys` reports no filter).
+            let subtree = tree.subtree("output_objects").unwrap();
+            let kids: Vec<&str> = subtree.explicit_children().collect();
+            assert_eq!(kids, vec!["json"]);
+            assert!(subtree.map_keys().is_none());
+        }
+    }
+
+    #[test]
+    fn non_exception_child_still_collapses_under_parent() {
+        let mut tree = FieldMaskTree::default();
+        tree.add_field_path_with_exceptions("output_objects", EXC);
+        tree.add_field_path_with_exceptions("output_objects.bcs", EXC);
+        // `bcs` is an ordinary field, subsumed by the wildcard parent.
+        assert_eq!(tree.to_string(), "output_objects");
+        let subtree = tree.subtree("output_objects").unwrap();
+        assert!(subtree.explicit_children().next().is_none());
+    }
+
+    #[test]
+    fn explicit_only_leaf_alone_excludes_siblings() {
+        let mut tree = FieldMaskTree::default();
+        tree.add_field_path_with_exceptions("output_objects.json", EXC);
+        // Only `json` is selected; the parent is not a wildcard.
+        assert!(tree.contains("output_objects.json"));
+        assert!(!tree.contains("output_objects.reference"));
+        let subtree = tree.subtree("output_objects").unwrap();
+        let kids: Vec<&str> = subtree.explicit_children().collect();
+        assert_eq!(kids, vec!["json"]);
+    }
+
+    #[test]
+    fn explicit_only_leaf_survives_a_nested_parent() {
+        // A bare grandparent plus a deeply-nested explicit-only leaf.
+        let mut tree = FieldMaskTree::default();
+        tree.add_field_path_with_exceptions("transactions", EXC);
+        tree.add_field_path_with_exceptions("transactions.output_objects.json", EXC);
+        assert_eq!(
+            tree.to_string(),
+            "transactions,transactions.output_objects.json"
+        );
+        assert!(tree.contains("transactions.digest"));
+
+        let output_objects = tree
+            .subtree("transactions")
+            .unwrap()
+            .subtree("output_objects")
+            .unwrap();
+        let kids: Vec<&str> = output_objects.explicit_children().collect();
+        assert_eq!(kids, vec!["json"]);
+    }
+
+    #[test]
+    fn without_exceptions_parent_subsumes_everything() {
+        // The default path (no exceptions) keeps the standard collapse.
+        let mut tree = FieldMaskTree::default();
+        tree.add_field_path("output_objects");
+        tree.add_field_path("output_objects.json");
+        assert_eq!(tree.to_string(), "output_objects");
     }
 }

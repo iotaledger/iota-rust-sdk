@@ -44,6 +44,11 @@ macro_rules! field_mask {
 /// A path `"a.b"` is subsumed by `"a"` because requesting `"a"` already
 /// includes all of its sub-fields. Exact duplicates are also removed.
 ///
+/// A path whose leaf is a server-rendered field
+/// ([`field::SERVER_RENDERED_FIELD_NAMES`]) is **not** subsumed by its parent:
+/// the server renders these only when named explicitly, so
+/// `"output_objects,output_objects.json"` keeps both paths.
+///
 /// # Examples
 /// ```
 /// use iota_sdk_grpc_types::field_mask_normalize;
@@ -51,6 +56,10 @@ macro_rules! field_mask {
 /// assert_eq!(field_mask_normalize("effects,effects.bcs"), "effects");
 /// assert_eq!(field_mask_normalize("effects.bcs,effects"), "effects");
 /// assert_eq!(field_mask_normalize("a,b.c,b"), "a,b");
+/// assert_eq!(
+///     field_mask_normalize("output_objects,output_objects.json"),
+///     "output_objects,output_objects.json"
+/// );
 /// ```
 pub fn field_mask_normalize(mask: &str) -> String {
     let mut paths: Vec<&str> = mask.split(',').filter(|s| !s.is_empty()).collect();
@@ -59,9 +68,13 @@ pub fn field_mask_normalize(mask: &str) -> String {
 
     let mut result: Vec<&str> = Vec::new();
     for path in paths {
+        let leaf = path.rsplit(field::FIELD_SEPARATOR).next().unwrap_or(path);
+        let explicit_only = field::SERVER_RENDERED_FIELD_NAMES.contains(&leaf);
         let subsumed = result.iter().any(|&kept| {
             path == kept
-                || (path.starts_with(kept) && path.as_bytes().get(kept.len()) == Some(&b'.'))
+                || (!explicit_only
+                    && path.starts_with(kept)
+                    && path.as_bytes().get(kept.len()) == Some(&b'.'))
         });
         if !subsumed {
             result.push(path);
