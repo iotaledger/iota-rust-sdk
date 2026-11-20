@@ -68,6 +68,7 @@ pub(crate) use iota_types::Address;
 pub use output_types::*;
 pub use pagination::{Direction, Page, PaginationFilter};
 pub use reqwest;
+pub use streams::PageStream;
 pub use subscription::{EventsSubscriptionBuilder, TransactionsSubscriptionBuilder};
 pub use version_check::{CRATE_VERSION, X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN};
 

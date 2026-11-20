@@ -5,7 +5,6 @@
 //! Coin API implementation.
 
 use cynic::QueryBuilder;
-use futures::Stream;
 use iota_types::{Address, Identifier, StructTag, framework::Coin};
 
 use crate::{
@@ -14,7 +13,7 @@ use crate::{
     error::GraphQLResult,
     pagination::{Page, PaginationFilter},
     query_types::{CoinMetadata, CoinMetadataArgs, CoinMetadataQueryFragment, ObjectFilter},
-    streams::stream_paginated_query,
+    streams::PageStream,
 };
 
 define_query! {
@@ -44,9 +43,12 @@ impl ListCoinsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<Coin>> + Unpin {
+    pub fn stream(self) -> PageStream<Coin> {
         let pagination = self.pagination.clone();
-        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+        PageStream::new(
+            pagination,
+            Box::new(move |page| self.clone().pagination(page).into_future()),
+        )
     }
 
     fn objects_query(self) -> ListObjectsQuery {
@@ -99,9 +101,12 @@ impl ListGasCoinsQuery {
 
     /// Stream every item, page by page, starting at the pagination's cursor
     /// and in its direction, with its limit as the page size.
-    pub fn stream(self) -> impl Stream<Item = GraphQLResult<Coin>> + Unpin {
+    pub fn stream(self) -> PageStream<Coin> {
         let pagination = self.coins.pagination.clone();
-        stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
+        PageStream::new(
+            pagination,
+            Box::new(move |page| self.clone().pagination(page).into_future()),
+        )
     }
 
     async fn send(self) -> GraphQLResult<Page<Coin>> {
