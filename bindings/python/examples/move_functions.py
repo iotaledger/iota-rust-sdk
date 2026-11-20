@@ -24,9 +24,9 @@ async def main():
         if module is None:
             print(f"module `{module_id.as_str()}` not found")
             return
-        if module.functions is not None:
+        if module.functions:
             print(f"Module: {module_id.as_str()}")
-            for fun in module.functions.nodes:
+            for fun in module.functions:
                 print(f"- {str(fun)}")
             print()
 

@@ -23,13 +23,14 @@ async fn main() -> Result<()> {
         else {
             eyre::bail!("module `{module_id}` not found")
         };
-        if let Some(funs) = module.functions {
-            println!("Module: {module_id}");
-            for fun in funs.data {
-                println!("- {fun}");
-            }
-            println!();
+        if module.functions.is_empty() {
+            continue;
         }
+        println!("Module: {module_id}");
+        for fun in module.functions {
+            println!("- {fun}");
+        }
+        println!();
     }
 
     Ok(())

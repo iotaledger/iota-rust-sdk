@@ -76,12 +76,7 @@ struct PackageInspectExample {
 
       let module = try await client.normalizedMoveModule(
         package: packageAddress,
-        module: moduleName,
-        version: nil,
-        paginationFilterEnums: forwardPage(),
-        paginationFilterFriends: forwardPage(),
-        paginationFilterFunctions: forwardPage(),
-        paginationFilterStructs: forwardPage()
+        module: moduleName
       )
 
       guard let module else {
@@ -90,38 +85,32 @@ struct PackageInspectExample {
         continue
       }
 
-      if let functions = module.functions, !functions.nodes.isEmpty {
+      if !module.functions.isEmpty {
         print("  functions:")
-        for function in functions.nodes {
+        for function in module.functions {
           let signature = formatFunctionSignature(
             String(describing: function),
             packagePrefix: packagePrefix
           )
           print("    - \(signature)")
         }
-        if functions.pageInfo.hasNextPage {
-          print("    - ...")
-        }
       } else {
         print("  functions: none")
       }
 
-      if let structs = module.structs, !structs.nodes.isEmpty {
+      if !module.structs.isEmpty {
         print("  types:")
-        for structType in structs.nodes {
+        for structType in module.structs {
           let typeTag = "\(packagePrefix)::\(moduleName)::\(structType.name)"
           print("    - \(typeTag)")
-          let hasKeyAbility = (structType.abilities ?? []).contains(.key)
-          let isGeneric = !(structType.typeParameters ?? []).isEmpty
+          let hasKeyAbility = structType.abilities.contains(.key)
+          let isGeneric = !structType.typeParameters.isEmpty
           try await printObjectSamples(
             client: client,
             typeTag: typeTag,
             hasKeyAbility: hasKeyAbility,
             isGeneric: isGeneric
           )
-        }
-        if structs.pageInfo.hasNextPage {
-          print("    - ...")
         }
       } else {
         print("  types: none")

@@ -84,16 +84,7 @@ fun main() = runBlocking {
         for (moduleName in moduleNames) {
             println("Module: $moduleName")
 
-            val module =
-                client.normalizedMoveModule(
-                    packageAddress,
-                    moduleName,
-                    null,
-                    forwardPage(),
-                    forwardPage(),
-                    forwardPage(),
-                    forwardPage(),
-                )
+            val module = client.normalizedMoveModule(packageAddress, moduleName)
 
             if (module == null) {
                 println("  metadata: missing")
@@ -101,36 +92,25 @@ fun main() = runBlocking {
                 continue
             }
 
-            val functions = module.functions
-            if (functions == null || functions.nodes.isEmpty()) {
+            if (module.functions.isEmpty()) {
                 println("  functions: none")
             } else {
                 println("  functions:")
-                for (function in functions.nodes) {
+                for (function in module.functions) {
                     println("    - ${formatFunctionSignature(function.toString(), packagePrefix)}")
-                }
-                if (functions.pageInfo.hasNextPage) {
-                    println("    - ...")
                 }
             }
 
-            val structs = module.structs
-            if (structs == null || structs.nodes.isEmpty()) {
+            if (module.structs.isEmpty()) {
                 println("  types: none")
             } else {
                 println("  types:")
-                for (structType in structs.nodes) {
+                for (structType in module.structs) {
                     val typeTag = "$packagePrefix::$moduleName::${structType.name}"
                     println("    - $typeTag")
-                    val hasKeyAbility =
-                        structType.abilities?.contains(GraphQlMoveAbility.KEY) == true
-                    val isGeneric =
-                        structType.typeParameters != null &&
-                            structType.typeParameters!!.isNotEmpty()
+                    val hasKeyAbility = structType.abilities.contains(GraphQlMoveAbility.KEY)
+                    val isGeneric = structType.typeParameters.isNotEmpty()
                     printObjectSamples(client, typeTag, hasKeyAbility, isGeneric)
-                }
-                if (structs.pageInfo.hasNextPage) {
-                    println("    - ...")
                 }
             }
 

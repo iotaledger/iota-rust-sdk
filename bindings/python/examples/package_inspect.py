@@ -79,43 +79,32 @@ async def main():
         module = await client.normalized_move_module(
             package_address,
             module_name,
-            None,
-            forward_page(),
-            forward_page(),
-            forward_page(),
-            forward_page(),
         )
         if module is None:
             print("  metadata: missing")
             print()
             continue
 
-        if module.functions is None or len(module.functions.nodes) == 0:
+        if not module.functions:
             print("  functions: none")
         else:
             print("  functions:")
-            for function in module.functions.nodes:
+            for function in module.functions:
                 print(
                     f"    - {format_function_signature(str(function), package_prefix)}"
                 )
-            if module.functions.page_info.has_next_page:
-                print("    - ...")
 
-        if module.structs is None or len(module.structs.nodes) == 0:
+        if not module.structs:
             print("  types: none")
         else:
             print("  types:")
-            for struct_ in module.structs.nodes:
+            for struct_ in module.structs:
                 type_tag = f"{package_prefix}::{module_name}::{struct_.name}"
                 print(f"    - {type_tag}")
-                has_key_ability = (struct_.abilities is not None and
-                                   GraphQlMoveAbility.KEY in struct_.abilities)
-                is_generic = (struct_.type_parameters is not None and
-                              len(struct_.type_parameters) > 0)
+                has_key_ability = GraphQlMoveAbility.KEY in struct_.abilities
+                is_generic = len(struct_.type_parameters) > 0
                 await print_object_samples(client, type_tag, has_key_ability,
                                            is_generic)
-            if module.structs.page_info.has_next_page:
-                print("    - ...")
 
         print()
 
