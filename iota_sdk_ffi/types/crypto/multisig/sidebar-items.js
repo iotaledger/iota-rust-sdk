@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["MultisigAggregatedSignature","MultisigCommittee","MultisigMember","MultisigMemberSignature"]};

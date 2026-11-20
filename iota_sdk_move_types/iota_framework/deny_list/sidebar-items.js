@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["AddressKey","ConfigKey","ConfigWriteCap","DenyList","GlobalPauseKey","PerTypeConfigCreated"]};

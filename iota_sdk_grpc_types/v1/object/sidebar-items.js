@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["display_field"],"struct":["Display","DisplayField","DisplayFieldFieldPathBuilder","DisplayFieldPathBuilder","Object","ObjectFieldPathBuilder","Objects","ObjectsFieldPathBuilder"]};

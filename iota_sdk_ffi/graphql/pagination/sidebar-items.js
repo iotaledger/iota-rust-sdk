@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["GraphQLCheckpointSummaryPage","GraphQLCoinPage","GraphQLDynamicFieldOutputPage","GraphQLEpochPage","GraphQLEventPage","GraphQLMovePackagePage","GraphQLNameRegistrationPage","GraphQLObjectPage","GraphQLSignedTransactionPage","GraphQLTransactionDataEffectsPage","GraphQLTransactionEffectsPage","GraphQLValidatorPage"]};
