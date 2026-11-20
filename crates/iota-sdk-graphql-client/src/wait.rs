@@ -35,6 +35,24 @@ pub(crate) async fn timeout<F: Future>(duration: Duration, f: F) -> Result<F::Ou
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
+pub(crate) use std::time::Instant;
+
+/// `std::time::Instant` panics on wasm32, so the wall clock stands in for it.
+#[cfg(target_arch = "wasm32")]
+pub(crate) struct Instant(f64);
+
+#[cfg(target_arch = "wasm32")]
+impl Instant {
+    pub(crate) fn now() -> Self {
+        Self(js_sys::Date::now())
+    }
+
+    pub(crate) fn elapsed(&self) -> Duration {
+        Duration::from_secs_f64((js_sys::Date::now() - self.0).max(0.0) / 1000.0)
+    }
+}
+
 /// Marker type returned by [`timeout`] when the deadline elapses.
 #[derive(Debug)]
 pub(crate) struct Elapsed;

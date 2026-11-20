@@ -8,9 +8,10 @@ use std::sync::{Arc, OnceLock};
 
 use cynic::{GraphQlResponse, Operation, QueryBuilder, serde};
 use reqwest::Url;
+use tracing::Instrument;
 
 use crate::{
-    error::{ErrorExtensions, GraphQLError, GraphQLResult},
+    error::{ErrorExtensions, GraphQLError, GraphQLResult, truncated},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
     query_types::{ServiceConfig, ServiceConfigQueryFragment},
     version_check::check_client_version,
@@ -24,6 +25,8 @@ pub(crate) const LOCAL_HOST: &str = "http://localhost:9125/graphql";
 /// Connect timeout of the HTTP clients this crate builds itself.
 #[cfg(not(target_arch = "wasm32"))]
 pub(crate) const DEFAULT_CONNECT_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(5);
+/// Size the request and response bodies are cut to in TRACE events.
+const MAX_TRACE_BODY_BYTES: usize = 4096;
 /// Value this crate sends as the `User-Agent` header.
 pub static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"));
 
@@ -62,6 +65,15 @@ impl GetMaxPageSizeQuery {
             .await
             .map(|cfg| cfg.max_page_size)
     }
+}
+
+/// `url` without its userinfo and query, which can hold credentials.
+fn without_credentials(url: &Url) -> Url {
+    let mut url = url.clone();
+    let _ = url.set_username("");
+    let _ = url.set_password(None);
+    url.set_query(None);
+    url
 }
 
 /// The GraphQL client for interacting with the IOTA blockchain.
@@ -232,8 +244,11 @@ impl GraphQLClient {
         V: serde::Serialize,
     {
         response_to_result(
-            self.post_query::<GraphQlResponse<T, ErrorExtensions>>(operation)
-                .await?,
+            self.post_query::<GraphQlResponse<T, ErrorExtensions>>(
+                operation.operation_name.as_deref(),
+                operation,
+            )
+            .await?,
         )
     }
 
@@ -243,26 +258,59 @@ impl GraphQLClient {
     ///
     /// Fails with [`GraphQLError::OutdatedClient`] first when the indexer
     /// requires a newer client.
-    async fn post_query<R>(&self, body: &impl serde::Serialize) -> GraphQLResult<R>
+    async fn post_query<R>(
+        &self,
+        operation_name: Option<&str>,
+        body: &impl serde::Serialize,
+    ) -> GraphQLResult<R>
     where
         R: serde::de::DeserializeOwned,
     {
-        let resp = self
-            .inner
-            .post(self.rpc_server().clone())
-            .json(body)
-            .send()
-            .await?;
-        check_client_version(resp.headers())?;
-        let status = resp.status();
-        let url = resp.url().clone();
-        let bytes = resp.bytes().await?;
-        let target_type = std::any::type_name::<R>();
-        if !status.is_success() {
-            return Err(GraphQLError::http(url, status, &bytes, target_type));
+        let span = tracing::debug_span!(
+            "graphql_request",
+            "graphql.operation.name" = operation_name,
+            "url.full" = %without_credentials(self.rpc_server()),
+            "http.response.status_code" = tracing::field::Empty,
+        );
+        let request = async {
+            tracing::trace!(
+                body = %truncated(&serde_json::to_vec(body).unwrap_or_default(), MAX_TRACE_BODY_BYTES),
+                "request body"
+            );
+            let resp = self
+                .inner
+                .post(self.rpc_server().clone())
+                .json(body)
+                .send()
+                .await?;
+            check_client_version(resp.headers())?;
+            let status = resp.status();
+            span.record("http.response.status_code", status.as_u16());
+            let url = resp.url().clone();
+            let bytes = resp.bytes().await?;
+            tracing::trace!(
+                body = %truncated(&bytes, MAX_TRACE_BODY_BYTES),
+                "response body"
+            );
+            let target_type = std::any::type_name::<R>();
+            if !status.is_success() {
+                return Err(GraphQLError::http(url, status, &bytes, target_type));
+            }
+            serde_json::from_slice::<R>(&bytes)
+                .map_err(|e| GraphQLError::json(url, status, &bytes, target_type, e))
+        };
+        async {
+            let start = crate::wait::Instant::now();
+            let result = request.await;
+            let elapsed_ms = start.elapsed().as_millis() as u64;
+            match &result {
+                Ok(_) => tracing::debug!(elapsed_ms, "request completed"),
+                Err(error) => tracing::debug!(elapsed_ms, %error, "request failed"),
+            }
+            result
         }
-        serde_json::from_slice::<R>(&bytes)
-            .map_err(|e| GraphQLError::json(url, status, &bytes, target_type, e))
+        .instrument(span.clone())
+        .await
     }
 
     /// Run a JSON query on the GraphQL server and return the response data.
@@ -276,8 +324,11 @@ impl GraphQLClient {
         json: serde_json::Map<String, serde_json::Value>,
     ) -> GraphQLResult<serde_json::Value> {
         response_to_result(
-            self.post_query::<GraphQlResponse<serde_json::Value, ErrorExtensions>>(&json)
-                .await?,
+            self.post_query::<GraphQlResponse<serde_json::Value, ErrorExtensions>>(
+                json.get("operationName").and_then(|name| name.as_str()),
+                &json,
+            )
+            .await?,
         )
     }
 

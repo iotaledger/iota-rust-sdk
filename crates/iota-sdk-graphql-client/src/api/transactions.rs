@@ -413,14 +413,18 @@ impl WaitForTransactionQuery {
         crate::wait::timeout(
             self.timeout.unwrap_or_else(|| Duration::from_secs(60)),
             async {
+                let mut attempt = 0u32;
                 loop {
-                    if match self.wait_for {
+                    attempt += 1;
+                    let found = match self.wait_for {
                         WaitForTransaction::IndexedOnNode => client.is_transaction_indexed_on_node(digest).await?,
                         WaitForTransaction::Finalized => client.is_transaction_finalized(digest).await?,
                         _ => unimplemented!(
                             "a new WaitForTransaction enum variant was added and needs to be handled"
                         ),
-                    } {
+                    };
+                    tracing::debug!(%digest, attempt, found, "checked transaction status");
+                    if found {
                         break Ok(());
                     }
                     crate::wait::sleep(Duration::from_millis(100)).await;

@@ -8,7 +8,7 @@ use iota_types::{Address, ObjectId, TransactionDigest};
 use reqwest::{StatusCode, Url};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use tracing::{error, info};
+use tracing::debug;
 
 use crate::WaitForTransaction;
 
@@ -162,10 +162,7 @@ impl FaucetClient {
             }
         }];
         let url = self.faucet_url.join("v1/gas")?;
-        info!(
-            "Requesting gas from faucet for address {} : {}",
-            address, url
-        );
+        debug!(address, "url.full" = %url, "requesting gas from faucet");
         let resp = self
             .inner
             .post(url)
@@ -173,30 +170,25 @@ impl FaucetClient {
             .json(&json_body)
             .send()
             .await?;
+        debug!(
+            "http.response.status_code" = resp.status().as_u16(),
+            "faucet responded"
+        );
         match resp.status() {
             StatusCode::ACCEPTED | StatusCode::CREATED => {
                 let faucet_resp: FaucetResponse = resp.json().await?;
 
                 if let Some(err) = faucet_resp.error {
-                    error!("Faucet request was unsuccessful: {err}");
+                    debug!(error = err, "faucet request rejected");
                     Err(FaucetError::Request(err))
                 } else {
-                    info!("Request successful: {:?}", faucet_resp.task);
+                    debug!(task = faucet_resp.task, "faucet request accepted");
                     Ok(faucet_resp.task)
                 }
             }
-            StatusCode::TOO_MANY_REQUESTS => {
-                error!("Faucet service received too many requests from this IP address.");
-                Err(FaucetError::TooManyRequests)
-            }
-            StatusCode::SERVICE_UNAVAILABLE => {
-                error!("Faucet service is currently overloaded or unavailable.");
-                Err(FaucetError::Unavailable)
-            }
-            status_code => {
-                error!("Faucet request was unsuccessful: {status_code}");
-                Err(FaucetError::StatusCode(status_code))
-            }
+            StatusCode::TOO_MANY_REQUESTS => Err(FaucetError::TooManyRequests),
+            StatusCode::SERVICE_UNAVAILABLE => Err(FaucetError::Unavailable),
+            status_code => Err(FaucetError::StatusCode(status_code)),
         }
     }
 
@@ -221,17 +213,17 @@ impl FaucetClient {
         if let Some(request_id) = request_id {
             let status_response = crate::wait::timeout(FAUCET_REQUEST_TIMEOUT, async {
                 loop {
-                    info!("Polling faucet request status: {request_id}");
+                    debug!(request_id, "polling faucet request status");
                     let status_response = self.request_status(request_id.clone()).await?;
 
                     if let Some(status_response) = status_response {
                         match status_response.status {
                             BatchSendStatusType::Succeeded => {
-                                info!("Faucet request {request_id} succeeded");
+                                debug!(request_id, "faucet request succeeded");
                                 break Ok::<_, FaucetError>(status_response);
                             }
                             BatchSendStatusType::Discarded => {
-                                error!("Faucet request {request_id} was discarded");
+                                debug!(request_id, "faucet request discarded");
                                 break Err(FaucetError::Discarded(request_id.clone()));
                             }
                             // Still pending — fall through to the poll interval and retry.
@@ -244,9 +236,10 @@ impl FaucetClient {
             })
             .await
             .map_err(|_| {
-                error!(
-                    "Faucet request {request_id} timed out. Timeout set to {} seconds",
-                    FAUCET_REQUEST_TIMEOUT.as_secs()
+                debug!(
+                    request_id,
+                    timeout_s = FAUCET_REQUEST_TIMEOUT.as_secs(),
+                    "faucet request timed out"
                 );
                 FaucetError::TimedOut
             })??;
@@ -298,7 +291,7 @@ impl FaucetClient {
     /// `-`, `{`, `}` and `:`, which covers the UUID forms the faucet accepts.
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>, FaucetError> {
         let status_url = self.status_url(&id)?;
-        info!("Checking status of faucet request: {status_url}");
+        debug!("url.full" = %status_url, "checking faucet request status");
         let response = self.inner.get(status_url).send().await?;
 
         if response.status() == StatusCode::TOO_MANY_REQUESTS {
