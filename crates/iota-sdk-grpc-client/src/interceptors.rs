@@ -6,12 +6,18 @@
 #[derive(Clone, Debug, Default)]
 pub struct HeadersInterceptor {
     headers: tonic::metadata::MetadataMap,
+    server_address: Option<std::sync::Arc<str>>,
 }
 
 impl HeadersInterceptor {
     /// Create a new, empty `HeadersInterceptor`.
     pub fn new() -> Self {
         Self::default()
+    }
+
+    pub(crate) fn with_server_address(mut self, server_address: Option<&str>) -> Self {
+        self.server_address = server_address.map(Into::into);
+        self
     }
 
     /// Return reference to the internal `MetadataMap`.
@@ -76,6 +82,9 @@ impl tonic::service::Interceptor for &HeadersInterceptor {
         &mut self,
         mut request: tonic::Request<()>,
     ) -> std::result::Result<tonic::Request<()>, tonic::Status> {
+        if let Some(method) = request.extensions().get::<tonic::GrpcMethod<'static>>() {
+            crate::api::record_rpc(method, self.server_address.as_deref());
+        }
         if !self.headers.is_empty() {
             request
                 .metadata_mut()

@@ -25,6 +25,7 @@ thiserror.workspace = true
 tokio = { workspace = true, features = ["time"] }
 tonic = { workspace = true, features = ["zstd"] }
 tower-service = "0.3"
+tracing.workspace = true
 
 # internal dependencies
 iota-grpc-types.workspace = true
@@ -57,3 +58,4 @@ unstable = []
 
 [dev-dependencies]
 tokio = { workspace = true, features = ["macros", "rt"] }
+tracing-subscriber = { workspace = true, features = ["registry"] }
