@@ -590,8 +590,10 @@ mod tests {
 
         /// Serves gas coins in three single-coin pages and counts the
         /// `objects` calls, to pin how far automatic gas selection paginates.
+        /// With `repeat_first_coin`, every page serves the same coin.
         struct PagingClient {
             pages_served: Arc<AtomicUsize>,
+            repeat_first_coin: bool,
         }
 
         impl TransactionBuilderClientBase for PagingClient {
@@ -616,7 +618,12 @@ mod tests {
             ) -> Result<ObjectsPage, Self::Error> {
                 self.pages_served.fetch_add(1, Ordering::SeqCst);
                 let page = cursor.map_or(0, |c| c[0]);
-                let coin_id = ObjectId::from_bytes([0xa0 + page; ObjectId::LENGTH]).unwrap();
+                let coin_byte = if self.repeat_first_coin {
+                    0xa0
+                } else {
+                    0xa0 + page
+                };
+                let coin_id = ObjectId::from_bytes([coin_byte; ObjectId::LENGTH]).unwrap();
                 let coin = TestClient.object(coin_id, None).await?.unwrap();
                 Ok(ObjectsPage {
                     data: vec![coin],
@@ -671,6 +678,7 @@ mod tests {
             let pages_served = Arc::new(AtomicUsize::new(0));
             let builder = super::builder_with(PagingClient {
                 pages_served: pages_served.clone(),
+                repeat_first_coin: false,
             });
             let txn = builder.finish_with_budget(1000).await.unwrap();
             assert_eq!(pages_served.load(Ordering::SeqCst), 1);
@@ -683,6 +691,7 @@ mod tests {
             let pages_served = Arc::new(AtomicUsize::new(0));
             let builder = super::builder_with(PagingClient {
                 pages_served: pages_served.clone(),
+                repeat_first_coin: false,
             });
             let txn = builder.finish_with_budget(1_500_000_000_000).await.unwrap();
             assert_eq!(pages_served.load(Ordering::SeqCst), 2);
@@ -694,10 +703,25 @@ mod tests {
             let pages_served = Arc::new(AtomicUsize::new(0));
             let builder = super::builder_with(PagingClient {
                 pages_served: pages_served.clone(),
+                repeat_first_coin: false,
             });
             let txn = builder.finish().await.unwrap();
             assert_eq!(pages_served.load(Ordering::SeqCst), 3);
             assert_eq!(gas_coin_count(&txn), 3);
+        }
+
+        #[tokio::test]
+        async fn a_coin_served_on_several_pages_counts_once_toward_the_budget() {
+            // One 1e12 coin repeated on every page never covers a 1.5e12
+            // budget, so selection walks every page and keeps the coin once.
+            let pages_served = Arc::new(AtomicUsize::new(0));
+            let builder = super::builder_with(PagingClient {
+                pages_served: pages_served.clone(),
+                repeat_first_coin: true,
+            });
+            let txn = builder.finish_with_budget(1_500_000_000_000).await.unwrap();
+            assert_eq!(pages_served.load(Ordering::SeqCst), 3);
+            assert_eq!(gas_coin_count(&txn), 1);
         }
     }
 
