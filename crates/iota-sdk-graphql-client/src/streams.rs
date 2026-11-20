@@ -17,12 +17,15 @@ use crate::{
 };
 
 /// A stream that yields items from a paginated query with support for
-/// bidirectional pagination.
+/// bidirectional pagination. An empty page with more pages behind it is
+/// fetched past.
 pub struct PageStream<T, F, Fut> {
     query_fn: F,
     direction: Direction,
     limit: Option<i32>,
     start_cursor: Option<String>,
+    /// The cursor the page in flight or being yielded was requested with.
+    requested_cursor: Option<String>,
     current_page: Option<(PageInfo, std::vec::IntoIter<T>)>,
     current_future: Option<Pin<Box<Fut>>>,
     finished: bool,
@@ -35,6 +38,7 @@ impl<T, F, Fut> PageStream<T, F, Fut> {
             direction: pagination.direction,
             limit: pagination.limit,
             start_cursor: pagination.cursor,
+            requested_cursor: None,
             current_page: None,
             current_future: None,
             finished: false,
@@ -95,6 +99,7 @@ where
                 } else {
                     current_cursor
                 };
+                self.requested_cursor = current_cursor.clone();
                 let filter = PaginationFilter {
                     direction: self.direction.clone(),
                     cursor: current_cursor,
@@ -109,12 +114,28 @@ where
                 Poll::Ready(Ok(page)) => {
                     self.current_future = None;
 
-                    if page.is_empty() {
-                        self.finished = true;
-                        return Poll::Ready(None);
-                    }
-
                     let (page_info, data) = page.into_parts();
+                    let (has_more, cursor) = match self.direction {
+                        Direction::Forward => {
+                            (page_info.has_next_page, page_info.end_cursor.as_ref())
+                        }
+                        Direction::Backward => {
+                            (page_info.has_previous_page, page_info.start_cursor.as_ref())
+                        }
+                    };
+                    let reason = match (has_more, cursor) {
+                        (true, None) => Some("the server announced more pages but gave no cursor"),
+                        (true, Some(cursor)) if self.requested_cursor.as_ref() == Some(cursor) => {
+                            Some("the server repeated the cursor the page was requested with")
+                        }
+                        _ => None,
+                    };
+                    if let Some(reason) = reason {
+                        self.finished = true;
+                        return Poll::Ready(Some(Err(error::GraphQLError::PageNotAdvanced(
+                            reason,
+                        ))));
+                    }
                     // For backward pagination, we need to reverse the items
                     let iter = match self.direction {
                         Direction::Forward => data.into_iter(),
@@ -221,7 +242,7 @@ mod tests {
             pagination,
             vec![
                 Ok(page(vec![1, 2], true, Some("second"))),
-                Ok(page(vec![3], false, None)),
+                Ok(page(vec![3], false, Some("third"))),
             ],
         )
         .await;
@@ -267,14 +288,121 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn an_empty_page_ends_the_stream() {
+    async fn an_empty_page_with_more_pages_is_fetched_past() {
         let (items, requests) = run(
             PaginationFilter::default(),
-            vec![Ok(page(Vec::new(), true, Some("next")))],
+            vec![
+                Ok(page(Vec::new(), true, Some("next"))),
+                Ok(page(vec![1], false, None)),
+            ],
+        )
+        .await;
+
+        assert_eq!(values(items), [1]);
+        assert_eq!(requests.len(), 2);
+        assert_eq!(requests[1].cursor.as_deref(), Some("next-forward"));
+    }
+
+    #[tokio::test]
+    async fn an_empty_last_page_ends_the_stream() {
+        let (items, requests) = run(
+            PaginationFilter::default(),
+            vec![Ok(page(Vec::new(), false, None))],
         )
         .await;
 
         assert!(items.is_empty());
+        assert_eq!(requests.len(), 1);
+    }
+
+    #[tokio::test]
+    async fn more_pages_without_a_cursor_is_an_error() {
+        let (items, requests) = run(
+            PaginationFilter::default(),
+            vec![Ok(page(vec![1], true, None))],
+        )
+        .await;
+
+        assert!(matches!(
+            items.as_slice(),
+            [Err(crate::GraphQLError::PageNotAdvanced(_))]
+        ));
+        assert_eq!(requests.len(), 1);
+    }
+
+    #[tokio::test]
+    async fn a_repeated_cursor_is_an_error() {
+        let (items, requests) = run(
+            PaginationFilter::default(),
+            vec![
+                Ok(page(vec![1, 2], true, Some("second"))),
+                Ok(page(vec![3], true, Some("second"))),
+            ],
+        )
+        .await;
+
+        assert!(matches!(
+            items.as_slice(),
+            [Ok(1), Ok(2), Err(crate::GraphQLError::PageNotAdvanced(_))]
+        ));
+        assert_eq!(requests.len(), 2);
+        assert_eq!(requests[1].cursor.as_deref(), Some("second-forward"));
+    }
+
+    #[tokio::test]
+    async fn a_first_page_repeating_the_start_cursor_is_an_error() {
+        let pagination = PaginationFilter {
+            direction: Direction::Forward,
+            cursor: Some("start-forward".to_owned()),
+            limit: None,
+        };
+        let (items, requests) =
+            run(pagination, vec![Ok(page(vec![1, 2], true, Some("start")))]).await;
+
+        assert!(matches!(
+            items.as_slice(),
+            [Err(crate::GraphQLError::PageNotAdvanced(_))]
+        ));
+        assert_eq!(requests.len(), 1);
+    }
+
+    #[tokio::test]
+    async fn a_repeated_cursor_backward_is_an_error() {
+        let pagination = PaginationFilter {
+            direction: Direction::Backward,
+            cursor: Some("start".to_owned()),
+            limit: None,
+        };
+        let (items, requests) = run(
+            pagination,
+            vec![
+                Ok(page(vec![3, 4], true, Some("second"))),
+                Ok(page(vec![1, 2], true, Some("second"))),
+            ],
+        )
+        .await;
+
+        assert!(matches!(
+            items.as_slice(),
+            [Ok(4), Ok(3), Err(crate::GraphQLError::PageNotAdvanced(_))]
+        ));
+        assert_eq!(requests.len(), 2);
+        assert_eq!(requests[1].cursor.as_deref(), Some("second-backward"));
+    }
+
+    #[tokio::test]
+    async fn more_pages_without_a_cursor_backward_is_an_error() {
+        let pagination = PaginationFilter {
+            direction: Direction::Backward,
+            cursor: None,
+            limit: None,
+        };
+        let (items, requests) = run(pagination, vec![Ok(page(vec![3, 4], true, None))]).await;
+
+        assert!(matches!(
+            items.as_slice(),
+            [Err(crate::GraphQLError::PageNotAdvanced(_))]
+        ));
         assert_eq!(requests.len(), 1);
     }
 

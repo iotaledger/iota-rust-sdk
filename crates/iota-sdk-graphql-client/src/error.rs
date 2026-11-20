@@ -114,6 +114,9 @@ pub enum GraphQLError {
     /// does not know.
     #[error("unknown {0} variant")]
     UnknownVariant(&'static str),
+    /// A page announced more pages but gave no cursor that advances past it.
+    #[error("page did not advance: {0}")]
+    PageNotAdvanced(&'static str),
     /// A response value could not be deserialized into its SDK type.
     #[error("deserialization error: {0}")]
     Deserialization(#[source] BoxError),
