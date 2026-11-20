@@ -1,3 +1,17 @@
+## [3.0.0] - 2026-11-20
+
+### 🚀 Features
+
+- Add a non-default `unstable` feature to every published crate (#1816)
+
+### 🐛 Bug Fixes
+
+- Update the Rust release example for iota-sdk 3.0.0-rc.1 (#1699)
+
+### ⚙️ Miscellaneous Tasks
+
+- Fix lints reported by Rust 1.100 (#1806)
+
 ## [3.0.0-rc.1] - 2026-10-09
 
 ### 🚀 Features
