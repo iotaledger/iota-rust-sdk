@@ -319,13 +319,15 @@ impl ListTransactionsDataEffectsQuery {
             txc.nodes
                 .into_iter()
                 .map(|node| {
-                    let (Some(bcs), Some(effects)) = (node.bcs, node.effects) else {
+                    let (Some(bcs), Some(effects_bcs)) =
+                        (node.bcs, node.effects.and_then(|effects| effects.bcs))
+                    else {
                         return Err(GraphQLError::EmptyResponseField(
                             "transaction bcs or effects",
                         ));
                     };
                     let bcs = crate::base64::decode(bcs.0.as_str())?;
-                    let effects = crate::base64::decode(effects.bcs.as_ref().unwrap().0.as_str())?;
+                    let effects = crate::base64::decode(effects_bcs.0.as_str())?;
                     let transaction: SenderSignedTransaction =
                         bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
                     let effects: TransactionEffects =
@@ -498,8 +500,11 @@ impl GetTransactionDataEffectsQuery {
 
         match response.transaction_block.map(|tx| (tx.bcs, tx.effects)) {
             Some((Some(bcs), Some(effects))) => {
+                let effects_bcs = effects
+                    .bcs
+                    .ok_or(GraphQLError::EmptyResponseField("transaction effects bcs"))?;
                 let bcs = crate::base64::decode(bcs.0.as_str())?;
-                let effects = crate::base64::decode(effects.bcs.unwrap().0.as_str())?;
+                let effects = crate::base64::decode(effects_bcs.0.as_str())?;
                 let transaction: SenderSignedTransaction =
                     bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
                 let effects: TransactionEffects =
