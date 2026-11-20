@@ -1,3 +1,20 @@
+## [1.0.0] - 2026-11-20
+
+### 🚀 Features
+
+- Add a non-default `unstable` feature to every published crate (#1816)
+- *(grpc-client)* [**breaking**] Reject gRPC responses from nodes that require a newer client (#1488)
+- *(grpc-types)* [**breaking**] Add json and Display fields to Object, json_name to DynamicField (#1809)
+
+### 🐛 Bug Fixes
+
+- *(grpc)* Document the actual default read masks and pin them in a test (#1812)
+
+### ⚙️ Miscellaneous Tasks
+
+- *(grpc-types)* Regenerate types with prost-build 0.14.4 (#1750)
+- *(grpc-types)* Stop deriving Eq/Hash on Transaction and TransactionEffects (#1817)
+
 ## [1.0.0-rc.1] - 2026-10-09
 
 ### 🚀 Features
