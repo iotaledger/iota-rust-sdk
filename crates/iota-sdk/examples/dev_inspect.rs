@@ -68,8 +68,7 @@ async fn main() -> Result<()> {
         .arguments([assigned("name_record")])
         .assign("target_address_opt");
 
-    // Step 6: Borrow the address from the option (this returns the resolved
-    // address)
+    // Step 6: Borrow the address from the option (this returns the resolved address)
     builder
         .move_call(Address::STD, "option", "borrow")
         .arguments([assigned("target_address_opt")])

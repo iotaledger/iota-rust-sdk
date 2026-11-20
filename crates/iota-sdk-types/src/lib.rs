@@ -118,8 +118,7 @@ pub use bcs_base64::FromBase64Error;
 mod bcs_base64 {
     use base64ct::Encoding;
 
-    /// Error returned when decoding a type from a base64-encoded string of its
-    /// BCS bytes.
+    /// Error returned when decoding a type from a base64-encoded string of its BCS bytes.
     #[derive(Debug, thiserror::Error)]
     #[non_exhaustive]
     pub enum FromBase64Error {
@@ -182,8 +181,7 @@ pub(crate) const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) 
     }
 }
 
-/// Returns the next array in byte-increasing order, or `None` if the result
-/// would overflow.
+/// Returns the next array in byte-increasing order, or `None` if the result would overflow.
 pub(crate) const fn next_lexicographical_array_opt<const N: usize>(
     array: &[u8; N],
 ) -> Option<[u8; N]> {

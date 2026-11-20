@@ -61,58 +61,51 @@ pub struct Version(
 impl Version {
     /// An inclusive lower limit on a valid version.
     ///
-    /// A valid version means an object, which this version
-    /// is assigned to, does not appear in a canceled transaction.
+    /// A valid version means an object, which this version is assigned to, does not appear in a
+    /// canceled transaction.
     pub const MIN_VALID_INCL: Self = Self(u64::MIN);
 
     /// The initial shared version for shared system objects.
     pub const INITIAL_SHARED_VERSION: Self = Self(1);
 
-    /// An exclusive upper limit on a valid version: versions
-    /// strictly smaller than this limit are valid versions.
+    /// An exclusive upper limit on a valid version: versions strictly smaller than this limit are
+    /// valid versions.
     ///
-    /// A valid version means an object, which this version
-    /// is assigned to, does not appear in a canceled transaction.
-    /// Versions larger than this value are "special" and
-    /// assigned to objects that appear in canceled transactions.
+    /// A valid version means an object, which this version is assigned to, does not appear in a
+    /// canceled transaction. Versions larger than this value are "special" and assigned to objects
+    /// that appear in canceled transactions.
     pub const MAX_VALID_EXCL: Self = Self(0x7fff_ffff_ffff_ffff);
 
-    /// Special version that is assigned to objects which are accessed
-    /// immutably in a canceled transaction.
+    /// Special version that is assigned to objects which are accessed immutably in a canceled
+    /// transaction.
     pub const CANCELED_READ: Self = Self(Self::MAX_VALID_EXCL.0 + 1);
 
-    /// Special version that was assigned to congested objects which
-    /// cause transaction cancellations. Note that this special version
-    /// was only used prior to the introduction of a gas price feedback
-    /// mechanism, but it is kept for backward compatibility.
+    /// Special version that was assigned to congested objects which cause transaction
+    /// cancellations. Note that this special version was only used prior to the introduction of a
+    /// gas price feedback mechanism, but it is kept for backward compatibility.
     pub const CONGESTED_PRIOR_TO_GAS_PRICE_FEEDBACK: Self = Self(Self::MAX_VALID_EXCL.0 + 2);
 
     pub const RANDOMNESS_UNAVAILABLE: Self = Self(Self::MAX_VALID_EXCL.0 + 3);
 
-    // NOTE: if you want to add new Version constants used for cancellation
-    // reasons different than those used for cancellations due to shared object
-    // congestion, please make sure their offset is less than
-    // CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK
+    // NOTE: if you want to add new Version constants used for cancellation reasons different than
+    // those used for cancellations due to shared object congestion, please make sure their offset
+    // is less than CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK
 
-    /// In the gas price feedback mechanism, versions >=
-    /// `Version::MAX_VALID_EXCL` +
-    /// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are assigned to
-    /// objects that cause transactions cancellations due to congestion.
+    /// In the gas price feedback mechanism, versions >= `Version::MAX_VALID_EXCL` +
+    /// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are assigned to objects that cause
+    /// transactions cancellations due to congestion.
     ///
-    /// Versions larger than `Version::MAX_VALID_EXCL` but
-    /// smaller than `Version::MAX_VALID_EXCL` +
-    /// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are
-    /// intended for other transaction cancellation reasons.
+    /// Versions larger than `Version::MAX_VALID_EXCL` but smaller than `Version::MAX_VALID_EXCL` +
+    /// `CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK` are intended for other transaction
+    /// cancellation reasons.
     ///
-    /// There unlikely will be more than 1000 non-congestion cancellation
-    /// reasons, but this offset can be increased if needed, as long as
-    /// (`Version::MIN_CONGESTED.value()` + maximum gas price) does not
-    /// overflow `u64::MAX`.
+    /// There unlikely will be more than 1000 non-congestion cancellation reasons, but this offset
+    /// can be increased if needed, as long as (`Version::MIN_CONGESTED.value()` + maximum gas
+    /// price) does not overflow `u64::MAX`.
     const CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK: Self = Self(1_000);
 
-    /// Minimum congested version used in the gas price feedback
-    /// mechanism. A congested version is assigned to objects that
-    /// cause transaction cancellations.
+    /// Minimum congested version used in the gas price feedback mechanism. A congested version is
+    /// assigned to objects that cause transaction cancellations.
     const MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK: Self =
         Self(Self::MAX_VALID_EXCL.0 + Self::CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK.0);
 
@@ -158,11 +151,10 @@ impl Version {
         Ok(())
     }
 
-    /// Returns a special version used for congested shared objects:
-    /// `Version::MIN_CONGESTED + suggested_gas_price`,
-    /// where `suggested_gas_price` is embedded into a congested version
-    /// to facilitate a gas price feedback mechanism for transactions
-    /// canceled due to shared object congestion.
+    /// Returns a special version used for congested shared objects: `Version::MIN_CONGESTED +
+    /// suggested_gas_price`, where `suggested_gas_price` is embedded into a congested version to
+    /// facilitate a gas price feedback mechanism for transactions canceled due to shared object
+    /// congestion.
     pub fn new_congested_with_suggested_gas_price(
         suggested_gas_price: u64,
     ) -> Result<Self, VersionError> {
@@ -176,17 +168,16 @@ impl Version {
         Ok(Self(version))
     }
 
-    /// Check if this version is congested, i.e., the corresponding
-    /// object is the reason for transaction cancellation.
+    /// Check if this version is congested, i.e., the corresponding object is the reason for
+    /// transaction cancellation.
     pub fn is_congested(&self) -> bool {
         *self == Self::CONGESTED_PRIOR_TO_GAS_PRICE_FEEDBACK
             || *self >= Self::MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK
     }
 
-    /// Returns the `suggested_gas_price` embedded in this congested shared
-    /// object version. The `suggested_gas_price` here is used for a
-    /// gas price feedback mechanism for transactions canceled due to
-    /// shared object congestion.
+    /// Returns the `suggested_gas_price` embedded in this congested shared object version. The
+    /// `suggested_gas_price` here is used for a gas price feedback mechanism for transactions
+    /// canceled due to shared object congestion.
     pub fn get_congested_version_suggested_gas_price(&self) -> Result<u64, VersionError> {
         if *self < Self::MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK {
             return Err(VersionError::InvalidCongestedVersion);
@@ -195,21 +186,21 @@ impl Version {
         Ok(self.0 - Self::MIN_CONGESTED_FOR_GAS_PRICE_FEEDBACK.0)
     }
 
-    /// Returns a new version that is greater than all versions
-    /// in `inputs`, assuming this operation will not overflow.
+    /// Returns a new version that is greater than all versions in `inputs`, assuming this operation
+    /// will not overflow.
     pub fn lamport_increment(inputs: impl IntoIterator<Item = Self>) -> Result<Self, VersionError> {
         let max_input = inputs.into_iter().max().unwrap_or_default();
         max_input.next()
     }
 
-    /// Checks if this version is canceled, i.e., the corresponding
-    /// object appears in a canceled transaction.
+    /// Checks if this version is canceled, i.e., the corresponding object appears in a canceled
+    /// transaction.
     pub fn is_canceled(&self) -> bool {
         *self == Self::CANCELED_READ || *self == Self::RANDOMNESS_UNAVAILABLE || self.is_congested()
     }
 
-    /// Checks if this version is valid, i.e., the corresponding
-    /// object does not appear in a canceled transaction.
+    /// Checks if this version is valid, i.e., the corresponding object does not appear in a
+    /// canceled transaction.
     pub fn is_valid(&self) -> bool {
         *self < Self::MAX_VALID_EXCL
     }

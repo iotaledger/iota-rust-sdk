@@ -21,8 +21,8 @@ pub(crate) fn test_client() -> GraphQLClient {
     }
 }
 
-/// A pagination filter whose every field differs from the default, so a
-/// query that drops it sends different variables.
+/// A pagination filter whose every field differs from the default, so a query that drops it sends
+/// different variables.
 pub(crate) fn backward_page() -> crate::PaginationFilter {
     crate::PaginationFilter {
         direction: crate::Direction::Backward,
@@ -31,9 +31,8 @@ pub(crate) fn backward_page() -> crate::PaginationFilter {
     }
 }
 
-/// Run `send` against a local server that answers every request with `{}`,
-/// and return the variables of the first request that is not the service
-/// config query, which pagination sends first.
+/// Run `send` against a local server that answers every request with `{}`, and return the variables
+/// of the first request that is not the service config query, which pagination sends first.
 pub(crate) async fn sent_variables<Fut: Future>(
     operation: &str,
     send: impl FnOnce(GraphQLClient) -> Fut,

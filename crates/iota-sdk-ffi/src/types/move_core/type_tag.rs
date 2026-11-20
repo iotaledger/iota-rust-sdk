@@ -88,8 +88,8 @@ impl TypeTag {
     }
 
     #[inline]
-    /// Converts this type tag into the inner type tag of a vector, if it is
-    /// one, or returns `None` otherwise.
+    /// Converts this type tag into the inner type tag of a vector, if it is one, or returns `None`
+    /// otherwise.
     pub fn as_opt_vector_type_tag(&self) -> Option<Arc<TypeTag>> {
         self.0
             .as_opt_vector_type_tag()
@@ -99,8 +99,8 @@ impl TypeTag {
     }
 
     #[inline]
-    /// Converts this type tag into the inner type tag of a vector, if it is
-    /// one, or panics otherwise.
+    /// Converts this type tag into the inner type tag of a vector, if it is one, or panics
+    /// otherwise.
     pub fn as_vector_type_tag(&self) -> TypeTag {
         self.0.as_vector_type_tag().clone().into()
     }
@@ -112,8 +112,7 @@ impl TypeTag {
     }
 
     #[inline]
-    /// Converts this type tag into a struct tag, if it is one, or returns
-    /// `None` otherwise.
+    /// Converts this type tag into a struct tag, if it is one, or returns `None` otherwise.
     pub fn as_opt_struct_tag(&self) -> Option<Arc<StructTag>> {
         self.0
             .as_opt_struct_tag()
@@ -123,8 +122,7 @@ impl TypeTag {
     }
 
     #[inline]
-    /// Converts this type tag into a struct tag, if it is one, or panics
-    /// otherwise.
+    /// Converts this type tag into a struct tag, if it is one, or panics otherwise.
     pub fn as_struct_tag(&self) -> StructTag {
         self.0.as_struct_tag().clone().into()
     }
@@ -188,8 +186,8 @@ impl TypeTag {
         )))
     }
 
-    /// Returns the string representation of this type tag using the
-    /// canonical display, with or without a `0x` prefix.
+    /// Returns the string representation of this type tag using the canonical display, with or
+    /// without a `0x` prefix.
     pub fn to_canonical_string(&self, with_prefix: bool) -> String {
         self.0.to_canonical_string(with_prefix)
     }

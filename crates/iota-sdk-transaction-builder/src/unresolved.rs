@@ -112,14 +112,12 @@ impl Command {
         }
     }
 
-    /// The arguments of this command that cannot be replaced by
-    /// [`Argument::Gas`].
+    /// The arguments of this command that cannot be replaced by [`Argument::Gas`].
     ///
-    /// [`Argument::Gas`] stands for the whole gas payment — every gas coin
-    /// smashed into one — so substituting it for an argument that names a
-    /// single coin changes what the command operates on. The positions left
-    /// out take a coin without consuming it: a coin split from or merged into
-    /// is still there afterwards.
+    /// [`Argument::Gas`] stands for the whole gas payment — every gas coin smashed into one — so
+    /// substituting it for an argument that names a single coin changes what the command operates
+    /// on. The positions left out take a coin without consuming it: a coin split from or merged
+    /// into is still there afterwards.
     pub(crate) fn arguments_that_cannot_be_gas(&self) -> &[Argument] {
         match self {
             Command::MoveCall(MoveCall { arguments, .. }) => arguments,
@@ -129,8 +127,7 @@ impl Command {
         }
     }
 
-    /// Every argument of this command, in the order the node numbers them in
-    /// its errors.
+    /// Every argument of this command, in the order the node numbers them in its errors.
     pub(crate) fn arguments(&self) -> impl Iterator<Item = &Argument> {
         let (first, list, last): (Option<&Argument>, &[Argument], Option<&Argument>) = match self {
             Command::MoveCall(MoveCall { arguments, .. }) => (None, arguments, None),
@@ -321,8 +318,8 @@ pub struct MakeMoveVector {
 impl MakeMoveVector {
     /// Construct a Move vector of `elements`.
     ///
-    /// `type_tag` names the element type; it may be omitted when the type can
-    /// be inferred from the elements.
+    /// `type_tag` names the element type; it may be omitted when the type can be inferred from the
+    /// elements.
     pub fn new(type_tag: Option<TypeTag>, elements: Vec<Argument>) -> Self {
         Self { type_tag, elements }
     }
@@ -487,8 +484,8 @@ impl Publish {
     }
 }
 
-/// Builder state for a coin division, which is carried out by a
-/// [`Command::MoveCall`] and has no command of its own.
+/// Builder state for a coin division, which is carried out by a [`Command::MoveCall`] and has no
+/// command of its own.
 #[derive(Clone, Debug)]
 pub struct DivideCoin;
 

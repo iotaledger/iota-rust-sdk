@@ -22,14 +22,12 @@ use crate::{
 impl GrpcClient {
     /// Execute a signed transaction.
     ///
-    /// If `checkpoint_inclusion_timeout_ms` is provided, the server waits up
-    /// to that long for the transaction to be included in a checkpoint
-    /// before responding. Include `checkpoint` and `timestamp` in the
-    /// `read_mask` to receive that data.
+    /// If `checkpoint_inclusion_timeout_ms` is provided, the server waits up to that long for the
+    /// transaction to be included in a checkpoint before responding. Include `checkpoint` and
+    /// `timestamp` in the `read_mask` to receive that data.
     ///
-    /// The optional `read_mask` controls which fields the server returns.
-    /// If `None`, the transaction digest, effects, events, and input/output
-    /// objects are returned.
+    /// The optional `read_mask` controls which fields the server returns. If `None`, the
+    /// transaction digest, effects, events, and input/output objects are returned.
     #[uniffi::method(default(checkpoint_inclusion_timeout_ms = None, read_mask = None))]
     pub async fn execute_transaction(
         &self,
@@ -52,19 +50,16 @@ impl GrpcClient {
 
     /// Execute a batch of signed transactions.
     ///
-    /// An error the server reports for one transaction does not abort the
-    /// rest of the batch; reading that transaction's item throws the server's
-    /// error message. A transaction the server returns but
-    /// that cannot be decoded fails the whole call.
+    /// An error the server reports for one transaction does not abort the rest of the batch;
+    /// reading that transaction's item throws the server's error message. A transaction the server
+    /// returns but that cannot be decoded fails the whole call.
     ///
-    /// If `checkpoint_inclusion_timeout_ms` is provided, the server waits up
-    /// to that long for the transactions to be included in a checkpoint
-    /// before responding. Include `checkpoint` and `timestamp` in the
-    /// `read_mask` to receive that data.
+    /// If `checkpoint_inclusion_timeout_ms` is provided, the server waits up to that long for the
+    /// transactions to be included in a checkpoint before responding. Include `checkpoint` and
+    /// `timestamp` in the `read_mask` to receive that data.
     ///
-    /// The optional `read_mask` controls which fields the server returns.
-    /// If `None`, the transaction digest, effects, events, and input/output
-    /// objects are returned.
+    /// The optional `read_mask` controls which fields the server returns. If `None`, the
+    /// transaction digest, effects, events, and input/output objects are returned.
     #[uniffi::method(default(checkpoint_inclusion_timeout_ms = None, read_mask = None))]
     pub async fn execute_transactions(
         &self,

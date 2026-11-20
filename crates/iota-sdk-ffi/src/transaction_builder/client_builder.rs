@@ -26,8 +26,8 @@ use crate::{
 
 /// Emit a client-backed transaction builder object for the given client type.
 ///
-/// Uniffi has no generics, so the Rust `TransactionBuilder<C>` becomes one
-/// object per client. Everything but the dry-run result type is identical.
+/// Uniffi has no generics, so the Rust `TransactionBuilder<C>` becomes one object per client.
+/// Everything but the dry-run result type is identical.
 macro_rules! client_transaction_builder {
     (
         $(#[$meta:meta])*
@@ -133,9 +133,8 @@ macro_rules! client_transaction_builder {
 
             /// Send IOTA to a recipient address.
             ///
-            /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
-            /// equals 1_000_000_000 NANOS. That amount is split from the gas coin and
-            /// sent.
+            /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA equals
+            /// 1_000_000_000 NANOS. That amount is split from the gas coin and sent.
             pub fn send_iota(self: Arc<Self>, recipient: &Address, amount: &PTBArgument) -> Arc<Self> {
                 self.write(|builder| {
                     builder.send_iota(**recipient, amount);
@@ -143,21 +142,19 @@ macro_rules! client_transaction_builder {
                 self
             }
 
-            /// Transfer some coins to a recipient address. If multiple coins are
-            /// provided then they will be merged.
+            /// Transfer some coins to a recipient address. If multiple coins are provided then they
+            /// will be merged.
             ///
-            /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA
-            /// equals 1_000_000_000 NANOS.
-            /// If `amount` is provided, that amount is split from the provided coins
-            /// and sent.
+            /// The `amount` parameter specifies the quantity in NANOS, where 1 IOTA equals
+            /// 1_000_000_000 NANOS.
+            /// If `amount` is provided, that amount is split from the provided coins and sent.
             /// If `amount` is `None`, the entire coins are transferred.
             ///
-            /// All provided coins must have the same coin type. Mixing coins of
-            /// different types will result in an error.
+            /// All provided coins must have the same coin type. Mixing coins of different types
+            /// will result in an error.
             ///
-            /// If you intend to transfer all provided coins to another address in a
-            /// single transaction, consider using
-            /// `TransactionBuilder::transfer_objects()` instead.
+            /// If you intend to transfer all provided coins to another address in a single
+            /// transaction, consider using `TransactionBuilder::transfer_objects()` instead.
             #[uniffi::method(default(amount = None))]
             pub fn send_coins(
                 self: Arc<Self>,
@@ -171,8 +168,7 @@ macro_rules! client_transaction_builder {
                 self
             }
 
-            /// Transfer a list of objects to the given address, without producing any
-            /// result.
+            /// Transfer a list of objects to the given address, without producing any result.
             pub fn transfer_objects(
                 self: Arc<Self>,
                 recipient: &Address,
@@ -184,26 +180,21 @@ macro_rules! client_transaction_builder {
                 self
             }
 
-            /// Send coins to multiple recipients, each paired with the amount to
-            /// send.
+            /// Send coins to multiple recipients, each paired with the amount to send.
             ///
-            /// The amounts specify quantities in the coins' smallest unit (NANOS for
-            /// IOTA coins, where 1 IOTA equals 1_000_000_000 NANOS).
+            /// The amounts specify quantities in the coins' smallest unit (NANOS for IOTA coins,
+            /// where 1 IOTA equals 1_000_000_000 NANOS).
             ///
-            /// The coins are merged into the first one, the amounts are split off it
-            /// in a single command, and each split coin is transferred to its
-            /// corresponding recipient, with one transfer command per unique
-            /// recipient. The remainder stays in the first coin.
+            /// The coins are merged into the first one, the amounts are split off it in a single
+            /// command, and each split coin is transferred to its corresponding recipient, with one
+            /// transfer command per unique recipient. The remainder stays in the first coin.
             ///
-            /// All provided coins must have the same coin type. Mixing coins of
-            /// different types will result in an error.
+            /// All provided coins must have the same coin type. Mixing coins of different types
+            /// will result in an error.
             ///
-            /// To pay IOTA directly from the gas coin, use
-            /// `pay_iota()` instead.
+            /// To pay IOTA directly from the gas coin, use `pay_iota()` instead.
             ///
-            /// For a single recipient, consider using
-            /// `send_coins()` or
-            /// `send_iota()` instead.
+            /// For a single recipient, consider using `send_coins()` or `send_iota()` instead.
             pub fn pay(self: Arc<Self>, coins: Vec<Arc<PTBArgument>>, payments: Vec<Payment>) -> Arc<Self> {
                 self.write(|builder| {
                     builder.pay(
@@ -214,17 +205,15 @@ macro_rules! client_transaction_builder {
                 self
             }
 
-            /// Send IOTA to multiple recipients, each paired with the amount to
-            /// send.
+            /// Send IOTA to multiple recipients, each paired with the amount to send.
             ///
-            /// The amounts specify quantities in NANOS, where 1 IOTA equals
-            /// 1_000_000_000 NANOS. They are split off the gas coin in a single
-            /// command, and each split coin is transferred to its corresponding
-            /// recipient, with one transfer command per unique recipient.
+            /// The amounts specify quantities in NANOS, where 1 IOTA equals 1_000_000_000 NANOS.
+            /// They are split off the gas coin in a single command, and each split coin is
+            /// transferred to its corresponding recipient, with one transfer command per unique
+            /// recipient.
             ///
-            /// To pay with specific coins, or with a coin type other than IOTA, use
-            /// `pay()`. For a single recipient, consider
-            /// using `send_iota()` instead.
+            /// To pay with specific coins, or with a coin type other than IOTA, use `pay()`. For a
+            /// single recipient, consider using `send_iota()` instead.
             pub fn pay_iota(self: Arc<Self>, payments: Vec<Payment>) -> Arc<Self> {
                 self.write(|builder| {
                     builder.pay_iota(payments.into_iter().map(|p| (**p.recipient, p.amount)));
@@ -248,10 +237,9 @@ macro_rules! client_transaction_builder {
 
             /// Merge multiple coins into one.
             ///
-            /// This method combines the balances of multiple coins of the same coin
-            /// type into a single coin. The `primary_coin` will receive the balances
-            /// from all `consumed_coins`. After merging, the `consumed_coins` will
-            /// be consumed and no longer exist.
+            /// This method combines the balances of multiple coins of the same coin type into a
+            /// single coin. The `primary_coin` will receive the balances from all `consumed_coins`.
+            /// After merging, the `consumed_coins` will be consumed and no longer exist.
             pub fn merge_coins(
                 self: Arc<Self>,
                 primary_coin: &PTBArgument,
@@ -263,25 +251,22 @@ macro_rules! client_transaction_builder {
                 self
             }
 
-            /// Divide a coin into `count` coins of equal value, all kept by the
-            /// sender.
+            /// Divide a coin into `count` coins of equal value, all kept by the sender.
             ///
             /// Unlike `split_coins`, the new coins are transferred to the sender by
-            /// `0x2::pay::divide_and_keep` itself, so no transfer command is needed
-            /// for them. In exchange they are not available as command results and
-            /// cannot be used by later commands in the same transaction.
+            /// `0x2::pay::divide_and_keep` itself, so no transfer command is needed for them. In
+            /// exchange they are not available as command results and cannot be used by later
+            /// commands in the same transaction.
             ///
-            /// The coin defaults an IOTA coin. For any other coin type, set it
-            /// with `coin_type`, which is the `T` of `0x2::coin::Coin<T>`.
+            /// The coin defaults an IOTA coin. For any other coin type, set it with `coin_type`,
+            /// which is the `T` of `0x2::coin::Coin<T>`.
             ///
-            /// `count - 1` new coins are created, each holding `value / count`, and
-            /// the divided coin keeps its own share plus the remainder of the
-            /// division. The transaction aborts if `count` is zero or larger than the
-            /// coin's value.
+            /// `count - 1` new coins are created, each holding `value / count`, and the divided
+            /// coin keeps its own share plus the remainder of the division. The transaction aborts
+            /// if `count` is zero or larger than the coin's value.
             ///
-            /// The coin is passed by reference, so the gas coin
-            /// (`PTBArgument::Gas`) can be divided as well, as long as it retains
-            /// enough balance to pay for the transaction.
+            /// The coin is passed by reference, so the gas coin (`PTBArgument::Gas`) can be divided
+            /// as well, as long as it retains enough balance to pay for the transaction.
             #[uniffi::method(default(coin_type = None))]
             pub fn divide_coin(
                 self: Arc<Self>,
@@ -298,8 +283,8 @@ macro_rules! client_transaction_builder {
                 self
             }
 
-            /// Make a move vector from a list of elements. The elements must all be of
-            /// the type indicated by `type_tag`.
+            /// Make a move vector from a list of elements. The elements must all be of the type
+            /// indicated by `type_tag`.
             pub fn make_move_vec(
                 self: Arc<Self>,
                 elements: Vec<Arc<MoveArg>>,
@@ -320,10 +305,9 @@ macro_rules! client_transaction_builder {
                 self
             }
 
-            /// Publish a list of modules with the given dependencies. The result
-            /// assigned to `upgrade_cap_name` is the `0x2::package::UpgradeCap`
-            /// Move type. Note that the upgrade capability needs to be handled
-            /// after this call:
+            /// Publish a list of modules with the given dependencies. The result assigned to
+            /// `upgrade_cap_name` is the `0x2::package::UpgradeCap` Move type. Note that the
+            /// upgrade capability needs to be handled after this call:
             ///  - transfer it to the transaction sender or another address
             ///  - burn it
             ///  - wrap it for access control
@@ -331,8 +315,7 @@ macro_rules! client_transaction_builder {
             ///
             /// The arguments required for this command are:
             ///  - `modules`: is the modules' bytecode to be published
-            ///  - `dependencies`: is the list of IDs of the transitive dependencies of
-            ///    the package
+            ///  - `dependencies`: is the list of IDs of the transitive dependencies of the package
             pub fn publish_package(
                 self: Arc<Self>,
                 package_data: &MovePackageData,
@@ -346,15 +329,13 @@ macro_rules! client_transaction_builder {
                 self
             }
 
-            /// Authorize a package upgrade by calling
-            /// `0x2::package::authorize_upgrade`.
+            /// Authorize a package upgrade by calling `0x2::package::authorize_upgrade`.
             ///
-            /// The result assigned to `upgrade_ticket_name` is the `UpgradeTicket`
-            /// expected by `upgrade()`. The digest is the
-            /// digest of the package being upgraded to (`MovePackageData::digest()`).
+            /// The result assigned to `upgrade_ticket_name` is the `UpgradeTicket` expected by
+            /// `upgrade()`. The digest is the digest of the package being upgraded to
+            /// (`MovePackageData::digest()`).
             ///
-            /// For the standard upgrade flow, use
-            /// `upgrade_package()` instead.
+            /// For the standard upgrade flow, use `upgrade_package()` instead.
             pub fn authorize_upgrade(
                 self: Arc<Self>,
                 upgrade_capability: &PTBArgument,
@@ -373,15 +354,13 @@ macro_rules! client_transaction_builder {
             /// Upgrade a Move package.
             ///
             ///  - `modules`: is the modules' bytecode for the modules to be published
-            ///  - `dependencies`: is the list of IDs of the transitive dependencies of
-            ///    the package to be upgraded
+            ///  - `dependencies`: is the list of IDs of the transitive dependencies of the package
+            ///    to be upgraded
             ///  - `package`: is the ID of the current package being upgraded
             ///  - `ticket`: is the upgrade ticket
             ///
-            /// To get the ticket, use
-            /// `authorize_upgrade()`. The result assigned
-            /// to `name` is the `UpgradeReceipt` expected by
-            /// `commit_upgrade()`.
+            /// To get the ticket, use `authorize_upgrade()`. The result assigned to `name` is the
+            /// `UpgradeReceipt` expected by `commit_upgrade()`.
             #[uniffi::method(default(name = None))]
             pub fn upgrade(
                 self: Arc<Self>,
@@ -398,9 +377,8 @@ macro_rules! client_transaction_builder {
                 self
             }
 
-            /// Commit a package upgrade by calling `0x2::package::commit_upgrade`,
-            /// consuming the `UpgradeReceipt` returned by
-            /// `upgrade()`.
+            /// Commit a package upgrade by calling `0x2::package::commit_upgrade`, consuming the
+            /// `UpgradeReceipt` returned by `upgrade()`.
             pub fn commit_upgrade(
                 self: Arc<Self>,
                 upgrade_capability: &PTBArgument,
@@ -414,12 +392,9 @@ macro_rules! client_transaction_builder {
 
             /// Upgrade a Move package.
             ///
-            /// This is a high-level function which chains
-            /// `authorize_upgrade()`,
-            /// `upgrade()` and
-            /// `commit_upgrade()` using the digest from the
-            /// provided `MovePackageData`. Use the individual functions for custom
-            /// upgrade flows.
+            /// This is a high-level function which chains `authorize_upgrade()`, `upgrade()` and
+            /// `commit_upgrade()` using the digest from the provided `MovePackageData`. Use the
+            /// individual functions for custom upgrade flows.
             pub fn upgrade_package(
                 self: Arc<Self>,
                 package_id: &ObjectId,
@@ -440,8 +415,8 @@ macro_rules! client_transaction_builder {
 
             /// Add stake to a validator's staking pool.
             ///
-            /// This is a high-level function which will split the provided stake amount
-            /// from the gas coin and then stake using the resulting coin.
+            /// This is a high-level function which will split the provided stake amount from the
+            /// gas coin and then stake using the resulting coin.
             pub fn stake(self: Arc<Self>, stake: &PTBArgument, validator_address: &Address) -> Arc<Self> {
                 self.write(|builder| {
                     builder.stake(stake, **validator_address);
@@ -462,9 +437,8 @@ macro_rules! client_transaction_builder {
                 Ok(Transaction(self.read(|builder| builder.clone()).finish().await?))
             }
 
-            /// Convert this builder into a transaction with the given gas budget,
-            /// used as-is (no estimation or minimum clamp) and overriding any budget
-            /// set via `gas_budget`.
+            /// Convert this builder into a transaction with the given gas budget, used as-is (no
+            /// estimation or minimum clamp) and overriding any budget set via `gas_budget`.
             pub async fn finish_with_budget(&self, gas_budget: u64) -> Result<Transaction> {
                 Ok(Transaction(
                     self.read(|builder| builder.clone())
@@ -482,9 +456,9 @@ macro_rules! client_transaction_builder {
 
             /// Execute the transaction and optionally wait for finalization.
             ///
-            /// If the wait fails, the error is returned although the transaction was
-            /// executed, and its effects are lost. To keep them, pass no `wait_for`
-            /// and call `wait_for_transaction` on the client afterwards.
+            /// If the wait fails, the error is returned although the transaction was executed, and
+            /// its effects are lost. To keep them, pass no `wait_for` and call
+            /// `wait_for_transaction` on the client afterwards.
             #[uniffi::method(default(wait_for = None))]
             pub async fn execute(
                 &self,
@@ -498,8 +472,8 @@ macro_rules! client_transaction_builder {
                     .into())
             }
 
-            /// Execute the transaction with its gas paid by `gas_station`, and wait
-            /// for finalization.
+            /// Execute the transaction with its gas paid by `gas_station`, and wait for
+            /// finalization.
             pub async fn execute_with_gas_station(
                 &self,
                 gas_station: &GasStation,
@@ -515,17 +489,17 @@ macro_rules! client_transaction_builder {
                     .into())
             }
 
-            /// Execute the transaction with both the sender's and the sponsor's
-            /// signature, and optionally wait for finalization.
+            /// Execute the transaction with both the sender's and the sponsor's signature, and
+            /// optionally wait for finalization.
             ///
-            /// If the wait fails, the error is returned although the transaction was
-            /// executed, and its effects are lost. To keep them, pass no `wait_for`
-            /// and call `wait_for_transaction` on the client afterwards.
+            /// If the wait fails, the error is returned although the transaction was executed, and
+            /// its effects are lost. To keep them, pass no `wait_for` and call
+            /// `wait_for_transaction` on the client afterwards.
             ///
-            /// Use this when you hold the sponsor's key. The sponsor's address must be
-            /// set with `sponsor`, which is also where the gas coins are drawn from.
-            /// When the sponsor is a service that keeps its own key and submits for
-            /// you, use `execute_with_gas_station` instead.
+            /// Use this when you hold the sponsor's key. The sponsor's address must be set with
+            /// `sponsor`, which is also where the gas coins are drawn from. When the sponsor is a
+            /// service that keeps its own key and submits for you, use `execute_with_gas_station`
+            /// instead.
             #[uniffi::method(default(wait_for = None))]
             pub async fn execute_with_sponsor_signer(
                 &self,
@@ -549,12 +523,11 @@ macro_rules! client_transaction_builder {
         #[cfg(feature = "unstable")]
         #[uniffi::export]
         impl $name {
-            /// Make the transaction depend on the transaction `digest`: it
-            /// executes only after `digest` executed successfully in the
-            /// current epoch.
+            /// Make the transaction depend on the transaction `digest`: it executes only after
+            /// `digest` executed successfully in the current epoch.
             ///
-            /// The transaction must also have an epoch expiration, set with
-            /// `expiration`. Calling this again replaces the digest.
+            /// The transaction must also have an epoch expiration, set with `expiration`. Calling
+            /// this again replaces the digest.
             pub fn transaction_dependency(
                 self: Arc<Self>,
                 digest: &TransactionDigest,
@@ -569,18 +542,16 @@ macro_rules! client_transaction_builder {
 }
 
 client_transaction_builder! {
-    /// A builder for creating transactions which uses a GraphQL client to
-    /// automatically resolve inputs. Use `finish` to finalize the transaction
-    /// data.
+    /// A builder for creating transactions which uses a GraphQL client to automatically resolve
+    /// inputs. Use `finish` to finalize the transaction data.
     GraphQLTransactionBuilder: Arc<iota_sdk::graphql_client::GraphQLClient>,
     dry_run -> GraphQLDryRunResult = |result| result.into()
 }
 
 #[cfg(feature = "grpc")]
 client_transaction_builder! {
-    /// A builder for creating transactions which uses a gRPC client to
-    /// automatically resolve inputs. Use `finish` to finalize the transaction
-    /// data.
+    /// A builder for creating transactions which uses a gRPC client to automatically resolve
+    /// inputs. Use `finish` to finalize the transaction data.
     GrpcTransactionBuilder: Arc<iota_sdk::grpc_client::GrpcClient>,
     dry_run -> crate::grpc::api::execution::simulate::GrpcSimulatedTransaction =
         |result| crate::grpc::api::execution::simulate::GrpcSimulatedTransaction::try_from(&result)?

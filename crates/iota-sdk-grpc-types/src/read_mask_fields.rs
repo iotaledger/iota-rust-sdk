@@ -3,12 +3,11 @@
 
 //! Typed read mask field paths and per-endpoint mask types.
 //!
-//! Each endpoint has a typed namespace (e.g. [`ObjectField`]) whose associated
-//! constants identify the fields the server can return, and a matching
-//! per-endpoint mask type (e.g. [`ObjectReadMask`]) that the client's
-//! `read_mask` setter accepts. Without the setter the endpoint's default mask
-//! is used; otherwise build a mask from a single field, a slice, an array, or
-//! an owned vec of the matching kind, and conversion happens automatically:
+//! Each endpoint has a typed namespace (e.g. [`ObjectField`]) whose associated constants identify
+//! the fields the server can return, and a matching per-endpoint mask type (e.g.
+//! [`ObjectReadMask`]) that the client's `read_mask` setter accepts. Without the setter the
+//! endpoint's default mask is used; otherwise build a mask from a single field, a slice, an array,
+//! or an owned vec of the matching kind, and conversion happens automatically:
 //!
 //! ```ignore
 //! use iota_sdk_grpc_types::read_mask_fields::ObjectField;
@@ -30,18 +29,16 @@
 //!
 //! # Server-rendered fields
 //!
-//! The server-rendered fields (`json`, `display`, `json_name`, `json_contents`,
-//! and command-output `json`) require Move type-layout resolution on the node
-//! (and `display` a display-index lookup), so they are populated **only when
-//! named explicitly by their leaf path**. A parent path, an `ALL` wildcard, or
-//! the `*` wildcard does **not** include them.
+//! The server-rendered fields (`json`, `display`, `json_name`, `json_contents`, and command-output
+//! `json`) require Move type-layout resolution on the node (and `display` a display-index lookup),
+//! so they are populated **only when named explicitly by their leaf path**. A parent path, an `ALL`
+//! wildcard, or the `*` wildcard does **not** include them.
 //!
-//! A leaf may be requested on its own or alongside a parent — both are kept, so
-//! `[OUTPUT_OBJECTS, OUTPUT_OBJECTS_JSON]` selects every output-object field
-//! *and* the rendered `json`. (The leaf is preserved by
-//! [`field_mask_normalize`] /
-//! [`field::SERVER_RENDERED_FIELD_NAMES`](crate::field::SERVER_RENDERED_FIELD_NAMES)
-//! rather than being collapsed into the parent.)
+//! A leaf may be requested on its own or alongside a parent — both are kept, so `[OUTPUT_OBJECTS,
+//! OUTPUT_OBJECTS_JSON]` selects every output-object field *and* the rendered `json`. (The leaf is
+//! preserved by [`field_mask_normalize`] /
+//! [`field::SERVER_RENDERED_FIELD_NAMES`](crate::field::SERVER_RENDERED_FIELD_NAMES) rather than
+//! being collapsed into the parent.)
 
 use std::borrow::Cow;
 
@@ -57,12 +54,11 @@ use crate::{
 
 /// Conversion into an endpoint-scoped read mask.
 ///
-/// This is the bound used by the client's `read_mask` setters. It is
-/// implemented for everything convertible into the endpoint's mask type: the
-/// mask itself (e.g. `ObjectReadMask::default()` for the endpoint default), a
-/// field constant of the matching field namespace (e.g. [`ObjectField::BCS`]),
-/// arrays/slices/`Vec`s of such fields, and raw `&'static str`/`String` field
-/// paths.
+/// This is the bound used by the client's `read_mask` setters. It is implemented for everything
+/// convertible into the endpoint's mask type: the mask itself (e.g. `ObjectReadMask::default()` for
+/// the endpoint default), a field constant of the matching field namespace (e.g.
+/// [`ObjectField::BCS`]), arrays/slices/`Vec`s of such fields, and raw `&'static str`/`String`
+/// field paths.
 #[diagnostic::on_unimplemented(
     message = "`{Self}` is not a valid read mask for this endpoint",
     label = "expected a value convertible into `{M}`",
@@ -99,8 +95,8 @@ macro_rules! define_field_paths {
                 pub const $variant: Self = Self(Cow::Borrowed($path));
             )*
 
-            /// Construct from a custom field path (escape hatch for paths not
-            /// covered by the named constants).
+            /// Construct from a custom field path (escape hatch for paths not covered by the named
+            /// constants).
             pub fn custom(path: impl Into<Cow<'static, str>>) -> Self {
                 Self(path.into())
             }
@@ -175,18 +171,17 @@ macro_rules! define_scoped_read_mask {
         }
 
         impl From<&'static str> for $mask {
-            /// Escape hatch — build the mask from a raw comma-separated path
-            /// string (e.g. one of the pre-computed
-            /// [`read_masks`](crate::read_masks) constants). Prefer passing
-            /// typed field constants when possible.
+            /// Escape hatch — build the mask from a raw comma-separated path string (e.g. one of
+            /// the pre-computed [`read_masks`](crate::read_masks) constants). Prefer passing typed
+            /// field constants when possible.
             fn from(s: &'static str) -> Self {
                 Self(Cow::Borrowed(s))
             }
         }
 
         impl From<String> for $mask {
-            /// Escape hatch — build the mask from a raw comma-separated path
-            /// string. Prefer passing typed field constants when possible.
+            /// Escape hatch — build the mask from a raw comma-separated path string. Prefer passing
+            /// typed field constants when possible.
             fn from(s: String) -> Self {
                 Self(Cow::Owned(s))
             }
@@ -234,9 +229,9 @@ macro_rules! define_scoped_read_mask {
             }
         }
 
-        // `IntoReadMask` impls are enumerated (instead of blanket-implemented
-        // over `Into<$mask>`) so that an invalid argument has *no* candidate
-        // impl, which lets the trait's `on_unimplemented` diagnostic fire.
+        // `IntoReadMask` impls are enumerated (instead of blanket-implemented over `Into<$mask>`)
+        // so that an invalid argument has *no* candidate impl, which lets the trait's
+        // `on_unimplemented` diagnostic fire.
         impl_into_read_mask!($mask: $mask, $field, &$field, &[$field], Vec<$field>, &'static str, String);
 
         impl<const N: usize> IntoReadMask<$mask> for [$field; N] {
@@ -284,9 +279,8 @@ macro_rules! impl_into_read_mask {
 define_field_paths! {
     /// Field paths for `get_objects`.
     pub struct ObjectField {
-        /// Wildcard — request all object fields except the server-rendered
-        /// `json`/`display`, which must be named explicitly (see the module
-        /// docs).
+        /// Wildcard — request all object fields except the server-rendered `json`/`display`, which
+        /// must be named explicitly (see the module docs).
         ALL = "*",
         /// Object reference (object_id, version, digest).
         REFERENCE = "reference",
@@ -317,8 +311,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `list_owned_objects` and `coins`.
     pub struct OwnedObjectField {
-        /// Wildcard — request all fields except the server-rendered ones this
-        /// message has, which must be named explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this message has, which
+        /// must be named explicitly (see the module docs).
         ALL = "*",
         /// Object reference (object_id, version, digest).
         REFERENCE = "reference",
@@ -349,8 +343,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `get_transactions` and `execute_transaction(s)`.
     pub struct TransactionField {
-        /// Wildcard — request all fields except the server-rendered ones this
-        /// message has, which must be named explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this message has, which
+        /// must be named explicitly (see the module docs).
         ALL = "*",
         /// Transaction data (all sub-fields).
         TRANSACTION = "transaction",
@@ -457,9 +451,8 @@ define_scoped_read_mask! {
 define_scoped_read_mask! {
     /// Scoped read mask for `execute_transaction(s)`.
     ///
-    /// Its `default()` is [`EXECUTE_TRANSACTIONS_READ_MASK`], matching the
-    /// server-side fallback: the transaction digest, `effects`, `events` and
-    /// the input/output objects.
+    /// Its `default()` is [`EXECUTE_TRANSACTIONS_READ_MASK`], matching the server-side fallback:
+    /// the transaction digest, `effects`, `events` and the input/output objects.
     pub struct ExecuteTransactionReadMask from TransactionField default EXECUTE_TRANSACTIONS_READ_MASK;
 }
 
@@ -470,8 +463,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `get_service_info`.
     pub struct ServiceInfoField {
-        /// Wildcard — request all fields except the server-rendered ones this
-        /// message has, which must be named explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this message has, which
+        /// must be named explicitly (see the module docs).
         ALL = "*",
         /// The chain ID (network identifier).
         CHAIN_ID = "chain_id",
@@ -504,11 +497,11 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `get_epoch`.
     ///
-    /// Use [`EpochField::feature_flag`] and [`EpochField::attribute`] for
-    /// individual protocol-config map entries.
+    /// Use [`EpochField::feature_flag`] and [`EpochField::attribute`] for individual
+    /// protocol-config map entries.
     pub struct EpochField {
-        /// Wildcard — request all fields except the server-rendered ones this
-        /// message has, which must be named explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this message has, which
+        /// must be named explicitly (see the module docs).
         ALL = "*",
         /// The epoch number.
         EPOCH = "epoch",
@@ -596,8 +589,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for checkpoint responses.
     pub struct CheckpointResponseField {
-        /// Wildcard — request all fields except the server-rendered ones this
-        /// message has, which must be named explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this message has, which
+        /// must be named explicitly (see the module docs).
         ALL = "*",
         /// All checkpoint data fields.
         CHECKPOINT = "checkpoint",
@@ -687,8 +680,8 @@ define_field_paths! {
 }
 
 define_scoped_read_mask! {
-    /// Scoped read mask for checkpoint queries (`get_checkpoint_*`,
-    /// `stream_checkpoints`, `checkpoints_stream_filtered`).
+    /// Scoped read mask for checkpoint queries (`get_checkpoint_*`, `stream_checkpoints`,
+    /// `checkpoints_stream_filtered`).
     pub struct CheckpointResponseReadMask from CheckpointResponseField default GET_CHECKPOINT_READ_MASK;
 }
 
@@ -699,8 +692,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `simulate_transaction(s)`.
     pub struct SimulateField {
-        /// Wildcard — request all fields except the server-rendered ones this
-        /// message has, which must be named explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this message has, which
+        /// must be named explicitly (see the module docs).
         ALL = "*",
         /// The simulated executed transaction (all sub-fields).
         EXECUTED_TRANSACTION = "executed_transaction",
@@ -755,11 +748,10 @@ define_field_paths! {
         EXECUTED_TRANSACTION_OBJECT_CHANGES = "executed_transaction.object_changes",
         /// The suggested gas price (in NANOS).
         SUGGESTED_GAS_PRICE = "suggested_gas_price",
-        /// Execution result (all sub-fields except the server-rendered
-        /// command-output `json`).
+        /// Execution result (all sub-fields except the server-rendered command-output `json`).
         EXECUTION_RESULT = "execution_result",
-        /// Per-command results (on success, all sub-fields except the
-        /// server-rendered command-output `json`).
+        /// Per-command results (on success, all sub-fields except the server-rendered
+        /// command-output `json`).
         EXECUTION_RESULT_COMMAND_RESULTS = "execution_result.command_results",
         /// Objects mutated by reference.
         EXECUTION_RESULT_COMMAND_RESULTS_MUTATED_BY_REF =
@@ -797,11 +789,10 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `view_function_call(s)`.
     pub struct ViewFunctionCallField {
-        /// Wildcard — request all fields except the server-rendered ones this
-        /// message has, which must be named explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this message has, which
+        /// must be named explicitly (see the module docs).
         ALL = "*",
-        /// Execution result (all sub-fields except the server-rendered
-        /// command-output `json`).
+        /// Execution result (all sub-fields except the server-rendered command-output `json`).
         EXECUTION_RESULT = "execution_result",
         /// Return values of the call (all sub-fields).
         EXECUTION_RESULT_RETURN_VALUES = "execution_result.return_values",
@@ -837,8 +828,8 @@ define_scoped_read_mask! {
 define_field_paths! {
     /// Field paths for `list_dynamic_fields`.
     pub struct DynamicFieldField {
-        /// Wildcard — request all fields except the server-rendered ones this
-        /// message has, which must be named explicitly (see the module docs).
+        /// Wildcard — request all fields except the server-rendered ones this message has, which
+        /// must be named explicitly (see the module docs).
         ALL = "*",
         /// The kind of dynamic field (field or object).
         KIND = "kind",
@@ -854,8 +845,8 @@ define_field_paths! {
         VALUE = "value",
         /// The Move type of the value.
         VALUE_TYPE = "value_type",
-        /// The full field object (all sub-fields except the server-rendered
-        /// `json`/`display`; sub-fields match `get_objects`).
+        /// The full field object (all sub-fields except the server-rendered `json`/`display`;
+        /// sub-fields match `get_objects`).
         FIELD_OBJECT = "field_object",
         /// The full BCS-encoded field object.
         FIELD_OBJECT_BCS = "field_object.bcs",
@@ -863,8 +854,8 @@ define_field_paths! {
         FIELD_OBJECT_JSON = "field_object.json",
         /// Rendering of the field object's on-chain Display template.
         FIELD_OBJECT_DISPLAY = "field_object.display",
-        /// The full child object (all sub-fields except the server-rendered
-        /// `json`/`display`; sub-fields match `get_objects`).
+        /// The full child object (all sub-fields except the server-rendered `json`/`display`;
+        /// sub-fields match `get_objects`).
         CHILD_OBJECT = "child_object",
         /// The full BCS-encoded child object.
         CHILD_OBJECT_BCS = "child_object.bcs",
@@ -1095,9 +1086,8 @@ mod tests {
         assert_eq!(mask, "bcs,reference");
     }
 
-    /// Every path a caller can name must be one the server can resolve against
-    /// the message the mask is applied to, otherwise the field is silently
-    /// dropped instead of rejected.
+    /// Every path a caller can name must be one the server can resolve against the message the mask
+    /// is applied to, otherwise the field is silently dropped instead of rejected.
     #[test]
     fn view_function_call_field_paths_resolve_against_the_outputs_message() {
         use crate::{
@@ -1126,8 +1116,8 @@ mod tests {
             );
         }
 
-        // The response-level field name is *not* a valid path: the mask applies
-        // per item, so naming it selects nothing.
+        // The response-level field name is *not* a valid path: the mask applies per item, so naming
+        // it selects nothing.
         assert!(
             FieldMask::from_str("view_function_call_results")
                 .validate::<ViewFunctionCallOutputs>()
@@ -1149,16 +1139,15 @@ mod tests {
             Ok(())
         );
 
-        // The default names the oneof, so both arms come back — a caller that
-        // does not set a mask still sees a failing call's error.
+        // The default names the oneof, so both arms come back — a caller that does not set a mask
+        // still sees a failing call's error.
         let tree = FieldMaskTree::from_field_mask(&FieldMask::from_str(mask.as_str()));
         assert!(tree.contains(ViewFunctionCallField::EXECUTION_RESULT_RETURN_VALUES.as_str()));
         assert!(tree.contains(ViewFunctionCallField::EXECUTION_RESULT_EXECUTION_ERROR.as_str()));
     }
 
-    /// The server-rendered fields are explicit-only, so a caller must be able
-    /// to name them; these paths must resolve, or the field is silently
-    /// dropped instead of rendered.
+    /// The server-rendered fields are explicit-only, so a caller must be able to name them; these
+    /// paths must resolve, or the field is silently dropped instead of rendered.
     #[test]
     fn simulate_field_paths_resolve_against_the_simulated_transaction_message() {
         use crate::{
@@ -1181,11 +1170,11 @@ mod tests {
         }
     }
 
-    // Checkpoint read masks name the per-transaction fields under `transactions`
-    // (the field is `executed_transactions` on the message), so they are checked
-    // by the endpoint's own path validator rather than `MessageFields`. The
-    // event sub-path is the same one proven against `ExecutedTransaction` above
-    // via `SimulatedTransaction`; here we pin the string the server expects.
+    // Checkpoint read masks name the per-transaction fields under `transactions` (the field is
+    // `executed_transactions` on the message), so they are checked by the endpoint's own path
+    // validator rather than `MessageFields`. The event sub-path is the same one proven against
+    // `ExecutedTransaction` above via `SimulatedTransaction`; here we pin the string the server
+    // expects.
     #[test]
     fn checkpoint_response_transaction_event_json_contents_path() {
         assert_eq!(
@@ -1223,8 +1212,7 @@ mod tests {
         let mask = ExecuteTransactionReadMask::default();
         assert_eq!(mask, EXECUTE_TRANSACTIONS_READ_MASK);
         assert!(mask.as_str().split(',').any(|path| path == "effects"));
-        // The `get_transactions` default does not, so the two endpoints must
-        // not share a mask type.
+        // The `get_transactions` default does not, so the two endpoints must not share a mask type.
         assert!(
             !TransactionReadMask::default()
                 .as_str()

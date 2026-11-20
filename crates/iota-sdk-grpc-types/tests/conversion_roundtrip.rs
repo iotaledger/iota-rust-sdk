@@ -3,8 +3,8 @@
 
 //! Roundtrip conversion tests for gRPC proto types <-> iota-sdk-types.
 //!
-//! Each test converts an SDK type to its proto representation and back,
-//! verifying that the value survives the roundtrip unchanged.
+//! Each test converts an SDK type to its proto representation and back, verifying that the value
+//! survives the roundtrip unchanged.
 
 use base64ct::Encoding;
 use iota_sdk_grpc_types::v1;
@@ -214,9 +214,8 @@ fn validator_committee_roundtrip_empty_members() {
 
 #[test]
 fn validator_aggregated_signature_roundtrip() {
-    // Use a known-good BCS fixture to construct a valid
-    // ValidatorAggregatedSignature (the roaring bitmap field requires the
-    // `roaring` crate which isn't a direct dep).
+    // Use a known-good BCS fixture to construct a valid ValidatorAggregatedSignature (the roaring
+    // bitmap field requires the `roaring` crate which isn't a direct dep).
     let bcs_bytes = base64ct::Base64::decode_vec(
         "CgAAAAAAAACZrBcXiqa0ttztfwrBxKzQRzIRnZhbmsQV7tqNXwiZQrRC+dVDbdua1Ety9uy2pCUSOjAAAAEAAAAAAAAAEAAAAAAA",
     ).unwrap();

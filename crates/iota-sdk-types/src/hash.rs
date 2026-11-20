@@ -23,14 +23,14 @@ impl Hasher {
         self.0.update(data)
     }
 
-    /// Finalize hashing, consuming the Hasher instance and returning the
-    /// resultant hash or `Digest`.
+    /// Finalize hashing, consuming the Hasher instance and returning the resultant hash or
+    /// `Digest`.
     pub fn finalize(self) -> Digest {
         Digest::new(self.0.finalize().into())
     }
 
-    /// Convenience function for creating a new Hasher instance, hashing the
-    /// provided data, and returning the resultant `Digest`
+    /// Convenience function for creating a new Hasher instance, hashing the provided data, and
+    /// returning the resultant `Digest`
     pub fn digest<T: AsRef<[u8]>>(data: T) -> Digest {
         let mut hasher = Self::new();
         hasher.update(data);
@@ -59,8 +59,8 @@ fn derive_address_from(write: impl FnOnce(&mut Hasher)) -> Address {
 impl crate::Ed25519PublicKey {
     /// Derive an `Address` from this Public Key
     ///
-    /// An `Address` can be derived from an `Ed25519PublicKey` by hashing the
-    /// bytes of the public key with no prefix flag.
+    /// An `Address` can be derived from an `Ed25519PublicKey` by hashing the bytes of the public
+    /// key with no prefix flag.
     ///
     /// `hash(32-byte ed25519 public key)`
     ///
@@ -100,9 +100,8 @@ impl From<&crate::Ed25519PublicKey> for Address {
 impl crate::Secp256k1PublicKey {
     /// Derive an `Address` from this Public Key
     ///
-    /// An `Address` can be derived from a `Secp256k1PublicKey` by hashing the
-    /// bytes of the public key prefixed with the Secp256k1
-    /// `SignatureScheme` flag (`0x01`).
+    /// An `Address` can be derived from a `Secp256k1PublicKey` by hashing the bytes of the public
+    /// key prefixed with the Secp256k1 `SignatureScheme` flag (`0x01`).
     ///
     /// `hash( 0x01 || 33-byte secp256k1 public key)`
     ///
@@ -144,9 +143,8 @@ impl From<&crate::Secp256k1PublicKey> for Address {
 impl crate::Secp256r1PublicKey {
     /// Derive an `Address` from this Public Key
     ///
-    /// An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
-    /// bytes of the public key prefixed with the Secp256r1
-    /// `SignatureScheme` flag (`0x02`).
+    /// An `Address` can be derived from a `Secp256r1PublicKey` by hashing the bytes of the public
+    /// key prefixed with the Secp256r1 `SignatureScheme` flag (`0x02`).
     ///
     /// `hash( 0x02 || 33-byte secp256r1 public key)`
     ///
@@ -188,9 +186,9 @@ impl From<&crate::Secp256r1PublicKey> for Address {
 impl crate::PasskeyPublicKey {
     /// Derive an `Address` from this Passkey Public Key
     ///
-    /// An `Address` can be derived from a `PasskeyPublicKey` by hashing the
-    /// bytes of the `Secp256r1PublicKey` that corresponds to this passkey
-    /// prefixed with the Passkey `SignatureScheme` flag (`0x06`).
+    /// An `Address` can be derived from a `PasskeyPublicKey` by hashing the bytes of the
+    /// `Secp256r1PublicKey` that corresponds to this passkey prefixed with the Passkey
+    /// `SignatureScheme` flag (`0x06`).
     ///
     /// `hash( 0x06 || 33-byte secp256r1 public key)`
     pub fn derive_address(&self) -> Address {
@@ -239,8 +237,8 @@ impl From<&crate::PasskeyAuthenticator> for Address {
 impl crate::PublicKey {
     /// Derive an `Address` from this Public Key
     ///
-    /// See the `derive_address` documentation of the concrete key types for
-    /// the scheme-specific derivation.
+    /// See the `derive_address` documentation of the concrete key types for the scheme-specific
+    /// derivation.
     pub fn derive_address(&self) -> Address {
         derive_address_from(|hasher| self.write_into_hasher(hasher))
     }
@@ -270,8 +268,8 @@ impl From<&crate::PublicKey> for Address {
 impl crate::SimpleSignature {
     /// Derive the `Address` of the public key that produced this signature.
     ///
-    /// See the `derive_address` documentation of the concrete key types for
-    /// the scheme-specific hashing rules.
+    /// See the `derive_address` documentation of the concrete key types for the scheme-specific
+    /// hashing rules.
     pub fn derive_address(&self) -> Address {
         self.to_public_key().derive_address()
     }
@@ -292,11 +290,10 @@ impl From<&crate::SimpleSignature> for Address {
 impl crate::MultisigCommittee {
     /// Derive an `Address` from this MultisigCommittee.
     ///
-    /// A MultiSig address is defined as the 32-byte Blake2b hash of serializing
-    /// the `SignatureScheme` flag (0x03), the threshold (in little endian), and
-    /// the concatenation of all n flags, public keys and their weights, where
-    /// `flag_i?` is the member's `SignatureScheme` flag — omitted for Ed25519
-    /// keys, matching their plain address derivation.
+    /// A MultiSig address is defined as the 32-byte Blake2b hash of serializing the
+    /// `SignatureScheme` flag (0x03), the threshold (in little endian), and the concatenation of
+    /// all n flags, public keys and their weights, where `flag_i?` is the member's
+    /// `SignatureScheme` flag — omitted for Ed25519 keys, matching their plain address derivation.
     ///
     /// `hash(0x03 || threshold || flag_1? || pk_1 || weight_1
     /// || ... || flag_n? || pk_n || weight_n)`.
@@ -370,9 +367,8 @@ impl From<&crate::UserSignature> for Address {
     }
 }
 
-/// Error returned when no signature in a
-/// [`SignedTransaction`](crate::SignedTransaction) commits to an expected
-/// signer address.
+/// Error returned when no signature in a [`SignedTransaction`](crate::SignedTransaction) commits to
+/// an expected signer address.
 #[cfg(feature = "serde")]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
 #[error("no signature found for address {address}")]
@@ -390,9 +386,9 @@ impl MissingSignatureError {
     }
 }
 
-/// Borrowed mirror of [`Transaction`](crate::Transaction) that serializes
-/// identically, allowing digests of a [`TransactionV1`](crate::TransactionV1)
-/// to be computed without cloning it into the owned enum.
+/// Borrowed mirror of [`Transaction`](crate::Transaction) that serializes identically, allowing
+/// digests of a [`TransactionV1`](crate::TransactionV1) to be computed without cloning it into the
+/// owned enum.
 #[cfg(feature = "serde")]
 #[derive(serde::Serialize)]
 enum TransactionRef<'a> {
@@ -410,8 +406,7 @@ mod type_digest {
     impl crate::Object {
         /// Calculate the digest of this `Object`
         ///
-        /// This is done by hashing the BCS bytes of this `Object` prefixed
-        /// with a salt.
+        /// This is done by hashing the BCS bytes of this `Object` prefixed with a salt.
         pub fn digest(&self) -> ObjectDigest {
             const SALT: &str = "Object::";
             type_digest(SALT, self).into()
@@ -447,11 +442,11 @@ mod type_digest {
     }
 
     impl crate::SenderSignedTransaction {
-        /// Calculate the digest of the full message, committing to the signing
-        /// intent, the transaction, and all signatures.
+        /// Calculate the digest of the full message, committing to the signing intent, the
+        /// transaction, and all signatures.
         ///
-        /// Unlike the other type digests, this hashes the BCS bytes directly,
-        /// without a salt prefix.
+        /// Unlike the other type digests, this hashes the BCS bytes directly, without a salt
+        /// prefix.
         pub fn full_message_digest(&self) -> SenderSignedDataDigest {
             let mut hasher = Hasher::new();
             bcs::serialize_into(&mut hasher, self).expect("bcs serialization failed");
@@ -483,11 +478,9 @@ mod type_digest {
     impl crate::UserSignature {
         /// Calculate the auth digest for this signature.
         ///
-        /// For [`MoveAuthenticator`](crate::MoveAuthenticator) signatures this
-        /// equals
-        /// [`MoveAuthenticator::digest()`](crate::MoveAuthenticator::digest).
-        /// For all other signature types it is the Blake2b256 of the
-        /// serialized (flag-prefixed) signature bytes.
+        /// For [`MoveAuthenticator`](crate::MoveAuthenticator) signatures this equals
+        /// [`MoveAuthenticator::digest()`](crate::MoveAuthenticator::digest). For all other
+        /// signature types it is the Blake2b256 of the serialized (flag-prefixed) signature bytes.
         pub fn auth_digest(&self) -> Digest {
             match self {
                 Self::MoveAuthenticator(authenticator) => authenticator.digest(),
@@ -499,13 +492,11 @@ mod type_digest {
     }
 
     impl crate::SignedTransaction {
-        /// Computes the auth digest for the sender and, if sponsored, for the
-        /// sponsor. See
-        /// [`UserSignature::auth_digest`](crate::UserSignature::auth_digest)
-        /// for the per-signature logic.
+        /// Computes the auth digest for the sender and, if sponsored, for the sponsor. See
+        /// [`UserSignature::auth_digest`](crate::UserSignature::auth_digest) for the per-signature
+        /// logic.
         ///
-        /// Returns an error if no signature commits to the sender or sponsor
-        /// address.
+        /// Returns an error if no signature commits to the sender or sponsor address.
         pub fn compute_auth_digests(
             &self,
         ) -> Result<(Digest, Option<Digest>), super::MissingSignatureError> {
@@ -592,12 +583,10 @@ mod signing_message {
     }
 
     impl crate::Bls12381PublicKey {
-        /// The message a proof of possession for this key and `address`
-        /// commits to. A validator signs it with the matching private key to
-        /// show that the key it registers is its own.
+        /// The message a proof of possession for this key and `address` commits to. A validator
+        /// signs it with the matching private key to show that the key it registers is its own.
         ///
-        /// The proof is not tied to an epoch, so the message always commits
-        /// to epoch 0.
+        /// The proof is not tied to an epoch, so the message always commits to epoch 0.
         pub fn proof_of_possession_message(&self, address: crate::Address) -> Vec<u8> {
             let mut committed = self.bytes().to_vec();
             committed.extend_from_slice(address.as_ref());
@@ -626,9 +615,8 @@ mod signing_message {
     }
 }
 
-/// A 1-byte domain separator for hashing Object ID in IOTA. It starts from 0xf0
-/// to ensure no hashing collision for any ObjectId vs Address which is
-/// derived as the hash of `flag || pubkey`.
+/// A 1-byte domain separator for hashing Object ID in IOTA. It starts from 0xf0 to ensure no
+/// hashing collision for any ObjectId vs Address which is derived as the hash of `flag || pubkey`.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
@@ -641,8 +629,7 @@ enum HashingIntent {
 impl crate::ObjectId {
     /// Create an ObjectId from a transaction digest and `count`.
     ///
-    /// `count` is the number of objects that have been created during a
-    /// transaction.
+    /// `count` is the number of objects that have been created during a transaction.
     pub fn derive_id(digest: crate::TransactionDigest, count: u64) -> Self {
         let mut hasher = Hasher::new();
         hasher.update([HashingIntent::RegularObjectId as u8]);
@@ -678,8 +665,7 @@ impl crate::ObjectId {
     /// hash(parent || len(key) || key || DerivedObjectKey(key_type_tag))
     #[cfg(feature = "serde")]
     pub fn derive_object_id(&self, key_type_tag: &crate::TypeTag, key_bytes: &[u8]) -> Self {
-        // Wrap the key type into `DerivedObjectKey<K>` to preserve on-chain
-        // namespacing
+        // Wrap the key type into `DerivedObjectKey<K>` to preserve on-chain namespacing
         let wrapper_type_tag = crate::TypeTag::Struct(Box::new(crate::StructTag::new(
             crate::Address::FRAMEWORK,
             crate::Identifier::DERIVED_OBJECT_MODULE,
@@ -723,8 +709,7 @@ mod tests {
         assert_eq!(Ok(intent), HashingIntent::from_byte(intent as u8));
     }
 
-    // Guards that `TransactionRef` stays serialization-identical to
-    // `Transaction`.
+    // Guards that `TransactionRef` stays serialization-identical to `Transaction`.
     #[cfg(feature = "serde")]
     #[proptest]
     fn transaction_v1_digests_match_transaction(transaction: crate::TransactionV1) {
@@ -744,8 +729,8 @@ mod serde_tests {
 
     use crate::{Address, Identifier, ObjectId, StructTag, TypeTag, UserSignature};
 
-    // Guards the address derivation from serialized signatures: every
-    // UserSignature kind, given as base64, must keep deriving the same address.
+    // Guards the address derivation from serialized signatures: every UserSignature kind, given as
+    // base64, must keep deriving the same address.
     #[test]
     fn test_address_from_user_signature() {
         let fixtures = [
@@ -797,15 +782,13 @@ mod serde_tests {
             assert_eq!(inner.to_string(), expected);
         }
 
-        // zkLogin (flag 0x05) is deprecated: serialized signatures are rejected
-        // at deserialization.
+        // zkLogin (flag 0x05) is deprecated: serialized signatures are rejected at deserialization.
         let zklogin_b64 = base64ct::Base64::encode_string(&[0x05u8, 0, 0, 0]);
         assert!(UserSignature::from_base64(&zklogin_b64).is_err());
     }
 
     // Snapshot tests that match the on-chain `derive_address` logic.
-    // These snapshots can also be found in the `derived_object_tests.move` unit
-    // tests.
+    // These snapshots can also be found in the `derived_object_tests.move` unit tests.
     #[test]
     fn test_derive_object_id_snapshot() {
         let key_bytes = bcs::to_bytes("foo".as_bytes()).unwrap();

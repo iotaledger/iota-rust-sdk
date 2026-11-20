@@ -67,8 +67,8 @@ pub struct GrpcEpochInfo {
     pub epoch: Option<u64>,
     /// The committee governing the epoch.
     pub committee: Option<Arc<ValidatorCommittee>>,
-    /// Snapshot of IOTA's `SystemState` as BCS, at the beginning of the epoch
-    /// for past epochs, or the current state for the current epoch.
+    /// Snapshot of IOTA's `SystemState` as BCS, at the beginning of the epoch for past epochs, or
+    /// the current state for the current epoch.
     pub system_state_bcs: Option<Vec<u8>>,
     /// The first checkpoint sequence number of the epoch.
     pub first_checkpoint: Option<u64>,
@@ -109,8 +109,7 @@ impl TryFrom<&proto::epoch::Epoch> for GrpcEpochInfo {
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GrpcClient {
-    /// Get information about an epoch. If `epoch` is `None`, the current
-    /// epoch is returned.
+    /// Get information about an epoch. If `epoch` is `None`, the current epoch is returned.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     #[uniffi::method(default(epoch = None, read_mask = None))]
@@ -129,8 +128,7 @@ impl GrpcClient {
             .try_into()
     }
 
-    /// Get the reference gas price of the current epoch, denominated in
-    /// NANOS.
+    /// Get the reference gas price of the current epoch, denominated in NANOS.
     pub async fn reference_gas_price(&self) -> Result<u64> {
         Ok(self.client().reference_gas_price().await?.into_inner())
     }

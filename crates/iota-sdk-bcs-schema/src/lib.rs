@@ -34,8 +34,8 @@ pub fn derive_bcs_schema(input: TokenStream) -> TokenStream {
     }
 }
 
-/// Internal to the IOTA SDK workspace: the generated impl targets a
-/// `crate::move_shape` module that the deriving crate has to define.
+/// Internal to the IOTA SDK workspace: the generated impl targets a `crate::move_shape` module that
+/// the deriving crate has to define.
 #[cfg(feature = "move-shape")]
 #[doc(hidden)]
 #[proc_macro_derive(MoveShape)]
@@ -198,9 +198,9 @@ fn type_to_schema(ty: &Type) -> String {
                     }
                     None => "(size *(unknown unknown))".into(),
                 },
-                // A BCS set has the same wire shape as a vector; the grammar
-                // cannot express the canonical (sorted, unique) element order,
-                // which is a BCS-level semantic like map key order.
+                // A BCS set has the same wire shape as a vector; the grammar cannot express the
+                // canonical (sorted, unique) element order, which is a BCS-level semantic like map
+                // key order.
                 "BTreeSet" => match extract_single_generic(seg) {
                     Some(inner) => {
                         format!("(size {})", wrap_for_repetition(&type_to_schema(&inner)))
@@ -279,10 +279,9 @@ fn matches_type_name(ty: &Type, name: &str) -> bool {
 
 /// Prefix `s` with `*` to form a zero-or-more repetition per RFC 5234 §3.6.
 ///
-/// If `s` is already a bracketed group (`(…)` or `[…]`) or a single bare token
-/// (no whitespace, not already a repetition), the `*` can be prepended
-/// directly. Otherwise `s` is wrapped in `(…)` first so the repetition applies
-/// to the whole expression.
+/// If `s` is already a bracketed group (`(…)` or `[…]`) or a single bare token (no whitespace, not
+/// already a repetition), the `*` can be prepended directly. Otherwise `s` is wrapped in `(…)`
+/// first so the repetition applies to the whole expression.
 fn wrap_for_repetition(s: &str) -> String {
     if s.starts_with('(') || s.starts_with('[') || (!s.contains(' ') && !s.starts_with('*')) {
         format!("*{s}")
@@ -300,9 +299,9 @@ fn to_kebab_case(s: &str) -> String {
     let chars: Vec<char> = s.chars().collect();
     for (i, &ch) in chars.iter().enumerate() {
         if ch == '_' {
-            // Treat an underscore as an explicit word boundary. ABNF rule names
-            // can't contain underscores, and Move type names like
-            // `STARDUST_UPGRADE_LABEL` or `UQ32_32` reach here.
+            // Treat an underscore as an explicit word boundary. ABNF rule names can't contain
+            // underscores, and Move type names like `STARDUST_UPGRADE_LABEL` or `UQ32_32` reach
+            // here.
             result.push('-');
             continue;
         }
@@ -311,8 +310,8 @@ fn to_kebab_case(s: &str) -> String {
                 let prev = chars[i - 1];
                 let prev_upper = prev.is_uppercase();
                 let next_lower = i + 1 < chars.len() && chars[i + 1].is_lowercase();
-                // Skip the boundary dash when the previous char was already a
-                // separator (the `_` arm above pushed one), to avoid `_-`.
+                // Skip the boundary dash when the previous char was already a separator (the `_`
+                // arm above pushed one), to avoid `_-`.
                 if prev != '_' && (!prev_upper || next_lower) {
                     result.push('-');
                 }
@@ -398,10 +397,9 @@ fn gen_enum(schema_name: &str, data: &syn::DataEnum) -> syn::Result<String> {
 
     for (idx, variant) in data.variants.iter().enumerate() {
         let va = parse_variant_attrs(variant)?;
-        // A skipped variant is omitted from the grammar but still consumes its
-        // discriminant, so the following variants keep their `%dNN` tags. This
-        // is how reserved/deprecated slots (which deserialization rejects) are
-        // held without appearing as valid input in the schema.
+        // A skipped variant is omitted from the grammar but still consumes its discriminant, so the
+        // following variants keep their `%dNN` tags. This is how reserved/deprecated slots (which
+        // deserialization rejects) are held without appearing as valid input in the schema.
         if va.skip {
             continue;
         }
@@ -410,9 +408,8 @@ fn gen_enum(schema_name: &str, data: &syn::DataEnum) -> syn::Result<String> {
 
         let fields_str = match &variant.fields {
             Fields::Unit => {
-                // A variant-level as_type allows specifying payload for unit
-                // variants that carry data only on the wire (e.g. repr-enum
-                // mirrors used for BCS schema generation).
+                // A variant-level as_type allows specifying payload for unit variants that carry
+                // data only on the wire (e.g. repr-enum mirrors used for BCS schema generation).
                 match &va.as_type {
                     Some(t) => format!(" {t}"),
                     None => String::new(),
@@ -482,9 +479,9 @@ fn schema_file_path() -> std::path::PathBuf {
 
 /// Built-in BCS primitive type definitions.
 ///
-/// These are seeded into every schema file so that the grammar is always
-/// self-contained.  The proc macro never derives entries for these names, so
-/// they are preserved unchanged across regeneration runs.
+/// These are seeded into every schema file so that the grammar is always self-contained.  The proc
+/// macro never derives entries for these names, so they are preserved unchanged across regeneration
+/// runs.
 fn primitive_entries() -> &'static [(&'static str, &'static str)] {
     &[
         ("bool", "bool    = %d00   ; false\n        / %d01   ; true"),
@@ -611,9 +608,8 @@ fn expand(input: &DeriveInput) -> syn::Result<TokenStream2> {
         },
     };
 
-    // Write the definition to the schema file only when explicitly requested via
-    // the BCS_SCHEMA env var — keeps `--all-features` builds from regenerating
-    // the file during normal development.
+    // Write the definition to the schema file only when explicitly requested via the BCS_SCHEMA env
+    // var — keeps `--all-features` builds from regenerating the file during normal development.
     let bcs_schema_enabled = std::env::var("BCS_SCHEMA").is_ok_and(|v| !v.is_empty() && v != "0");
     if bcs_schema_enabled {
         write_schema_entry(&schema_name, &definition);
@@ -638,8 +634,8 @@ mod tests {
         assert_eq!(to_kebab_case("TransactionV1"), "transaction-v1");
         assert_eq!(to_kebab_case("ObjectID"), "object-id");
         assert_eq!(to_kebab_case("BTreeMap"), "b-tree-map");
-        // Underscores are word boundaries, not literal characters (invalid in
-        // ABNF rule names). No spurious `_-` before an uppercase letter.
+        // Underscores are word boundaries, not literal characters (invalid in ABNF rule names). No
+        // spurious `_-` before an uppercase letter.
         assert_eq!(
             to_kebab_case("STARDUST_UPGRADE_LABEL"),
             "stardust-upgrade-label"
@@ -659,8 +655,8 @@ mod tests {
 
     #[test]
     fn skip_variant_holds_its_discriminant() {
-        // The skipped variant is omitted from the grammar, but the variants
-        // after it keep the `%dNN` tag matching their discriminant.
+        // The skipped variant is omitted from the grammar, but the variants after it keep the
+        // `%dNN` tag matching their discriminant.
         let schema = enum_schema(
             r#"
             enum Scheme {
@@ -671,8 +667,8 @@ mod tests {
             }
             "#,
         );
-        // `Passkey` keeps tag `%d02` even though it is the second emitted
-        // alternative, and the skipped variant contributes no `%d01` line.
+        // `Passkey` keeps tag `%d02` even though it is the second emitted alternative, and the
+        // skipped variant contributes no `%d01` line.
         assert_eq!(
             schema,
             "scheme = %d00 ed25519-signature       ; Ed25519\n\

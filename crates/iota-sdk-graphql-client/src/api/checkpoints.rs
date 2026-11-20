@@ -37,10 +37,9 @@ impl ListCheckpointsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
-    /// Without a cursor this fetches every checkpoint, which may take many
-    /// requests.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
+    /// Without a cursor this fetches every checkpoint, which may take many requests.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<CheckpointSummary>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -75,10 +74,8 @@ impl ListCheckpointsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::checkpoint`],
-    /// [`GraphQLClient::checkpoint_by_digest`] and
-    /// [`GraphQLClient::checkpoint_by_sequence_number`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::checkpoint`], [`GraphQLClient::checkpoint_by_digest`] and
+    /// [`GraphQLClient::checkpoint_by_sequence_number`]. Await it to send the request.
     pub struct GetCheckpointQuery {
         client: GraphQLClient,
         digest: Option<CheckpointDigest>,
@@ -102,8 +99,8 @@ impl GetCheckpointQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::latest_checkpoint_sequence_number`]. Await
-    /// it to send the request.
+    /// Query for [`GraphQLClient::latest_checkpoint_sequence_number`]. Await it to send the
+    /// request.
     pub struct GetLatestCheckpointSequenceNumberQuery {
         client: GraphQLClient,
     }
@@ -119,8 +116,8 @@ impl GetLatestCheckpointSequenceNumberQuery {
 define_query! {
     /// Query for [`GraphQLClient::total_transaction_blocks`],
     /// [`GraphQLClient::total_transaction_blocks_by_digest`] and
-    /// [`GraphQLClient::total_transaction_blocks_by_sequence_number`]. Await it
-    /// to send the request.
+    /// [`GraphQLClient::total_transaction_blocks_by_sequence_number`]. Await it to send the
+    /// request.
     pub struct GetTotalTransactionBlocksQuery {
         client: GraphQLClient,
         digest: Option<String>,
@@ -181,16 +178,15 @@ impl GraphQLClient {
         }
     }
 
-    /// Return the sequence number of the latest checkpoint that has been
-    /// executed.
+    /// Return the sequence number of the latest checkpoint that has been executed.
     pub fn latest_checkpoint_sequence_number(&self) -> GetLatestCheckpointSequenceNumberQuery {
         GetLatestCheckpointSequenceNumberQuery {
             client: self.clone(),
         }
     }
 
-    /// The total number of transaction blocks in the network by the end of the
-    /// provided checkpoint digest.
+    /// The total number of transaction blocks in the network by the end of the provided checkpoint
+    /// digest.
     pub fn total_transaction_blocks_by_digest(
         &self,
         digest: CheckpointDigest,
@@ -202,8 +198,8 @@ impl GraphQLClient {
         }
     }
 
-    /// The total number of transaction blocks in the network by the end of the
-    /// provided checkpoint sequence number.
+    /// The total number of transaction blocks in the network by the end of the provided checkpoint
+    /// sequence number.
     pub fn total_transaction_blocks_by_sequence_number(
         &self,
         sequence_number: u64,
@@ -215,8 +211,8 @@ impl GraphQLClient {
         }
     }
 
-    /// The total number of transaction blocks in the network by the end of the
-    /// last known checkpoint.
+    /// The total number of transaction blocks in the network by the end of the last known
+    /// checkpoint.
     pub fn total_transaction_blocks(&self) -> GetTotalTransactionBlocksQuery {
         GetTotalTransactionBlocksQuery {
             client: self.clone(),

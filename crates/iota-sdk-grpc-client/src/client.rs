@@ -21,9 +21,8 @@ pub(crate) const TESTNET_HOST: &str = "https://grpc.testnet.iota.cafe:443";
 pub(crate) const DEVNET_HOST: &str = "https://grpc.devnet.iota.cafe:443";
 pub(crate) const LOCAL_HOST: &str = "http://localhost:50051";
 
-/// Channel handed to the service clients: the shared transport channel,
-/// checked against the node's minimum SDK version and carrying the configured
-/// headers.
+/// Channel handed to the service clients: the shared transport channel, checked against the node's
+/// minimum SDK version and carrying the configured headers.
 pub type InterceptedChannel = tonic::service::interceptor::InterceptedService<
     CheckedChannel<tonic::transport::Channel>,
     HeadersInterceptor,
@@ -111,8 +110,7 @@ impl GrpcClient {
         Self::new(DEVNET_HOST)
     }
 
-    /// Create a new client connected to a `localnet` gRPC server:
-    /// <http://localhost:50051>.
+    /// Create a new client connected to a `localnet` gRPC server: <http://localhost:50051>.
     pub fn new_localnet() -> GrpcResult<Self> {
         Self::new(LOCAL_HOST)
     }
@@ -123,22 +121,19 @@ impl GrpcClient {
 
     /// Get a reference to the underlying channel.
     ///
-    /// Responses on this channel are not checked against the node's minimum
-    /// SDK version. To create additional service clients that aren't yet
-    /// integrated into GrpcClient, use
+    /// Responses on this channel are not checked against the node's minimum SDK version. To create
+    /// additional service clients that aren't yet integrated into GrpcClient, use
     /// [`checked_channel`](GrpcClient::checked_channel) instead.
     pub fn channel(&self) -> &tonic::transport::Channel {
         &self.channel
     }
 
-    /// Get the underlying channel, failing any call whose response names a
-    /// minimum SDK version newer than [`CRATE_VERSION`](crate::CRATE_VERSION),
-    /// the version of this crate.
+    /// Get the underlying channel, failing any call whose response names a minimum SDK version
+    /// newer than [`CRATE_VERSION`](crate::CRATE_VERSION), the version of this crate.
     ///
-    /// This can be useful for creating additional service clients that aren't
-    /// yet integrated into GrpcClient. Wrap it with the client's
-    /// [`headers`](GrpcClient::headers) via the service client's
-    /// `with_interceptor` to also send the configured headers.
+    /// This can be useful for creating additional service clients that aren't yet integrated into
+    /// GrpcClient. Wrap it with the client's [`headers`](GrpcClient::headers) via the service
+    /// client's `with_interceptor` to also send the configured headers.
     pub fn checked_channel(&self) -> CheckedChannel<tonic::transport::Channel> {
         CheckedChannel::new(self.channel.clone())
     }
@@ -208,9 +203,8 @@ impl GrpcClient {
 
 /// Trait for common gRPC client configuration methods.
 ///
-/// This trait abstracts over the common configuration methods shared by
-/// tonic-generated service clients, allowing `configure_client` to work
-/// generically.
+/// This trait abstracts over the common configuration methods shared by tonic-generated service
+/// clients, allowing `configure_client` to work generically.
 trait GrpcClientConfig: Sized {
     fn accept_compressed(self, encoding: CompressionEncoding) -> Self;
     fn max_decoding_message_size(self, limit: usize) -> Self;

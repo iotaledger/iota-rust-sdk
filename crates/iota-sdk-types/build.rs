@@ -8,8 +8,8 @@ fn main() {
     //
     //   BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash
     //
-    // The env var (not just the feature) triggers the forced recompilation so
-    // that `--all-features` builds remain incremental during normal development.
+    // The env var (not just the feature) triggers the forced recompilation so that `--all-features`
+    // builds remain incremental during normal development.
     println!("cargo:rerun-if-env-changed=BCS_SCHEMA");
 
     let enabled = cfg!(feature = "bcs-schema")
@@ -23,8 +23,8 @@ fn main() {
         let schema_file = manifest_dir.join("bcs-schema.abnf");
         let _ = std::fs::remove_file(&schema_file);
 
-        // 2. Touch all .rs files under src/ to invalidate incremental caches, ensuring
-        //    every #[derive(BcsSchema)] re-runs.
+        // 2. Touch all .rs files under src/ to invalidate incremental caches, ensuring every
+        //    #[derive(BcsSchema)] re-runs.
         let src_dir = manifest_dir.join("src");
         touch_all_rs(&src_dir);
     }

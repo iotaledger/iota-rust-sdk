@@ -12,10 +12,9 @@ use crate::{
 
 /// An event emitted during the successful execution of a transaction.
 ///
-/// This mirrors the core chain [`iota_sdk::types::Event`] one-to-one: every
-/// field is required and the type round-trips through BCS/JSON. For events
-/// returned by the GraphQL `events` query — which may originate from system
-/// transactions and therefore lack a sender or emitting module — see
+/// This mirrors the core chain [`iota_sdk::types::Event`] one-to-one: every field is required and
+/// the type round-trips through BCS/JSON. For events returned by the GraphQL `events` query — which
+/// may originate from system transactions and therefore lack a sender or emitting module — see
 /// [`GraphQLEvent`](crate::graphql::query_types::GraphQLEvent).
 ///
 /// # BCS
@@ -24,14 +23,13 @@ use crate::{
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct Event {
-    /// Package id of the top-level function invoked by a MoveCall command which
-    /// triggered this event to be emitted.
+    /// Package id of the top-level function invoked by a MoveCall command which triggered this
+    /// event to be emitted.
     pub package_id: Arc<ObjectId>,
-    /// Module name of the top-level function invoked by a MoveCall command
-    /// which triggered this event to be emitted.
+    /// Module name of the top-level function invoked by a MoveCall command which triggered this
+    /// event to be emitted.
     pub module: String,
-    /// Address of the account that sent the transaction where this event was
-    /// emitted.
+    /// Address of the account that sent the transaction where this event was emitted.
     pub sender: Arc<Address>,
     /// The type of the event emitted
     pub struct_tag: String,
@@ -102,8 +100,8 @@ crate::export_iota_types_json_conversion!(Event);
 impl Event {
     /// Render this type as human-readable text.
     ///
-    /// The layout is meant for reading and can change between releases. Use the
-    /// JSON or BCS conversions for output that gets parsed.
+    /// The layout is meant for reading and can change between releases. Use the JSON or BCS
+    /// conversions for output that gets parsed.
     pub fn to_display_string(&self) -> Result<String> {
         let data: iota_sdk::types::Event = self.clone().try_into()?;
         Ok(data.to_string())

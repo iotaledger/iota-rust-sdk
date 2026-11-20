@@ -5,8 +5,7 @@
 use iota_grpc_types::headers;
 use iota_types::Digest;
 
-/// Extension trait used to facilitate retrieval of IOTA specific data from
-/// responses
+/// Extension trait used to facilitate retrieval of IOTA specific data from responses
 pub trait ResponseExt: sealed::Sealed {
     fn chain_id(&self) -> Option<Digest>;
     fn chain(&self) -> Option<&str>;
