@@ -4,7 +4,7 @@
 
 //! Transaction Builder errors.
 
-use iota_types::{Address, ObjectId, TransactionDigest};
+use iota_types::{Address, ObjectId, Owner, TransactionDigest};
 
 use crate::unresolved::Argument;
 
@@ -119,5 +119,18 @@ pub enum LookupError {
         requested: usize,
         /// How many objects the client responded with.
         returned: usize,
+    },
+    /// The client returned a gas coin that is not owned by the requested
+    /// owner.
+    #[error(
+        "requested gas coins owned by {requested}, but coin {object_id} is owned by {returned}"
+    )]
+    GasCoinOwnerMismatch {
+        /// The gas coin with the wrong owner.
+        object_id: ObjectId,
+        /// The owner whose gas coins were requested.
+        requested: Address,
+        /// The owner of the returned coin.
+        returned: Owner,
     },
 }
