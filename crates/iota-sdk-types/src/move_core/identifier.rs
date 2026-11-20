@@ -83,8 +83,6 @@ impl Identifier {
     /// underscore (_), and may be followed by up to 127 alphanumeric
     /// characters (a-z, A-Z, 0-9) or underscores (_). The maximum length of
     /// an identifier is 128 characters.
-    ///
-    /// Note: this function allows the special identifier `<SELF>`.
     pub const fn is_valid(s: &str) -> bool {
         if s.is_empty() || s.len() > MAX_IDENTIFIER_LENGTH {
             return false;
@@ -107,7 +105,6 @@ impl Identifier {
         // valid identifiers are (currently) ASCII-only.
         let b = s.as_bytes();
         match b {
-            b"<SELF>" => true,
             [b'a'..=b'z', ..] | [b'A'..=b'Z', ..] => all_bytes_valid(b, 1),
             [b'_', ..] if b.len() > 1 => all_bytes_valid(b, 1),
             _ => false,

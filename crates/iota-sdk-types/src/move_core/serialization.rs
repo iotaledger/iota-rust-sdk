@@ -304,4 +304,21 @@ mod tests {
         assert_eq!(bcs_fixture, bcs::to_bytes(&type_from_string).unwrap());
         assert_eq!(display, type_from_string.to_string().replace(' ', ""));
     }
+
+    #[test]
+    fn identifier_rejects_self_on_deserialize() {
+        assert!(serde_json::from_str::<Identifier>("\"<SELF>\"").is_err());
+
+        let bytes = bcs::to_bytes("<SELF>").unwrap();
+        assert!(bcs::from_bytes::<Identifier>(&bytes).is_err());
+
+        let tag = StructTag {
+            address: Address::from_str("0x2").unwrap(),
+            module: Identifier::from_static("iota"),
+            name: Identifier::new_unchecked("<SELF>"),
+            type_params: vec![],
+        };
+        let bytes = bcs::to_bytes(&tag).unwrap();
+        assert!(bcs::from_bytes::<StructTag>(&bytes).is_err());
+    }
 }
