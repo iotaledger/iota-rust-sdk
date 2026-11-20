@@ -95,16 +95,14 @@ impl Bls12381PrivateKey {
         Self(secret_key)
     }
 
-    /// Generate a new private key using the operating system's random number
-    /// generator.
+    /// Generate a new private key using the operating system's random number generator.
     #[cfg(feature = "rand")]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
-    /// Sign a proof that this key's holder also controls `address`, which a
-    /// validator submits alongside its public key so the network can check
-    /// that the key is not someone else's.
+    /// Sign a proof that this key's holder also controls `address`, which a validator submits
+    /// alongside its public key so the network can check that the key is not someone else's.
     pub fn generate_proof_of_possession(&self, address: Address) -> Bls12381Signature {
         self.sign(&self.public_key().proof_of_possession_message(address))
     }
@@ -161,8 +159,8 @@ impl Bls12381VerifyingKey {
         Bls12381PublicKey::new(self.0.to_bytes())
     }
 
-    /// Check a proof of possession produced by
-    /// [`Bls12381PrivateKey::generate_proof_of_possession`] for `address`.
+    /// Check a proof of possession produced by [`Bls12381PrivateKey::generate_proof_of_possession`]
+    /// for `address`.
     pub fn verify_proof_of_possession(
         &self,
         address: Address,
@@ -264,9 +262,8 @@ mod tests {
         );
     }
 
-    // Proofs of possession are checked on-chain against what the node
-    // produces, so the message this crate signs has to stay byte-identical to
-    // it. This vector was generated with the node's
+    // Proofs of possession are checked on-chain against what the node produces, so the message this
+    // crate signs has to stay byte-identical to it. This vector was generated with the node's
     // `generate_proof_of_possession`.
     #[test]
     fn proof_of_possession_matches_the_node() {

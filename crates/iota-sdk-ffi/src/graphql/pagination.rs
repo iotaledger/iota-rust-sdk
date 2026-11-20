@@ -20,8 +20,7 @@ macro_rules! define_paged_record {
         /// A page of items returned by the GraphQL server.
         #[derive(uniffi::Record)]
         pub struct $id {
-            /// Information about the page, such as the cursor and whether there are
-            /// more pages.
+            /// Information about the page, such as the cursor and whether there are more pages.
             pub page_info: GraphQLPageInfo,
             /// The data returned by the server.
             pub data: Vec<$type_>,
@@ -53,8 +52,7 @@ macro_rules! define_paged_object {
         /// A page of items returned by the GraphQL server.
         #[derive(uniffi::Record)]
         pub struct $id {
-            /// Information about the page, such as the cursor and whether there are
-            /// more pages.
+            /// Information about the page, such as the cursor and whether there are more pages.
             pub page_info: GraphQLPageInfo,
             /// The data returned by the server.
             pub data: Vec<std::sync::Arc<$type_>>,

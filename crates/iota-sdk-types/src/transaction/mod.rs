@@ -31,15 +31,15 @@ pub(crate) use serialization::SignedTransactionWithIntentMessage;
 #[non_exhaustive]
 pub enum Transaction {
     V1(TransactionV1),
-    // When new variants are introduced, it is important that we check version support
-    // in the validity_check function based on the protocol config.
+    // When new variants are introduced, it is important that we check version support in the
+    // validity_check function based on the protocol config.
 }
 
 impl Transaction {
     crate::def_is_as_into_opt!(V1(TransactionV1));
 
-    /// Wraps a reference to this transaction in the transaction signing
-    /// intent, producing the message that user signatures commit to.
+    /// Wraps a reference to this transaction in the transaction signing intent, producing the
+    /// message that user signatures commit to.
     pub fn intent_message(&self) -> IntentMessage<&Self> {
         IntentMessage::new(Intent::iota_transaction(), self)
     }
@@ -115,8 +115,7 @@ impl SenderSignedTransaction {
         &mut self.0
     }
 
-    /// Consume this intent message and return the signed transaction it
-    /// carries.
+    /// Consume this intent message and return the signed transaction it carries.
     pub fn into_signed_transaction(self) -> SignedTransaction {
         self.0
     }
@@ -156,8 +155,8 @@ impl SignedTransaction {
         &self.signatures
     }
 
-    /// Wraps a reference to the transaction in the transaction signing
-    /// intent, producing the message that the signatures commit to.
+    /// Wraps a reference to the transaction in the transaction signing intent, producing the
+    /// message that the signatures commit to.
     pub fn intent_message(&self) -> IntentMessage<&Transaction> {
         self.transaction.intent_message()
     }
@@ -179,8 +178,8 @@ impl SignedTransaction {
             .find(|authenticator| authenticator.address() == transaction.sender)
     }
 
-    /// Returns the sponsor's [`MoveAuthenticator`], if the transaction is
-    /// sponsored and the sponsor uses one.
+    /// Returns the sponsor's [`MoveAuthenticator`], if the transaction is sponsored and the sponsor
+    /// uses one.
     pub fn sponsor_move_authenticator(&self) -> Option<&MoveAuthenticator> {
         let Transaction::V1(transaction) = &self.transaction;
         let gas_owner = transaction.gas_payment.owner;
@@ -224,8 +223,8 @@ pub enum TransactionExpiration {
     /// The transaction has no expiration
     #[default]
     None,
-    /// Validators won't sign a transaction unless the expiration Epoch
-    /// is greater than or equal to the current epoch
+    /// Validators won't sign a transaction unless the expiration Epoch is greater than or equal to
+    /// the current epoch
     Epoch(
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
@@ -264,8 +263,7 @@ pub struct GasPayment {
     pub owner: Address,
     /// Gas unit price to use when charging for computation
     ///
-    /// Must be greater-than-or-equal-to the network's current RGP (reference
-    /// gas price)
+    /// Must be greater-than-or-equal-to the network's current RGP (reference gas price)
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub price: u64,
     /// Total budget willing to spend for the execution of a transaction
@@ -326,10 +324,9 @@ impl crate::TreeDisplay for RandomnessStateUpdate {
 
 /// A complete set of transaction deny rules.
 ///
-/// The set-typed deny lists encode in canonical form — ascending order
-/// without duplicates — by construction, like BCS map keys. Note that
-/// decoding normalizes: a non-canonical sequence encoding (unsorted or
-/// duplicated elements) is accepted and sorted/deduplicated into the set, so
+/// The set-typed deny lists encode in canonical form — ascending order without duplicates — by
+/// construction, like BCS map keys. Note that decoding normalizes: a non-canonical sequence
+/// encoding (unsorted or duplicated elements) is accepted and sorted/deduplicated into the set, so
 /// re-encoding it does not reproduce the original bytes.
 ///
 /// # BCS
@@ -341,13 +338,13 @@ impl crate::TreeDisplay for RandomnessStateUpdate {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct DenyRuleSet {
-    /// Addresses denied as transaction sender or gas sponsor. A denied
-    /// address can still receive objects.
+    /// Addresses denied as transaction sender or gas sponsor. A denied address can still receive
+    /// objects.
     pub denied_addresses: BTreeSet<Address>,
     /// Objects denied as transaction inputs or receiving objects.
     pub denied_objects: BTreeSet<ObjectId>,
-    /// Packages denied as a (transitive) dependency of any command; upgrading
-    /// a denied package is denied too.
+    /// Packages denied as a (transitive) dependency of any command; upgrading a denied package is
+    /// denied too.
     pub denied_packages: BTreeSet<ObjectId>,
     /// Denies all package publishing.
     pub package_publish_disabled: bool,
@@ -365,10 +362,9 @@ pub struct DenyRuleSet {
 
 /// Update of the on-chain transaction deny rules.
 ///
-/// Carries an add/remove delta for each deny list plus the absolute switch
-/// states. The added and removed sets of a list are disjoint by producer
-/// contract (validators compute them as a diff); a delta too large for one
-/// transaction arrives split across several update transactions in the same
+/// Carries an add/remove delta for each deny list plus the absolute switch states. The added and
+/// removed sets of a list are disjoint by producer contract (validators compute them as a diff); a
+/// delta too large for one transaction arrives split across several update transactions in the same
 /// commit. Set-typed fields decode normalizing, like [`DenyRuleSet`]'s.
 ///
 /// # BCS
@@ -518,15 +514,15 @@ pub enum TransactionKind {
     Programmable(ProgrammableTransaction),
     /// Transaction used to initialize the chain state.
     ///
-    /// Only valid if in the genesis checkpoint (0) and if this is the very
-    /// first transaction ever executed on the chain.
+    /// Only valid if in the genesis checkpoint (0) and if this is the very first transaction ever
+    /// executed on the chain.
     Genesis(GenesisTransaction),
     /// V1 consensus commit update
     ConsensusCommitPrologueV1(ConsensusCommitPrologueV1),
     /// Update set of valid JWKs used for zklogin - Deprecated
     AuthenticatorStateUpdateV1Deprecated,
-    /// Set of operations to run at the end of the epoch to close out the
-    /// current epoch and start the next one.
+    /// Set of operations to run at the end of the epoch to close out the current epoch and start
+    /// the next one.
     EndOfEpoch(Vec<EndOfEpochTransactionKind>),
     /// Randomness update
     RandomnessStateUpdate(RandomnessStateUpdate),
@@ -766,14 +762,12 @@ impl EndOfEpochTransactionKind {
         })
     }
 
-    /// Creates a [`Self::TransactionDenyRulesCreate`] end-of-epoch transaction
-    /// kind.
+    /// Creates a [`Self::TransactionDenyRulesCreate`] end-of-epoch transaction kind.
     pub fn new_transaction_deny_rules_create() -> Self {
         Self::TransactionDenyRulesCreate
     }
 
-    /// Returns an iterator over the shared input objects required by this
-    /// transaction kind.
+    /// Returns an iterator over the shared input objects required by this transaction kind.
     pub fn shared_input_objects(&self) -> impl Iterator<Item = SharedObjectReference> + '_ {
         match self {
             Self::ChangeEpoch(_)
@@ -782,8 +776,8 @@ impl EndOfEpochTransactionKind {
             | Self::ChangeEpochV4(_) => {
                 vec![SharedObjectReference::IOTA_SYSTEM_STATE_OBJ_MUTABLE].into_iter()
             }
-            // The deny-rules object is created by this transaction, so there
-            // is no shared input to reference yet.
+            // The deny-rules object is created by this transaction, so there is no shared input to
+            // reference yet.
             Self::TransactionDenyRulesCreate => vec![].into_iter(),
         }
     }
@@ -915,8 +909,8 @@ pub struct ConsensusCommitPrologueV1 {
     /// Consensus round of the commit
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub round: u64,
-    /// The sub DAG index of the consensus commit. This field will be populated
-    /// if there are multiple consensus commits per round.
+    /// The sub DAG index of the consensus commit. This field will be populated if there are
+    /// multiple consensus commits per round.
     #[cfg_attr(
         feature = "serde",
         serde(with = "crate::_serde::OptionReadableDisplay")
@@ -986,12 +980,11 @@ pub struct ChangeEpoch {
     /// Unix timestamp when epoch started
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub epoch_start_timestamp_ms: u64,
-    /// System packages (specifically framework and move stdlib) that are
-    /// written before the new epoch starts. This tracks framework upgrades
-    /// on chain. When executing the ChangeEpoch txn, the validator must
-    /// write out the modules below.  Modules are provided with the version they
-    /// will be upgraded to, their modules in serialized form (which include
-    /// their package ID), and a list of their transitive dependencies.
+    /// System packages (specifically framework and move stdlib) that are written before the new
+    /// epoch starts. This tracks framework upgrades on chain. When executing the ChangeEpoch txn,
+    /// the validator must write out the modules below.  Modules are provided with the version they
+    /// will be upgraded to, their modules in serialized form (which include their package ID), and
+    /// a list of their transitive dependencies.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
 }
@@ -1055,12 +1048,11 @@ pub struct ChangeEpochV2 {
     /// Unix timestamp when epoch started
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub epoch_start_timestamp_ms: u64,
-    /// System packages (specifically framework and move stdlib) that are
-    /// written before the new epoch starts. This tracks framework upgrades
-    /// on chain. When executing the ChangeEpoch txn, the validator must
-    /// write out the modules below.  Modules are provided with the version they
-    /// will be upgraded to, their modules in serialized form (which include
-    /// their package ID), and a list of their transitive dependencies.
+    /// System packages (specifically framework and move stdlib) that are written before the new
+    /// epoch starts. This tracks framework upgrades on chain. When executing the ChangeEpoch txn,
+    /// the validator must write out the modules below.  Modules are provided with the version they
+    /// will be upgraded to, their modules in serialized form (which include their package ID), and
+    /// a list of their transitive dependencies.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
 }
@@ -1127,16 +1119,15 @@ pub struct ChangeEpochV3 {
     /// Unix timestamp when epoch started
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub epoch_start_timestamp_ms: u64,
-    /// System packages (specifically framework and move stdlib) that are
-    /// written before the new epoch starts. This tracks framework upgrades
-    /// on chain. When executing the ChangeEpoch txn, the validator must
-    /// write out the modules below.  Modules are provided with the version they
-    /// will be upgraded to, their modules in serialized form (which include
-    /// their package ID), and a list of their transitive dependencies.
+    /// System packages (specifically framework and move stdlib) that are written before the new
+    /// epoch starts. This tracks framework upgrades on chain. When executing the ChangeEpoch txn,
+    /// the validator must write out the modules below.  Modules are provided with the version they
+    /// will be upgraded to, their modules in serialized form (which include their package ID), and
+    /// a list of their transitive dependencies.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
-    /// Vector of active validator indices eligible to take part in committee
-    /// selection because they support the new, target protocol version.
+    /// Vector of active validator indices eligible to take part in committee selection because
+    /// they support the new, target protocol version.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::VecReadableDisplay"))]
     pub eligible_active_validators: Vec<u64>,
 }
@@ -1208,20 +1199,19 @@ pub struct ChangeEpochV4 {
     /// Unix timestamp when epoch started
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub epoch_start_timestamp_ms: u64,
-    /// System packages (specifically framework and move stdlib) that are
-    /// written before the new epoch starts. This tracks framework upgrades
-    /// on chain. When executing the ChangeEpoch txn, the validator must
-    /// write out the modules below.  Modules are provided with the version they
-    /// will be upgraded to, their modules in serialized form (which include
-    /// their package ID), and a list of their transitive dependencies.
+    /// System packages (specifically framework and move stdlib) that are written before the new
+    /// epoch starts. This tracks framework upgrades on chain. When executing the ChangeEpoch txn,
+    /// the validator must write out the modules below.  Modules are provided with the version they
+    /// will be upgraded to, their modules in serialized form (which include their package ID), and
+    /// a list of their transitive dependencies.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub system_packages: Vec<SystemPackage>,
-    /// Vector of active validator indices eligible to take part in committee
-    /// selection because they support the new, target protocol version.
+    /// Vector of active validator indices eligible to take part in committee selection because
+    /// they support the new, target protocol version.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::VecReadableDisplay"))]
     pub eligible_active_validators: Vec<u64>,
-    /// Vector of scores relative to the past epoch performance of each
-    /// validator, ordered by the past epoch's validator index.
+    /// Vector of scores relative to the past epoch performance of each validator, ordered by the
+    /// past epoch's validator index.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::VecReadableDisplay"))]
     pub scores: Vec<u64>,
     /// Whether to adjust validator rewards based on score.
@@ -1330,8 +1320,8 @@ impl crate::TreeDisplay for GenesisTransaction {
 
 /// A user transaction
 ///
-/// Contains a series of native commands and move calls where the results of one
-/// command can be used in future commands.
+/// Contains a series of native commands and move calls where the results of one command can be used
+/// in future commands.
 ///
 /// # BCS
 ///
@@ -1345,8 +1335,8 @@ pub struct ProgrammableTransaction {
     /// Input objects or primitive values
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
     pub inputs: Vec<Input>,
-    /// The commands to be executed sequentially. A failure in any command will
-    /// result in the failure of the entire transaction.
+    /// The commands to be executed sequentially. A failure in any command will result in the
+    /// failure of the entire transaction.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=10).lift()))]
     pub commands: Vec<Command>,
 }
@@ -1375,8 +1365,8 @@ impl crate::TreeDisplay for ProgrammableTransaction {
 pub enum Input {
     /// A move value serialized as BCS.
     ///
-    /// For normal operations this is required to be a move primitive type and
-    /// not contain structs or objects.
+    /// For normal operations this is required to be a move primitive type and not contain structs
+    /// or objects.
     Pure(#[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(_0))] Vec<u8>),
     /// A move object that is either immutable or address owned
     ImmutableOrOwned(ObjectReference),
@@ -1387,14 +1377,13 @@ pub enum Input {
     Receiving(ObjectReference),
     /// A transaction this transaction depends on.
     ///
-    /// The transaction is valid only once the named transaction executed
-    /// successfully, in the current epoch, and no command may use this input.
+    /// The transaction is valid only once the named transaction executed successfully, in the
+    /// current epoch, and no command may use this input.
     ///
-    /// A validator authenticates a transaction against its current state. A
-    /// transaction whose Move authenticator reads state that the named
-    /// transaction writes is therefore admitted only once the named
-    /// transaction has executed on that validator; until then it is rejected
-    /// with a retriable error.
+    /// A validator authenticates a transaction against its current state. A transaction whose Move
+    /// authenticator reads state that the named transaction writes is therefore admitted only once
+    /// the named transaction has executed on that validator; until then it is rejected with a
+    /// retriable error.
     #[cfg(feature = "unstable")]
     TransactionDependency(TransactionDigest),
 }
@@ -1455,8 +1444,7 @@ impl Input {
         )
     }
 
-    /// Returns the [`ObjectReference`] if this is an `ImmutableOrOwned` or
-    /// `Receiving` input.
+    /// Returns the [`ObjectReference`] if this is an `ImmutableOrOwned` or `Receiving` input.
     pub fn as_opt_object_ref(&self) -> Option<&ObjectReference> {
         match self {
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(obj_ref),
@@ -1506,8 +1494,7 @@ impl crate::TreeDisplay for Input {
 pub struct SharedObjectReference {
     pub object_id: ObjectId,
     pub initial_shared_version: Version,
-    /// Controls whether the caller asks for a mutable reference to the
-    /// shared object.
+    /// Controls whether the caller asks for a mutable reference to the shared object.
     pub mutable: bool,
 }
 
@@ -1518,8 +1505,8 @@ impl SharedObjectReference {
         mutable: true,
     };
 
-    /// Creates a new shared object reference from the object's id, initial
-    /// shared version, and mutability.
+    /// Creates a new shared object reference from the object's id, initial shared version, and
+    /// mutability.
     pub const fn new(object_id: ObjectId, initial_shared_version: Version, mutable: bool) -> Self {
         Self {
             object_id,
@@ -1557,9 +1544,8 @@ pub enum Command {
     /// A call to either an entry or a public Move function
     MoveCall(MoveCall),
     /// `(Vec<forall T:key+store. T>, address)`
-    /// It sends n-objects to the specified address. These objects must have
-    /// store (public transfer) and either the previous owner must be an
-    /// address or the object must be newly created.
+    /// It sends n-objects to the specified address. These objects must have store (public transfer)
+    /// and either the previous owner must be an address or the object must be newly created.
     TransferObjects(TransferObjects),
     /// `(&mut Coin<T>, Vec<u64>)` -> `Vec<Coin<T>>`
     /// It splits off some amounts into a new coins with those amounts
@@ -1567,21 +1553,20 @@ pub enum Command {
     /// `(&mut Coin<T>, Vec<Coin<T>>)`
     /// It merges n-coins into the first coin
     MergeCoins(MergeCoins),
-    /// Publishes a Move package. It takes the package bytes and a list of the
-    /// package's transitive dependencies to link against on-chain.
+    /// Publishes a Move package. It takes the package bytes and a list of the package's transitive
+    /// dependencies to link against on-chain.
     Publish(Publish),
     /// `forall T: Vec<T> -> vector<T>`
-    /// Given n-values of the same type, it constructs a vector. For non objects
-    /// or an empty vector, the type tag must be specified.
+    /// Given n-values of the same type, it constructs a vector. For non objects or an empty vector,
+    /// the type tag must be specified.
     MakeMoveVector(MakeMoveVector),
     /// Upgrades a Move package
     /// Takes (in order):
     /// 1. A vector of serialized modules for the package.
-    /// 2. A vector of object ids for the transitive dependencies of the new
-    ///    package.
+    /// 2. A vector of object ids for the transitive dependencies of the new package.
     /// 3. The object ID of the package being upgraded.
-    /// 4. An argument holding the `UpgradeTicket` that must have been produced
-    ///    from an earlier command in the same programmable transaction.
+    /// 4. An argument holding the `UpgradeTicket` that must have been produced from an earlier
+    ///    command in the same programmable transaction.
     Upgrade(Upgrade),
 }
 
@@ -1806,8 +1791,8 @@ impl crate::TreeDisplay for Publish {
 pub struct MakeMoveVector {
     /// Type of the individual elements
     ///
-    /// This is required to be set when the type can't be inferred, for example
-    /// when the set of provided arguments are all pure input values.
+    /// This is required to be set when the type can't be inferred, for example when the set of
+    /// provided arguments are all pure input values.
     #[cfg_attr(feature = "serde", serde(rename = "type"))]
     pub type_tag: Option<TypeTag>,
     /// The set individual elements to build the vector with
@@ -1879,17 +1864,15 @@ impl crate::TreeDisplay for Upgrade {
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum Argument {
-    /// The gas coin. The gas coin can only be used by-ref, except for with
-    /// `TransferObjects`, which can use it by-value.
+    /// The gas coin. The gas coin can only be used by-ref, except for with `TransferObjects`, which
+    /// can use it by-value.
     Gas,
-    /// One of the input objects or primitive values (from
-    /// `ProgrammableTransaction` inputs)
+    /// One of the input objects or primitive values (from `ProgrammableTransaction` inputs)
     Input(u16),
     /// The result of another command (from `ProgrammableTransaction` commands)
     Result(u16),
-    /// Like a `Result` but it accesses a nested result. Currently, the only
-    /// usage of this is to access a value from a Move call with multiple
-    /// return values.
+    /// Like a `Result` but it accesses a nested result. Currently, the only usage of this is to
+    /// access a value from a Move call with multiple return values.
     // (command index, subresult index)
     NestedResult(u16, u16),
 }
@@ -1944,8 +1927,8 @@ impl Argument {
         self.as_opt_nested_result().expect("not a nested result")
     }
 
-    /// Get the nested result for this result at the given index. Returns None
-    /// if this is not a Result.
+    /// Get the nested result for this result at the given index. Returns None if this is not a
+    /// Result.
     pub fn nested_result(&self, ix: u16) -> Option<Argument> {
         match self {
             Argument::Result(i) => Some(Argument::NestedResult(*i, ix)),
@@ -1956,9 +1939,8 @@ impl Argument {
 
 /// Command to call a move function
 ///
-/// Functions that can be called by a `MoveCall` command are those that have a
-/// function signature that is either `entry` or `public` (which don't have a
-/// reference return type).
+/// Functions that can be called by a `MoveCall` command are those that have a function signature
+/// that is either `entry` or `public` (which don't have a reference return type).
 ///
 /// # BCS
 ///

@@ -26,24 +26,21 @@ pub enum MoveVisibility {
     Friend,
 }
 
-/// A Move type that may still have unbound type parameters, which are
-/// rendered as `$0`, `$1`, ...
+/// A Move type that may still have unbound type parameters, which are rendered as `$0`, `$1`, ...
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub struct OpenMoveType {
     pub repr: String,
 }
 
-/// A type parameter of a Move function, with the abilities it is constrained
-/// to.
+/// A type parameter of a Move function, with the abilities it is constrained to.
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub struct MoveFunctionTypeParameter {
     pub constraints: Vec<MoveAbility>,
 }
 
-/// A type parameter of a Move struct or enum, with the abilities it is
-/// constrained to.
+/// A type parameter of a Move struct or enum, with the abilities it is constrained to.
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub struct MoveStructTypeParameter {
@@ -107,8 +104,7 @@ pub struct MoveModuleId {
     pub name: String,
 }
 
-/// The normalized contents of a Move module. Each list is one page of the
-/// module's items.
+/// The normalized contents of a Move module. Each list is one page of the module's items.
 #[derive(Clone, Debug)]
 #[non_exhaustive]
 pub struct MoveModule {

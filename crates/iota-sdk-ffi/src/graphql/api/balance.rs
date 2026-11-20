@@ -17,8 +17,8 @@ use crate::{
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
-    /// Get the balance of all the coins owned by address for the provided coin
-    /// type. Coin type will default to `0x2::iota::IOTA` if not provided.
+    /// Get the balance of all the coins owned by address for the provided coin type. Coin type will
+    /// default to `0x2::iota::IOTA` if not provided.
     #[uniffi::method(default(coin_type = None))]
     pub async fn balance(
         &self,

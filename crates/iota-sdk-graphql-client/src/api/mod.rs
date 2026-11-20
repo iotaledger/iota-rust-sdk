@@ -28,9 +28,8 @@ pub(crate) type QueryFuture<T> = futures::future::LocalBoxFuture<'static, T>;
 
 /// Generate a query object: a struct that runs its query when awaited.
 ///
-/// The struct's [`IntoFuture`](std::future::IntoFuture) boxes the future of
-/// `send(self) -> $output`, which each invocation writes by hand in an
-/// inherent impl.
+/// The struct's [`IntoFuture`](std::future::IntoFuture) boxes the future of `send(self) ->
+/// $output`, which each invocation writes by hand in an inherent impl.
 macro_rules! define_query {
     (
         $(#[$meta:meta])*

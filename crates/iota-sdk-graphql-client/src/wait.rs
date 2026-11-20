@@ -1,9 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Async `sleep` / `timeout`. Tokio's time driver isn't available on wasm32,
-//! so on that target we drive a cancelable `setTimeout`-backed future
-//! instead.
+//! Async `sleep` / `timeout`. Tokio's time driver isn't available on wasm32, so on that target we
+//! drive a cancelable `setTimeout`-backed future instead.
 
 use std::{future::Future, time::Duration};
 
@@ -73,8 +72,8 @@ mod wasm_time {
         waker: Cell<Option<Waker>>,
     }
 
-    /// Cancelable sleep — `clearTimeout` on drop so Node's event loop
-    /// doesn't stay alive past a future that's been raced out.
+    /// Cancelable sleep — `clearTimeout` on drop so Node's event loop doesn't stay alive past a
+    /// future that's been raced out.
     pub(super) struct Sleep {
         state: Rc<State>,
         handle: Option<JsValue>,

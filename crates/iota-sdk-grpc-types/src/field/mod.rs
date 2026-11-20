@@ -17,21 +17,19 @@ pub const FIELD_SEPARATOR: char = '.';
 
 pub const FIELD_PATH_WILDCARD: &str = "*";
 
-/// Leaf field names the server renders only when named explicitly — never
-/// pulled in by a parent path or the `*` wildcard, because each needs Move
-/// type-layout resolution on the node (and `display` a display-index lookup).
+/// Leaf field names the server renders only when named explicitly — never pulled in by a parent
+/// path or the `*` wildcard, because each needs Move type-layout resolution on the node (and
+/// `display` a display-index lookup).
 ///
-/// Passed as the exceptions to
-/// [`FieldMaskTree::add_field_path_with_exceptions`] and used by
-/// [`crate::field_mask_normalize`], so one of these leaves survives alongside
-/// its parent path (`[output_objects, output_objects.json]`) instead of being
-/// collapsed into the bare parent — which the server would then not render.
+/// Passed as the exceptions to [`FieldMaskTree::add_field_path_with_exceptions`] and used by
+/// [`crate::field_mask_normalize`], so one of these leaves survives alongside its parent path
+/// (`[output_objects, output_objects.json]`) instead of being collapsed into the bare parent —
+/// which the server would then not render.
 ///
-/// The exception match looks at every path component, not just the leaf (so a
-/// sub-path like `display.fields` is kept too). That relies on these names
-/// denoting only server-rendered fields within the response messages a read
-/// mask selects. The request-side `InputArgument.json` shares the name but is
-/// never a read-mask target, so it is not affected.
+/// The exception match looks at every path component, not just the leaf (so a sub-path like
+/// `display.fields` is kept too). That relies on these names denoting only server-rendered fields
+/// within the response messages a read mask selects. The request-side `InputArgument.json` shares
+/// the name but is never a read-mask target, so it is not affected.
 pub const SERVER_RENDERED_FIELD_NAMES: &[&str] = &["json", "display", "json_name", "json_contents"];
 
 fn is_valid_path(path: &str) -> bool {
@@ -42,8 +40,7 @@ fn is_valid_path(path: &str) -> bool {
     path.split(FIELD_SEPARATOR).all(is_valid_path_component)
 }
 
-// A valid path component needs to be a valid protobuf identifier which is
-// defined by the following:
+// A valid path component needs to be a valid protobuf identifier which is defined by the following:
 //
 // ```
 // letter        = "A" … "Z" | "a" … "z" | "_" .
@@ -82,10 +79,9 @@ pub trait MessageFields: sealed::Sealed {
 
     /// Oneof group names declared in this message.
     ///
-    /// A oneof name acts as a virtual parent path for its variant fields
-    /// during read mask validation.  For example, a message with
-    /// `oneof execution_result { CommandResults command_results = 3; ... }`
-    /// lists `"execution_result"` here so that paths like
+    /// A oneof name acts as a virtual parent path for its variant fields during read mask
+    /// validation.  For example, a message with `oneof execution_result { CommandResults
+    /// command_results = 3; ... }` lists `"execution_result"` here so that paths like
     /// `"execution_result.command_results"` are accepted by `validate()`.
     const ONEOFS: &'static [&'static str] = &[];
 }

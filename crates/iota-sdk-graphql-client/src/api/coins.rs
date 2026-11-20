@@ -42,8 +42,8 @@ impl ListCoinsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<Coin>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -97,8 +97,8 @@ impl ListGasCoinsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<Coin>> + Unpin {
         let pagination = self.coins.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -110,8 +110,7 @@ impl ListGasCoinsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::coin_metadata`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::coin_metadata`]. Await it to send the request.
     pub struct GetCoinMetadataQuery {
         client: GraphQLClient,
         coin_type: StructTag,
@@ -152,8 +151,8 @@ impl GetTotalSupplyQuery {
 }
 
 impl GraphQLClient {
-    /// Get the list of coins for the specified address. For IOTA coins, set
-    /// the coin type to `0x2::iota::IOTA`.
+    /// Get the list of coins for the specified address. For IOTA coins, set the coin type to
+    /// `0x2::iota::IOTA`.
     pub fn coins(&self, owner: Address) -> ListCoinsQuery {
         ListCoinsQuery {
             client: self.clone(),
@@ -289,9 +288,8 @@ mod tests {
         let client = test_client();
         let faucet = match client.rpc_server().as_str() {
             LOCAL_HOST => FaucetClient::new_localnet(),
-            // The testnet and devnet faucets are web-only and expose no
-            // programmatic gas endpoint, so this test can only fund an
-            // address on localnet.
+            // The testnet and devnet faucets are web-only and expose no programmatic gas endpoint,
+            // so this test can only fund an address on localnet.
             _ => return,
         };
         let key = Ed25519PublicKey::random();
@@ -304,9 +302,9 @@ mod tests {
         const MAX_RETRIES: u32 = 10;
         const RETRY_DELAY: time::Duration = time::Duration::from_secs(1);
 
-        // Retry until the expected number of coins is streamed. Indexer lag can
-        // return a successful but incomplete page, so retry on a low count as
-        // well as on a stream error, re-counting from scratch each attempt.
+        // Retry until the expected number of coins is streamed. Indexer lag can return a successful
+        // but incomplete page, so retry on a low count as well as on a stream error, re-counting
+        // from scratch each attempt.
         let mut num_coins = 0;
         for attempt in 0..MAX_RETRIES {
             num_coins = 0;

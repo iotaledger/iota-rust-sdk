@@ -39,8 +39,8 @@ impl GetCoinInfoQuery {
 impl GrpcClient {
     /// Get information about a coin type.
     ///
-    /// Returns the [`GetCoinInfoResponse`] proto type with metadata, treasury,
-    /// and regulation information for the specified coin type.
+    /// Returns the [`GetCoinInfoResponse`] proto type with metadata, treasury, and regulation
+    /// information for the specified coin type.
     ///
     /// # Parameters
     ///

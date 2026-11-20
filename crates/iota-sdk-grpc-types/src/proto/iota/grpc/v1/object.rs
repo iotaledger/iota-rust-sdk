@@ -90,8 +90,8 @@ impl Object {
     /// Get the object reference (object_id, version, digest).
     ///
     /// **Read mask:** `"reference"` (see [`OBJECT_REFERENCE`]).
-    /// For objects nested in transactions, prefix accordingly
-    /// (e.g. `"input_objects.reference"`, `"output_objects.reference"`).
+    /// For objects nested in transactions, prefix accordingly (e.g. `"input_objects.reference"`,
+    /// `"output_objects.reference"`).
     ///
     /// [`OBJECT_REFERENCE`]: crate::read_masks::OBJECT_REFERENCE
     pub fn object_reference(&self) -> Result<iota_types::ObjectReference, TryFromProtoError> {
@@ -101,8 +101,8 @@ impl Object {
     /// Deserialize the full object from BCS.
     ///
     /// **Read mask:** `"bcs"` (see [`OBJECT_BCS`]).
-    /// For objects nested in transactions, prefix accordingly
-    /// (e.g. `"input_objects.bcs"`, `"output_objects.bcs"`).
+    /// For objects nested in transactions, prefix accordingly (e.g. `"input_objects.bcs"`,
+    /// `"output_objects.bcs"`).
     ///
     /// [`OBJECT_BCS`]: crate::read_masks::OBJECT_BCS
     pub fn object(&self) -> Result<iota_types::Object, TryFromProtoError> {
@@ -111,8 +111,7 @@ impl Object {
 
     /// Get the JSON rendering of the object's Move contents.
     ///
-    /// **Read mask:** `"json"` (see
-    /// [`OBJECT_JSON`](crate::read_masks::OBJECT_JSON)).
+    /// **Read mask:** `"json"` (see [`OBJECT_JSON`](crate::read_masks::OBJECT_JSON)).
     pub fn json(&self) -> Result<serde_json::Value, TryFromProtoError> {
         self.json
             .as_ref()
@@ -122,8 +121,7 @@ impl Object {
 
     /// Get the object's on-chain Display template render.
     ///
-    /// **Read mask:** `"display"` (see
-    /// [`OBJECT_DISPLAY`](crate::read_masks::OBJECT_DISPLAY)).
+    /// **Read mask:** `"display"` (see [`OBJECT_DISPLAY`](crate::read_masks::OBJECT_DISPLAY)).
     pub fn display(&self) -> Result<&Display, TryFromProtoError> {
         self.display
             .as_ref()

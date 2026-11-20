@@ -1,9 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! The type tags of the mirrors the IOTA node uses as dynamic field keys.
-//! Dynamic field IDs are hashed from the key's type tag, so these must not
-//! change.
+//! The type tags of the mirrors the IOTA node uses as dynamic field keys. Dynamic field IDs are
+//! hashed from the key's type tag, so these must not change.
 
 use iota_sdk_move_types::{
     MoveType,

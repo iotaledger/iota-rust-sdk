@@ -11,20 +11,17 @@ use tokio::sync::Mutex;
 
 /// A stream exposed to foreign code as a handle object.
 ///
-/// uniffi has no equivalent of a `Stream`, so a stream is pulled one item at a
-/// time with [`StreamHandle::next`] and closed with [`StreamHandle::cancel`].
-/// The uniffi object wrapping this handle only maps items to their foreign
-/// representation.
+/// uniffi has no equivalent of a `Stream`, so a stream is pulled one item at a time with
+/// [`StreamHandle::next`] and closed with [`StreamHandle::cancel`]. The uniffi object wrapping this
+/// handle only maps items to their foreign representation.
 ///
-/// Foreign async support is uneven — Kotlin, Swift and Python can cancel a
-/// pending call, Go and C# cannot — so cancellation has to be something the
-/// handle itself understands rather than something the caller's runtime does
-/// to it. [`Abortable`] provides that: aborting wakes a pending poll and makes
-/// every later poll return `None`.
+/// Foreign async support is uneven — Kotlin, Swift and Python can cancel a pending call, Go and C#
+/// cannot — so cancellation has to be something the handle itself understands rather than something
+/// the caller's runtime does to it. [`Abortable`] provides that: aborting wakes a pending poll and
+/// makes every later poll return `None`.
 pub(crate) struct StreamHandle<S> {
-    /// `None` once the stream has been canceled or exhausted, so that the
-    /// connection behind it is dropped right away instead of being held until
-    /// the handle is freed.
+    /// `None` once the stream has been canceled or exhausted, so that the connection behind it is
+    /// dropped right away instead of being held until the handle is freed.
     stream: Mutex<Option<Abortable<S>>>,
     abort: AbortHandle,
 }
@@ -40,8 +37,8 @@ impl<S> StreamHandle<S> {
 
     /// Cancel the handle, dropping the stream and unblocking a pending `next`.
     ///
-    /// Idempotent, and safe to call while `next` is pending — the pending call
-    /// drops the stream on its way out.
+    /// Idempotent, and safe to call while `next` is pending — the pending call drops the stream on
+    /// its way out.
     pub(crate) fn cancel(&self) {
         self.abort.abort();
         if let Ok(mut stream) = self.stream.try_lock() {
@@ -58,14 +55,12 @@ impl<S> StreamHandle<S> {
 impl<S: Stream + Unpin> StreamHandle<S> {
     /// Wait for the next item.
     ///
-    /// Returns `None` once the stream is exhausted or the handle has been
-    /// canceled. Concurrent calls are serialized; there is no ordering
-    /// guarantee between them.
+    /// Returns `None` once the stream is exhausted or the handle has been canceled. Concurrent
+    /// calls are serialized; there is no ordering guarantee between them.
     pub(crate) async fn next(&self) -> Option<S::Item> {
-        // No early return on the cancellation flag: a `next` that was dropped
-        // by the caller's runtime while `cancel` lost the `try_lock` race
-        // leaves the stream in place, and only polling it (which yields `None`
-        // once aborted) drops it.
+        // No early return on the cancellation flag: a `next` that was dropped by the caller's
+        // runtime while `cancel` lost the `try_lock` race leaves the stream in place, and only
+        // polling it (which yields `None` once aborted) drops it.
         let mut stream = self.stream.lock().await;
         let item = stream.as_mut()?.next().await;
         if item.is_none() {
@@ -86,8 +81,8 @@ mod tests {
     #[test]
     fn yields_items_until_exhausted() {
         let (sender, receiver) = mpsc::unbounded();
-        // `take` ends the stream while the sender is still alive, so dropping
-        // the exhausted stream is observable as the channel closing.
+        // `take` ends the stream while the sender is still alive, so dropping the exhausted stream
+        // is observable as the channel closing.
         let handle = StreamHandle::new(receiver.take(2));
         sender.unbounded_send(1).unwrap();
         sender.unbounded_send(2).unwrap();
@@ -136,8 +131,8 @@ mod tests {
         let (sender, receiver) = mpsc::unbounded::<u8>();
         let handle = StreamHandle::new(receiver);
 
-        // `join` polls `next` first, so it is pending on the empty channel and
-        // holding the mutex when `cancel` runs.
+        // `join` polls `next` first, so it is pending on the empty channel and holding the mutex
+        // when `cancel` runs.
         let (item, ()) = block_on(join(handle.next(), async { handle.cancel() }));
 
         assert_eq!(item, None);
@@ -150,9 +145,9 @@ mod tests {
         let (sender, receiver) = mpsc::unbounded::<u8>();
         let handle = StreamHandle::new(receiver);
 
-        // Poll `next` once so it holds the mutex and is pending on the empty
-        // channel, then drop it the way a foreign runtime does when it cancels
-        // the call, after `cancel` lost the `try_lock` race against it.
+        // Poll `next` once so it holds the mutex and is pending on the empty channel, then drop it
+        // the way a foreign runtime does when it cancels the call, after `cancel` lost the
+        // `try_lock` race against it.
         let mut cx = Context::from_waker(noop_waker_ref());
         let mut pending = Box::pin(handle.next());
         assert!(pending.as_mut().poll(&mut cx).is_pending());

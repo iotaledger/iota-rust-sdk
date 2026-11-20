@@ -15,8 +15,8 @@ use crate::{Address, Identifier, StructTag, TypeParseError, TypeTag};
 
 type ModalResult<'a, O> = winnow::ModalResult<O, InnerError<'a>>;
 
-/// Error returned by the parsers, converted into the public [`TypeParseError`]
-/// by [`parse_complete`].
+/// Error returned by the parsers, converted into the public [`TypeParseError`] by
+/// [`parse_complete`].
 #[derive(Debug)]
 pub(crate) enum InnerError<'a> {
     /// The input where parsing stopped.
@@ -486,13 +486,12 @@ mod tests {
         );
     }
 
-    // Custom strategies that exercise the full TypeTag grammar, including vectors
-    // and nested generics. The existing `Arbitrary` derives intentionally skip
-    // these (Vector has weight 0, type_params is always empty) to keep BCS
-    // serialization fuzz tests fast.
+    // Custom strategies that exercise the full TypeTag grammar, including vectors and nested
+    // generics. The existing `Arbitrary` derives intentionally skip these (Vector has weight 0,
+    // type_params is always empty) to keep BCS serialization fuzz tests fast.
 
-    /// Strategy producing valid Move identifiers, including both
-    /// letter-prefixed (`Foo`, `a1`) and underscore-prefixed (`_bar`, `__x1`).
+    /// Strategy producing valid Move identifiers, including both letter-prefixed (`Foo`, `a1`) and
+    /// underscore-prefixed (`_bar`, `__x1`).
     fn arb_identifier() -> impl Strategy<Value = Identifier> {
         prop_oneof!["[a-zA-Z][a-zA-Z0-9_]{0,127}", "_[a-zA-Z0-9_]{1,127}",]
             .prop_map(|s| Identifier::new(&s).unwrap())
@@ -504,8 +503,8 @@ mod tests {
             .prop_map(|(addr, module, name)| StructTag::new(addr, module, name, Vec::new()))
     }
 
-    /// Strategy producing valid TypeTags including vectors, structs with
-    /// generics, and nested combinations. Recursion is bounded to depth 4.
+    /// Strategy producing valid TypeTags including vectors, structs with generics, and nested
+    /// combinations. Recursion is bounded to depth 4.
     fn arb_type_tag() -> impl Strategy<Value = TypeTag> {
         let leaf = prop_oneof![
             Just(TypeTag::U8),

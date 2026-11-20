@@ -33,19 +33,16 @@ use crate::{
 
 /// Response for a checkpoint query.
 ///
-/// Which fields are populated depends on the read mask used for the query;
-/// the default read mask only includes the checkpoint summary, and every
-/// other field is `None`.
+/// Which fields are populated depends on the read mask used for the query; the default read mask
+/// only includes the checkpoint summary, and every other field is `None`.
 ///
-/// The `summary`, `signature`, `contents` and `events` fields are
-/// deserialized from BCS, so the read mask must include
-/// `CheckpointSummaryBcs`, `CheckpointSignature`, `CheckpointContentsBcs` and
-/// `EventsBcs` respectively for them to be populated; digest-only read masks
-/// populate only the digest fields.
+/// The `summary`, `signature`, `contents` and `events` fields are deserialized from BCS, so the
+/// read mask must include `CheckpointSummaryBcs`, `CheckpointSignature`, `CheckpointContentsBcs`
+/// and `EventsBcs` respectively for them to be populated; digest-only read masks populate only the
+/// digest fields.
 #[derive(uniffi::Record)]
 pub struct GrpcCheckpointResponse {
-    /// The checkpoint sequence number. Always available regardless of the
-    /// read mask.
+    /// The checkpoint sequence number. Always available regardless of the read mask.
     pub sequence_number: u64,
     /// The digest of the checkpoint summary.
     pub summary_digest: Option<Arc<CheckpointDigest>>,
@@ -57,20 +54,19 @@ pub struct GrpcCheckpointResponse {
     pub contents_digest: Option<Arc<CheckpointContentsDigest>>,
     /// The checkpoint contents.
     pub contents: Option<Arc<CheckpointContents>>,
-    /// The transactions executed in the checkpoint. `None` unless the read
-    /// mask requests `Transactions` or one of its sub-fields (e.g.
-    /// `TransactionsEffectsBcs`); with a transactions filter that matches
-    /// nothing, an empty list.
+    /// The transactions executed in the checkpoint. `None` unless the read mask requests
+    /// `Transactions` or one of its sub-fields (e.g. `TransactionsEffectsBcs`); with a
+    /// transactions filter that matches nothing, an empty list.
     pub transactions: Option<Vec<GrpcExecutedTransaction>>,
-    /// The events emitted in the checkpoint. `None` unless the read mask
-    /// requests `EventsBcs` (or `Events`); a checkpoint with no events, or an
-    /// events filter that matches nothing, yields an empty list.
+    /// The events emitted in the checkpoint. `None` unless the read mask requests `EventsBcs` (or
+    /// `Events`); a checkpoint with no events, or an events filter that matches nothing, yields an
+    /// empty list.
     pub events: Option<Vec<Event>>,
 }
 
 impl GrpcCheckpointResponse {
-    /// Convert a client response, using the read mask it was requested with
-    /// to tell fields that were not requested from fields that are empty.
+    /// Convert a client response, using the read mask it was requested with to tell fields that
+    /// were not requested from fields that are empty.
     fn from_response(
         value: &iota_sdk::grpc_client::CheckpointResponse,
         read_mask: &CheckpointResponseReadMask,
@@ -135,16 +131,15 @@ impl GrpcCheckpointResponse {
 
 /// Define a handle object over a server-streaming checkpoint RPC.
 ///
-/// The Rust API exposes these as a `Stream`, which has no uniffi equivalent,
-/// so the handle is pulled one item at a time with `next` and closed with
-/// `cancel`. The handle keeps the read mask the stream was opened with, since
-/// converting an item needs it.
+/// The Rust API exposes these as a `Stream`, which has no uniffi equivalent, so the handle is
+/// pulled one item at a time with `next` and closed with `cancel`. The handle keeps the read mask
+/// the stream was opened with, since converting an item needs it.
 macro_rules! define_checkpoint_stream {
     ($(#[$meta:meta])* $name:ident, $item:ty, $ffi_item:ty, $convert:expr) => {
         $(#[$meta])*
         ///
-        /// Call `next` in a loop to receive items; it returns `None` once the
-        /// stream is exhausted or `cancel` has been called.
+        /// Call `next` in a loop to receive items; it returns `None` once the stream is exhausted
+        /// or `cancel` has been called.
         #[derive(uniffi::Object)]
         pub struct $name {
             stream: StreamHandle<BoxStream<'static, GrpcResult<$item>>>,
@@ -155,16 +150,14 @@ macro_rules! define_checkpoint_stream {
         impl $name {
             /// Get the next item from the stream.
             ///
-            /// Returns `None` once the stream is exhausted or has been
-            /// canceled. Concurrent calls are serialized; there is no ordering
-            /// guarantee between them.
+            /// Returns `None` once the stream is exhausted or has been canceled. Concurrent calls
+            /// are serialized; there is no ordering guarantee between them.
             ///
-            /// An error from the connection or the server ends the stream:
-            /// there is no reconnect, so every later call returns `None`, and
-            /// a caller that wants to resume must open a new stream from the
-            /// last sequence number it received. An error converting a single
-            /// item, such as a BCS decode failure, only affects that item; the
-            /// next call continues with the following one.
+            /// An error from the connection or the server ends the stream: there is no reconnect,
+            /// so every later call returns `None`, and a caller that wants to resume must open a
+            /// new stream from the last sequence number it received. An error converting a single
+            /// item, such as a BCS decode failure, only affects that item; the next call continues
+            /// with the following one.
             pub async fn next(&self) -> Result<Option<$ffi_item>> {
                 self.stream
                     .next()
@@ -174,15 +167,13 @@ macro_rules! define_checkpoint_stream {
                     .transpose()
             }
 
-            /// Cancel the stream, dropping the connection and unblocking a
-            /// pending `next`.
+            /// Cancel the stream, dropping the connection and unblocking a pending `next`.
             ///
-            /// Idempotent, and safe to call while `next` is pending — the
-            /// pending call drops the connection on its way out.
+            /// Idempotent, and safe to call while `next` is pending — the pending call drops the
+            /// connection on its way out.
             ///
-            /// Named `cancel` rather than `close` because a `close` method
-            /// collides with the disposal method uniffi generates for objects
-            /// in some languages.
+            /// Named `cancel` rather than `close` because a `close` method collides with the
+            /// disposal method uniffi generates for objects in some languages.
             pub fn cancel(&self) {
                 self.stream.cancel();
             }
@@ -215,15 +206,14 @@ define_checkpoint_stream!(
     |checkpoint, read_mask| GrpcCheckpointResponse::from_response(&checkpoint, read_mask)
 );
 
-/// An item yielded by a filtered checkpoint stream: either a checkpoint with
-/// matching data, or a progress indicator emitted while the server scans
-/// checkpoints that have none.
+/// An item yielded by a filtered checkpoint stream: either a checkpoint with matching data, or a
+/// progress indicator emitted while the server scans checkpoints that have none.
 #[derive(uniffi::Enum)]
 pub enum GrpcCheckpointStreamItem {
     /// A complete checkpoint with its transactions and events.
     Checkpoint { checkpoint: GrpcCheckpointResponse },
-    /// A progress indicator sent during filtered scanning, carrying the
-    /// sequence number of the latest scanned checkpoint.
+    /// A progress indicator sent during filtered scanning, carrying the sequence number of the
+    /// latest scanned checkpoint.
     Progress { latest_scanned_sequence_number: u64 },
 }
 
@@ -253,8 +243,7 @@ impl GrpcCheckpointStreamItem {
 }
 
 define_checkpoint_stream!(
-    /// A stream of filtered checkpoints returned by
-    /// [`GrpcClient::checkpoints_stream_filtered`].
+    /// A stream of filtered checkpoints returned by [`GrpcClient::checkpoints_stream_filtered`].
     GrpcFilteredCheckpointStream,
     iota_sdk::grpc_client::CheckpointStreamItem,
     GrpcCheckpointStreamItem,
@@ -265,8 +254,8 @@ define_checkpoint_stream!(
 impl GrpcClient {
     /// Get the latest checkpoint.
     ///
-    /// The optional `transactions_filter` and `events_filter` narrow the
-    /// transactions and events returned for the checkpoint.
+    /// The optional `transactions_filter` and `events_filter` narrow the transactions and events
+    /// returned for the checkpoint.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, only the checkpoint summary is returned.
@@ -297,8 +286,8 @@ impl GrpcClient {
 
     /// Get a checkpoint by its sequence number.
     ///
-    /// The optional `transactions_filter` and `events_filter` narrow the
-    /// transactions and events returned for the checkpoint.
+    /// The optional `transactions_filter` and `events_filter` narrow the transactions and events
+    /// returned for the checkpoint.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, only the checkpoint summary is returned.
@@ -330,8 +319,8 @@ impl GrpcClient {
 
     /// Get a checkpoint by its digest.
     ///
-    /// The optional `transactions_filter` and `events_filter` narrow the
-    /// transactions and events returned for the checkpoint.
+    /// The optional `transactions_filter` and `events_filter` narrow the transactions and events
+    /// returned for the checkpoint.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, only the checkpoint summary is returned.
@@ -363,18 +352,17 @@ impl GrpcClient {
 
     /// Stream checkpoints across a range of sequence numbers.
     ///
-    /// Every checkpoint in the range is yielded, even if the filters produce
-    /// no matching transactions or events within it.
+    /// Every checkpoint in the range is yielded, even if the filters produce no matching
+    /// transactions or events within it.
     ///
-    /// If `start_sequence_number` is `None`, the stream starts from the latest
-    /// checkpoint. If `end_sequence_number` is `None`, the stream continues
-    /// indefinitely.
+    /// If `start_sequence_number` is `None`, the stream starts from the latest checkpoint. If
+    /// `end_sequence_number` is `None`, the stream continues indefinitely.
     ///
-    /// The optional `transactions_filter` and `events_filter` narrow the
-    /// transactions and events returned for each checkpoint.
+    /// The optional `transactions_filter` and `events_filter` narrow the transactions and events
+    /// returned for each checkpoint.
     ///
-    /// The optional `read_mask` controls which fields the server returns for
-    /// each checkpoint. If `None`, only the checkpoint summary is returned.
+    /// The optional `read_mask` controls which fields the server returns for each checkpoint. If
+    /// `None`, only the checkpoint summary is returned.
     #[uniffi::method(default(
         start_sequence_number = None,
         end_sequence_number = None,
@@ -416,24 +404,22 @@ impl GrpcClient {
         Ok(GrpcCheckpointStream::new(stream, read_mask))
     }
 
-    /// Stream checkpoints across a range of sequence numbers, skipping
-    /// checkpoints with no data matching the filters.
+    /// Stream checkpoints across a range of sequence numbers, skipping checkpoints with no data
+    /// matching the filters.
     ///
-    /// Unlike [`GrpcClient::checkpoints_stream`], the filters decide which
-    /// checkpoints are returned at all; checkpoints without any matching
-    /// transactions or events are skipped entirely. At least one of
-    /// `transactions_filter` or `events_filter` must be set.
+    /// Unlike [`GrpcClient::checkpoints_stream`], the filters decide which checkpoints are returned
+    /// at all; checkpoints without any matching transactions or events are skipped entirely. At
+    /// least one of `transactions_filter` or `events_filter` must be set.
     ///
-    /// While the server scans non-matching checkpoints, the stream yields
-    /// progress items indicating the current scan position (default every
-    /// 2000ms, configurable via `progress_interval_ms`, minimum 500ms).
+    /// While the server scans non-matching checkpoints, the stream yields progress items indicating
+    /// the current scan position (default every 2000ms, configurable via `progress_interval_ms`,
+    /// minimum 500ms).
     ///
-    /// If `start_sequence_number` is `None`, the stream starts from the latest
-    /// checkpoint. If `end_sequence_number` is `None`, the stream continues
-    /// indefinitely.
+    /// If `start_sequence_number` is `None`, the stream starts from the latest checkpoint. If
+    /// `end_sequence_number` is `None`, the stream continues indefinitely.
     ///
-    /// The optional `read_mask` controls which fields the server returns for
-    /// each checkpoint. If `None`, only the checkpoint summary is returned.
+    /// The optional `read_mask` controls which fields the server returns for each checkpoint. If
+    /// `None`, only the checkpoint summary is returned.
     #[uniffi::method(default(
         start_sequence_number = None,
         end_sequence_number = None,

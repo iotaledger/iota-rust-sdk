@@ -105,8 +105,7 @@ impl TransactionBuilderError {
     }
 }
 
-/// A response from a [`TransactionBuilderLedgerClient`] that does not match
-/// what was requested.
+/// A response from a [`TransactionBuilderLedgerClient`] that does not match what was requested.
 ///
 /// [`TransactionBuilderLedgerClient`]: crate::TransactionBuilderLedgerClient
 #[derive(Debug, thiserror::Error)]

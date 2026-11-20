@@ -56,12 +56,11 @@ impl std::fmt::Debug for TypeParseError {
     }
 }
 
-/// Maximum number of bytes of the unparsed input that a
-/// [`TypeParseError::Parse`] message shows.
+/// Maximum number of bytes of the unparsed input that a [`TypeParseError::Parse`] message shows.
 const MAX_ERROR_INPUT_LENGTH: usize = 128;
 
-/// Shows the unparsed input in debug output: cut to
-/// [`MAX_ERROR_INPUT_LENGTH`] bytes and escaped like a `str`.
+/// Shows the unparsed input in debug output: cut to [`MAX_ERROR_INPUT_LENGTH`] bytes and escaped
+/// like a `str`.
 struct DebugInput<'a>(&'a str);
 
 impl std::fmt::Debug for DebugInput<'_> {
@@ -76,8 +75,8 @@ impl std::fmt::Debug for DebugInput<'_> {
     }
 }
 
-/// Shows the unparsed input in an error message: cut to
-/// [`MAX_ERROR_INPUT_LENGTH`] bytes, with control characters escaped.
+/// Shows the unparsed input in an error message: cut to [`MAX_ERROR_INPUT_LENGTH`] bytes, with
+/// control characters escaped.
 struct ErrorInput<'a>(&'a str);
 
 impl std::fmt::Display for ErrorInput<'_> {

@@ -16,8 +16,7 @@ use crate::{
     query_types::PageInfo,
 };
 
-/// A stream that yields items from a paginated query with support for
-/// bidirectional pagination.
+/// A stream that yields items from a paginated query with support for bidirectional pagination.
 pub struct PageStream<T, F, Fut> {
     query_fn: F,
     direction: Direction,

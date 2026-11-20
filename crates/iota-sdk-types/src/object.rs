@@ -28,8 +28,7 @@ pub struct ObjectReference {
 }
 
 impl ObjectReference {
-    /// Creates a new object reference from the object's id, version, and
-    /// digest.
+    /// Creates a new object reference from the object's id, version, and digest.
     pub const fn new(object_id: ObjectId, version: Version, digest: ObjectDigest) -> Self {
         Self {
             object_id,
@@ -38,20 +37,17 @@ impl ObjectReference {
         }
     }
 
-    /// Returns a reference to the object id that this ObjectReference is
-    /// referring to.
+    /// Returns a reference to the object id that this ObjectReference is referring to.
     pub fn object_id(&self) -> &ObjectId {
         &self.object_id
     }
 
-    /// Returns the version of the object that this ObjectReference is referring
-    /// to.
+    /// Returns the version of the object that this ObjectReference is referring to.
     pub fn version(&self) -> Version {
         self.version
     }
 
-    /// Returns the digest of the object that this ObjectReference is referring
-    /// to.
+    /// Returns the digest of the object that this ObjectReference is referring to.
     pub fn digest(&self) -> &ObjectDigest {
         &self.digest
     }
@@ -79,8 +75,8 @@ impl crate::TreeDisplay for ObjectReference {
 
 /// An [`ObjectReference`] paired with the owner the object has at that version.
 ///
-/// Not a wire type: this is how transaction effects report an object they
-/// touched, since a reference alone does not say who owns it.
+/// Not a wire type: this is how transaction effects report an object they touched, since a
+/// reference alone does not say who owns it.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct OwnedObjectReference {
     pub(crate) reference: ObjectReference,
@@ -114,8 +110,8 @@ impl crate::TreeDisplay for OwnedObjectReference {
 
 /// An [`ObjectId`] paired with one of that object's versions.
 ///
-/// Not a wire type: this is how transaction effects report the version an
-/// object was at before the transaction changed it.
+/// Not a wire type: this is how transaction effects report the version an object was at before the
+/// transaction changed it.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct ObjectVersion {
     pub(crate) object_id: ObjectId,
@@ -177,8 +173,8 @@ impl Owner {
 
     crate::def_is_as_into_opt!(Address, Object(ObjectId), Shared(Version));
 
-    /// Returns an `Address` if this object is owned by an address or
-    /// object, and None if it is shared or immutable.
+    /// Returns an `Address` if this object is owned by an address or object, and None if it is
+    /// shared or immutable.
     pub fn address_or_object(&self) -> Option<&Address> {
         Some(match self {
             Self::Address(address) => address,
@@ -269,9 +265,8 @@ impl crate::TreeDisplay for ObjectData {
 
 /// A [`StructTag`] with optimized BCS serialization for object types.
 ///
-/// GasCoin, StakedIota, and Coin variants use compact enum encoding
-/// instead of the full StructTag representation. The Other variant
-/// carries the full StructTag inline.
+/// GasCoin, StakedIota, and Coin variants use compact enum encoding instead of the full StructTag
+/// representation. The Other variant carries the full StructTag inline.
 ///
 /// # BCS
 ///
@@ -355,14 +350,12 @@ pub struct MoveStruct {
     /// The type of this object. Uses optimized BCS serialization.
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "compressed-struct-tag"))]
     object_type: MoveObjectType,
-    /// Number that increases each time a tx takes this object as a mutable
-    /// input This is a lamport timestamp, not a sequentially increasing
-    /// version
+    /// Number that increases each time a tx takes this object as a mutable input This is a lamport
+    /// timestamp, not a sequentially increasing version
     version: Version,
     /// BCS bytes of a Move struct value.
     ///
-    /// The first [`ObjectId::LENGTH`] bytes are always the object's
-    /// [`ObjectId`].
+    /// The first [`ObjectId::LENGTH`] bytes are always the object's [`ObjectId`].
     #[cfg_attr(
         feature = "serde",
         serde(with = "crate::_serde::ReadableBase64Encoded")
@@ -377,9 +370,8 @@ impl MoveStruct {
     ///
     /// # Errors
     ///
-    /// Returns an error if `contents` is shorter than [`ObjectId::LENGTH`]
-    /// bytes, since every Move object must contain its [`ObjectId`] as the
-    /// leading bytes.
+    /// Returns an error if `contents` is shorter than [`ObjectId::LENGTH`] bytes, since every Move
+    /// object must contain its [`ObjectId`] as the leading bytes.
     pub fn new(
         object_type: MoveObjectType,
         version: Version,
@@ -414,8 +406,8 @@ impl MoveStruct {
 
     /// Returns the object's ID, extracted from the BCS-encoded contents.
     ///
-    /// This is always valid because the constructor guarantees that `contents`
-    /// is at least [`ObjectId::LENGTH`] bytes long.
+    /// This is always valid because the constructor guarantees that `contents` is at least
+    /// [`ObjectId::LENGTH`] bytes long.
     pub fn id(&self) -> ObjectId {
         ObjectId::from_bytes(&self.contents[..ObjectId::LENGTH]).unwrap()
     }
@@ -432,8 +424,8 @@ impl MoveStruct {
 
     /// Sets the type of this object.
     ///
-    /// The caller must ensure the existing [`contents`](Self::contents) are a
-    /// valid BCS encoding of the new `object_type`; this is not verified.
+    /// The caller must ensure the existing [`contents`](Self::contents) are a valid BCS encoding of
+    /// the new `object_type`; this is not verified.
     pub fn set_object_type(&mut self, object_type: MoveObjectType) {
         self.object_type = object_type;
     }
@@ -445,13 +437,12 @@ impl MoveStruct {
 
     /// Replaces the BCS-encoded contents of this object.
     ///
-    /// The caller must ensure the new contents are a valid BCS encoding of the
-    /// object's [`object_type`](Self::object_type); this is not verified.
+    /// The caller must ensure the new contents are a valid BCS encoding of the object's
+    /// [`object_type`](Self::object_type); this is not verified.
     ///
     /// # Errors
     ///
-    /// Returns an error if `contents` is shorter than [`ObjectId::LENGTH`]
-    /// bytes.
+    /// Returns an error if `contents` is shorter than [`ObjectId::LENGTH`] bytes.
     pub fn set_contents(&mut self, contents: Vec<u8>) -> Result<(), MoveStructContentsError> {
         if contents.len() < ObjectId::LENGTH {
             return Err(MoveStructContentsError {
@@ -493,8 +484,7 @@ impl crate::TreeDisplay for MoveStruct {
     }
 }
 
-/// Error returned when [`MoveStruct`] contents are too short to contain an
-/// [`ObjectId`].
+/// Error returned when [`MoveStruct`] contents are too short to contain an [`ObjectId`].
 #[derive(Clone, Debug, thiserror::Error)]
 #[error(
     "MoveStruct contents must be at least {} bytes to contain an ObjectId, got {contents_len}",
@@ -554,8 +544,8 @@ pub struct Object {
     /// The digest of the transaction that created or last mutated this object
     pub previous_transaction: TransactionDigest,
     /// The amount of IOTA we would rebate if this object gets deleted.
-    /// This number is re-calculated each time the object is mutated based on
-    /// the present storage gas price.
+    /// This number is re-calculated each time the object is mutated based on the present storage
+    /// gas price.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub storage_rebate: u64,
 }
@@ -653,8 +643,7 @@ impl Object {
 
     /// Return the storage rebate locked in this object
     ///
-    /// Storage rebates are credited to the gas coin used in a transaction that
-    /// deletes this object.
+    /// Storage rebates are credited to the gas coin used in a transaction that deletes this object.
     pub fn storage_rebate(&self) -> u64 {
         self.storage_rebate
     }
@@ -714,8 +703,8 @@ impl Object {
             .and_then(|move_object| move_object.struct_tag().opt_coin_type())
     }
 
-    /// Returns the address of the single owner of this object (address- or
-    /// object-owned), or `None` if it is shared or immutable.
+    /// Returns the address of the single owner of this object (address- or object-owned), or `None`
+    /// if it is shared or immutable.
     pub fn single_owner(&self) -> Option<Address> {
         self.owner.address_or_object().copied()
     }
@@ -739,8 +728,8 @@ impl crate::TreeDisplay for Object {
 
 /// An object part of the initial chain state
 ///
-/// `GenesisObject`'s are included as a part of genesis, the initial
-/// checkpoint/transaction, that initializes the state of the blockchain.
+/// `GenesisObject`'s are included as a part of genesis, the initial checkpoint/transaction, that
+/// initializes the state of the blockchain.
 ///
 /// # BCS
 ///
@@ -819,12 +808,10 @@ mod serialization {
     use super::*;
     use crate::TypeTag;
 
-    /// Wrapper around StructTag with a space-efficient representation for
-    /// common types like coins The StructTag for a gas coin is 84 bytes, so
-    /// using 1 byte instead is a win. The inner representation is private
-    /// to prevent incorrectly constructing an `Other` instead of one of the
-    /// specialized variants, e.g. `Other(GasCoin::type_())` instead of
-    /// `GasCoin`
+    /// Wrapper around StructTag with a space-efficient representation for common types like coins
+    /// The StructTag for a gas coin is 84 bytes, so using 1 byte instead is a win. The inner
+    /// representation is private to prevent incorrectly constructing an `Other` instead of one of
+    /// the specialized variants, e.g. `Other(GasCoin::type_())` instead of `GasCoin`
     #[derive(serde::Deserialize)]
     #[serde(rename = "MoveObjectType")]
     #[cfg_attr(
@@ -837,11 +824,9 @@ mod serialization {
         Other(StructTag),
         /// An IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
         GasCoin,
-        /// A record of a staked IOTA coin (i.e.,
-        /// `0x3::staking_pool::StakedIota`)
+        /// A record of a staked IOTA coin (i.e., `0x3::staking_pool::StakedIota`)
         StakedIota,
-        /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
-        /// 0x2::iota::IOTA`)
+        /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T != 0x2::iota::IOTA`)
         Coin(TypeTag),
     }
 
@@ -853,11 +838,9 @@ mod serialization {
         Other(&'a StructTag),
         /// An IOTA coin (i.e., `0x2::coin::Coin<0x2::iota::IOTA>`)
         GasCoin,
-        /// A record of a staked IOTA coin (i.e.,
-        /// `0x3::staking_pool::StakedIota`)
+        /// A record of a staked IOTA coin (i.e., `0x3::staking_pool::StakedIota`)
         StakedIota,
-        /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T !=
-        /// 0x2::iota::IOTA`)
+        /// A non-IOTA coin type (i.e., `0x2::coin::Coin<T> where T != 0x2::iota::IOTA`)
         Coin(&'a TypeTag),
     }
 
@@ -871,8 +854,8 @@ mod serialization {
             }
         }
 
-        /// Wire-format variant index, compared against the canonical encoding
-        /// chosen by `MoveObjectTypeRef::from_struct_tag`.
+        /// Wire-format variant index, compared against the canonical encoding chosen by
+        /// `MoveObjectTypeRef::from_struct_tag`.
         fn variant_index(&self) -> u8 {
             match self {
                 Self::Other(_) => 0,
@@ -938,14 +921,13 @@ mod serialization {
             if deserializer.is_human_readable() {
                 StructTag::deserialize(deserializer).map(Self)
             } else {
-                // The same `StructTag` is reachable from several wire forms
-                // (e.g. `Other(0x2::coin::Coin<0x2::iota::IOTA>)` and
-                // `GasCoin`), but serialization always emits the specialized
-                // one. Reject the others so BCS round-trips stay byte-faithful
-                // and digests computed over them stay stable. Only the
-                // variants carrying a payload can be non-canonical: `Other`
-                // may wrap any specialized tag and `Coin` may wrap the IOTA
-                // type, while `GasCoin` and `StakedIota` are always canonical.
+                // The same `StructTag` is reachable from several wire forms (e.g.
+                // `Other(0x2::coin::Coin<0x2::iota::IOTA>)` and `GasCoin`), but serialization
+                // always emits the specialized one. Reject the others so BCS round-trips stay
+                // byte-faithful and digests computed over them stay stable. Only the variants
+                // carrying a payload can be non-canonical: `Other` may wrap any specialized tag and
+                // `Coin` may wrap the IOTA type, while `GasCoin` and `StakedIota` are always
+                // canonical.
                 let parsed = MoveObjectTypeWrapper::deserialize(deserializer)?;
                 match parsed {
                     MoveObjectTypeWrapper::Other(_) | MoveObjectTypeWrapper::Coin(_) => {
@@ -1033,9 +1015,9 @@ mod serialization {
         }
     }
 
-    /// Deserialization target mirroring `MoveStruct`'s fields, so that
-    /// `contents` can be validated through `MoveStruct::new` before the value
-    /// reaches the public type, where `id()` relies on that invariant.
+    /// Deserialization target mirroring `MoveStruct`'s fields, so that `contents` can be validated
+    /// through `MoveStruct::new` before the value reaches the public type, where `id()` relies on
+    /// that invariant.
     #[derive(serde::Deserialize)]
     #[serde(rename = "MoveStruct")]
     struct RawMoveStruct {
@@ -1070,10 +1052,9 @@ mod serialization {
         use super::*;
         use crate::{Identifier, TypeOrigin, UpgradeInfo, object::Object};
 
-        // A non-canonical `MoveObjectType` wire form such as `Other(<gas coin
-        // tag>)` used to deserialize successfully and then re-serialize as the
-        // specialized variant, so the same logical value had several BCS
-        // encodings. Each must now be rejected at deserialization.
+        // A non-canonical `MoveObjectType` wire form such as `Other(<gas coin tag>)` used to
+        // deserialize successfully and then re-serialize as the specialized variant, so the same
+        // logical value had several BCS encodings. Each must now be rejected at deserialization.
         #[test]
         fn non_canonical_move_object_type_is_rejected() {
             // Variant indices on the wire (uleb128, one byte here):
@@ -1118,15 +1099,14 @@ mod serialization {
             }
         }
 
-        // A `MoveStruct` whose `contents` is shorter than an `ObjectId` used to
-        // deserialize successfully and then panic in `id()`. Both the BCS and
-        // JSON paths must reject it up front.
+        // A `MoveStruct` whose `contents` is shorter than an `ObjectId` used to deserialize
+        // successfully and then panic in `id()`. Both the BCS and JSON paths must reject it up
+        // front.
         #[test]
         fn truncated_move_struct_contents_is_rejected() {
             const SHORT: usize = ObjectId::LENGTH - 1;
 
-            // BCS layout: GasCoin tag (0x01) | version u64 | contents uleb128
-            // length | contents.
+            // BCS layout: GasCoin tag (0x01) | version u64 | contents uleb128 length | contents.
             let mut short_bcs = vec![0x01];
             short_bcs.extend_from_slice(&[0u8; 8]);
             short_bcs.push(SHORT as u8);
@@ -1138,9 +1118,8 @@ mod serialization {
                 "unexpected BCS error: {err}"
             );
 
-            // Same layout wrapped in an `Object`: ObjectData::Struct (0x00) |
-            // MoveStruct | Owner::Immutable (0x03) | digest (uleb128 length +
-            // 32 bytes) | storage_rebate u64.
+            // Same layout wrapped in an `Object`: ObjectData::Struct (0x00) | MoveStruct |
+            // Owner::Immutable (0x03) | digest (uleb128 length + 32 bytes) | storage_rebate u64.
             let mut short_object = vec![0x00];
             short_object.extend_from_slice(&short_bcs);
             short_object.push(0x03);

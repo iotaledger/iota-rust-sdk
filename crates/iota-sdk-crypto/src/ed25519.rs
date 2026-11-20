@@ -76,15 +76,13 @@ impl Ed25519PrivateKey {
         Self::new(buf)
     }
 
-    /// Generate a new private key using the operating system's random number
-    /// generator.
+    /// Generate a new private key using the operating system's random number generator.
     #[cfg(feature = "rand")]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
-    /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
-    /// format).
+    /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary format).
     #[cfg(feature = "pem")]
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
         pkcs8::DecodePrivateKey::from_pkcs8_der(bytes)
@@ -122,8 +120,7 @@ impl Ed25519PrivateKey {
             .map(|pem| (*pem).to_owned())
     }
 
-    /// Rejects PKCS#8 v2 documents whose embedded public key does not match
-    /// the private key.
+    /// Rejects PKCS#8 v2 documents whose embedded public key does not match the private key.
     #[cfg(feature = "pem")]
     pub(crate) fn from_pkcs8(
         keypair_bytes: ed25519::pkcs8::KeypairBytes,
@@ -139,8 +136,8 @@ impl Ed25519PrivateKey {
         Ok(private_key)
     }
 
-    /// Re-expose the raw private key as PKCS#8 v2 key material (with the
-    /// public key embedded), used only as a PEM/DER codec.
+    /// Re-expose the raw private key as PKCS#8 v2 key material (with the public key embedded), used
+    /// only as a PEM/DER codec.
     #[cfg(feature = "pem")]
     fn to_pkcs8(&self) -> ed25519::pkcs8::KeypairBytes {
         ed25519::pkcs8::KeypairBytes {
@@ -341,8 +338,7 @@ impl Ed25519VerifyingKey {
             .map_err(SignatureError::from_source)
     }
 
-    /// Re-expose the public key as PKCS#8 key material, used only as a PEM/DER
-    /// codec.
+    /// Re-expose the public key as PKCS#8 key material, used only as a PEM/DER codec.
     #[cfg(feature = "pem")]
     fn to_pkcs8(&self) -> ed25519::pkcs8::PublicKeyBytes {
         ed25519::pkcs8::PublicKeyBytes(

@@ -26,8 +26,8 @@ pub type ProtocolVersion = u64;
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum CheckpointCommitment {
-    /// An Elliptic Curve Multiset Hash attesting to the set of Objects that
-    /// compose the live state of the IOTA blockchain.
+    /// An Elliptic Curve Multiset Hash attesting to the set of Objects that compose the live state
+    /// of the IOTA blockchain.
     EcmhLiveObjectSet { digest: Digest },
     // Other commitment types (e.g. merkle roots) go here.
 }
@@ -51,8 +51,7 @@ impl std::fmt::Display for CheckpointCommitment {
     }
 }
 
-/// Data, which when included in a [`CheckpointSummary`], signals the end of an
-/// `Epoch`.
+/// Data, which when included in a [`CheckpointSummary`], signals the end of an `Epoch`.
 ///
 /// # BCS
 ///
@@ -63,8 +62,7 @@ impl std::fmt::Display for CheckpointCommitment {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct EndOfEpochData {
-    /// The set of Validators that will be in the ValidatorCommittee for the
-    /// next epoch.
+    /// The set of Validators that will be in the ValidatorCommittee for the next epoch.
     pub next_epoch_committee: Vec<ValidatorCommitteeMember>,
     /// The protocol version that is in effect during the next epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
@@ -72,8 +70,7 @@ pub struct EndOfEpochData {
     pub next_epoch_protocol_version: ProtocolVersion,
     /// Commitments to epoch specific state (e.g. live object set)
     pub epoch_commitments: Vec<CheckpointCommitment>,
-    /// The number of tokens that were minted (if positive) or burnt (if
-    /// negative) in this epoch.
+    /// The number of tokens that were minted (if positive) or burnt (if negative) in this epoch.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub epoch_supply_change: i64,
 }
@@ -94,26 +91,23 @@ impl crate::TreeDisplay for EndOfEpochData {
 
 /// A header for a Checkpoint on the IOTA blockchain.
 ///
-/// On the IOTA network, checkpoints define the history of the blockchain. They
-/// are quite similar to the concept of blocks used by other blockchains like
-/// Bitcoin or Ethereum. The IOTA blockchain, however, forms checkpoints after
-/// transaction execution has already happened to provide a certified history of
-/// the chain, instead of being formed before execution.
+/// On the IOTA network, checkpoints define the history of the blockchain. They are quite similar to
+/// the concept of blocks used by other blockchains like Bitcoin or Ethereum. The IOTA blockchain,
+/// however, forms checkpoints after transaction execution has already happened to provide a
+/// certified history of the chain, instead of being formed before execution.
 ///
 /// Checkpoints commit to a variety of state including but not limited to:
 /// - The hash of the previous checkpoint.
-/// - The set of transaction digests, their corresponding effects digests, as
-///   well as the set of user signatures which authorized its execution.
+/// - The set of transaction digests, their corresponding effects digests, as well as the set of
+///   user signatures which authorized its execution.
 /// - The object's produced by a transaction.
 /// - The set of live objects that make up the current state of the chain.
 /// - On epoch transitions, the next validator committee.
 ///
-/// `CheckpointSummary`s themselves don't directly include all of the above
-/// information but they are the top-level type by which all the above are
-/// committed to transitively via cryptographic hashes included in the summary.
-/// `CheckpointSummary`s are signed and certified by a quorum of the validator
-/// committee in a given epoch in order to allow verification of the chain's
-/// state.
+/// `CheckpointSummary`s themselves don't directly include all of the above information but they are
+/// the top-level type by which all the above are committed to transitively via cryptographic hashes
+/// included in the summary. `CheckpointSummary`s are signed and certified by a quorum of the
+/// validator committee in a given epoch in order to allow verification of the chain's state.
 ///
 /// # BCS
 ///
@@ -132,8 +126,7 @@ pub struct CheckpointSummary {
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub sequence_number: CheckpointSequenceNumber,
-    /// Total number of transactions committed since genesis, including those in
-    /// this checkpoint.
+    /// Total number of transactions committed since genesis, including those in this checkpoint.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     pub network_total_transactions: u64,
     /// The hash of the [`CheckpointContents`] for this checkpoint.
@@ -143,13 +136,12 @@ pub struct CheckpointSummary {
     /// This will be only be `None` for the first, or genesis checkpoint.
     #[cfg_attr(feature = "serde", serde(default))]
     pub previous_digest: Option<CheckpointDigest>,
-    /// The running total gas costs of all transactions included in the current
-    /// epoch so far until this checkpoint.
+    /// The running total gas costs of all transactions included in the current epoch so far until
+    /// this checkpoint.
     pub epoch_rolling_gas_cost_summary: GasCostSummary,
     /// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
-    /// Checkpoint timestamps are monotonic, but not strongly monotonic -
-    /// subsequent checkpoints can have same timestamp if they originate
-    /// from the same underlining consensus commit
+    /// Checkpoint timestamps are monotonic, but not strongly monotonic - subsequent checkpoints
+    /// can have same timestamp if they originate from the same underlining consensus commit
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u64"))]
     pub timestamp_ms: CheckpointTimestamp,
@@ -159,10 +151,9 @@ pub struct CheckpointSummary {
     /// Extra data only present in the final checkpoint of an epoch.
     #[cfg_attr(feature = "serde", serde(default))]
     pub end_of_epoch_data: Option<EndOfEpochData>,
-    /// CheckpointSummary is not an evolvable structure - it must be readable by
-    /// any version of the code. Therefore, in order to allow extensions to
-    /// be added to CheckpointSummary, we allow opaque data to be added to
-    /// checkpoints which can be deserialized based on the current
+    /// CheckpointSummary is not an evolvable structure - it must be readable by any version of the
+    /// code. Therefore, in order to allow extensions to be added to CheckpointSummary, we allow
+    /// opaque data to be added to checkpoints which can be deserialized based on the current
     /// protocol version.
     #[cfg_attr(
         feature = "serde",
@@ -241,8 +232,7 @@ impl CheckpointSummary {
         self.sequence_number
     }
 
-    /// Total number of transactions committed since genesis, including those in
-    /// this checkpoint.
+    /// Total number of transactions committed since genesis, including those in this checkpoint.
     pub fn network_total_transactions(&self) -> u64 {
         self.network_total_transactions
     }
@@ -252,14 +242,13 @@ impl CheckpointSummary {
         self.contents_digest
     }
 
-    /// The hash of the previous `CheckpointSummary`, or `None` for the genesis
-    /// checkpoint.
+    /// The hash of the previous `CheckpointSummary`, or `None` for the genesis checkpoint.
     pub fn previous_digest(&self) -> Option<CheckpointDigest> {
         self.previous_digest
     }
 
-    /// The running total gas costs of all transactions included in the current
-    /// epoch so far until this checkpoint.
+    /// The running total gas costs of all transactions included in the current epoch so far until
+    /// this checkpoint.
     pub fn epoch_rolling_gas_cost_summary(&self) -> &GasCostSummary {
         &self.epoch_rolling_gas_cost_summary
     }
@@ -284,8 +273,8 @@ impl CheckpointSummary {
         &self.version_specific_data
     }
 
-    /// The validator committee that takes effect in the next epoch, present
-    /// only on the final checkpoint of an epoch.
+    /// The validator committee that takes effect in the next epoch, present only on the final
+    /// checkpoint of an epoch.
     pub fn next_epoch_committee(&self) -> Option<&[ValidatorCommitteeMember]> {
         self.end_of_epoch_data
             .as_ref()
@@ -321,9 +310,8 @@ impl crate::TreeDisplay for SignedCheckpointSummary {
 
 /// The committed to contents of a checkpoint.
 ///
-/// `CheckpointContents` contains a list of digests of Transactions, their
-/// effects, and the user signatures that authorized their execution included in
-/// a checkpoint.
+/// `CheckpointContents` contains a list of digests of Transactions, their effects, and the user
+/// signatures that authorized their execution included in a checkpoint.
 ///
 /// # BCS
 ///
@@ -352,8 +340,7 @@ impl CheckpointContents {
         }
     }
 
-    /// Consumes the `CheckpointContentsV1` and returns the list of
-    /// transactions.
+    /// Consumes the `CheckpointContentsV1` and returns the list of transactions.
     pub fn into_transactions(self) -> Vec<CheckpointTransactionInfo> {
         match self {
             CheckpointContents::V1(v1) => v1.into_transactions(),
@@ -375,10 +362,9 @@ impl CheckpointContents {
     }
 }
 
-/// CheckpointContents are the transactions included in an upcoming checkpoint.
-/// They must have already been causally ordered. Since the causal order
-/// algorithm is the same among validators, we expect all honest validators to
-/// come up with the same order for each checkpoint content.
+/// CheckpointContents are the transactions included in an upcoming checkpoint. They must have
+/// already been causally ordered. Since the causal order algorithm is the same among validators, we
+/// expect all honest validators to come up with the same order for each checkpoint content.
 ///
 /// # BCS
 ///
@@ -401,8 +387,7 @@ impl CheckpointContentsV1 {
         &self.transactions
     }
 
-    /// Consumes the `CheckpointContentsV1` and returns the list of
-    /// transactions.
+    /// Consumes the `CheckpointContentsV1` and returns the list of transactions.
     pub fn into_transactions(self) -> Vec<CheckpointTransactionInfo> {
         self.transactions
     }
@@ -506,8 +491,7 @@ pub struct CheckpointTransaction {
     pub effects: TransactionEffects,
     /// The events, if any, emitted by this transaction during execution
     pub events: Option<TransactionEvents>,
-    /// The state of all inputs to this transaction as they were prior to
-    /// execution.
+    /// The state of all inputs to this transaction as they were prior to execution.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub input_objects: Vec<Object>,
     /// The state of all output objects created or mutated by this transaction.

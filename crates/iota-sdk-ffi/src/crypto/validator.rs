@@ -106,19 +106,17 @@ impl ValidatorCommitteeSignatureAggregator {
     }
 }
 
-/// Verifies the committee chain: the sequence of committees linked by each
-/// epoch's certified closing checkpoint, whose end-of-epoch data elects the
-/// committee of the next epoch.
+/// Verifies the committee chain: the sequence of committees linked by each epoch's certified
+/// closing checkpoint, whose end-of-epoch data elects the committee of the next epoch.
 ///
-/// Starting from a trusted committee (typically the genesis committee, the
-/// operator's trust root), feed it each epoch's closing
-/// `SignedCheckpointSummary` in epoch order via `Self::verify_epoch_close`;
-/// every summary a consumer obtains this way is committee-verified, with no
-/// trust in whatever transport delivered it.
+/// Starting from a trusted committee (typically the genesis committee, the operator's trust root),
+/// feed it each epoch's closing `SignedCheckpointSummary` in epoch order via
+/// `Self::verify_epoch_close`; every summary a consumer obtains this way is committee-verified,
+/// with no trust in whatever transport delivered it.
 ///
-/// The walk is transport-agnostic by design — callers drive their own loop (an
-/// in-memory list, a remote-store stream, files on disk) and feed summaries in;
-/// this type only holds the verification state.
+/// The walk is transport-agnostic by design — callers drive their own loop (an in-memory list, a
+/// remote-store stream, files on disk) and feed summaries in; this type only holds the verification
+/// state.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct CommitteeChainVerifier(pub RwLock<iota_sdk::crypto::validator::CommitteeChainVerifier>);
@@ -151,8 +149,8 @@ impl CommitteeChainVerifier {
             .into()
     }
 
-    /// Verify `summary` as the certified closing checkpoint of the current
-    /// epoch and advance to the committee it elects for the next epoch.
+    /// Verify `summary` as the certified closing checkpoint of the current epoch and advance to the
+    /// committee it elects for the next epoch.
     pub fn verify_epoch_close(&self, summary: &SignedCheckpointSummary) -> Result<()> {
         Ok(self
             .0

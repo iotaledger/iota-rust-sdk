@@ -5,10 +5,10 @@
 //!
 //! # Read Mask
 //!
-//! Without [`read_mask`](ListOwnedObjectsQuery::read_mask), the default mask is
-//! used. Pass an [`OwnedObjectReadMask`] built from
-//! an [`OwnedObjectField`](iota_grpc_types::read_mask_fields::OwnedObjectField)
-//! (or any slice/array/vec of fields) to choose the returned fields.
+//! Without [`read_mask`](ListOwnedObjectsQuery::read_mask), the default mask is used. Pass an
+//! [`OwnedObjectReadMask`] built from an
+//! [`OwnedObjectField`](iota_grpc_types::read_mask_fields::OwnedObjectField) (or any
+//! slice/array/vec of fields) to choose the returned fields.
 
 use iota_grpc_types::{
     read_mask_fields::{IntoReadMask, OwnedObjectReadMask},
@@ -25,9 +25,8 @@ use crate::{GrpcClient, InterceptedChannel, api::define_list_query};
 define_list_query! {
     /// Builder for listing objects owned by an address.
     ///
-    /// Created by [`GrpcClient::owned_objects`]. Await directly for a
-    /// single page, or call [`.collect(limit)`](Self::collect) to
-    /// auto-paginate.
+    /// Created by [`GrpcClient::owned_objects`]. Await directly for a single page, or call
+    /// [`.collect(limit)`](Self::collect) to auto-paginate.
     pub struct ListOwnedObjectsQuery {
         service_client: StateServiceClient<InterceptedChannel>,
         request: ListOwnedObjectsRequest,
@@ -54,12 +53,11 @@ impl ListOwnedObjectsQuery {
 impl GrpcClient {
     /// List objects owned by an address.
     ///
-    /// Returns a query builder. Await it directly for a single page
-    /// (with access to `next_page_token`), or call `.collect(limit)` to
-    /// auto-paginate through all results. Filter by type with
-    /// [`object_type`](ListOwnedObjectsQuery::object_type), choose the
-    /// returned fields with [`read_mask`](ListOwnedObjectsQuery::read_mask),
-    /// and page with [`page_size`](ListOwnedObjectsQuery::page_size) and
+    /// Returns a query builder. Await it directly for a single page (with access to
+    /// `next_page_token`), or call `.collect(limit)` to auto-paginate through all results. Filter
+    /// by type with [`object_type`](ListOwnedObjectsQuery::object_type), choose the returned fields
+    /// with [`read_mask`](ListOwnedObjectsQuery::read_mask), and page with
+    /// [`page_size`](ListOwnedObjectsQuery::page_size) and
     /// [`page_token`](ListOwnedObjectsQuery::page_token).
     ///
     /// # Parameters
