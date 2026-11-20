@@ -56,7 +56,6 @@ derive_more = { workspace = true, features = ["from", "deref", "display"] }
 futures.workspace = true
 hex.workspace = true
 paste.workspace = true
-primitive-types.workspace = true
 reqwest = { workspace = true, features = ["rustls-no-provider", "json"] }
 serde.workspace = true
 serde_json.workspace = true

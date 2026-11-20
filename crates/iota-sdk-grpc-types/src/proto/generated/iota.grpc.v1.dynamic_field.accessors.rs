@@ -74,5 +74,13 @@ mod _accessor_impls {
             self.child_object = Some(field.into());
             self
         }
+        /// Sets `json_name` with the provided value.
+        pub fn with_json_name<T: Into<::prost_types::Value>>(
+            mut self,
+            field: T,
+        ) -> Self {
+            self.json_name = Some(field.into());
+            self
+        }
     }
 }

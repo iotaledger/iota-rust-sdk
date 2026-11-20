@@ -365,6 +365,22 @@ pub const OBJECT_REFERENCE: &str = "reference";
 /// (BCS deserialization).
 pub const OBJECT_BCS: &str = "bcs";
 
+/// Read mask for
+/// [`Object::json()`](crate::v1::object::Object::json).
+pub const OBJECT_JSON: &str = "json";
+
+/// Read mask for the object's on-chain Display template render
+/// ([`Object::display()`](crate::v1::object::Object::display)).
+pub const OBJECT_DISPLAY: &str = "display";
+
+// ---------------------------------------------------------------------------
+// DynamicField — per-method field constants (for list_dynamic_fields)
+// ---------------------------------------------------------------------------
+
+/// Read mask for
+/// [`DynamicField::json_name()`](crate::v1::dynamic_field::DynamicField::json_name).
+pub const DYNAMIC_FIELD_JSON_NAME: &str = "json_name";
+
 // ---------------------------------------------------------------------------
 // SimulatedTransaction — per-method field constants
 // ---------------------------------------------------------------------------
