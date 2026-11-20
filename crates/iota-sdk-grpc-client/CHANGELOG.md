@@ -1,3 +1,12 @@
+## [1.0.0] - 2026-11-20
+
+### 🚀 Features
+
+- Add a non-default `unstable` feature to every published crate (#1816)
+- *(grpc-client)* [**breaking**] Reject gRPC responses from nodes that require a newer client (#1488)
+- *(graphql-client)* Reject GraphQL responses from indexers that require a newer client (#1798)
+- *(grpc-types)* [**breaking**] Add json and Display fields to Object, json_name to DynamicField (#1809)
+
 ## [1.0.0-rc.2] - 2026-10-23
 
 ### 🚜 Refactor
