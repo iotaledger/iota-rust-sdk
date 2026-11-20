@@ -41,6 +41,8 @@ bls12381 = ["iota-sdk/bls12381"]
 # Enable for bindings whose language compares map keys by identity: Go, and the
 # WASM/TypeScript bindings. See `ffi_map!` in `src/macros.rs`.
 map-objects = []
+# Unstable APIs that may change or be removed in any release.
+unstable = ["iota-sdk/unstable"]
 
 [lints]
 workspace = true

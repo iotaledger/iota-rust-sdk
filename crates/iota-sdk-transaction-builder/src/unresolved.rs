@@ -37,16 +37,16 @@ impl Input {
             InputKind::ImmutableOrOwned(object_id)
             | InputKind::Shared { object_id, .. }
             | InputKind::Receiving(object_id) => Some(object_id),
-            InputKind::Input(input) => match input {
-                iota_types::Input::Pure(..) => None,
-                iota_types::Input::ImmutableOrOwned(ObjectReference { object_id, .. })
-                | iota_types::Input::Shared(SharedObjectReference { object_id, .. })
-                | iota_types::Input::Receiving(ObjectReference { object_id, .. }) => {
-                    Some(object_id)
-                }
-                _ => unimplemented!("a new Input enum variant was added and needs to be handled"),
-            },
+            InputKind::Input(input) => input.opt_object_id(),
         }
+    }
+
+    #[cfg(feature = "unstable")]
+    pub(crate) fn is_transaction_dependency(&self) -> bool {
+        matches!(
+            self.kind,
+            InputKind::Input(iota_types::Input::TransactionDependency(_))
+        )
     }
 }
 
@@ -129,23 +129,24 @@ impl Command {
         }
     }
 
-    /// Every argument of this command.
+    /// Every argument of this command, in the order the node numbers them in
+    /// its errors.
     pub(crate) fn arguments(&self) -> impl Iterator<Item = &Argument> {
-        let (single, list): (Option<&Argument>, &[Argument]) = match self {
-            Command::MoveCall(MoveCall { arguments, .. }) => (None, arguments),
+        let (first, list, last): (Option<&Argument>, &[Argument], Option<&Argument>) = match self {
+            Command::MoveCall(MoveCall { arguments, .. }) => (None, arguments, None),
             Command::TransferObjects(TransferObjects { objects, address }) => {
-                (Some(address), objects)
+                (None, objects, Some(address))
             }
-            Command::SplitCoins(SplitCoins { coin, amounts }) => (Some(coin), amounts),
+            Command::SplitCoins(SplitCoins { coin, amounts }) => (Some(coin), amounts, None),
             Command::MergeCoins(MergeCoins {
                 coin,
                 coins_to_merge,
-            }) => (Some(coin), coins_to_merge),
-            Command::Publish(_) => (None, &[]),
-            Command::MakeMoveVector(MakeMoveVector { elements, .. }) => (None, elements),
-            Command::Upgrade(Upgrade { ticket, .. }) => (Some(ticket), &[]),
+            }) => (Some(coin), coins_to_merge, None),
+            Command::Publish(_) => (None, &[], None),
+            Command::MakeMoveVector(MakeMoveVector { elements, .. }) => (None, elements, None),
+            Command::Upgrade(Upgrade { ticket, .. }) => (Some(ticket), &[], None),
         };
-        single.into_iter().chain(list)
+        first.into_iter().chain(list).chain(last)
     }
 }
 
