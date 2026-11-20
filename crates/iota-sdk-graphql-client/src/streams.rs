@@ -27,8 +27,6 @@ pub struct PageStream<T, F, Fut> {
     /// The cursor the page in flight or being yielded was requested with.
     requested_cursor: Option<String>,
     current_page: Option<(PageInfo, std::vec::IntoIter<T>)>,
-    /// Yielded after the current page's items.
-    pending_error: Option<error::GraphQLError>,
     current_future: Option<Pin<Box<Fut>>>,
     finished: bool,
 }
@@ -42,7 +40,6 @@ impl<T, F, Fut> PageStream<T, F, Fut> {
             start_cursor: pagination.cursor,
             requested_cursor: None,
             current_page: None,
-            pending_error: None,
             current_future: None,
             finished: false,
         }
@@ -75,10 +72,6 @@ where
                     Direction::Forward => page_info.has_next_page,
                     Direction::Backward => page_info.has_previous_page,
                 };
-                if let Some(error) = self.pending_error.take() {
-                    self.finished = true;
-                    return Poll::Ready(Some(Err(error)));
-                }
                 if !should_continue {
                     self.finished = true;
                     return Poll::Ready(None);
@@ -130,25 +123,18 @@ where
                             (page_info.has_previous_page, page_info.start_cursor.as_ref())
                         }
                     };
-                    match (has_more, cursor) {
-                        (true, None) => {
-                            self.pending_error = Some(error::GraphQLError::PageNotAdvanced(
-                                "the server announced more pages but gave no cursor",
-                            ));
-                        }
+                    let reason = match (has_more, cursor) {
+                        (true, None) => Some("the server announced more pages but gave no cursor"),
                         (true, Some(cursor)) if self.requested_cursor.as_ref() == Some(cursor) => {
-                            let error = error::GraphQLError::PageNotAdvanced(
-                                "the server repeated the cursor the page was requested with",
-                            );
-                            if self.current_page.is_some() {
-                                // The page repeats the one this stream already
-                                // yielded, so its items are not yielded again.
-                                self.finished = true;
-                                return Poll::Ready(Some(Err(error)));
-                            }
-                            self.pending_error = Some(error);
+                            Some("the server repeated the cursor the page was requested with")
                         }
-                        _ => {}
+                        _ => None,
+                    };
+                    if let Some(reason) = reason {
+                        self.finished = true;
+                        return Poll::Ready(Some(Err(error::GraphQLError::PageNotAdvanced(
+                            reason,
+                        ))));
                     }
                     // For backward pagination, we need to reverse the items
                     let iter = match self.direction {
@@ -330,7 +316,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn more_pages_without_a_cursor_is_an_error_after_the_items() {
+    async fn more_pages_without_a_cursor_is_an_error() {
         let (items, requests) = run(
             PaginationFilter::default(),
             vec![Ok(page(vec![1], true, None))],
@@ -339,7 +325,7 @@ mod tests {
 
         assert!(matches!(
             items.as_slice(),
-            [Ok(1), Err(crate::GraphQLError::PageNotAdvanced(_))]
+            [Err(crate::GraphQLError::PageNotAdvanced(_))]
         ));
         assert_eq!(requests.len(), 1);
     }
@@ -364,7 +350,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn a_first_page_repeating_the_start_cursor_is_an_error_after_the_items() {
+    async fn a_first_page_repeating_the_start_cursor_is_an_error() {
         let pagination = PaginationFilter {
             direction: Direction::Forward,
             cursor: Some("start-forward".to_owned()),
@@ -375,7 +361,7 @@ mod tests {
 
         assert!(matches!(
             items.as_slice(),
-            [Ok(1), Ok(2), Err(crate::GraphQLError::PageNotAdvanced(_))]
+            [Err(crate::GraphQLError::PageNotAdvanced(_))]
         ));
         assert_eq!(requests.len(), 1);
     }
@@ -405,7 +391,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn more_pages_without_a_cursor_backward_is_an_error_after_the_items() {
+    async fn more_pages_without_a_cursor_backward_is_an_error() {
         let pagination = PaginationFilter {
             direction: Direction::Backward,
             cursor: None,
@@ -415,7 +401,7 @@ mod tests {
 
         assert!(matches!(
             items.as_slice(),
-            [Ok(4), Ok(3), Err(crate::GraphQLError::PageNotAdvanced(_))]
+            [Err(crate::GraphQLError::PageNotAdvanced(_))]
         ));
         assert_eq!(requests.len(), 1);
     }
