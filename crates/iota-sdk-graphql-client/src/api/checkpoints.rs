@@ -224,12 +224,59 @@ impl GraphQLClient {
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use iota_types::CheckpointDigest;
+    use iota_types::{CheckpointDigest, CheckpointSummary};
+    use serde_json::json;
 
-    use crate::test_utils::{
-        assert_backward_page, assert_forward_page, backward_page, forward_page, scripted,
-        sent_variables, service_config_body, test_client,
+    use crate::{
+        GraphQLError,
+        test_utils::{
+            arbitrary, assert_backward_page, assert_forward_page, backward_page, base64_bcs,
+            forward_page, scripted, sent_variables, service_config_body, test_client,
+        },
     };
+
+    fn page_info() -> serde_json::Value {
+        json!({ "hasPreviousPage": false, "hasNextPage": false, "startCursor": null, "endCursor": null })
+    }
+
+    #[tokio::test]
+    async fn checkpoints_decodes_the_page() {
+        let summary: CheckpointSummary = arbitrary();
+        let body = json!({ "data": { "checkpoints": {
+            "pageInfo": { "hasPreviousPage": false, "hasNextPage": true, "startCursor": "s", "endCursor": "e" },
+            "nodes": [{ "bcs": base64_bcs(&summary) }],
+        } } });
+        let (_, page) = scripted(vec![service_config_body(50), body], |client| async move {
+            client.checkpoints().await
+        })
+        .await;
+        let page = page.unwrap();
+        assert_eq!(page.data(), [summary]);
+        assert!(page.page_info().has_next_page);
+        assert_eq!(page.page_info().end_cursor.as_deref(), Some("e"));
+    }
+
+    #[tokio::test]
+    async fn checkpoints_without_bcs_is_an_error_and_an_empty_page_decodes() {
+        let body = json!({ "data": { "checkpoints": { "pageInfo": page_info(), "nodes": [{ "bcs": null }] } } });
+        let (_, page) = scripted(vec![service_config_body(50), body], |client| async move {
+            client.checkpoints().await
+        })
+        .await;
+        assert!(matches!(
+            page,
+            Err(GraphQLError::EmptyResponseField("checkpoint bcs"))
+        ));
+
+        let body = json!({ "data": { "checkpoints": { "pageInfo": page_info(), "nodes": [] } } });
+        let (_, page) = scripted(vec![service_config_body(50), body], |client| async move {
+            client.checkpoints().await
+        })
+        .await;
+        let page = page.unwrap();
+        assert!(page.is_empty());
+        assert!(!page.page_info().has_next_page);
+    }
 
     #[tokio::test]
     async fn checkpoints_without_setters_sends_the_max_page_size_forward() {
