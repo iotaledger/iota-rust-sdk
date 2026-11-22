@@ -83,6 +83,8 @@ eyre.workspace = true
 iota-types = { workspace = true, features = ["serde", "rand", "hash"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
+proptest = { workspace = true, features = ["std"] }
+iota-types = { workspace = true, features = ["proptest"] }
 tokio = { workspace = true, features = ["io-util", "macros", "net", "rt-multi-thread", "time"] }
 
 [build-dependencies]

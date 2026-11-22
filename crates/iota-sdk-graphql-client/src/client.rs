@@ -312,7 +312,7 @@ mod tests {
     };
 
     use super::*;
-    use crate::test_utils::test_client;
+    use crate::test_utils::{scripted, service_config_body, test_client};
 
     #[test]
     fn test_rpc_server() {
@@ -395,6 +395,33 @@ mod tests {
         };
         assert_eq!(errors.len(), 1);
         assert_eq!(errors[0].message, "boom");
+    }
+
+    #[tokio::test]
+    async fn max_page_size_reads_the_service_config() {
+        let (requests, max_page_size) =
+            scripted(vec![service_config_body(50)], |client| async move {
+                client.max_page_size().await
+            })
+            .await;
+        assert_eq!(max_page_size.unwrap(), 50);
+        assert_eq!(requests.len(), 1);
+        assert_eq!(requests[0].operation, "ServiceConfigQueryFragment");
+    }
+
+    #[tokio::test]
+    async fn pagination_filter_without_a_limit_uses_the_max_page_size() {
+        let (_, pagination) = scripted(vec![service_config_body(50)], |client| async move {
+            client.pagination_filter(PaginationFilter::default()).await
+        })
+        .await;
+        assert_eq!(pagination.first, Some(50));
+
+        let (_, pagination) = scripted(Vec::new(), |client| async move {
+            client.pagination_filter(PaginationFilter::default()).await
+        })
+        .await;
+        assert_eq!(pagination.first, Some(DEFAULT_ITEMS_PER_PAGE));
     }
 
     #[tokio::test]
