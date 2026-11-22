@@ -53,7 +53,7 @@ package_%.json: crates/integration-tests/%/Move.toml crates/integration-tests/%/
 
 .PHONY: test-with-localnet
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
-	cargo nextest run -p iota-sdk-graphql-client -p integration-tests
+	cargo nextest run -p iota-sdk-graphql-client -p integration-tests --features iota-sdk-graphql-client/move-types
 	cargo nextest run --no-default-features -p iota-sdk-graphql-client
 
 # Verify that individual SDK crates compile to wasm32-unknown-unknown.
