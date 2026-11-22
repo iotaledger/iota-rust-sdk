@@ -862,6 +862,45 @@ impl<C, L> TransactionBuilder<C, L> {
         self.reset()
     }
 
+    /// Merge the coins into one and send it to a recipient address, without splitting an amount
+    /// off.
+    ///
+    /// All provided coins must have the same coin type. Mixing coins of different types will
+    /// result in an error.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use iota_sdk_transaction_builder::TestClient;
+    /// use iota_sdk_transaction_builder::TransactionBuilder;
+    /// use iota_types::{Address, ObjectId};
+    ///
+    /// # #[tokio::main(flavor = "current_thread")]
+    /// # async fn main() -> eyre::Result<()> {
+    /// # let client = TestClient;
+    /// let from_address =
+    ///     Address::from_hex("0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151")?;
+    /// let to_address =
+    ///     Address::from_hex("0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900")?;
+    /// let coins = [
+    ///     ObjectId::from_hex("0xe0e45ecb12ddca5f0d5192d2ee9e7f711959aa98614f9905e1e25c612ffd99a2")?,
+    ///     ObjectId::from_hex("0x19406ea4d9609cd9422b85e6bf2486908f790b778c757aff805241f3f609f9b4")?,
+    /// ];
+    ///
+    /// let mut builder = TransactionBuilder::new(from_address).with_client(client);
+    /// builder.send_merged_coins(coins, to_address);
+    /// let txn = builder.finish().await?;
+    /// #   Ok(())
+    /// # }
+    /// ```
+    pub fn send_merged_coins<T: PTBArgumentList>(
+        &mut self,
+        coins: T,
+        recipient: Address,
+    ) -> &mut TransactionBuilder<C> {
+        self.send_coins::<_, u64>(coins, recipient, None)
+    }
+
     /// Send coins to multiple recipients, each paired with the amount to send.
     ///
     /// The amounts specify quantities in the coins' smallest unit (NANOS for IOTA coins, where 1
@@ -2870,6 +2909,44 @@ mod tests {
             builder.data.inputs[&primary].kind.object_id(),
             Some(coins[0])
         );
+        let Command::TransferObjects(transfer) = &commands[1] else {
+            panic!("expected TransferObjects command");
+        };
+        assert!(matches!(transfer.objects[..], [Argument::Input(i)] if i == primary));
+    }
+
+    #[test]
+    fn send_merged_coins_merges_into_first_coin_and_transfers_it() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient: Address =
+            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+        let coin_id = |seed: u8| {
+            let mut id_bytes = [0u8; 32];
+            id_bytes[0] = seed;
+            ObjectId::new(id_bytes)
+        };
+        let coins = [coin_id(0), coin_id(1), coin_id(2)];
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.send_merged_coins(coins, recipient);
+
+        let commands = &builder.data.commands;
+        assert_eq!(commands.len(), 2);
+        let Command::MergeCoins(merge) = &commands[0] else {
+            panic!("expected MergeCoins command");
+        };
+        let Argument::Input(primary) = merge.coin else {
+            panic!("expected the primary coin to be an input");
+        };
+        assert_eq!(
+            builder.data.inputs[&primary].kind.object_id(),
+            Some(coins[0])
+        );
+        assert_eq!(merge.coins_to_merge.len(), 2);
         let Command::TransferObjects(transfer) = &commands[1] else {
             panic!("expected TransferObjects command");
         };

@@ -111,6 +111,8 @@
 //!     - `type_tags`: Add generic types directly using the [TypeTag](iota_types::TypeTag).
 //! - [send_iota](TransactionBuilder::send_iota): Send IOTA coins to a recipient address.
 //! - [send_coins](TransactionBuilder::send_coins): Send coins of any type to a recipient address.
+//! - [send_merged_coins](TransactionBuilder::send_merged_coins): Merge coins of any type and send
+//!   them whole to a recipient address.
 //! - [pay](TransactionBuilder::pay): Send coins of any type to several recipients, each paired with
 //!   the amount to send.
 //! - [pay_iota](TransactionBuilder::pay_iota): Send IOTA coins from the gas coin to several
