@@ -287,9 +287,10 @@ impl GraphQLClient {
         &self,
         pagination_filter: PaginationFilter,
     ) -> PaginationFilterResponse {
-        let limit = pagination_filter
-            .limit
-            .unwrap_or(self.max_page_size().await.unwrap_or(DEFAULT_ITEMS_PER_PAGE));
+        let limit = match pagination_filter.limit {
+            Some(limit) => limit,
+            None => self.max_page_size().await.unwrap_or(DEFAULT_ITEMS_PER_PAGE),
+        };
 
         let (after, before, first, last) = match pagination_filter.direction {
             Direction::Forward => (pagination_filter.cursor, None, Some(limit), None),
@@ -437,6 +438,34 @@ mod tests {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let url = format!("http://{}/graphql", listener.local_addr().unwrap());
         (listener, url)
+    }
+
+    #[tokio::test]
+    async fn pagination_filter_with_a_limit_sends_no_request() {
+        let (listener, url) = bind().await;
+        let client = GraphQLClient::new(&url).unwrap();
+        for (direction, expected) in [
+            (Direction::Forward, (Some(7), None)),
+            (Direction::Backward, (None, Some(7))),
+        ] {
+            let pagination = tokio::time::timeout(
+                Duration::from_secs(5),
+                client.pagination_filter(PaginationFilter {
+                    direction,
+                    cursor: None,
+                    limit: Some(7),
+                }),
+            )
+            .await
+            .expect("a service config request was sent");
+            assert_eq!((pagination.first, pagination.last), expected);
+        }
+        assert!(
+            tokio::time::timeout(Duration::from_millis(200), listener.accept())
+                .await
+                .is_err(),
+            "a request was sent"
+        );
     }
 
     #[tokio::test]
