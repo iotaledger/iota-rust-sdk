@@ -121,18 +121,12 @@ impl<T: MoveObject> ListMoveObjectsQuery<T> {
     }
 
     async fn send(self) -> GraphQLResult<Page<OwnedMoveObject<T>>> {
-        let page = self.objects_query().await?;
-        let (page_info, objects) = page.into_parts();
-        let decoded = objects
-            .iter()
-            .map(|object| {
-                Ok(OwnedMoveObject {
-                    object_ref: object.object_ref(),
-                    object: T::try_from(object)?,
-                })
+        self.objects_query().await?.try_map(|object| {
+            Ok(OwnedMoveObject {
+                object_ref: object.object_ref(),
+                object: T::try_from(&object)?,
             })
-            .collect::<GraphQLResult<Vec<_>>>()?;
-        Ok(Page::new(page_info, decoded))
+        })
     }
 }
 

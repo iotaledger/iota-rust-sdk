@@ -76,14 +76,7 @@ impl ListDynamicFieldsQuery {
             return Ok(Page::new_empty());
         };
 
-        Ok(Page::new(
-            dfs.dynamic_fields.page_info,
-            dfs.dynamic_fields
-                .nodes
-                .into_iter()
-                .map(TryInto::try_into)
-                .collect::<GraphQLResult<Vec<_>>>()?,
-        ))
+        Page::new(dfs.dynamic_fields.page_info, dfs.dynamic_fields.nodes).try_map(TryInto::try_into)
     }
 }
 

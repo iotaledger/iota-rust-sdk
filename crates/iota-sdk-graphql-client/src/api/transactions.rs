@@ -90,14 +90,7 @@ impl ListTransactionsQuery {
             .await?;
 
         let txc = response.transaction_blocks;
-        let page_info = txc.page_info;
-
-        let transactions = txc
-            .nodes
-            .into_iter()
-            .map(|n| n.try_into())
-            .collect::<GraphQLResult<Vec<_>>>()?;
-        Ok(Page::new(page_info, transactions))
+        Page::new(txc.page_info, txc.nodes).try_map(TryInto::try_into)
     }
 }
 
@@ -177,13 +170,7 @@ impl ListAddressTransactionsQuery {
             return Ok(Page::new_empty());
         };
 
-        let transactions = transaction_blocks
-            .nodes
-            .into_iter()
-            .map(|n| n.try_into())
-            .collect::<GraphQLResult<Vec<_>>>()?;
-
-        Ok(Page::new(transaction_blocks.page_info, transactions))
+        Page::new(transaction_blocks.page_info, transaction_blocks.nodes).try_map(TryInto::try_into)
     }
 }
 
@@ -244,14 +231,7 @@ impl ListTransactionsEffectsQuery {
             .await?;
 
         let txc = response.transaction_blocks;
-        let page_info = txc.page_info;
-
-        let transactions = txc
-            .nodes
-            .into_iter()
-            .map(|n| n.try_into())
-            .collect::<GraphQLResult<Vec<_>>>()?;
-        Ok(Page::new(page_info, transactions))
+        Page::new(txc.page_info, txc.nodes).try_map(TryInto::try_into)
     }
 }
 
