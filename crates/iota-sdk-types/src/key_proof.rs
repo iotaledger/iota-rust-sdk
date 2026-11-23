@@ -1,29 +1,27 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! The text a key holder signs to approve attaching their public key to a
-//! `SmartAccount`.
+//! The text a key holder signs to approve attaching their public key to a `SmartAccount`.
 
 use crate::Address;
 
-/// The `check` line: the function that checks the proof, with the framework
-/// address written as `StructTag` displays it.
+/// The `check` line: the function that checks the proof, with the framework address written as
+/// `StructTag` displays it.
 const CHECK_V1: &str = "0x2::smart_account_builtin_authenticator::verify_key_proof";
 
-/// Returns the text a key holder signs to approve attaching their key to a
-/// `SmartAccount`. The signature is over the UTF-8 bytes of the text, as an
-/// IOTA personal message.
+/// Returns the text a key holder signs to approve attaching their key to a `SmartAccount`. The
+/// signature is over the UTF-8 bytes of the text, as an IOTA personal message.
 ///
-/// - `chain_identifier`: the digest of the genesis checkpoint, as gRPC's
-///   `ResponseExt::chain_id()` returns it.
-/// - `account`: the account the key is attached to, or the transaction sender
-///   when `new_account` is `true`.
+/// - `chain_identifier`: the digest of the genesis checkpoint, as gRPC's `ResponseExt::chain_id()`
+///   returns it.
+/// - `account`: the account the key is attached to, or the transaction sender when `new_account` is
+///   `true`.
 /// - `new_account`: whether the account is new.
 /// - `nonce`: the nonce of the transaction that attaches the key.
 /// - `valid_until_epoch`: the last epoch in which the proof is valid.
 ///
-/// Validators compute the same text to check the proof, so the result for
-/// given values must never change. A new text is a new function.
+/// Validators compute the same text to check the proof, so the result for given values must never
+/// change. A new text is a new function.
 pub fn key_proof_message_v1(
     chain_identifier: &[u8; 32],
     account: &Address,
@@ -48,8 +46,7 @@ mod tests {
         hex::decode(hex).unwrap().try_into().unwrap()
     }
 
-    // The example of the design page, with values read from testnet. The text
-    // must never change.
+    // The example of the design page, with values read from testnet. The text must never change.
     #[test]
     fn message_of_the_design_example() {
         let message = key_proof_message_v1(

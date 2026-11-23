@@ -1659,8 +1659,7 @@ impl AccountClaimKind {
         self.0.is_smart_account()
     }
 
-    /// The smart account claim, or `None` if this is not a smart account
-    /// claim.
+    /// The smart account claim, or `None` if this is not a smart account claim.
     pub fn as_opt_smart_account(&self) -> Option<Arc<SmartAccountClaim>> {
         self.0
             .as_opt_smart_account()
@@ -1669,8 +1668,7 @@ impl AccountClaimKind {
             .map(Arc::new)
     }
 
-    /// The smart account claim, panicking if this is not a smart account
-    /// claim.
+    /// The smart account claim, panicking if this is not a smart account claim.
     pub fn as_smart_account(&self) -> SmartAccountClaim {
         self.0.as_smart_account().clone().into()
     }
@@ -1690,17 +1688,15 @@ pub struct SmartAccountClaim(pub iota_sdk::types::SmartAccountClaim);
 #[cfg(feature = "unstable")]
 #[uniffi::export]
 impl SmartAccountClaim {
-    /// Create a `SmartAccountClaim` of the address derived from `public_key`,
-    /// which is the address a transaction signed by the corresponding private
-    /// key is sent from.
+    /// Create a `SmartAccountClaim` of the address derived from `public_key`, which is the address
+    /// a transaction signed by the corresponding private key is sent from.
     #[uniffi::constructor]
     pub fn new(public_key: &PublicKey) -> Self {
         Self(iota_sdk::types::SmartAccountClaim::new(&public_key.0))
     }
 
-    /// Create a `SmartAccountClaim` of the address derived from `committee`,
-    /// which is the address a transaction signed by that committee is sent
-    /// from.
+    /// Create a `SmartAccountClaim` of the address derived from `committee`, which is the address a
+    /// transaction signed by that committee is sent from.
     #[uniffi::constructor]
     pub fn new_multisig(committee: &MultisigCommittee) -> Self {
         Self(iota_sdk::types::SmartAccountClaim::new_multisig(
@@ -1708,26 +1704,25 @@ impl SmartAccountClaim {
         ))
     }
 
-    /// Signature-scheme flag of the public key for the address being claimed:
-    /// `0x00` Ed25519, `0x01` Secp256k1, `0x02` Secp256r1, `0x03` MultiSig or
-    /// `0x06` Passkey.
+    /// Signature-scheme flag of the public key for the address being claimed: `0x00` Ed25519,
+    /// `0x01` Secp256k1, `0x02` Secp256r1, `0x03` MultiSig or `0x06` Passkey.
     pub fn public_key_scheme(&self) -> u8 {
         self.0.public_key_scheme
     }
 
-    /// Raw public key bytes, without the scheme flag prefix. For `MultiSig`
-    /// this is a BCS-encoded multisig committee.
+    /// Raw public key bytes, without the scheme flag prefix. For `MultiSig` this is a BCS-encoded
+    /// multisig committee.
     ///
-    /// The transaction is rejected unless the scheme and these bytes derive
-    /// the transaction sender's address.
+    /// The transaction is rejected unless the scheme and these bytes derive the transaction
+    /// sender's address.
     pub fn public_key_raw_bytes(&self) -> Vec<u8> {
         self.0.public_key_raw_bytes.clone()
     }
 
     /// The signature scheme of the public key.
     ///
-    /// Fails if the scheme flag is not a known signature scheme, which is
-    /// possible for a claim that was decoded rather than built here.
+    /// Fails if the scheme flag is not a known signature scheme, which is possible for a claim that
+    /// was decoded rather than built here.
     pub fn signature_scheme(&self) -> Result<SignatureScheme> {
         Ok(self.0.signature_scheme()?.into())
     }

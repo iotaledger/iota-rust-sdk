@@ -535,9 +535,9 @@ mod nonce {
     use super::Hasher;
     use crate::{GasPayment, ObjectId, ObjectReference, Transaction};
 
-    /// Where a transaction nonce comes from. Its BCS variant number is the
-    /// first byte hashed, so nonces from two sources never have the same
-    /// bytes. A later source is a new variant, added at the end.
+    /// Where a transaction nonce comes from. Its BCS variant number is the first byte hashed, so
+    /// nonces from two sources never have the same bytes. A later source is a new variant, added at
+    /// the end.
     #[derive(serde::Serialize)]
     enum NonceSource<'a> {
         GasCoin(&'a ObjectReference),
@@ -552,23 +552,20 @@ mod nonce {
     }
 
     impl GasPayment {
-        /// Returns the nonce of a transaction with this gas payment, or `None`
-        /// if it has none.
+        /// Returns the nonce of a transaction with this gas payment, or `None` if it has none.
         ///
-        /// The nonce is the Blake2b256 hash of the BCS bytes of the first gas
-        /// coin's reference, as the transaction lists it, after one byte for
-        /// the gas coin source. At most one executed transaction lists a given
-        /// coin version, so at most one has a given nonce. It does not name
-        /// the network. A gas payment with no coins, or whose first coin has
-        /// the zero ID (system transactions), has no nonce.
+        /// The nonce is the Blake2b256 hash of the BCS bytes of the first gas coin's reference, as
+        /// the transaction lists it, after one byte for the gas coin source. At most one executed
+        /// transaction lists a given coin version, so at most one has a given nonce. It does not
+        /// name the network. A gas payment with no coins, or whose first coin has the zero ID
+        /// (system transactions), has no nonce.
         ///
-        /// Validators compute it to check key proofs, so its result for a
-        /// given gas payment must never change.
+        /// Validators compute it to check key proofs, so its result for a given gas payment must
+        /// never change.
         ///
-        /// A node runs a dry run or dev-inspect of a transaction without a gas
-        /// coin with a mock gas coin, so the simulation reads a different
-        /// nonce than the transaction will have with its real gas coin. Pick
-        /// the gas coin before asking a key holder to sign over the nonce, and
+        /// A node runs a dry run or dev-inspect of a transaction without a gas coin with a mock gas
+        /// coin, so the simulation reads a different nonce than the transaction will have with its
+        /// real gas coin. Pick the gas coin before asking a key holder to sign over the nonce, and
         /// simulate with that coin.
         pub fn nonce(&self) -> Option<[u8; 32]> {
             let gas_coin = self.objects.first()?;

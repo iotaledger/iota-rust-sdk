@@ -1999,11 +1999,10 @@ impl crate::TreeDisplay for MoveCall {
     }
 }
 
-/// A transaction that claims the sender's address, creating an account object
-/// whose id is that address.
+/// A transaction that claims the sender's address, creating an account object whose id is that
+/// address.
 ///
-/// The address must be derivable from the public key in the claim, and can be
-/// claimed only once.
+/// The address must be derivable from the public key in the claim, and can be claimed only once.
 ///
 /// # BCS
 ///
@@ -2053,13 +2052,12 @@ impl AccountClaimKind {
 
 /// Parameters for claiming an `iota::smart_account::SmartAccount`.
 ///
-/// The account is authenticated by the built-in authenticator for the claimed
-/// key's signature scheme, so its owner keeps signing transactions with the
-/// same key after the claim.
+/// The account is authenticated by the built-in authenticator for the claimed key's signature
+/// scheme, so its owner keeps signing transactions with the same key after the claim.
 ///
-/// The key is carried as a scheme flag plus raw bytes rather than as a
-/// [`PublicKey`], so that every scheme the framework accepts can be expressed,
-/// including `MultiSig`. Both are validated on chain.
+/// The key is carried as a scheme flag plus raw bytes rather than as a [`PublicKey`], so that every
+/// scheme the framework accepts can be expressed, including `MultiSig`. Both are validated on
+/// chain.
 ///
 /// # BCS
 ///
@@ -2071,15 +2069,14 @@ impl AccountClaimKind {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct SmartAccountClaim {
-    /// Signature-scheme flag of the public key for the address being claimed:
-    /// `0x00` Ed25519, `0x01` Secp256k1, `0x02` Secp256r1, `0x03` MultiSig or
-    /// `0x06` Passkey.
+    /// Signature-scheme flag of the public key for the address being claimed: `0x00` Ed25519,
+    /// `0x01` Secp256k1, `0x02` Secp256r1, `0x03` MultiSig or `0x06` Passkey.
     pub public_key_scheme: u8,
-    /// Raw public key bytes, without the scheme flag prefix. For `MultiSig`
-    /// this is a BCS-encoded multisig committee.
+    /// Raw public key bytes, without the scheme flag prefix. For `MultiSig` this is a BCS-encoded
+    /// multisig committee.
     ///
-    /// The transaction is rejected unless the scheme and these bytes derive
-    /// the transaction sender's address.
+    /// The transaction is rejected unless the scheme and these bytes derive the transaction
+    /// sender's address.
     #[cfg_attr(
         feature = "serde",
         serde(with = "crate::_serde::ReadableBase64Encoded")
@@ -2090,18 +2087,16 @@ pub struct SmartAccountClaim {
 
 #[cfg(feature = "unstable")]
 impl SmartAccountClaim {
-    /// Creates a claim of the address derived from `public_key`, which is the
-    /// address a transaction signed by the corresponding private key is sent
-    /// from.
+    /// Creates a claim of the address derived from `public_key`, which is the address a transaction
+    /// signed by the corresponding private key is sent from.
     pub fn new(public_key: &PublicKey) -> Self {
         Self::new_unchecked(public_key.scheme(), public_key.as_ref().to_vec())
     }
 
-    /// Creates a claim of the address derived from `committee`, which is the
-    /// address a transaction signed by that committee is sent from.
+    /// Creates a claim of the address derived from `committee`, which is the address a transaction
+    /// signed by that committee is sent from.
     ///
-    /// The committee is carried BCS encoded, the form the chain decodes it
-    /// from.
+    /// The committee is carried BCS encoded, the form the chain decodes it from.
     #[cfg(feature = "serde")]
     pub fn new_multisig(committee: &crate::MultisigCommittee) -> Self {
         Self::new_unchecked(
@@ -2110,9 +2105,8 @@ impl SmartAccountClaim {
         )
     }
 
-    /// Creates a claim of the address derived from the public key described by
-    /// `scheme` and `public_key_raw_bytes`, without checking that the two
-    /// describe a key at all.
+    /// Creates a claim of the address derived from the public key described by `scheme` and
+    /// `public_key_raw_bytes`, without checking that the two describe a key at all.
     fn new_unchecked(scheme: SignatureScheme, public_key_raw_bytes: Vec<u8>) -> Self {
         Self {
             public_key_scheme: scheme.to_u8(),
@@ -2122,9 +2116,9 @@ impl SmartAccountClaim {
 
     /// The signature scheme of the claimed public key.
     ///
-    /// Returns an error if [`Self::public_key_scheme`] is not a known scheme
-    /// flag, which is possible for a claim that was deserialized rather than
-    /// built through one of the constructors.
+    /// Returns an error if [`Self::public_key_scheme`] is not a known scheme flag, which is
+    /// possible for a claim that was deserialized rather than built through one of the
+    /// constructors.
     pub fn signature_scheme(&self) -> Result<SignatureScheme, SignatureSchemeError> {
         SignatureScheme::from_byte(self.public_key_scheme)
     }
@@ -2223,8 +2217,8 @@ mod tests {
         let secp256r1 = Secp256r1PublicKey::new([2; Secp256r1PublicKey::LENGTH]);
         let claim = SmartAccountClaim::new(&PublicKey::Passkey(PasskeyPublicKey::new(secp256r1)));
 
-        // A passkey is claimed by the secp256r1 key it wraps, under the
-        // passkey scheme flag, matching `PasskeyPublicKey::derive_address`.
+        // A passkey is claimed by the secp256r1 key it wraps, under the passkey scheme flag,
+        // matching `PasskeyPublicKey::derive_address`.
         assert_eq!(claim.public_key_scheme, 0x06);
         assert_eq!(claim.public_key_raw_bytes, secp256r1.bytes().as_slice());
         assert_eq!(
