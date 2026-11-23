@@ -162,6 +162,7 @@ serialization_test!(Upgrade);
 serialization_test!(Identifier);
 serialization_test!(StructTag);
 serialization_test!(TypeTag);
+serialization_test!(U256);
 serialization_test!(Version);
 
 macro_rules! bcs_base64_test {

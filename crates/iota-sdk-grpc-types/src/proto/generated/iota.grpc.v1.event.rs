@@ -29,6 +29,9 @@ pub struct Event {
     #[prost(message, optional, tag = "6")]
     pub bcs_contents: ::core::option::Option<super::bcs::BcsData>,
     /// JSON rendering of the event.
+    /// Requires server-side Move type-layout resolution, so it is populated only
+    /// when named explicitly in the read mask — a bare parent or `*` wildcard does
+    /// not include it — and is bounded by the server's maximum JSON size.
     #[prost(message, optional, tag = "7")]
     pub json_contents: ::core::option::Option<::prost_types::Value>,
 }

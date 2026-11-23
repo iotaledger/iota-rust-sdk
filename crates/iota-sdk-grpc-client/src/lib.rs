@@ -23,6 +23,8 @@ pub use api::{
     CHECKPOINT_RESPONSE_SUMMARY,
     CHECKPOINT_SUMMARY_BCS,
     CHECKPOINT_SUMMARY_DIGEST,
+    // DynamicField per-method masks
+    DYNAMIC_FIELD_JSON_NAME,
     // Event per-method masks
     EVENT_BCS,
     EVENT_BCS_CONTENTS,
@@ -46,6 +48,8 @@ pub use api::{
     EXECUTION_ERROR_SOURCE,
     // Object per-method masks
     OBJECT_BCS,
+    OBJECT_DISPLAY,
+    OBJECT_JSON,
     OBJECT_REFERENCE,
     // SimulatedTransaction per-method masks
     SIMULATED_TRANSACTION_EXECUTED_TRANSACTION,

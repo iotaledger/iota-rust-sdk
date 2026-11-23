@@ -1404,6 +1404,18 @@ pub enum Input {
     /// A move object that is attempted to be received in this transaction.
     // TODO add discussion around what receiving is
     Receiving(ObjectReference),
+    /// A transaction this transaction depends on.
+    ///
+    /// The transaction is valid only once the named transaction executed
+    /// successfully, in the current epoch, and no command may use this input.
+    ///
+    /// A validator authenticates a transaction against its current state. A
+    /// transaction whose Move authenticator reads state that the named
+    /// transaction writes is therefore admitted only once the named
+    /// transaction has executed on that validator; until then it is rejected
+    /// with a retriable error.
+    #[cfg(feature = "unstable")]
+    TransactionDependency(TransactionDigest),
 }
 
 impl Input {
@@ -1443,10 +1455,12 @@ impl Input {
 
     /// Returns the object id referenced by this input, if any.
     ///
-    /// Returns `None` for `Pure` inputs.
+    /// Returns `None` for `Pure` and `TransactionDependency` inputs.
     pub fn opt_object_id(&self) -> Option<&ObjectId> {
         match self {
             Self::Pure { .. } => None,
+            #[cfg(feature = "unstable")]
+            Self::TransactionDependency(_) => None,
             Self::ImmutableOrOwned(obj_ref) | Self::Receiving(obj_ref) => Some(&obj_ref.object_id),
             Self::Shared(SharedObjectReference { object_id, .. }) => Some(object_id),
         }
@@ -1470,6 +1484,11 @@ impl Input {
     }
 }
 
+#[cfg(feature = "unstable")]
+impl Input {
+    crate::def_is_as_into_opt!(TransactionDependency(TransactionDigest));
+}
+
 impl crate::TreeDisplay for Input {
     fn fmt_tree(&self, w: &mut crate::TreeWriter<'_, '_>) -> std::fmt::Result {
         w.enum_name("Input");
@@ -1489,6 +1508,11 @@ impl crate::TreeDisplay for Input {
             Self::Receiving(obj_ref) => {
                 w.header("Receiving")?;
                 w.inline_child(obj_ref)
+            }
+            #[cfg(feature = "unstable")]
+            Self::TransactionDependency(digest) => {
+                w.header("Transaction Dependency")?;
+                w.leaf("Digest", digest, true)
             }
         }
     }

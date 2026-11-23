@@ -364,6 +364,24 @@ impl Input {
     }
 }
 
+#[cfg(feature = "unstable")]
+#[uniffi::export]
+impl Input {
+    /// A transaction this transaction depends on: the transaction is valid
+    /// only once the named transaction executed successfully, in the current
+    /// epoch, and no command may use this input.
+    ///
+    /// A validator authenticates a transaction against its current state. A
+    /// transaction whose Move authenticator reads state that the named
+    /// transaction writes is therefore admitted only once the named
+    /// transaction has executed on that validator; until then it is rejected
+    /// with a retriable error.
+    #[uniffi::constructor]
+    pub fn new_transaction_dependency(digest: &TransactionDigest) -> Self {
+        Self(iota_sdk::types::Input::TransactionDependency(digest.0))
+    }
+}
+
 /// A single command in a programmable transaction.
 ///
 /// # BCS

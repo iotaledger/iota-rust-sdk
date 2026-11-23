@@ -153,6 +153,8 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::TypeOrigin>();
     assert_display::<iota_sdk_types::TypeParseError>();
     assert_display::<iota_sdk_types::TypeTag>();
+    assert_display::<iota_sdk_types::U256>();
+    assert_display::<iota_sdk_types::U256ParseError>();
     assert_display::<iota_sdk_types::UnchangedSharedKind>();
     assert_display::<iota_sdk_types::UnchangedSharedObject>();
     assert_display::<iota_sdk_types::Upgrade>();

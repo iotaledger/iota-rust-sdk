@@ -365,6 +365,22 @@ pub const OBJECT_REFERENCE: &str = "reference";
 /// (BCS deserialization).
 pub const OBJECT_BCS: &str = "bcs";
 
+/// Read mask for
+/// [`Object::json()`](crate::v1::object::Object::json).
+pub const OBJECT_JSON: &str = "json";
+
+/// Read mask for the object's on-chain Display template render
+/// ([`Object::display()`](crate::v1::object::Object::display)).
+pub const OBJECT_DISPLAY: &str = "display";
+
+// ---------------------------------------------------------------------------
+// DynamicField — per-method field constants (for list_dynamic_fields)
+// ---------------------------------------------------------------------------
+
+/// Read mask for
+/// [`DynamicField::json_name()`](crate::v1::dynamic_field::DynamicField::json_name).
+pub const DYNAMIC_FIELD_JSON_NAME: &str = "json_name";
+
 // ---------------------------------------------------------------------------
 // SimulatedTransaction — per-method field constants
 // ---------------------------------------------------------------------------
@@ -413,3 +429,44 @@ pub const EXECUTION_ERROR_SOURCE: &str = "execution_result.execution_error.sourc
 /// Read mask for
 /// [`ExecutionError::error_command_index()`](crate::v1::transaction_execution_service::ExecutionError::error_command_index).
 pub const EXECUTION_ERROR_COMMAND_INDEX: &str = "execution_result.execution_error.command_index";
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // Nodes use these defaults when a request has no read mask, and the client
+    // sends them by default. Nodes reject paths they don't know, so adding a
+    // path here makes every default call fail against nodes without it.
+    #[test]
+    fn endpoint_defaults_are_pinned() {
+        assert_eq!(
+            GET_SERVICE_INFO_READ_MASK,
+            "chain_id,epoch,executed_checkpoint_height,executed_checkpoint_timestamp,\
+             lowest_available_checkpoint,lowest_available_checkpoint_objects"
+        );
+        assert_eq!(
+            GET_EPOCH_READ_MASK,
+            "epoch,first_checkpoint,last_checkpoint,start,end,reference_gas_price,\
+             protocol_config.protocol_version"
+        );
+        assert_eq!(
+            GET_TRANSACTIONS_READ_MASK,
+            "transaction,signatures,checkpoint,timestamp"
+        );
+        assert_eq!(GET_OBJECTS_READ_MASK, "reference,bcs");
+        assert_eq!(GET_CHECKPOINT_READ_MASK, "checkpoint.summary");
+        assert_eq!(LIST_DYNAMIC_FIELDS_READ_MASK, "parent,field_id");
+        assert_eq!(LIST_OWNED_OBJECTS_READ_MASK, "reference,bcs");
+        assert_eq!(
+            EXECUTE_TRANSACTIONS_READ_MASK,
+            "transaction.digest,effects,events,input_objects,output_objects"
+        );
+        assert_eq!(
+            SIMULATE_TRANSACTIONS_READ_MASK,
+            "executed_transaction.transaction,executed_transaction.effects,\
+             executed_transaction.events,executed_transaction.input_objects,\
+             executed_transaction.output_objects,suggested_gas_price,execution_result"
+        );
+        assert_eq!(VIEW_FUNCTION_CALLS_READ_MASK, "execution_result");
+    }
+}

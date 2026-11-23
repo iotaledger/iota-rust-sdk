@@ -224,6 +224,46 @@ impl TransactionBuildData {
         Ok(())
     }
 
+    /// Check that there is at most one transaction dependency input and that
+    /// no command uses it.
+    #[cfg(feature = "unstable")]
+    fn check_transaction_dependency(&self) -> Result<(), TransactionBuilderError> {
+        let mut dependencies = self
+            .inputs
+            .iter()
+            .filter(|(_, input)| input.is_transaction_dependency())
+            .map(|(id, _)| *id);
+        let Some(dependency) = dependencies.next() else {
+            return Ok(());
+        };
+        if dependencies.next().is_some() {
+            return Err(TransactionBuilderError::MultipleTransactionDependencies);
+        }
+        for (command, mut arguments) in self.commands.iter().map(Command::arguments).enumerate() {
+            if let Some(argument_index) = arguments
+                .position(|argument| matches!(argument, Argument::Input(id) if *id == dependency))
+            {
+                return Err(TransactionBuilderError::TransactionDependencyInputUsed {
+                    command,
+                    argument_index,
+                });
+            }
+        }
+        Ok(())
+    }
+
+    /// Check that a transaction with a transaction dependency input has an
+    /// epoch expiration.
+    #[cfg(feature = "unstable")]
+    fn check_transaction_dependency_expiration(&self) -> Result<(), TransactionBuilderError> {
+        if !matches!(self.expiration, TransactionExpiration::Epoch(_))
+            && self.inputs.values().any(Input::is_transaction_dependency)
+        {
+            return Err(TransactionBuilderError::TransactionDependencyRequiresExpiration);
+        }
+        Ok(())
+    }
+
     /// Set the gas budget. Optional.
     pub fn gas_budget(&mut self, gas_budget: u64) -> &mut Self {
         self.gas_budget = Some(gas_budget);
@@ -245,6 +285,27 @@ impl TransactionBuildData {
     /// Set the expiration. Optional.
     pub fn expiration(&mut self, expiration: u64) -> &mut Self {
         self.expiration = TransactionExpiration::Epoch(expiration);
+        self
+    }
+
+    /// Make the transaction depend on the transaction `digest`: it executes
+    /// only after `digest` executed successfully in the current epoch.
+    ///
+    /// The transaction must also have an epoch expiration, set with
+    /// [`expiration`](Self::expiration). Calling this again replaces the
+    /// digest.
+    #[cfg(feature = "unstable")]
+    pub fn transaction_dependency(&mut self, digest: TransactionDigest) -> &mut Self {
+        let dependency = InputKind::Input(iota_types::Input::TransactionDependency(digest));
+        if let Some(input) = self
+            .inputs
+            .values_mut()
+            .find(|input| input.is_transaction_dependency())
+        {
+            input.kind = dependency;
+        } else {
+            self.set_input(dependency, false);
+        }
         self
     }
 
@@ -536,6 +597,18 @@ impl<C, L> TransactionBuilder<C, L> {
     /// Set the expiration. Optional.
     pub fn expiration(&mut self, expiration: u64) -> &mut Self {
         self.data.expiration(expiration);
+        self
+    }
+
+    /// Make the transaction depend on the transaction `digest`: it executes
+    /// only after `digest` executed successfully in the current epoch.
+    ///
+    /// The transaction must also have an epoch expiration, set with
+    /// [`expiration`](Self::expiration). Calling this again replaces the
+    /// digest.
+    #[cfg(feature = "unstable")]
+    pub fn transaction_dependency(&mut self, digest: TransactionDigest) -> &mut Self {
+        self.data.transaction_dependency(digest);
         self
     }
 
@@ -1432,6 +1505,10 @@ impl<L> TransactionBuilder<(), L> {
 
     /// Convert this builder into a transaction.
     pub fn finish(mut self) -> Result<Transaction, TransactionBuilderError> {
+        #[cfg(feature = "unstable")]
+        self.data.check_transaction_dependency()?;
+        #[cfg(feature = "unstable")]
+        self.data.check_transaction_dependency_expiration()?;
         let Some(price) = self.data.gas_price else {
             return Err(TransactionBuilderError::MissingGasPrice);
         };
@@ -1887,6 +1964,10 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
         &mut self,
         default_gas: bool,
     ) -> Result<Transaction, TransactionBuilderError> {
+        #[cfg(feature = "unstable")]
+        self.data.check_transaction_dependency()?;
+        #[cfg(feature = "unstable")]
+        self.data.check_transaction_dependency_expiration()?;
         if default_gas {
             self.select_default_gas().await?;
         }
@@ -1936,7 +2017,11 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// [`gas`](Self::gas) or [`gas_refs`](Self::gas_refs), and the sponsor,
     /// price, budget and expiration, are not part of a
     /// [`TransactionKind`] and are dropped.
-    ///
+    #[cfg_attr(
+        feature = "unstable",
+        doc = "If a [`transaction_dependency`](Self::transaction_dependency) is set, the",
+        doc = "transaction made from the kind needs an epoch expiration."
+    )]
     /// # Example
     ///
     /// ```
@@ -1964,6 +2049,8 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
     /// # }
     /// ```
     pub async fn finish_kind(mut self) -> Result<TransactionKind, TransactionBuilderError> {
+        #[cfg(feature = "unstable")]
+        self.data.check_transaction_dependency()?;
         let (kind, _gas) = self.resolve_kind().await?;
         Ok(kind)
     }
@@ -2412,6 +2499,41 @@ mod tests {
             builder.data.assigned_results.get("divided"),
             Some(Argument::Result(0))
         ));
+    }
+
+    /// Gas selection finds the coins that commands name by the object id of
+    /// each input.
+    #[test]
+    fn resolved_inputs_report_their_object_id() {
+        let object_ref = ObjectReference::new(
+            ObjectId::new([1; ObjectId::LENGTH]),
+            Version::from_u64(2),
+            ObjectDigest::new([3; 32]),
+        );
+        let shared = SharedObjectReference {
+            object_id: ObjectId::CLOCK,
+            initial_shared_version: Version::from_u64(1),
+            mutable: false,
+        };
+        let object_id = |input| {
+            Input::new(InputKind::Input(input), false)
+                .object_id()
+                .copied()
+        };
+
+        assert_eq!(object_id(iota_types::Input::Pure(vec![1])), None);
+        assert_eq!(
+            object_id(iota_types::Input::ImmutableOrOwned(object_ref)),
+            Some(object_ref.object_id)
+        );
+        assert_eq!(
+            object_id(iota_types::Input::Receiving(object_ref)),
+            Some(object_ref.object_id)
+        );
+        assert_eq!(
+            object_id(iota_types::Input::Shared(shared)),
+            Some(ObjectId::CLOCK)
+        );
     }
 
     /// Verify that `TryFrom<Transaction>` preserves input ordering: non-gas
@@ -3400,6 +3522,337 @@ mod tests {
                 panic!("expected a V1 transaction");
             };
             assert_eq!(txn.gas_payment.objects, vec![gas_coin]);
+        }
+    }
+
+    /// The network rejects a transaction with more than one transaction
+    /// dependency input, with a command that uses one, or with one but no
+    /// epoch expiration.
+    #[cfg(feature = "unstable")]
+    mod transaction_dependency {
+        use super::*;
+
+        const EPOCH: u64 = 7;
+
+        fn sender() -> Address {
+            Address::new([1; 32])
+        }
+
+        fn digest(seed: u8) -> TransactionDigest {
+            TransactionDigest::new([seed; 32])
+        }
+
+        fn gas_coin() -> ObjectReference {
+            ObjectReference::new(
+                ObjectId::new([9; ObjectId::LENGTH]),
+                Version::from_u64(1),
+                ObjectDigest::new([9; 32]),
+            )
+        }
+
+        /// An offline builder with the gas set, ready to finish.
+        fn offline_builder() -> TransactionBuilder {
+            let mut builder = TransactionBuilder::new(sender());
+            builder.gas([gas_coin()]).gas_price(1000);
+            builder
+        }
+
+        fn programmable(kind: &TransactionKind) -> &ProgrammableTransaction {
+            let TransactionKind::Programmable(ptb) = kind else {
+                panic!("expected a programmable transaction");
+            };
+            ptb
+        }
+
+        fn dependencies(ptb: &ProgrammableTransaction) -> Vec<TransactionDigest> {
+            ptb.inputs
+                .iter()
+                .filter_map(|input| match input {
+                    iota_types::Input::TransactionDependency(digest) => Some(*digest),
+                    _ => None,
+                })
+                .collect()
+        }
+
+        #[test]
+        fn dependency_is_an_input_no_command_uses() {
+            let mut builder = offline_builder();
+            builder.split_coins(Argument::Gas, [1_000u64]);
+            builder.transaction_dependency(digest(1)).expiration(EPOCH);
+
+            let Transaction::V1(txn) = builder.finish().unwrap() else {
+                panic!("expected a V1 transaction");
+            };
+            let ptb = programmable(&txn.kind);
+            assert_eq!(dependencies(ptb), [digest(1)]);
+            let position = ptb
+                .inputs
+                .iter()
+                .position(|input| matches!(input, iota_types::Input::TransactionDependency(_)))
+                .unwrap();
+            for command in ptb.commands.iter().cloned().map(Command::from) {
+                assert!(
+                    !command
+                        .arguments()
+                        .any(|argument| matches!(argument, Argument::Input(i) if *i == position)),
+                    "a command uses the dependency input"
+                );
+            }
+            assert_eq!(txn.expiration, TransactionExpiration::Epoch(EPOCH));
+        }
+
+        #[test]
+        fn calling_it_again_replaces_the_digest() {
+            let mut builder = offline_builder();
+            builder
+                .transaction_dependency(digest(1))
+                .transaction_dependency(digest(2))
+                .expiration(EPOCH);
+
+            let Transaction::V1(txn) = builder.finish().unwrap() else {
+                panic!("expected a V1 transaction");
+            };
+            assert_eq!(dependencies(programmable(&txn.kind)), [digest(2)]);
+        }
+
+        #[test]
+        fn two_dependencies_are_rejected() {
+            let mut builder = offline_builder();
+            builder.input(iota_types::Input::TransactionDependency(digest(1)));
+            builder.input(iota_types::Input::TransactionDependency(digest(2)));
+            builder.expiration(EPOCH);
+
+            let err = builder.finish().unwrap_err();
+            assert!(
+                matches!(
+                    err,
+                    TransactionBuilderError::MultipleTransactionDependencies
+                ),
+                "got {err}"
+            );
+        }
+
+        /// The argument index counts a transfer's objects before its address,
+        /// as the node does.
+        #[test]
+        fn dependency_used_by_a_command_is_rejected() {
+            let mut builder = offline_builder();
+            builder.split_coins(Argument::Gas, [1_000u64]);
+            let dependency = builder.input(iota_types::Input::TransactionDependency(digest(1)));
+            builder.transfer_objects(sender(), [dependency]);
+            builder.expiration(EPOCH);
+
+            let err = builder.finish().unwrap_err();
+            assert!(
+                matches!(
+                    err,
+                    TransactionBuilderError::TransactionDependencyInputUsed {
+                        command: 1,
+                        argument_index: 0
+                    }
+                ),
+                "got {err}"
+            );
+        }
+
+        /// A dependency input names a transaction, not an object.
+        #[test]
+        fn dependency_input_has_no_object_id() {
+            let input = Input::new(
+                InputKind::Input(iota_types::Input::TransactionDependency(digest(1))),
+                false,
+            );
+            assert_eq!(input.object_id(), None);
+        }
+
+        #[test]
+        fn dependency_without_expiration_is_rejected() {
+            let mut builder = offline_builder();
+            builder.transaction_dependency(digest(1));
+
+            let err = builder.finish().unwrap_err();
+            assert!(
+                matches!(
+                    err,
+                    TransactionBuilderError::TransactionDependencyRequiresExpiration
+                ),
+                "got {err}"
+            );
+        }
+
+        #[test]
+        fn try_from_transaction_round_trips() {
+            let coin = ObjectReference::new(
+                ObjectId::new([3; ObjectId::LENGTH]),
+                Version::from_u64(4),
+                ObjectDigest::new([3; 32]),
+            );
+            let txn = Transaction::V1(TransactionV1 {
+                kind: TransactionKind::Programmable(ProgrammableTransaction {
+                    inputs: vec![
+                        iota_types::Input::Pure(bcs::to_bytes(&1_000u64).unwrap()),
+                        iota_types::Input::TransactionDependency(digest(1)),
+                        iota_types::Input::ImmutableOrOwned(coin),
+                    ],
+                    commands: vec![iota_types::Command::SplitCoins(iota_types::SplitCoins {
+                        coin: iota_types::Argument::Input(2),
+                        amounts: vec![iota_types::Argument::Input(0)],
+                    })],
+                }),
+                sender: sender(),
+                gas_payment: GasPayment {
+                    objects: vec![gas_coin()],
+                    owner: sender(),
+                    price: 1000,
+                    budget: 5_000_000,
+                },
+                expiration: TransactionExpiration::Epoch(EPOCH),
+            });
+
+            let rebuilt = TransactionBuilder::try_from(txn.clone())
+                .unwrap()
+                .finish()
+                .unwrap();
+            assert_eq!(rebuilt, txn);
+        }
+
+        /// Fails every request, so a check that runs after a client request
+        /// reports a client error instead of its own.
+        #[cfg(feature = "test-client")]
+        #[derive(Clone, Debug)]
+        struct NoRequestsClient;
+
+        #[cfg(feature = "test-client")]
+        impl NoRequestsClient {
+            fn refused() -> crate::TestClientError {
+                crate::TestClientError("no client request expected".to_owned())
+            }
+        }
+
+        #[cfg(feature = "test-client")]
+        impl crate::TransactionBuilderClientBase for NoRequestsClient {
+            type Error = crate::TestClientError;
+        }
+
+        #[cfg(feature = "test-client")]
+        impl TransactionBuilderLedgerClient for NoRequestsClient {
+            async fn object(
+                &self,
+                _object_id: ObjectId,
+                _version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                Err(Self::refused())
+            }
+
+            async fn objects(
+                &self,
+                _struct_tag: Option<StructTag>,
+                _owner: Address,
+                _cursor: Option<Vec<u8>>,
+                _limit: Option<usize>,
+            ) -> Result<crate::ObjectsPage, Self::Error> {
+                Err(Self::refused())
+            }
+
+            async fn reference_gas_price(
+                &self,
+                _epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                Err(Self::refused())
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                Err(Self::refused())
+            }
+        }
+
+        #[cfg(feature = "test-client")]
+        #[tokio::test]
+        async fn checks_run_before_any_client_request() {
+            let mut used = TransactionBuilder::new(sender()).with_client(NoRequestsClient);
+            let dependency = used.input(iota_types::Input::TransactionDependency(digest(1)));
+            used.transfer_objects(sender(), [dependency]);
+            used.expiration(EPOCH);
+            for err in [
+                used.clone().finish_kind().await.unwrap_err(),
+                used.finish_with_budget(5_000_000).await.unwrap_err(),
+            ] {
+                assert!(
+                    matches!(
+                        err,
+                        TransactionBuilderError::TransactionDependencyInputUsed {
+                            command: 0,
+                            argument_index: 0
+                        }
+                    ),
+                    "got {err}"
+                );
+            }
+
+            let mut unexpiring = TransactionBuilder::new(sender()).with_client(NoRequestsClient);
+            unexpiring.transaction_dependency(digest(1));
+            let err = unexpiring.finish_with_budget(5_000_000).await.unwrap_err();
+            assert!(
+                matches!(
+                    err,
+                    TransactionBuilderError::TransactionDependencyRequiresExpiration
+                ),
+                "got {err}"
+            );
+        }
+
+        #[cfg(feature = "test-client")]
+        #[tokio::test]
+        async fn client_builder_requires_an_expiration() {
+            let builder = || {
+                let mut builder = TransactionBuilder::new(sender()).with_client(crate::TestClient);
+                builder.split_coins(Argument::Gas, [1_000u64]);
+                builder.transaction_dependency(digest(1));
+                builder
+            };
+
+            let err = builder().finish().await.unwrap_err();
+            assert!(
+                matches!(
+                    err,
+                    TransactionBuilderError::TransactionDependencyRequiresExpiration
+                ),
+                "got {err}"
+            );
+
+            let mut with_expiration = builder();
+            with_expiration.expiration(EPOCH);
+            let Transaction::V1(txn) = with_expiration.finish().await.unwrap() else {
+                panic!("expected a V1 transaction");
+            };
+            assert_eq!(dependencies(programmable(&txn.kind)), [digest(1)]);
+            assert_eq!(txn.expiration, TransactionExpiration::Epoch(EPOCH));
+        }
+
+        /// A [`TransactionKind`] has no expiration to check.
+        #[cfg(feature = "test-client")]
+        #[tokio::test]
+        async fn finish_kind_does_not_require_an_expiration() {
+            let mut builder = TransactionBuilder::new(sender()).with_client(crate::TestClient);
+            builder.split_coins(Argument::Gas, [1_000u64]);
+            builder.transaction_dependency(digest(1));
+
+            let kind = builder.finish_kind().await.unwrap();
+            assert_eq!(dependencies(programmable(&kind)), [digest(1)]);
+        }
+
+        #[cfg(feature = "test-client")]
+        #[tokio::test]
+        async fn move_authenticator_rejects_a_dependency_call_argument() {
+            let err = crate::MoveAuthenticatorBuilder::new(ObjectId::CLOCK)
+                .call_args([iota_types::Input::TransactionDependency(digest(1))])
+                .finish(crate::TestClient)
+                .await
+                .unwrap_err();
+            assert!(
+                matches!(err, TransactionBuilderError::InvalidMoveAuthArg(_)),
+                "got {err}"
+            );
         }
     }
 }
