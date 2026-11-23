@@ -17,8 +17,7 @@ use crate::{
 };
 
 /// A stream that yields items from a paginated query with support for
-/// bidirectional pagination. An empty page with more pages behind it is
-/// fetched past.
+/// bidirectional pagination.
 pub struct PageStream<T, F, Fut> {
     query_fn: F,
     direction: Direction,
