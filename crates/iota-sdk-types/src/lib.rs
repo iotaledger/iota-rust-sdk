@@ -23,6 +23,8 @@ mod execution_status;
 pub mod framework;
 mod gas;
 pub mod iota_names;
+#[cfg(feature = "unstable")]
+pub mod key_proof;
 mod move_core;
 mod move_package;
 mod object;
@@ -87,6 +89,8 @@ pub use object_id::ObjectId;
 pub use rand_core;
 #[cfg(feature = "serde")]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
+#[cfg(feature = "unstable")]
+pub use transaction::{AccountClaimKind, ClaimAccountTransaction, SmartAccountClaim};
 pub use transaction::{
     Argument, CanceledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
     Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, DenyRuleSet,
