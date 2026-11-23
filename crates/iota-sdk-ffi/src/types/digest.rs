@@ -12,10 +12,9 @@ use crate::error::Result;
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// Due to historical reasons, even though a `Digest` has a fixed-length of 32,
-/// IOTA's binary representation of a `Digest` is prefixed with its length
-/// meaning its serialized binary form (in bcs) is 33 bytes long vs a more
-/// compact 32 bytes.
+/// Due to historical reasons, even though a `Digest` has a fixed-length of 32, IOTA's binary
+/// representation of a `Digest` is prefixed with its length meaning its serialized binary form (in
+/// bcs) is 33 bytes long vs a more compact 32 bytes.
 #[derive(
     Debug,
     derive_more::Deref,
@@ -61,8 +60,7 @@ impl Digest {
         Self(self.0.next_lexicographical())
     }
 
-    /// Returns the next digest in byte-increasing order, or `None` if the
-    /// result would overflow.
+    /// Returns the next digest in byte-increasing order, or `None` if the result would overflow.
     pub fn next_lexicographical_opt(&self) -> Option<Arc<Self>> {
         self.0.next_lexicographical_opt().map(Self).map(Arc::new)
     }
@@ -72,10 +70,9 @@ crate::export_iota_types_objects_bcs_conversion!(Digest);
 crate::export_iota_types_objects_json_conversion!(Digest);
 crate::export_iota_types_objects_display!(Digest);
 
-/// Defines an FFI object mirroring one of the core SDK's domain-specific digest
-/// newtypes (e.g. `TransactionDigest`). Each wraps the corresponding
-/// `iota_sdk::types` digest and exposes the same shared surface as [`Digest`];
-/// the optional trailing block adds type-specific items.
+/// Defines an FFI object mirroring one of the core SDK's domain-specific digest newtypes (e.g.
+/// `TransactionDigest`). Each wraps the corresponding `iota_sdk::types` digest and exposes the same
+/// shared surface as [`Digest`]; the optional trailing block adds type-specific items.
 macro_rules! ffi_digest_wrapper {
     ($(#[$meta:meta])* $name:ident $({ $($extra:tt)* })?) => {
         $(#[$meta])*
@@ -124,8 +121,8 @@ macro_rules! ffi_digest_wrapper {
                 Self(self.0.next_lexicographical())
             }
 
-            /// Returns the next digest in byte-increasing order, or `None` if
-            /// the result would overflow.
+            /// Returns the next digest in byte-increasing order, or `None` if the result would
+            /// overflow.
             pub fn next_lexicographical_opt(&self) -> Option<Arc<Self>> {
                 self.0.next_lexicographical_opt().map(Self).map(Arc::new)
             }
@@ -206,8 +203,7 @@ ffi_digest_wrapper! {
             Self(iota_sdk::types::ObjectDigest::OBJECT_CANCELED)
         }
 
-        /// Returns whether the digest represents an object that is neither
-        /// deleted nor wrapped.
+        /// Returns whether the digest represents an object that is neither deleted nor wrapped.
         pub fn is_alive(&self) -> bool {
             self.0.is_alive()
         }
@@ -217,8 +213,7 @@ ffi_digest_wrapper! {
             self.0.is_deleted()
         }
 
-        /// Returns whether the digest represents an object wrapped in another
-        /// object.
+        /// Returns whether the digest represents an object wrapped in another object.
         pub fn is_wrapped(&self) -> bool {
             self.0.is_wrapped()
         }

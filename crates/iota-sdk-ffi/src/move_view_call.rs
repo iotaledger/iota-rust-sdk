@@ -1,8 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Arguments for Move view function calls, shared by the GraphQL and gRPC
-//! clients.
+//! Arguments for Move view function calls, shared by the GraphQL and gRPC clients.
 
 use std::sync::Arc;
 
@@ -10,8 +9,8 @@ use crate::types::{address::Address, object::ObjectId};
 
 /// An argument for a Move View Function call.
 ///
-/// This enum represents the different types of values that can be passed
-/// as arguments to a Move View Function.
+/// This enum represents the different types of values that can be passed as arguments to a Move
+/// View Function.
 #[derive(Clone, uniffi::Object)]
 pub enum MoveViewArg {
     /// A boolean value.

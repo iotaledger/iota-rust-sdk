@@ -23,8 +23,8 @@ use crate::{
 impl GraphQLClient {
     /// Get the list of coins for the specified address.
     ///
-    /// If `coin_type` is not provided, all coins will be returned. For IOTA
-    /// coins, pass in the coin type: `0x2::iota::IOTA`.
+    /// If `coin_type` is not provided, all coins will be returned. For IOTA coins, pass in the coin
+    /// type: `0x2::iota::IOTA`.
     #[uniffi::method(default(pagination_filter = None, coin_type = None))]
     pub async fn coins(
         &self,

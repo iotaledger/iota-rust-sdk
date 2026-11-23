@@ -1,19 +1,16 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Structural cross-check: each Rust mirror's `MoveShape` derive output is
-//! compared against the canonical Move definition parsed from a compiled
-//! `packages_compiled` blob.
+//! Structural cross-check: each Rust mirror's `MoveShape` derive output is compared against the
+//! canonical Move definition parsed from a compiled `packages_compiled` blob.
 //!
-//! The blobs are not committed — `update_compiled_packages.sh` fetches them
-//! into the gitignored `src/packages_compiled/` directory at the monorepo
-//! rev pinned by the `move-binary-format` dependency (`make test` does this
-//! automatically when they are missing or out of date). They are read at
-//! test run time, so the crate compiles without them.
+//! The blobs are not committed — `update_compiled_packages.sh` fetches them into the gitignored
+//! `src/packages_compiled/` directory at the monorepo rev pinned by the `move-binary-format`
+//! dependency (`make test` does this automatically when they are missing or out of date). They are
+//! read at test run time, so the crate compiles without them.
 //!
-//! Extend by adding blobs to the `ARTIFACTS` list in that script, deriving
-//! `MoveShape` on more mirrors, and registering more entries in
-//! [`expected_entries`].
+//! Extend by adding blobs to the `ARTIFACTS` list in that script, deriving `MoveShape` on more
+//! mirrors, and registering more entries in [`expected_entries`].
 
 use move_binary_format::{
     CompiledModule,
@@ -32,8 +29,8 @@ use crate::{
 
 /// Read a fetched artifact from `src/packages_compiled/`.
 ///
-/// Artifacts are loaded at test run time, so the crate compiles without
-/// them; a missing file fails the test with fetch instructions.
+/// Artifacts are loaded at test run time, so the crate compiles without them; a missing file fails
+/// the test with fetch instructions.
 fn read_artifact(name: &str) -> Vec<u8> {
     let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("src/packages_compiled")
@@ -53,9 +50,8 @@ fn read_artifact(name: &str) -> Vec<u8> {
 // ---------------------------------------------------------------------------
 
 struct Entry {
-    /// Which compiled package to look the Move struct up in. Needed because
-    /// distinct packages can declare modules of the same short name
-    /// (e.g. `0x1::bcs` vs `0x2::bcs`).
+    /// Which compiled package to look the Move struct up in. Needed because distinct packages can
+    /// declare modules of the same short name (e.g. `0x1::bcs` vs `0x2::bcs`).
     package: Package,
     /// Short Move module name (e.g. `coin`).
     module: &'static str,
@@ -92,8 +88,8 @@ impl Package {
     }
 }
 
-/// One-line `Entry` constructor. Hides the `<Ty as MoveShape>::move_shape()`
-/// boilerplate so the registry stays scannable.
+/// One-line `Entry` constructor. Hides the `<Ty as MoveShape>::move_shape()` boilerplate so the
+/// registry stays scannable.
 macro_rules! entry {
     ($pkg:expr, $module:literal, $name:literal, $ty:ty) => {
         Entry {
@@ -106,10 +102,9 @@ macro_rules! entry {
 }
 
 fn expected_entries() -> Vec<Entry> {
-    // For generic mirrors, the type argument is irrelevant — the derive
-    // resolves `T` at macro-expansion time into `Shape::TypeParameter(0)`,
-    // so the body of `move_shape()` never references the chosen type. `()`
-    // keeps the instantiation noise-free.
+    // For generic mirrors, the type argument is irrelevant — the derive resolves `T` at
+    // macro-expansion time into `Shape::TypeParameter(0)`, so the body of `move_shape()` never
+    // references the chosen type. `()` keeps the instantiation noise-free.
     use Package::*;
     vec![
         // -- 0x2 iota-framework -----------------------------------------------
@@ -1158,8 +1153,8 @@ fn expected_entries() -> Vec<Entry> {
 // Package loading
 // ---------------------------------------------------------------------------
 
-/// Parse a `packages_compiled` blob into one normalized module per inner
-/// bytecode payload, keyed by short module name.
+/// Parse a `packages_compiled` blob into one normalized module per inner bytecode payload, keyed by
+/// short module name.
 fn load_package(
     package: Package,
 ) -> std::collections::HashMap<String, normalized::Module<normalized::RcIdentifier>> {
@@ -1196,8 +1191,8 @@ fn check_struct(
         }
     };
 
-    // Drop Rust-side phantom fields (e.g. `PhantomData<T>`) — Move models
-    // phantom type params at the struct level, not as fields.
+    // Drop Rust-side phantom fields (e.g. `PhantomData<T>`) — Move models phantom type params at
+    // the struct level, not as fields.
     let rust_fields: Vec<&Field> = rust_fields
         .iter()
         .filter(|f| !matches!(f.shape, Shape::Phantom))
@@ -1225,8 +1220,8 @@ fn check_struct(
     Ok(())
 }
 
-/// Compare a Rust-side `Shape::Enum` against a Move `normalized::Enum`.
-/// Variants must match by name, in order, with the same per-variant fields.
+/// Compare a Rust-side `Shape::Enum` against a Move `normalized::Enum`. Variants must match by
+/// name, in order, with the same per-variant fields.
 fn check_enum(
     move_module: &str,
     move_enum: &str,
@@ -1307,9 +1302,9 @@ fn check_type(
         ))
     };
 
-    // Rust-side primitive-wrapper types (e.g. `ObjectId`, `Address`) come
-    // through the derive as `Datatype { name, args: [] }` but represent a
-    // Move primitive on the wire. Normalize before the structural match.
+    // Rust-side primitive-wrapper types (e.g. `ObjectId`, `Address`) come through the derive as
+    // `Datatype { name, args: [] }` but represent a Move primitive on the wire. Normalize before
+    // the structural match.
     if let Shape::Datatype { name, args } = rust
         && args.is_empty()
         && matches!(*name, "ObjectId" | "Address")
@@ -1318,10 +1313,9 @@ fn check_type(
         return Ok(());
     }
 
-    // Rust prelude `Option<T>` is BCS-equivalent to Move's
-    // `0x1::option::Option<T>`, which the Move side reports as a Datatype
-    // (a struct wrapping `vector<T>`). Recurse on the inner type so callers
-    // don't have to use `move_stdlib::option::Option` to participate.
+    // Rust prelude `Option<T>` is BCS-equivalent to Move's `0x1::option::Option<T>`, which the Move
+    // side reports as a Datatype (a struct wrapping `vector<T>`). Recurse on the inner type so
+    // callers don't have to use `move_stdlib::option::Option` to participate.
     if let Shape::Option(rust_inner) = rust
         && let Type::Datatype(d) = move_ty
         && d.name.as_ref().as_str() == "Option"
@@ -1340,14 +1334,12 @@ fn check_type(
         (Shape::Address, Type::Address) => Ok(()),
         (Shape::Vector(a), Type::Vector(b)) => check_type(module, struct_name, field, a, b),
         (Shape::TypeParameter(n), Type::TypeParameter(m)) if *n == *m => Ok(()),
-        // Named types are matched by name + type-arg arity only — the derive
-        // can't see Move module paths, so two same-named, same-arity types in
-        // different modules (e.g. `vec_map::Entry<K, V>` vs a hypothetical
-        // two-param `Entry` elsewhere) would cross-match at a reference site.
-        // Each named type still gets its own registry entry checked against
-        // its own module's definition, and the fixture roundtrips cover the
-        // serde path, so a wrong-module reference with a *different layout*
-        // is still caught there.
+        // Named types are matched by name + type-arg arity only — the derive can't see Move module
+        // paths, so two same-named, same-arity types in different modules (e.g. `vec_map::Entry<K,
+        // V>` vs a hypothetical two-param `Entry` elsewhere) would cross-match at a reference site.
+        // Each named type still gets its own registry entry checked against its own module's
+        // definition, and the fixture roundtrips cover the serde path, so a wrong-module reference
+        // with a *different layout* is still caught there.
         (Shape::Datatype { name, args }, Type::Datatype(d)) => {
             let move_name: &str = d.name.as_ref().as_str();
             if *name != move_name {
@@ -1377,8 +1369,8 @@ fn check_type(
 
 #[test]
 fn shapes_match() {
-    // Load each package once, keyed by its `Package` variant — every entry
-    // routes to the right blob without re-parsing.
+    // Load each package once, keyed by its `Package` variant — every entry routes to the right blob
+    // without re-parsing.
     let entries = expected_entries();
     let mut by_package: std::collections::HashMap<
         Package,
@@ -1405,9 +1397,8 @@ fn shapes_match() {
                 continue;
             }
         };
-        // A registered name may resolve to either a struct or an enum on
-        // the Move side; structs and enums share a namespace within a
-        // module, so they can't collide.
+        // A registered name may resolve to either a struct or an enum on the Move side; structs and
+        // enums share a namespace within a module, so they can't collide.
         let result = if let Some(move_struct) = module.structs.get(entry.struct_name) {
             check_struct(
                 entry.module,
@@ -1442,17 +1433,15 @@ fn shapes_match() {
     }
 }
 
-/// Parse `published_api.txt` — the manifest of every public
-/// `struct`/`enum` across the four system packages, fetched at the pinned
-/// monorepo rev — into the set of `(address, module, name)` keys.
+/// Parse `published_api.txt` — the manifest of every public `struct`/`enum` across the four system
+/// packages, fetched at the pinned monorepo rev — into the set of `(address, module, name)` keys.
 ///
-/// `move_types_drift_nightly` flags when upstream `develop` drifts from the
-/// pin; [`registry_matches_published_api`] in turn keeps [`expected_entries`]
-/// in sync with the manifest — so every published type has a registered
-/// mirror that [`shapes_match`] then cross-checks.
+/// `move_types_drift_nightly` flags when upstream `develop` drifts from the pin;
+/// [`registry_matches_published_api`] in turn keeps [`expected_entries`] in sync with the manifest
+/// — so every published type has a registered mirror that [`shapes_match`] then cross-checks.
 ///
-/// The file stores one record per three lines: the type name, its kind
-/// (`public struct` / `public enum`), and its `address::module` path.
+/// The file stores one record per three lines: the type name, its kind (`public struct` / `public
+/// enum`), and its `address::module` path.
 fn published_api_types() -> std::collections::BTreeSet<(String, String, String)> {
     let manifest =
         String::from_utf8(read_artifact("published_api.txt")).expect("manifest is UTF-8");
@@ -1475,8 +1464,7 @@ fn published_api_types() -> std::collections::BTreeSet<(String, String, String)>
     types
 }
 
-/// The `(address, module, name)` keys currently registered in
-/// [`expected_entries`].
+/// The `(address, module, name)` keys currently registered in [`expected_entries`].
 fn registered_types() -> std::collections::BTreeSet<(String, String, String)> {
     expected_entries()
         .iter()
@@ -1490,11 +1478,10 @@ fn registered_types() -> std::collections::BTreeSet<(String, String, String)> {
         .collect()
 }
 
-/// Every published Move type must have a registered mirror, and every
-/// registered entry must correspond to a real published type. Without this
-/// guard a new mirror could be added but left out of [`expected_entries`] —
-/// silently skipping its shape check — or an upstream type could go unmirrored
-/// entirely, leaving [`shapes_match`]'s "exhaustive" claim unenforced.
+/// Every published Move type must have a registered mirror, and every registered entry must
+/// correspond to a real published type. Without this guard a new mirror could be added but left out
+/// of [`expected_entries`] — silently skipping its shape check — or an upstream type could go
+/// unmirrored entirely, leaving [`shapes_match`]'s "exhaustive" claim unenforced.
 #[test]
 fn registry_matches_published_api() {
     let published = published_api_types();
@@ -1531,11 +1518,10 @@ fn registry_matches_published_api() {
 // Negative tests
 // ---------------------------------------------------------------------------
 //
-// `shapes_match` only ever feeds the comparator *correct* shapes, so a
-// comparator that regressed to always returning `Ok(())` would still pass it.
-// Each test below starts from a real Move definition and the mirror's
-// known-good `move_shape()`, mutates exactly one thing, and asserts the
-// comparator now rejects it — one case per branch the comparator protects.
+// `shapes_match` only ever feeds the comparator *correct* shapes, so a comparator that regressed to
+// always returning `Ok(())` would still pass it. Each test below starts from a real Move definition
+// and the mirror's known-good `move_shape()`, mutates exactly one thing, and asserts the comparator
+// now rejects it — one case per branch the comparator protects.
 
 fn struct_fields(shape: Shape) -> Vec<Field> {
     match shape {
@@ -1686,8 +1672,8 @@ fn rejects_option_inner_mismatch() {
     let def = pkgs["staking_pool"].structs.get("StakingPoolV1").unwrap();
     let mut fields =
         struct_fields(<iota_system::staking_pool::StakingPoolV1 as MoveShape>::move_shape());
-    // `activation_epoch` is an `Option<u64>`; corrupt the inner type so the
-    // Option normalization can't paper over it.
+    // `activation_epoch` is an `Option<u64>`; corrupt the inner type so the Option normalization
+    // can't paper over it.
     let Shape::Option(inner) = &mut field_mut(&mut fields, "activation_epoch").shape else {
         panic!("activation_epoch should be an option");
     };
@@ -1715,8 +1701,8 @@ fn rejects_objectid_normalization_off_a_non_address() {
     let pkgs = load_package(Package::IotaSystem);
     let def = pkgs["staking_pool"].structs.get("StakedIota").unwrap();
     let mut fields = struct_fields(staked_iota_shape());
-    // The ObjectId/Address → Address shortcut must only fire against a Move
-    // `address`; here the Move field is a `u64`, so it must be rejected.
+    // The ObjectId/Address → Address shortcut must only fire against a Move `address`; here the
+    // Move field is a `u64`, so it must be rejected.
     field_mut(&mut fields, "stake_activation_epoch").shape = Shape::Datatype {
         name: "ObjectId",
         args: vec![],

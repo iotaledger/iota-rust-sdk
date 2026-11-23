@@ -28,8 +28,7 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GraphQLClient::iota_names_registrations`]. Await it to send
-    /// the request.
+    /// Query for [`GraphQLClient::iota_names_registrations`]. Await it to send the request.
     #[derive(Clone)]
     pub struct ListIotaNamesRegistrationsQuery {
         client: GraphQLClient,
@@ -46,8 +45,8 @@ impl ListIotaNamesRegistrationsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<NameRegistration>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -100,8 +99,7 @@ impl ListIotaNamesRegistrationsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::iota_names_default_name`]. Await it to send
-    /// the request.
+    /// Query for [`GraphQLClient::iota_names_default_name`]. Await it to send the request.
     pub struct GetIotaNamesDefaultNameQuery {
         client: GraphQLClient,
         address: Address,
@@ -141,8 +139,7 @@ impl GetIotaNamesDefaultNameQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::iota_names_lookup`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::iota_names_lookup`]. Await it to send the request.
     pub struct GetIotaNamesLookupQuery {
         client: GraphQLClient,
         name: Name,

@@ -10,16 +10,14 @@ use crate::types::{address::Address, crypto::Secp256r1PublicKey, signature::Simp
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for
-/// the required json-schema for the `client-data-json` rule. In addition, IOTA
-/// currently requires that the `CollectedClientData.type` field is required to
-/// be `webauthn.get`.
+/// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for the required json-schema
+/// for the `client-data-json` rule. In addition, IOTA currently requires that the
+/// `CollectedClientData.type` field is required to be `webauthn.get`.
 ///
-/// Note: Due to historical reasons, signatures are serialized slightly
-/// different from the majority of the types in IOTA. In particular if a
-/// signature is ever embedded in another structure it generally is serialized
-/// as `bytes` meaning it has a length prefix that defines the length of
-/// the completely serialized signature.
+/// Note: Due to historical reasons, signatures are serialized slightly different from the majority
+/// of the types in IOTA. In particular if a signature is ever embedded in another structure it
+/// generally is serialized as `bytes` meaning it has a length prefix that defines the length of the
+/// completely serialized signature.
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct PasskeyAuthenticator(pub iota_sdk::types::PasskeyAuthenticator);
@@ -28,24 +26,23 @@ pub struct PasskeyAuthenticator(pub iota_sdk::types::PasskeyAuthenticator);
 impl PasskeyAuthenticator {
     /// Opaque authenticator data for this passkey signature.
     ///
-    /// See <https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data>
-    /// for more information on this field.
+    /// See <https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data> for more information on this
+    /// field.
     pub fn authenticator_data(&self) -> Vec<u8> {
         self.0.authenticator_data().to_vec()
     }
 
     /// Structured, unparsed, JSON for this passkey signature.
     ///
-    /// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata>
-    /// for more information on this field.
+    /// See <https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata> for more information on
+    /// this field.
     pub fn client_data_json(&self) -> String {
         self.0.client_data_json().to_owned()
     }
 
     /// The parsed challenge message for this passkey signature.
     ///
-    /// This is parsed by decoding the base64url data from the
-    /// `client_data_json.challenge` field.
+    /// This is parsed by decoding the base64url data from the `client_data_json.challenge` field.
     pub fn challenge(&self) -> Vec<u8> {
         self.0.challenge().to_vec()
     }
@@ -93,9 +90,9 @@ impl PasskeyPublicKey {
 
     /// Derive an `Address` from this Passkey Public Key
     ///
-    /// An `Address` can be derived from a `PasskeyPublicKey` by hashing the
-    /// bytes of the `Secp256r1PublicKey` that corresponds to this passkey
-    /// prefixed with the Passkey `SignatureScheme` flag (`0x06`).
+    /// An `Address` can be derived from a `PasskeyPublicKey` by hashing the bytes of the
+    /// `Secp256r1PublicKey` that corresponds to this passkey prefixed with the Passkey
+    /// `SignatureScheme` flag (`0x06`).
     ///
     /// `hash( 0x06 || 33-byte secp256r1 public key)`
     pub fn derive_address(&self) -> Address {

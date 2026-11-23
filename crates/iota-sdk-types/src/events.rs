@@ -34,14 +34,13 @@ impl crate::TreeDisplay for TransactionEvents {
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 pub struct Event {
-    /// Package id of the top-level function invoked by a MoveCall command which
-    /// triggered this event to be emitted.
+    /// Package id of the top-level function invoked by a MoveCall command which triggered this
+    /// event to be emitted.
     pub package_id: ObjectId,
-    /// Module name of the top-level function invoked by a MoveCall command
-    /// which triggered this event to be emitted.
+    /// Module name of the top-level function invoked by a MoveCall command which triggered this
+    /// event to be emitted.
     pub module: Identifier,
-    /// Address of the account that sent the transaction where this event was
-    /// emitted.
+    /// Address of the account that sent the transaction where this event was emitted.
     pub sender: Address,
     /// The type of the event emitted
     #[cfg_attr(feature = "serde", serde(rename = "type"))]
@@ -67,14 +66,12 @@ impl Event {
         self.is_system_epoch_info_event_v1() || self.is_system_epoch_info_event_v2()
     }
 
-    /// Checks if this is
-    /// `0x3::iota_system_state_inner::SystemEpochInfoEventV1`.
+    /// Checks if this is `0x3::iota_system_state_inner::SystemEpochInfoEventV1`.
     pub fn is_system_epoch_info_event_v1(&self) -> bool {
         self.is_system_epoch_info_event_type(Identifier::SYSTEM_EPOCH_INFO_EVENT_V1)
     }
 
-    /// Checks if this is
-    /// `0x3::iota_system_state_inner::SystemEpochInfoEventV2`.
+    /// Checks if this is `0x3::iota_system_state_inner::SystemEpochInfoEventV2`.
     pub fn is_system_epoch_info_event_v2(&self) -> bool {
         self.is_system_epoch_info_event_type(Identifier::SYSTEM_EPOCH_INFO_EVENT_V2)
     }

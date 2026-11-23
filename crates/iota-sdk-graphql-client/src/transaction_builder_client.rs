@@ -1,8 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of the transaction builder client traits for the GraphQL
-//! [`GraphQLClient`].
+//! Implementation of the transaction builder client traits for the GraphQL [`GraphQLClient`].
 
 use iota_transaction_builder::{
     ObjectsPage, ProtocolConfig, TransactionBuilder, TransactionBuilderClientBase,
@@ -51,10 +50,9 @@ impl TransactionBuilderLedgerClient for GraphQLClient {
         cursor: Option<Vec<u8>>,
         limit: Option<usize>,
     ) -> Result<ObjectsPage, Self::Error> {
-        // GraphQL cursors are base64 ASCII, so round-tripping through
-        // Vec<u8> is lossless. Caller-supplied cursors must come from a
-        // prior call to this method; anything else is rejected here
-        // rather than panicked on.
+        // GraphQL cursors are base64 ASCII, so round-tripping through Vec<u8> is lossless.
+        // Caller-supplied cursors must come from a prior call to this method; anything else is
+        // rejected here rather than panicked on.
         let cursor = cursor.map(String::from_utf8).transpose()?;
         let page = self
             .objects()

@@ -5,10 +5,10 @@
 //!
 //! # Read Mask
 //!
-//! Without [`read_mask`](ListDynamicFieldsQuery::read_mask), the default mask
-//! is used. Pass a [`DynamicFieldReadMask`] built from a
-//! [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField)
-//! (or any slice/array/vec of fields) to choose the returned fields.
+//! Without [`read_mask`](ListDynamicFieldsQuery::read_mask), the default mask is used. Pass a
+//! [`DynamicFieldReadMask`] built from a
+//! [`DynamicFieldField`](iota_grpc_types::read_mask_fields::DynamicFieldField) (or any
+//! slice/array/vec of fields) to choose the returned fields.
 
 use iota_grpc_types::{
     read_mask_fields::{DynamicFieldReadMask, IntoReadMask},
@@ -27,9 +27,8 @@ use crate::{
 define_list_query! {
     /// Builder for listing dynamic fields of a parent object.
     ///
-    /// Created by [`GrpcClient::dynamic_fields`]. Await directly for a
-    /// single page, or call [`.collect(limit)`](Self::collect) to
-    /// auto-paginate.
+    /// Created by [`GrpcClient::dynamic_fields`]. Await directly for a single page, or call
+    /// [`.collect(limit)`](Self::collect) to auto-paginate.
     pub struct ListDynamicFieldsQuery {
         service_client: StateServiceClient<InterceptedChannel>,
         request: ListDynamicFieldsRequest,
@@ -50,10 +49,9 @@ impl ListDynamicFieldsQuery {
 impl GrpcClient {
     /// List dynamic fields owned by a parent object.
     ///
-    /// Returns a query builder. Await it directly for a single page
-    /// (with access to `next_page_token`), or call `.collect(limit)` to
-    /// auto-paginate through all results. Choose the returned fields with
-    /// [`read_mask`](ListDynamicFieldsQuery::read_mask), and page with
+    /// Returns a query builder. Await it directly for a single page (with access to
+    /// `next_page_token`), or call `.collect(limit)` to auto-paginate through all results. Choose
+    /// the returned fields with [`read_mask`](ListDynamicFieldsQuery::read_mask), and page with
     /// [`page_size`](ListDynamicFieldsQuery::page_size) and
     /// [`page_token`](ListDynamicFieldsQuery::page_token).
     ///

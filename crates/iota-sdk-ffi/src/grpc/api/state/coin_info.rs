@@ -40,8 +40,8 @@ impl From<proto::coin::coin_metadata::MetadataCapState> for GrpcMetadataCapState
 /// The metadata of a coin type.
 #[derive(uniffi::Record)]
 pub struct GrpcCoinMetadata {
-    /// The id of the `0x2::coin::CoinMetadata` object or
-    /// `Currency` object (when registered with the `CoinRegistry`).
+    /// The id of the `0x2::coin::CoinMetadata` object or `Currency` object (when registered with
+    /// the `CoinRegistry`).
     pub id: Option<Arc<ObjectId>>,
     /// Number of decimal places the coin uses.
     pub decimals: Option<u32>,
@@ -94,11 +94,9 @@ impl TryFrom<&proto::coin::CoinMetadata> for GrpcCoinMetadata {
 /// The supply state of a coin type.
 #[derive(uniffi::Enum)]
 pub enum GrpcSupplyState {
-    /// The supply is unknown or the `TreasuryCap` still exists (minting still
-    /// possible).
+    /// The supply is unknown or the `TreasuryCap` still exists (minting still possible).
     Unknown,
-    /// The supply is fixed (the `TreasuryCap` was consumed, no more minting
-    /// possible).
+    /// The supply is fixed (the `TreasuryCap` was consumed, no more minting possible).
     Fixed,
     /// The supply can only be burned.
     BurnOnly,
@@ -227,14 +225,13 @@ impl TryFrom<&proto::coin::RegulatedCoinMetadata> for GrpcRegulatedCoinMetadata 
 pub struct GrpcCoinInfo {
     /// The coin type.
     pub coin_type: Option<String>,
-    /// Information about the coin type's `0x2::coin::CoinMetadata`, if it
-    /// exists and has not been wrapped.
+    /// Information about the coin type's `0x2::coin::CoinMetadata`, if it exists and has not been
+    /// wrapped.
     pub metadata: Option<GrpcCoinMetadata>,
-    /// Information about the coin type's `0x2::coin::TreasuryCap`, if it
-    /// exists and has not been wrapped.
+    /// Information about the coin type's `0x2::coin::TreasuryCap`, if it exists and has not been
+    /// wrapped.
     pub treasury: Option<GrpcCoinTreasury>,
-    /// Information about the coin type's regulated metadata, if the coin is
-    /// regulated.
+    /// Information about the coin type's regulated metadata, if the coin is regulated.
     pub regulated_metadata: Option<GrpcRegulatedCoinMetadata>,
 }
 
@@ -257,11 +254,10 @@ impl TryFrom<&proto::state_service::GetCoinInfoResponse> for GrpcCoinInfo {
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GrpcClient {
-    /// Get information about a coin type, including its metadata, treasury,
-    /// and regulated metadata.
+    /// Get information about a coin type, including its metadata, treasury, and regulated metadata.
     ///
-    /// `coin_type` is the inner type `T` of `Coin<T>`, e.g. `0x2::iota::IOTA`,
-    /// not the `Coin<T>` wrapper.
+    /// `coin_type` is the inner type `T` of `Coin<T>`, e.g. `0x2::iota::IOTA`, not the `Coin<T>`
+    /// wrapper.
     pub async fn coin_info(&self, coin_type: &StructTag) -> Result<GrpcCoinInfo> {
         (&self
             .client()

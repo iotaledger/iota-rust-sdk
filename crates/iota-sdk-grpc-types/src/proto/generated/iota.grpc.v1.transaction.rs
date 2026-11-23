@@ -6,7 +6,7 @@
 /// A transaction.
 #[allow(clippy::all)]
 #[non_exhaustive]
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Transaction {
     /// The digest of this Transaction.
     #[prost(message, optional, tag = "1")]
@@ -18,7 +18,7 @@ pub struct Transaction {
 /// The effects of executing a transaction.
 #[allow(clippy::all)]
 #[non_exhaustive]
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct TransactionEffects {
     /// The digest of this TransactionEffects.
     #[prost(message, optional, tag = "1")]

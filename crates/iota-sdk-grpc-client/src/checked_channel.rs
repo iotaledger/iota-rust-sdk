@@ -3,12 +3,11 @@
 
 //! Rejects responses from a node that requires a newer SDK than this one.
 //!
-//! The node stamps every gRPC response with the lowest `iota-sdk-grpc-client`
-//! version able to decode its wire types, in the
-//! [`X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN`](crate::headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN) header. The
-//! check runs on the response headers, before any body is decoded, so an
-//! outdated client fails with a clear error instead of tripping over a wire
-//! value it does not know.
+//! The node stamps every gRPC response with the lowest `iota-sdk-grpc-client` version able to
+//! decode its wire types, in the
+//! [`X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN`](crate::headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN)
+//! header. The check runs on the response headers, before any body is decoded, so an outdated
+//! client fails with a clear error instead of tripping over a wire value it does not know.
 
 use std::{
     future::Future,
@@ -22,16 +21,15 @@ use tower_service::Service;
 
 use crate::{ResponseExt, client::BoxError};
 
-/// Version of this crate, which the node's minimum SDK version is compared
-/// against.
+/// Version of this crate, which the node's minimum SDK version is compared against.
 pub const CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// The node requires a newer `iota-sdk-grpc-client` than the one in use.
 ///
-/// Attached as the source of the `FAILED_PRECONDITION` status a failed check
-/// produces. [`GrpcError::from`](crate::GrpcError) turns such a status into
-/// [`GrpcError::OutdatedClient`](crate::GrpcError::OutdatedClient), which tells
-/// it apart from a `FAILED_PRECONDITION` sent by the node.
+/// Attached as the source of the `FAILED_PRECONDITION` status a failed check produces.
+/// [`GrpcError::from`](crate::GrpcError) turns such a status into
+/// [`GrpcError::OutdatedClient`](crate::GrpcError::OutdatedClient), which tells it apart from a
+/// `FAILED_PRECONDITION` sent by the node.
 #[derive(Clone, Debug, Eq, PartialEq, thiserror::Error)]
 #[error(
     "the node requires a newer IOTA SDK, upgrade it (needs iota-sdk-grpc-client >= {minimum}, this SDK uses {current})"
@@ -52,8 +50,7 @@ impl OutdatedClientError {
         &self.current
     }
 
-    /// The `FAILED_PRECONDITION` status for this error, with this error as its
-    /// source.
+    /// The `FAILED_PRECONDITION` status for this error, with this error as its source.
     pub(crate) fn into_status(self, metadata: tonic::metadata::MetadataMap) -> tonic::Status {
         let mut status = tonic::Status::with_metadata(
             tonic::Code::FailedPrecondition,
@@ -65,11 +62,10 @@ impl OutdatedClientError {
     }
 }
 
-/// gRPC channel wrapper that fails a call when the node's minimum SDK version
-/// is newer than this crate.
+/// gRPC channel wrapper that fails a call when the node's minimum SDK version is newer than this
+/// crate.
 ///
-/// A response without the header, or with one that is not a semantic version,
-/// passes unchanged.
+/// A response without the header, or with one that is not a semantic version, passes unchanged.
 #[derive(Clone, Debug)]
 pub struct CheckedChannel<S> {
     inner: S,
@@ -77,16 +73,15 @@ pub struct CheckedChannel<S> {
 }
 
 impl<S> CheckedChannel<S> {
-    /// Wraps `inner`, failing any call whose response names a minimum crate
-    /// version newer than [`CRATE_VERSION`].
+    /// Wraps `inner`, failing any call whose response names a minimum crate version newer than
+    /// [`CRATE_VERSION`].
     ///
-    /// Use it to check service clients built on a channel of your own, such as
-    /// one with custom TLS or a proxy. A [`GrpcClient`](crate::GrpcClient)
-    /// hands out its own channel already wrapped through
-    /// [`checked_channel`](crate::GrpcClient::checked_channel).
+    /// Use it to check service clients built on a channel of your own, such as one with custom TLS
+    /// or a proxy. A [`GrpcClient`](crate::GrpcClient) hands out its own channel already wrapped
+    /// through [`checked_channel`](crate::GrpcClient::checked_channel).
     pub fn new(inner: S) -> Self {
-        // `CARGO_PKG_VERSION` comes from this crate's manifest, which cargo
-        // only accepts with a valid semantic version.
+        // `CARGO_PKG_VERSION` comes from this crate's manifest, which cargo only accepts with a
+        // valid semantic version.
         let current = Version::parse(CRATE_VERSION).expect("CARGO_PKG_VERSION is a valid version");
         Self::with_current_version(inner, current)
     }
@@ -142,8 +137,7 @@ fn check_min_sdk_version(
         current: current.to_string(),
     };
     let mut metadata = tonic::metadata::MetadataMap::from_headers(response_headers.clone());
-    // The node's own status for the call, when it failed; this status replaces
-    // it.
+    // The node's own status for the call, when it failed; this status replaces it.
     for reserved in ["grpc-status", "grpc-message", "grpc-status-details-bin"] {
         metadata.remove(reserved);
     }
@@ -158,8 +152,7 @@ mod tests {
 
     use super::*;
 
-    /// Inner service answering every request with a fixed set of response
-    /// headers.
+    /// Inner service answering every request with a fixed set of response headers.
     #[derive(Clone)]
     struct FixedHeaders(http::HeaderMap);
 
@@ -290,8 +283,8 @@ mod tests {
             .unwrap();
     }
 
-    /// Error of a layer wrapped around the channel, holding the channel's
-    /// error as its source, as tower's `Buffer` does.
+    /// Error of a layer wrapped around the channel, holding the channel's error as its source, as
+    /// tower's `Buffer` does.
     #[derive(Debug)]
     struct LayerError(BoxError);
 

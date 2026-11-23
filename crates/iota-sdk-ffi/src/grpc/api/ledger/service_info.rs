@@ -19,8 +19,8 @@ use crate::{
 /// Information about the gRPC service and the node serving it.
 #[derive(uniffi::Record)]
 pub struct GrpcServiceInfo {
-    /// The chain identifier of the chain that the node is on, which is the
-    /// digest of the genesis checkpoint.
+    /// The chain identifier of the chain that the node is on, which is the digest of the genesis
+    /// checkpoint.
     pub chain_id: Option<Arc<Digest>>,
     /// Human-readable name of the chain that the node is on.
     pub chain: Option<String>,
@@ -28,11 +28,9 @@ pub struct GrpcServiceInfo {
     pub epoch: Option<u64>,
     /// Checkpoint height of the most recently executed checkpoint.
     pub executed_checkpoint_height: Option<u64>,
-    /// Unix timestamp in milliseconds of the most recently executed
-    /// checkpoint.
+    /// Unix timestamp in milliseconds of the most recently executed checkpoint.
     pub executed_checkpoint_timestamp_ms: Option<u64>,
-    /// The lowest checkpoint for which checkpoints and transaction data are
-    /// available.
+    /// The lowest checkpoint for which checkpoints and transaction data are available.
     pub lowest_available_checkpoint: Option<u64>,
     /// The lowest checkpoint for which object data is available.
     pub lowest_available_checkpoint_objects: Option<u64>,

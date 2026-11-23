@@ -1,8 +1,8 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Defines the [`TransactionSigner`] trait, which allows users to implement any
-//! type which can sign a transaction asynchronously.
+//! Defines the [`TransactionSigner`] trait, which allows users to implement any type which can sign
+//! a transaction asynchronously.
 
 use std::future::Future;
 

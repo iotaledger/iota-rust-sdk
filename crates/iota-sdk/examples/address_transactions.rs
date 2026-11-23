@@ -3,9 +3,8 @@
 
 //! Fetch all transactions for an address (both outgoing and incoming).
 //!
-//! The GraphQL service does not have a single filter that returns
-//! transactions in *both* directions for an address. To get the full
-//! history, run two queries and merge the results.
+//! The GraphQL service does not have a single filter that returns transactions in *both* directions
+//! for an address. To get the full history, run two queries and merge the results.
 
 use std::str::FromStr;
 

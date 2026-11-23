@@ -18,13 +18,11 @@ use crate::{
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
-    /// Dry run a `Transaction` and return the transaction effects and dry run
-    /// error (if any).
+    /// Dry run a `Transaction` and return the transaction effects and dry run error (if any).
     ///
-    /// `skipChecks` optional flag disables the usual verification checks that
-    /// prevent access to objects that are owned by addresses other than the
-    /// sender, and calling non-public, non-entry functions, and some other
-    /// checks. Defaults to false.
+    /// `skipChecks` optional flag disables the usual verification checks that prevent access to
+    /// objects that are owned by addresses other than the sender, and calling non-public, non-entry
+    /// functions, and some other checks. Defaults to false.
     #[uniffi::method(default(skip_checks = false))]
     pub async fn dry_run_transaction(
         &self,
@@ -39,13 +37,11 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Dry run a `TransactionKind` and return the transaction effects and dry
-    /// run error (if any).
+    /// Dry run a `TransactionKind` and return the transaction effects and dry run error (if any).
     ///
-    /// `skipChecks` optional flag disables the usual verification checks that
-    /// prevent access to objects that are owned by addresses other than the
-    /// sender, and calling non-public, non-entry functions, and some other
-    /// checks. Defaults to false.
+    /// `skipChecks` optional flag disables the usual verification checks that prevent access to
+    /// objects that are owned by addresses other than the sender, and calling non-public, non-entry
+    /// functions, and some other checks. Defaults to false.
     ///
     /// `transaction_metadata` is the transaction metadata.
     #[uniffi::method(default(skip_checks = false))]

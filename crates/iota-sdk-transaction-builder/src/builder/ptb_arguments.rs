@@ -9,8 +9,7 @@ use crate::{
     unresolved::{Argument, InputKind},
 };
 
-/// A trait which defines a single argument for a
-/// [`TransactionBuilder`](crate::TransactionBuilder).
+/// A trait which defines a single argument for a [`TransactionBuilder`](crate::TransactionBuilder).
 #[diagnostic::on_unimplemented(message = "Provided value is not a valid move argument.")]
 pub trait PTBArgument: Sized {
     /// Get the argument.

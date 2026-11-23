@@ -3,18 +3,16 @@
 
 //! Query objects by their Move type, decoded into Rust mirrors.
 //!
-//! `objects` takes a type string and hands back raw objects you then decode
-//! yourself (see `decode_staked_iota.rs`). `move_objects` takes the Move type
-//! from its type parameter instead: the filter is derived from the mirror and
-//! every object in the page arrives decoded, so neither the type string nor
-//! the decode step appears here.
+//! `objects` takes a type string and hands back raw objects you then decode yourself (see
+//! `decode_staked_iota.rs`). `move_objects` takes the Move type from its type parameter instead:
+//! the filter is derived from the mirror and every object in the page arrives decoded, so neither
+//! the type string nor the decode step appears here.
 //!
-//! Because the type comes from `T`, [`MoveObjectFilter`] has no type field —
-//! there is no second place to set it and nothing to disagree about.
+//! Because the type comes from `T`, [`MoveObjectFilter`] has no type field — there is no second
+//! place to set it and nothing to disagree about.
 //!
-//! A decode failure fails the whole page rather than skipping the object: the
-//! query filtered on `T`'s exact type, so a failure means the on-chain type
-//! has moved out from under the mirror.
+//! A decode failure fails the whole page rather than skipping the object: the query filtered on
+//! `T`'s exact type, so a failure means the on-chain type has moved out from under the mirror.
 
 use eyre::Result;
 use futures::StreamExt;
@@ -55,8 +53,7 @@ async fn main() -> Result<()> {
     }
     println!("Total: {total} nanos");
 
-    // Same query for a different mirror, paginated as a stream. Only the type
-    // parameter changes.
+    // Same query for a different mirror, paginated as a stream. Only the type parameter changes.
     println!("---");
     let mut staked = client
         .move_objects::<StakedIota>()

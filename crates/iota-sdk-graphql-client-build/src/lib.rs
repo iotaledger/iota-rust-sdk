@@ -4,9 +4,8 @@
 
 #![doc = include_str!("../README.md")]
 
-/// Register the schema to enable building custom queries using cynic derive
-/// macros queries. Call this function in a `build.rs` file in your crate if you
-/// need to build custom queries.
+/// Register the schema to enable building custom queries using cynic derive macros queries. Call
+/// this function in a `build.rs` file in your crate if you need to build custom queries.
 ///
 /// Examples
 /// ```rust,ignore

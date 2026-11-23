@@ -1,21 +1,17 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! MetadataEnvelope wrapper that preserves gRPC metadata headers alongside the
-//! body.
+//! MetadataEnvelope wrapper that preserves gRPC metadata headers alongside the body.
 
 use crate::ResponseExt;
 
-/// A response from the gRPC API that carries both the response body and
-/// metadata headers.
+/// A response from the gRPC API that carries both the response body and metadata headers.
 ///
-/// The metadata contains IOTA-specific headers such as chain ID, epoch,
-/// checkpoint height, and timestamps. Access them via the [`ResponseExt`]
-/// trait methods.
+/// The metadata contains IOTA-specific headers such as chain ID, epoch, checkpoint height, and
+/// timestamps. Access them via the [`ResponseExt`] trait methods.
 ///
-/// Use [`body()`](Self::body) / [`body_mut()`](Self::body_mut) to access the
-/// response body, or [`into_inner()`](Self::into_inner) to consume the
-/// envelope and extract the body.
+/// Use [`body()`](Self::body) / [`body_mut()`](Self::body_mut) to access the response body, or
+/// [`into_inner()`](Self::into_inner) to consume the envelope and extract the body.
 ///
 /// # Example
 ///
@@ -77,8 +73,7 @@ impl<T> MetadataEnvelope<T> {
         }
     }
 
-    /// Transform the body with a fallible function, preserving metadata on
-    /// success.
+    /// Transform the body with a fallible function, preserving metadata on success.
     pub fn try_map<U, E>(
         self,
         f: impl FnOnce(T) -> Result<U, E>,

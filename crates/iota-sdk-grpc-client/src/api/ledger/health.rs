@@ -22,9 +22,9 @@ define_query! {
 }
 
 impl GetHealthQuery {
-    /// Consider the node healthy only if the latest executed checkpoint
-    /// timestamp is within `threshold_ms` milliseconds of the current system
-    /// time. Without it, the server applies its default threshold (5 seconds).
+    /// Consider the node healthy only if the latest executed checkpoint timestamp is within
+    /// `threshold_ms` milliseconds of the current system time. Without it, the server applies its
+    /// default threshold (5 seconds).
     pub fn threshold_ms(mut self, threshold_ms: u64) -> Self {
         self.threshold_ms = Some(threshold_ms);
         self
@@ -50,13 +50,11 @@ impl GetHealthQuery {
 impl GrpcClient {
     /// Check the health of the node.
     ///
-    /// Returns a [`MetadataEnvelope`]`<`[`GetHealthResponse`]`>` with the
-    /// latest checkpoint sequence number and an estimated validator latency
-    /// field (reserved for future use).
+    /// Returns a [`MetadataEnvelope`]`<`[`GetHealthResponse`]`>` with the latest checkpoint
+    /// sequence number and an estimated validator latency field (reserved for future use).
     ///
-    /// If the node's latest checkpoint is stale (beyond the threshold), the
-    /// server returns an `UNAVAILABLE` error. Set the threshold with
-    /// [`threshold_ms`](GetHealthQuery::threshold_ms).
+    /// If the node's latest checkpoint is stale (beyond the threshold), the server returns an
+    /// `UNAVAILABLE` error. Set the threshold with [`threshold_ms`](GetHealthQuery::threshold_ms).
     pub fn health(&self) -> GetHealthQuery {
         GetHealthQuery {
             service_client: self.ledger_service_client(),

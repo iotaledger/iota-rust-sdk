@@ -27,8 +27,7 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GrpcClient::view_function_call`]. Await it to send the
-    /// request.
+    /// Query for [`GrpcClient::view_function_call`]. Await it to send the request.
     pub struct ViewFunctionCallQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,
         function_call: ViewFunctionCallItem,
@@ -80,8 +79,7 @@ impl ViewFunctionCallQuery {
 }
 
 define_query! {
-    /// Query for [`GrpcClient::view_function_calls`]. Await it to send the
-    /// request.
+    /// Query for [`GrpcClient::view_function_calls`]. Await it to send the request.
     pub struct ViewFunctionCallsQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,
         function_calls: Vec<ViewFunctionCallItem>,
@@ -120,21 +118,18 @@ impl ViewFunctionCallsQuery {
 }
 
 impl GrpcClient {
-    /// Call a Move view function and read back what it returns, without
-    /// submitting a transaction.
+    /// Call a Move view function and read back what it returns, without submitting a transaction.
     ///
-    /// Arguments are passed as JSON and encoded by the node against the
-    /// parameter's Move type. Numbers go over the wire as strings. To
-    /// pass BCS-encoded arguments instead, build the [`InputArgument`]s
-    /// yourself and use [`view_function_calls`](Self::view_function_calls).
+    /// Arguments are passed as JSON and encoded by the node against the parameter's Move type.
+    /// Numbers go over the wire as strings. To pass BCS-encoded arguments instead, build the
+    /// [`InputArgument`]s yourself and use [`view_function_calls`](Self::view_function_calls).
     ///
     /// # Parameters
     ///
     /// - `fq_function_name`: Fully qualified Move view function name
     ///
     /// Set [`type_args`](ViewFunctionCallQuery::type_args) and
-    /// [`call_args`](ViewFunctionCallQuery::call_args) for a function that
-    /// takes them.
+    /// [`call_args`](ViewFunctionCallQuery::call_args) for a function that takes them.
     ///
     /// Returns [`ViewFunctionCallOutputs`] which contains:
     /// - `return_values()` - View function return values in case of success
@@ -162,18 +157,16 @@ impl GrpcClient {
     /// # }
     /// ```
     ///
-    /// Without [`read_mask`](ViewFunctionCallQuery::read_mask), the default
-    /// mask is used. Pass a
-    /// [`ViewFunctionCallField`](iota_grpc_types::read_mask_fields::ViewFunctionCallField)
-    /// or any slice/array/vec of fields to choose the returned fields.
+    /// Without [`read_mask`](ViewFunctionCallQuery::read_mask), the default mask is used. Pass a
+    /// [`ViewFunctionCallField`](iota_grpc_types::read_mask_fields::ViewFunctionCallField) or any
+    /// slice/array/vec of fields to choose the returned fields.
     ///
     /// # Errors
     ///
-    /// Returns [`GrpcError::EmptyRequest`] if `fq_function_name` is empty.
-    /// Returns [`GrpcError::Server`] if the node rejected the call (an unknown
-    /// function, a wrong argument count, a non-view function). A call that ran
-    /// and *aborted* is not an error here — it comes back as
-    /// [`ViewFunctionCallOutputs::execution_error`].
+    /// Returns [`GrpcError::EmptyRequest`] if `fq_function_name` is empty. Returns
+    /// [`GrpcError::Server`] if the node rejected the call (an unknown function, a wrong argument
+    /// count, a non-view function). A call that ran and *aborted* is not an error here — it comes
+    /// back as [`ViewFunctionCallOutputs::execution_error`].
     pub fn view_function_call(&self, fq_function_name: impl Into<String>) -> ViewFunctionCallQuery {
         ViewFunctionCallQuery {
             service_client: self.execution_service_client(),
@@ -184,28 +177,26 @@ impl GrpcClient {
 
     /// Call a batch of Move view functions.
     ///
-    /// Each call runs in its own transaction on the server, so one call being
-    /// rejected leaves the rest untouched.
+    /// Each call runs in its own transaction on the server, so one call being rejected leaves the
+    /// rest untouched.
     ///
-    /// Returns a `Vec<GrpcResult<ViewFunctionCallOutputs>>` in the same order
-    /// as the input. Each element is either the outputs of that call or the
-    /// per-item error the server returned for it. Note that a call which ran
-    /// and aborted lands in the `Ok` slot — the abort is reported by
-    /// [`ViewFunctionCallOutputs::execution_error`]; only a call the server
-    /// refused to run yields `Err`.
+    /// Returns a `Vec<GrpcResult<ViewFunctionCallOutputs>>` in the same order as the input. Each
+    /// element is either the outputs of that call or the per-item error the server returned for it.
+    /// Note that a call which ran and aborted lands in the `Ok` slot — the abort is reported by
+    /// [`ViewFunctionCallOutputs::execution_error`]; only a call the server refused to run yields
+    /// `Err`.
     ///
-    /// Without [`read_mask`](ViewFunctionCallsQuery::read_mask), the default
-    /// mask is used for each `ViewFunctionCallOutputs`. Pass a
-    /// [`ViewFunctionCallField`](iota_grpc_types::read_mask_fields::ViewFunctionCallField)
-    /// or any slice/array/vec of fields to choose the returned fields.
+    /// Without [`read_mask`](ViewFunctionCallsQuery::read_mask), the default mask is used for each
+    /// `ViewFunctionCallOutputs`. Pass a
+    /// [`ViewFunctionCallField`](iota_grpc_types::read_mask_fields::ViewFunctionCallField) or any
+    /// slice/array/vec of fields to choose the returned fields.
     ///
     /// # Errors
     ///
-    /// Returns [`GrpcError::EmptyRequest`] if `function_calls` is empty.
-    /// Returns a transport-level [`GrpcError::Grpc`] if the entire RPC fails
-    /// (e.g. batch size exceeded).
-    /// Returns [`ProtocolError::UnexpectedResultCount`] if the server did not
-    /// answer every call, since results are paired with calls by position.
+    /// Returns [`GrpcError::EmptyRequest`] if `function_calls` is empty. Returns a transport-level
+    /// [`GrpcError::Grpc`] if the entire RPC fails (e.g. batch size exceeded).
+    /// Returns [`ProtocolError::UnexpectedResultCount`] if the server did not answer every call,
+    /// since results are paired with calls by position.
     pub fn view_function_calls(
         &self,
         function_calls: Vec<ViewFunctionCallItem>,

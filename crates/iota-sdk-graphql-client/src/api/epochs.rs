@@ -38,8 +38,7 @@ impl GetEpochQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::epoch_total_checkpoints`]. Await it to send
-    /// the request.
+    /// Query for [`GraphQLClient::epoch_total_checkpoints`]. Await it to send the request.
     pub struct GetEpochTotalCheckpointsQuery {
         client: GraphQLClient,
         epoch: Option<u64>,
@@ -62,8 +61,7 @@ impl GetEpochTotalCheckpointsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::epoch_total_transaction_blocks`]. Await it to
-    /// send the request.
+    /// Query for [`GraphQLClient::epoch_total_transaction_blocks`]. Await it to send the request.
     pub struct GetEpochTotalTransactionBlocksQuery {
         client: GraphQLClient,
         epoch: Option<u64>,
@@ -86,8 +84,8 @@ impl GetEpochTotalTransactionBlocksQuery {
 }
 
 impl GraphQLClient {
-    /// Internal method for getting the epoch summary that is called in a few
-    /// other APIs for convenience.
+    /// Internal method for getting the epoch summary that is called in a few other APIs for
+    /// convenience.
     pub(crate) async fn epoch_summary(
         &self,
         epoch: Option<u64>,
@@ -104,9 +102,8 @@ impl GraphQLClient {
         }
     }
 
-    /// Return the number of checkpoints in an epoch. Resolves to `None` if the
-    /// epoch requested is not available in the GraphQL service (e.g., due to
-    /// pruning).
+    /// Return the number of checkpoints in an epoch. Resolves to `None` if the epoch requested is
+    /// not available in the GraphQL service (e.g., due to pruning).
     pub fn epoch_total_checkpoints(&self) -> GetEpochTotalCheckpointsQuery {
         GetEpochTotalCheckpointsQuery {
             client: self.clone(),
@@ -114,9 +111,8 @@ impl GraphQLClient {
         }
     }
 
-    /// Return the number of transaction blocks in an epoch. Resolves to `None`
-    /// if the epoch requested is not available in the GraphQL service (e.g.,
-    /// due to pruning).
+    /// Return the number of transaction blocks in an epoch. Resolves to `None` if the epoch
+    /// requested is not available in the GraphQL service (e.g., due to pruning).
     pub fn epoch_total_transaction_blocks(&self) -> GetEpochTotalTransactionBlocksQuery {
         GetEpochTotalTransactionBlocksQuery {
             client: self.clone(),

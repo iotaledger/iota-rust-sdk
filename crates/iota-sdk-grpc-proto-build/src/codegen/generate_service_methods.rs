@@ -7,8 +7,8 @@
 //! - A `&[&str]` constant per service listing its method paths.
 //! - An `ALL_METHOD_PATHS` constant with every valid method path.
 //!
-//! These constants are derived from the proto service definitions, so they
-//! update automatically when methods are added or removed.
+//! These constants are derived from the proto service definitions, so they update automatically
+//! when methods are added or removed.
 
 use std::path::Path;
 
@@ -16,8 +16,8 @@ use heck::ToSnakeCase;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 
-/// Generate a Rust source file containing constants for all gRPC method paths
-/// discovered in the descriptor pool.
+/// Generate a Rust source file containing constants for all gRPC method paths discovered in the
+/// descriptor pool.
 pub fn generate_service_method_paths(pool: &prost_reflect::DescriptorPool, out_dir: &Path) {
     let mut service_consts = Vec::new();
     let mut all_paths = Vec::new();
@@ -101,8 +101,7 @@ pub fn generate_service_method_paths(pool: &prost_reflect::DescriptorPool, out_d
     std::fs::write(out_file, output).unwrap();
 }
 
-/// Convert a service name like "LedgerService" to a constant name like
-/// "LEDGER_SERVICE".
+/// Convert a service name like "LedgerService" to a constant name like "LEDGER_SERVICE".
 fn service_const_name(name: &str) -> String {
     name.to_snake_case().to_uppercase()
 }

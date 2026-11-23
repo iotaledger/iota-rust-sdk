@@ -27,8 +27,7 @@ define_query! {
 }
 
 impl GetEpochQuery {
-    /// Set the number of the epoch to query. Without it, queries the current
-    /// epoch.
+    /// Set the number of the epoch to query. Without it, queries the current epoch.
     pub fn epoch_number(mut self, epoch_number: u64) -> Self {
         self.epoch = Some(epoch_number);
         self
@@ -56,8 +55,7 @@ impl GetEpochQuery {
 }
 
 define_query! {
-    /// Query for [`GrpcClient::reference_gas_price`]. Await it to send the
-    /// request.
+    /// Query for [`GrpcClient::reference_gas_price`]. Await it to send the request.
     pub struct GetReferenceGasPriceQuery {
         service_client: LedgerServiceClient<InterceptedChannel>,
     }
@@ -82,19 +80,14 @@ impl GetReferenceGasPriceQuery {
 impl GrpcClient {
     /// Get epoch information.
     ///
-    /// Returns the [`Epoch`] proto type of the current epoch, or of the one set
-    /// with [`epoch_number`](GetEpochQuery::epoch_number), with fields
-    /// populated according to the read mask. Without
-    /// [`read_mask`](GetEpochQuery::read_mask), the default mask is used.
-    /// Pass an
-    /// [`EpochReadMask`](iota_grpc_types::read_mask_fields::EpochReadMask)
-    /// built from an
-    /// [`EpochField`](iota_grpc_types::read_mask_fields::EpochField) or any
-    /// slice/array/vec of fields. For individual protocol config map entries,
-    /// use
+    /// Returns the [`Epoch`] proto type of the current epoch, or of the one set with
+    /// [`epoch_number`](GetEpochQuery::epoch_number), with fields populated according to the read
+    /// mask. Without [`read_mask`](GetEpochQuery::read_mask), the default mask is used.
+    /// Pass an [`EpochReadMask`](iota_grpc_types::read_mask_fields::EpochReadMask) built from an
+    /// [`EpochField`](iota_grpc_types::read_mask_fields::EpochField) or any slice/array/vec of
+    /// fields. For individual protocol config map entries, use
     /// [`EpochField::feature_flag`](iota_grpc_types::read_mask_fields::EpochField::feature_flag)
-    /// and
-    /// [`EpochField::attribute`](iota_grpc_types::read_mask_fields::EpochField::attribute).
+    /// and [`EpochField::attribute`](iota_grpc_types::read_mask_fields::EpochField::attribute).
     ///
     /// # Example
     ///

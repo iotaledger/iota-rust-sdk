@@ -87,11 +87,10 @@ impl crate::TreeDisplay for ReverseRegistryEntry {
 pub struct NameRecord {
     /// The ID of the registration NFT assigned to this record.
     ///
-    /// The owner of the corresponding registration NFT has the rights to be
-    /// able to change and adjust the `target_address` of this name.
+    /// The owner of the corresponding registration NFT has the rights to be able to change and
+    /// adjust the `target_address` of this name.
     ///
-    /// It is possible that the ID changes if the record expires and is
-    /// purchased by someone else.
+    /// It is possible that the ID changes if the record expires and is purchased by someone else.
     pub nft_id: ObjectId,
     /// Timestamp in milliseconds when the record expires.
     #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]

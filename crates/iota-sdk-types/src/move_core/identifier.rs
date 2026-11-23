@@ -31,18 +31,16 @@ pub struct Identifier(
 );
 
 impl Identifier {
-    /// Creates a new `Identifier` from the given string slice, checking
-    /// that it is a valid Move identifier and returning an error if not.
+    /// Creates a new `Identifier` from the given string slice, checking that it is a valid Move
+    /// identifier and returning an error if not.
     pub fn new(identifier: impl AsRef<str>) -> Result<Self, TypeParseError> {
         identifier.as_ref().parse()
     }
 
-    /// Creates a new `Identifier` from the given string slice without
-    /// validation.
+    /// Creates a new `Identifier` from the given string slice without validation.
     ///
-    /// The caller must ensure that the provided string is a valid Move
-    /// identifier. Otherwise this method is safe to use, but invalid
-    /// identifiers will lead to downstream errors.
+    /// The caller must ensure that the provided string is a valid Move identifier. Otherwise this
+    /// method is safe to use, but invalid identifiers will lead to downstream errors.
     pub fn new_unchecked(identifier: impl AsRef<str>) -> Self {
         Self(identifier.as_ref().into())
     }
@@ -78,10 +76,9 @@ impl Identifier {
         self.as_str().is_empty()
     }
 
-    /// Returns `true` if the provided string is a valid Move identifier. Valid
-    /// identifiers must start with an alphabetic character (a-z, A-Z) or an
-    /// underscore (_), and may be followed by up to 127 alphanumeric
-    /// characters (a-z, A-Z, 0-9) or underscores (_). The maximum length of
+    /// Returns `true` if the provided string is a valid Move identifier. Valid identifiers must
+    /// start with an alphabetic character (a-z, A-Z) or an underscore (_), and may be followed by
+    /// up to 127 alphanumeric characters (a-z, A-Z, 0-9) or underscores (_). The maximum length of
     /// an identifier is 128 characters.
     ///
     /// Note: this function allows the special identifier `<SELF>`.
@@ -90,8 +87,8 @@ impl Identifier {
             return false;
         }
 
-        /// Returns `true` if all bytes in `b` after the offset `start_offset`
-        /// are valid ASCII identifier characters.
+        /// Returns `true` if all bytes in `b` after the offset `start_offset` are valid ASCII
+        /// identifier characters.
         const fn all_bytes_valid(b: &[u8], start_offset: usize) -> bool {
             let mut i = start_offset;
             while i < b.len() {
@@ -102,9 +99,9 @@ impl Identifier {
             }
             true
         }
-        // Rust const fn's don't currently support slicing or indexing &str's, so we
-        // have to operate on the underlying byte slice. This is not a problem as
-        // valid identifiers are (currently) ASCII-only.
+        // Rust const fn's don't currently support slicing or indexing &str's, so we have to operate
+        // on the underlying byte slice. This is not a problem as valid identifiers are (currently)
+        // ASCII-only.
         let b = s.as_bytes();
         match b {
             b"<SELF>" => true,
@@ -116,8 +113,8 @@ impl Identifier {
 
     /// Return true if this character can appear in a Move identifier.
     ///
-    /// Note: there are stricter restrictions on whether a character can begin a
-    /// Move identifier--only alphabetic characters are allowed here.
+    /// Note: there are stricter restrictions on whether a character can begin a Move
+    /// identifier--only alphabetic characters are allowed here.
     #[inline]
     pub const fn is_valid_char(c: char) -> bool {
         matches!(c, '_' | 'a'..='z' | 'A'..='Z' | '0'..='9')

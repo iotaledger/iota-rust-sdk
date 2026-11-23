@@ -51,15 +51,14 @@ impl FieldMaskUtil for FieldMask {
     }
 
     fn validate<M: MessageFields>(&self) -> Result<(), &str> {
-        // Determine if the provided path matches one of the provided fields. If a path
-        // matches a field and that field is a message type (which can have its
-        // own set of fields), attempt to match the remainder of the path
-        // against a field in the sub_message.
+        // Determine if the provided path matches one of the provided fields. If a path matches a
+        // field and that field is a message type (which can have its own set of fields), attempt to
+        // match the remainder of the path against a field in the sub_message.
         //
         // `oneofs` lists oneof group names for the current message level.
-        // A oneof name acts as a virtual parent: `"execution_result"` alone is
-        // valid (selects all variants), and `"execution_result.command_results"`
-        // is validated by recursing into the same `fields` array.
+        // A oneof name acts as a virtual parent: `"execution_result"` alone is valid (selects all
+        // variants), and `"execution_result.command_results"` is validated by recursing into the
+        // same `fields` array.
         fn is_valid_path(
             mut fields: &[&MessageField],
             mut oneofs: &[&str],
@@ -79,25 +78,24 @@ impl FieldMaskUtil for FieldMask {
                         (None, Some(_)) => return false,
                         (Some(sub_message_fields), Some(remainder)) => {
                             fields = sub_message_fields;
-                            // Nested messages have their own oneofs (from their
-                            // own MessageFields impl), but we don't have access
-                            // to those here.  Oneof-as-parent only applies at
-                            // the top level of each message, and nested oneofs
-                            // in read masks are uncommon, so this is acceptable.
+                            // Nested messages have their own oneofs (from their own MessageFields
+                            // impl), but we don't have access to those here.  Oneof-as-parent only
+                            // applies at the top level of each message, and nested oneofs in read
+                            // masks are uncommon, so this is acceptable.
                             oneofs = &[];
                             path = remainder;
                         }
                     }
                 } else if oneofs.contains(&field_name) {
                     // The path segment matches a oneof group name.
-                    // Bare oneof name (no remainder) means "all variants".
-                    // With a remainder, validate the rest against the same
-                    // fields (oneof variants are top-level fields).
+                    // Bare oneof name (no remainder) means "all variants". With a remainder,
+                    // validate the rest against the same fields (oneof variants are top-level
+                    // fields).
                     match remainder {
                         None => return true,
                         Some(remainder) => {
-                            // Don't recurse through oneofs again at the same
-                            // level — the remainder should match a real field.
+                            // Don't recurse through oneofs again at the same level — the remainder
+                            // should match a real field.
                             oneofs = &[];
                             path = remainder;
                         }
@@ -135,8 +133,8 @@ impl std::fmt::Display for FieldMaskDisplay<'_> {
                 continue;
             }
 
-            // If this isn't the first path we've printed,
-            // we need to print a FIELD_PATH_SEPARATOR character
+            // If this isn't the first path we've printed, we need to print a FIELD_PATH_SEPARATOR
+            // character
             if first {
                 first = false;
             } else {

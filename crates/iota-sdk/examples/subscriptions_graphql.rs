@@ -3,11 +3,10 @@
 
 //! Tail live transactions and events over GraphQL subscriptions.
 //!
-//! Unlike the paginated `transactions` / `events` queries, these streams push
-//! data as the network produces it and never end on their own — the consumer
-//! decides when to stop. Errors arrive in-band: the stream reconnects behind
-//! the scenes and resumes after the last item it handed out, so a yielded
-//! error is a hiccup to report, not the end of the stream.
+//! Unlike the paginated `transactions` / `events` queries, these streams push data as the network
+//! produces it and never end on their own — the consumer decides when to stop. Errors arrive
+//! in-band: the stream reconnects behind the scenes and resumes after the last item it handed out,
+//! so a yielded error is a hiccup to report, not the end of the stream.
 
 use std::time::Duration;
 
@@ -27,8 +26,7 @@ const PATIENCE: Duration = Duration::from_secs(60);
 async fn main() -> Result<()> {
     let client = GraphQLClient::new_testnet()?;
 
-    // Subscriptions are served over a WebSocket that the node has to have
-    // enabled
+    // Subscriptions are served over a WebSocket that the node has to have enabled
     let enabled = client
         .service_config()
         .await?

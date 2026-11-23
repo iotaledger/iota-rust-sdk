@@ -41,6 +41,8 @@ bls12381 = ["iota-sdk/bls12381"]
 # Enable for bindings whose language compares map keys by identity: Go, and the
 # WASM/TypeScript bindings. See `ffi_map!` in `src/macros.rs`.
 map-objects = []
+# Unstable APIs that may change or be removed in any release.
+unstable = ["iota-sdk/unstable"]
 
 [lints]
 workspace = true
@@ -54,7 +56,6 @@ derive_more = { workspace = true, features = ["from", "deref", "display"] }
 futures.workspace = true
 hex.workspace = true
 paste.workspace = true
-primitive-types.workspace = true
 reqwest = { workspace = true, features = ["rustls-no-provider", "json"] }
 serde.workspace = true
 serde_json.workspace = true
@@ -63,7 +64,7 @@ tokio = { workspace = true, features = ["time", "sync"] }
 uniffi = { version = "0.31", features = ["cli", "tokio", "wasm-unstable-single-threaded", "scaffolding-ffi-buffer-fns"] }
 
 # internal dependencies
-iota-sdk = { version = "3.0.0-rc.1", path = "../iota-sdk", default-features = false, features = ["gas-station", "graphql", "graphql-tls-native-roots", "graphql-tls-ring", "graphql-tls-webpki-roots", "transaction-builder", "types", "move-types", "serde", "rand", "hash"] }
+iota-sdk = { version = "3.0.0", path = "../iota-sdk", default-features = false, features = ["gas-station", "graphql", "graphql-tls-native-roots", "graphql-tls-ring", "graphql-tls-webpki-roots", "transaction-builder", "types", "move-types", "serde", "rand", "hash"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 rustls = { version = "0.23.46", default-features = false, features = ["ring"] }

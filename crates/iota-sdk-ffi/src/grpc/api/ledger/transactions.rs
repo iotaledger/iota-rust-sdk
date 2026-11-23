@@ -24,13 +24,12 @@ use crate::{
     },
 };
 
-/// A transaction that has been executed, along with its signatures, effects,
-/// events and objects.
+/// A transaction that has been executed, along with its signatures, effects, events and objects.
 ///
-/// The `transaction`, `effects`, `events`, and input/output object fields are
-/// deserialized from BCS, so the read mask must include the matching
-/// `GrpcTransactionField` (`TransactionBcs`, `EffectsBcs`, `EventsEventsBcs`,
-/// `InputObjectsBcs`, `OutputObjectsBcs`), or its `GrpcCheckpointResponseField`
+/// The `transaction`, `effects`, `events`, and input/output object fields are deserialized from
+/// BCS, so the read mask must include the matching `GrpcTransactionField` (`TransactionBcs`,
+/// `EffectsBcs`, `EventsEventsBcs`, `InputObjectsBcs`, `OutputObjectsBcs`), or its
+/// `GrpcCheckpointResponseField`
 /// / `GrpcSimulateField` counterpart, for them to be populated; digest-only
 /// read masks populate only the digest fields.
 #[derive(Clone, uniffi::Record)]
@@ -51,8 +50,7 @@ pub struct GrpcExecutedTransaction {
     pub events: Option<Arc<TransactionEvents>>,
     /// The sequence number of the checkpoint that includes the transaction.
     pub checkpoint: Option<u64>,
-    /// Unix timestamp in milliseconds of the checkpoint that includes the
-    /// transaction.
+    /// Unix timestamp in milliseconds of the checkpoint that includes the transaction.
     pub timestamp_ms: Option<u64>,
     /// The input objects used by the transaction.
     pub input_objects: Option<Vec<Arc<Object>>>,
@@ -61,8 +59,8 @@ pub struct GrpcExecutedTransaction {
 }
 
 crate::grpc_batch_results! {
-    /// The results of a batch of transactions, in request order. Each item is
-    /// either the transaction or the error the server reported for it.
+    /// The results of a batch of transactions, in request order. Each item is either the
+    /// transaction or the error the server reported for it.
     GrpcExecutedTransactionResults(GrpcExecutedTransaction, proto::transaction::ExecutedTransaction)
 }
 
@@ -160,15 +158,13 @@ impl TryFrom<&proto::transaction::ExecutedTransaction> for GrpcExecutedTransacti
 impl GrpcClient {
     /// Get transactions by their digests.
     ///
-    /// Results are returned in the same order as the input digests, one per
-    /// digest. A transaction the serving node cannot return — because it is
-    /// not found or has been pruned — fails only its own item, which reading
-    /// throws with the server's error message. A transaction the server returns
-    /// but that cannot be decoded fails the whole call.
+    /// Results are returned in the same order as the input digests, one per digest. A transaction
+    /// the serving node cannot return — because it is not found or has been pruned — fails only its
+    /// own item, which reading throws with the server's error message. A transaction the server
+    /// returns but that cannot be decoded fails the whole call.
     ///
     /// The optional `read_mask` controls which fields the server returns.
-    /// If `None`, the transaction, signatures, checkpoint, and timestamp are
-    /// returned.
+    /// If `None`, the transaction, signatures, checkpoint, and timestamp are returned.
     #[uniffi::method(default(read_mask = None))]
     pub async fn transactions(
         &self,
@@ -187,8 +183,8 @@ impl GrpcClient {
         )
     }
 
-    /// Wait for the indexing (on the node) or finalization of a transaction by
-    /// its digest, polling the node until then. Returns an error after 60s.
+    /// Wait for the indexing (on the node) or finalization of a transaction by its digest, polling
+    /// the node until then. Returns an error after 60s.
     pub async fn wait_for_transaction(
         &self,
         digest: &TransactionDigest,

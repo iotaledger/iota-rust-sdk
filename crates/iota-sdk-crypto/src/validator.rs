@@ -214,16 +214,14 @@ impl Verifier<ValidatorAggregatedSignature> for ValidatorCommitteeSignatureVerif
     }
 }
 
-/// An error returned while walking the committee chain with
-/// [`CommitteeChainVerifier`].
+/// An error returned while walking the committee chain with [`CommitteeChainVerifier`].
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum CommitteeChainError {
     /// The summary is for a different epoch than the one the verifier expects.
     #[error("checkpoint epoch {actual} does not match the expected epoch {expected}")]
     WrongEpoch { expected: EpochId, actual: EpochId },
-    /// The summary is not the closing checkpoint of its epoch, so it elects no
-    /// next committee.
+    /// The summary is not the closing checkpoint of its epoch, so it elects no next committee.
     #[error(
         "checkpoint {sequence_number} is not the closing checkpoint of epoch {epoch} (no end-of-epoch data)"
     )]
@@ -234,8 +232,8 @@ pub enum CommitteeChainError {
     /// The summary's signatures did not verify under the current committee.
     #[error("signature verification failed: {0}")]
     Signature(#[from] SignatureError),
-    /// The committee elected by the summary's end-of-epoch data cannot be used
-    /// to verify the next epoch.
+    /// The committee elected by the summary's end-of-epoch data cannot be used to verify the next
+    /// epoch.
     #[error("invalid next epoch committee: {0}")]
     NextCommittee(#[source] SignatureError),
     /// The epoch counter would overflow past the last epoch.
@@ -243,27 +241,24 @@ pub enum CommitteeChainError {
     EpochOverflow,
 }
 
-/// Verifies the committee chain: the sequence of committees linked by each
-/// epoch's certified closing checkpoint, whose end-of-epoch data elects the
-/// committee of the next epoch.
+/// Verifies the committee chain: the sequence of committees linked by each epoch's certified
+/// closing checkpoint, whose end-of-epoch data elects the committee of the next epoch.
 ///
-/// Starting from a trusted committee (typically the genesis committee, the
-/// operator's trust root), feed it each epoch's closing
-/// [`SignedCheckpointSummary`] in epoch order via [`Self::verify_epoch_close`];
-/// every summary a consumer obtains this way is committee-verified, with no
-/// trust in whatever transport delivered it.
+/// Starting from a trusted committee (typically the genesis committee, the operator's trust root),
+/// feed it each epoch's closing [`SignedCheckpointSummary`] in epoch order via
+/// [`Self::verify_epoch_close`]; every summary a consumer obtains this way is committee-verified,
+/// with no trust in whatever transport delivered it.
 ///
-/// The walk is transport-agnostic by design — callers drive their own loop (an
-/// in-memory list, a remote-store stream, files on disk) and feed summaries in;
-/// this type only holds the verification state.
+/// The walk is transport-agnostic by design — callers drive their own loop (an in-memory list, a
+/// remote-store stream, files on disk) and feed summaries in; this type only holds the verification
+/// state.
 #[derive(Debug)]
 pub struct CommitteeChainVerifier {
     verifier: ValidatorCommitteeSignatureVerifier,
 }
 
 impl CommitteeChainVerifier {
-    /// Start the walk at a trusted committee — the trust root for everything
-    /// verified after it.
+    /// Start the walk at a trusted committee — the trust root for everything verified after it.
     pub fn new(trusted_committee: ValidatorCommittee) -> Result<Self, SignatureError> {
         ValidatorCommitteeSignatureVerifier::new(trusted_committee)
             .map(|verifier| Self { verifier })
@@ -279,13 +274,12 @@ impl CommitteeChainVerifier {
         self.verifier.committee()
     }
 
-    /// Verify `summary` as the certified closing checkpoint of [`Self::epoch`]
-    /// and advance to the committee it elects for the next epoch.
+    /// Verify `summary` as the certified closing checkpoint of [`Self::epoch`] and advance to the
+    /// committee it elects for the next epoch.
     ///
-    /// Errors leave the verifier unchanged, e.g. if the summary is for a
-    /// different epoch, its signatures don't verify under the current
-    /// committee, it is not a close-of-epoch checkpoint (no end-of-epoch data),
-    /// or the committee it elects is not well-formed.
+    /// Errors leave the verifier unchanged, e.g. if the summary is for a different epoch, its
+    /// signatures don't verify under the current committee, it is not a close-of-epoch checkpoint
+    /// (no end-of-epoch data), or the committee it elects is not well-formed.
     pub fn verify_epoch_close(
         &mut self,
         summary: &SignedCheckpointSummary,
@@ -296,9 +290,8 @@ impl CommitteeChainVerifier {
         } = summary;
         let expected_epoch = self.verifier.committee().epoch;
 
-        // The structural checks run before the (expensive) signature
-        // verification. They can only ever reject; nothing from the summary is
-        // trusted until the signatures verify.
+        // The structural checks run before the (expensive) signature verification. They can only
+        // ever reject; nothing from the summary is trusted until the signatures verify.
         if checkpoint.epoch != expected_epoch {
             return Err(CommitteeChainError::WrongEpoch {
                 expected: expected_epoch,
@@ -516,8 +509,8 @@ mod tests {
         }
     }
 
-    /// Turn `checkpoint` into a summary certified by every key in `keys`, which
-    /// must be `committee`'s members.
+    /// Turn `checkpoint` into a summary certified by every key in `keys`, which must be
+    /// `committee`'s members.
     fn certify(
         keys: &[Bls12381PrivateKey],
         committee: ValidatorCommittee,
@@ -537,8 +530,8 @@ mod tests {
         }
     }
 
-    /// Make `summary` the closing checkpoint of `epoch`, electing `next` as the
-    /// next epoch's committee.
+    /// Make `summary` the closing checkpoint of `epoch`, electing `next` as the next epoch's
+    /// committee.
     fn close_epoch(
         mut summary: CheckpointSummary,
         epoch: EpochId,
@@ -641,8 +634,8 @@ mod tests {
         .unwrap_err();
     }
 
-    /// A committee whose stake sums past `u64::MAX` wraps to a low total, and
-    /// so to a quorum threshold a single member can meet.
+    /// A committee whose stake sums past `u64::MAX` wraps to a low total, and so to a quorum
+    /// threshold a single member can meet.
     #[proptest]
     fn committee_with_overflowing_stake_is_rejected(
         key1: Bls12381PrivateKey,
@@ -726,9 +719,9 @@ mod tests {
         assert_eq!(verifier.committee(), &committee0);
     }
 
-    /// A closing checkpoint certified by a stake minority fails on weight, not
-    /// on the signature: one member's signature verifies, the quorum does not.
-    /// `certify` cannot build this case, since `finish` refuses it.
+    /// A closing checkpoint certified by a stake minority fails on weight, not on the signature:
+    /// one member's signature verifies, the quorum does not. `certify` cannot build this case,
+    /// since `finish` refuses it.
     #[proptest]
     fn under_quorum_certification_is_rejected(
         keys: [Bls12381PrivateKey; 4],
@@ -747,8 +740,8 @@ mod tests {
         };
 
         let err = verifier.verify_epoch_close(&signed).unwrap_err();
-        // `Signature` is also how a bad signature is reported, so the message
-        // is what separates the two.
+        // `Signature` is also how a bad signature is reported, so the message is what separates the
+        // two.
         assert!(matches!(err, CommitteeChainError::Signature(_)), "{err}");
         assert!(
             err.to_string().contains("insufficient signing weight"),
@@ -757,8 +750,8 @@ mod tests {
         assert_eq!(verifier.committee(), &committee0);
     }
 
-    /// A third of the stake cannot certify: with three equal stakes the
-    /// threshold is 3, so one member's signature is rejected.
+    /// A third of the stake cannot certify: with three equal stakes the threshold is 3, so one
+    /// member's signature is rejected.
     #[proptest]
     fn one_third_of_the_stake_is_not_a_quorum(
         keys: [Bls12381PrivateKey; 3],
@@ -784,8 +777,8 @@ mod tests {
         assert_eq!(verifier.committee(), &committee0);
     }
 
-    /// Exactly the threshold is enough: three of four equal stakes close the
-    /// epoch. `committee_chain_walk` signs with all four, one unit above it.
+    /// Exactly the threshold is enough: three of four equal stakes close the epoch.
+    /// `committee_chain_walk` signs with all four, one unit above it.
     #[proptest]
     fn certification_at_the_quorum_threshold_is_accepted(
         keys: [Bls12381PrivateKey; 4],
