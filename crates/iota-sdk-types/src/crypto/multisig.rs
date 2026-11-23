@@ -578,12 +578,36 @@ impl From<SimpleSignature> for MultisigMemberSignature {
 }
 
 #[cfg(feature = "proptest")]
+fn committee_with_keys(
+    public_key: proptest::strategy::BoxedStrategy<PublicKey>,
+) -> proptest::strategy::BoxedStrategy<MultisigCommittee> {
+    use proptest::{collection::vec, prelude::*};
+
+    vec(
+        (public_key, 1u8..=WeightUnit::MAX),
+        1..=MULTISIG_COMMITTEE_SIZE_MAX,
+    )
+    .prop_flat_map(|raw_members| {
+        let mut members: Vec<MultisigMember> = Vec::with_capacity(raw_members.len());
+        for (public_key, weight) in raw_members {
+            if !members.iter().any(|m| m.public_key == public_key) {
+                members.push(MultisigMember { public_key, weight });
+            }
+        }
+        let sum: ThresholdUnit = members.iter().map(|m| m.weight as ThresholdUnit).sum();
+        (Just(members), 1..=sum)
+    })
+    .prop_map(|(members, threshold)| MultisigCommittee { members, threshold })
+    .boxed()
+}
+
+#[cfg(feature = "proptest")]
 impl proptest::arbitrary::Arbitrary for MultisigCommittee {
     type Parameters = ();
     type Strategy = proptest::strategy::BoxedStrategy<Self>;
 
     fn arbitrary_with(_args: Self::Parameters) -> Self::Strategy {
-        use proptest::{collection::vec, prelude::*};
+        use proptest::prelude::*;
 
         use crate::{Ed25519PublicKey, PasskeyPublicKey, Secp256k1PublicKey, Secp256r1PublicKey};
 
@@ -601,22 +625,8 @@ impl proptest::arbitrary::Arbitrary for MultisigCommittee {
                     ]
                     .boxed()
                 };
-                vec(
-                    (public_key, 1u8..=WeightUnit::MAX),
-                    1..=MULTISIG_COMMITTEE_SIZE_MAX,
-                )
+                committee_with_keys(public_key)
             })
-            .prop_flat_map(|raw_members| {
-                let mut members: Vec<MultisigMember> = Vec::with_capacity(raw_members.len());
-                for (public_key, weight) in raw_members {
-                    if !members.iter().any(|m| m.public_key == public_key) {
-                        members.push(MultisigMember { public_key, weight });
-                    }
-                }
-                let sum: ThresholdUnit = members.iter().map(|m| m.weight as ThresholdUnit).sum();
-                (Just(members), 1..=sum)
-            })
-            .prop_map(|(members, threshold)| Self { members, threshold })
             .boxed()
     }
 }
@@ -629,12 +639,21 @@ impl proptest::arbitrary::Arbitrary for MultisigAggregatedSignature {
     fn arbitrary_with(_args: Self::Parameters) -> Self::Strategy {
         use proptest::{collection::vec, prelude::*, sample::subsequence};
 
-        any::<MultisigCommittee>()
-            .prop_flat_map(|committee| {
-                let n = committee.members.len();
-                let all_indices: Vec<usize> = (0..n).collect();
-                (Just(committee), subsequence(all_indices, 1..=n))
+        let partially_signed = any::<MultisigCommittee>().prop_flat_map(|committee| {
+            let n = committee.members.len();
+            let all_indices: Vec<usize> = (0..n).collect();
+            (Just(committee), subsequence(all_indices, 1..=n))
+        });
+        let fully_signed_mixed_ed25519 = committee_with_keys(any::<PublicKey>().boxed())
+            .prop_filter("mixed Ed25519 committee", |committee| {
+                committee.is_mixed_ed25519()
             })
+            .prop_map(|committee| {
+                let all_indices: Vec<usize> = (0..committee.members.len()).collect();
+                (committee, all_indices)
+            });
+
+        prop_oneof![3 => partially_signed, 1 => fully_signed_mixed_ed25519]
             .prop_flat_map(|(committee, indices)| {
                 let count = indices.len();
                 let bitmap = indices
@@ -1540,6 +1559,20 @@ mod tests {
                     SignatureScheme::PasskeyAuthenticator,
                 ])
             );
+        }
+
+        #[test]
+        fn any_aggregated_signature_draws_fully_signed_mixed_ed25519_committees() {
+            let mut runner = TestRunner::deterministic();
+            let strategy = any::<MultisigAggregatedSignature>();
+            let fully_signed_mixed = (0..64)
+                .map(|_| strategy.new_tree(&mut runner).unwrap().current())
+                .filter(|signature| {
+                    signature.committee.is_mixed_ed25519()
+                        && signature.signatures.len() == signature.committee.members.len()
+                })
+                .count();
+            assert!(fully_signed_mixed > 0);
         }
     }
 }
