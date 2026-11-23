@@ -8,7 +8,7 @@ use crate::Address;
 
 /// The `check` line: the function that checks the proof, with the framework
 /// address written as `StructTag` displays it.
-const CHECK_V1: &str = "0x2::smart_account_builtin_auth::verify_key_proof";
+const CHECK_V1: &str = "0x2::smart_account_builtin_authenticator::verify_key_proof";
 
 /// Returns the text a key holder signs to approve attaching their key to a
 /// `SmartAccount`. The signature is over the UTF-8 bytes of the text, as an
@@ -65,7 +65,7 @@ mod tests {
 
         assert_eq!(
             message,
-            "check: 0x2::smart_account_builtin_auth::verify_key_proof\n\
+            "check: 0x2::smart_account_builtin_authenticator::verify_key_proof\n\
              network: 2304aa976b1765b020886e8b5c7369e169bc779154b9c3efb4dd15c6039c0679\n\
              account: 0xf9e4f7f66304ca332d20636b5358b0b9297afbc7428bc107fc5dbc64fb204125\n\
              new account: true\n\
@@ -86,7 +86,7 @@ mod tests {
 
         assert_eq!(
             message,
-            "check: 0x2::smart_account_builtin_auth::verify_key_proof\n\
+            "check: 0x2::smart_account_builtin_authenticator::verify_key_proof\n\
              network: 0000000000000000000000000000000000000000000000000000000000000000\n\
              account: 0x0000000000000000000000000000000000000000000000000000000000000002\n\
              new account: false\n\
