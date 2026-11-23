@@ -581,7 +581,10 @@ mod tests {
             atomic::{AtomicUsize, Ordering},
         };
 
-        use iota_types::{Object, ObjectId, StructTag, Transaction, Version};
+        use iota_types::{
+            MoveStruct, Object, ObjectData, ObjectId, Owner, StructTag, Transaction,
+            TransactionDigest, Version,
+        };
 
         use crate::{
             ObjectsPage, ProtocolConfig, TestClient, TestClientError, TransactionBuilderClientBase,
@@ -590,7 +593,8 @@ mod tests {
 
         /// Serves gas coins in three single-coin pages and counts the
         /// `objects` calls, to pin how far automatic gas selection paginates.
-        /// With `repeat_first_coin`, every page serves the same coin.
+        /// With `repeat_first_coin`, every page serves the same coin, one
+        /// version newer and with a lower balance than on the page before.
         struct PagingClient {
             pages_served: Arc<AtomicUsize>,
             repeat_first_coin: bool,
@@ -612,19 +616,33 @@ mod tests {
             async fn objects(
                 &self,
                 _struct_tag: Option<StructTag>,
-                _owner: iota_types::Address,
+                owner: iota_types::Address,
                 cursor: Option<Vec<u8>>,
                 _limit: Option<usize>,
             ) -> Result<ObjectsPage, Self::Error> {
                 self.pages_served.fetch_add(1, Ordering::SeqCst);
                 let page = cursor.map_or(0, |c| c[0]);
-                let coin_byte = if self.repeat_first_coin {
-                    0xa0
+                let coin = if self.repeat_first_coin {
+                    let coin_id = ObjectId::from_bytes([0xa0; ObjectId::LENGTH]).unwrap();
+                    let balance = 1_000_000_000_000 - u64::from(page) * 100_000_000_000;
+                    let mut contents = coin_id.as_bytes().to_vec();
+                    contents.extend_from_slice(&balance.to_le_bytes());
+                    let move_struct = MoveStruct::new(
+                        StructTag::new_gas_coin().into(),
+                        Version::from_u64(u64::from(page) + 1),
+                        contents,
+                    )
+                    .unwrap();
+                    Object::new(
+                        ObjectData::Struct(move_struct),
+                        Owner::Address(owner),
+                        TransactionDigest::ZERO,
+                        0,
+                    )
                 } else {
-                    0xa0 + page
+                    let coin_id = ObjectId::from_bytes([0xa0 + page; ObjectId::LENGTH]).unwrap();
+                    TestClient.object(coin_id, None).await?.unwrap()
                 };
-                let coin_id = ObjectId::from_bytes([coin_byte; ObjectId::LENGTH]).unwrap();
-                let coin = TestClient.object(coin_id, None).await?.unwrap();
                 Ok(ObjectsPage {
                     data: vec![coin],
                     next_cursor: (page < 2).then(|| vec![page + 1]),
@@ -711,9 +729,10 @@ mod tests {
         }
 
         #[tokio::test]
-        async fn a_coin_served_on_several_pages_counts_once_toward_the_budget() {
-            // One 1e12 coin repeated on every page never covers a 1.5e12
-            // budget, so selection walks every page and keeps the coin once.
+        async fn a_coin_served_again_at_a_newer_version_is_kept_at_that_version() {
+            // One coin repeated on every page never covers a 1.5e12 budget,
+            // so selection walks every page and keeps the coin once, at the
+            // version from the last page.
             let pages_served = Arc::new(AtomicUsize::new(0));
             let builder = super::builder_with(PagingClient {
                 pages_served: pages_served.clone(),
@@ -721,7 +740,11 @@ mod tests {
             });
             let txn = builder.finish_with_budget(1_500_000_000_000).await.unwrap();
             assert_eq!(pages_served.load(Ordering::SeqCst), 3);
-            assert_eq!(gas_coin_count(&txn), 1);
+            let iota_types::Transaction::V1(txn) = txn else {
+                panic!("expected a V1 transaction");
+            };
+            assert_eq!(txn.gas_payment.objects.len(), 1);
+            assert_eq!(txn.gas_payment.objects[0].version, Version::from_u64(3));
         }
     }
 
