@@ -21,10 +21,9 @@ pub enum ExecutionStatus {
     Success,
     /// The Transaction didn't execute successfully.
     ///
-    /// Failed transactions are still committed to the blockchain but any
-    /// intended effects are rolled back to prior to this transaction
-    /// executing with the caveat that gas objects are still smashed and gas
-    /// usage is still charged.
+    /// Failed transactions are still committed to the blockchain but any intended effects are
+    /// rolled back to prior to this transaction executing with the caveat that gas objects are
+    /// still smashed and gas usage is still charged.
     Failure {
         /// The error encountered during execution.
         error: ExecutionError,
@@ -147,9 +146,9 @@ pub enum ExecutionError {
     PublishUpgradeMissingDependency,
     /// Publish or Upgrade dependency downgrade.
     ///
-    /// Indirect (transitive) dependency of published or upgraded package has
-    /// been assigned an on-chain version that is less than the version
-    /// required by one of the package's transitive dependencies.
+    /// Indirect (transitive) dependency of published or upgraded package has been assigned an
+    /// on-chain version that is less than the version required by one of the package's transitive
+    /// dependencies.
     PublishUpgradeDependencyDowngrade,
     /// Invalid package upgrade
     PackageUpgrade { kind: PackageUpgradeError },
@@ -183,54 +182,48 @@ pub enum ExecutionError {
     },
     /// Coin type is globally paused for use
     CoinTypeGlobalPause { coin_type: String },
-    /// Certificate is canceled because randomness could not be generated this
-    /// epoch
+    /// Certificate is canceled because randomness could not be generated this epoch
     ExecutionCanceledDueToRandomnessUnavailable,
-    /// A valid linkage was unable to be determined for the transaction or one
-    /// of its commands.
+    /// A valid linkage was unable to be determined for the transaction or one of its commands.
     InvalidLinkage,
-    /// The transaction's Move-based authentication failed while executing an
-    /// authenticator, before the programmable transaction was run. The
-    /// wrapped error is the failure produced by the authenticator's
-    /// execution.
+    /// The transaction's Move-based authentication failed while executing an authenticator, before
+    /// the programmable transaction was run. The wrapped error is the failure produced by the
+    /// authenticator's execution.
     MoveAuthentication { error: Arc<ExecutionErrorWrapper> },
-    /// Certificate is canceled because the execution workers are congested;
-    /// suggested gas price can be used to give this certificate more priority.
-    /// No individual object is responsible, so none is reported.
+    /// Certificate is canceled because the execution workers are congested; suggested gas price can
+    /// be used to give this certificate more priority. No individual object is responsible, so none
+    /// is reported.
     ExecutionCanceledDueToExecutionWorkerCongestion { suggested_gas_price: u64 },
-    /// Move vector element (passed to MakeMoveVec) is larger than the maximum
-    /// size. The maximum is scaled based on the type of the vector element.
+    /// Move vector element (passed to MakeMoveVec) is larger than the maximum size. The maximum is
+    /// scaled based on the type of the vector element.
     MoveVectorElemTooBig {
         value_size: u64,
         max_scaled_size: u64,
     },
-    /// Move value (possibly an upgrade ticket or a dev-inspect value) is larger
-    /// than the maximum size. The maximum is scaled based on the type of the
-    /// value.
+    /// Move value (possibly an upgrade ticket or a dev-inspect value) is larger than the maximum
+    /// size. The maximum is scaled based on the type of the value.
     MoveRawValueTooBig {
         value_size: u64,
         max_scaled_size: u64,
     },
-    /// The account object named by a Move authenticator has no authenticator
-    /// function: the object has no authenticator function field, or the field
-    /// cannot be read. Nothing can authenticate the transaction.
+    /// The account object named by a Move authenticator has no authenticator function: the object
+    /// has no authenticator function field, or the field cannot be read. Nothing can authenticate
+    /// the transaction.
     AuthenticatorFunctionNotFound { object_id: Arc<ObjectId> },
-    /// The account object named by a Move authenticator is not a shared
-    /// object: it is immutable, or owned by an address or by another object.
-    /// An account must be shared so that a transaction carrying a Move
-    /// authenticator is ordered by consensus.
+    /// The account object named by a Move authenticator is not a shared object: it is immutable, or
+    /// owned by an address or by another object. An account must be shared so that a transaction
+    /// carrying a Move authenticator is ordered by consensus.
     AccountNotSharedObject { object_id: Arc<ObjectId> },
-    /// The transaction named as a dependency did not execute successfully, so
-    /// this transaction failed without running its commands.
+    /// The transaction named as a dependency did not execute successfully, so this transaction
+    /// failed without running its commands.
     #[cfg(feature = "unstable")]
     TransactionDependencyFailed { dependency: Arc<TransactionDigest> },
 }
 
-/// Holds an [`ExecutionError`] so it can be nested inside another
-/// [`ExecutionError`].
-// Workaround for UniFFI <0.32: enums cannot contain themselves by value, so a
-// variant that carries another execution error stores it through this wrapper.
-// Access the wrapped value via [`ExecutionErrorWrapper::inner`].
+/// Holds an [`ExecutionError`] so it can be nested inside another [`ExecutionError`].
+// Workaround for UniFFI <0.32: enums cannot contain themselves by value, so a variant that carries
+// another execution error stores it through this wrapper. Access the wrapped value via
+// [`ExecutionErrorWrapper::inner`].
 #[derive(Debug, uniffi::Object)]
 pub struct ExecutionErrorWrapper(iota_sdk::types::ExecutionError);
 
@@ -597,8 +590,8 @@ pub struct MoveLocation {
     pub module: String,
     /// The function index
     pub function: u16,
-    /// Index into the code stream for a jump. The offset is relative to the
-    /// beginning of the instruction stream.
+    /// Index into the code stream for a jump. The offset is relative to the beginning of the
+    /// instruction stream.
     pub instruction: u16,
     /// The name of the function if available
     #[uniffi(default = None)]
@@ -665,11 +658,10 @@ pub enum CommandArgumentError {
     InvalidObjectByValue,
     /// Immutable objects cannot be passed by mutable reference, &mut.
     InvalidObjectByMutRef,
-    /// Shared object operations such a wrapping, freezing, or converting to
-    /// owned are not allowed.
+    /// Shared object operations such a wrapping, freezing, or converting to owned are not allowed.
     SharedObjectOperationNotAllowed,
-    /// Invalid argument arity. Expected a single argument but found a result
-    /// that expanded to multiple arguments.
+    /// Invalid argument arity. Expected a single argument but found a result that expanded to
+    /// multiple arguments.
     InvalidArgumentArity,
 }
 

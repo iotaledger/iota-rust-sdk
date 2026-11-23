@@ -42,8 +42,8 @@ mod tests {
     use crate::TransactionBuilder;
 
     fn u256_values() -> [U256; 5] {
-        // 2^112 as a hex string is 32 bytes long too, so only the content
-        // tells it apart from the 32 little-endian bytes.
+        // 2^112 as a hex string is 32 bytes long too, so only the content tells it apart from the
+        // 32 little-endian bytes.
         let mut two_pow_112 = [0; U256::LENGTH];
         two_pow_112[14] = 1;
         [

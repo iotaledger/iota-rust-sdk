@@ -7,8 +7,7 @@
 pub mod fixed_point32 {
     /// Rust version of the Move `std::fixed_point32::FixedPoint32` type.
     ///
-    /// A fixed-point numeric type with 32 fractional bits, represented by an
-    /// underlying `u64`.
+    /// A fixed-point numeric type with 32 fractional bits, represented by an underlying `u64`.
     ///
     /// # BCS
     ///
@@ -37,9 +36,8 @@ pub mod fixed_point32 {
 pub mod ascii {
     /// Rust version of the Move `std::ascii::String` type.
     ///
-    /// The Move type guarantees that all bytes are valid ASCII. This Rust
-    /// mirror does **not** enforce that invariant — it is up to the caller.
-    /// Wire format: a length-prefixed byte vector.
+    /// The Move type guarantees that all bytes are valid ASCII. This Rust mirror does **not**
+    /// enforce that invariant — it is up to the caller. Wire format: a length-prefixed byte vector.
     ///
     /// # BCS
     ///
@@ -62,8 +60,8 @@ pub mod ascii {
         }
     }
 
-    /// Fails only on bytes that are not UTF-8: like the mirror itself, the
-    /// conversion does not check for ASCII, so non-ASCII UTF-8 converts too.
+    /// Fails only on bytes that are not UTF-8: like the mirror itself, the conversion does not
+    /// check for ASCII, so non-ASCII UTF-8 converts too.
     impl TryFrom<String> for std::string::String {
         type Error = std::string::FromUtf8Error;
 
@@ -125,9 +123,9 @@ pub mod ascii {
 pub mod string {
     /// Rust version of the Move `std::string::String` type.
     ///
-    /// The Move type holds a UTF-8 encoded byte sequence. This Rust mirror
-    /// does **not** enforce that invariant. Wire format: a length-prefixed
-    /// byte vector — identical to Rust's [`struct@String`].
+    /// The Move type holds a UTF-8 encoded byte sequence. This Rust mirror does **not** enforce
+    /// that invariant. Wire format: a length-prefixed byte vector — identical to Rust's
+    /// [`struct@String`].
     ///
     /// # BCS
     ///
@@ -185,8 +183,8 @@ pub mod string {
 pub mod uq32_32 {
     /// Rust version of the Move `std::uq32_32::UQ32_32` type.
     ///
-    /// An unsigned fixed-point numeric type with 32 integer bits and 32
-    /// fractional bits, represented by an underlying `u64`.
+    /// An unsigned fixed-point numeric type with 32 integer bits and 32 fractional bits,
+    /// represented by an underlying `u64`.
     ///
     /// # BCS
     ///
@@ -214,8 +212,8 @@ pub mod uq32_32 {
 pub mod uq64_64 {
     /// Rust version of the Move `std::uq64_64::UQ64_64` type.
     ///
-    /// An unsigned fixed-point numeric type with 64 integer bits and 64
-    /// fractional bits, represented by an underlying `u128`.
+    /// An unsigned fixed-point numeric type with 64 integer bits and 64 fractional bits,
+    /// represented by an underlying `u128`.
     ///
     /// # BCS
     ///
@@ -273,9 +271,8 @@ pub mod type_name {
 
     /// Rust version of the Move `std::type_name::TypeName` type.
     ///
-    /// String representation of a Move type, using its source syntax. For
-    /// example: `00000000000000000000000000000001::string::String`, or
-    /// for nested generics:
+    /// String representation of a Move type, using its source syntax. For example:
+    /// `00000000000000000000000000000001::string::String`, or for nested generics:
     /// `0a::module_name1::type_name1<0a::module_name2::type_name2<u64>>`.
     ///
     /// # BCS
@@ -304,10 +301,9 @@ pub mod type_name {
 pub mod option {
     /// Rust version of the Move `std::option::Option<Element>` type.
     ///
-    /// Move encodes optional values as a `vector` of length 0 or 1. The wire
-    /// format is identical to Rust's prelude [`struct@Option`], so most code
-    /// can use that instead — this mirror is provided for parity with the
-    /// Move source.
+    /// Move encodes optional values as a `vector` of length 0 or 1. The wire format is identical to
+    /// Rust's prelude [`struct@Option`], so most code can use that instead — this mirror is
+    /// provided for parity with the Move source.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(

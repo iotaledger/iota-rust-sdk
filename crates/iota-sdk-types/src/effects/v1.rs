@@ -29,12 +29,12 @@ pub struct TransactionEffectsV1 {
     pub gas_cost_summary: GasCostSummary,
     /// The transaction digest
     pub transaction_digest: TransactionDigest,
-    /// The updated gas object reference, as an index into the `changed_objects`
-    /// vector. Having a dedicated field for convenient access.
+    /// The updated gas object reference, as an index into the `changed_objects` vector. Having a
+    /// dedicated field for convenient access.
     /// System transaction that don't require gas will leave this as None.
     pub gas_object_index: Option<u32>,
-    /// The digest of the events emitted during execution,
-    /// can be None if the transaction does not emit any event.
+    /// The digest of the events emitted during execution, can be None if the transaction does not
+    /// emit any event.
     pub events_digest: Option<TransactionEventsDigest>,
     /// The set of transaction digests this transaction depends on.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=5).lift()))]
@@ -44,16 +44,15 @@ pub struct TransactionEffectsV1 {
     /// Objects whose state are changed in the object store.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub changed_objects: Vec<ChangedObject>,
-    /// Shared objects that are not mutated in this transaction. Unlike owned
-    /// objects, read-only shared objects' version are not committed in the
-    /// transaction, and in order for a node to catch up and execute it
-    /// without consensus sequencing, the version needs to be committed in
+    /// Shared objects that are not mutated in this transaction. Unlike owned objects, read-only
+    /// shared objects' version are not committed in the transaction, and in order for a node to
+    /// catch up and execute it without consensus sequencing, the version needs to be committed in
     /// the effects.
     #[cfg_attr(feature = "proptest", any(proptest::collection::size_range(0..=2).lift()))]
     pub unchanged_shared_objects: Vec<UnchangedSharedObject>,
-    /// Auxiliary data that are not protocol-critical, generated as part of the
-    /// effects but are stored separately. Storing it separately allows us
-    /// to avoid bloating the effects with data that are not critical.
+    /// Auxiliary data that are not protocol-critical, generated as part of the effects but are
+    /// stored separately. Storing it separately allows us to avoid bloating the effects with data
+    /// that are not critical.
     /// It also provides more flexibility on the format and type of the data.
     pub auxiliary_data_digest: Option<EffectsAuxDataDigest>,
 }
@@ -96,9 +95,9 @@ pub struct ChangedObject {
     pub input_state: ObjectIn,
     /// State of the object in the store after this transaction.
     pub output_state: ObjectOut,
-    /// Whether this object ID is created or deleted in this transaction.
-    /// This information isn't required by the protocol but is useful for
-    /// providing more detailed semantics on object changes.
+    /// Whether this object ID is created or deleted in this transaction. This information isn't
+    /// required by the protocol but is useful for providing more detailed semantics on object
+    /// changes.
     pub id_operation: IdOperation,
 }
 
@@ -156,9 +155,8 @@ crate::impl_tree_display!(
 #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
 #[non_exhaustive]
 pub enum UnchangedSharedKind {
-    /// Read-only shared objects from the input. We don't really need
-    /// ObjectDigest for protocol correctness, but it will make it easier to
-    /// verify untrusted read.
+    /// Read-only shared objects from the input. We don't really need ObjectDigest for protocol
+    /// correctness, but it will make it easier to verify untrusted read.
     ReadOnlyRoot {
         version: Version,
         digest: ObjectDigest,
@@ -167,11 +165,9 @@ pub enum UnchangedSharedKind {
     MutateDeleted { version: Version },
     /// Deleted shared objects that appear as read-only in the input.
     ReadDeleted { version: Version },
-    /// Shared objects in canceled transaction. The sequence number embed
-    /// cancellation reason.
+    /// Shared objects in canceled transaction. The sequence number embed cancellation reason.
     Canceled { version: Version },
-    /// Read of a per-epoch config object that should remain the same during an
-    /// epoch.
+    /// Read of a per-epoch config object that should remain the same during an epoch.
     PerEpochConfig,
 }
 
@@ -213,9 +209,8 @@ impl crate::TreeDisplay for UnchangedSharedKind {
 
 /// State of an object prior to execution
 ///
-/// If an object exists (at root-level) in the store prior to this transaction,
-/// it should be Data, otherwise it's Missing, e.g. wrapped objects should be
-/// Missing.
+/// If an object exists (at root-level) in the store prior to this transaction, it should be Data,
+/// otherwise it's Missing, e.g. wrapped objects should be Missing.
 ///
 /// # BCS
 ///
@@ -311,8 +306,8 @@ pub enum ObjectOut {
     Missing,
     /// Any written object, including all of mutated, created, unwrapped today.
     ObjectWrite { digest: ObjectDigest, owner: Owner },
-    /// Packages writes need to be tracked separately with version because
-    /// we don't use lamport version for package publish and upgrades.
+    /// Packages writes need to be tracked separately with version because we don't use lamport
+    /// version for package publish and upgrades.
     PackageWrite {
         version: Version,
         digest: ObjectDigest,
@@ -391,8 +386,8 @@ impl crate::TreeDisplay for ObjectOut {
 }
 
 impl TransactionEffectsV1 {
-    /// The id and pre-transaction version of every object that existed before
-    /// this transaction and was modified by it (mutated, wrapped or deleted).
+    /// The id and pre-transaction version of every object that existed before this transaction and
+    /// was modified by it (mutated, wrapped or deleted).
     pub fn modified_at_versions(&self) -> Vec<ObjectVersion> {
         self.changed_objects
             .iter()
@@ -405,9 +400,8 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// The shared objects this transaction was sequenced against, whether or
-    /// not it changed them. Excludes per-epoch config objects, which need no
-    /// sequencing.
+    /// The shared objects this transaction was sequenced against, whether or not it changed them.
+    /// Excludes per-epoch config objects, which need no sequencing.
     pub fn input_shared_objects(&self) -> Vec<InputSharedObject> {
         self.changed_objects
             .iter()
@@ -445,8 +439,8 @@ impl TransactionEffectsV1 {
                             UnchangedSharedKind::Canceled { version } => {
                                 Some(InputSharedObject::Canceled(object(version)))
                             }
-                            // A per-epoch config object is read without being
-                            // sequenced, so it is not an input in this sense.
+                            // A per-epoch config object is read without being sequenced, so it is
+                            // not an input in this sense.
                             UnchangedSharedKind::PerEpochConfig => None,
                         }
                     }),
@@ -454,8 +448,7 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// The reference and owner, before this transaction, of every object it
-    /// modified.
+    /// The reference and owner, before this transaction, of every object it modified.
     pub fn old_object_metadata(&self) -> Vec<OwnedObjectReference> {
         self.changed_objects
             .iter()
@@ -473,9 +466,8 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// Objects (Move objects and packages) newly created by this transaction,
-    /// paired with their owner. Excludes objects created and then wrapped
-    /// within the same transaction.
+    /// Objects (Move objects and packages) newly created by this transaction, paired with their
+    /// owner. Excludes objects created and then wrapped within the same transaction.
     pub fn created(&self) -> Vec<OwnedObjectReference> {
         self.changed_objects
             .iter()
@@ -486,9 +478,8 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// Objects that existed before this transaction and whose contents it
-    /// updated (in-place mutations and system package upgrades), at their
-    /// post-transaction reference and owner.
+    /// Objects that existed before this transaction and whose contents it updated (in-place
+    /// mutations and system package upgrades), at their post-transaction reference and owner.
     pub fn mutated(&self) -> Vec<OwnedObjectReference> {
         self.changed_objects
             .iter()
@@ -497,8 +488,8 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// Objects that were wrapped inside another object before this transaction
-    /// and that it promoted back to top-level objects in the store.
+    /// Objects that were wrapped inside another object before this transaction and that it promoted
+    /// back to top-level objects in the store.
     pub fn unwrapped(&self) -> Vec<OwnedObjectReference> {
         self.changed_objects
             .iter()
@@ -512,9 +503,8 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// Objects that existed before this transaction and that it deleted.
-    /// References carry the version this transaction assigned and the
-    /// [`ObjectDigest::OBJECT_DELETED`] tombstone digest.
+    /// Objects that existed before this transaction and that it deleted. References carry the
+    /// version this transaction assigned and the [`ObjectDigest::OBJECT_DELETED`] tombstone digest.
     pub fn deleted(&self) -> Vec<ObjectReference> {
         self.removed_references(
             |changed| changed.input_state.is_data() && changed.id_operation == IdOperation::Deleted,
@@ -522,10 +512,9 @@ impl TransactionEffectsV1 {
         )
     }
 
-    /// Objects unwrapped and then deleted within this same transaction, so
-    /// that they existed as top-level objects neither before nor after it.
-    /// References carry the version this transaction assigned and the
-    /// [`ObjectDigest::OBJECT_DELETED`] tombstone digest.
+    /// Objects unwrapped and then deleted within this same transaction, so that they existed as
+    /// top-level objects neither before nor after it. References carry the version this transaction
+    /// assigned and the [`ObjectDigest::OBJECT_DELETED`] tombstone digest.
     pub fn unwrapped_then_deleted(&self) -> Vec<ObjectReference> {
         self.removed_references(
             |changed| {
@@ -535,10 +524,9 @@ impl TransactionEffectsV1 {
         )
     }
 
-    /// Objects that existed as top-level objects before this transaction and
-    /// that it wrapped inside another object, so they are no longer visible in
-    /// the object store. References carry the version this transaction assigned
-    /// and the [`ObjectDigest::OBJECT_WRAPPED`] tombstone digest.
+    /// Objects that existed as top-level objects before this transaction and that it wrapped inside
+    /// another object, so they are no longer visible in the object store. References carry the
+    /// version this transaction assigned and the [`ObjectDigest::OBJECT_WRAPPED`] tombstone digest.
     pub fn wrapped(&self) -> Vec<ObjectReference> {
         self.removed_references(
             |changed| changed.input_state.is_data() && changed.id_operation == IdOperation::None,
@@ -546,9 +534,9 @@ impl TransactionEffectsV1 {
         )
     }
 
-    /// Every object still in the store after this transaction, tagged with how
-    /// it got there: the created, mutated and unwrapped objects together.
-    /// Excludes the objects the transaction removed.
+    /// Every object still in the store after this transaction, tagged with how it got there: the
+    /// created, mutated and unwrapped objects together. Excludes the objects the transaction
+    /// removed.
     pub fn all_changed_objects(&self) -> Vec<(OwnedObjectReference, WriteKind)> {
         let tagged = |kind| move |object| (object, kind);
         self.mutated()
@@ -559,10 +547,9 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// Every object that was in the store before this transaction and is not
-    /// after it, tagged with why: the deleted and wrapped objects together.
-    /// Excludes an object the transaction unwrapped and then deleted, which was
-    /// not in the store to begin with.
+    /// Every object that was in the store before this transaction and is not after it, tagged with
+    /// why: the deleted and wrapped objects together. Excludes an object the transaction unwrapped
+    /// and then deleted, which was not in the store to begin with.
     pub fn all_removed_objects(&self) -> Vec<(ObjectReference, ObjectRemoveKind)> {
         let tagged = |kind| move |reference| (reference, kind);
         self.deleted()
@@ -576,8 +563,8 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// The post-transaction reference and owner of the gas object, or `None`
-    /// for a system transaction, which pays no gas and so names none.
+    /// The post-transaction reference and owner of the gas object, or `None` for a system
+    /// transaction, which pays no gas and so names none.
     pub fn gas_object(&self) -> Option<OwnedObjectReference> {
         let changed = self.changed_objects.get(self.gas_object_index? as usize)?;
         // Gas is paid in coins, so a gas object is never a package.
@@ -587,9 +574,9 @@ impl TransactionEffectsV1 {
             .then(|| self.output_reference(changed))?
     }
 
-    /// The post-transaction reference and owner of a changed object, or `None`
-    /// if this transaction removed it from the store. A package carries its own
-    /// version; every other object takes the version this transaction assigned.
+    /// The post-transaction reference and owner of a changed object, or `None` if this transaction
+    /// removed it from the store. A package carries its own version; every other object takes the
+    /// version this transaction assigned.
     fn output_reference(&self, changed: &ChangedObject) -> Option<OwnedObjectReference> {
         match changed.output_state {
             ObjectOut::ObjectWrite { digest, owner } => Some(OwnedObjectReference::new(
@@ -604,8 +591,8 @@ impl TransactionEffectsV1 {
         }
     }
 
-    /// References, carrying `digest` as their tombstone, to the objects this
-    /// transaction removed from the store that `select` accepts.
+    /// References, carrying `digest` as their tombstone, to the objects this transaction removed
+    /// from the store that `select` accepts.
     fn removed_references(
         &self,
         select: impl Fn(&ChangedObject) -> bool,
@@ -625,11 +612,10 @@ mod tests {
 
     use super::TransactionEffectsV1;
 
-    /// The six object sets are selected by mutually exclusive combinations of
-    /// input state, output state and id operation, so together they report each
-    /// changed object at most once — for any effects, not only well-formed
-    /// ones. The fixtures cover the other half, that real effects leave none
-    /// out.
+    /// The six object sets are selected by mutually exclusive combinations of input state, output
+    /// state and id operation, so together they report each changed object at most once — for any
+    /// effects, not only well-formed ones. The fixtures cover the other half, that real effects
+    /// leave none out.
     #[proptest]
     fn object_sets_report_each_changed_object_at_most_once(effects: TransactionEffectsV1) {
         let reported = effects.created().len()

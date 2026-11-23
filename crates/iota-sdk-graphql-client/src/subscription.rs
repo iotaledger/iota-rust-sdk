@@ -1,15 +1,14 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Live `events` / `transactions` streams backed by GraphQL subscriptions over
-//! a WebSocket (`graphql-transport-ws`).
+//! Live `events` / `transactions` streams backed by GraphQL subscriptions over a WebSocket
+//! (`graphql-transport-ws`).
 //!
-//! Unlike the paginated `events` / `transactions` page methods, these stream
-//! data as it arrives. The stream transparently reconnects on disconnect,
-//! resuming from the last item it delivered via the subscription's
-//! `startAfter` cursor. It only ends after yielding
-//! [`GraphQLError::OutdatedClient`], since reconnecting would fail the
-//! same way until the SDK is upgraded.
+//! Unlike the paginated `events` / `transactions` page methods, these stream data as it arrives.
+//! The stream transparently reconnects on disconnect, resuming from the last item it delivered via
+//! the subscription's `startAfter` cursor. It only ends after yielding
+//! [`GraphQLError::OutdatedClient`], since reconnecting would fail the same way until the SDK is
+//! upgraded.
 
 use std::{future::Future, time::Duration};
 
@@ -30,9 +29,8 @@ use crate::{
     },
 };
 
-/// Backoff applied before the first reconnect attempt, doubled on each
-/// consecutive failure up to [`MAX_BACKOFF`] and reset once an item is
-/// received.
+/// Backoff applied before the first reconnect attempt, doubled on each consecutive failure up to
+/// [`MAX_BACKOFF`] and reset once an item is received.
 const INITIAL_BACKOFF: Duration = Duration::from_millis(250);
 /// Upper bound on the reconnect backoff.
 const MAX_BACKOFF: Duration = Duration::from_secs(5);
@@ -41,19 +39,17 @@ const WS_PROTOCOL: &str = "graphql-transport-ws";
 
 /// The result of decoding a single subscription payload.
 enum Outcome<T> {
-    /// A delivered item, along with the resume cursor to use should the
-    /// connection drop after this item (`None` leaves the cursor unchanged).
+    /// A delivered item, along with the resume cursor to use should the connection drop after this
+    /// item (`None` leaves the cursor unchanged).
     Item { value: T, cursor: Option<String> },
     /// The server dropped `count` payloads before this one.
     Lagged(i32),
-    /// A payload that carries nothing to yield (unknown union variant or an
-    /// empty response).
+    /// A payload that carries nothing to yield (unknown union variant or an empty response).
     Skip,
 }
 
-/// Convert a subscription response to a `Result`, surfacing any `errors` as a
-/// query error. The server sends no error extensions on subscriptions, so the
-/// errors carry no `code`.
+/// Convert a subscription response to a `Result`, surfacing any `errors` as a query error. The
+/// server sends no error extensions on subscriptions, so the errors carry no `code`.
 fn subscription_response_to_result<T>(response: cynic::GraphQlResponse<T>) -> GraphQLResult<T> {
     response_to_result(cynic::GraphQlResponse {
         data: response.data,
@@ -63,8 +59,8 @@ fn subscription_response_to_result<T>(response: cynic::GraphQlResponse<T>) -> Gr
     })
 }
 
-/// Subscription for [`GraphQLClient::events_subscription`]. Call
-/// [`subscribe`](Self::subscribe) to open it.
+/// Subscription for [`GraphQLClient::events_subscription`]. Call [`subscribe`](Self::subscribe) to
+/// open it.
 #[must_use]
 pub struct EventsSubscriptionBuilder {
     client: GraphQLClient,
@@ -79,16 +75,15 @@ impl EventsSubscriptionBuilder {
         self
     }
 
-    /// Resume from the transaction immediately following the given
-    /// transaction digest; thereafter the stream tracks its own resume point.
+    /// Resume from the transaction immediately following the given transaction digest; thereafter
+    /// the stream tracks its own resume point.
     pub fn start_after(mut self, start_after: TransactionDigest) -> Self {
         self.start_after = Some(start_after.to_string());
         self
     }
 
-    /// Open the subscription. The stream yields events as they arrive and
-    /// reconnects automatically on disconnect. It ends after yielding
-    /// [`GraphQLError::OutdatedClient`].
+    /// Open the subscription. The stream yields events as they arrive and reconnects automatically
+    /// on disconnect. It ends after yielding [`GraphQLError::OutdatedClient`].
     pub fn subscribe(self) -> impl Stream<Item = GraphQLResult<Event>> + Unpin {
         let Self {
             client,
@@ -160,16 +155,15 @@ impl TransactionsSubscriptionBuilder {
         self
     }
 
-    /// Resume from the transaction immediately following the given digest;
-    /// thereafter the stream tracks its own resume point.
+    /// Resume from the transaction immediately following the given digest; thereafter the stream
+    /// tracks its own resume point.
     pub fn start_after(mut self, start_after: TransactionDigest) -> Self {
         self.start_after = Some(start_after.to_string());
         self
     }
 
-    /// Open the subscription. The stream yields transactions as they arrive
-    /// and reconnects automatically on disconnect. It ends after yielding
-    /// [`GraphQLError::OutdatedClient`].
+    /// Open the subscription. The stream yields transactions as they arrive and reconnects
+    /// automatically on disconnect. It ends after yielding [`GraphQLError::OutdatedClient`].
     pub fn subscribe(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
         let Self {
             client,
@@ -217,9 +211,8 @@ impl TransactionsSubscriptionBuilder {
 impl GraphQLClient {
     /// Subscribe to a live stream of events.
     ///
-    /// Note: subscriptions are served over a WebSocket, which the node has to
-    /// have enabled: `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
-    /// when it is available.
+    /// Note: subscriptions are served over a WebSocket, which the node has to have enabled:
+    /// `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS` when it is available.
     pub fn events_subscription(&self) -> EventsSubscriptionBuilder {
         EventsSubscriptionBuilder {
             client: self.clone(),
@@ -230,9 +223,8 @@ impl GraphQLClient {
 
     /// Subscribe to a live stream of transactions.
     ///
-    /// Note: subscriptions are served over a WebSocket, which the node has to
-    /// have enabled: `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS`
-    /// when it is available.
+    /// Note: subscriptions are served over a WebSocket, which the node has to have enabled:
+    /// `serviceConfig.enabledFeatures` includes `SUBSCRIPTIONS` when it is available.
     pub fn transactions_subscription(&self) -> TransactionsSubscriptionBuilder {
         TransactionsSubscriptionBuilder {
             client: self.clone(),
@@ -241,14 +233,11 @@ impl GraphQLClient {
         }
     }
 
-    /// The WebSocket URL for subscriptions, upgrading the scheme (`http` →
-    /// `ws`, `https` → `wss`).
+    /// The WebSocket URL for subscriptions, upgrading the scheme (`http` → `ws`, `https` → `wss`).
     ///
-    /// Unless one was set with
-    /// [`with_subscription_url`](Self::with_subscription_url), it is the
-    /// `subscriptions` endpoint under the RPC URL, as the server routes it,
-    /// keeping the query: `https://host/graphql` subscribes at
-    /// `wss://host/graphql/subscriptions`.
+    /// Unless one was set with [`with_subscription_url`](Self::with_subscription_url), it is the
+    /// `subscriptions` endpoint under the RPC URL, as the server routes it, keeping the query:
+    /// `https://host/graphql` subscribes at `wss://host/graphql/subscriptions`.
     fn ws_url(&self) -> GraphQLResult<Url> {
         let mut url = match &self.subscription_url {
             Some(url) => url.clone(),
@@ -291,12 +280,11 @@ impl GraphQLClient {
     }
 }
 
-/// Open a WebSocket to `url`, negotiating the `graphql-transport-ws`
-/// subprotocol.
+/// Open a WebSocket to `url`, negotiating the `graphql-transport-ws` subprotocol.
 ///
-/// The two transports negotiate it differently: tungstenite sets it as a header
-/// on the upgrade request, while a browser `WebSocket` rejects arbitrary
-/// headers and takes the subprotocol as a constructor argument instead.
+/// The two transports negotiate it differently: tungstenite sets it as a header on the upgrade
+/// request, while a browser `WebSocket` rejects arbitrary headers and takes the subprotocol as a
+/// constructor argument instead.
 #[cfg(not(target_arch = "wasm32"))]
 async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection + Send + 'static> {
     use tokio_tungstenite::tungstenite::{client::IntoClientRequest, http::HeaderValue};
@@ -326,10 +314,9 @@ async fn connect(url: &Url) -> GraphQLResult<impl graphql_ws_client::Connection 
 
 /// Wrap a connect-and-subscribe closure in an auto-reconnecting stream.
 ///
-/// `connect` is called with the current resume cursor on every (re)connection
-/// and must yield a stream of decoded [`Outcome`]s. Connection and transport
-/// errors are surfaced to the consumer and then trigger a backed-off reconnect.
-/// The stream only ends after yielding
+/// `connect` is called with the current resume cursor on every (re)connection and must yield a
+/// stream of decoded [`Outcome`]s. Connection and transport errors are surfaced to the consumer and
+/// then trigger a backed-off reconnect. The stream only ends after yielding
 /// [`GraphQLError::OutdatedClient`].
 fn reconnecting_subscription<'a, T, C, Fut, S>(
     connect: C,
@@ -356,8 +343,7 @@ where
                                 backoff = INITIAL_BACKOFF;
                                 yield Ok(value);
                             }
-                            // A negative count cannot happen; report 0
-                            // rather than its magnitude.
+                            // A negative count cannot happen; report 0 rather than its magnitude.
                             Ok(Outcome::Lagged(count)) => yield Err(GraphQLError::Lagged {
                                 count: u32::try_from(count).unwrap_or(0),
                             }),
@@ -475,8 +461,8 @@ mod tests {
         assert_eq!(errors[0].extensions, None);
     }
 
-    /// Server side of the WebSocket handshake: accepts the subprotocol and
-    /// sends its minimum SDK version.
+    /// Server side of the WebSocket handshake: accepts the subprotocol and sends its minimum SDK
+    /// version.
     struct IndexerWithMinimum(&'static str);
 
     impl Callback for IndexerWithMinimum {
@@ -498,8 +484,8 @@ mod tests {
         }
     }
 
-    /// Opens a WebSocket to an indexer whose handshake response carries
-    /// `minimum` in the minimum SDK version header.
+    /// Opens a WebSocket to an indexer whose handshake response carries `minimum` in the minimum
+    /// SDK version header.
     async fn connect_to_indexer_with_minimum(minimum: &'static str) -> GraphQLResult<()> {
         let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
         let url = Url::parse(&format!("ws://{}", listener.local_addr().unwrap())).unwrap();
@@ -530,9 +516,8 @@ mod tests {
             .unwrap();
     }
 
-    /// Runs a reconnecting subscription whose every connection attempt fails
-    /// with `error`. Returns its first two items, or fewer if it ends first,
-    /// and how often it tried to connect.
+    /// Runs a reconnecting subscription whose every connection attempt fails with `error`. Returns
+    /// its first two items, or fewer if it ends first, and how often it tried to connect.
     async fn subscription_failing_to_connect(
         error: fn() -> GraphQLError,
     ) -> (Vec<GraphQLError>, usize) {
@@ -544,8 +529,7 @@ mod tests {
             },
             None,
         );
-        // Only stops a stream that neither ends nor yields; two items take one
-        // backoff.
+        // Only stops a stream that neither ends nor yields; two items take one backoff.
         let errors = tokio::time::timeout(
             Duration::from_secs(5),
             stream

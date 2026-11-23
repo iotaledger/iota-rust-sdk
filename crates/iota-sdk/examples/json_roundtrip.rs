@@ -1,8 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! This example demonstrates how to convert a Transaction to and from JSON.
-//! A similar roundtrip can be done for other types as well.
+//! This example demonstrates how to convert a Transaction to and from JSON. A similar roundtrip can
+//! be done for other types as well.
 
 use eyre::Result;
 use iota_sdk::types::Transaction;

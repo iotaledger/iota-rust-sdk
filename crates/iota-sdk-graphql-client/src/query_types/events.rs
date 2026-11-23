@@ -55,8 +55,7 @@ pub struct EventFilter {
 }
 
 impl EventFilter {
-    /// Filter by the module emitting the event, e.g. `"0x02"` (package) or
-    /// `"0x02::coin"` (module).
+    /// Filter by the module emitting the event, e.g. `"0x02"` (package) or `"0x02::coin"` (module).
     pub fn with_emitting_module(mut self, emitting_module: impl Into<String>) -> Self {
         self.emitting_module = Some(emitting_module.into());
         self

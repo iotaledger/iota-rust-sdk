@@ -22,33 +22,31 @@ use crate::{
     },
 };
 
-/// The result of a simulation (dry run), which includes the effects of the
-/// transaction and intermediate results for each command.
+/// The result of a simulation (dry run), which includes the effects of the transaction and
+/// intermediate results for each command.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[non_exhaustive]
 pub struct DryRunResult {
     /// The error that occurred during dry run execution, if any.
     pub error: Option<String>,
-    /// The intermediate results for each command of the dry run execution,
-    /// including contents of mutated references and return values.
+    /// The intermediate results for each command of the dry run execution, including contents of
+    /// mutated references and return values.
     pub results: Vec<DryRunEffect>,
     /// The transaction that was dry run, without signatures.
     pub transaction: Option<Transaction>,
     /// The effects of the transaction execution.
     pub effects: Option<TransactionEffects>,
-    /// The gas price to use. This is the reference gas price, or a higher
-    /// price if an input object is congested.
+    /// The gas price to use. This is the reference gas price, or a higher price if an input object
+    /// is congested.
     #[serde(default, with = "iota_types::OptionReadableDisplay")]
     pub suggested_gas_price: Option<u64>,
 }
 
-/// Effects of a single command in the dry run, including mutated references
-/// and return values.
+/// Effects of a single command in the dry run, including mutated references and return values.
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[non_exhaustive]
 pub struct DryRunEffect {
-    /// Changes made to arguments that were mutably borrowed by this
-    /// command.
+    /// Changes made to arguments that were mutably borrowed by this command.
     pub mutated_references: Vec<DryRunMutation>,
     /// Return results of this command.
     pub return_values: Vec<DryRunReturn>,
@@ -89,12 +87,10 @@ pub enum TransactionArgument {
     },
     /// The result of another transaction command.
     Result {
-        /// The index of the previous command (0-indexed) that returned this
-        /// result.
+        /// The index of the previous command (0-indexed) that returned this result.
         cmd: u32,
-        /// If the previous command returns multiple values, this is the
-        /// index of the individual result among the multiple
-        /// results from that command (also 0-indexed).
+        /// If the previous command returns multiple values, this is the index of the individual
+        /// result among the multiple results from that command (also 0-indexed).
         index: Option<u32>,
     },
 }
@@ -186,8 +182,7 @@ pub struct TransactionDataEffects {
     pub effects: TransactionEffects,
 }
 
-/// The name part of a dynamic field, including its type, bcs, and json
-/// representation.
+/// The name part of a dynamic field, including its type, bcs, and json representation.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[non_exhaustive]
 pub struct DynamicFieldName {
@@ -207,8 +202,8 @@ pub struct DynamicFieldValue {
     pub bcs: Vec<u8>,
 }
 
-/// The output of a dynamic field query, that includes the name, value, and
-/// value's json representation.
+/// The output of a dynamic field query, that includes the name, value, and value's json
+/// representation.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[non_exhaustive]
 pub struct DynamicFieldOutput {
@@ -220,8 +215,8 @@ pub struct DynamicFieldOutput {
     pub value_as_json: Option<serde_json::Value>,
 }
 
-/// Helper struct for passing a value that has a type that implements Serialize,
-/// for the dynamic fields API.
+/// Helper struct for passing a value that has a type that implements Serialize, for the dynamic
+/// fields API.
 pub struct NameValue(pub Vec<u8>);
 
 /// Helper struct for passing a raw bcs value.

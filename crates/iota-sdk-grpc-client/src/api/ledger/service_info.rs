@@ -46,14 +46,11 @@ impl GetServiceInfoQuery {
 impl GrpcClient {
     /// Get service info from the node.
     ///
-    /// Returns the [`GetServiceInfoResponse`] proto type with fields populated
-    /// according to the read mask. Without
-    /// [`read_mask`](GetServiceInfoQuery::read_mask), the default mask is
-    /// used. Pass a
-    /// [`ServiceInfoReadMask`](iota_grpc_types::read_mask_fields::ServiceInfoReadMask)
-    /// built from a
-    /// [`ServiceInfoField`](iota_grpc_types::read_mask_fields::ServiceInfoField)
-    /// or any slice/array/vec of fields to choose the returned fields.
+    /// Returns the [`GetServiceInfoResponse`] proto type with fields populated according to the
+    /// read mask. Without [`read_mask`](GetServiceInfoQuery::read_mask), the default mask is used.
+    /// Pass a [`ServiceInfoReadMask`](iota_grpc_types::read_mask_fields::ServiceInfoReadMask) built
+    /// from a [`ServiceInfoField`](iota_grpc_types::read_mask_fields::ServiceInfoField) or any
+    /// slice/array/vec of fields to choose the returned fields.
     ///
     /// # Example
     ///

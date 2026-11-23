@@ -51,8 +51,7 @@ impl Verifier<PasskeyAuthenticator> for PasskeyVerifier {
             ));
         }
 
-        // Construct passkey signing message = authenticator_data ||
-        // sha256(client_data_json).
+        // Construct passkey signing message = authenticator_data || sha256(client_data_json).
         let mut message = authenticator.authenticator_data().to_owned();
         let client_data_hash = {
             use sha2::Digest;

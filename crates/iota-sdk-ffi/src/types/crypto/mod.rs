@@ -53,10 +53,10 @@ impl_crypto_object!(
     /// The BCS serialized form of this type is specified in
     /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
     ///
-    /// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a
-    /// fixed-length of 96, IOTA's binary representation of a min-sig
-    /// `Bls12381PublicKey` is prefixed with its length meaning its serialized
-    /// binary form (in bcs) is 97 bytes long vs a more compact 96 bytes.
+    /// Due to historical reasons, even though a min-sig `Bls12381PublicKey` has a fixed-length of
+    /// 96, IOTA's binary representation of a min-sig `Bls12381PublicKey` is prefixed with its
+    /// length meaning its serialized binary form (in bcs) is 97 bytes long vs a more compact 96
+    /// bytes.
     Bls12381PublicKey
 );
 impl_crypto_object!(
@@ -73,8 +73,8 @@ impl_crypto_object!(
 impl Ed25519PublicKey {
     /// Derive an `Address` from this Public Key
     ///
-    /// An `Address` can be derived from an `Ed25519PublicKey` by hashing the
-    /// bytes of the public key with no prefix flag.
+    /// An `Address` can be derived from an `Ed25519PublicKey` by hashing the bytes of the public
+    /// key with no prefix flag.
     ///
     /// `hash(32-byte ed25519 public key)`
     pub fn derive_address(&self) -> Address {
@@ -106,9 +106,8 @@ impl_crypto_object!(
 impl Secp256k1PublicKey {
     /// Derive an `Address` from this Public Key
     ///
-    /// An `Address` can be derived from a `Secp256k1PublicKey` by hashing the
-    /// bytes of the public key prefixed with the Secp256k1
-    /// `SignatureScheme` flag (`0x01`).
+    /// An `Address` can be derived from a `Secp256k1PublicKey` by hashing the bytes of the public
+    /// key prefixed with the Secp256k1 `SignatureScheme` flag (`0x01`).
     ///
     /// `hash( 0x01 || 33-byte secp256k1 public key)`
     pub fn derive_address(&self) -> Address {
@@ -140,9 +139,8 @@ impl_crypto_object!(
 impl Secp256r1PublicKey {
     /// Derive an `Address` from this Public Key
     ///
-    /// An `Address` can be derived from a `Secp256r1PublicKey` by hashing the
-    /// bytes of the public key prefixed with the Secp256r1
-    /// `SignatureScheme` flag (`0x02`).
+    /// An `Address` can be derived from a `Secp256r1PublicKey` by hashing the bytes of the public
+    /// key prefixed with the Secp256r1 `SignatureScheme` flag (`0x02`).
     ///
     /// `hash( 0x02 || 33-byte secp256r1 public key)`
     pub fn derive_address(&self) -> Address {

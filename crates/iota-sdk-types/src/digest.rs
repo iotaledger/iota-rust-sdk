@@ -9,10 +9,9 @@
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// Due to historical reasons, even though a `Digest` has a fixed-length of 32,
-/// IOTA's binary representation of a `Digest` is prefixed with its length
-/// meaning its serialized binary form (in bcs) is 33 bytes long vs a more
-/// compact 32 bytes.
+/// Due to historical reasons, even though a `Digest` has a fixed-length of 32, IOTA's binary
+/// representation of a `Digest` is prefixed with its length meaning its serialized binary form (in
+/// bcs) is 33 bytes long vs a more compact 32 bytes.
 #[derive(Clone, Copy, Default, derive_more::Deref, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -41,8 +40,7 @@ impl Digest {
     /// The lexicographically maximum digest
     pub const MAX: Self = Self([u8::MAX; 32]);
 
-    /// Generates a new digest from the provided 32 byte array containing [`u8`]
-    /// values.
+    /// Generates a new digest from the provided 32 byte array containing [`u8`] values.
     pub const fn new(digest: [u8; Self::LENGTH]) -> Self {
         Self(digest)
     }
@@ -116,8 +114,7 @@ impl Digest {
         Self(crate::next_lexicographical_array(&self.0))
     }
 
-    /// Returns the next digest in byte-increasing order, or `None` if the
-    /// result would overflow.
+    /// Returns the next digest in byte-increasing order, or `None` if the result would overflow.
     pub const fn next_lexicographical_opt(&self) -> Option<Self> {
         match crate::next_lexicographical_array_opt(&self.0) {
             Some(val) => Some(Self(val)),
@@ -256,9 +253,8 @@ impl std::fmt::UpperHex for Digest {
     }
 }
 
-// Unfortunately IOTA's binary representation of digests is prefixed with its
-// length meaning its serialized binary form is 33 bytes long (in bcs) vs a more
-// compact 32 bytes.
+// Unfortunately IOTA's binary representation of digests is prefixed with its length meaning its
+// serialized binary form is 33 bytes long (in bcs) vs a more compact 32 bytes.
 #[cfg(feature = "serde")]
 type DigestSerialization =
     ::serde_with::As<::serde_with::IfIsHumanReadable<ReadableDigest, ::serde_with::Bytes>>;
@@ -307,18 +303,16 @@ pub enum DigestParseError {
     InvalidBase58Length { actual: usize },
 }
 
-// Don't implement like the other digest type since this isn't intended to be
-// serialized
+// Don't implement like the other digest type since this isn't intended to be serialized
 pub type SigningDigest = [u8; Digest::LENGTH];
 
 /// Defines a domain-specific newtype wrapper around [`Digest`].
 ///
-/// Each wrapper has the same 32-byte representation and BCS/JSON form as a bare
-/// [`Digest`] (it is a transparent newtype), but is a distinct type so that,
-/// for example, a [`TransactionDigest`] can't be mixed up with an
-/// [`ObjectDigest`]. The shared, domain-agnostic surface (construction,
-/// encoding, ordering) is generated here; domain-specific behavior is added in
-/// separate `impl` blocks.
+/// Each wrapper has the same 32-byte representation and BCS/JSON form as a bare [`Digest`] (it is a
+/// transparent newtype), but is a distinct type so that, for example, a [`TransactionDigest`] can't
+/// be mixed up with an [`ObjectDigest`]. The shared, domain-agnostic surface (construction,
+/// encoding, ordering) is generated here; domain-specific behavior is added in separate `impl`
+/// blocks.
 macro_rules! impl_digest_wrapper {
     ($(#[$meta:meta])* $name:ident) => {
         $(#[$meta])*
@@ -405,8 +399,8 @@ macro_rules! impl_digest_wrapper {
                 Self(self.0.next_lexicographical())
             }
 
-            /// Returns the next digest in byte-increasing order, or `None` if the
-            /// result would overflow.
+            /// Returns the next digest in byte-increasing order, or `None` if the result would
+            /// overflow.
             pub const fn next_lexicographical_opt(&self) -> Option<Self> {
                 match self.0.next_lexicographical_opt() {
                     Some(val) => Some(Self(val)),
@@ -561,8 +555,7 @@ impl ObjectDigest {
     /// A marker that signifies the object is canceled.
     pub const OBJECT_CANCELED: Self = Self(Digest::new([OBJECT_DIGEST_CANCELED_BYTE_VAL; 32]));
 
-    /// Returns whether the digest represents an object that is neither deleted
-    /// nor wrapped.
+    /// Returns whether the digest represents an object that is neither deleted nor wrapped.
     pub fn is_alive(&self) -> bool {
         !self.is_deleted() && !self.is_wrapped()
     }
@@ -572,8 +565,7 @@ impl ObjectDigest {
         *self == Self::OBJECT_DELETED
     }
 
-    /// Returns whether the digest represents an object wrapped in another
-    /// object.
+    /// Returns whether the digest represents an object wrapped in another object.
     pub fn is_wrapped(&self) -> bool {
         *self == Self::OBJECT_WRAPPED
     }
@@ -581,12 +573,11 @@ impl ObjectDigest {
 
 impl TransactionDigest {
     /// A digest used to signify the parent transaction was the genesis.
-    /// Note that this is not the same as the digest of the genesis transaction,
-    /// which cannot be known ahead of time.
+    /// Note that this is not the same as the digest of the genesis transaction, which cannot be
+    /// known ahead of time.
     pub const GENESIS_MARKER: Self = Self::ZERO;
 
-    /// Returns the digest used to signify the parent transaction was the
-    /// genesis.
+    /// Returns the digest used to signify the parent transaction was the genesis.
     pub const fn genesis_marker() -> Self {
         Self::GENESIS_MARKER
     }
@@ -745,8 +736,8 @@ mod tests {
     #[cfg(feature = "serde")]
     #[proptest]
     fn wrappers_serialize_like_digest(digest: Digest) {
-        // Each wrapper is a transparent newtype, so its BCS and JSON forms must
-        // be byte-for-byte identical to the underlying `Digest`.
+        // Each wrapper is a transparent newtype, so its BCS and JSON forms must be byte-for-byte
+        // identical to the underlying `Digest`.
         macro_rules! assert_transparent {
             ($wrapper:ty) => {{
                 let wrapped = <$wrapper>::from(digest);
@@ -782,8 +773,8 @@ mod tests {
         assert!(ObjectDigest::OBJECT_WRAPPED.is_wrapped());
         assert!(!ObjectDigest::OBJECT_WRAPPED.is_alive());
         assert!(ObjectDigest::ZERO.is_alive());
-        // `is_alive` only accounts for deleted/wrapped objects, so a canceled
-        // marker is still considered alive.
+        // `is_alive` only accounts for deleted/wrapped objects, so a canceled marker is still
+        // considered alive.
         assert!(ObjectDigest::OBJECT_CANCELED.is_alive());
     }
 

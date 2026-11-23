@@ -10,21 +10,19 @@ use quote::quote;
 
 use crate::{context::Context, ident::to_snake};
 
-/// Information about a transparent wrapper message (one that should be skipped
-/// in read_mask paths / field path builders).
+/// Information about a transparent wrapper message (one that should be skipped in read_mask paths /
+/// field path builders).
 pub(crate) struct TransparentInfo {
     /// True when the single inner field is a map field.
     pub is_map: bool,
-    /// Full protobuf type name of the inner message (e.g.
-    /// ".iota.grpc.v1.event.Event"), None for maps.
+    /// Full protobuf type name of the inner message (e.g. ".iota.grpc.v1.event.Event"), None for
+    /// maps.
     pub inner_full_type_name: Option<String>,
 }
 
-/// Parses the descriptor pool to find all messages with the
-/// `field_mask_transparent` option set to true. Returns a map keyed by full
-/// protobuf type name (e.g. `.iota.grpc.v1.event.Events`) with information
-/// about the inner field that should be surfaced through the transparent
-/// wrapper.
+/// Parses the descriptor pool to find all messages with the `field_mask_transparent` option set to
+/// true. Returns a map keyed by full protobuf type name (e.g. `.iota.grpc.v1.event.Events`) with
+/// information about the inner field that should be surfaced through the transparent wrapper.
 pub fn parse_transparent_messages_from_pool(
     pool: &prost_reflect::DescriptorPool,
 ) -> HashMap<String, TransparentInfo> {
@@ -63,8 +61,8 @@ pub fn parse_transparent_messages_from_pool(
 
         let inner_field = fields[0].clone();
 
-        // Detect whether the inner field is a map field (a repeated field whose
-        // message type has map_entry = true).
+        // Detect whether the inner field is a map field (a repeated field whose message type has
+        // map_entry = true).
         let is_map = match inner_field.kind() {
             Kind::Message(ref msg) => msg.is_map_entry(),
             _ => false,
@@ -88,8 +86,8 @@ pub fn parse_transparent_messages_from_pool(
     map
 }
 
-/// What the generator needs to turn a field's protobuf type into Rust, shared
-/// by every message of the package being generated.
+/// What the generator needs to turn a field's protobuf type into Rust, shared by every message of
+/// the package being generated.
 struct PackageContext<'a> {
     /// Package being generated, e.g. `iota.grpc.v1.command`.
     package: &'a str,
@@ -116,8 +114,8 @@ impl PackageContext<'_> {
         self.context.transparent(full_type_name)
     }
 
-    /// True when prost boxes the field, which the field constants have to
-    /// mirror by not recursing into it.
+    /// True when prost boxes the field, which the field constants have to mirror by not recursing
+    /// into it.
     fn is_boxed_field(&self, message: &MessageDescriptor, field: &FieldDescriptor) -> bool {
         let field_path = format!("{}.{}", message.full_name(), field.name());
         self.boxed_types
@@ -148,8 +146,8 @@ pub(crate) fn generate_field_info(context: &Context, out_dir: &Path, boxed_types
             continue;
         }
 
-        // Types of other packages are referenced through their full module path,
-        // so nothing but the traits has to be imported here.
+        // Types of other packages are referenced through their full module path, so nothing but the
+        // traits has to be imported here.
         let code = quote! {
             mod _field_impls {
                 #![allow(clippy::wrong_self_convention)]
@@ -181,16 +179,14 @@ pub(crate) fn generate_field_info(context: &Context, out_dir: &Path, boxed_types
     }
 }
 
-// Helper function to recursively generate field info for all messages including
-// nested ones
+// Helper function to recursively generate field info for all messages including nested ones
 fn generate_field_info_for_all_messages(
     context: &PackageContext<'_>,
     messages: &[MessageDescriptor],
 ) -> TokenStream {
     let mut stream = TokenStream::new();
 
-    // First pass: Generate nested modules first so they're defined before being
-    // used
+    // First pass: Generate nested modules first so they're defined before being used
     for message in messages {
         // Skip map entry messages
         if message.is_map_entry() {
@@ -247,9 +243,8 @@ fn generate_field_info_for_message(
     }
 }
 
-/// Generates `pub const {NAME}_ONEOF: &'static str = "{name}";` constants for
-/// each real `oneof` declaration in a message. Synthetic oneofs created by the
-/// proto3-optional feature are excluded.
+/// Generates `pub const {NAME}_ONEOF: &'static str = "{name}";` constants for each real `oneof`
+/// declaration in a message. Synthetic oneofs created by the proto3-optional feature are excluded.
 fn generate_oneof_name_constants(
     message: &MessageDescriptor,
     message_path: &TokenStream,
@@ -357,8 +352,7 @@ fn generate_field_constant(
             // Check for circular references that need to be broken:
             // 1. Self-reference
             // 2. Map entry types
-            // 3. Fields that are boxed AND create circular dependencies in the message
-            //    graph
+            // 3. Fields that are boxed AND create circular dependencies in the message graph
             let is_circular_reference = context.is_boxed_field(message, field)
                 && context
                     .context

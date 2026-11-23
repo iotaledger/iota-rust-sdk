@@ -3,34 +3,30 @@
 
 //! Rejects responses from an indexer that requires a newer SDK than this one.
 //!
-//! The indexer's GraphQL service stamps every response with the lowest
-//! `iota-sdk-graphql-client` version able to decode it, in the
-//! [`X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN`] header. The check runs on the
-//! response headers, before any body is decoded, so an outdated client fails
-//! with a clear error instead of tripping over a value it does not know.
+//! The indexer's GraphQL service stamps every response with the lowest `iota-sdk-graphql-client`
+//! version able to decode it, in the [`X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN`] header. The check
+//! runs on the response headers, before any body is decoded, so an outdated client fails with a
+//! clear error instead of tripping over a value it does not know.
 
 use reqwest::header::HeaderMap;
 use semver::Version;
 
 use crate::error::{GraphQLError, GraphQLResult};
 
-/// Version of this crate, which the indexer's minimum SDK version is compared
-/// against.
+/// Version of this crate, which the indexer's minimum SDK version is compared against.
 pub const CRATE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
-/// Lowest `iota-sdk-graphql-client` version able to decode the server's
-/// responses, as a semantic version. Clients below it fail their requests
-/// instead of decoding values they do not know.
+/// Lowest `iota-sdk-graphql-client` version able to decode the server's responses, as a semantic
+/// version. Clients below it fail their requests instead of decoding values they do not know.
 pub const X_IOTA_SDK_GRAPHQL_CLIENT_VERSION_MIN: &str = "x-iota-sdk-graphql-client-version-min";
 
-/// Fails with [`GraphQLError::OutdatedClient`] when the response
-/// headers name a minimum SDK version newer than this crate.
+/// Fails with [`GraphQLError::OutdatedClient`] when the response headers name a minimum SDK version
+/// newer than this crate.
 ///
-/// A response without the header, or with one that is not a semantic version,
-/// passes.
+/// A response without the header, or with one that is not a semantic version, passes.
 pub(crate) fn check_client_version(response_headers: &HeaderMap) -> GraphQLResult<()> {
-    // `CARGO_PKG_VERSION` comes from this crate's manifest, which cargo only
-    // accepts with a valid semantic version.
+    // `CARGO_PKG_VERSION` comes from this crate's manifest, which cargo only accepts with a valid
+    // semantic version.
     let current = Version::parse(CRATE_VERSION).expect("CARGO_PKG_VERSION is a valid version");
     check_against(response_headers, &current)
 }

@@ -53,10 +53,9 @@ pub struct GrpcDynamicField {
     pub name_bcs: Option<Vec<u8>>,
     /// The BCS representation of the dynamic field's value.
     ///
-    /// For regular dynamic fields this contains the BCS-encoded value whose
-    /// type is given by `value_type`. For dynamic *object* fields this
-    /// contains the BCS-encoded id of the child object; use `child_object`
-    /// to access the full object.
+    /// For regular dynamic fields this contains the BCS-encoded value whose type is given by
+    /// `value_type`. For dynamic *object* fields this contains the BCS-encoded id of the child
+    /// object; use `child_object` to access the full object.
     pub value_bcs: Option<Vec<u8>>,
     /// The type of the dynamic field's value.
     pub value_type: Option<String>,
@@ -166,8 +165,8 @@ impl GrpcClient {
         })
     }
 
-    /// List all dynamic fields of an object, auto-paginating up to `limit`
-    /// fields. If `limit` is `None`, all fields are returned.
+    /// List all dynamic fields of an object, auto-paginating up to `limit` fields. If `limit` is
+    /// `None`, all fields are returned.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     /// If `None`, the parent and field id are returned.

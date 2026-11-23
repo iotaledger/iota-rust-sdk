@@ -16,16 +16,15 @@ mod input_argument {
         transaction::{Input, SharedObjectReference},
     };
 
-    // Mirrors the default derived serialization of `Input`; the manual impl
-    // only exists to keep the BCS form as the `CallArg`/`ObjectArg` protocol
-    // encoding below.
+    // Mirrors the default derived serialization of `Input`; the manual impl only exists to keep the
+    // BCS form as the `CallArg`/`ObjectArg` protocol encoding below.
     #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "Input")]
     enum ReadableInput {
         /// A move value serialized as BCS.
         ///
-        /// For normal operations this is required to be a move primitive type
-        /// and not contain structs or objects.
+        /// For normal operations this is required to be a move primitive type and not contain
+        /// structs or objects.
         Pure(#[serde(with = "crate::_serde::ReadableBase64Encoded")] Vec<u8>),
         /// A move object that is either immutable or address owned
         ImmutableOrOwned(ObjectReference),
@@ -43,8 +42,8 @@ mod input_argument {
     enum CallArg {
         Pure(#[serde(with = "::serde_with::As::<::serde_with::Bytes>")] Vec<u8>),
         Object(ObjectArg),
-        // Keep this variant last while it is gated: BCS tags follow variant
-        // order, so a variant after it would get another tag without `unstable`.
+        // Keep this variant last while it is gated: BCS tags follow variant order, so a variant
+        // after it would get another tag without `unstable`.
         #[cfg(feature = "unstable")]
         TransactionDependency(TransactionDigest),
     }
@@ -271,10 +270,9 @@ mod signed_transaction {
     }
 }
 
-/// Deserialize an `Identifier` without validating that it is a valid Move
-/// identifier. This is used for deserializing the module in `MoveCall`
-/// commands, where BCS bytes could contain invalid identifiers but we still
-/// want to be able to deserialize them and let the move VM handle the
+/// Deserialize an `Identifier` without validating that it is a valid Move identifier. This is used
+/// for deserializing the module in `MoveCall` commands, where BCS bytes could contain invalid
+/// identifiers but we still want to be able to deserialize them and let the move VM handle the
 /// validation.
 pub(super) fn deserialize_ident_unchecked<'de, D>(d: D) -> Result<Identifier, D::Error>
 where
@@ -397,16 +395,14 @@ mod tests {
         }
     }
 
-    /// Pins the BCS wire format of
-    /// [`TransactionKind::TransactionDenyRulesUpdate`].
+    /// Pins the BCS wire format of [`TransactionKind::TransactionDenyRulesUpdate`].
     ///
-    /// Runs one sample per switch (one-hot) so swapping any two bool fields
-    /// changes some expected byte string; the six delta lists carry distinct
-    /// contents and lengths for the same reason.
+    /// Runs one sample per switch (one-hot) so swapping any two bool fields changes some expected
+    /// byte string; the six delta lists carry distinct contents and lengths for the same reason.
     #[test]
     fn transaction_deny_rules_update_bcs_pin() {
-        // Field order: package_publish, package_upgrade, shared_object,
-        // user_transaction, receiving_objects, move_authenticator.
+        // Field order: package_publish, package_upgrade, shared_object, user_transaction,
+        // receiving_objects, move_authenticator.
         let mut samples: Vec<[bool; 6]> = (0..6)
             .map(|hot| std::array::from_fn(|i| i == hot))
             .collect();
@@ -471,8 +467,7 @@ mod tests {
         }
     }
 
-    /// Pins the BCS wire format of
-    /// [`EndOfEpochTransactionKind::TransactionDenyRulesCreate`].
+    /// Pins the BCS wire format of [`EndOfEpochTransactionKind::TransactionDenyRulesCreate`].
     #[test]
     fn transaction_deny_rules_create_bcs_pin() {
         let kind = EndOfEpochTransactionKind::TransactionDenyRulesCreate;

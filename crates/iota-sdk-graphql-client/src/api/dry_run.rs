@@ -16,8 +16,7 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GraphQLClient::dry_run_transaction`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::dry_run_transaction`]. Await it to send the request.
     pub struct DryRunTransactionQuery {
         client: GraphQLClient,
         transaction: Transaction,
@@ -27,10 +26,9 @@ define_query! {
 }
 
 impl DryRunTransactionQuery {
-    /// Disable the usual verification checks that prevent access to objects
-    /// that are owned by addresses other than the sender, and calling
-    /// non-public, non-entry functions, and some other checks. Defaults to
-    /// `false`.
+    /// Disable the usual verification checks that prevent access to objects that are owned by
+    /// addresses other than the sender, and calling non-public, non-entry functions, and some other
+    /// checks. Defaults to `false`.
     pub fn skip_checks(mut self, skip_checks: bool) -> Self {
         self.skip_checks = skip_checks;
         self
@@ -56,8 +54,7 @@ impl DryRunTransactionQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::dry_run_transaction_kind`]. Await it to send
-    /// the request.
+    /// Query for [`GraphQLClient::dry_run_transaction_kind`]. Await it to send the request.
     pub struct DryRunTransactionKindQuery {
         client: GraphQLClient,
         transaction_kind: TransactionKind,
@@ -99,10 +96,9 @@ impl DryRunTransactionKindQuery {
         self
     }
 
-    /// Disable the usual verification checks that prevent access to objects
-    /// that are owned by addresses other than the sender, and calling
-    /// non-public, non-entry functions, and some other checks. Defaults to
-    /// `false`.
+    /// Disable the usual verification checks that prevent access to objects that are owned by
+    /// addresses other than the sender, and calling non-public, non-entry functions, and some other
+    /// checks. Defaults to `false`.
     pub fn skip_checks(mut self, skip_checks: bool) -> Self {
         self.skip_checks = skip_checks;
         self
@@ -119,8 +115,7 @@ impl DryRunTransactionKindQuery {
 }
 
 impl GraphQLClient {
-    /// Dry run a [`Transaction`] and return the transaction effects and dry
-    /// run error (if any).
+    /// Dry run a [`Transaction`] and return the transaction effects and dry run error (if any).
     pub fn dry_run_transaction(&self, transaction: &Transaction) -> DryRunTransactionQuery {
         DryRunTransactionQuery {
             client: self.clone(),
@@ -129,8 +124,7 @@ impl GraphQLClient {
         }
     }
 
-    /// Dry run a [`TransactionKind`] and return the transaction effects and
-    /// dry run error (if any).
+    /// Dry run a [`TransactionKind`] and return the transaction effects and dry run error (if any).
     pub fn dry_run_transaction_kind(
         &self,
         transaction_kind: &TransactionKind,

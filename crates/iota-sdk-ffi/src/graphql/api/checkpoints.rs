@@ -19,9 +19,8 @@ use crate::{
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
-    /// Get the `CheckpointSummary` for a given checkpoint digest or
-    /// checkpoint id. If none is provided, it will use the last known
-    /// checkpoint id.
+    /// Get the `CheckpointSummary` for a given checkpoint digest or checkpoint id. If none is
+    /// provided, it will use the last known checkpoint id.
     #[uniffi::method(default(digest = None, sequence_number = None))]
     pub async fn checkpoint(
         &self,
@@ -55,16 +54,15 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Return the sequence number of the latest checkpoint that has been
-    /// executed.
+    /// Return the sequence number of the latest checkpoint that has been executed.
     pub async fn latest_checkpoint_sequence_number(
         &self,
     ) -> Result<Option<CheckpointSequenceNumber>> {
         Ok(self.client().latest_checkpoint_sequence_number().await?)
     }
 
-    /// The total number of transaction blocks in the network by the end of the
-    /// provided checkpoint digest.
+    /// The total number of transaction blocks in the network by the end of the provided checkpoint
+    /// digest.
     pub async fn total_transaction_blocks_by_digest(
         &self,
         digest: &CheckpointDigest,
@@ -75,8 +73,8 @@ impl GraphQLClient {
             .await?)
     }
 
-    /// The total number of transaction blocks in the network by the end of the
-    /// provided checkpoint sequence number.
+    /// The total number of transaction blocks in the network by the end of the provided checkpoint
+    /// sequence number.
     pub async fn total_transaction_blocks_by_sequence_number(
         &self,
         sequence_number: u64,
@@ -87,8 +85,8 @@ impl GraphQLClient {
             .await?)
     }
 
-    /// The total number of transaction blocks in the network by the end of the
-    /// last known checkpoint.
+    /// The total number of transaction blocks in the network by the end of the last known
+    /// checkpoint.
     pub async fn total_transaction_blocks(&self) -> Result<Option<u64>> {
         Ok(self.client().total_transaction_blocks().await?)
     }

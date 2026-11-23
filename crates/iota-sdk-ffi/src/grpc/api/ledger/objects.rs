@@ -17,9 +17,8 @@ use crate::{
     },
 };
 
-/// A reference to an object to fetch with `objects_with_versions`, with an
-/// optional version. If no version is provided, the latest version is
-/// returned.
+/// A reference to an object to fetch with `objects_with_versions`, with an optional version. If no
+/// version is provided, the latest version is returned.
 #[derive(uniffi::Record)]
 pub struct GrpcObjectRequest {
     /// The id of the object.
@@ -31,10 +30,9 @@ pub struct GrpcObjectRequest {
 
 /// An object as returned by the gRPC ledger service.
 ///
-/// The `object_id`, `version` and `digest` fields come from `Reference` or its
-/// sub-fields (e.g. `ReferenceObjectId`) in the read mask. The `object` field
-/// is deserialized from BCS, so the read mask must include `Bcs` for it to be
-/// populated.
+/// The `object_id`, `version` and `digest` fields come from `Reference` or its sub-fields (e.g.
+/// `ReferenceObjectId`) in the read mask. The `object` field is deserialized from BCS, so the read
+/// mask must include `Bcs` for it to be populated.
 #[derive(Clone, uniffi::Record)]
 pub struct GrpcObject {
     /// The id of the object.
@@ -81,8 +79,8 @@ impl TryFrom<&proto::object::Object> for GrpcObject {
 }
 
 crate::grpc_batch_results! {
-    /// The results of a batch of objects, in request order. Each item is
-    /// either the object or the error the server reported for it.
+    /// The results of a batch of objects, in request order. Each item is either the object or the
+    /// error the server reported for it.
     GrpcObjectResults(GrpcObject, proto::object::Object)
 }
 
@@ -90,14 +88,13 @@ crate::grpc_batch_results! {
 impl GrpcClient {
     /// Get the latest version of objects by their ids.
     ///
-    /// Results are returned in the same order as the input ids, one per
-    /// id. An object the serving node cannot return — because it is not
-    /// found, was deleted, or has been pruned — fails only its own item,
-    /// which reading throws with the server's error message. An object the
-    /// server returns but that cannot be decoded fails the whole call.
+    /// Results are returned in the same order as the input ids, one per id. An object the serving
+    /// node cannot return — because it is not found, was deleted, or has been pruned — fails only
+    /// its own item, which reading throws with the server's error message. An object the server
+    /// returns but that cannot be decoded fails the whole call.
     ///
-    /// The optional `read_mask` controls which fields the server returns.
-    /// If `None`, the reference and the object are returned.
+    /// The optional `read_mask` controls which fields the server returns. If `None`, the reference
+    /// and the object are returned.
     #[uniffi::method(default(read_mask = None))]
     pub async fn objects(
         &self,
@@ -116,14 +113,13 @@ impl GrpcClient {
 
     /// Get objects by their ids and optional versions.
     ///
-    /// Results are returned in the same order as the input requests, one per
-    /// request. An object the serving node cannot return — because it is not
-    /// found, was deleted, or has been pruned — fails only its own item,
-    /// which reading throws with the server's error message. An object the
+    /// Results are returned in the same order as the input requests, one per request. An object the
+    /// serving node cannot return — because it is not found, was deleted, or has been pruned —
+    /// fails only its own item, which reading throws with the server's error message. An object the
     /// server returns but that cannot be decoded fails the whole call.
     ///
-    /// The optional `read_mask` controls which fields the server returns.
-    /// If `None`, the reference and the object are returned.
+    /// The optional `read_mask` controls which fields the server returns. If `None`, the reference
+    /// and the object are returned.
     #[uniffi::method(default(read_mask = None))]
     pub async fn objects_with_versions(
         &self,

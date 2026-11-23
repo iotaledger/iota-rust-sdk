@@ -23,8 +23,7 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GraphQLClient::dynamic_fields`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::dynamic_fields`]. Await it to send the request.
     #[derive(Clone)]
     pub struct ListDynamicFieldsQuery {
         client: GraphQLClient,
@@ -41,8 +40,8 @@ impl ListDynamicFieldsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<DynamicFieldOutput>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -95,8 +94,7 @@ fn dynamic_field_name(type_tag: TypeTag, name: impl Into<NameValue>) -> DynamicF
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::dynamic_field`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::dynamic_field`]. Await it to send the request.
     pub struct GetDynamicFieldQuery {
         client: GraphQLClient,
         address: Address,
@@ -125,8 +123,7 @@ impl GetDynamicFieldQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::dynamic_object_field`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::dynamic_object_field`]. Await it to send the request.
     pub struct GetDynamicObjectFieldQuery {
         client: GraphQLClient,
         address: Address,
@@ -154,15 +151,14 @@ impl GetDynamicObjectFieldQuery {
 }
 
 impl GraphQLClient {
-    /// Access a dynamic field on an object using its name. Names are arbitrary
-    /// Move values whose type have copy, drop, and store, and are specified
-    /// using their type, and their BCS contents, Base64 encoded.
+    /// Access a dynamic field on an object using its name. Names are arbitrary Move values whose
+    /// type have copy, drop, and store, and are specified using their type, and their BCS contents,
+    /// Base64 encoded.
     ///
-    /// The `name` argument can be either a [`BcsName`](crate::BcsName) for
-    /// passing raw bcs bytes or a type that implements Serialize.
+    /// The `name` argument can be either a [`BcsName`](crate::BcsName) for passing raw bcs bytes or
+    /// a type that implements Serialize.
     ///
-    /// This returns [`DynamicFieldOutput`] which contains the name, the value
-    /// as json, and object.
+    /// This returns [`DynamicFieldOutput`] which contains the name, the value as json, and object.
     ///
     /// # Example
     /// ```rust,ignore
@@ -188,15 +184,14 @@ impl GraphQLClient {
         }
     }
 
-    /// Access a dynamic object field on an object using its name. Names are
-    /// arbitrary Move values whose type have copy, drop, and store, and are
-    /// specified using their type, and their BCS contents, Base64 encoded.
+    /// Access a dynamic object field on an object using its name. Names are arbitrary Move values
+    /// whose type have copy, drop, and store, and are specified using their type, and their BCS
+    /// contents, Base64 encoded.
     ///
-    /// The `name` argument can be either a [`BcsName`](crate::BcsName) for
-    /// passing raw bcs bytes or a type that implements Serialize.
+    /// The `name` argument can be either a [`BcsName`](crate::BcsName) for passing raw bcs bytes or
+    /// a type that implements Serialize.
     ///
-    /// This returns [`DynamicFieldOutput`] which contains the name, the value
-    /// as json, and object.
+    /// This returns [`DynamicFieldOutput`] which contains the name, the value as json, and object.
     pub fn dynamic_object_field(
         &self,
         address: Address,
@@ -210,8 +205,8 @@ impl GraphQLClient {
         }
     }
 
-    /// Get a page of dynamic fields for the provided address. Note that this
-    /// will also fetch dynamic fields on wrapped objects.
+    /// Get a page of dynamic fields for the provided address. Note that this will also fetch
+    /// dynamic fields on wrapped objects.
     pub fn dynamic_fields(&self, address: Address) -> ListDynamicFieldsQuery {
         ListDynamicFieldsQuery {
             client: self.clone(),

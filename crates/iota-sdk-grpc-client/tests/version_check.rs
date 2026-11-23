@@ -1,9 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Calls against a local ledger service that sends a given minimum SDK
-//! version. `service_info` succeeds and every other call fails with
-//! `NOT_FOUND`.
+//! Calls against a local ledger service that sends a given minimum SDK version. `service_info`
+//! succeeds and every other call fails with `NOT_FOUND`.
 
 use std::{
     convert::Infallible,
@@ -98,8 +97,7 @@ impl LedgerService for FakeLedger {
     }
 }
 
-/// Adds the minimum SDK version header to every response of `inner`, as the
-/// node does.
+/// Adds the minimum SDK version header to every response of `inner`, as the node does.
 #[derive(Clone)]
 struct WithMinimum<S> {
     inner: S,

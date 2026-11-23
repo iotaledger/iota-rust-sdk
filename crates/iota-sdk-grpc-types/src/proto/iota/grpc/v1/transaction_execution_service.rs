@@ -14,8 +14,8 @@ impl ExecuteTransactionResult {
     /// Get the executed transaction from the result, if it succeeded.
     ///
     /// The read mask paths in the request apply directly to
-    /// [`ExecutedTransaction`](crate::v1::transaction::ExecutedTransaction)
-    /// fields (e.g. `"effects"`, not `"executed_transaction.effects"`).
+    /// [`ExecutedTransaction`](crate::v1::transaction::ExecutedTransaction) fields (e.g.
+    /// `"effects"`, not `"executed_transaction.effects"`).
     pub fn executed_transaction(&self) -> Option<&crate::v1::transaction::ExecutedTransaction> {
         match &self.result {
             Some(execute_transaction_result::Result::ExecutedTransaction(tx)) => Some(tx),
@@ -53,8 +53,7 @@ impl ExecutionError {
 
     /// Get the error source (human-readable description).
     ///
-    /// **Read mask:** `"execution_result.execution_error.source"` (see
-    /// [`EXECUTION_ERROR_SOURCE`]).
+    /// **Read mask:** `"execution_result.execution_error.source"` (see [`EXECUTION_ERROR_SOURCE`]).
     ///
     /// [`EXECUTION_ERROR_SOURCE`]: crate::read_masks::EXECUTION_ERROR_SOURCE
     pub fn error_source(&self) -> Result<String, TryFromProtoError> {
@@ -80,9 +79,8 @@ impl ExecutionError {
 impl SimulatedTransaction {
     /// Get the simulated executed transaction.
     ///
-    /// Returns the
-    /// [`ExecutedTransaction`](crate::v1::transaction::ExecutedTransaction)
-    /// with sub-fields populated according to the read mask. Use paths like
+    /// Returns the [`ExecutedTransaction`](crate::v1::transaction::ExecutedTransaction) with
+    /// sub-fields populated according to the read mask. Use paths like
     /// `"executed_transaction.effects"` to request specific sub-fields.
     ///
     /// **Read mask:** `"executed_transaction"` (see
@@ -99,8 +97,7 @@ impl SimulatedTransaction {
 
     /// Get the suggested gas price (in NANOS).
     ///
-    /// **Read mask:** `"suggested_gas_price"` (see
-    /// [`SIMULATED_TRANSACTION_SUGGESTED_GAS_PRICE`]).
+    /// **Read mask:** `"suggested_gas_price"` (see [`SIMULATED_TRANSACTION_SUGGESTED_GAS_PRICE`]).
     ///
     /// [`SIMULATED_TRANSACTION_SUGGESTED_GAS_PRICE`]: crate::read_masks::SIMULATED_TRANSACTION_SUGGESTED_GAS_PRICE
     pub fn gas_price_suggested(&self) -> Result<u64, TryFromProtoError> {
@@ -108,11 +105,9 @@ impl SimulatedTransaction {
             .ok_or_else(|| TryFromProtoError::missing(Self::SUGGESTED_GAS_PRICE_FIELD.name))
     }
 
-    /// Get the execution result (command results on success, execution error on
-    /// failure).
+    /// Get the execution result (command results on success, execution error on failure).
     ///
-    /// **Read mask:** `"execution_result"` (see
-    /// [`SIMULATED_TRANSACTION_EXECUTION_RESULT`]).
+    /// **Read mask:** `"execution_result"` (see [`SIMULATED_TRANSACTION_EXECUTION_RESULT`]).
     ///
     /// [`SIMULATED_TRANSACTION_EXECUTION_RESULT`]: crate::read_masks::SIMULATED_TRANSACTION_EXECUTION_RESULT
     pub fn execution_result(
@@ -126,11 +121,9 @@ impl SimulatedTransaction {
             .ok_or_else(|| TryFromProtoError::missing(Self::EXECUTION_RESULT_ONEOF))
     }
 
-    /// Returns `Some` if the simulation succeeded with command results, `None`
-    /// otherwise.
+    /// Returns `Some` if the simulation succeeded with command results, `None` otherwise.
     ///
-    /// **Read mask:** `"execution_result"` (see
-    /// [`SIMULATED_TRANSACTION_EXECUTION_RESULT`]).
+    /// **Read mask:** `"execution_result"` (see [`SIMULATED_TRANSACTION_EXECUTION_RESULT`]).
     ///
     /// [`SIMULATED_TRANSACTION_EXECUTION_RESULT`]: crate::read_masks::SIMULATED_TRANSACTION_EXECUTION_RESULT
     pub fn command_results(&self) -> Option<&crate::v1::command::CommandResults> {
@@ -140,11 +133,9 @@ impl SimulatedTransaction {
         }
     }
 
-    /// Returns `Some` if the simulation failed with an execution error, `None`
-    /// otherwise.
+    /// Returns `Some` if the simulation failed with an execution error, `None` otherwise.
     ///
-    /// **Read mask:** `"execution_result"` (see
-    /// [`SIMULATED_TRANSACTION_EXECUTION_RESULT`]).
+    /// **Read mask:** `"execution_result"` (see [`SIMULATED_TRANSACTION_EXECUTION_RESULT`]).
     ///
     /// [`SIMULATED_TRANSACTION_EXECUTION_RESULT`]: crate::read_masks::SIMULATED_TRANSACTION_EXECUTION_RESULT
     pub fn execution_error(
@@ -180,11 +171,9 @@ impl SimulateTransactionResult {
 // ViewFunctionCallOutputs
 
 impl ViewFunctionCallOutputs {
-    /// Get the execution result (return values on success, execution error on
-    /// failure).
+    /// Get the execution result (return values on success, execution error on failure).
     ///
-    /// **Read mask:** `"execution_result"` (see
-    /// [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]).
+    /// **Read mask:** `"execution_result"` (see [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]).
     ///
     /// [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]: crate::read_masks::VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT
     pub fn execution_result(
@@ -200,8 +189,7 @@ impl ViewFunctionCallOutputs {
 
     /// Returns `Some` if the call returned, `None` if it aborted.
     ///
-    /// **Read mask:** `"execution_result"` (see
-    /// [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]).
+    /// **Read mask:** `"execution_result"` (see [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]).
     ///
     /// [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]: crate::read_masks::VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT
     pub fn return_values(&self) -> Option<&crate::v1::command::CommandOutputs> {
@@ -213,8 +201,7 @@ impl ViewFunctionCallOutputs {
 
     /// Returns `Some` if the call aborted, `None` if it returned.
     ///
-    /// **Read mask:** `"execution_result"` (see
-    /// [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]).
+    /// **Read mask:** `"execution_result"` (see [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]).
     ///
     /// [`VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT`]: crate::read_masks::VIEW_FUNCTION_CALL_OUTPUTS_EXECUTION_RESULT
     pub fn execution_error(
@@ -232,9 +219,9 @@ impl ViewFunctionCallOutputs {
 impl ViewFunctionCallResult {
     /// Get the outputs of this call, if the server ran it.
     ///
-    /// A call that ran and aborted still has outputs — the abort is reported
-    /// through [`ViewFunctionCallOutputs::execution_error`]. `None` here means
-    /// the server rejected the call outright; see [`Self::error`].
+    /// A call that ran and aborted still has outputs — the abort is reported through
+    /// [`ViewFunctionCallOutputs::execution_error`]. `None` here means the server rejected the call
+    /// outright; see [`Self::error`].
     pub fn outputs(&self) -> Option<&ViewFunctionCallOutputs> {
         match &self.result {
             Some(view_function_call_result::Result::CallOutputs(outputs)) => Some(outputs),

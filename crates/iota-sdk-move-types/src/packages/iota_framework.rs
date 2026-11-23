@@ -108,11 +108,10 @@ pub mod iota {
 
     /// Rust version of the Move `iota::iota::IOTA` type.
     ///
-    /// Name of the coin. The Move struct is empty; Move bytecode requires at
-    /// least one field, so this carries a `dummy_field` to preserve the BCS
-    /// wire format (1 byte, always `false`).
-    // The MoveShape derive lets `Balance<IOTA>` references in mirrors like
-    // `Kiosk` resolve `<IOTA as MoveShape>::NAME` at macro time.
+    /// Name of the coin. The Move struct is empty; Move bytecode requires at least one field, so
+    /// this carries a `dummy_field` to preserve the BCS wire format (1 byte, always `false`).
+    // The MoveShape derive lets `Balance<IOTA>` references in mirrors like `Kiosk` resolve `<IOTA
+    // as MoveShape>::NAME` at macro time.
     /// # BCS
     ///
     /// The BCS serialized form of this type is specified in
@@ -165,12 +164,10 @@ pub mod iota {
 
 /// Types from `0x2::system_admin_cap`.
 pub mod system_admin_cap {
-    /// Rust version of the Move `iota::system_admin_cap::IotaSystemAdminCap`
-    /// type.
+    /// Rust version of the Move `iota::system_admin_cap::IotaSystemAdminCap` type.
     ///
-    /// Capability allowing the bearer to perform privileged IOTA system
-    /// operations. The Move struct is empty; the Rust mirror carries a
-    /// `dummy_field` to preserve the BCS wire format.
+    /// Capability allowing the bearer to perform privileged IOTA system operations. The Move struct
+    /// is empty; the Rust mirror carries a `dummy_field` to preserve the BCS wire format.
     ///
     /// # BCS
     ///
@@ -194,8 +191,8 @@ pub mod balance {
 
     /// Rust version of the Move `iota::balance::Supply<T>` type.
     ///
-    /// A `Supply` of `T`; used for minting and burning. Wrapped into a
-    /// `TreasuryCap` in the `coin` module.
+    /// A `Supply` of `T`; used for minting and burning. Wrapped into a `TreasuryCap` in the `coin`
+    /// module.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -224,8 +221,8 @@ pub mod balance {
 
     /// Rust version of the Move `iota::balance::Balance<T>` type.
     ///
-    /// A storable balance — the inner struct of a `Coin` type. Can be used
-    /// to store coins which don't need the `key` ability.
+    /// A storable balance — the inner struct of a `Coin` type. Can be used to store coins which
+    /// don't need the `key` ability.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -252,8 +249,8 @@ pub mod balance {
         }
     }
 
-    /// Compositional tag: `Balance<T>` is itself a valid type argument
-    /// (e.g. `TimeLock<Balance<IOTA>>`), so its tag is derived from `T`'s.
+    /// Compositional tag: `Balance<T>` is itself a valid type argument (e.g.
+    /// `TimeLock<Balance<IOTA>>`), so its tag is derived from `T`'s.
     impl<T: crate::MoveType> crate::MoveType for Balance<T> {
         /// `0x2::balance::Balance<T>`.
         fn type_tag() -> iota_types::TypeTag {
@@ -268,9 +265,8 @@ pub mod bag {
 
     /// Rust version of the Move `iota::bag::Bag` type.
     ///
-    /// A heterogeneous map-like collection. Keys and values are stored as
-    /// dynamic fields off the bag's UID; the struct itself just carries the
-    /// handle and an entry count.
+    /// A heterogeneous map-like collection. Keys and values are stored as dynamic fields off the
+    /// bag's UID; the struct itself just carries the handle and an entry count.
     ///
     /// # BCS
     ///
@@ -336,8 +332,7 @@ pub mod coin {
     where
         T: serde::de::DeserializeOwned,
     {
-        /// Decode a [`Coin<T>`] from BCS bytes without verifying the
-        /// on-chain type tag.
+        /// Decode a [`Coin<T>`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
@@ -347,8 +342,8 @@ pub mod coin {
 
     /// Rust version of the Move `iota::coin::CoinMetadata<T>` type.
     ///
-    /// Each `Coin<T>` created through `create_currency` has a unique
-    /// `CoinMetadata<T>` storing display metadata for the coin type.
+    /// Each `Coin<T>` created through `create_currency` has a unique `CoinMetadata<T>` storing
+    /// display metadata for the coin type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -397,8 +392,7 @@ pub mod coin {
     where
         T: serde::de::DeserializeOwned,
     {
-        /// Decode a [`CoinMetadata<T>`] from BCS bytes without verifying
-        /// the on-chain type tag.
+        /// Decode a [`CoinMetadata<T>`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
@@ -408,8 +402,8 @@ pub mod coin {
 
     /// Rust version of the Move `iota::coin::RegulatedCoinMetadata<T>` type.
     ///
-    /// Similar to [`CoinMetadata`], but created only for regulated coins
-    /// that use the DenyList. Always immutable.
+    /// Similar to [`CoinMetadata`], but created only for regulated coins that use the DenyList.
+    /// Always immutable.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -471,9 +465,8 @@ pub mod coin {
 
     /// Rust version of the Move `iota::coin::DenyCapV1<T>` type.
     ///
-    /// Capability allowing the bearer to deny addresses from using the
-    /// currency's coins. If `allow_global_pause` is `true`, the bearer can
-    /// also enable a global pause.
+    /// Capability allowing the bearer to deny addresses from using the currency's coins. If
+    /// `allow_global_pause` is `true`, the bearer can also enable a global pause.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -508,8 +501,8 @@ pub mod table {
 
     /// Rust version of the Move `iota::table::Table<K, V>` type.
     ///
-    /// A map-like collection. Keys and values are stored as dynamic fields
-    /// off the table's `UID`, not inside the struct itself.
+    /// A map-like collection. Keys and values are stored as dynamic fields off the table's `UID`,
+    /// not inside the struct itself.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -546,9 +539,9 @@ pub mod url {
 
     /// Rust version of the Move `iota::url::Url` type.
     ///
-    /// A standard URL string. The Move type stores ASCII bytes only; this
-    /// Rust mirror does **not** enforce that invariant on construction. Use
-    /// [`Url::try_from_ascii`] for a validating constructor.
+    /// A standard URL string. The Move type stores ASCII bytes only; this Rust mirror does **not**
+    /// enforce that invariant on construction. Use [`Url::try_from_ascii`] for a validating
+    /// constructor.
     ///
     /// # BCS
     ///
@@ -570,8 +563,7 @@ pub mod url {
             Self { url }
         }
 
-        /// Construct a [`Url`] from a Rust string, validating that it is
-        /// ASCII.
+        /// Construct a [`Url`] from a Rust string, validating that it is ASCII.
         pub fn try_from_ascii(s: impl Into<String>) -> Result<Self, NonAsciiUrl> {
             let s = s.into();
             if !s.is_ascii() {
@@ -583,11 +575,10 @@ pub mod url {
         }
     }
 
-    /// Returned by [`Url::try_from_ascii`] when the input contains non-ASCII
-    /// bytes.
+    /// Returned by [`Url::try_from_ascii`] when the input contains non-ASCII bytes.
     ///
-    /// This is a Rust-side error type, not a mirror of a Move struct, so it
-    /// has no Move counterpart and no `MoveShape` derive.
+    /// This is a Rust-side error type, not a mirror of a Move struct, so it has no Move counterpart
+    /// and no `MoveShape` derive.
     #[derive(Clone, Copy, Debug, Eq, PartialEq)]
     pub struct NonAsciiUrl;
 
@@ -599,8 +590,8 @@ pub mod url {
 
     impl core::error::Error for NonAsciiUrl {}
 
-    /// Converts through the `ascii::String` conversion, so it fails only on
-    /// bytes that are not UTF-8 and does not check for ASCII.
+    /// Converts through the `ascii::String` conversion, so it fails only on bytes that are not
+    /// UTF-8 and does not check for ASCII.
     impl TryFrom<Url> for String {
         type Error = std::string::FromUtf8Error;
 
@@ -653,9 +644,8 @@ pub mod vec_map {
 
     /// Rust version of the Move `iota::vec_map::VecMap<K, V>` type.
     ///
-    /// A map backed by a vector; guaranteed to contain no duplicate keys.
-    /// Entries are *not* sorted; they are stored in insertion order. All
-    /// operations are O(N).
+    /// A map backed by a vector; guaranteed to contain no duplicate keys. Entries are *not* sorted;
+    /// they are stored in insertion order. All operations are O(N).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -825,8 +815,8 @@ pub mod table_vec {
 
     /// Rust version of the Move `iota::table_vec::TableVec<Element>` type.
     ///
-    /// A vector-like collection whose elements are stored as dynamic fields
-    /// off an inner [`Table<u64, Element>`].
+    /// A vector-like collection whose elements are stored as dynamic fields off an inner
+    /// [`Table<u64, Element>`].
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -851,9 +841,9 @@ pub mod versioned {
 
     /// Rust version of the Move `iota::versioned::Versioned` type.
     ///
-    /// A wrapper that supports versioning of an inner type stored as a
-    /// dynamic field keyed by `version`. Consumers load the inner object
-    /// using the type corresponding to the current `version`.
+    /// A wrapper that supports versioning of an inner type stored as a dynamic field keyed by
+    /// `version`. Consumers load the inner object using the type corresponding to the current
+    /// `version`.
     ///
     /// # BCS
     ///
@@ -880,8 +870,8 @@ pub mod versioned {
 
     /// Rust version of the Move `iota::versioned::VersionChangeCap` type.
     ///
-    /// A hot-potato object generated when the inner dynamic field is taken
-    /// out, ensuring a new value is always put back.
+    /// A hot-potato object generated when the inner dynamic field is taken out, ensuring a new
+    /// value is always put back.
     ///
     /// # BCS
     ///
@@ -914,8 +904,8 @@ pub mod versioned {
 pub mod bcs {
     /// Rust version of the Move `iota::bcs::BCS` type.
     ///
-    /// A helper struct used by the Move-side BCS deserializer; stores
-    /// reversed bytes so `vector::pop_back` can be used efficiently.
+    /// A helper struct used by the Move-side BCS deserializer; stores reversed bytes so
+    /// `vector::pop_back` can be used efficiently.
     ///
     /// # BCS
     ///
@@ -945,9 +935,8 @@ pub mod clock {
 
     /// Rust version of the Move `iota::clock::Clock` type.
     ///
-    /// Singleton shared object at `0x6` that exposes the current time to
-    /// Move calls. Entry functions can only accept it by immutable
-    /// reference.
+    /// Singleton shared object at `0x6` that exposes the current time to Move calls. Entry
+    /// functions can only accept it by immutable reference.
     ///
     /// # BCS
     ///
@@ -962,8 +951,8 @@ pub mod clock {
     )]
     pub struct Clock {
         pub id: UID,
-        /// The clock's timestamp. Set automatically by a system transaction
-        /// every time consensus commits a schedule.
+        /// The clock's timestamp. Set automatically by a system transaction every time consensus
+        /// commits a schedule.
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub timestamp_ms: u64,
     }
@@ -976,8 +965,7 @@ pub mod clock {
 
     #[cfg(feature = "serde")]
     impl Clock {
-        /// Decode a [`Clock`] from BCS bytes without verifying the
-        /// on-chain type tag.
+        /// Decode a [`Clock`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
@@ -992,9 +980,8 @@ pub mod tx_context {
 
     /// Rust version of the Move `iota::tx_context::TxContext` type.
     ///
-    /// Information about the transaction currently being executed. Not
-    /// constructible from user code — created by the VM and passed to the
-    /// transaction entrypoint as `&mut TxContext`.
+    /// Information about the transaction currently being executed. Not constructible from user code
+    /// — created by the VM and passed to the transaction entrypoint as `&mut TxContext`.
     ///
     /// # BCS
     ///
@@ -1018,8 +1005,8 @@ pub mod tx_context {
         /// Timestamp at which the epoch started.
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch_timestamp_ms: u64,
-        /// Counter recording the number of fresh IDs created while
-        /// executing this transaction. Always 0 at the start.
+        /// Counter recording the number of fresh IDs created while executing this transaction.
+        /// Always 0 at the start.
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub ids_created: u64,
     }
@@ -1029,8 +1016,7 @@ pub mod tx_context {
 pub mod intent {
     /// Rust version of the Move `iota::intent::Intent` type.
     ///
-    /// Compact 3-byte struct prepended to a message before signing as a
-    /// domain separator.
+    /// Compact 3-byte struct prepended to a message before signing as a domain separator.
     ///
     /// # BCS
     ///
@@ -1067,11 +1053,10 @@ pub mod zklogin_verified_id {
     use super::object::UID;
     use crate::move_stdlib::string;
 
-    /// Rust version of the Move `iota::zklogin_verified_id::VerifiedID`
-    /// type.
+    /// Rust version of the Move `iota::zklogin_verified_id::VerifiedID` type.
     ///
-    /// Possession proves that the user's address was created using zkLogin
-    /// with the given parameters.
+    /// Possession proves that the user's address was created using zkLogin with the given
+    /// parameters.
     ///
     /// # BCS
     ///
@@ -1106,8 +1091,7 @@ pub mod zklogin_verified_issuer {
     use super::object::UID;
     use crate::move_stdlib::string;
 
-    /// Rust version of the Move
-    /// `iota::zklogin_verified_issuer::VerifiedIssuer` type.
+    /// Rust version of the Move `iota::zklogin_verified_issuer::VerifiedIssuer` type.
     ///
     /// # BCS
     ///
@@ -1135,8 +1119,8 @@ pub mod transfer {
 
     /// Rust version of the Move `iota::transfer::Receiving<T>` type.
     ///
-    /// Represents the ability to `receive` an object of type `T`.
-    /// Ephemeral per-transaction; cannot be stored on-chain.
+    /// Represents the ability to `receive` an object of type `T`. Ephemeral per-transaction; cannot
+    /// be stored on-chain.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -1208,8 +1192,7 @@ pub mod timelock {
     where
         T: serde::de::DeserializeOwned,
     {
-        /// Decode a [`TimeLock<T>`] from BCS bytes without verifying the
-        /// on-chain type tag.
+        /// Decode a [`TimeLock<T>`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
@@ -1246,9 +1229,8 @@ pub mod borrow {
 
     /// Rust version of the Move `iota::borrow::Borrow` type.
     ///
-    /// A hot potato making sure the object is put back once borrowed. The
-    /// Move field name `ref` is a Rust keyword, so it is stored on the
-    /// raw identifier `r#ref`.
+    /// A hot potato making sure the object is put back once borrowed. The Move field name `ref` is
+    /// a Rust keyword, so it is stored on the raw identifier `r#ref`.
     ///
     /// # BCS
     ///
@@ -1271,11 +1253,10 @@ pub mod borrow {
 pub mod dynamic_field {
     use super::object::UID;
 
-    /// Rust version of the Move `iota::dynamic_field::Field<Name, Value>`
-    /// type.
+    /// Rust version of the Move `iota::dynamic_field::Field<Name, Value>` type.
     ///
-    /// Internal object used for storing the field and value. The object's
-    /// ID is determined by `hash(parent.id || name || Name)`.
+    /// Internal object used for storing the field and value. The object's ID is determined by
+    /// `hash(parent.id || name || Name)`.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -1299,8 +1280,7 @@ pub mod dynamic_field {
 
 /// Types from `0x2::dynamic_object_field`.
 pub mod dynamic_object_field {
-    /// Rust version of the Move
-    /// `iota::dynamic_object_field::Wrapper<Name>` type.
+    /// Rust version of the Move `iota::dynamic_object_field::Wrapper<Name>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -1335,8 +1315,8 @@ pub mod labeler {
 
     /// Rust version of the Move `iota::labeler::LabelerCap<L>` type.
     ///
-    /// Allows creating labels of the specific type `L`. Can be publicly
-    /// transferred like any other object.
+    /// Allows creating labels of the specific type `L`. Can be publicly transferred like any other
+    /// object.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -1367,12 +1347,10 @@ pub mod linked_table {
 
     use super::object::UID;
 
-    /// Rust version of the Move `iota::linked_table::LinkedTable<K, V>`
-    /// type.
+    /// Rust version of the Move `iota::linked_table::LinkedTable<K, V>` type.
     ///
-    /// A map-like collection with ordered insertion and removal. Like a
-    /// `Table`, keys and values are stored as dynamic fields off the
-    /// table's UID, not inside the struct.
+    /// A map-like collection with ordered insertion and removal. Like a `Table`, keys and values
+    /// are stored as dynamic fields off the table's UID, not inside the struct.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -1430,11 +1408,9 @@ pub mod object_table {
 
     use super::object::UID;
 
-    /// Rust version of the Move `iota::object_table::ObjectTable<K, V>`
-    /// type.
+    /// Rust version of the Move `iota::object_table::ObjectTable<K, V>` type.
     ///
-    /// Similar to `Table`, but the values bound as dynamic fields *must*
-    /// be objects themselves.
+    /// Similar to `Table`, but the values bound as dynamic fields *must* be objects themselves.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -1508,11 +1484,10 @@ pub mod priority_queue {
         }
     }
 
-    /// Rust version of the Move `iota::priority_queue::PriorityQueue<T>`
-    /// type.
+    /// Rust version of the Move `iota::priority_queue::PriorityQueue<T>` type.
     ///
-    /// A priority queue implemented as a max-heap. `entries[0]` is the
-    /// root; children of `entries[i]` are at `i * 2 + 1` and `i * 2 + 2`.
+    /// A priority queue implemented as a max-heap. `entries[0]` is the root; children of
+    /// `entries[i]` are at `i * 2 + 1` and `i * 2 + 2`.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -1532,8 +1507,7 @@ pub mod priority_queue {
 
 /// Types from `0x2::derived_object`.
 pub mod derived_object {
-    /// Rust version of the Move `iota::derived_object::DerivedObjectKey<K>`
-    /// type.
+    /// Rust version of the Move `iota::derived_object::DerivedObjectKey<K>` type.
     ///
     /// An internal key to protect from generating the same UID twice.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -1556,8 +1530,7 @@ pub mod authenticator_state {
     use super::object::UID;
     use crate::move_stdlib::string;
 
-    /// Rust version of the Move
-    /// `iota::authenticator_state::AuthenticatorState` type.
+    /// Rust version of the Move `iota::authenticator_state::AuthenticatorState` type.
     ///
     /// # BCS
     ///
@@ -1576,8 +1549,7 @@ pub mod authenticator_state {
         pub version: u64,
     }
 
-    /// Rust version of the Move
-    /// `iota::authenticator_state::AuthenticatorStateInner` type.
+    /// Rust version of the Move `iota::authenticator_state::AuthenticatorStateInner` type.
     ///
     /// # BCS
     ///
@@ -1639,8 +1611,7 @@ pub mod authenticator_state {
         pub kid: string::String,
     }
 
-    /// Rust version of the Move `iota::authenticator_state::ActiveJwk`
-    /// type.
+    /// Rust version of the Move `iota::authenticator_state::ActiveJwk` type.
     ///
     /// # BCS
     ///
@@ -1673,9 +1644,8 @@ pub mod display {
 
     /// Rust version of the Move `iota::display::Display<T>` type.
     ///
-    /// Defines the way a `T` instance should be displayed. Uses `String`
-    /// types throughout because display rules are external-facing and the
-    /// property names take priority over their types.
+    /// Defines the way a `T` instance should be displayed. Uses `String` types throughout because
+    /// display rules are external-facing and the property names take priority over their types.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -1684,8 +1654,8 @@ pub mod display {
     )]
     pub struct Display<T> {
         pub id: UID,
-        /// Fields for display. Currently supported field names are `name`,
-        /// `link`, `image`, `description`.
+        /// Fields for display. Currently supported field names are `name`, `link`, `image`,
+        /// `description`.
         pub fields: VecMap<string::String, string::String>,
         /// Version that can only be updated manually by the publisher.
         pub version: u16,
@@ -1710,8 +1680,7 @@ pub mod display {
 
     impl_try_from_object_generic!(Display<phantom T>);
 
-    /// Rust version of the Move `iota::display::DisplayCreated<T>` event
-    /// type.
+    /// Rust version of the Move `iota::display::DisplayCreated<T>` event type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -1733,8 +1702,7 @@ pub mod display {
         }
     }
 
-    /// Rust version of the Move `iota::display::VersionUpdated<T>` event
-    /// type.
+    /// Rust version of the Move `iota::display::VersionUpdated<T>` event type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -1772,9 +1740,8 @@ pub mod package {
 
     /// Rust version of the Move `iota::package::Publisher` type.
     ///
-    /// Can only be created in the transaction that creates a module, by
-    /// consuming its one-time witness, so it can be used to identify the
-    /// publishing address.
+    /// Can only be created in the transaction that creates a module, by consuming its one-time
+    /// witness, so it can be used to identify the publishing address.
     ///
     /// # BCS
     ///
@@ -1795,8 +1762,7 @@ pub mod package {
 
     #[cfg(feature = "serde")]
     impl Publisher {
-        /// Decode a [`Publisher`] from BCS bytes without verifying the
-        /// on-chain type tag.
+        /// Decode a [`Publisher`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
@@ -1823,8 +1789,8 @@ pub mod package {
         pub id: UID,
         /// (Mutable) ID of the package that can be upgraded.
         pub package: ID,
-        /// (Mutable) Number of upgrades that have been applied to the
-        /// original package. Initially 0.
+        /// (Mutable) Number of upgrades that have been applied to the original package.
+        /// Initially 0.
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub version: u64,
         /// What kind of upgrades are allowed.
@@ -1844,8 +1810,7 @@ pub mod package {
 
     #[cfg(feature = "serde")]
     impl UpgradeCap {
-        /// Decode an [`UpgradeCap`] from BCS bytes without verifying the
-        /// on-chain type tag.
+        /// Decode an [`UpgradeCap`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
@@ -1855,8 +1820,8 @@ pub mod package {
 
     /// Rust version of the Move `iota::package::UpgradeTicket` type.
     ///
-    /// Permission to perform a particular upgrade. An `UpgradeCap` can
-    /// only issue one ticket at a time — the ticket is a hot potato.
+    /// Permission to perform a particular upgrade. An `UpgradeCap` can only issue one ticket at a
+    /// time — the ticket is a hot potato.
     ///
     /// # BCS
     ///
@@ -1873,16 +1838,16 @@ pub mod package {
         pub cap: ID,
         pub package: ID,
         pub policy: u8,
-        /// SHA-256 digest of the bytecode and transitive dependencies that
-        /// will be used in the upgrade.
+        /// SHA-256 digest of the bytecode and transitive dependencies that will be used in the
+        /// upgrade.
         pub digest: Vec<u8>,
     }
 
     /// Rust version of the Move `iota::package::UpgradeReceipt` type.
     ///
-    /// Issued as a result of a successful upgrade, containing info to be
-    /// used to update the `UpgradeCap`. A hot potato to ensure that the
-    /// upgrade is recorded before the transaction ends.
+    /// Issued as a result of a successful upgrade, containing info to be used to update the
+    /// `UpgradeCap`. A hot potato to ensure that the upgrade is recorded before the transaction
+    /// ends.
     ///
     /// # BCS
     ///
@@ -1909,8 +1874,8 @@ pub mod package {
 
 /// Types from `0x2::bls12381`.
 ///
-/// Each of the marker structs is empty in Move; the Rust mirrors carry a
-/// `dummy_field` to preserve the BCS wire format (1 byte).
+/// Each of the marker structs is empty in Move; the Rust mirrors carry a `dummy_field` to preserve
+/// the BCS wire format (1 byte).
 pub mod bls12381 {
     /// Rust version of the Move `iota::bls12381::Scalar` type.
     ///
@@ -2002,8 +1967,8 @@ pub mod bls12381 {
 pub mod groth16 {
     /// Rust version of the Move `iota::groth16::Curve` type.
     ///
-    /// Represents an elliptic-curve construction to be used in the
-    /// verifier. Currently BLS12-381 and BN254 are supported.
+    /// Represents an elliptic-curve construction to be used in the verifier. Currently BLS12-381
+    /// and BN254 are supported.
     ///
     /// # BCS
     ///
@@ -2109,8 +2074,7 @@ pub mod authenticator_function {
     use super::object::ID;
     use crate::move_stdlib::ascii;
 
-    /// Rust version of the Move
-    /// `iota::authenticator_function::AuthenticatorFunctionRefV1<Account>`
+    /// Rust version of the Move `iota::authenticator_function::AuthenticatorFunctionRefV1<Account>`
     /// type.
     ///
     /// Represents a validated authenticate function.
@@ -2148,8 +2112,7 @@ pub mod authenticator_function {
 pub mod account {
     use super::{authenticator_function::AuthenticatorFunctionRefV1, object::ID};
 
-    /// Rust version of the Move `iota::account::ImmutableAccountCreated`
-    /// event type.
+    /// Rust version of the Move `iota::account::ImmutableAccountCreated` event type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -2161,8 +2124,7 @@ pub mod account {
         pub authenticator: AuthenticatorFunctionRefV1<Account>,
     }
 
-    /// Rust version of the Move `iota::account::MutableAccountCreated`
-    /// event type.
+    /// Rust version of the Move `iota::account::MutableAccountCreated` event type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -2174,8 +2136,7 @@ pub mod account {
         pub authenticator: AuthenticatorFunctionRefV1<Account>,
     }
 
-    /// Rust version of the Move
-    /// `iota::account::AuthenticatorFunctionRefV1Rotated` event type.
+    /// Rust version of the Move `iota::account::AuthenticatorFunctionRefV1Rotated` event type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -2188,12 +2149,10 @@ pub mod account {
         pub to: AuthenticatorFunctionRefV1<Account>,
     }
 
-    /// Rust version of the Move
-    /// `iota::account::AuthenticatorFunctionRefV1Key` type.
+    /// Rust version of the Move `iota::account::AuthenticatorFunctionRefV1Key` type.
     ///
-    /// Dynamic-field key used to locate a potential authenticate function.
-    /// The Move struct is empty; the Rust mirror carries a `dummy_field`
-    /// to preserve the BCS wire format.
+    /// Dynamic-field key used to locate a potential authenticate function. The Move struct is
+    /// empty; the Rust mirror carries a `dummy_field` to preserve the BCS wire format.
     ///
     /// # BCS
     ///
@@ -2224,8 +2183,7 @@ pub mod coin_manager {
 
     /// Rust version of the Move `iota::coin_manager::CoinManager<T>` type.
     ///
-    /// Holds all the related objects to the coin of type `T` in a single
-    /// shared object.
+    /// Holds all the related objects to the coin of type `T` in a single shared object.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -2234,14 +2192,12 @@ pub mod coin_manager {
     )]
     pub struct CoinManager<T> {
         pub id: UID,
-        /// The original `TreasuryCap` object as returned by
-        /// `create_currency`.
+        /// The original `TreasuryCap` object as returned by `create_currency`.
         pub treasury_cap: TreasuryCap<T>,
-        /// Metadata object, original one from the `coin` module, if
-        /// available.
+        /// Metadata object, original one from the `coin` module, if available.
         pub metadata: Option<CoinMetadata<T>>,
-        /// Immutable metadata object, only to be used as a last resort if
-        /// the original metadata is frozen.
+        /// Immutable metadata object, only to be used as a last resort if the original metadata is
+        /// frozen.
         pub immutable_metadata: Option<ImmutableCoinMetadata<T>>,
         /// Optional maximum supply.
         #[cfg_attr(
@@ -2257,8 +2213,7 @@ pub mod coin_manager {
 
     impl_try_from_object_generic!(CoinManager<phantom T>);
 
-    /// Rust version of the Move
-    /// `iota::coin_manager::CoinManagerTreasuryCap<T>` type.
+    /// Rust version of the Move `iota::coin_manager::CoinManagerTreasuryCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -2282,8 +2237,7 @@ pub mod coin_manager {
 
     impl_try_from_object_generic!(CoinManagerTreasuryCap<phantom T>);
 
-    /// Rust version of the Move
-    /// `iota::coin_manager::CoinManagerMetadataCap<T>` type.
+    /// Rust version of the Move `iota::coin_manager::CoinManagerMetadataCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -2307,8 +2261,7 @@ pub mod coin_manager {
 
     impl_try_from_object_generic!(CoinManagerMetadataCap<phantom T>);
 
-    /// Rust version of the Move
-    /// `iota::coin_manager::ImmutableCoinMetadata<T>` type.
+    /// Rust version of the Move `iota::coin_manager::ImmutableCoinMetadata<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -2361,8 +2314,7 @@ pub mod coin_manager {
         pub coin_name: ascii::String,
     }
 
-    /// Rust version of the Move
-    /// `iota::coin_manager::TreasuryOwnershipRenounced` event.
+    /// Rust version of the Move `iota::coin_manager::TreasuryOwnershipRenounced` event.
     ///
     /// # BCS
     ///
@@ -2379,8 +2331,7 @@ pub mod coin_manager {
         pub coin_name: ascii::String,
     }
 
-    /// Rust version of the Move
-    /// `iota::coin_manager::MetadataOwnershipRenounced` event.
+    /// Rust version of the Move `iota::coin_manager::MetadataOwnershipRenounced` event.
     ///
     /// # BCS
     ///
@@ -2414,8 +2365,8 @@ pub mod token {
 
     /// Rust version of the Move `iota::token::Token<T>` type.
     ///
-    /// A single `Token` with a `Balance` inside. Can only be owned by an
-    /// address; actions on it must be confirmed in a matching `TokenPolicy`.
+    /// A single `Token` with a `Balance` inside. Can only be owned by an address; actions on it
+    /// must be confirmed in a matching `TokenPolicy`.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -2470,11 +2421,10 @@ pub mod token {
     )]
     pub struct TokenPolicy<T> {
         pub id: UID,
-        /// Balance effectively spent on the `spend` action. Cannot be
-        /// accessed by anyone but the `TreasuryCap` owner.
+        /// Balance effectively spent on the `spend` action. Cannot be accessed by anyone but the
+        /// `TreasuryCap` owner.
         pub spent_balance: Balance<T>,
-        /// Rules that define what actions can be performed on the token,
-        /// keyed by action name.
+        /// Rules that define what actions can be performed on the token, keyed by action name.
         pub rules: VecMap<string::String, VecSet<TypeName>>,
     }
 
@@ -2502,16 +2452,15 @@ pub mod token {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct ActionRequest<T> {
-        /// Name of the action — one of `transfer`, `spend`, `to_coin`,
-        /// `from_coin`, or a custom action.
+        /// Name of the action — one of `transfer`, `spend`, `to_coin`, `from_coin`, or a custom
+        /// action.
         pub name: string::String,
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub amount: u64,
         pub sender: Address,
         /// Only present for the `transfer` action.
         pub recipient: Option<Address>,
-        /// Balance to be spent in the `TokenPolicy`. Only present for the
-        /// `spend` action.
+        /// Balance to be spent in the `TokenPolicy`. Only present for the `spend` action.
         pub spent_balance: Option<Balance<T>>,
         /// Collected approvals from completed rules.
         pub approvals: VecSet<TypeName>,
@@ -2571,14 +2520,12 @@ pub mod module_metadata {
     use super::object::UID;
     use crate::move_stdlib::ascii;
 
-    /// Rust version of the Move `iota::module_metadata::ModuleMetadata`
-    /// type.
+    /// Rust version of the Move `iota::module_metadata::ModuleMetadata` type.
     ///
-    /// On-chain metadata associated with a single module of a package: a
-    /// key-value store backed by dynamic fields, owned by the package's
-    /// [`PackageMetadataV1`](super::package_metadata::PackageMetadataV1)
-    /// object. Like the other dynamic-field containers, the mirror carries
-    /// only the handle and an entry count.
+    /// On-chain metadata associated with a single module of a package: a key-value store backed by
+    /// dynamic fields, owned by the package's
+    /// [`PackageMetadataV1`](super::package_metadata::PackageMetadataV1) object. Like the other
+    /// dynamic-field containers, the mirror carries only the handle and an entry count.
     ///
     /// # BCS
     ///
@@ -2593,19 +2540,17 @@ pub mod module_metadata {
     )]
     pub struct ModuleMetadata {
         pub id: UID,
-        /// The number of key-value pairs stored in the metadata's dynamic
-        /// fields.
+        /// The number of key-value pairs stored in the metadata's dynamic fields.
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub size: u64,
     }
 
     impl_try_from_object!(ModuleMetadata);
 
-    /// Rust version of the Move `iota::module_metadata::ModuleMetadataKey`
-    /// type.
+    /// Rust version of the Move `iota::module_metadata::ModuleMetadataKey` type.
     ///
-    /// Key used to derive the address of a [`ModuleMetadata`] object from
-    /// the owning package ID and the module name.
+    /// Key used to derive the address of a [`ModuleMetadata`] object from the owning package ID and
+    /// the module name.
     ///
     /// # BCS
     ///
@@ -2620,12 +2565,10 @@ pub mod module_metadata {
     )]
     pub struct ModuleMetadataKey(pub ascii::String);
 
-    /// Rust version of the Move
-    /// `iota::module_metadata::ViewFunctionMetadataV1FieldName` type.
+    /// Rust version of the Move `iota::module_metadata::ViewFunctionMetadataV1FieldName` type.
     ///
-    /// Dynamic-field key for the list of view function names of the module.
-    /// The Move struct is empty; the Rust mirror carries a `dummy_field` to
-    /// preserve the BCS wire format.
+    /// Dynamic-field key for the list of view function names of the module. The Move struct is
+    /// empty; the Rust mirror carries a `dummy_field` to preserve the BCS wire format.
     ///
     /// # BCS
     ///
@@ -2651,11 +2594,10 @@ pub mod package_metadata {
     };
     use crate::move_stdlib::{ascii, type_name::TypeName};
 
-    /// Rust version of the Move
-    /// `iota::package_metadata::PackageMetadataKey` type.
+    /// Rust version of the Move `iota::package_metadata::PackageMetadataKey` type.
     ///
-    /// Key type for deriving the package metadata object address. Empty in
-    /// Move; the Rust mirror carries a `dummy_field` for BCS shape.
+    /// Key type for deriving the package metadata object address. Empty in Move; the Rust mirror
+    /// carries a `dummy_field` for BCS shape.
     ///
     /// # BCS
     ///
@@ -2672,11 +2614,10 @@ pub mod package_metadata {
         dummy_field: bool,
     }
 
-    /// Rust version of the Move
-    /// `iota::package_metadata::PackageMetadataVersionFieldName` type.
+    /// Rust version of the Move `iota::package_metadata::PackageMetadataVersionFieldName` type.
     ///
-    /// Dynamic-field key for the package metadata version. Empty in Move;
-    /// the Rust mirror carries a `dummy_field` for BCS shape.
+    /// Dynamic-field key for the package metadata version. Empty in Move; the Rust mirror carries a
+    /// `dummy_field` for BCS shape.
     ///
     /// # BCS
     ///
@@ -2693,11 +2634,10 @@ pub mod package_metadata {
         dummy_field: bool,
     }
 
-    /// Rust version of the Move
-    /// `iota::package_metadata::ModuleMetadataV1FieldName` type.
+    /// Rust version of the Move `iota::package_metadata::ModuleMetadataV1FieldName` type.
     ///
-    /// Dynamic-field key for a module's [`ModuleMetadataV1`]. Empty in Move;
-    /// the Rust mirror carries a `dummy_field` for BCS shape.
+    /// Dynamic-field key for a module's [`ModuleMetadataV1`]. Empty in Move; the Rust mirror
+    /// carries a `dummy_field` for BCS shape.
     ///
     /// # BCS
     ///
@@ -2714,12 +2654,11 @@ pub mod package_metadata {
         dummy_field: bool,
     }
 
-    /// Rust version of the Move
-    /// `iota::package_metadata::ModulesMetadataFieldName` type.
+    /// Rust version of the Move `iota::package_metadata::ModulesMetadataFieldName` type.
     ///
     /// Dynamic-field key for the map from module names to
-    /// [`ModuleMetadata`](super::module_metadata::ModuleMetadata) objects.
-    /// Empty in Move; the Rust mirror carries a `dummy_field` for BCS shape.
+    /// [`ModuleMetadata`](super::module_metadata::ModuleMetadata) objects. Empty in Move; the Rust
+    /// mirror carries a `dummy_field` for BCS shape.
     ///
     /// # BCS
     ///
@@ -2751,11 +2690,10 @@ pub mod package_metadata {
     )]
     pub struct ModuleName(pub ascii::String);
 
-    /// Rust version of the Move
-    /// `iota::package_metadata::PackageMetadataV1` type.
+    /// Rust version of the Move `iota::package_metadata::PackageMetadataV1` type.
     ///
-    /// Represents the metadata of a Move package, including storage ID,
-    /// runtime ID, version, and per-module metadata.
+    /// Represents the metadata of a Move package, including storage ID, runtime ID, version, and
+    /// per-module metadata.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -2770,20 +2708,17 @@ pub mod package_metadata {
         pub runtime_id: ID,
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub package_version: u64,
-        /// Per-module metadata, keyed by module name. Deprecated upstream in
-        /// favor of a dynamic field attached to this object that maps module
-        /// names to [`ModuleMetadata`](super::module_metadata::ModuleMetadata)
-        /// objects.
+        /// Per-module metadata, keyed by module name. Deprecated upstream in favor of a dynamic
+        /// field attached to this object that maps module names to
+        /// [`ModuleMetadata`](super::module_metadata::ModuleMetadata) objects.
         pub modules_metadata: VecMap<ascii::String, ModuleMetadataV1>,
     }
 
     impl_try_from_object!(PackageMetadataV1);
 
-    /// Rust version of the Move
-    /// `iota::package_metadata::ModuleMetadataV1` type.
+    /// Rust version of the Move `iota::package_metadata::ModuleMetadataV1` type.
     ///
-    /// V1 includes only the authenticator function information. Deprecated
-    /// upstream in favor of
+    /// V1 includes only the authenticator function information. Deprecated upstream in favor of
     /// [`ModuleMetadata`](super::module_metadata::ModuleMetadata).
     ///
     /// # BCS
@@ -2801,8 +2736,7 @@ pub mod package_metadata {
         pub authenticator_metadata: Vec<AuthenticatorMetadataV1>,
     }
 
-    /// Rust version of the Move
-    /// `iota::package_metadata::AuthenticatorMetadataV1` type.
+    /// Rust version of the Move `iota::package_metadata::AuthenticatorMetadataV1` type.
     ///
     /// # BCS
     ///
@@ -2855,10 +2789,9 @@ pub mod deny_list {
 
     /// Rust version of the Move `iota::deny_list::ConfigWriteCap` type.
     ///
-    /// Move's source declares `ConfigWriteCap()` (positional empty) but
-    /// the compiler injects a `dummy_field: bool` into the bytecode, so
-    /// the Rust mirror carries the same named field to preserve the BCS
-    /// wire format.
+    /// Move's source declares `ConfigWriteCap()` (positional empty) but the compiler injects a
+    /// `dummy_field: bool` into the bytecode, so the Rust mirror carries the same named field to
+    /// preserve the BCS wire format.
     ///
     /// # BCS
     ///
@@ -2927,8 +2860,8 @@ pub mod deny_list {
 
     /// Rust version of the Move `iota::deny_list::GlobalPauseKey` type.
     ///
-    /// Move's source declares `GlobalPauseKey()` (positional empty) but
-    /// the compiler injects a `dummy_field: bool` into the bytecode.
+    /// Move's source declares `GlobalPauseKey()` (positional empty) but the compiler injects a
+    /// `dummy_field: bool` into the bytecode.
     ///
     /// # BCS
     ///
@@ -2954,8 +2887,7 @@ pub mod deny_list {
         }
     }
 
-    /// Rust version of the Move `iota::deny_list::PerTypeConfigCreated`
-    /// event.
+    /// Rust version of the Move `iota::deny_list::PerTypeConfigCreated` event.
     ///
     /// # BCS
     ///
@@ -2984,8 +2916,7 @@ pub mod transaction_deny_rules {
         versioned::Versioned,
     };
 
-    /// Rust version of the Move
-    /// `iota::transaction_deny_rules::TransactionDenyRules` type.
+    /// Rust version of the Move `iota::transaction_deny_rules::TransactionDenyRules` type.
     ///
     /// Singleton shared object storing the active transaction deny rules.
     /// The actual state lives in a versioned inner field.
@@ -3008,13 +2939,11 @@ pub mod transaction_deny_rules {
 
     impl_try_from_object!(TransactionDenyRules);
 
-    /// Rust version of the Move
-    /// `iota::transaction_deny_rules::TransactionDenyRulesInnerV1` type.
+    /// Rust version of the Move `iota::transaction_deny_rules::TransactionDenyRulesInnerV1` type.
     ///
-    /// The deny lists are `LinkedTable` membership sets — the `bool` value
-    /// is always `true` and never read. Each entry is its own child object,
-    /// so the sets are enumerated by walking the linked keys with
-    /// child-object reads, not by decoding this struct.
+    /// The deny lists are `LinkedTable` membership sets — the `bool` value is always `true` and
+    /// never read. Each entry is its own child object, so the sets are enumerated by walking the
+    /// linked keys with child-object reads, not by decoding this struct.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -3044,11 +2973,9 @@ pub mod transaction_deny_rules {
         pub move_authenticator_disabled: bool,
     }
 
-    /// Rust version of the Move
-    /// `iota::transaction_deny_rules::TransactionDenyRulesUpdated` event.
+    /// Rust version of the Move `iota::transaction_deny_rules::TransactionDenyRulesUpdated` event.
     ///
-    /// Emitted on every update; the event stream is the audit history of
-    /// the network's deny rules.
+    /// Emitted on every update; the event stream is the audit history of the network's deny rules.
     ///
     /// # BCS
     ///
@@ -3065,12 +2992,10 @@ pub mod transaction_deny_rules {
         /// The epoch in which the update was executed.
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub epoch: u64,
-        /// Addresses added to / removed from the sender-or-sponsor deny
-        /// list.
+        /// Addresses added to / removed from the sender-or-sponsor deny list.
         pub added_addresses: Vec<Address>,
         pub removed_addresses: Vec<Address>,
-        /// Objects added to / removed from the input-or-receiving deny
-        /// list.
+        /// Objects added to / removed from the input-or-receiving deny list.
         pub added_objects: Vec<ID>,
         pub removed_objects: Vec<ID>,
         /// Packages added to / removed from the dependency deny list.
@@ -3104,8 +3029,8 @@ pub mod random {
 
     /// Rust version of the Move `iota::random::Random` type.
     ///
-    /// Singleton shared object storing the global randomness state. The
-    /// actual state lives in a versioned inner field.
+    /// Singleton shared object storing the global randomness state. The actual state lives in a
+    /// versioned inner field.
     ///
     /// # BCS
     ///
@@ -3216,8 +3141,7 @@ pub mod config {
             Self { data }
         }
 
-        /// The value [`SettingData::read_value`] reads, or `None` without
-        /// `data`.
+        /// The value [`SettingData::read_value`] reads, or `None` without `data`.
         pub fn read_value(&self, current_epoch: Option<iota_types::EpochId>) -> Option<&Value> {
             self.data.as_ref()?.read_value(current_epoch)
         }
@@ -3238,9 +3162,8 @@ pub mod config {
     }
 
     impl<Value> SettingData<Value> {
-        /// `newer_value` once `current_epoch` is past `newer_value_epoch`,
-        /// otherwise `older_value_opt`. Without `current_epoch`, always
-        /// `newer_value`.
+        /// `newer_value` once `current_epoch` is past `newer_value_epoch`, otherwise
+        /// `older_value_opt`. Without `current_epoch`, always `newer_value`.
         pub fn read_value(&self, current_epoch: Option<iota_types::EpochId>) -> Option<&Value> {
             let use_newer_value = match current_epoch {
                 Some(current_epoch) => current_epoch > self.newer_value_epoch,
@@ -3310,8 +3233,7 @@ pub mod ptb_command {
         NestedResult(u16, u16),
     }
 
-    /// Rust version of the Move
-    /// `iota::ptb_command::ProgrammableMoveCall` type.
+    /// Rust version of the Move `iota::ptb_command::ProgrammableMoveCall` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -3326,8 +3248,7 @@ pub mod ptb_command {
         pub arguments: Vec<Argument>,
     }
 
-    /// Rust version of the Move
-    /// `iota::ptb_command::TransferObjectsData` type.
+    /// Rust version of the Move `iota::ptb_command::TransferObjectsData` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -3506,11 +3427,10 @@ pub mod auth_context {
         pub tx_commands: Vec<Command>,
     }
 
-    /// Rust version of the Move
-    /// `iota::auth_context::AuthenticatorFunctionInfoV1` type.
+    /// Rust version of the Move `iota::auth_context::AuthenticatorFunctionInfoV1` type.
     ///
-    /// Identifies the `authenticate` function used by a `MoveAuthenticator`
-    /// signature, without binding to a specific account type.
+    /// Identifies the `authenticate` function used by a `MoveAuthenticator` signature, without
+    /// binding to a specific account type.
     ///
     /// # BCS
     ///
@@ -3544,8 +3464,7 @@ pub mod kiosk {
 
     /// Rust version of the Move `iota::kiosk::Kiosk` type.
     ///
-    /// An object which allows selling collectibles within the kiosk
-    /// ecosystem.
+    /// An object which allows selling collectibles within the kiosk ecosystem.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -3556,8 +3475,8 @@ pub mod kiosk {
         pub id: UID,
         /// Balance of the Kiosk — all profits from sales go here.
         pub profits: Balance<IOTA>,
-        /// Always points to the `sender` of the transaction; can be
-        /// changed by calling `set_owner` with the owner cap.
+        /// Always points to the `sender` of the transaction; can be changed by calling `set_owner`
+        /// with the owner cap.
         pub owner: Address,
         /// Number of items stored in the Kiosk.
         pub item_count: u32,
@@ -3565,8 +3484,7 @@ pub mod kiosk {
 
     #[cfg(feature = "serde")]
     impl Kiosk {
-        /// Decode a [`Kiosk`] from BCS bytes without verifying the
-        /// on-chain type tag.
+        /// Decode a [`Kiosk`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
@@ -3594,8 +3512,7 @@ pub mod kiosk {
 
     #[cfg(feature = "serde")]
     impl KioskOwnerCap {
-        /// Decode a [`KioskOwnerCap`] from BCS bytes without verifying the
-        /// on-chain type tag.
+        /// Decode a [`KioskOwnerCap`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
@@ -3636,9 +3553,8 @@ pub mod kiosk {
 
     /// Rust version of the Move `iota::kiosk::Borrow` type.
     ///
-    /// Hot potato ensuring an item was returned after being taken with
-    /// `borrow_val`. Schema named `kiosk-borrow` to disambiguate from
-    /// [`super::borrow::Borrow`].
+    /// Hot potato ensuring an item was returned after being taken with `borrow_val`. Schema named
+    /// `kiosk-borrow` to disambiguate from [`super::borrow::Borrow`].
     ///
     /// # BCS
     ///
@@ -3801,8 +3717,8 @@ pub mod kiosk_extension {
 
     /// Rust version of the Move `iota::kiosk_extension::Extension` type.
     ///
-    /// Configuration and storage for a kiosk extension; stored under the
-    /// [`ExtensionKey`] dynamic field.
+    /// Configuration and storage for a kiosk extension; stored under the [`ExtensionKey`] dynamic
+    /// field.
     ///
     /// # BCS
     ///
@@ -3817,16 +3733,14 @@ pub mod kiosk_extension {
     )]
     pub struct Extension {
         pub storage: Bag,
-        /// Bitmap of permissions. Bit 0 = `place`, bit 1 = `lock` (and
-        /// `place`).
+        /// Bitmap of permissions. Bit 0 = `place`, bit 1 = `lock` (and `place`).
         #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub permissions: u128,
         /// Whether the extension can call protected actions.
         pub is_enabled: bool,
     }
 
-    /// Rust version of the Move
-    /// `iota::kiosk_extension::ExtensionKey<Ext>` type.
+    /// Rust version of the Move `iota::kiosk_extension::ExtensionKey<Ext>` type.
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -3852,11 +3766,10 @@ pub mod transfer_policy {
     };
     use crate::move_stdlib::type_name::TypeName;
 
-    /// Rust version of the Move
-    /// `iota::transfer_policy::TransferRequest<T>` type.
+    /// Rust version of the Move `iota::transfer_policy::TransferRequest<T>` type.
     ///
-    /// A hot potato forcing the buyer to get a transfer permission from
-    /// the item type's owner on purchase.
+    /// A hot potato forcing the buyer to get a transfer permission from the item type's owner on
+    /// purchase.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -3870,8 +3783,7 @@ pub mod transfer_policy {
         pub paid: u64,
         /// ID of the kiosk / safe the object is being sold from.
         pub from: ID,
-        /// Collected receipts. Used to verify that all rules were
-        /// followed.
+        /// Collected receipts. Used to verify that all rules were followed.
         pub receipts: VecSet<TypeName>,
         #[cfg_attr(feature = "serde", serde(skip))]
         _marker: PhantomData<T>,
@@ -3889,8 +3801,7 @@ pub mod transfer_policy {
         }
     }
 
-    /// Rust version of the Move `iota::transfer_policy::TransferPolicy<T>`
-    /// type.
+    /// Rust version of the Move `iota::transfer_policy::TransferPolicy<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -3920,8 +3831,7 @@ pub mod transfer_policy {
 
     impl_try_from_object_generic!(TransferPolicy<phantom T>);
 
-    /// Rust version of the Move
-    /// `iota::transfer_policy::TransferPolicyCap<T>` type.
+    /// Rust version of the Move `iota::transfer_policy::TransferPolicyCap<T>` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -3947,8 +3857,7 @@ pub mod transfer_policy {
 
     impl_try_from_object_generic!(TransferPolicyCap<phantom T>);
 
-    /// Rust version of the Move
-    /// `iota::transfer_policy::TransferPolicyCreated<T>` event.
+    /// Rust version of the Move `iota::transfer_policy::TransferPolicyCreated<T>` event.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -3970,8 +3879,7 @@ pub mod transfer_policy {
         }
     }
 
-    /// Rust version of the Move
-    /// `iota::transfer_policy::TransferPolicyDestroyed<T>` event.
+    /// Rust version of the Move `iota::transfer_policy::TransferPolicyDestroyed<T>` event.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(

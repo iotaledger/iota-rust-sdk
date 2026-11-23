@@ -16,8 +16,8 @@ use crate::{
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
-    /// Return the epoch information for the provided epoch. If no epoch is
-    /// provided, it will return the last known epoch.
+    /// Return the epoch information for the provided epoch. If no epoch is provided, it will return
+    /// the last known epoch.
     #[uniffi::method(default(epoch = None))]
     pub async fn epoch(&self, epoch: Option<u64>) -> Result<Option<GraphQLEpoch>> {
         Ok(self
@@ -28,9 +28,8 @@ impl GraphQLClient {
             .map(Into::into))
     }
 
-    /// Return the number of checkpoints in this epoch. This will return
-    /// `Ok(None)` if the epoch requested is not available in the GraphQL
-    /// service (e.g., due to pruning).
+    /// Return the number of checkpoints in this epoch. This will return `Ok(None)` if the epoch
+    /// requested is not available in the GraphQL service (e.g., due to pruning).
     #[uniffi::method(default(epoch = None))]
     pub async fn epoch_total_checkpoints(&self, epoch: Option<u64>) -> Result<Option<u64>> {
         Ok(self
@@ -40,9 +39,8 @@ impl GraphQLClient {
             .await?)
     }
 
-    /// Return the number of transaction blocks in this epoch. This will return
-    /// `Ok(None)` if the epoch requested is not available in the GraphQL
-    /// service (e.g., due to pruning).
+    /// Return the number of transaction blocks in this epoch. This will return `Ok(None)` if the
+    /// epoch requested is not available in the GraphQL service (e.g., due to pruning).
     #[uniffi::method(default(epoch = None))]
     pub async fn epoch_total_transaction_blocks(&self, epoch: Option<u64>) -> Result<Option<u64>> {
         Ok(self

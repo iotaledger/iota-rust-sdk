@@ -3,28 +3,25 @@
 
 //! Typed read mask fields, one enum per endpoint.
 //!
-//! Each enum mirrors the field namespace the Rust client defines for the same
-//! endpoint in `iota_sdk::grpc_client::read_mask_fields`, so the field paths
-//! themselves are defined only there. The `read_mask` parameter of a method
-//! takes a list of the matching enum; `None` selects the endpoint's default
-//! mask. Every enum has a `Custom` variant taking a raw field path, for paths
+//! Each enum mirrors the field namespace the Rust client defines for the same endpoint in
+//! `iota_sdk::grpc_client::read_mask_fields`, so the field paths themselves are defined only there.
+//! The `read_mask` parameter of a method takes a list of the matching enum; `None` selects the
+//! endpoint's default mask. Every enum has a `Custom` variant taking a raw field path, for paths
 //! that have no variant of their own.
 
 use iota_sdk::grpc_client::read_mask_fields as sdk;
 
-/// A typed read mask field mirroring one of the Rust client's field
-/// namespaces.
+/// A typed read mask field mirroring one of the Rust client's field namespaces.
 pub(crate) trait ReadMaskField: Sized {
     /// The Rust client's field type this enum maps onto.
     type Field: AsRef<str> + From<Self>;
 }
 
-/// Define a read mask field enum with one variant per listed constant of the
-/// Rust client's field namespace given after `for`, named after the constant
-/// in PascalCase.
+/// Define a read mask field enum with one variant per listed constant of the Rust client's field
+/// namespace given after `for`, named after the constant in PascalCase.
 ///
-/// The optional `keyed` block adds variants carrying a map key, each mapped
-/// onto the namespace's constructor of that name.
+/// The optional `keyed` block adds variants carrying a map key, each mapped onto the namespace's
+/// constructor of that name.
 macro_rules! read_mask_fields {
     (
         $(#[$attr:meta])*
@@ -118,8 +115,7 @@ read_mask_fields! {
 }
 
 read_mask_fields! {
-    /// Field paths for `transactions`, `execute_transaction` and
-    /// `execute_transactions`.
+    /// Field paths for `transactions`, `execute_transaction` and `execute_transactions`.
     pub enum GrpcTransactionField for TransactionField {
         /// Wildcard — request all fields.
         ALL,
@@ -286,8 +282,8 @@ read_mask_fields! {
 
 read_mask_fields! {
     /// Field paths for the checkpoint methods: `checkpoint_latest`,
-    /// `checkpoint_by_sequence_number`, `checkpoint_by_digest`,
-    /// `checkpoints_stream` and `checkpoints_stream_filtered`.
+    /// `checkpoint_by_sequence_number`, `checkpoint_by_digest`, `checkpoints_stream` and
+    /// `checkpoints_stream_filtered`.
     pub enum GrpcCheckpointResponseField for CheckpointResponseField {
         /// Wildcard — request all fields.
         ALL,
@@ -494,8 +490,8 @@ mod tests {
 
     use super::*;
 
-    /// The variant name of each field is the PascalCase form of its path, so
-    /// a Rust client constant named differently from its path shows up here.
+    /// The variant name of each field is the PascalCase form of its path, so a Rust client constant
+    /// named differently from its path shows up here.
     fn variant_names_follow_their_paths<F>(variants: &[F])
     where
         F: ReadMaskField + Clone + Debug,

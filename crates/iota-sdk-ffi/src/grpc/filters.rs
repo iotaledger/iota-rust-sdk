@@ -3,10 +3,9 @@
 
 //! Transaction and event filters for the checkpoint read/stream APIs.
 //!
-//! These mirror the gRPC `TransactionFilter`, `EventFilter`, and
-//! `CommandFilter` oneofs. Each filter is built through variant constructors;
-//! logical filters (`all`, `any`, `negation`) compose other filters, so complex
-//! predicates can be expressed as a tree.
+//! These mirror the gRPC `TransactionFilter`, `EventFilter`, and `CommandFilter` oneofs. Each
+//! filter is built through variant constructors; logical filters (`all`, `any`, `negation`) compose
+//! other filters, so complex predicates can be expressed as a tree.
 
 use std::sync::Arc;
 
@@ -95,8 +94,7 @@ impl GrpcEventFilter {
         )
     }
 
-    /// Matches events whose struct is defined in the given Move package (and
-    /// optional module).
+    /// Matches events whose struct is defined in the given Move package (and optional module).
     #[uniffi::constructor(default(module = None))]
     pub fn move_event_package_and_module(package_id: &ObjectId, module: Option<String>) -> Self {
         Self(
@@ -105,8 +103,7 @@ impl GrpcEventFilter {
         )
     }
 
-    /// Matches events with the given Move event struct tag, e.g.
-    /// `0xabcd::my_module::Foo`.
+    /// Matches events with the given Move event struct tag, e.g. `0xabcd::my_module::Foo`.
     #[uniffi::constructor]
     pub fn move_event_type(struct_tag: &StructTag) -> Self {
         Self(proto::EventFilter::default().with_move_event_type(
@@ -127,8 +124,7 @@ impl From<&GrpcCommandFilter> for proto::CommandFilter {
 
 #[uniffi::export]
 impl GrpcCommandFilter {
-    /// Matches a `MoveCall` command targeting the given package (and optional
-    /// module and function).
+    /// Matches a `MoveCall` command targeting the given package (and optional module and function).
     #[uniffi::constructor(default(module = None, function = None))]
     pub fn move_call(
         package_id: &ObjectId,
@@ -187,8 +183,7 @@ impl GrpcCommandFilter {
         )
     }
 
-    /// Matches an `Upgrade` command, optionally restricted to the given
-    /// package being upgraded.
+    /// Matches an `Upgrade` command, optionally restricted to the given package being upgraded.
     #[uniffi::constructor(default(package_id = None))]
     pub fn upgrade(package_id: Option<Arc<ObjectId>>) -> Self {
         let mut filter = proto::UpgradeCommandFilter::default();
@@ -199,8 +194,7 @@ impl GrpcCommandFilter {
     }
 }
 
-/// A filter over transactions, used to narrow the transactions returned for a
-/// checkpoint.
+/// A filter over transactions, used to narrow the transactions returned for a checkpoint.
 #[derive(Clone, Debug, uniffi::Object)]
 pub struct GrpcTransactionFilter(pub(crate) proto::TransactionFilter);
 
@@ -254,8 +248,8 @@ impl GrpcTransactionFilter {
         )
     }
 
-    /// Matches transactions by execution status: `true` for successful
-    /// transactions, `false` for failed ones.
+    /// Matches transactions by execution status: `true` for successful transactions, `false` for
+    /// failed ones.
     #[uniffi::constructor]
     pub fn execution_status(success: bool) -> Self {
         Self(
@@ -274,8 +268,8 @@ impl GrpcTransactionFilter {
         )
     }
 
-    /// Matches transactions received by the given address (determined from the
-    /// owners of mutated and unwrapped objects).
+    /// Matches transactions received by the given address (determined from the owners of mutated
+    /// and unwrapped objects).
     #[uniffi::constructor]
     pub fn receiver(receiver: &Address) -> Self {
         Self(
@@ -294,15 +288,13 @@ impl GrpcTransactionFilter {
         ))
     }
 
-    /// Matches transactions containing a command that satisfies the given
-    /// command filter.
+    /// Matches transactions containing a command that satisfies the given command filter.
     #[uniffi::constructor]
     pub fn command(command: &GrpcCommandFilter) -> Self {
         Self(proto::TransactionFilter::default().with_command(proto::CommandFilter::from(command)))
     }
 
-    /// Matches transactions that emit an event satisfying the given event
-    /// filter.
+    /// Matches transactions that emit an event satisfying the given event filter.
     #[uniffi::constructor]
     pub fn event(filter: &GrpcEventFilter) -> Self {
         Self(proto::TransactionFilter::default().with_event(proto::EventFilter::from(filter)))

@@ -223,8 +223,7 @@ impl TransactionKind {
         ))
     }
 
-    /// Create a `TransactionKind` for a consensus-commit-prologue-v1
-    /// transaction.
+    /// Create a `TransactionKind` for a consensus-commit-prologue-v1 transaction.
     #[uniffi::constructor]
     pub fn new_consensus_commit_prologue_v1(transaction: &ConsensusCommitPrologueV1) -> Self {
         Self(
@@ -248,8 +247,7 @@ impl TransactionKind {
         Self(iota_sdk::types::TransactionKind::new_randomness_state_update(transaction.into()))
     }
 
-    /// Create a `TransactionKind` for a transaction-deny-rules-update
-    /// transaction.
+    /// Create a `TransactionKind` for a transaction-deny-rules-update transaction.
     #[uniffi::constructor]
     pub fn new_transaction_deny_rules_update(transaction: TransactionDenyRulesUpdate) -> Self {
         Self(
@@ -272,8 +270,8 @@ impl TransactionKind {
 
 /// A user transaction
 ///
-/// Contains a series of native commands and move calls where the results of one
-/// command can be used in future commands.
+/// Contains a series of native commands and move calls where the results of one command can be used
+/// in future commands.
 ///
 /// # BCS
 ///
@@ -304,8 +302,8 @@ impl ProgrammableTransaction {
             .collect()
     }
 
-    /// The commands to be executed sequentially. A failure in any command will
-    /// result in the failure of the entire transaction.
+    /// The commands to be executed sequentially. A failure in any command will result in the
+    /// failure of the entire transaction.
     pub fn commands(&self) -> Vec<Arc<Command>> {
         self.0
             .commands
@@ -329,8 +327,8 @@ pub struct Input(pub iota_sdk::types::Input);
 
 #[uniffi::export]
 impl Input {
-    /// For normal operations this is required to be a move primitive type and
-    /// not contain structs or objects.
+    /// For normal operations this is required to be a move primitive type and not contain structs
+    /// or objects.
     #[uniffi::constructor]
     pub fn new_pure(value: Vec<u8>) -> Self {
         Self(iota_sdk::types::Input::Pure(value))
@@ -367,15 +365,13 @@ impl Input {
 #[cfg(feature = "unstable")]
 #[uniffi::export]
 impl Input {
-    /// A transaction this transaction depends on: the transaction is valid
-    /// only once the named transaction executed successfully, in the current
-    /// epoch, and no command may use this input.
+    /// A transaction this transaction depends on: the transaction is valid only once the named
+    /// transaction executed successfully, in the current epoch, and no command may use this input.
     ///
-    /// A validator authenticates a transaction against its current state. A
-    /// transaction whose Move authenticator reads state that the named
-    /// transaction writes is therefore admitted only once the named
-    /// transaction has executed on that validator; until then it is rejected
-    /// with a retriable error.
+    /// A validator authenticates a transaction against its current state. A transaction whose Move
+    /// authenticator reads state that the named transaction writes is therefore admitted only once
+    /// the named transaction has executed on that validator; until then it is rejected with a
+    /// retriable error.
     #[uniffi::constructor]
     pub fn new_transaction_dependency(digest: &TransactionDigest) -> Self {
         Self(iota_sdk::types::Input::TransactionDependency(digest.0))
@@ -400,9 +396,8 @@ impl Command {
         Self(iota_sdk::types::Command::MoveCall(move_call.0.clone()))
     }
 
-    /// It sends n-objects to the specified address. These objects must have
-    /// store (public transfer) and either the previous owner must be an
-    /// address or the object must be newly created.
+    /// It sends n-objects to the specified address. These objects must have store (public transfer)
+    /// and either the previous owner must be an address or the object must be newly created.
     #[uniffi::constructor]
     pub fn new_transfer_objects(transfer_objects: &TransferObjects) -> Self {
         Self(iota_sdk::types::Command::TransferObjects(
@@ -422,15 +417,15 @@ impl Command {
         Self(iota_sdk::types::Command::MergeCoins(merge_coins.0.clone()))
     }
 
-    /// Publishes a Move package. It takes the package bytes and a list of the
-    /// package's transitive dependencies to link against on-chain.
+    /// Publishes a Move package. It takes the package bytes and a list of the package's transitive
+    /// dependencies to link against on-chain.
     #[uniffi::constructor]
     pub fn new_publish(publish: &Publish) -> Self {
         Self(iota_sdk::types::Command::Publish(publish.0.clone()))
     }
 
-    /// Given n-values of the same type, it constructs a vector. For non objects
-    /// or an empty vector, the type tag must be specified.
+    /// Given n-values of the same type, it constructs a vector. For non objects or an empty vector,
+    /// the type tag must be specified.
     #[uniffi::constructor]
     pub fn new_make_move_vector(make_move_vector: &MakeMoveVector) -> Self {
         Self(iota_sdk::types::Command::MakeMoveVector(
@@ -441,11 +436,10 @@ impl Command {
     /// Upgrades a Move package
     /// Takes (in order):
     /// 1. A vector of serialized modules for the package.
-    /// 2. A vector of object ids for the transitive dependencies of the new
-    ///    package.
+    /// 2. A vector of object ids for the transitive dependencies of the new package.
     /// 3. The object ID of the package being upgraded.
-    /// 4. An argument holding the `UpgradeTicket` that must have been produced
-    ///    from an earlier command in the same programmable transaction.
+    /// 4. An argument holding the `UpgradeTicket` that must have been produced from an earlier
+    ///    command in the same programmable transaction.
     #[uniffi::constructor]
     pub fn new_upgrade(upgrade: &Upgrade) -> Self {
         Self(iota_sdk::types::Command::Upgrade(upgrade.0.clone()))
@@ -624,8 +618,8 @@ impl MakeMoveVector {
 
     /// Type of the individual elements
     ///
-    /// This is required to be set when the type can't be inferred, for example
-    /// when the set of provided arguments are all pure input values.
+    /// This is required to be set when the type can't be inferred, for example when the set of
+    /// provided arguments are all pure input values.
     pub fn type_tag(&self) -> Option<Arc<TypeTag>> {
         self.0.type_tag.clone().map(Into::into).map(Arc::new)
     }
@@ -739,8 +733,8 @@ impl ConsensusCommitPrologueV1 {
         self.0.round
     }
 
-    /// The sub DAG index of the consensus commit. This field will be populated
-    /// if there are multiple consensus commits per round.
+    /// The sub DAG index of the consensus commit. This field will be populated if there are
+    /// multiple consensus commits per round.
     pub fn sub_dag_index(&self) -> Option<u64> {
         self.0.sub_dag_index
     }
@@ -987,8 +981,8 @@ impl ChangeEpoch {
         self.0.epoch_start_timestamp_ms
     }
 
-    /// System packages (specifically framework and move stdlib) that are
-    /// written before the new epoch starts.
+    /// System packages (specifically framework and move stdlib) that are written before the new
+    /// epoch starts.
     pub fn system_packages(&self) -> Vec<Arc<SystemPackage>> {
         self.0
             .system_packages
@@ -1121,8 +1115,8 @@ impl ChangeEpochV2 {
         self.0.epoch_start_timestamp_ms
     }
 
-    /// System packages (specifically framework and move stdlib) that are
-    /// written before the new epoch starts.
+    /// System packages (specifically framework and move stdlib) that are written before the new
+    /// epoch starts.
     pub fn system_packages(&self) -> Vec<Arc<SystemPackage>> {
         self.0
             .system_packages
@@ -1215,8 +1209,8 @@ impl ChangeEpochV3 {
         self.0.epoch_start_timestamp_ms
     }
 
-    /// System packages (specifically framework and move stdlib) that are
-    /// written before the new epoch starts.
+    /// System packages (specifically framework and move stdlib) that are written before the new
+    /// epoch starts.
     pub fn system_packages(&self) -> Vec<Arc<SystemPackage>> {
         self.0
             .system_packages
@@ -1227,8 +1221,8 @@ impl ChangeEpochV3 {
             .collect()
     }
 
-    /// Vector of active validator indices eligible to take part in committee
-    /// selection because they support the new, target protocol version.
+    /// Vector of active validator indices eligible to take part in committee selection because they
+    /// support the new, target protocol version.
     pub fn eligible_active_validators(&self) -> Vec<u64> {
         self.0.eligible_active_validators.clone()
     }
@@ -1318,8 +1312,8 @@ impl ChangeEpochV4 {
         self.0.epoch_start_timestamp_ms
     }
 
-    /// System packages (specifically framework and move stdlib) that are
-    /// written before the new epoch starts.
+    /// System packages (specifically framework and move stdlib) that are written before the new
+    /// epoch starts.
     pub fn system_packages(&self) -> Vec<Arc<SystemPackage>> {
         self.0
             .system_packages
@@ -1330,14 +1324,14 @@ impl ChangeEpochV4 {
             .collect()
     }
 
-    /// Vector of active validator indices eligible to take part in committee
-    /// selection because they support the new, target protocol version.
+    /// Vector of active validator indices eligible to take part in committee selection because they
+    /// support the new, target protocol version.
     pub fn eligible_active_validators(&self) -> Vec<u64> {
         self.0.eligible_active_validators.clone()
     }
 
-    /// Vector of scores relative to the past epoch performance of each
-    /// validator, ordered by the past epoch's validator index.
+    /// Vector of scores relative to the past epoch performance of each validator, ordered by the
+    /// past epoch's validator index.
     pub fn scores(&self) -> Vec<u64> {
         self.0.scores.clone()
     }
@@ -1392,9 +1386,9 @@ impl From<iota_sdk::types::RandomnessStateUpdate> for RandomnessStateUpdate {
 
 /// A complete set of transaction deny rules.
 ///
-/// The deny lists are exposed as sequences over the FFI; converting into the
-/// underlying set-typed Rust representation sorts and deduplicates them, so
-/// the BCS encoding is canonical regardless of the order supplied here.
+/// The deny lists are exposed as sequences over the FFI; converting into the underlying set-typed
+/// Rust representation sorts and deduplicates them, so the BCS encoding is canonical regardless of
+/// the order supplied here.
 ///
 /// # BCS
 ///
@@ -1402,13 +1396,13 @@ impl From<iota_sdk::types::RandomnessStateUpdate> for RandomnessStateUpdate {
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Record)]
 pub struct DenyRuleSet {
-    /// Addresses denied as transaction sender or gas sponsor. A denied
-    /// address can still receive objects.
+    /// Addresses denied as transaction sender or gas sponsor. A denied address can still receive
+    /// objects.
     pub denied_addresses: Vec<Arc<Address>>,
     /// Objects denied as transaction inputs or receiving objects.
     pub denied_objects: Vec<Arc<ObjectId>>,
-    /// Packages denied as a (transitive) dependency of any command; upgrading
-    /// a denied package is denied too.
+    /// Packages denied as a (transitive) dependency of any command; upgrading a denied package is
+    /// denied too.
     pub denied_packages: Vec<Arc<ObjectId>>,
     /// Denies all package publishing.
     pub package_publish_disabled: bool,
@@ -1473,10 +1467,9 @@ impl From<iota_sdk::types::DenyRuleSet> for DenyRuleSet {
 
 /// Update of the on-chain transaction deny rules.
 ///
-/// Carries an add/remove delta for each deny list plus the absolute switch
-/// states. The added and removed sets of a list are disjoint by producer
-/// contract; converting into the underlying set-typed Rust representation
-/// sorts and deduplicates the lists.
+/// Carries an add/remove delta for each deny list plus the absolute switch states. The added and
+/// removed sets of a list are disjoint by producer contract; converting into the underlying
+/// set-typed Rust representation sorts and deduplicates the lists.
 ///
 /// # BCS
 ///
@@ -1666,8 +1659,7 @@ impl AccountClaimKind {
         self.0.is_smart_account()
     }
 
-    /// The smart account claim, or `None` if this is not a smart account
-    /// claim.
+    /// The smart account claim, or `None` if this is not a smart account claim.
     pub fn as_opt_smart_account(&self) -> Option<Arc<SmartAccountClaim>> {
         self.0
             .as_opt_smart_account()
@@ -1676,8 +1668,7 @@ impl AccountClaimKind {
             .map(Arc::new)
     }
 
-    /// The smart account claim, panicking if this is not a smart account
-    /// claim.
+    /// The smart account claim, panicking if this is not a smart account claim.
     pub fn as_smart_account(&self) -> SmartAccountClaim {
         self.0.as_smart_account().clone().into()
     }
@@ -1697,17 +1688,15 @@ pub struct SmartAccountClaim(pub iota_sdk::types::SmartAccountClaim);
 #[cfg(feature = "unstable")]
 #[uniffi::export]
 impl SmartAccountClaim {
-    /// Create a `SmartAccountClaim` of the address derived from `public_key`,
-    /// which is the address a transaction signed by the corresponding private
-    /// key is sent from.
+    /// Create a `SmartAccountClaim` of the address derived from `public_key`, which is the address
+    /// a transaction signed by the corresponding private key is sent from.
     #[uniffi::constructor]
     pub fn new(public_key: &PublicKey) -> Self {
         Self(iota_sdk::types::SmartAccountClaim::new(&public_key.0))
     }
 
-    /// Create a `SmartAccountClaim` of the address derived from `committee`,
-    /// which is the address a transaction signed by that committee is sent
-    /// from.
+    /// Create a `SmartAccountClaim` of the address derived from `committee`, which is the address a
+    /// transaction signed by that committee is sent from.
     #[uniffi::constructor]
     pub fn new_multisig(committee: &MultisigCommittee) -> Self {
         Self(iota_sdk::types::SmartAccountClaim::new_multisig(
@@ -1715,26 +1704,25 @@ impl SmartAccountClaim {
         ))
     }
 
-    /// Signature-scheme flag of the public key for the address being claimed:
-    /// `0x00` Ed25519, `0x01` Secp256k1, `0x02` Secp256r1, `0x03` MultiSig or
-    /// `0x06` Passkey.
+    /// Signature-scheme flag of the public key for the address being claimed: `0x00` Ed25519,
+    /// `0x01` Secp256k1, `0x02` Secp256r1, `0x03` MultiSig or `0x06` Passkey.
     pub fn public_key_scheme(&self) -> u8 {
         self.0.public_key_scheme
     }
 
-    /// Raw public key bytes, without the scheme flag prefix. For `MultiSig`
-    /// this is a BCS-encoded multisig committee.
+    /// Raw public key bytes, without the scheme flag prefix. For `MultiSig` this is a BCS-encoded
+    /// multisig committee.
     ///
-    /// The transaction is rejected unless the scheme and these bytes derive
-    /// the transaction sender's address.
+    /// The transaction is rejected unless the scheme and these bytes derive the transaction
+    /// sender's address.
     pub fn public_key_raw_bytes(&self) -> Vec<u8> {
         self.0.public_key_raw_bytes.clone()
     }
 
     /// The signature scheme of the public key.
     ///
-    /// Fails if the scheme flag is not a known signature scheme, which is
-    /// possible for a claim that was decoded rather than built here.
+    /// Fails if the scheme flag is not a known signature scheme, which is possible for a claim that
+    /// was decoded rather than built here.
     pub fn signature_scheme(&self) -> Result<SignatureScheme> {
         Ok(self.0.signature_scheme()?.into())
     }
@@ -1753,8 +1741,7 @@ pub struct GasPayment {
     pub owner: Arc<Address>,
     /// Gas unit price to use when charging for computation
     ///
-    /// Must be greater-than-or-equal-to the network's current RGP (reference
-    /// gas price)
+    /// Must be greater-than-or-equal-to the network's current RGP (reference gas price)
     pub price: u64,
     /// Total budget willing to spend for the execution of a transaction
     pub budget: u64,
@@ -1805,9 +1792,9 @@ impl TransactionEffects {
         self.0.is_v1()
     }
 
-    /// The V1 effects, which is where the object sets and other views derived
-    /// from them are reported. Panics for any other version; a caller that does
-    /// not want to assume one should check `is_v1` first.
+    /// The V1 effects, which is where the object sets and other views derived from them are
+    /// reported. Panics for any other version; a caller that does not want to assume one should
+    /// check `is_v1` first.
     pub fn as_v1(&self) -> TransactionEffectsV1 {
         TransactionEffectsV1(self.0.as_v1().clone())
     }
@@ -1827,8 +1814,8 @@ impl TransactionEffects {
 pub enum TransactionExpiration {
     /// The transaction has no expiration
     None,
-    /// Validators won't sign a transaction unless the expiration Epoch
-    /// is greater than or equal to the current epoch
+    /// Validators won't sign a transaction unless the expiration Epoch is greater than or equal to
+    /// the current epoch
     Epoch(u64),
 }
 
@@ -1865,15 +1852,14 @@ pub struct Argument(iota_sdk::types::Argument);
 
 #[uniffi::export]
 impl Argument {
-    /// The gas coin. The gas coin can only be used by-ref, except for with
-    /// `TransferObjects`, which can use it by-value.
+    /// The gas coin. The gas coin can only be used by-ref, except for with `TransferObjects`, which
+    /// can use it by-value.
     #[uniffi::constructor]
     pub fn new_gas() -> Self {
         Self(iota_sdk::types::Argument::Gas)
     }
 
-    /// One of the input objects or primitive values (from
-    /// `ProgrammableTransaction` inputs)
+    /// One of the input objects or primitive values (from `ProgrammableTransaction` inputs)
     #[uniffi::constructor]
     pub fn new_input(input: u16) -> Self {
         Self(iota_sdk::types::Argument::Input(input))
@@ -1885,9 +1871,8 @@ impl Argument {
         Self(iota_sdk::types::Argument::Result(result))
     }
 
-    /// Like a `Result` but it accesses a nested result. Currently, the only
-    /// usage of this is to access a value from a Move call with multiple
-    /// return values.
+    /// Like a `Result` but it accesses a nested result. Currently, the only usage of this is to
+    /// access a value from a Move call with multiple return values.
     // (command index, subresult index)
     #[uniffi::constructor]
     pub fn new_nested_result(command_index: u16, subresult_index: u16) -> Self {
@@ -1897,8 +1882,8 @@ impl Argument {
         ))
     }
 
-    /// Get the nested result for this result at the given index. Returns None
-    /// if this is not a Result.
+    /// Get the nested result for this result at the given index. Returns None if this is not a
+    /// Result.
     pub fn nested_result(&self, ix: u16) -> Option<Arc<Argument>> {
         self.0.nested_result(ix).map(Self).map(Arc::new)
     }
@@ -1906,9 +1891,8 @@ impl Argument {
 
 /// Command to call a move function
 ///
-/// Functions that can be called by a `MoveCall` command are those that have a
-/// function signature that is either `entry` or `public` (which don't have a
-/// reference return type).
+/// Functions that can be called by a `MoveCall` command are those that have a function signature
+/// that is either `entry` or `public` (which don't have a reference return type).
 ///
 /// # BCS
 ///

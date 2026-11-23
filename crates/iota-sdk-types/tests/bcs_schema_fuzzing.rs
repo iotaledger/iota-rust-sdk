@@ -1,11 +1,10 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Grammar-driven fuzzing: generates byte sequences that conform to
-//! `bcs-schema.abnf` and verifies that the BCS deserializer accepts them.
+//! Grammar-driven fuzzing: generates byte sequences that conform to `bcs-schema.abnf` and verifies
+//! that the BCS deserializer accepts them.
 //!
-//! This proves the grammar is a sound description of what BCS can decode
-//! (grammar → BCS). Run with:
+//! This proves the grammar is a sound description of what BCS can decode (grammar → BCS). Run with:
 //!
 //!   BCS_SCHEMA=1 cargo check -p iota-sdk-types --features bcs-schema,hash
 //!   cargo test -p iota-sdk-types --features bcs-schema --test
@@ -26,8 +25,7 @@ enum Expr {
     Concat(Vec<Expr>),
     Alt(Vec<Expr>),
     Literal(u8),
-    /// Any byte in the inclusive range [lo, hi] — RFC 5234 `%xNN-MM` /
-    /// `%dNN-MM`.
+    /// Any byte in the inclusive range [lo, hi] — RFC 5234 `%xNN-MM` / `%dNN-MM`.
     ByteRange(u8, u8),
     RuleRef(String),
     Prim(PrimKind),
@@ -50,8 +48,7 @@ enum PrimKind {
     Str,
 }
 
-// ─── Grammar Parser
-// ───────────────────────────────────────────────────────────
+// ─── Grammar Parser ───────────────────────────────────────────────────────────
 
 fn parse_grammar(content: &str) -> HashMap<String, Expr> {
     let mut rules = HashMap::new();
@@ -82,8 +79,8 @@ fn parse_rule_block(block: &str) -> Option<(String, Expr)> {
     let (name, first_rhs) = first_line.split_once('=')?;
     let name = name.trim().to_string();
 
-    // Accumulate alternatives; multi-line struct fields are concatenation
-    // continuations while lines starting with `/` open a new alternative.
+    // Accumulate alternatives; multi-line struct fields are concatenation continuations while lines
+    // starting with `/` open a new alternative.
     let mut alternatives: Vec<String> = Vec::new();
     let mut current = strip_comment(first_rhs).trim().to_string();
 
@@ -145,8 +142,7 @@ fn tokenize(s: &str) -> Vec<String> {
         .collect()
 }
 
-/// Find the indices of `/` tokens that are at group depth 0 (inline
-/// alternation).
+/// Find the indices of `/` tokens that are at group depth 0 (inline alternation).
 fn top_level_slash_positions(tokens: &[String]) -> Vec<usize> {
     let mut positions = Vec::new();
     let mut depth = 0usize;
@@ -162,8 +158,8 @@ fn top_level_slash_positions(tokens: &[String]) -> Vec<usize> {
     positions
 }
 
-/// Parse a flat token sequence, handling inline `/` alternation (RFC 5234 §3.2)
-/// as well as groups, repetition, and atoms.
+/// Parse a flat token sequence, handling inline `/` alternation (RFC 5234 §3.2) as well as groups,
+/// repetition, and atoms.
 fn parse_token_seq(tokens: &[String]) -> Vec<Expr> {
     let slash_positions = top_level_slash_positions(tokens);
     if !slash_positions.is_empty() {
@@ -289,8 +285,7 @@ fn parse_paren_expr(tokens: &[String]) -> Expr {
         return Expr::Map(k.clone(), v.clone());
     }
 
-    // RFC 5234 §3.5: anonymous group — concatenation (or alternation if `Alt` was
-    // produced).
+    // RFC 5234 §3.5: anonymous group — concatenation (or alternation if `Alt` was produced).
     concat_exprs(exprs)
 }
 
@@ -346,18 +341,15 @@ fn parse_atom(token: &str) -> Expr {
     }
 }
 
-// ─── Byte Generator
-// ───────────────────────────────────────────────────────────
+// ─── Byte Generator ───────────────────────────────────────────────────────────
 
-/// Recursion depth beyond which the generator switches to minimal mode
-/// (first alternative, empty vectors/options) to prevent infinite loops
-/// on self-referential rules like `type-tag`.
+/// Recursion depth beyond which the generator switches to minimal mode (first alternative, empty
+/// vectors/options) to prevent infinite loops on self-referential rules like `type-tag`.
 const MAX_DEPTH: usize = 8;
 
-/// Rule-name → generator overrides used for types whose BCS deserializer
-/// applies semantic validation (e.g. scheme bytes, bitmap magic) or
-/// normalizes its input (set-typed fields), beyond what the grammar
-/// expresses.
+/// Rule-name → generator overrides used for types whose BCS deserializer applies semantic
+/// validation (e.g. scheme bytes, bitmap magic) or normalizes its input (set-typed fields), beyond
+/// what the grammar expresses.
 type Overrides = HashMap<&'static str, fn(&mut TestHarness) -> Vec<u8>>;
 
 fn encode_uleb128(mut n: u64) -> Vec<u8> {
@@ -376,8 +368,7 @@ fn encode_uleb128(mut n: u64) -> Vec<u8> {
     out
 }
 
-// ─── Test harness
-// ─────────────────────────────────────────────────────────────
+// ─── Test harness ─────────────────────────────────────────────────────────────
 
 struct TestHarness {
     grammar: HashMap<String, Expr>,
@@ -397,11 +388,11 @@ impl TestHarness {
         });
         let grammar = parse_grammar(&content);
 
-        // Rule-level overrides for types whose BCS deserializers apply semantic
-        // validation (valid scheme byte, roaring-bitmap magic) or normalize
-        // their input (set-typed deny lists) beyond the grammar.
-        // The override generators are wired into gen_expr so they fire whenever the
-        // named rule is referenced at any depth, fixing all cascade types too.
+        // Rule-level overrides for types whose BCS deserializers apply semantic validation (valid
+        // scheme byte, roaring-bitmap magic) or normalize their input (set-typed deny lists) beyond
+        // the grammar.
+        // The override generators are wired into gen_expr so they fire whenever the named rule is
+        // referenced at any depth, fixing all cascade types too.
         let mut overrides: Overrides = Default::default();
         overrides.insert("checkpoint-contents", Self::gen_checkpoint_contents);
         overrides.insert("user-signature", Self::gen_user_signature);
@@ -479,9 +470,9 @@ impl TestHarness {
 
     /// Generate a valid `checkpoint-contents` in BCS wire form.
     ///
-    /// The binary format is: `%d00` (V1 discriminant) + two parallel vectors of
-    /// the *same* length. The deserializer enforces this length invariant, so
-    /// the two vectors must be generated in sync.
+    /// The binary format is: `%d00` (V1 discriminant) + two parallel vectors of the *same* length.
+    /// The deserializer enforces this length invariant, so the two vectors must be generated in
+    /// sync.
     fn gen_checkpoint_contents(&mut self) -> Vec<u8> {
         let count = (self.rng.next_u32() as usize) % 6;
         let mut out = vec![0x00]; // V1 enum discriminant
@@ -505,8 +496,7 @@ impl TestHarness {
 
     /// Generate a valid `user-signature` in BCS wire form.
     ///
-    /// BCS `bytes` = ULEB128(97) + [0x00 scheme flag] + [64 Ed25519 sig] + [32
-    /// pubkey].
+    /// BCS `bytes` = ULEB128(97) + [0x00 scheme flag] + [64 Ed25519 sig] + [32 pubkey].
     fn gen_user_signature(&mut self) -> Vec<u8> {
         const PAYLOAD_LEN: usize = 1 + 64 + 32; // scheme byte + sig + pubkey
         let mut out = encode_uleb128(PAYLOAD_LEN as u64);
@@ -519,11 +509,10 @@ impl TestHarness {
 
     /// Generate a valid `move-struct` in BCS wire form.
     ///
-    /// Layout: compressed-struct-tag + u64 version + length-prefixed bytes.
-    /// `MoveStruct::new` rejects `contents` shorter than `ObjectId::LENGTH`
-    /// (32 bytes), since the leading bytes are the object's id; the grammar's
-    /// generic `bytes` rule cannot express that lower bound, so generate it
-    /// here directly.
+    /// Layout: compressed-struct-tag + u64 version + length-prefixed bytes. `MoveStruct::new`
+    /// rejects `contents` shorter than `ObjectId::LENGTH` (32 bytes), since the leading bytes are
+    /// the object's id; the grammar's generic `bytes` rule cannot express that lower bound, so
+    /// generate it here directly.
     fn gen_move_struct(&mut self) -> Vec<u8> {
         let mut out = self.generate("compressed-struct-tag");
         out.extend(self.rng.next_u64().to_le_bytes());
@@ -538,13 +527,11 @@ impl TestHarness {
 
     /// Generate a canonical `deny-rule-set` in BCS wire form.
     ///
-    /// The grammar expresses the wire shape (length-prefixed sequences) but
-    /// not the canonical element order of the set-typed deny lists, which is
-    /// a BCS-level semantic like map key order. Generate arbitrary bytes from
-    /// the grammar, then normalize them through the type itself: decoding
-    /// sorts and deduplicates into the sets, so re-encoding yields the
-    /// canonical bytes a producer emits. This also exercises that every
-    /// grammar-conformant encoding decodes.
+    /// The grammar expresses the wire shape (length-prefixed sequences) but not the canonical
+    /// element order of the set-typed deny lists, which is a BCS-level semantic like map key order.
+    /// Generate arbitrary bytes from the grammar, then normalize them through the type itself:
+    /// decoding sorts and deduplicates into the sets, so re-encoding yields the canonical bytes a
+    /// producer emits. This also exercises that every grammar-conformant encoding decodes.
     fn gen_deny_rule_set(&mut self) -> Vec<u8> {
         let expr = self
             .grammar
@@ -559,9 +546,8 @@ impl TestHarness {
 
     /// Generate a canonical `transaction-deny-rules-update` in BCS wire form.
     ///
-    /// Its six delta lists are set-typed like `deny-rule-set`'s, so the same
-    /// normalization applies: generate from the grammar, decode through the
-    /// type, re-encode.
+    /// Its six delta lists are set-typed like `deny-rule-set`'s, so the same normalization applies:
+    /// generate from the grammar, decode through the type, re-encode.
     fn gen_transaction_deny_rules_update(&mut self) -> Vec<u8> {
         let expr = self
             .grammar
@@ -576,9 +562,8 @@ impl TestHarness {
 
     /// Generate a valid `validator-aggregated-signature` in BCS wire form.
     ///
-    /// Layout: u64 epoch + 48OCTET bls-sig + BCS-bytes(roaring bitmap).
-    /// Uses an empty RoaringBitmap so the bitmap deserialization always
-    /// succeeds.
+    /// Layout: u64 epoch + 48OCTET bls-sig + BCS-bytes(roaring bitmap). Uses an empty RoaringBitmap
+    /// so the bitmap deserialization always succeeds.
     fn gen_validator_aggregated_signature(&mut self) -> Vec<u8> {
         let mut out = self.rng.next_u64().to_le_bytes().to_vec(); // epoch u64
         let mut sig = vec![0u8; 48];
@@ -668,8 +653,8 @@ impl TestHarness {
                         )
                     })
                     .collect();
-                // BCS requires maps to be in canonical (lexicographic) key order
-                // and keys must be unique.
+                // BCS requires maps to be in canonical (lexicographic) key order and keys must be
+                // unique.
                 pairs.sort_by(|(a, _), (b, _)| a.cmp(b));
                 pairs.dedup_by(|(a, _), (b, _)| a == b);
                 let actual = pairs.len();
@@ -710,10 +695,10 @@ impl TestHarness {
                 out
             }
             PrimKind::Str => {
-                // Non-empty ASCII identifier (a-z first char, then a-z0-9_).
-                // BCS strings are UTF-8; Move Identifier validation requires non-empty
-                // strings starting with a letter.  This conservative generation avoids
-                // TypeParseError rejections that would mask real format bugs.
+                // Non-empty ASCII identifier (a-z first char, then a-z0-9_). BCS strings are UTF-8;
+                // Move Identifier validation requires non-empty strings starting with a letter.
+                // This conservative generation avoids TypeParseError rejections that would mask
+                // real format bugs.
                 let len = 1 + (self.rng.next_u32() as usize) % 16; // 1..=16
                 let mut out = encode_uleb128(len as u64);
                 // First character: always a letter
@@ -732,10 +717,9 @@ impl TestHarness {
         }
     }
 
-    /// Generate byte sequences conforming to `rule` and assert that
-    /// a round trip of deserialization followed by serialization returns the
-    /// same bytes. Failures are collected into a vector rather than
-    /// panicking immediately, so the full test can run to completion.
+    /// Generate byte sequences conforming to `rule` and assert that a round trip of deserialization
+    /// followed by serialization returns the same bytes. Failures are collected into a vector
+    /// rather than panicking immediately, so the full test can run to completion.
     fn check_rule<T: Serialize + DeserializeOwned>(&mut self, rule: &str) {
         const ITERATIONS: usize = 200;
         for _ in 0_usize..ITERATIONS {

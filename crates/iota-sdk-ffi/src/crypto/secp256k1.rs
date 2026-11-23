@@ -43,8 +43,7 @@ impl Secp256k1PrivateKey {
         Self(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::random())
     }
 
-    /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
-    /// format).
+    /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary format).
     #[uniffi::constructor]
     pub fn from_der(bytes: &[u8]) -> Result<Self> {
         Ok(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::from_der(bytes)?.into())
@@ -71,14 +70,13 @@ impl Secp256k1PrivateKey {
         self.0.to_bytes().to_vec()
     }
 
-    /// Encode this private key as `flag || privkey` in Bech32 starting with
-    /// "iotaprivkey" to a string.
+    /// Encode this private key as `flag || privkey` in Bech32 starting with "iotaprivkey" to a
+    /// string.
     pub fn to_bech32(&self) -> Result<String> {
         Ok(self.0.to_bech32()?)
     }
 
-    /// Decode a private key from `flag || privkey` in Bech32 starting with
-    /// "iotaprivkey".
+    /// Decode a private key from `flag || privkey` in Bech32 starting with "iotaprivkey".
     #[uniffi::constructor]
     pub fn from_bech32(value: &str) -> Result<Self> {
         Ok(iota_sdk::crypto::secp256k1::Secp256k1PrivateKey::from_bech32(value)?.into())
@@ -97,8 +95,7 @@ impl Secp256k1PrivateKey {
         )
     }
 
-    /// Create an instance from a mnemonic phrase and a derivation path like
-    /// `"m/54'/4218'/0'/0/0"`
+    /// Create an instance from a mnemonic phrase and a derivation path like `"m/54'/4218'/0'/0/0"`
     #[uniffi::constructor(default(password = ""))]
     pub fn from_mnemonic_with_path(phrase: &str, path: String, password: String) -> Result<Self> {
         Ok(

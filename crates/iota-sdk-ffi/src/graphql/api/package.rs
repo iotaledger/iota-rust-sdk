@@ -24,17 +24,15 @@ use crate::{
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
-    /// The package corresponding to the given address (at the optionally given
-    /// version). When no version is given, the package is loaded directly
-    /// from the address given. Otherwise, the address is translated before
-    /// loading to point to the package whose original ID matches
-    /// the package at address, but whose version is version. For non-system
-    /// packages, this might result in a different address than address
-    /// because different versions of a package, introduced by upgrades,
-    /// exist at distinct addresses.
+    /// The package corresponding to the given address (at the optionally given version). When no
+    /// version is given, the package is loaded directly from the address given. Otherwise, the
+    /// address is translated before loading to point to the package whose original ID matches the
+    /// package at address, but whose version is version. For non-system packages, this might result
+    /// in a different address than address because different versions of a package, introduced by
+    /// upgrades, exist at distinct addresses.
     ///
-    /// Note that this interpretation of version is different from a historical
-    /// object read (the interpretation of version for the object query).
+    /// Note that this interpretation of version is different from a historical object read (the
+    /// interpretation of version for the object query).
     #[uniffi::method(default(version = None))]
     pub async fn package(
         &self,
@@ -50,9 +48,9 @@ impl GraphQLClient {
             .map(Arc::new))
     }
 
-    /// Fetch all versions of package at address (packages that share this
-    /// package's original ID), optionally bounding the versions exclusively
-    /// from below with afterVersion, or from above with beforeVersion.
+    /// Fetch all versions of package at address (packages that share this package's original ID),
+    /// optionally bounding the versions exclusively from below with afterVersion, or from above
+    /// with beforeVersion.
     #[uniffi::method(default(pagination_filter = None, after_version = None, before_version = None))]
     pub async fn package_versions(
         &self,
@@ -79,8 +77,8 @@ impl GraphQLClient {
     }
 
     /// Fetch the latest version of the package at address.
-    /// This corresponds to the package with the highest version that shares its
-    /// original ID with the package at address.
+    /// This corresponds to the package with the highest version that shares its original ID with
+    /// the package at address.
     pub async fn package_latest(&self, address: &Address) -> Result<Option<Arc<MovePackage>>> {
         Ok(self
             .client()
@@ -90,13 +88,11 @@ impl GraphQLClient {
             .map(Arc::new))
     }
 
-    /// The Move packages that exist in the network, optionally filtered to be
-    /// strictly before beforeCheckpoint and/or strictly after
-    /// afterCheckpoint.
+    /// The Move packages that exist in the network, optionally filtered to be strictly before
+    /// beforeCheckpoint and/or strictly after afterCheckpoint.
     ///
-    /// This query returns all versions of a given user package that appear
-    /// between the specified checkpoints, but only records the latest
-    /// versions of system packages.
+    /// This query returns all versions of a given user package that appear between the specified
+    /// checkpoints, but only records the latest versions of system packages.
     #[uniffi::method(default(pagination_filter = None, after_checkpoint = None, before_checkpoint = None))]
     pub async fn packages(
         &self,
@@ -115,8 +111,7 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Return the normalized Move function data for the provided package,
-    /// module, and function.
+    /// Return the normalized Move function data for the provided package, module, and function.
     #[uniffi::method(default(version = None))]
     pub async fn normalized_move_function(
         &self,
