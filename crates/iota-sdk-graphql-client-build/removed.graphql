@@ -1,5 +1,11 @@
+# Definitions removed from the node's schema, kept until the next major release of
+# iota-sdk-graphql-client. Use `extend <kind> <Name> { ... }` with a closing `}` on its own line to
+# restore fields or values of a definition that still exists; anything else is appended as is.
+
+extend type Query {
 	"""
 	Fetch multiple transaction blocks by their digests.
 	This includes all transactions, even if they are not checkpointed yet.
 	"""
 	transactionBlocksByDigests(digests: [String!]!): [TransactionBlock]! @deprecated(reason: "Use `transactionsByDigests` instead. Will be removed in v1.38.")
+}
