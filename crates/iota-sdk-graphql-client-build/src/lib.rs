@@ -43,9 +43,13 @@
 /// }
 /// ```
 pub fn register_schema(schema_name: &str) {
-    let sdl = include_str!("../schema.graphql");
+    let sdl = include_str!("../schema.graphql").replacen(
+        "type Query {\n",
+        concat!("type Query {\n", include_str!("../removed.graphql")),
+        1,
+    );
     cynic_codegen::register_schema(schema_name)
-        .from_sdl(sdl)
+        .from_sdl(&sdl)
         .expect("Failed to find GraphQL Schema")
         .as_default()
         .unwrap();
