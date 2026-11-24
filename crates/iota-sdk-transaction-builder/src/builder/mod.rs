@@ -1718,7 +1718,17 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                     let Ok(coin) = Coin::try_from_object(&obj) else {
                         continue;
                     };
-                    selected.push((coin.balance(), obj.object_ref()));
+                    let entry = (coin.balance(), obj.object_ref());
+                    // A coin that changed between pages can be served again at a newer version;
+                    // keep only the newest one.
+                    match selected
+                        .iter_mut()
+                        .find(|(_, r)| r.object_id == entry.1.object_id)
+                    {
+                        Some(existing) if existing.1.version < entry.1.version => *existing = entry,
+                        Some(_) => {}
+                        None => selected.push(entry),
+                    }
                 }
                 selected.sort_by_key(|c| std::cmp::Reverse(c.0));
                 selected.truncate(max_gas_payment_objects);
