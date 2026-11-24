@@ -702,9 +702,8 @@ mod tests {
 
         #[tokio::test]
         async fn a_coin_served_again_at_a_newer_version_is_kept_at_that_version() {
-            // One coin repeated on every page never covers a 1.5e12 budget,
-            // so selection walks every page and keeps the coin once, at the
-            // version from the last page.
+            // One coin repeated on every page never covers a 1.5e12 budget, so selection walks
+            // every page and keeps the coin once, at the version from the last page.
             let pages_served = Arc::new(AtomicUsize::new(0));
             let builder = super::builder_with(PagingClient {
                 pages_served: pages_served.clone(),

@@ -1719,8 +1719,8 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                         continue;
                     };
                     let entry = (coin.balance(), obj.object_ref());
-                    // A coin that changed between pages can be served again at
-                    // a newer version; keep only the newest one.
+                    // A coin that changed between pages can be served again at a newer version;
+                    // keep only the newest one.
                     match selected
                         .iter_mut()
                         .find(|(_, r)| r.object_id == entry.1.object_id)
