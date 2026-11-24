@@ -50,9 +50,9 @@ impl From<IntentError> for iota_sdk::types::IntentError {
 
 /// Byte signifying the scope of an Intent
 ///
-/// This enum specifies the intent scope. Two intents for different scopes
-/// should never collide, so no signature provided for one intent scope can be
-/// used for another, even when the serialized data itself may be the same.
+/// This enum specifies the intent scope. Two intents for different scopes should never collide, so
+/// no signature provided for one intent scope can be used for another, even when the serialized
+/// data itself may be the same.
 ///
 /// # BCS
 ///
@@ -70,11 +70,10 @@ pub enum IntentScope {
     PersonalMessage = 3,
     /// Used for an authority signature on a user signed transaction.
     SenderSignedTransaction = 4,
-    /// Used as a signature representing an authority's proof of possession of
-    /// its authority key.
+    /// Used as a signature representing an authority's proof of possession of its authority key.
     ProofOfPossession = 5,
-    /// Deprecated. Should not be reused. Introduced for bridge purposes but was
-    /// never included in messages.
+    /// Deprecated. Should not be reused. Introduced for bridge purposes but was never included in
+    /// messages.
     BridgeEventDeprecated = 6,
     /// Used for consensus authority signature on block's digest.
     ConsensusBlock = 7,
@@ -121,9 +120,9 @@ impl From<IntentScope> for iota_sdk::types::IntentScope {
 
 /// Byte signifying the version of an Intent
 ///
-/// The version here is to distinguish between signing different versions of the
-/// struct or enum. Serialized output between two different versions of the same
-/// struct/enum might accidentally (or maliciously on purpose) match.
+/// The version here is to distinguish between signing different versions of the struct or enum.
+/// Serialized output between two different versions of the same struct/enum might accidentally (or
+/// maliciously on purpose) match.
 ///
 /// # BCS
 ///
@@ -155,11 +154,9 @@ impl From<IntentVersion> for iota_sdk::types::IntentVersion {
 
 /// Byte signifying the application id of an Intent
 ///
-/// This enum specifies the application ID. Two intents in two different
-/// applications (i.e., IOTA, Ethereum etc) should never collide, so
-/// that even when a signing key is reused, nobody can take a signature
-/// designated for app_1 and present it as a valid signature for an (any) intent
-/// in app_2.
+/// This enum specifies the application ID. Two intents in two different applications (i.e., IOTA,
+/// Ethereum etc) should never collide, so that even when a signing key is reused, nobody can take a
+/// signature designated for app_1 and present it as a valid signature for an (any) intent in app_2.
 ///
 /// # BCS
 ///
@@ -192,15 +189,14 @@ impl From<IntentAppId> for iota_sdk::types::IntentAppId {
 
 /// A Signing Intent
 ///
-/// An intent is a compact struct that serves as the domain separator for a
-/// message that a signature commits to. It consists of three parts:
+/// An intent is a compact struct that serves as the domain separator for a message that a signature
+/// commits to. It consists of three parts:
 ///     1. IntentScope (what the type of the message is)
 ///     2. IntentVersion
 ///     3. IntentAppId (what application the signature refers to).
 ///
-/// The serialization of an Intent is a 3-byte array where each field is
-/// represented by a byte and it is prepended onto a message before it is signed
-/// in IOTA.
+/// The serialization of an Intent is a 3-byte array where each field is represented by a byte and
+/// it is prepended onto a message before it is signed in IOTA.
 ///
 /// # BCS
 ///
@@ -287,9 +283,9 @@ impl Intent {
     }
 }
 
-/// A 1-byte domain separator for hashing Object ID in IOTA. It starts from
-/// 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
-/// derived as the hash of `flag || pubkey`.
+/// A 1-byte domain separator for hashing Object ID in IOTA. It starts from 0xf0 to ensure no
+/// hashing collision for any ObjectID vs IotaAddress which is derived as the hash of `flag ||
+/// pubkey`.
 #[derive(Clone, Debug, uniffi::Enum)]
 pub enum HashingIntentScope {
     ChildObjectId = 0xf0,

@@ -1,15 +1,13 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Type-tag validation tests for the generic `try_from_object`
-//! constructors.
+//! Type-tag validation tests for the generic `try_from_object` constructors.
 //!
-//! The coin marker `T` is phantom, so the BCS contents of e.g. a
-//! `BasicOutput<IOTA>` and a `BasicOutput<FOO>` are byte-identical — the
-//! type tag is the only place the coin type is recorded. These tests wrap
-//! the committed fixtures in synthetic [`Object`]s with correct and forged
-//! tags and assert that the constructors accept the former and reject the
-//! latter with [`FromObjectError::WrongType`].
+//! The coin marker `T` is phantom, so the BCS contents of e.g. a `BasicOutput<IOTA>` and a
+//! `BasicOutput<FOO>` are byte-identical — the type tag is the only place the coin type is
+//! recorded. These tests wrap the committed fixtures in synthetic [`Object`]s with correct and
+//! forged tags and assert that the constructors accept the former and reject the latter with
+//! [`FromObjectError::WrongType`].
 
 #![cfg(feature = "serde")]
 use iota_sdk_move_types::{
@@ -83,9 +81,8 @@ impl MoveType for Foo {
 macro_rules! coin_marker_validation_tests {
     ($mod_name:ident, $ty:ident, $tag_base:literal, $fixture:literal) => {
         mod $mod_name {
-            // An explicit (non-glob) import may shadow the prelude's `test`
-            // attribute; a glob from `super` may not, so this can't live at
-            // the file level.
+            // An explicit (non-glob) import may shadow the prelude's `test` attribute; a glob from
+            // `super` may not, so this can't live at the file level.
             #[cfg(target_arch = "wasm32")]
             use wasm_bindgen_test::wasm_bindgen_test as test;
 
@@ -103,8 +100,8 @@ macro_rules! coin_marker_validation_tests {
 
             #[test]
             fn rejects_mismatched_coin_marker() {
-                // Same bytes, different coin in the tag — without the
-                // type-param check this would silently decode as `<IOTA>`.
+                // Same bytes, different coin in the tag — without the type-param check this would
+                // silently decode as `<IOTA>`.
                 let object = object_with_tag(FOO_TAG, FIXTURE);
                 assert!(matches!(
                     $ty::<IOTA>::try_from(&object),
@@ -112,8 +109,8 @@ macro_rules! coin_marker_validation_tests {
                 ));
             }
 
-            /// The tag the mirror advertises has to be the one it accepts,
-            /// including the type parameter.
+            /// The tag the mirror advertises has to be the one it accepts, including the type
+            /// parameter.
             #[test]
             fn struct_tag_matches_the_type_it_decodes() {
                 assert_eq!($ty::<IOTA>::struct_tag().to_string(), IOTA_TAG);
@@ -256,14 +253,13 @@ coin_marker_validation_tests!(
     "fixtures/transfer_policy_cap.bcs"
 );
 
-/// Tag-validation tests for non-generic mirrors: the constructor must
-/// accept the type's own tag and reject any other.
+/// Tag-validation tests for non-generic mirrors: the constructor must accept the type's own tag and
+/// reject any other.
 macro_rules! object_tag_validation_tests {
     ($mod_name:ident, $ty:ty, $tag:literal, $fixture:literal) => {
         mod $mod_name {
-            // An explicit (non-glob) import may shadow the prelude's `test`
-            // attribute; a glob from `super` may not, so this can't live at
-            // the file level.
+            // An explicit (non-glob) import may shadow the prelude's `test` attribute; a glob from
+            // `super` may not, so this can't live at the file level.
             #[cfg(target_arch = "wasm32")]
             use wasm_bindgen_test::wasm_bindgen_test as test;
 
@@ -345,9 +341,8 @@ object_tag_validation_tests!(
     "fixtures/validator_operation_cap.bcs"
 );
 
-/// Mirrors without a committed fixture are exercised with synthetic
-/// values: encode a hand-built value, wrap it in an object with the
-/// matching (or a forged) tag, and decode it back.
+/// Mirrors without a committed fixture are exercised with synthetic values: encode a hand-built
+/// value, wrap it in an object with the matching (or a forged) tag, and decode it back.
 mod synthetic {
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::wasm_bindgen_test as test;
@@ -428,8 +423,8 @@ mod synthetic {
         let decoded = TimeLock::<Balance<IOTA>>::try_from(&object).expect("tag matches");
         assert_eq!(decoded, value);
 
-        // Escape hatch: an explicit locked-type tag, with nothing tying it
-        // to `T`. Accepts the matching tag and rejects a foreign one.
+        // Escape hatch: an explicit locked-type tag, with nothing tying it to `T`. Accepts the
+        // matching tag and rejects a foreign one.
         let decoded = TimeLock::<Balance<IOTA>>::try_from_object_with_type(
             &object,
             &Balance::<IOTA>::type_tag(),
@@ -441,8 +436,7 @@ mod synthetic {
             Err(FromObjectError::WrongType)
         ));
 
-        // Same bytes labeled as a different coin's balance must be
-        // rejected for `Balance<IOTA>` …
+        // Same bytes labeled as a different coin's balance must be rejected for `Balance<IOTA>` …
         let object = synthetic_object(
             "0x2::timelock::TimeLock<0x2::balance::Balance<0x123::foo::FOO>>",
             &value,
@@ -452,8 +446,8 @@ mod synthetic {
             Err(FromObjectError::WrongType)
         ));
 
-        // … while `Balance<Foo>` composes the matching tag through the
-        // blanket `MoveType` impl on `Balance<T>`.
+        // … while `Balance<Foo>` composes the matching tag through the blanket `MoveType` impl on
+        // `Balance<T>`.
         TimeLock::<Balance<Foo>>::try_from(&object).expect("composed tag matches");
     }
 
@@ -470,9 +464,8 @@ mod synthetic {
             &value,
         );
 
-        // The locked type is validated against the runtime-supplied tag,
-        // not the compile-time `T`: the matching `Balance<IOTA>` tag is
-        // accepted …
+        // The locked type is validated against the runtime-supplied tag, not the compile-time `T`:
+        // the matching `Balance<IOTA>` tag is accepted …
         TimeLock::<Balance<IOTA>>::try_from_object_with_type(
             &object,
             &<Balance<IOTA> as MoveType>::type_tag(),
@@ -517,8 +510,8 @@ mod synthetic {
         let decoded = LabelerCap::<IOTA>::try_from(&object).expect("tag matches L");
         assert_eq!(decoded, value);
 
-        // Escape hatch: an explicit label-type tag. Accepts the matching
-        // tag and rejects a foreign one.
+        // Escape hatch: an explicit label-type tag. Accepts the matching tag and rejects a foreign
+        // one.
         LabelerCap::try_from_object_with_type(&object, &IOTA::type_tag())
             .expect("explicit label type matches");
         assert!(matches!(
@@ -526,16 +519,15 @@ mod synthetic {
             Err(FromObjectError::WrongType)
         ));
 
-        // Same bytes labeled with a different type must be rejected for
-        // `LabelerCap<IOTA>` …
+        // Same bytes labeled with a different type must be rejected for `LabelerCap<IOTA>` …
         let object = synthetic_object("0x2::labeler::LabelerCap<0x123::foo::FOO>", &value);
         assert!(matches!(
             LabelerCap::<IOTA>::try_from(&object),
             Err(FromObjectError::WrongType)
         ));
 
-        // … while `LabelerCap<Foo>` composes the matching tag through the
-        // `MoveType` impl on the marker.
+        // … while `LabelerCap<Foo>` composes the matching tag through the `MoveType` impl on the
+        // marker.
         LabelerCap::<Foo>::try_from(&object).expect("composed tag matches");
     }
 
@@ -552,8 +544,8 @@ mod synthetic {
         let decoded = PurchaseCap::<IOTA>::try_from(&object).expect("tag matches T");
         assert_eq!(decoded, value);
 
-        // Escape hatch: an explicit item-type tag. Accepts the matching tag
-        // and rejects a foreign one.
+        // Escape hatch: an explicit item-type tag. Accepts the matching tag and rejects a foreign
+        // one.
         PurchaseCap::try_from_object_with_type(&object, &IOTA::type_tag())
             .expect("explicit item type matches");
         assert!(matches!(
@@ -561,16 +553,15 @@ mod synthetic {
             Err(FromObjectError::WrongType)
         ));
 
-        // Same bytes labeled with a different item type must be rejected
-        // for `PurchaseCap<IOTA>` …
+        // Same bytes labeled with a different item type must be rejected for `PurchaseCap<IOTA>` …
         let object = synthetic_object("0x2::kiosk::PurchaseCap<0x123::foo::FOO>", &value);
         assert!(matches!(
             PurchaseCap::<IOTA>::try_from(&object),
             Err(FromObjectError::WrongType)
         ));
 
-        // … while `PurchaseCap<Foo>` composes the matching tag through the
-        // `MoveType` impl on the marker.
+        // … while `PurchaseCap<Foo>` composes the matching tag through the `MoveType` impl on the
+        // marker.
         PurchaseCap::<Foo>::try_from(&object).expect("composed tag matches");
     }
 }

@@ -81,21 +81,17 @@ pub struct Validator {
     pub next_epoch_credentials: Option<ValidatorCredentials>,
     /// The validator's gas price quote for the next epoch.
     pub next_epoch_gas_price: Option<BigInt>,
-    /// The total number of IOTA tokens in this pool plus
-    /// the pending stake amount for this epoch.
+    /// The total number of IOTA tokens in this pool plus the pending stake amount for this epoch.
     pub next_epoch_stake: Option<BigInt>,
-    /// The validator's current valid `Cap` object. Validators can delegate
-    /// the operation ability to another address. The address holding this `Cap`
-    /// object can then update the reference gas price and tallying rule on
-    /// behalf of the validator.
+    /// The validator's current valid `Cap` object. Validators can delegate the operation ability
+    /// to another address. The address holding this `Cap` object can then update the reference
+    /// gas price and tallying rule on behalf of the validator.
     pub operation_cap: Option<MoveObject>,
-    /// Pending pool token withdrawn during the current epoch, emptied at epoch
-    /// boundaries.
+    /// Pending pool token withdrawn during the current epoch, emptied at epoch boundaries.
     pub pending_pool_token_withdraw: Option<BigInt>,
     /// Pending stake amount for this epoch.
     pub pending_stake: Option<BigInt>,
-    /// Pending stake withdrawn during the current epoch, emptied at epoch
-    /// boundaries.
+    /// Pending stake withdrawn during the current epoch, emptied at epoch boundaries.
     pub pending_total_iota_withdraw: Option<BigInt>,
     /// Total number of pool tokens issued by the pool.
     pub pool_token_balance: Option<BigInt>,
@@ -109,8 +105,7 @@ pub struct Validator {
     pub staking_pool_id: ObjectId,
     /// The total number of IOTA tokens in this pool.
     pub staking_pool_iota_balance: Option<BigInt>,
-    /// The voting power of this validator in basis points (e.g., 100 = 1%
-    /// voting power).
+    /// The voting power of this validator in basis points (e.g., 100 = 1% voting power).
     pub voting_power: Option<i32>,
 }
 

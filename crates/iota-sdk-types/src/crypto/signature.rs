@@ -10,20 +10,18 @@ use crate::crypto::move_authenticator::MoveAuthenticator;
 
 /// A basic signature
 ///
-/// This enumeration defines the set of simple or basic signature schemes
-/// supported by IOTA. Most signature schemes supported by IOTA end up
-/// comprising of at least one simple signature scheme.
+/// This enumeration defines the set of simple or basic signature schemes supported by IOTA. Most
+/// signature schemes supported by IOTA end up comprising of at least one simple signature scheme.
 ///
 /// # BCS
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// Note: Due to historical reasons, signatures are serialized slightly
-/// different from the majority of the types in IOTA. In particular if a
-/// signature is ever embedded in another structure it generally is serialized
-/// as `bytes` meaning it has a length prefix that defines the length of
-/// the completely serialized signature.
+/// Note: Due to historical reasons, signatures are serialized slightly different from the majority
+/// of the types in IOTA. In particular if a signature is ever embedded in another structure it
+/// generally is serialized as `bytes` meaning it has a length prefix that defines the length of the
+/// completely serialized signature.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
@@ -222,8 +220,7 @@ impl SimpleSignature {
 
     /// The public key embedded in this signature.
     ///
-    /// The raw public-key bytes are available via [`AsRef`] on the returned
-    /// [`PublicKey`].
+    /// The raw public-key bytes are available via [`AsRef`] on the returned [`PublicKey`].
     pub fn to_public_key(&self) -> PublicKey {
         match self {
             SimpleSignature::Ed25519 { public_key, .. } => PublicKey::Ed25519(*public_key),
@@ -261,9 +258,8 @@ impl crate::TreeDisplay for SimpleSignature {
 ///
 /// # BCS
 ///
-/// Flag `%d05` is reserved: it was formerly used for the now-removed zklogin
-/// authenticator (which was never enabled on chain) and is intentionally
-/// skipped.
+/// Flag `%d05` is reserved: it was formerly used for the now-removed zklogin authenticator (which
+/// was never enabled on chain) and is intentionally skipped.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, strum::Display)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[repr(u8)]
@@ -342,8 +338,7 @@ impl super::PasskeyPublicKey {
     }
 }
 
-/// Error returned when a byte flag or a name does not correspond to a known
-/// [`SignatureScheme`].
+/// Error returned when a byte flag or a name does not correspond to a known [`SignatureScheme`].
 #[derive(Clone, Debug, Eq, Hash, PartialEq, thiserror::Error)]
 #[non_exhaustive]
 pub enum SignatureSchemeError {
@@ -355,19 +350,18 @@ pub enum SignatureSchemeError {
 
 /// A signature from a user
 ///
-/// A `UserSignature` is most commonly used to authorize the execution and
-/// inclusion of a transaction to the blockchain.
+/// A `UserSignature` is most commonly used to authorize the execution and inclusion of a
+/// transaction to the blockchain.
 ///
 /// # BCS
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// Note: Due to historical reasons, signatures are serialized slightly
-/// different from the majority of the types in IOTA. In particular if a
-/// signature is ever embedded in another structure it generally is serialized
-/// as `bytes` meaning it has a length prefix that defines the length of
-/// the completely serialized signature.
+/// Note: Due to historical reasons, signatures are serialized slightly different from the majority
+/// of the types in IOTA. In particular if a signature is ever embedded in another structure it
+/// generally is serialized as `bytes` meaning it has a length prefix that defines the length of the
+/// completely serialized signature.
 #[derive(Clone, Debug, derive_more::From, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
 #[cfg_attr(
@@ -455,10 +449,9 @@ mod serialization {
 
     /// Flat wire shape for `SimpleSignature`.
     ///
-    /// Variant order matches the scheme flags (0x00 Ed25519, 0x01 Secp256k1,
-    /// 0x02 Secp256r1) so BCS emits the correct byte for each variant
-    /// automatically. All fields are `Copy`, so the same owned enum serves
-    /// both serialization (built by copying) and deserialization.
+    /// Variant order matches the scheme flags (0x00 Ed25519, 0x01 Secp256k1, 0x02 Secp256r1) so BCS
+    /// emits the correct byte for each variant automatically. All fields are `Copy`, so the same
+    /// owned enum serves both serialization (built by copying) and deserialization.
     #[derive(serde::Deserialize, serde::Serialize)]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     pub(crate) enum SimpleSignatureBody {
@@ -639,17 +632,16 @@ mod serialization {
             }
         }
 
-        /// Base64-encode this signature as its `flag || sig || pubkey` bytes,
-        /// the same layout as [`to_bytes`](Self::to_bytes).
+        /// Base64-encode this signature as its `flag || sig || pubkey` bytes, the same layout as
+        /// [`to_bytes`](Self::to_bytes).
         pub fn to_base64(&self) -> String {
             use base64ct::Encoding;
 
             base64ct::Base64::encode_string(&self.to_bytes())
         }
 
-        /// Decode a signature from the Base64 form produced by
-        /// [`to_base64`](Self::to_base64), i.e. base64 over the
-        /// `flag || sig || pubkey` bytes.
+        /// Decode a signature from the Base64 form produced by [`to_base64`](Self::to_base64), i.e.
+        /// base64 over the `flag || sig || pubkey` bytes.
         pub fn from_base64(s: &str) -> Result<Self, SignatureFromBytesError> {
             use base64ct::Encoding;
 
@@ -690,18 +682,16 @@ mod serialization {
     // UserSignature
     // -----------------------------------------------------------------------
 
-    /// Decode-side wire shape for `UserSignature`: the flat
-    /// `scheme-flag || payload` body inside the outer length prefix.
+    /// Decode-side wire shape for `UserSignature`: the flat `scheme-flag || payload` body inside
+    /// the outer length prefix.
     ///
-    /// Variant order matches the eight scheme flags so the BCS variant tag is
-    /// the scheme byte. `Bls12381Reserved` and `ZkLoginDeprecated` hold the
-    /// `0x04`/`0x05` slots (keeping `Passkey` at `0x06`); the `TryFrom`
-    /// conversion rejects both because they are not valid user signature
+    /// Variant order matches the eight scheme flags so the BCS variant tag is the scheme byte.
+    /// `Bls12381Reserved` and `ZkLoginDeprecated` hold the `0x04`/`0x05` slots (keeping `Passkey`
+    /// at `0x06`); the `TryFrom` conversion rejects both because they are not valid user signature
     /// schemes, and they are `bcs_schema(skip)`ped from the generated grammar.
     ///
-    /// The multisig and passkey variants hold the flat body pivots rather
-    /// than the public types, whose own serde emits the historical
-    /// `bytes`-wrapped `flag || body` form.
+    /// The multisig and passkey variants hold the flat body pivots rather than the public types,
+    /// whose own serde emits the historical `bytes`-wrapped `flag || body` form.
     #[derive(serde::Deserialize)]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     pub(crate) enum UserSignatureBody {
@@ -983,12 +973,11 @@ mod serialization {
             assert_eq!(Ok(scheme), SignatureScheme::from_byte(scheme.to_u8()));
         }
 
-        /// The `SignatureScheme` flag bytes are part of the on-chain wire
-        /// format and must never change. They are pinned here against
-        /// hardcoded values; a round-trip (`roundtrip_signature_scheme`)
-        /// cannot catch a shifted value because it would move in lockstep.
-        /// `0x05` is reserved for the removed zklogin authenticator (never
-        /// enabled on chain) and must be rejected rather than mapped.
+        /// The `SignatureScheme` flag bytes are part of the on-chain wire format and must never
+        /// change. They are pinned here against hardcoded values; a round-trip
+        /// (`roundtrip_signature_scheme`) cannot catch a shifted value because it would move in
+        /// lockstep. `0x05` is reserved for the removed zklogin authenticator (never enabled on
+        /// chain) and must be rejected rather than mapped.
         #[test]
         fn signature_scheme_flag_values() {
             assert_eq!(SignatureScheme::Ed25519.to_u8(), 0x00);
@@ -1034,8 +1023,7 @@ mod serialization {
             );
         }
 
-        /// `FromStr` must accept exactly the lowercase strings produced by
-        /// `Display`.
+        /// `FromStr` must accept exactly the lowercase strings produced by `Display`.
         #[test]
         fn signature_scheme_string_roundtrip() {
             use std::str::FromStr as _;
@@ -1083,8 +1071,8 @@ mod serialization {
             );
         }
 
-        /// A bare `0x05` flag previously decoded to the (removed) zklogin
-        /// variant; it must now fail to decode.
+        /// A bare `0x05` flag previously decoded to the (removed) zklogin variant; it must now fail
+        /// to decode.
         #[test]
         fn user_signature_rejects_zklogin_flag() {
             assert!(UserSignature::from_bytes([0x05]).is_err());
@@ -1193,11 +1181,10 @@ mod serialization {
 
         #[test]
         fn move_authenticator_fixtures() {
-            // BCS form of on-chain `MoveAuthenticator` user signatures: the
-            // length-prefixed `flag || payload` byte blob, matching the raw
-            // fixtures in `move_authenticator.rs`. The Move variant derives
-            // `Serialize`, so this pins it to the `bytes` wire form shared by
-            // every other scheme rather than the bare enum encoding.
+            // BCS form of on-chain `MoveAuthenticator` user signatures: the length-prefixed
+            // `flag || payload` byte blob, matching the raw fixtures in `move_authenticator.rs`.
+            // The Move variant derives `Serialize`, so this pins it to the `bytes` wire form shared
+            // by every other scheme rather than the bare enum encoding.
             const FIXTURES: &[&str] = &[
                 // testnet/ALZRemHMDS7L5hTvNbsqBo3m9ppHdss9fnYBrhg5Goj1 (aa_account::AaAccount)
                 "cgcAAQBBQHXo3l3VcV9Td7kSzIjdCcFaY7+nhwYn0/FAK8OKW7Vpve1bLrpkfvITLYzNphI2xHv45H2k+el6SVdM+45CZQgAAQHN7ufjvWgbqrk+iJudkpDtJJMBIXO1q4OmR3b+n4krQEQrQiwAAAAAAA==",

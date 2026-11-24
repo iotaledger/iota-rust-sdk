@@ -3,28 +3,24 @@
 
 //! # IOTA Transaction Builder
 //!
-//! This crate contains the [TransactionBuilder], which allows for simple
-//! construction of Programmable Transactions which can be executed on the IOTA
-//! network.
+//! This crate contains the [TransactionBuilder], which allows for simple construction of
+//! Programmable Transactions which can be executed on the IOTA network.
 //!
-//! The builder is designed to allow for a lot of flexibility while also
-//! reducing the necessary boilerplate code. It uses a type-state pattern to
-//! ensure the proper flow through the various functions. It is chainable via
-//! mutable references.
+//! The builder is designed to allow for a lot of flexibility while also reducing the necessary
+//! boilerplate code. It uses a type-state pattern to ensure the proper flow through the various
+//! functions. It is chainable via mutable references.
 //!
 //! ## Online vs. Offline Builder
 //!
 //! The Transaction Builder can be used with or without a client implementing
 //! [TransactionBuilderLedgerClient]. When one is provided via the
-//! [with_client](TransactionBuilder::with_client) method, the resulting builder
-//! will use it to find and validate provided IDs. A ledger-only client can
-//! build transactions with an explicit gas budget via
-//! [finish_with_budget](TransactionBuilder::finish_with_budget). Clients that
-//! also implement [TransactionBuilderSimulationClient] enable
-//! [dry_run](TransactionBuilder::dry_run) and
-//! [finish](TransactionBuilder::finish) with automatic gas budget estimation;
-//! clients that additionally implement [TransactionBuilderExecutionClient]
-//! enable [execute](TransactionBuilder::execute).
+//! [with_client](TransactionBuilder::with_client) method, the resulting builder will use it to find
+//! and validate provided IDs. A ledger-only client can build transactions with an explicit gas
+//! budget via [finish_with_budget](TransactionBuilder::finish_with_budget). Clients that also
+//! implement [TransactionBuilderSimulationClient] enable [dry_run](TransactionBuilder::dry_run) and
+//! [finish](TransactionBuilder::finish) with automatic gas budget estimation; clients that
+//! additionally implement [TransactionBuilderExecutionClient] enable
+//! [execute](TransactionBuilder::execute).
 //!
 //! ### Example with Client Resolution
 //!
@@ -94,9 +90,8 @@
 //! # Result::<_, eyre::Error>::Ok(())
 //! ```
 //!
-//! NOTE: It is possible to provide an [ObjectId](iota_types::ObjectId) to an
-//! offline client builder, but this will cause the builder to fail when calling
-//! `finish`.
+//! NOTE: It is possible to provide an [ObjectId](iota_types::ObjectId) to an offline client
+//! builder, but this will cause the builder to fail when calling `finish`.
 //!
 //! ## Methods
 //!
@@ -104,58 +99,48 @@
 //!
 //! ### Commands
 //!
-//! Each command method adds one or more commands to the final transaction. Some
-//! commands have optional follow-up methods. All command results can be
-//! assigned a name via [assign](TransactionBuilder::assign). Assigning a name
-//! to a command allows them to be used later in the transaction via the
-//! [assigned] method.
+//! Each command method adds one or more commands to the final transaction. Some commands have
+//! optional follow-up methods. All command results can be assigned a name via
+//! [assign](TransactionBuilder::assign). Assigning a name to a command allows them to be used later
+//! in the transaction via the [assigned] method.
 //!
 //! - [move_call](TransactionBuilder::move_call): Call a move function.
 //!     - `arguments`: Add arguments to the move call.
-//!     - `generics`: Add generic types to the move call using types that
-//!       implement [MoveType](types::MoveType).
-//!     - `type_tags`: Add generic types directly using the
-//!       [TypeTag](iota_types::TypeTag).
-//! - [send_iota](TransactionBuilder::send_iota): Send IOTA coins to a recipient
-//!   address.
-//! - [send_coins](TransactionBuilder::send_coins): Send coins of any type to a
-//!   recipient address.
-//! - [pay](TransactionBuilder::pay): Send coins of any type to several
-//!   recipients, each paired with the amount to send.
-//! - [pay_iota](TransactionBuilder::pay_iota): Send IOTA coins from the gas
-//!   coin to several recipients.
-//! - [merge_coins](TransactionBuilder::merge_coins): Merge a list of coins into
-//!   a single primary coin.
-//! - [split_coins](TransactionBuilder::split_coins): Split a coin into coins of
-//!   various amounts.
-//! - [transfer_objects](TransactionBuilder::transfer_objects): Send objects to
-//!   a recipient address.
-//! - [publish_package](TransactionBuilder::publish_package): Publish a move
-//!   package.
+//!     - `generics`: Add generic types to the move call using types that implement
+//!       [MoveType](types::MoveType).
+//!     - `type_tags`: Add generic types directly using the [TypeTag](iota_types::TypeTag).
+//! - [send_iota](TransactionBuilder::send_iota): Send IOTA coins to a recipient address.
+//! - [send_coins](TransactionBuilder::send_coins): Send coins of any type to a recipient address.
+//! - [pay](TransactionBuilder::pay): Send coins of any type to several recipients, each paired with
+//!   the amount to send.
+//! - [pay_iota](TransactionBuilder::pay_iota): Send IOTA coins from the gas coin to several
+//!   recipients.
+//! - [merge_coins](TransactionBuilder::merge_coins): Merge a list of coins into a single primary
+//!   coin.
+//! - [split_coins](TransactionBuilder::split_coins): Split a coin into coins of various amounts.
+//! - [transfer_objects](TransactionBuilder::transfer_objects): Send objects to a recipient address.
+//! - [publish_package](TransactionBuilder::publish_package): Publish a move package.
 //!     - `package_id`: Name the package ID returned by the publish call.
 //! - [upgrade](TransactionBuilder::upgrade): Upgrade a move package.
-//! - [make_move_vec](TransactionBuilder::make_move_vec): Create a move
-//!   `vector`.
+//! - [make_move_vec](TransactionBuilder::make_move_vec): Create a move `vector`.
 //!
 //! ### Metadata
 //!
 //! These methods set various metadata which may be needed for the execution.
 //!
 //! - [gas](TransactionBuilder::gas): Add gas coins to pay for the execution.
-//! - [gas_refs](TransactionBuilder::gas_refs): Add gas coins that the caller
-//!   has already resolved to references.
-//! - [gas_budget](TransactionBuilder::gas_budget): Set the maximum gas budget
-//!   to spend.
+//! - [gas_refs](TransactionBuilder::gas_refs): Add gas coins that the caller has already resolved
+//!   to references.
+//! - [gas_budget](TransactionBuilder::gas_budget): Set the maximum gas budget to spend.
 //! - [gas_price](TransactionBuilder::gas_price): Set the gas price.
 //! - [sponsor](TransactionBuilder::sponsor): Set the gas sponsor address.
-//! - [expiration](TransactionBuilder::expiration): Set the transaction
-//!   expiration epoch.
+//! - [expiration](TransactionBuilder::expiration): Set the transaction expiration epoch.
 //!
 //! ### Other
 //!
-//! Many other methods exist, either to get data or allow for development on top
-//! of the builder. Typically, these methods should not be needed, but they are
-//! made available for special circumstances.
+//! Many other methods exist, either to get data or allow for development on top of the builder.
+//! Typically, these methods should not be needed, but they are made available for special
+//! circumstances.
 //!
 //! - [apply_argument](TransactionBuilder::apply_argument)
 //! - [apply_arguments](TransactionBuilder::apply_arguments)
@@ -167,35 +152,31 @@
 //!
 //! ## Finalization and Execution
 //!
-//! There are several ways to finish the builder. First, the
-//! [finish](TransactionBuilder::finish) method can be used to return the
-//! resulting [Transaction](iota_types::Transaction), which can be manually
-//! serialized, executed, etc. On a client without simulation support, use
-//! [finish_with_budget](TransactionBuilder::finish_with_budget) instead and
-//! provide the gas budget explicitly.
+//! There are several ways to finish the builder. First, the [finish](TransactionBuilder::finish)
+//! method can be used to return the resulting [Transaction](iota_types::Transaction), which can be
+//! manually serialized, executed, etc. On a client without simulation support, use
+//! [finish_with_budget](TransactionBuilder::finish_with_budget) instead and provide the gas budget
+//! explicitly.
 //!
 //! Additionally, when a client is provided, the builder can directly
-//! [dry_run](TransactionBuilder::dry_run) or
-//! [execute](TransactionBuilder::execute) the transaction.
+//! [dry_run](TransactionBuilder::dry_run) or [execute](TransactionBuilder::execute) the
+//! transaction.
 //!
-//! When the gas payment is decided elsewhere,
-//! [finish_kind](TransactionBuilder::finish_kind) returns just the
-//! [TransactionKind](iota_types::TransactionKind): the inputs are resolved with
-//! the client, but no gas coins are selected, no budget is estimated and no gas
-//! price is fetched.
+//! When the gas payment is decided elsewhere, [finish_kind](TransactionBuilder::finish_kind)
+//! returns just the [TransactionKind](iota_types::TransactionKind): the inputs are resolved with
+//! the client, but no gas coins are selected, no budget is estimated and no gas price is fetched.
 //!
-//! When the transaction is resolved, the builder will try to ensure a valid
-//! state by de-duplicating and converting appropriate inputs into references to
-//! the gas coin. This means that the same input can be passed multiple times
-//! and the final transaction will only contain one instance. However, in some
-//! cases an invalid state can still be reached. For instance, if a coin is used
-//! both for gas and as part of a group of coins, i.e. when transferring
-//! objects, the transaction can not possibly be valid.
+//! When the transaction is resolved, the builder will try to ensure a valid state by de-duplicating
+//! and converting appropriate inputs into references to the gas coin. This means that the same
+//! input can be passed multiple times and the final transaction will only contain one instance.
+//! However, in some cases an invalid state can still be reached. For instance, if a coin is used
+//! both for gas and as part of a group of coins, i.e. when transferring objects, the transaction
+//! can not possibly be valid.
 //!
 //! ### Defaults
 //!
-//! When a client is provided, the builder can set some values by default. The
-//! following are the default behaviors for each metadata value.
+//! When a client is provided, the builder can set some values by default. The following are the
+//! default behaviors for each metadata value.
 //!
 //! - Gas: One page of coins owned by the sender.
 //! - Gas Budget: A dry run will be used to estimate.
@@ -203,27 +184,24 @@
 //!
 //! ## Gas Sponsorship
 //!
-//! A transaction's gas can be paid by someone other than its sender, in two
-//! ways depending on who holds the sponsor's key.
+//! A transaction's gas can be paid by someone other than its sender, in two ways depending on who
+//! holds the sponsor's key.
 //!
-//! When you hold it, set the sponsor's address with
-//! [sponsor](TransactionBuilder::sponsor) — the gas coins are drawn from it —
-//! and call
-//! [execute_with_sponsor_signer](TransactionBuilder::execute_with_sponsor_signer),
-//! which signs as both parties and submits through the client.
+//! When you hold it, set the sponsor's address with [sponsor](TransactionBuilder::sponsor) — the
+//! gas coins are drawn from it — and call
+//! [execute_with_sponsor_signer](TransactionBuilder::execute_with_sponsor_signer), which signs as
+//! both parties and submits through the client.
 //!
 //! When a service holds it, pass a [GasSponsor] to
-//! [execute_with_gas_sponsor](TransactionBuilder::execute_with_gas_sponsor). It
-//! supplies the whole gas payment and submits the transaction itself, so the
-//! sender's own coins are never looked up; setting gas coins or a
-//! [sponsor](TransactionBuilder::sponsor) address on the same builder is
+//! [execute_with_gas_sponsor](TransactionBuilder::execute_with_gas_sponsor). It supplies the whole
+//! gas payment and submits the transaction itself, so the sender's own coins are never looked up;
+//! setting gas coins or a [sponsor](TransactionBuilder::sponsor) address on the same builder is
 //! rejected.
 //!
-//! [GasStation] implements [GasSponsor] for the
-//! [IOTA gas station](https://github.com/iotaledger/gas-station) and is enabled
-//! by the `gas-station` feature. A station is configured once — with its URL
-//! and, typically, an authorization header — and reused for any number of
-//! transactions:
+//! [GasStation] implements [GasSponsor] for the [IOTA gas
+//! station](https://github.com/iotaledger/gas-station) and is enabled by the `gas-station` feature.
+//! A station is configured once — with its URL and, typically, an authorization header — and reused
+//! for any number of transactions:
 //!
 //! ```no_run
 //! # use iota_sdk_transaction_builder::GasStation;
@@ -237,45 +215,41 @@
 //! # }
 //! ```
 //!
-//! Pass [http_client](GasStationBuilder::http_client) to control timeouts,
-//! proxies or TLS roots; otherwise reqwest's defaults are used. Requests carry
-//! `Content-Type: application/json` unless a header overrides it.
+//! Pass [http_client](GasStationBuilder::http_client) to control timeouts, proxies or TLS roots;
+//! otherwise reqwest's defaults are used. Requests carry `Content-Type: application/json` unless a
+//! header overrides it.
 //!
-//! Implement [GasSponsor] yourself to sponsor through a service this crate does
-//! not ship.
+//! Implement [GasSponsor] yourself to sponsor through a service this crate does not ship.
 //!
 //! ## Traits and Helpers
 //!
-//! This crate provides several traits which enable the functionality of the
-//! builder. Often, when providing arguments, functions will accept either a
-//! single [PTBArgument] or a [PTBArgumentList].
+//! This crate provides several traits which enable the functionality of the builder. Often, when
+//! providing arguments, functions will accept either a single [PTBArgument] or a [PTBArgumentList].
 //!
-//! [PTBArgument] is implemented for any type implementing
-//! [MoveArg](types::MoveArg) as well as:
-//! - [unresolved::Argument]: Arguments returned by various builder functions.
-//!   Distinct from [iota_types::Argument], which cannot be used.
+//! [PTBArgument] is implemented for any type implementing [MoveArg](types::MoveArg) as well as:
+//! - [unresolved::Argument]: Arguments returned by various builder functions. Distinct from
+//!   [iota_types::Argument], which cannot be used.
 //! - [Input](iota_types::Input): A resolved input.
-//! - [ObjectId](iota_types::ObjectId): An object's ID. Can only be used when a
-//!   client is provided. This will be assumed immutable or owned.
-//! - [ObjectReference](iota_types::ObjectReference): An object's reference.
+//! - [ObjectId](iota_types::ObjectId): An object's ID. Can only be used when a client is provided.
 //!   This will be assumed immutable or owned.
-//! - [Assigned]: A reference to the result of a previous assigned command, set
-//!   with [assign](TransactionBuilder::assign).
+//! - [ObjectReference](iota_types::ObjectReference): An object's reference. This will be assumed
+//!   immutable or owned.
+//! - [Assigned]: A reference to the result of a previous assigned command, set with
+//!   [assign](TransactionBuilder::assign).
 //! - [Shared]: Allows specifying shared immutable move objects.
 //! - [SharedMut]: Allows specifying shared mutable move objects.
 //! - [Receiving]: Allows specifying receiving move objects.
 //!
-//! [PTBArgumentList] is implemented for collection types, and represents a set
-//! of arguments. For move calls, this enables tuples of rust values to
-//! represent the parameters defined in the smart contract. For calls like
-//! [merge_coins](TransactionBuilder::merge_coins), this can represent a list of
-//! coins.
+//! [PTBArgumentList] is implemented for collection types, and represents a set of arguments. For
+//! move calls, this enables tuples of rust values to represent the parameters defined in the smart
+//! contract. For calls like [merge_coins](TransactionBuilder::merge_coins), this can represent a
+//! list of coins.
 //!
-//! [MoveArg](types::MoveArg) represents types that can be serialized and
-//! provided to the transaction as pure bytes.
+//! [MoveArg](types::MoveArg) represents types that can be serialized and provided to the
+//! transaction as pure bytes.
 //!
-//! [MoveType](types::MoveType) defines the type tag for a rust type, so that it
-//! can be used for generic arguments.
+//! [MoveType](types::MoveType) defines the type tag for a rust type, so that it can be used for
+//! generic arguments.
 //!
 //! ### Example
 //!
@@ -331,8 +305,8 @@ pub mod types;
 pub mod unresolved;
 
 pub use iota_types;
-// Re-exported so that configuring a gas station does not require depending on
-// reqwest directly.
+// Re-exported so that configuring a gas station does not require depending on reqwest
+// directly.
 #[cfg(feature = "gas-station")]
 pub use reqwest::{
     Url, header,
@@ -398,9 +372,9 @@ mod tests {
             TransactionBuilderLedgerClient,
         };
 
-        /// Implements only [`TransactionBuilderLedgerClient`] by forwarding to
-        /// [`TestClient`], to verify that building a transaction with an
-        /// explicit budget requires neither simulation nor execution support.
+        /// Implements only [`TransactionBuilderLedgerClient`] by forwarding to [`TestClient`], to
+        /// verify that building a transaction with an explicit budget requires neither simulation
+        /// nor execution support.
         struct LedgerOnlyClient(TestClient);
 
         impl TransactionBuilderClientBase for LedgerOnlyClient {
@@ -450,8 +424,7 @@ mod tests {
 
         #[tokio::test]
         async fn finish_with_budget_overrides_the_setter_and_skips_the_clamp() {
-            // 1 is below the network minimum (price * 1000), so a clamp
-            // would have changed it.
+            // 1 is below the network minimum (price * 1000), so a clamp would have changed it.
             let mut builder = super::builder_with(LedgerOnlyClient(TestClient));
             builder.gas_budget(2_000_000);
             let txn = builder.finish_with_budget(1).await.unwrap();
@@ -471,8 +444,8 @@ mod tests {
             TransactionBuilderLedgerClient, TransactionBuilderSimulationClient,
         };
 
-        /// Forwards to [`TestClient`] but reports a fixed gas estimate, to
-        /// exercise the estimation handling in `finish()`.
+        /// Forwards to [`TestClient`] but reports a fixed gas estimate, to exercise the estimation
+        /// handling in `finish()`.
         struct FixedEstimateClient(TestClient, Option<u64>);
 
         impl TransactionBuilderClientBase for FixedEstimateClient {
@@ -536,8 +509,8 @@ mod tests {
             let iota_types::Transaction::V1(txn) = txn else {
                 panic!("expected a V1 transaction");
             };
-            // TestClient's reference gas price is 1000, so the enforced
-            // minimum is 1000 * 1000 rather than the estimated 1.
+            // TestClient's reference gas price is 1000, so the enforced minimum is 1000 * 1000
+            // rather than the estimated 1.
             assert_eq!(txn.gas_payment.budget, 1_000_000);
         }
 
@@ -591,10 +564,9 @@ mod tests {
             TransactionBuilderLedgerClient, TransactionBuilderSimulationClient,
         };
 
-        /// Serves gas coins in three single-coin pages and counts the
-        /// `objects` calls, to pin how far automatic gas selection paginates.
-        /// With `repeat_first_coin`, every page serves the same coin, one
-        /// version newer and with a lower balance than on the page before.
+        /// Serves gas coins in three single-coin pages and counts the `objects` calls, to pin how
+        /// far automatic gas selection paginates. With `repeat_first_coin`, every page serves the
+        /// same coin, one version newer and with a lower balance than on the page before.
         struct PagingClient {
             pages_served: Arc<AtomicUsize>,
             repeat_first_coin: bool,
@@ -691,8 +663,8 @@ mod tests {
 
         #[tokio::test]
         async fn an_explicit_budget_stops_gas_selection_at_the_covering_page() {
-            // `finish_with_budget` sets the budget before resolution, so gas
-            // selection stops as soon as the first page covers it.
+            // `finish_with_budget` sets the budget before resolution, so gas selection stops as
+            // soon as the first page covers it.
             let pages_served = Arc::new(AtomicUsize::new(0));
             let builder = super::builder_with(PagingClient {
                 pages_served: pages_served.clone(),
@@ -812,8 +784,8 @@ mod tests {
                 .unwrap(),
         );
 
-        // Build a transaction with multiple commands and a sponsor to exercise
-        // inputs, gas, and the various builder fields.
+        // Build a transaction with multiple commands and a sponsor to exercise inputs, gas, and the
+        // various builder fields.
         let mut tx = TransactionBuilder::new(sender);
         tx.transfer_objects(recipient, vec![coin]);
         tx.split_coins(crate::unresolved::Argument::Gas, [42u64]);
@@ -851,9 +823,8 @@ mod tests {
         ));
     }
 
-    /// Converting a transaction whose command names an input it does not have
-    /// fails, rather than leaving an argument that could later name the gas
-    /// coin.
+    /// Converting a transaction whose command names an input it does not have fails, rather than
+    /// leaving an argument that could later name the gas coin.
     #[test]
     fn transaction_naming_a_missing_input_is_rejected() {
         let sender = Address::new([1; 32]);
@@ -894,8 +865,7 @@ mod tests {
         );
     }
 
-    /// The infallible conversion panics on a command naming an input the
-    /// transaction does not have.
+    /// The infallible conversion panics on a command naming an input the transaction does not have.
     #[test]
     #[should_panic(expected = "refers to an input or result it does not have")]
     fn converting_a_programmable_transaction_naming_a_missing_input_panics() {
@@ -934,8 +904,8 @@ mod tests {
         );
     }
 
-    /// Commands that use the results of earlier commands are accepted and
-    /// survive the round trip unchanged.
+    /// Commands that use the results of earlier commands are accepted and survive the round trip
+    /// unchanged.
     #[test]
     fn transaction_using_earlier_results_round_trips() {
         let sender = Address::new([1; 32]);
@@ -1013,8 +983,7 @@ mod tests {
         const SPONSOR_COIN: &str =
             "0x8a7d6c5b4e3f2a1908172635445362718091a2b3c4d5e6f708192a3b4c5d6e7f";
 
-        /// Records what the builder asked the sponsor for and what it handed
-        /// over to be executed.
+        /// Records what the builder asked the sponsor for and what it handed over to be executed.
         #[derive(Default)]
         struct RecordingSponsor {
             reserved_budget: Mutex<Option<u64>>,
@@ -1068,8 +1037,8 @@ mod tests {
             }
         }
 
-        /// Forwards to [`TestClient`] but counts the owner-coin queries, so a
-        /// test can show the sender's coins were never looked up.
+        /// Forwards to [`TestClient`] but counts the owner-coin queries, so a test can show the
+        /// sender's coins were never looked up.
         struct CountingClient(Arc<AtomicUsize>);
 
         impl TransactionBuilderClientBase for CountingClient {
@@ -1161,16 +1130,16 @@ mod tests {
             Ed25519PrivateKey::new([9; 32])
         }
 
-        /// The sponsor's payment replaces the sender's, and the sender's own
-        /// coins are never queried to build it.
+        /// The sponsor's payment replaces the sender's, and the sender's own coins are never
+        /// queried to build it.
         #[tokio::test]
         async fn the_sponsor_supplies_the_whole_gas_payment() {
             let owner_queries = Arc::new(AtomicUsize::new(0));
             let builder = super::builder_with(CountingClient(owner_queries.clone()));
             let sponsor = RecordingSponsor::default();
 
-            // TestClient reports no effects, so the refetch after execution is
-            // what fails; everything up to the sponsor call already happened.
+            // TestClient reports no effects, so the refetch after execution is what fails;
+            // everything up to the sponsor call already happened.
             let err = builder
                 .execute_with_gas_sponsor(&sponsor, &signer())
                 .await

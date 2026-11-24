@@ -1,19 +1,16 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Decode `StakedIota` objects into typed Rust structs using
-//! `iota-sdk-move-types`.
+//! Decode `StakedIota` objects into typed Rust structs using `iota-sdk-move-types`.
 //!
-//! The GraphQL client returns each object's `contents` as a raw BCS byte
-//! buffer. Without a Rust mirror of the Move type you would have to walk
-//! those bytes by hand — 32 bytes for the `UID`, 32 bytes for the pool's
-//! `ID`, 8 little-endian bytes for the activation epoch, 8 more for the
-//! principal — and you'd be on the hook for keeping that decoder in sync
-//! with every Move-side change.
+//! The GraphQL client returns each object's `contents` as a raw BCS byte buffer. Without a Rust
+//! mirror of the Move type you would have to walk those bytes by hand — 32 bytes for the `UID`, 32
+//! bytes for the pool's `ID`, 8 little-endian bytes for the activation epoch, 8 more for the
+//! principal — and you'd be on the hook for keeping that decoder in sync with every Move-side
+//! change.
 //!
-//! With the move-types crate, a single `StakedIota::try_from`
-//! validates the on-chain type tag and gives you typed, named-field
-//! access:
+//! With the move-types crate, a single `StakedIota::try_from` validates the on-chain type tag and
+//! gives you typed, named-field access:
 //!
 //! - `staked.id()` — the staked object's [`ObjectId`]
 //! - `staked.pool_id()` — the staking pool the stake belongs to

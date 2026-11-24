@@ -3,9 +3,8 @@
 
 use std::sync::Arc;
 
-// Supertrait of [`TransactionSignerFn`] that conditionally drops Send+Sync on
-// wasm32, where uniffi's `wasm-unstable-single-threaded` feature doesn't
-// generate them for callback handlers.
+// Supertrait of [`TransactionSignerFn`] that conditionally drops Send+Sync on wasm32, where
+// uniffi's `wasm-unstable-single-threaded` feature doesn't generate them for callback handlers.
 #[cfg(not(target_arch = "wasm32"))]
 pub trait ThreadSafety: Send + Sync {}
 #[cfg(not(target_arch = "wasm32"))]
@@ -112,8 +111,8 @@ impl TransactionSignerFn for MoveAuthenticator {
     }
 }
 
-/// An async signer implementation which wraps a `TransactionSignerFn`
-/// definition, which can be used to sign a transaction with a callback.
+/// An async signer implementation which wraps a `TransactionSignerFn` definition, which can be used
+/// to sign a transaction with a callback.
 #[derive(uniffi::Object)]
 pub struct TransactionSigner(Arc<dyn TransactionSignerFn>);
 

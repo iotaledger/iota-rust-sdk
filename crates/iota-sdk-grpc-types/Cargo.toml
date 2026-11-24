@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk-grpc-types"
-version = "1.0.0-rc.1"
+version = "1.0.0"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
@@ -23,6 +23,10 @@ rustdoc-args = [
   "-Zunstable-options",
   "--generate-link-to-definition",
 ]
+
+[features]
+# Unstable APIs that may change or be removed in any release.
+unstable = []
 
 [dependencies]
 # external dependencies

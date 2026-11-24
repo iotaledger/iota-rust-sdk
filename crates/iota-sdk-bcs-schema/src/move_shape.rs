@@ -3,30 +3,28 @@
 
 //! Implementation of `#[derive(MoveShape)]`.
 //!
-//! Emits an `impl crate::move_shape::MoveShape for T` whose `move_shape()`
-//! returns a [`crate::move_shape::Shape`] mirroring the BCS wire layout of `T`
-//! — comparable against a Move struct's `normalized::Type` so a drifted Rust
-//! mirror fails loudly at test time.
+//! Emits an `impl crate::move_shape::MoveShape for T` whose `move_shape()` returns a
+//! [`crate::move_shape::Shape`] mirroring the BCS wire layout of `T` — comparable against a Move
+//! struct's `normalized::Type` so a drifted Rust mirror fails loudly at test time.
 //!
 //! Resolution strategy mirrors Move's `normalized::Type`:
 //! - Primitives map to `Shape::Bool`/`Shape::U{8..128}`.
 //! - `Vec<T>` / `Option<T>` map to `Shape::Vector` / `Shape::Option`.
 //! - `PhantomData<_>` becomes `Shape::Phantom` (filtered before comparison).
-//! - A bare reference to one of the struct's own generic type parameters
-//!   becomes `Shape::TypeParameter(idx)`.
-//! - Anything else — a named type like `UID` or `Balance<T>` — becomes
-//!   `Shape::Datatype { name, args }`. The macro does **not** delegate to `<Ty
-//!   as MoveShape>::move_shape()`, so nested struct bodies are not inlined;
-//!   verify those by giving each named type its own registry entry.
+//! - A bare reference to one of the struct's own generic type parameters becomes
+//!   `Shape::TypeParameter(idx)`.
+//! - Anything else — a named type like `UID` or `Balance<T>` — becomes `Shape::Datatype { name,
+//!   args }`. The macro does **not** delegate to `<Ty as MoveShape>::move_shape()`, so nested
+//!   struct bodies are not inlined; verify those by giving each named type its own registry entry.
 //!
-//! Because nothing in the emitted body dispatches through a trait method
-//! at runtime, no `T: MoveShape` bound is added to the impl — type
-//! parameters are resolved purely at macro-expansion time.
+//! Because nothing in the emitted body dispatches through a trait method at runtime, no `T:
+//! MoveShape` bound is added to the impl — type parameters are resolved purely at macro-expansion
+//! time.
 //!
-//! The emitted code assumes the trait + ADT live at `crate::move_shape` in the
-//! consuming crate. That keeps the derive useful for `iota-sdk-move-types`'
-//! `#[cfg(test)] mod move_shape` setup without requiring an attribute. Other
-//! consumers would need an explicit re-export at the same path.
+//! The emitted code assumes the trait + ADT live at `crate::move_shape` in the consuming crate.
+//! That keeps the derive useful for `iota-sdk-move-types`' `#[cfg(test)] mod move_shape` setup
+//! without requiring an attribute. Other consumers would need an explicit re-export at the same
+//! path.
 
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
@@ -105,9 +103,9 @@ fn struct_fields_expr(fields: &Fields, type_params: &[&syn::Ident]) -> syn::Resu
     match fields {
         Fields::Named(named) => {
             for field in &named.named {
-                // `Ident::unraw()` drops a `r#` prefix the source may carry
-                // around a Rust keyword (e.g. `r#ref`, `r#for`). Move sees
-                // the bare identifier, so use it for the shape too.
+                // `Ident::unraw()` drops a `r#` prefix the source may carry around a Rust keyword
+                // (e.g. `r#ref`, `r#for`). Move sees the bare identifier, so use it for the shape
+                // too.
                 let name = field.ident.as_ref().unwrap().unraw().to_string();
                 let shape = type_to_shape_expr(&field.ty, type_params);
                 entries.push(quote! {
@@ -115,9 +113,9 @@ fn struct_fields_expr(fields: &Fields, type_params: &[&syn::Ident]) -> syn::Resu
                 });
             }
         }
-        // Tuple structs: Move bytecode names positional fields `pos0`,
-        // `pos1`, … so we mirror that here. Lets us register Rust tuple
-        // mirrors like `UQ32_32(pub u64)` against their Move counterparts.
+        // Tuple structs: Move bytecode names positional fields `pos0`, `pos1`, … so we mirror that
+        // here. Lets us register Rust tuple mirrors like `UQ32_32(pub u64)` against their Move
+        // counterparts.
         Fields::Unnamed(unnamed) => {
             for (idx, field) in unnamed.unnamed.iter().enumerate() {
                 let name = format!("pos{idx}");
@@ -173,8 +171,8 @@ fn type_to_shape_expr(ty: &Type, type_params: &[&syn::Ident]) -> TokenStream2 {
             _ => {}
         }
 
-        // Bare reference to one of the struct's own generic type parameters —
-        // single-segment path, no generic args, matching ident.
+        // Bare reference to one of the struct's own generic type parameters — single-segment path,
+        // no generic args, matching ident.
         if tp.qself.is_none()
             && tp.path.segments.len() == 1
             && matches!(seg.arguments, PathArguments::None)
@@ -184,11 +182,10 @@ fn type_to_shape_expr(ty: &Type, type_params: &[&syn::Ident]) -> TokenStream2 {
             return quote! { crate::move_shape::Shape::TypeParameter(#idx) };
         }
 
-        // Anything else: a named type. Resolve the Move-side name through
-        // the trait const (`<Ty as MoveShape>::NAME`) so `use ... as Alias`
-        // renames don't leak into the comparator — the dispatch goes to
-        // the impl on the *underlying* type. Generic arguments are still
-        // lowered statically through this same function.
+        // Anything else: a named type. Resolve the Move-side name through the trait const (`<Ty as
+        // MoveShape>::NAME`) so `use ... as Alias` renames don't leak into the comparator — the
+        // dispatch goes to the impl on the *underlying* type. Generic arguments are still lowered
+        // statically through this same function.
         let args_expr = match &seg.arguments {
             PathArguments::AngleBracketed(args) => {
                 let arg_exprs: Vec<TokenStream2> = args
@@ -211,8 +208,8 @@ fn type_to_shape_expr(ty: &Type, type_params: &[&syn::Ident]) -> TokenStream2 {
         };
     }
 
-    // Unknown / non-path type — give the comparator something to choke on
-    // rather than silently passing.
+    // Unknown / non-path type — give the comparator something to choke on rather than silently
+    // passing.
     quote! { crate::move_shape::Shape::Datatype { name: "<unsupported>", args: ::std::vec![] } }
 }
 

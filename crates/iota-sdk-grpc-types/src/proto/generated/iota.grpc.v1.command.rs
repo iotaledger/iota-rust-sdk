@@ -69,6 +69,10 @@ pub struct CommandOutput {
     pub type_tag: ::core::option::Option<super::types::TypeTag>,
     #[prost(message, optional, tag = "3")]
     pub bcs: ::core::option::Option<super::bcs::BcsData>,
+    /// JSON rendering of the command output.
+    /// Requires server-side Move type-layout resolution, so it is populated only
+    /// when named explicitly in the read mask — a bare parent or `*` wildcard does
+    /// not include it — and is bounded by the server's maximum JSON size.
     #[prost(message, optional, tag = "4")]
     pub json: ::core::option::Option<::prost_types::Value>,
 }

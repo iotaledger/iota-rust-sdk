@@ -80,6 +80,14 @@ mod _field_impls {
             is_map: false,
             message_fields: Some(crate::v1::object::Object::FIELDS),
         };
+        pub const JSON_NAME_FIELD: &'static MessageField = &MessageField {
+            name: "json_name",
+            json_name: "jsonName",
+            number: 10i32,
+            is_optional: true,
+            is_map: false,
+            message_fields: None,
+        };
     }
     impl crate::field::sealed::Sealed for DynamicField {}
     impl MessageFields for DynamicField {
@@ -93,6 +101,7 @@ mod _field_impls {
             Self::VALUE_TYPE_FIELD,
             Self::CHILD_ID_FIELD,
             Self::CHILD_OBJECT_FIELD,
+            Self::JSON_NAME_FIELD,
         ];
     }
     impl DynamicField {
@@ -150,6 +159,10 @@ mod _field_impls {
         pub fn child_object(mut self) -> crate::v1::object::ObjectFieldPathBuilder {
             self.path.push(DynamicField::CHILD_OBJECT_FIELD.name);
             crate::v1::object::ObjectFieldPathBuilder::new_with_base(self.path)
+        }
+        pub fn json_name(mut self) -> String {
+            self.path.push(DynamicField::JSON_NAME_FIELD.name);
+            self.finish()
         }
     }
 }

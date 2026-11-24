@@ -3,17 +3,19 @@
 
 //! Guards that every public type in this crate implements `Display`.
 //!
-//! `every_public_type_implements_display` proves it for the listed types: a
-//! type that loses its `Display` impl fails to compile here.
+//! `every_public_type_implements_display` proves it for the listed types: a type that loses its
+//! `Display` impl fails to compile here.
 //!
-//! `coverage_list_is_complete` keeps the list honest by scanning `src/` for
-//! public types it does not mention, so a type added without a `Display` impl
-//! fails instead of silently escaping the check.
+//! `coverage_list_is_complete` keeps the list honest by scanning `src/` for public types it does
+//! not mention, so a type added without a `Display` impl fails instead of silently escaping the
+//! check.
 
 fn assert_display<T: std::fmt::Display>() {}
 
 #[test]
 fn every_public_type_implements_display() {
+    #[cfg(feature = "unstable")]
+    assert_display::<iota_sdk_types::AccountClaimKind>();
     assert_display::<iota_sdk_types::Address>();
     assert_display::<iota_sdk_types::AddressParseError>();
     assert_display::<iota_sdk_types::Argument>();
@@ -35,6 +37,8 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::CheckpointSummary>();
     assert_display::<iota_sdk_types::CheckpointTransaction>();
     assert_display::<iota_sdk_types::CheckpointTransactionInfo>();
+    #[cfg(feature = "unstable")]
+    assert_display::<iota_sdk_types::ClaimAccountTransaction>();
     assert_display::<iota_sdk_types::Coin>();
     assert_display::<iota_sdk_types::framework::CoinFromObjectError>();
     assert_display::<iota_sdk_types::Command>();
@@ -129,6 +133,8 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::SignedCheckpointSummary>();
     assert_display::<iota_sdk_types::SignedTransaction>();
     assert_display::<iota_sdk_types::SimpleSignature>();
+    #[cfg(feature = "unstable")]
+    assert_display::<iota_sdk_types::SmartAccountClaim>();
     assert_display::<iota_sdk_types::SplitCoins>();
     assert_display::<iota_sdk_types::StructTag>();
     assert_display::<iota_sdk_types::iota_names::SubnameRegistration>();
@@ -147,6 +153,8 @@ fn every_public_type_implements_display() {
     assert_display::<iota_sdk_types::TypeOrigin>();
     assert_display::<iota_sdk_types::TypeParseError>();
     assert_display::<iota_sdk_types::TypeTag>();
+    assert_display::<iota_sdk_types::U256>();
+    assert_display::<iota_sdk_types::U256ParseError>();
     assert_display::<iota_sdk_types::UnchangedSharedKind>();
     assert_display::<iota_sdk_types::UnchangedSharedObject>();
     assert_display::<iota_sdk_types::Upgrade>();
@@ -258,8 +266,8 @@ fn re_exports(text: &str) -> String {
 
 /// Names of items declared at the top level of a file with the given prefix.
 ///
-/// Indentation is the filter for nesting: anything inside a function, a private
-/// inline module or a `#[cfg(test)]` block is not part of the public surface.
+/// Indentation is the filter for nesting: anything inside a function, a private inline module or a
+/// `#[cfg(test)]` block is not part of the public surface.
 fn declared_names(text: &str, prefix: &str) -> Vec<String> {
     text.lines()
         .filter_map(|line| line.strip_prefix(prefix))

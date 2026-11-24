@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk-graphql-client-build"
-version = "1.0.0-rc.1"
+version = "1.0.0"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
@@ -10,6 +10,10 @@ description = "GraphQL RPC Client for the IOTA Blockchain"
 
 [lints]
 workspace = true
+
+[features]
+# Unstable APIs that may change or be removed in any release.
+unstable = []
 
 [dependencies]
 cynic-codegen = "3.14.0"

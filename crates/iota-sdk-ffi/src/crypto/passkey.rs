@@ -21,8 +21,7 @@ impl PasskeyVerifier {
         Self(RwLock::default())
     }
 
-    /// Only accept signatures from the passkey whose public key derives to
-    /// `address`.
+    /// Only accept signatures from the passkey whose public key derives to `address`.
     pub fn with_address(self: Arc<Self>, address: &Address) -> Arc<Self> {
         {
             let mut lock = self.0.write().expect("error writing to verifier");

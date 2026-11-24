@@ -121,6 +121,8 @@ serialization_test!(Owner);
 serialization_test!(TypeOrigin);
 serialization_test!(UpgradeInfo);
 serialization_test!(ObjectId);
+#[cfg(feature = "unstable")]
+serialization_test!(AccountClaimKind);
 serialization_test!(Argument);
 serialization_test!(ChangeEpoch);
 serialization_test!(ChangeEpochV2);
@@ -129,6 +131,8 @@ serialization_test!(ChangeEpochV4);
 serialization_test!(Command);
 serialization_test!(ConsensusCommitPrologueV1);
 serialization_test!(CanceledTransaction);
+#[cfg(feature = "unstable")]
+serialization_test!(ClaimAccountTransaction);
 serialization_test!(ConsensusDeterminedVersionAssignments);
 serialization_test!(VersionAssignment);
 serialization_test!(DenyRuleSet);
@@ -144,6 +148,8 @@ serialization_test!(Publish);
 serialization_test!(RandomnessStateUpdate);
 serialization_test!(SignedTransaction);
 serialization_test!(SenderSignedTransaction);
+#[cfg(feature = "unstable")]
+serialization_test!(SmartAccountClaim);
 serialization_test!(SplitCoins);
 serialization_test!(SystemPackage);
 serialization_test!(Transaction);
@@ -156,6 +162,7 @@ serialization_test!(Upgrade);
 serialization_test!(Identifier);
 serialization_test!(StructTag);
 serialization_test!(TypeTag);
+serialization_test!(U256);
 serialization_test!(Version);
 
 macro_rules! bcs_base64_test {

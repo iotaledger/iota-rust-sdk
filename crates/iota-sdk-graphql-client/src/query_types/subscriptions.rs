@@ -3,9 +3,9 @@
 
 //! Subscription operations for the live `events` and `transactions` streams.
 //!
-//! These map the GraphQL `Subscription` root, whose `events` and
-//! `transactions` fields each return a union of the payload type and
-//! [`Lagged`] (emitted when the server's broker had to drop messages).
+//! These map the GraphQL `Subscription` root, whose `events` and `transactions` fields each return
+//! a union of the payload type and [`Lagged`] (emitted when the server's broker had to drop
+//! messages).
 
 use iota_types::{SenderSignedTransaction, SignedTransaction};
 
@@ -69,8 +69,8 @@ pub(crate) struct TransactionsSubscriptionArgs {
 #[derive(Clone, Debug)]
 #[non_exhaustive]
 pub enum SubscriptionEventFilter {
-    /// Filter incoming events by emitting module, e.g. `"0x02"` (package) or
-    /// `"0x02::coin"` (module).
+    /// Filter incoming events by emitting module, e.g. `"0x02"` (package) or `"0x02::coin"`
+    /// (module).
     EmittingModule(String),
 }
 
@@ -101,13 +101,11 @@ pub enum SubscriptionTransactionFilter {
     Kind(TransactionBlockKindInput),
     /// Filter incoming transactions by sender address.
     ///
-    /// Only the sender is compared, despite the name — a sponsored
-    /// transaction is not matched by its sponsor's (gas owner's) address,
-    /// even though the sponsor also signed it.
+    /// Only the sender is compared, despite the name — a sponsored transaction is not matched by
+    /// its sponsor's (gas owner's) address, even though the sponsor also signed it.
     SigningAddress(Address),
-    /// Filter incoming transactions by package, module, or function name, e.g.
-    /// `"0x03"`, `"0x03::iota_system"`, or
-    /// `"0x03::iota_system::request_add_stake"`.
+    /// Filter incoming transactions by package, module, or function name, e.g. `"0x03"`,
+    /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
     Function(String),
 }
 
@@ -158,8 +156,8 @@ pub(crate) enum TransactionBlockSubscriptionPayload {
     Unknown,
 }
 
-/// Emitted when the server dropped one or more payloads before this one
-/// because the subscriber could not keep up.
+/// Emitted when the server dropped one or more payloads before this one because the subscriber
+/// could not keep up.
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Lagged")]
 pub(crate) struct Lagged {
@@ -171,9 +169,8 @@ pub(crate) struct Lagged {
 // Payload bodies
 // ===========================================================================
 
-/// An event as delivered over a subscription. Mirrors [`Event`] but also
-/// selects the emitting transaction's digest, which is used as the stream
-/// recovery cursor (`startAfter`).
+/// An event as delivered over a subscription. Mirrors [`Event`] but also selects the emitting
+/// transaction's digest, which is used as the stream recovery cursor (`startAfter`).
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "Event")]
 pub(crate) struct SubscriptionEvent {
@@ -211,9 +208,9 @@ impl From<SubscriptionEvent> for Event {
     }
 }
 
-/// A transaction block as delivered over a subscription. Selects the digest
-/// (used as the stream recovery cursor) alongside the `SenderSignedData` BCS
-/// that a [`SignedTransaction`] is rebuilt from.
+/// A transaction block as delivered over a subscription. Selects the digest (used as the stream
+/// recovery cursor) alongside the `SenderSignedData` BCS that a [`SignedTransaction`] is rebuilt
+/// from.
 #[derive(cynic::QueryFragment, Debug)]
 #[cynic(schema = "rpc", graphql_type = "TransactionBlock")]
 pub(crate) struct SubscriptionTransactionBlock {

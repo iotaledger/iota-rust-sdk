@@ -6,8 +6,7 @@ use crate::query_types::PageInfo;
 /// A page of items returned by the GraphQL server.
 #[derive(Clone, Debug)]
 pub struct Page<T> {
-    /// Information about the page, such as the cursor and whether there are
-    /// more pages.
+    /// Information about the page, such as the cursor and whether there are more pages.
     pub page_info: PageInfo,
     /// The data returned by the server.
     pub data: Vec<T>,
@@ -60,16 +59,16 @@ pub enum Direction {
     Backward,
 }
 
-/// Pagination options for querying the GraphQL server. It defaults to forward
-/// pagination with the GraphQL server's max page size.
+/// Pagination options for querying the GraphQL server. It defaults to forward pagination with the
+/// GraphQL server's max page size.
 #[derive(Clone, Debug, Default)]
 pub struct PaginationFilter {
     /// The direction of pagination.
     pub direction: Direction,
     /// An opaque cursor used for pagination.
     pub cursor: Option<String>,
-    /// The maximum number of items to return. If this is omitted, it will
-    /// lazily query the service configuration for the max page size.
+    /// The maximum number of items to return. If this is omitted, it will lazily query the service
+    /// configuration for the max page size.
     pub limit: Option<i32>,
 }
 

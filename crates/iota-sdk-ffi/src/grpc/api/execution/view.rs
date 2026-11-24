@@ -29,9 +29,8 @@ use crate::{
 
 /// The outputs of a Move view function call.
 ///
-/// Exactly one of `return_values` and `execution_error` is populated when the
-/// read mask includes `execution_result`: the first if the call returned, the
-/// second if it aborted.
+/// Exactly one of `return_values` and `execution_error` is populated when the read mask includes
+/// `execution_result`: the first if the call returned, the second if it aborted.
 #[derive(uniffi::Record)]
 pub struct GrpcViewFunctionCallOutputs {
     /// The values the function returned.
@@ -64,12 +63,12 @@ impl TryFrom<&proto::transaction_execution_service::ViewFunctionCallOutputs>
     }
 }
 
-/// The result of a single call in a batch of Move view function calls: either
-/// the outputs of the call or the error the node returned for it.
+/// The result of a single call in a batch of Move view function calls: either the outputs of the
+/// call or the error the node returned for it.
 #[derive(uniffi::Record)]
 pub struct GrpcViewFunctionCallResult {
-    /// The outputs of the call, if the node ran it. A call that ran and
-    /// aborted still has outputs, with the abort in `execution_error`.
+    /// The outputs of the call, if the node ran it. A call that ran and aborted still has outputs,
+    /// with the abort in `execution_error`.
     pub outputs: Option<GrpcViewFunctionCallOutputs>,
     /// The error message, if the node refused to run the call.
     pub error: Option<String>,
@@ -108,17 +107,14 @@ impl From<&GrpcViewFunctionCallInput> for ViewFunctionCallItem {
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GrpcClient {
-    /// Call a Move view function and read back what it returns, without
-    /// submitting a transaction.
+    /// Call a Move view function and read back what it returns, without submitting a transaction.
     ///
-    /// Only a function declared with the `#[view]` attribute can be called
-    /// this way. `fq_function_name` is the fully qualified name
-    /// `<package>::<module>::<function>`.
+    /// Only a function declared with the `#[view]` attribute can be called this way.
+    /// `fq_function_name` is the fully qualified name `<package>::<module>::<function>`.
     ///
-    /// A call that ran and aborted is not an error: the abort is reported in
-    /// the `execution_error` field of the outputs. The call fails only if the
-    /// node refused to run it (unknown function, wrong argument count, not a
-    /// view function).
+    /// A call that ran and aborted is not an error: the abort is reported in the `execution_error`
+    /// field of the outputs. The call fails only if the node refused to run it (unknown function,
+    /// wrong argument count, not a view function).
     ///
     /// The optional `read_mask` controls which fields the server returns.
     #[uniffi::method(default(type_args = [], call_args = [], read_mask = None))]
@@ -144,11 +140,10 @@ impl GrpcClient {
 
     /// Call a batch of Move view functions.
     ///
-    /// Each call runs in its own transaction on the server, so one call being
-    /// rejected leaves the rest untouched. Results are returned in the same
-    /// order as the input; each result carries either the outputs of the call
-    /// or the error the node returned for it. A call that ran and aborted
-    /// lands in `outputs`, with the abort in its `execution_error` field.
+    /// Each call runs in its own transaction on the server, so one call being rejected leaves the
+    /// rest untouched. Results are returned in the same order as the input; each result carries
+    /// either the outputs of the call or the error the node returned for it. A call that ran and
+    /// aborted lands in `outputs`, with the abort in its `execution_error` field.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     #[uniffi::method(default(read_mask = None))]

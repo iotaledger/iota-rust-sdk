@@ -3,12 +3,10 @@
 
 //! BCS roundtrip tests against real on-chain bytes.
 //!
-//! Each test loads a fixture captured from mainnet by the
-//! `capture_move_type_fixtures` example in the `iota-sdk` crate, decodes
-//! it into the corresponding hand-curated Move-mirror type, re-encodes,
-//! and asserts the bytes are bit-identical. This confirms the mirror's BCS
-//! wire layout — field types and widths, field count, and enum variants —
-//! matches the real on-chain encoding.
+//! Each test loads a fixture captured from mainnet by the `capture_move_type_fixtures` example in
+//! the `iota-sdk` crate, decodes it into the corresponding hand-curated Move-mirror type,
+//! re-encodes, and asserts the bytes are bit-identical. This confirms the mirror's BCS wire layout
+//! — field types and widths, field count, and enum variants — matches the real on-chain encoding.
 //!
 //! To refresh the fixtures against current chain state, run:
 //!
@@ -69,9 +67,8 @@ where
     assert_eq!(bytes, encoded.as_slice(), "wire-shape mismatch");
 }
 
-/// Emits one `#[test]` per `Type => fixture` row. The fixture name doubles
-/// as the test function name, and the bytes are loaded from
-/// `fixtures/<fixture>.bcs`.
+/// Emits one `#[test]` per `Type => fixture` row. The fixture name doubles as the test function
+/// name, and the bytes are loaded from `fixtures/<fixture>.bcs`.
 macro_rules! fixture_roundtrip {
     ($($ty:ty => $fixture:ident),* $(,)?) => {
         $(

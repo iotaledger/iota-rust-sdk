@@ -4,6 +4,8 @@
 
 use thiserror::Error;
 
+#[cfg(feature = "unstable")]
+use super::TransactionDigest;
 use super::{Address, Digest, Identifier, ObjectId};
 
 /// The status of an executed Transaction
@@ -21,10 +23,9 @@ pub enum ExecutionStatus {
     Success,
     /// The Transaction didn't execute successfully.
     ///
-    /// Failed transactions are still committed to the blockchain but any
-    /// intended effects are rolled back to prior to this transaction
-    /// executing with the caveat that gas objects are still smashed and gas
-    /// usage is still charged.
+    /// Failed transactions are still committed to the blockchain but any intended effects are
+    /// rolled back to prior to this transaction executing with the caveat that gas objects are
+    /// still smashed and gas usage is still charged.
     Failure {
         /// The error encountered during execution.
         error: ExecutionError,
@@ -275,9 +276,9 @@ pub enum ExecutionError {
     PublishUpgradeMissingDependency,
     /// Publish or Upgrade dependency downgrade.
     ///
-    /// Indirect (transitive) dependency of published or upgraded package has
-    /// been assigned an on-chain version that is less than the version
-    /// required by one of the package's transitive dependencies.
+    /// Indirect (transitive) dependency of published or upgraded package has been assigned an
+    /// on-chain version that is less than the version required by one of the package's transitive
+    /// dependencies.
     #[error(
         "Publish/Upgrade Error, Dependency downgrade. Indirect (transitive) dependency of published or upgraded package has been assigned an on-chain version that is less than the version required by one of the package's transitive dependencies."
     )]
@@ -316,8 +317,7 @@ pub enum ExecutionError {
     /// Coin type is globally paused for use
     #[error("Coin type is globally paused for use: {coin_type}")]
     CoinTypeGlobalPause { coin_type: String },
-    /// Certificate is canceled because randomness could not be generated this
-    /// epoch
+    /// Certificate is canceled because randomness could not be generated this epoch
     #[error("Certificate is canceled because randomness could not be generated this epoch")]
     ExecutionCanceledDueToRandomnessUnavailable,
     /// Certificate is canceled due to congestion on shared objects;
@@ -331,20 +331,18 @@ pub enum ExecutionError {
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         suggested_gas_price: u64,
     },
-    /// A valid linkage was unable to be determined for the transaction or one
-    /// of its commands.
+    /// A valid linkage was unable to be determined for the transaction or one of its commands.
     #[error("A valid linkage was unable to be determined for the transaction")]
     InvalidLinkage,
-    /// The transaction's Move-based authentication failed while executing an
-    /// authenticator, before the programmable transaction was run. The
-    /// wrapped error is the failure produced by the authenticator's
-    /// execution.
+    /// The transaction's Move-based authentication failed while executing an authenticator, before
+    /// the programmable transaction was run. The wrapped error is the failure produced by the
+    /// authenticator's execution.
     #[error("Move authentication failed: {error}")]
     #[cfg_attr(feature = "proptest", weight(0))]
     MoveAuthentication { error: Box<ExecutionError> },
-    /// Certificate is canceled because the execution workers are congested;
-    /// suggested gas price can be used to give this certificate more priority.
-    /// No individual object is responsible, so none is reported.
+    /// Certificate is canceled because the execution workers are congested; suggested gas price can
+    /// be used to give this certificate more priority. No individual object is responsible, so none
+    /// is reported.
     #[error(
         "Certificate is canceled due to execution-worker congestion. To give this certificate more priority to be executed, its gas price can be increased to at least {suggested_gas_price}."
     )]
@@ -352,8 +350,8 @@ pub enum ExecutionError {
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         suggested_gas_price: u64,
     },
-    /// Move vector element (passed to MakeMoveVec) is larger than the maximum
-    /// size. The maximum is scaled based on the type of the vector element.
+    /// Move vector element (passed to MakeMoveVec) is larger than the maximum size. The maximum is
+    /// scaled based on the type of the vector element.
     #[error(
         "Move vector element (passed to MakeMoveVec) with size {value_size} is larger than the maximum size {max_scaled_size}. Note that this maximum is scaled based on the type of the vector element."
     )]
@@ -363,9 +361,8 @@ pub enum ExecutionError {
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         max_scaled_size: u64,
     },
-    /// Move value (possibly an upgrade ticket or a dev-inspect value) is larger
-    /// than the maximum size. The maximum is scaled based on the type of the
-    /// value.
+    /// Move value (possibly an upgrade ticket or a dev-inspect value) is larger than the maximum
+    /// size. The maximum is scaled based on the type of the value.
     #[error(
         "Move value (possibly an upgrade ticket or a dev-inspect value) with size {value_size} is larger than the maximum size {max_scaled_size}. Note that this maximum is scaled based on the type of the value."
     )]
@@ -375,17 +372,25 @@ pub enum ExecutionError {
         #[cfg_attr(feature = "serde", serde(with = "crate::_serde::ReadableDisplay"))]
         max_scaled_size: u64,
     },
-    /// The account object named by a Move authenticator has no authenticator
-    /// function: the object has no authenticator function field, or the field
-    /// cannot be read. Nothing can authenticate the transaction.
+    /// The account object named by a Move authenticator has no authenticator function: the object
+    /// has no authenticator function field, or the field cannot be read. Nothing can authenticate
+    /// the transaction.
     #[error("Account object {object_id} has no authenticator function")]
     AuthenticatorFunctionNotFound { object_id: ObjectId },
-    /// The account object named by a Move authenticator is not a shared
-    /// object: it is immutable, or owned by an address or by another object.
-    /// An account must be shared so that a transaction carrying a Move
-    /// authenticator is ordered by consensus.
+    /// The account object named by a Move authenticator is not a shared object: it is immutable, or
+    /// owned by an address or by another object. An account must be shared so that a transaction
+    /// carrying a Move authenticator is ordered by consensus.
     #[error("Account {object_id} is not a shared object")]
     AccountNotSharedObject { object_id: ObjectId },
+    /// The transaction named as a dependency did not execute successfully, so this transaction
+    /// failed without running its commands.
+    // Keep this variant last while it is gated: BCS tags follow variant order, so a variant after
+    // it would get another tag without `unstable`.
+    #[cfg(feature = "unstable")]
+    #[error(
+        "Transaction {dependency} that this transaction depends on did not execute successfully"
+    )]
+    TransactionDependencyFailed { dependency: TransactionDigest },
 }
 
 impl ExecutionError {
@@ -442,6 +447,11 @@ impl ExecutionError {
     }
 }
 
+#[cfg(feature = "unstable")]
+impl ExecutionError {
+    crate::def_is!(TransactionDependencyFailed);
+}
+
 /// Location in move bytecode where an error occurred
 ///
 /// # BCS
@@ -459,8 +469,8 @@ pub struct MoveLocation {
     pub module: Identifier,
     /// The function index
     pub function: u16,
-    /// Index into the code stream for a jump. The offset is relative to the
-    /// beginning of the instruction stream.
+    /// Index into the code stream for a jump. The offset is relative to the beginning of the
+    /// instruction stream.
     pub instruction: u16,
     /// The name of the function if available
     pub function_name: Option<Identifier>,
@@ -557,15 +567,14 @@ pub enum CommandArgumentError {
     /// Immutable objects cannot be passed by mutable reference, &mut.
     #[error("Immutable objects cannot be passed by mutable reference, &mut")]
     InvalidObjectByMutRef,
-    /// Shared object operations such a wrapping, freezing, or converting to
-    /// owned are not allowed.
+    /// Shared object operations such a wrapping, freezing, or converting to owned are not allowed.
     #[error(
         "Shared object operations such a wrapping, freezing, or converting to owned are not \
         allowed."
     )]
     SharedObjectOperationNotAllowed,
-    /// Invalid argument arity. Expected a single argument but found a result
-    /// that expanded to multiple arguments.
+    /// Invalid argument arity. Expected a single argument but found a result that expanded to
+    /// multiple arguments.
     #[error(
         "Invalid argument arity. Expected a single argument but found a result that expanded to \
         multiple arguments."

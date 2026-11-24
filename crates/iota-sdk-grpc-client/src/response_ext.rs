@@ -5,8 +5,7 @@
 use iota_grpc_types::headers;
 use iota_types::Digest;
 
-/// Extension trait used to facilitate retrieval of IOTA specific data from
-/// responses
+/// Extension trait used to facilitate retrieval of IOTA specific data from responses
 pub trait ResponseExt: sealed::Sealed {
     fn chain_id(&self) -> Option<Digest>;
     fn chain(&self) -> Option<&str>;
@@ -17,6 +16,7 @@ pub trait ResponseExt: sealed::Sealed {
     fn lowest_available_checkpoint(&self) -> Option<u64>;
     fn lowest_available_checkpoint_objects(&self) -> Option<u64>;
     fn server_version(&self) -> Option<&str>;
+    fn iota_sdk_grpc_client_version_min(&self) -> Option<&str>;
 }
 
 impl ResponseExt for http::header::HeaderMap {
@@ -70,6 +70,11 @@ impl ResponseExt for http::header::HeaderMap {
         self.get(headers::X_IOTA_SERVER)
             .and_then(|h| h.to_str().ok())
     }
+
+    fn iota_sdk_grpc_client_version_min(&self) -> Option<&str> {
+        self.get(headers::X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN)
+            .and_then(|h| h.to_str().ok())
+    }
 }
 
 impl ResponseExt for tonic::metadata::MetadataMap {
@@ -107,6 +112,10 @@ impl ResponseExt for tonic::metadata::MetadataMap {
 
     fn server_version(&self) -> Option<&str> {
         self.as_ref().server_version()
+    }
+
+    fn iota_sdk_grpc_client_version_min(&self) -> Option<&str> {
+        self.as_ref().iota_sdk_grpc_client_version_min()
     }
 }
 
@@ -146,6 +155,10 @@ impl<T> ResponseExt for tonic::Response<T> {
     fn server_version(&self) -> Option<&str> {
         self.metadata().server_version()
     }
+
+    fn iota_sdk_grpc_client_version_min(&self) -> Option<&str> {
+        self.metadata().iota_sdk_grpc_client_version_min()
+    }
 }
 
 impl ResponseExt for tonic::Status {
@@ -183,6 +196,10 @@ impl ResponseExt for tonic::Status {
 
     fn server_version(&self) -> Option<&str> {
         self.metadata().server_version()
+    }
+
+    fn iota_sdk_grpc_client_version_min(&self) -> Option<&str> {
+        self.metadata().iota_sdk_grpc_client_version_min()
     }
 }
 

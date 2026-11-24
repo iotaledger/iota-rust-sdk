@@ -6,6 +6,9 @@ syntax = "proto3";
 
 package iota.grpc.v1.object;
 
+import "google/protobuf/struct.proto";
+import "google/rpc/status.proto";
+
 import "iota/grpc/options.proto";
 import "iota/grpc/v1/bcs.proto";
 import "iota/grpc/v1/types.proto";
@@ -16,6 +19,41 @@ message Object {
   optional iota.grpc.v1.types.ObjectReference reference = 1;
   // This Object serialized as BCS.
   optional iota.grpc.v1.bcs.BcsData bcs = 2;
+  // JSON rendering of the object's Move contents.
+  // Requires server-side Move type-layout resolution, so it is populated only
+  // when named explicitly in the read mask — a bare parent or `*` wildcard does
+  // not include it — and is bounded by the server's maximum JSON size.
+  optional google.protobuf.Value json = 3;
+  // Rendering of the object's on-chain Display template, when its type has one.
+  // Requires resolving the type's Display template and field layouts, so it is
+  // populated only when named explicitly in the read mask — a bare parent or `*`
+  // wildcard does not include it.
+  optional Display display = 4;
+}
+
+// Rendering of an object's on-chain Display template.
+message Display {
+  option (iota.grpc.message_accessors) = "with";
+
+  // The rendered Display fields, in the order defined by the template.
+  repeated DisplayField fields = 1;
+  // Set only when the whole template could not be resolved, so no per-field
+  // results apply (for example the type's `Display` object is missing or
+  // failed to load).
+  optional google.rpc.Status error = 2;
+}
+
+// One Display field: its name and either the rendered value or the error it hit.
+message DisplayField {
+  option (iota.grpc.message_accessors) = "with";
+
+  // The Display field name.
+  string name = 1;
+  // The field's rendered value, or the error that prevented rendering it.
+  oneof result {
+    string value = 2;
+    google.rpc.Status error = 3;
+  }
 }
 
 // A list of objects.

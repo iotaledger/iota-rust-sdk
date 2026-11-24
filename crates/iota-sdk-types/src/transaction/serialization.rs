@@ -9,21 +9,22 @@ use crate::{Identifier, ObjectId, ObjectReference};
 
 mod input_argument {
     use super::*;
+    #[cfg(feature = "unstable")]
+    use crate::TransactionDigest;
     use crate::{
         Version,
         transaction::{Input, SharedObjectReference},
     };
 
-    // Mirrors the default derived serialization of `Input`; the manual impl
-    // only exists to keep the BCS form as the `CallArg`/`ObjectArg` protocol
-    // encoding below.
+    // Mirrors the default derived serialization of `Input`; the manual impl only exists to keep the
+    // BCS form as the `CallArg`/`ObjectArg` protocol encoding below.
     #[derive(serde::Deserialize, serde::Serialize)]
     #[serde(rename = "Input")]
     enum ReadableInput {
         /// A move value serialized as BCS.
         ///
-        /// For normal operations this is required to be a move primitive type
-        /// and not contain structs or objects.
+        /// For normal operations this is required to be a move primitive type and not contain
+        /// structs or objects.
         Pure(#[serde(with = "crate::_serde::ReadableBase64Encoded")] Vec<u8>),
         /// A move object that is either immutable or address owned
         ImmutableOrOwned(ObjectReference),
@@ -31,6 +32,9 @@ mod input_argument {
         Shared(SharedObjectReference),
         /// A move object that is attempted to be received in this transaction.
         Receiving(ObjectReference),
+        /// A transaction this transaction depends on.
+        #[cfg(feature = "unstable")]
+        TransactionDependency(TransactionDigest),
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
@@ -38,6 +42,10 @@ mod input_argument {
     enum CallArg {
         Pure(#[serde(with = "::serde_with::As::<::serde_with::Bytes>")] Vec<u8>),
         Object(ObjectArg),
+        // Keep this variant last while it is gated: BCS tags follow variant order, so a variant
+        // after it would get another tag without `unstable`.
+        #[cfg(feature = "unstable")]
+        TransactionDependency(TransactionDigest),
     }
 
     #[derive(serde::Deserialize, serde::Serialize)]
@@ -65,6 +73,10 @@ mod input_argument {
                     }
                     Input::Shared(shared) => ReadableInput::Shared(shared),
                     Input::Receiving(object_ref) => ReadableInput::Receiving(object_ref),
+                    #[cfg(feature = "unstable")]
+                    Input::TransactionDependency(digest) => {
+                        ReadableInput::TransactionDependency(digest)
+                    }
                 };
                 readable.serialize(serializer)
             } else {
@@ -85,6 +97,8 @@ mod input_argument {
                     Input::Receiving(object_ref) => {
                         CallArg::Object(ObjectArg::Receiving(object_ref))
                     }
+                    #[cfg(feature = "unstable")]
+                    Input::TransactionDependency(digest) => CallArg::TransactionDependency(digest),
                 };
                 binary.serialize(serializer)
             }
@@ -104,6 +118,10 @@ mod input_argument {
                     }
                     ReadableInput::Shared(shared) => Input::Shared(shared),
                     ReadableInput::Receiving(object_ref) => Input::Receiving(object_ref),
+                    #[cfg(feature = "unstable")]
+                    ReadableInput::TransactionDependency(digest) => {
+                        Input::TransactionDependency(digest)
+                    }
                 })
             } else {
                 CallArg::deserialize(deserializer).map(|binary| match binary {
@@ -123,6 +141,8 @@ mod input_argument {
                     CallArg::Object(ObjectArg::Receiving(object_ref)) => {
                         Input::Receiving(object_ref)
                     }
+                    #[cfg(feature = "unstable")]
+                    CallArg::TransactionDependency(digest) => Input::TransactionDependency(digest),
                 })
             }
         }
@@ -250,10 +270,9 @@ mod signed_transaction {
     }
 }
 
-/// Deserialize an `Identifier` without validating that it is a valid Move
-/// identifier. This is used for deserializing the module in `MoveCall`
-/// commands, where BCS bytes could contain invalid identifiers but we still
-/// want to be able to deserialize them and let the move VM handle the
+/// Deserialize an `Identifier` without validating that it is a valid Move identifier. This is used
+/// for deserializing the module in `MoveCall` commands, where BCS bytes could contain invalid
+/// identifiers but we still want to be able to deserialize them and let the move VM handle the
 /// validation.
 pub(super) fn deserialize_ident_unchecked<'de, D>(d: D) -> Result<Identifier, D::Error>
 where
@@ -376,16 +395,14 @@ mod tests {
         }
     }
 
-    /// Pins the BCS wire format of
-    /// [`TransactionKind::TransactionDenyRulesUpdate`].
+    /// Pins the BCS wire format of [`TransactionKind::TransactionDenyRulesUpdate`].
     ///
-    /// Runs one sample per switch (one-hot) so swapping any two bool fields
-    /// changes some expected byte string; the six delta lists carry distinct
-    /// contents and lengths for the same reason.
+    /// Runs one sample per switch (one-hot) so swapping any two bool fields changes some expected
+    /// byte string; the six delta lists carry distinct contents and lengths for the same reason.
     #[test]
     fn transaction_deny_rules_update_bcs_pin() {
-        // Field order: package_publish, package_upgrade, shared_object,
-        // user_transaction, receiving_objects, move_authenticator.
+        // Field order: package_publish, package_upgrade, shared_object, user_transaction,
+        // receiving_objects, move_authenticator.
         let mut samples: Vec<[bool; 6]> = (0..6)
             .map(|hot| std::array::from_fn(|i| i == hot))
             .collect();
@@ -450,8 +467,7 @@ mod tests {
         }
     }
 
-    /// Pins the BCS wire format of
-    /// [`EndOfEpochTransactionKind::TransactionDenyRulesCreate`].
+    /// Pins the BCS wire format of [`EndOfEpochTransactionKind::TransactionDenyRulesCreate`].
     #[test]
     fn transaction_deny_rules_create_bcs_pin() {
         let kind = EndOfEpochTransactionKind::TransactionDenyRulesCreate;

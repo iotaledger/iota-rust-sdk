@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk-transaction-builder"
-version = "1.0.0-rc.2"
+version = "1.0.0"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
@@ -25,6 +25,8 @@ rustdoc-args = [
 default = []
 gas-station = ["dep:base64ct", "dep:reqwest"]
 test-client = []
+# Unstable APIs that may change or be removed in any release.
+unstable = ["iota-types/unstable"]
 
 [lints]
 workspace = true
@@ -34,7 +36,6 @@ workspace = true
 base64ct = { workspace = true, features = ["std"], optional = true }
 bcs.workspace = true
 derive_more = { workspace = true, features = ["from"] }
-primitive-types.workspace = true
 reqwest = { workspace = true, features = ["json"], optional = true }
 serde.workspace = true
 serde_json.workspace = true
@@ -43,7 +44,7 @@ variadics_please.workspace = true
 
 # internal dependencies
 iota-crypto = { workspace = true, features = ["ed25519", "secp256r1", "secp256k1"] }
-iota-move-types = { workspace = true, features = ["u256"] }
+iota-move-types.workspace = true
 iota-types = { workspace = true, features = ["serde", "hash"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]

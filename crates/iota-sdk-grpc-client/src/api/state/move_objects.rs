@@ -3,15 +3,14 @@
 
 //! High-level API for listing owned objects of a known Move type.
 //!
-//! Wraps [`Client::owned_objects`] with the type filter taken from the
-//! type parameter, and decodes each returned proto `Object` into the mirror,
-//! paired with its object reference.
+//! Wraps [`Client::owned_objects`] with the type filter taken from the type parameter, and decodes
+//! each returned proto `Object` into the mirror, paired with its object reference.
 //!
 //! # Read Mask
 //!
-//! Not a parameter here. The mirror and the object reference both come out of
-//! the BCS payload, so the query always asks for the default mask and there is
-//! no way to request one that leaves the objects undecodable.
+//! Not a parameter here. The mirror and the object reference both come out of the BCS payload, so
+//! the query always asks for the default mask and there is no way to request one that leaves the
+//! objects undecodable.
 
 use iota_grpc_types::{
     read_mask_fields::OwnedObjectReadMask,
@@ -55,14 +54,12 @@ impl<T> OwnedMoveObject<T> {
 define_list_query! {
     /// Builder for listing owned objects of the Move type `T`.
     ///
-    /// Created by [`GrpcClient::owned_move_objects`]. Await directly for a
-    /// single page, or call [`.collect(limit)`](Self::collect) to
-    /// auto-paginate.
+    /// Created by [`GrpcClient::owned_move_objects`]. Await directly for a single page, or call
+    /// [`.collect(limit)`](Self::collect) to auto-paginate.
     ///
-    /// Fails if any object fails to decode. The query filters on `T`'s exact
-    /// type, so a failure means the on-chain type has moved out from under the
-    /// mirror rather than that one object is odd — yielding the rest would hide
-    /// that.
+    /// Fails if any object fails to decode. The query filters on `T`'s exact type, so a failure
+    /// means the on-chain type has moved out from under the mirror rather than that one object is
+    /// odd — yielding the rest would hide that.
     pub struct ListOwnedMoveObjectsQuery<T: MoveObject> {
         service_client: StateServiceClient<InterceptedChannel>,
         request: ListOwnedObjectsRequest,
@@ -73,8 +70,7 @@ define_list_query! {
     }
 }
 
-/// Decode a proto `Object` into an [`OwnedMoveObject`], by way of the SDK
-/// `Object`.
+/// Decode a proto `Object` into an [`OwnedMoveObject`], by way of the SDK `Object`.
 fn decode<T: MoveObject>(
     object: &iota_grpc_types::v1::object::Object,
 ) -> GrpcResult<OwnedMoveObject<T>> {
@@ -88,17 +84,15 @@ fn decode<T: MoveObject>(
 }
 
 impl GrpcClient {
-    /// List objects of the Move type `T` owned by an address, decoded into `T`
-    /// and paired with their object references.
+    /// List objects of the Move type `T` owned by an address, decoded into `T` and paired with
+    /// their object references.
     ///
-    /// The type filter is derived from `T`, so unlike
-    /// [`GrpcClient::owned_objects`] this needs neither a type argument nor a
-    /// separate decode step.
+    /// The type filter is derived from `T`, so unlike [`GrpcClient::owned_objects`] this needs
+    /// neither a type argument nor a separate decode step.
     ///
-    /// Returns a query builder. Await it directly for a single page (with
-    /// access to `next_page_token`), or call `.collect(limit)` to auto-paginate
-    /// through all results. Page with
-    /// [`page_size`](ListOwnedMoveObjectsQuery::page_size) and
+    /// Returns a query builder. Await it directly for a single page (with access to
+    /// `next_page_token`), or call `.collect(limit)` to auto-paginate through all results. Page
+    /// with [`page_size`](ListOwnedMoveObjectsQuery::page_size) and
     /// [`page_token`](ListOwnedMoveObjectsQuery::page_token).
     ///
     /// # Parameters

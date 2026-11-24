@@ -24,6 +24,8 @@ pub enum FaucetError {
     BadGateway,
     #[error("Faucet request {0} was discarded")]
     Discarded(String),
+    #[error("Invalid faucet request id `{0}`: expected a UUID")]
+    InvalidRequestId(String),
     #[error("Invalid faucet URL: {0}")]
     InvalidUrl(#[from] url::ParseError),
     #[error("Faucet request was unsuccessful: {0}")]
@@ -34,7 +36,9 @@ pub enum FaucetError {
     StatusCode(StatusCode),
     #[error("Faucet request timed out")]
     TimedOut,
-    #[deprecated(note = "no longer returned; an `https` request without TLS fails with `Reqwest`")]
+    #[deprecated(
+        note = "no longer returned; an `https` request without TLS fails with `Reqwest` unless a proxy is set"
+    )]
     #[error(
         "Faucet URL scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass \
          your own client to `new_with_reqwest_client`"
@@ -95,17 +99,16 @@ pub struct CoinInfo {
 }
 
 impl FaucetClient {
-    /// Construct a new `FaucetClient` with the given faucet service URL. This
-    /// [`FaucetClient`] expects that the service provides two endpoints:
+    /// Construct a new `FaucetClient` with the given faucet service URL. This [`FaucetClient`]
+    /// expects that the service provides two endpoints:
     /// /v1/gas and /v1/status. As such, do not provide the request
     /// endpoint, just the top level service endpoint.
     ///
     /// - /v1/gas is used to request gas
     /// - /v1/status/task-uuid is used to check the status of the request
     ///
-    /// The HTTP client is built for you, trusting the platform store plus the
-    /// bundled Mozilla roots. Use [`Self::new_with_reqwest_client`] to supply
-    /// your own.
+    /// The HTTP client is built for you, trusting the platform store plus the bundled Mozilla
+    /// roots. Use [`Self::new_with_reqwest_client`] to supply your own.
     pub fn new(faucet_url: &str) -> Result<Self, FaucetError> {
         Self::new_with_reqwest_client(
             faucet_url,
@@ -113,14 +116,14 @@ impl FaucetClient {
         )
     }
 
-    /// Construct a new `FaucetClient` that issues its requests through the
-    /// supplied [`reqwest::Client`].
+    /// Construct a new `FaucetClient` that issues its requests through the supplied
+    /// [`reqwest::Client`].
     ///
     /// This is the way to choose your own trust anchors or TLS backend.
     ///
-    /// Note that on a build with `tls-ring` or `tls-aws-lc`, `reqwest` has no
-    /// crypto provider to fall back on, so building a `reqwest::Client` panics
-    /// unless one has been installed for the process. See the crate README.
+    /// Note that on a build with `tls-ring` or `tls-aws-lc`, `reqwest` has no crypto provider to
+    /// fall back on, so building a `reqwest::Client` panics unless one has been installed for the
+    /// process. See the crate README.
     pub fn new_with_reqwest_client(
         faucet_url: &str,
         client: reqwest::Client,
@@ -141,15 +144,13 @@ impl FaucetClient {
         Self::new(FAUCET_LOCAL_HOST).expect("cannot build localnet faucet client")
     }
 
-    /// Request gas from the faucet. Note that this will return the UUID of the
-    /// request and not wait until the token is received. Use
-    /// `request_and_wait` to wait for the token.
+    /// Request gas from the faucet. Note that this will return the UUID of the request and not wait
+    /// until the token is received. Use `request_and_wait` to wait for the token.
     pub async fn request(&self, address: Address) -> Result<Option<String>, FaucetError> {
         self.request_impl(address).await
     }
 
-    /// Internal implementation of a faucet request. It returns the task Uuid as
-    /// a String.
+    /// Internal implementation of a faucet request. It returns the task Uuid as a String.
     async fn request_impl(&self, address: Address) -> Result<Option<String>, FaucetError> {
         let address = address.to_string();
         let json_body = json![{
@@ -196,18 +197,16 @@ impl FaucetClient {
         }
     }
 
-    /// Request gas from the faucet and wait until the request is completed and
-    /// token is transferred. Returns `FaucetReceipt` if the request is
-    /// successful, which contains the list of tokens transferred, and the
-    /// transaction digest. Returns [`FaucetError::Discarded`] if the faucet
-    /// discards the request.
+    /// Request gas from the faucet and wait until the request is completed and token is
+    /// transferred. Returns `FaucetReceipt` if the request is successful, which contains the list
+    /// of tokens transferred, and the transaction digest. Returns [`FaucetError::Discarded`] if the
+    /// faucet discards the request.
     ///
-    /// Note that the faucet is heavily rate-limited, so calling repeatedly the
-    /// faucet would likely result in a 429 code or 502 code.
+    /// Note that the faucet is heavily rate-limited, so calling repeatedly the faucet would likely
+    /// result in a 429 code or 502 code.
     ///
-    /// If you intend to use the transferred tokens with the graphql client,
-    /// consider using `request_and_wait_for_finalized` instead to ensure
-    /// the tokens are available in the indexer.
+    /// If you intend to use the transferred tokens with the graphql client, consider using
+    /// `request_and_wait_for_finalized` instead to ensure the tokens are available in the indexer.
     pub async fn request_and_wait(
         &self,
         address: Address,
@@ -252,15 +251,13 @@ impl FaucetClient {
         }
     }
 
-    /// Request gas from the faucet and wait until the request is completed and
-    /// token is transferred and finalized on the ledger. Returns
-    /// `FaucetReceipt` if the request is successful, which contains the
-    /// list of tokens transferred, and the transaction digest. Returns
+    /// Request gas from the faucet and wait until the request is completed and token is transferred
+    /// and finalized on the ledger. Returns `FaucetReceipt` if the request is successful, which
+    /// contains the list of tokens transferred, and the transaction digest. Returns
     /// [`FaucetError::Discarded`] if the faucet discards the request.
     ///
-    /// This is a convenience method that combines `request_and_wait` and
-    /// waiting for the funding transactions to be finalized using the provided
-    /// GraphQL `GraphQLClient`.
+    /// This is a convenience method that combines `request_and_wait` and waiting for the funding
+    /// transactions to be finalized using the provided GraphQL `GraphQLClient`.
     pub async fn request_and_wait_for_finalized(
         &self,
         address: Address,
@@ -288,8 +285,12 @@ impl FaucetClient {
     /// Check the faucet request status.
     ///
     /// Possible statuses are defined in: [`BatchSendStatusType`]
+    ///
+    /// Returns [`FaucetError::InvalidRequestId`] without sending a request if `id` is empty or
+    /// contains anything other than ASCII letters, digits, `-`, `{`, `}` and `:`, which covers the
+    /// UUID forms the faucet accepts.
     pub async fn request_status(&self, id: String) -> Result<Option<BatchSendStatus>, FaucetError> {
-        let status_url = self.faucet_url.join(&format!("v1/status/{id}"))?;
+        let status_url = self.status_url(&id)?;
         info!("Checking status of faucet request: {status_url}");
         let response = self.inner.get(status_url).send().await?;
 
@@ -302,6 +303,17 @@ impl FaucetClient {
         let json = response.json::<BatchStatusFaucetResponse>().await?;
 
         Ok(json.status)
+    }
+
+    fn status_url(&self, id: &str) -> Result<Url, FaucetError> {
+        if id.is_empty()
+            || !id
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'{' | b'}' | b':'))
+        {
+            return Err(FaucetError::InvalidRequestId(id.to_owned()));
+        }
+        Ok(self.faucet_url.join(&format!("v1/status/{id}"))?)
     }
 }
 
@@ -327,5 +339,47 @@ mod tests {
             gas_url("https://host/faucet/"),
             "https://host/faucet/v1/gas"
         );
+    }
+
+    #[test]
+    fn status_url_takes_the_id_as_one_segment() {
+        let client = FaucetClient::new("https://host/faucet").unwrap();
+        assert_eq!(
+            client
+                .status_url("11111111-2222-3333-4444-555555555555")
+                .unwrap()
+                .as_str(),
+            "https://host/faucet/v1/status/11111111-2222-3333-4444-555555555555"
+        );
+        assert_eq!(
+            client
+                .status_url("{11111111-2222-3333-4444-555555555555}")
+                .unwrap()
+                .as_str(),
+            "https://host/faucet/v1/status/%7B11111111-2222-3333-4444-555555555555%7D"
+        );
+        assert_eq!(
+            client
+                .status_url("urn:uuid:11111111-2222-3333-4444-555555555555")
+                .unwrap()
+                .as_str(),
+            "https://host/faucet/v1/status/urn:uuid:11111111-2222-3333-4444-555555555555"
+        );
+        for id in [
+            "",
+            ".",
+            "..",
+            "../../graphql",
+            "x?y=1",
+            "x#frag",
+            "a\nb",
+            "a/b",
+            "a%2Fb",
+        ] {
+            assert!(
+                matches!(client.status_url(id), Err(FaucetError::InvalidRequestId(_))),
+                "{id:?} was accepted"
+            );
+        }
     }
 }

@@ -23,6 +23,7 @@ use iota_types::{ObjectId, TransactionDigest, Version};
 use serde::Serialize;
 
 use super::MetadataEnvelope;
+use crate::checked_channel::OutdatedClientError;
 
 /// Errors that can occur during gRPC client API operations.
 #[derive(Debug, thiserror::Error)]
@@ -32,8 +33,7 @@ pub enum GrpcError {
     #[error("proto conversion error: {0}")]
     ProtoConversion(#[from] Box<TryFromProtoError>),
 
-    /// Per-item error returned by the server (preserves code, message,
-    /// details).
+    /// Per-item error returned by the server (preserves code, message, details).
     #[error("server error (code {code}): {msg}", code = .0.code, msg = .0.message)]
     Server(RpcStatus),
 
@@ -56,20 +56,23 @@ pub enum GrpcError {
     /// gRPC transport or protocol error.
     #[error("grpc error: {0}")]
     Grpc(Box<tonic::Status>),
+
+    /// The node requires a newer `iota-sdk-grpc-client` than this one, so the response was rejected
+    /// before its body was decoded. Upgrade the crate.
+    #[error(transparent)]
+    OutdatedClient(OutdatedClientError),
 }
 
 impl GrpcError {
-    /// Returns `true` if the error carries a `NOT_FOUND` status, whether the
-    /// server reported it for the call or for a single item of a batched
-    /// request.
+    /// Returns `true` if the error carries a `NOT_FOUND` status, whether the server reported it for
+    /// the call or for a single item of a batched request.
     ///
-    /// **Warning:** do not test the outer error of a batched read to decide
-    /// that an item is absent. Those calls report an absent item against the
-    /// request that asked for it, so a `NOT_FOUND` for the call means the
-    /// endpoint is wrong; treating it as a missing item turns a misconfigured
-    /// endpoint into a normal "not there" answer. Test the per-item result
-    /// instead. Calls returning a single response, such as fetching a
-    /// checkpoint, do report absence at the call level.
+    /// **Warning:** do not test the outer error of a batched read to decide that an item is absent.
+    /// Those calls report an absent item against the request that asked for it, so a `NOT_FOUND`
+    /// for the call means the endpoint is wrong; treating it as a missing item turns a
+    /// misconfigured endpoint into a normal "not there" answer. Test the per-item result instead.
+    /// Calls returning a single response, such as fetching a checkpoint, do report absence at the
+    /// call level.
     pub fn is_not_found(&self) -> bool {
         match self {
             GrpcError::Server(status) => status.code == i32::from(tonic::Code::NotFound),
@@ -87,6 +90,14 @@ impl From<TryFromProtoError> for GrpcError {
 
 impl From<tonic::Status> for GrpcError {
     fn from(status: tonic::Status) -> Self {
+        // A layer wrapped around the channel, such as tower's `Buffer`, can put its own error
+        // between the status and the version error.
+        if let Some(error) =
+            std::iter::successors(std::error::Error::source(&status), |error| error.source())
+                .find_map(|error| error.downcast_ref::<OutdatedClientError>())
+        {
+            return GrpcError::OutdatedClient(error.clone());
+        }
         GrpcError::Grpc(Box::new(status))
     }
 }
@@ -109,6 +120,7 @@ impl From<GrpcError> for tonic::Status {
                 tonic::Status::internal("stream ended unexpectedly: has_next was true")
             }
             GrpcError::Grpc(status) => *status,
+            GrpcError::OutdatedClient(error) => error.into_status(Default::default()),
         }
     }
 }
@@ -129,13 +141,12 @@ pub enum ProtocolError {
     #[error("checkpoint stream error: {0}")]
     CheckpointStream(#[from] CheckpointStreamError),
 
-    /// A batched read returned a number of results that does not match the
-    /// number of requested items.
+    /// A batched read returned a number of results that does not match the number of requested
+    /// items.
     #[error("expected {expected} results, got {actual}")]
     UnexpectedResultCount { expected: usize, actual: usize },
 
-    /// `objects()` answered a position with a different object than the one
-    /// requested there.
+    /// `objects()` answered a position with a different object than the one requested there.
     #[error("requested object {expected} at position {position}, but got {actual}")]
     UnexpectedObject {
         position: usize,
@@ -143,8 +154,8 @@ pub enum ProtocolError {
         actual: ObjectId,
     },
 
-    /// `transactions()` answered a position with a different transaction than
-    /// the one requested there.
+    /// `transactions()` answered a position with a different transaction than the one requested
+    /// there.
     #[error("requested transaction {expected} at position {position}, but got {actual}")]
     UnexpectedTransaction {
         position: usize,
@@ -181,17 +192,17 @@ pub enum CheckpointStreamError {
 /// Result type alias for API operations.
 pub type GrpcResult<T> = std::result::Result<T, GrpcError>;
 
-/// Safely convert a `usize` to `u32`, saturating at `u32::MAX` instead of
-/// silently truncating on 64-bit platforms.
+/// Safely convert a `usize` to `u32`, saturating at `u32::MAX` instead of silently truncating on
+/// 64-bit platforms.
 pub fn saturating_usize_to_u32(value: usize) -> u32 {
     u32::try_from(value).unwrap_or(u32::MAX)
 }
 
-/// A trait for proto result types that follow the pattern of having
-/// `Some(Result::Value)`, `Some(Result::Error)`, or `None`.
+/// A trait for proto result types that follow the pattern of having `Some(Result::Value)`,
+/// `Some(Result::Error)`, or `None`.
 ///
-/// This allows generic handling of gRPC response results that can be either
-/// a success value, a server error, or missing.
+/// This allows generic handling of gRPC response results that can be either a success value, a
+/// server error, or missing.
 pub trait ProtoResult {
     /// The success value type.
     type Value;
@@ -200,22 +211,19 @@ pub trait ProtoResult {
     fn into_result(self) -> GrpcResult<Self::Value>;
 }
 
-/// Convert a batch of proto results into one result per requested item,
-/// preserving request order.
+/// Convert a batch of proto results into one result per requested item, preserving request order.
 ///
-/// The batched RPCs report a failure for a single item as a `google.rpc.Status`
-/// in that item's slot, so the outcome for one item is independent of the
-/// others: a caller that needs every item can
-/// `collect::<GrpcResult<Vec<_>>>()`, while one that tolerates gaps can inspect
-/// each slot.
+/// The batched RPCs report a failure for a single item as a `google.rpc.Status` in that item's
+/// slot, so the outcome for one item is independent of the others: a caller that needs every item
+/// can `collect::<GrpcResult<Vec<_>>>()`, while one that tolerates gaps can inspect each slot.
 pub fn into_item_results<T: ProtoResult>(batch: Vec<T>) -> Vec<GrpcResult<T::Value>> {
     batch.into_iter().map(ProtoResult::into_result).collect()
 }
 
 /// Check that a batched read answered every requested item.
 ///
-/// Callers pair results with requests by position, so a count that does not
-/// match the request leaves no way to tell which item each result belongs to.
+/// Callers pair results with requests by position, so a count that does not match the request
+/// leaves no way to tell which item each result belongs to.
 pub fn check_result_count<T>(results: &[T], expected: usize) -> GrpcResult<()> {
     if results.len() == expected {
         Ok(())
@@ -229,9 +237,8 @@ pub fn check_result_count<T>(results: &[T], expected: usize) -> GrpcResult<()> {
 
 /// Check that each answered object is the one requested in that position.
 ///
-/// A matching count only says how many results came back, not that position `i`
-/// holds object `i`, so the pairing callers rely on is checked rather than
-/// trusted.
+/// A matching count only says how many results came back, not that position `i` holds object `i`,
+/// so the pairing callers rely on is checked rather than trusted.
 pub fn check_object_identity(
     results: &[GrpcResult<ProtoObject>],
     requested: &[(ObjectId, Option<Version>)],
@@ -254,8 +261,7 @@ pub fn check_object_identity(
 
 /// Check that each answered transaction is the one requested in that position.
 ///
-/// See [`check_object_identity`] for why the pairing is checked rather than
-/// trusted.
+/// See [`check_object_identity`] for why the pairing is checked rather than trusted.
 pub fn check_transaction_identity(
     results: &[GrpcResult<ExecutedTransaction>],
     requested: &[TransactionDigest],
@@ -276,9 +282,8 @@ pub fn check_transaction_identity(
     Ok(())
 }
 
-/// The id of an answered object, taken from its reference or, when the read
-/// mask left that out, from its BCS. `None` when it carries neither, leaving
-/// nothing to compare.
+/// The id of an answered object, taken from its reference or, when the read mask left that out,
+/// from its BCS. `None` when it carries neither, leaving nothing to compare.
 fn answered_object_id(object: &ProtoObject) -> GrpcResult<Option<ObjectId>> {
     if let Some(id) = object
         .reference
@@ -293,9 +298,9 @@ fn answered_object_id(object: &ProtoObject) -> GrpcResult<Option<ObjectId>> {
     Ok(None)
 }
 
-/// The digest of an answered transaction, taken from the response or, when the
-/// read mask left it out, computed from the transaction's BCS. `None` when it
-/// carries neither, leaving nothing to compare.
+/// The digest of an answered transaction, taken from the response or, when the read mask left it
+/// out, computed from the transaction's BCS. `None` when it carries neither, leaving nothing to
+/// compare.
 fn answered_transaction_digest(
     transaction: &ExecutedTransaction,
 ) -> GrpcResult<Option<TransactionDigest>> {
@@ -388,15 +393,13 @@ impl ProtoResult for ViewFunctionCallResult {
 
 /// Collect all items from a paginated gRPC stream into a single `Vec`.
 ///
-/// This handles the common pattern of iterating over a `tonic::Streaming<T>`,
-/// extracting items from each message via the `extract` closure, and checking
-/// that the stream was not truncated (i.e. `has_next` is `false` on the last
-/// message).
+/// This handles the common pattern of iterating over a `tonic::Streaming<T>`, extracting items from
+/// each message via the `extract` closure, and checking that the stream was not truncated (i.e.
+/// `has_next` is `false` on the last message).
 ///
-/// The `extract` closure receives each stream message and must return
-/// `(has_next, items)`.  Because some streams require fallible per-item
-/// conversion (e.g. via [`ProtoResult`]), the closure itself returns
-/// `GrpcResult<…>`.
+/// The `extract` closure receives each stream message and must return `(has_next, items)`.  Because
+/// some streams require fallible per-item conversion (e.g. via [`ProtoResult`]), the closure itself
+/// returns `GrpcResult<…>`.
 pub async fn collect_stream<T, I, F>(
     mut stream: tonic::Streaming<T>,
     metadata: tonic::metadata::MetadataMap,
@@ -423,8 +426,8 @@ where
 
 /// A single page of results from a paginated list endpoint.
 ///
-/// Returned when awaiting a list query builder directly (single-page mode).
-/// Contains the items from this page plus an optional continuation token.
+/// Returned when awaiting a list query builder directly (single-page mode). Contains the items from
+/// this page plus an optional continuation token.
 #[derive(Clone, Debug)]
 pub struct Page<T> {
     /// The items returned in this page.
@@ -435,10 +438,9 @@ pub struct Page<T> {
 
 /// Generate a query object: a struct that runs its query when awaited.
 ///
-/// The struct's [`IntoFuture`](std::future::IntoFuture) boxes the future of
-/// `send(self) -> $output`, which each invocation writes by hand in an
-/// inherent impl. An optional `read_mask: $mask;` adds a `read_mask: $mask`
-/// field and its `read_mask` setter.
+/// The struct's [`IntoFuture`](std::future::IntoFuture) boxes the future of `send(self) ->
+/// $output`, which each invocation writes by hand in an inherent impl. An optional `read_mask:
+/// $mask;` adds a `read_mask: $mask` field and its `read_mask` setter.
 macro_rules! define_query {
     (
         $(#[$meta:meta])*
@@ -485,22 +487,20 @@ pub(crate) use define_query;
 
 /// Generate a paginated query builder for a list endpoint.
 ///
-/// The generated struct implements [`IntoFuture`](std::future::IntoFuture) for
-/// single-page retrieval and provides a [`collect`] method for auto-pagination.
+/// The generated struct implements [`IntoFuture`](std::future::IntoFuture) for single-page
+/// retrieval and provides a [`collect`] method for auto-pagination.
 ///
 /// # Parameters
 ///
-/// - `$query_name` — name of the generated builder struct, optionally with a
-///   single bounded type parameter (e.g. `ListOwnedMoveObjectsQuery<T:
-///   MoveObject>`) usable in `item` and `map_item`
+/// - `$query_name` — name of the generated builder struct, optionally with a single bounded type
+///   parameter (e.g. `ListOwnedMoveObjectsQuery<T: MoveObject>`) usable in `item` and `map_item`
 /// - `$service_client_type` — the tonic service client type
 /// - `$item_type` — the item type exposed by the builder
 /// - `$rpc_method` — the RPC method name on the service client
 /// - `$items_field` — the field name on the response containing the items vec
-/// - `map_item` (optional) — a fallible `fn(&ProtoItem) ->
-///   GrpcResult<$item_type>` applied to each response element. When omitted,
-///   items are passed through unchanged (so `$item_type` must be the response
-///   field's element type).
+/// - `map_item` (optional) — a fallible `fn(&ProtoItem) -> GrpcResult<$item_type>` applied to each
+///   response element. When omitted, items are passed through unchanged (so `$item_type` must be
+///   the response field's element type).
 ///
 /// # Example
 ///
@@ -556,8 +556,8 @@ macro_rules! define_list_query {
         }
     };
 
-    // Conversion variant: each response element is mapped through `$map_item`,
-    // a fallible `fn(&ProtoItem) -> GrpcResult<$item_type>`.
+    // Conversion variant: each response element is mapped through `$map_item`, a fallible
+    // `fn(&ProtoItem) -> GrpcResult<$item_type>`.
     (
         $(#[$meta:meta])*
         pub struct $query_name:ident $(<$generic:ident: $bound:path>)? {
@@ -657,8 +657,8 @@ macro_rules! define_list_query {
                 loop {
                     let mut request = self.base_request.clone();
 
-                    // Cap page_size to the remaining items needed when a
-                    // limit is set, so we don't over-fetch from the server.
+                    // Cap page_size to the remaining items needed when a limit is set, so we don't
+                    // over-fetch from the server.
                     let effective_page_size = match (self.page_size, limit) {
                         (Some(ps), Some(l)) => {
                             let remaining = (l as usize).saturating_sub(all_items.len());
@@ -826,8 +826,8 @@ mod tests {
         assert_eq!(into_item_results(batch).len(), 2);
     }
 
-    /// Each view function call runs in its own transaction, so a call the node
-    /// refuses fails only its own slot.
+    /// Each view function call runs in its own transaction, so a call the node refuses fails only
+    /// its own slot.
     #[test]
     fn a_rejected_view_function_call_keeps_the_surrounding_calls() {
         let batch = vec![
@@ -847,9 +847,8 @@ mod tests {
         assert!(matches!(items[1], Err(GrpcError::Server(_))));
     }
 
-    /// A call that ran and aborted is not a failed *request*: it occupies the
-    /// `Ok` slot, and the abort is read off the outputs. Only a call the node
-    /// refused to run yields `Err`.
+    /// A call that ran and aborted is not a failed *request*: it occupies the `Ok` slot, and the
+    /// abort is read off the outputs. Only a call the node refused to run yields `Err`.
     #[test]
     fn an_aborted_view_function_call_reports_through_its_outputs() {
         let batch = vec![
@@ -891,8 +890,7 @@ mod tests {
         TransactionDigest::new([byte; TransactionDigest::LENGTH])
     }
 
-    /// A proto object carrying just its reference, as the default read mask
-    /// requests.
+    /// A proto object carrying just its reference, as the default read mask requests.
     fn answered(id: ObjectId) -> GrpcResult<Object> {
         let mut object = Object::default();
         object.reference =
@@ -923,8 +921,7 @@ mod tests {
         answered
     }
 
-    /// A proto transaction carrying just its digest, as the default read mask
-    /// requests.
+    /// A proto transaction carrying just its digest, as the default read mask requests.
     fn answered_transaction(digest: TransactionDigest) -> ExecutedTransaction {
         ExecutedTransaction::default()
             .with_transaction(ProtoTransaction::default().with_digest(digest))

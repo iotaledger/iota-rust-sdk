@@ -1,8 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Reads the chain id, epoch and checkpoint height from the `service_info`
-//! RPC, then the current reference gas price.
+//! Reads the chain id, epoch and checkpoint height from the `service_info` RPC, then the current
+//! reference gas price.
 
 use eyre::{OptionExt, Result};
 use iota_sdk::grpc_client::GrpcClient;

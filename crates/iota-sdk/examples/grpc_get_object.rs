@@ -4,10 +4,10 @@
 //! gRPC counterpart to `get_object.rs`.
 //!
 //! Highlights two things about the gRPC API:
-//! - `objects` is batched (it takes an iterable of ids and streams the matched
-//!   objects back), so we just hand it one id.
-//! - The returned proto `Object` is *lazy* — you convert into the SDK type only
-//!   when you need the deserialized fields.
+//! - `objects` is batched (it takes an iterable of ids and streams the matched objects back), so we
+//!   just hand it one id.
+//! - The returned proto `Object` is *lazy* — you convert into the SDK type only when you need the
+//!   deserialized fields.
 
 use eyre::{Result, bail};
 use iota_sdk::{
@@ -23,8 +23,7 @@ async fn main() -> Result<()> {
         "0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755".parse()?;
 
     let response = client.objects([object_id]).await?;
-    // Each requested id gets its own result, so a failure here concerns only
-    // this object.
+    // Each requested id gets its own result, so a failure here concerns only this object.
     let proto_obj = match response.body().first() {
         Some(Ok(obj)) => obj,
         Some(Err(e)) => bail!("could not read object: {e}"),
