@@ -543,6 +543,28 @@ mod tests {
         },
     };
 
+    #[test]
+    fn package_from_bcs_rejects_non_package_objects() {
+        let object = iota_types::Object::new(
+            iota_types::ObjectData::Struct(
+                iota_types::MoveStruct::new(
+                    iota_types::MoveObjectType::new(iota_types::StructTag::new_gas_coin()),
+                    Version::from_u64(1),
+                    vec![0; iota_types::ObjectId::LENGTH + 8],
+                )
+                .unwrap(),
+            ),
+            iota_types::Owner::Address(Address::ZERO),
+            iota_types::TransactionDigest::ZERO,
+            0,
+        );
+        let bcs = bcs::to_bytes(&object).unwrap();
+        assert!(matches!(
+            super::package_from_bcs(&bcs),
+            Err(crate::error::GraphQLError::Deserialization(_))
+        ));
+    }
+
     #[tokio::test]
     async fn package_latest_sends_the_address_without_a_version() {
         let vars = sent_variables("LatestPackageQueryFragment", |client| async move {

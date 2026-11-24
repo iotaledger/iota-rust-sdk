@@ -168,3 +168,80 @@ impl TryFrom<DynamicField> for DynamicFieldOutput {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::query_types::{MoveType, MoveValue};
+
+    fn move_value(repr: &str, bcs: &str) -> MoveValue {
+        MoveValue {
+            move_type: MoveType {
+                repr: repr.to_owned(),
+            },
+            bcs: Base64(bcs.to_owned()),
+            json: None,
+        }
+    }
+
+    #[test]
+    fn missing_name_is_an_error() {
+        let field = DynamicField {
+            value: None,
+            name: None,
+        };
+        assert!(matches!(
+            DynamicFieldOutput::try_from(field),
+            Err(GraphQLError::EmptyResponseField("dynamic field name"))
+        ));
+    }
+
+    #[test]
+    fn invalid_name_is_an_error() {
+        let field = DynamicField {
+            value: None,
+            name: Some(move_value("not a type", "AQ==")),
+        };
+        assert!(DynamicFieldOutput::try_from(field).is_err());
+
+        let field = DynamicField {
+            value: None,
+            name: Some(move_value("u8", "not base64!")),
+        };
+        assert!(DynamicFieldOutput::try_from(field).is_err());
+    }
+
+    #[test]
+    fn invalid_value_is_an_error() {
+        let field = DynamicField {
+            value: Some(DynamicFieldValue::MoveValue(move_value(
+                "not a type",
+                "AQ==",
+            ))),
+            name: Some(move_value("u8", "AQ==")),
+        };
+        assert!(DynamicFieldOutput::try_from(field).is_err());
+
+        let field = DynamicField {
+            value: Some(DynamicFieldValue::MoveObject(MoveObjectContents {
+                contents: Some(move_value("u8", "not base64!")),
+            })),
+            name: Some(move_value("u8", "AQ==")),
+        };
+        assert!(DynamicFieldOutput::try_from(field).is_err());
+    }
+
+    #[test]
+    fn valid_field_converts() {
+        let field = DynamicField {
+            value: Some(DynamicFieldValue::MoveValue(move_value("u8", "Ag=="))),
+            name: Some(move_value("u8", "AQ==")),
+        };
+        let output = DynamicFieldOutput::try_from(field).unwrap();
+        assert_eq!(output.name.type_tag, TypeTag::U8);
+        assert_eq!(output.name.bcs, vec![1]);
+        let value = output.value.unwrap();
+        assert_eq!(value.type_tag, TypeTag::U8);
+        assert_eq!(value.bcs, vec![2]);
+    }
+}

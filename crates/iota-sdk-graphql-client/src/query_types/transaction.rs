@@ -513,3 +513,33 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
         effects.ok_or(GraphQLError::EmptyResponseField("transaction effects bcs"))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn missing_effects_bcs_is_an_error() {
+        for value in [
+            TxBlockEffects { effects: None },
+            TxBlockEffects {
+                effects: Some(TransactionBlockEffects { bcs: None }),
+            },
+        ] {
+            assert!(matches!(
+                TransactionEffects::try_from(value),
+                Err(GraphQLError::EmptyResponseField("transaction effects bcs"))
+            ));
+        }
+    }
+
+    #[test]
+    fn invalid_effects_bcs_is_an_error() {
+        let value = TxBlockEffects {
+            effects: Some(TransactionBlockEffects {
+                bcs: Some(Base64("AQ==".to_owned())),
+            }),
+        };
+        assert!(TransactionEffects::try_from(value).is_err());
+    }
+}
