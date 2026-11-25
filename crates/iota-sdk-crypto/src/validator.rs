@@ -624,7 +624,8 @@ mod tests {
             .unwrap_err();
         assert!(
             err.to_string()
-                .contains("checkpoint epoch 5 does not match committee epoch 7")
+                .contains("checkpoint epoch 5 does not match committee epoch 7"),
+            "{err}"
         );
     }
 
@@ -641,7 +642,8 @@ mod tests {
         .unwrap_err();
         assert!(
             err.to_string()
-                .contains("checkpoint epoch 5 does not match committee epoch 7")
+                .contains("checkpoint epoch 5 does not match committee epoch 7"),
+            "{err}"
         );
     }
 
