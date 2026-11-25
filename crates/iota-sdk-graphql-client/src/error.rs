@@ -13,7 +13,7 @@ use iota_types::{
 };
 use reqwest::{StatusCode, Url};
 
-use crate::faucet::FaucetError;
+use crate::{client::mask_error_url, faucet::FaucetError};
 
 type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
@@ -72,7 +72,7 @@ fn display_graphql_errors(errors: &[QueryError]) -> String {
 pub enum GraphQLError {
     /// The request could not be sent, or the response could not be read.
     #[error("request error: {0}")]
-    Request(#[from] reqwest::Error),
+    Request(#[source] reqwest::Error),
     /// The server answered with a non-success HTTP status.
     #[error(
         "GraphQL request to {url} failed with HTTP {status} while decoding `{target_type}`, \
@@ -196,7 +196,7 @@ impl HttpResponse {
         })
     }
 
-    /// URL the request was sent to.
+    /// URL the request was sent to, with its query values replaced by `omitted`.
     pub fn url(&self) -> &Url {
         &self.url
     }
@@ -261,6 +261,12 @@ impl GraphQLError {
 impl From<iota_types::BcsError> for GraphQLError {
     fn from(error: iota_types::BcsError) -> Self {
         Self::Deserialization(error.into())
+    }
+}
+
+impl From<reqwest::Error> for GraphQLError {
+    fn from(error: reqwest::Error) -> Self {
+        Self::Request(mask_error_url(error))
     }
 }
 

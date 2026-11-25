@@ -53,7 +53,30 @@ fn mask_credentials(url: &Url) -> Url {
     if url.password().is_some() {
         let _ = url.set_password(Some("omitted"));
     }
+    if url.query().is_some() {
+        // A bare `?SECRET` parses as a name with an empty value.
+        let names: Vec<String> = url
+            .query_pairs()
+            .map(|(name, value)| {
+                if value.is_empty() {
+                    "omitted".to_owned()
+                } else {
+                    name.into_owned()
+                }
+            })
+            .collect();
+        url.query_pairs_mut()
+            .clear()
+            .extend_pairs(names.iter().map(|name| (name, "omitted")));
+    }
     url
+}
+
+fn mask_error_url(mut error: reqwest::Error) -> reqwest::Error {
+    if let Some(url) = error.url_mut() {
+        *url = mask_credentials(url);
+    }
+    error
 }
 
 fn idx_to_segment_name(idx: usize) -> &'static str {
@@ -74,7 +97,8 @@ pub enum GasStationError {
     Request {
         /// The underlying transport error.
         source: reqwest::Error,
-        /// The URL that was requested, with its username and password replaced by `omitted`.
+        /// The URL that was requested, with its username, password and query values replaced by
+        /// `omitted`.
         gas_station_url: Url,
     },
     /// The gas station answered with something unusable.
@@ -85,7 +109,8 @@ pub enum GasStationError {
     Response {
         /// The error the gas station reported, when it reported one.
         message: Option<String>,
-        /// The URL that was requested, with its username and password replaced by `omitted`.
+        /// The URL that was requested, with its username, password and query values replaced by
+        /// `omitted`.
         gas_station_url: Url,
     },
     /// The gas station is too old for this client.
@@ -111,9 +136,9 @@ pub enum GasStationError {
 /// A station is configured once and reused for any number of transactions; build one with
 /// [`GasStation::builder`].
 ///
-/// `Debug` prints the URL with its username and password replaced by `omitted`, shows the values of
-/// headers added through [`GasStationBuilder::header`] or [`GasStationBuilder::headers`] as
-/// `Sensitive`, and leaves out the HTTP client.
+/// `Debug` prints the URL with its username, password and query values replaced by `omitted`, shows
+/// the values of headers added through [`GasStationBuilder::header`] or
+/// [`GasStationBuilder::headers`] as `Sensitive`, and leaves out the HTTP client.
 ///
 /// # Example
 ///
@@ -189,9 +214,9 @@ const DEFAULT_RESERVATION_DURATION: Duration = Duration::from_secs(60);
 
 /// Configures a [`GasStation`].
 ///
-/// `Debug` prints the URL with its username and password replaced by `omitted`, shows the values of
-/// headers added through [`Self::header`] or [`Self::headers`] as `Sensitive`, and leaves out the
-/// HTTP client.
+/// `Debug` prints the URL with its username, password and query values replaced by `omitted`, shows
+/// the values of headers added through [`Self::header`] or [`Self::headers`] as `Sensitive`, and
+/// leaves out the HTTP client.
 #[derive(Clone)]
 pub struct GasStationBuilder {
     url: Url,
@@ -438,12 +463,12 @@ impl GasStation {
             .send()
             .await
             .map_err(|e| GasStationError::Request {
-                source: e,
+                source: mask_error_url(e),
                 gas_station_url: mask_credentials(&url),
             })?
             .error_for_status()
             .map_err(|e| GasStationError::Request {
-                source: e,
+                source: mask_error_url(e),
                 gas_station_url: mask_credentials(&url),
             })?;
 
@@ -514,12 +539,12 @@ impl GasStation {
             .send()
             .await
             .map_err(|e| GasStationError::Request {
-                source: e,
+                source: mask_error_url(e),
                 gas_station_url: mask_credentials(&url),
             })?
             .error_for_status()
             .map_err(|e| GasStationError::Request {
-                source: e,
+                source: mask_error_url(e),
                 gas_station_url: mask_credentials(&url),
             })?;
 
@@ -528,7 +553,7 @@ impl GasStation {
                 .json()
                 .await
                 .map_err(|e| GasStationError::Request {
-                    source: e,
+                    source: mask_error_url(e),
                     gas_station_url: mask_credentials(&url),
                 })?;
 
@@ -570,12 +595,12 @@ impl GasStation {
             .send()
             .await
             .map_err(|e| GasStationError::Request {
-                source: e,
+                source: mask_error_url(e),
                 gas_station_url: mask_credentials(&url),
             })?
             .error_for_status()
             .map_err(|e| GasStationError::Request {
-                source: e,
+                source: mask_error_url(e),
                 gas_station_url: mask_credentials(&url),
             })?;
 
@@ -584,7 +609,7 @@ impl GasStation {
                 .json()
                 .await
                 .map_err(|e| GasStationError::Request {
-                    source: e,
+                    source: mask_error_url(e),
                     gas_station_url: mask_credentials(&url),
                 })?;
 
@@ -723,7 +748,11 @@ mod credential_tests {
     /// `rustls-no-provider`.
     fn station_builder() -> GasStationBuilder {
         let _ = rustls::crypto::ring::default_provider().install_default();
-        GasStation::builder("http://user:url-secret@127.0.0.1:1".parse().unwrap())
+        GasStation::builder(
+            "http://user:url-secret@127.0.0.1:1?key=query-secret"
+                .parse()
+                .unwrap(),
+        )
     }
 
     #[test]
@@ -764,6 +793,7 @@ mod credential_tests {
         assert!(matches!(err, GasStationError::Request { .. }), "{err:?}");
         let display = err.to_string();
         assert!(display.contains("omitted:omitted@127.0.0.1"), "{display}");
+        assert!(display.contains("key=omitted"), "{display}");
         assert!(!display.contains("secret"), "{display}");
         let debug = format!("{err:?}");
         assert!(!debug.contains("secret"), "{debug}");
