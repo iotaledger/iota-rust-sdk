@@ -7,7 +7,8 @@ use std::time::Duration;
 
 use iota_grpc_types::{
     read_mask_fields::{
-        EpochField, EpochReadMask, SimulateField, TransactionField, TransactionReadMask,
+        EpochField, EpochReadMask, ServiceInfoField, SimulateField, TransactionField,
+        TransactionReadMask,
     },
     v1::transaction_execution_service::SimulatedTransaction,
 };
@@ -228,10 +229,9 @@ impl TransactionBuilderExecutionClient for GrpcClient {
         digest: TransactionDigest,
         wait_for: WaitForTransaction,
     ) -> Result<(), Self::Error> {
-        // Request only the field that proves the desired condition: any transaction field confirms
-        // the node returns it by digest, while `checkpoint` is only populated once it has been
-        // finalized, which is also the point from which query results are guaranteed to be up to
-        // date with it.
+        // Any transaction field confirms the node returns it by digest. `checkpoint` is populated
+        // once it has been finalized, but the node records it before indexing that checkpoint, so
+        // `Finalized` also waits for the executed checkpoint height to reach it.
         let mask = match wait_for {
             WaitForTransaction::IndexedOnNode => {
                 TransactionReadMask::from(TransactionField::TRANSACTION_DIGEST)
@@ -250,18 +250,30 @@ impl TransactionBuilderExecutionClient for GrpcClient {
             let mut interval = tokio::time::interval(WAIT_FOR_TRANSACTION_POLL_INTERVAL);
             loop {
                 interval.tick().await;
+
                 let response = self.transactions([digest]).read_mask(mask.clone()).await;
 
                 // An absent transaction is not indexed yet — keep polling.
-                if let Some(tx) = single_item(response)? {
-                    let ready = match wait_for {
-                        WaitForTransaction::IndexedOnNode => true,
-                        WaitForTransaction::Finalized => tx.checkpoint_sequence_number().is_ok(),
-                        _ => unreachable!("checked above"),
-                    };
-                    if ready {
-                        return Ok(());
+                let Some(tx) = single_item(response)? else {
+                    continue;
+                };
+                match wait_for {
+                    WaitForTransaction::IndexedOnNode => return Ok(()),
+                    WaitForTransaction::Finalized => {
+                        let Ok(checkpoint) = tx.checkpoint_sequence_number() else {
+                            continue;
+                        };
+                        let executed = self
+                            .service_info()
+                            .read_mask(ServiceInfoField::EXECUTED_CHECKPOINT_HEIGHT)
+                            .await?
+                            .into_inner()
+                            .checkpoint_executed()?;
+                        if executed >= checkpoint {
+                            return Ok(());
+                        }
                     }
+                    _ => unreachable!("checked above"),
                 }
             }
         };
