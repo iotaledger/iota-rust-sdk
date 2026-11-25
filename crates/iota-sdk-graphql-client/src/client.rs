@@ -61,6 +61,7 @@ impl GetMaxPageSizeQuery {
     }
 }
 
+// Copied in `iota-sdk-transaction-builder` (`gas_station.rs`) with `mask_error_url`; change both.
 pub(crate) fn mask_credentials(url: &Url) -> Url {
     let mut url = url.clone();
     // Both setters fail only on URLs that cannot carry credentials at all.

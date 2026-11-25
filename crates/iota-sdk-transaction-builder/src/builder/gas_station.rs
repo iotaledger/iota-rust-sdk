@@ -44,6 +44,7 @@ pub struct VersionParsingError {
     kind: VersionParsingErrorKind,
 }
 
+// Copied in `iota-sdk-graphql-client` (`client.rs`) with `mask_error_url`; change both.
 fn mask_credentials(url: &Url) -> Url {
     let mut url = url.clone();
     // Both setters fail only on URLs that cannot carry credentials at all.
