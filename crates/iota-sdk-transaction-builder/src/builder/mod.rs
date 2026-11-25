@@ -381,14 +381,9 @@ impl TransactionBuilder {
 
     /// Set the client to enable automatic object resolution.
     ///
-    /// The client is trusted for the gas price and budget it supplies when
-    /// they are not set on the builder. A price or budget taken from the
-    /// client that is above the protocol's `max_gas_price` or `max_tx_gas`
-    /// is rejected, but those
-    /// limits come from the same client, so this only catches a faulty
-    /// endpoint, not a malicious one. With an endpoint you do not trust, set
-    /// [`gas_price`](TransactionBuilder::gas_price) yourself and show the fee
-    /// before signing.
+    /// Without a set gas price or budget, the client's values are used, checked
+    /// only against the client's own protocol limits. With an untrusted client,
+    /// set [`gas_price`](TransactionBuilder::gas_price) yourself.
     pub fn with_client<C>(self, client: C) -> TransactionBuilder<C> {
         TransactionBuilder {
             data: self.data,
@@ -583,20 +578,12 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Set the gas budget. Optional.
-    ///
-    /// Without one, a builder with a client estimates the budget through the
-    /// client, which is trusted for it; see
-    /// [`with_client`](TransactionBuilder::with_client).
     pub fn gas_budget(&mut self, gas_budget: u64) -> &mut Self {
         self.data.gas_budget(gas_budget);
         self
     }
 
     /// Set the gas price. Optional.
-    ///
-    /// Without one, a builder with a client uses the reference gas price the
-    /// client reports, which is trusted for it; see
-    /// [`with_client`](TransactionBuilder::with_client).
     pub fn gas_price(&mut self, gas_price: u64) -> &mut Self {
         self.data.gas_price(gas_price);
         self
