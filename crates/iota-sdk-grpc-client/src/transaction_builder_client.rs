@@ -21,6 +21,7 @@ use iota_types::{
     Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
     TransactionEffects, UserSignature, Version,
 };
+use tracing::Instrument;
 
 use crate::{
     GrpcClient,
@@ -265,7 +266,7 @@ impl TransactionBuilderExecutionClient for GrpcClient {
                     WaitForTransaction::Finalized => tx.checkpoint_sequence_number().is_ok(),
                     _ => unreachable!("checked above"),
                 });
-                tracing::debug!(%digest, attempt, ready, "checked transaction status");
+                tracing::debug!(attempt, ready, "checked transaction status");
                 if ready {
                     return Ok(());
                 }
@@ -273,6 +274,7 @@ impl TransactionBuilderExecutionClient for GrpcClient {
         };
 
         tokio::time::timeout(WAIT_FOR_TRANSACTION_TIMEOUT, poll)
+            .instrument(tracing::debug_span!("wait_for_transaction", %digest))
             .await
             .map_err(|_| {
                 GrpcError::from(tonic::Status::deadline_exceeded(format!(

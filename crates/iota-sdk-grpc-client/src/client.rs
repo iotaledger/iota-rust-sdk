@@ -38,6 +38,8 @@ pub struct GrpcClient {
     channel: tonic::transport::Channel,
     /// Headers interceptor for adding custom headers to requests
     headers: HeadersInterceptor,
+    /// Host of `uri`, recorded on the span of each RPC
+    server_address: Option<std::sync::Arc<str>>,
     /// Maximum decoding message size for responses
     max_decoding_message_size: Option<usize>,
 }
@@ -86,6 +88,7 @@ impl GrpcClient {
             .connect_lazy();
 
         Ok(Self {
+            server_address: uri.host().map(Into::into),
             uri,
             channel,
             headers: Default::default(),
@@ -196,7 +199,9 @@ impl GrpcClient {
     }
 
     fn interceptor(&self) -> HeadersInterceptor {
-        self.headers.clone().with_server_address(self.uri.host())
+        self.headers
+            .clone()
+            .with_server_address(self.server_address.clone())
     }
 
     /// Apply common client configuration (compression, message size limits).

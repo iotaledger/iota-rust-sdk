@@ -18,7 +18,8 @@ pub use common::{CheckpointStreamError, GrpcError, GrpcResult, Page, ProtocolErr
 pub(crate) use common::{
     TryFromProtoError, build_proto_transaction, check_object_identity, check_result_count,
     check_transaction_identity, collect_stream, define_list_query, define_query, in_rpc_span,
-    into_item_results, proto_object_id, record_rpc, saturating_usize_to_u32,
+    into_item_results, proto_object_id, record_rpc, record_status, rpc_span,
+    saturating_usize_to_u32,
 };
 pub use iota_grpc_types::read_masks::*;
 use iota_types::CheckpointSequenceNumber;

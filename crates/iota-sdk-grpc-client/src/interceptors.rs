@@ -15,8 +15,11 @@ impl HeadersInterceptor {
         Self::default()
     }
 
-    pub(crate) fn with_server_address(mut self, server_address: Option<&str>) -> Self {
-        self.server_address = server_address.map(Into::into);
+    pub(crate) fn with_server_address(
+        mut self,
+        server_address: Option<std::sync::Arc<str>>,
+    ) -> Self {
+        self.server_address = server_address;
         self
     }
 

@@ -50,9 +50,7 @@ pub(crate) async fn in_rpc_span<T>(rpc: impl Future<Output = GrpcResult<T>>) -> 
                 tracing::debug!(elapsed_ms, "rpc completed");
             }
             Err(error) => {
-                if let GrpcError::Grpc(status) = error {
-                    span.record("rpc.grpc.status_code", status.code() as i32);
-                }
+                record_status(&span, error);
                 tracing::debug!(elapsed_ms, %error, "rpc failed");
             }
         }
@@ -62,16 +60,31 @@ pub(crate) async fn in_rpc_span<T>(rpc: impl Future<Output = GrpcResult<T>>) -> 
     .await
 }
 
-/// Record the RPC being sent on the current span, if [`in_rpc_span`] opened it.
-pub(crate) fn record_rpc(method: &tonic::GrpcMethod<'_>, server_address: Option<&str>) {
+/// The current span if [`in_rpc_span`] opened it, a disabled span otherwise.
+pub(crate) fn rpc_span() -> tracing::Span {
     let span = tracing::Span::current();
     if span
         .metadata()
         .is_some_and(|m| m.name() == RPC_SPAN && m.target() == module_path!())
     {
-        span.record("rpc.service", method.service());
-        span.record("rpc.method", method.method());
-        span.record("server.address", server_address);
+        span
+    } else {
+        tracing::Span::none()
+    }
+}
+
+/// Record the RPC being sent on the span [`in_rpc_span`] opened.
+pub(crate) fn record_rpc(method: &tonic::GrpcMethod<'_>, server_address: Option<&str>) {
+    let span = rpc_span();
+    span.record("rpc.service", method.service());
+    span.record("rpc.method", method.method());
+    span.record("server.address", server_address);
+}
+
+/// Record the status the server sent with `error`, if it sent one.
+pub(crate) fn record_status(span: &tracing::Span, error: &GrpcError) {
+    if let GrpcError::Grpc(status) = error {
+        span.record("rpc.grpc.status_code", status.code() as i32);
     }
 }
 
