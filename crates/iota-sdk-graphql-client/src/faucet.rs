@@ -208,7 +208,7 @@ impl FaucetClient {
         if let Some(request_id) = request_id {
             let status_response = crate::wait::timeout(FAUCET_REQUEST_TIMEOUT, async {
                 loop {
-                    debug!(request_id, "polling faucet request status");
+                    tracing::trace!(request_id, "polling faucet request status");
                     let status_response = self.request_status(request_id.clone()).await?;
 
                     if let Some(status_response) = status_response {
