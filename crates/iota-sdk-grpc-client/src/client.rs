@@ -37,8 +37,6 @@ pub struct GrpcClient {
     channel: tonic::transport::Channel,
     /// Headers interceptor for adding custom headers to requests
     headers: HeadersInterceptor,
-    /// Host of `uri`, recorded on the span of each RPC
-    server_address: Option<std::sync::Arc<str>>,
     /// Maximum decoding message size for responses
     max_decoding_message_size: Option<usize>,
 }
@@ -87,7 +85,6 @@ impl GrpcClient {
             .connect_lazy();
 
         Ok(Self {
-            server_address: uri.host().map(Into::into),
             uri,
             channel,
             headers: Default::default(),
@@ -163,7 +160,7 @@ impl GrpcClient {
     pub fn ledger_service_client(&self) -> LedgerServiceClient<InterceptedChannel> {
         self.configure_client(LedgerServiceClient::with_interceptor(
             self.checked_channel(),
-            self.interceptor(),
+            self.headers.clone(),
         ))
     }
 
@@ -173,7 +170,7 @@ impl GrpcClient {
     ) -> TransactionExecutionServiceClient<InterceptedChannel> {
         self.configure_client(TransactionExecutionServiceClient::with_interceptor(
             self.checked_channel(),
-            self.interceptor(),
+            self.headers.clone(),
         ))
     }
 
@@ -181,7 +178,7 @@ impl GrpcClient {
     pub fn state_service_client(&self) -> StateServiceClient<InterceptedChannel> {
         self.configure_client(StateServiceClient::with_interceptor(
             self.checked_channel(),
-            self.interceptor(),
+            self.headers.clone(),
         ))
     }
 
@@ -189,14 +186,8 @@ impl GrpcClient {
     pub fn move_package_service_client(&self) -> MovePackageServiceClient<InterceptedChannel> {
         self.configure_client(MovePackageServiceClient::with_interceptor(
             self.checked_channel(),
-            self.interceptor(),
+            self.headers.clone(),
         ))
-    }
-
-    fn interceptor(&self) -> HeadersInterceptor {
-        self.headers
-            .clone()
-            .with_server_address(self.server_address.clone())
     }
 
     /// Apply common client configuration (compression, message size limits).

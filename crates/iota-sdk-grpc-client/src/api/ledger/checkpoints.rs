@@ -646,7 +646,7 @@ impl GrpcClient {
                             }.into()))?;
                         }
 
-                        span.in_scope(|| tracing::debug!(
+                        span.in_scope(|| tracing::trace!(
                             sequence_number,
                             transactions = current_transactions.len(),
                             events = current_events.len(),
@@ -665,7 +665,7 @@ impl GrpcClient {
                     }
 
                     Some(checkpoint_data::Payload::Progress(progress)) => {
-                        span.in_scope(|| tracing::debug!(
+                        span.in_scope(|| tracing::trace!(
                             latest_scanned_sequence_number = progress.latest_scanned_sequence_number,
                             "checkpoint stream progress"
                         ));

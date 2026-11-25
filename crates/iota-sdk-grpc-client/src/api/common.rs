@@ -29,15 +29,11 @@ use crate::checked_channel::OutdatedClientError;
 const RPC_SPAN: &str = "grpc_request";
 
 /// Run `rpc` in a DEBUG span and log a DEBUG event when it completes. The
-/// interceptor fills in the service, the method and the server address with
-/// [`record_rpc`].
+/// interceptor fills in the method with [`record_rpc`].
 pub(crate) async fn in_rpc_span<T>(rpc: impl Future<Output = GrpcResult<T>>) -> GrpcResult<T> {
     let span = tracing::debug_span!(
         RPC_SPAN,
-        "rpc.system" = "grpc",
-        "rpc.service" = tracing::field::Empty,
         "rpc.method" = tracing::field::Empty,
-        "server.address" = tracing::field::Empty,
         "rpc.grpc.status_code" = tracing::field::Empty,
     );
     async {
@@ -74,11 +70,8 @@ pub(crate) fn rpc_span() -> tracing::Span {
 }
 
 /// Record the RPC being sent on the span [`in_rpc_span`] opened.
-pub(crate) fn record_rpc(method: &tonic::GrpcMethod<'_>, server_address: Option<&str>) {
-    let span = rpc_span();
-    span.record("rpc.service", method.service());
-    span.record("rpc.method", method.method());
-    span.record("server.address", server_address);
+pub(crate) fn record_rpc(method: &tonic::GrpcMethod<'_>) {
+    rpc_span().record("rpc.method", method.method());
 }
 
 /// Record the status the server sent with `error`, if it sent one.

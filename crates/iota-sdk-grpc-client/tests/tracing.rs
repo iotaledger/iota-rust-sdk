@@ -62,10 +62,7 @@ async fn rpc_emits_a_span_with_its_fields() {
     let captured = capture.0.lock().unwrap();
     for expected in [
         "span=grpc_request",
-        "rpc.system=grpc",
-        "rpc.service=iota.grpc.v1.ledger_service.LedgerService",
         "rpc.method=GetHealth",
-        "server.address=127.0.0.1",
         "rpc.grpc.status_code=14",
         "message=rpc failed",
     ] {

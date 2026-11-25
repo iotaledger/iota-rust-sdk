@@ -260,7 +260,7 @@ impl TransactionBuilderExecutionClient for GrpcClient {
                     WaitForTransaction::Finalized => tx.checkpoint_sequence_number().is_ok(),
                     _ => unreachable!("checked above"),
                 });
-                tracing::debug!(attempt, ready, "checked transaction status");
+                tracing::trace!(attempt, ready, "checked transaction status");
                 if ready {
                     return Ok(());
                 }
