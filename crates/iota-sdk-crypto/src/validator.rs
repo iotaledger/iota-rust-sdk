@@ -343,6 +343,12 @@ impl ValidatorCommitteeSignatureAggregator {
         committee: ValidatorCommittee,
         summary: &CheckpointSummary,
     ) -> Result<Self, SignatureError> {
+        if summary.epoch != committee.epoch {
+            return Err(SignatureError::from_source(format!(
+                "checkpoint epoch {} does not match committee epoch {}",
+                summary.epoch, committee.epoch
+            )));
+        }
         let verifier = ValidatorCommitteeSignatureVerifier::new(committee)?;
         let message = summary.signing_message();
 
@@ -613,9 +619,30 @@ mod tests {
         let mut signed = certify(&keys, committee(&keys, 5), summary);
         let verifier = ValidatorCommitteeSignatureVerifier::new(committee(&keys, 7)).unwrap();
         signed.signature.epoch = 7;
-        verifier
+        let err = verifier
             .verify_checkpoint_summary(&signed.checkpoint, &signed.signature)
             .unwrap_err();
+        assert!(
+            err.to_string()
+                .contains("checkpoint epoch 5 does not match committee epoch 7")
+        );
+    }
+
+    #[proptest]
+    fn aggregating_a_summary_from_another_epoch_is_rejected(
+        keys: [Bls12381PrivateKey; 4],
+        mut summary: CheckpointSummary,
+    ) {
+        summary.epoch = 5;
+        let err = ValidatorCommitteeSignatureAggregator::new_checkpoint_summary(
+            committee(&keys, 7),
+            &summary,
+        )
+        .unwrap_err();
+        assert!(
+            err.to_string()
+                .contains("checkpoint epoch 5 does not match committee epoch 7")
+        );
     }
 
     #[proptest]
