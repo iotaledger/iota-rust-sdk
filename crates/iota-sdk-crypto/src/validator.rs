@@ -142,6 +142,13 @@ impl ValidatorCommitteeSignatureVerifier {
         summary: &CheckpointSummary,
         signature: &ValidatorAggregatedSignature,
     ) -> Result<(), SignatureError> {
+        if summary.epoch != self.committee().epoch {
+            return Err(SignatureError::from_source(format!(
+                "checkpoint epoch {} does not match committee epoch {}",
+                summary.epoch,
+                self.committee().epoch
+            )));
+        }
         let message = summary.signing_message();
         self.verify(&message, signature)
     }
@@ -336,6 +343,12 @@ impl ValidatorCommitteeSignatureAggregator {
         committee: ValidatorCommittee,
         summary: &CheckpointSummary,
     ) -> Result<Self, SignatureError> {
+        if summary.epoch != committee.epoch {
+            return Err(SignatureError::from_source(format!(
+                "checkpoint epoch {} does not match committee epoch {}",
+                summary.epoch, committee.epoch
+            )));
+        }
         let verifier = ValidatorCommitteeSignatureVerifier::new(committee)?;
         let message = summary.signing_message();
 
@@ -595,6 +608,43 @@ mod tests {
         ));
         // The verifier is left unchanged.
         assert_eq!(verifier.committee(), &committee0);
+    }
+
+    #[proptest]
+    fn summary_from_another_epoch_is_rejected(
+        keys: [Bls12381PrivateKey; 4],
+        mut summary: CheckpointSummary,
+    ) {
+        summary.epoch = 5;
+        let mut signed = certify(&keys, committee(&keys, 5), summary);
+        let verifier = ValidatorCommitteeSignatureVerifier::new(committee(&keys, 7)).unwrap();
+        signed.signature.epoch = 7;
+        let err = verifier
+            .verify_checkpoint_summary(&signed.checkpoint, &signed.signature)
+            .unwrap_err();
+        assert!(
+            err.to_string()
+                .contains("checkpoint epoch 5 does not match committee epoch 7"),
+            "{err}"
+        );
+    }
+
+    #[proptest]
+    fn aggregating_a_summary_from_another_epoch_is_rejected(
+        keys: [Bls12381PrivateKey; 4],
+        mut summary: CheckpointSummary,
+    ) {
+        summary.epoch = 5;
+        let err = ValidatorCommitteeSignatureAggregator::new_checkpoint_summary(
+            committee(&keys, 7),
+            &summary,
+        )
+        .unwrap_err();
+        assert!(
+            err.to_string()
+                .contains("checkpoint epoch 5 does not match committee epoch 7"),
+            "{err}"
+        );
     }
 
     #[proptest]
