@@ -186,9 +186,8 @@ impl GrpcClient {
     /// Wait for the indexing (on the node) or finalization of a transaction by its digest, polling
     /// the node until then. Returns an error after 60s.
     ///
-    /// The node updates some of its indexes after a transaction is finalized. When using
-    /// `IndexedOnNode`, queries that depend on them may still return the state from before the
-    /// transaction. Use `Finalized` instead if this is important.
+    /// Query results are only guaranteed to be up to date with the transaction once it is
+    /// `Finalized`.
     pub async fn wait_for_transaction(
         &self,
         digest: &TransactionDigest,

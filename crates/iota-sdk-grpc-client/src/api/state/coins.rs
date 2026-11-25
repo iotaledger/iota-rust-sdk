@@ -69,11 +69,9 @@ fn coin_object_type(coin_type: Option<StructTag>) -> String {
 impl GrpcClient {
     /// List coins owned by an address.
     ///
-    /// The node updates this listing after a transaction is finalized. When using
-    /// [`WaitForTransaction::IndexedOnNode`], it may still return the state from before the
-    /// transaction. Use [`WaitForTransaction::Finalized`] instead if this is important.
+    /// Results are only guaranteed to be up to date with transactions that are finalized
+    /// ([`WaitForTransaction::Finalized`]).
     ///
-    /// [`WaitForTransaction::IndexedOnNode`]: iota_transaction_builder::WaitForTransaction::IndexedOnNode
     /// [`WaitForTransaction::Finalized`]: iota_transaction_builder::WaitForTransaction::Finalized
     ///
     /// Returns a query builder. Await it directly for a single page (with access to

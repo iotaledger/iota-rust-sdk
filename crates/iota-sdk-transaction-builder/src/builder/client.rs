@@ -18,10 +18,8 @@ pub enum WaitForTransaction {
     /// reference objects created by this transaction), and that the fullnode returns the
     /// transaction when queried by its digest.
     ///
-    /// **Warning:** This does not guarantee that queries depending on an index reflect the
-    /// transaction yet, meaning queries served by an indexer may not find it, and queries served
-    /// by the node may still return the state from before it. Use [`WaitForTransaction::Finalized`]
-    /// instead if this is important.
+    /// **Warning:** Query results, whether served by the node or an indexer, are only guaranteed
+    /// to be up to date with the transaction once it is [`WaitForTransaction::Finalized`].
     IndexedOnNode,
     /// Indicates that the transaction has been included in a checkpoint, and all queries may
     /// include it.

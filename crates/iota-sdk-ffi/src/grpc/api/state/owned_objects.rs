@@ -30,9 +30,8 @@ pub struct GrpcOwnedObjectPage {
 impl GrpcClient {
     /// List a single page of objects owned by an address, optionally filtered by object type.
     ///
-    /// The node updates this listing after a transaction is finalized. When using
-    /// `WaitForTransaction::IndexedOnNode`, it may still return the state from before the
-    /// transaction. Use `WaitForTransaction::Finalized` instead if this is important.
+    /// Results are only guaranteed to be up to date with transactions that are finalized
+    /// (`WaitForTransaction::Finalized`).
     ///
     /// Pass the returned `next_page_token` back in to retrieve the next page.
     ///
