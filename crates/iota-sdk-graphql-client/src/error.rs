@@ -45,6 +45,10 @@ pub type QueryError = cynic::GraphQlError<ErrorExtensions>;
 pub struct ErrorExtensions {
     /// Machine-readable error kind, e.g. `BAD_USER_INPUT`.
     pub code: Option<String>,
+    /// On a `DATA_PRUNED` error, the oldest checkpoint the request could have found data in;
+    /// anything before it has been pruned.
+    #[serde(rename = "oldestAvailableCheckpoint")]
+    pub oldest_available_checkpoint: Option<u64>,
 }
 
 /// Convert an error whose extensions were not decoded; `code` is `None`.
