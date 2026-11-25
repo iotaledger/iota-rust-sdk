@@ -25,12 +25,13 @@ pub struct Payment {
 #[derive(uniffi::Enum)]
 pub enum WaitForTransaction {
     /// Indicates that the transaction effects will be usable in subsequent transactions (you can
-    /// reference objects created by this transaction), and that the transaction itself is indexed
-    /// on the fullnode, so queries served by the fullnode, such as gRPC, will find it.
+    /// reference objects created by this transaction), and that the fullnode returns the
+    /// transaction when queried by its digest.
     ///
-    /// **Warning:** This does not guarantee the transaction is indexed on the indexer, so queries
-    /// served by an indexer, such as GraphQL, may not find it yet. Use
-    /// WaitForTransaction::Finalized with those clients.
+    /// **Warning:** This does not guarantee that queries depending on an index reflect the
+    /// transaction yet, meaning queries served by an indexer may not find it, and queries served
+    /// by the node may still return the state from before it. Use `WaitForTransaction::Finalized`
+    /// instead if this is important.
     IndexedOnNode,
     /// Indicates that the transaction has been included in a checkpoint, and all queries may
     /// include it.

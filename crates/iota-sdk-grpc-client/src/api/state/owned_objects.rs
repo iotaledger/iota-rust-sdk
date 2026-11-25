@@ -53,6 +53,13 @@ impl ListOwnedObjectsQuery {
 impl GrpcClient {
     /// List objects owned by an address.
     ///
+    /// The node updates this listing after a transaction is finalized. When using
+    /// [`WaitForTransaction::IndexedOnNode`], it may still return the state from before the
+    /// transaction. Use [`WaitForTransaction::Finalized`] instead if this is important.
+    ///
+    /// [`WaitForTransaction::IndexedOnNode`]: iota_transaction_builder::WaitForTransaction::IndexedOnNode
+    /// [`WaitForTransaction::Finalized`]: iota_transaction_builder::WaitForTransaction::Finalized
+    ///
     /// Returns a query builder. Await it directly for a single page (with access to
     /// `next_page_token`), or call `.collect(limit)` to auto-paginate through all results. Filter
     /// by type with [`object_type`](ListOwnedObjectsQuery::object_type), choose the returned fields

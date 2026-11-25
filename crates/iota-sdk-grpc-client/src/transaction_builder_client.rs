@@ -229,8 +229,9 @@ impl TransactionBuilderExecutionClient for GrpcClient {
         wait_for: WaitForTransaction,
     ) -> Result<(), Self::Error> {
         // Request only the field that proves the desired condition: any transaction field confirms
-        // it is indexed on the node, while `checkpoint` is only populated once it has been
-        // finalized.
+        // the node returns it by digest, while `checkpoint` is only populated once it has been
+        // finalized. The node updates some of its indexes after a transaction is finalized, so
+        // `IndexedOnNode` does not cover queries that depend on them.
         let mask = match wait_for {
             WaitForTransaction::IndexedOnNode => {
                 TransactionReadMask::from(TransactionField::TRANSACTION_DIGEST)
