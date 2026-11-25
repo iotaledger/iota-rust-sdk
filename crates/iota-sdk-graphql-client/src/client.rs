@@ -73,6 +73,22 @@ fn without_credentials(url: &Url) -> Url {
     url
 }
 
+/// `error` as text, with the URL it names stripped by [`without_credentials`].
+fn without_url_credentials(error: &GraphQLError) -> String {
+    let url = match error {
+        GraphQLError::Request(error) => error.url(),
+        GraphQLError::Http { response } | GraphQLError::Json { response, .. } => {
+            Some(response.url())
+        }
+        _ => None,
+    };
+    let text = error.to_string();
+    match url {
+        Some(url) => text.replace(url.as_str(), without_credentials(url).as_str()),
+        None => text,
+    }
+}
+
 /// The GraphQL client for interacting with the IOTA blockchain. By default, it uses the `reqwest`
 /// crate as the HTTP client.
 #[derive(Clone, Debug)]
@@ -273,9 +289,9 @@ impl GraphQLClient {
                 .json(body)
                 .send()
                 .await?;
-            check_client_version(resp.headers())?;
             let status = resp.status();
             span.record("http.response.status_code", status.as_u16());
+            check_client_version(resp.headers())?;
             let url = resp.url().clone();
             let bytes = resp.bytes().await?;
             tracing::trace!(
@@ -295,7 +311,11 @@ impl GraphQLClient {
             let elapsed_ms = start.elapsed().as_millis() as u64;
             match &result {
                 Ok(_) => tracing::debug!(elapsed_ms, "request completed"),
-                Err(error) => tracing::debug!(elapsed_ms, %error, "request failed"),
+                Err(error) => tracing::debug!(
+                    elapsed_ms,
+                    error = without_url_credentials(error),
+                    "request failed"
+                ),
             }
             result
         }

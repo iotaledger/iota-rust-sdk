@@ -61,27 +61,33 @@ async fn request_emits_a_span_with_its_fields() {
     let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
     let address = listener.local_addr().unwrap();
     let server = async {
-        let (mut stream, _) = listener.accept().await.unwrap();
-        let mut request = Vec::new();
-        while !request.ends_with(b"}") {
-            let mut chunk = [0; 4096];
-            let read = stream.read(&mut chunk).await.unwrap();
-            assert!(read > 0, "connection closed before the request body");
-            request.extend_from_slice(&chunk[..read]);
+        for status in ["200 OK", "500 Internal Server Error"] {
+            let (mut stream, _) = listener.accept().await.unwrap();
+            let mut request = Vec::new();
+            while !request.ends_with(b"}") {
+                let mut chunk = [0; 4096];
+                let read = stream.read(&mut chunk).await.unwrap();
+                assert!(read > 0, "connection closed before the request body");
+                request.extend_from_slice(&chunk[..read]);
+            }
+            let response = format!(
+                "HTTP/1.1 {status}\r\ncontent-type: application/json\r\ncontent-length: 23\r\nconnection: close\r\n\r\n{{\"data\":{{\"epoch\":null}}}}"
+            );
+            stream.write_all(response.as_bytes()).await.unwrap();
         }
-        stream
-            .write_all(b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: 23\r\nconnection: close\r\n\r\n{\"data\":{\"epoch\":null}}")
-            .await
-            .unwrap();
     };
     let client =
         GraphQLClient::new(&format!("http://user:secret@{address}/graphql?key=secret")).unwrap();
     let query = serde_json::json!({ "operationName": "Test", "query": "{ epoch { epochId } }" });
-    let (_, response) = tokio::join!(
-        server,
-        client.run_query_from_json(query.as_object().unwrap().clone())
-    );
-    response.unwrap();
+    let query = query.as_object().unwrap();
+    let (_, (ok, failed)) = tokio::join!(server, async {
+        (
+            client.run_query_from_json(query.clone()).await,
+            client.run_query_from_json(query.clone()).await,
+        )
+    });
+    ok.unwrap();
+    failed.unwrap_err();
 
     let captured = capture.0.lock().unwrap();
     for expected in [
@@ -90,6 +96,8 @@ async fn request_emits_a_span_with_its_fields() {
         &format!("url.full=http://{address}/graphql"),
         "http.response.status_code=200",
         "message=request completed",
+        "http.response.status_code=500",
+        "message=request failed",
         "message=request body",
         "body={\"data\":{\"epoch\":null}}",
     ] {
