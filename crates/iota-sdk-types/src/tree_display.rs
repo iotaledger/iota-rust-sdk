@@ -3,16 +3,14 @@
 
 /// Trait for types that render as tree sub-trees.
 ///
-/// Types implementing this trait can render their fields as a tree structure
-/// with box-drawing characters (`├──`, `└──`, `│`).
+/// Types implementing this trait can render their fields as a tree structure with box-drawing
+/// characters (`├──`, `└──`, `│`).
 ///
-/// Each `fmt_tree` impl must call [`TreeWriter::header`] before any other
-/// writer method, on every arm of an enum dispatch. [`TreeWriter::child`] and
-/// [`TreeWriter::inline_child`] leave state behind for the child's `header`
-/// call to consume; writing a leaf or branch first leaves it pending and
-/// applies it to some later, unrelated node. An impl that only delegates
-/// (`Self::V1(v1) => v1.fmt_tree(w)`) satisfies this through the type it
-/// delegates to.
+/// Each `fmt_tree` impl must call [`TreeWriter::header`] before any other writer method, on every
+/// arm of an enum dispatch. [`TreeWriter::child`] and [`TreeWriter::inline_child`] leave state
+/// behind for the child's `header` call to consume; writing a leaf or branch first leaves it
+/// pending and applies it to some later, unrelated node. An impl that only delegates (`Self::V1(v1)
+/// => v1.fmt_tree(w)`) satisfies this through the type it delegates to.
 ///
 /// Use [`impl_tree_display`] to generate the `Display` impl.
 pub(crate) trait TreeDisplay {
@@ -42,8 +40,8 @@ enum PendingLabel {
     Indexed,
 }
 
-/// A tree node writer that tracks depth and sibling position for rendering
-/// tree-structured output with box-drawing characters.
+/// A tree node writer that tracks depth and sibling position for rendering tree-structured output
+/// with box-drawing characters.
 pub(crate) struct TreeWriter<'f, 'a> {
     f: &'f mut std::fmt::Formatter<'a>,
     prefix: String,
@@ -65,10 +63,9 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         }
     }
 
-    /// Write the root label without connectors. When called as a child
-    /// (via [`child`](Self::child)), the parent already wrote the field
-    /// label, so the header is appended to it as `Label: Header` (or
-    /// omitted when it repeats the label).
+    /// Write the root label without connectors. When called as a child (via
+    /// [`child`](Self::child)), the parent already wrote the field label, so the header is appended
+    /// to it as `Label: Header` (or omitted when it repeats the label).
     pub fn header(&mut self, text: &str) -> std::fmt::Result {
         let enum_name = self.pending_enum.take();
         if std::mem::take(&mut self.skip_header) {
@@ -98,13 +95,12 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         Ok(())
     }
 
-    /// Name the enum whose variant is about to write its header, so the node
-    /// reads `Enum Name: Variant`.
+    /// Name the enum whose variant is about to write its header, so the node reads `Enum Name:
+    /// Variant`.
     ///
-    /// The name is dropped where a field label already says what the node is,
-    /// and kept at a root or under an index, which name nothing. Nested enums
-    /// each add their name, so a variant holding another enum reads as the
-    /// whole chain down to the type that writes the header.
+    /// The name is dropped where a field label already says what the node is, and kept at a root or
+    /// under an index, which name nothing. Nested enums each add their name, so a variant holding
+    /// another enum reads as the whole chain down to the type that writes the header.
     pub fn enum_name(&mut self, name: &str) {
         match &mut self.pending_enum {
             Some(pending) => {
@@ -127,8 +123,8 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
 
     /// Write a leaf node: `├── Label: value` or `└── Label: value`.
     ///
-    /// A multi-line value keeps the tree readable: it starts on its own line
-    /// below the label, with all its lines indented equally.
+    /// A multi-line value keeps the tree readable: it starts on its own line below the label, with
+    /// all its lines indented equally.
     pub fn leaf(
         &mut self,
         label: &str,
@@ -179,8 +175,8 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         })
     }
 
-    /// Write a [`TreeDisplay`] child under its index, which names nothing, so a
-    /// variant header keeps its enum name.
+    /// Write a [`TreeDisplay`] child under its index, which names nothing, so a variant header
+    /// keeps its enum name.
     fn indexed_child(
         &mut self,
         index: usize,
@@ -193,8 +189,8 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         })
     }
 
-    /// Render a [`TreeDisplay`] child's fields under the header just written,
-    /// dropping the child's own header and nesting level.
+    /// Render a [`TreeDisplay`] child's fields under the header just written, dropping the child's
+    /// own header and nesting level.
     pub fn inline_child(&mut self, child: &dyn TreeDisplay) -> std::fmt::Result {
         self.skip_header = true;
         child.fmt_tree(self)
@@ -254,8 +250,7 @@ impl<'f, 'a> TreeWriter<'f, 'a> {
         }
     }
 
-    /// Display an `Option<impl TreeDisplay>` as a sub-tree, showing "None" for
-    /// `None`.
+    /// Display an `Option<impl TreeDisplay>` as a sub-tree, showing "None" for `None`.
     pub fn option_child(
         &mut self,
         label: &str,
@@ -300,8 +295,7 @@ mod tests {
 
     use super::*;
 
-    /// Helper that captures formatted output by implementing Display with a
-    /// closure.
+    /// Helper that captures formatted output by implementing Display with a closure.
     struct FmtFn<F: Fn(&mut fmt::Formatter<'_>) -> fmt::Result>(F);
 
     impl<F: Fn(&mut fmt::Formatter<'_>) -> fmt::Result> fmt::Display for FmtFn<F> {

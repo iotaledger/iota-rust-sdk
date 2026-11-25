@@ -23,8 +23,7 @@ async fn main() -> Result<()> {
     let sender_address = private_key.public_key().derive_address();
     println!("Sender address: {sender_address}");
 
-    // Request funds from faucet (the faucet client relies on GraphQL to await
-    // finalization)
+    // Request funds from faucet (the faucet client relies on GraphQL to await finalization)
     FaucetClient::new_localnet()
         .request_and_wait_for_finalized(sender_address, &GraphQLClient::new_localnet()?)
         .await?;

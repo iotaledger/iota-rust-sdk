@@ -13,16 +13,15 @@ use crate::{
     },
 };
 
-/// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
-/// the IOTA blockchain.
+/// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on the IOTA
+/// blockchain.
 ///
 /// ## Relationship to Address
 ///
-/// `Address`es and `ObjectId`s share the same 32-byte addressable space but
-/// are derived leveraging different domain-separator values to ensure,
-/// cryptographically, that there won't be any overlap, e.g. there can't be a
-/// valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
-/// account.
+/// `Address`es and `ObjectId`s share the same 32-byte addressable space but are derived leveraging
+/// different domain-separator values to ensure, cryptographically, that there won't be any overlap,
+/// e.g. there can't be a valid `Object` whose `ObjectId` is equal to that of the `Address` of a
+/// user account.
 ///
 /// # BCS
 ///
@@ -52,41 +51,39 @@ impl ObjectId {
         )))
     }
 
-    /// Parses an ObjectId from a full-length hex string (64 hex characters),
-    /// with or without a `0x` prefix. Will return an error if the string is not
-    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    /// Parses an ObjectId from a full-length hex string (64 hex characters), with or without a `0x`
+    /// prefix. Will return an error if the string is not exactly 64 hex characters long (excluding
+    /// the `0x` prefix).
     #[uniffi::constructor]
     pub fn from_hex(hex: &str) -> Result<Self> {
         Ok(Self(iota_sdk::types::ObjectId::from_hex(hex)?))
     }
 
-    /// Parses an ObjectId from a full-length hex string (64 hex characters),
-    /// with a mandatory `0x` prefix. Will return an error if the string is not
-    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    /// Parses an ObjectId from a full-length hex string (64 hex characters), with a mandatory `0x`
+    /// prefix. Will return an error if the string is not exactly 64 hex characters long (excluding
+    /// the `0x` prefix).
     #[uniffi::constructor]
     pub fn from_prefixed_hex(hex: &str) -> Result<Self> {
         Ok(Self(iota_sdk::types::ObjectId::from_prefixed_hex(hex)?))
     }
 
-    /// Parses an ObjectId from a full-length hex string (64 hex characters),
-    /// without a `0x` prefix. Will return an error if the string has a `0x`
-    /// prefix or is not exactly 64 hex characters long.
+    /// Parses an ObjectId from a full-length hex string (64 hex characters), without a `0x` prefix.
+    /// Will return an error if the string has a `0x` prefix or is not exactly 64 hex characters
+    /// long.
     #[uniffi::constructor]
     pub fn from_raw_hex(hex: &str) -> Result<Self> {
         Ok(Self(iota_sdk::types::ObjectId::from_raw_hex(hex)?))
     }
 
-    /// Parses an ObjectId from a hex string, with or without a `0x` prefix.
-    /// The string can be of variable length; if it's shorter than 64 hex
-    /// characters, it will be left-padded with `0`s.
+    /// Parses an ObjectId from a hex string, with or without a `0x` prefix. The string can be of
+    /// variable length; if it's shorter than 64 hex characters, it will be left-padded with `0`s.
     #[uniffi::constructor]
     pub fn from_short_hex(hex: &str) -> Result<Self> {
         Ok(Self(iota_sdk::types::ObjectId::from_short_hex(hex)?))
     }
 
-    /// Parses an ObjectId from a hex string with a mandatory `0x` prefix.
-    /// The string can be of variable length; if it's shorter than 64 hex
-    /// characters, it will be left-padded with `0`s.
+    /// Parses an ObjectId from a hex string with a mandatory `0x` prefix. The string can be of
+    /// variable length; if it's shorter than 64 hex characters, it will be left-padded with `0`s.
     #[uniffi::constructor]
     pub fn from_prefixed_short_hex(hex: &str) -> Result<Self> {
         Ok(Self(iota_sdk::types::ObjectId::from_prefixed_short_hex(
@@ -95,9 +92,8 @@ impl ObjectId {
     }
 
     /// Parses an ObjectId from a hex string without a `0x` prefix.
-    /// The string can be of variable length; if it's shorter than 64 hex
-    /// characters, it will be left-padded with `0`s. Will return an error if
-    /// the string has a `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex characters, it will be
+    /// left-padded with `0`s. Will return an error if the string has a `0x` prefix.
     #[uniffi::constructor]
     pub fn from_raw_short_hex(hex: &str) -> Result<Self> {
         Ok(Self(iota_sdk::types::ObjectId::from_raw_short_hex(hex)?))
@@ -111,8 +107,8 @@ impl ObjectId {
         (*self.0.as_address()).into()
     }
 
-    /// Create an ObjectId from a transaction digest and the number of objects
-    /// that have been created during a transactions.
+    /// Create an ObjectId from a transaction digest and the number of objects that have been
+    /// created during a transactions.
     #[uniffi::constructor]
     pub fn derive_id(digest: &TransactionDigest, count: u64) -> Self {
         Self(iota_sdk::types::ObjectId::derive_id(**digest, count))
@@ -134,32 +130,30 @@ impl ObjectId {
         self.0.derive_object_id(&key_type_tag.0, key_bytes).into()
     }
 
-    /// Returns the string representation of this object ID using the
-    /// canonical display, with or without a `0x` prefix.
+    /// Returns the string representation of this object ID using the canonical display, with or
+    /// without a `0x` prefix.
     pub fn to_canonical_string(&self, with_prefix: bool) -> String {
         self.0.to_canonical_string(with_prefix)
     }
 
-    /// Returns the string representation of this object id in hex format with
-    /// `0x` prefix.
+    /// Returns the string representation of this object id in hex format with `0x` prefix.
     pub fn to_hex(&self) -> String {
         self.0.to_hex()
     }
 
-    /// Returns the string representation of this object id in hex format
-    /// without `0x` prefix.
+    /// Returns the string representation of this object id in hex format without `0x` prefix.
     pub fn to_raw_hex(&self) -> String {
         self.0.to_raw_hex()
     }
 
-    /// Returns the shortest possible string representation of the object ID
-    /// (i.e. with leading zeroes trimmed).
+    /// Returns the shortest possible string representation of the object ID (i.e. with leading
+    /// zeroes trimmed).
     pub fn to_short_hex(&self) -> String {
         self.0.to_short_hex()
     }
 
-    /// Returns the shortest possible string representation of the object id
-    /// (i.e. with leading zeroes trimmed), without `0x` prefix.
+    /// Returns the shortest possible string representation of the object id (i.e. with leading
+    /// zeroes trimmed), without `0x` prefix.
     pub fn to_raw_short_hex(&self) -> String {
         self.0.to_raw_short_hex()
     }
@@ -169,8 +163,7 @@ impl ObjectId {
         Self(self.0.next_lexicographical())
     }
 
-    /// Returns the next digest in byte-increasing order, or `None` if the
-    /// result would overflow.
+    /// Returns the next digest in byte-increasing order, or `None` if the result would overflow.
     pub fn next_lexicographical_opt(&self) -> Option<Arc<Self>> {
         self.0.next_lexicographical_opt().map(Self).map(Arc::new)
     }
@@ -326,8 +319,7 @@ impl Object {
 
     /// Return the storage rebate locked in this object
     ///
-    /// Storage rebates are credited to the gas coin used in a transaction that
-    /// deletes this object.
+    /// Storage rebates are credited to the gas coin used in a transaction that deletes this object.
     pub fn storage_rebate(&self) -> u64 {
         self.0.storage_rebate
     }
@@ -389,9 +381,8 @@ impl ObjectData {
     }
 }
 
-/// Stores the origin of a data type where it first appeared in the version
-/// chain. A data type is identified by the name of the module and the name of
-/// the struct/enum in combination.
+/// Stores the origin of a data type where it first appeared in the version chain. A data type is
+/// identified by the name of the module and the name of the struct/enum in combination.
 ///
 /// # BCS
 ///
@@ -401,8 +392,7 @@ impl ObjectData {
 pub struct TypeOrigin {
     /// The name of the module the data type resides in.
     pub module_name: Arc<Identifier>,
-    /// The name of the data type. Either refers to an enum or a struct
-    /// identifier.
+    /// The name of the data type. Either refers to an enum or a struct identifier.
     pub datatype_name: Arc<Identifier>,
     /// ID of the package, where the given type first appeared.
     pub package: Arc<ObjectId>,
@@ -466,8 +456,7 @@ crate::ffi_btree_map! {
 }
 
 crate::ffi_btree_map! {
-    /// The version of each package a package depends on, keyed by the
-    /// dependency's runtime ID.
+    /// The version of each package a package depends on, keyed by the dependency's runtime ID.
     LinkageMap<Arc<ObjectId>, UpgradeInfo>
 }
 
@@ -568,9 +557,8 @@ impl MovePackage {
 pub struct MoveStruct {
     /// The type of this object
     pub struct_type: Arc<StructTag>,
-    /// Number that increases each time a tx takes this object as a mutable
-    /// input This is a lamport timestamp, not a sequentially increasing
-    /// version
+    /// Number that increases each time a tx takes this object as a mutable input This is a lamport
+    /// timestamp, not a sequentially increasing version
     pub version: Arc<Version>,
     /// BCS bytes of a Move struct value
     pub contents: Vec<u8>,
@@ -662,14 +650,12 @@ impl Owner {
         self.0.is_immutable()
     }
 
-    /// Convert this owner into an address owner if it is one, or panic
-    /// otherwise
+    /// Convert this owner into an address owner if it is one, or panic otherwise
     pub fn as_address(&self) -> Address {
         (*self.0.as_address()).into()
     }
 
-    /// Convert this owner into an address owner if it is one, or return `None`
-    /// otherwise
+    /// Convert this owner into an address owner if it is one, or return `None` otherwise
     pub fn as_opt_address(&self) -> Option<Arc<Address>> {
         self.0
             .as_opt_address()
@@ -683,8 +669,7 @@ impl Owner {
         (*self.0.as_object()).into()
     }
 
-    /// Convert this owner into an object owner if it is one, or return `None`
-    /// otherwise
+    /// Convert this owner into an object owner if it is one, or return `None` otherwise
     pub fn as_opt_object(&self) -> Option<Arc<ObjectId>> {
         self.0
             .as_opt_object()
@@ -698,8 +683,7 @@ impl Owner {
         (*self.0.as_shared()).into()
     }
 
-    /// Convert this owner into a shared owner if it is one, or return `None`
-    /// otherwise
+    /// Convert this owner into a shared owner if it is one, or return `None` otherwise
     pub fn as_opt_shared(&self) -> Option<Arc<Version>> {
         self.0
             .as_opt_shared()
@@ -708,8 +692,8 @@ impl Owner {
             .map(Arc::new)
     }
 
-    /// Returns an `Address` if this object is owned by an address or
-    /// object, and None if it is shared or immutable.
+    /// Returns an `Address` if this object is owned by an address or object, and None if it is
+    /// shared or immutable.
     pub fn address_or_object(&self) -> Option<Arc<Address>> {
         self.0
             .address_or_object()
@@ -761,8 +745,8 @@ impl ObjectType {
 
 /// An object part of the initial chain state
 ///
-/// `GenesisObject`'s are included as a part of genesis, the initial
-/// checkpoint/transaction, that initializes the state of the blockchain.
+/// `GenesisObject`'s are included as a part of genesis, the initial checkpoint/transaction, that
+/// initializes the state of the blockchain.
 ///
 /// # BCS
 ///

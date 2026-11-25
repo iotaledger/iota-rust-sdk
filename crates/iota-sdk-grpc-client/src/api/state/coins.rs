@@ -3,9 +3,8 @@
 
 //! High-level API for listing coins owned by an address.
 //!
-//! Wraps [`GrpcClient::owned_objects`](crate::GrpcClient::owned_objects)
-//! with a coin type filter and converts each returned proto `Object` into an
-//! [`iota_types::framework::Coin`].
+//! Wraps [`GrpcClient::owned_objects`](crate::GrpcClient::owned_objects) with a coin type filter
+//! and converts each returned proto `Object` into an [`iota_types::framework::Coin`].
 
 use iota_grpc_types::{
     read_mask_fields::OwnedObjectReadMask,
@@ -24,9 +23,8 @@ use crate::{
 define_list_query! {
     /// Builder for listing coins owned by an address.
     ///
-    /// Created by [`GrpcClient::coins`]. Await directly for a single page
-    /// (with access to `next_page_token`), or call
-    /// [`.collect(limit)`](Self::collect) to auto-paginate.
+    /// Created by [`GrpcClient::coins`]. Await directly for a single page (with access to
+    /// `next_page_token`), or call [`.collect(limit)`](Self::collect) to auto-paginate.
     pub struct GetCoinsQuery {
         service_client: StateServiceClient<InterceptedChannel>,
         request: ListOwnedObjectsRequest,
@@ -44,8 +42,8 @@ fn object_to_coin(obj: &iota_grpc_types::v1::object::Object) -> GrpcResult<Coin>
 }
 
 impl GetCoinsQuery {
-    /// Filter by coin type, the inner type `T` of `Coin<T>`. Without it, lists
-    /// all coin types (with type `0x2::coin::Coin`).
+    /// Filter by coin type, the inner type `T` of `Coin<T>`. Without it, lists all coin types (with
+    /// type `0x2::coin::Coin`).
     pub fn coin_type(mut self, coin_type: StructTag) -> Self {
         self.base_request.object_type = Some(coin_object_type(Some(coin_type)));
         self
@@ -53,8 +51,8 @@ impl GetCoinsQuery {
 }
 
 fn coin_object_type(coin_type: Option<StructTag>) -> String {
-    // Without a coin type, query for the generic `0x2::coin::Coin` (no type
-    // params); the server returns all `Coin<T>` objects regardless of `T`.
+    // Without a coin type, query for the generic `0x2::coin::Coin` (no type params); the server
+    // returns all `Coin<T>` objects regardless of `T`.
     coin_type
         .map(StructTag::new_coin)
         .unwrap_or_else(|| {
@@ -71,15 +69,12 @@ fn coin_object_type(coin_type: Option<StructTag>) -> String {
 impl GrpcClient {
     /// List coins owned by an address.
     ///
-    /// Returns a query builder. Await it directly for a single page (with
-    /// access to `next_page_token`), or call `.collect(limit)` to
-    /// auto-paginate through all results. Filter by coin type with
-    /// [`coin_type`](GetCoinsQuery::coin_type) and page with
-    /// [`page_size`](GetCoinsQuery::page_size) and
-    /// [`page_token`](GetCoinsQuery::page_token).
+    /// Returns a query builder. Await it directly for a single page (with access to
+    /// `next_page_token`), or call `.collect(limit)` to auto-paginate through all results. Filter
+    /// by coin type with [`coin_type`](GetCoinsQuery::coin_type) and page with
+    /// [`page_size`](GetCoinsQuery::page_size) and [`page_token`](GetCoinsQuery::page_token).
     ///
-    /// Each returned [`Coin`] is converted from the underlying proto
-    /// `Object`.
+    /// Each returned [`Coin`] is converted from the underlying proto `Object`.
     ///
     /// # Parameters
     ///

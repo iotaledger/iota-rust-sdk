@@ -15,14 +15,13 @@ use crate::{
 #[derive(Clone, Copy, Debug, Eq, PartialEq, strum::Display)]
 #[non_exhaustive]
 pub enum UpgradePolicy {
-    /// The least restrictive policy. Permits changes to all function
-    /// implementations, the removal of ability constraints on generic type
-    /// parameters in function signatures, and modifications to private,
-    /// public(friend), and entry function signatures. However, public function
+    /// The least restrictive policy. Permits changes to all function implementations, the removal
+    /// of ability constraints on generic type parameters in function signatures, and modifications
+    /// to private, public(friend), and entry function signatures. However, public function
     /// signatures and existing types cannot be changed.
     Compatible = 0,
-    /// Allows adding new functionalities (e.g., new public functions or
-    /// structs) but restricts changes to existing functionalities.
+    /// Allows adding new functionalities (e.g., new public functions or structs) but restricts
+    /// changes to existing functionalities.
     Additive = 128,
     /// Limits modifications to the package’s dependencies only.
     DepOnly = 192,
@@ -50,14 +49,12 @@ impl TryFrom<u8> for UpgradePolicy {
     }
 }
 
-/// Error returned when a byte does not correspond to a known
-/// [`UpgradePolicy`].
+/// Error returned when a byte does not correspond to a known [`UpgradePolicy`].
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, thiserror::Error)]
 #[error("invalid upgrade policy: {0}")]
 pub struct UpgradePolicyError(u8);
 
-/// Type corresponding to the output of `iota move build
-/// --dump-bytecode-as-base64`
+/// Type corresponding to the output of `iota move build --dump-bytecode-as-base64`
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 #[cfg_attr(feature = "proptest", derive(test_strategy::Arbitrary))]
@@ -130,9 +127,8 @@ impl crate::TreeDisplay for UpgradeInfo {
     }
 }
 
-/// Stores the origin of a data type where it first appeared in the version
-/// chain. A data type is identified by the name of the module and the name of
-/// the struct/enum in combination.
+/// Stores the origin of a data type where it first appeared in the version chain. A data type is
+/// identified by the name of the module and the name of the struct/enum in combination.
 ///
 /// # BCS
 ///
@@ -145,8 +141,7 @@ impl crate::TreeDisplay for UpgradeInfo {
 pub struct TypeOrigin {
     /// The name of the module the data type resides in.
     pub module_name: Identifier,
-    /// The name of the data type. Either refers to an enum or a struct
-    /// identifier.
+    /// The name of the data type. Either refers to an enum or a struct identifier.
     pub datatype_name: Identifier,
     /// ID of the package, where the given type first appeared.
     pub package: ObjectId,
@@ -174,17 +169,16 @@ impl crate::TreeDisplay for TypeOrigin {
 pub struct MovePackage {
     /// The ID of this package
     pub id: ObjectId,
-    /// Most move packages are uniquely identified by their ID (i.e. there is
-    /// only one version per ID), but the version is still stored because
-    /// one package may be an upgrade of another (at a different ID), in
-    /// which case its version will be one greater than the version of the
+    /// Most move packages are uniquely identified by their ID (i.e. there is only one version per
+    /// ID), but the version is still stored because one package may be an upgrade of another (at a
+    /// different ID), in which case its version will be one greater than the version of the
     /// upgraded package.
     ///
-    /// Framework packages are an exception to this rule -- all versions of the
-    /// framework packages exist at the same ID, at increasing versions.
+    /// Framework packages are an exception to this rule -- all versions of the framework packages
+    /// exist at the same ID, at increasing versions.
     ///
-    /// In all cases, packages are referred to by move calls using just their
-    /// ID, and they are always loaded at their latest version.
+    /// In all cases, packages are referred to by move calls using just their ID, and they are
+    /// always loaded at their latest version.
     pub version: Version,
     /// Set of modules defined by this package
     #[cfg_attr(
@@ -207,12 +201,11 @@ pub struct MovePackage {
             .collect::<BTreeMap<_, _>>()
     )]
     pub modules: BTreeMap<Identifier, Vec<u8>>,
-    /// Maps structs and enums in a given module to a package version where it
-    /// was first defined, stored as a vector for simple serialization and
-    /// deserialization.
+    /// Maps structs and enums in a given module to a package version where it was first defined,
+    /// stored as a vector for simple serialization and deserialization.
     pub type_origin_table: Vec<TypeOrigin>,
-    /// For each dependency, maps original package ID to the info about the
-    /// (upgraded) dependency version that this package is using.
+    /// For each dependency, maps original package ID to the info about the (upgraded) dependency
+    /// version that this package is using.
     #[cfg_attr(
         feature = "proptest",
         strategy(
@@ -223,13 +216,12 @@ pub struct MovePackage {
 }
 
 impl MovePackage {
-    /// Create a package with all required data (including serialized modules,
-    /// type origin and linkage tables) already supplied.
+    /// Create a package with all required data (including serialized modules, type origin and
+    /// linkage tables) already supplied.
     ///
-    /// It does not perform any type of validation. Ensure that the supplied
-    /// parts are semantically valid. A package that is about to be written
-    /// on-chain is additionally held to a size limit, which
-    /// [`MovePackage::check_size`] applies.
+    /// It does not perform any type of validation. Ensure that the supplied parts are semantically
+    /// valid. A package that is about to be written on-chain is additionally held to a size limit,
+    /// which [`MovePackage::check_size`] applies.
     pub fn new(
         id: ObjectId,
         version: Version,
@@ -246,12 +238,12 @@ impl MovePackage {
         }
     }
 
-    /// Check the package against `max_package_size`, the number of bytes a
-    /// package may occupy on-chain.
+    /// Check the package against `max_package_size`, the number of bytes a package may occupy
+    /// on-chain.
     ///
-    /// Only a package that is about to be written needs this. One that was read
-    /// back from the network was already held to the limit of the protocol
-    /// version that accepted it, and that limit is not knowable from here.
+    /// Only a package that is about to be written needs this. One that was read back from the
+    /// network was already held to the limit of the protocol version that accepted it, and that
+    /// limit is not knowable from here.
     pub fn check_size(&self, max_package_size: u64) -> Result<(), ExecutionError> {
         let object_size = self.size() as u64;
         if object_size > max_package_size {
@@ -274,9 +266,8 @@ impl MovePackage {
         )
     }
 
-    // It is important that this function is shared across both the calculation
-    // of the digest for the package, and the calculation of the digest
-    // on-chain.
+    // It is important that this function is shared across both the calculation of the digest for
+    // the package, and the calculation of the digest on-chain.
     #[cfg(feature = "hash")]
     pub fn compute_digest_for_modules_and_deps<'a>(
         modules: impl IntoIterator<Item = &'a Vec<u8>>,
@@ -292,8 +283,8 @@ impl MovePackage {
             )
             .collect::<Vec<_>>();
 
-        // NB: sorting so the order of the modules and the order of the dependencies
-        // does not matter.
+        // NB: sorting so the order of the modules and the order of the dependencies does not
+        // matter.
         components.sort();
 
         let mut digest = Hasher::new();
@@ -566,8 +557,8 @@ mod tests {
 
         #[test]
         fn digest_ignores_module_names() {
-            // Same module bytes under different identifier keys must hash the same,
-            // because the digest is computed over module *values* only.
+            // Same module bytes under different identifier keys must hash the same, because the
+            // digest is computed over module *values* only.
             let bytes = b"module_bytes".to_vec();
             let pkg1 = package(
                 [(Identifier::new("foo").unwrap(), bytes.clone())],
@@ -605,8 +596,8 @@ mod tests {
             let modules = [module("m", b"bytes")];
             let upgraded = ObjectId::from_u16(0xaa);
 
-            // Different linkage-table keys (original_id) and versions, same upgraded_id
-            // → digest must be unchanged.
+            // Different linkage-table keys (original_id) and versions, same upgraded_id → digest
+            // must be unchanged.
             let pkg1 = package(
                 modules.clone(),
                 vec![],

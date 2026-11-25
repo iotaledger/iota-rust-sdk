@@ -27,11 +27,10 @@ pub mod rpc {
             }
         }
 
-        /// Convert to a [`tonic::Status`], preserving code, message, and
-        /// details.
+        /// Convert to a [`tonic::Status`], preserving code, message, and details.
         ///
-        /// The details are encoded as the binary `google.rpc.Status` message,
-        /// matching the `grpc-status-details-bin` trailer convention.
+        /// The details are encoded as the binary `google.rpc.Status` message, matching the
+        /// `grpc-status-details-bin` trailer convention.
         pub fn to_tonic_status(&self) -> tonic::Status {
             use prost::Message;
 

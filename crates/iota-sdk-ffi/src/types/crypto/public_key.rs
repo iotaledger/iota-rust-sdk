@@ -20,8 +20,8 @@ use crate::{
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// The gap in the flag values of the `public-key` rule is intentional, as not
-/// all signature schemes support public keys.
+/// The gap in the flag values of the `public-key` rule is intentional, as not all signature schemes
+/// support public keys.
 ///
 /// There is also a base64 encoding for this type defined as:
 ///
@@ -108,14 +108,12 @@ impl PublicKey {
         self.0.scheme().into()
     }
 
-    /// Encode this public key as a base64 string of its scheme-flagged byte
-    /// representation
+    /// Encode this public key as a base64 string of its scheme-flagged byte representation
     pub fn to_base64(&self) -> String {
         self.0.to_base64()
     }
 
-    /// Decode a public key from a base64 string of its scheme-flagged byte
-    /// representation
+    /// Decode a public key from a base64 string of its scheme-flagged byte representation
     #[uniffi::constructor]
     pub fn from_base64(s: &str) -> Result<Self> {
         Ok(Self(iota_sdk::types::PublicKey::from_base64(s)?))

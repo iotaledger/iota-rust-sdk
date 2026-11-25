@@ -1,3 +1,22 @@
+## [1.0.0] - 2026-11-20
+
+### 🚀 Features
+
+- *(iota-sdk-move-types)* Convert an ascii::String or Url into a String (#1732)
+- *(iota-sdk-move-types)* Implement MoveType for the dynamic field key mirrors (#1740)
+- *(iota-sdk-move-types)* Add PoolTokenExchangeRate::rate, Setting::read_value, IotaTreasuryCap getters and Upgrade* constructors (#1730)
+- Add a non-default `unstable` feature to every published crate (#1816)
+
+### 🐛 Bug Fixes
+
+- *(move-types)* [**breaking**] Write u64 and u128 fields as strings in human-readable formats (#1766)
+- [**breaking**] Replace primitive_types::U256 with iota_sdk_types::U256 (#1820)
+
+### ⚙️ Miscellaneous Tasks
+
+- Fix lints reported by Rust 1.100 (#1806)
+- Replace deprecated filetime::set_file_mtime with std::fs::set_times (#1808)
+
 ## [1.0.0-rc.2] - 2026-10-23
 
 ### 🚀 Features

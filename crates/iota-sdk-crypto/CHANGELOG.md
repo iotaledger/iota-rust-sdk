@@ -1,3 +1,21 @@
+## [1.0.0] - 2026-11-20
+
+### 🚀 Features
+
+- *(crypto)* Add DerivationPath and FromMnemonic::from_mnemonic_with_derivation_path (#1746)
+- Add a non-default `unstable` feature to every published crate (#1816)
+
+### 🐛 Bug Fixes
+
+- *(crypto)* Use configured passkey verifier for direct passkey signatures (#1695)
+- *(crypto)* Reject unhardened indices in Ed25519 mnemonic paths (#1744)
+- *(crypto)* Verify the aggregate in MultisigAggregator::finish with the full verifier (#1776)
+
+### ⚙️ Miscellaneous Tasks
+
+- *(crypto)* Clarify scope of UserSignatureVerifier::with_passkey_verifier (#1763)
+- *(iota-sdk-crypto)* Update fastcrypto to 0.1.12 (#1791)
+
 ## [1.0.0-rc.2] - 2026-10-23
 
 ### 🐛 Bug Fixes

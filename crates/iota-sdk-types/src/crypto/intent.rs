@@ -26,15 +26,14 @@ pub enum IntentError {
 
 /// A Signing Intent
 ///
-/// An intent is a compact struct that serves as the domain separator for a
-/// message that a signature commits to. It consists of three parts:
+/// An intent is a compact struct that serves as the domain separator for a message that a signature
+/// commits to. It consists of three parts:
 ///     1. [enum IntentScope] (what the type of the message is)
 ///     2. [enum IntentVersion]
 ///     3. [enum IntentAppId] (what application the signature refers to).
 ///
-/// The serialization of an Intent is a 3-byte array where each field is
-/// represented by a byte and it is prepended onto a message before it is signed
-/// in IOTA.
+/// The serialization of an Intent is a 3-byte array where each field is represented by a byte and
+/// it is prepended onto a message before it is signed in IOTA.
 ///
 /// # BCS
 ///
@@ -144,9 +143,9 @@ impl FromStr for Intent {
 
 /// Byte signifying the scope of an [`Intent`]
 ///
-/// This enum specifies the intent scope. Two intents for different scopes
-/// should never collide, so no signature provided for one intent scope can be
-/// used for another, even when the serialized data itself may be the same.
+/// This enum specifies the intent scope. Two intents for different scopes should never collide, so
+/// no signature provided for one intent scope can be used for another, even when the serialized
+/// data itself may be the same.
 ///
 /// # BCS
 ///
@@ -201,9 +200,9 @@ impl TryFrom<u8> for IntentScope {
 
 /// Byte signifying the version of an [`Intent`]
 ///
-/// The version here is to distinguish between signing different versions of the
-/// struct or enum. Serialized output between two different versions of the same
-/// struct/enum might accidentally (or maliciously on purpose) match.
+/// The version here is to distinguish between signing different versions of the struct or enum.
+/// Serialized output between two different versions of the same struct/enum might accidentally (or
+/// maliciously on purpose) match.
 ///
 /// # BCS
 ///
@@ -236,11 +235,9 @@ impl TryFrom<u8> for IntentVersion {
 
 /// Byte signifying the application id of an [`Intent`]
 ///
-/// This enum specifies the application ID. Two intents in two different
-/// applications (i.e., IOTA, Ethereum etc) should never collide, so
-/// that even when a signing key is reused, nobody can take a signature
-/// designated for app_1 and present it as a valid signature for an (any) intent
-/// in app_2.
+/// This enum specifies the application ID. Two intents in two different applications (i.e., IOTA,
+/// Ethereum etc) should never collide, so that even when a signing key is reused, nobody can take a
+/// signature designated for app_1 and present it as a valid signature for an (any) intent in app_2.
 ///
 /// # BCS
 ///
@@ -272,14 +269,13 @@ impl TryFrom<u8> for IntentAppId {
     }
 }
 
-/// Intent Message is a wrapper around a message with its intent. The message
-/// can be any type that implements [trait Serialize]. *ALL* signatures in IOTA
-/// must commit to the intent message, not the message itself. This guarantees
-/// any intent message signed in the system cannot collide with another since
-/// they are domain separated by intent.
+/// Intent Message is a wrapper around a message with its intent. The message can be any type that
+/// implements [trait Serialize]. *ALL* signatures in IOTA must commit to the intent message, not
+/// the message itself. This guarantees any intent message signed in the system cannot collide with
+/// another since they are domain separated by intent.
 ///
-/// The serialization of an IntentMessage is compact: it only prepends three
-/// bytes to the message itself.
+/// The serialization of an IntentMessage is compact: it only prepends three bytes to the message
+/// itself.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
 pub struct IntentMessage<T> {
@@ -308,10 +304,9 @@ impl<T: std::fmt::Display> std::fmt::Display for IntentMessage<T> {
     }
 }
 
-/// A 1-byte domain separator for hashing Object ID in IOTA. It starts from
-/// 0xf0 to ensure no hashing collision for any ObjectID vs IotaAddress which is
-/// derived as the hash of `flag || pubkey`. See
-/// `iota_types::crypto::SignatureScheme::flag()`.
+/// A 1-byte domain separator for hashing Object ID in IOTA. It starts from 0xf0 to ensure no
+/// hashing collision for any ObjectID vs IotaAddress which is derived as the hash of `flag ||
+/// pubkey`. See `iota_types::crypto::SignatureScheme::flag()`.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, strum::Display)]
 #[cfg_attr(
     feature = "serde",

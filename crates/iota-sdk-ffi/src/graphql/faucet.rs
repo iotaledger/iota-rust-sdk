@@ -16,8 +16,8 @@ pub struct FaucetClient(iota_sdk::graphql_client::faucet::FaucetClient);
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl FaucetClient {
-    /// Construct a new `FaucetClient` with the given faucet service URL. This
-    /// `FaucetClient` expects that the service provides two endpoints:
+    /// Construct a new `FaucetClient` with the given faucet service URL. This `FaucetClient`
+    /// expects that the service provides two endpoints:
     /// /v1/gas and /v1/status. As such, do not provide the request
     /// endpoint, just the top level service endpoint.
     ///
@@ -31,8 +31,7 @@ impl FaucetClient {
         ))
     }
 
-    /// Construct a new `FaucetClient` using an HTTP client built to the given
-    /// options.
+    /// Construct a new `FaucetClient` using an HTTP client built to the given options.
     #[uniffi::constructor]
     pub fn new_with_http_options(faucet_url: String, options: HttpClientOptions) -> Result<Self> {
         Ok(Self(
@@ -50,25 +49,22 @@ impl FaucetClient {
         Self(iota_sdk::graphql_client::faucet::FaucetClient::new_localnet())
     }
 
-    /// Request gas from the faucet. Note that this will return the UUID of the
-    /// request and not wait until the token is received. Use
-    /// `request_and_wait` to wait for the token.
+    /// Request gas from the faucet. Note that this will return the UUID of the request and not wait
+    /// until the token is received. Use `request_and_wait` to wait for the token.
     pub async fn request(&self, address: &Address) -> Result<Option<String>> {
         self.0.request(**address).await.map_err(SdkFfiError::custom)
     }
 
-    /// Request gas from the faucet and wait until the request is completed and
-    /// token is transferred. Returns `FaucetReceipt` if the request is
-    /// successful, which contains the list of tokens transferred, and the
-    /// transaction digest. Returns `FaucetError::Discarded` if the faucet
-    /// discards the request.
+    /// Request gas from the faucet and wait until the request is completed and token is
+    /// transferred. Returns `FaucetReceipt` if the request is successful, which contains the list
+    /// of tokens transferred, and the transaction digest. Returns `FaucetError::Discarded` if the
+    /// faucet discards the request.
     ///
-    /// Note that the faucet is heavily rate-limited, so calling repeatedly the
-    /// faucet would likely result in a 429 code or 502 code.
+    /// Note that the faucet is heavily rate-limited, so calling repeatedly the faucet would likely
+    /// result in a 429 code or 502 code.
     ///
-    /// If you intend to use the transferred tokens with the graphql client,
-    /// consider using `request_and_wait_for_finalized` instead to ensure
-    /// the tokens are available in the indexer.
+    /// If you intend to use the transferred tokens with the graphql client, consider using
+    /// `request_and_wait_for_finalized` instead to ensure the tokens are available in the indexer.
     pub async fn request_and_wait(&self, address: &Address) -> Result<Option<FaucetReceipt>> {
         Ok(self
             .0
@@ -78,15 +74,13 @@ impl FaucetClient {
             .map(Into::into))
     }
 
-    /// Request gas from the faucet and wait until the request is completed and
-    /// token is transferred and finalized on the ledger. Returns
-    /// `FaucetReceipt` if the request is successful, which contains the
-    /// list of tokens transferred, and the transaction digest. Returns
+    /// Request gas from the faucet and wait until the request is completed and token is transferred
+    /// and finalized on the ledger. Returns `FaucetReceipt` if the request is successful, which
+    /// contains the list of tokens transferred, and the transaction digest. Returns
     /// `FaucetError::Discarded` if the faucet discards the request.
     ///
-    /// This is a convenience method that combines `request_and_wait` and
-    /// waiting for the funding transactions to be finalized using the provided
-    /// GraphQL `GraphQLClient`.
+    /// This is a convenience method that combines `request_and_wait` and waiting for the funding
+    /// transactions to be finalized using the provided GraphQL `GraphQLClient`.
     pub async fn request_and_wait_for_finalized(
         &self,
         address: &Address,
@@ -104,9 +98,9 @@ impl FaucetClient {
     ///
     /// Possible statuses are defined in: `FaucetBatchSendStatusType`
     ///
-    /// Returns an error without sending a request if `id` is empty or contains
-    /// anything other than ASCII letters, digits, `-`, `{`, `}` and `:`, which
-    /// covers the UUID forms the faucet accepts.
+    /// Returns an error without sending a request if `id` is empty or contains anything other than
+    /// ASCII letters, digits, `-`, `{`, `}` and `:`, which covers the UUID forms the faucet
+    /// accepts.
     pub async fn request_status(&self, id: String) -> Result<Option<FaucetBatchSendStatus>> {
         Ok(self
             .0

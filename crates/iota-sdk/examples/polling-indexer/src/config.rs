@@ -71,9 +71,8 @@ pub struct FilterConfig {
 }
 
 impl FilterConfig {
-    /// Returns `true` when any transaction or event filter is set, enabling
-    /// batch query mode which queries across large checkpoint ranges instead
-    /// of processing checkpoints one by one.
+    /// Returns `true` when any transaction or event filter is set, enabling batch query mode which
+    /// queries across large checkpoint ranges instead of processing checkpoints one by one.
     pub fn has_filters(&self) -> bool {
         self.has_tx_filters() || self.has_event_filters()
     }
@@ -88,17 +87,16 @@ impl FilterConfig {
             || self.event_package_id.is_some()
     }
 
-    /// Returns `true` when only event filters are active (no transaction-level
-    /// filters). In this mode, the indexer derives a package filter from the
-    /// event type and skips transactions that produce no matching events.
+    /// Returns `true` when only event filters are active (no transaction-level filters). In this
+    /// mode, the indexer derives a package filter from the event type and skips transactions that
+    /// produce no matching events.
     pub fn is_event_only(&self) -> bool {
         self.has_event_filters() && !self.has_tx_filters()
     }
 
-    /// Derive an effective transaction function filter for batch mode.
-    /// When only event filters are set, extracts the package address from
-    /// `event_type` (e.g. `"0x...::module::Event"` → `"0x..."`) or falls
-    /// back to `event_package_id`.
+    /// Derive an effective transaction function filter for batch mode. When only event filters are
+    /// set, extracts the package address from `event_type` (e.g. `"0x...::module::Event"` →
+    /// `"0x..."`) or falls back to `event_package_id`.
     pub fn derived_tx_function(&self) -> Option<String> {
         self.tx_function.clone().or_else(|| {
             self.event_type

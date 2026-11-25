@@ -27,4 +27,4 @@ jobs:
           curl --fail --location --silent --show-error --retry 3 \
             https://raw.githubusercontent.com/iotaledger/iota/develop/crates/iota-graphql-rpc/schema.graphql \
             | diff -u crates/iota-sdk-graphql-client-build/schema.graphql - \
-            || { echo "::error::GraphQL schema drift detected. Copy iotaledger/iota@develop crates/iota-graphql-rpc/schema.graphql verbatim over crates/iota-sdk-graphql-client-build/schema.graphql."; exit 1; }
+            || { echo "::error::GraphQL schema drift detected. Copy iotaledger/iota@develop crates/iota-graphql-rpc/schema.graphql verbatim over crates/iota-sdk-graphql-client-build/schema.graphql, and add any definitions it removes to crates/iota-sdk-graphql-client-build/removed.graphql so they are kept until the next major release."; exit 1; }

@@ -6,10 +6,9 @@ use crate::ObjectId;
 
 /// Unique identifier for an Account on the IOTA blockchain.
 ///
-/// An `Address` is a 32-byte pseudonymous identifier used to uniquely identify
-/// an account and asset-ownership on the IOTA blockchain. Often, human-readable
-/// addresses are encoded in hexadecimal with a `0x` prefix. For example, this
-/// is a valid IOTA address:
+/// An `Address` is a 32-byte pseudonymous identifier used to uniquely identify an account and
+/// asset-ownership on the IOTA blockchain. Often, human-readable addresses are encoded in
+/// hexadecimal with a `0x` prefix. For example, this is a valid IOTA address:
 /// `0x02a212de6a9dfa3a69e22387acfbafbb1a9e591bd9d636e7895dcfc8de05f331`.
 ///
 /// ```
@@ -23,30 +22,27 @@ use crate::ObjectId;
 ///
 /// # Deriving an Address
 ///
-/// Addresses are cryptographically derived from a number of user account
-/// authenticators, the simplest of which is an
-/// [`Ed25519PublicKey`](crate::Ed25519PublicKey).
+/// Addresses are cryptographically derived from a number of user account authenticators, the
+/// simplest of which is an [`Ed25519PublicKey`](crate::Ed25519PublicKey).
 ///
-/// Deriving an address consists of the Blake2b256 hash of the sequence of bytes
-/// of its corresponding authenticator, prefixed with a domain-separator (except
-/// ed25519, for compatibility reasons). For each other authenticator, this
-/// domain-separator is the single byte-value of its
-/// [`SignatureScheme`](crate::SignatureScheme) flag. E.g. `hash(signature
-/// schema flag || authenticator bytes)`.
+/// Deriving an address consists of the Blake2b256 hash of the sequence of bytes of its
+/// corresponding authenticator, prefixed with a domain-separator (except ed25519, for compatibility
+/// reasons). For each other authenticator, this domain-separator is the single byte-value of its
+/// [`SignatureScheme`](crate::SignatureScheme) flag. E.g. `hash(signature schema flag ||
+/// authenticator bytes)`.
 ///
-/// Each authenticator has a method for deriving its `Address` as well as
-/// documentation for the specifics of how the derivation is done. See
-/// [`Ed25519PublicKey::derive_address`] for an example.
+/// Each authenticator has a method for deriving its `Address` as well as documentation for the
+/// specifics of how the derivation is done. See [`Ed25519PublicKey::derive_address`] for an
+/// example.
 ///
 /// [`Ed25519PublicKey::derive_address`]: crate::Ed25519PublicKey::derive_address
 ///
 /// ## Relationship to ObjectIds
 ///
-/// [`ObjectId`]s and [`Address`]es share the same 32-byte addressable space but
-/// are derived leveraging different domain-separator values to ensure that,
-/// cryptographically, there won't be any overlap, e.g. there can't be a
-/// valid `Object` who's `ObjectId` is equal to that of the `Address` of a user
-/// account.
+/// [`ObjectId`]s and [`Address`]es share the same 32-byte addressable space but are derived
+/// leveraging different domain-separator values to ensure that, cryptographically, there won't be
+/// any overlap, e.g. there can't be a valid `Object` who's `ObjectId` is equal to that of the
+/// `Address` of a user account.
 ///
 /// [`ObjectId`]: crate::ObjectId
 ///
@@ -150,9 +146,9 @@ impl Address {
         object_id.0
     }
 
-    /// Parses an Address from a full-length hex string (64 hex characters),
-    /// with or without a `0x` prefix. Will return an error if the string is not
-    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    /// Parses an Address from a full-length hex string (64 hex characters), with or without a `0x`
+    /// prefix. Will return an error if the string is not exactly 64 hex characters long (excluding
+    /// the `0x` prefix).
     pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         let hex = Self::strip_hex_prefix(hex.as_ref())?;
         if hex.len() != Self::LENGTH * 2 {
@@ -194,9 +190,9 @@ impl Address {
             })
     }
 
-    /// Parses an Address from a full-length hex string (64 hex characters),
-    /// with a mandatory `0x` prefix. Will return an error if the string is not
-    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    /// Parses an Address from a full-length hex string (64 hex characters), with a mandatory `0x`
+    /// prefix. Will return an error if the string is not exactly 64 hex characters long (excluding
+    /// the `0x` prefix).
     pub fn from_prefixed_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         if !hex.as_ref().starts_with(b"0x") {
             return Err(AddressParseError::MissingPrefix);
@@ -204,9 +200,9 @@ impl Address {
         Self::from_hex(hex)
     }
 
-    /// Parses an Address from a full-length hex string (64 hex characters),
-    /// without a `0x` prefix. Will return an error if the string has a `0x`
-    /// prefix or is not exactly 64 hex characters long.
+    /// Parses an Address from a full-length hex string (64 hex characters), without a `0x` prefix.
+    /// Will return an error if the string has a `0x` prefix or is not exactly 64 hex characters
+    /// long.
     pub fn from_raw_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         if hex.as_ref().starts_with(b"0x") {
             return Err(AddressParseError::UnexpectedPrefix);
@@ -214,16 +210,14 @@ impl Address {
         Self::from_hex(hex)
     }
 
-    /// Parses an Address from a hex string, with or without a `0x` prefix.
-    /// The string can be of variable length; if it's shorter than 64 hex
-    /// characters, it will be left-padded with `0`s.
+    /// Parses an Address from a hex string, with or without a `0x` prefix. The string can be of
+    /// variable length; if it's shorter than 64 hex characters, it will be left-padded with `0`s.
     pub fn from_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         Self::decode_hex(Self::strip_hex_prefix(hex.as_ref())?)
     }
 
-    /// Parses an Address from a hex string with a mandatory `0x` prefix.
-    /// The string can be of variable length; if it's shorter than 64 hex
-    /// characters, it will be left-padded with `0`s.
+    /// Parses an Address from a hex string with a mandatory `0x` prefix. The string can be of
+    /// variable length; if it's shorter than 64 hex characters, it will be left-padded with `0`s.
     pub fn from_prefixed_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         if !hex.as_ref().starts_with(b"0x") {
             return Err(AddressParseError::MissingPrefix);
@@ -232,9 +226,8 @@ impl Address {
     }
 
     /// Parses an Address from a hex string without a `0x` prefix.
-    /// The string can be of variable length; if it's shorter than 64 hex
-    /// characters, it will be left-padded with `0`s. Will return an error if
-    /// the string has a `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex characters, it will be
+    /// left-padded with `0`s. Will return an error if the string has a `0x` prefix.
     pub fn from_raw_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         if hex.as_ref().starts_with(b"0x") {
             return Err(AddressParseError::UnexpectedPrefix);
@@ -242,26 +235,24 @@ impl Address {
         Self::from_short_hex(hex)
     }
 
-    /// Returns the string representation of this address in hex format with
-    /// `0x` prefix.
+    /// Returns the string representation of this address in hex format with `0x` prefix.
     pub fn to_hex(&self) -> String {
         self.to_canonical_string(true)
     }
 
-    /// Returns the string representation of this address in hex format without
-    /// `0x` prefix.
+    /// Returns the string representation of this address in hex format without `0x` prefix.
     pub fn to_raw_hex(&self) -> String {
         self.to_canonical_string(false)
     }
 
-    /// Returns the shortest possible string representation of the address (i.e.
-    /// with leading zeroes trimmed).
+    /// Returns the shortest possible string representation of the address (i.e. with leading zeroes
+    /// trimmed).
     pub fn to_short_hex(&self) -> String {
         format!("0x{}", self.to_raw_short_hex())
     }
 
-    /// Returns the shortest possible string representation of the address (i.e.
-    /// with leading zeroes trimmed), without `0x` prefix.
+    /// Returns the shortest possible string representation of the address (i.e. with leading zeroes
+    /// trimmed), without `0x` prefix.
     pub fn to_raw_short_hex(&self) -> String {
         let full_str = self.to_canonical_string(false);
         let trimmed = full_str.trim_start_matches('0');
@@ -269,8 +260,8 @@ impl Address {
         hex_str.to_owned()
     }
 
-    /// Returns the string representation of this address using the
-    /// canonical display, with or without a `0x` prefix.
+    /// Returns the string representation of this address using the canonical display, with or
+    /// without a `0x` prefix.
     pub fn to_canonical_string(&self, with_prefix: bool) -> String {
         let hex_str = hex::encode(self.0);
         if with_prefix {
@@ -294,8 +285,7 @@ impl Address {
         Self::new(crate::next_lexicographical_array(self.bytes()))
     }
 
-    /// Returns the next address in byte-increasing order, or `None` if the
-    /// result would overflow.
+    /// Returns the next address in byte-increasing order, or `None` if the result would overflow.
     pub const fn next_lexicographical_opt(&self) -> Option<Self> {
         match crate::next_lexicographical_array_opt(self.bytes()) {
             Some(val) => Some(Self::new(val)),

@@ -6,8 +6,8 @@ use std::{fmt, str::FromStr};
 /// Bit set on hardened indices.
 const HARDENED: u32 = 1 << 31;
 
-/// A BIP-32 derivation path, parsed from a string like
-/// `m/44'/4218'/0'/0'/0'`; `'` or `h` marks a hardened index.
+/// A BIP-32 derivation path, parsed from a string like `m/44'/4218'/0'/0'/0'`; `'` or `h` marks a
+/// hardened index.
 #[derive(Clone, Eq, Hash, PartialEq)]
 pub struct DerivationPath(Vec<u32>);
 

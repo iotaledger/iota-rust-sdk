@@ -3,31 +3,28 @@
 
 //! Read mask constants for the gRPC API.
 //!
-//! For type-safe field selection, prefer the enums in
-//! [`read_mask_fields`](crate::read_mask_fields) instead. The constants in
-//! this module are still useful with the [`field_mask!`](crate::field_mask)
-//! and [`field_masks_merge!`](crate::field_masks_merge) macros.
+//! For type-safe field selection, prefer the enums in [`read_mask_fields`](crate::read_mask_fields)
+//! instead. The constants in this module are still useful with the
+//! [`field_mask!`](crate::field_mask) and [`field_masks_merge!`](crate::field_masks_merge) macros.
 //!
 //! This module provides two categories of constants:
 //!
 //! ## Endpoint defaults
 //!
-//! Constants like [`GET_CHECKPOINT_READ_MASK`] are the canonical defaults used
-//! by both the server (as fallback when no mask is provided) and the client
-//! (as the `Default` of the endpoint's mask type in
-//! [`read_mask_fields`](crate::read_mask_fields)).
+//! Constants like [`GET_CHECKPOINT_READ_MASK`] are the canonical defaults used by both the server
+//! (as fallback when no mask is provided) and the client (as the `Default` of the endpoint's mask
+//! type in [`read_mask_fields`](crate::read_mask_fields)).
 //!
 //! ## Per-method field constants
 //!
-//! Constants like [`CHECKPOINT_RESPONSE_SUMMARY`] or
-//! [`EXECUTED_TRANSACTION_EFFECTS`] represent the read mask field(s) required
-//! by a specific accessor method on a response type. Pass one or more of these
-//! to the endpoint's `read_mask` setter to ensure the accessor will succeed.
+//! Constants like [`CHECKPOINT_RESPONSE_SUMMARY`] or [`EXECUTED_TRANSACTION_EFFECTS`] represent the
+//! read mask field(s) required by a specific accessor method on a response type. Pass one or more
+//! of these to the endpoint's `read_mask` setter to ensure the accessor will succeed.
 //!
 //! ### Context-dependent paths
 //!
-//! [`ExecutedTransaction`](crate::v1::transaction::ExecutedTransaction) appears
-//! in multiple endpoints with different field-path prefixes:
+//! [`ExecutedTransaction`](crate::v1::transaction::ExecutedTransaction) appears in multiple
+//! endpoints with different field-path prefixes:
 //!
 //! | Endpoint | Prefix |
 //! |---|---|
@@ -35,14 +32,12 @@
 //! | Checkpoint queries | `transactions.` |
 //! | `simulate_transactions` | `executed_transaction.` |
 //!
-//! The `EXECUTED_TRANSACTION_*` constants use the **direct** (unprefixed)
-//! paths. For checkpoint or simulate contexts, prepend the appropriate prefix.
-//! The `CHECKPOINT_RESPONSE_*` constants already include the `transactions.`
-//! or `checkpoint.` prefix for convenience.
+//! The `EXECUTED_TRANSACTION_*` constants use the **direct** (unprefixed) paths. For checkpoint or
+//! simulate contexts, prepend the appropriate prefix. The `CHECKPOINT_RESPONSE_*` constants already
+//! include the `transactions.` or `checkpoint.` prefix for convenience.
 //!
-//! Individual fields can be requested using dot notation. Pass a custom mask
-//! to narrow or widen the response; the endpoint defaults serve as a baseline
-//! that covers the most commonly needed fields.
+//! Individual fields can be requested using dot notation. Pass a custom mask to narrow or widen the
+//! response; the endpoint defaults serve as a baseline that covers the most commonly needed fields.
 
 use crate::field_mask;
 
@@ -89,8 +84,8 @@ pub const LIST_OWNED_OBJECTS_READ_MASK: &str = field_mask!("reference", "bcs");
 
 /// Default read mask for `execute_transactions`.
 ///
-/// These paths apply to each `ExecutedTransaction` within the
-/// `transaction_results` of the response.
+/// These paths apply to each `ExecutedTransaction` within the `transaction_results` of the
+/// response.
 pub const EXECUTE_TRANSACTIONS_READ_MASK: &str = field_mask!(
     "transaction.digest",
     "effects",
@@ -116,8 +111,8 @@ pub const VIEW_FUNCTION_CALLS_READ_MASK: &str = field_mask!("execution_result");
 // ---------------------------------------------------------------------------
 // CheckpointResponse — per-method field constants
 //
-// These use the full paths expected by the checkpoint endpoints
-// (get_checkpoint_*, stream_checkpoints).
+// These use the full paths expected by the checkpoint endpoints (get_checkpoint_*,
+// stream_checkpoints).
 // ---------------------------------------------------------------------------
 
 /// Read mask for `CheckpointResponse::summary()`.
@@ -147,17 +142,15 @@ pub const CHECKPOINT_RESPONSE_EVENTS: &str = field_mask!("events");
 
 /// Read mask for `CheckpointResponse::signed_summary()`.
 ///
-/// Contains the minimum fields required to build a
-/// `SignedCheckpointSummary`: checkpoint summary BCS and validator
-/// signature.
+/// Contains the minimum fields required to build a `SignedCheckpointSummary`: checkpoint summary
+/// BCS and validator signature.
 pub const CHECKPOINT_RESPONSE_SIGNED_SUMMARY: &str =
     field_mask!("checkpoint.summary.bcs", "checkpoint.signature",);
 
 /// Read mask for `CheckpointResponse::checkpoint_data()`.
 ///
-/// Contains the minimum set of fields required to build a full
-/// `CheckpointData`: checkpoint summary/signature/contents BCS and
-/// per-transaction BCS for the transaction, signatures, effects,
+/// Contains the minimum set of fields required to build a full `CheckpointData`: checkpoint
+/// summary/signature/contents BCS and per-transaction BCS for the transaction, signatures, effects,
 /// events, and input/output objects.
 pub const CHECKPOINT_RESPONSE_CHECKPOINT_DATA: &str = field_mask!(
     "checkpoint.summary.bcs",
@@ -177,8 +170,7 @@ pub const CHECKPOINT_RESPONSE_CHECKPOINT_DATA: &str = field_mask!(
 // Full paths from the checkpoint endpoint root.
 // ---------------------------------------------------------------------------
 
-/// Read mask for
-/// [`CheckpointSummary::digest()`](crate::v1::checkpoint::CheckpointSummary::digest).
+/// Read mask for [`CheckpointSummary::digest()`](crate::v1::checkpoint::CheckpointSummary::digest).
 pub const CHECKPOINT_SUMMARY_DIGEST: &str = "checkpoint.summary.digest";
 
 /// Read mask for
@@ -196,9 +188,9 @@ pub const CHECKPOINT_CONTENTS_BCS: &str = "checkpoint.contents.bcs";
 // ---------------------------------------------------------------------------
 // ExecutedTransaction — per-method field constants
 //
-// Direct (unprefixed) paths, usable with get_transactions and
-// execute_transactions. For checkpoint context prefix with "transactions.",
-// for simulate_transactions prefix with "executed_transaction.".
+// Direct (unprefixed) paths, usable with get_transactions and execute_transactions. For checkpoint
+// context prefix with "transactions.", for simulate_transactions prefix with
+// "executed_transaction.".
 // ---------------------------------------------------------------------------
 
 /// Read mask for
@@ -236,10 +228,9 @@ pub const EXECUTED_TRANSACTION_TIMESTAMP: &str = "timestamp";
 ///
 /// Includes object references and BCS for all input objects.
 ///
-/// If the serving node no longer has one of the objects (e.g. pruned),
-/// `get_transactions` requests including this field fail with
-/// `FAILED_PRECONDITION`; narrow the read mask, or fetch objects individually
-/// via `get_objects` for best-effort retrieval.
+/// If the serving node no longer has one of the objects (e.g. pruned), `get_transactions` requests
+/// including this field fail with `FAILED_PRECONDITION`; narrow the read mask, or fetch objects
+/// individually via `get_objects` for best-effort retrieval.
 pub const EXECUTED_TRANSACTION_INPUT_OBJECTS: &str = "input_objects";
 
 /// Read mask for
@@ -247,10 +238,9 @@ pub const EXECUTED_TRANSACTION_INPUT_OBJECTS: &str = "input_objects";
 ///
 /// Includes object references and BCS for all output objects.
 ///
-/// If the serving node no longer has one of the objects (e.g. pruned),
-/// `get_transactions` requests including this field fail with
-/// `FAILED_PRECONDITION`; narrow the read mask, or fetch objects individually
-/// via `get_objects` for best-effort retrieval.
+/// If the serving node no longer has one of the objects (e.g. pruned), `get_transactions` requests
+/// including this field fail with `FAILED_PRECONDITION`; narrow the read mask, or fetch objects
+/// individually via `get_objects` for best-effort retrieval.
 pub const EXECUTED_TRANSACTION_OUTPUT_OBJECTS: &str = "output_objects";
 
 /// Read mask for
@@ -258,9 +248,8 @@ pub const EXECUTED_TRANSACTION_OUTPUT_OBJECTS: &str = "output_objects";
 ///
 /// Not included in any default read mask; must be requested explicitly.
 ///
-/// If the serving node no longer has a required object (e.g. pruned),
-/// `get_transactions` requests including this field fail with
-/// `FAILED_PRECONDITION`; retry without it in the read mask.
+/// If the serving node no longer has a required object (e.g. pruned), `get_transactions` requests
+/// including this field fail with `FAILED_PRECONDITION`; retry without it in the read mask.
 pub const EXECUTED_TRANSACTION_BALANCE_CHANGES: &str = "balance_changes";
 
 /// Read mask for
@@ -268,21 +257,18 @@ pub const EXECUTED_TRANSACTION_BALANCE_CHANGES: &str = "balance_changes";
 ///
 /// Not included in any default read mask; must be requested explicitly.
 ///
-/// If the serving node no longer has a required object (e.g. pruned),
-/// `get_transactions` requests including this field fail with
-/// `FAILED_PRECONDITION`; retry without it in the read mask.
+/// If the serving node no longer has a required object (e.g. pruned), `get_transactions` requests
+/// including this field fail with `FAILED_PRECONDITION`; retry without it in the read mask.
 pub const EXECUTED_TRANSACTION_OBJECT_CHANGES: &str = "object_changes";
 
 // ---------------------------------------------------------------------------
 // Transaction — sub-field constants (relative to ExecutedTransaction)
 // ---------------------------------------------------------------------------
 
-/// Read mask for
-/// [`Transaction::digest()`](crate::v1::transaction::Transaction::digest).
+/// Read mask for [`Transaction::digest()`](crate::v1::transaction::Transaction::digest).
 pub const TRANSACTION_DIGEST: &str = "transaction.digest";
 
-/// Read mask for
-/// [`Transaction::transaction()`](crate::v1::transaction::Transaction::transaction)
+/// Read mask for [`Transaction::transaction()`](crate::v1::transaction::Transaction::transaction)
 /// (BCS deserialization).
 pub const TRANSACTION_BCS: &str = "transaction.bcs";
 
@@ -295,8 +281,8 @@ pub const TRANSACTION_BCS: &str = "transaction.bcs";
 pub const TRANSACTION_EFFECTS_DIGEST: &str = "effects.digest";
 
 /// Read mask for
-/// [`TransactionEffects::effects()`](crate::v1::transaction::TransactionEffects::effects)
-/// (BCS deserialization).
+/// [`TransactionEffects::effects()`](crate::v1::transaction::TransactionEffects::effects) (BCS
+/// deserialization).
 pub const TRANSACTION_EFFECTS_BCS: &str = "effects.bcs";
 
 // ---------------------------------------------------------------------------
@@ -307,8 +293,7 @@ pub const TRANSACTION_EFFECTS_BCS: &str = "effects.bcs";
 /// [`TransactionEvents::digest()`](crate::v1::transaction::TransactionEvents::digest).
 pub const TRANSACTION_EVENTS_DIGEST: &str = "events.digest";
 
-/// Read mask for
-/// [`TransactionEvents::events()`](crate::v1::transaction::TransactionEvents::events)
+/// Read mask for [`TransactionEvents::events()`](crate::v1::transaction::TransactionEvents::events)
 /// (BCS deserialization of all events).
 pub const TRANSACTION_EVENTS_BCS: &str = "events.events.bcs";
 
@@ -321,49 +306,52 @@ pub const TRANSACTION_EVENTS_BCS: &str = "events.events.bcs";
 // - Checkpoint transaction events: prefix with "transactions.events.events."
 // ---------------------------------------------------------------------------
 
-/// Read mask for
-/// [`Event::event()`](crate::v1::event::Event::event)
-/// (full BCS deserialization).
+/// Read mask for [`Event::event()`](crate::v1::event::Event::event) (full BCS deserialization).
 pub const EVENT_BCS: &str = "bcs";
 
-/// Read mask for
-/// [`Event::package_id()`](crate::v1::event::Event::package_id).
+/// Read mask for [`Event::package_id()`](crate::v1::event::Event::package_id).
 pub const EVENT_PACKAGE_ID: &str = "package_id";
 
-/// Read mask for
-/// [`Event::module_name()`](crate::v1::event::Event::module_name).
+/// Read mask for [`Event::module_name()`](crate::v1::event::Event::module_name).
 pub const EVENT_MODULE: &str = "module";
 
-/// Read mask for
-/// [`Event::sender()`](crate::v1::event::Event::sender).
+/// Read mask for [`Event::sender()`](crate::v1::event::Event::sender).
 pub const EVENT_SENDER: &str = "sender";
 
-/// Read mask for
-/// [`Event::type_name()`](crate::v1::event::Event::type_name).
+/// Read mask for [`Event::type_name()`](crate::v1::event::Event::type_name).
 pub const EVENT_TYPE: &str = "event_type";
 
-/// Read mask for
-/// [`Event::bcs_contents()`](crate::v1::event::Event::bcs_contents).
+/// Read mask for [`Event::bcs_contents()`](crate::v1::event::Event::bcs_contents).
 pub const EVENT_BCS_CONTENTS: &str = "bcs_contents";
 
-/// Read mask for
-/// [`Event::json_contents()`](crate::v1::event::Event::json_contents).
+/// Read mask for [`Event::json_contents()`](crate::v1::event::Event::json_contents).
 pub const EVENT_JSON_CONTENTS: &str = "json_contents";
 
 // ---------------------------------------------------------------------------
 // Object — per-method field constants (for get_objects)
 // ---------------------------------------------------------------------------
 
-/// Read mask for
-/// [`Object::object_reference()`](crate::v1::object::Object::object_reference).
+/// Read mask for [`Object::object_reference()`](crate::v1::object::Object::object_reference).
 ///
 /// Includes object_id, version, and digest.
 pub const OBJECT_REFERENCE: &str = "reference";
 
-/// Read mask for
-/// [`Object::object()`](crate::v1::object::Object::object)
-/// (BCS deserialization).
+/// Read mask for [`Object::object()`](crate::v1::object::Object::object) (BCS deserialization).
 pub const OBJECT_BCS: &str = "bcs";
+
+/// Read mask for [`Object::json()`](crate::v1::object::Object::json).
+pub const OBJECT_JSON: &str = "json";
+
+/// Read mask for the object's on-chain Display template render
+/// ([`Object::display()`](crate::v1::object::Object::display)).
+pub const OBJECT_DISPLAY: &str = "display";
+
+// ---------------------------------------------------------------------------
+// DynamicField — per-method field constants (for list_dynamic_fields)
+// ---------------------------------------------------------------------------
+
+/// Read mask for [`DynamicField::json_name()`](crate::v1::dynamic_field::DynamicField::json_name).
+pub const DYNAMIC_FIELD_JSON_NAME: &str = "json_name";
 
 // ---------------------------------------------------------------------------
 // SimulatedTransaction — per-method field constants
@@ -372,8 +360,8 @@ pub const OBJECT_BCS: &str = "bcs";
 /// Read mask for
 /// [`SimulatedTransaction::executed_transaction()`](crate::v1::transaction_execution_service::SimulatedTransaction::executed_transaction).
 ///
-/// Includes all ExecutedTransaction sub-fields. To request specific
-/// sub-fields, use paths like `"executed_transaction.effects"`.
+/// Includes all ExecutedTransaction sub-fields. To request specific sub-fields, use paths like
+/// `"executed_transaction.effects"`.
 pub const SIMULATED_TRANSACTION_EXECUTED_TRANSACTION: &str = "executed_transaction";
 
 /// Read mask for
@@ -418,9 +406,9 @@ pub const EXECUTION_ERROR_COMMAND_INDEX: &str = "execution_result.execution_erro
 mod tests {
     use super::*;
 
-    // Nodes use these defaults when a request has no read mask, and the client
-    // sends them by default. Nodes reject paths they don't know, so adding a
-    // path here makes every default call fail against nodes without it.
+    // Nodes use these defaults when a request has no read mask, and the client sends them by
+    // default. Nodes reject paths they don't know, so adding a path here makes every default call
+    // fail against nodes without it.
     #[test]
     fn endpoint_defaults_are_pinned() {
         assert_eq!(

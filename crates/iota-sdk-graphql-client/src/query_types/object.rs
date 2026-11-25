@@ -112,8 +112,8 @@ pub struct ObjectFilter {
 }
 
 impl ObjectFilter {
-    /// Filter by package, module, or fully qualified type, e.g. `"0x02"`,
-    /// `"0x02::coin"`, or `"0x02::coin::Coin"`.
+    /// Filter by package, module, or fully qualified type, e.g. `"0x02"`, `"0x02::coin"`, or
+    /// `"0x02::coin::Coin"`.
     pub fn with_type(mut self, type_tag: impl Into<String>) -> Self {
         self.type_tag = Some(type_tag.into());
         self

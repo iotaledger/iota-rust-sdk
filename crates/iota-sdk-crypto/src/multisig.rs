@@ -48,9 +48,8 @@ impl MultisigVerifier {
         self
     }
 
-    /// Reject a member signature whose scheme differs from its member's public
-    /// key before verifying it. Such a signature fails verification either
-    /// way, so this only changes the error returned.
+    /// Reject a member signature whose scheme differs from its member's public key before verifying
+    /// it. Such a signature fails verification either way, so this only changes the error returned.
     ///
     /// Disabled by default.
     pub fn with_additional_multisig_checks(mut self, additional_checks: bool) -> Self {
@@ -58,19 +57,16 @@ impl MultisigVerifier {
         self
     }
 
-    /// Reject partially signed multisigs whose committee mixes Ed25519 with
-    /// other key schemes, by validating the aggregated signature with
-    /// [`MultisigAggregatedSignature::validate`] instead of
-    /// [`MultisigAggregatedSignature::validate_allow_partially_signed_mixed_ed25519`].
+    /// Reject partially signed multisigs whose committee mixes Ed25519 with other key schemes, by
+    /// validating the aggregated signature with [`MultisigAggregatedSignature::validate`] instead
+    /// of [`MultisigAggregatedSignature::validate_allow_partially_signed_mixed_ed25519`].
     ///
     /// Such a multisig is still accepted when every member has signed.
-    /// [`MultisigAggregator::finish`] applies the same rule through its
-    /// verifier.
+    /// [`MultisigAggregator::finish`] applies the same rule through its verifier.
     ///
-    /// Enabled by default. The network accepted such multisigs before protocol
-    /// version 39 (node release 1.35), so disabling it accepts them again, but
-    /// a partially signed one can then not be told apart from one forged
-    /// through a committee whose address collides with the signer's.
+    /// Enabled by default. The network accepted such multisigs before protocol version 39 (node
+    /// release 1.35), so disabling it accepts them again, but a partially signed one can then not
+    /// be told apart from one forged through a committee whose address collides with the signer's.
     pub fn with_reject_partially_signed_mixed_ed25519(mut self, reject: bool) -> Self {
         self.reject_partially_signed_mixed_ed25519 = reject;
         self
@@ -151,9 +147,8 @@ impl MultisigVerifier {
 
 #[cfg(feature = "passkey")]
 impl MultisigVerifier {
-    /// The verifier used for every passkey member. An address set on it must
-    /// match each passkey member, so leave it unset for a multisig with
-    /// passkey members of different addresses.
+    /// The verifier used for every passkey member. An address set on it must match each passkey
+    /// member, so leave it unset for a multisig with passkey members of different addresses.
     pub fn with_passkey_verifier(
         mut self,
         passkey_verifier: crate::passkey::PasskeyVerifier,
@@ -275,8 +270,8 @@ impl UserSignatureVerifier {
         self
     }
 
-    /// Replaces the verifier used for multisig signatures, including the
-    /// setting from [`Self::with_reject_partially_signed_mixed_ed25519`].
+    /// Replaces the verifier used for multisig signatures, including the setting from
+    /// [`Self::with_reject_partially_signed_mixed_ed25519`].
     pub fn with_multisig_verifier(mut self, multisig_verifier: MultisigVerifier) -> Self {
         self.multisig_verifier = multisig_verifier;
         self
@@ -293,8 +288,8 @@ impl UserSignatureVerifier {
 
 #[cfg(feature = "passkey")]
 impl UserSignatureVerifier {
-    /// The verifier used for direct passkey signatures. Passkey members of a
-    /// multisig are checked by the [`MultisigVerifier`] instead.
+    /// The verifier used for direct passkey signatures. Passkey members of a multisig are checked
+    /// by the [`MultisigVerifier`] instead.
     pub fn with_passkey_verifier(
         mut self,
         passkey_verifier: crate::passkey::PasskeyVerifier,
@@ -323,8 +318,8 @@ impl Verifier<UserSignature> for UserSignatureVerifier {
             UserSignature::PasskeyAuthenticator(_) => Err(SignatureError::from_source(
                 "support for passkey is not enabled",
             )),
-            // A configured verifier may also check the signer's address; the
-            // default one only checks the signature.
+            // A configured verifier may also check the signer's address; the default one only
+            // checks the signature.
             #[cfg(feature = "passkey")]
             UserSignature::PasskeyAuthenticator(authenticator) => self
                 .passkey_verifier()
@@ -428,10 +423,9 @@ impl MultisigAggregator {
         Ok(())
     }
 
-    /// Build the aggregated signature once the signed weight reaches the
-    /// threshold, verified like [`MultisigVerifier`] does, so with its default
-    /// settings a committee mixing Ed25519 with other key schemes needs every
-    /// member's signature and a passkey signature is rejected.
+    /// Build the aggregated signature once the signed weight reaches the threshold, verified like
+    /// [`MultisigVerifier`] does, so with its default settings a committee mixing Ed25519 with
+    /// other key schemes needs every member's signature and a passkey signature is rejected.
     /// [`Self::verifier_mut`] can change that.
     pub fn finish(&self) -> Result<MultisigAggregatedSignature, SignatureError> {
         if self.signed_weight < self.committee.threshold() {
@@ -539,8 +533,8 @@ mod tests {
         .unwrap()
     }
 
-    /// A 2-of-3 committee with one member per scheme, each with weight 1,
-    /// built unchecked since it mixes Ed25519 with other key schemes.
+    /// A 2-of-3 committee with one member per scheme, each with weight 1, built unchecked since it
+    /// mixes Ed25519 with other key schemes.
     fn mixed_ed25519_committee_2_of_3(
         k0: &Ed25519PrivateKey,
         k1: &Secp256k1PrivateKey,
@@ -560,8 +554,8 @@ mod tests {
         PersonalMessage("hello multisig".as_bytes().to_vec().into())
     }
 
-    /// Sign with two of the three members and verify the aggregated signature
-    /// both with the generic verifier and with the multisig address bound.
+    /// Sign with two of the three members and verify the aggregated signature both with the generic
+    /// verifier and with the multisig address bound.
     #[test]
     fn sign_aggregate_and_verify() {
         let (k0, k1, k2) = committee_keys();
@@ -605,8 +599,7 @@ mod tests {
         );
     }
 
-    /// Binding the wrong address must be rejected even when the signatures
-    /// themselves are valid.
+    /// Binding the wrong address must be rejected even when the signatures themselves are valid.
     #[test]
     fn verify_rejects_wrong_address() {
         let (k0, k1, k2) = committee_keys();
@@ -629,10 +622,9 @@ mod tests {
         );
     }
 
-    /// When a member signature's scheme does not match its committee public
-    /// key, the mismatch is only reported when the additional multisig checks
-    /// are enabled; otherwise the failure surfaces later, during cryptographic
-    /// verification.
+    /// When a member signature's scheme does not match its committee public key, the mismatch is
+    /// only reported when the additional multisig checks are enabled; otherwise the failure
+    /// surfaces later, during cryptographic verification.
     #[test]
     fn verify_reports_scheme_pubkey_mismatch_only_with_additional_checks() {
         let (k0, k1, _k2) = test_keys();
@@ -671,9 +663,8 @@ mod tests {
         );
     }
 
-    /// Drive the incremental [`MultisigAggregator`]: duplicates and
-    /// non-members are rejected, `finish` enforces the threshold, and the
-    /// resulting signature verifies.
+    /// Drive the incremental [`MultisigAggregator`]: duplicates and non-members are rejected,
+    /// `finish` enforces the threshold, and the resulting signature verifies.
     #[test]
     fn aggregator_rejects_bad_signatures_and_enforces_threshold() {
         let (k0, k1, k2) = committee_keys();
@@ -723,8 +714,8 @@ mod tests {
             .unwrap();
     }
 
-    /// [`MultisigAggregator::finish`] applies the verifier's rule for a
-    /// committee mixing Ed25519 with other key schemes.
+    /// [`MultisigAggregator::finish`] applies the verifier's rule for a committee mixing Ed25519
+    /// with other key schemes.
     #[test]
     fn aggregator_rejects_partially_signed_mixed_ed25519() {
         let (k0, k1, k2) = test_keys();
@@ -761,8 +752,8 @@ mod tests {
             .unwrap();
     }
 
-    /// [`MultisigAggregator::finish`] rejects a committee that is not valid
-    /// instead of returning a signature over it.
+    /// [`MultisigAggregator::finish`] rejects a committee that is not valid instead of returning a
+    /// signature over it.
     #[test]
     fn aggregator_rejects_invalid_committee() {
         let msg = message();
@@ -806,8 +797,7 @@ mod tests {
         );
     }
 
-    /// [`MultisigAggregator::finish`] applies the address bound on its
-    /// verifier.
+    /// [`MultisigAggregator::finish`] applies the address bound on its verifier.
     #[test]
     fn aggregator_rejects_wrong_address() {
         let (k0, k1, k2) = committee_keys();
@@ -836,8 +826,8 @@ mod tests {
         aggregator.finish().unwrap();
     }
 
-    /// [`UserSignatureVerifier`] accepts a plain simple signature, while the
-    /// [`MultisigVerifier`] rejects anything that is not a multisig.
+    /// [`UserSignatureVerifier`] accepts a plain simple signature, while the [`MultisigVerifier`]
+    /// rejects anything that is not a multisig.
     #[test]
     fn user_signature_verifier_handles_simple_signatures() {
         let (k0, _k1, _k2) = test_keys();
@@ -857,8 +847,8 @@ mod tests {
         );
     }
 
-    /// A passkey member inside a multisig is rejected unless explicitly
-    /// accepted, independent of whether its signature would verify.
+    /// A passkey member inside a multisig is rejected unless explicitly accepted, independent of
+    /// whether its signature would verify.
     #[cfg(feature = "passkey")]
     #[test]
     fn verify_rejects_passkey_member_when_not_accepted() {
@@ -894,8 +884,8 @@ mod tests {
         );
     }
 
-    /// [`UserSignatureVerifier`] applies the configured passkey verifier to
-    /// direct passkey signatures.
+    /// [`UserSignatureVerifier`] applies the configured passkey verifier to direct passkey
+    /// signatures.
     #[cfg(feature = "passkey")]
     #[test]
     fn user_signature_verifier_uses_passkey_verifier() {
@@ -935,8 +925,8 @@ mod tests {
         );
     }
 
-    /// [`UserSignatureVerifier`] accepts a passkey member inside a multisig
-    /// only with a multisig verifier that accepts it.
+    /// [`UserSignatureVerifier`] accepts a passkey member inside a multisig only with a multisig
+    /// verifier that accepts it.
     #[cfg(feature = "passkey")]
     #[test]
     fn user_signature_verifier_uses_multisig_verifier() {
@@ -982,8 +972,8 @@ mod tests {
             .unwrap();
     }
 
-    /// [`MultisigAggregator::finish`] rejects a passkey member unless its
-    /// verifier accepts passkeys inside a multisig.
+    /// [`MultisigAggregator::finish`] rejects a passkey member unless its verifier accepts passkeys
+    /// inside a multisig.
     #[cfg(feature = "passkey")]
     #[test]
     fn aggregator_rejects_passkey_member_unless_accepted() {
@@ -1025,10 +1015,9 @@ mod tests {
             .unwrap();
     }
 
-    /// Decode a hardcoded base64 transaction and the 2-of-3 multisig signature
-    /// over it (ed25519 + secp256k1), then verify. This pins the multisig wire
-    /// format and end-to-end verification, mirroring the fixtures kept for the
-    /// other signature schemes.
+    /// Decode a hardcoded base64 transaction and the 2-of-3 multisig signature over it (ed25519 +
+    /// secp256k1), then verify. This pins the multisig wire format and end-to-end verification,
+    /// mirroring the fixtures kept for the other signature schemes.
     #[test]
     fn transaction_signing_fixture() {
         const TRANSACTION: &str = "AAAAACdZawPnpJRjmVcwDu6xrIumtq5NLO+6GHbs0iGdCoD7AQ0T0TolicYERdSvyCRjSSduDZLbSpBsZBoib+lF48EBcgAAAAAAAAAgpQr/Mudl9BdzyBdkbqTlqBw4/aJ21kAD/jpJKa05im4nWWsD56SUY5lXMA7usayLprauTSzvuhh27NIhnQqA++gDAAAAAAAAgIQeAAAAAAAA";
@@ -1059,8 +1048,8 @@ mod tests {
             .verify_transaction(&transaction, &signature)
             .unwrap();
 
-        // The committee mixes Ed25519 with other key schemes and only two of
-        // its three members signed.
+        // The committee mixes Ed25519 with other key schemes and only two of its three members
+        // signed.
         for error in [
             MultisigVerifier::new()
                 .verify_transaction(&transaction, &signature)
@@ -1078,9 +1067,9 @@ mod tests {
         }
     }
 
-    /// A committee mixing Ed25519 with other key schemes verifies only with a
-    /// signature from every member by default, and with a subset of signatures
-    /// when mixed Ed25519 committees are not rejected.
+    /// A committee mixing Ed25519 with other key schemes verifies only with a signature from every
+    /// member by default, and with a subset of signatures when mixed Ed25519 committees are not
+    /// rejected.
     #[test]
     fn verify_mixed_ed25519_committee() {
         let (k0, k1, k2) = test_keys();

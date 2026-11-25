@@ -5,11 +5,10 @@
 //!
 //! # Read Mask
 //!
-//! The checkpoint queries and streams take a mask through their `read_mask`
-//! setter to control which data is included in the response. Without the
-//! setter the default mask is used. Set a
-//! [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField)
-//! (or any slice/array/vec of fields) to choose the returned fields.
+//! The checkpoint queries and streams take a mask through their `read_mask` setter to control which
+//! data is included in the response. Without the setter the default mask is used. Set a
+//! [`CheckpointResponseField`](iota_grpc_types::read_mask_fields::CheckpointResponseField) (or any
+//! slice/array/vec of fields) to choose the returned fields.
 
 use std::pin::Pin;
 
@@ -38,9 +37,8 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GrpcClient::checkpoint_latest`],
-    /// [`GrpcClient::checkpoint_by_sequence_number`] and
-    /// [`GrpcClient::checkpoint_by_digest`]. Await it to send the request.
+    /// Query for [`GrpcClient::checkpoint_latest`], [`GrpcClient::checkpoint_by_sequence_number`]
+    /// and [`GrpcClient::checkpoint_by_digest`]. Await it to send the request.
     pub struct GetCheckpointQuery {
         service_client: LedgerServiceClient<InterceptedChannel>,
         max_message_size: Option<usize>,
@@ -196,8 +194,7 @@ impl CheckpointStreamOptions {
 }
 
 define_query! {
-    /// Query for [`GrpcClient::checkpoints_stream`]. Await it to open the
-    /// stream.
+    /// Query for [`GrpcClient::checkpoints_stream`]. Await it to open the stream.
     pub struct CheckpointsStreamQuery {
         options: CheckpointStreamOptions,
     }
@@ -205,8 +202,7 @@ define_query! {
 }
 
 impl CheckpointsStreamQuery {
-    /// Set the first checkpoint to stream. Without it, starts from the
-    /// latest checkpoint.
+    /// Set the first checkpoint to stream. Without it, starts from the latest checkpoint.
     pub fn start_sequence_number(
         mut self,
         start_sequence_number: CheckpointSequenceNumber,
@@ -251,9 +247,8 @@ impl CheckpointsStreamQuery {
             .await?
             .into_parts();
 
-        // remove the wrapping CheckpointStreamItem layer since we know
-        // filter_checkpoints is false and thus only Checkpoint items will be
-        // produced
+        // remove the wrapping CheckpointStreamItem layer since we know filter_checkpoints is false
+        // and thus only Checkpoint items will be produced
         let filtered = stream.filter_map(|item| async {
             match item {
                 Ok(CheckpointStreamItem::Checkpoint(cp)) => Some(Ok(*cp)),
@@ -267,8 +262,7 @@ impl CheckpointsStreamQuery {
 }
 
 define_query! {
-    /// Query for [`GrpcClient::checkpoints_stream_filtered`]. Await it to
-    /// open the stream.
+    /// Query for [`GrpcClient::checkpoints_stream_filtered`]. Await it to open the stream.
     pub struct CheckpointsStreamFilteredQuery {
         options: CheckpointStreamOptions,
         progress_interval_ms: Option<u32>,
@@ -277,8 +271,7 @@ define_query! {
 }
 
 impl CheckpointsStreamFilteredQuery {
-    /// Set the first checkpoint to stream. Without it, starts from the
-    /// latest checkpoint.
+    /// Set the first checkpoint to stream. Without it, starts from the latest checkpoint.
     pub fn start_sequence_number(
         mut self,
         start_sequence_number: CheckpointSequenceNumber,
@@ -314,8 +307,7 @@ impl CheckpointsStreamFilteredQuery {
         self
     }
 
-    /// Set the progress message interval in milliseconds. Defaults to
-    /// 2000ms, minimum 500ms.
+    /// Set the progress message interval in milliseconds. Defaults to 2000ms, minimum 500ms.
     pub fn progress_interval_ms(mut self, progress_interval_ms: u32) -> Self {
         self.progress_interval_ms = Some(progress_interval_ms);
         self
@@ -333,11 +325,10 @@ impl CheckpointsStreamFilteredQuery {
 impl GrpcClient {
     /// Get the latest checkpoint.
     ///
-    /// Returns the checkpoint with fields populated according to the read
-    /// mask. Filter with
+    /// Returns the checkpoint with fields populated according to the read mask. Filter with
     /// [`transactions_filter`](GetCheckpointQuery::transactions_filter) and
-    /// [`events_filter`](GetCheckpointQuery::events_filter), and choose the
-    /// returned fields with [`read_mask`](GetCheckpointQuery::read_mask).
+    /// [`events_filter`](GetCheckpointQuery::events_filter), and choose the returned fields with
+    /// [`read_mask`](GetCheckpointQuery::read_mask).
     ///
     /// # Example
     ///
@@ -359,11 +350,10 @@ impl GrpcClient {
 
     /// Get checkpoint by sequence number.
     ///
-    /// Returns the checkpoint with fields populated according to the read
-    /// mask. Filter with
+    /// Returns the checkpoint with fields populated according to the read mask. Filter with
     /// [`transactions_filter`](GetCheckpointQuery::transactions_filter) and
-    /// [`events_filter`](GetCheckpointQuery::events_filter), and choose the
-    /// returned fields with [`read_mask`](GetCheckpointQuery::read_mask).
+    /// [`events_filter`](GetCheckpointQuery::events_filter), and choose the returned fields with
+    /// [`read_mask`](GetCheckpointQuery::read_mask).
     ///
     /// # Parameters
     ///
@@ -394,11 +384,10 @@ impl GrpcClient {
 
     /// Get checkpoint by digest.
     ///
-    /// Returns the checkpoint with fields populated according to the read
-    /// mask. Filter with
+    /// Returns the checkpoint with fields populated according to the read mask. Filter with
     /// [`transactions_filter`](GetCheckpointQuery::transactions_filter) and
-    /// [`events_filter`](GetCheckpointQuery::events_filter), and choose the
-    /// returned fields with [`read_mask`](GetCheckpointQuery::read_mask).
+    /// [`events_filter`](GetCheckpointQuery::events_filter), and choose the returned fields with
+    /// [`read_mask`](GetCheckpointQuery::read_mask).
     ///
     /// # Parameters
     ///
@@ -440,26 +429,23 @@ impl GrpcClient {
 
     /// Stream checkpoints across a range of checkpoints.
     ///
-    /// Returns a stream of [`CheckpointResponse`] objects, each representing
-    /// a complete checkpoint with its transactions and events. Every checkpoint
-    /// in the range is yielded, even if the filters produce no matching
-    /// transactions or events within it.
+    /// Returns a stream of [`CheckpointResponse`] objects, each representing a complete checkpoint
+    /// with its transactions and events. Every checkpoint in the range is yielded, even if the
+    /// filters produce no matching transactions or events within it.
     ///
     /// To skip non-matching checkpoints entirely, use
     /// [`checkpoints_stream_filtered`](Self::checkpoints_stream_filtered).
     ///
-    /// Without [`start_sequence_number`](CheckpointsStreamQuery::start_sequence_number)
-    /// the stream starts from the latest checkpoint, and without
-    /// [`end_sequence_number`](CheckpointsStreamQuery::end_sequence_number) it
-    /// runs indefinitely. Filter with
-    /// [`transactions_filter`](CheckpointsStreamQuery::transactions_filter) and
-    /// [`events_filter`](CheckpointsStreamQuery::events_filter), and choose
-    /// the returned fields with
-    /// [`read_mask`](CheckpointsStreamQuery::read_mask).
+    /// Without [`start_sequence_number`](CheckpointsStreamQuery::start_sequence_number) the stream
+    /// starts from the latest checkpoint, and without
+    /// [`end_sequence_number`](CheckpointsStreamQuery::end_sequence_number) it runs indefinitely.
+    /// Filter with [`transactions_filter`](CheckpointsStreamQuery::transactions_filter) and
+    /// [`events_filter`](CheckpointsStreamQuery::events_filter), and choose the returned fields
+    /// with [`read_mask`](CheckpointsStreamQuery::read_mask).
     ///
-    /// **Note:** The metadata in the returned [`MetadataEnvelope`] is captured
-    /// from the initial gRPC response headers when the stream is opened. It is
-    /// **not** updated as subsequent checkpoint data arrives.
+    /// **Note:** The metadata in the returned [`MetadataEnvelope`] is captured from the initial
+    /// gRPC response headers when the stream is opened. It is **not** updated as subsequent
+    /// checkpoint data arrives.
     ///
     /// # Example
     ///
@@ -489,27 +475,23 @@ impl GrpcClient {
 
     /// Stream checkpoints, skipping those with no matching data.
     ///
-    /// Unlike [`checkpoints_stream`](Self::checkpoints_stream), this method
-    /// sets `filter_checkpoints = true` on the server, which means checkpoints
-    /// without any matching transactions or events are skipped entirely.
+    /// Unlike [`checkpoints_stream`](Self::checkpoints_stream), this method sets
+    /// `filter_checkpoints = true` on the server, which means checkpoints without any matching
+    /// transactions or events are skipped entirely.
     ///
     /// The returned stream yields [`CheckpointStreamItem`], which is either a
-    /// [`CheckpointStreamItem::Checkpoint`] or a
-    /// [`CheckpointStreamItem::Progress`]. Progress messages are sent
-    /// periodically during scanning to indicate liveness and the current scan
+    /// [`CheckpointStreamItem::Checkpoint`] or a [`CheckpointStreamItem::Progress`]. Progress
+    /// messages are sent periodically during scanning to indicate liveness and the current scan
     /// position (default every 2 seconds, configurable via
     /// [`progress_interval_ms`](CheckpointsStreamFilteredQuery::progress_interval_ms)).
     ///
-    /// For liveness detection, wrap `stream.next()` in
-    /// `tokio::time::timeout()`: if neither a `Checkpoint` nor a `Progress`
-    /// arrives within your chosen duration plus some buffer for connection
-    /// latency, the connection is likely dead.
+    /// For liveness detection, wrap `stream.next()` in `tokio::time::timeout()`: if neither a
+    /// `Checkpoint` nor a `Progress` arrives within your chosen duration plus some buffer for
+    /// connection latency, the connection is likely dead.
     ///
-    /// At least one of
-    /// [`transactions_filter`](CheckpointsStreamFilteredQuery::transactions_filter)
-    /// or [`events_filter`](CheckpointsStreamFilteredQuery::events_filter) must
-    /// be set. The range and the read mask work as for
-    /// [`checkpoints_stream`](Self::checkpoints_stream).
+    /// At least one of [`transactions_filter`](CheckpointsStreamFilteredQuery::transactions_filter)
+    /// or [`events_filter`](CheckpointsStreamFilteredQuery::events_filter) must be set. The range
+    /// and the read mask work as for [`checkpoints_stream`](Self::checkpoints_stream).
     ///
     /// # Example
     ///
@@ -571,10 +553,9 @@ impl GrpcClient {
     /// - `Progress` - Liveness indicator during filtered scanning
     /// - `EndMarker` - Signals the end of one checkpoint's data
     ///
-    /// This function buffers the chunks and yields [`CheckpointStreamItem`]
-    /// values: either complete [`CheckpointResponse`] objects when an
-    /// `EndMarker` is received, or [`CheckpointStreamItem::Progress`] when
-    /// a progress message arrives.
+    /// This function buffers the chunks and yields [`CheckpointStreamItem`] values: either complete
+    /// [`CheckpointResponse`] objects when an `EndMarker` is received, or
+    /// [`CheckpointStreamItem::Progress`] when a progress message arrives.
     fn reassemble_checkpoint_data_stream<S, E>(
         stream: S,
         span: tracing::Span,

@@ -31,20 +31,17 @@ impl AccessorTypes {
     /// Parse a comma-separated string of accessor types
     /// Example: "set,with" -> AccessorTypes::SET | AccessorTypes::WITH
     /// Special values:
-    /// - "all" -> generates all accessor types (getter, getter_opt, set, with,
-    ///   mut, mut_opt) Note: "all" cannot be combined with other accessor types
-    ///   Note: "all" includes getter, which automatically generates default
-    ///   helpers
-    /// - "default" -> generates const_default() and default_instance() helpers
-    ///   Note: Only use "default" with non-getter accessors (e.g.,
-    ///   "set,with,default") Note: "getter" and "all" already include default
-    ///   helpers, so don't combine
+    /// - "all" -> generates all accessor types (getter, getter_opt, set, with, mut, mut_opt) Note:
+    ///   "all" cannot be combined with other accessor types Note: "all" includes getter, which
+    ///   automatically generates default helpers
+    /// - "default" -> generates const_default() and default_instance() helpers Note: Only use
+    ///   "default" with non-getter accessors (e.g., "set,with,default") Note: "getter" and "all"
+    ///   already include default helpers, so don't combine
     ///
     /// Panics if:
     /// - Unknown accessor type is encountered
     /// - "all" is combined with other accessor types
-    /// - "default" is combined with "getter" or "all" (redundant, since getter
-    ///   includes defaults)
+    /// - "default" is combined with "getter" or "all" (redundant, since getter includes defaults)
     pub fn parse(s: &str) -> Option<Self> {
         if s.is_empty() {
             return None;
@@ -105,8 +102,8 @@ impl AccessorTypes {
             );
         }
 
-        // Validate that 'default' is not combined with 'getter' or 'all' (since getter
-        // already includes default)
+        // Validate that 'default' is not combined with 'getter' or 'all' (since getter already
+        // includes default)
         if result.contains(AccessorTypes::DEFAULT) && result.contains(AccessorTypes::GETTER) {
             panic!(
                 "Cannot combine 'default' with 'getter' or 'all' in '{s}'. The 'getter' accessor already generates default helpers. Use 'default' only with non-getter accessors like 'set,with,default'."
@@ -123,8 +120,8 @@ impl AccessorTypes {
     /// Extract accessor types from a protobuf field's name.
     /// Returns None if the field can't be found in the accessor_map.
     ///
-    /// `message_full_name` is the fully qualified message name without a
-    /// leading dot, as [`AccessorMap`] is keyed.
+    /// `message_full_name` is the fully qualified message name without a leading dot, as
+    /// [`AccessorMap`] is keyed.
     pub fn from_field(
         field: &FieldDescriptorProto,
         accessor_map: &AccessorMap,
@@ -140,14 +137,12 @@ impl AccessorTypes {
 /// Map of fields to their accessor configurations.
 ///
 /// Key is the fully qualified field name without a leading dot
-/// (`iota.grpc.v1.filter.EventFilter.negation`), so that messages sharing a
-/// simple name in different packages, or nested under different parents, keep
-/// their own configuration.
+/// (`iota.grpc.v1.filter.EventFilter.negation`), so that messages sharing a simple name in
+/// different packages, or nested under different parents, keep their own configuration.
 pub type AccessorMap = HashMap<String, AccessorTypes>;
 
-/// Parse proto files to extract message_accessors and field_accessors
-/// annotations from the descriptor pool Returns a map of
-/// "MessageName.field_name" -> AccessorTypes
+/// Parse proto files to extract message_accessors and field_accessors annotations from the
+/// descriptor pool Returns a map of "MessageName.field_name" -> AccessorTypes
 pub fn parse_proto_accessors_from_pool(pool: &prost_reflect::DescriptorPool) -> AccessorMap {
     let mut map = HashMap::new();
 
@@ -210,8 +205,8 @@ pub fn parse_proto_accessors_from_pool(pool: &prost_reflect::DescriptorPool) -> 
 mod tests {
     use super::*;
 
-    /// Keys have to carry the package and any enclosing messages, so that two
-    /// messages sharing a simple name cannot share accessor configuration.
+    /// Keys have to carry the package and any enclosing messages, so that two messages sharing a
+    /// simple name cannot share accessor configuration.
     #[test]
     fn accessor_keys_are_fully_qualified() {
         let proto_dir = std::path::PathBuf::from(std::env!("CARGO_MANIFEST_DIR"))

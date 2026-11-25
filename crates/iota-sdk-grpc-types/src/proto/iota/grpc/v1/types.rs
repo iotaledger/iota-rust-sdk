@@ -25,8 +25,8 @@ impl TryFrom<&Digest> for iota_types::Digest {
     }
 }
 
-/// The domain-specific digest newtypes are transparent wrappers around
-/// [`iota_types::Digest`], so their proto conversions just delegate to it.
+/// The domain-specific digest newtypes are transparent wrappers around [`iota_types::Digest`], so
+/// their proto conversions just delegate to it.
 macro_rules! impl_digest_wrapper_conversion {
     ($wrapper:ty) => {
         impl From<$wrapper> for Digest {
@@ -196,8 +196,8 @@ impl From<iota_types::Owner> for Owner {
             }
             iota_types::Owner::Shared(version) => Some(owner::Kind::Shared(version.as_u64())),
             iota_types::Owner::Immutable => Some(owner::Kind::Immutable(true)),
-            // `iota_types::Owner` is `#[non_exhaustive]`; an unknown future
-            // variant maps to an unset oneof ("unspecified ownership kind").
+            // `iota_types::Owner` is `#[non_exhaustive]`; an unknown future variant maps to an
+            // unset oneof ("unspecified ownership kind").
             _ => None,
         };
 

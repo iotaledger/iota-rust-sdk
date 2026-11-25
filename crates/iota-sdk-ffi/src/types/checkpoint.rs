@@ -21,26 +21,23 @@ pub type ProtocolVersion = u64;
 
 /// A header for a Checkpoint on the IOTA blockchain.
 ///
-/// On the IOTA network, checkpoints define the history of the blockchain. They
-/// are quite similar to the concept of blocks used by other blockchains like
-/// Bitcoin or Ethereum. The IOTA blockchain, however, forms checkpoints after
-/// transaction execution has already happened to provide a certified history of
-/// the chain, instead of being formed before execution.
+/// On the IOTA network, checkpoints define the history of the blockchain. They are quite similar to
+/// the concept of blocks used by other blockchains like Bitcoin or Ethereum. The IOTA blockchain,
+/// however, forms checkpoints after transaction execution has already happened to provide a
+/// certified history of the chain, instead of being formed before execution.
 ///
 /// Checkpoints commit to a variety of state including but not limited to:
 /// - The hash of the previous checkpoint.
-/// - The set of transaction digests, their corresponding effects digests, as
-///   well as the set of user signatures which authorized its execution.
+/// - The set of transaction digests, their corresponding effects digests, as well as the set of
+///   user signatures which authorized its execution.
 /// - The object's produced by a transaction.
 /// - The set of live objects that make up the current state of the chain.
 /// - On epoch transitions, the next validator committee.
 ///
-/// `CheckpointSummary`s themselves don't directly include all of the above
-/// information but they are the top-level type by which all the above are
-/// committed to transitively via cryptographic hashes included in the summary.
-/// `CheckpointSummary`s are signed and certified by a quorum of the validator
-/// committee in a given epoch in order to allow verification of the chain's
-/// state.
+/// `CheckpointSummary`s themselves don't directly include all of the above information but they are
+/// the top-level type by which all the above are committed to transitively via cryptographic hashes
+/// included in the summary. `CheckpointSummary`s are signed and certified by a quorum of the
+/// validator committee in a given epoch in order to allow verification of the chain's state.
 ///
 /// # BCS
 ///
@@ -92,8 +89,7 @@ impl CheckpointSummary {
         self.0.sequence_number
     }
 
-    /// Total number of transactions committed since genesis, including those in
-    /// this checkpoint.
+    /// Total number of transactions committed since genesis, including those in this checkpoint.
     pub fn network_total_transactions(&self) -> u64 {
         self.0.network_total_transactions
     }
@@ -110,16 +106,15 @@ impl CheckpointSummary {
         self.0.previous_digest.map(Into::into).map(Arc::new)
     }
 
-    /// The running total gas costs of all transactions included in the current
-    /// epoch so far until this checkpoint.
+    /// The running total gas costs of all transactions included in the current epoch so far until
+    /// this checkpoint.
     pub fn epoch_rolling_gas_cost_summary(&self) -> GasCostSummary {
         self.0.epoch_rolling_gas_cost_summary.clone().into()
     }
 
     /// Timestamp of the checkpoint - number of milliseconds from the Unix epoch
-    /// Checkpoint timestamps are monotonic, but not strongly monotonic -
-    /// subsequent checkpoints can have same timestamp if they originate
-    /// from the same underlining consensus commit
+    /// Checkpoint timestamps are monotonic, but not strongly monotonic - subsequent checkpoints can
+    /// have same timestamp if they originate from the same underlining consensus commit
     pub fn timestamp_ms(&self) -> u64 {
         self.0.timestamp_ms
     }
@@ -140,10 +135,9 @@ impl CheckpointSummary {
         self.0.end_of_epoch_data.clone().map(Into::into)
     }
 
-    /// CheckpointSummary is not an evolvable structure - it must be readable by
-    /// any version of the code. Therefore, in order to allow extensions to
-    /// be added to CheckpointSummary, we allow opaque data to be added to
-    /// checkpoints which can be deserialized based on the current
+    /// CheckpointSummary is not an evolvable structure - it must be readable by any version of the
+    /// code. Therefore, in order to allow extensions to be added to CheckpointSummary, we allow
+    /// opaque data to be added to checkpoints which can be deserialized based on the current
     /// protocol version.
     pub fn version_specific_data(&self) -> Vec<u8> {
         self.0.version_specific_data.clone()
@@ -162,8 +156,8 @@ impl CheckpointSummary {
     }
 }
 
-/// A [`CheckpointSummary`] together with an aggregated signature certifying it
-/// under its epoch's validator committee.
+/// A [`CheckpointSummary`] together with an aggregated signature certifying it under its epoch's
+/// validator committee.
 ///
 /// # BCS
 ///
@@ -193,9 +187,8 @@ impl SignedCheckpointSummary {
 
 /// The committed to contents of a checkpoint.
 ///
-/// `CheckpointContents` contains a list of digests of Transactions, their
-/// effects, and the user signatures that authorized their execution included in
-/// a checkpoint.
+/// `CheckpointContents` contains a list of digests of Transactions, their effects, and the user
+/// signatures that authorized their execution included in a checkpoint.
 ///
 /// # BCS
 ///
@@ -246,10 +239,9 @@ impl CheckpointContents {
     }
 }
 
-/// CheckpointContents are the transactions included in an upcoming checkpoint.
-/// They must have already been causally ordered. Since the causal order
-/// algorithm is the same among validators, we expect all honest validators to
-/// come up with the same order for each checkpoint content.
+/// CheckpointContents are the transactions included in an upcoming checkpoint. They must have
+/// already been causally ordered. Since the causal order algorithm is the same among validators, we
+/// expect all honest validators to come up with the same order for each checkpoint content.
 ///
 /// # BCS
 ///
@@ -351,8 +343,7 @@ impl CheckpointCommitment {
     }
 }
 
-/// Data which, when included in a [`CheckpointSummary`], signals the end of an
-/// `Epoch`.
+/// Data which, when included in a [`CheckpointSummary`], signals the end of an `Epoch`.
 ///
 /// # BCS
 ///

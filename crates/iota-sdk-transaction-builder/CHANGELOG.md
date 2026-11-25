@@ -1,3 +1,23 @@
+## [1.0.0] - 2026-11-20
+
+### 🚀 Features
+
+- Add a non-default `unstable` feature to every published crate (#1816)
+- *(iota-sdk-types,iota-sdk-transaction-builder)* Add the transaction dependency input and execution error (#1777)
+
+### 🐛 Bug Fixes
+
+- Reject a sponsor digest that doesn't match the signed transaction (#1747)
+- *(transaction-builder)* Reject an answer for a different object than requested (#1718)
+- *(transaction-builder)* Reject transactions whose commands name missing inputs or results (#1719)
+- *(transaction-builder)* Reject a gas sponsor that names the sender as the gas owner (#1768)
+- *(transaction-builder)* Keep the path of the gas station URL (#1743)
+- [**breaking**] Replace primitive_types::U256 with iota_sdk_types::U256 (#1820)
+
+### ⚙️ Miscellaneous Tasks
+
+- Fix lints reported by Rust 1.100 (#1806)
+
 ## [1.0.0-rc.2] - 2026-10-23
 
 ### ⚙️ Miscellaneous Tasks

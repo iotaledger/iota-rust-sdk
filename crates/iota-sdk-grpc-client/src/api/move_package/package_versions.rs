@@ -17,9 +17,8 @@ use crate::{
 define_list_query! {
     /// Builder for listing versions of a Move package.
     ///
-    /// Created by [`GrpcClient::package_versions`]. Await directly for a
-    /// single page, or call [`.collect(limit)`](Self::collect) to
-    /// auto-paginate.
+    /// Created by [`GrpcClient::package_versions`]. Await directly for a single page, or call
+    /// [`.collect(limit)`](Self::collect) to auto-paginate.
     pub struct ListPackageVersionsQuery {
         service_client: MovePackageServiceClient<InterceptedChannel>,
         request: ListPackageVersionsRequest,
@@ -32,10 +31,9 @@ define_list_query! {
 impl GrpcClient {
     /// List all versions of a Move package.
     ///
-    /// Returns a query builder. Await it directly for a single page
-    /// (with access to `next_page_token`), or call `.collect(limit)` to
-    /// auto-paginate through all results. Page with
-    /// [`page_size`](ListPackageVersionsQuery::page_size) and
+    /// Returns a query builder. Await it directly for a single page (with access to
+    /// `next_page_token`), or call `.collect(limit)` to auto-paginate through all results. Page
+    /// with [`page_size`](ListPackageVersionsQuery::page_size) and
     /// [`page_token`](ListPackageVersionsQuery::page_token).
     ///
     /// # Parameters
