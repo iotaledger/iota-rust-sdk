@@ -37,7 +37,7 @@ pub enum TransactionBuilderError {
     MissingProtocolValue { name: String },
     #[error("Invalid protocol value: {name} = {value}")]
     InvalidProtocolValue { name: String, value: String },
-    #[error("gas value {value} is above the protocol limit {name} = {limit}")]
+    #[error("{name} protocol limit {limit} exceeded by gas value {value}")]
     GasAboveProtocolLimit {
         name: String,
         value: u64,
