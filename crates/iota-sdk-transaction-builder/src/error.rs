@@ -37,6 +37,12 @@ pub enum TransactionBuilderError {
     MissingProtocolValue { name: String },
     #[error("Invalid protocol value: {name} = {value}")]
     InvalidProtocolValue { name: String, value: String },
+    #[error("{name} protocol limit {limit} exceeded by gas value {value}")]
+    GasAboveProtocolLimit {
+        name: String,
+        value: u64,
+        limit: u64,
+    },
     #[error("Unknown shared object mutability for object {0}")]
     SharedObjectMutability(ObjectId),
     #[error("only programmable transactions can be converted into a TransactionBuilder")]

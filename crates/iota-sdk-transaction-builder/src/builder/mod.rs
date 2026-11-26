@@ -53,6 +53,12 @@ const MAX_GAS_PAYMENT_OBJECTS_KEY: &str = "max_gas_payment_objects";
 /// Protocol-config key for the fixed base transaction cost.
 const BASE_TX_COST_FIXED_KEY: &str = "base_tx_cost_fixed";
 
+/// Protocol-config key for the highest gas price a transaction may set.
+const MAX_GAS_PRICE_KEY: &str = "max_gas_price";
+
+/// Protocol-config key for the highest gas budget a transaction may set.
+const MAX_TX_GAS_KEY: &str = "max_tx_gas";
+
 /// A transaction builder which can be used to construct [`Transaction`]s.
 #[derive(Clone, Debug)]
 #[repr(C)]
@@ -374,6 +380,11 @@ impl TransactionBuilder {
     }
 
     /// Set the client to enable automatic object resolution.
+    ///
+    /// Without a set gas price or budget, the client's values are used, checked only against the
+    /// protocol limits the client reports. With an untrusted client, set
+    /// [`gas_price`](TransactionBuilder::gas_price) yourself, or build with `finish` and check the
+    /// gas price and budget before signing.
     pub fn with_client<C>(self, client: C) -> TransactionBuilder<C> {
         TransactionBuilder {
             data: self.data,
@@ -568,12 +579,19 @@ impl<C, L> TransactionBuilder<C, L> {
     }
 
     /// Set the gas budget. Optional.
+    ///
+    /// Without it, `finish` and the `execute` methods of a builder with a client use the client's
+    /// estimate, checked only against the `max_tx_gas` the client reports.
     pub fn gas_budget(&mut self, gas_budget: u64) -> &mut Self {
         self.data.gas_budget(gas_budget);
         self
     }
 
     /// Set the gas price. Optional.
+    ///
+    /// Without it, a builder with a client uses the client's reference gas price, checked only
+    /// against the `max_gas_price` the client reports. Set it yourself when the client is
+    /// untrusted.
     pub fn gas_price(&mut self, gas_price: u64) -> &mut Self {
         self.data.gas_price(gas_price);
         self
@@ -2015,12 +2033,16 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
         let (kind, gas) = self.resolve_kind().await?;
         let price = match self.data.gas_price {
             Some(price) => price,
-            None => self
-                .client
-                .reference_gas_price(None)
-                .await
-                .map_err(TransactionBuilderError::client)?
-                .ok_or_else(|| TransactionBuilderError::MissingGasPrice)?,
+            None => {
+                let price = self
+                    .client
+                    .reference_gas_price(None)
+                    .await
+                    .map_err(TransactionBuilderError::client)?
+                    .ok_or_else(|| TransactionBuilderError::MissingGasPrice)?;
+                self.check_protocol_limit(MAX_GAS_PRICE_KEY, price).await?;
+                price
+            }
         };
         Ok(TransactionV1 {
             kind,
@@ -2093,6 +2115,26 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
         Ok(kind)
     }
 
+    async fn check_protocol_limit(
+        &mut self,
+        key: &str,
+        value: u64,
+    ) -> Result<(), TransactionBuilderError> {
+        let limit = match self.protocol_config_attribute::<u64>(key).await {
+            Ok(limit) => limit,
+            Err(TransactionBuilderError::MissingProtocolValue { .. }) => return Ok(()),
+            Err(e) => return Err(e),
+        };
+        if value > limit {
+            return Err(TransactionBuilderError::GasAboveProtocolLimit {
+                name: key.to_owned(),
+                value,
+                limit,
+            });
+        }
+        Ok(())
+    }
+
     /// Read one protocol-config attribute, fetching the config from the client on first use and
     /// reusing it for the rest of the build.
     async fn protocol_config_attribute<T: std::str::FromStr>(
@@ -2146,7 +2188,9 @@ impl<C: TransactionBuilderLedgerClient + TransactionBuilderSimulationClient, L>
                 .protocol_config_attribute::<u64>(BASE_TX_COST_FIXED_KEY)
                 .await?;
             let min_budget = txn.gas_payment.price.saturating_mul(min_gas_budget);
-            txn.gas_payment.budget = budget.max(min_budget);
+            let budget = budget.max(min_budget);
+            self.check_protocol_limit(MAX_TX_GAS_KEY, budget).await?;
+            txn.gas_payment.budget = budget;
         }
 
         Ok(txn)
@@ -2285,6 +2329,7 @@ impl<C: TransactionBuilderClient, L> TransactionBuilder<C, L> {
                         .await?;
                     let budget =
                         estimate.max(txn_v1.gas_payment.price.saturating_mul(min_gas_budget));
+                    self.check_protocol_limit(MAX_TX_GAS_KEY, budget).await?;
                     txn.as_mut_v1().gas_payment.budget = budget;
                 };
 
