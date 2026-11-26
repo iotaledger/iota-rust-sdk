@@ -219,15 +219,29 @@ impl GraphQLClient {
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use base64ct::Encoding;
-    use iota_types::{ObjectId, TypeTag};
+    use iota_types::{Address, ObjectId, TypeTag};
+    use serde_json::json;
 
     use crate::{
         BcsName,
         test_utils::{
-            assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
-            test_client,
+            assert_backward_page, assert_forward_page, backward_page, forward_page, scripted,
+            sent_variables, service_config_body, test_client,
         },
     };
+
+    #[tokio::test]
+    async fn dynamic_fields_of_an_unknown_owner_is_an_empty_page() {
+        let (_, page) = scripted(
+            vec![
+                service_config_body(50),
+                json!({ "data": { "owner": null } }),
+            ],
+            |client| async move { client.dynamic_fields(Address::STD).await },
+        )
+        .await;
+        assert!(page.unwrap().is_empty());
+    }
 
     #[tokio::test]
     async fn dynamic_field_getters_send_the_address_and_name() {

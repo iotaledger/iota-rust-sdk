@@ -195,11 +195,81 @@ impl GraphQLClient {
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    use iota_types::{Address, iota_names::NameFormat};
+    use std::str::FromStr;
 
-    use crate::test_utils::{
-        assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
+    use iota_types::{
+        Address, MoveObjectType, MoveStruct, Object, ObjectData, ObjectId, Owner,
+        TransactionDigest, Version,
+        iota_names::{IotaNamesNft, Name, NameFormat, NameRegistration},
     };
+    use serde_json::json;
+
+    use crate::{
+        GraphQLError,
+        test_utils::{
+            assert_backward_page, assert_forward_page, backward_page, base64_bcs, forward_page,
+            scripted, sent_variables, service_config_body,
+        },
+    };
+
+    fn page_info() -> serde_json::Value {
+        json!({ "hasPreviousPage": false, "hasNextPage": false, "startCursor": null, "endCursor": null })
+    }
+
+    #[tokio::test]
+    async fn iota_names_registrations_decodes_the_page_and_an_unknown_address_is_empty() {
+        let registration = NameRegistration::new(
+            ObjectId::ZERO,
+            Name::from_str("example.iota").unwrap(),
+            "example.iota".to_owned(),
+            1234,
+        );
+        let object = Object::new(
+            ObjectData::Struct(
+                MoveStruct::new(
+                    MoveObjectType::new(NameRegistration::type_(Address::STD)),
+                    Version::from_u64(1),
+                    bcs::to_bytes(&registration).unwrap(),
+                )
+                .unwrap(),
+            ),
+            Owner::Address(Address::STD),
+            TransactionDigest::ZERO,
+            0,
+        );
+        let body = json!({ "data": { "address": { "iotaNamesRegistrations": {
+            "pageInfo": page_info(),
+            "nodes": [{ "bcs": base64_bcs(&object) }],
+        } } } });
+        let (_, page) = scripted(vec![service_config_body(50), body], |client| async move {
+            client.iota_names_registrations(Address::STD).await
+        })
+        .await;
+        assert_eq!(page.unwrap().data(), [registration]);
+
+        let body = json!({ "data": { "address": { "iotaNamesRegistrations": {
+            "pageInfo": page_info(),
+            "nodes": [{ "bcs": null }],
+        } } } });
+        let (_, page) = scripted(vec![service_config_body(50), body], |client| async move {
+            client.iota_names_registrations(Address::STD).await
+        })
+        .await;
+        assert!(matches!(
+            page,
+            Err(GraphQLError::EmptyResponseField("name registration bcs"))
+        ));
+
+        let (_, page) = scripted(
+            vec![
+                service_config_body(50),
+                json!({ "data": { "address": null } }),
+            ],
+            |client| async move { client.iota_names_registrations(Address::STD).await },
+        )
+        .await;
+        assert!(page.unwrap().is_empty());
+    }
 
     #[tokio::test]
     async fn iota_names_lookup_sends_the_name() {

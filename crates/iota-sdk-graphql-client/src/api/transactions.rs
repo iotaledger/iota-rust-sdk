@@ -683,13 +683,13 @@ mod tests {
 
     use base64ct::Encoding;
     use iota_types::{
-        Address, Ed25519PublicKey, Ed25519Signature, SimpleSignature, TransactionEffects,
-        UserSignature,
+        Address, Ed25519PublicKey, Ed25519Signature, SenderSignedTransaction, SignedTransaction,
+        SimpleSignature, TransactionEffects, UserSignature,
     };
     use serde_json::json;
 
     use crate::{
-        GraphQLClient, GraphQLError, WaitForTransaction,
+        GraphQLClient, GraphQLError, TransactionDataEffects, WaitForTransaction,
         query_types::{AddressTransactionRelationship, TransactionsFilter},
         test_utils::{
             arbitrary, assert_backward_page, assert_forward_page, backward_page, base64_bcs,
@@ -798,6 +798,128 @@ mod tests {
         .await
         .expect("the query's own timeout fires first");
         assert!(matches!(result, Err(GraphQLError::Timeout)));
+    }
+
+    fn page_info() -> serde_json::Value {
+        json!({ "hasPreviousPage": false, "hasNextPage": false, "startCursor": null, "endCursor": null })
+    }
+
+    fn sender_signed_bcs(signed: &SignedTransaction) -> String {
+        base64_bcs(&SenderSignedTransaction::new(
+            signed.transaction.clone(),
+            signed.signatures.clone(),
+        ))
+    }
+
+    #[tokio::test]
+    async fn transactions_decodes_the_page() {
+        let signed: SignedTransaction = arbitrary();
+        let body = json!({ "data": { "transactionBlocks": {
+            "pageInfo": page_info(),
+            "nodes": [{ "bcs": sender_signed_bcs(&signed) }],
+        } } });
+        let (_, page) = scripted(vec![service_config_body(50), body], |client| async move {
+            client.transactions().await
+        })
+        .await;
+        assert_eq!(page.unwrap().data(), [signed]);
+
+        let body = json!({ "data": { "transactionBlocks": { "pageInfo": page_info(), "nodes": [{ "bcs": null }] } } });
+        let (_, page) = scripted(vec![service_config_body(50), body], |client| async move {
+            client.transactions().await
+        })
+        .await;
+        assert!(matches!(
+            page,
+            Err(GraphQLError::EmptyResponseField("transaction bcs"))
+        ));
+    }
+
+    #[tokio::test]
+    async fn transactions_effects_decodes_the_page() {
+        let effects: TransactionEffects = arbitrary();
+        let body = json!({ "data": { "transactionBlocks": {
+            "pageInfo": page_info(),
+            "nodes": [{ "effects": { "bcs": base64_bcs(&effects) } }],
+        } } });
+        let (_, page) = scripted(vec![service_config_body(50), body], |client| async move {
+            client.transactions_effects().await
+        })
+        .await;
+        assert_eq!(page.unwrap().data(), [effects]);
+
+        let body = json!({ "data": { "transactionBlocks": { "pageInfo": page_info(), "nodes": [{ "effects": null }] } } });
+        let (_, page) = scripted(vec![service_config_body(50), body], |client| async move {
+            client.transactions_effects().await
+        })
+        .await;
+        assert!(matches!(
+            page,
+            Err(GraphQLError::EmptyResponseField("transaction effects bcs"))
+        ));
+    }
+
+    #[tokio::test]
+    async fn transactions_data_effects_decodes_the_page() {
+        let signed: SignedTransaction = arbitrary();
+        let effects: TransactionEffects = arbitrary();
+        let body = json!({ "data": { "transactionBlocks": {
+            "pageInfo": page_info(),
+            "nodes": [{
+                "bcs": sender_signed_bcs(&signed),
+                "effects": { "bcs": base64_bcs(&effects) },
+            }],
+        } } });
+        let (_, page) = scripted(vec![service_config_body(50), body], |client| async move {
+            client.transactions_data_effects().await
+        })
+        .await;
+        assert_eq!(
+            page.unwrap().data(),
+            [TransactionDataEffects {
+                signed_transaction: signed,
+                effects,
+            }]
+        );
+
+        let body = json!({ "data": { "transactionBlocks": {
+            "pageInfo": page_info(),
+            "nodes": [{ "bcs": null, "effects": null }],
+        } } });
+        let (_, page) = scripted(vec![service_config_body(50), body], |client| async move {
+            client.transactions_data_effects().await
+        })
+        .await;
+        assert!(matches!(
+            page,
+            Err(GraphQLError::EmptyResponseField(
+                "transaction bcs or effects"
+            ))
+        ));
+    }
+
+    #[tokio::test]
+    async fn address_transactions_decodes_the_page_and_an_unknown_address_is_empty() {
+        let signed: SignedTransaction = arbitrary();
+        let body = json!({ "data": { "address": { "transactionBlocks": {
+            "pageInfo": page_info(),
+            "nodes": [{ "bcs": sender_signed_bcs(&signed) }],
+        } } } });
+        let (_, page) = scripted(vec![service_config_body(50), body], |client| async move {
+            client.address_transactions(Address::STD).await
+        })
+        .await;
+        assert_eq!(page.unwrap().data(), [signed]);
+
+        let (_, page) = scripted(
+            vec![
+                service_config_body(50),
+                json!({ "data": { "address": null } }),
+            ],
+            |client| async move { client.address_transactions(Address::STD).await },
+        )
+        .await;
+        assert!(page.unwrap().is_empty());
     }
 
     #[tokio::test]
