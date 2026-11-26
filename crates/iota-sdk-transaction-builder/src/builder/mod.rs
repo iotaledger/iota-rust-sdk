@@ -839,19 +839,19 @@ impl<C, L> TransactionBuilder<C, L> {
                 coin
             }
         } else {
-            let primary_coin = coin_args.pop().unwrap();
-            let coin_arg = self.command(Command::MergeCoins(MergeCoins {
+            let primary_coin = coin_args.remove(0);
+            self.command(Command::MergeCoins(MergeCoins {
                 coin: primary_coin,
                 coins_to_merge: coin_args,
             }));
             if let Some(amount) = amount.into() {
                 let amt_arg = self.apply_argument(amount);
                 self.command(Command::SplitCoins(SplitCoins {
-                    coin: coin_arg,
+                    coin: primary_coin,
                     amounts: vec![amt_arg],
                 }))
             } else {
-                coin_arg
+                primary_coin
             }
         };
         let rec_arg = self.pure(recipient);
@@ -2784,6 +2784,96 @@ mod tests {
             transfer_b.objects[..],
             [Argument::NestedResult(1, 1)]
         ));
+    }
+
+    #[test]
+    fn send_coins_merges_into_first_coin_and_splits_from_it() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient: Address =
+            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+        let coin_id = |seed: u8| {
+            let mut id_bytes = [0u8; 32];
+            id_bytes[0] = seed;
+            ObjectId::new(id_bytes)
+        };
+        let coins = [coin_id(0), coin_id(1), coin_id(2)];
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.send_coins(coins, recipient, 100u64);
+
+        let commands = &builder.data.commands;
+        assert_eq!(commands.len(), 3);
+        let Command::MergeCoins(merge) = &commands[0] else {
+            panic!("expected MergeCoins command");
+        };
+        let Argument::Input(primary) = merge.coin else {
+            panic!("expected the primary coin to be an input");
+        };
+        assert_eq!(
+            builder.data.inputs[&primary].kind.object_id(),
+            Some(coins[0])
+        );
+        let merged: Vec<_> = merge
+            .coins_to_merge
+            .iter()
+            .map(|coin| {
+                let Argument::Input(i) = coin else {
+                    panic!("expected the merged coins to be inputs");
+                };
+                builder.data.inputs[i].kind.object_id()
+            })
+            .collect();
+        assert_eq!(merged, [Some(coins[1]), Some(coins[2])]);
+        let Command::SplitCoins(split) = &commands[1] else {
+            panic!("expected SplitCoins command");
+        };
+        assert!(matches!(split.coin, Argument::Input(i) if i == primary));
+        assert_eq!(split.amounts.len(), 1);
+        let Command::TransferObjects(transfer) = &commands[2] else {
+            panic!("expected TransferObjects command");
+        };
+        assert!(matches!(transfer.objects[..], [Argument::Result(1)]));
+    }
+
+    #[test]
+    fn send_coins_without_an_amount_transfers_the_merged_coin() {
+        let sender: Address = "0xc574ea804d9c1a27c886312e96c0e2c9cfd71923ebaeb3000d04b5e65fca2793"
+            .parse()
+            .unwrap();
+        let recipient: Address =
+            "0x0000a4984bd495d4346fa208ddff4f5d5e5ad48c21dec631ddebc99809f16900"
+                .parse()
+                .unwrap();
+        let coin_id = |seed: u8| {
+            let mut id_bytes = [0u8; 32];
+            id_bytes[0] = seed;
+            ObjectId::new(id_bytes)
+        };
+        let coins = [coin_id(0), coin_id(1)];
+
+        let mut builder = TransactionBuilder::new(sender);
+        builder.send_coins::<_, u64>(coins, recipient, None);
+
+        let commands = &builder.data.commands;
+        assert_eq!(commands.len(), 2);
+        let Command::MergeCoins(merge) = &commands[0] else {
+            panic!("expected MergeCoins command");
+        };
+        let Argument::Input(primary) = merge.coin else {
+            panic!("expected the primary coin to be an input");
+        };
+        assert_eq!(
+            builder.data.inputs[&primary].kind.object_id(),
+            Some(coins[0])
+        );
+        let Command::TransferObjects(transfer) = &commands[1] else {
+            panic!("expected TransferObjects command");
+        };
+        assert!(matches!(transfer.objects[..], [Argument::Input(i)] if i == primary));
     }
 
     /// `pay_iota` splits the amounts off the gas coin without a merge command.
