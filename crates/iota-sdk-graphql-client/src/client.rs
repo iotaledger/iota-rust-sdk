@@ -352,6 +352,27 @@ mod tests {
     }
 
     #[test]
+    fn test_response_to_result_data_pruned() {
+        let response: GraphQlResponse<serde_json::Value, ErrorExtensions> =
+            serde_json::from_value(json!({
+                "data": null,
+                "errors": [{
+                    "message": "Requested data has been pruned: checkpoint 0 has been pruned",
+                    "path": ["checkpoint"],
+                    "extensions": { "code": "DATA_PRUNED", "oldestAvailableCheckpoint": 7 },
+                }],
+            }))
+            .unwrap();
+
+        let GraphQLError::Query(errors) = response_to_result(response).unwrap_err() else {
+            panic!("expected GraphQLError::Query");
+        };
+        let extensions = errors[0].extensions.as_ref().unwrap();
+        assert_eq!(extensions.code.as_deref(), Some("DATA_PRUNED"));
+        assert_eq!(extensions.oldest_available_checkpoint, Some(7));
+    }
+
+    #[test]
     fn test_response_to_result_data_only() {
         let response: GraphQlResponse<serde_json::Value, ErrorExtensions> =
             serde_json::from_value(json!({ "data": { "epoch": 1 } })).unwrap();
