@@ -565,3 +565,36 @@ mod synthetic {
         PurchaseCap::<Foo>::try_from(&object).expect("composed tag matches");
     }
 }
+
+#[cfg(feature = "unstable")]
+mod smart_account {
+    use iota_sdk_move_types::iota_framework::smart_account::SmartAccount;
+    #[cfg(target_arch = "wasm32")]
+    use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
+
+    const TAG: &str = "0x2::smart_account::SmartAccount";
+    const CONTENTS: [u8; 32] = [7; 32];
+
+    #[test]
+    fn accepts_matching_tag() {
+        let account =
+            SmartAccount::try_from(&object_with_tag(TAG, &CONTENTS)).expect("tag matches");
+        assert_eq!(account.id.object_id(), &ObjectId::new(CONTENTS));
+    }
+
+    #[test]
+    fn struct_tag_matches_the_type_it_decodes() {
+        assert_eq!(SmartAccount::struct_tag().to_string(), TAG);
+    }
+
+    #[test]
+    fn rejects_mismatched_tag() {
+        let object = object_with_tag("0x123::foo::FOO", &CONTENTS);
+        assert!(matches!(
+            SmartAccount::try_from(&object),
+            Err(FromObjectError::WrongType)
+        ));
+    }
+}

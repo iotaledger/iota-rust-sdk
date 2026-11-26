@@ -29,7 +29,7 @@ default = []
 bcs-schema = ["dep:iota-bcs-schema", "serde"]
 serde = ["dep:bcs", "dep:serde", "dep:thiserror", "iota-types/serde"]
 # Unstable APIs that may change or be removed in any release.
-unstable = []
+unstable = ["dep:thiserror", "iota-types/unstable"]
 
 [dependencies]
 # external dependencies
@@ -57,7 +57,7 @@ iota-bcs-schema = { workspace = true, features = ["move-shape"] }
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 # `update_compiled_packages.sh` reads this rev via `cargo metadata` so the
 # parser matches the fetched blobs.
-move-binary-format = { git = "https://github.com/iotaledger/iota.git", rev = "f981470a89e6540f482779a58965919f3b093c98" }
+move-binary-format = { git = "https://github.com/iotaledger/iota.git", rev = "5db9b6ddbb2c69ce8d07c4d991169317c3e5fba1" }
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
 wasm-bindgen-test.workspace = true
