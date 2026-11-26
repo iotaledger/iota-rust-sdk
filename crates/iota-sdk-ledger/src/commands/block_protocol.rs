@@ -1,8 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! The block protocol, which carries command parameters and results of any
-//! length in chunks small enough for single APDUs.
+//! The block protocol, which carries command parameters and results of any length in chunks small
+//! enough for single APDUs.
 
 use std::collections::HashMap;
 
@@ -11,11 +11,9 @@ use sha2::{Digest, Sha256};
 use super::{app::Instruction, exec};
 use crate::{LedgerError, Transport};
 
-/// Parameter bytes per chunk; each chunk also carries the 32-byte hash of the
-/// next one.
+/// Parameter bytes per chunk; each chunk also carries the 32-byte hash of the next one.
 const CHUNK_SIZE: usize = 180;
-/// Upper bound on the chunks the device may store on the host during one
-/// command.
+/// Upper bound on the chunks the device may store on the host during one command.
 const MAX_STORED_CHUNKS: usize = 1024;
 /// Upper bound on the length of a block protocol result.
 const MAX_RESULT_LEN: usize = 64 * 1024;
@@ -55,12 +53,10 @@ enum HostToLedger {
     ResultAccumulatingResponse = 4,
 }
 
-/// Send `parameters` to `instruction` through the block protocol and return the
-/// result.
+/// Send `parameters` to `instruction` through the block protocol and return the result.
 ///
-/// Each parameter is split into chunks that are hash-linked back to front, so
-/// the device receives only the hash of each parameter's first chunk and
-/// requests the chunks it needs by hash.
+/// Each parameter is split into chunks that are hash-linked back to front, so the device receives
+/// only the hash of each parameter's first chunk and requests the chunks it needs by hash.
 pub(super) async fn send(
     transport: &dyn Transport,
     instruction: Instruction,

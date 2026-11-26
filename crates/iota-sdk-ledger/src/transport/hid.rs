@@ -30,9 +30,8 @@ impl Ledger {
 
     /// Connect to a Ledger device from [`Ledger::hid_devices`].
     ///
-    /// The device's path usually changes when it switches apps, so with
-    /// several Ledger devices attached, [`Ledger::open_app`] and
-    /// [`Ledger::exit_app`] cannot find it again and fail with
+    /// The device's path usually changes when it switches apps, so with several Ledger devices
+    /// attached, [`Ledger::open_app`] and [`Ledger::exit_app`] cannot find it again and fail with
     /// [`LedgerError::DeviceNotFound`].
     pub fn new_native_hid_device(device: &HidDeviceInfo) -> Result<Self, LedgerError> {
         HidConnection::open(device)
@@ -49,8 +48,7 @@ pub struct HidDeviceInfo {
 }
 
 impl HidDeviceInfo {
-    /// The operating system's path to the device. It usually changes when the
-    /// device switches apps.
+    /// The operating system's path to the device. It usually changes when the device switches apps.
     pub fn path(&self) -> String {
         self.path.to_string_lossy().into_owned()
     }
@@ -72,15 +70,13 @@ impl From<&DeviceInfo> for HidDeviceInfo {
 
 /// Talks to a Ledger device connected over USB.
 ///
-/// The connection lives on a thread of its own that handles requests in the
-/// order they are sent, so waiting for the device does not block the thread
-/// polling the call.
+/// The connection lives on a thread of its own that handles requests in the order they are sent, so
+/// waiting for the device does not block the thread polling the call.
 struct HidTransport {
     requests: mpsc::Sender<Request>,
 }
 
-/// A request to the thread holding the connection, answered through the
-/// enclosed sender.
+/// A request to the thread holding the connection, answered through the enclosed sender.
 enum Request {
     Exchange(
         ApduCommand,
@@ -90,16 +86,15 @@ enum Request {
 }
 
 impl HidTransport {
-    /// Move `connection` to a new thread, which ends once the transport is
-    /// dropped and the requests already sent are answered.
+    /// Move `connection` to a new thread, which ends once the transport is dropped and the requests
+    /// already sent are answered.
     fn spawn(mut connection: HidConnection) -> Result<Self, LedgerError> {
         let (requests, receiver) = mpsc::channel();
         thread::Builder::new()
             .name("ledger-hid".to_owned())
             .spawn(move || {
                 for request in receiver {
-                    // A caller that dropped its call no longer waits for the
-                    // answer.
+                    // A caller that dropped its call no longer waits for the answer.
                     match request {
                         Request::Exchange(command, answer) => {
                             let _ = answer.send(connection.exchange(&command));
@@ -120,8 +115,8 @@ impl HidTransport {
         request: impl FnOnce(oneshot::Sender<Result<T, LedgerError>>) -> Request,
     ) -> Result<T, LedgerError> {
         let (sender, receiver) = oneshot::channel();
-        // If the thread has stopped, the request is dropped with its sender
-        // and the receiver reports that it was canceled.
+        // If the thread has stopped, the request is dropped with its sender and the receiver
+        // reports that it was canceled.
         let _ = self.requests.send(request(sender));
         receiver.await.map_err(LedgerError::transport)?
     }
@@ -139,8 +134,8 @@ impl Transport for HidTransport {
 
 /// A blocking connection to a Ledger device connected over USB.
 struct HidConnection {
-    /// `None` while reconnecting: the previous handle is closed before a new
-    /// one is opened, since two open handles to the same device can lock it.
+    /// `None` while reconnecting: the previous handle is closed before a new one is opened, since
+    /// two open handles to the same device can lock it.
     device: Option<TransportNativeHID>,
     path: CString,
 }
@@ -193,10 +188,9 @@ impl HidConnection {
         })
     }
 
-    /// Reopen the device at its previous path, or, as the path usually
-    /// changes when the device switches apps, the only Ledger device
-    /// connected. Ledger devices share a serial number, so with several
-    /// connected the device cannot be told apart and this fails.
+    /// Reopen the device at its previous path, or, as the path usually changes when the device
+    /// switches apps, the only Ledger device connected. Ledger devices share a serial number, so
+    /// with several connected the device cannot be told apart and this fails.
     fn reconnect(&mut self) -> Result<(), LedgerError> {
         self.device = None;
         let api = HidApi::new().map_err(LedgerError::transport)?;

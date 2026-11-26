@@ -11,16 +11,14 @@ use iota_types::{Address, Ed25519PublicKey};
 use super::{Reader, block_protocol, command, encode_path};
 use crate::{ApduError, LedgerError, Transport, transport::ApduCommand};
 
-/// Instruction class of the app's commands; the app rejects any other class
-/// as a bad instruction.
+/// Instruction class of the app's commands; the app rejects any other class as a bad instruction.
 const CLA: u8 = 0x00;
 
-/// Status word the app returns for a derivation path outside the prefixes it
-/// allows. The app returns syscall error numbers as bare status words, here
-/// `InvalidParameter`.
+/// Status word the app returns for a derivation path outside the prefixes it allows. The app
+/// returns syscall error numbers as bare status words, here `InvalidParameter`.
 const SW_INVALID_PARAMETER: u16 = 0x0002;
-/// Status word the app returns for a transaction it cannot clear-sign while
-/// blind signing is disabled (syscall error `NotSupported`).
+/// Status word the app returns for a transaction it cannot clear-sign while blind signing is
+/// disabled (syscall error `NotSupported`).
 const SW_NOT_SUPPORTED: u16 = 0x0008;
 
 /// Map the status words specific to the app to their errors.
@@ -94,8 +92,8 @@ pub(crate) async fn version(transport: &dyn Transport) -> Result<AppVersion, Led
     })
 }
 
-/// Read the public key at `path`, first showing its address on the device for
-/// the user to confirm when `show_to_user` is set.
+/// Read the public key at `path`, first showing its address on the device for the user to confirm
+/// when `show_to_user` is set.
 pub(crate) async fn public_key(
     transport: &dyn Transport,
     path: &DerivationPath,

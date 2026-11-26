@@ -39,18 +39,16 @@ pub trait TransactionSignerFn: ThreadSafety + std::fmt::Debug {
     /// Sign a transaction and return a `UserSignature`.
     async fn sign(&self, transaction: Arc<Transaction>) -> Result<TransactionSignerFnOutput>;
 
-    /// Whether the signer uses the objects the transaction reads, such as a
-    /// hardware wallet showing what the transaction does. When `true`, the
-    /// transaction builder gathers them and calls `sign_with_objects` instead
-    /// of `sign`.
+    /// Whether the signer uses the objects the transaction reads, such as a hardware wallet showing
+    /// what the transaction does. When `true`, the transaction builder gathers them and calls
+    /// `sign_with_objects` instead of `sign`.
     fn uses_objects(&self) -> bool;
 
-    /// Sign a transaction given the objects it reads: its gas coins and
-    /// immutable, owned or receiving inputs at the versions it references, and
-    /// its shared inputs as the builder fetched them, which may change before
-    /// the transaction executes. The transaction builder only calls this when
-    /// `uses_objects` returns `true`, and passes no objects when it has no
-    /// client to fetch them.
+    /// Sign a transaction given the objects it reads: its gas coins and immutable, owned or
+    /// receiving inputs at the versions it references, and its shared inputs as the builder fetched
+    /// them, which may change before the transaction executes. The transaction builder only calls
+    /// this when `uses_objects` returns `true`, and passes no objects when it has no client to
+    /// fetch them.
     async fn sign_with_objects(
         &self,
         transaction: Arc<Transaction>,
@@ -58,8 +56,8 @@ pub trait TransactionSignerFn: ThreadSafety + std::fmt::Debug {
     ) -> Result<TransactionSignerFnOutput>;
 }
 
-/// Implements [`TransactionSignerFn`] for signers that sign the transaction
-/// digest with a key and do not use the transaction's objects.
+/// Implements [`TransactionSignerFn`] for signers that sign the transaction digest with a key and
+/// do not use the transaction's objects.
 #[cfg(feature = "crypto")]
 macro_rules! impl_key_signer {
     ($($signer:ty),*) => {
@@ -173,11 +171,10 @@ impl TransactionSigner {
 #[cfg(feature = "ledger")]
 #[uniffi::export]
 impl TransactionSigner {
-    /// Create a transaction signer that signs with a Ledger device. The
-    /// transaction builder passes it the transaction's objects so the device
-    /// shows what the transaction does; without them, or with an IOTA app older
-    /// than 1.0, it blind-signs, which the app only allows when blind signing
-    /// is enabled in its settings.
+    /// Create a transaction signer that signs with a Ledger device. The transaction builder passes
+    /// it the transaction's objects so the device shows what the transaction does; without them, or
+    /// with an IOTA app older than 1.0, it blind-signs, which the app only allows when blind
+    /// signing is enabled in its settings.
     #[uniffi::constructor]
     pub fn from_ledger(signer: Arc<crate::ledger::LedgerSigner>) -> Self {
         Self(signer as Arc<_>)
@@ -220,8 +217,8 @@ impl iota_sdk::transaction_builder::TransactionSigner for TransactionSigner {
         transaction: &iota_sdk::types::Transaction,
         objects: &[iota_sdk::types::Object],
     ) -> std::result::Result<iota_sdk::types::UserSignature, Self::Error> {
-        // The builder passes the objects to every signer when any of them uses
-        // them, so only convert them for a signer that does.
+        // The builder passes the objects to every signer when any of them uses them, so only
+        // convert them for a signer that does.
         if !self.0.uses_objects() {
             return iota_sdk::transaction_builder::TransactionSigner::sign(self, transaction).await;
         }

@@ -19,11 +19,10 @@ impl Ledger {
 
 /// Signs with the key at one derivation path on a Ledger device.
 ///
-/// The device hashes the intent message itself, so the signer sends the whole
-/// transaction or message rather than its digest. Before each signature it
-/// reads the public key again and fails with [`LedgerError::KeyMismatch`] if
-/// it differs, which happens when another device is connected or the device
-/// was unlocked with a different seed or passphrase.
+/// The device hashes the intent message itself, so the signer sends the whole transaction or
+/// message rather than its digest. Before each signature it reads the public key again and fails
+/// with [`LedgerError::KeyMismatch`] if it differs, which happens when another device is connected
+/// or the device was unlocked with a different seed or passphrase.
 #[derive(Debug)]
 pub struct LedgerSigner {
     ledger: Ledger,
@@ -68,8 +67,8 @@ impl LedgerSigner {
     }
 
     /// Sign a transaction without its input objects. Fails with
-    /// [`LedgerError::BlindSigningDisabled`] if blind signing is disabled in
-    /// the IOTA app's settings.
+    /// [`LedgerError::BlindSigningDisabled`] if blind signing is disabled in the IOTA app's
+    /// settings.
     pub async fn sign_transaction(
         &self,
         transaction: &Transaction,
@@ -77,9 +76,8 @@ impl LedgerSigner {
         self.sign_transaction_with_objects(transaction, &[]).await
     }
 
-    /// Sign a transaction, passing its input objects so the device can
-    /// clear-sign it. With an IOTA app older than 1.0, it logs a warning and
-    /// blind-signs.
+    /// Sign a transaction, passing its input objects so the device can clear-sign it. With an IOTA
+    /// app older than 1.0, it logs a warning and blind-signs.
     pub async fn sign_transaction_with_objects(
         &self,
         transaction: &Transaction,
@@ -158,9 +156,9 @@ mod tests {
     const GAS_COIN: &str = "00018600000000000000281eec6c32ef36467331fb7b088b4acb1ce46f736354308e03ff6ce913a42734e2005ed0b200000000000f58eb1351454d623a6a4366198d6cd5aa4a12a12a3caefb501476e06d8bd5b620a7e7993dd298e10fb373fb708b9f9005be1963c6f074b202bbe7a7cf9d75d717b0f50e0000000000";
     const SIGNATURE: [u8; 64] = [9; 64];
 
-    /// Answers every command with its final result at once, using whichever
-    /// key is currently set, and records how many parameters each signing
-    /// request carries: three when the input objects are sent, two otherwise.
+    /// Answers every command with its final result at once, using whichever key is currently set,
+    /// and records how many parameters each signing request carries: three when the input objects
+    /// are sent, two otherwise.
     struct FakeDevice {
         version: [u8; 3],
         public_key: Arc<Mutex<Ed25519PublicKey>>,
@@ -197,8 +195,7 @@ mod tests {
                         ]
                         .concat()
                     }
-                    // sign; the start request is a tag byte and one hash per
-                    // parameter
+                    // sign; the start request is a tag byte and one hash per parameter
                     0x03 => {
                         let parameters = (command.data().len() - 1) / 32;
                         self.sign_parameters.lock().unwrap().push(parameters);
@@ -282,8 +279,8 @@ mod tests {
         assert_eq!(*public_key_reads.lock().unwrap(), 2);
     }
 
-    /// Wraps [`FakeDevice`], returning `Pending` once before each answer and
-    /// logging each command's instruction.
+    /// Wraps [`FakeDevice`], returning `Pending` once before each answer and logging each command's
+    /// instruction.
     struct LoggingDevice {
         inner: FakeDevice,
         log: Arc<Mutex<Vec<String>>>,
@@ -312,8 +309,8 @@ mod tests {
         }
     }
 
-    /// Logs when it is woken, which for a task waiting on the device happens
-    /// as the lock is released.
+    /// Logs when it is woken, which for a task waiting on the device happens as the lock is
+    /// released.
     struct LogWake(Arc<Mutex<Vec<String>>>);
 
     impl futures::task::ArcWake for LogWake {
@@ -340,8 +337,8 @@ mod tests {
         let clone = signer.ledger().clone();
         log.lock().unwrap().clear();
 
-        // Start signing until the device holds the key request, then queue a
-        // command on the clone behind it.
+        // Start signing until the device holds the key request, then queue a command on the clone
+        // behind it.
         let message = PersonalMessage(b"Hello".into());
         let mut signing = Box::pin(signer.sign_personal_message(&message));
         let noop = futures::task::noop_waker();

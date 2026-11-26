@@ -13,8 +13,8 @@ use tracing::debug;
 
 use crate::{ApduError, LedgerError, Transport, transport::ApduCommand};
 
-/// Encode `path` as the device expects: the number of indices followed by
-/// each index as a little-endian `u32`.
+/// Encode `path` as the device expects: the number of indices followed by each index as a
+/// little-endian `u32`.
 fn encode_path(path: &DerivationPath) -> Result<Vec<u8>, LedgerError> {
     let indices = path.indices();
     let len = u8::try_from(indices.len()).map_err(|_| LedgerError::PayloadTooLong)?;
@@ -26,9 +26,9 @@ fn encode_path(path: &DerivationPath) -> Result<Vec<u8>, LedgerError> {
     Ok(bytes)
 }
 
-/// Build a command with both instruction parameters zero. The IOTA app
-/// requires zero, as command arguments travel in the data through the block
-/// protocol, and the device's operating system does not use them.
+/// Build a command with both instruction parameters zero. The IOTA app requires zero, as command
+/// arguments travel in the data through the block protocol, and the device's operating system does
+/// not use them.
 fn command(cla: u8, ins: u8, data: Vec<u8>) -> ApduCommand {
     ApduCommand {
         cla,

@@ -1,8 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Send IOTA from a Ledger device's address on a local network. Set
-//! `LEDGER_SIMULATOR` to use the Speculos emulator instead of a device.
+//! Send IOTA from a Ledger device's address on a local network. Set `LEDGER_SIMULATOR` to use the
+//! Speculos emulator instead of a device.
 
 use eyre::Result;
 use iota_sdk::{
@@ -39,8 +39,8 @@ async fn main() -> Result<()> {
     let mut builder = client.transaction_builder(sender_address);
     builder.send_iota(recipient_address, amount);
 
-    // The builder passes the signer the coins the transaction spends, so the
-    // device shows the transfer instead of asking to blind-sign
+    // The builder passes the signer the coins the transaction spends, so the device shows the
+    // transfer instead of asking to blind-sign
     println!("Review and approve the transaction on the device");
     let effects = builder
         .execute(&signer, WaitForTransaction::Finalized)

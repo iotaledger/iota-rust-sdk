@@ -17,8 +17,8 @@ pub enum LedgerError {
     /// The IOTA app is not installed on the device.
     #[error("IOTA app not found; install the IOTA app on the Ledger device")]
     AppNotFound,
-    /// The IOTA app cannot clear-sign the transaction, and blind signing is
-    /// disabled in its settings.
+    /// The IOTA app cannot clear-sign the transaction, and blind signing is disabled in its
+    /// settings.
     #[error(
         "transaction cannot be clear-signed and blind signing is disabled in the IOTA app's settings"
     )]
@@ -35,15 +35,15 @@ pub enum LedgerError {
     /// The device's response could not be decoded.
     #[error("invalid response from the device: {0}")]
     InvalidResponse(String),
-    /// The device returns a different key for the signer's derivation path
-    /// than when the signer was created, because another device is connected
-    /// or the device was unlocked with a different seed or passphrase.
+    /// The device returns a different key for the signer's derivation path than when the signer was
+    /// created, because another device is connected or the device was unlocked with a different
+    /// seed or passphrase.
     #[error(
         "the device returned a different key for the signer's derivation path; use the same device, seed and passphrase as when the signer was created"
     )]
     KeyMismatch,
-    /// The objects passed for clear signing lack an owned or immutable input
-    /// or a gas coin of the transaction at the version it references.
+    /// The objects passed for clear signing lack an owned or immutable input or a gas coin of the
+    /// transaction at the version it references.
     #[error(
         "object {0} is missing from the objects passed for clear signing, or not at the version the transaction references"
     )]
@@ -70,8 +70,7 @@ impl LedgerError {
     }
 }
 
-/// Error the device answered a command with, as reported by the APDU status
-/// word.
+/// Error the device answered a command with, as reported by the APDU status word.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, thiserror::Error)]
 #[non_exhaustive]
 pub enum ApduError {

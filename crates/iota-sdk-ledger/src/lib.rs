@@ -40,12 +40,11 @@ const APP_SWITCH_POLL_INTERVAL: Duration = Duration::from_millis(250);
 
 /// A connection to the IOTA app on a Ledger device.
 ///
-/// Every call completes once the device answers, which for signing and
-/// address verification includes waiting for the user to confirm on the
-/// device.
+/// Every call completes once the device answers, which for signing and address verification
+/// includes waiting for the user to confirm on the device.
 ///
-/// Calls on the same `Ledger` run one at a time: each waits for the previous
-/// one to finish, since a command can take several exchanges with the device.
+/// Calls on the same `Ledger` run one at a time: each waits for the previous one to finish, since a
+/// command can take several exchanges with the device.
 #[derive(Clone)]
 pub struct Ledger {
     /// Locked for the whole of each command.
@@ -55,8 +54,7 @@ pub struct Ledger {
 /// The state every clone of a [`Ledger`] shares.
 struct Device {
     transport: Box<dyn Transport>,
-    /// The IOTA app's version, read once and cleared when the device switches
-    /// apps.
+    /// The IOTA app's version, read once and cleared when the device switches apps.
     version: Option<AppVersion>,
 }
 
@@ -92,9 +90,9 @@ impl Ledger {
 
     /// Open the IOTA app, from the dashboard or by closing another app first.
     ///
-    /// Does nothing if the IOTA app is already running, or on transports that
-    /// cannot switch apps, such as Speculos. Reconnects first if the device
-    /// does not answer, as after an app was opened or closed on the device.
+    /// Does nothing if the IOTA app is already running, or on transports that cannot switch apps,
+    /// such as Speculos. Reconnects first if the device does not answer, as after an app was opened
+    /// or closed on the device.
     pub async fn open_app(&self) -> Result<(), LedgerError> {
         let mut device = self.device.lock().await;
         if !device.transport.can_switch_apps() {
@@ -122,8 +120,7 @@ impl Ledger {
 
     /// Close the app running on the device and return to the dashboard.
     ///
-    /// On transports that cannot switch apps, such as Speculos, this ends the
-    /// emulated app.
+    /// On transports that cannot switch apps, such as Speculos, this ends the emulated app.
     pub async fn exit_app(&self) -> Result<(), LedgerError> {
         let mut device = self.device.lock().await;
         bolos::exit_app(device.transport.as_ref()).await?;
@@ -147,8 +144,7 @@ impl Ledger {
         app::public_key(device.transport.as_ref(), path, false).await
     }
 
-    /// Show the address at `path` on the device for the user to confirm, and
-    /// return its public key.
+    /// Show the address at `path` on the device for the user to confirm, and return its public key.
     pub async fn verify_address(
         &self,
         path: &DerivationPath,
@@ -159,14 +155,12 @@ impl Ledger {
 
     /// Sign a transaction with the key at `path`.
     ///
-    /// `objects` are the transaction's input objects. With them the device
-    /// shows what the transaction does; without them it only signs when blind
-    /// signing is enabled in the app's settings. Only the owned or immutable
-    /// inputs and gas coins at the versions the transaction references are
-    /// sent, and any other object is left out. Passing objects to an app older
-    /// than 1.0 fails with [`LedgerError::ClearSigningUnsupported`], and
-    /// objects that lack one of those inputs or gas coins fail with
-    /// [`LedgerError::MissingObject`].
+    /// `objects` are the transaction's input objects. With them the device shows what the
+    /// transaction does; without them it only signs when blind signing is enabled in the app's
+    /// settings. Only the owned or immutable inputs and gas coins at the versions the transaction
+    /// references are sent, and any other object is left out. Passing objects to an app older than
+    /// 1.0 fails with [`LedgerError::ClearSigningUnsupported`], and objects that lack one of those
+    /// inputs or gas coins fail with [`LedgerError::MissingObject`].
     pub async fn sign_transaction(
         &self,
         path: &DerivationPath,
@@ -192,8 +186,8 @@ impl Ledger {
 
     /// Sign `message` under `intent` with the key at `path`.
     ///
-    /// The app shows the transactions it recognizes and personal messages, and
-    /// only signs anything else when blind signing is enabled in its settings.
+    /// The app shows the transactions it recognizes and personal messages, and only signs anything
+    /// else when blind signing is enabled in its settings.
     pub async fn sign_intent<T: Serialize + ?Sized>(
         &self,
         path: &DerivationPath,
@@ -215,8 +209,7 @@ impl Device {
         Ok(version)
     }
 
-    /// Fail with [`LedgerError::KeyMismatch`] unless the key at `path` is
-    /// `expected`.
+    /// Fail with [`LedgerError::KeyMismatch`] unless the key at `path` is `expected`.
     async fn ensure_public_key(
         &self,
         path: &DerivationPath,
@@ -243,8 +236,8 @@ impl Device {
         sign::transaction(self.transport.as_ref(), path, transaction, objects).await
     }
 
-    /// Wait until `app` runs on the device, reconnecting as the device
-    /// re-enumerates after an app switch.
+    /// Wait until `app` runs on the device, reconnecting as the device re-enumerates after an app
+    /// switch.
     async fn wait_for_app(&mut self, app: &str) -> Result<(), LedgerError> {
         self.version = None;
         let mut error = LedgerError::from(ApduError::DeviceNotReady);
@@ -281,9 +274,8 @@ mod tests {
         }
     }
 
-    /// Answers public key requests through the block protocol, yielding once
-    /// before each answer, and records whether a new command starts while
-    /// another is still in progress.
+    /// Answers public key requests through the block protocol, yielding once before each answer,
+    /// and records whether a new command starts while another is still in progress.
     #[derive(Default)]
     struct FakeDevice {
         in_progress: std::sync::Mutex<bool>,
@@ -356,9 +348,8 @@ mod tests {
         assert!(!interleaved.load(std::sync::atomic::Ordering::SeqCst));
     }
 
-    /// Runs the dashboard, opens the IOTA app when asked and answers with its
-    /// name only after `startup`, like a device that restarts to switch apps.
-    /// Reconnecting is instant.
+    /// Runs the dashboard, opens the IOTA app when asked and answers with its name only after
+    /// `startup`, like a device that restarts to switch apps. Reconnecting is instant.
     struct SlowSwitchingDevice {
         startup: std::time::Duration,
         opened_at: std::sync::Mutex<Option<std::time::Instant>>,
@@ -396,8 +387,8 @@ mod tests {
         futures::executor::block_on(ledger.open_app()).unwrap();
     }
 
-    /// Fails every command until reconnected and runs the IOTA app after, like
-    /// a device whose app was closed and reopened on the device.
+    /// Fails every command until reconnected and runs the IOTA app after, like a device whose app
+    /// was closed and reopened on the device.
     #[derive(Default)]
     struct StaleConnection {
         reconnected: bool,
@@ -436,8 +427,7 @@ mod tests {
         futures::executor::block_on(ledger.open_app()).unwrap();
     }
 
-    /// Runs the IOTA app at `version` until told to exit, and counts version
-    /// requests.
+    /// Runs the IOTA app at `version` until told to exit, and counts version requests.
     struct UpdatableDevice(std::sync::Arc<std::sync::Mutex<UpdatableDeviceState>>);
 
     struct UpdatableDeviceState {
