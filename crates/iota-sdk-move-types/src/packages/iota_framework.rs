@@ -2286,6 +2286,9 @@ pub mod public_key {
     }
 
     impl PublicKey {
+        /// The signature scheme of the key.
+        ///
+        /// Returns an error if [`Self::scheme`] is not the flag of a scheme that accounts can use.
         pub fn signature_scheme(
             &self,
         ) -> Result<iota_types::SignatureScheme, AccountSignatureSchemeError> {
