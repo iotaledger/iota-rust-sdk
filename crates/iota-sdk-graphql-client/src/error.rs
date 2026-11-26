@@ -51,7 +51,7 @@ pub struct ErrorExtensions {
     pub oldest_available_checkpoint: Option<u64>,
 }
 
-/// Convert an error whose extensions were not decoded; `code` is `None`.
+/// Convert an error whose extensions were not decoded.
 pub(crate) fn query_error(error: cynic::GraphQlError) -> QueryError {
     QueryError::new(error.message, error.locations, error.path, None)
 }
