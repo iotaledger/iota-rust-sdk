@@ -27,19 +27,18 @@ pub trait TransactionSigner {
         transaction: &Transaction,
     ) -> impl Future<Output = Result<UserSignature, Self::Error>>;
 
-    /// Whether the signer uses the objects the transaction reads, such as a
-    /// hardware wallet showing what the transaction does. When `true`, the
-    /// builder gathers them for [`sign_with_objects`](Self::sign_with_objects).
+    /// Whether the signer uses the objects the transaction reads, such as a hardware wallet showing
+    /// what the transaction does. When `true`, the builder gathers them for
+    /// [`sign_with_objects`](Self::sign_with_objects).
     fn uses_objects(&self) -> bool {
         false
     }
 
-    /// Sign a transaction given the objects it reads: its gas coins and
-    /// immutable, owned or receiving inputs at the versions it references, and
-    /// its shared inputs as the builder fetched them, which may change before
-    /// the transaction executes. `objects` is empty when the signer does not
-    /// use them or the builder has no client to fetch them. The default
-    /// ignores them and calls [`sign`](Self::sign).
+    /// Sign a transaction given the objects it reads: its gas coins and immutable, owned or
+    /// receiving inputs at the versions it references, and its shared inputs as the builder fetched
+    /// them, which may change before the transaction executes. `objects` is empty when the signer
+    /// does not use them or the builder has no client to fetch them. The default ignores them and
+    /// calls [`sign`](Self::sign).
     fn sign_with_objects(
         &self,
         transaction: &Transaction,
@@ -85,13 +84,12 @@ mod ledger {
 
     use super::TransactionSigner;
 
-    /// Clear-signs with the objects the builder gathers, so the device shows
-    /// what the transaction does. Without them, or with an IOTA app too old to
-    /// clear-sign, it blind-signs with a warning, which the app only allows
-    /// when blind signing is enabled in its settings.
+    /// Clear-signs with the objects the builder gathers, so the device shows what the transaction
+    /// does. Without them, or with an IOTA app too old to clear-sign, it blind-signs with a
+    /// warning, which the app only allows when blind signing is enabled in its settings.
     ///
-    /// With the Speculos transport, signing blocks the thread polling it until
-    /// the emulator answers.
+    /// With the Speculos transport, signing blocks the thread polling it until the emulator
+    /// answers.
     impl TransactionSigner for LedgerSigner {
         type Error = LedgerError;
 
@@ -133,9 +131,8 @@ mod ledger {
         /// The gas coin of [`TRANSACTION`], from the same tests.
         const GAS_COIN: &str = "00018600000000000000281eec6c32ef36467331fb7b088b4acb1ce46f736354308e03ff6ce913a42734e2005ed0b200000000000f58eb1351454d623a6a4366198d6cd5aa4a12a12a3caefb501476e06d8bd5b620a7e7993dd298e10fb373fb708b9f9005be1963c6f074b202bbe7a7cf9d75d717b0f50e0000000000";
 
-        /// Answers each command with its final result at once and records how
-        /// many parameters each signing request carries: three when the input
-        /// objects are sent, two otherwise.
+        /// Answers each command with its final result at once and records how many parameters each
+        /// signing request carries: three when the input objects are sent, two otherwise.
         struct FakeDevice {
             sign_parameters: Arc<Mutex<Vec<usize>>>,
         }
@@ -154,8 +151,7 @@ mod ledger {
                         ]
                         .concat(),
                         0x03 => {
-                            // The start request is a tag byte and one hash per
-                            // parameter
+                            // The start request is a tag byte and one hash per parameter
                             let parameters = (command.data().len() - 1) / 32;
                             self.sign_parameters.lock().unwrap().push(parameters);
                             vec![9; 64]
@@ -362,8 +358,7 @@ mod tests {
         let signer = RecordingSigner::default();
         builder.execute(&signer, None).await.unwrap_err();
 
-        // the gas coin and every object input, including the system state
-        // given by reference
+        // the gas coin and every object input, including the system state given by reference
         let objects = signer.objects.lock().unwrap().take().unwrap();
         let mut ids = objects.iter().map(Object::id).collect::<Vec<_>>();
         ids.sort();

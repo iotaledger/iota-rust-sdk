@@ -1931,15 +1931,13 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
         Ok((kind, gas))
     }
 
-    /// The objects `transaction` reads that a signer can show the user: its
-    /// gas coins and immutable, owned or receiving inputs at the versions it
-    /// references, and its shared inputs, whose version the transaction leaves
-    /// to consensus.
+    /// The objects `transaction` reads that a signer can show the user: its gas coins and
+    /// immutable, owned or receiving inputs at the versions it references, and its shared inputs,
+    /// whose version the transaction leaves to consensus.
     ///
-    /// Objects fetched while building are reused, as the transaction references
-    /// them at the versions they were fetched at, and the rest are fetched,
-    /// shared ones at their latest version. Fails if any object cannot be
-    /// fetched.
+    /// Objects fetched while building are reused, as the transaction references them at the
+    /// versions they were fetched at, and the rest are fetched, shared ones at their latest
+    /// version. Fails if any object cannot be fetched.
     async fn signing_objects(
         &self,
         transaction: &Transaction,

@@ -39,13 +39,13 @@ pub enum LedgerError {
     /// The IOTA app is not installed on the device.
     #[error("{0}")]
     AppNotFound(String),
-    /// The IOTA app cannot clear-sign the transaction, and blind signing is
-    /// disabled in its settings.
+    /// The IOTA app cannot clear-sign the transaction, and blind signing is disabled in its
+    /// settings.
     #[error("{0}")]
     BlindSigningDisabled(String),
-    /// The device returns a different key for the signer's derivation path
-    /// than when the signer was created, because another device is connected
-    /// or the device was unlocked with a different seed or passphrase.
+    /// The device returns a different key for the signer's derivation path than when the signer was
+    /// created, because another device is connected or the device was unlocked with a different
+    /// seed or passphrase.
     #[error("{0}")]
     KeyMismatch(String),
     /// Any other failure.
@@ -83,9 +83,8 @@ fn new_native_hid() -> Result<iota_sdk::ledger::Ledger, LedgerError> {
     Ok(iota_sdk::ledger::Ledger::new_native_hid()?)
 }
 
-// The constructor stays in builds without HID so that every native library of
-// a binding package exposes the same functions as the bindings generated from
-// the desktop build.
+// The constructor stays in builds without HID so that every native library of a binding package
+// exposes the same functions as the bindings generated from the desktop build.
 #[cfg(not(feature = "ledger-hid"))]
 fn new_native_hid() -> Result<iota_sdk::ledger::Ledger, LedgerError> {
     Err(LedgerError::Other(
@@ -94,8 +93,7 @@ fn new_native_hid() -> Result<iota_sdk::ledger::Ledger, LedgerError> {
 }
 
 /// Error a `LedgerTransport` fails to exchange a command with.
-// Not `LedgerError`: uniffi cannot pass a flat error from the host language to
-// Rust.
+// Not `LedgerError`: uniffi cannot pass a flat error from the host language to Rust.
 #[derive(Debug, thiserror::Error, uniffi::Error)]
 #[non_exhaustive]
 pub enum LedgerTransportError {
@@ -103,8 +101,8 @@ pub enum LedgerTransportError {
     #[error("Ledger device not found; connect the device")]
     DeviceNotFound,
     /// Any other failure.
-    // Not `message`, which the Kotlin bindings cannot compile: it collides
-    // with `Throwable.message`.
+    // Not `message`, which the Kotlin bindings cannot compile: it collides with
+    // `Throwable.message`.
     #[error("{reason}")]
     Other { reason: String },
 }
@@ -127,20 +125,17 @@ impl From<LedgerTransportError> for iota_sdk::ledger::LedgerError {
     }
 }
 
-/// A link to a Ledger device implemented in the host language, for the links
-/// the SDK does not provide: Bluetooth through Ledger's mobile SDKs, or WebHID
-/// and WebUSB in the browser.
+/// A link to a Ledger device implemented in the host language, for the links the SDK does not
+/// provide: Bluetooth through Ledger's mobile SDKs, or WebHID and WebUSB in the browser.
 #[uniffi::export(with_foreign)]
 #[cfg_attr(not(target_arch = "wasm32"), async_trait::async_trait)]
 #[cfg_attr(target_arch = "wasm32", async_trait::async_trait(?Send))]
 pub trait LedgerTransport: MaybeSendSync {
-    /// Send an APDU command (`cla ins p1 p2 len data`) to the device and
-    /// return its answer: the response payload followed by the two-byte
-    /// status word.
+    /// Send an APDU command (`cla ins p1 p2 len data`) to the device and return its answer: the
+    /// response payload followed by the two-byte status word.
     ///
-    /// Opening or closing an app closes the link on some transports. `Ledger`
-    /// then calls this at intervals until the app answers, so re-establish a
-    /// closed link here.
+    /// Opening or closing an app closes the link on some transports. `Ledger` then calls this at
+    /// intervals until the app answers, so re-establish a closed link here.
     async fn exchange(&self, apdu: Vec<u8>) -> Result<Vec<u8>, LedgerTransportError>;
 }
 
@@ -175,10 +170,9 @@ impl From<iota_sdk::ledger::AppVersion> for LedgerAppVersion {
 
 /// A connection to the IOTA app on a Ledger device.
 ///
-/// Every call completes once the device answers, which for address
-/// verification includes waiting for the user to confirm on the device. Calls
-/// on the same `Ledger`, including through the `LedgerSigner`s created from
-/// it, run one at a time.
+/// Every call completes once the device answers, which for address verification includes waiting
+/// for the user to confirm on the device. Calls on the same `Ledger`, including through the
+/// `LedgerSigner`s created from it, run one at a time.
 #[derive(uniffi::Object)]
 pub struct Ledger(iota_sdk::ledger::Ledger);
 
@@ -193,30 +187,26 @@ impl From<iota_sdk::ledger::Ledger> for Ledger {
 impl Ledger {
     /// Connect to the first Ledger device attached over USB.
     ///
-    /// Fails in builds of the SDK without USB support, such as those for
-    /// Android, iOS and the web.
+    /// Fails in builds of the SDK without USB support, such as those for Android, iOS and the web.
     #[uniffi::constructor]
     pub fn native_hid() -> Result<Self, LedgerError> {
         new_native_hid().map(Self::from)
     }
 
-    /// Connect to the APDU port of a Speculos emulator (by default this is
-    /// `127.0.0.1:9999` in the emulator).
+    /// Connect to the APDU port of a Speculos emulator (by default this is `127.0.0.1:9999` in the
+    /// emulator).
     ///
-    /// Calls through this connection block the thread running them until the
-    /// emulator answers, and fail in the WASM bindings, which have no TCP
-    /// sockets.
+    /// Calls through this connection block the thread running them until the emulator answers, and
+    /// fail in the WASM bindings, which have no TCP sockets.
     #[uniffi::constructor]
     pub fn speculos(host: String, port: u16) -> Self {
         iota_sdk::ledger::Ledger::new_speculos(&host, port).into()
     }
 
-    /// Communicate with the device through a transport implemented in the
-    /// host language.
+    /// Communicate with the device through a transport implemented in the host language.
     ///
-    /// `open_app` closes whichever other app the transport reports as
-    /// running, so do not call it on an emulator that reports a placeholder
-    /// app name, such as Speculos started without
+    /// `open_app` closes whichever other app the transport reports as running, so do not call it on
+    /// an emulator that reports a placeholder app name, such as Speculos started without
     /// `SPECULOS_APPNAME=IOTA:<version>`: it ends the emulated app.
     #[uniffi::constructor]
     pub fn from_transport(transport: Arc<dyn LedgerTransport>) -> Self {
@@ -233,8 +223,7 @@ impl Ledger {
 
     /// Open the IOTA app, from the dashboard or by closing another app first.
     ///
-    /// Does nothing if the IOTA app is already running, or on a `speculos`
-    /// connection.
+    /// Does nothing if the IOTA app is already running, or on a `speculos` connection.
     pub async fn open_app(&self) -> Result<(), LedgerError> {
         Ok(self.0.open_app().await?)
     }
@@ -251,22 +240,21 @@ impl Ledger {
         Ok(self.0.version().await?.into())
     }
 
-    /// Read the public key at a derivation path such as
-    /// `m/44'/4218'/0'/0'/0'`.
+    /// Read the public key at a derivation path such as `m/44'/4218'/0'/0'/0'`.
     pub async fn get_public_key(&self, path: String) -> Result<Ed25519PublicKey, LedgerError> {
         let path = parse_path(&path)?;
         Ok(self.0.get_public_key(&path).await?.into())
     }
 
-    /// Show the address at a derivation path on the device for the user to
-    /// confirm, and return its public key.
+    /// Show the address at a derivation path on the device for the user to confirm, and return its
+    /// public key.
     pub async fn verify_address(&self, path: String) -> Result<Ed25519PublicKey, LedgerError> {
         let path = parse_path(&path)?;
         Ok(self.0.verify_address(&path).await?.into())
     }
 
-    /// Create a signer for the key at a derivation path such as
-    /// `m/44'/4218'/0'/0'/0'`, reading its public key from the device.
+    /// Create a signer for the key at a derivation path such as `m/44'/4218'/0'/0'/0'`, reading its
+    /// public key from the device.
     ///
     /// The signer shares this `Ledger`'s connection, which stays usable.
     pub async fn signer(&self, path: String) -> Result<LedgerSigner, LedgerError> {
@@ -277,13 +265,12 @@ impl Ledger {
 
 /// Signs with the key at one derivation path on a Ledger device.
 ///
-/// Before each signature it reads the public key again and fails with
-/// `KeyMismatch` if it differs, which happens when another device is connected
-/// or the device was unlocked with a different seed or passphrase.
+/// Before each signature it reads the public key again and fails with `KeyMismatch` if it differs,
+/// which happens when another device is connected or the device was unlocked with a different seed
+/// or passphrase.
 ///
-/// Use `TransactionSigner.from_ledger` to sign with it through the transaction
-/// builder, which passes it the transaction's objects so the device shows what
-/// the transaction does.
+/// Use `TransactionSigner.from_ledger` to sign with it through the transaction builder, which
+/// passes it the transaction's objects so the device shows what the transaction does.
 #[derive(Debug, uniffi::Object)]
 pub struct LedgerSigner(pub(crate) iota_sdk::ledger::LedgerSigner);
 
@@ -305,9 +292,8 @@ impl LedgerSigner {
         self.0.address().into()
     }
 
-    /// Sign a transaction without its input objects. Fails with
-    /// `BlindSigningDisabled` if blind signing is disabled in the IOTA app's
-    /// settings.
+    /// Sign a transaction without its input objects. Fails with `BlindSigningDisabled` if blind
+    /// signing is disabled in the IOTA app's settings.
     pub async fn sign_transaction(
         &self,
         transaction: &Transaction,
@@ -315,9 +301,8 @@ impl LedgerSigner {
         Ok(self.0.sign_transaction(&transaction.0).await?.into())
     }
 
-    /// Sign a transaction, passing its input objects so the device can
-    /// clear-sign it. Falls back to blind signing with an IOTA app older than
-    /// 1.0.
+    /// Sign a transaction, passing its input objects so the device can clear-sign it. Falls back to
+    /// blind signing with an IOTA app older than 1.0.
     pub async fn sign_transaction_with_objects(
         &self,
         transaction: &Transaction,
@@ -394,8 +379,8 @@ mod tests {
 
     const PATH: &str = "m/44'/4218'/0'/0'/0'";
 
-    /// Answers version and public key requests at once, or fails every command
-    /// while `connected` is unset.
+    /// Answers version and public key requests at once, or fails every command while `connected` is
+    /// unset.
     struct FakeDevice {
         connected: Arc<std::sync::atomic::AtomicBool>,
     }
@@ -451,8 +436,8 @@ mod tests {
         assert!(TransactionSigner::from_ledger(Arc::new(signer)).uses_objects());
     }
 
-    /// Implements the transport the way a host language does: records the
-    /// commands it receives and answers each with `answer`.
+    /// Implements the transport the way a host language does: records the commands it receives and
+    /// answers each with `answer`.
     struct HostTransport {
         received: std::sync::Mutex<Vec<Vec<u8>>>,
         answer: fn() -> Result<Vec<u8>, LedgerTransportError>,
@@ -481,8 +466,8 @@ mod tests {
 
         let version = block_on(ledger.version()).unwrap();
         assert_eq!((version.major, version.minor, version.patch), (1, 0, 1));
-        // cla, ins, p1, p2 and length, then the block protocol start byte and
-        // the hash that stands for an empty parameter
+        // cla, ins, p1, p2 and length, then the block protocol start byte and the hash that stands
+        // for an empty parameter
         assert_eq!(
             *transport.received.lock().unwrap(),
             [[&[0, 0, 0, 0, 33, 0][..], &[0; 32]].concat()]

@@ -19,8 +19,7 @@ use super::{
 };
 use crate::{LedgerError, Transport};
 
-/// Sign a transaction, passing its input objects for clear signing when
-/// there are any.
+/// Sign a transaction, passing its input objects for clear signing when there are any.
 pub(crate) async fn transaction(
     transport: &dyn Transport,
     path: &DerivationPath,
@@ -47,10 +46,9 @@ pub(crate) async fn transaction(
     .await
 }
 
-/// The objects among `objects` that `transaction` references as an owned or
-/// immutable input or a gas coin, in the order it references them, as the
-/// device looks them up by digest. Fails if any of them is missing or at
-/// another version.
+/// The objects among `objects` that `transaction` references as an owned or immutable input or a
+/// gas coin, in the order it references them, as the device looks them up by digest. Fails if any
+/// of them is missing or at another version.
 fn referenced_objects<'a>(
     transaction: &Transaction,
     objects: &'a [Object],
