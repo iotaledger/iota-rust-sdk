@@ -382,8 +382,9 @@ impl TransactionBuilder {
     /// Set the client to enable automatic object resolution.
     ///
     /// Without a set gas price or budget, the client's values are used, checked only against the
-    /// client's own protocol limits. With an untrusted client, set
-    /// [`gas_price`](TransactionBuilder::gas_price) yourself and check the fee before signing.
+    /// protocol limits the client reports. With an untrusted client, set
+    /// [`gas_price`](TransactionBuilder::gas_price) yourself, or build with `finish` and check the
+    /// gas price and budget before signing.
     pub fn with_client<C>(self, client: C) -> TransactionBuilder<C> {
         TransactionBuilder {
             data: self.data,
@@ -579,8 +580,8 @@ impl<C, L> TransactionBuilder<C, L> {
 
     /// Set the gas budget. Optional.
     ///
-    /// Without it, a builder with a client uses the client's estimate, checked only against the
-    /// client's own `max_tx_gas`.
+    /// Without it, `finish` and the `execute` methods of a builder with a client use the client's
+    /// estimate, checked only against the `max_tx_gas` the client reports.
     pub fn gas_budget(&mut self, gas_budget: u64) -> &mut Self {
         self.data.gas_budget(gas_budget);
         self
@@ -589,7 +590,8 @@ impl<C, L> TransactionBuilder<C, L> {
     /// Set the gas price. Optional.
     ///
     /// Without it, a builder with a client uses the client's reference gas price, checked only
-    /// against the client's own `max_gas_price`. Set it yourself when the client is untrusted.
+    /// against the `max_gas_price` the client reports. Set it yourself when the client is
+    /// untrusted.
     pub fn gas_price(&mut self, gas_price: u64) -> &mut Self {
         self.data.gas_price(gas_price);
         self
