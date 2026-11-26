@@ -1,8 +1,7 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Implementation of the transaction builder client traits for the GRPC
-//! [`GrpcClient`].
+//! Implementation of the transaction builder client traits for the GRPC [`GrpcClient`].
 
 use std::time::Duration;
 
@@ -27,23 +26,20 @@ use crate::{
     api::{GrpcError, GrpcResult, MetadataEnvelope, check_result_count, saturating_usize_to_u32},
 };
 
-/// How long [`TransactionBuilderExecutionClient::wait_for_transaction`] polls
-/// before giving up.
+/// How long [`TransactionBuilderExecutionClient::wait_for_transaction`] polls before giving up.
 const WAIT_FOR_TRANSACTION_TIMEOUT: Duration = Duration::from_secs(60);
-/// Interval between polls in
-/// [`TransactionBuilderExecutionClient::wait_for_transaction`].
+/// Interval between polls in [`TransactionBuilderExecutionClient::wait_for_transaction`].
 const WAIT_FOR_TRANSACTION_POLL_INTERVAL: Duration = Duration::from_millis(100);
 
 /// Extract the result for the single item of a one-item batch request.
 ///
-/// A `NOT_FOUND` for the item maps to `None`, since these callers treat a
-/// missing object or transaction as an absence rather than a failure. A failure
-/// of the call itself still propagates — including a `NOT_FOUND`, which says
-/// the endpoint is wrong rather than that the item is absent.
+/// A `NOT_FOUND` for the item maps to `None`, since these callers treat a missing object or
+/// transaction as an absence rather than a failure. A failure of the call itself still propagates —
+/// including a `NOT_FOUND`, which says the endpoint is wrong rather than that the item is absent.
 ///
-/// Anything other than exactly one result is a protocol error, not an absent
-/// item: the batched reads answer every request, so an empty batch says the
-/// server broke that promise rather than that the item is missing.
+/// Anything other than exactly one result is a protocol error, not an absent item: the batched
+/// reads answer every request, so an empty batch says the server broke that promise rather than
+/// that the item is missing.
 fn single_item<T>(
     response: GrpcResult<MetadataEnvelope<Vec<GrpcResult<T>>>>,
 ) -> GrpcResult<Option<T>> {
@@ -74,8 +70,8 @@ impl TransactionBuilderLedgerClient for GrpcClient {
         object_id: ObjectId,
         version: impl Into<Option<Version>>,
     ) -> Result<Option<Object>, Self::Error> {
-        // Default read mask (`reference` + `bcs`) provides everything needed to
-        // reconstruct the SDK object.
+        // Default read mask (`reference` + `bcs`) provides everything needed to reconstruct the SDK
+        // object.
         let response = self
             .objects_with_versions([(object_id, version.into())])
             .await;
@@ -93,9 +89,8 @@ impl TransactionBuilderLedgerClient for GrpcClient {
         if object_ids.is_empty() {
             return Ok(Vec::new());
         }
-        // Default read mask (`reference` + `bcs`) provides everything needed to
-        // reconstruct the SDK objects, which `objects` returns in request
-        // order.
+        // Default read mask (`reference` + `bcs`) provides everything needed to reconstruct the SDK
+        // objects, which `objects` returns in request order.
         self.objects_with_versions(object_ids.iter().copied())
             .await?
             .into_inner()
@@ -171,8 +166,7 @@ impl TransactionBuilderSimulationClient for GrpcClient {
         &self,
         transaction: &Transaction,
     ) -> Result<Option<u64>, Self::Error> {
-        // Simulate with relaxed checks and read the gas used from the resulting
-        // effects.
+        // Simulate with relaxed checks and read the gas used from the resulting effects.
         let simulated = self
             .simulate_transaction(transaction.clone())
             .skip_checks(true)
@@ -234,9 +228,9 @@ impl TransactionBuilderExecutionClient for GrpcClient {
         digest: TransactionDigest,
         wait_for: WaitForTransaction,
     ) -> Result<(), Self::Error> {
-        // Request only the field that proves the desired condition: any
-        // transaction field confirms it is indexed on the node, while
-        // `checkpoint` is only populated once it has been finalized.
+        // Request only the field that proves the desired condition: any transaction field confirms
+        // it is indexed on the node, while `checkpoint` is only populated once it has been
+        // finalized.
         let mask = match wait_for {
             WaitForTransaction::IndexedOnNode => {
                 TransactionReadMask::from(TransactionField::TRANSACTION_DIGEST)

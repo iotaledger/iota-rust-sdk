@@ -223,8 +223,8 @@ pub enum AddressTransactionRelationship {
     Sent,
     /// Transactions that sent objects to the address.
     Recv,
-    /// Transactions that affected the address: it is the sender, a recipient,
-    /// or the owner of the gas payment.
+    /// Transactions that affected the address: it is the sender, a recipient, or the owner of the
+    /// gas payment.
     Affected,
 }
 
@@ -232,8 +232,8 @@ pub enum AddressTransactionRelationship {
 #[derive(Clone, Debug)]
 #[non_exhaustive]
 pub enum TransactionsSelector {
-    /// Select by package, module, or function name, e.g. `"0x03"`,
-    /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
+    /// Select by package, module, or function name, e.g. `"0x03"`, `"0x03::iota_system"`, or
+    /// `"0x03::iota_system::request_add_stake"`.
     Function(String),
     /// Select by transaction kind.
     Kind(TransactionBlockKindInput),
@@ -251,9 +251,9 @@ pub enum TransactionsSelector {
 
 /// Filter for transaction queries.
 ///
-/// Holds at most one [`TransactionsSelector`], so each of the setters that
-/// picks one replaces whichever was set before; the sender, checkpoint and
-/// digest filters can be combined with it and with each other freely.
+/// Holds at most one [`TransactionsSelector`], so each of the setters that picks one replaces
+/// whichever was set before; the sender, checkpoint and digest filters can be combined with it and
+/// with each other freely.
 #[derive(Clone, Debug, Default)]
 pub struct TransactionsFilter {
     selector: Option<TransactionsSelector>,
@@ -265,15 +265,14 @@ pub struct TransactionsFilter {
 }
 
 impl TransactionsFilter {
-    /// Select on a function, kind, address or object, replacing the selector
-    /// already set, if any.
+    /// Select on a function, kind, address or object, replacing the selector already set, if any.
     pub fn with_selector(mut self, selector: TransactionsSelector) -> Self {
         self.selector = Some(selector);
         self
     }
 
-    /// Select by package, module, or function name, e.g. `"0x03"`,
-    /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
+    /// Select by package, module, or function name, e.g. `"0x03"`, `"0x03::iota_system"`, or
+    /// `"0x03::iota_system::request_add_stake"`.
     ///
     /// Replaces the selector already set, if any.
     pub fn with_function(self, function: String) -> Self {

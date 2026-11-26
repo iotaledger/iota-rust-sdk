@@ -3,10 +3,9 @@
 
 //! gRPC counterpart to `owned_objects.rs`.
 //!
-//! Demonstrates the gRPC pagination builder: the query is *lazy* until
-//! awaited or `.collect()`-ed. Awaiting returns a single `Page` with a
-//! continuation token; `.collect(limit)` auto-paginates up to `limit`
-//! items (or all of them if `limit` is `None`).
+//! Demonstrates the gRPC pagination builder: the query is *lazy* until awaited or `.collect()`-ed.
+//! Awaiting returns a single `Page` with a continuation token; `.collect(limit)` auto-paginates up
+//! to `limit` items (or all of them if `limit` is `None`).
 
 use eyre::Result;
 use iota_sdk::{
@@ -22,8 +21,8 @@ async fn main() -> Result<()> {
     let owner: Address =
         "0xda1820edf693ee32b5729907b9b2ec8e64980ee8c008c17e89cfb4e5ecd72151".parse()?;
 
-    // First page: 10 results, no filter on type. The returned page includes
-    // a `next_page_token` to feed back in for the following page.
+    // First page: 10 results, no filter on type. The returned page includes a `next_page_token` to
+    // feed back in for the following page.
     let page = client.owned_objects(owner).page_size(10).await?;
     println!("First page: {} objects", page.body().items.len());
     for obj in &page.body().items {
@@ -51,9 +50,8 @@ async fn main() -> Result<()> {
         println!("  {}  v{}", r.object_id, r.version);
     }
 
-    // Same builder, but the type filter comes from `StakedIota` and each
-    // object arrives decoded, so neither the type string nor the BCS step
-    // above appears here.
+    // Same builder, but the type filter comes from `StakedIota` and each object arrives decoded, so
+    // neither the type string nor the BCS step above appears here.
     let staked = client
         .owned_move_objects::<StakedIota>(owner)
         .page_size(25)

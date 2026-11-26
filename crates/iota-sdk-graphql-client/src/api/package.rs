@@ -24,8 +24,7 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GraphQLClient::package_versions`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::package_versions`]. Await it to send the request.
     #[derive(Clone)]
     pub struct ListPackageVersionsQuery {
         client: GraphQLClient,
@@ -44,8 +43,8 @@ impl ListPackageVersionsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<MovePackage>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -141,8 +140,8 @@ impl ListPackagesQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<MovePackage>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -216,8 +215,7 @@ impl ListPackagesQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::normalized_move_module`]. Await it to send
-    /// the request.
+    /// Query for [`GraphQLClient::normalized_move_module`]. Await it to send the request.
     pub struct GetNormalizedMoveModuleQuery {
         client: GraphQLClient,
         package: Address,
@@ -341,8 +339,7 @@ define_query! {
 }
 
 impl GetPackageQuery {
-    /// Set the package version. Without it, the package is loaded from the
-    /// given address.
+    /// Set the package version. Without it, the package is loaded from the given address.
     pub fn version(mut self, version: Version) -> Self {
         self.version = Some(version);
         self
@@ -368,8 +365,7 @@ impl GetPackageQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::normalized_move_function`]. Await it to send
-    /// the request.
+    /// Query for [`GraphQLClient::normalized_move_function`]. Await it to send the request.
     pub struct GetNormalizedMoveFunctionQuery {
         client: GraphQLClient,
         package: Address,
@@ -381,8 +377,7 @@ define_query! {
 }
 
 impl GetNormalizedMoveFunctionQuery {
-    /// Set the package version. Without it, the package at the given address
-    /// is used.
+    /// Set the package version. Without it, the package at the given address is used.
     pub fn version(mut self, version: Version) -> Self {
         self.version = Some(version);
         self
@@ -407,8 +402,7 @@ impl GetNormalizedMoveFunctionQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::package_latest`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::package_latest`]. Await it to send the request.
     pub struct GetPackageLatestQuery {
         client: GraphQLClient,
         address: Address,
@@ -437,17 +431,15 @@ impl GetPackageLatestQuery {
 }
 
 impl GraphQLClient {
-    /// The package corresponding to the given address (at the optionally given
-    /// version). When no version is given, the package is loaded directly
-    /// from the address given. Otherwise, the address is translated before
-    /// loading to point to the package whose original ID matches
-    /// the package at address, but whose version is version. For non-system
-    /// packages, this might result in a different address than address
-    /// because different versions of a package, introduced by upgrades,
-    /// exist at distinct addresses.
+    /// The package corresponding to the given address (at the optionally given version). When no
+    /// version is given, the package is loaded directly from the address given. Otherwise, the
+    /// address is translated before loading to point to the package whose original ID matches the
+    /// package at address, but whose version is version. For non-system packages, this might result
+    /// in a different address than address because different versions of a package, introduced by
+    /// upgrades, exist at distinct addresses.
     ///
-    /// Note that this interpretation of version is different from a historical
-    /// object read (the interpretation of version for the object query).
+    /// Note that this interpretation of version is different from a historical object read (the
+    /// interpretation of version for the object query).
     pub fn package(&self, address: Address) -> GetPackageQuery {
         GetPackageQuery {
             client: self.clone(),
@@ -456,9 +448,9 @@ impl GraphQLClient {
         }
     }
 
-    /// Fetch all versions of package at address (packages that share this
-    /// package's original ID), optionally bounding the versions exclusively
-    /// with [`ListPackageVersionsQuery::after_version`] and
+    /// Fetch all versions of package at address (packages that share this package's original ID),
+    /// optionally bounding the versions exclusively with
+    /// [`ListPackageVersionsQuery::after_version`] and
     /// [`ListPackageVersionsQuery::before_version`].
     pub fn package_versions(&self, address: Address) -> ListPackageVersionsQuery {
         ListPackageVersionsQuery {
@@ -471,8 +463,8 @@ impl GraphQLClient {
     }
 
     /// Fetch the latest version of the package at address.
-    /// This corresponds to the package with the highest version that shares its
-    /// original ID with the package at address.
+    /// This corresponds to the package with the highest version that shares its original ID with
+    /// the package at address.
     pub fn package_latest(&self, address: Address) -> GetPackageLatestQuery {
         GetPackageLatestQuery {
             client: self.clone(),
@@ -480,13 +472,11 @@ impl GraphQLClient {
         }
     }
 
-    /// The Move packages that exist in the network, optionally bounded
-    /// exclusively with [`ListPackagesQuery::after_checkpoint`] and
-    /// [`ListPackagesQuery::before_checkpoint`].
+    /// The Move packages that exist in the network, optionally bounded exclusively with
+    /// [`ListPackagesQuery::after_checkpoint`] and [`ListPackagesQuery::before_checkpoint`].
     ///
-    /// This query returns all versions of a given user package that appear
-    /// between the specified checkpoints, but only records the latest
-    /// versions of system packages.
+    /// This query returns all versions of a given user package that appear between the specified
+    /// checkpoints, but only records the latest versions of system packages.
     pub fn packages(&self) -> ListPackagesQuery {
         ListPackagesQuery {
             client: self.clone(),
@@ -496,8 +486,7 @@ impl GraphQLClient {
         }
     }
 
-    /// Return the normalized Move function data for the provided package,
-    /// module, and function.
+    /// Return the normalized Move function data for the provided package, module, and function.
     pub fn normalized_move_function(
         &self,
         package: Address,
@@ -514,8 +503,8 @@ impl GraphQLClient {
     }
 
     /// Return the normalized Move module data for the provided module.
-    // TODO: do we want to self paginate everything and return all the data, or keep
-    // pagination options?
+    // TODO: do we want to self paginate everything and return all the data, or keep pagination
+    // options?
     pub fn normalized_move_module(
         &self,
         package: Address,

@@ -31,7 +31,8 @@ pub struct GetHealthResponse {
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetServiceInfoRequest {
     /// Mask specifying which ServiceInfo fields to read.
-    /// If no mask is specified, defaults to `chain_id,epoch,checkpoint_height`.
+    /// If no mask is specified, defaults to
+    /// `chain_id,epoch,executed_checkpoint_height,executed_checkpoint_timestamp,lowest_available_checkpoint,lowest_available_checkpoint_objects`.
     #[prost(message, optional, tag = "1")]
     pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
 }
@@ -93,7 +94,7 @@ pub struct GetObjectsRequest {
     #[prost(message, optional, tag = "1")]
     pub requests: ::core::option::Option<ObjectRequests>,
     /// Mask specifying which fields to read.
-    /// If no mask is specified, defaults to `object_id,version,digest`.
+    /// If no mask is specified, defaults to `reference,bcs`.
     #[prost(message, optional, tag = "2")]
     pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// Optional maximum message size the client can receive (1MB - 128MB)
@@ -160,7 +161,7 @@ pub struct GetTransactionsRequest {
     #[prost(message, optional, tag = "1")]
     pub requests: ::core::option::Option<TransactionRequests>,
     /// Mask specifying which fields to read.
-    /// If no mask is specified, defaults to `transaction.digest`.
+    /// If no mask is specified, defaults to `transaction,signatures,checkpoint,timestamp`.
     #[prost(message, optional, tag = "2")]
     pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// Optional maximum message size the client can receive (1MB - 128MB)
@@ -212,7 +213,7 @@ pub struct GetTransactionsResponse {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetCheckpointRequest {
     /// Mask specifying which fields to read.
-    /// If no mask is specified, defaults to `summary`.
+    /// If no mask is specified, defaults to `checkpoint.summary`.
     #[prost(message, optional, tag = "4")]
     pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// if no filter is passed, all transactions are included (if mentioned in the read_mask)
@@ -256,7 +257,7 @@ pub struct StreamCheckpointsRequest {
     #[prost(uint64, optional, tag = "2")]
     pub end_sequence_number: ::core::option::Option<u64>,
     /// Mask specifying which fields to read.
-    /// If no mask is specified, defaults to `summary`.
+    /// If no mask is specified, defaults to `checkpoint.summary`.
     #[prost(message, optional, tag = "3")]
     pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
     /// if no filter is passed, all transactions are included (if mentioned in the read_mask)
@@ -329,7 +330,8 @@ pub struct GetEpochRequest {
     #[prost(uint64, optional, tag = "1")]
     pub epoch: ::core::option::Option<u64>,
     /// Mask specifying which fields to read.
-    /// If no mask is specified, defaults to `epoch`.
+    /// If no mask is specified, defaults to
+    /// `epoch,first_checkpoint,last_checkpoint,start,end,reference_gas_price,protocol_config.protocol_version`.
     #[prost(message, optional, tag = "2")]
     pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
 }

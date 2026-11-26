@@ -3,44 +3,37 @@
 
 //! Bindings for selected Rust mirrors of Move types.
 //!
-//! Each FFI shim wraps an inner [`iota_sdk::move_types`] type and exposes
-//! the fields that non-Rust consumers typically need when decoding objects
-//! returned by the GraphQL client. Currently the bindings cover:
+//! Each FFI shim wraps an inner [`iota_sdk::move_types`] type and exposes the fields that non-Rust
+//! consumers typically need when decoding objects returned by the GraphQL client. Currently the
+//! bindings cover:
 //!
-//! - **System types** (`0x3`): [`StakedIota`], [`TimelockedStakedIota`],
-//!   [`IotaSystemState`], [`IotaSystemStateV2`] and [`IotaSystemStateV1`] (with
-//!   their embedded [`ValidatorSetV2`] / [`ValidatorSetV1`], [`ValidatorV1`],
-//!   [`ValidatorMetadataV1`], [`StakingPoolV1`], [`SystemParametersV1`], and
-//!   [`StorageFundV1`]), [`UnverifiedValidatorOperationCap`].
-//! - **Framework types** (`0x2`): [`CoinMetadata`], [`ImmutableCoinMetadata`],
-//!   [`Clock`], [`TimelockedIotaBalance`], [`UpgradeCap`], [`Publisher`],
-//!   [`Kiosk`], [`KioskOwnerCap`], [`KioskExtension`], [`DenyList`], [`Random`]
-//!   (with [`RandomInner`]), [`PackageMetadataV1`] (with its
-//!   [`ModuleMetadataV1`] and [`AuthenticatorMetadataV1`] records),
-//!   [`ModuleMetadata`], [`TreasuryCap`], [`RegulatedCoinMetadata`],
-//!   [`DenyCapV1`], [`Display`], [`CoinManager`], [`CoinManagerTreasuryCap`],
-//!   [`CoinManagerMetadataCap`], [`Token`], [`TokenPolicyCap`],
-//!   [`TokenPolicy`], [`Config`] (with [`BoolSetting`]), [`TransferPolicy`],
-//!   [`TransferPolicyCap`], [`LabelerCap`], [`PurchaseCap`].
-//! - **Stardust types** (`0x107a`): [`Nft`], [`Irc27Metadata`],
-//!   [`BasicOutput`], [`NftOutput`], [`AliasOutput`], [`Alias`], plus the
-//!   unlock-condition records [`TimelockUnlockCondition`],
+//! - **System types** (`0x3`): [`StakedIota`], [`TimelockedStakedIota`], [`IotaSystemState`],
+//!   [`IotaSystemStateV2`] and [`IotaSystemStateV1`] (with their embedded [`ValidatorSetV2`] /
+//!   [`ValidatorSetV1`], [`ValidatorV1`], [`ValidatorMetadataV1`], [`StakingPoolV1`],
+//!   [`SystemParametersV1`], and [`StorageFundV1`]), [`UnverifiedValidatorOperationCap`].
+//! - **Framework types** (`0x2`): [`CoinMetadata`], [`ImmutableCoinMetadata`], [`Clock`],
+//!   [`TimelockedIotaBalance`], [`UpgradeCap`], [`Publisher`], [`Kiosk`], [`KioskOwnerCap`],
+//!   [`KioskExtension`], [`DenyList`], [`Random`] (with [`RandomInner`]), [`PackageMetadataV1`]
+//!   (with its [`ModuleMetadataV1`] and [`AuthenticatorMetadataV1`] records), [`ModuleMetadata`],
+//!   [`TreasuryCap`], [`RegulatedCoinMetadata`], [`DenyCapV1`], [`Display`], [`CoinManager`],
+//!   [`CoinManagerTreasuryCap`], [`CoinManagerMetadataCap`], [`Token`], [`TokenPolicyCap`],
+//!   [`TokenPolicy`], [`Config`] (with [`BoolSetting`]), [`TransferPolicy`], [`TransferPolicyCap`],
+//!   [`LabelerCap`], [`PurchaseCap`].
+//! - **Stardust types** (`0x107a`): [`Nft`], [`Irc27Metadata`], [`BasicOutput`], [`NftOutput`],
+//!   [`AliasOutput`], [`Alias`], plus the unlock-condition records [`TimelockUnlockCondition`],
 //!   [`ExpirationUnlockCondition`], [`StorageDepositReturnUnlockCondition`].
 //!
-//! Generic Move types are exposed as their `<IOTA>` instantiations
-//! (`BasicOutput<IOTA>`, `NftOutput<IOTA>`, `AliasOutput<IOTA>`, and
-//! [`TimelockedIotaBalance`] wrapping `TimeLock<Balance<IOTA>>`). The
-//! `try_from_object` constructors validate the full on-chain type tag,
-//! including that the coin marker is `0x2::iota::IOTA`.
+//! Generic Move types are exposed as their `<IOTA>` instantiations (`BasicOutput<IOTA>`,
+//! `NftOutput<IOTA>`, `AliasOutput<IOTA>`, and [`TimelockedIotaBalance`] wrapping
+//! `TimeLock<Balance<IOTA>>`). The `try_from_object` constructors validate the full on-chain type
+//! tag, including that the coin marker is `0x2::iota::IOTA`.
 //!
-//! `0x2::coin::Coin` deliberately has no shim here: the existing
-//! [`Coin`](crate::types::coin::Coin) binding already decodes coin objects
-//! of any coin type.
+//! `0x2::coin::Coin` deliberately has no shim here: the existing [`Coin`](crate::types::coin::Coin)
+//! binding already decodes coin objects of any coin type.
 //!
-//! Move **event** mirrors are exposed the same way but via `ffi_move_event!`,
-//! which generates only a `try_from_bcs` constructor (events are not objects,
-//! so there is no `try_from_object` or `id`); decode them from the BCS
-//! `contents` of an event query result.
+//! Move **event** mirrors are exposed the same way but via `ffi_move_event!`, which generates only
+//! a `try_from_bcs` constructor (events are not objects, so there is no `try_from_object` or `id`);
+//! decode them from the BCS `contents` of an event query result.
 
 use std::{collections::HashMap, sync::Arc};
 
@@ -69,8 +62,7 @@ crate::ffi_map! {
 }
 
 crate::ffi_map! {
-    /// Number of epochs each at-risk validator has had stake below the
-    /// low-stake threshold.
+    /// Number of epochs each at-risk validator has had stake below the low-stake threshold.
     AtRiskMap<Address, u64>
 }
 
@@ -97,8 +89,7 @@ crate::ffi_move_object! {
 }
 
 crate::ffi_move_object! {
-    /// A typed view of an on-chain
-    /// `0x3::timelocked_staking::TimelockedStakedIota` object.
+    /// A typed view of an on-chain `0x3::timelocked_staking::TimelockedStakedIota` object.
     TimelockedStakedIota(iota_sdk::move_types::iota_system::timelocked_staking::TimelockedStakedIota) {
         /// The wrapped `StakedIota` carrying the staked principal.
         pub fn staked_iota(&self) -> StakedIota {
@@ -117,11 +108,11 @@ crate::ffi_move_object! {
 }
 
 crate::ffi_move_object! {
-    /// A typed view of the on-chain `0x3::iota_system::IotaSystemState` object
-    /// (the `0x5` singleton).
+    /// A typed view of the on-chain `0x3::iota_system::IotaSystemState` object (the `0x5`
+    /// singleton).
     ///
-    /// This is only the versioned wrapper; the actual state lives in a dynamic
-    /// field holding e.g. an `IotaSystemStateV2`.
+    /// This is only the versioned wrapper; the actual state lives in a dynamic field holding e.g.
+    /// an `IotaSystemStateV2`.
     IotaSystemState(iota_sdk::move_types::iota_system::iota_system::IotaSystemState) {
         /// Version selecting which inner state layout the dynamic field holds.
         pub fn version(&self) -> u64 {
@@ -130,12 +121,11 @@ crate::ffi_move_object! {
     }
 }
 
-/// A typed view of the `0x3::iota_system_state_inner::IotaSystemStateV2`
-/// inner system state.
+/// A typed view of the `0x3::iota_system_state_inner::IotaSystemStateV2` inner system state.
 ///
-/// Exposes the scalar epoch parameters plus the nested validator set
-/// ([`ValidatorSetV2`]), storage fund ([`StorageFundV1`]), system parameters
-/// ([`SystemParametersV1`]), and the treasury's total supply.
+/// Exposes the scalar epoch parameters plus the nested validator set ([`ValidatorSetV2`]), storage
+/// fund ([`StorageFundV1`]), system parameters ([`SystemParametersV1`]), and the treasury's total
+/// supply.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct IotaSystemStateV2(
@@ -146,9 +136,8 @@ pub struct IotaSystemStateV2(
 impl IotaSystemStateV2 {
     /// Decode an `IotaSystemStateV2` from raw BCS bytes.
     ///
-    /// There is no object-based constructor: the inner state is stored as
-    /// a dynamic field of the `0x5` wrapper, not as a top-level object
-    /// with its own type tag.
+    /// There is no object-based constructor: the inner state is stored as a dynamic field of the
+    /// `0x5` wrapper, not as a top-level object with its own type tag.
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
@@ -206,8 +195,8 @@ impl IotaSystemStateV2 {
         SystemParametersV1(self.0.parameters.clone())
     }
 
-    /// Validator report records: each reported validator's address mapped to
-    /// the addresses of the validators reporting it.
+    /// Validator report records: each reported validator's address mapped to the addresses of the
+    /// validators reporting it.
     pub fn validator_report_records(&self) -> ReportRecordMap {
         self.0
             .validator_report_records
@@ -251,20 +240,18 @@ impl IotaSystemStateV2 {
         self.0.safe_mode_non_refundable_storage_fee
     }
 
-    /// Object ID of the `Bag` holding fields added to this struct after its
-    /// current on-chain layout was set.
+    /// Object ID of the `Bag` holding fields added to this struct after its current on-chain layout
+    /// was set.
     pub fn extra_fields_id(&self) -> ObjectId {
         (*self.0.extra_fields.id.object_id()).into()
     }
 }
 
-/// A typed view of the `0x3::iota_system_state_inner::IotaSystemStateV1`
-/// inner system state, the layout selected by
-/// [`IotaSystemState::version`] 1.
+/// A typed view of the `0x3::iota_system_state_inner::IotaSystemStateV1` inner system state, the
+/// layout selected by [`IotaSystemState::version`] 1.
 ///
-/// Exposes the same parameters as [`IotaSystemStateV2`], except that safe-mode
-/// computation is accounted as rewards rather than charges, and the validator
-/// set is a [`ValidatorSetV1`].
+/// Exposes the same parameters as [`IotaSystemStateV2`], except that safe-mode computation is
+/// accounted as rewards rather than charges, and the validator set is a [`ValidatorSetV1`].
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct IotaSystemStateV1(
@@ -275,9 +262,8 @@ pub struct IotaSystemStateV1(
 impl IotaSystemStateV1 {
     /// Decode an `IotaSystemStateV1` from raw BCS bytes.
     ///
-    /// There is no object-based constructor: the inner state is stored as
-    /// a dynamic field of the `0x5` wrapper, not as a top-level object
-    /// with its own type tag.
+    /// There is no object-based constructor: the inner state is stored as a dynamic field of the
+    /// `0x5` wrapper, not as a top-level object with its own type tag.
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(bcs::from_bytes::<
@@ -333,8 +319,8 @@ impl IotaSystemStateV1 {
         SystemParametersV1(self.0.parameters.clone())
     }
 
-    /// Validator report records: each reported validator's address mapped to
-    /// the addresses of the validators reporting it.
+    /// Validator report records: each reported validator's address mapped to the addresses of the
+    /// validators reporting it.
     pub fn validator_report_records(&self) -> ReportRecordMap {
         self.0
             .validator_report_records
@@ -373,23 +359,21 @@ impl IotaSystemStateV1 {
         self.0.safe_mode_non_refundable_storage_fee
     }
 
-    /// Object ID of the `Bag` holding fields added to this struct after its
-    /// current on-chain layout was set.
+    /// Object ID of the `Bag` holding fields added to this struct after its current on-chain layout
+    /// was set.
     pub fn extra_fields_id(&self) -> ObjectId {
         (*self.0.extra_fields.id.object_id()).into()
     }
 }
 
-/// A typed view of the `0x3::validator_set::ValidatorSetV2` embedded in the
-/// system state.
+/// A typed view of the `0x3::validator_set::ValidatorSetV2` embedded in the system state.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct ValidatorSetV2(pub iota_sdk::move_types::iota_system::validator_set::ValidatorSetV2);
 
 #[uniffi::export]
 impl ValidatorSetV2 {
-    /// Total stake from all committee validators at the beginning of the
-    /// epoch, in nanos.
+    /// Total stake from all committee validators at the beginning of the epoch, in nanos.
     pub fn total_stake(&self) -> u64 {
         self.0.total_stake
     }
@@ -403,8 +387,7 @@ impl ValidatorSetV2 {
             .collect()
     }
 
-    /// Indices into `active_validators` of the validators responsible for
-    /// consensus.
+    /// Indices into `active_validators` of the validators responsible for consensus.
     pub fn committee_members(&self) -> Vec<u64> {
         self.0.committee_members.clone()
     }
@@ -414,14 +397,13 @@ impl ValidatorSetV2 {
         self.0.pending_removals.clone()
     }
 
-    /// Number of pending validator candidates. The candidates themselves are
-    /// stored in dynamic fields and are not part of this struct's contents.
+    /// Number of pending validator candidates. The candidates themselves are stored in dynamic
+    /// fields and are not part of this struct's contents.
     pub fn pending_active_validators_size(&self) -> u64 {
         self.0.pending_active_validators.contents.size
     }
 
-    /// Number of epochs each at-risk validator has had stake below the
-    /// low-stake threshold.
+    /// Number of epochs each at-risk validator has had stake below the low-stake threshold.
     pub fn at_risk_validators(&self) -> AtRiskMap {
         self.0
             .at_risk_validators
@@ -431,50 +413,44 @@ impl ValidatorSetV2 {
             .collect()
     }
 
-    /// Object ID of the `TableVec` holding the pending validator candidates,
-    /// keyed by their index.
+    /// Object ID of the `TableVec` holding the pending validator candidates, keyed by their index.
     pub fn pending_active_validators_id(&self) -> ObjectId {
         (*self.0.pending_active_validators.contents.id.object_id()).into()
     }
 
-    /// Object ID of the `Table` mapping each staking pool ID to its validator
-    /// address.
+    /// Object ID of the `Table` mapping each staking pool ID to its validator address.
     pub fn staking_pool_mappings_id(&self) -> ObjectId {
         (*self.0.staking_pool_mappings.id.object_id()).into()
     }
 
-    /// Object ID of the `Table` holding the inactive validators, keyed by
-    /// staking pool ID.
+    /// Object ID of the `Table` holding the inactive validators, keyed by staking pool ID.
     pub fn inactive_validators_id(&self) -> ObjectId {
         (*self.0.inactive_validators.id.object_id()).into()
     }
 
-    /// Object ID of the `Table` holding the validator candidates, keyed by
-    /// their address.
+    /// Object ID of the `Table` holding the validator candidates, keyed by their address.
     pub fn validator_candidates_id(&self) -> ObjectId {
         (*self.0.validator_candidates.id.object_id()).into()
     }
 
-    /// Object ID of the `Bag` holding fields added to this struct after its
-    /// current on-chain layout was set.
+    /// Object ID of the `Bag` holding fields added to this struct after its current on-chain layout
+    /// was set.
     pub fn extra_fields_id(&self) -> ObjectId {
         (*self.0.extra_fields.id.object_id()).into()
     }
 }
 
-/// A typed view of the `0x3::validator_set::ValidatorSetV1` embedded in
-/// [`IotaSystemStateV1`].
+/// A typed view of the `0x3::validator_set::ValidatorSetV1` embedded in [`IotaSystemStateV1`].
 ///
-/// Unlike [`ValidatorSetV2`] there are no committee members: in this layout
-/// every active validator is part of the committee.
+/// Unlike [`ValidatorSetV2`] there are no committee members: in this layout every active validator
+/// is part of the committee.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct ValidatorSetV1(pub iota_sdk::move_types::iota_system::validator_set::ValidatorSetV1);
 
 #[uniffi::export]
 impl ValidatorSetV1 {
-    /// Total stake from all active validators at the beginning of the epoch,
-    /// in nanos.
+    /// Total stake from all active validators at the beginning of the epoch, in nanos.
     pub fn total_stake(&self) -> u64 {
         self.0.total_stake
     }
@@ -493,14 +469,13 @@ impl ValidatorSetV1 {
         self.0.pending_removals.clone()
     }
 
-    /// Number of pending validator candidates. The candidates themselves are
-    /// stored in dynamic fields and are not part of this struct's contents.
+    /// Number of pending validator candidates. The candidates themselves are stored in dynamic
+    /// fields and are not part of this struct's contents.
     pub fn pending_active_validators_size(&self) -> u64 {
         self.0.pending_active_validators.contents.size
     }
 
-    /// Number of epochs each at-risk validator has had stake below the
-    /// low-stake threshold.
+    /// Number of epochs each at-risk validator has had stake below the low-stake threshold.
     pub fn at_risk_validators(&self) -> AtRiskMap {
         self.0
             .at_risk_validators
@@ -510,39 +485,34 @@ impl ValidatorSetV1 {
             .collect()
     }
 
-    /// Object ID of the `TableVec` holding the pending validator candidates,
-    /// keyed by their index.
+    /// Object ID of the `TableVec` holding the pending validator candidates, keyed by their index.
     pub fn pending_active_validators_id(&self) -> ObjectId {
         (*self.0.pending_active_validators.contents.id.object_id()).into()
     }
 
-    /// Object ID of the `Table` mapping each staking pool ID to its validator
-    /// address.
+    /// Object ID of the `Table` mapping each staking pool ID to its validator address.
     pub fn staking_pool_mappings_id(&self) -> ObjectId {
         (*self.0.staking_pool_mappings.id.object_id()).into()
     }
 
-    /// Object ID of the `Table` holding the inactive validators, keyed by
-    /// staking pool ID.
+    /// Object ID of the `Table` holding the inactive validators, keyed by staking pool ID.
     pub fn inactive_validators_id(&self) -> ObjectId {
         (*self.0.inactive_validators.id.object_id()).into()
     }
 
-    /// Object ID of the `Table` holding the validator candidates, keyed by
-    /// their address.
+    /// Object ID of the `Table` holding the validator candidates, keyed by their address.
     pub fn validator_candidates_id(&self) -> ObjectId {
         (*self.0.validator_candidates.id.object_id()).into()
     }
 
-    /// Object ID of the `Bag` holding fields added to this struct after its
-    /// current on-chain layout was set.
+    /// Object ID of the `Bag` holding fields added to this struct after its current on-chain layout
+    /// was set.
     pub fn extra_fields_id(&self) -> ObjectId {
         (*self.0.extra_fields.id.object_id()).into()
     }
 }
 
-/// A typed view of a `0x3::validator::ValidatorV1` from the active validator
-/// set.
+/// A typed view of a `0x3::validator::ValidatorV1` from the active validator set.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct ValidatorV1(pub iota_sdk::move_types::iota_system::validator::ValidatorV1);
@@ -554,14 +524,12 @@ impl ValidatorV1 {
         ValidatorMetadataV1(self.0.metadata.clone())
     }
 
-    /// The voting power of this validator, which may differ from its stake
-    /// amount.
+    /// The voting power of this validator, which may differ from its stake amount.
     pub fn voting_power(&self) -> u64 {
         self.0.voting_power
     }
 
-    /// Object ID of this validator's current valid
-    /// `UnverifiedValidatorOperationCap`.
+    /// Object ID of this validator's current valid `UnverifiedValidatorOperationCap`.
     pub fn operation_cap_id(&self) -> ObjectId {
         self.0.operation_cap_id.bytes.into()
     }
@@ -581,8 +549,7 @@ impl ValidatorV1 {
         self.0.commission_rate
     }
 
-    /// Total amount of stake that would be active in the next epoch, in
-    /// nanos.
+    /// Total amount of stake that would be active in the next epoch, in nanos.
     pub fn next_epoch_stake(&self) -> u64 {
         self.0.next_epoch_stake
     }
@@ -592,14 +559,13 @@ impl ValidatorV1 {
         self.0.next_epoch_gas_price
     }
 
-    /// The commission rate of the validator starting next epoch, in basis
-    /// points.
+    /// The commission rate of the validator starting next epoch, in basis points.
     pub fn next_epoch_commission_rate(&self) -> u64 {
         self.0.next_epoch_commission_rate
     }
 
-    /// Object ID of the `Bag` holding fields added to this struct after its
-    /// current on-chain layout was set.
+    /// Object ID of the `Bag` holding fields added to this struct after its current on-chain layout
+    /// was set.
     pub fn extra_fields_id(&self) -> ObjectId {
         (*self.0.extra_fields.id.object_id()).into()
     }
@@ -624,8 +590,7 @@ impl ValidatorMetadataV1 {
         Address(self.0.iota_address)
     }
 
-    /// Public key bytes for signing transactions (also serves as the
-    /// authority name).
+    /// Public key bytes for signing transactions (also serves as the authority name).
     pub fn authority_pubkey_bytes(&self) -> Vec<u8> {
         self.0.authority_pubkey_bytes.clone()
     }
@@ -677,8 +642,8 @@ impl ValidatorMetadataV1 {
         move_string_to_string(&self.0.primary_address)
     }
 
-    /// `next_epoch_*` metadata only takes effect in the next epoch. If
-    /// `None`, the current value stays unchanged.
+    /// `next_epoch_*` metadata only takes effect in the next epoch. If `None`, the current value
+    /// stays unchanged.
     pub fn next_epoch_authority_pubkey_bytes(&self) -> Option<Vec<u8>> {
         self.0.next_epoch_authority_pubkey_bytes.clone()
     }
@@ -717,8 +682,7 @@ impl ValidatorMetadataV1 {
     }
 }
 
-/// A typed view of a `0x3::staking_pool::StakingPoolV1` embedded in a
-/// validator.
+/// A typed view of a `0x3::staking_pool::StakingPoolV1` embedded in a validator.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct StakingPoolV1(pub iota_sdk::move_types::iota_system::staking_pool::StakingPoolV1);
@@ -729,21 +693,20 @@ impl StakingPoolV1 {
         (*self.0.id.object_id()).into()
     }
 
-    /// The epoch at which this pool became active. `None` while pre-active;
-    /// `Some(epoch)` once active or inactive.
+    /// The epoch at which this pool became active. `None` while pre-active; `Some(epoch)` once
+    /// active or inactive.
     pub fn activation_epoch(&self) -> Option<u64> {
         self.0.activation_epoch
     }
 
-    /// The epoch at which this pool ceased to be active. `None` while
-    /// pre-active or active; `Some(epoch)` once inactive.
+    /// The epoch at which this pool ceased to be active. `None` while pre-active or active;
+    /// `Some(epoch)` once inactive.
     pub fn deactivation_epoch(&self) -> Option<u64> {
         self.0.deactivation_epoch
     }
 
-    /// The total number of IOTA tokens in this pool, including the rewards
-    /// and the principal of every `StakedIota`, in nanos; updated at epoch
-    /// boundaries.
+    /// The total number of IOTA tokens in this pool, including the rewards and the principal of
+    /// every `StakedIota`, in nanos; updated at epoch boundaries.
     pub fn iota_balance(&self) -> u64 {
         self.0.iota_balance
     }
@@ -758,8 +721,8 @@ impl StakingPoolV1 {
         self.0.pool_token_balance
     }
 
-    /// Number of exchange-rate history entries. The entries themselves are
-    /// stored in dynamic fields and are not part of this struct's contents.
+    /// Number of exchange-rate history entries. The entries themselves are stored in dynamic fields
+    /// and are not part of this struct's contents.
     pub fn exchange_rates_size(&self) -> u64 {
         self.0.exchange_rates.size
     }
@@ -769,33 +732,31 @@ impl StakingPoolV1 {
         self.0.pending_stake
     }
 
-    /// Pending stake withdrawn during the current epoch, including both
-    /// principal and rewards; emptied at epoch boundaries.
+    /// Pending stake withdrawn during the current epoch, including both principal and rewards;
+    /// emptied at epoch boundaries.
     pub fn pending_total_iota_withdraw(&self) -> u64 {
         self.0.pending_total_iota_withdraw
     }
 
-    /// Pending pool tokens withdrawn during the current epoch, emptied at
-    /// epoch boundaries.
+    /// Pending pool tokens withdrawn during the current epoch, emptied at epoch boundaries.
     pub fn pending_pool_token_withdraw(&self) -> u64 {
         self.0.pending_pool_token_withdraw
     }
 
-    /// Object ID of the `Table` holding the exchange-rate history, keyed by
-    /// epoch.
+    /// Object ID of the `Table` holding the exchange-rate history, keyed by epoch.
     pub fn exchange_rates_id(&self) -> ObjectId {
         (*self.0.exchange_rates.id.object_id()).into()
     }
 
-    /// Object ID of the `Bag` holding fields added to this struct after its
-    /// current on-chain layout was set.
+    /// Object ID of the `Bag` holding fields added to this struct after its current on-chain layout
+    /// was set.
     pub fn extra_fields_id(&self) -> ObjectId {
         (*self.0.extra_fields.id.object_id()).into()
     }
 }
 
-/// A typed view of the `0x3::iota_system_state_inner::SystemParametersV1`
-/// embedded in the system state.
+/// A typed view of the `0x3::iota_system_state_inner::SystemParametersV1` embedded in the system
+/// state.
 ///
 /// # BCS
 ///
@@ -824,33 +785,31 @@ impl SystemParametersV1 {
         self.0.max_validator_count
     }
 
-    /// Lower bound on the amount of stake required to become a validator, in
-    /// nanos.
+    /// Lower bound on the amount of stake required to become a validator, in nanos.
     pub fn min_validator_joining_stake(&self) -> u64 {
         self.0.min_validator_joining_stake
     }
 
-    /// Validators with stake below this threshold (in nanos) are considered
-    /// to have low stake and may be removed from the validator set.
+    /// Validators with stake below this threshold (in nanos) are considered to have low stake and
+    /// may be removed from the validator set.
     pub fn validator_low_stake_threshold(&self) -> u64 {
         self.0.validator_low_stake_threshold
     }
 
-    /// Validators with stake below this threshold (in nanos) are removed
-    /// immediately at epoch change with no grace period.
+    /// Validators with stake below this threshold (in nanos) are removed immediately at epoch
+    /// change with no grace period.
     pub fn validator_very_low_stake_threshold(&self) -> u64 {
         self.0.validator_very_low_stake_threshold
     }
 
-    /// A validator can have stake below `validator_low_stake_threshold` for
-    /// this many epochs before being removed.
+    /// A validator can have stake below `validator_low_stake_threshold` for this many epochs before
+    /// being removed.
     pub fn validator_low_stake_grace_period(&self) -> u64 {
         self.0.validator_low_stake_grace_period
     }
 }
 
-/// A typed view of the `0x3::storage_fund::StorageFundV1` embedded in the
-/// system state.
+/// A typed view of the `0x3::storage_fund::StorageFundV1` embedded in the system state.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct StorageFundV1(pub iota_sdk::move_types::iota_system::storage_fund::StorageFundV1);
@@ -869,8 +828,7 @@ impl StorageFundV1 {
 }
 
 crate::ffi_move_object! {
-    /// A typed view of an on-chain
-    /// `0x3::validator_cap::UnverifiedValidatorOperationCap` object.
+    /// A typed view of an on-chain `0x3::validator_cap::UnverifiedValidatorOperationCap` object.
     UnverifiedValidatorOperationCap(
         iota_sdk::move_types::iota_system::validator_cap::UnverifiedValidatorOperationCap
     ) {
@@ -910,9 +868,9 @@ crate::ffi_move_object_generic! {
     }
 }
 
-/// A typed view of a `0x2::coin_manager::ImmutableCoinMetadata<T>` — the
-/// frozen metadata fallback embedded in a `CoinManager`. Reachable only via
-/// `CoinManager::immutable_metadata`; it is not a standalone on-chain object.
+/// A typed view of a `0x2::coin_manager::ImmutableCoinMetadata<T>` — the frozen metadata fallback
+/// embedded in a `CoinManager`. Reachable only via `CoinManager::immutable_metadata`; it is not a
+/// standalone on-chain object.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct ImmutableCoinMetadata(
@@ -943,8 +901,8 @@ impl ImmutableCoinMetadata {
 }
 
 crate::ffi_move_object! {
-    /// A typed view of the on-chain `0x2::clock::Clock` object (the `0x6`
-    /// singleton carrying the consensus timestamp).
+    /// A typed view of the on-chain `0x2::clock::Clock` object (the `0x6` singleton carrying the
+    /// consensus timestamp).
     Clock(iota_sdk::move_types::iota_framework::clock::Clock) {
         /// The clock's timestamp (ms), set by consensus every commit.
         pub fn timestamp_ms(&self) -> u64 {
@@ -954,8 +912,8 @@ crate::ffi_move_object! {
 }
 
 crate::ffi_move_object! {
-    /// A typed view of an on-chain `0x2::timelock::TimeLock<Balance<IOTA>>`
-    /// object — a time-locked IOTA balance, e.g. Stardust vested rewards.
+    /// A typed view of an on-chain `0x2::timelock::TimeLock<Balance<IOTA>>` object — a time-locked
+    /// IOTA balance, e.g. Stardust vested rewards.
     TimelockedIotaBalance(
         iota_sdk::move_types::iota_framework::timelock::TimeLock<
             iota_sdk::move_types::iota_framework::balance::Balance<IOTA>,
@@ -1039,8 +997,8 @@ crate::ffi_move_object! {
     }
 }
 
-/// A typed view of a `0x2::kiosk_extension::Extension` held in a dynamic field
-/// of a [`Kiosk`] object.
+/// A typed view of a `0x2::kiosk_extension::Extension` held in a dynamic field of a [`Kiosk`]
+/// object.
 ///
 /// # BCS
 ///
@@ -1054,9 +1012,8 @@ pub struct KioskExtension(pub iota_sdk::move_types::iota_framework::kiosk_extens
 impl KioskExtension {
     /// Decode an `Extension` from raw BCS bytes.
     ///
-    /// There is no object-based constructor: an extension is stored as a
-    /// dynamic field of the kiosk, not as a top-level object with its own type
-    /// tag.
+    /// There is no object-based constructor: an extension is stored as a dynamic field of the
+    /// kiosk, not as a top-level object with its own type tag.
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
@@ -1072,8 +1029,8 @@ impl KioskExtension {
         (*self.0.storage.id.object_id()).into()
     }
 
-    /// Bitmap of the permissions granted to the extension, as a decimal
-    /// string: bit 0 is `place`, bit 1 is `lock` (which also grants `place`).
+    /// Bitmap of the permissions granted to the extension, as a decimal string: bit 0 is `place`,
+    /// bit 1 is `lock` (which also grants `place`).
     pub fn permissions(&self) -> String {
         self.0.permissions.to_string()
     }
@@ -1085,8 +1042,8 @@ impl KioskExtension {
 }
 
 crate::ffi_move_object! {
-    /// A typed view of an on-chain `0x2::deny_list::DenyList` object (the
-    /// `0x403` singleton tracking regulated-coin deny lists).
+    /// A typed view of an on-chain `0x2::deny_list::DenyList` object (the `0x403` singleton
+    /// tracking regulated-coin deny lists).
     DenyList(iota_sdk::move_types::iota_framework::deny_list::DenyList) {
         /// Object ID of the `Bag` holding the per-coin deny lists.
         pub fn lists_id(&self) -> ObjectId {
@@ -1096,17 +1053,17 @@ crate::ffi_move_object! {
 }
 
 crate::ffi_move_object! {
-    /// A typed view of the on-chain `0x2::random::Random` object (the `0x8`
-    /// singleton holding the global randomness state).
+    /// A typed view of the on-chain `0x2::random::Random` object (the `0x8` singleton holding the
+    /// global randomness state).
     Random(iota_sdk::move_types::iota_framework::random::Random) {
-        // `inner` is a `Versioned` handle whose state lives in a dynamic
-        // field, not in this object's contents, so it cannot be surfaced here.
-        // Decode that field's contents with [`RandomInner::try_from_bcs`].
+        // `inner` is a `Versioned` handle whose state lives in a dynamic field, not in this
+        // object's contents, so it cannot be surfaced here. Decode that field's contents with
+        // [`RandomInner::try_from_bcs`].
     }
 }
 
-/// A typed view of the `0x2::random::RandomInner` state held in the dynamic
-/// field of the [`Random`] singleton.
+/// A typed view of the `0x2::random::RandomInner` state held in the dynamic field of the [`Random`]
+/// singleton.
 ///
 /// # BCS
 ///
@@ -1120,9 +1077,8 @@ pub struct RandomInner(pub iota_sdk::move_types::iota_framework::random::RandomI
 impl RandomInner {
     /// Decode a `RandomInner` from raw BCS bytes.
     ///
-    /// There is no object-based constructor: the state is stored as a dynamic
-    /// field of the `0x8` wrapper, not as a top-level object with its own type
-    /// tag.
+    /// There is no object-based constructor: the state is stored as a dynamic field of the `0x8`
+    /// wrapper, not as a top-level object with its own type tag.
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
@@ -1149,8 +1105,7 @@ impl RandomInner {
     }
 }
 
-/// Metadata of a single module of a package
-/// (`0x2::package_metadata::ModuleMetadataV1`).
+/// Metadata of a single module of a package (`0x2::package_metadata::ModuleMetadataV1`).
 ///
 /// # BCS
 ///
@@ -1201,8 +1156,7 @@ impl From<&iota_sdk::move_types::iota_framework::package_metadata::Authenticator
 }
 
 crate::ffi_move_object! {
-    /// A typed view of an on-chain
-    /// `0x2::package_metadata::PackageMetadataV1` object.
+    /// A typed view of an on-chain `0x2::package_metadata::PackageMetadataV1` object.
     PackageMetadataV1(
         iota_sdk::move_types::iota_framework::package_metadata::PackageMetadataV1
     ) {
@@ -1233,13 +1187,12 @@ crate::ffi_move_object! {
 }
 
 crate::ffi_move_object! {
-    /// A typed view of an on-chain `0x2::module_metadata::ModuleMetadata`
-    /// object, the per-module key-value store owned by a package's
-    /// `PackageMetadataV1`.
+    /// A typed view of an on-chain `0x2::module_metadata::ModuleMetadata` object, the per-module
+    /// key-value store owned by a package's `PackageMetadataV1`.
     ModuleMetadata(iota_sdk::move_types::iota_framework::module_metadata::ModuleMetadata) {
-        /// The number of key-value pairs stored in the metadata's dynamic
-        /// fields. The entries themselves (e.g. the view-function names) live
-        /// in dynamic fields, not in this object's contents.
+        /// The number of key-value pairs stored in the metadata's dynamic fields. The entries
+        /// themselves (e.g. the view-function names) live in dynamic fields, not in this object's
+        /// contents.
         pub fn size(&self) -> u64 {
             self.0.size
         }
@@ -1247,8 +1200,8 @@ crate::ffi_move_object! {
 }
 
 crate::ffi_move_object_generic! {
-    /// A typed view of an on-chain `0x2::coin::TreasuryCap<T>` object, the
-    /// capability controlling a coin type's supply.
+    /// A typed view of an on-chain `0x2::coin::TreasuryCap<T>` object, the capability controlling a
+    /// coin type's supply.
     TreasuryCap(iota_sdk::move_types::iota_framework::coin::TreasuryCap<()>) {
         /// Total supply of the coin currently in circulation, in base units.
         pub fn total_supply(&self) -> u64 {
@@ -1258,8 +1211,7 @@ crate::ffi_move_object_generic! {
 }
 
 crate::ffi_move_object_generic! {
-    /// A typed view of an on-chain `0x2::coin::RegulatedCoinMetadata<T>`
-    /// object.
+    /// A typed view of an on-chain `0x2::coin::RegulatedCoinMetadata<T>` object.
     RegulatedCoinMetadata(
         iota_sdk::move_types::iota_framework::coin::RegulatedCoinMetadata<()>
     ) {
@@ -1276,8 +1228,8 @@ crate::ffi_move_object_generic! {
 }
 
 crate::ffi_move_object_generic! {
-    /// A typed view of an on-chain `0x2::coin::DenyCapV1<T>` object, the
-    /// capability for denying addresses from using a regulated coin.
+    /// A typed view of an on-chain `0x2::coin::DenyCapV1<T>` object, the capability for denying
+    /// addresses from using a regulated coin.
     DenyCapV1(iota_sdk::move_types::iota_framework::coin::DenyCapV1<()>) {
         /// Whether the bearer may also enable a global pause.
         pub fn allow_global_pause(&self) -> bool {
@@ -1294,8 +1246,8 @@ crate::ffi_move_object_generic! {
             self.0.version
         }
 
-        /// The display template as key/value pairs (e.g. `name`, `link`,
-        /// `image_url`, `description`).
+        /// The display template as key/value pairs (e.g. `name`, `link`, `image_url`,
+        /// `description`).
         pub fn fields(&self) -> HashMap<String, String> {
             self.0
                 .fields
@@ -1338,8 +1290,7 @@ crate::ffi_move_object_generic! {
                 .map(|m| Arc::new(CoinMetadata(m)))
         }
 
-        /// Frozen fallback metadata, used only if the original metadata has
-        /// been frozen.
+        /// Frozen fallback metadata, used only if the original metadata has been frozen.
         pub fn immutable_metadata(&self) -> Option<Arc<ImmutableCoinMetadata>> {
             self.0
                 .immutable_metadata
@@ -1350,8 +1301,7 @@ crate::ffi_move_object_generic! {
 }
 
 crate::ffi_move_object_generic! {
-    /// A typed view of an on-chain
-    /// `0x2::coin_manager::CoinManagerTreasuryCap<T>` object.
+    /// A typed view of an on-chain `0x2::coin_manager::CoinManagerTreasuryCap<T>` object.
     CoinManagerTreasuryCap(
         iota_sdk::move_types::iota_framework::coin_manager::CoinManagerTreasuryCap<()>
     ) {
@@ -1359,8 +1309,7 @@ crate::ffi_move_object_generic! {
 }
 
 crate::ffi_move_object_generic! {
-    /// A typed view of an on-chain
-    /// `0x2::coin_manager::CoinManagerMetadataCap<T>` object.
+    /// A typed view of an on-chain `0x2::coin_manager::CoinManagerMetadataCap<T>` object.
     CoinManagerMetadataCap(
         iota_sdk::move_types::iota_framework::coin_manager::CoinManagerMetadataCap<()>
     ) {
@@ -1380,8 +1329,7 @@ crate::ffi_move_object_generic! {
 crate::ffi_move_object_generic! {
     /// A typed view of an on-chain `0x2::token::TokenPolicyCap<T>` object.
     TokenPolicyCap(iota_sdk::move_types::iota_framework::token::TokenPolicyCap<()>) {
-        /// Object ID of the `TokenPolicy` this cap controls (the Move `for`
-        /// field).
+        /// Object ID of the `TokenPolicy` this cap controls (the Move `for` field).
         pub fn policy_id(&self) -> ObjectId {
             self.0.r#for.bytes.into()
         }
@@ -1396,8 +1344,7 @@ crate::ffi_move_object_generic! {
             self.0.spent_balance.value()
         }
 
-        /// Fully-qualified type names of the rules attached to each action,
-        /// keyed by action name.
+        /// Fully-qualified type names of the rules attached to each action, keyed by action name.
         pub fn rules(&self) -> HashMap<String, Vec<String>> {
             self.0
                 .rules
@@ -1415,23 +1362,19 @@ crate::ffi_move_object_generic! {
 }
 
 crate::ffi_move_object_generic! {
-    /// A typed view of an on-chain `0x2::config::Config<WriteCap>` object,
-    /// where `WriteCap` is the phantom type parameter from the Move
-    /// declaration, not a concrete type.
+    /// A typed view of an on-chain `0x2::config::Config<WriteCap>` object, where `WriteCap` is the
+    /// phantom type parameter from the Move declaration, not a concrete type.
     Config(iota_sdk::move_types::iota_framework::config::Config<()>) {
-        // The config's settings live in dynamic fields off its `UID`, not in
-        // the struct itself. Decode a `bool`-valued one with
-        // [`BoolSetting::try_from_bcs`].
+        // The config's settings live in dynamic fields off its `UID`, not in the struct itself.
+        // Decode a `bool`-valued one with [`BoolSetting::try_from_bcs`].
     }
 }
 
-/// A typed view of a `0x2::config::Setting<bool>` held in a dynamic field of a
-/// [`Config`] object — the shape used by the deny list for its per-address and
-/// global-pause entries.
+/// A typed view of a `0x2::config::Setting<bool>` held in a dynamic field of a [`Config`] object —
+/// the shape used by the deny list for its per-address and global-pause entries.
 ///
-/// A setting carries the value for the epoch it was last written in plus the
-/// value that preceded it, so a reader can tell which one applies to the epoch
-/// it cares about.
+/// A setting carries the value for the epoch it was last written in plus the value that preceded
+/// it, so a reader can tell which one applies to the epoch it cares about.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct BoolSetting(pub iota_sdk::move_types::iota_framework::config::Setting<bool>);
@@ -1440,8 +1383,8 @@ pub struct BoolSetting(pub iota_sdk::move_types::iota_framework::config::Setting
 impl BoolSetting {
     /// Decode a `Setting<bool>` from raw BCS bytes.
     ///
-    /// There is no object-based constructor: a setting is stored as a dynamic
-    /// field of the config, not as a top-level object with its own type tag.
+    /// There is no object-based constructor: a setting is stored as a dynamic field of the config,
+    /// not as a top-level object with its own type tag.
     #[uniffi::constructor]
     pub fn try_from_bcs(bytes: Vec<u8>) -> Result<Self> {
         Ok(
@@ -1467,8 +1410,7 @@ impl BoolSetting {
 }
 
 crate::ffi_move_object_generic! {
-    /// A typed view of an on-chain
-    /// `0x2::transfer_policy::TransferPolicy<T>` object.
+    /// A typed view of an on-chain `0x2::transfer_policy::TransferPolicy<T>` object.
     TransferPolicy(
         iota_sdk::move_types::iota_framework::transfer_policy::TransferPolicy<()>
     ) {
@@ -1485,8 +1427,7 @@ crate::ffi_move_object_generic! {
 }
 
 crate::ffi_move_object_generic! {
-    /// A typed view of an on-chain
-    /// `0x2::transfer_policy::TransferPolicyCap<T>` object.
+    /// A typed view of an on-chain `0x2::transfer_policy::TransferPolicyCap<T>` object.
     TransferPolicyCap(
         iota_sdk::move_types::iota_framework::transfer_policy::TransferPolicyCap<()>
     ) {
@@ -1552,12 +1493,10 @@ crate::ffi_move_object! {
     }
 }
 
-/// A typed view of `0x107a::irc27::Irc27Metadata` (usually nested inside an
-/// [`Nft`]).
+/// A typed view of `0x107a::irc27::Irc27Metadata` (usually nested inside an [`Nft`]).
 ///
-/// The `royalties`, `attributes`, and `non_standard_fields` `VecMap` fields
-/// are not yet exposed across the FFI boundary — consumers that need them
-/// can decode the inner type from BCS in Rust.
+/// The `royalties`, `attributes`, and `non_standard_fields` `VecMap` fields are not yet exposed
+/// across the FFI boundary — consumers that need them can decode the inner type from BCS in Rust.
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct Irc27Metadata(pub iota_sdk::move_types::stardust::irc27::Irc27Metadata);
@@ -1599,16 +1538,15 @@ impl Irc27Metadata {
 }
 
 crate::ffi_move_object! {
-    /// A typed view of an on-chain
-    /// `0x107a::basic_output::BasicOutput<IOTA>` object.
+    /// A typed view of an on-chain `0x107a::basic_output::BasicOutput<IOTA>` object.
     BasicOutput(iota_sdk::move_types::stardust::basic_output::BasicOutput<IOTA>) {
         /// IOTA balance held by the output, in nanos.
         pub fn balance(&self) -> u64 {
             self.0.balance.value()
         }
 
-        /// Object ID of the `Bag` of native tokens. Use the GraphQL client to
-        /// list dynamic fields if you need to enumerate the tokens.
+        /// Object ID of the `Bag` of native tokens. Use the GraphQL client to list dynamic fields
+        /// if you need to enumerate the tokens.
         pub fn native_tokens_bag_id(&self) -> ObjectId {
             (*self.0.native_tokens.id.object_id()).into()
         }
@@ -1683,8 +1621,7 @@ crate::ffi_move_object! {
 }
 
 crate::ffi_move_object! {
-    /// A typed view of an on-chain
-    /// `0x107a::alias_output::AliasOutput<IOTA>` object.
+    /// A typed view of an on-chain `0x107a::alias_output::AliasOutput<IOTA>` object.
     AliasOutput(iota_sdk::move_types::stardust::alias_output::AliasOutput<IOTA>) {
         pub fn balance(&self) -> u64 {
             self.0.balance.value()
@@ -1731,8 +1668,7 @@ crate::ffi_move_object! {
 
 // Unlock conditions used by `BasicOutput` and `NftOutput`.
 
-/// A typed view of
-/// `0x107a::timelock_unlock_condition::TimelockUnlockCondition`.
+/// A typed view of `0x107a::timelock_unlock_condition::TimelockUnlockCondition`.
 ///
 /// # BCS
 ///
@@ -1746,15 +1682,13 @@ pub struct TimelockUnlockCondition(
 
 #[uniffi::export]
 impl TimelockUnlockCondition {
-    /// Unix time (seconds since the Unix epoch) from which the output can
-    /// be consumed.
+    /// Unix time (seconds since the Unix epoch) from which the output can be consumed.
     pub fn unix_time(&self) -> u32 {
         self.0.unix_time
     }
 }
 
-/// A typed view of
-/// `0x107a::expiration_unlock_condition::ExpirationUnlockCondition`.
+/// A typed view of `0x107a::expiration_unlock_condition::ExpirationUnlockCondition`.
 ///
 /// # BCS
 ///
@@ -1808,15 +1742,14 @@ impl StorageDepositReturnUnlockCondition {
 // =====================================================================
 // Event mirrors
 //
-// Events are not objects (no `key`, no `UID`); they are decoded from the
-// BCS `contents` of an event query result via `ffi_move_event!`. Generic
-// events carry a phantom (`serde(skip)`) type parameter, so their BCS layout
-// is instantiation-independent and they are wrapped at `<IOTA>`.
+// Events are not objects (no `key`, no `UID`); they are decoded from the BCS `contents` of an event
+// query result via `ffi_move_event!`. Generic events carry a phantom (`serde(skip)`) type
+// parameter, so their BCS layout is instantiation-independent and they are wrapped at `<IOTA>`.
 // =====================================================================
 
 /// A reference to an authenticator function
-/// (`0x2::authenticator_function::AuthenticatorFunctionRefV1`), carried by the
-/// account-abstraction events.
+/// (`0x2::authenticator_function::AuthenticatorFunctionRefV1`), carried by the account-abstraction
+/// events.
 #[derive(uniffi::Record)]
 pub struct AuthenticatorFunctionRef {
     /// Object ID of the package declaring the function.
@@ -1867,8 +1800,7 @@ impl From<&iota_sdk::move_types::iota_system::staking_pool::PoolTokenExchangeRat
     }
 }
 
-/// Key identifying a per-type deny-list config
-/// (`0x2::deny_list::ConfigKey`).
+/// Key identifying a per-type deny-list config (`0x2::deny_list::ConfigKey`).
 ///
 /// # BCS
 ///
@@ -1943,8 +1875,7 @@ crate::ffi_move_event! {
 }
 
 crate::ffi_move_event! {
-    /// A typed view of a
-    /// `0x3::iota_system_state_inner::SystemEpochInfoEventV1`.
+    /// A typed view of a `0x3::iota_system_state_inner::SystemEpochInfoEventV1`.
     SystemEpochInfoEventV1(
         iota_sdk::move_types::iota_system::iota_system_state_inner::SystemEpochInfoEventV1
     ) {
@@ -1986,8 +1917,7 @@ crate::ffi_move_event! {
 }
 
 crate::ffi_move_event! {
-    /// A typed view of a
-    /// `0x3::iota_system_state_inner::SystemEpochInfoEventV2`.
+    /// A typed view of a `0x3::iota_system_state_inner::SystemEpochInfoEventV2`.
     SystemEpochInfoEventV2(
         iota_sdk::move_types::iota_system::iota_system_state_inner::SystemEpochInfoEventV2
     ) {

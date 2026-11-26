@@ -1,3 +1,13 @@
+## [1.0.0] - 2026-11-20
+
+### 🚀 Features
+
+- Add a non-default `unstable` feature to every published crate (#1816)
+
+### ⚙️ Miscellaneous Tasks
+
+- *(graphql)* Sync the schema with the monorepo (#1825)
+
 ## [1.0.0-rc.1] - 2026-10-09
 
 ### 🐛 Bug Fixes

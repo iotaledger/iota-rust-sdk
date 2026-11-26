@@ -3,17 +3,16 @@
 
 //! Rust representations of Move types used by the IOTA blockchain.
 //!
-//! Each top-level module corresponds to a system package, identified by the
-//! address constants on [`iota_types::Address`]:
+//! Each top-level module corresponds to a system package, identified by the address constants on
+//! [`iota_types::Address`]:
 //!
 //! - [`move_stdlib`]    — `0x1`, the Move standard library
 //! - [`iota_framework`] — `0x2`, the IOTA framework
 //! - [`iota_system`]    — `0x3`, the IOTA system package
 //! - [`stardust`]       — `0x107a`, the Stardust migration package
 //!
-//! Inside each package, every Move source module is mirrored 1:1 as a Rust
-//! `pub mod`. Generic Move types stay generic in Rust (with a
-//! `PhantomData<T>` placeholder for phantom parameters).
+//! Inside each package, every Move source module is mirrored 1:1 as a Rust `pub mod`. Generic Move
+//! types stay generic in Rust (with a `PhantomData<T>` placeholder for phantom parameters).
 
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
 
@@ -76,11 +75,10 @@ mod _serde {
     }
 }
 
-// The shape machinery (this module, the `MoveShape` derives on every
-// mirror, and the comparator below) is native-only: the comparator reads
-// the fetched package artifacts from disk at test time (no `std::fs` on
-// wasm32), and its checks are target-independent — running them on one
-// target covers all.
+// The shape machinery (this module, the `MoveShape` derives on every mirror, and the comparator
+// below) is native-only: the comparator reads the fetched package artifacts from disk at test time
+// (no `std::fs` on wasm32), and its checks are target-independent — running them on one target
+// covers all.
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod move_shape;
 
@@ -89,16 +87,15 @@ mod move_shape_compare;
 
 /// A Rust type that knows its Move type tag.
 ///
-/// The type argument `T` of a generic mirror such as `Coin<T>` must implement
-/// this trait, so that `Coin<IOTA>` can check that an object really is a
-/// `0x2::coin::Coin<0x2::iota::IOTA>`.
+/// The type argument `T` of a generic mirror such as `Coin<T>` must implement this trait, so that
+/// `Coin<IOTA>` can check that an object really is a `0x2::coin::Coin<0x2::iota::IOTA>`.
 ///
-/// Markers like [`IOTA`](iota_framework::iota::IOTA) implement it by hand.
-/// Every `MoveObject` implements it automatically, so an object mirror can
-/// also be a type argument, as in `Display<Coin<IOTA>>`.
+/// Markers like [`IOTA`](iota_framework::iota::IOTA) implement it by hand. Every `MoveObject`
+/// implements it automatically, so an object mirror can also be a type argument, as in
+/// `Display<Coin<IOTA>>`.
 ///
-/// To use your own coin type, define an empty marker struct that derives
-/// `Deserialize` and implement this trait for it:
+/// To use your own coin type, define an empty marker struct that derives `Deserialize` and
+/// implement this trait for it:
 ///
 /// ```
 /// #[derive(serde::Deserialize)]
@@ -111,27 +108,25 @@ mod move_shape_compare;
 /// }
 /// ```
 ///
-/// For coin types only known at runtime, use the
-/// `try_from_object_with_type` constructors instead, which take the
-/// expected [`TypeTag`](iota_types::TypeTag) as a value.
+/// For coin types only known at runtime, use the `try_from_object_with_type` constructors instead,
+/// which take the expected [`TypeTag`](iota_types::TypeTag) as a value.
 pub trait MoveType {
     /// The Move type tag this type represents (e.g. `0x2::iota::IOTA`).
     fn type_tag() -> iota_types::TypeTag;
 }
 
-/// An ordered list of [`MoveType`]s: `()`, a single type, or a tuple, such as
-/// the type arguments of a Move function call.
+/// An ordered list of [`MoveType`]s: `()`, a single type, or a tuple, such as the type arguments of
+/// a Move function call.
 pub trait MoveTypes {
     /// Get the type tags.
     fn type_tags() -> Vec<iota_types::TypeTag>;
 }
 
-/// A Rust mirror of a Move object that can be decoded from an
-/// [`Object`](iota_types::Object).
+/// A Rust mirror of a Move object that can be decoded from an [`Object`](iota_types::Object).
 ///
-/// [`struct_tag`](Self::struct_tag) is the type of the objects it decodes,
-/// e.g. `0x2::coin::Coin<0x2::iota::IOTA>` for `Coin<IOTA>`. Every
-/// `MoveObject` is also a [`MoveType`] with that same tag.
+/// [`struct_tag`](Self::struct_tag) is the type of the objects it decodes, e.g.
+/// `0x2::coin::Coin<0x2::iota::IOTA>` for `Coin<IOTA>`. Every `MoveObject` is also a [`MoveType`]
+/// with that same tag.
 #[cfg(feature = "serde")]
 pub trait MoveObject:
     Sized + for<'a> TryFrom<&'a iota_types::Object, Error = FromObjectError>
@@ -149,10 +144,9 @@ impl<T: MoveObject> MoveType for T {
 
 /// Error returned when converting an `Object` into a typed mirror.
 ///
-/// Every mirror's `TryFrom<&Object>` (and `try_from_object_with_type`)
-/// conversion returns this on failure: the object either isn't a Move
-/// struct, carries a type tag that doesn't match the expected type, or has
-/// BCS contents that fail to decode.
+/// Every mirror's `TryFrom<&Object>` (and `try_from_object_with_type`) conversion returns this on
+/// failure: the object either isn't a Move struct, carries a type tag that doesn't match the
+/// expected type, or has BCS contents that fail to decode.
 #[cfg(feature = "serde")]
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
@@ -168,8 +162,7 @@ pub enum FromObjectError {
     Bcs(#[from] iota_types::BcsError),
 }
 
-/// Decode the BCS contents of `object`, provided it is a Move struct tagged
-/// exactly `expected`.
+/// Decode the BCS contents of `object`, provided it is a Move struct tagged exactly `expected`.
 #[cfg(feature = "serde")]
 fn decode_move_struct<T: serde::de::DeserializeOwned>(
     object: &iota_types::Object,

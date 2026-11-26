@@ -71,7 +71,7 @@ pub struct ExecuteTransactionsResponse {
 /// A single transaction to simulate, along with simulation options.
 #[allow(clippy::all)]
 #[non_exhaustive]
-#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct SimulateTransactionItem {
     #[prost(message, optional, tag = "1")]
     pub transaction: ::core::option::Option<super::transaction::Transaction>,
@@ -135,6 +135,8 @@ pub struct SimulateTransactionsRequest {
     #[prost(message, repeated, tag = "1")]
     pub transactions: ::prost::alloc::vec::Vec<SimulateTransactionItem>,
     /// Mask specifying which fields to read, applied to each SimulatedTransaction in the response.
+    /// If no mask is specified, defaults to
+    /// `executed_transaction.transaction,executed_transaction.effects,executed_transaction.events,executed_transaction.input_objects,executed_transaction.output_objects,suggested_gas_price,execution_result`.
     #[prost(message, optional, tag = "2")]
     pub read_mask: ::core::option::Option<::prost_types::FieldMask>,
 }

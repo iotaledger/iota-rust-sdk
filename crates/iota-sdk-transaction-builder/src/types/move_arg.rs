@@ -55,8 +55,7 @@ impl<T: MoveArgCollection> MoveArg for T {
     }
 }
 
-/// A trait which defines how collections of move arg types are serialized for
-/// move calls.
+/// A trait which defines how collections of move arg types are serialized for move calls.
 pub trait MoveArgCollection {
     /// Get the pure BCS bytes.
     fn collection_bytes(self) -> PureBytes;

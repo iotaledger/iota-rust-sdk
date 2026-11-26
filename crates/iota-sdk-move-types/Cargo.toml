@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk-move-types"
-version = "1.0.0-rc.2"
+version = "1.0.0"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
@@ -28,13 +28,13 @@ rustdoc-args = [
 default = []
 bcs-schema = ["dep:iota-bcs-schema", "serde"]
 serde = ["dep:bcs", "dep:serde", "dep:thiserror", "iota-types/serde"]
-u256 = ["dep:primitive-types"]
+# Unstable APIs that may change or be removed in any release.
+unstable = []
 
 [dependencies]
 # external dependencies
 bcs = { workspace = true, optional = true }
 paste = { workspace = true }
-primitive-types = { workspace = true, optional = true }
 serde = { workspace = true, features = ["derive"], optional = true }
 thiserror = { workspace = true, optional = true }
 variadics_please.workspace = true
@@ -61,6 +61,3 @@ move-binary-format = { git = "https://github.com/iotaledger/iota.git", rev = "f9
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
 wasm-bindgen-test.workspace = true
-
-[build-dependencies]
-filetime = "0.2"

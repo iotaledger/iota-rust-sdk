@@ -29,9 +29,8 @@ impl From<&proto::ledger_service::GetHealthResponse> for GrpcHealthInfo {
 impl GrpcClient {
     /// Get the health of the node serving the gRPC service.
     ///
-    /// If `threshold_ms` is provided, the server returns an `UNAVAILABLE`
-    /// error when the most recently executed checkpoint is older than the
-    /// threshold.
+    /// If `threshold_ms` is provided, the server returns an `UNAVAILABLE` error when the most
+    /// recently executed checkpoint is older than the threshold.
     #[uniffi::method(default(threshold_ms = None))]
     pub async fn health(&self, threshold_ms: Option<u64>) -> Result<GrpcHealthInfo> {
         Ok((&self

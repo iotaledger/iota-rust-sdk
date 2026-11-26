@@ -8,8 +8,8 @@ fn main() {
     //
     //   BCS_SCHEMA=1 cargo check -p iota-sdk-move-types --features bcs-schema
     //
-    // The env var (not just the feature) triggers the forced recompilation so
-    // that `--all-features` builds remain incremental during normal development.
+    // The env var (not just the feature) triggers the forced recompilation so that `--all-features`
+    // builds remain incremental during normal development.
     println!("cargo:rerun-if-env-changed=BCS_SCHEMA");
 
     let enabled = cfg!(feature = "bcs-schema")
@@ -23,8 +23,8 @@ fn main() {
         let schema_file = manifest_dir.join("bcs-schema.abnf");
         let _ = std::fs::remove_file(&schema_file);
 
-        // 2. Touch all .rs files under src/ to invalidate incremental caches, ensuring
-        //    every #[derive(BcsSchema)] re-runs.
+        // 2. Touch all .rs files under src/ to invalidate incremental caches, ensuring every
+        //    #[derive(BcsSchema)] re-runs.
         let src_dir = manifest_dir.join("src");
         touch_all_rs(&src_dir);
     }
@@ -34,13 +34,16 @@ fn touch_all_rs(dir: &Path) {
     let Ok(entries) = std::fs::read_dir(dir) else {
         return;
     };
-    let now = filetime::FileTime::now();
+    let now = std::time::SystemTime::now();
     for entry in entries.flatten() {
         let path = entry.path();
         if path.is_dir() {
             touch_all_rs(&path);
         } else if path.extension().is_some_and(|ext| ext == "rs") {
-            let _ = filetime::set_file_mtime(&path, now);
+            let _ = std::fs::File::options()
+                .write(true)
+                .open(&path)
+                .and_then(|file| file.set_modified(now));
         }
     }
 }

@@ -3,8 +3,7 @@
 
 //! High-level API for LedgerService operations.
 //!
-//! Provides ergonomic methods for querying transactions, objects, checkpoints,
-//! and epochs.
+//! Provides ergonomic methods for querying transactions, objects, checkpoints, and epochs.
 
 pub mod checkpoints;
 pub mod epochs;

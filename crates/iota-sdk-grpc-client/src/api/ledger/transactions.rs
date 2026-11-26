@@ -78,8 +78,8 @@ impl GetTransactionsQuery {
 impl GrpcClient {
     /// Get transactions by their digests.
     ///
-    /// Returns proto `ExecutedTransaction` for each transaction. Use the lazy
-    /// conversion methods to extract data:
+    /// Returns proto `ExecutedTransaction` for each transaction. Use the lazy conversion methods to
+    /// extract data:
     /// - `tx.digest()` - Get transaction digest
     /// - `tx.transaction()` - Deserialize transaction
     /// - `tx.signatures()` - Deserialize signatures
@@ -88,26 +88,22 @@ impl GrpcClient {
     /// - `tx.checkpoint_sequence_number()` - Get checkpoint number
     /// - `tx.timestamp_ms()` - Get timestamp
     ///
-    /// Results are returned in the same order as the input digests, one per
-    /// digest.
+    /// Results are returned in the same order as the input digests, one per digest.
     ///
     /// # Errors
     ///
     /// Returns [`GrpcError::EmptyRequest`] if `digests` is empty.
     ///
-    /// Each digest gets its own result: a transaction the node does not have
-    /// (never executed, or pruned) yields [`GrpcError::Server`] with code
-    /// `NOT_FOUND` in that slot only, leaving the other transactions intact. A
-    /// slot can also carry `FAILED_PRECONDITION` when the transaction itself is
-    /// present but an object a requested field needs is gone, as described
-    /// under Read Mask below. The outer `GrpcResult` is reserved for failures
-    /// of the call itself, such as a transport error, and for a server that
-    /// answered with a different number of results than digests requested
-    /// ([`UnexpectedResultCount`]), which leaves no way to tell which digest
-    /// each result belongs to, or answered a position with a different
-    /// transaction than the one requested there ([`UnexpectedTransaction`]).
-    /// The answered digest is read from the response or computed from the
-    /// transaction's BCS, so a read mask that includes neither leaves nothing
+    /// Each digest gets its own result: a transaction the node does not have (never executed, or
+    /// pruned) yields [`GrpcError::Server`] with code `NOT_FOUND` in that slot only, leaving the
+    /// other transactions intact. A slot can also carry `FAILED_PRECONDITION` when the transaction
+    /// itself is present but an object a requested field needs is gone, as described under Read
+    /// Mask below. The outer `GrpcResult` is reserved for failures of the call itself, such as a
+    /// transport error, and for a server that answered with a different number of results than
+    /// digests requested ([`UnexpectedResultCount`]), which leaves no way to tell which digest each
+    /// result belongs to, or answered a position with a different transaction than the one
+    /// requested there ([`UnexpectedTransaction`]). The answered digest is read from the response
+    /// or computed from the transaction's BCS, so a read mask that includes neither leaves nothing
     /// to check.
     ///
     /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
@@ -115,20 +111,16 @@ impl GrpcClient {
     ///
     /// # Read Mask
     ///
-    /// Without [`read_mask`](GetTransactionsQuery::read_mask), the default
-    /// mask is used. Pass a
-    /// [`TransactionReadMask`](iota_grpc_types::read_mask_fields::TransactionReadMask)
-    /// built from a
-    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// or any slice/array/vec of fields to choose the returned fields.
+    /// Without [`read_mask`](GetTransactionsQuery::read_mask), the default mask is used. Pass a
+    /// [`TransactionReadMask`](iota_grpc_types::read_mask_fields::TransactionReadMask) built from a
+    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField) or any
+    /// slice/array/vec of fields to choose the returned fields.
     ///
-    /// The `input_objects`, `output_objects`, `balance_changes` and
-    /// `object_changes` fields (also included by wildcard masks) require the
-    /// serving node to still have the transaction's objects. If one has been
-    /// pruned, the transaction's result is a `FAILED_PRECONDITION` error
-    /// instead of a silently incomplete answer — narrow the read mask, or
-    /// fetch objects individually via
-    /// [`objects`](GrpcClient::objects) for best-effort retrieval.
+    /// The `input_objects`, `output_objects`, `balance_changes` and `object_changes` fields (also
+    /// included by wildcard masks) require the serving node to still have the transaction's
+    /// objects. If one has been pruned, the transaction's result is a `FAILED_PRECONDITION` error
+    /// instead of a silently incomplete answer — narrow the read mask, or fetch objects
+    /// individually via [`objects`](GrpcClient::objects) for best-effort retrieval.
     ///
     /// # Example
     ///

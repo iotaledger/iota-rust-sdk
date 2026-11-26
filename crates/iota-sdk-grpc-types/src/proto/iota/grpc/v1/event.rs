@@ -34,9 +34,9 @@ impl TryFrom<&Event> for iota_types::Event {
 impl Event {
     /// Deserialize the full event from BCS.
     ///
-    /// **Read mask:** `bcs` relative to this event (see [`EVENT_BCS`]).
-    /// Full path depends on context — e.g. `"events.bcs"` for checkpoint
-    /// top-level events, `"events.events.bcs"` for transaction events.
+    /// **Read mask:** `bcs` relative to this event (see [`EVENT_BCS`]). Full path depends on
+    /// context — e.g. `"events.bcs"` for checkpoint top-level events, `"events.events.bcs"` for
+    /// transaction events.
     ///
     /// [`EVENT_BCS`]: crate::read_masks::EVENT_BCS
     pub fn event(&self) -> Result<iota_types::Event, TryFromProtoError> {
@@ -45,8 +45,7 @@ impl Event {
 
     /// Get the package ID of the Move module that emitted this event.
     ///
-    /// **Read mask:** `package_id` relative to this event (see
-    /// [`EVENT_PACKAGE_ID`]).
+    /// **Read mask:** `package_id` relative to this event (see [`EVENT_PACKAGE_ID`]).
     ///
     /// [`EVENT_PACKAGE_ID`]: crate::read_masks::EVENT_PACKAGE_ID
     pub fn package_id(&self) -> Result<iota_types::ObjectId, TryFromProtoError> {
@@ -82,8 +81,7 @@ impl Event {
 
     /// Get the type of the event emitted.
     ///
-    /// **Read mask:** `event_type` relative to this event (see
-    /// [`EVENT_TYPE`]).
+    /// **Read mask:** `event_type` relative to this event (see [`EVENT_TYPE`]).
     ///
     /// [`EVENT_TYPE`]: crate::read_masks::EVENT_TYPE
     pub fn type_name(&self) -> Result<iota_types::StructTag, TryFromProtoError> {
@@ -101,11 +99,9 @@ impl Event {
 
     /// Get the raw BCS bytes of the event contents/data only.
     ///
-    /// This is the serialized event data without the metadata (package, module,
-    /// sender, type).
+    /// This is the serialized event data without the metadata (package, module, sender, type).
     ///
-    /// **Read mask:** `bcs_contents` relative to this event (see
-    /// [`EVENT_BCS_CONTENTS`]).
+    /// **Read mask:** `bcs_contents` relative to this event (see [`EVENT_BCS_CONTENTS`]).
     ///
     /// [`EVENT_BCS_CONTENTS`]: crate::read_masks::EVENT_BCS_CONTENTS
     pub fn bcs_contents(&self) -> Result<&[u8], TryFromProtoError> {
@@ -117,8 +113,7 @@ impl Event {
 
     /// Get the JSON contents of the event.
     ///
-    /// **Read mask:** `json_contents` relative to this event (see
-    /// [`EVENT_JSON_CONTENTS`]).
+    /// **Read mask:** `json_contents` relative to this event (see [`EVENT_JSON_CONTENTS`]).
     ///
     /// [`EVENT_JSON_CONTENTS`]: crate::read_masks::EVENT_JSON_CONTENTS
     pub fn json_contents(&self) -> Result<serde_json::Value, TryFromProtoError> {

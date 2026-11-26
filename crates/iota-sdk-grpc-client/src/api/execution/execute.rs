@@ -25,8 +25,7 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GrpcClient::execute_transaction`]. Await it to send the
-    /// request.
+    /// Query for [`GrpcClient::execute_transaction`]. Await it to send the request.
     pub struct ExecuteTransactionQuery {
         batch: ExecuteTransactionsQuery,
     }
@@ -34,10 +33,9 @@ define_query! {
 }
 
 impl ExecuteTransactionQuery {
-    /// Wait up to `checkpoint_inclusion_timeout_ms` milliseconds for the
-    /// transaction to be included in a checkpoint. Without it, or with `0`, the
-    /// server returns without waiting; it may clamp the timeout to a configured
-    /// maximum.
+    /// Wait up to `checkpoint_inclusion_timeout_ms` milliseconds for the transaction to be included
+    /// in a checkpoint. Without it, or with `0`, the server returns without waiting; it may clamp
+    /// the timeout to a configured maximum.
     pub fn checkpoint_inclusion_timeout_ms(mut self, checkpoint_inclusion_timeout_ms: u64) -> Self {
         self.batch = self
             .batch
@@ -60,8 +58,7 @@ impl ExecuteTransactionQuery {
 }
 
 define_query! {
-    /// Query for [`GrpcClient::execute_transactions`]. Await it to send the
-    /// request.
+    /// Query for [`GrpcClient::execute_transactions`]. Await it to send the request.
     pub struct ExecuteTransactionsQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,
         transactions: Vec<SignedTransaction>,
@@ -72,10 +69,9 @@ define_query! {
 }
 
 impl ExecuteTransactionsQuery {
-    /// Wait up to `checkpoint_inclusion_timeout_ms` milliseconds for all
-    /// executed transactions to be included in a checkpoint. Without it, or
-    /// with `0`, the server returns without waiting; it may clamp the timeout
-    /// to a configured maximum.
+    /// Wait up to `checkpoint_inclusion_timeout_ms` milliseconds for all executed transactions to
+    /// be included in a checkpoint. Without it, or with `0`, the server returns without waiting; it
+    /// may clamp the timeout to a configured maximum.
     pub fn checkpoint_inclusion_timeout_ms(mut self, checkpoint_inclusion_timeout_ms: u64) -> Self {
         self.checkpoint_inclusion_timeout_ms = Some(checkpoint_inclusion_timeout_ms);
         self
@@ -124,11 +120,10 @@ impl ExecuteTransactionsQuery {
 impl GrpcClient {
     /// Execute a signed transaction.
     ///
-    /// This submits the transaction to the network for execution and waits for
-    /// the result. The transaction must be signed with valid signatures.
+    /// This submits the transaction to the network for execution and waits for the result. The
+    /// transaction must be signed with valid signatures.
     ///
-    /// Returns proto `ExecutedTransaction`. Use lazy conversion methods to
-    /// extract data:
+    /// Returns proto `ExecutedTransaction`. Use lazy conversion methods to extract data:
     /// - `result.effects()` - Get transaction effects
     /// - `result.events()` - Get transaction events (if available)
     /// - `result.input_objects()` - Get input objects (if requested)
@@ -136,19 +131,17 @@ impl GrpcClient {
     /// - `result.balance_changes()` - Get balance changes (if requested)
     /// - `result.object_changes()` - Get object changes (if requested)
     ///
-    /// Without [`read_mask`](ExecuteTransactionQuery::read_mask), the default
-    /// mask is used. Pass a
-    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// or any slice/array/vec of fields to choose the returned fields.
+    /// Without [`read_mask`](ExecuteTransactionQuery::read_mask), the default mask is used. Pass a
+    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField) or any
+    /// slice/array/vec of fields to choose the returned fields.
     ///
     /// # Checkpoint Inclusion
     ///
     /// If
     /// [`checkpoint_inclusion_timeout_ms`](ExecuteTransactionQuery::checkpoint_inclusion_timeout_ms)
-    /// is set, the server will wait up to the specified duration (in
-    /// milliseconds) for the transaction to be included in a checkpoint before
-    /// returning. When set, include `checkpoint` and `timestamp` in the read
-    /// mask to receive the data.
+    /// is set, the server will wait up to the specified duration (in milliseconds) for the
+    /// transaction to be included in a checkpoint before returning. When set, include `checkpoint`
+    /// and `timestamp` in the read mask to receive the data.
     ///
     /// # Example
     ///
@@ -182,34 +175,32 @@ impl GrpcClient {
 
     /// Execute a batch of signed transactions.
     ///
-    /// Transactions are executed concurrently on the server, so their relative
-    /// execution order is not guaranteed. Send transactions that must run in a
-    /// given order (for example, ones that use the same shared object) in
-    /// separate batches. Failure of one transaction does not abort the rest.
+    /// Transactions are executed concurrently on the server, so their relative execution order is
+    /// not guaranteed. Send transactions that must run in a given order (for example, ones that use
+    /// the same shared object) in separate batches. Failure of one transaction does not abort the
+    /// rest.
     ///
-    /// Returns a `Vec<GrpcResult<ExecutedTransaction>>` in the same order as
-    /// the input. Each element is either the successfully executed
-    /// transaction or the per-item error returned by the server.
+    /// Returns a `Vec<GrpcResult<ExecutedTransaction>>` in the same order as the input. Each
+    /// element is either the successfully executed transaction or the per-item error returned by
+    /// the server.
     ///
-    /// Without [`read_mask`](ExecuteTransactionsQuery::read_mask), the default
-    /// mask is used for each `ExecutedTransaction`. Pass a
-    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField)
-    /// or any slice/array/vec of fields to choose the returned fields.
+    /// Without [`read_mask`](ExecuteTransactionsQuery::read_mask), the default mask is used for
+    /// each `ExecutedTransaction`. Pass a
+    /// [`TransactionField`](iota_grpc_types::read_mask_fields::TransactionField) or any
+    /// slice/array/vec of fields to choose the returned fields.
     ///
     /// # Checkpoint Inclusion
     ///
     /// If
     /// [`checkpoint_inclusion_timeout_ms`](ExecuteTransactionsQuery::checkpoint_inclusion_timeout_ms)
-    /// is set, the server will wait up to the specified duration (in
-    /// milliseconds) for all executed transactions to be included in a
-    /// checkpoint before returning. When set, include `checkpoint` and
-    /// `timestamp` in the read mask to receive the data.
+    /// is set, the server will wait up to the specified duration (in milliseconds) for all executed
+    /// transactions to be included in a checkpoint before returning. When set, include `checkpoint`
+    /// and `timestamp` in the read mask to receive the data.
     ///
     /// # Errors
     ///
-    /// Returns [`GrpcError::EmptyRequest`] if `transactions` is empty.
-    /// Returns a transport-level [`GrpcError::Grpc`] if the entire RPC fails
-    /// (e.g. batch size exceeded).
+    /// Returns [`GrpcError::EmptyRequest`] if `transactions` is empty. Returns a transport-level
+    /// [`GrpcError::Grpc`] if the entire RPC fails (e.g. batch size exceeded).
     pub fn execute_transactions(
         &self,
         transactions: Vec<SignedTransaction>,

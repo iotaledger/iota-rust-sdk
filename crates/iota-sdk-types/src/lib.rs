@@ -23,11 +23,14 @@ mod execution_status;
 pub mod framework;
 mod gas;
 pub mod iota_names;
+#[cfg(feature = "unstable")]
+pub mod key_proof;
 mod move_core;
 mod move_package;
 mod object;
 mod object_id;
 mod transaction;
+mod u256;
 mod validator;
 pub mod version;
 
@@ -86,6 +89,8 @@ pub use object_id::ObjectId;
 pub use rand_core;
 #[cfg(feature = "serde")]
 pub(crate) use transaction::SignedTransactionWithIntentMessage;
+#[cfg(feature = "unstable")]
+pub use transaction::{AccountClaimKind, ClaimAccountTransaction, SmartAccountClaim};
 pub use transaction::{
     Argument, CanceledTransaction, ChangeEpoch, ChangeEpochV2, ChangeEpochV3, ChangeEpochV4,
     Command, ConsensusCommitPrologueV1, ConsensusDeterminedVersionAssignments, DenyRuleSet,
@@ -95,6 +100,7 @@ pub use transaction::{
     Transaction, TransactionDenyRulesUpdate, TransactionExpiration, TransactionKind, TransactionV1,
     TransferObjects, Upgrade, VersionAssignment,
 };
+pub use u256::{U256, U256ParseError};
 #[cfg(feature = "serde")]
 pub use validator::SignerBitmapError;
 pub use validator::{
@@ -116,8 +122,7 @@ pub use bcs_base64::FromBase64Error;
 mod bcs_base64 {
     use base64ct::Encoding;
 
-    /// Error returned when decoding a type from a base64-encoded string of its
-    /// BCS bytes.
+    /// Error returned when decoding a type from a base64-encoded string of its BCS bytes.
     #[derive(Debug, thiserror::Error)]
     #[non_exhaustive]
     pub enum FromBase64Error {
@@ -180,8 +185,7 @@ pub(crate) const fn next_lexicographical_array<const N: usize>(array: &[u8; N]) 
     }
 }
 
-/// Returns the next array in byte-increasing order, or `None` if the result
-/// would overflow.
+/// Returns the next array in byte-increasing order, or `None` if the result would overflow.
 pub(crate) const fn next_lexicographical_array_opt<const N: usize>(
     array: &[u8; N],
 ) -> Option<[u8; N]> {

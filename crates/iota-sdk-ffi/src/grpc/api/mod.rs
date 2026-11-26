@@ -3,17 +3,15 @@
 
 //! High-level API for gRPC client operations.
 //!
-//! The gRPC API lets callers control which fields the server returns via read
-//! masks, given as a list of the typed fields of the endpoint (see
-//! [`read_mask_fields`](crate::grpc::read_mask_fields)). Fields that were not
-//! requested (or that the server did not populate) are `None` in the
-//! corresponding record.
+//! The gRPC API lets callers control which fields the server returns via read masks, given as a
+//! list of the typed fields of the endpoint (see
+//! [`read_mask_fields`](crate::grpc::read_mask_fields)). Fields that were not requested (or that
+//! the server did not populate) are `None` in the corresponding record.
 //!
-//! Complex types (transactions, effects, events, objects, ...) are eagerly
-//! deserialized from their BCS representation, so the read mask must include
-//! the matching BCS field (e.g. `GrpcTransactionField::EffectsBcs`), or a field
-//! covering it such as `GrpcTransactionField::Effects` or `All`, for those
-//! record fields to be populated.
+//! Complex types (transactions, effects, events, objects, ...) are eagerly deserialized from their
+//! BCS representation, so the read mask must include the matching BCS field (e.g.
+//! `GrpcTransactionField::EffectsBcs`), or a field covering it such as
+//! `GrpcTransactionField::Effects` or `All`, for those record fields to be populated.
 
 use crate::grpc::read_mask_fields::ReadMaskField;
 
@@ -24,9 +22,9 @@ pub mod state;
 
 /// Convert an optional list of typed fields into an endpoint read mask.
 ///
-/// The paths are normalized like the typed field lists of the Rust client
-/// (duplicates and subsumed paths dropped). When nothing is left, or no fields
-/// were given at all, the endpoint's default mask is used.
+/// The paths are normalized like the typed field lists of the Rust client (duplicates and subsumed
+/// paths dropped). When nothing is left, or no fields were given at all, the endpoint's default
+/// mask is used.
 pub(crate) fn read_mask<M, F>(fields: Option<Vec<F>>) -> M
 where
     M: AsRef<str> + Default + From<Vec<F::Field>>,
@@ -45,12 +43,11 @@ where
     }
 }
 
-/// Whether a read mask requests `field`, i.e. whether any of its paths is
-/// `field` itself, an ancestor of it, one of its sub-paths, or `*`.
+/// Whether a read mask requests `field`, i.e. whether any of its paths is `field` itself, an
+/// ancestor of it, one of its sub-paths, or `*`.
 ///
-/// Repeated response fields arrive as an empty list both when they were not
-/// requested and when there was nothing to return, so the mask is the only
-/// way to tell those apart.
+/// Repeated response fields arrive as an empty list both when they were not requested and when
+/// there was nothing to return, so the mask is the only way to tell those apart.
 pub(crate) fn read_mask_requests(mask: impl AsRef<str>, field: impl AsRef<str>) -> bool {
     let field = field.as_ref();
     mask.as_ref().split(',').any(|path| {

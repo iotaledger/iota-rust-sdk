@@ -1,9 +1,9 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! This example allows you to publish any Move package by compiling it
-//! first using the `iota` binary. For demonstration purposes this example
-//! immediately upgrades the package after publishing it.
+//! This example allows you to publish any Move package by compiling it first using the `iota`
+//! binary. For demonstration purposes this example immediately upgrades the package after
+//! publishing it.
 //!
 //! ```bash
 //! cd /path/to/your/move/package
@@ -129,8 +129,7 @@ async fn main() -> Result<()> {
     // Build the `upgrade` PTB
     let mut builder = TransactionBuilder::new(sender).with_client(client.clone());
     builder
-        // Authorize the upgrade by providing the upgrade cap object id to receive an upgrade
-        // ticket
+        // Authorize the upgrade by providing the upgrade cap object id to receive an upgrade ticket
         .move_call(Address::FRAMEWORK, "package", "authorize_upgrade")
         .arguments((
             upgrade_cap_id,

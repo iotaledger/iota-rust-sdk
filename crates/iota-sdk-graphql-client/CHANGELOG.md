@@ -1,3 +1,22 @@
+## [1.0.0] - 2026-11-20
+
+### 🚀 Features
+
+- Add a non-default `unstable` feature to every published crate (#1816)
+- *(graphql-client)* Reject GraphQL responses from indexers that require a newer client (#1798)
+
+### 🐛 Bug Fixes
+
+- *(graphql-client)* Show the GraphQL hosts in docs (#1761)
+- *(graphql-client)* Stop rejecting https URLs in the constructors (#1787)
+- *(graphql-client)* Report discarded faucet requests and keep the faucet URL path (#1796)
+- *(graphql-client)* Keep the RPC path prefix in the subscription URL (#1789)
+- *(graphql-client)* Reject faucet request ids that would change the status URL (#1803)
+
+### ⚙️ Miscellaneous Tasks
+
+- *(graphql-client)* Say a proxy set without TLS receives https requests unencrypted (#1802)
+
 ## [1.0.0-rc.2] - 2026-10-23
 
 ### 🐛 Bug Fixes

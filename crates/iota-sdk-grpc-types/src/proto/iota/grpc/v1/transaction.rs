@@ -41,8 +41,8 @@ impl TryFrom<&TransactionEffects> for iota_types::Digest {
 impl TransactionEffects {
     /// Get the effects digest.
     ///
-    /// **Read mask:** `effects.digest` relative to the parent
-    /// `ExecutedTransaction` (see [`TRANSACTION_EFFECTS_DIGEST`]).
+    /// **Read mask:** `effects.digest` relative to the parent `ExecutedTransaction` (see
+    /// [`TRANSACTION_EFFECTS_DIGEST`]).
     ///
     /// [`TRANSACTION_EFFECTS_DIGEST`]: crate::read_masks::TRANSACTION_EFFECTS_DIGEST
     pub fn digest(&self) -> Result<iota_types::TransactionEffectsDigest, TryFromProtoError> {
@@ -51,8 +51,8 @@ impl TransactionEffects {
 
     /// Deserialize effects from BCS.
     ///
-    /// **Read mask:** `effects.bcs` relative to the parent
-    /// `ExecutedTransaction` (see [`TRANSACTION_EFFECTS_BCS`]).
+    /// **Read mask:** `effects.bcs` relative to the parent `ExecutedTransaction` (see
+    /// [`TRANSACTION_EFFECTS_BCS`]).
     ///
     /// [`TRANSACTION_EFFECTS_BCS`]: crate::read_masks::TRANSACTION_EFFECTS_BCS
     pub fn effects(&self) -> Result<iota_types::TransactionEffects, TryFromProtoError> {
@@ -114,8 +114,8 @@ impl TryFrom<&TransactionEvents> for iota_types::Digest {
 impl TransactionEvents {
     /// Get the events digest.
     ///
-    /// **Read mask:** `events.digest` relative to the parent
-    /// `ExecutedTransaction` (see [`TRANSACTION_EVENTS_DIGEST`]).
+    /// **Read mask:** `events.digest` relative to the parent `ExecutedTransaction` (see
+    /// [`TRANSACTION_EVENTS_DIGEST`]).
     ///
     /// [`TRANSACTION_EVENTS_DIGEST`]: crate::read_masks::TRANSACTION_EVENTS_DIGEST
     pub fn digest(&self) -> Result<iota_types::TransactionEventsDigest, TryFromProtoError> {
@@ -124,8 +124,8 @@ impl TransactionEvents {
 
     /// Deserialize all events from BCS.
     ///
-    /// **Read mask:** `events.events.bcs` relative to the parent
-    /// `ExecutedTransaction` (see [`TRANSACTION_EVENTS_BCS`]).
+    /// **Read mask:** `events.events.bcs` relative to the parent `ExecutedTransaction` (see
+    /// [`TRANSACTION_EVENTS_BCS`]).
     ///
     /// [`TRANSACTION_EVENTS_BCS`]: crate::read_masks::TRANSACTION_EVENTS_BCS
     pub fn events(&self) -> Result<iota_types::TransactionEvents, TryFromProtoError> {
@@ -143,9 +143,8 @@ impl ExecutedTransaction {
     /// - [`Transaction::digest()`] — the transaction digest
     /// - [`Transaction::transaction()`] — the deserialized SDK `Transaction`
     ///
-    /// **Read mask:** `"transaction"` (see
-    /// [`EXECUTED_TRANSACTION_TRANSACTION`]). For checkpoint context use
-    /// `"transactions.transaction"`.
+    /// **Read mask:** `"transaction"` (see [`EXECUTED_TRANSACTION_TRANSACTION`]). For checkpoint
+    /// context use `"transactions.transaction"`.
     ///
     /// [`EXECUTED_TRANSACTION_TRANSACTION`]: crate::read_masks::EXECUTED_TRANSACTION_TRANSACTION
     pub fn transaction(&self) -> Result<&super::transaction::Transaction, TryFromProtoError> {
@@ -156,8 +155,8 @@ impl ExecutedTransaction {
 
     /// Get the user signatures.
     ///
-    /// **Read mask:** `"signatures"` (see [`EXECUTED_TRANSACTION_SIGNATURES`]).
-    /// For checkpoint context use `"transactions.signatures"`.
+    /// **Read mask:** `"signatures"` (see [`EXECUTED_TRANSACTION_SIGNATURES`]). For checkpoint
+    /// context use `"transactions.signatures"`.
     ///
     /// [`EXECUTED_TRANSACTION_SIGNATURES`]: crate::read_masks::EXECUTED_TRANSACTION_SIGNATURES
     pub fn signatures(&self) -> Result<&super::signatures::UserSignatures, TryFromProtoError> {
@@ -170,11 +169,10 @@ impl ExecutedTransaction {
     ///
     /// Returns the proto [`TransactionEffects`] which provides:
     /// - [`TransactionEffects::digest()`] — the effects digest
-    /// - [`TransactionEffects::effects()`] — the deserialized SDK
-    ///   `TransactionEffects`
+    /// - [`TransactionEffects::effects()`] — the deserialized SDK `TransactionEffects`
     ///
-    /// **Read mask:** `"effects"` (see [`EXECUTED_TRANSACTION_EFFECTS`]).
-    /// For checkpoint context use `"transactions.effects"`.
+    /// **Read mask:** `"effects"` (see [`EXECUTED_TRANSACTION_EFFECTS`]). For checkpoint context
+    /// use `"transactions.effects"`.
     ///
     /// [`EXECUTED_TRANSACTION_EFFECTS`]: crate::read_masks::EXECUTED_TRANSACTION_EFFECTS
     pub fn effects(&self) -> Result<&super::transaction::TransactionEffects, TryFromProtoError> {
@@ -187,8 +185,7 @@ impl ExecutedTransaction {
     ///
     /// Returns the proto [`TransactionEvents`] which provides:
     /// - [`TransactionEvents::digest()`] — the events digest
-    /// - [`TransactionEvents::events()`] — the deserialized SDK
-    ///   `TransactionEvents`
+    /// - [`TransactionEvents::events()`] — the deserialized SDK `TransactionEvents`
     ///
     /// **Read mask:** `"events"` (see [`EXECUTED_TRANSACTION_EVENTS`]).
     /// For checkpoint context use `"transactions.events"`.
@@ -209,8 +206,8 @@ impl ExecutedTransaction {
 
     /// Get checkpoint sequence number.
     ///
-    /// **Read mask:** `"checkpoint"` (see [`EXECUTED_TRANSACTION_CHECKPOINT`]).
-    /// For checkpoint context use `"transactions.checkpoint"`.
+    /// **Read mask:** `"checkpoint"` (see [`EXECUTED_TRANSACTION_CHECKPOINT`]). For checkpoint
+    /// context use `"transactions.checkpoint"`.
     ///
     /// [`EXECUTED_TRANSACTION_CHECKPOINT`]: crate::read_masks::EXECUTED_TRANSACTION_CHECKPOINT
     pub fn checkpoint_sequence_number(
@@ -222,8 +219,8 @@ impl ExecutedTransaction {
 
     /// Get timestamp in milliseconds.
     ///
-    /// **Read mask:** `"timestamp"` (see [`EXECUTED_TRANSACTION_TIMESTAMP`]).
-    /// For checkpoint context use `"transactions.timestamp"`.
+    /// **Read mask:** `"timestamp"` (see [`EXECUTED_TRANSACTION_TIMESTAMP`]). For checkpoint
+    /// context use `"transactions.timestamp"`.
     ///
     /// [`EXECUTED_TRANSACTION_TIMESTAMP`]: crate::read_masks::EXECUTED_TRANSACTION_TIMESTAMP
     pub fn timestamp_ms(&self) -> Result<iota_types::CheckpointTimestamp, TryFromProtoError> {
@@ -235,17 +232,16 @@ impl ExecutedTransaction {
 
     /// Get input objects.
     ///
-    /// Returns proto [`Objects`](super::object::Objects) containing the
-    /// transaction's input objects. Call `.object()` on each to deserialize.
+    /// Returns proto [`Objects`](super::object::Objects) containing the transaction's input
+    /// objects. Call `.object()` on each to deserialize.
     ///
-    /// **Read mask:** `"input_objects"` (see
-    /// [`EXECUTED_TRANSACTION_INPUT_OBJECTS`]).
+    /// **Read mask:** `"input_objects"` (see [`EXECUTED_TRANSACTION_INPUT_OBJECTS`]).
     /// For checkpoint context use `"transactions.input_objects"`.
     ///
-    /// The set is always complete: if the serving node no longer has one of
-    /// the objects (e.g. pruned), `get_transactions` requests including this
-    /// field fail with `FAILED_PRECONDITION`. Narrow the read mask, or fetch
-    /// objects individually via `get_objects` for best-effort retrieval.
+    /// The set is always complete: if the serving node no longer has one of the objects (e.g.
+    /// pruned), `get_transactions` requests including this field fail with `FAILED_PRECONDITION`.
+    /// Narrow the read mask, or fetch objects individually via `get_objects` for best-effort
+    /// retrieval.
     ///
     /// [`EXECUTED_TRANSACTION_INPUT_OBJECTS`]: crate::read_masks::EXECUTED_TRANSACTION_INPUT_OBJECTS
     pub fn input_objects(&self) -> Result<&super::object::Objects, TryFromProtoError> {
@@ -256,17 +252,16 @@ impl ExecutedTransaction {
 
     /// Get output objects.
     ///
-    /// Returns proto [`Objects`](super::object::Objects) containing the
-    /// transaction's output objects. Call `.object()` on each to deserialize.
+    /// Returns proto [`Objects`](super::object::Objects) containing the transaction's output
+    /// objects. Call `.object()` on each to deserialize.
     ///
-    /// **Read mask:** `"output_objects"` (see
-    /// [`EXECUTED_TRANSACTION_OUTPUT_OBJECTS`]).
+    /// **Read mask:** `"output_objects"` (see [`EXECUTED_TRANSACTION_OUTPUT_OBJECTS`]).
     /// For checkpoint context use `"transactions.output_objects"`.
     ///
-    /// The set is always complete: if the serving node no longer has one of
-    /// the objects (e.g. pruned), `get_transactions` requests including this
-    /// field fail with `FAILED_PRECONDITION`. Narrow the read mask, or fetch
-    /// objects individually via `get_objects` for best-effort retrieval.
+    /// The set is always complete: if the serving node no longer has one of the objects (e.g.
+    /// pruned), `get_transactions` requests including this field fail with `FAILED_PRECONDITION`.
+    /// Narrow the read mask, or fetch objects individually via `get_objects` for best-effort
+    /// retrieval.
     ///
     /// [`EXECUTED_TRANSACTION_OUTPUT_OBJECTS`]: crate::read_masks::EXECUTED_TRANSACTION_OUTPUT_OBJECTS
     pub fn output_objects(&self) -> Result<&super::object::Objects, TryFromProtoError> {
@@ -277,16 +272,15 @@ impl ExecutedTransaction {
 
     /// Get balance changes.
     ///
-    /// Returns proto [`BalanceChanges`] containing the balance changes derived
-    /// from the transaction's effects.
+    /// Returns proto [`BalanceChanges`] containing the balance changes derived from the
+    /// transaction's effects.
     ///
-    /// **Read mask:** `"balance_changes"` (see
-    /// [`EXECUTED_TRANSACTION_BALANCE_CHANGES`]).
+    /// **Read mask:** `"balance_changes"` (see [`EXECUTED_TRANSACTION_BALANCE_CHANGES`]).
     /// For checkpoint context use `"transactions.balance_changes"`.
     ///
-    /// If the serving node no longer has a required object (e.g. pruned),
-    /// `get_transactions` requests including this field fail with
-    /// `FAILED_PRECONDITION`; retry without it in the read mask.
+    /// If the serving node no longer has a required object (e.g. pruned), `get_transactions`
+    /// requests including this field fail with `FAILED_PRECONDITION`; retry without it in the read
+    /// mask.
     ///
     /// [`EXECUTED_TRANSACTION_BALANCE_CHANGES`]: crate::read_masks::EXECUTED_TRANSACTION_BALANCE_CHANGES
     pub fn balance_changes(&self) -> Result<&BalanceChanges, TryFromProtoError> {
@@ -297,16 +291,15 @@ impl ExecutedTransaction {
 
     /// Get object changes.
     ///
-    /// Returns proto [`ObjectChanges`] containing the object changes derived
-    /// from the transaction's effects.
+    /// Returns proto [`ObjectChanges`] containing the object changes derived from the transaction's
+    /// effects.
     ///
-    /// **Read mask:** `"object_changes"` (see
-    /// [`EXECUTED_TRANSACTION_OBJECT_CHANGES`]).
+    /// **Read mask:** `"object_changes"` (see [`EXECUTED_TRANSACTION_OBJECT_CHANGES`]).
     /// For checkpoint context use `"transactions.object_changes"`.
     ///
-    /// If the serving node no longer has a required object (e.g. pruned),
-    /// `get_transactions` requests including this field fail with
-    /// `FAILED_PRECONDITION`; retry without it in the read mask.
+    /// If the serving node no longer has a required object (e.g. pruned), `get_transactions`
+    /// requests including this field fail with `FAILED_PRECONDITION`; retry without it in the read
+    /// mask.
     ///
     /// [`EXECUTED_TRANSACTION_OBJECT_CHANGES`]: crate::read_masks::EXECUTED_TRANSACTION_OBJECT_CHANGES
     pub fn object_changes(&self) -> Result<&ObjectChanges, TryFromProtoError> {
@@ -386,8 +379,8 @@ impl TryFrom<&Transaction> for iota_types::Digest {
 impl Transaction {
     /// Get the transaction digest.
     ///
-    /// **Read mask:** `transaction.digest` relative to the parent
-    /// `ExecutedTransaction` (see [`TRANSACTION_DIGEST`]).
+    /// **Read mask:** `transaction.digest` relative to the parent `ExecutedTransaction` (see
+    /// [`TRANSACTION_DIGEST`]).
     ///
     /// [`TRANSACTION_DIGEST`]: crate::read_masks::TRANSACTION_DIGEST
     pub fn digest(&self) -> Result<iota_types::TransactionDigest, TryFromProtoError> {
@@ -396,8 +389,8 @@ impl Transaction {
 
     /// Deserialize the transaction from BCS.
     ///
-    /// **Read mask:** `transaction.bcs` relative to the parent
-    /// `ExecutedTransaction` (see [`TRANSACTION_BCS`]).
+    /// **Read mask:** `transaction.bcs` relative to the parent `ExecutedTransaction` (see
+    /// [`TRANSACTION_BCS`]).
     ///
     /// [`TRANSACTION_BCS`]: crate::read_masks::TRANSACTION_BCS
     pub fn transaction(&self) -> Result<iota_types::Transaction, TryFromProtoError> {
@@ -424,8 +417,8 @@ impl BalanceChange {
             .map_err(|e| e.nested(Self::COIN_TYPE_FIELD.name))
     }
 
-    /// Get the signed amount the balance changed by, decoded from its 16-byte
-    /// big-endian two's-complement encoding.
+    /// Get the signed amount the balance changed by, decoded from its 16-byte big-endian
+    /// two's-complement encoding.
     pub fn amount_i128(&self) -> Result<i128, TryFromProtoError> {
         let bytes: [u8; 16] = self
             .amount
@@ -440,8 +433,8 @@ impl BalanceChange {
     }
 }
 
-/// The `ObjectChange` variant messages share the same field shapes; this
-/// generates the getters that parse those fields into SDK types.
+/// The `ObjectChange` variant messages share the same field shapes; this generates the getters that
+/// parse those fields into SDK types.
 macro_rules! impl_object_change_variant_accessors {
     ($type:ty { $($field:ident),* $(,)? }) => {
         impl $type {

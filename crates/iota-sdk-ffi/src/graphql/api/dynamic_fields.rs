@@ -16,14 +16,14 @@ use crate::{
 #[cfg_attr(not(target_arch = "wasm32"), uniffi::export(async_runtime = "tokio"))]
 #[cfg_attr(target_arch = "wasm32", uniffi::export)]
 impl GraphQLClient {
-    /// Access a dynamic field on an object using its name. Names are arbitrary
-    /// Move values whose type have copy, drop, and store, and are specified
-    /// using their type, and their BCS contents, Base64 encoded.
+    /// Access a dynamic field on an object using its name. Names are arbitrary Move values whose
+    /// type have copy, drop, and store, and are specified using their type, and their BCS contents,
+    /// Base64 encoded.
     ///
     /// The `name` argument is a json serialized type.
     ///
-    /// This returns `GraphQLDynamicFieldOutput` which contains the name, the
-    /// value as json, and object.
+    /// This returns `GraphQLDynamicFieldOutput` which contains the name, the value as json, and
+    /// object.
     pub async fn dynamic_field(
         &self,
         address: &Address,
@@ -37,14 +37,14 @@ impl GraphQLClient {
             .map(Into::into))
     }
 
-    /// Access a dynamic object field on an object using its name. Names are
-    /// arbitrary Move values whose type have copy, drop, and store, and are
-    /// specified using their type, and their BCS contents, Base64 encoded.
+    /// Access a dynamic object field on an object using its name. Names are arbitrary Move values
+    /// whose type have copy, drop, and store, and are specified using their type, and their BCS
+    /// contents, Base64 encoded.
     ///
     /// The `name` argument is a json serialized type.
     ///
-    /// This returns `GraphQLDynamicFieldOutput` which contains the name, the
-    /// value as json, and object.
+    /// This returns `GraphQLDynamicFieldOutput` which contains the name, the value as json, and
+    /// object.
     pub async fn dynamic_object_field(
         &self,
         address: &Address,
@@ -58,8 +58,8 @@ impl GraphQLClient {
             .map(Into::into))
     }
 
-    /// Get a page of dynamic fields for the provided address. Note that this
-    /// will also fetch dynamic fields on wrapped objects.
+    /// Get a page of dynamic fields for the provided address. Note that this will also fetch
+    /// dynamic fields on wrapped objects.
     ///
     /// This returns a page of `GraphQLDynamicFieldOutput`s.
     #[uniffi::method(default(pagination_filter = None))]

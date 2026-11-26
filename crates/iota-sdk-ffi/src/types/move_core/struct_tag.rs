@@ -38,23 +38,20 @@ impl StructTag {
         ))
     }
 
-    /// Creates a new IOTA-Names `Name` struct tag
-    /// with the given package address.
+    /// Creates a new IOTA-Names `Name` struct tag with the given package address.
     #[uniffi::constructor]
     pub fn new_name(address: &Address) -> Self {
         Self(iota_sdk::types::StructTag::new_name(address.0))
     }
 
     /// Checks if this is an IOTA-Names `Name` type.
-    /// Note that this does not check the package address, so it will return
-    /// true for any struct with the correct module and type name with no
-    /// type params.
+    /// Note that this does not check the package address, so it will return true for any struct
+    /// with the correct module and type name with no type params.
     pub fn is_name(&self) -> bool {
         self.0.is_name()
     }
 
-    /// Creates a new dynamic field struct tag
-    /// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+    /// Creates a new dynamic field struct tag (`0x2::dynamic_field::Field<KeyType, ValueType>`)
     #[uniffi::constructor]
     pub fn new_dynamic_field(key: &TypeTag, value: &TypeTag) -> Self {
         Self(iota_sdk::types::StructTag::new_dynamic_field(
@@ -63,8 +60,7 @@ impl StructTag {
         ))
     }
 
-    /// Checks if this is a Dynamic Field type
-    /// (`0x2::dynamic_field::Field<KeyType, ValueType>`)
+    /// Checks if this is a Dynamic Field type (`0x2::dynamic_field::Field<KeyType, ValueType>`)
     pub fn is_dynamic_field(&self) -> bool {
         self.0.is_dynamic_field()
     }
@@ -78,8 +74,7 @@ impl StructTag {
             .map(Arc::new)
     }
 
-    /// Returns the coin type part of a `StructTag`, panics if this is not a
-    /// Coin type
+    /// Returns the coin type part of a `StructTag`, panics if this is not a Coin type
     pub fn coin_type(&self) -> TypeTag {
         self.0.coin_type().clone().into()
     }
@@ -110,14 +105,12 @@ impl StructTag {
             .collect()
     }
 
-    /// Returns whether the type (excluding the type params) is the same as
-    /// another struct tag.
+    /// Returns whether the type (excluding the type params) is the same as another struct tag.
     pub fn is_same_type_as(&self, other: &StructTag) -> bool {
         self.0.is_same_type_as(&other.0)
     }
 
-    /// Checks if this is an IOTA balance type
-    /// (`0x2::balance::Balance<0x2::iota::IOTA>`)
+    /// Checks if this is an IOTA balance type (`0x2::balance::Balance<0x2::iota::IOTA>`)
     pub fn is_gas_balance(&self) -> bool {
         self.0.is_gas_balance()
     }
@@ -140,8 +133,8 @@ impl StructTag {
         self.0.is_timelocked_gas_balance()
     }
 
-    /// Returns the string representation of this struct tag using the
-    /// canonical display, with or without a `0x` prefix.
+    /// Returns the string representation of this struct tag using the canonical display, with or
+    /// without a `0x` prefix.
     pub fn to_canonical_string(&self, with_prefix: bool) -> String {
         self.0.to_canonical_string(with_prefix)
     }
