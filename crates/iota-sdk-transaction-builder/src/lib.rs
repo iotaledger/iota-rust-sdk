@@ -1299,4 +1299,225 @@ mod tests {
             assert!(sponsor.executed.lock().unwrap().is_none());
         }
     }
+
+    #[cfg(feature = "test-client")]
+    mod gas_limits {
+        use iota_types::{
+            Object, ObjectId, StructTag, Transaction, TransactionDigest, TransactionEffects,
+            UserSignature, Version,
+        };
+
+        use crate::{
+            GasSponsor, ObjectsPage, ProtocolConfig, SponsoredGas, TestClient, TestClientError,
+            TransactionBuilderClientBase, TransactionBuilderExecutionClient,
+            TransactionBuilderLedgerClient, TransactionBuilderSimulationClient, WaitForTransaction,
+            error::TransactionBuilderError,
+        };
+
+        const MAX_GAS_PRICE: u64 = 100_000;
+        const MAX_TX_GAS: u64 = 50_000_000_000;
+
+        struct GasAnswersClient {
+            price: u64,
+            estimate: u64,
+            without_limits: bool,
+        }
+
+        impl TransactionBuilderClientBase for GasAnswersClient {
+            type Error = TestClientError;
+        }
+
+        impl TransactionBuilderLedgerClient for GasAnswersClient {
+            async fn object(
+                &self,
+                object_id: ObjectId,
+                version: impl Into<Option<Version>>,
+            ) -> Result<Option<Object>, Self::Error> {
+                TestClient.object(object_id, version).await
+            }
+
+            async fn objects(
+                &self,
+                struct_tag: Option<StructTag>,
+                owner: iota_types::Address,
+                cursor: Option<Vec<u8>>,
+                limit: Option<usize>,
+            ) -> Result<ObjectsPage, Self::Error> {
+                TestClient.objects(struct_tag, owner, cursor, limit).await
+            }
+
+            async fn reference_gas_price(
+                &self,
+                _epoch: impl Into<Option<u64>>,
+            ) -> Result<Option<u64>, Self::Error> {
+                Ok(Some(self.price))
+            }
+
+            async fn protocol_config(&self) -> Result<ProtocolConfig, Self::Error> {
+                let mut config = TestClient.protocol_config().await?;
+                if self.without_limits {
+                    config.attributes.remove("max_gas_price");
+                    config.attributes.remove("max_tx_gas");
+                }
+                Ok(config)
+            }
+        }
+
+        impl TransactionBuilderSimulationClient for GasAnswersClient {
+            type DryRunResult = ();
+
+            async fn estimate_transaction_budget(
+                &self,
+                _transaction: &Transaction,
+            ) -> Result<Option<u64>, Self::Error> {
+                Ok(Some(self.estimate))
+            }
+
+            async fn dry_run_transaction(
+                &self,
+                transaction: &Transaction,
+                skip_checks: bool,
+            ) -> Result<Self::DryRunResult, Self::Error> {
+                TestClient
+                    .dry_run_transaction(transaction, skip_checks)
+                    .await
+            }
+        }
+
+        impl TransactionBuilderExecutionClient for GasAnswersClient {
+            async fn execute_transaction(
+                &self,
+                signatures: &[UserSignature],
+                transaction: &Transaction,
+                wait_for: impl Into<Option<WaitForTransaction>>,
+            ) -> Result<TransactionEffects, Self::Error> {
+                TestClient
+                    .execute_transaction(signatures, transaction, wait_for)
+                    .await
+            }
+
+            async fn wait_for_transaction(
+                &self,
+                digest: TransactionDigest,
+                wait_for: WaitForTransaction,
+            ) -> Result<(), Self::Error> {
+                TestClient.wait_for_transaction(digest, wait_for).await
+            }
+
+            async fn transaction_effects(
+                &self,
+                digest: TransactionDigest,
+            ) -> Result<Option<TransactionEffects>, Self::Error> {
+                TestClient.transaction_effects(digest).await
+            }
+        }
+
+        struct UnreachableSponsor;
+
+        impl GasSponsor for UnreachableSponsor {
+            type Error = TestClientError;
+            type Reservation = ();
+
+            async fn reserve_gas(
+                &self,
+                _transaction: &Transaction,
+            ) -> Result<(Self::Reservation, SponsoredGas), Self::Error> {
+                unreachable!("the gas is checked before it is reserved")
+            }
+
+            async fn execute_reserved(
+                &self,
+                _reservation: Self::Reservation,
+                _transaction: &Transaction,
+                _signature: &UserSignature,
+            ) -> Result<TransactionDigest, Self::Error> {
+                unreachable!("the gas is checked before it is reserved")
+            }
+        }
+
+        fn is_above_limit(
+            result: Result<impl Sized, TransactionBuilderError>,
+            key: &str,
+            expected_value: u64,
+            expected_limit: u64,
+        ) -> bool {
+            matches!(
+                result,
+                Err(TransactionBuilderError::GasAboveProtocolLimit { name, value, limit })
+                    if name == key && value == expected_value && limit == expected_limit
+            )
+        }
+
+        #[tokio::test]
+        async fn values_at_the_limits_are_used() {
+            let builder = super::builder_with(GasAnswersClient {
+                price: MAX_GAS_PRICE,
+                estimate: MAX_TX_GAS,
+                without_limits: false,
+            });
+            let txn = builder.finish().await.unwrap();
+            assert_eq!(txn.as_v1().gas_payment.price, MAX_GAS_PRICE);
+            assert_eq!(txn.as_v1().gas_payment.budget, MAX_TX_GAS);
+        }
+
+        #[tokio::test]
+        async fn a_client_without_the_limits_is_not_checked() {
+            let builder = super::builder_with(GasAnswersClient {
+                price: MAX_GAS_PRICE + 1,
+                estimate: MAX_TX_GAS + 1,
+                without_limits: true,
+            });
+            let txn = builder.finish().await.unwrap();
+            assert_eq!(txn.as_v1().gas_payment.price, MAX_GAS_PRICE + 1);
+            assert_eq!(txn.as_v1().gas_payment.budget, MAX_TX_GAS + 1);
+        }
+
+        #[tokio::test]
+        async fn a_price_above_max_gas_price_is_rejected() {
+            let builder = super::builder_with(GasAnswersClient {
+                price: MAX_GAS_PRICE + 1,
+                estimate: 50_000_000,
+                without_limits: false,
+            });
+            assert!(is_above_limit(
+                builder.finish().await,
+                "max_gas_price",
+                MAX_GAS_PRICE + 1,
+                MAX_GAS_PRICE
+            ));
+        }
+
+        #[tokio::test]
+        async fn a_budget_estimate_above_max_tx_gas_is_rejected() {
+            let builder = super::builder_with(GasAnswersClient {
+                price: 1000,
+                estimate: MAX_TX_GAS + 1,
+                without_limits: false,
+            });
+            assert!(is_above_limit(
+                builder.finish().await,
+                "max_tx_gas",
+                MAX_TX_GAS + 1,
+                MAX_TX_GAS
+            ));
+        }
+
+        #[tokio::test]
+        async fn a_sponsored_budget_estimate_above_max_tx_gas_is_rejected() {
+            let builder = super::builder_with(GasAnswersClient {
+                price: 1000,
+                estimate: MAX_TX_GAS + 1,
+                without_limits: false,
+            });
+            let signer = iota_crypto::ed25519::Ed25519PrivateKey::new([9; 32]);
+            assert!(is_above_limit(
+                builder
+                    .execute_with_gas_sponsor(&UnreachableSponsor, &signer)
+                    .await,
+                "max_tx_gas",
+                MAX_TX_GAS + 1,
+                MAX_TX_GAS
+            ));
+        }
+    }
 }

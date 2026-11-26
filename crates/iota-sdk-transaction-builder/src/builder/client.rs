@@ -410,7 +410,9 @@ pub(crate) mod test_client {
     };
     use crate::{
         ObjectsPage,
-        builder::{BASE_TX_COST_FIXED_KEY, MAX_GAS_PAYMENT_OBJECTS_KEY},
+        builder::{
+            BASE_TX_COST_FIXED_KEY, MAX_GAS_PAYMENT_OBJECTS_KEY, MAX_GAS_PRICE_KEY, MAX_TX_GAS_KEY,
+        },
     };
 
     /// Balance, in NANOS, of every fabricated coin. Large enough to cover any gas budget the
@@ -517,6 +519,12 @@ pub(crate) mod test_client {
             config
                 .attributes
                 .insert(MAX_GAS_PAYMENT_OBJECTS_KEY.to_owned(), "256".to_owned());
+            config
+                .attributes
+                .insert(MAX_GAS_PRICE_KEY.to_owned(), "100000".to_owned());
+            config
+                .attributes
+                .insert(MAX_TX_GAS_KEY.to_owned(), "50000000000".to_owned());
             Ok(config)
         }
     }
