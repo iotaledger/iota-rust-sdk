@@ -96,6 +96,9 @@ pub struct TransactionBuildData {
     state_command: Option<u16>,
     /// Objects fetched while resolving, for signers that use them.
     objects: HashMap<ObjectId, Object>,
+    /// The first object passed as kinds of input that a single input cannot serve. The methods
+    /// taking inputs cannot fail, so it is reported when the transaction is built.
+    conflicting_input: Option<ObjectId>,
 }
 
 impl TransactionBuildData {
@@ -115,9 +118,10 @@ impl TransactionBuildData {
             if is_gas {
                 input.is_gas = true;
             }
-            // If the new input is already resolved, replace the old one in case it was unresolved
-            if let new_kind @ InputKind::Input(_) = kind {
-                input.kind = new_kind;
+            if let Some(object_id) = kind.object_id()
+                && !input.kind.merge(kind)
+            {
+                self.conflicting_input.get_or_insert(object_id);
             }
             return Argument::Input(*i as _);
         }
@@ -225,6 +229,19 @@ impl TransactionBuildData {
         }
 
         Ok(())
+    }
+
+    /// Check that no object was passed as kinds of input that a single input cannot serve.
+    fn check_input_kinds(&self) -> Result<(), TransactionBuilderError> {
+        let Some(object_id) = self.conflicting_input else {
+            return Ok(());
+        };
+        if self.get_gas().contains(&object_id) {
+            return Err(TransactionBuilderError::WrongGasObject);
+        }
+        Err(TransactionBuilderError::Input(format!(
+            "object {object_id} was passed as inputs of different kinds"
+        )))
     }
 
     /// Check that there is at most one transaction dependency input and that no command uses it.
@@ -372,6 +389,7 @@ impl TransactionBuilder {
                 assigned_results: Default::default(),
                 state_command: Default::default(),
                 objects: Default::default(),
+                conflicting_input: Default::default(),
             },
             client: (),
             protocol_config: None,
@@ -457,6 +475,7 @@ impl TransactionBuilder {
                 assigned_results: Default::default(),
                 state_command: Default::default(),
                 objects: Default::default(),
+                conflicting_input: Default::default(),
             },
             client: (),
             protocol_config: None,
@@ -1498,6 +1517,7 @@ impl<L> TransactionBuilder<(), L> {
             return Err(TransactionBuilderError::MissingGasPrice);
         };
         self.data.resolve_gas_arguments()?;
+        self.data.check_input_kinds()?;
         let mut inputs = Vec::new();
         let mut gas = Vec::new();
         let mut input_map = HashMap::new();
@@ -1835,6 +1855,7 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
         &mut self,
     ) -> Result<(TransactionKind, Vec<ObjectReference>), TransactionBuilderError> {
         self.data.resolve_gas_arguments()?;
+        self.data.check_input_kinds()?;
         let taken_inputs: Vec<_> = std::mem::take(&mut self.data.inputs).into_iter().collect();
         let objects = self.fetch_input_objects(&taken_inputs).await?;
         let object = |object_id: ObjectId| {
@@ -1902,6 +1923,9 @@ impl<C: TransactionBuilderLedgerClient, L> TransactionBuilder<C, L> {
                     input_map.insert(id, idx as u16);
                 }
                 InputKind::Shared { object_id, mutable } => {
+                    if input.is_gas {
+                        return Err(TransactionBuilderError::WrongGasObject);
+                    }
                     let obj = object(object_id)?;
 
                     let input = match obj.owner() {
@@ -3222,6 +3246,126 @@ mod tests {
                 matches!(err, TransactionBuilderError::WrongGasObject),
                 "expected WrongGasObject, got {err}"
             );
+
+            let mut gas_first =
+                TransactionBuilder::new(sender).with_client(RecordingClient::default());
+            gas_first.gas([receivable]);
+            gas_first.transfer_objects(sender, [crate::Receiving(receivable)]);
+
+            let err = gas_first.finish_kind().await.unwrap_err();
+            assert!(
+                matches!(err, TransactionBuilderError::WrongGasObject),
+                "expected WrongGasObject, got {err}"
+            );
+        }
+
+        /// Build a move call taking `first` and `second`, in that order.
+        async fn call_with(
+            first: impl PTBArgument,
+            second: impl PTBArgument,
+        ) -> Result<ProgrammableTransaction, TransactionBuilderError> {
+            let mut builder =
+                TransactionBuilder::new(Address::random()).with_client(RecordingClient::default());
+            builder
+                .move_call(Address::FRAMEWORK, "module", "function")
+                .arguments((first, second));
+            match builder.finish_kind().await? {
+                TransactionKind::Programmable(ptb) => Ok(ptb),
+                _ => panic!("expected a programmable transaction"),
+            }
+        }
+
+        /// An object passed as two kinds that no single input can serve is rejected, whichever
+        /// kind comes first.
+        #[tokio::test]
+        async fn an_object_passed_as_conflicting_kinds_is_rejected() {
+            let id = object_id(3);
+            let reference =
+                ObjectReference::new(id, Version::from_u64(1), ObjectDigest::new([3; 32]));
+
+            let mut offline = TransactionBuilder::new(Address::random());
+            offline
+                .move_call(Address::FRAMEWORK, "module", "function")
+                .arguments((reference, crate::Receiving(reference)));
+            offline.gas_price(1000);
+
+            let results = [
+                call_with(id, crate::Receiving(id)).await.map(drop),
+                call_with(crate::Receiving(id), id).await.map(drop),
+                call_with(crate::Shared(id), crate::Receiving(id))
+                    .await
+                    .map(drop),
+                call_with(crate::Receiving(id), crate::Shared(id))
+                    .await
+                    .map(drop),
+                call_with(reference, crate::SharedMut(id)).await.map(drop),
+                call_with(crate::SharedMut(id), reference).await.map(drop),
+                offline.finish().map(drop),
+            ];
+            for result in results {
+                let err = result.unwrap_err();
+                let TransactionBuilderError::Input(message) = &err else {
+                    panic!("expected an input error, got {err}");
+                };
+                assert!(
+                    message.contains("passed as inputs of different kinds"),
+                    "unexpected message: {message}"
+                );
+            }
+        }
+
+        /// An id on its own resolves by the object's owner, so it shares an input with a shared
+        /// kind. That input is mutable if either kind asks for it, whichever comes first.
+        #[tokio::test]
+        async fn kinds_of_a_shared_object_share_an_input() {
+            let clock = ObjectId::CLOCK;
+            let cases = [
+                (call_with(clock, crate::Shared(clock)).await, false),
+                (call_with(crate::Shared(clock), clock).await, false),
+                (call_with(clock, crate::SharedMut(clock)).await, true),
+                (call_with(crate::SharedMut(clock), clock).await, true),
+                (
+                    call_with(crate::Shared(clock), crate::SharedMut(clock)).await,
+                    true,
+                ),
+                (
+                    call_with(crate::SharedMut(clock), crate::Shared(clock)).await,
+                    true,
+                ),
+            ];
+            for (ptb, mutable) in cases {
+                let ptb = ptb.unwrap();
+                let [iota_types::Input::Shared(shared)] = &ptb.inputs[..] else {
+                    panic!("expected a single shared input, got {:?}", ptb.inputs);
+                };
+                assert_eq!(shared.mutable, mutable);
+            }
+        }
+
+        /// A shared object cannot pay for gas, whether it is flagged as gas before or after it is
+        /// passed as shared. Splitting a coin is allowed on a gas coin, so the gas flag is what
+        /// gets the transaction rejected.
+        #[tokio::test]
+        async fn a_shared_id_flagged_as_gas_is_rejected() {
+            let new_builder = || {
+                TransactionBuilder::new(Address::random()).with_client(RecordingClient::default())
+            };
+
+            let mut shared_first = new_builder();
+            shared_first.split_coins(crate::Shared(ObjectId::CLOCK), [1u64]);
+            shared_first.gas([ObjectId::CLOCK]);
+
+            let mut gas_first = new_builder();
+            gas_first.gas([ObjectId::CLOCK]);
+            gas_first.split_coins(crate::Shared(ObjectId::CLOCK), [1u64]);
+
+            for builder in [shared_first, gas_first] {
+                let err = builder.finish_kind().await.unwrap_err();
+                assert!(
+                    matches!(err, TransactionBuilderError::WrongGasObject),
+                    "expected WrongGasObject, got {err}"
+                );
+            }
         }
 
         /// Forwards to [`crate::TestClient`], but reports one id as owned by another object.

@@ -75,6 +75,64 @@ impl InputKind {
             None
         }
     }
+
+    /// Fold `other`, given for the same object, into this kind so that one input serves both.
+    /// Returns `false` and leaves this kind as it is if no single input can.
+    ///
+    /// An id on its own becomes an owned or a shared input depending on the object's owner, so it
+    /// combines with either. A reference replaces an id, and the later of two references is kept. A
+    /// shared input is mutable if either kind asks for it.
+    pub(crate) fn merge(&mut self, mut other: Self) -> bool {
+        let compatible = match (self.usage(), other.usage()) {
+            (None, Some(Usage::Receiving)) | (Some(Usage::Receiving), None) => false,
+            (Some(ours), Some(theirs)) => ours == theirs,
+            _ => true,
+        };
+        if !compatible {
+            return false;
+        }
+        let mutable = self.shared_mutability().is_some_and(|mutable| *mutable)
+            || other.shared_mutability().is_some_and(|mutable| *mutable);
+        if matches!(other, Self::Input(_)) || matches!(self, Self::ImmutableOrOwned(_)) {
+            *self = other;
+        }
+        if let Some(shared_mutability) = self.shared_mutability() {
+            *shared_mutability = mutable;
+        }
+        true
+    }
+
+    /// What the object is passed as, or `None` for an id on its own, which leaves that to the
+    /// object's owner.
+    fn usage(&self) -> Option<Usage> {
+        match self {
+            Self::Input(iota_types::Input::ImmutableOrOwned(_)) => Some(Usage::Owned),
+            Self::Shared { .. } | Self::Input(iota_types::Input::Shared(_)) => Some(Usage::Shared),
+            Self::Receiving(_) | Self::Input(iota_types::Input::Receiving(_)) => {
+                Some(Usage::Receiving)
+            }
+            Self::ImmutableOrOwned(_) | Self::Input(_) => None,
+        }
+    }
+
+    /// The mutability flag of a shared kind.
+    fn shared_mutability(&mut self) -> Option<&mut bool> {
+        match self {
+            Self::Shared { mutable, .. }
+            | Self::Input(iota_types::Input::Shared(SharedObjectReference { mutable, .. })) => {
+                Some(mutable)
+            }
+            _ => None,
+        }
+    }
+}
+
+/// What an object input is passed to the transaction as.
+#[derive(Clone, Copy, Eq, PartialEq)]
+enum Usage {
+    Owned,
+    Shared,
+    Receiving,
 }
 
 #[derive(Clone, Debug, derive_more::From)]
