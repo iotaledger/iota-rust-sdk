@@ -171,6 +171,8 @@ impl TryFrom<DynamicField> for DynamicFieldOutput {
 
 #[cfg(test)]
 mod tests {
+    use iota_types::TypeParseError;
+
     use super::*;
     use crate::query_types::{MoveType, MoveValue};
 
@@ -204,7 +206,10 @@ mod tests {
         };
         assert!(matches!(
             DynamicFieldOutput::try_from(field),
-            Err(GraphQLError::Parse(_))
+            Err(GraphQLError::Parse(e)) if matches!(
+                e.downcast_ref(),
+                Some(TypeParseError::Parse { input, .. }) if input == "not a type"
+            )
         ));
 
         let field = DynamicField {
@@ -213,7 +218,8 @@ mod tests {
         };
         assert!(matches!(
             DynamicFieldOutput::try_from(field),
-            Err(GraphQLError::Parse(_))
+            Err(GraphQLError::Parse(e))
+                if matches!(e.downcast_ref(), Some(base64ct::Error::InvalidEncoding))
         ));
     }
 
@@ -228,7 +234,10 @@ mod tests {
         };
         assert!(matches!(
             DynamicFieldOutput::try_from(field),
-            Err(GraphQLError::Parse(_))
+            Err(GraphQLError::Parse(e)) if matches!(
+                e.downcast_ref(),
+                Some(TypeParseError::Parse { input, .. }) if input == "not a type"
+            )
         ));
 
         let field = DynamicField {
@@ -239,7 +248,8 @@ mod tests {
         };
         assert!(matches!(
             DynamicFieldOutput::try_from(field),
-            Err(GraphQLError::Parse(_))
+            Err(GraphQLError::Parse(e))
+                if matches!(e.downcast_ref(), Some(base64ct::Error::InvalidEncoding))
         ));
     }
 
