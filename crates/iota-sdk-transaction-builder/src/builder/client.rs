@@ -8,21 +8,22 @@ use iota_types::{
     UserSignature, Version,
 };
 
+use crate::error::{LookupError, TransactionBuilderError};
+
 /// Determines what to wait for after executing a transaction.
 #[derive(Default)]
 #[non_exhaustive]
 pub enum WaitForTransaction {
-    /// Indicates that the transaction effects will be usable in subsequent
-    /// transactions (you can reference objects created by this transaction),
-    /// and that the transaction itself is indexed on the fullnode, so queries
-    /// served by the fullnode, such as gRPC, will find it.
+    /// Indicates that the transaction effects will be usable in subsequent transactions (you can
+    /// reference objects created by this transaction), and that the transaction itself is indexed
+    /// on the fullnode, so queries served by the fullnode, such as gRPC, will find it.
     ///
-    /// **Warning:** This does not guarantee the transaction is indexed on the
-    /// indexer, so queries served by an indexer, such as GraphQL, may not
-    /// find it yet. Use [`WaitForTransaction::Finalized`] with those clients.
+    /// **Warning:** This does not guarantee the transaction is indexed on the indexer, so queries
+    /// served by an indexer, such as GraphQL, may not find it yet. Use
+    /// [`WaitForTransaction::Finalized`] with those clients.
     IndexedOnNode,
-    /// Indicates that the transaction has been included in a checkpoint, and
-    /// all queries may include it.
+    /// Indicates that the transaction has been included in a checkpoint, and all queries may
+    /// include it.
     #[default]
     Finalized,
 }
@@ -33,28 +34,28 @@ pub enum WaitForTransaction {
 pub struct ObjectsPage {
     /// The objects in this page.
     pub data: Vec<Object>,
-    /// Opaque continuation cursor for fetching the next page; `None` when no
-    /// further pages exist. Pass it back as the `cursor` argument to
-    /// [`TransactionBuilderLedgerClient::objects`] to advance.
+    /// Opaque continuation cursor for fetching the next page; `None` when no further pages exist.
+    /// Pass it back as the `cursor` argument to [`TransactionBuilderLedgerClient::objects`] to
+    /// advance.
     pub next_cursor: Option<Vec<u8>>,
 }
 
-/// Transport-neutral view of the chain's protocol configuration: a flat
-/// map of attribute name to value, parsed by callers as needed.
+/// Transport-neutral view of the chain's protocol configuration: a flat map of attribute name to
+/// value, parsed by callers as needed.
 #[derive(Clone, Debug, Default)]
 pub struct ProtocolConfig {
     pub(crate) attributes: BTreeMap<String, String>,
 }
 
 impl ProtocolConfig {
-    /// Builds a config from attributes keyed by their canonical protocol name
-    /// (e.g. `"max_gas_payment_objects"`).
+    /// Builds a config from attributes keyed by their canonical protocol name (e.g.
+    /// `"max_gas_payment_objects"`).
     pub fn new(attributes: BTreeMap<String, String>) -> Self {
         Self { attributes }
     }
 
-    /// All available configuration attributes, keyed by their canonical
-    /// protocol name (e.g. `"max_gas_payment_objects"`).
+    /// All available configuration attributes, keyed by their canonical protocol name (e.g.
+    /// `"max_gas_payment_objects"`).
     pub fn attributes(&self) -> &BTreeMap<String, String> {
         &self.attributes
     }
@@ -65,16 +66,14 @@ impl ProtocolConfig {
     }
 }
 
-/// Base trait shared by the transaction builder client traits, carrying the
-/// client's error type.
+/// Base trait shared by the transaction builder client traits, carrying the client's error type.
 pub trait TransactionBuilderClientBase {
     /// The error type for this client.
     type Error: 'static + std::error::Error + Send + Sync;
 }
 
-/// Read-only access to ledger state: everything the Transaction Builder needs
-/// to resolve and build a transaction
-/// ([`finish_with_budget`](crate::TransactionBuilder::finish_with_budget)).
+/// Read-only access to ledger state: everything the Transaction Builder needs to resolve and build
+/// a transaction ([`finish_with_budget`](crate::TransactionBuilder::finish_with_budget)).
 pub trait TransactionBuilderLedgerClient: TransactionBuilderClientBase {
     /// Fetch an object
     fn object(
@@ -83,12 +82,11 @@ pub trait TransactionBuilderLedgerClient: TransactionBuilderClientBase {
         version: impl Into<Option<Version>>,
     ) -> impl std::future::Future<Output = Result<Option<Object>, Self::Error>>;
 
-    /// Fetch several objects at once, returning them in the order they were
-    /// requested with `None` in place of any object that does not exist.
+    /// Fetch several objects at once, returning them in the order they were requested with `None`
+    /// in place of any object that does not exist.
     ///
-    /// The default impl calls [`object`](Self::object) once per entry, costing
-    /// one round trip each. Clients whose transport can fetch a batch (such as
-    /// gRPC's `GetObjects`) should override it.
+    /// The default impl calls [`object`](Self::object) once per entry, costing one round trip each.
+    /// Clients whose transport can fetch a batch (such as gRPC's `GetObjects`) should override it.
     fn objects_by_id(
         &self,
         object_ids: &[(ObjectId, Option<Version>)],
@@ -102,13 +100,12 @@ pub trait TransactionBuilderLedgerClient: TransactionBuilderClientBase {
         }
     }
 
-    /// Fetch one page of objects matching the filter, returning the page
-    /// contents and a continuation cursor (when more pages exist).
+    /// Fetch one page of objects matching the filter, returning the page contents and a
+    /// continuation cursor (when more pages exist).
     ///
-    /// The cursor is opaque to callers — both GraphQL (base64-encoded
-    /// JSON/BCS) and gRPC (`prost::bytes::Bytes` page token) formats fit
-    /// into `Option<Vec<u8>>`. Pass `None` to start from the beginning;
-    /// pass the cursor returned by a previous call to advance.
+    /// The cursor is opaque to callers — both GraphQL (base64-encoded JSON/BCS) and gRPC
+    /// (`prost::bytes::Bytes` page token) formats fit into `Option<Vec<u8>>`. Pass `None` to start
+    /// from the beginning; pass the cursor returned by a previous call to advance.
     fn objects(
         &self,
         struct_tag: Option<StructTag>,
@@ -129,18 +126,33 @@ pub trait TransactionBuilderLedgerClient: TransactionBuilderClientBase {
     ) -> impl std::future::Future<Output = Result<Option<u64>, Self::Error>>;
 }
 
-/// Transaction simulation: dry runs and the gas budget estimation built on
-/// them ([`finish`](crate::TransactionBuilder::finish),
+/// Check that `object`, as answered by a [`TransactionBuilderLedgerClient`], is the object
+/// requested as `object_id`.
+pub(crate) fn check_object_identity(
+    object_id: ObjectId,
+    object: &Object,
+) -> Result<(), TransactionBuilderError> {
+    if object.id() == object_id {
+        Ok(())
+    } else {
+        Err(LookupError::ObjectIdMismatch {
+            requested: object_id,
+            returned: object.id(),
+        }
+        .into())
+    }
+}
+
+/// Transaction simulation: dry runs and the gas budget estimation built on them
+/// ([`finish`](crate::TransactionBuilder::finish),
 /// [`dry_run`](crate::TransactionBuilder::dry_run)).
 pub trait TransactionBuilderSimulationClient: TransactionBuilderClientBase {
     /// The result of a dry run.
     type DryRunResult;
 
-    /// Estimate the gas budget needed for a transaction, typically by
-    /// simulating it and reading the gas cost from the result. `Ok(None)`
-    /// means no estimate is available;
-    /// [`finish`](crate::TransactionBuilder::finish) then fails unless a
-    /// budget was set explicitly.
+    /// Estimate the gas budget needed for a transaction, typically by simulating it and reading the
+    /// gas cost from the result. `Ok(None)` means no estimate is available;
+    /// [`finish`](crate::TransactionBuilder::finish) then fails unless a budget was set explicitly.
     fn estimate_transaction_budget(
         &self,
         transaction: &Transaction,
@@ -158,6 +170,10 @@ pub trait TransactionBuilderSimulationClient: TransactionBuilderClientBase {
 /// ([`execute`](crate::TransactionBuilder::execute)).
 pub trait TransactionBuilderExecutionClient: TransactionBuilderClientBase {
     /// Execute a transaction
+    ///
+    /// If the wait fails, the error is returned although the transaction was executed, and its
+    /// effects are lost. To keep them, pass `None` and call
+    /// [`wait_for_transaction`](Self::wait_for_transaction) afterwards.
     fn execute_transaction(
         &self,
         signatures: &[UserSignature],
@@ -182,9 +198,8 @@ pub trait TransactionBuilderExecutionClient: TransactionBuilderClientBase {
 /// A full transaction builder client: ledger reads, simulation, and execution.
 ///
 /// This is a blanket alias — do not implement it directly. Implement
-/// [`TransactionBuilderLedgerClient`], [`TransactionBuilderSimulationClient`],
-/// and [`TransactionBuilderExecutionClient`] instead, and this trait is
-/// implemented automatically.
+/// [`TransactionBuilderLedgerClient`], [`TransactionBuilderSimulationClient`], and
+/// [`TransactionBuilderExecutionClient`] instead, and this trait is implemented automatically.
 pub trait TransactionBuilderClient:
     TransactionBuilderLedgerClient
     + TransactionBuilderSimulationClient
@@ -395,18 +410,20 @@ pub(crate) mod test_client {
     };
     use crate::{
         ObjectsPage,
-        builder::{BASE_TX_COST_FIXED_KEY, MAX_GAS_PAYMENT_OBJECTS_KEY},
+        builder::{
+            BASE_TX_COST_FIXED_KEY, MAX_GAS_PAYMENT_OBJECTS_KEY, MAX_GAS_PRICE_KEY, MAX_TX_GAS_KEY,
+        },
     };
 
-    /// Balance, in NANOS, of every fabricated coin. Large enough to cover any
-    /// gas budget the builder might estimate in a doc test or example.
+    /// Balance, in NANOS, of every fabricated coin. Large enough to cover any gas budget the
+    /// builder might estimate in a doc test or example.
     const FABRICATED_COIN_BALANCE: u64 = 1_000_000_000_000;
 
-    /// Build a fabricated gas coin (`0x2::coin::Coin<0x2::iota::IOTA>`) with
-    /// the given id, owner and balance.
+    /// Build a fabricated gas coin (`0x2::coin::Coin<0x2::iota::IOTA>`) with the given id, owner
+    /// and balance.
     ///
-    /// The contents are the BCS layout the coin resolution code expects: the
-    /// 32-byte object id followed by the little-endian `u64` balance.
+    /// The contents are the BCS layout the coin resolution code expects: the 32-byte object id
+    /// followed by the little-endian `u64` balance.
     fn fabricated_coin(object_id: ObjectId, owner: Owner, balance: u64) -> Object {
         let mut contents = Vec::with_capacity(ObjectId::LENGTH + std::mem::size_of::<u64>());
         contents.extend_from_slice(object_id.as_ref());
@@ -425,18 +442,17 @@ pub(crate) mod test_client {
         )
     }
 
-    /// A test client that implements the transaction builder client traits by
-    /// fabricating objects on demand.
+    /// A test client that implements the transaction builder client traits by fabricating objects
+    /// on demand.
     ///
-    /// It is useful for building transactions in tests, examples, and doc tests
-    /// where a live network connection is not available. Object lookups resolve
-    /// to a synthesized gas coin owned by an address (shared system objects
-    /// such as the system state object resolve as shared), and gas
-    /// selection always finds a single funded coin. This is enough to drive
-    /// [`finish`](crate::TransactionBuilder::finish) to completion, but the
-    /// resulting transaction references made-up objects and cannot be executed
-    /// — [`execute_transaction`](TransactionBuilderExecutionClient::execute_transaction) returns
-    /// an error.
+    /// It is useful for building transactions in tests, examples, and doc tests where a live
+    /// network connection is not available. Object lookups resolve to a synthesized gas coin owned
+    /// by an address (shared system objects such as the system state object resolve as shared), and
+    /// gas selection always finds a single funded coin. This is enough to drive
+    /// [`finish`](crate::TransactionBuilder::finish) to completion, but the resulting transaction
+    /// references made-up objects and cannot be executed —
+    /// [`execute_transaction`](TransactionBuilderExecutionClient::execute_transaction) returns an
+    /// error.
     #[derive(Clone, Copy, Debug, Default)]
     pub struct TestClient;
 
@@ -455,8 +471,8 @@ pub(crate) mod test_client {
             object_id: ObjectId,
             _version: impl Into<Option<Version>>,
         ) -> Result<Option<Object>, Self::Error> {
-            // System objects (e.g. the system state object used by staking) are
-            // shared; everything else resolves as an address-owned coin.
+            // System objects (e.g. the system state object used by staking) are shared; everything
+            // else resolves as an address-owned coin.
             let owner = if object_id == ObjectId::SYSTEM_STATE || object_id == ObjectId::CLOCK {
                 Owner::Shared(Version::from_u64(1))
             } else {
@@ -476,9 +492,9 @@ pub(crate) mod test_client {
             _cursor: Option<Vec<u8>>,
             _limit: Option<usize>,
         ) -> Result<ObjectsPage, Self::Error> {
-            // A single funded gas coin owned by the requested owner is enough for
-            // the builder's automatic gas selection. Its id is a fixed sentinel
-            // that won't collide with the object ids used in examples.
+            // A single funded gas coin owned by the requested owner is enough for the builder's
+            // automatic gas selection. Its id is a fixed sentinel that won't collide with the
+            // object ids used in examples.
             let gas_coin_id = ObjectId::from_bytes([0xee; ObjectId::LENGTH])
                 .expect("32 bytes is a valid object id");
             let owner = Owner::Address(owner);
@@ -503,6 +519,12 @@ pub(crate) mod test_client {
             config
                 .attributes
                 .insert(MAX_GAS_PAYMENT_OBJECTS_KEY.to_owned(), "256".to_owned());
+            config
+                .attributes
+                .insert(MAX_GAS_PRICE_KEY.to_owned(), "100000".to_owned());
+            config
+                .attributes
+                .insert(MAX_TX_GAS_KEY.to_owned(), "50000000000".to_owned());
             Ok(config)
         }
     }
@@ -554,8 +576,8 @@ pub(crate) mod test_client {
         }
     }
 
-    /// A [`TestClient`] that records how the builder asked for objects, and can
-    /// report chosen ids as missing.
+    /// A [`TestClient`] that records how the builder asked for objects, and can report chosen ids
+    /// as missing.
     #[derive(Clone, Default)]
     pub struct RecordingClient {
         /// The ids of each `objects_by_id` call, in call order.

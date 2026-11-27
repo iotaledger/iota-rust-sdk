@@ -1,9 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Defines the [`MoveAuthenticator`] builder that represents a call to an
-//! authenticator function in move which can authorize a transaction as part of
-//! Account Abstraction.
+//! Defines the [`MoveAuthenticator`] builder that represents a call to an authenticator function in
+//! move which can authorize a transaction as part of Account Abstraction.
 
 use iota_types::{
     Input, MoveAuthenticator, MoveAuthenticatorV1, ObjectId, ObjectReference, Owner,
@@ -11,8 +10,8 @@ use iota_types::{
 };
 
 use crate::{
-    PTBArgumentList, TransactionBuilderLedgerClient, error::TransactionBuilderError,
-    types::MoveTypes, unresolved::InputKind,
+    PTBArgumentList, TransactionBuilderLedgerClient, builder::client::check_object_identity,
+    error::TransactionBuilderError, types::MoveTypes, unresolved::InputKind,
 };
 
 /// A function call to authorize a transaction via move.
@@ -27,8 +26,8 @@ pub struct MoveAuthenticatorBuilder {
 }
 
 impl MoveAuthenticatorBuilder {
-    /// Create a new Move Authenticator builder from an account ID, which is the
-    /// sender of a transaction that this will be used to authenticate.
+    /// Create a new Move Authenticator builder from an account ID, which is the sender of a
+    /// transaction that this will be used to authenticate.
     pub fn new(account_id: ObjectId) -> Self {
         Self {
             call_args: Default::default(),
@@ -55,8 +54,8 @@ impl MoveAuthenticatorBuilder {
         self
     }
 
-    /// Resolve this move authenticator builder into a [`MoveAuthenticator`]
-    /// which can be used to execute the given transaction.
+    /// Resolve this move authenticator builder into a [`MoveAuthenticator`] which can be used to
+    /// execute the given transaction.
     pub async fn finish(
         self,
         client: impl TransactionBuilderLedgerClient,
@@ -68,6 +67,7 @@ impl MoveAuthenticatorBuilder {
             .ok_or_else(|| {
                 TransactionBuilderError::Input(format!("missing account {}", self.account_id))
             })?;
+        check_object_identity(self.account_id, &account)?;
 
         let mut call_args = Vec::new();
         for input in self.call_args {
@@ -85,6 +85,7 @@ impl MoveAuthenticatorBuilder {
                                 "missing object {object_id}"
                             ))
                         })?;
+                    check_object_identity(object_id, &obj)?;
                     if !obj.owner().is_immutable() {
                         return Err(TransactionBuilderError::InvalidMoveAuthArg(
                             "call arguments must not be owned".to_owned(),
@@ -107,6 +108,7 @@ impl MoveAuthenticatorBuilder {
                                 "missing object {object_id}"
                             ))
                         })?;
+                    check_object_identity(object_id, &obj)?;
 
                     let Owner::Shared(version) = obj.owner() else {
                         return Err(TransactionBuilderError::InvalidMoveAuthArg(format!(
@@ -125,7 +127,13 @@ impl MoveAuthenticatorBuilder {
                         "call arguments must not be receiving".to_owned(),
                     ));
                 }
-                InputKind::Input(input) => input.clone(),
+                #[cfg(feature = "unstable")]
+                InputKind::Input(Input::TransactionDependency(_)) => {
+                    return Err(TransactionBuilderError::InvalidMoveAuthArg(
+                        "call arguments must not be a transaction dependency".to_owned(),
+                    ));
+                }
+                InputKind::Input(input) => input,
             })
         }
         let Owner::Shared(version) = account.owner() else {

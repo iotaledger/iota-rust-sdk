@@ -1,2 +1,6 @@
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 getrandom = { version = "0.3", features = ["wasm_js"] }
+
+[dependencies]
+# `make wasm-bindgen-cli` installs the CLI at this version; keep the "=X.Y.Z" form.
+wasm-bindgen = "=0.2.130"

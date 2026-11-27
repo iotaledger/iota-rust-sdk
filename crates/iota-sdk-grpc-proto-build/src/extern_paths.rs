@@ -89,8 +89,7 @@ impl ExternPaths {
             return Some(rust_path.clone());
         }
 
-        // TODO(danburkert): there must be a more efficient way to do this, maybe a
-        // trie?
+        // TODO(danburkert): there must be a more efficient way to do this, maybe a trie?
         for (idx, _) in pb_ident.rmatch_indices('.') {
             if let Some(rust_path) = self.extern_paths.get(&pb_ident[..idx]) {
                 let mut segments = pb_ident[idx + 1..].split('.');

@@ -43,7 +43,7 @@ impl NameRegistration {
 
 #[derive(Debug, derive_more::Display, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Display, Eq, Hash)]
-pub struct Name(iota_sdk::types::iota_names::Name);
+pub struct Name(pub iota_sdk::types::iota_names::Name);
 
 #[uniffi::export]
 impl Name {
@@ -78,14 +78,17 @@ impl Name {
         self.0.label(index as _).cloned()
     }
 
-    /// Get all of the labels. NOTE: These are in reverse order starting with
-    /// the top-level name and proceeding to subnames.
+    /// Get all of the labels. NOTE: These are in reverse order starting with the top-level name and
+    /// proceeding to subnames.
     pub fn labels(&self) -> Vec<String> {
         self.0.labels().to_vec()
     }
 
     /// Formats a name into a string based on the available output formats.
     /// The default separator is `.`
+    ///
+    /// A name decoded from BCS is not validated. One without a second-level name or with a
+    /// top-level name other than `iota` has no AT form and is formatted in the DOT format.
     pub fn format(&self, format: NameFormat) -> String {
         self.0.format(format.into())
     }

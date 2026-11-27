@@ -4,47 +4,47 @@
 
 //! Proto build tool for generating gRPC types with field constants.
 //!
-//! Everything is written into `iota-sdk-grpc-types/src/proto/generated` and
-//! committed, so a run that changes the output fails the build. The pipeline
-//! is:
+//! Everything is written into `iota-sdk-grpc-types/src/proto/generated` and committed, so a run
+//! that changes the output fails the build. The pipeline is:
 //!
-//! 1. [`discover_proto_files`] — collect the `.proto` sources in a stable
-//!    order.
-//! 2. [`compile_proto_files`] — compile them with `protox` into a descriptor
-//!    pool (name resolution, options) and a file descriptor set.
+//! 1. [`discover_proto_files`] — collect the `.proto` sources in a stable order.
+//! 2. [`compile_proto_files`] — compile them with `protox` into a descriptor pool (name resolution,
+//!    options) and a file descriptor set.
 //! 3. [`generate_tonic`] — prost/tonic structs, clients and servers.
-//! 4. [`add_license_headers`] — license headers and `super::google` rewrites on
-//!    the files prost just wrote.
-//! 5. Accessor generation — `with_`/`set_`/getter methods driven by the
-//!    `iota.grpc.*_accessors` proto options.
-//! 6. Service method paths, then field constants and `MessageFields` impls,
-//!    which together back read masks and field path builders.
-//! 7. [`verify_generated_files_committed`] — fail if the output drifted from
-//!    what is committed.
+//! 4. [`add_license_headers`] — license headers and `super::google` rewrites on the files prost
+//!    just wrote.
+//! 5. [`remove_eq_hash_derives`] — drop prost's automatic `Eq`/`Hash` from the messages listed in
+//!    [`STRIP_EQ_HASH_MESSAGES`].
+//! 6. Accessor generation — `with_`/`set_`/getter methods driven by the `iota.grpc.*_accessors`
+//!    proto options.
+//! 7. Service method paths, then field constants and `MessageFields` impls, which together back
+//!    read masks and field path builders.
+//! 8. [`verify_generated_files_committed`] — fail if the output drifted from what is committed.
 
 mod codegen;
 mod context;
 mod extern_paths;
 mod ident;
 
-use std::path::{Path, PathBuf};
+use std::{
+    collections::{BTreeSet, HashMap},
+    path::{Path, PathBuf},
+};
 
-use prost_reflect::DescriptorPool;
+use prost_reflect::{DescriptorPool, Kind};
 
 use crate::context::Context;
 
-/// Fields that prost boxes in the generated structs, which accessor generation
-/// has to mirror in its signatures.
+/// Fields that prost boxes in the generated structs, which accessor generation has to mirror in its
+/// signatures.
 ///
-/// These are deliberately not passed to `Config::boxed`: prost boxes every
-/// non-repeated message field lying on a reference cycle by itself, before it
-/// consults its own config (`prost-build`, `Context::should_box_impl`), so
-/// configuring them changes nothing. The list exists only as input to our own
-/// accessor codegen.
+/// These are deliberately not passed to `Config::boxed`: prost boxes every non-repeated message
+/// field lying on a reference cycle by itself, before it consults its own config (`prost-build`,
+/// `Context::should_box_impl`), so configuring them changes nothing. The list exists only as input
+/// to our own accessor codegen.
 ///
-/// Known gap, deliberately left alone:
-/// `.iota.grpc.v1.types.TypeTagVector.inner_type` is boxed by prost and missing
-/// here. No accessor is generated for it, so the omission is inert — adding it
+/// Known gap, deliberately left alone: `.iota.grpc.v1.types.TypeTagVector.inner_type` is boxed by
+/// prost and missing here. No accessor is generated for it, so the omission is inert — adding it
 /// would change generated output.
 const PROST_BOXED_FIELDS: &[&str] = &[
     ".iota.grpc.v1.filter.EventFilter.negation",
@@ -54,8 +54,8 @@ const PROST_BOXED_FIELDS: &[&str] = &[
     ".iota.grpc.v1.types.TypeTag.vector_tag",
 ];
 
-/// Fields whose `MessageFields::FIELDS` must stop recursing, because the field
-/// closes a reference cycle.
+/// Fields whose `MessageFields::FIELDS` must stop recursing, because the field closes a reference
+/// cycle.
 const BOXED_TYPES_FIELD_INFO: &[&str] = &[
     ".iota.grpc.v1.filter.AllEventFilter.filters",
     ".iota.grpc.v1.filter.AnyEventFilter.filters",
@@ -66,14 +66,32 @@ const BOXED_TYPES_FIELD_INFO: &[&str] = &[
     ".iota.grpc.v1.types.TypeTagVector.inner_type",
 ];
 
-/// Fields whose accessors take and return boxed values: the ones prost boxes,
-/// plus those where a boxed signature is simply more ergonomic.
+/// Fields whose accessors take and return boxed values: the ones prost boxes, plus those where a
+/// boxed signature is simply more ergonomic.
 const BOXED_TYPES_ACCESSOR: &[&str] = &[
     ".iota.grpc.v1.filter.EventFilter.negation",
     ".iota.grpc.v1.filter.TransactionFilter.negation",
     ".iota.grpc.v1.filter.NotEventFilter.filter",
     ".iota.grpc.v1.filter.NotTransactionFilter.filter",
     ".iota.grpc.v1.types.TypeTag.vector_tag",
+];
+
+/// Messages whose automatic `Eq`/`Hash` derives are stripped after generation.
+///
+/// prost derives `Eq, Hash` for every message whose fields are all hashable. For these BCS carriers
+/// the digest is the identity, so the derives add nothing; dropping them now keeps a later decoded
+/// `json` (`google.protobuf.Value`, which holds an `f64` and is not hashable) field from silently
+/// removing the derives and breaking downstream `Eq`/`Hash` uses.
+///
+/// Only the intended roots are listed; [`eq_hash_strip_closure`] extends the set to every message
+/// that transitively contains one, since those would otherwise still derive `Eq`/`Hash` around a
+/// now-non-`Eq` field and fail to compile.
+///
+/// Entries are fully-qualified proto names so a message is addressed by its own package, never by a
+/// bare name that another package could share.
+const STRIP_EQ_HASH_MESSAGES: &[&str] = &[
+    "iota.grpc.v1.transaction.Transaction",
+    "iota.grpc.v1.transaction.TransactionEffects",
 ];
 
 fn main() {
@@ -101,6 +119,11 @@ fn main() {
 
     generate_tonic(&proto_dir, &proto_files, &out_dir);
     add_license_headers(&out_dir);
+    remove_eq_hash_derives(
+        &out_dir,
+        &descriptor_pool,
+        &eq_hash_strip_closure(&descriptor_pool, STRIP_EQ_HASH_MESSAGES),
+    );
 
     codegen::generate_service_methods::generate_service_method_paths(&descriptor_pool, &out_dir);
 
@@ -122,8 +145,7 @@ fn owned_paths(paths: &[&str]) -> Vec<String> {
     paths.iter().map(|path| (*path).to_owned()).collect()
 }
 
-/// Clears the output directory so that removed protos cannot leave stale
-/// generated files behind.
+/// Clears the output directory so that removed protos cannot leave stale generated files behind.
 fn reset_out_dir(out_dir: &Path) {
     if out_dir.exists() {
         std::fs::remove_dir_all(out_dir).unwrap();
@@ -153,10 +175,9 @@ fn discover_proto_files(proto_dir: &Path) -> Vec<PathBuf> {
         })
         .collect::<Result<Vec<_>, walkdir::Error>>()
         .unwrap();
-    // `walkdir` traversal order depends on the OS (and is non-deterministic on
-    // Linux), so sort the paths to keep `compile_protos` output stable across
-    // runs — without this, messages from different .proto files in the same
-    // package can swap positions in the generated module.
+    // `walkdir` traversal order depends on the OS (and is non-deterministic on Linux), so sort the
+    // paths to keep `compile_protos` output stable across runs — without this, messages from
+    // different .proto files in the same package can swap positions in the generated module.
     proto_files.sort();
 
     proto_files
@@ -188,9 +209,8 @@ fn generate_tonic(proto_dir: &Path, proto_files: &[PathBuf], out_dir: &Path) {
         .unwrap();
 }
 
-/// Adds IOTA license headers to the tonic-generated files and rewrites the
-/// `super::google` paths prost emits, which do not resolve from the module the
-/// generated files are included into.
+/// Adds IOTA license headers to the tonic-generated files and rewrites the `super::google` paths
+/// prost emits, which do not resolve from the module the generated files are included into.
 fn add_license_headers(out_dir: &Path) {
     let google_import_regex = regex::Regex::new(r"(?:super::)+google").unwrap();
 
@@ -220,13 +240,103 @@ fn add_license_headers(out_dir: &Path) {
                 );
             }
 
-            // Replace all occurrences of super::google with crate::google (any number of
-            // super::)
+            // Replace all occurrences of super::google with crate::google (any number of super::)
             content = google_import_regex
                 .replace_all(&content, "crate::google")
                 .to_string();
             std::fs::write(&path, content).unwrap();
         }
+    }
+}
+
+/// Expands the configured roots to every message that transitively contains one of them through a
+/// message-typed field.
+///
+/// A container that currently derives `Eq`/`Hash` must lose them too, otherwise the derive would
+/// require `Eq`/`Hash` on a field whose type no longer has them. Walking the containment graph here
+/// keeps [`STRIP_EQ_HASH_MESSAGES`] to the intended roots instead of a hand-maintained list of
+/// every container.
+fn eq_hash_strip_closure(pool: &DescriptorPool, roots: &[&str]) -> BTreeSet<String> {
+    // Reverse containment edges, keyed by fully-qualified name: message -> the messages that hold
+    // it in a field.
+    let mut containers: HashMap<String, Vec<String>> = HashMap::new();
+    for message in pool.all_messages() {
+        for field in message.fields() {
+            if let Kind::Message(field_type) = field.kind() {
+                containers
+                    .entry(field_type.full_name().to_owned())
+                    .or_default()
+                    .push(message.full_name().to_owned());
+            }
+        }
+    }
+
+    let mut closure = BTreeSet::new();
+    let mut pending: Vec<String> = roots
+        .iter()
+        .map(|root| {
+            assert!(
+                pool.get_message_by_name(root).is_some(),
+                "STRIP_EQ_HASH_MESSAGES names `{root}`, which is not a message in the proto set"
+            );
+            (*root).to_owned()
+        })
+        .collect();
+    while let Some(message) = pending.pop() {
+        if closure.insert(message.clone())
+            && let Some(parents) = containers.get(&message)
+        {
+            pending.extend(parents.iter().cloned());
+        }
+    }
+    closure
+}
+
+/// Removes `Eq` and `Hash` from the derive list of each given message.
+///
+/// See [`STRIP_EQ_HASH_MESSAGES`] for why. Each message is resolved through the descriptor pool to
+/// its own generated file (`<package>.rs`) and struct name, so a name shared by another package
+/// cannot be matched by mistake. Within that file the derive directly above the struct is
+/// rewritten: `Eq` and `Hash` are dropped and every other derive is kept, whatever the set or
+/// order. A message that no longer derives them (for example once it gains a non-hashable field) is
+/// left unchanged. The struct must appear exactly once in the file, so a nested type sharing the
+/// name fails the build rather than having the wrong struct stripped.
+fn remove_eq_hash_derives(out_dir: &Path, pool: &DescriptorPool, messages: &BTreeSet<String>) {
+    for message in messages {
+        let descriptor = pool
+            .get_message_by_name(message)
+            .expect("closure members are message names taken from the descriptor pool");
+        let struct_name = descriptor.name();
+        let path = out_dir.join(format!("{}.rs", descriptor.package_name()));
+
+        let derive = regex::Regex::new(&format!(
+            r"#\[derive\(([^)]*)\)\]\npub struct {} \{{",
+            regex::escape(struct_name)
+        ))
+        .unwrap();
+
+        let content = std::fs::read_to_string(&path)
+            .unwrap_or_else(|e| panic!("reading {} for `{message}`: {e}", path.display()));
+
+        let captures = derive.captures_iter(&content).collect::<Vec<_>>();
+        assert!(
+            captures.len() == 1,
+            "expected exactly one `pub struct {struct_name}` with a derive in {}, found {}; \
+             `{message}` needs module-aware matching",
+            path.display(),
+            captures.len()
+        );
+
+        let kept = captures[0][1]
+            .split(',')
+            .map(str::trim)
+            .filter(|derive| !matches!(*derive, "" | "Eq" | "Hash"))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let replacement = format!("#[derive({kept})]\npub struct {struct_name} {{");
+
+        let content = derive.replace(&content, regex::NoExpand(&replacement));
+        std::fs::write(&path, content.as_bytes()).unwrap();
     }
 }
 

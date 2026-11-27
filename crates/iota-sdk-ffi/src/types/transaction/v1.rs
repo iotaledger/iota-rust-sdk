@@ -76,14 +76,14 @@ impl TransactionEffectsV1 {
         self.0.transaction_digest.into()
     }
 
-    /// The updated gas object, as an index into `changed_objects`. `None` for a
-    /// system transaction, which pays no gas.
+    /// The updated gas object, as an index into `changed_objects`. `None` for a system transaction,
+    /// which pays no gas.
     pub fn gas_object_index(&self) -> Option<u32> {
         self.0.gas_object_index
     }
 
-    /// The digest of the events emitted during execution, or `None` if the
-    /// transaction emitted none.
+    /// The digest of the events emitted during execution, or `None` if the transaction emitted
+    /// none.
     pub fn events_digest(&self) -> Option<Arc<TransactionEventsDigest>> {
         self.0.events_digest.map(|digest| Arc::new(digest.into()))
     }
@@ -97,8 +97,7 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// The version this transaction assigned to every output object other than
-    /// packages.
+    /// The version this transaction assigned to every output object other than packages.
     pub fn lamport_version(&self) -> Version {
         self.0.lamport_version.into()
     }
@@ -130,8 +129,8 @@ impl TransactionEffectsV1 {
             .map(|digest| Arc::new(digest.into()))
     }
 
-    /// The id and pre-transaction version of every object that existed before
-    /// this transaction and was modified by it.
+    /// The id and pre-transaction version of every object that existed before this transaction and
+    /// was modified by it.
     pub fn modified_at_versions(&self) -> Vec<ObjectVersion> {
         self.0
             .modified_at_versions()
@@ -140,8 +139,7 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// The reference and owner, before this transaction, of every object it
-    /// modified.
+    /// The reference and owner, before this transaction, of every object it modified.
     pub fn old_object_metadata(&self) -> Vec<OwnedObjectReference> {
         self.0
             .old_object_metadata()
@@ -155,14 +153,14 @@ impl TransactionEffectsV1 {
         self.0.created().into_iter().map(Into::into).collect()
     }
 
-    /// Objects that existed before this transaction and whose contents it
-    /// updated, at their post-transaction reference and owner.
+    /// Objects that existed before this transaction and whose contents it updated, at their
+    /// post-transaction reference and owner.
     pub fn mutated(&self) -> Vec<OwnedObjectReference> {
         self.0.mutated().into_iter().map(Into::into).collect()
     }
 
-    /// Objects that were wrapped inside another object before this transaction
-    /// and that it restored to the store.
+    /// Objects that were wrapped inside another object before this transaction and that it restored
+    /// to the store.
     pub fn unwrapped(&self) -> Vec<OwnedObjectReference> {
         self.0.unwrapped().into_iter().map(Into::into).collect()
     }
@@ -186,8 +184,7 @@ impl TransactionEffectsV1 {
         self.0.wrapped().into_iter().map(Into::into).collect()
     }
 
-    /// The shared objects this transaction was sequenced against, whether or
-    /// not it changed them.
+    /// The shared objects this transaction was sequenced against, whether or not it changed them.
     pub fn input_shared_objects(&self) -> Vec<InputSharedObject> {
         self.0
             .input_shared_objects()
@@ -196,8 +193,7 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// Every object still in the store after this transaction, tagged with how
-    /// it got there.
+    /// Every object still in the store after this transaction, tagged with how it got there.
     pub fn all_changed_objects(&self) -> Vec<ChangedObjectWrite> {
         self.0
             .all_changed_objects()
@@ -209,8 +205,8 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// Every object that was in the store before this transaction and is not
-    /// after it, tagged with why.
+    /// Every object that was in the store before this transaction and is not after it, tagged with
+    /// why.
     pub fn all_removed_objects(&self) -> Vec<RemovedObject> {
         self.0
             .all_removed_objects()
@@ -222,8 +218,8 @@ impl TransactionEffectsV1 {
             .collect()
     }
 
-    /// The post-transaction reference and owner of the gas object, or `None`
-    /// for a system transaction, which pays no gas.
+    /// The post-transaction reference and owner of the gas object, or `None` for a system
+    /// transaction, which pays no gas.
     pub fn gas_object(&self) -> Option<OwnedObjectReference> {
         self.0.gas_object().map(Into::into)
     }
@@ -243,9 +239,9 @@ pub struct ChangedObject {
     pub input_state: ObjectIn,
     /// State of the object in the store after this transaction.
     pub output_state: ObjectOut,
-    /// Whether this object ID is created or deleted in this transaction.
-    /// This information isn't required by the protocol but is useful for
-    /// providing more detailed semantics on object changes.
+    /// Whether this object ID is created or deleted in this transaction. This information isn't
+    /// required by the protocol but is useful for providing more detailed semantics on object
+    /// changes.
     pub id_operation: IdOperation,
 }
 
@@ -309,9 +305,8 @@ impl From<UnchangedSharedObject> for iota_sdk::types::UnchangedSharedObject {
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 #[derive(Clone, uniffi::Enum)]
 pub enum UnchangedSharedKind {
-    /// Read-only shared objects from the input. We don't really need
-    /// ObjectDigest for protocol correctness, but it will make it easier to
-    /// verify untrusted read.
+    /// Read-only shared objects from the input. We don't really need ObjectDigest for protocol
+    /// correctness, but it will make it easier to verify untrusted read.
     ReadOnlyRoot {
         version: Arc<Version>,
         digest: Arc<ObjectDigest>,
@@ -320,11 +315,9 @@ pub enum UnchangedSharedKind {
     MutateDeleted { version: Arc<Version> },
     /// Deleted shared objects that appear as read-only in the input.
     ReadDeleted { version: Arc<Version> },
-    /// Shared objects in canceled transaction. The sequence number embed
-    /// cancellation reason.
+    /// Shared objects in canceled transaction. The sequence number embed cancellation reason.
     Canceled { version: Arc<Version> },
-    /// Read of a per-epoch config object that should remain the same during an
-    /// epoch.
+    /// Read of a per-epoch config object that should remain the same during an epoch.
     PerEpochConfig,
 }
 
@@ -377,9 +370,8 @@ impl From<UnchangedSharedKind> for iota_sdk::types::UnchangedSharedKind {
 
 /// State of an object prior to execution
 ///
-/// If an object exists (at root-level) in the store prior to this transaction,
-/// it should be Data, otherwise it's Missing, e.g. wrapped objects should be
-/// Missing.
+/// If an object exists (at root-level) in the store prior to this transaction, it should be Data,
+/// otherwise it's Missing, e.g. wrapped objects should be Missing.
 ///
 /// # BCS
 ///
@@ -446,8 +438,8 @@ pub enum ObjectOut {
         digest: Arc<ObjectDigest>,
         owner: Arc<Owner>,
     },
-    /// Packages writes need to be tracked separately with version because
-    /// we don't use lamport version for package publish and upgrades.
+    /// Packages writes need to be tracked separately with version because we don't use lamport
+    /// version for package publish and upgrades.
     PackageWrite {
         version: Arc<Version>,
         digest: Arc<ObjectDigest>,
@@ -629,8 +621,7 @@ pub enum WriteKind {
     Mutate,
     /// The transaction created the object.
     Create,
-    /// The object was wrapped inside another object, and the transaction
-    /// restored it to the store.
+    /// The object was wrapped inside another object, and the transaction restored it to the store.
     Unwrap,
 }
 

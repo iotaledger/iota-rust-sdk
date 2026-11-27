@@ -868,6 +868,12 @@ def update_root_cargo_toml(root_path: str, deps_to_add: dict, deps_to_remove: se
         workspace_deps_end = len(new_lines)
 
     if deps_to_add and workspace_deps_end > 0:
+        # Blank and comment lines right before the next header belong to that
+        # header, so insert above them.
+        while workspace_deps_end > 0 and (not new_lines[workspace_deps_end - 1].strip()
+                                          or new_lines[workspace_deps_end - 1].strip().startswith('#')):
+            workspace_deps_end -= 1
+
         insert_lines = []
         for alias, dep in sorted(deps_to_add.items()):
             if alias not in added_deps:
@@ -1766,6 +1772,7 @@ Examples:
     internal_crates_dict["iota-grpc-client"] = None
     internal_crates_dict["iota-grpc-proto-build"] = None
     internal_crates_dict["iota-grpc-types"] = None
+    internal_crates_dict["iota-ledger"] = None
     internal_crates_dict["iota-move-types"] = None
     internal_crates_dict["iota-transaction-builder"] = None
     internal_crates_dict["iota-types"] = None

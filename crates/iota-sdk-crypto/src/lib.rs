@@ -7,8 +7,8 @@
 
 use iota_types::{PersonalMessage, Transaction, UserSignature};
 
-/// Error returned when signing or verifying fails, or when a key cannot be
-/// decoded. Its `Display` output states the reason.
+/// Error returned when signing or verifying fails, or when a key cannot be decoded. Its `Display`
+/// output states the reason.
 #[derive(Debug, thiserror::Error)]
 #[error(transparent)]
 pub struct SignatureError(Box<dyn std::error::Error + Send + Sync + 'static>);
@@ -111,6 +111,9 @@ pub mod simple;
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 pub mod multisig;
 
+mod derivation_path;
+
+pub use derivation_path::{DerivationPath, DerivationPathError};
 pub use iota_types;
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1",))]
 #[doc(inline)]
@@ -124,9 +127,9 @@ pub use rand_core;
 /// # Note
 ///
 /// There is a blanket implementation of `IotaSigner` for all `T` where `T:
-/// `[`Signer`]`<`[`UserSignature`]`>` so it is generally recommended for a
-/// signer to implement `Signer<UserSignature>` and rely on the blanket
-/// implementation which handles the proper construction of the signing message.
+/// `[`Signer`]`<`[`UserSignature`]`>` so it is generally recommended for a signer to implement
+/// `Signer<UserSignature>` and rely on the blanket implementation which handles the proper
+/// construction of the signing message.
 pub trait IotaSigner {
     fn sign_transaction(&self, transaction: &Transaction) -> Result<UserSignature, SignatureError>;
     fn sign_personal_message(
@@ -154,11 +157,10 @@ impl<T: Signer<UserSignature>> IotaSigner for T {
 ///
 /// # Note
 ///
-/// This trait is implemented by the verifier and verifying key types of this
-/// crate as well as directly by the public key types of `iota-sdk-types`. The
-/// public key implementations validate the key bytes on every call, so when
-/// verifying many signatures with the same key it is cheaper to construct the
-/// corresponding verifying key once and verify with that instead.
+/// This trait is implemented by the verifier and verifying key types of this crate as well as
+/// directly by the public key types of `iota-sdk-types`. The public key implementations validate
+/// the key bytes on every call, so when verifying many signatures with the same key it is cheaper
+/// to construct the corresponding verifying key once and verify with that instead.
 pub trait IotaVerifier {
     fn verify_transaction(
         &self,
@@ -173,8 +175,8 @@ pub trait IotaVerifier {
     ) -> Result<(), SignatureError>;
 }
 
-// Implements `IotaVerifier` for types implementing `Verifier<UserSignature>`,
-// handling the proper construction of the signing message.
+// Implements `IotaVerifier` for types implementing `Verifier<UserSignature>`, handling the proper
+// construction of the signing message.
 #[cfg(any(feature = "ed25519", feature = "secp256r1", feature = "secp256k1"))]
 macro_rules! impl_iota_verifier {
     ($($type:ty),+ $(,)?) => {
@@ -240,8 +242,8 @@ pub trait ToFromBytes {
         Self: Sized;
 }
 
-/// Defines a type that can be converted to and from flagged bytes, i.e. bytes
-/// prepended by some variant indicator flag
+/// Defines a type that can be converted to and from flagged bytes, i.e. bytes prepended by some
+/// variant indicator flag
 pub trait ToFromFlaggedBytes {
     type Error;
 
@@ -291,8 +293,7 @@ where
     }
 }
 
-/// Defines a type which can be converted to and from a base64 string of its
-/// raw bytes
+/// Defines a type which can be converted to and from a base64 string of its raw bytes
 #[cfg(any(
     feature = "bls12381",
     feature = "ed25519",
@@ -302,12 +303,10 @@ where
 pub trait ToFromBase64 {
     type Error;
 
-    /// Encode this private key as a base64 string of its raw bytes, without a
-    /// signature scheme flag
+    /// Encode this private key as a base64 string of its raw bytes, without a signature scheme flag
     fn to_base64(&self) -> String;
 
-    /// Decode a private key from a base64 string of its raw bytes, without a
-    /// signature scheme flag
+    /// Decode a private key from a base64 string of its raw bytes, without a signature scheme flag
     fn from_base64(value: &str) -> Result<Self, Self::Error>
     where
         Self: Sized;
@@ -379,8 +378,8 @@ impl<T: ToFromFlaggedBytes<Error = PrivateKeyError>> ToFromBech32 for T {
         let expected_hrp = Hrp::parse(IOTA_PRIV_KEY_PREFIX)
             .map_err(|e| PrivateKeyError::Bech32Hrp(format!("{e}")))?;
 
-        // Only the Bech32 checksum is valid for this encoding; `bech32::decode`
-        // would also accept a Bech32m checksum.
+        // Only the Bech32 checksum is valid for this encoding; `bech32::decode` would also accept a
+        // Bech32m checksum.
         let parsed = CheckedHrpstring::new::<bech32::Bech32>(value)
             .map_err(|e| PrivateKeyError::Bech32(format!("decoding failed: {e}")))?;
 
@@ -419,6 +418,9 @@ pub trait FromMnemonic {
     /// - Ed25519: `"m/44'/4218'/0'/0'/0'"`
     /// - Secp256k1: `"m/54'/4218'/0'/0/0"`
     /// - Secp256r1: `"m/74'/4218'/0'/0/0"`
+    ///
+    /// Ed25519 keys can only be derived along hardened indices, so an Ed25519 path with an
+    /// unhardened index is an error.
     fn from_mnemonic_with_path(
         phrase: &str,
         path: String,
@@ -426,6 +428,18 @@ pub trait FromMnemonic {
     ) -> Result<Self, Self::Error>
     where
         Self: Sized;
+
+    /// Create an instance from a mnemonic phrase and a parsed derivation path.
+    fn from_mnemonic_with_derivation_path(
+        phrase: &str,
+        path: &DerivationPath,
+        password: impl Into<Option<String>>,
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized,
+    {
+        Self::from_mnemonic_with_path(phrase, path.to_string(), password)
+    }
 }
 
 #[cfg(test)]
@@ -459,6 +473,36 @@ mod tests {
             assert_eq!(key.to_bech32().unwrap(), bech32);
             assert_eq!(key.public_key().derive_address().to_string(), address);
         }
+    }
+
+    #[cfg(all(feature = "mnemonic", feature = "ed25519"))]
+    #[test]
+    fn ed25519_mnemonic_path_with_an_unhardened_index_is_rejected() {
+        use super::*;
+        use crate::ed25519::Ed25519PrivateKey;
+
+        const MNEMONIC: &str = "film crazy soon outside stand loop subway crumble thrive popular green nuclear struggle pistol arm wife phrase warfare march wheat nephew ask sunny firm";
+
+        for path in [
+            "m/44'/4218'/0'/0/0",
+            "m/44'/4218'/0'/0'/0",
+            "m/44/4218'/0'/0'/0'",
+        ] {
+            let result =
+                Ed25519PrivateKey::from_mnemonic_with_path(MNEMONIC, path.to_owned(), None);
+            assert!(
+                matches!(result, Err(PrivateKeyError::Bip32(_))),
+                "path {path}"
+            );
+        }
+        assert!(
+            Ed25519PrivateKey::from_mnemonic_with_path(
+                MNEMONIC,
+                "m/44'/4218'/0'/0'/0'".to_owned(),
+                None
+            )
+            .is_ok()
+        );
     }
 
     #[cfg(all(feature = "mnemonic", feature = "secp256k1", feature = "bech32"))]
@@ -521,5 +565,47 @@ mod tests {
             assert_eq!(key.to_bech32().unwrap(), bech32);
             assert_eq!(key.public_key().derive_address().to_string(), address);
         }
+    }
+
+    #[cfg(all(
+        feature = "mnemonic",
+        feature = "ed25519",
+        feature = "secp256k1",
+        feature = "secp256r1",
+        feature = "bech32"
+    ))]
+    #[test]
+    fn test_mnemonics_with_derivation_path() {
+        use super::*;
+        use crate::{
+            ed25519::Ed25519PrivateKey, secp256k1::Secp256k1PrivateKey,
+            secp256r1::Secp256r1PrivateKey,
+        };
+
+        const MNEMONIC: &str = "film crazy soon outside stand loop subway crumble thrive popular green nuclear struggle pistol arm wife phrase warfare march wheat nephew ask sunny firm";
+
+        let path = "m/44'/4218'/1'/0'/2'".parse().unwrap();
+        let key =
+            Ed25519PrivateKey::from_mnemonic_with_derivation_path(MNEMONIC, &path, None).unwrap();
+        assert_eq!(
+            key.to_bech32().unwrap(),
+            "iotaprivkey1qzjy8v3qng6axv7hz8px5ck8u63e6ws4a727h096la7nemtjysy2yrjptnc"
+        );
+
+        let path = "m/54'/4218'/1'/0/2".parse().unwrap();
+        let key =
+            Secp256k1PrivateKey::from_mnemonic_with_derivation_path(MNEMONIC, &path, None).unwrap();
+        assert_eq!(
+            key.to_bech32().unwrap(),
+            "iotaprivkey1q8rygpxx4jh4dj9qfjtk33zrkxx30yn2kfun739de4sg42vgtftxzyprlu8"
+        );
+
+        let path = "m/74'/4218'/1'/0/2".parse().unwrap();
+        let key =
+            Secp256r1PrivateKey::from_mnemonic_with_derivation_path(MNEMONIC, &path, None).unwrap();
+        assert_eq!(
+            key.to_bech32().unwrap(),
+            "iotaprivkey1qgeth8hmds9p0up5lnpvr5m0pxamaynu2ha35vljee36t4ya3gc8wzd9rmk"
+        );
     }
 }

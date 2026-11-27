@@ -4,7 +4,7 @@
 //! High-level API for transaction simulation.
 
 use iota_grpc_types::{
-    read_mask_fields::{IntoReadMask, SimulateReadMask},
+    read_mask_fields::SimulateReadMask,
     v1::transaction_execution_service::{
         SimulateTransactionItem, SimulateTransactionsRequest, SimulatedTransaction,
         simulate_transaction_item::TransactionCheckModes,
@@ -36,8 +36,7 @@ impl SimulateTransactionInput {
         }
     }
 
-    /// Ask for relaxed Move VM checks, which is useful for debugging and
-    /// development.
+    /// Ask for relaxed Move VM checks, which is useful for debugging and development.
     pub fn skip_checks(mut self, skip_checks: bool) -> Self {
         self.skip_checks = skip_checks;
         self
@@ -55,27 +54,19 @@ impl SimulateTransactionInput {
 }
 
 define_query! {
-    /// Query for [`GrpcClient::simulate_transaction`]. Await it to send the
-    /// request.
+    /// Query for [`GrpcClient::simulate_transaction`]. Await it to send the request.
     pub struct SimulateTransactionQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,
         input: SimulateTransactionInput,
-        read_mask: SimulateReadMask,
     }
     output: GrpcResult<MetadataEnvelope<SimulatedTransaction>>;
+    read_mask: SimulateReadMask;
 }
 
 impl SimulateTransactionQuery {
-    /// Ask for relaxed Move VM checks, which is useful for debugging and
-    /// development.
+    /// Ask for relaxed Move VM checks, which is useful for debugging and development.
     pub fn skip_checks(mut self, skip_checks: bool) -> Self {
         self.input = self.input.skip_checks(skip_checks);
-        self
-    }
-
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<SimulateReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
         self
     }
 
@@ -96,23 +87,16 @@ impl SimulateTransactionQuery {
 }
 
 define_query! {
-    /// Query for [`GrpcClient::simulate_transactions`]. Await it to send the
-    /// request.
+    /// Query for [`GrpcClient::simulate_transactions`]. Await it to send the request.
     pub struct SimulateTransactionsQuery {
         service_client: TransactionExecutionServiceClient<InterceptedChannel>,
         transactions: Vec<SimulateTransactionInput>,
-        read_mask: SimulateReadMask,
     }
     output: GrpcResult<MetadataEnvelope<Vec<GrpcResult<SimulatedTransaction>>>>;
+    read_mask: SimulateReadMask;
 }
 
 impl SimulateTransactionsQuery {
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<SimulateReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
-        self
-    }
-
     fn into_request(
         self,
     ) -> GrpcResult<(
@@ -152,15 +136,14 @@ impl SimulateTransactionsQuery {
 impl GrpcClient {
     /// Simulate a transaction without executing it.
     ///
-    /// This allows you to preview the effects of a transaction before
-    /// actually submitting it to the network.
+    /// This allows you to preview the effects of a transaction before actually submitting it to the
+    /// network.
     ///
     /// # Parameters
     ///
     /// - `transaction`: The transaction to simulate
     ///
-    /// Set [`skip_checks`](SimulateTransactionQuery::skip_checks) for relaxed
-    /// Move VM checks.
+    /// Set [`skip_checks`](SimulateTransactionQuery::skip_checks) for relaxed Move VM checks.
     ///
     /// Returns [`SimulatedTransaction`] which contains:
     /// - `executed_transaction()` - Access to the simulated ExecutedTransaction
@@ -168,16 +151,11 @@ impl GrpcClient {
     ///
     /// Use lazy conversion methods on the executed transaction to extract data:
     /// - `result.executed_transaction()?.effects()` - Get simulated effects
-    /// - `result.executed_transaction()?.events()` - Get simulated events (if
-    ///   available)
-    /// - `result.executed_transaction()?.input_objects()` - Get input objects
-    ///   (if requested)
-    /// - `result.executed_transaction()?.output_objects()` - Get output objects
-    ///   (if requested)
-    /// - `result.executed_transaction()?.balance_changes()` - Get balance
-    ///   changes (if requested)
-    /// - `result.executed_transaction()?.object_changes()` - Get object changes
-    ///   (if requested)
+    /// - `result.executed_transaction()?.events()` - Get simulated events (if available)
+    /// - `result.executed_transaction()?.input_objects()` - Get input objects (if requested)
+    /// - `result.executed_transaction()?.output_objects()` - Get output objects (if requested)
+    /// - `result.executed_transaction()?.balance_changes()` - Get balance changes (if requested)
+    /// - `result.executed_transaction()?.object_changes()` - Get object changes (if requested)
     ///
     /// # Example
     ///
@@ -200,10 +178,9 @@ impl GrpcClient {
     /// # }
     /// ```
     ///
-    /// Without [`read_mask`](SimulateTransactionQuery::read_mask), the default
-    /// mask is used. Pass a
-    /// [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField) or
-    /// any slice/array/vec of fields to choose the returned fields.
+    /// Without [`read_mask`](SimulateTransactionQuery::read_mask), the default mask is used. Pass a
+    /// [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField) or any slice/array/vec
+    /// of fields to choose the returned fields.
     pub fn simulate_transaction(&self, transaction: Transaction) -> SimulateTransactionQuery {
         SimulateTransactionQuery {
             service_client: self.execution_service_client(),
@@ -214,24 +191,23 @@ impl GrpcClient {
 
     /// Simulate a batch of transactions without executing them.
     ///
-    /// Each transaction is simulated independently against the current state,
-    /// so it does not see the effects of other transactions in the batch.
-    /// Failure of one transaction does not abort the rest.
+    /// Each transaction is simulated independently against the current state, so it does not see
+    /// the effects of other transactions in the batch. Failure of one transaction does not abort
+    /// the rest.
     ///
-    /// Returns a `Vec<GrpcResult<SimulatedTransaction>>` in the same order as
-    /// the input. Each element is either the successfully simulated
-    /// transaction or the per-item error returned by the server.
+    /// Returns a `Vec<GrpcResult<SimulatedTransaction>>` in the same order as the input. Each
+    /// element is either the successfully simulated transaction or the per-item error returned by
+    /// the server.
     ///
-    /// Without [`read_mask`](SimulateTransactionsQuery::read_mask), the
-    /// default mask is used for each `SimulatedTransaction`. Pass a
-    /// [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField) or
-    /// any slice/array/vec of fields to choose the returned fields.
+    /// Without [`read_mask`](SimulateTransactionsQuery::read_mask), the default mask is used for
+    /// each `SimulatedTransaction`. Pass a
+    /// [`SimulateField`](iota_grpc_types::read_mask_fields::SimulateField) or any slice/array/vec
+    /// of fields to choose the returned fields.
     ///
     /// # Errors
     ///
-    /// Returns [`GrpcError::EmptyRequest`] if `transactions` is empty.
-    /// Returns a transport-level [`GrpcError::Grpc`] if the entire RPC fails
-    /// (e.g. batch size exceeded).
+    /// Returns [`GrpcError::EmptyRequest`] if `transactions` is empty. Returns a transport-level
+    /// [`GrpcError::Grpc`] if the entire RPC fails (e.g. batch size exceeded).
     pub fn simulate_transactions(
         &self,
         transactions: Vec<SimulateTransactionInput>,

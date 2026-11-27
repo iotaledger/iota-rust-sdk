@@ -20,6 +20,19 @@ The Move sources these mirror live in the [iota monorepo] under
 
 [iota monorepo]: https://github.com/iotaledger/iota/tree/develop/crates/iota-framework
 
+## Features
+
+| Feature      | Enables                                                                                 |
+| ------------ | --------------------------------------------------------------------------------------- |
+| `serde`      | BCS and JSON (de)serialization of the mirrors and their `TryFrom<&Object>` constructors |
+| `bcs-schema` | `BcsSchema` derives on the mirrors (implies `serde`)                                    |
+| `unstable`   | unstable APIs that may change or be removed in any release                              |
+
+None are enabled by default. `MoveType` itself and its impls for the Move
+primitives, `String` and `Vec<T>` need no features. Mirrors of Move objects
+that implement it do so through `MoveObject`, which needs `serde`; the other mirrors
+that implement it need no features.
+
 ## Compiled Move packages (`src/packages_compiled/`, not committed)
 
 The `move_shape_compare` test reads the compiled bytecode blobs of the

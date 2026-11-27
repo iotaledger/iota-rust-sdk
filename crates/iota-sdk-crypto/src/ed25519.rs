@@ -76,15 +76,13 @@ impl Ed25519PrivateKey {
         Self::new(buf)
     }
 
-    /// Generate a new private key using the operating system's random number
-    /// generator.
+    /// Generate a new private key using the operating system's random number generator.
     #[cfg(feature = "rand")]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
-    /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
-    /// format).
+    /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary format).
     #[cfg(feature = "pem")]
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
         pkcs8::DecodePrivateKey::from_pkcs8_der(bytes)
@@ -122,8 +120,7 @@ impl Ed25519PrivateKey {
             .map(|pem| (*pem).to_owned())
     }
 
-    /// Rejects PKCS#8 v2 documents whose embedded public key does not match
-    /// the private key.
+    /// Rejects PKCS#8 v2 documents whose embedded public key does not match the private key.
     #[cfg(feature = "pem")]
     pub(crate) fn from_pkcs8(
         keypair_bytes: ed25519::pkcs8::KeypairBytes,
@@ -139,8 +136,8 @@ impl Ed25519PrivateKey {
         Ok(private_key)
     }
 
-    /// Re-expose the raw private key as PKCS#8 v2 key material (with the
-    /// public key embedded), used only as a PEM/DER codec.
+    /// Re-expose the raw private key as PKCS#8 v2 key material (with the public key embedded), used
+    /// only as a PEM/DER codec.
     #[cfg(feature = "pem")]
     fn to_pkcs8(&self) -> ed25519::pkcs8::KeypairBytes {
         ed25519::pkcs8::KeypairBytes {
@@ -204,18 +201,36 @@ impl crate::FromMnemonic for Ed25519PrivateKey {
     where
         Self: Sized,
     {
-        use std::str::FromStr;
+        let path = path
+            .parse::<crate::DerivationPath>()
+            .map_err(|e| crate::PrivateKeyError::Bip32(e.to_string()))?;
+        Self::from_mnemonic_with_derivation_path(phrase, &path, password)
+    }
 
+    fn from_mnemonic_with_derivation_path(
+        phrase: &str,
+        path: &crate::DerivationPath,
+        password: impl Into<Option<String>>,
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized,
+    {
         let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)
             .map_err(|e| crate::PrivateKeyError::Bip39(e.to_string()))?;
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
-        let path = bip32::DerivationPath::from_str(&path)
-            .map_err(|e| crate::PrivateKeyError::Bip32(e.to_string()))?
-            .into_iter()
-            .map(|c| c.0)
-            .collect::<Vec<_>>();
+        if let Some(index) = path
+            .indices()
+            .iter()
+            .map(|index| bip32::ChildNumber(*index))
+            .find(|index| !index.is_hardened())
+        {
+            return Err(crate::PrivateKeyError::Bip32(format!(
+                "ed25519 derivation requires hardened path indices, got {index}"
+            )));
+        }
         Ok(Self::new(slip10_ed25519::derive_ed25519_private_key(
-            &seed, &path,
+            &seed,
+            path.indices(),
         )))
     }
 }
@@ -323,8 +338,7 @@ impl Ed25519VerifyingKey {
             .map_err(SignatureError::from_source)
     }
 
-    /// Re-expose the public key as PKCS#8 key material, used only as a PEM/DER
-    /// codec.
+    /// Re-expose the public key as PKCS#8 key material, used only as a PEM/DER codec.
     #[cfg(feature = "pem")]
     fn to_pkcs8(&self) -> ed25519::pkcs8::PublicKeyBytes {
         ed25519::pkcs8::PublicKeyBytes(

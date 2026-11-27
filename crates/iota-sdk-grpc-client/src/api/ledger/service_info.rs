@@ -4,7 +4,7 @@
 //! High-level API for service info queries.
 
 use iota_grpc_types::{
-    read_mask_fields::{IntoReadMask, ServiceInfoReadMask},
+    read_mask_fields::ServiceInfoReadMask,
     v1::ledger_service::{
         GetServiceInfoRequest, GetServiceInfoResponse, ledger_service_client::LedgerServiceClient,
     },
@@ -19,18 +19,12 @@ define_query! {
     /// Query for [`GrpcClient::service_info`]. Await it to send the request.
     pub struct GetServiceInfoQuery {
         service_client: LedgerServiceClient<InterceptedChannel>,
-        read_mask: ServiceInfoReadMask,
     }
     output: GrpcResult<MetadataEnvelope<GetServiceInfoResponse>>;
+    read_mask: ServiceInfoReadMask;
 }
 
 impl GetServiceInfoQuery {
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<ServiceInfoReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
-        self
-    }
-
     fn into_request(
         self,
     ) -> (
@@ -52,14 +46,11 @@ impl GetServiceInfoQuery {
 impl GrpcClient {
     /// Get service info from the node.
     ///
-    /// Returns the [`GetServiceInfoResponse`] proto type with fields populated
-    /// according to the read mask. Without
-    /// [`read_mask`](GetServiceInfoQuery::read_mask), the default mask is
-    /// used. Pass a
-    /// [`ServiceInfoReadMask`](iota_grpc_types::read_mask_fields::ServiceInfoReadMask)
-    /// built from a
-    /// [`ServiceInfoField`](iota_grpc_types::read_mask_fields::ServiceInfoField)
-    /// or any slice/array/vec of fields to choose the returned fields.
+    /// Returns the [`GetServiceInfoResponse`] proto type with fields populated according to the
+    /// read mask. Without [`read_mask`](GetServiceInfoQuery::read_mask), the default mask is used.
+    /// Pass a [`ServiceInfoReadMask`](iota_grpc_types::read_mask_fields::ServiceInfoReadMask) built
+    /// from a [`ServiceInfoField`](iota_grpc_types::read_mask_fields::ServiceInfoField) or any
+    /// slice/array/vec of fields to choose the returned fields.
     ///
     /// # Example
     ///

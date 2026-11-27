@@ -34,8 +34,7 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GraphQLClient::transactions`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::transactions`]. Await it to send the request.
     #[derive(Clone)]
     pub struct ListTransactionsQuery {
         client: GraphQLClient,
@@ -58,8 +57,8 @@ impl ListTransactionsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -102,8 +101,7 @@ impl ListTransactionsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::address_transactions`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::address_transactions`]. Await it to send the request.
     #[derive(Clone)]
     pub struct ListAddressTransactionsQuery {
         client: GraphQLClient,
@@ -116,8 +114,7 @@ define_query! {
 }
 
 impl ListAddressTransactionsQuery {
-    /// Set how the address relates to the transactions. Defaults to the
-    /// transactions it sent.
+    /// Set how the address relates to the transactions. Defaults to the transactions it sent.
     pub fn relation(mut self, relation: AddressTransactionRelationship) -> Self {
         self.relation = Some(relation);
         self
@@ -135,8 +132,8 @@ impl ListAddressTransactionsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<SignedTransaction>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -188,8 +185,7 @@ impl ListAddressTransactionsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::transactions_effects`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::transactions_effects`]. Await it to send the request.
     #[derive(Clone)]
     pub struct ListTransactionsEffectsQuery {
         client: GraphQLClient,
@@ -212,8 +208,8 @@ impl ListTransactionsEffectsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<TransactionEffects>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -256,8 +252,7 @@ impl ListTransactionsEffectsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::transactions_data_effects`]. Await it to
-    /// send the request.
+    /// Query for [`GraphQLClient::transactions_data_effects`]. Await it to send the request.
     #[derive(Clone)]
     pub struct ListTransactionsDataEffectsQuery {
         client: GraphQLClient,
@@ -280,8 +275,8 @@ impl ListTransactionsDataEffectsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<TransactionDataEffects>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -346,8 +341,7 @@ impl ListTransactionsDataEffectsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::execute_transaction`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::execute_transaction`]. Await it to send the request.
     pub struct ExecuteTransactionQuery {
         client: GraphQLClient,
         signatures: Vec<String>,
@@ -358,8 +352,7 @@ define_query! {
 }
 
 impl ExecuteTransactionQuery {
-    /// Wait for the executed transaction to be indexed or finalized before
-    /// resolving.
+    /// Wait for the executed transaction to be indexed or finalized before resolving.
     pub fn wait_for(mut self, wait_for: WaitForTransaction) -> Self {
         self.wait_for = Some(wait_for);
         self
@@ -391,8 +384,7 @@ impl ExecuteTransactionQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::wait_for_transaction`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::wait_for_transaction`]. Await it to send the request.
     pub struct WaitForTransactionQuery {
         client: GraphQLClient,
         digest: TransactionDigest,
@@ -458,8 +450,7 @@ impl GetTransactionQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::transaction_effects`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::transaction_effects`]. Await it to send the request.
     pub struct GetTransactionEffectsQuery {
         client: GraphQLClient,
         digest: TransactionDigest,
@@ -482,8 +473,7 @@ impl GetTransactionEffectsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::transaction_data_effects`]. Await it to send
-    /// the request.
+    /// Query for [`GraphQLClient::transaction_data_effects`]. Await it to send the request.
     pub struct GetTransactionDataEffectsQuery {
         client: GraphQLClient,
         digest: TransactionDigest,
@@ -524,8 +514,7 @@ impl GetTransactionDataEffectsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::is_transaction_indexed_on_node`]. Await it to
-    /// send the request.
+    /// Query for [`GraphQLClient::is_transaction_indexed_on_node`]. Await it to send the request.
     pub struct IsTransactionIndexedOnNodeQuery {
         client: GraphQLClient,
         digest: TransactionDigest,
@@ -547,8 +536,7 @@ impl IsTransactionIndexedOnNodeQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::is_transaction_finalized`]. Await it to send
-    /// the request.
+    /// Query for [`GraphQLClient::is_transaction_finalized`]. Await it to send the request.
     pub struct IsTransactionFinalizedQuery {
         client: GraphQLClient,
         digest: TransactionDigest,
@@ -655,10 +643,9 @@ impl GraphQLClient {
         }
     }
 
-    /// Returns whether the transaction for the given digest has been indexed
-    /// on the node. This means that it can be queried by its digest and its
-    /// effects will be usable for subsequent transactions. To check for
-    /// full finalization, use [`Self::is_transaction_finalized`].
+    /// Returns whether the transaction for the given digest has been indexed on the node. This
+    /// means that it can be queried by its digest and its effects will be usable for subsequent
+    /// transactions. To check for full finalization, use [`Self::is_transaction_finalized`].
     pub fn is_transaction_indexed_on_node(
         &self,
         digest: TransactionDigest,
@@ -669,8 +656,8 @@ impl GraphQLClient {
         }
     }
 
-    /// Returns whether the transaction for the given digest has been included
-    /// in a checkpoint (finalized).
+    /// Returns whether the transaction for the given digest has been included in a checkpoint
+    /// (finalized).
     pub fn is_transaction_finalized(
         &self,
         digest: TransactionDigest,
@@ -681,9 +668,9 @@ impl GraphQLClient {
         }
     }
 
-    /// Wait for the indexing or finalization of a transaction by its digest.
-    /// Resolves to an error if it takes longer than the timeout, 60s unless
-    /// set with [`timeout`](WaitForTransactionQuery::timeout).
+    /// Wait for the indexing or finalization of a transaction by its digest. Resolves to an error
+    /// if it takes longer than the timeout, 60s unless set with
+    /// [`timeout`](WaitForTransactionQuery::timeout).
     pub fn wait_for_transaction(
         &self,
         digest: TransactionDigest,

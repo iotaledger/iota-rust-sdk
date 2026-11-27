@@ -81,9 +81,9 @@ impl Secp256r1PrivateKey {
     where
         R: rand_core::CryptoRng,
     {
-        // Almost every 32-byte value is a valid secp256r1 private key, but a
-        // few (zero, or values at/above the curve order) are not. Draw fresh
-        // bytes until we get a valid key; in practice this never repeats.
+        // Almost every 32-byte value is a valid secp256r1 private key, but a few (zero, or values
+        // at/above the curve order) are not. Draw fresh bytes until we get a valid key; in practice
+        // this never repeats.
         loop {
             let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
             rng.fill_bytes(&mut buf);
@@ -93,15 +93,13 @@ impl Secp256r1PrivateKey {
         }
     }
 
-    /// Generate a new private key using the operating system's random number
-    /// generator.
+    /// Generate a new private key using the operating system's random number generator.
     #[cfg(feature = "rand")]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
-    /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
-    /// format).
+    /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary format).
     #[cfg(feature = "pem")]
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
         p256::pkcs8::DecodePrivateKey::from_pkcs8_der(bytes)
@@ -145,9 +143,9 @@ impl Secp256r1PrivateKey {
         Self(private_key.to_bytes().into())
     }
 
-    /// Re-expose the raw private key through p256, used only as a PKCS#8/PEM
-    /// codec. Don't sign with the returned key — use this type's `Signer` impl
-    /// (`try_sign`) instead, so signing goes through fastcrypto.
+    /// Re-expose the raw private key through p256, used only as a PKCS#8/PEM codec. Don't sign with
+    /// the returned key — use this type's `Signer` impl (`try_sign`) instead, so signing goes
+    /// through fastcrypto.
     #[cfg(feature = "pem")]
     fn to_p256(&self) -> p256::ecdsa::SigningKey {
         p256::ecdsa::SigningKey::from_slice(&self.0).expect("validated on construction")
@@ -208,15 +206,28 @@ impl crate::FromMnemonic for Secp256r1PrivateKey {
     where
         Self: Sized,
     {
-        use std::str::FromStr;
+        let path = path
+            .parse::<crate::DerivationPath>()
+            .map_err(|e| crate::PrivateKeyError::Bip32(e.to_string()))?;
+        Self::from_mnemonic_with_derivation_path(phrase, &path, password)
+    }
 
+    fn from_mnemonic_with_derivation_path(
+        phrase: &str,
+        path: &crate::DerivationPath,
+        password: impl Into<Option<String>>,
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized,
+    {
         use crate::ToFromBytes;
 
         let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)
             .map_err(|e| crate::PrivateKeyError::Bip39(e.to_string()))?;
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
-        let child_xprv = bip32::DerivationPath::from_str(&path)
-            .and_then(|path| bip32::XPrv::derive_from_path(seed, &path))
+        let mut bip32_path = bip32::DerivationPath::default();
+        bip32_path.extend(path.indices().iter().copied().map(bip32::ChildNumber));
+        let child_xprv = bip32::XPrv::derive_from_path(seed, &bip32_path)
             .map_err(|e| crate::PrivateKeyError::Bip32(e.to_string()))?;
         Self::from_bytes(child_xprv.private_key().to_bytes())
     }
@@ -316,9 +327,9 @@ impl Secp256r1VerifyingKey {
         )
     }
 
-    /// Re-expose the public key through p256, used only as a PKCS#8/PEM codec.
-    /// Don't verify with the returned key — use this type's `Verifier` impl
-    /// instead, so verification goes through fastcrypto.
+    /// Re-expose the public key through p256, used only as a PKCS#8/PEM codec. Don't verify with
+    /// the returned key — use this type's `Verifier` impl instead, so verification goes through
+    /// fastcrypto.
     #[cfg(feature = "pem")]
     fn to_p256(&self) -> p256::ecdsa::VerifyingKey {
         p256::ecdsa::VerifyingKey::from_sec1_bytes(self.0.as_ref())
@@ -506,8 +517,8 @@ mod tests {
     fn from_bytes_rejects_invalid_scalar() {
         use crate::ToFromBytes;
 
-        // The all-zeros scalar is not a valid secp256r1 private key; `from_bytes`
-        // must surface this as an error rather than panicking.
+        // The all-zeros scalar is not a valid secp256r1 private key; `from_bytes` must surface this
+        // as an error rather than panicking.
         let err = Secp256r1PrivateKey::from_bytes([0u8; Secp256r1PrivateKey::LENGTH]);
         assert!(err.is_err());
     }

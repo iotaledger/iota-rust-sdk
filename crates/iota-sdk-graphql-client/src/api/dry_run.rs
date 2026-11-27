@@ -16,8 +16,7 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GraphQLClient::dry_run_transaction`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::dry_run_transaction`]. Await it to send the request.
     pub struct DryRunTransactionQuery {
         client: GraphQLClient,
         transaction: Transaction,
@@ -27,10 +26,9 @@ define_query! {
 }
 
 impl DryRunTransactionQuery {
-    /// Disable the usual verification checks that prevent access to objects
-    /// that are owned by addresses other than the sender, and calling
-    /// non-public, non-entry functions, and some other checks. Defaults to
-    /// `false`.
+    /// Disable the usual verification checks that prevent access to objects that are owned by
+    /// addresses other than the sender, and calling non-public, non-entry functions, and some other
+    /// checks. Defaults to `false`.
     pub fn skip_checks(mut self, skip_checks: bool) -> Self {
         self.skip_checks = skip_checks;
         self
@@ -56,8 +54,7 @@ impl DryRunTransactionQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::dry_run_transaction_kind`]. Await it to send
-    /// the request.
+    /// Query for [`GraphQLClient::dry_run_transaction_kind`]. Await it to send the request.
     pub struct DryRunTransactionKindQuery {
         client: GraphQLClient,
         transaction_kind: TransactionKind,
@@ -99,10 +96,9 @@ impl DryRunTransactionKindQuery {
         self
     }
 
-    /// Disable the usual verification checks that prevent access to objects
-    /// that are owned by addresses other than the sender, and calling
-    /// non-public, non-entry functions, and some other checks. Defaults to
-    /// `false`.
+    /// Disable the usual verification checks that prevent access to objects that are owned by
+    /// addresses other than the sender, and calling non-public, non-entry functions, and some other
+    /// checks. Defaults to `false`.
     pub fn skip_checks(mut self, skip_checks: bool) -> Self {
         self.skip_checks = skip_checks;
         self
@@ -119,8 +115,7 @@ impl DryRunTransactionKindQuery {
 }
 
 impl GraphQLClient {
-    /// Dry run a [`Transaction`] and return the transaction effects and dry
-    /// run error (if any).
+    /// Dry run a [`Transaction`] and return the transaction effects and dry run error (if any).
     pub fn dry_run_transaction(&self, transaction: &Transaction) -> DryRunTransactionQuery {
         DryRunTransactionQuery {
             client: self.clone(),
@@ -129,8 +124,7 @@ impl GraphQLClient {
         }
     }
 
-    /// Dry run a [`TransactionKind`] and return the transaction effects and
-    /// dry run error (if any).
+    /// Dry run a [`TransactionKind`] and return the transaction effects and dry run error (if any).
     pub fn dry_run_transaction_kind(
         &self,
         transaction_kind: &TransactionKind,
@@ -209,10 +203,7 @@ mod tests {
     use base64ct::Encoding;
     use iota_types::{Address, ObjectDigest, ObjectId, ObjectReference, Transaction, Version};
 
-    use crate::{
-        GraphQLClient,
-        test_utils::{sent_variables, test_transaction},
-    };
+    use crate::test_utils::{sent_variables, test_transaction};
 
     #[tokio::test]
     async fn dry_run_transaction_sends_the_kind_metadata_and_skip_checks() {
@@ -299,9 +290,10 @@ mod tests {
     }
 
     // This needs the transaction builder to be able to be tested properly
+    #[cfg(any(feature = "tls-ring", feature = "tls-aws-lc"))]
     #[tokio::test]
     async fn test_dry_run() {
-        let client = GraphQLClient::new_testnet().unwrap();
+        let client = crate::GraphQLClient::new_testnet().unwrap();
         let tx_bytes = "AAACAAgAypo7AAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgABAQAAAQEDAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACg9WqbvnpQmublI1+/dnonzEvhVPHnGEX++ianEHLIZmoiqRAAAAAAAgmrviNLnSJMjhRUZ8il2SFFjZ60cdJWv9v3M7pTsTQaA0FjZwX1JlYTftfc/+nF7J1QTfVacG+5wc2teKJoJHBDf/BgAAAAAAIOFdV7nQyvw+7AJpDmJFifAa4SqrI5qqXqAq1IKZsSxKVTI1Cd7yJVFzIqi4nnPX1ShmHEJWweFl5BId7OSkHXViNQ0AAAAAACA4U7t1jiQwTs87xenAvOkQWAAMWbElg0Exz1annhowtXPQJaMX5mcenWnm/aFAXhUM2rGsvqqa2zM2OOQyEKqbNP8GAAAAAAAg7pHVs4Z58mP71Y53cDuY3X/TbTgfmBHkDWe16J+kBOqhnfl+yRNiYZ3fpWvyc4rB2u+a2qjUGqcw7yFnlhJAj1w00w8AAAAAIDEjW30S0iN4lnDXpigCjEmOA0tUYKf339ZayYUU9PG6s1wmB/dndlMUdTZGe5MOz1baxXMESHbVd5L7XTObgECAQpEAAAAAACBCkCOAwD6Dl2DkdXj/eFRBTsNPWg3XYATTPxeThLuhzrTmcYf4XqT8ceMAoKbQBjtzyaTv+xb0K0MzHfvJR1NFgUKRAAAAAAAgxUVPvQUU/R1jcC2+AxZ7uC3ls+09G7xAk0xusdBSUkXPNNWDsV8xzw6ipjnf5pk9W3R9P0RD6iORRe+0JKaLtmE1DQAAAAAAIPhsUoriBlzhLc4SHds72JTbjeI37VhyjlFVtQurLY+26e+jqKb2TsdARpYEvxPl31WAelj2RMuUyK8S5NeluEWjKpEAAAAAACCR/0nc3l5UIXpl6I6SEpWABP/vJewHhZ5iMDpIDXdMqf0VCu+y2k/TZIpRFMDRiBO0oUW+L8+06uAi3pZkwpbFNf8GAAAAAAAgyIfExjdHxdt7+eiOLRh4N4/iSMZCrHf2t5iYI+Kl8ysAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOgDAAAAAAAA4G88AAAAAAAA";
 
         client

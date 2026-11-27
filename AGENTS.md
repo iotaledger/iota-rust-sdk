@@ -25,6 +25,7 @@ The **IOTA Rust SDK** is a modular software development kit for integrating with
 8. **Write only what the diff can't say** — PR descriptions, review comments and chat replies cover the reasoning and the high-level shape of a change, never a walkthrough of the diff. See [Writing style](#writing-style); this is the most frequently ignored rule in this file.
 9. **Feature flags matter** — the umbrella `iota-sdk` gates everything behind features. Check what's enabled for the code you're modifying before assuming an item exists.
 10. **NEVER hand-edit generated gRPC types** under `crates/iota-sdk-grpc-types/src/proto/` — they are build output. Changes go into the proto sources / `update_grpc_types.sh`.
+11. **Gate devnet-only features behind `unstable`** — new APIs for node features that are still in development or only live on devnet go behind `#[cfg(feature = "unstable")]`. Remove the gate once the feature is deployed to testnet/mainnet.
 
 ## Repository Structure
 
@@ -83,6 +84,9 @@ make grpc   # Pull/refresh protos and regenerate types
 
 # BCS schema
 make bcs-schema      # Regenerate bcs-schema.abnf
+
+# Releases
+make release-status  # List the crates that changed since their last release tag, in publish order
 
 # Examples
 make examples                    # Run all Rust examples

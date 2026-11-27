@@ -21,8 +21,8 @@ pub struct EpochData {
 }
 
 // The variables to pass to the custom query.
-// If an epoch id is passed, then the query will return the data for that epoch.
-// Otherwise, the query will return the data for the last known epoch.
+// If an epoch id is passed, then the query will return the data for that epoch. Otherwise, the
+// query will return the data for the last known epoch.
 #[derive(cynic::QueryVariables, Debug)]
 pub struct CustomVariables {
     pub id: Option<u64>,
@@ -47,8 +47,8 @@ pub struct ChainIdQuery {
 async fn main() -> Result<()> {
     let client = GraphQLClient::new_testnet()?;
 
-    // Query the data for the last known epoch. Note that id variable is None,
-    // so last epoch data will be returned.
+    // Query the data for the last known epoch. Note that id variable is None, so last epoch data
+    // will be returned.
     let operation = CustomQuery::build(CustomVariables { id: None });
     let response = client
         .run_query::<CustomQuery, CustomVariables>(&operation)

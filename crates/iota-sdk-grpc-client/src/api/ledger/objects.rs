@@ -4,7 +4,7 @@
 //! High-level API for object queries.
 
 use iota_grpc_types::{
-    read_mask_fields::{IntoReadMask, ObjectField, ObjectReadMask},
+    read_mask_fields::{ObjectField, ObjectReadMask},
     v1::{
         ledger_service::{
             GetObjectsRequest, ObjectRequest, ObjectRequests,
@@ -25,24 +25,18 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GrpcClient::objects`] and
-    /// [`GrpcClient::objects_with_versions`]. Await it to send the request.
+    /// Query for [`GrpcClient::objects`] and [`GrpcClient::objects_with_versions`]. Await it to
+    /// send the request.
     pub struct GetObjectsQuery {
         service_client: LedgerServiceClient<InterceptedChannel>,
         max_message_size: Option<usize>,
         refs: Vec<(ObjectId, Option<Version>)>,
-        read_mask: ObjectReadMask,
     }
     output: GrpcResult<MetadataEnvelope<Vec<GrpcResult<Object>>>>;
+    read_mask: ObjectReadMask;
 }
 
 impl GetObjectsQuery {
-    /// Set the field mask controlling the returned fields.
-    pub fn read_mask(mut self, read_mask: impl IntoReadMask<ObjectReadMask>) -> Self {
-        self.read_mask = read_mask.into_read_mask();
-        self
-    }
-
     fn request(&self) -> GetObjectsRequest {
         let requests = ObjectRequests::default().with_requests(
             self.refs
@@ -93,8 +87,7 @@ impl GetObjectsQuery {
 }
 
 define_query! {
-    /// Query for [`GrpcClient::object_references`]. Await it to send the
-    /// request.
+    /// Query for [`GrpcClient::object_references`]. Await it to send the request.
     pub struct GetObjectReferencesQuery {
         objects: GetObjectsQuery,
     }
@@ -117,8 +110,8 @@ impl GetObjectReferencesQuery {
 impl GrpcClient {
     /// Get objects by their IDs.
     ///
-    /// Returns proto `Object` types. Use `obj.object()` to convert to SDK
-    /// type, or use `obj.object_reference()` to get the object reference.
+    /// Returns proto `Object` types. Use `obj.object()` to convert to SDK type, or use
+    /// `obj.object_reference()` to get the object reference.
     ///
     /// Results are returned in the same order as the input IDs, one per ID.
     ///
@@ -126,30 +119,24 @@ impl GrpcClient {
     ///
     /// Returns [`GrpcError::EmptyRequest`] if `refs` is empty.
     ///
-    /// Each ID gets its own result: an object that is not found (never
-    /// existed, was deleted, or has been pruned by the serving node) yields
-    /// [`GrpcError::Server`] with code `NOT_FOUND` in that slot only, leaving
-    /// the other objects intact. The outer `GrpcResult` is reserved for
-    /// failures of the call itself, such as a transport error, and for a
-    /// server that answered with a different number of results than IDs
-    /// requested ([`UnexpectedResultCount`]), which leaves no way to tell
-    /// which ID each result belongs to, or answered a position with a
-    /// different object than the one requested there
-    /// ([`UnexpectedObject`]). The answered id is read from the object
-    /// reference or its BCS, so a read mask that includes neither leaves
-    /// nothing to check.
+    /// Each ID gets its own result: an object that is not found (never existed, was deleted, or has
+    /// been pruned by the serving node) yields [`GrpcError::Server`] with code `NOT_FOUND` in that
+    /// slot only, leaving the other objects intact. The outer `GrpcResult` is reserved for failures
+    /// of the call itself, such as a transport error, and for a server that answered with a
+    /// different number of results than IDs requested ([`UnexpectedResultCount`]), which leaves no
+    /// way to tell which ID each result belongs to, or answered a position with a different object
+    /// than the one requested there ([`UnexpectedObject`]). The answered id is read from the object
+    /// reference or its BCS, so a read mask that includes neither leaves nothing to check.
     ///
     /// [`UnexpectedResultCount`]: crate::ProtocolError::UnexpectedResultCount
     /// [`UnexpectedObject`]: crate::ProtocolError::UnexpectedObject
     ///
     /// # Read Mask
     ///
-    /// Without [`read_mask`](GetObjectsQuery::read_mask), the default mask is
-    /// used. Pass an
-    /// [`ObjectReadMask`](iota_grpc_types::read_mask_fields::ObjectReadMask)
-    /// built from an
-    /// [`ObjectField`](iota_grpc_types::read_mask_fields::ObjectField) or any
-    /// slice/array/vec of fields to choose the returned fields.
+    /// Without [`read_mask`](GetObjectsQuery::read_mask), the default mask is used. Pass an
+    /// [`ObjectReadMask`](iota_grpc_types::read_mask_fields::ObjectReadMask) built from an
+    /// [`ObjectField`](iota_grpc_types::read_mask_fields::ObjectField) or any slice/array/vec of
+    /// fields to choose the returned fields.
     ///
     /// # Example
     ///
@@ -211,8 +198,8 @@ impl GrpcClient {
 
     /// Get objects by their IDs and optional versions.
     ///
-    /// Returns proto `Object` types. Use `obj.object()` to convert to SDK
-    /// type, or use `obj.object_reference()` to get the object reference.
+    /// Returns proto `Object` types. Use `obj.object()` to convert to SDK type, or use
+    /// `obj.object_reference()` to get the object reference.
     ///
     /// Results are returned in the same order as the input refs, one per ref.
     ///
@@ -220,14 +207,12 @@ impl GrpcClient {
     ///
     /// Returns [`GrpcError::EmptyRequest`] if `refs` is empty.
     ///
-    /// Each ref gets its own result, with the same meaning as in
-    /// [`objects`](GrpcClient::objects): a requested version the serving
-    /// node does not have fails only its own slot.
+    /// Each ref gets its own result, with the same meaning as in [`objects`](GrpcClient::objects):
+    /// a requested version the serving node does not have fails only its own slot.
     ///
     /// # Read Mask
     ///
-    /// As for [`objects`](GrpcClient::objects), set with
-    /// [`read_mask`](GetObjectsQuery::read_mask).
+    /// As for [`objects`](GrpcClient::objects), set with [`read_mask`](GetObjectsQuery::read_mask).
     ///
     /// # Example
     ///
@@ -276,15 +261,14 @@ impl GrpcClient {
 
     /// Get the current references of objects by their IDs.
     ///
-    /// Requests the `reference` field only, so no object contents travel.
-    /// Results are returned in the same order as the input IDs, one per ID.
+    /// Requests the `reference` field only, so no object contents travel. Results are returned in
+    /// the same order as the input IDs, one per ID.
     ///
     /// # Errors
     ///
-    /// Returns [`GrpcError::EmptyRequest`] if `ids` is empty. As for
-    /// [`objects`](Self::objects), an ID that is not found yields
-    /// [`GrpcError::Server`] with code `NOT_FOUND` in its slot only; the outer
-    /// `GrpcResult` is reserved for failures of the call itself.
+    /// Returns [`GrpcError::EmptyRequest`] if `ids` is empty. As for [`objects`](Self::objects), an
+    /// ID that is not found yields [`GrpcError::Server`] with code `NOT_FOUND` in its slot only;
+    /// the outer `GrpcResult` is reserved for failures of the call itself.
     ///
     /// # Example
     ///

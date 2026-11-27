@@ -21,9 +21,10 @@ async def main():
         "=== Example 1: move_view_call() with typed arguments (primitives) ===")
     print()
 
+    package_id = ObjectId.from_hex(PACKAGE)
     price_args = [MoveViewArg.u64(100), MoveViewArg.u64(25)]
 
-    result = await client.move_view_call(f"{PACKAGE}::shop::discounted_price",
+    result = await client.move_view_call(package_id, "shop", "discounted_price",
                                          None, price_args)
 
     if result.error is not None:
@@ -43,8 +44,9 @@ async def main():
     print()
 
     # `u64` is passed as a string so large values survive JSON.
-    json_result = await client.move_view_call_json(
-        f"{PACKAGE}::shop::discounted_price", None, ['"100"', '"25"'])
+    json_result = await client.move_view_call_json(package_id, "shop",
+                                                   "discounted_price", None,
+                                                   ['"100"', '"25"'])
 
     if json_result.error is not None:
         print("JSON Error:", json_result.error)
@@ -67,8 +69,8 @@ async def main():
         MoveViewArg.u64(1)
     ]
 
-    shop_result = await client.move_view_call(f"{PACKAGE}::shop::sale_at", None,
-                                              shop_args)
+    shop_result = await client.move_view_call(package_id, "shop", "sale_at",
+                                              None, shop_args)
 
     if shop_result.error is not None:
         print("Shop Error:", shop_result.error)
@@ -86,8 +88,9 @@ async def main():
     )
     print()
 
-    shop_json_result = await client.move_view_call_json(
-        f"{PACKAGE}::shop::sale_at", None, [f'"{SHOP}"', '"1"'])
+    shop_json_result = await client.move_view_call_json(package_id, "shop",
+                                                        "sale_at", None,
+                                                        [f'"{SHOP}"', '"1"'])
 
     if shop_json_result.error is not None:
         print("Shop JSON Error:", shop_json_result.error)

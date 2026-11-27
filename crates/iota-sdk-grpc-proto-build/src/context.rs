@@ -3,16 +3,14 @@
 
 //! The single context over the compiled protobuf descriptors.
 //!
-//! `protox` produces a [`DescriptorPool`] that already resolves names, nesting,
-//! map entries and options across files, so this type adds only what the pool
-//! cannot know: where a message lands in the generated Rust module tree, which
-//! version module a package belongs to, and which messages reference each other
-//! in a cycle.
+//! `protox` produces a [`DescriptorPool`] that already resolves names, nesting, map entries and
+//! options across files, so this type adds only what the pool cannot know: where a message lands in
+//! the generated Rust module tree, which version module a package belongs to, and which messages
+//! reference each other in a cycle.
 //!
-//! Protobuf names come in two shapes: the pool uses bare names
-//! (`iota.grpc.v1.types.Digest`), while `FieldDescriptorProto::type_name` and
-//! the boxing config carry a leading dot. Everything here accepts either and
-//! normalizes on the way in.
+//! Protobuf names come in two shapes: the pool uses bare names (`iota.grpc.v1.types.Digest`), while
+//! `FieldDescriptorProto::type_name` and the boxing config carry a leading dot. Everything here
+//! accepts either and normalizes on the way in.
 
 use std::collections::{HashMap, HashSet};
 
@@ -32,14 +30,12 @@ use crate::{
 
 pub(crate) struct Context {
     pool: DescriptorPool,
-    /// Types resolved to a path outside the generated code, such as the
-    /// `google.protobuf` well-known types.
+    /// Types resolved to a path outside the generated code, such as the `google.protobuf`
+    /// well-known types.
     extern_paths: ExternPaths,
-    /// Accessor annotations, keyed as [`parse_proto_accessors_from_pool`]
-    /// produces them.
+    /// Accessor annotations, keyed as [`parse_proto_accessors_from_pool`] produces them.
     accessors: AccessorMap,
-    /// Messages marked `field_mask_transparent`, keyed by fully qualified name
-    /// with a leading dot.
+    /// Messages marked `field_mask_transparent`, keyed by fully qualified name with a leading dot.
     transparent: HashMap<String, TransparentInfo>,
 }
 
@@ -56,20 +52,19 @@ impl Context {
         }
     }
 
-    /// True when the type resolves outside the generated code and so has
-    /// nothing generated for it.
+    /// True when the type resolves outside the generated code and so has nothing generated for it.
     pub(crate) fn is_extern(&self, full_type_name: &str) -> bool {
         self.extern_paths
             .resolve_ident(&format!(".{}", full_type_name.trim_start_matches('.')))
             .is_some()
     }
 
-    /// Resolves a protobuf type to a Rust path relative to `package`, the form
-    /// accessor generation emits (`super::super::types::Digest`).
+    /// Resolves a protobuf type to a Rust path relative to `package`, the form accessor generation
+    /// emits (`super::super::types::Digest`).
     ///
-    /// Kept separate from [`Self::message_path`], which produces absolute
-    /// `crate::` paths: accessors are written into a `_accessor_impls` module
-    /// and address their types relatively from there.
+    /// Kept separate from [`Self::message_path`], which produces absolute `crate::` paths:
+    /// accessors are written into a `_accessor_impls` module and address their types relatively
+    /// from there.
     pub(crate) fn accessor_type_path(&self, package: &str, pb_ident: &str) -> String {
         // protoc should always give fully qualified identifiers.
         assert_eq!(".", &pb_ident[..1]);
@@ -80,8 +75,8 @@ impl Context {
 
         let mut local_path = package.split('.').peekable();
 
-        // If no package is specified the start of the package name will be '.'
-        // and split will return an empty string ("") which breaks resolution
+        // If no package is specified the start of the package name will be '.' and split will
+        // return an empty string ("") which breaks resolution
         // The fix to this is to ignore the first item if it is empty.
         if local_path.peek().is_some_and(|s| s.is_empty()) {
             local_path.next();
@@ -104,14 +99,13 @@ impl Context {
             .join("::")
     }
 
-    /// Accessor annotations of every message, from the `iota.grpc` accessor
-    /// options.
+    /// Accessor annotations of every message, from the `iota.grpc` accessor options.
     pub(crate) fn accessor_map(&self) -> &AccessorMap {
         &self.accessors
     }
 
-    /// Information about a `field_mask_transparent` wrapper, if the message is
-    /// one. Takes a fully qualified name with or without the leading dot.
+    /// Information about a `field_mask_transparent` wrapper, if the message is one. Takes a fully
+    /// qualified name with or without the leading dot.
     pub(crate) fn transparent(&self, full_type_name: &str) -> Option<&TransparentInfo> {
         self.transparent
             .get(&format!(".{}", full_type_name.trim_start_matches('.')))
@@ -129,9 +123,9 @@ impl Context {
         packages
     }
 
-    /// Root messages of a package in the order codegen emits them: files sorted
-    /// by name, messages in declaration order. Nested messages are reached
-    /// through [`MessageDescriptor::child_messages`].
+    /// Root messages of a package in the order codegen emits them: files sorted by name, messages
+    /// in declaration order. Nested messages are reached through
+    /// [`MessageDescriptor::child_messages`].
     pub(crate) fn messages_in_declaration_order(&self, package: &str) -> Vec<MessageDescriptor> {
         let mut files: Vec<_> = self
             .pool
@@ -143,10 +137,9 @@ impl Context {
         files.iter().flat_map(|file| file.messages()).collect()
     }
 
-    /// Every message of a package, nested ones included, in the order the proto
-    /// files declare them: files by name, then each message followed by its own
-    /// nested messages. Map entry messages are synthetic and have no generated
-    /// type, so they are skipped.
+    /// Every message of a package, nested ones included, in the order the proto files declare them:
+    /// files by name, then each message followed by its own nested messages. Map entry messages are
+    /// synthetic and have no generated type, so they are skipped.
     pub(crate) fn all_messages_in_declaration_order(
         &self,
         package: &str,
@@ -169,9 +162,8 @@ impl Context {
         messages
     }
 
-    /// Resolves a message by fully qualified name, with or without the leading
-    /// dot. Panics when unknown: every message a field can reference is
-    /// compiled together with the field's own file.
+    /// Resolves a message by fully qualified name, with or without the leading dot. Panics when
+    /// unknown: every message a field can reference is compiled together with the field's own file.
     pub(crate) fn resolve(&self, full_type_name: &str) -> MessageDescriptor {
         let name = full_type_name.trim_start_matches('.');
         self.pool
@@ -179,9 +171,8 @@ impl Context {
             .unwrap_or_else(|| panic!("unknown protobuf message type {full_type_name}"))
     }
 
-    /// Path to the message type as prost generates it. Messages of
-    /// `from_package` that are not nested are left unqualified — the generated
-    /// file is included into that very module.
+    /// Path to the message type as prost generates it. Messages of `from_package` that are not
+    /// nested are left unqualified — the generated file is included into that very module.
     pub(crate) fn message_path(
         &self,
         message: &MessageDescriptor,
@@ -208,22 +199,20 @@ impl Context {
         let outer = outer_modules(message);
 
         if message.package_name() == from_package {
-            // Builders are generated into `_field_impls` of the file being
-            // written, mirroring the message nesting.
+            // Builders are generated into `_field_impls` of the file being written, mirroring the
+            // message nesting.
             return quote! { #(#outer::)* #builder };
         }
 
         let root = package_path(message.package_name());
         if !outer.is_empty() {
-            // A nested message's builder has no path from outside its own
-            // package: `_field_impls` is private, and at the package root the
-            // module holding the builder is shadowed by the prost module of the
-            // same name, so the glob re-export never surfaces it.
+            // A nested message's builder has no path from outside its own package: `_field_impls`
+            // is private, and at the package root the module holding the builder is shadowed by the
+            // prost module of the same name, so the glob re-export never surfaces it.
             //
-            // No proto references such a builder across packages today. Making
-            // `_field_impls` `pub` is the one-line fix if one ever does — hence
-            // failing loudly here rather than emitting a path that does not
-            // resolve.
+            // No proto references such a builder across packages today. Making `_field_impls` `pub`
+            // is the one-line fix if one ever does — hence failing loudly here rather than emitting
+            // a path that does not resolve.
             panic!(
                 "cannot reference the field path builder of nested message {} from package {from_package}: \
                  nested builders are only addressable inside their own package",
@@ -234,13 +223,12 @@ impl Context {
         quote! { #root::#builder }
     }
 
-    /// True when `to` reaches back to `from` through message-typed fields, i.e.
-    /// the two sit on a reference cycle. Used to stop `MessageFields::FIELDS`
-    /// from recursing forever.
+    /// True when `to` reaches back to `from` through message-typed fields, i.e. the two sit on a
+    /// reference cycle. Used to stop `MessageFields::FIELDS` from recursing forever.
     ///
-    /// The walk is scoped to the package `from` belongs to: cycle breaking has
-    /// always been decided per package, and a path leaving the package cannot
-    /// close a cycle the generated code would recurse through.
+    /// The walk is scoped to the package `from` belongs to: cycle breaking has always been decided
+    /// per package, and a path leaving the package cannot close a cycle the generated code would
+    /// recurse through.
     pub(crate) fn has_reference_cycle(&self, from: &str, to: &str) -> bool {
         let from = from.trim_start_matches('.');
         let package = self.resolve(from).package_name().to_owned();
@@ -397,10 +385,9 @@ mod tests {
         );
     }
 
-    /// A nested message's builder lives in the private `_field_impls` module,
-    /// and at the package root its module is shadowed by the prost module
-    /// of the same name, so no path reaches it from another package. Fail
-    /// at codegen rather than emit a path that will not resolve.
+    /// A nested message's builder lives in the private `_field_impls` module, and at the package
+    /// root its module is shadowed by the prost module of the same name, so no path reaches it from
+    /// another package. Fail at codegen rather than emit a path that will not resolve.
     #[test]
     #[should_panic(expected = "nested builders are only addressable inside their own package")]
     fn builders_of_nested_messages_in_other_packages_are_rejected() {
@@ -431,8 +418,8 @@ mod tests {
         assert!(!context.has_reference_cycle(".iota.grpc.v1.a.Input", ".iota.grpc.v1.a.Loop"));
     }
 
-    /// The option extensions live in the real protos, so this one compiles
-    /// those instead of the fixtures.
+    /// The option extensions live in the real protos, so this one compiles those instead of the
+    /// fixtures.
     #[test]
     fn proto_options_are_parsed() {
         let proto_dir = std::path::PathBuf::from(std::env!("CARGO_MANIFEST_DIR"))

@@ -28,8 +28,7 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GraphQLClient::iota_names_registrations`]. Await it to send
-    /// the request.
+    /// Query for [`GraphQLClient::iota_names_registrations`]. Await it to send the request.
     #[derive(Clone)]
     pub struct ListIotaNamesRegistrationsQuery {
         client: GraphQLClient,
@@ -46,8 +45,8 @@ impl ListIotaNamesRegistrationsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<NameRegistration>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -100,8 +99,7 @@ impl ListIotaNamesRegistrationsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::iota_names_default_name`]. Await it to send
-    /// the request.
+    /// Query for [`GraphQLClient::iota_names_default_name`]. Await it to send the request.
     pub struct GetIotaNamesDefaultNameQuery {
         client: GraphQLClient,
         address: Address,
@@ -141,11 +139,10 @@ impl GetIotaNamesDefaultNameQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::iota_names_lookup`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::iota_names_lookup`]. Await it to send the request.
     pub struct GetIotaNamesLookupQuery {
         client: GraphQLClient,
-        name: String,
+        name: Name,
     }
     output: GraphQLResult<Option<Address>>;
 }
@@ -153,7 +150,7 @@ define_query! {
 impl GetIotaNamesLookupQuery {
     async fn send(self) -> GraphQLResult<Option<Address>> {
         let operation = ResolveIotaNamesAddressQueryFragment::build(ResolveIotaNamesAddressArgs {
-            name: self.name,
+            name: self.name.to_string(),
         });
         let response = self.client.run_query(&operation).await?;
 
@@ -170,10 +167,10 @@ impl GetIotaNamesLookupQuery {
 
 impl GraphQLClient {
     /// Return the resolved address for the given name.
-    pub fn iota_names_lookup(&self, name: impl Into<String>) -> GetIotaNamesLookupQuery {
+    pub fn iota_names_lookup(&self, name: Name) -> GetIotaNamesLookupQuery {
         GetIotaNamesLookupQuery {
             client: self.clone(),
-            name: name.into(),
+            name,
         }
     }
 
@@ -209,7 +206,9 @@ mod tests {
         let vars = sent_variables(
             "ResolveIotaNamesAddressQueryFragment",
             |client| async move {
-                let _ = client.iota_names_lookup("example.iota").await;
+                let _ = client
+                    .iota_names_lookup("example.iota".parse().unwrap())
+                    .await;
             },
         )
         .await;

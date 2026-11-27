@@ -17,15 +17,13 @@ use iota_transaction_builder::{
 };
 use iota_types::{
     Address, ExecutionStatus, IdOperation, MovePackageData, ObjectId, ObjectType, Transaction,
-    TransactionEffects, UpgradePolicy,
+    TransactionEffects, U256, UpgradePolicy,
 };
 
-/// This is used to read the json file that contains the modules/deps/digest
-/// generated with iota move build --dump-bytecode-as-base64 on the
-/// `test_example_v1 and test_example_v2` projects in the tests
-/// directory. The json files are generated automatically when running
-/// `make test-with-localnet` in the root of the
-/// iota-sdk-transaction-builder crate.
+/// This is used to read the json file that contains the modules/deps/digest generated with iota
+/// move build --dump-bytecode-as-base64 on the `test_example_v1 and test_example_v2` projects in
+/// the tests directory. The json files are generated automatically when running `make
+/// test-with-localnet` in the root of the iota-sdk-transaction-builder crate.
 fn move_package_data(file: &str) -> MovePackageData {
     let data = std::fs::read_to_string(file)
         .with_context(|| {
@@ -52,12 +50,11 @@ fn helper_address_pk() -> (Address, Ed25519PrivateKey) {
 /// - set gas price
 /// - set gas budget
 /// - call faucet which returns 5 coin objects
-/// - set the gas object (last coin from the list of the 5 objects returned by
-///   faucet)
+/// - set the gas object (last coin from the list of the 5 objects returned by faucet)
 /// - return the address, private key, and coins.
 ///
-/// NB! This assumes that these tests run on a network whose faucet returns
-/// 5 coins per each faucet request.
+/// NB! This assumes that these tests run on a network whose faucet returns 5 coins per each faucet
+/// request.
 async fn helper_setup() -> (
     TransactionBuilder<GraphQLClient>,
     Address,
@@ -122,8 +119,7 @@ async fn test_transfer_obj_execution() {
 #[tokio::test]
 async fn test_move_call() {
     // Check that `0x1::option::is_none` move call works when passing `1`
-    // set up the sender, gas object, gas budget, and gas price and return the
-    // pk to sign
+    // set up the sender, gas object, gas budget, and gas price and return the pk to sign
     let (mut tx, _, pk, _) = helper_setup().await;
     tx.move_call(Address::STD, "option", "is_none")
         .generics::<u64>()
@@ -131,6 +127,53 @@ async fn test_move_call() {
 
     let effects = tx.execute(&pk, WaitForTransaction::Finalized).await;
     check_effects_status_success(effects);
+}
+
+/// Execute `0x1::u256::try_as_u128(value)` and unwrap its result. The second command aborts if the
+/// `u256` Move read does not fit in a `u128`.
+async fn execute_u256_as_u128(
+    value: impl FnOnce(&mut TransactionBuilder<GraphQLClient>) -> Argument,
+) -> ExecutionStatus {
+    let (mut tx, _, pk, _) = helper_setup().await;
+    let value = value(&mut tx);
+    let as_u128 = tx
+        .move_call(Address::STD, "u256", "try_as_u128")
+        .arguments([value])
+        .result();
+    tx.move_call(Address::STD, "option", "destroy_some")
+        .generics::<u128>()
+        .arguments([as_u128]);
+
+    match tx
+        .execute(&pk, WaitForTransaction::Finalized)
+        .await
+        .unwrap()
+    {
+        TransactionEffects::V1(v1) => v1.status,
+        _ => unimplemented!(
+            "a new TransactionEffects enum variant was added and needs to be handled"
+        ),
+    }
+}
+
+#[tokio::test]
+async fn test_u256_argument() {
+    // 2^112, which fits in a `u128`.
+    let mut two_pow_112 = [0; U256::LENGTH];
+    two_pow_112[14] = 1;
+
+    for value in [U256::ONE, U256::from_le_bytes(two_pow_112)] {
+        assert_eq!(
+            execute_u256_as_u128(|tx| tx.apply_argument(value)).await,
+            ExecutionStatus::Success,
+            "U256 argument {value}"
+        );
+        assert_eq!(
+            execute_u256_as_u128(|tx| tx.pure(value)).await,
+            ExecutionStatus::Success,
+            "U256 through pure {value}"
+        );
+    }
 }
 
 #[tokio::test]
@@ -199,9 +242,9 @@ async fn test_merge_coins() {
     assert_eq!(coins_after.data().len(), 2);
 }
 
-/// The counterpart to `test_split_without_transfer_should_fail`: the coins
-/// `divide_coins` produces are transferred to the sender by the framework, so
-/// the transaction succeeds without a transfer command.
+/// The counterpart to `test_split_without_transfer_should_fail`: the coins `divide_coins` produces
+/// are transferred to the sender by the framework, so the transaction succeeds without a transfer
+/// command.
 #[tokio::test]
 async fn test_divide_coins() {
     const PARTS: u64 = 4;
@@ -219,8 +262,8 @@ async fn test_divide_coins() {
 
     let owned = client.coins(address).await.unwrap();
 
-    // PARTS - 1 coins that the sender did not have before, of an equal share
-    // each, and none of them transferred by the transaction itself.
+    // PARTS - 1 coins that the sender did not have before, of an equal share each, and none of them
+    // transferred by the transaction itself.
     let new_coins = owned
         .data()
         .iter()
@@ -341,10 +384,9 @@ async fn test_upgrade() {
     check_effects_status_success(effects);
 }
 
-/// Fund the sender with ~2044 coins (via repeated `split_coins` — each
-/// command tops out at 511 amounts, with one slot used by the source
-/// coin), then run a plain `send_iota` and let auto gas selection deal
-/// with the resulting fleet of gas coins.
+/// Fund the sender with ~2044 coins (via repeated `split_coins` — each command tops out at 511
+/// amounts, with one slot used by the source coin), then run a plain `send_iota` and let auto gas
+/// selection deal with the resulting fleet of gas coins.
 #[tokio::test]
 async fn test_auto_gas_selection_with_many_coins() {
     let (mut tx, sender, pk, coins) = helper_setup().await;
@@ -370,21 +412,19 @@ async fn test_auto_gas_selection_with_many_coins() {
     check_effects_status_success(tx2.execute(&pk, WaitForTransaction::Finalized).await);
 }
 
-/// Pin all 255 gas coins (the protocol cap, `gas().len() <
-/// max_gas_payment_objects = 256`) and assert the gas-smashing
-/// prologue consolidates them into a single coin during execution.
+/// Pin all 255 gas coins (the protocol cap, `gas().len() < max_gas_payment_objects = 256`) and
+/// assert the gas-smashing prologue consolidates them into a single coin during execution.
 #[tokio::test]
 async fn test_manual_gas_pin_consolidates_255_coins() {
     let (mut tx, sender, pk, coins) = helper_setup().await;
     let client = tx.get_client().clone();
 
-    // helper_setup pinned coins.last() as gas; split a different
-    // faucet coin so the source isn't already reserved.
+    // helper_setup pinned coins.last() as gas; split a different faucet coin so the source isn't
+    // already reserved.
     let source = coins.first().unwrap().id;
 
-    // 255 outputs fits in a single split_coins command (511-arg cap,
-    // minus the source-coin slot). PER_COIN × 255 must fit in the
-    // source coin and exceed the gas budget below.
+    // 255 outputs fits in a single split_coins command (511-arg cap, minus the source-coin slot).
+    // PER_COIN × 255 must fit in the source coin and exceed the gas budget below.
     const NUM_GAS_COINS: usize = 255;
     const PER_COIN: u64 = 10_000_000;
     const GAS_BUDGET: u64 = 100_000_000;
@@ -441,8 +481,8 @@ async fn test_manual_gas_pin_consolidates_255_coins() {
         .send_iota(recipient, 1_000u64);
     check_effects_status_success(tx2.execute(&pk, WaitForTransaction::Finalized).await);
 
-    // send_iota's output belongs to `recipient`, so the only delta on
-    // sender's side is the 255 → 1 smashing.
+    // send_iota's output belongs to `recipient`, so the only delta on sender's side is the 255 → 1
+    // smashing.
     let before_count = before.len();
     let after_count = list_coins(&client, sender).await.len();
     let expected_drop = NUM_GAS_COINS - 1;
@@ -454,20 +494,18 @@ async fn test_manual_gas_pin_consolidates_255_coins() {
     );
 }
 
-/// Mint 50 coins of 1 IOTA each — any single one trivially covers the
-/// gas budget — and let auto gas selection resolve a fresh tx without
-/// pinning gas. It should pin *every* coin from the first page (not just
-/// the one minimally needed), so gas smashing can consolidate them into
-/// a single coin during execution.
+/// Mint 50 coins of 1 IOTA each — any single one trivially covers the gas budget — and let auto gas
+/// selection resolve a fresh tx without pinning gas. It should pin *every* coin from the first page
+/// (not just the one minimally needed), so gas smashing can consolidate them into a single coin
+/// during execution.
 #[tokio::test]
 async fn test_auto_gas_pins_full_first_page_for_consolidation() {
     let (mut tx, sender, pk, coins) = helper_setup().await;
     let client = tx.get_client().clone();
     let source = coins.first().unwrap().id;
 
-    // 50 matches the default IOTA GraphQL `max_page_size`, so all newly
-    // minted coins land on the first page even alongside the few
-    // leftover faucet coins. 1 IOTA per coin is well above any
+    // 50 matches the default IOTA GraphQL `max_page_size`, so all newly minted coins land on the
+    // first page even alongside the few leftover faucet coins. 1 IOTA per coin is well above any
     // realistic gas budget for a `send_iota` of 1 nano.
     const NUM_COINS: usize = 50;
     const PER_COIN: u64 = 1_000_000_000;
@@ -482,8 +520,8 @@ async fn test_auto_gas_pins_full_first_page_for_consolidation() {
     );
     check_effects_status_success(tx.execute(&pk, WaitForTransaction::Finalized).await);
 
-    // Build (but don't execute) a fresh tx without pinning gas. The
-    // resolved transaction reveals what auto-gas picked.
+    // Build (but don't execute) a fresh tx without pinning gas. The resolved transaction reveals
+    // what auto-gas picked.
     let mut tx2 = TransactionBuilder::new(sender).with_client(client.clone());
     let recipient = Address::random();
     tx2.gas_budget(GAS_BUDGET);
@@ -491,9 +529,8 @@ async fn test_auto_gas_pins_full_first_page_for_consolidation() {
     let Transaction::V1(resolved) = tx2.finish().await.unwrap() else {
         panic!("expected TransactionV1");
     };
-    // First page covers the budget many times over, so every gas coin
-    // from that page (capped at the protocol max) is pinned, including
-    // the 50 newly minted ones.
+    // First page covers the budget many times over, so every gas coin from that page (capped at the
+    // protocol max) is pinned, including the 50 newly minted ones.
     assert!(
         resolved.gas_payment.objects.len() >= NUM_COINS,
         "auto-gas should pin every gas coin from the first page \
@@ -502,11 +539,10 @@ async fn test_auto_gas_pins_full_first_page_for_consolidation() {
     );
 }
 
-/// Open a live transactions subscription and assert it delivers a transaction.
-/// A transfer is executed on a background task once the subscription has had a
-/// moment to connect, so the live stream observes it. This exercises the
-/// WebSocket transport, payload decoding, and resume-cursor tracking shared by
-/// `events_subscription`.
+/// Open a live transactions subscription and assert it delivers a transaction. A transfer is
+/// executed on a background task once the subscription has had a moment to connect, so the live
+/// stream observes it. This exercises the WebSocket transport, payload decoding, and resume-cursor
+/// tracking shared by `events_subscription`.
 #[tokio::test]
 async fn test_transactions_subscription() {
     use futures::StreamExt;
@@ -534,11 +570,10 @@ async fn test_transactions_subscription() {
     );
 }
 
-/// Open a live events subscription and assert it delivers the
-/// `0x3::validator::StakingRequestEvent` emitted by a staking transaction that
-/// runs on a background task once the subscription has had a moment to connect.
-/// The filter is set at package level, so other `0x3` events (epoch changes)
-/// are skipped until the staking event arrives.
+/// Open a live events subscription and assert it delivers the `0x3::validator::StakingRequestEvent`
+/// emitted by a staking transaction that runs on a background task once the subscription has had a
+/// moment to connect. The filter is set at package level, so other `0x3` events (epoch changes) are
+/// skipped until the staking event arrives.
 #[tokio::test]
 async fn test_events_subscription() {
     use futures::StreamExt;
@@ -616,7 +651,7 @@ async fn test_move_view_call() {
     check_effects_status_success(effects);
 
     let client = GraphQLClient::new_localnet().unwrap();
-    let function = format!("{}::test_example::double", package_id.unwrap());
+    let package_id = package_id.unwrap();
 
     let assert_doubled = |result: iota_graphql_client::query_types::MoveViewResult| {
         assert_eq!(
@@ -641,7 +676,7 @@ async fn test_move_view_call() {
 
     // Typed arguments
     let result = client
-        .move_view_call(&function)
+        .move_view_call(package_id, "test_example", "double")
         .arguments((21u64,))
         .await
         .unwrap();
@@ -649,8 +684,16 @@ async fn test_move_view_call() {
 
     // Raw JSON arguments
     let result = client
-        .move_view_call_json(&function)
+        .move_view_call_json(package_id, "test_example", "double")
         .arguments(vec![serde_json::json!("21")])
+        .await
+        .unwrap();
+    assert_doubled(result);
+
+    // Appended argument
+    let result = client
+        .move_view_call(package_id, "test_example", "double")
+        .argument(21u64)
         .await
         .unwrap();
     assert_doubled(result);

@@ -21,18 +21,23 @@ func main() {
 		log.Fatalf("Failed to parse object ID: %v", err)
 	}
 
-	// `Objects` is batched: it takes a list of ids and returns the objects in
-	// the same order. The default read mask returns the reference and the
-	// BCS-decoded object; pass a read mask like
+	// `Objects` is batched: it takes a list of ids and returns one result per
+	// id, in the same order; reading an id's result returns the error for that
+	// id. The default read mask returns the reference and the BCS-decoded
+	// object; pass a read mask like
 	// `[]iota_sdk.GrpcObjectField{iota_sdk.GrpcObjectFieldReference{}}` to skip the object.
-	objects, err := client.Objects([]*iota_sdk.ObjectId{objectID}, nil)
+	results, err := client.Objects([]*iota_sdk.ObjectId{objectID}, nil)
+	if err != nil {
+		log.Fatalf("Failed to get objects: %v", err)
+	}
+	result, err := results.Get(0)
 	if err != nil {
 		log.Fatalf("Failed to get object: %v", err)
 	}
-	if objects[0].Object == nil {
+	if result.Object == nil {
 		log.Fatal("Object not included in the response")
 	}
-	obj := *objects[0].Object
+	obj := *result.Object
 
 	fmt.Println("Object ID:", obj.Id())
 	fmt.Println("Version:", obj.Version())

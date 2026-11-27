@@ -1,8 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Typed object queries, decoding each object into a Move-type mirror paired
-//! with its object reference.
+//! Typed object queries, decoding each object into a Move-type mirror paired with its object
+//! reference.
 
 use std::marker::PhantomData;
 
@@ -45,9 +45,8 @@ impl<T> OwnedMoveObject<T> {
 
 /// Filter for the typed object queries.
 ///
-/// [`ObjectFilter`] without its type field: the Move type comes from the type
-/// parameter, so there is no second place to set it and nothing to disagree
-/// about.
+/// [`ObjectFilter`] without its type field: the Move type comes from the type parameter, so there
+/// is no second place to set it and nothing to disagree about.
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct MoveObjectFilter {
     /// Filter by the address owning the object.
@@ -58,14 +57,14 @@ pub struct MoveObjectFilter {
 
 impl MoveObjectFilter {
     /// Filter by the address owning the object.
-    pub fn with_owner(mut self, owner: impl Into<Option<Address>>) -> Self {
-        self.owner = owner.into();
+    pub fn with_owner(mut self, owner: Address) -> Self {
+        self.owner = Some(owner);
         self
     }
 
     /// Filter by object ids.
-    pub fn with_object_ids(mut self, object_ids: impl Into<Option<Vec<ObjectId>>>) -> Self {
-        self.object_ids = object_ids.into();
+    pub fn with_object_ids(mut self, object_ids: Vec<ObjectId>) -> Self {
+        self.object_ids = Some(object_ids);
         self
     }
 
@@ -104,8 +103,8 @@ impl<T: MoveObject> ListMoveObjectsQuery<T> {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<OwnedMoveObject<T>>> + Unpin
     where
         T: Clone + Unpin,
@@ -137,19 +136,17 @@ impl<T: MoveObject> ListMoveObjectsQuery<T> {
 }
 
 impl GraphQLClient {
-    /// Return a page of objects of the Move type `T`, decoded into `T` and
-    /// paired with their object references.
+    /// Return a page of objects of the Move type `T`, decoded into `T` and paired with their object
+    /// references.
     ///
-    /// The type filter is derived from `T`, so unlike
-    /// [`GraphQLClient::objects`] this needs no type string and no separate
-    /// decode step.
+    /// The type filter is derived from `T`, so unlike [`GraphQLClient::objects`] this needs no type
+    /// string and no separate decode step.
     ///
     /// # Errors
     ///
-    /// Returns an error if any object in the page fails to decode. The query
-    /// filters on `T`'s exact type, so a failure means the on-chain type has
-    /// moved out from under the mirror rather than that one object is odd —
-    /// yielding the rest of the page would hide that.
+    /// Returns an error if any object in the page fails to decode. The query filters on `T`'s exact
+    /// type, so a failure means the on-chain type has moved out from under the mirror rather than
+    /// that one object is odd — yielding the rest of the page would hide that.
     ///
     /// # Example
     ///
@@ -228,8 +225,8 @@ mod tests {
         );
     }
 
-    /// The type filter comes from `T`, so a page reached this way holds only
-    /// objects of that type — every one of them decoded, or the call failed.
+    /// The type filter comes from `T`, so a page reached this way holds only objects of that type —
+    /// every one of them decoded, or the call failed.
     #[tokio::test]
     async fn test_move_objects_stream() {
         let client = test_client();

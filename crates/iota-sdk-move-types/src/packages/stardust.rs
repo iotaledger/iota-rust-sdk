@@ -28,8 +28,7 @@ pub mod irc27 {
         pub media_type: string::String,
         /// URL pointing to the NFT file location.
         pub uri: Url,
-        /// Alphanumeric text string defining the human identifiable name for
-        /// the NFT.
+        /// Alphanumeric text string defining the human identifiable name for the NFT.
         pub name: string::String,
         /// The human-readable collection name of the NFT.
         pub collection_name: Option<string::String>,
@@ -49,9 +48,9 @@ pub mod irc27 {
 
     #[cfg(feature = "serde")]
     impl Irc27Metadata {
-        /// Decode an [`Irc27Metadata`] from BCS bytes without verifying any
-        /// on-chain type tag (the metadata is usually nested inside an
-        /// [`Nft`](super::nft::Nft), not stored as a top-level object).
+        /// Decode an [`Irc27Metadata`] from BCS bytes without verifying any on-chain type tag (the
+        /// metadata is usually nested inside an [`Nft`](super::nft::Nft), not stored as a top-level
+        /// object).
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
@@ -67,8 +66,8 @@ pub mod nft {
 
     /// Rust version of the Move `stardust::nft::NFT` type.
     ///
-    /// One-time witness marker. The Move struct is empty; the Rust mirror
-    /// carries a `dummy_field` to preserve the BCS wire format.
+    /// One-time witness marker. The Move struct is empty; the Rust mirror carries a `dummy_field`
+    /// to preserve the BCS wire format.
     ///
     /// # BCS
     ///
@@ -97,8 +96,8 @@ pub mod nft {
     pub struct Nft {
         /// The Nft's ID is inherited from Stardust.
         pub id: UID,
-        /// Last sender address assigned before the migration. Not supported
-        /// by the protocol after migration.
+        /// Last sender address assigned before the migration. Not supported by the protocol after
+        /// migration.
         pub legacy_sender: Option<Address>,
         /// The metadata feature.
         pub metadata: Option<Vec<u8>>,
@@ -112,8 +111,7 @@ pub mod nft {
 
     #[cfg(feature = "serde")]
     impl Nft {
-        /// Decode an [`Nft`] from BCS bytes without verifying the on-chain
-        /// type tag.
+        /// Decode an [`Nft`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
@@ -180,24 +178,21 @@ pub mod nft_output {
     where
         T: serde::de::DeserializeOwned,
     {
-        /// Decode a [`NftOutput<T>`] from BCS bytes without verifying the
-        /// on-chain type tag.
+        /// Decode a [`NftOutput<T>`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
-    impl_try_from_object_generic!(NftOutput<T>);
+    impl_try_from_object_generic!(NftOutput<phantom T>);
 }
 
 /// Types from `0x107a::stardust_upgrade_label`.
 pub mod stardust_upgrade_label {
-    /// Rust version of the Move
-    /// `stardust::stardust_upgrade_label::STARDUST_UPGRADE_LABEL` type.
+    /// Rust version of the Move `stardust::stardust_upgrade_label::STARDUST_UPGRADE_LABEL` type.
     ///
-    /// Name of the label applied to vested rewards migrated from Stardust.
-    /// The Move struct is empty; the Rust mirror carries a `dummy_field`
-    /// to preserve the BCS wire format.
+    /// Name of the label applied to vested rewards migrated from Stardust. The Move struct is
+    /// empty; the Rust mirror carries a `dummy_field` to preserve the BCS wire format.
     ///
     /// # BCS
     ///
@@ -227,15 +222,13 @@ pub mod basic_output {
     };
     use crate::iota_framework::{bag::Bag, balance::Balance, object::UID};
 
-    /// Rust version of the Move `stardust::basic_output::BasicOutput<T>`
-    /// type.
+    /// Rust version of the Move `stardust::basic_output::BasicOutput<T>` type.
     ///
-    /// A basic output that carries unlock conditions and feature flags. A
-    /// basic output with an expiration unlock condition must be a shared
-    /// object — that is the only way to handle the two possible addresses
-    /// that can unlock the output. Note that the Move type has no `store`
-    /// ability and no custom transfer function: callers either invoke
-    /// `extract_assets` or call `receive` to obtain a `BasicOutput`.
+    /// A basic output that carries unlock conditions and feature flags. A basic output with an
+    /// expiration unlock condition must be a shared object — that is the only way to handle the two
+    /// possible addresses that can unlock the output. Note that the Move type has no `store`
+    /// ability and no custom transfer function: callers either invoke `extract_assets` or call
+    /// `receive` to obtain a `BasicOutput`.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -295,14 +288,13 @@ pub mod basic_output {
     where
         T: serde::de::DeserializeOwned,
     {
-        /// Decode a [`BasicOutput<T>`] from BCS bytes without verifying
-        /// the on-chain type tag.
+        /// Decode a [`BasicOutput<T>`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
-    impl_try_from_object_generic!(BasicOutput<T>);
+    impl_try_from_object_generic!(BasicOutput<phantom T>);
 }
 
 /// Types from `0x107a::alias`.
@@ -313,10 +305,9 @@ pub mod alias {
 
     /// Rust version of the Move `stardust::alias::Alias` type.
     ///
-    /// The persisted Alias object from Stardust, without tokens or assets.
-    /// Outputs owned by the AliasID/Address in Stardust will be sent to
-    /// this object and have to be received via it once extracted from
-    /// `AliasOutput`.
+    /// The persisted Alias object from Stardust, without tokens or assets. Outputs owned by the
+    /// AliasID/Address in Stardust will be sent to this object and have to be received via it once
+    /// extracted from `AliasOutput`.
     ///
     /// # BCS
     ///
@@ -335,8 +326,7 @@ pub mod alias {
         pub id: UID,
         /// The last State Controller address assigned before the migration.
         pub legacy_state_controller: Address,
-        /// A counter increased by 1 every time the alias was state-
-        /// transitioned.
+        /// A counter increased by 1 every time the alias was state- transitioned.
         pub state_index: u32,
         /// State metadata, used to store additional information.
         pub state_metadata: Option<Vec<u8>>,
@@ -352,8 +342,7 @@ pub mod alias {
 
     #[cfg(feature = "serde")]
     impl Alias {
-        /// Decode an [`Alias`] from BCS bytes without verifying the on-chain
-        /// type tag.
+        /// Decode an [`Alias`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
@@ -366,8 +355,7 @@ pub mod alias {
 pub mod alias_output {
     use crate::iota_framework::{bag::Bag, balance::Balance, object::UID};
 
-    /// Rust version of the Move `stardust::alias_output::AliasOutput<T>`
-    /// type.
+    /// Rust version of the Move `stardust::alias_output::AliasOutput<T>` type.
     ///
     /// Owned object controlled by the Governor Address.
     #[derive(Clone, Debug, Eq, PartialEq)]
@@ -400,20 +388,19 @@ pub mod alias_output {
     where
         T: serde::de::DeserializeOwned,
     {
-        /// Decode an [`AliasOutput<T>`] from BCS bytes without verifying
-        /// the on-chain type tag.
+        /// Decode an [`AliasOutput<T>`] from BCS bytes without verifying the on-chain type tag.
         pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
             bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
         }
     }
 
-    impl_try_from_object_generic!(AliasOutput<T>);
+    impl_try_from_object_generic!(AliasOutput<phantom T>);
 }
 
 /// Types from `0x107a::timelock_unlock_condition`.
 pub mod timelock_unlock_condition {
-    /// Rust version of the Move
-    /// `stardust::timelock_unlock_condition::TimelockUnlockCondition` type.
+    /// Rust version of the Move `stardust::timelock_unlock_condition::TimelockUnlockCondition`
+    /// type.
     ///
     /// # BCS
     ///
@@ -427,8 +414,7 @@ pub mod timelock_unlock_condition {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct TimelockUnlockCondition {
-        /// Unix time (seconds since the Unix epoch) from which the output
-        /// can be consumed.
+        /// Unix time (seconds since the Unix epoch) from which the output can be consumed.
         pub unix_time: u32,
     }
 
@@ -443,8 +429,7 @@ pub mod timelock_unlock_condition {
 pub mod expiration_unlock_condition {
     use iota_types::Address;
 
-    /// Rust version of the Move
-    /// `stardust::expiration_unlock_condition::ExpirationUnlockCondition`
+    /// Rust version of the Move `stardust::expiration_unlock_condition::ExpirationUnlockCondition`
     /// type.
     ///
     /// # BCS
@@ -463,8 +448,8 @@ pub mod expiration_unlock_condition {
         pub owner: Address,
         /// The address allowed to spend the locked funds after `unix_time`.
         pub return_address: Address,
-        /// Before this unix time, the address-unlock condition can unlock
-        /// the output; after, only `return_address` can.
+        /// Before this unix time, the address-unlock condition can unlock the output; after, only
+        /// `return_address` can.
         pub unix_time: u32,
     }
 
@@ -499,11 +484,10 @@ pub mod storage_deposit_return_unlock_condition {
         derive(iota_bcs_schema::MoveShape)
     )]
     pub struct StorageDepositReturnUnlockCondition {
-        /// The address to which the consuming transaction should deposit
-        /// `return_amount`.
+        /// The address to which the consuming transaction should deposit `return_amount`.
         pub return_address: Address,
-        /// The amount of coins the consuming transaction should deposit to
-        /// `return_address`.
+        /// The amount of coins the consuming transaction should deposit to `return_address`.
+        #[cfg_attr(feature = "serde", serde(with = "iota_types::ReadableDisplay"))]
         pub return_amount: u64,
     }
 

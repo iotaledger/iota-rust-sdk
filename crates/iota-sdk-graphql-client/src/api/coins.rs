@@ -42,8 +42,8 @@ impl ListCoinsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<Coin>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -97,8 +97,8 @@ impl ListGasCoinsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<Coin>> + Unpin {
         let pagination = self.coins.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -110,19 +110,19 @@ impl ListGasCoinsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::coin_metadata`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::coin_metadata`]. Await it to send the request.
     pub struct GetCoinMetadataQuery {
         client: GraphQLClient,
-        coin_type: String,
+        coin_type: StructTag,
     }
     output: GraphQLResult<Option<CoinMetadata>>;
 }
 
 impl GetCoinMetadataQuery {
     async fn send(self) -> GraphQLResult<Option<CoinMetadata>> {
+        let coin_type = self.coin_type.to_string();
         let operation = CoinMetadataQueryFragment::build(CoinMetadataArgs {
-            coin_type: &self.coin_type,
+            coin_type: &coin_type,
         });
         let response = self.client.run_query(&operation).await?;
 
@@ -134,7 +134,7 @@ define_query! {
     /// Query for [`GraphQLClient::total_supply`]. Await it to send the request.
     pub struct GetTotalSupplyQuery {
         client: GraphQLClient,
-        coin_type: String,
+        coin_type: StructTag,
     }
     output: GraphQLResult<Option<u64>>;
 }
@@ -151,8 +151,8 @@ impl GetTotalSupplyQuery {
 }
 
 impl GraphQLClient {
-    /// Get the list of coins for the specified address. For IOTA coins, set
-    /// the coin type to `0x2::iota::IOTA`.
+    /// Get the list of coins for the specified address. For IOTA coins, set the coin type to
+    /// `0x2::iota::IOTA`.
     pub fn coins(&self, owner: Address) -> ListCoinsQuery {
         ListCoinsQuery {
             client: self.clone(),
@@ -170,18 +170,18 @@ impl GraphQLClient {
     }
 
     /// Get the coin metadata for the coin type.
-    pub fn coin_metadata(&self, coin_type: impl Into<String>) -> GetCoinMetadataQuery {
+    pub fn coin_metadata(&self, coin_type: StructTag) -> GetCoinMetadataQuery {
         GetCoinMetadataQuery {
             client: self.clone(),
-            coin_type: coin_type.into(),
+            coin_type,
         }
     }
 
     /// Get total supply for the coin type.
-    pub fn total_supply(&self, coin_type: impl Into<String>) -> GetTotalSupplyQuery {
+    pub fn total_supply(&self, coin_type: StructTag) -> GetTotalSupplyQuery {
         GetTotalSupplyQuery {
             client: self.clone(),
-            coin_type: coin_type.into(),
+            coin_type,
         }
     }
 }
@@ -204,13 +204,13 @@ mod tests {
     #[tokio::test]
     async fn coin_metadata_and_total_supply_send_the_coin_type() {
         let vars = sent_variables("CoinMetadataQueryFragment", |client| async move {
-            let _ = client.coin_metadata("0x2::iota::IOTA").await;
+            let _ = client.coin_metadata(StructTag::new_gas()).await;
         })
         .await;
         assert_eq!(vars["coinType"], "0x2::iota::IOTA");
 
         let vars = sent_variables("CoinMetadataQueryFragment", |client| async move {
-            let _ = client.total_supply("0x2::iota::IOTA").await;
+            let _ = client.total_supply(StructTag::new_gas()).await;
         })
         .await;
         assert_eq!(vars["coinType"], "0x2::iota::IOTA");
@@ -288,9 +288,8 @@ mod tests {
         let client = test_client();
         let faucet = match client.rpc_server().as_str() {
             LOCAL_HOST => FaucetClient::new_localnet(),
-            // The testnet and devnet faucets are web-only and expose no
-            // programmatic gas endpoint, so this test can only fund an
-            // address on localnet.
+            // The testnet and devnet faucets are web-only and expose no programmatic gas endpoint,
+            // so this test can only fund an address on localnet.
             _ => return,
         };
         let key = Ed25519PublicKey::random();
@@ -303,9 +302,9 @@ mod tests {
         const MAX_RETRIES: u32 = 10;
         const RETRY_DELAY: time::Duration = time::Duration::from_secs(1);
 
-        // Retry until the expected number of coins is streamed. Indexer lag can
-        // return a successful but incomplete page, so retry on a low count as
-        // well as on a stream error, re-counting from scratch each attempt.
+        // Retry until the expected number of coins is streamed. Indexer lag can return a successful
+        // but incomplete page, so retry on a low count as well as on a stream error, re-counting
+        // from scratch each attempt.
         let mut num_coins = 0;
         for attempt in 0..MAX_RETRIES {
             num_coins = 0;
@@ -339,7 +338,7 @@ mod tests {
     async fn test_coin_metadata_query() {
         let client = test_client();
         client
-            .coin_metadata("0x2::iota::IOTA")
+            .coin_metadata(StructTag::new_gas())
             .await
             .map_err(|e| {
                 format!(
@@ -355,7 +354,7 @@ mod tests {
     async fn test_total_supply() {
         let client = test_client();
         client
-            .total_supply("0x2::iota::IOTA")
+            .total_supply(StructTag::new_gas())
             .await
             .map_err(|e| {
                 format!(

@@ -107,3 +107,53 @@ This builds `.so` files for all 4 ABIs and copies them to `bindings/kotlin/lib/a
 ### Demo App
 
 See [`examples/android-demo/`](examples/android-demo/) for a minimal Android app using the IOTA Kotlin SDK.
+
+## Ledger
+
+`Ledger` connects to the IOTA app on a Ledger hardware wallet, and a `LedgerSigner` signs transactions and personal messages with the key at one derivation path:
+
+```kotlin
+val ledger = Ledger.nativeHid()
+ledger.openApp()
+val signer = ledger.signer("m/44'/4218'/0'/0'/0'")
+
+val builder = client.transactionBuilder(signer.address())
+builder.sendIota(recipientAddress, PtbArgument.u64(1000uL))
+val effects =
+    builder.execute(TransactionSigner.fromLedger(signer), WaitForTransaction.FINALIZED)
+```
+
+The complete program is the [`LedgerSignSendIota`](examples/LedgerSignSendIota.kt) example.
+
+### USB
+
+`Ledger.nativeHid` connects to the first Ledger device attached over USB, on Linux, macOS and Windows.
+
+- Install the IOTA app on the device with Ledger Live and unlock the device. `openApp` opens the app.
+- On Linux, install the udev rules from [LedgerHQ/udev-rules](https://github.com/LedgerHQ/udev-rules) so that a regular user can open the device.
+- The native libraries of the released package are built without USB support, so `Ledger.nativeHid` fails with them. The library built by `make kotlin` has it; on Linux that build needs the `libudev` development package (`libudev-dev` on Debian and Ubuntu).
+
+### Speculos
+
+[Speculos](https://github.com/LedgerHQ/speculos) emulates a device running the IOTA app, for development without hardware. From the repository root, `make speculos-start` runs it in Docker and `make speculos-stop` stops it; [Using Speculos](../../crates/iota-sdk-ledger/README.md#using-speculos) describes running it yourself. Connect with `Ledger.speculos("127.0.0.1", 9999u)` and approve requests in the emulator's web interface at <http://127.0.0.1:5001>.
+
+With a local network running, `make ledger-example lang=kotlin` starts the emulator, runs the example on it and approves the transaction.
+
+### Host transport
+
+The Android libraries cannot open USB devices. To reach a device there, or over any other link the SDK does not provide, implement `LedgerTransport` on top of that link, such as Bluetooth through Ledger's mobile SDKs, and pass it to `Ledger.fromTransport`:
+
+```kotlin
+class BluetoothTransport : LedgerTransport {
+    override suspend fun exchange(apdu: ByteArray): ByteArray {
+        // Send the APDU command to the device and return its answer, which
+        // ends with the two-byte status word
+    }
+}
+
+val ledger = Ledger.fromTransport(BluetoothTransport())
+```
+
+### Clear and blind signing
+
+The IOTA app shows what a transaction does when it can work that out from the transaction and its input objects. The transaction builder passes them to a `TransactionSigner.fromLedger` signer; `LedgerSigner.signTransaction` sends none, and `signTransactionWithObjects` takes them as an argument. A transaction the app cannot interpret is only signed when blind signing is enabled in the app's settings. Otherwise the device tells the user so, and `LedgerSigner` then fails with `LedgerException.BlindSigningDisabled`.

@@ -43,9 +43,8 @@ impl crate::TreeDisplay for TransactionEffects {
 
 /// A shared object an executed transaction took as input.
 ///
-/// Not a wire type: this is the effects' view of the shared objects a
-/// transaction was sequenced against, drawn from both the objects it changed
-/// and those it left unchanged.
+/// Not a wire type: this is the effects' view of the shared objects a transaction was sequenced
+/// against, drawn from both the objects it changed and those it left unchanged.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[non_exhaustive]
 pub enum InputSharedObject {
@@ -57,15 +56,13 @@ pub enum InputSharedObject {
     ReadDeleted(ObjectVersion),
     /// Taken mutably, but already deleted by an earlier transaction.
     MutateDeleted(ObjectVersion),
-    /// Taken by a transaction that consensus canceled; the version carries the
-    /// cancellation reason.
+    /// Taken by a transaction that consensus canceled; the version carries the cancellation reason.
     Canceled(ObjectVersion),
 }
 
 impl InputSharedObject {
-    /// The object's reference. A shared object that no longer exists is
-    /// reported at the version it was last known at, with the tombstone digest
-    /// for why it is gone.
+    /// The object's reference. A shared object that no longer exists is reported at the version it
+    /// was last known at, with the tombstone digest for why it is gone.
     pub fn object_reference(&self) -> ObjectReference {
         match self {
             Self::Mutate(reference) | Self::ReadOnly(reference) => *reference,
@@ -100,9 +97,8 @@ impl crate::TreeDisplay for InputSharedObject {
 
 /// How an object came to be in the store after a transaction wrote it.
 ///
-/// Not a wire type: this tags an object reported by
-/// [`TransactionEffectsV1::all_changed_objects`] with which of the object sets
-/// it came from.
+/// Not a wire type: this tags an object reported by [`TransactionEffectsV1::all_changed_objects`]
+/// with which of the object sets it came from.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[non_exhaustive]
 pub enum WriteKind {
@@ -110,8 +106,7 @@ pub enum WriteKind {
     Mutate,
     /// The transaction created the object.
     Create,
-    /// The object was wrapped inside another object, and the transaction
-    /// restored it to the store.
+    /// The object was wrapped inside another object, and the transaction restored it to the store.
     Unwrap,
 }
 
@@ -128,9 +123,8 @@ impl std::fmt::Display for WriteKind {
 
 /// Why an object is no longer in the store after a transaction.
 ///
-/// Not a wire type: this tags an object reported by
-/// [`TransactionEffectsV1::all_removed_objects`] with which of the object sets
-/// it came from.
+/// Not a wire type: this tags an object reported by [`TransactionEffectsV1::all_removed_objects`]
+/// with which of the object sets it came from.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[non_exhaustive]
 pub enum ObjectRemoveKind {
@@ -202,8 +196,8 @@ mod tests {
         }
     }
 
-    /// Shared inputs are drawn from both the objects a transaction changed and
-    /// those it left unchanged, and a per-epoch config object is not one.
+    /// Shared inputs are drawn from both the objects a transaction changed and those it left
+    /// unchanged, and a per-epoch config object is not one.
     #[test]
     fn input_shared_objects_span_changed_and_unchanged() {
         use crate::{
@@ -278,8 +272,7 @@ mod tests {
             ],
         );
 
-        // A shared object that no longer exists is reported with the tombstone
-        // digest saying why.
+        // A shared object that no longer exists is reported with the tombstone digest saying why.
         assert!(
             InputSharedObject::ReadDeleted(object(read_deleted))
                 .object_reference()
@@ -294,9 +287,9 @@ mod tests {
         );
     }
 
-    /// A written object takes the version the transaction assigned, while a
-    /// package keeps the version it was published or upgraded at. The fixtures
-    /// cannot tell these apart, since they publish at their lamport version.
+    /// A written object takes the version the transaction assigned, while a package keeps the
+    /// version it was published or upgraded at. The fixtures cannot tell these apart, since they
+    /// publish at their lamport version.
     #[test]
     fn the_object_sets_keep_a_package_at_its_own_version() {
         use crate::{
@@ -353,8 +346,8 @@ mod tests {
         );
     }
 
-    /// A package write is only ever a create or a mutate: it is not reported as
-    /// an unwrap, and never as the gas object.
+    /// A package write is only ever a create or a mutate: it is not reported as an unwrap, and
+    /// never as the gas object.
     #[test]
     fn a_package_write_is_neither_unwrapped_nor_gas() {
         use crate::{
@@ -380,8 +373,7 @@ mod tests {
                     version: Version::from_u64(1),
                     digest: ObjectDigest::new([2; 32]),
                 },
-                // Neither created nor deleted, which is what would otherwise
-                // read as an unwrap.
+                // Neither created nor deleted, which is what would otherwise read as an unwrap.
                 id_operation: IdOperation::None,
             }],
             unchanged_shared_objects: Vec::new(),
@@ -392,9 +384,8 @@ mod tests {
         assert!(effects.gas_object().is_none());
     }
 
-    /// Every object set and both tagged unions, over effects that contain one
-    /// object of each kind. The fixtures hold only created and mutated objects,
-    /// so this is what covers the other four.
+    /// Every object set and both tagged unions, over effects that contain one object of each kind.
+    /// The fixtures hold only created and mutated objects, so this is what covers the other four.
     #[test]
     fn object_sets_report_each_kind() {
         use crate::{
@@ -490,8 +481,7 @@ mod tests {
             ]
         );
 
-        // An object unwrapped and then deleted was never in the store, so it is
-        // not a removal.
+        // An object unwrapped and then deleted was never in the store, so it is not a removal.
         assert_eq!(
             effects
                 .all_removed_objects()
@@ -504,8 +494,8 @@ mod tests {
             ]
         );
 
-        // Removals carry the tombstone digest for why the object is gone, at the
-        // version this transaction assigned.
+        // Removals carry the tombstone digest for why the object is gone, at the version this
+        // transaction assigned.
         for (reference, kind) in effects.all_removed_objects() {
             assert_eq!(reference.version, lamport_version);
             match kind {
@@ -518,8 +508,8 @@ mod tests {
         }
     }
 
-    /// The tagged unions are exactly the sets they are drawn from, so nothing
-    /// is dropped or double-counted, and each object carries the right tag.
+    /// The tagged unions are exactly the sets they are drawn from, so nothing is dropped or
+    /// double-counted, and each object carries the right tag.
     #[test]
     fn tagged_unions_cover_the_object_sets() {
         use crate::{ObjectRemoveKind, WriteKind};
@@ -558,16 +548,15 @@ mod tests {
             assert_eq!(removed_of_kind(ObjectRemoveKind::Delete), fx.deleted());
             assert_eq!(removed_of_kind(ObjectRemoveKind::Wrap), fx.wrapped());
 
-            // An object unwrapped and then deleted was never in the store, so it
-            // is not a removal.
+            // An object unwrapped and then deleted was never in the store, so it is not a removal.
             for reference in fx.unwrapped_then_deleted() {
                 assert!(!removed.iter().any(|(removed, _)| *removed == reference));
             }
         }
     }
 
-    /// Every changed object falls into exactly one of the reported sets, so the
-    /// sets partition `changed_objects` and never report an object twice.
+    /// Every changed object falls into exactly one of the reported sets, so the sets partition
+    /// `changed_objects` and never report an object twice.
     #[test]
     fn object_sets_partition_the_changed_objects() {
         for fixture in [GENESIS_EFFECTS, SPONSOR_TX_EFFECTS] {
@@ -602,9 +591,8 @@ mod tests {
         }
     }
 
-    /// Output objects other than packages are reported at the lamport version,
-    /// and the objects reported as modified are exactly those with a
-    /// pre-transaction state.
+    /// Output objects other than packages are reported at the lamport version, and the objects
+    /// reported as modified are exactly those with a pre-transaction state.
     #[test]
     fn object_sets_agree_with_the_raw_effects() {
         for fixture in [GENESIS_EFFECTS, SPONSOR_TX_EFFECTS] {
@@ -634,8 +622,8 @@ mod tests {
         }
     }
 
-    /// A transaction that pays for itself reports its gas object; the genesis
-    /// transaction is a system transaction, pays no gas, and reports none.
+    /// A transaction that pays for itself reports its gas object; the genesis transaction is a
+    /// system transaction, pays no gas, and reports none.
     #[test]
     fn gas_object_is_absent_without_a_gas_payment() {
         let effects: TransactionEffects =

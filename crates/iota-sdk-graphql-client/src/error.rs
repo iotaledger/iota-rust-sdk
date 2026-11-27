@@ -19,13 +19,12 @@ type BoxError = Box<dyn std::error::Error + Send + Sync + 'static>;
 
 pub type GraphQLResult<T> = std::result::Result<T, GraphQLError>;
 
-/// Maximum number of body bytes retained in an HTTP/decode error. Load
-/// balancer and gateway pages can be hundreds of KB, so the body is truncated
-/// before being stored in the error.
+/// Maximum number of body bytes retained in an HTTP/decode error. Load balancer and gateway pages
+/// can be hundreds of KB, so the body is truncated before being stored in the error.
 const MAX_ERROR_BODY_BYTES: usize = 512;
 
-/// Render a response body as a truncated, UTF-8-lossy string suitable for
-/// inclusion in an error message.
+/// Render a response body as a truncated, UTF-8-lossy string suitable for inclusion in an error
+/// message.
 fn truncated_body(bytes: &[u8]) -> String {
     let truncated = bytes.len() > MAX_ERROR_BODY_BYTES;
     let slice = &bytes[..bytes.len().min(MAX_ERROR_BODY_BYTES)];
@@ -36,20 +35,23 @@ fn truncated_body(bytes: &[u8]) -> String {
     body
 }
 
-/// A GraphQL error as reported by the server, with its [`ErrorExtensions`]
-/// decoded.
+/// A GraphQL error as reported by the server, with its [`ErrorExtensions`] decoded.
 pub type QueryError = cynic::GraphQlError<ErrorExtensions>;
 
 /// The `extensions` object of a GraphQL error returned by the server.
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq)]
 #[serde(crate = "cynic::serde")]
 #[non_exhaustive]
+#[serde(rename_all = "camelCase")]
 pub struct ErrorExtensions {
     /// Machine-readable error kind, e.g. `BAD_USER_INPUT`.
     pub code: Option<String>,
+    /// On a `DATA_PRUNED` error, the oldest checkpoint the request could have found data in;
+    /// anything before it has been pruned.
+    pub oldest_available_checkpoint: Option<u64>,
 }
 
-/// Convert an error whose extensions were not decoded; `code` is `None`.
+/// Convert an error whose extensions were not decoded.
 pub(crate) fn query_error(error: cynic::GraphQlError) -> QueryError {
     QueryError::new(error.message, error.locations, error.path, None)
 }
@@ -64,12 +66,11 @@ fn display_graphql_errors(errors: &[QueryError]) -> String {
 
 /// Errors returned by the GraphQL client.
 ///
-/// A queried object, transaction or checkpoint that does not exist is reported
-/// as `Ok(None)`, so absence never surfaces here.
+/// A queried object, transaction or checkpoint that does not exist is reported as `Ok(None)`, so
+/// absence never surfaces here.
 ///
-/// A variant that wraps another error renders that error inline and also
-/// exposes it through [`std::error::Error::source`], so the message is
-/// self-contained and the cause stays matchable.
+/// A variant that wraps another error renders that error inline and also exposes it through
+/// [`std::error::Error::source`], so the message is self-contained and the cause stays matchable.
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
 pub enum GraphQLError {
@@ -100,8 +101,8 @@ pub enum GraphQLError {
         #[source]
         source: serde_json::Error,
     },
-    /// The server returned errors for the query. The server sends no
-    /// [`ErrorExtensions::code`] for subscription errors.
+    /// The server returned errors for the query. The server sends no [`ErrorExtensions::code`] for
+    /// subscription errors.
     #[error("query error: [{}]", display_graphql_errors(.0))]
     Query(Vec<QueryError>),
     /// The response carried neither data nor errors.
@@ -110,10 +111,12 @@ pub enum GraphQLError {
     /// A response field the client needs to build its return value was empty.
     #[error("empty response field: {0}")]
     EmptyResponseField(&'static str),
-    /// The server returned a variant of a GraphQL union or enum this client
-    /// does not know.
+    /// The server returned a variant of a GraphQL union or enum this client does not know.
     #[error("unknown {0} variant")]
     UnknownVariant(&'static str),
+    /// A page announced more pages but gave no cursor that advances past it.
+    #[error("page did not advance: {0}")]
+    PageNotAdvanced(&'static str),
     /// A response value could not be deserialized into its SDK type.
     #[error("deserialization error: {0}")]
     Deserialization(#[source] BoxError),
@@ -136,14 +139,17 @@ pub enum GraphQLError {
         /// The type the field actually holds.
         actual: TypeTag,
     },
-    /// The caller-supplied arguments cannot be combined, or a caller-supplied
-    /// value is not usable for this operation.
+    /// The caller-supplied arguments cannot be combined, or a caller-supplied value is not usable
+    /// for this operation.
     #[error("invalid argument: {0}")]
     InvalidArgument(&'static str),
     /// The RPC URL scheme is not usable for subscriptions.
     #[error("unsupported RPC scheme `{0}` for subscriptions, expected http, https, ws or wss")]
     UnsupportedSubscriptionScheme(String),
     /// The RPC URL needs TLS, which this build does not have.
+    #[deprecated(
+        note = "no longer returned; an `https` request without TLS fails with `Request` unless a proxy is set"
+    )]
     #[error(
         "scheme `{0}` needs TLS: enable the `tls-ring` or `tls-aws-lc` feature, or pass your own \
          client to `new_with_reqwest_client`"
@@ -158,15 +164,27 @@ pub enum GraphQLError {
     /// The subscription transport failed.
     #[error("subscription error: {0}")]
     Subscription(#[source] BoxError),
-    /// The subscription server dropped `count` payloads before the next one
-    /// because the client could not keep up. The stream continues after this
-    /// error.
+    /// The subscription server dropped `count` payloads before the next one because the client
+    /// could not keep up. The stream continues after this error.
     #[error("subscription lagged: {count} payload(s) dropped by the server")]
     Lagged { count: u32 },
+    /// The indexer requires a newer `iota-sdk-graphql-client` than this one.
+    ///
+    /// Raised on a query response or a subscription handshake, before anything is decoded. The
+    /// indexer has still processed the request, so a transaction sent for execution may have been
+    /// executed. A subscription ends after this error. Upgrade the crate.
+    #[error(
+        "the indexer requires a newer IOTA SDK, upgrade it (needs iota-sdk-graphql-client >= {minimum}, this SDK uses {current})"
+    )]
+    OutdatedClient {
+        /// The lowest `iota-sdk-graphql-client` version the indexer accepts.
+        minimum: String,
+        /// The version of this crate.
+        current: String,
+    },
 }
 
-/// The HTTP response a [`GraphQLError::Http`] or [`GraphQLError::Json`] was
-/// raised for.
+/// The HTTP response a [`GraphQLError::Http`] or [`GraphQLError::Json`] was raised for.
 #[derive(Debug)]
 pub struct HttpResponse {
     url: Url,
@@ -200,16 +218,16 @@ impl HttpResponse {
         &self.body
     }
 
-    /// Name of the type the response was being decoded into. A bare status or
-    /// `serde_json` error does not reveal what the client was decoding.
+    /// Name of the type the response was being decoded into. A bare status or `serde_json` error
+    /// does not reveal what the client was decoding.
     pub fn target_type(&self) -> &'static str {
         self.target_type
     }
 }
 
 impl GraphQLError {
-    /// Build a [`GraphQLError::Http`] from a non-success response, retaining a
-    /// truncated, UTF-8-lossy snapshot of the body.
+    /// Build a [`GraphQLError::Http`] from a non-success response, retaining a truncated,
+    /// UTF-8-lossy snapshot of the body.
     pub(crate) fn http(
         url: Url,
         status: StatusCode,
@@ -221,8 +239,8 @@ impl GraphQLError {
         }
     }
 
-    /// Build a [`GraphQLError::Json`] from a response whose body is not valid
-    /// JSON, retaining a truncated, UTF-8-lossy snapshot of the body.
+    /// Build a [`GraphQLError::Json`] from a response whose body is not valid JSON, retaining a
+    /// truncated, UTF-8-lossy snapshot of the body.
     pub(crate) fn json(
         url: Url,
         status: StatusCode,
@@ -352,11 +370,10 @@ mod tests {
         );
     }
 
-    /// Rendering the message inline and exposing the same error through
-    /// `source` means a cause-chain formatter (`anyhow`/`eyre` `{:#}`, `{:?}`)
-    /// prints the wrapped message twice. That is the accepted cost of a
-    /// self-contained `Display`: a consumer that reads only the top frame,
-    /// such as the FFI layer, still sees the whole failure.
+    /// Rendering the message inline and exposing the same error through `source` means a
+    /// cause-chain formatter (`anyhow`/`eyre` `{:#}`, `{:?}`) prints the wrapped message twice.
+    /// That is the accepted cost of a self-contained `Display`: a consumer that reads only the top
+    /// frame, such as the FFI layer, still sees the whole failure.
     #[test]
     fn chain_formatters_repeat_the_wrapped_message() {
         use std::error::Error as _;

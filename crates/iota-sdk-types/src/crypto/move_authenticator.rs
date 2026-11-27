@@ -3,10 +3,9 @@
 
 use crate::{Address, Input, TypeTag, transaction::SharedObjectReference};
 
-/// MoveAuthenticator is a signature variant that enables a method of
-/// authentication through Move code. This type represents the data received
-/// by the Move authenticate function during the Account Abstraction
-/// authentication flow.
+/// MoveAuthenticator is a signature variant that enables a method of authentication through Move
+/// code. This type represents the data received by the Move authenticate function during the
+/// Account Abstraction authentication flow.
 ///
 /// # BCS
 ///
@@ -19,9 +18,9 @@ use crate::{Address, Input, TypeTag, transaction::SharedObjectReference};
 #[non_exhaustive]
 pub enum MoveAuthenticator {
     V1(MoveAuthenticatorV1),
-    // When new variants are introduced, it is important that we consciously gate
-    // version support (e.g. in transaction validity checks based on the protocol
-    // config), as is done for `Transaction`.
+    // When new variants are introduced, it is important that we consciously gate version support
+    // (e.g. in transaction validity checks based on the protocol config), as is done for
+    // `Transaction`.
 }
 
 impl MoveAuthenticator {
@@ -34,8 +33,8 @@ impl MoveAuthenticator {
         }
     }
 
-    /// Returns the address of the object being authenticated, which acts as
-    /// the sender of the transaction.
+    /// Returns the address of the object being authenticated, which acts as the sender of the
+    /// transaction.
     pub fn address(&self) -> Address {
         match self {
             Self::V1(v1) => v1.address(),
@@ -58,11 +57,10 @@ pub struct MoveAuthenticatorV1 {
     call_args: Vec<Input>,
     /// Type arguments for the Move authenticate function
     type_args: Vec<TypeTag>,
-    /// The object that is authenticated. Represents the account being the
-    /// sender of the transaction.
+    /// The object that is authenticated. Represents the account being the sender of the
+    /// transaction.
     ///
-    /// Only [`Input::Shared`] is valid here; deserialization rejects any other
-    /// [`Input`] variant.
+    /// Only [`Input::Shared`] is valid here; deserialization rejects any other [`Input`] variant.
     #[cfg_attr(
         feature = "serde",
         serde(deserialize_with = "deserialize_object_to_authenticate")
@@ -71,8 +69,8 @@ pub struct MoveAuthenticatorV1 {
     object_to_authenticate: Input,
 }
 
-/// Deserializes [`MoveAuthenticatorV1::object_to_authenticate`], rejecting any
-/// [`Input`] variant other than [`Input::Shared`].
+/// Deserializes [`MoveAuthenticatorV1::object_to_authenticate`], rejecting any [`Input`] variant
+/// other than [`Input::Shared`].
 #[cfg(feature = "serde")]
 fn deserialize_object_to_authenticate<'de, D>(deserializer: D) -> Result<Input, D::Error>
 where
@@ -88,8 +86,8 @@ where
 }
 
 /// Strategy generating only the [`Input`] variant valid for
-/// [`MoveAuthenticatorV1::object_to_authenticate`], keeping proptest-generated
-/// values in sync with what [`deserialize_object_to_authenticate`] accepts.
+/// [`MoveAuthenticatorV1::object_to_authenticate`], keeping proptest-generated values in sync with
+/// what [`deserialize_object_to_authenticate`] accepts.
 #[cfg(feature = "proptest")]
 fn arb_object_to_authenticate() -> impl proptest::strategy::Strategy<Value = Input> {
     use proptest::prelude::*;
@@ -111,8 +109,8 @@ impl MoveAuthenticatorV1 {
         }
     }
 
-    /// Returns the address of the object being authenticated, which acts as the
-    /// sender of the transaction.
+    /// Returns the address of the object being authenticated, which acts as the sender of the
+    /// transaction.
     pub fn address(&self) -> Address {
         match self.object_to_authenticate {
             Input::Shared(SharedObjectReference { object_id, .. }) => object_id.into(),
@@ -120,8 +118,7 @@ impl MoveAuthenticatorV1 {
         }
     }
 
-    /// Returns the input objects or primitive values passed to the authenticate
-    /// function.
+    /// Returns the input objects or primitive values passed to the authenticate function.
     pub fn call_args(&self) -> &[Input] {
         &self.call_args
     }
@@ -248,9 +245,8 @@ mod tests {
 
     #[test]
     fn deserialization_rejects_non_object_to_authenticate() {
-        // Serialization is unchecked and the field is private, so craft the
-        // forbidden values directly to confirm only deserialization rejects
-        // them.
+        // Serialization is unchecked and the field is private, so craft the forbidden values
+        // directly to confirm only deserialization rejects them.
         let bad_inputs = [
             Input::Pure(vec![1, 2, 3]),
             Input::ImmutableOrOwned(ObjectReference {
@@ -293,13 +289,12 @@ mod tests {
         assert_eq!(d1, d2, "digest must be deterministic");
     }
 
-    /// An on-chain `MoveAuthenticator` fixture, decoded along both
-    /// deserialization paths.
+    /// An on-chain `MoveAuthenticator` fixture, decoded along both deserialization paths.
     struct OnchainFixture {
         /// Human-readable label: `<network>/<object-id> (<module::Type>)`.
         name: &'static str,
-        /// Base64 of the full serialized authenticator, including the leading
-        /// `0x07` `SignatureScheme::MoveAuthenticator` flag byte.
+        /// Base64 of the full serialized authenticator, including the leading `0x07`
+        /// `SignatureScheme::MoveAuthenticator` flag byte.
         b64: &'static str,
         /// Base58 `MoveAuthenticator::digest()`, frozen to pin the digest.
         digest: &'static str,
@@ -338,10 +333,9 @@ mod tests {
         },
     ];
 
-    /// A synthetic `MoveAuthenticator` fixture: a value built in code together
-    /// with its frozen wire encoding. The builder catches accidental value
-    /// changes; the frozen `b64` catches encoding drift (e.g. a `Input`
-    /// variant being reordered).
+    /// A synthetic `MoveAuthenticator` fixture: a value built in code together with its frozen wire
+    /// encoding. The builder catches accidental value changes; the frozen `b64` catches encoding
+    /// drift (e.g. a `Input` variant being reordered).
     struct SyntheticFixture {
         name: &'static str,
         auth: MoveAuthenticator,
@@ -349,9 +343,9 @@ mod tests {
         digest: &'static str,
     }
 
-    /// Synthetic fixtures exercising structural shapes absent from the on-chain
-    /// fixtures: non-empty and nested `type_arguments`, and `call_args`
-    /// containing owned / receiving / mutable-shared inputs.
+    /// Synthetic fixtures exercising structural shapes absent from the on-chain fixtures: non-empty
+    /// and nested `type_arguments`, and `call_args` containing owned / receiving / mutable-shared
+    /// inputs.
     fn synthetic_fixtures() -> Vec<SyntheticFixture> {
         let owned = |b: u8, v: u64| {
             ObjectReference::new(
@@ -431,9 +425,8 @@ mod tests {
         ]
     }
 
-    /// Asserts the full encode/decode contract for a fixture given its base64
-    /// wire bytes. When `expected` is supplied, the decoded value must equal
-    /// it.
+    /// Asserts the full encode/decode contract for a fixture given its base64 wire bytes. When
+    /// `expected` is supplied, the decoded value must equal it.
     fn check_round_trip(name: &str, b64: &str, digest: &str, expected: Option<&MoveAuthenticator>) {
         let bytes =
             Base64::decode_vec(b64).unwrap_or_else(|e| panic!("{name}: invalid base64: {e:?}"));
@@ -449,14 +442,12 @@ mod tests {
             "{name}: re-serialization mismatch"
         );
 
-        // Raw BCS of the tail into the inner enum agrees with the flag-aware
-        // path.
+        // Raw BCS of the tail into the inner enum agrees with the flag-aware path.
         let auth_from_bcs = bcs::from_bytes::<MoveAuthenticator>(&bytes[1..])
             .unwrap_or_else(|e| panic!("{name}: bcs::from_bytes: {e:?}"));
 
-        // Mirror of the raw-BCS decode path: encoding the inner enum reproduces
-        // the flag-stripped tail (`to_bytes` is just this prefixed with the
-        // flag).
+        // Mirror of the raw-BCS decode path: encoding the inner enum reproduces the flag-stripped
+        // tail (`to_bytes` is just this prefixed with the flag).
         assert_eq!(
             bcs::to_bytes(&auth_from_bytes)
                 .expect("BCS serialization should not fail")

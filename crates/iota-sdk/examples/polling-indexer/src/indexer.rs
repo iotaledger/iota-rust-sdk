@@ -8,7 +8,7 @@ use iota_sdk::{
         GraphQLClient, PaginationFilter,
         query_types::{EventFilter, TransactionsFilter},
     },
-    types::{ExecutionStatus, SignedTransaction, Transaction},
+    types::{ExecutionStatus, SignedTransaction, Transaction, TransactionDigest},
 };
 use serde_json::json;
 use sqlx::PgPool;
@@ -26,8 +26,7 @@ use crate::{
 enum ProcessResult {
     /// Successfully processed. Value is the next checkpoint to resume from.
     Advance(u64),
-    /// The unit of work is not ready yet (e.g. checkpoint not indexed
-    /// on-chain).
+    /// The unit of work is not ready yet (e.g. checkpoint not indexed on-chain).
     NotReady,
 }
 
@@ -186,8 +185,8 @@ impl Indexer {
     // Batch filtered mode
     // ------------------------------------------------------------------
 
-    /// Query transactions across `[range_start, range_end]` in one paginated
-    /// stream, storing matching transactions and their events.
+    /// Query transactions across `[range_start, range_end]` in one paginated stream, storing
+    /// matching transactions and their events.
     async fn process_batch(&self, range_start: u64, range_end: u64) -> anyhow::Result<()> {
         info!(range_start, range_end, "processing batch");
 
@@ -245,9 +244,8 @@ impl Indexer {
                     .store_events_for_transaction(checkpoint_seq, tx_digest)
                     .await?;
 
-                // When only event filters are set (package derived from
-                // event_type), skip transactions that produced no matching
-                // events.
+                // When only event filters are set (package derived from event_type), skip
+                // transactions that produced no matching events.
                 if self.config.filters.is_event_only() && event_count == 0 {
                     continue;
                 }
@@ -408,8 +406,7 @@ impl Indexer {
     // Shared: event storage
     // ------------------------------------------------------------------
 
-    /// Store events for a transaction. Returns the number of matching events
-    /// stored.
+    /// Store events for a transaction. Returns the number of matching events stored.
     async fn store_events_for_transaction(
         &self,
         checkpoint: Option<u64>,
@@ -419,14 +416,15 @@ impl Indexer {
         let mut stored = 0_u64;
 
         loop {
+            let mut filter = EventFilter::default()
+                .with_transaction_digest(TransactionDigest::from_base58(transaction_digest)?);
+            if let Some(event_type) = self.config.filters.event_type.clone() {
+                filter = filter.with_event_type(event_type);
+            }
             let event_page = self
                 .client
                 .events()
-                .filter(
-                    EventFilter::default()
-                        .with_transaction_digest(transaction_digest.to_owned())
-                        .with_event_type(self.config.filters.event_type.clone()),
-                )
+                .filter(filter)
                 .pagination(PaginationFilter {
                     limit: Some(self.config.page_size),
                     cursor: cursor.clone(),
@@ -524,8 +522,8 @@ fn tx_kind_str(tx: &SignedTransaction) -> String {
 }
 
 /// Extract the short event name from a fully qualified event type.
-/// Handles generic types like `0x2::display::DisplayCreated<0x107a::nft::Nft>`
-/// → `DisplayCreated<0x107a::nft::Nft>`.
+/// Handles generic types like `0x2::display::DisplayCreated<0x107a::nft::Nft>` →
+/// `DisplayCreated<0x107a::nft::Nft>`.
 fn extract_event_name(event_type: &str) -> String {
     if let Some(angle_pos) = event_type.find('<') {
         let prefix = &event_type[..angle_pos];
@@ -540,9 +538,9 @@ fn extract_event_name(event_type: &str) -> String {
     }
 }
 
-/// Batch-fetch checkpoint sequence numbers for multiple transactions using
-/// aliased GraphQL queries, avoiding per-transaction round-trips. Digests are
-/// processed in chunks to stay within GraphQL query complexity limits.
+/// Batch-fetch checkpoint sequence numbers for multiple transactions using aliased GraphQL queries,
+/// avoiding per-transaction round-trips. Digests are processed in chunks to stay within GraphQL
+/// query complexity limits.
 async fn batch_lookup_tx_checkpoints(
     client: &GraphQLClient,
     digests: &[String],

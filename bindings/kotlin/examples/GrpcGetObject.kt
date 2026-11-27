@@ -13,14 +13,13 @@ fun main() = runBlocking {
         val objectId =
             ObjectId.fromHex("0x541b117cac18fb1c07a293db300acd12b05c01fa81232b37151b005ca7d4f755")
 
-        // `objects` is batched: it takes a list of ids and returns the objects in
-        // the same order. The default read mask returns the reference and the
-        // BCS-decoded object; pass `readMask = listOf(GrpcObjectField.Reference)` to
-        // skip the object.
-        val obj =
-            checkNotNull(client.objects(listOf(objectId))[0].`object`) {
-                "Object not included in the response"
-            }
+        // `objects` is batched: it takes a list of ids and returns one result per
+        // id, in the same order; reading an id's result throws the error for that
+        // id. The default read mask returns the reference and the BCS-decoded
+        // object; pass `readMask = listOf(GrpcObjectField.Reference)` to skip the
+        // object.
+        val result = client.objects(listOf(objectId)).get(0uL)
+        val obj = checkNotNull(result.`object`) { "Object not included in the response" }
 
         println("Object ID: ${obj.id()}")
         println("Version: ${obj.version()}")

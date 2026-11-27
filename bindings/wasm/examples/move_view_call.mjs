@@ -18,6 +18,7 @@ const SHOP =
   "0x9d5ce0da7531d56ffecced5efb7e19ccad0e191071041267cc8134a3e5a6cd20";
 
 const client = GraphQlClient.newTestnet();
+const packageId = ObjectId.fromHex(PACKAGE);
 
 // === Example 1: moveViewCall() with typed arguments (primitives) ===
 console.log(
@@ -26,7 +27,9 @@ console.log(
 
 const priceArgs = [MoveViewArg.u64(100n), MoveViewArg.u64(25n)];
 const result = await client.moveViewCall(
-  `${PACKAGE}::shop::discounted_price`,
+  packageId,
+  "shop",
+  "discounted_price",
   undefined,
   priceArgs,
 );
@@ -46,7 +49,9 @@ console.log(
 
 // `u64` is passed as a string so large values survive JSON.
 const jsonResult = await client.moveViewCallJson(
-  `${PACKAGE}::shop::discounted_price`,
+  packageId,
+  "shop",
+  "discounted_price",
   undefined,
   ['"100"', '"25"'],
 );
@@ -69,7 +74,9 @@ const shopArgs = [
   MoveViewArg.u64(1n),
 ];
 const shopResult = await client.moveViewCall(
-  `${PACKAGE}::shop::sale_at`,
+  packageId,
+  "shop",
+  "sale_at",
   undefined,
   shopArgs,
 );
@@ -88,7 +95,9 @@ console.log(
 );
 
 const shopJsonResult = await client.moveViewCallJson(
-  `${PACKAGE}::shop::sale_at`,
+  packageId,
+  "shop",
+  "sale_at",
   undefined,
   [`"${SHOP}"`, '"1"'],
 );

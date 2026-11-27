@@ -41,8 +41,7 @@ impl GetChainIdQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::active_validators`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::active_validators`]. Await it to send the request.
     #[derive(Clone)]
     pub struct ListActiveValidatorsQuery {
         client: GraphQLClient,
@@ -65,8 +64,8 @@ impl ListActiveValidatorsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<Validator>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -106,8 +105,7 @@ impl ListActiveValidatorsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::reference_gas_price`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::reference_gas_price`]. Await it to send the request.
     pub struct GetReferenceGasPriceQuery {
         client: GraphQLClient,
         epoch: Option<u64>,
@@ -135,8 +133,7 @@ impl GetReferenceGasPriceQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::protocol_config`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::protocol_config`]. Await it to send the request.
     pub struct GetProtocolConfigQuery {
         client: GraphQLClient,
         version: Option<u64>,
@@ -169,8 +166,8 @@ impl GraphQLClient {
 
     /// Get the reference gas price. Defaults to the last known epoch.
     ///
-    /// This will resolve to `Ok(None)` if the epoch requested is not available
-    /// in the GraphQL service (e.g., due to pruning).
+    /// This will resolve to `Ok(None)` if the epoch requested is not available in the GraphQL
+    /// service (e.g., due to pruning).
     pub fn reference_gas_price(&self) -> GetReferenceGasPriceQuery {
         GetReferenceGasPriceQuery {
             client: self.clone(),

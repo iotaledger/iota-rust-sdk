@@ -1,18 +1,15 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Capture real on-chain BCS fixtures for the Move types mirrored by
-//! `iota-sdk-move-types`.
+//! Capture real on-chain BCS fixtures for the Move types mirrored by `iota-sdk-move-types`.
 //!
-//! For each entry in [`FIXTURES`], the script queries a live IOTA
-//! GraphQL endpoint, fetches the pinned object, extracts the raw BCS
-//! bytes of the inner Move struct, and writes them to
+//! For each entry in [`FIXTURES`], the script queries a live IOTA GraphQL endpoint, fetches the
+//! pinned object, extracts the raw BCS bytes of the inner Move struct, and writes them to
 //! `crates/iota-sdk-move-types/tests/fixtures/<name>.bcs`.
 //!
-//! This is a standalone package (rather than an example of
-//! `iota-sdk-move-types`) so its GraphQL/`tokio` dependencies stay out of
-//! `iota-sdk-move-types`' own dependency graph — that crate runs its tests
-//! under wasm, where `tokio`/`reqwest` don't build.
+//! This is a standalone package (rather than an example of `iota-sdk-move-types`) so its
+//! GraphQL/`tokio` dependencies stay out of `iota-sdk-move-types`' own dependency graph — that
+//! crate runs its tests under wasm, where `tokio`/`reqwest` don't build.
 //!
 //! Invocation:
 //!
@@ -25,40 +22,35 @@
 //!
 //! # Capture strategies
 //!
-//! - [`Source::ObjectId`]: fetch a specific object by its known address. The
-//!   default for almost all fixtures — every entry carries a hard-pinned
-//!   mainnet object ID so re-runs produce the same bytes byte-for-byte. When a
-//!   pinned object is spent / deleted, capture for that fixture fails loudly;
-//!   the operator picks a fresh ID (often via [`Source::TypeFilter`] locally)
-//!   and commits the new pin alongside the new fixture.
-//! - [`Source::TypeFilter`]: ask the GraphQL endpoint for any object matching
-//!   the given fully-qualified type tag and take the first one returned. Useful
-//!   for *discovery* (finding a candidate to pin), but inherently
-//!   non-deterministic across runs so we don't leave this in `FIXTURES`
-//!   permanently.
-//! - [`Source::DynamicField`]: walk a dynamic field of a parent object. Used
-//!   for the versioned inner state (`IotaSystemStateInnerV2` sits as a dynamic
-//!   field of the 0x5 wrapper, keyed by version number).
-//! - [`Source::Event`]: fetch the BCS contents of an event, pinned by the
-//!   digest of the transaction that emitted it plus its fully-qualified type.
-//!   Events are immutable history, so unlike object pins these can never be
-//!   spent or deleted — re-runs always produce the same bytes.
-//! - [`Source::DynamicFieldName`]: capture the BCS of a dynamic field's *name*
-//!   struct (not its value). Used for the small key types that only ever exist
-//!   as dynamic-field names — e.g. `kiosk::Item`/`Listing`/`Lock`, which key
-//!   the items, listings and locks stored on a `Kiosk`. Takes the first field
-//!   on the parent whose name type matches, so the bytes are stable as long as
-//!   the parent's dynamic fields are unchanged.
+//! - [`Source::ObjectId`]: fetch a specific object by its known address. The default for almost all
+//!   fixtures — every entry carries a hard-pinned mainnet object ID so re-runs produce the same
+//!   bytes byte-for-byte. When a pinned object is spent / deleted, capture for that fixture fails
+//!   loudly; the operator picks a fresh ID (often via [`Source::TypeFilter`] locally) and commits
+//!   the new pin alongside the new fixture.
+//! - [`Source::TypeFilter`]: ask the GraphQL endpoint for any object matching the given
+//!   fully-qualified type tag and take the first one returned. Useful for *discovery* (finding a
+//!   candidate to pin), but inherently non-deterministic across runs so we don't leave this in
+//!   `FIXTURES` permanently.
+//! - [`Source::DynamicField`]: walk a dynamic field of a parent object. Used for the versioned
+//!   inner state (`IotaSystemStateInnerV2` sits as a dynamic field of the 0x5 wrapper, keyed by
+//!   version number).
+//! - [`Source::Event`]: fetch the BCS contents of an event, pinned by the digest of the transaction
+//!   that emitted it plus its fully-qualified type. Events are immutable history, so unlike object
+//!   pins these can never be spent or deleted — re-runs always produce the same bytes.
+//! - [`Source::DynamicFieldName`]: capture the BCS of a dynamic field's *name* struct (not its
+//!   value). Used for the small key types that only ever exist as dynamic-field names — e.g.
+//!   `kiosk::Item`/`Listing`/`Lock`, which key the items, listings and locks stored on a `Kiosk`.
+//!   Takes the first field on the parent whose name type matches, so the bytes are stable as long
+//!   as the parent's dynamic fields are unchanged.
 //!
-//! Run this manually whenever you want to refresh the fixtures
-//! against current chain state — there is no automated CI job that
-//! re-runs it.
+//! Run this manually whenever you want to refresh the fixtures against current chain state — there
+//! is no automated CI job that re-runs it.
 
 use std::path::PathBuf;
 
 use iota_sdk::{
     graphql_client::GraphQLClient,
-    types::{Address, ObjectId, TypeTag},
+    types::{Address, ObjectId, TransactionDigest, TypeTag},
 };
 
 /// What to capture and where to put it.
@@ -73,40 +65,38 @@ struct Fixture {
 enum Source {
     /// Fetch the singleton object at the given address.
     ObjectId(&'static str),
-    /// Find any object whose top-level type tag matches the given
-    /// fully-qualified Move type string. *Not used in committed
-    /// fixtures* — non-deterministic, only useful locally to find a
+    /// Find any object whose top-level type tag matches the given fully-qualified Move type string.
+    /// *Not used in committed fixtures* — non-deterministic, only useful locally to find a
     /// candidate to pin.
     TypeFilter(&'static str),
     /// Walk a dynamic field off the given parent.
     ///
-    /// `name_bcs` is the BCS-encoded value of the field name (e.g. a
-    /// `u64` epoch number, BCS-encoded as little-endian).
+    /// `name_bcs` is the BCS-encoded value of the field name (e.g. a `u64` epoch number,
+    /// BCS-encoded as little-endian).
     DynamicField {
         parent: &'static str,
         name_type: &'static str,
         name_bcs: &'static [u8],
     },
-    /// Fetch the first event of the given fully-qualified type emitted by
-    /// the given transaction. Events are immutable once the transaction is
-    /// checkpointed, so this pin is deterministic forever.
+    /// Fetch the first event of the given fully-qualified type emitted by the given transaction.
+    /// Events are immutable once the transaction is checkpointed, so this pin is deterministic
+    /// forever.
     Event {
         event_type: &'static str,
         tx_digest: &'static str,
     },
-    /// Capture the BCS of the *name* of the first dynamic field on `parent`
-    /// whose name type matches `name_type`. Used for key structs that only
-    /// live as dynamic-field names (e.g. `kiosk::Item`).
+    /// Capture the BCS of the *name* of the first dynamic field on `parent` whose name type matches
+    /// `name_type`. Used for key structs that only live as dynamic-field names (e.g.
+    /// `kiosk::Item`).
     DynamicFieldName {
         parent: &'static str,
         name_type: &'static str,
     },
 }
 
-/// One representative fixture per Move struct we care about. The
-/// object IDs below were captured once from mainnet (via
-/// `Source::TypeFilter` against the live GraphQL endpoint) and
-/// pinned here for byte-for-byte stability across CI runs.
+/// One representative fixture per Move struct we care about. The object IDs below were captured
+/// once from mainnet (via `Source::TypeFilter` against the live GraphQL endpoint) and pinned here
+/// for byte-for-byte stability across CI runs.
 const FIXTURES: &[Fixture] = &[
     // -- System singletons --------------------------------------------------
     Fixture {
@@ -242,9 +232,9 @@ const FIXTURES: &[Fixture] = &[
         ),
     },
     // -- Versioned inner state (dynamic-field walk) -------------------------
-    // The `IotaSystemState` wrapper at 0x5 stores its inner versioned state
-    // as a dynamic field keyed by version. V1 was migrated away long ago and
-    // no longer exists on chain; V2 is the current state shape.
+    // The `IotaSystemState` wrapper at 0x5 stores its inner versioned state as a dynamic field
+    // keyed by version. V1 was migrated away long ago and no longer exists on chain; V2 is the
+    // current state shape.
     Fixture {
         file: "iota_system_state_inner_v2",
         source: Source::DynamicField {
@@ -254,20 +244,19 @@ const FIXTURES: &[Fixture] = &[
         },
     },
     // -- Other system singletons --------------------------------------------
-    // Note: 0x7 (`AuthenticatorState`) is not present on IOTA mainnet —
-    // the zkLogin feature it backs is not activated here, so we skip it.
+    // Note: 0x7 (`AuthenticatorState`) is not present on IOTA mainnet — the zkLogin feature it
+    // backs is not activated here, so we skip it.
     Fixture {
         file: "random",
         source: Source::ObjectId("0x8"),
     },
     Fixture {
         file: "random_inner",
-        // `RandomInner` hangs off the UID of the `Versioned` embedded in
-        // the `Random` wrapper at 0x8, keyed by version. Both the UID and
-        // the version below are read out of the `random` fixture bytes
-        // (offsets 32..64 and 64..72); they only change on a protocol
-        // upgrade of the randomness state, in which case capture fails
-        // loudly and the pin is refreshed the same way.
+        // `RandomInner` hangs off the UID of the `Versioned` embedded in the `Random` wrapper at
+        // 0x8, keyed by version. Both the UID and the version below are read out of the `random`
+        // fixture bytes (offsets 32..64 and 64..72); they only change on a protocol upgrade of the
+        // randomness state, in which case capture fails loudly and the pin is refreshed the same
+        // way.
         source: Source::DynamicField {
             parent: "0xf036d71864eb9287330110df7475b5b98ba0564c8c69fd5f844d398560c0b41a",
             name_type: "u64",
@@ -280,8 +269,8 @@ const FIXTURES: &[Fixture] = &[
     },
     Fixture {
         file: "deny_list_config",
-        // mainnet `0x2::config::Config<0x2::deny_list::ConfigWriteCap>` —
-        // a per-coin-type deny list (v2) config, child object of 0x403.
+        // mainnet `0x2::config::Config<0x2::deny_list::ConfigWriteCap>` — a per-coin-type deny list
+        // (v2) config, child object of 0x403.
         source: Source::ObjectId(
             "0x1f4ecb57b09ec861ba44832cd3678f2db21a7ea19ee4bed90286068398048a58",
         ),
@@ -303,17 +292,17 @@ const FIXTURES: &[Fixture] = &[
     },
     Fixture {
         file: "field_pool_token_exchange_rate",
-        // mainnet `0x2::dynamic_field::Field<u64, 0x3::staking_pool::PoolTokenExchangeRate>`
-        // — an entry of a staking pool's exchange-rate table. Exchange
-        // rates are append-only per epoch, so the entry is never deleted.
+        // mainnet `0x2::dynamic_field::Field<u64, 0x3::staking_pool::PoolTokenExchangeRate>` — an
+        // entry of a staking pool's exchange-rate table. Exchange rates are append-only per epoch,
+        // so the entry is never deleted.
         source: Source::ObjectId(
             "0x000211cf08b3a4dd4c26992afdb88a535395f297170105880cdb079298a35e3f",
         ),
     },
     Fixture {
         file: "field_validator_wrapper",
-        // mainnet `0x2::dynamic_field::Field<0x2::object::ID, 0x3::validator_wrapper::Validator>`
-        // — an inactive validator entry in the system state's validator table.
+        // mainnet `0x2::dynamic_field::Field<0x2::object::ID, 0x3::validator_wrapper::Validator>` —
+        // an inactive validator entry in the system state's validator table.
         source: Source::ObjectId(
             "0x010634284fa0ffe3061a692e112dcef78f1768bf8631a0a1c1856d42fcf23a4b",
         ),
@@ -355,9 +344,9 @@ const FIXTURES: &[Fixture] = &[
             "0x081c9339cc0f8a2a458f85c48d73b57821d6fcfd3037157dacc26120b00f3066",
         ),
     },
-    // `Item`/`Listing`/`Lock` only exist as dynamic-field *names* on a
-    // `Kiosk`. The parent below is a personal (locked) kiosk holding
-    // several NFTs, so its fields are stable across re-runs.
+    // `Item`/`Listing`/`Lock` only exist as dynamic-field *names* on a `Kiosk`. The parent below
+    // is a personal (locked) kiosk holding several NFTs, so its fields are stable across
+    // re-runs.
     Fixture {
         file: "kiosk_item",
         source: Source::DynamicFieldName {
@@ -394,8 +383,8 @@ const FIXTURES: &[Fixture] = &[
         ),
     },
     // -- Events ---------------------------------------------------------
-    // Pinned by (transaction digest, event type); events are immutable
-    // history so these pins can never go stale.
+    // Pinned by (transaction digest, event type); events are immutable history so these pins can
+    // never go stale.
     Fixture {
         file: "staking_request_event",
         source: Source::Event {
@@ -445,8 +434,8 @@ const FIXTURES: &[Fixture] = &[
             tx_digest: "DvsQrzbjgdK6YYH9AhQkfuSZgDbDS6F16LAi16jXrrmk",
         },
     },
-    // `SystemEpochInfoEventV1` predates the indexed history on mainnet —
-    // only V2 (which added `tips_amount`) is emitted on current epochs.
+    // `SystemEpochInfoEventV1` predates the indexed history on mainnet — only V2 (which added
+    // `tips_amount`) is emitted on current epochs.
     Fixture {
         file: "system_epoch_info_event_v2",
         source: Source::Event {
@@ -497,13 +486,13 @@ const FIXTURES: &[Fixture] = &[
         },
     },
     // -- Policy rule keys (dynamic-field names) -----------------------------
-    // `transfer_policy::RuleKey<T>` / `token::RuleKey<T>` only exist as the
-    // *names* of the dynamic fields under which a policy stores its per-rule
-    // config. The parents below are shared policies carrying a stable rule.
+    // `transfer_policy::RuleKey<T>` / `token::RuleKey<T>` only exist as the *names* of the dynamic
+    // fields under which a policy stores its per-rule config. The parents below are shared
+    // policies carrying a stable rule.
     Fixture {
         file: "transfer_policy_rule_key",
-        // `0x2::transfer_policy::RuleKey<…::kiosk_lock_rule::Rule>` on a
-        // shared `TransferPolicy` enforcing a kiosk-lock rule.
+        // `0x2::transfer_policy::RuleKey<…::kiosk_lock_rule::Rule>` on a shared `TransferPolicy`
+        // enforcing a kiosk-lock rule.
         source: Source::DynamicFieldName {
             parent: "0x012e588fa67529383bc0be142f73dde76a44e1d2bd343574d0fd33acd6a035db",
             name_type: "0x2::transfer_policy::RuleKey<0xe49f2f23baf6c88a4c18478ac375033eea1f5609f2be6359b417208ea96f555d::kiosk_lock_rule::Rule>",
@@ -511,8 +500,8 @@ const FIXTURES: &[Fixture] = &[
     },
     Fixture {
         file: "token_rule_key",
-        // `0x2::token::RuleKey<…::allowlist_rule::Allowlist>` on a shared
-        // `TokenPolicy` enforcing an allowlist rule.
+        // `0x2::token::RuleKey<…::allowlist_rule::Allowlist>` on a shared `TokenPolicy` enforcing
+        // an allowlist rule.
         source: Source::DynamicFieldName {
             parent: "0xa10b50fb6e9b582eebb2b7b156a68c48489525f26022d6e877f63732292812af",
             name_type: "0x2::token::RuleKey<0x229b368f5086b9030778f54dd123bb2e8debb8da559658f21f4a6fd11083e7d7::allowlist_rule::Allowlist>",
@@ -535,13 +524,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
         }
     };
 
-    // Discovery mode: when `IOTA_DISCOVER_TYPE` is set to a fully-qualified
-    // Move type tag, find one live object of that type and print its ID so it
-    // can be pinned in FIXTURES as a `Source::ObjectId`. This is a local,
-    // ad-hoc workflow that writes no fixture file.
+    // Discovery mode: when `IOTA_DISCOVER_TYPE` is set to a fully-qualified Move type tag, find one
+    // live object of that type and print its ID so it can be pinned in FIXTURES as a
+    // `Source::ObjectId`. This is a local, ad-hoc workflow that writes no fixture file.
     if let Ok(type_str) = std::env::var("IOTA_DISCOVER_TYPE") {
-        // The process exits right after, so leaking the single string that the
-        // `Source::TypeFilter` borrow needs is harmless.
+        // The process exits right after, so leaking the single string that the `Source::TypeFilter`
+        // borrow needs is harmless.
         let type_str: &'static str = Box::leak(type_str.into_boxed_str());
         let bytes = capture(&client, &Source::TypeFilter(type_str)).await?;
         eprintln!(
@@ -551,9 +539,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
         return Ok(());
     }
 
-    // The fixtures belong to `iota-sdk-move-types`; this generator is a
-    // standalone package under that crate's `examples/` to keep its
-    // GraphQL/`tokio` dependencies out of the crate's own graph.
+    // The fixtures belong to `iota-sdk-move-types`; this generator is a standalone package under
+    // that crate's `examples/` to keep its GraphQL/`tokio` dependencies out of the crate's own
+    // graph.
     let out_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tests/fixtures");
     std::fs::create_dir_all(&out_dir)?;
 
@@ -594,8 +582,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>
     Ok(())
 }
 
-/// Resolve a [`Source`] into the raw BCS bytes of the Move struct
-/// contents.
+/// Resolve a [`Source`] into the raw BCS bytes of the Move struct contents.
 async fn capture(
     client: &GraphQLClient,
     source: &Source,
@@ -609,8 +596,8 @@ async fn capture(
                 .data()
                 .first()
                 .ok_or_else(|| format!("no objects of type `{type_str}` on this network"))?;
-            // Print the discovered ID so an operator can copy-paste it
-            // into FIXTURES as a `Source::ObjectId` pin.
+            // Print the discovered ID so an operator can copy-paste it into FIXTURES as a
+            // `Source::ObjectId` pin.
             eprintln!("    └─ discovered: {}", object.id());
             let move_struct = object
                 .as_opt_struct()
@@ -635,7 +622,7 @@ async fn capture(
             use base64ct::Encoding as _;
             let filter = iota_sdk::graphql_client::query_types::EventFilter::default()
                 .with_event_type((*event_type).to_string())
-                .with_transaction_digest((*tx_digest).to_string());
+                .with_transaction_digest(TransactionDigest::from_base58(tx_digest)?);
             let page = client.events().filter(filter).await?;
             let event = page
                 .data()

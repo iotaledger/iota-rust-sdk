@@ -4,16 +4,15 @@
 
 use super::{Address, address::AddressParseError};
 
-/// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on
-/// the IOTA blockchain.
+/// An `ObjectId` is a 32-byte identifier used to uniquely identify an object on the IOTA
+/// blockchain.
 ///
 /// ## Relationship to Address
 ///
-/// [`Address`]es and `ObjectId`s share the same 32-byte addressable space but
-/// are derived leveraging different domain-separator values to ensure,
-/// cryptographically, that there won't be any overlap, e.g. there can't be a
-/// valid `Object` whose `ObjectId` is equal to that of the `Address` of a user
-/// account.
+/// [`Address`]es and `ObjectId`s share the same 32-byte addressable space but are derived
+/// leveraging different domain-separator values to ensure, cryptographically, that there won't be
+/// any overlap, e.g. there can't be a valid `Object` whose `ObjectId` is equal to that of the
+/// `Address` of a user account.
 ///
 /// # BCS
 ///
@@ -63,69 +62,64 @@ impl ObjectId {
         self.0.is_system_package()
     }
 
-    /// Returns the string representation of this object id in hex format with
-    /// `0x` prefix.
+    /// Returns the string representation of this object id in hex format with `0x` prefix.
     pub fn to_hex(&self) -> String {
         self.0.to_hex()
     }
 
-    /// Returns the string representation of this object id in hex format
-    /// without `0x` prefix.
+    /// Returns the string representation of this object id in hex format without `0x` prefix.
     pub fn to_raw_hex(&self) -> String {
         self.0.to_raw_hex()
     }
 
-    /// Returns the shortest possible string representation of the object ID
-    /// (i.e. with leading zeroes trimmed).
+    /// Returns the shortest possible string representation of the object ID (i.e. with leading
+    /// zeroes trimmed).
     pub fn to_short_hex(&self) -> String {
         self.0.to_short_hex()
     }
 
-    /// Returns the shortest possible string representation of the object id
-    /// (i.e. with leading zeroes trimmed), without `0x` prefix.
+    /// Returns the shortest possible string representation of the object id (i.e. with leading
+    /// zeroes trimmed), without `0x` prefix.
     pub fn to_raw_short_hex(&self) -> String {
         self.0.to_raw_short_hex()
     }
 
-    /// Parses an ObjectId from a full-length hex string (64 hex characters),
-    /// with or without a `0x` prefix. Will return an error if the string is not
-    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    /// Parses an ObjectId from a full-length hex string (64 hex characters), with or without a `0x`
+    /// prefix. Will return an error if the string is not exactly 64 hex characters long (excluding
+    /// the `0x` prefix).
     pub fn from_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         Address::from_hex(hex).map(Self)
     }
 
-    /// Parses an ObjectId from a full-length hex string (64 hex characters),
-    /// with a mandatory `0x` prefix. Will return an error if the string is not
-    /// exactly 64 hex characters long (excluding the `0x` prefix).
+    /// Parses an ObjectId from a full-length hex string (64 hex characters), with a mandatory `0x`
+    /// prefix. Will return an error if the string is not exactly 64 hex characters long (excluding
+    /// the `0x` prefix).
     pub fn from_prefixed_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         Address::from_prefixed_hex(hex).map(Self)
     }
 
-    /// Parses an ObjectId from a full-length hex string (64 hex characters),
-    /// without a `0x` prefix. Will return an error if the string has a `0x`
-    /// prefix or is not exactly 64 hex characters long.
+    /// Parses an ObjectId from a full-length hex string (64 hex characters), without a `0x` prefix.
+    /// Will return an error if the string has a `0x` prefix or is not exactly 64 hex characters
+    /// long.
     pub fn from_raw_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         Address::from_raw_hex(hex).map(Self)
     }
 
-    /// Parses an ObjectId from a hex string, with or without a `0x` prefix.
-    /// The string can be of variable length; if it's shorter than 64 hex
-    /// characters, it will be left-padded with `0`s.
+    /// Parses an ObjectId from a hex string, with or without a `0x` prefix. The string can be of
+    /// variable length; if it's shorter than 64 hex characters, it will be left-padded with `0`s.
     pub fn from_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         Address::from_short_hex(hex).map(Self)
     }
 
-    /// Parses an ObjectId from a hex string with a mandatory `0x` prefix.
-    /// The string can be of variable length; if it's shorter than 64 hex
-    /// characters, it will be left-padded with `0`s.
+    /// Parses an ObjectId from a hex string with a mandatory `0x` prefix. The string can be of
+    /// variable length; if it's shorter than 64 hex characters, it will be left-padded with `0`s.
     pub fn from_prefixed_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         Address::from_prefixed_short_hex(hex).map(Self)
     }
 
     /// Parses an ObjectId from a hex string without a `0x` prefix.
-    /// The string can be of variable length; if it's shorter than 64 hex
-    /// characters, it will be left-padded with `0`s. Will return an error if
-    /// the string has a `0x` prefix.
+    /// The string can be of variable length; if it's shorter than 64 hex characters, it will be
+    /// left-padded with `0`s. Will return an error if the string has a `0x` prefix.
     pub fn from_raw_short_hex<T: AsRef<[u8]>>(hex: T) -> Result<Self, AddressParseError> {
         Address::from_raw_short_hex(hex).map(Self)
     }
@@ -158,8 +152,8 @@ impl ObjectId {
         &self.0
     }
 
-    /// Returns the string representation of this object ID using the
-    /// canonical display, with or without a `0x` prefix.
+    /// Returns the string representation of this object ID using the canonical display, with or
+    /// without a `0x` prefix.
     pub fn to_canonical_string(&self, with_prefix: bool) -> String {
         self.0.to_canonical_string(with_prefix)
     }
@@ -169,8 +163,7 @@ impl ObjectId {
         Self::new(crate::next_lexicographical_array(self.bytes()))
     }
 
-    /// Returns the next object id in byte-increasing order, or `None` if the
-    /// result would overflow.
+    /// Returns the next object id in byte-increasing order, or `None` if the result would overflow.
     pub const fn next_lexicographical_opt(&self) -> Option<Self> {
         match crate::next_lexicographical_array_opt(self.bytes()) {
             Some(val) => Some(Self::new(val)),

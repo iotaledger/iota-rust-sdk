@@ -28,13 +28,20 @@ func main() {
 	fmt.Println("=== Example 1: MoveViewCall() with typed arguments (primitives) ===")
 	fmt.Println()
 
+	packageObjectId, err := iota_sdk.ObjectIdFromHex(packageId)
+	if err != nil {
+		log.Fatalf("Failed to parse package id: %v", err)
+	}
+
 	priceArgs := []*iota_sdk.MoveViewArg{
 		iota_sdk.MoveViewArgU64(100),
 		iota_sdk.MoveViewArgU64(25),
 	}
 
 	result, err := client.MoveViewCall(
-		packageId+"::shop::discounted_price",
+		packageObjectId,
+		"shop",
+		"discounted_price",
 		nil,
 		&priceArgs,
 	)
@@ -65,7 +72,9 @@ func main() {
 	}
 
 	result2, err := client.MoveViewCallJson(
-		packageId+"::shop::discounted_price",
+		packageObjectId,
+		"shop",
+		"discounted_price",
 		nil,
 		&jsonArgs,
 	)
@@ -99,7 +108,9 @@ func main() {
 	}
 
 	shopResult, err := client.MoveViewCall(
-		packageId+"::shop::sale_at",
+		packageObjectId,
+		"shop",
+		"sale_at",
 		nil,
 		&shopArgs,
 	)
@@ -128,7 +139,9 @@ func main() {
 	}
 
 	shopJsonResult, err := client.MoveViewCallJson(
-		packageId+"::shop::sale_at",
+		packageObjectId,
+		"shop",
+		"sale_at",
 		nil,
 		&shopJsonArgs,
 	)

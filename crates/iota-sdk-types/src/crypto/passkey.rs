@@ -12,39 +12,36 @@ use crate::SigningDigest;
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
-/// the required json-schema for the `client-data-json` rule. In addition, IOTA
-/// currently requires that the `CollectedClientData.type` field is required to
-/// be `webauthn.get` and that the `CollectedClientData.challenge` field
-/// decodes to exactly 32 bytes, the length of the signing digest it must
-/// match.
+/// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for the
+/// required json-schema for the `client-data-json` rule. In addition, IOTA currently requires that
+/// the `CollectedClientData.type` field is required to be `webauthn.get` and that the
+/// `CollectedClientData.challenge` field decodes to exactly 32 bytes, the length of the signing
+/// digest it must match.
 ///
-/// Note: Due to historical reasons, signatures are serialized slightly
-/// different from the majority of the types in IOTA. In particular if a
-/// signature is ever embedded in another structure it generally is serialized
-/// as `bytes` meaning it has a length prefix that defines the length of
-/// the completely serialized signature.
+/// Note: Due to historical reasons, signatures are serialized slightly different from the majority
+/// of the types in IOTA. In particular if a signature is ever embedded in another structure it
+/// generally is serialized as `bytes` meaning it has a length prefix that defines the length of the
+/// completely serialized signature.
 #[derive(Clone, derive_more::Debug, Eq, Hash, PartialEq)]
 pub struct PasskeyAuthenticator {
     /// Compact r1 public key for this passkey.
     pub(crate) public_key: Secp256r1PublicKey,
     /// Normalized r1 signature from the passkey.
     pub(crate) signature: Secp256r1Signature,
-    /// Parsed base64url decoded challenge bytes from
-    /// `client_data_json.challenge`, which is expected to be the signing
-    /// message `hash(Intent | bcs_message)`
+    /// Parsed base64url decoded challenge bytes from `client_data_json.challenge`, which is
+    /// expected to be the signing message `hash(Intent | bcs_message)`
     #[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(challenge))]
     pub(crate) challenge: SigningDigest,
     /// Opaque authenticator data for this passkey signature.
     ///
-    /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
-    /// more information on this field.
+    /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for more
+    /// information on this field.
     #[debug("{:?}", <base64ct::Base64 as base64ct::Encoding>::encode_string(authenticator_data))]
     pub(crate) authenticator_data: Vec<u8>,
     /// Structured, unparsed, JSON for this passkey signature.
     ///
-    /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
-    /// for more information on this field.
+    /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
+    /// more information on this field.
     pub(crate) client_data_json: String,
 }
 
@@ -64,25 +61,24 @@ impl PasskeyAuthenticator {
 
     /// The parsed challenge message for this passkey signature.
     ///
-    /// This is parsed by decoding the base64url data from the
-    /// `client_data_json.challenge` field, and is guaranteed to be exactly 32
-    /// bytes, the length of the signing digest it must match.
+    /// This is parsed by decoding the base64url data from the `client_data_json.challenge` field,
+    /// and is guaranteed to be exactly 32 bytes, the length of the signing digest it must match.
     pub fn challenge(&self) -> &[u8] {
         &self.challenge
     }
 
     /// Opaque authenticator data for this passkey signature.
     ///
-    /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for
-    /// more information on this field.
+    /// See [Authenticator Data](https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data) for more
+    /// information on this field.
     pub fn authenticator_data(&self) -> &[u8] {
         &self.authenticator_data
     }
 
     /// Structured, unparsed, JSON for this passkey signature.
     ///
-    /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata)
-    /// for more information on this field.
+    /// See [CollectedClientData](https://www.w3.org/TR/webauthn-2/#dictdef-collectedclientdata) for
+    /// more information on this field.
     pub fn client_data_json(&self) -> &str {
         &self.client_data_json
     }
@@ -165,15 +161,14 @@ pub(crate) mod serialization {
         signature: SimpleSignature,
     }
 
-    /// Owned wire shape of a passkey authenticator: the three fields that
-    /// are actually serialized (the public type's `public_key`, `signature`
-    /// and derived `challenge` are folded into / recovered from these).
+    /// Owned wire shape of a passkey authenticator: the three fields that are actually serialized
+    /// (the public type's `public_key`, `signature` and derived `challenge` are folded into /
+    /// recovered from these).
     ///
-    /// `UserSignatureBody::Passkey` decodes through this type so that a
-    /// `UserSignature` carries the flat passkey body behind its own scheme
-    /// tag, while `PasskeyAuthenticator`'s standalone serde keeps the
-    /// historical `bytes`-wrapped `flag || body` form used when a passkey is
-    /// nested in a multisig member signature.
+    /// `UserSignatureBody::Passkey` decodes through this type so that a `UserSignature` carries the
+    /// flat passkey body behind its own scheme tag, while `PasskeyAuthenticator`'s standalone serde
+    /// keeps the historical `bytes`-wrapped `flag || body` form used when a passkey is nested in a
+    /// multisig member signature.
     #[derive(serde::Deserialize)]
     #[serde(rename = "PasskeyAuthenticator")]
     #[cfg_attr(
@@ -334,9 +329,9 @@ pub(crate) mod serialization {
         }
     }
 
-    /// The client data represents the contextual bindings of both the Relying
-    /// Party and the client. It is a key-value mapping whose keys are
-    /// strings. Values can be any type that has a valid encoding in JSON.
+    /// The client data represents the contextual bindings of both the Relying Party and the client.
+    /// It is a key-value mapping whose keys are strings. Values can be any type that has a valid
+    /// encoding in JSON.
     ///
     /// > Note: The [`CollectedClientData`] may be extended in the future.
     /// > Therefore it’s critical when
@@ -344,11 +339,11 @@ pub(crate) mod serialization {
     /// > keys
     ///
     /// This struct conforms to the JSON byte serialization format expected of
-    /// `CollectedClientData`, detailed in section [5.8.1.1 Serialization]
-    /// of the WebAuthn spec. Namely the following requirements:
+    /// `CollectedClientData`, detailed in section [5.8.1.1 Serialization] of the WebAuthn spec.
+    /// Namely the following requirements:
     ///
-    /// * `type`, `challenge`, `origin`, `crossOrigin` must always be present in
-    ///   the serialized format _in that order_.
+    /// * `type`, `challenge`, `origin`, `crossOrigin` must always be present in the serialized
+    ///   format _in that order_.
     ///
     /// <https://w3c.github.io/webauthn/#dictionary-client-data>
     ///
@@ -356,31 +351,27 @@ pub(crate) mod serialization {
     #[derive(Clone, Debug, Deserialize, Serialize)]
     #[serde(rename_all = "camelCase")]
     pub(super) struct CollectedClientData {
-        /// This member contains the value [`ClientDataType::Create`] when
-        /// creating new credentials, and [`ClientDataType::Get`] when
-        /// getting an assertion from an existing credential. The purpose
-        /// of this member is to prevent certain types of signature confusion
-        /// attacks (where an attacker  substitutes one legitimate
+        /// This member contains the value [`ClientDataType::Create`] when creating new
+        /// credentials, and [`ClientDataType::Get`] when getting an assertion from an
+        /// existing credential. The purpose of this member is to prevent certain types of
+        /// signature confusion attacks (where an attacker  substitutes one legitimate
         /// signature for another).
         #[serde(rename = "type")]
         pub ty: ClientDataType,
-        /// This member contains the base64url encoding of the challenge
-        /// provided by the Relying Party. See the [Cryptographic
-        /// Challenges] security consideration.
+        /// This member contains the base64url encoding of the challenge provided by the Relying
+        /// Party. See the [Cryptographic Challenges] security consideration.
         ///
         /// [Cryptographic Challenges]: https://w3c.github.io/webauthn/#sctn-cryptographic-challenges
         ///
         /// https://w3c.github.io/webauthn/#base64url-encoding
         ///
-        /// The term Base64url Encoding refers to the base64 encoding using the
-        /// URL- and filename-safe character set defined in Section 5 of
-        /// [RFC4648], with all trailing '=' characters omitted
-        /// (as permitted by Section 3.2) and without the inclusion of any line
+        /// The term Base64url Encoding refers to the base64 encoding using the URL- and
+        /// filename-safe character set defined in Section 5 of [RFC4648], with all trailing '='
+        /// characters omitted (as permitted by Section 3.2) and without the inclusion of any line
         /// breaks, whitespace, or other additional characters.
         pub challenge: String,
-        /// This member contains the fully qualified origin of the requester, as
-        /// provided to the authenticator by the client, in the syntax
-        /// defined by [RFC6454].
+        /// This member contains the fully qualified origin of the requester, as provided to the
+        /// authenticator by the client, in the syntax defined by [RFC6454].
         ///
         /// [RFC6454]: https://www.rfc-editor.org/rfc/rfc6454
         pub origin: String,
@@ -391,14 +382,13 @@ pub(crate) mod serialization {
         // pub cross_origin: Option<bool>,
     }
 
-    /// Used to limit the values of [`CollectedClientData::ty`] and serializes
-    /// to static strings.
+    /// Used to limit the values of [`CollectedClientData::ty`] and serializes to static strings.
     #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
     pub(super) enum ClientDataType {
         /// Serializes to the string `"webauthn.get"`
         ///
-        /// Passkey's in IOTA only support the value `"webauthn.get"`, other
-        /// values will be rejected.
+        /// Passkey's in IOTA only support the value `"webauthn.get"`, other values will be
+        /// rejected.
         #[serde(rename = "webauthn.get")]
         Get,
         // /// Serializes to the string `"webauthn.create"`

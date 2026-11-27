@@ -53,6 +53,12 @@ pub enum MultisigError {
     InvalidSignatureNumber,
     #[error("Invalid bitmap value: {0}")]
     InvalidBitmap(u16),
+    #[error("Multisig committee mixes Ed25519 with other key schemes")]
+    MixedEd25519Committee,
+    #[error(
+        "Multisig committee mixing Ed25519 with other key schemes requires a signature from every member"
+    )]
+    PartiallySignedMixedEd25519Committee,
 }
 
 /// A member in a multisig committee
@@ -101,10 +107,9 @@ impl crate::TreeDisplay for MultisigMember {
 
 /// A multisig committee
 ///
-/// A `MultisigCommittee` is a set of members who collectively control a single
-/// `Address` on the IOTA blockchain. The number of required signatures to
-/// authorize the execution of a transaction is determined by
-/// `(signature_0_weight + signature_1_weight ..) >= threshold`.
+/// A `MultisigCommittee` is a set of members who collectively control a single `Address` on the
+/// IOTA blockchain. The number of required signatures to authorize the execution of a transaction
+/// is determined by `(signature_0_weight + signature_1_weight ..) >= threshold`.
 ///
 /// # BCS
 ///
@@ -116,8 +121,8 @@ impl crate::TreeDisplay for MultisigMember {
 pub struct MultisigCommittee {
     /// A list of committee members and their corresponding weight.
     members: Vec<MultisigMember>,
-    /// If the total weight of the public keys corresponding to verified
-    /// signatures is larger than threshold, the Multisig is verified.
+    /// If the total weight of the public keys corresponding to verified signatures is larger than
+    /// threshold, the Multisig is verified.
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u16"))]
     threshold: ThresholdUnit,
 }
@@ -125,16 +130,16 @@ pub struct MultisigCommittee {
 impl MultisigCommittee {
     /// Construct a [`MultisigCommittee`] without validating the result.
     ///
-    /// Unlike [`Self::new`], this performs no checks: the committee may
-    /// violate any of the invariants enforced by [`Self::validate`] (zero
-    /// threshold, empty or oversized member list, zero-weight members,
-    /// duplicate public keys, or a threshold exceeding the sum of weights).
+    /// Unlike [`Self::new`], this performs no checks: the committee may violate any of the
+    /// invariants enforced by [`Self::validate`] (zero threshold, empty or oversized member list,
+    /// zero-weight members, duplicate public keys, a threshold exceeding the sum of weights, or
+    /// Ed25519 members mixed with members of other key schemes).
     ///
-    /// Note that the order of the members is significant towards deriving the
-    /// [`Address`] governed by this committee.
+    /// Note that the order of the members is significant towards deriving the [`Address`] governed
+    /// by this committee.
     ///
-    /// Prefer [`Self::new`]; this constructor is intended for deserialization
-    /// paths and tests where the inputs are already known to be well-formed.
+    /// Prefer [`Self::new`]; this constructor is intended for deserialization paths and tests where
+    /// the inputs are already known to be well-formed.
     ///
     /// [`Address`]: crate::Address
     pub fn new_unchecked(members: Vec<MultisigMember>, threshold: ThresholdUnit) -> Self {
@@ -148,10 +153,11 @@ impl MultisigCommittee {
     ///  - contain zero or more than ten members;
     ///  - contain a member with weight 0;
     ///  - have a `threshold` greater than the sum of all member weights;
-    ///  - contain duplicate public keys.
+    ///  - contain duplicate public keys;
+    ///  - mix Ed25519 members with members of other key schemes.
     ///
-    /// Note that the order of the members is significant towards deriving the
-    /// [`Address`] governed by this committee.
+    /// Note that the order of the members is significant towards deriving the [`Address`] governed
+    /// by this committee.
     ///
     /// [`Address`]: crate::Address
     pub fn new(
@@ -170,8 +176,8 @@ impl MultisigCommittee {
         &self.members
     }
 
-    /// The total signature weight required to authorize a transaction for the
-    /// address corresponding to this `MultisigCommittee`.
+    /// The total signature weight required to authorize a transaction for the address corresponding
+    /// to this `MultisigCommittee`.
     pub fn threshold(&self) -> ThresholdUnit {
         self.threshold
     }
@@ -189,6 +195,16 @@ impl MultisigCommittee {
             .map(|x| x as u8)
     }
 
+    /// Returns `true` if the committee has both Ed25519 members and members of other key schemes.
+    pub fn is_mixed_ed25519(&self) -> bool {
+        let ed25519_members = self
+            .members
+            .iter()
+            .filter(|member| member.public_key.scheme() == SignatureScheme::Ed25519)
+            .count();
+        ed25519_members != 0 && ed25519_members != self.members.len()
+    }
+
     /// Checks if the Committee is valid.
     ///
     /// A valid committee is one that:
@@ -198,7 +214,20 @@ impl MultisigCommittee {
     ///  - No member has weight 0
     ///  - the sum of the weights of all members must be at least the threshold
     ///  - contains no duplicate members
+    ///  - does not mix Ed25519 members with members of other key schemes
     pub fn validate(&self) -> Result<(), MultisigError> {
+        self.validate_allow_mixed_ed25519()?;
+
+        if self.is_mixed_ed25519() {
+            return Err(MultisigError::MixedEd25519Committee);
+        }
+
+        Ok(())
+    }
+
+    /// Runs the checks of [`Self::validate`] except the one rejecting Ed25519 members mixed with
+    /// members of other key schemes.
+    fn validate_allow_mixed_ed25519(&self) -> Result<(), MultisigError> {
         if self.threshold == 0 {
             return Err(MultisigError::ZeroThreshold);
         }
@@ -256,38 +285,34 @@ impl crate::TreeDisplay for MultisigCommittee {
 pub struct MultisigAggregatedSignature {
     /// The plain signature encoded with signature scheme.
     ///
-    /// The signatures must be in the same order as they are listed in the
-    /// committee.
+    /// The signatures must be in the same order as they are listed in the committee.
     signatures: Vec<MultisigMemberSignature>,
-    /// A bitmap that indicates the position of which public key the signature
-    /// should be authenticated with.
+    /// A bitmap that indicates the position of which public key the signature should be
+    /// authenticated with.
     #[cfg_attr(feature = "bcs-schema", bcs_schema(as_type = "u16"))]
     bitmap: BitmapUnit,
-    /// The public key encoded with each public key with its signature scheme
-    /// used along with the corresponding weight.
+    /// The public key encoded with each public key with its signature scheme used along with the
+    /// corresponding weight.
     committee: MultisigCommittee,
 }
 
 impl MultisigAggregatedSignature {
-    /// Construct a [`MultisigAggregatedSignature`] from its raw parts without
-    /// validation.
+    /// Construct a [`MultisigAggregatedSignature`] from its raw parts without validation.
     ///
-    /// Unlike [`Self::new`], this performs no checks: the `committee` is not
-    /// validated, the `bitmap` is trusted as-is, and the signatures are not
-    /// cross-referenced against the committee. The resulting value may be
-    /// rejected by [`Self::validate`] or by on-chain verification.
+    /// Unlike [`Self::new`], this performs no checks: the `committee` is not validated, the
+    /// `bitmap` is trusted as-is, and the signatures are not cross-referenced against the
+    /// committee. The resulting value may be rejected by [`Self::validate`] or by on-chain
+    /// verification.
     ///
     /// The caller must ensure that:
-    ///  - `signatures` appear in the same order as their corresponding members
-    ///    in `committee` (e.g. for committee `[pk1, pk2, pk3, pk4, pk5]`, valid
-    ///    signature orderings include `[sig1, sig2, sig5]` but not `[sig2,
-    ///    sig1, sig5]`);
+    ///  - `signatures` appear in the same order as their corresponding members in `committee` (e.g.
+    ///    for committee `[pk1, pk2, pk3, pk4, pk5]`, valid signature orderings include `[sig1,
+    ///    sig2, sig5]` but not `[sig2, sig1, sig5]`);
     ///  - each contributing member's position is set in `bitmap`;
     ///  - `committee` itself satisfies [`MultisigCommittee::validate`].
     ///
-    /// Prefer [`Self::new`] when starting from [`UserSignature`]s; this
-    /// constructor is intended for deserialization paths and tests where the
-    /// inputs are already known to be well-formed.
+    /// Prefer [`Self::new`] when starting from [`UserSignature`]s; this constructor is intended for
+    /// deserialization paths and tests where the inputs are already known to be well-formed.
     pub fn new_unchecked(
         signatures: Vec<MultisigMemberSignature>,
         bitmap: BitmapUnit,
@@ -300,21 +325,21 @@ impl MultisigAggregatedSignature {
         }
     }
 
-    /// Construct a [`MultisigAggregatedSignature`] from a list of
-    /// [`UserSignature`]s and a [`MultisigCommittee`].
+    /// Construct a [`MultisigAggregatedSignature`] from a list of [`UserSignature`]s and a
+    /// [`MultisigCommittee`].
     ///
     /// Compared to [`Self::new_unchecked`], this:
-    ///  - validates `committee` via [`MultisigCommittee::validate`];
+    ///  - validates `committee` via [`MultisigCommittee::validate`], except that a committee mixing
+    ///    Ed25519 with other key schemes is accepted when every member provides a signature;
     ///  - converts each [`UserSignature`] into a [`MultisigMemberSignature`];
-    ///  - derives the `bitmap` by locating each signature's public key in the
-    ///    committee, rejecting duplicates and signatures from non-members;
+    ///  - derives the `bitmap` by locating each signature's public key in the committee, rejecting
+    ///    duplicates and signatures from non-members;
     ///  - rejects empty signature lists and lists longer than the committee;
     ///  - rejects `signatures` that are not in committee order.
     ///
-    /// `signatures` must appear in the same order as their corresponding
-    /// members in `committee`: for committee `[pk1, pk2, pk3, pk4, pk5]`,
-    /// `[sig1, sig2, sig5]` is accepted but `[sig2, sig1, sig5]` is rejected
-    /// with [`MultisigError::SignaturesOutOfOrder`].
+    /// `signatures` must appear in the same order as their corresponding members in `committee`:
+    /// for committee `[pk1, pk2, pk3, pk4, pk5]`, `[sig1, sig2, sig5]` is accepted but `[sig2,
+    /// sig1, sig5]` is rejected with [`MultisigError::SignaturesOutOfOrder`].
     pub fn new(
         signatures: Vec<UserSignature>,
         committee: MultisigCommittee,
@@ -323,7 +348,10 @@ impl MultisigAggregatedSignature {
             return Err(MultisigError::InvalidSignatureNumber);
         }
 
-        committee.validate()?;
+        committee.validate_allow_mixed_ed25519()?;
+        if committee.is_mixed_ed25519() && signatures.len() != committee.members.len() {
+            return Err(MultisigError::PartiallySignedMixedEd25519Committee);
+        }
 
         let mut bitmap = 0;
         let mut member_signatures = Vec::with_capacity(signatures.len());
@@ -358,8 +386,28 @@ impl MultisigAggregatedSignature {
     }
 
     /// Validates the structural integrity of this aggregated signature.
+    ///
+    /// A committee mixing Ed25519 with other key schemes is only accepted when every member
+    /// provides a signature.
     pub fn validate(&self) -> Result<(), MultisigError> {
-        self.committee.validate()?;
+        self.validate_allow_partially_signed_mixed_ed25519()?;
+
+        if self.committee.is_mixed_ed25519()
+            && self.signatures.len() != self.committee.members.len()
+        {
+            return Err(MultisigError::PartiallySignedMixedEd25519Committee);
+        }
+
+        Ok(())
+    }
+
+    /// Validates the structural integrity of this aggregated signature like [`Self::validate`], but
+    /// accepts a committee mixing Ed25519 with other key schemes regardless of how many members
+    /// provide a signature.
+    ///
+    /// BCS decoding applies this check.
+    pub fn validate_allow_partially_signed_mixed_ed25519(&self) -> Result<(), MultisigError> {
+        self.committee.validate_allow_mixed_ed25519()?;
 
         if self.signatures.len() > self.committee.members.len() || self.signatures.is_empty() {
             return Err(MultisigError::InvalidSignatureNumber);
@@ -381,18 +429,17 @@ impl MultisigAggregatedSignature {
         &self.signatures
     }
 
-    /// The bitmap that indicates which committee members provided their
-    /// signature.
+    /// The bitmap that indicates which committee members provided their signature.
     pub fn bitmap(&self) -> BitmapUnit {
         self.bitmap
     }
 
-    /// The indices of the committee members that provided their signature,
-    /// derived from the [`bitmap`](Self::bitmap).
+    /// The indices of the committee members that provided their signature, derived from the
+    /// [`bitmap`](Self::bitmap).
     ///
     /// For example, a bitmap of `0b10110` yields `[1, 2, 4]`. Returns
-    /// [`MultisigError::InvalidBitmap`] if the bitmap has bits set beyond the
-    /// maximum committee size.
+    /// [`MultisigError::InvalidBitmap`] if the bitmap has bits set beyond the maximum committee
+    /// size.
     pub fn indices(&self) -> Result<Vec<u8>, MultisigError> {
         as_indices(self.bitmap)
     }
@@ -402,8 +449,7 @@ impl MultisigAggregatedSignature {
         &self.committee
     }
 
-    /// Returns `true` if any of the member signatures uses the given signature
-    /// scheme.
+    /// Returns `true` if any of the member signatures uses the given signature scheme.
     pub fn contains_signature_scheme(&self, scheme: SignatureScheme) -> bool {
         self.signatures.iter().any(|s| s.scheme() == scheme)
     }
@@ -592,12 +638,11 @@ pub(crate) mod serialization {
     use super::*;
     use crate::{SignatureScheme, crypto::SignatureFromBytesError};
 
-    /// Owned wire shape of an aggregated multisig: the flat
-    /// `signatures || bitmap || committee` body without the scheme flag or
-    /// length prefix. `UserSignatureBody::Multisig` embeds this type directly
-    /// (the enum tag supplies the flag and the outer `UserSignature` the
-    /// length prefix), while `MultisigAggregatedSignature`'s own serde keeps
-    /// the historical `bytes`-wrapped `flag || body` form.
+    /// Owned wire shape of an aggregated multisig: the flat `signatures || bitmap || committee`
+    /// body without the scheme flag or length prefix. `UserSignatureBody::Multisig` embeds this
+    /// type directly (the enum tag supplies the flag and the outer `UserSignature` the length
+    /// prefix), while `MultisigAggregatedSignature`'s own serde keeps the historical
+    /// `bytes`-wrapped `flag || body` form.
     #[derive(serde::Deserialize)]
     pub(crate) struct Multisig {
         signatures: Vec<MultisigMemberSignature>,
@@ -622,7 +667,7 @@ pub(crate) mod serialization {
                 committee: multisig.committee,
             };
             multisig
-                .validate()
+                .validate_allow_partially_signed_mixed_ed25519()
                 .map_err(|e| SignatureFromBytesError::new(format!("invalid multisig: {e}")))?;
             Ok(multisig)
         }
@@ -683,8 +728,8 @@ pub(crate) mod serialization {
     }
 
     impl MultisigAggregatedSignature {
-        /// Encode this aggregated signature as `flag || bcs-body`, where
-        /// `flag` is the multisig scheme byte (`0x03`).
+        /// Encode this aggregated signature as `flag || bcs-body`, where `flag` is the multisig
+        /// scheme byte (`0x03`).
         pub fn to_bytes(&self) -> Vec<u8> {
             let mut buf = vec![SignatureScheme::Multisig as u8];
             let multisig = MultisigRef {
@@ -715,10 +760,9 @@ pub(crate) mod serialization {
 
     /// Wire shape for `MultisigMemberSignature`.
     ///
-    /// The `ZkLoginDeprecated` placeholder pins `Passkey` at flag `%d04`; it
-    /// is rejected on deserialization. The passkey arm serializes through
-    /// `PasskeyAuthenticator`'s own serde, i.e. as length-prefixed `bytes`
-    /// containing `passkey-flag || passkey-authenticator`.
+    /// The `ZkLoginDeprecated` placeholder pins `Passkey` at flag `%d04`; it is rejected on
+    /// deserialization. The passkey arm serializes through `PasskeyAuthenticator`'s own serde, i.e.
+    /// as length-prefixed `bytes` containing `passkey-flag || passkey-authenticator`.
     #[derive(serde::Deserialize, serde::Serialize)]
     #[cfg_attr(
         feature = "bcs-schema",
@@ -905,8 +949,7 @@ mod tests {
     use super::*;
     use crate::UserSignature;
 
-    /// Roundtrip a multisig committee and aggregated signature that include a
-    /// passkey member.
+    /// Roundtrip a multisig committee and aggregated signature that include a passkey member.
     #[test]
     fn passkey_multisig_roundtrip() {
         let passkey_b64 = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";
@@ -949,9 +992,9 @@ mod tests {
         );
     }
 
-    /// `MultisigAggregatedSignature::new` must reject `UserSignature`s that
-    /// are not provided in committee order, since the resulting bitmap and
-    /// signatures vector would otherwise misalign at verification time.
+    /// `MultisigAggregatedSignature::new` must reject `UserSignature`s that are not provided in
+    /// committee order, since the resulting bitmap and signatures vector would otherwise misalign
+    /// at verification time.
     #[test]
     fn new_rejects_out_of_order_signatures() {
         use crate::{Ed25519PublicKey, Ed25519Signature, SimpleSignature};
@@ -1033,16 +1076,15 @@ mod tests {
         );
     }
 
-    /// A standalone `MultisigAggregatedSignature` BCS-serializes as
-    /// length-prefixed bytes containing `multisig-flag || body`, exactly the
-    /// `to_bytes` form. A round-trip test cannot detect losing (or doubling)
-    /// that framing, so it is pinned here byte-by-byte.
+    /// A standalone `MultisigAggregatedSignature` BCS-serializes as length-prefixed bytes
+    /// containing `multisig-flag || body`, exactly the `to_bytes` form. A round-trip test cannot
+    /// detect losing (or doubling) that framing, so it is pinned here byte-by-byte.
     #[test]
     fn multisig_standalone_bcs_framing() {
         use base64ct::{Base64, Encoding};
 
-        // A multisig `UserSignature` from a mainnet transaction, in the flat
-        // `[0x03 flag][body]` wire form (the `to_bytes` / explorer encoding):
+        // A multisig `UserSignature` from a mainnet transaction, in the flat `[0x03 flag][body]`
+        // wire form (the `to_bytes` / explorer encoding):
         // https://explorer.iota.org/txblock/BUPSmkG8QZgr1NtVNjFaJMYsArkaWMECs7RHbEZRZUEU?network=https%3A%2F%2Findexer.mainnet.iota.cafe
         let multisig_b64 = "AwIA+zI2waYMirpLgCXsqGcuy+VPNToMkxYeBxkQVSgFdIS/TnAHQKs9FFAzHTfV2iSJuO25oIw5dnu9KEBSZwiqBQAf+R79IrKzolrY7mAM6TmE8T9sKk496ztesq0ao6a5BDFeH0QrIXJ68PZFAdEE86k3wh1WkeIYjxAMrIBpy9YBGAAFALurCXoe8wunaE2g6O2CtIZW4lSIf/fImJrdqRvZtlphAQCpMi2gCtRO9jNLl3bwc1x8IB/YYs1P6XpUEQbwzh2lGAEABYLKuo/1LUczMu80FayRheNYXavDC8l+QLX/s4S9i7QBAJYYQ5QWs/aT8+VwA+Vh3wswa90eqAaf6N4yzYUSXuTCAQBR6+eXlJ4GViO9z7QXRPSUaRPR9DlyDjc6S9lz61JNLgECAA==";
         let flag_and_body = Base64::decode_vec(multisig_b64).unwrap();
@@ -1051,9 +1093,8 @@ mod tests {
             panic!("expected multisig signature");
         };
 
-        // `to_bytes` is the flat `flag || body`; the standalone BCS form wraps
-        // that same blob in a ULEB length prefix (identical to BCS-encoding the
-        // bytes themselves).
+        // `to_bytes` is the flat `flag || body`; the standalone BCS form wraps that same blob in a
+        // ULEB length prefix (identical to BCS-encoding the bytes themselves).
         assert_eq!(
             sig.to_bytes(),
             flag_and_body,
@@ -1069,11 +1110,10 @@ mod tests {
         assert_eq!(sig, decoded);
     }
 
-    /// A passkey member signature is BCS-framed as `%d04` followed by
-    /// length-prefixed bytes containing `passkey-flag || passkey body` — the
-    /// historical wrapping produced by `PasskeyAuthenticator`'s serde. A
-    /// round-trip test cannot detect losing (or doubling) that framing, so it
-    /// is pinned here byte-by-byte.
+    /// A passkey member signature is BCS-framed as `%d04` followed by length-prefixed bytes
+    /// containing `passkey-flag || passkey body` — the historical wrapping produced by
+    /// `PasskeyAuthenticator`'s serde. A round-trip test cannot detect losing (or doubling) that
+    /// framing, so it is pinned here byte-by-byte.
     #[test]
     fn member_signature_passkey_bcs_framing() {
         use base64ct::{Base64, Encoding};
@@ -1088,8 +1128,8 @@ mod tests {
 
         let bytes =
             bcs::to_bytes(&MultisigMemberSignature::Passkey(passkey_authenticator)).unwrap();
-        // `%d04` member tag, then the passkey as length-prefixed bytes whose
-        // contents are exactly the standalone `flag || body` wire form.
+        // `%d04` member tag, then the passkey as length-prefixed bytes whose contents are exactly
+        // the standalone `flag || body` wire form.
         assert_eq!(bytes[0], 0x04, "passkey member signature must use tag 4");
         let expected = bcs::to_bytes(&passkey_wire).unwrap();
         assert_eq!(
@@ -1099,12 +1139,11 @@ mod tests {
         );
     }
 
-    /// The BCS tag of a multisig `MemberSignature` is the on-chain wire
-    /// format, so the variant indices must stay fixed. A round-trip test
-    /// can't catch a shift (encode and decode move together), so the tag
-    /// values are pinned here against hardcoded expectations. In particular
-    /// this guards the `ZkLoginDeprecated` placeholder kept at index `0x03`:
-    /// removing it would silently shift `Passkey` from `0x04` to `0x03`.
+    /// The BCS tag of a multisig `MemberSignature` is the on-chain wire format, so the variant
+    /// indices must stay fixed. A round-trip test can't catch a shift (encode and decode move
+    /// together), so the tag values are pinned here against hardcoded expectations. In particular
+    /// this guards the `ZkLoginDeprecated` placeholder kept at index `0x03`: removing it would
+    /// silently shift `Passkey` from `0x04` to `0x03`.
     #[test]
     fn member_signature_bcs_tags() {
         use crate::Ed25519Signature;
@@ -1159,6 +1198,89 @@ mod tests {
     }
 
     #[test]
+    fn committee_rejects_mixed_ed25519() {
+        use crate::{Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey};
+
+        let ed0 = Ed25519PublicKey::new([1; 32]);
+        let ed1 = Ed25519PublicKey::new([2; 32]);
+        let k1 = Secp256k1PublicKey::new([3; 33]);
+        let r1 = Secp256r1PublicKey::new([4; 33]);
+
+        let err = MultisigCommittee::new(
+            vec![MultisigMember::new(ed0, 1), MultisigMember::new(k1, 1)],
+            1,
+        )
+        .unwrap_err();
+        assert!(
+            matches!(err, MultisigError::MixedEd25519Committee),
+            "expected MixedEd25519Committee, got {err:?}"
+        );
+
+        MultisigCommittee::new(
+            vec![MultisigMember::new(ed0, 1), MultisigMember::new(ed1, 1)],
+            1,
+        )
+        .unwrap();
+        MultisigCommittee::new(
+            vec![MultisigMember::new(k1, 1), MultisigMember::new(r1, 1)],
+            1,
+        )
+        .unwrap();
+    }
+
+    #[test]
+    fn mixed_ed25519_aggregated_signature_requires_all_signatures() {
+        use crate::{
+            Ed25519PublicKey, Ed25519Signature, Secp256k1PublicKey, Secp256k1Signature,
+            SimpleSignature,
+        };
+
+        let ed = Ed25519PublicKey::new([1; 32]);
+        let k1 = Secp256k1PublicKey::new([3; 33]);
+        let committee = MultisigCommittee::new_unchecked(
+            vec![MultisigMember::new(ed, 1), MultisigMember::new(k1, 1)],
+            1,
+        );
+        let ed_sig = UserSignature::Simple(SimpleSignature::Ed25519 {
+            signature: Ed25519Signature::new([0; 64]),
+            public_key: ed,
+        });
+        let k1_sig = UserSignature::Simple(SimpleSignature::Secp256k1 {
+            signature: Secp256k1Signature::new([0; 64]),
+            public_key: k1,
+        });
+
+        let err =
+            MultisigAggregatedSignature::new(vec![ed_sig.clone()], committee.clone()).unwrap_err();
+        assert!(
+            matches!(err, MultisigError::PartiallySignedMixedEd25519Committee),
+            "expected PartiallySignedMixedEd25519Committee, got {err:?}"
+        );
+        MultisigAggregatedSignature::new(vec![ed_sig.clone(), k1_sig], committee.clone())
+            .unwrap()
+            .validate()
+            .unwrap();
+
+        let partial = MultisigAggregatedSignature::new_unchecked(
+            vec![MultisigMemberSignature::try_from(ed_sig).unwrap()],
+            0b1,
+            committee,
+        );
+        let err = partial.validate().unwrap_err();
+        assert!(
+            matches!(err, MultisigError::PartiallySignedMixedEd25519Committee),
+            "expected PartiallySignedMixedEd25519Committee, got {err:?}"
+        );
+        partial
+            .validate_allow_partially_signed_mixed_ed25519()
+            .unwrap();
+
+        let decoded: MultisigAggregatedSignature =
+            bcs::from_bytes(&bcs::to_bytes(&partial).unwrap()).unwrap();
+        assert_eq!(partial, decoded);
+    }
+
+    #[test]
     fn new_rejects_duplicates() {
         use crate::{Ed25519PublicKey, Ed25519Signature, SimpleSignature};
 
@@ -1192,8 +1314,7 @@ mod tests {
             "adjacent duplicate should be reported as DuplicatePublicKey, got {err:?}"
         );
 
-        // pk0, pk1, pk0 — pk0 reappears non-adjacently, which must also be
-        // reported as a duplicate.
+        // pk0, pk1, pk0 — pk0 reappears non-adjacently, which must also be reported as a duplicate.
         let err = MultisigAggregatedSignature::new(vec![sig(pk0), sig(pk1), sig(pk0)], committee)
             .unwrap_err();
         assert!(
@@ -1202,8 +1323,7 @@ mod tests {
         );
     }
 
-    /// Pin the committee validation rules enforced by
-    /// [`MultisigCommittee::new`].
+    /// Pin the committee validation rules enforced by [`MultisigCommittee::new`].
     #[test]
     fn committee_new_validation() {
         use crate::Ed25519PublicKey;
@@ -1256,23 +1376,21 @@ mod tests {
         ));
     }
 
-    /// Pin the multisig address derivation against accidental changes. A
-    /// committee with a fixed set of public keys and weights must always map
-    /// to the same address.
+    /// Pin the multisig address derivation against accidental changes. A committee with a fixed set
+    /// of public keys and weights must always map to the same address.
     #[cfg(feature = "hash")]
     #[test]
     fn derive_address_is_stable() {
         use crate::{Address, Ed25519PublicKey, Secp256k1PublicKey, Secp256r1PublicKey};
 
-        let committee = MultisigCommittee::new(
+        let committee = MultisigCommittee::new_unchecked(
             vec![
                 MultisigMember::new(Ed25519PublicKey::new([1; 32]), 1),
                 MultisigMember::new(Secp256k1PublicKey::new([2; 33]), 2),
                 MultisigMember::new(Secp256r1PublicKey::new([3; 33]), 3),
             ],
             2,
-        )
-        .unwrap();
+        );
 
         assert_eq!(
             committee.derive_address(),
@@ -1316,8 +1434,8 @@ mod tests {
         ));
     }
 
-    /// The getters expose the committee, member signatures, bitmap, and the
-    /// indices derived from the bitmap.
+    /// The getters expose the committee, member signatures, bitmap, and the indices derived from
+    /// the bitmap.
     #[test]
     fn aggregated_signature_getters() {
         use crate::{Ed25519PublicKey, Ed25519Signature, SimpleSignature};

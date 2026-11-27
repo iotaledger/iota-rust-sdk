@@ -1,4 +1,9 @@
 """
+The type of account created by a claim.
+"""
+union AccountClaimKind = SmartAccountClaim
+
+"""
 The 32-byte address that is an account address (corresponding to a public
 key).
 """
@@ -135,8 +140,9 @@ enum AddressTransactionBlockRelationship {
 }
 
 """
-Range of checkpoints that the RPC is guaranteed to produce a consistent
-response for.
+Range of checkpoints that consistent object queries can be viewed at. A
+query paginated with a cursor is viewed at the checkpoint the cursor was
+issued at, so the cursor expires once that checkpoint leaves the range.
 """
 type AvailableRange {
 	first: Checkpoint
@@ -460,6 +466,14 @@ type CheckpointConnection {
 	A list of nodes.
 	"""
 	nodes: [Checkpoint!]!
+	"""
+	The oldest checkpoint this page can contain data from. Anything before
+	it has been pruned and is not listed. Zero when nothing has been
+	pruned, or when the historical fallback serves the whole history. Null
+	when no bound applies to the page, such as a lookup by digest, or a
+	page whose filters contradict each other.
+	"""
+	oldestAvailableCheckpoint: UInt53
 }
 
 """
@@ -483,6 +497,16 @@ latest checkpoint.
 input CheckpointId {
 	digest: String
 	sequenceNumber: UInt53
+}
+
+"""
+A transaction that claims the sender's address as an account object.
+"""
+type ClaimAccountTransaction {
+	"""
+	The type of account created by the claim.
+	"""
+	kind: AccountClaimKind!
 }
 
 """
@@ -1285,6 +1309,14 @@ type EventConnection {
 	A list of nodes.
 	"""
 	nodes: [Event!]!
+	"""
+	The oldest checkpoint this page can contain data from. Anything before
+	it has been pruned and is not listed. Zero when nothing has been
+	pruned, or when the historical fallback serves the whole history. Null
+	when no bound applies to the page, such as a lookup by digest, or a
+	page whose filters contradict each other.
+	"""
+	oldestAvailableCheckpoint: UInt53
 }
 
 """
@@ -3552,8 +3584,11 @@ type Query {
 	"""
 	chainIdentifier: String!
 	"""
-	Range of checkpoints that the RPC has data available for (for data
-	that can be tied to a particular checkpoint).
+	Range of checkpoints that consistent object queries (objects, coins,
+	balances, dynamic fields and name registrations) can be viewed at. A
+	query paginated with a cursor is viewed at the checkpoint the cursor
+	was issued at, so the cursor expires once that checkpoint leaves the
+	range.
 	"""
 	availableRange: AvailableRange!
 	"""
@@ -3658,11 +3693,6 @@ type Query {
 	Fetch a transaction block by its transaction digest.
 	"""
 	transactionBlock(digest: String!): TransactionBlock
-	"""
-	Fetch multiple transaction blocks by their digests.
-	This includes all transactions, even if they are not checkpointed yet.
-	"""
-	transactionBlocksByDigests(digests: [String!]!): [TransactionBlock]! @deprecated(reason: "Use `transactionsByDigests` instead. Will be removed in v1.38.")
 	"""
 	Fetch multiple transaction blocks by their digests.
 	
@@ -4048,6 +4078,22 @@ type SharedObjectRead {
 	The object at this version.  May not be available due to pruning.
 	"""
 	object: Object
+}
+
+"""
+Parameters the claimed SmartAccount was created with.
+"""
+type SmartAccountClaim {
+	"""
+	The signature scheme flag byte of the public key (0=Ed25519,
+	1=Secp256k1, 2=Secp256r1, 3=MultiSig, 6=Passkey).
+	"""
+	publicKeyScheme: Int!
+	"""
+	Raw public key bytes of the claimed address, without the scheme flag
+	prefix. For MultiSig this is a BCS-encoded multisig public key.
+	"""
+	publicKeyRawBytes: Base64!
 }
 
 """
@@ -4519,6 +4565,14 @@ type TransactionBlockConnection {
 	A list of nodes.
 	"""
 	nodes: [TransactionBlock!]!
+	"""
+	The oldest checkpoint this page can contain data from. Anything before
+	it has been pruned and is not listed. Zero when nothing has been
+	pruned, or when the historical fallback serves the whole history. Null
+	when no bound applies to the page, such as a lookup by digest, or a
+	page whose filters contradict each other.
+	"""
+	oldestAvailableCheckpoint: UInt53
 }
 
 """
@@ -4623,8 +4677,9 @@ input TransactionBlockFilter {
 	"""
 	function: String
 	"""
-	An input filter selecting for either system or programmable
-	transactions.
+	An input filter selecting transactions by kind: system transactions,
+	programmable transactions, claims of an account, or one kind of system
+	transaction.
 	"""
 	kind: TransactionBlockKindInput
 	"""
@@ -4671,13 +4726,15 @@ input TransactionBlockFilter {
 }
 
 """
-The kind of transaction block, either a programmable transaction or a system
-transaction.
+The kind of transaction block: a programmable transaction, a claim of the
+sender's address as an account object, or a system transaction.
 """
-union TransactionBlockKind = ConsensusCommitPrologueTransaction | GenesisTransaction | ProgrammableTransactionBlock | RandomnessStateUpdateTransaction | TransactionDenyRulesUpdateTransaction | EndOfEpochTransaction
+union TransactionBlockKind = ConsensusCommitPrologueTransaction | GenesisTransaction | ProgrammableTransactionBlock | RandomnessStateUpdateTransaction | TransactionDenyRulesUpdateTransaction | EndOfEpochTransaction | ClaimAccountTransaction
 
 """
-An input filter selecting for either system or programmable transactions.
+An input filter selecting transactions by kind: system transactions,
+programmable transactions, claims of an account, or one kind of system
+transaction.
 """
 enum TransactionBlockKindInput {
 	"""
@@ -4705,6 +4762,10 @@ enum TransactionBlockKindInput {
 	The end of epoch transaction block.
 	"""
 	END_OF_EPOCH_TX
+	"""
+	A claim of the sender's address as an account object.
+	"""
+	CLAIM_ACCOUNT
 }
 
 """
@@ -4791,7 +4852,18 @@ type TransactionDenyRulesUpdateTransaction {
 	denyRulesObjInitialSharedVersion: UInt53!
 }
 
-union TransactionInput = OwnedOrImmutable | SharedInput | Receiving | Pure
+"""
+The transaction this transaction depends on: it executes after that
+transaction, and fails if that transaction failed. No command can use this input.
+"""
+type TransactionDependencyInput {
+	"""
+	Digest of the transaction depended on.
+	"""
+	digest: String!
+}
+
+union TransactionInput = OwnedOrImmutable | SharedInput | Receiving | Pure | TransactionDependencyInput
 
 type TransactionInputConnection {
 	"""

@@ -1,13 +1,11 @@
 // Copyright (c) 2025 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-/// Define the FFI wrapper for a `key` Move-object mirror decoded at a fixed
-/// Move type tag (a non-generic mirror, or a fixed instantiation such as
-/// `<IOTA>`): the `uniffi::Object` newtype plus its `try_from_object` /
-/// `try_from_bcs` constructors. Type-specific field accessors go in the
-/// trailing block and are spliced into the exported impl. For mirrors whose
-/// type parameter is chosen by the caller at runtime, use
-/// [`crate::ffi_move_object_generic`].
+/// Define the FFI wrapper for a `key` Move-object mirror decoded at a fixed Move type tag (a
+/// non-generic mirror, or a fixed instantiation such as `<IOTA>`): the `uniffi::Object` newtype
+/// plus its `try_from_object` / `try_from_bcs` constructors. Type-specific field accessors go in
+/// the trailing block and are spliced into the exported impl. For mirrors whose type parameter is
+/// chosen by the caller at runtime, use [`crate::ffi_move_object_generic`].
 #[macro_export]
 macro_rules! ffi_move_object {
     (
@@ -45,12 +43,11 @@ macro_rules! ffi_move_object {
     };
 }
 
-/// Define the FFI wrapper for a Move event mirror: the `uniffi::Object`
-/// newtype plus a `try_from_bcs` constructor. Events are not objects (no
-/// `key` ability, no `UID`), so there is no `try_from_object` and no `id`;
-/// they are decoded from the BCS `contents` of an event query result.
-/// Type-specific field accessors go in the trailing block and are spliced
-/// into the exported impl.
+/// Define the FFI wrapper for a Move event mirror: the `uniffi::Object` newtype plus a
+/// `try_from_bcs` constructor. Events are not objects (no `key` ability, no `UID`), so there is no
+/// `try_from_object` and no `id`; they are decoded from the BCS `contents` of an event query
+/// result. Type-specific field accessors go in the trailing block and are spliced into the exported
+/// impl.
 #[macro_export]
 macro_rules! ffi_move_event {
     (
@@ -75,10 +72,10 @@ macro_rules! ffi_move_event {
     };
 }
 
-/// Like [`ffi_move_object`], but for a mirror with a single (phantom) type
-/// parameter. `$core` is the type instantiated at `IOTA` (a phantom marker, so
-/// the BCS layout is the same for every coin type); the object constructor
-/// validates the on-chain type parameter against a caller-provided `TypeTag`.
+/// Like [`ffi_move_object`], but for a mirror with a single (phantom) type parameter. `$core` is
+/// the type instantiated at `()` (the parameter is phantom, so the BCS layout is the same for every
+/// instantiation); the object constructor validates the on-chain type parameter against a
+/// caller-provided `TypeTag`.
 #[macro_export]
 macro_rules! ffi_move_object_generic {
     (
@@ -92,8 +89,8 @@ macro_rules! ffi_move_object_generic {
 
         #[uniffi::export]
         impl $name {
-            /// Decode from an on-chain object, validating its Move type tag,
-            /// including that its type parameter equals `type_param`.
+            /// Decode from an on-chain object, validating its Move type tag, including that its
+            /// type parameter equals `type_param`.
             #[uniffi::constructor]
             pub fn try_from_object_with_type(
                 object: &$crate::types::object::Object,
@@ -118,11 +115,9 @@ macro_rules! ffi_move_object_generic {
     };
 }
 
-/// Export BCS conversions for a `uniffi::Record` or `uniffi::Enum` mirrored
-/// from `iota_sdk::types`.
+/// Export BCS conversions for a `uniffi::Record` or `uniffi::Enum` mirrored from `iota_sdk::types`.
 ///
-/// `from_bcs` is a free function because no language backend renders
-/// `Record::constructors`.
+/// `from_bcs` is a free function because no language backend renders `Record::constructors`.
 #[macro_export]
 macro_rules! export_iota_types_bcs_conversion {
     ($($name:ident),+ $(,)?) => {
@@ -146,8 +141,7 @@ macro_rules! export_iota_types_bcs_conversion {
     }
 }
 
-/// Export BCS conversions for a `uniffi::Object` newtype wrapping a type from
-/// `iota_sdk::types`.
+/// Export BCS conversions for a `uniffi::Object` newtype wrapping a type from `iota_sdk::types`.
 #[macro_export]
 macro_rules! export_iota_types_objects_bcs_conversion {
     ($($name:ident),+ $(,)?) => {$(
@@ -257,9 +251,8 @@ macro_rules! export_iota_types_display {
             impl $name {
                 /// Render this type as human-readable text.
                 ///
-                /// The layout is meant for reading and can change between
-                /// releases. Use the JSON or BCS conversions for output that
-                /// gets parsed.
+                /// The layout is meant for reading and can change between releases. Use the JSON or
+                /// BCS conversions for output that gets parsed.
                 pub fn to_display_string(&self) -> String {
                     <$core>::from(self.clone()).to_string()
                 }
@@ -272,9 +265,8 @@ macro_rules! export_iota_types_display {
             impl $name {
                 /// Render this type as human-readable text.
                 ///
-                /// The layout is meant for reading and can change between
-                /// releases. Use the JSON or BCS conversions for output that
-                /// gets parsed.
+                /// The layout is meant for reading and can change between releases. Use the JSON or
+                /// BCS conversions for output that gets parsed.
                 pub fn to_display_string(&self) -> String {
                     iota_sdk::types::$name::from(self.clone()).to_string()
                 }
@@ -291,13 +283,11 @@ macro_rules! export_iota_types_objects_display {
             impl $name {
                 /// Render this type as human-readable text.
                 ///
-                /// Some types also print this through the binding's native
-                /// string conversion; this method is the spelling every object
-                /// type has.
+                /// Some types also print this through the binding's native string conversion; this
+                /// method is the spelling every object type has.
                 ///
-                /// The layout is meant for reading and can change between
-                /// releases. Use the JSON or BCS conversions for output that
-                /// gets parsed.
+                /// The layout is meant for reading and can change between releases. Use the JSON or
+                /// BCS conversions for output that gets parsed.
                 pub fn to_display_string(&self) -> String {
                     self.0.to_string()
                 }
@@ -325,8 +315,8 @@ macro_rules! ffi_map {
 
             #[uniffi::export]
             impl $name {
-                /// Collect entries into a map. A key repeated across entries keeps
-                /// the value of the last one.
+                /// Collect entries into a map. A key repeated across entries keeps the value of the
+                /// last one.
                 #[uniffi::constructor]
                 pub fn from_entries(entries: Vec<[<$name Entry>]>) -> Self {
                     Self::from_iter(entries.into_iter().map(|entry| (entry.key, entry.value)))
@@ -375,8 +365,7 @@ macro_rules! ffi_map {
             }
 
             impl $name {
-                /// Borrow the entries, the way the native map this stands in
-                /// for is read.
+                /// Borrow the entries, the way the native map this stands in for is read.
                 pub fn iter(&self) -> impl Iterator<Item = (&::std::sync::Arc<$key>, &$value)> {
                     self.0.iter()
                 }
@@ -403,15 +392,15 @@ macro_rules! ffi_map {
     };
 }
 
-/// Declares an FFI map object backed by a [`std::collections::BTreeMap`], for
-/// maps read out of an ordered Rust map.
+/// Declares an FFI map object backed by a [`std::collections::BTreeMap`], for maps read out of an
+/// ordered Rust map.
 ///
-/// Unlike [`ffi_map!`], which hands the bindings a native map unless
-/// `map-objects` is enabled, this one is always an object: a native map keeps
-/// the key order in some binding languages and drops it in others.
+/// Unlike [`ffi_map!`], which hands the bindings a native map unless `map-objects` is enabled, this
+/// one is always an object: a native map keeps the key order in some binding languages and drops it
+/// in others.
 ///
-/// The key type is written as it is stored — `Arc<ObjectId>`, `String` — and
-/// lookups take its [`Deref`](std::ops::Deref) target.
+/// The key type is written as it is stored — `Arc<ObjectId>`, `String` — and lookups take its
+/// [`Deref`](std::ops::Deref) target.
 #[macro_export]
 macro_rules! ffi_btree_map {
     ($(#[$meta:meta])* $name:ident<$key:ty, $value:ty>) => {
@@ -431,8 +420,8 @@ macro_rules! ffi_btree_map {
 
             #[uniffi::export]
             impl $name {
-                /// Collect entries into a map. A key repeated across entries keeps
-                /// the value of the last one.
+                /// Collect entries into a map. A key repeated across entries keeps the value of the
+                /// last one.
                 #[uniffi::constructor]
                 pub fn from_entries(entries: Vec<[<$name Entry>]>) -> Self {
                     Self::from_iter(entries.into_iter().map(|entry| (entry.key, entry.value)))
@@ -481,8 +470,7 @@ macro_rules! ffi_btree_map {
             }
 
             impl $name {
-                /// Borrow the entries, the way the native map this stands in
-                /// for is read.
+                /// Borrow the entries, the way the native map this stands in for is read.
                 pub fn iter(&self) -> impl Iterator<Item = (&$key, &$value)> {
                     self.0.iter()
                 }
@@ -498,6 +486,100 @@ macro_rules! ffi_btree_map {
                 fn default() -> Self {
                     Self(::std::collections::BTreeMap::new())
                 }
+            }
+        }
+    };
+}
+
+/// Define the FFI object holding the per-item results of a gRPC batch call, each either an `$item`
+/// converted from `$proto` or the error message the server reported for it. uniffi can't carry a
+/// `Result` inside a list, so the items are read through `get` and `has_next`/`next`, which throw
+/// an item's error.
+#[macro_export]
+macro_rules! grpc_batch_results {
+    (
+        $(#[$meta:meta])*
+        $name:ident($item:ty, $proto:ty)
+    ) => {
+        $(#[$meta])*
+        ///
+        /// Read items by position with `get`, or in order with `has_next` and `next`. An item's
+        /// error does not end the iteration: `next` throws it and the following call moves on to
+        /// the next item. Items can be read any number of times.
+        #[derive(uniffi::Object)]
+        pub struct $name {
+            results: Vec<::std::result::Result<$item, String>>,
+            cursor: ::std::sync::atomic::AtomicUsize,
+        }
+
+        impl $name {
+            /// Convert the client's results, failing if an item the server returned cannot be
+            /// decoded.
+            pub(crate) fn new(
+                results: Vec<::iota_sdk::grpc_client::GrpcResult<$proto>>,
+            ) -> $crate::error::Result<Self> {
+                Ok(Self {
+                    results: results
+                        .into_iter()
+                        .map(|result| match result {
+                            Ok(item) => <$item>::try_from(&item).map(Ok),
+                            Err(error) => Ok(Err(error.to_string())),
+                        })
+                        .collect::<$crate::error::Result<_>>()?,
+                    cursor: ::std::sync::atomic::AtomicUsize::new(0),
+                })
+            }
+        }
+
+        #[uniffi::export]
+        impl $name {
+            /// The number of items.
+            pub fn len(&self) -> u64 {
+                self.results.len() as u64
+            }
+
+            /// Whether there are no items.
+            pub fn is_empty(&self) -> bool {
+                self.results.is_empty()
+            }
+
+            /// The item at `index`, or an error carrying the message the server reported for it.
+            /// Errors if `index` is out of range.
+            pub fn get(&self, index: u64) -> $crate::error::Result<$item> {
+                usize::try_from(index)
+                    .ok()
+                    .and_then(|index| self.results.get(index))
+                    .ok_or_else(|| {
+                        $crate::error::SdkFfiError::custom(format!(
+                            "index {index} out of range for {} results",
+                            self.results.len()
+                        ))
+                    })?
+                    .clone()
+                    .map_err($crate::error::SdkFfiError::custom)
+            }
+
+            /// Whether `next` has an item left to return.
+            pub fn has_next(&self) -> bool {
+                self.cursor.load(::std::sync::atomic::Ordering::Relaxed) < self.results.len()
+            }
+
+            /// The next item, or an error carrying the message the server reported for it. Errors
+            /// once every item has been returned.
+            ///
+            /// `has_next` followed by `next` is not atomic: when several threads share the results,
+            /// `next` can error as exhausted after `has_next` returned `true`.
+            pub fn next(&self) -> $crate::error::Result<$item> {
+                let len = self.results.len();
+                let index = self
+                    .cursor
+                    .fetch_add(1, ::std::sync::atomic::Ordering::Relaxed);
+                if index >= len {
+                    self.cursor
+                        .fetch_min(len, ::std::sync::atomic::Ordering::Relaxed);
+                    return Err($crate::error::SdkFfiError::custom("no results left"));
+                }
+                self.get(index as u64)
             }
         }
     };

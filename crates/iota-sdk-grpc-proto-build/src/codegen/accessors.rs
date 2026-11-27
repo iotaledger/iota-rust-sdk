@@ -19,9 +19,9 @@ use crate::{
     ident::sanitize_identifier,
 };
 
-/// The fields prost stores directly on the generated struct: everything that is
-/// not a member of a real `oneof`. A synthetic proto3-optional oneof is not a
-/// oneof as far as prost is concerned, so its field belongs here.
+/// The fields prost stores directly on the generated struct: everything that is not a member of a
+/// real `oneof`. A synthetic proto3-optional oneof is not a oneof as far as prost is concerned, so
+/// its field belongs here.
 fn struct_fields(message: &MessageDescriptor) -> impl Iterator<Item = FieldDescriptor> {
     message.fields().filter(|field| {
         field
@@ -35,8 +35,8 @@ fn real_oneofs(message: &MessageDescriptor) -> impl Iterator<Item = OneofDescrip
     message.oneofs().filter(|oneof| !oneof.is_synthetic())
 }
 
-/// Key and value fields of the entry message backing a map field, or `None`
-/// when the field is not a map.
+/// Key and value fields of the entry message backing a map field, or `None` when the field is not a
+/// map.
 fn map_entry_fields(
     field: &FieldDescriptor,
 ) -> Option<(FieldDescriptorProto, FieldDescriptorProto)> {
@@ -53,12 +53,11 @@ fn map_entry_fields(
     ))
 }
 
-/// Whether prost wrapped the field in `Option`, which decides the shape of
-/// every accessor generated for it.
+/// Whether prost wrapped the field in `Option`, which decides the shape of every accessor generated
+/// for it.
 ///
-/// Deliberately not [`FieldDescriptor::supports_presence`], which is also true
-/// for scalar members of a oneof — prost keeps those in the oneof enum rather
-/// than an `Option`.
+/// Deliberately not [`FieldDescriptor::supports_presence`], which is also true for scalar members
+/// of a oneof — prost keeps those in the oneof enum rather than an `Option`.
 fn is_optional(field: &FieldDescriptorProto) -> bool {
     if field.proto3_optional.unwrap_or(false) {
         return true;
@@ -87,8 +86,7 @@ fn is_well_known_type(field: &FieldDescriptorProto) -> bool {
     field.type_name().starts_with(".google.protobuf")
 }
 
-/// Fully qualified name with the leading dot protobuf paths carry and the
-/// descriptor pool omits.
+/// Fully qualified name with the leading dot protobuf paths carry and the descriptor pool omits.
 fn qualified(name: &str) -> String {
     format!(".{name}")
 }
@@ -102,8 +100,8 @@ pub(crate) fn generate_accessors(
     for package in context.packages() {
         let mut stream = TokenStream::new();
 
-        // Emit in the order the protos declare their messages, so a generated
-        // file reads like the `.proto` it comes from.
+        // Emit in the order the protos declare their messages, so a generated file reads like the
+        // `.proto` it comes from.
         let messages = context
             .all_messages_in_declaration_order(&package)
             .into_iter()
@@ -159,10 +157,9 @@ fn generate_accessors_for_message(
 
     let mut functions = TokenStream::new();
 
-    // Check if any field in this message needs the default_instance function, and
-    // generate it if so. We do this at the message level (instead of per-field)
-    // to avoid generating multiple default_instance functions for the same message
-    // if multiple fields need it.
+    // Check if any field in this message needs the default_instance function, and generate it if
+    // so. We do this at the message level (instead of per-field) to avoid generating multiple
+    // default_instance functions for the same message if multiple fields need it.
     let needs_default_instance = message_needs_default_instance(message, context.accessor_map());
 
     if needs_default_instance {
@@ -223,8 +220,7 @@ fn message_needs_default_instance(message: &MessageDescriptor, accessor_map: &Ac
                 {
                     return true;
                 }
-                // Required/implicit optional fields don't generate getters, so
-                // no default needed
+                // Required/implicit optional fields don't generate getters, so no default needed
             }
         }
     }
@@ -668,8 +664,7 @@ fn generate_selective_accessors_for_field(
             }
         }
 
-        // only include _opt and set for non enums (as this already exists for enums
-        // from prost)
+        // only include _opt and set for non enums (as this already exists for enums from prost)
         if !matches!(descriptor.r#type(), Type::Enum)
             && accessor_types.contains(AccessorTypes::GETTER_OPT)
         {
@@ -721,10 +716,9 @@ fn generate_selective_accessors_for_field(
 
         let mut accessors = TokenStream::new();
 
-        // For enum fields, prost stores the value as i32 but
-        // field_type_path resolves to the enum type. We need special
-        // handling: take the enum type as parameter and convert via
-        // .into() for assignment.
+        // For enum fields, prost stores the value as i32 but field_type_path resolves to the enum
+        // type. We need special handling: take the enum type as parameter and convert via .into()
+        // for assignment.
         if is_enum(descriptor) {
             if accessor_types.contains(AccessorTypes::SET) {
                 accessors.extend(quote! {
@@ -936,12 +930,11 @@ fn use_into_for_setter(field: &FieldDescriptorProto) -> bool {
     }
 }
 
-/// The type an accessor takes and returns for the field, as a path relative to
-/// `package`.
+/// The type an accessor takes and returns for the field, as a path relative to `package`.
 ///
-/// Enums resolve to the generated enum type, not to the `i32` prost stores them
-/// in: the accessors convert with `.into()` at the assignment. Contrast
-/// [`map_entry_type_path`], which has to name the storage type.
+/// Enums resolve to the generated enum type, not to the `i32` prost stores them in: the accessors
+/// convert with `.into()` at the assignment. Contrast [`map_entry_type_path`], which has to name
+/// the storage type.
 fn field_type_path(field: &FieldDescriptorProto, context: &Context, package: &str) -> String {
     match field.r#type() {
         Type::Float => String::from("f32"),
@@ -959,8 +952,8 @@ fn field_type_path(field: &FieldDescriptorProto, context: &Context, package: &st
     }
 }
 
-/// The Rust type prost stores a map key or value in, as a path relative to
-/// `package`. Enum values are stored as `i32`.
+/// The Rust type prost stores a map key or value in, as a path relative to `package`. Enum values
+/// are stored as `i32`.
 fn map_entry_type_path(field: &FieldDescriptorProto, context: &Context, package: &str) -> String {
     match field.r#type() {
         Type::Float => String::from("f32"),

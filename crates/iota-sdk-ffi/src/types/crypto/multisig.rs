@@ -104,19 +104,19 @@ pub struct MultisigAggregatedSignature(pub iota_sdk::types::MultisigAggregatedSi
 
 #[uniffi::export]
 impl MultisigAggregatedSignature {
-    /// Construct a `MultisigAggregatedSignature` from a list of
-    /// `UserSignature`s and a `MultisigCommittee`.
+    /// Construct a `MultisigAggregatedSignature` from a list of `UserSignature`s and a
+    /// `MultisigCommittee`.
     ///
     /// This:
-    ///  - validates `committee` via `MultisigCommittee::validate`;
+    ///  - validates `committee` via `MultisigCommittee::validate`, except that a committee mixing
+    ///    Ed25519 with other key schemes is accepted when every member provides a signature;
     ///  - converts each `UserSignature` into a `MultisigMemberSignature`;
-    ///  - derives the `bitmap` by locating each signature's public key in the
-    ///    committee, rejecting duplicates and signatures from non-members;
+    ///  - derives the `bitmap` by locating each signature's public key in the committee, rejecting
+    ///    duplicates and signatures from non-members;
     ///  - rejects empty signature lists and lists longer than the committee.
     ///
-    /// The caller must provide `signatures` in the same order as their
-    /// corresponding members in `committee`: for committee
-    /// `[pk1, pk2, pk3, pk4, pk5]`, `[sig1, sig2, sig5]` is valid but
+    /// The caller must provide `signatures` in the same order as their corresponding members in
+    /// `committee`: for committee `[pk1, pk2, pk3, pk4, pk5]`, `[sig1, sig2, sig5]` is valid but
     /// `[sig2, sig1, sig5]` is not.
     #[uniffi::constructor]
     pub fn new(signatures: Vec<Arc<UserSignature>>, committee: &MultisigCommittee) -> Result<Self> {
@@ -144,8 +144,7 @@ impl MultisigAggregatedSignature {
             .collect()
     }
 
-    /// The bitmap that indicates which committee members provided their
-    /// signature.
+    /// The bitmap that indicates which committee members provided their signature.
     pub fn bitmap(&self) -> u16 {
         self.0.bitmap()
     }
@@ -157,10 +156,9 @@ impl MultisigAggregatedSignature {
 
 /// A multisig committee
 ///
-/// A `MultisigCommittee` is a set of members who collectively control a single
-/// `Address` on the IOTA blockchain. The number of required signatures to
-/// authorize the execution of a transaction is determined by
-/// `(signature_0_weight + signature_1_weight ..) >= threshold`.
+/// A `MultisigCommittee` is a set of members who collectively control a single `Address` on the
+/// IOTA blockchain. The number of required signatures to authorize the execution of a transaction
+/// is determined by `(signature_0_weight + signature_1_weight ..) >= threshold`.
 ///
 /// # BCS
 ///
@@ -179,10 +177,11 @@ impl MultisigCommittee {
     ///  - contain zero or more than ten members;
     ///  - contain a member with weight 0;
     ///  - have a `threshold` greater than the sum of all member weights;
-    ///  - contain duplicate public keys.
+    ///  - contain duplicate public keys;
+    ///  - mix Ed25519 members with members of other key schemes.
     ///
-    /// Note that the order of the members is significant towards deriving the
-    /// `Address` governed by this committee.
+    /// Note that the order of the members is significant towards deriving the `Address` governed by
+    /// this committee.
     #[uniffi::constructor]
     pub fn new(members: Vec<Arc<MultisigMember>>, threshold: u16) -> Result<Self> {
         Ok(Self(iota_sdk::types::MultisigCommittee::new(
@@ -202,8 +201,8 @@ impl MultisigCommittee {
             .collect()
     }
 
-    /// The total signature weight required to authorize a transaction for the
-    /// address corresponding to this `MultisigCommittee`.
+    /// The total signature weight required to authorize a transaction for the address corresponding
+    /// to this `MultisigCommittee`.
     pub fn threshold(&self) -> u16 {
         self.0.threshold()
     }
@@ -222,16 +221,16 @@ impl MultisigCommittee {
     ///  - No member has weight 0
     ///  - the sum of the weights of all members must be at least the threshold
     ///  - contains no duplicate members
+    ///  - does not mix Ed25519 members with members of other key schemes
     pub fn validate(&self) -> Result<()> {
         Ok(self.0.validate()?)
     }
 
     /// Derive an `Address` from this MultisigCommittee.
     ///
-    /// A MultiSig address
-    /// is defined as the 32-byte Blake2b hash of serializing the
-    /// `SignatureScheme` flag (0x03), the threshold (in little endian), and
-    /// the concatenation of all n flag, public keys and its weight.
+    /// A MultiSig address is defined as the 32-byte Blake2b hash of serializing the
+    /// `SignatureScheme` flag (0x03), the threshold (in little endian), and the concatenation of
+    /// all n flag, public keys and its weight.
     ///
     /// `hash(0x03 || threshold || flag_1 || pk_1 || weight_1
     /// || ... || flag_n || pk_n || weight_n)`.

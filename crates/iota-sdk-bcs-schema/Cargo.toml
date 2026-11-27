@@ -1,6 +1,6 @@
 [package]
 name = "iota-sdk-bcs-schema"
-version = "1.0.0-beta.1"
+version = "1.0.0"
 authors = ["IOTA Foundation <info@iota.org>"]
 edition = "2024"
 license = "Apache-2.0"
@@ -13,6 +13,8 @@ proc-macro = true
 
 [features]
 move-shape = []
+# Unstable APIs that may change or be removed in any release.
+unstable = []
 
 [dependencies]
 proc-macro2.workspace = true

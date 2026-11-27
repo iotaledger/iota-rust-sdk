@@ -11,10 +11,9 @@ use crate::{
 
 /// The tokio runtime that backs the gRPC channels.
 ///
-/// Creating a tonic channel spawns background tasks, which requires a running
-/// tokio runtime. The uniffi constructors are synchronous and run outside of
-/// the uniffi tokio runtime, so the channels are backed by this dedicated
-/// runtime instead.
+/// Creating a tonic channel spawns background tasks, which requires a running tokio runtime. The
+/// uniffi constructors are synchronous and run outside of the uniffi tokio runtime, so the channels
+/// are backed by this dedicated runtime instead.
 fn tokio_runtime() -> &'static tokio::runtime::Runtime {
     static RUNTIME: std::sync::OnceLock<tokio::runtime::Runtime> = std::sync::OnceLock::new();
     RUNTIME.get_or_init(|| {
@@ -87,8 +86,7 @@ impl GrpcClient {
         )))
     }
 
-    /// Create a new gRPC client connected to a `localnet` gRPC server:
-    /// <http://localhost:50051>.
+    /// Create a new gRPC client connected to a `localnet` gRPC server: <http://localhost:50051>.
     #[uniffi::constructor]
     pub fn new_localnet() -> Result<Self> {
         let _guard = tokio_runtime().enter();
@@ -97,8 +95,7 @@ impl GrpcClient {
         )))
     }
 
-    /// Set a basic auth `Authorization` header that is sent with every
-    /// request.
+    /// Set a basic auth `Authorization` header that is sent with every request.
     pub fn set_basic_auth(&self, username: String, password: Option<String>) {
         self.update(|client| {
             let mut headers = client.headers().clone();
@@ -107,8 +104,7 @@ impl GrpcClient {
         });
     }
 
-    /// Set a bearer auth `Authorization` header that is sent with every
-    /// request.
+    /// Set a bearer auth `Authorization` header that is sent with every request.
     pub fn set_bearer_auth(&self, token: String) -> Result<()> {
         let mut headers = self.client().headers().clone();
         headers.bearer_auth(token)?;
@@ -123,8 +119,7 @@ impl GrpcClient {
         });
     }
 
-    /// Create a new transaction builder with the given sender address, backed
-    /// by this client.
+    /// Create a new transaction builder with the given sender address, backed by this client.
     pub fn transaction_builder(self: Arc<Self>, sender: &Address) -> GrpcTransactionBuilder {
         TransactionBuilder::new(sender).with_grpc_client(self)
     }

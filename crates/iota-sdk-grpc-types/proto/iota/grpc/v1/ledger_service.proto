@@ -80,7 +80,8 @@ message GetServiceInfoRequest {
   option (iota.grpc.message_accessors) = "with";
 
   // Mask specifying which ServiceInfo fields to read.
-  // If no mask is specified, defaults to `chain_id,epoch,checkpoint_height`.
+  // If no mask is specified, defaults to
+  // `chain_id,epoch,executed_checkpoint_height,executed_checkpoint_timestamp,lowest_available_checkpoint,lowest_available_checkpoint_objects`.
   optional google.protobuf.FieldMask read_mask = 1;
 }
 
@@ -138,7 +139,7 @@ message GetObjectsRequest {
   optional ObjectRequests requests = 1;
 
   // Mask specifying which fields to read.
-  // If no mask is specified, defaults to `object_id,version,digest`.
+  // If no mask is specified, defaults to `reference,bcs`.
   optional google.protobuf.FieldMask read_mask = 2;
 
   // Optional maximum message size the client can receive (1MB - 128MB)
@@ -188,7 +189,7 @@ message GetTransactionsRequest {
   optional TransactionRequests requests = 1;
 
   // Mask specifying which fields to read.
-  // If no mask is specified, defaults to `transaction.digest`.
+  // If no mask is specified, defaults to `transaction,signatures,checkpoint,timestamp`.
   optional google.protobuf.FieldMask read_mask = 2;
 
   // Optional maximum message size the client can receive (1MB - 128MB)
@@ -235,7 +236,7 @@ message GetCheckpointRequest {
   }
 
   // Mask specifying which fields to read.
-  // If no mask is specified, defaults to `summary`.
+  // If no mask is specified, defaults to `checkpoint.summary`.
   optional google.protobuf.FieldMask read_mask = 4;
 
   // if no filter is passed, all transactions are included (if mentioned in the read_mask)
@@ -259,7 +260,7 @@ message StreamCheckpointsRequest {
   optional uint64 end_sequence_number = 2;
 
   // Mask specifying which fields to read.
-  // If no mask is specified, defaults to `summary`.
+  // If no mask is specified, defaults to `checkpoint.summary`.
   optional google.protobuf.FieldMask read_mask = 3;
 
   // if no filter is passed, all transactions are included (if mentioned in the read_mask)
@@ -316,7 +317,8 @@ message GetEpochRequest {
   optional uint64 epoch = 1;
 
   // Mask specifying which fields to read.
-  // If no mask is specified, defaults to `epoch`.
+  // If no mask is specified, defaults to
+  // `epoch,first_checkpoint,last_checkpoint,start,end,reference_gas_price,protocol_config.protocol_version`.
   optional google.protobuf.FieldMask read_mask = 2;
 }
 

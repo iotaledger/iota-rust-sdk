@@ -1,9 +1,8 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! This example inspects a published Move package on testnet and prints its
-//! upgrade policy, version history, dependencies, functions, types, and sample
-//! objects.
+//! This example inspects a published Move package on testnet and prints its upgrade policy, version
+//! history, dependencies, functions, types, and sample objects.
 
 use eyre::{OptionExt, Result};
 use iota_sdk::{

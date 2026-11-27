@@ -18,9 +18,10 @@ class Program
         Console.WriteLine("=== Example 1: MoveViewCall() with typed arguments (primitives) ===");
         Console.WriteLine();
 
+        var packageId = ObjectId.FromHex(Package);
         var priceArgs = new[] { MoveViewArg.U64(100), MoveViewArg.U64(25) };
 
-        var result = await client.MoveViewCall($"{Package}::shop::discounted_price", null, priceArgs);
+        var result = await client.MoveViewCall(packageId, "shop", "discounted_price", null, priceArgs);
 
         if (result.Error != null)
         {
@@ -41,7 +42,7 @@ class Program
 
         // `u64` is passed as a string so large values survive JSON.
         var jsonArgs = new[] { "\"100\"", "\"25\"" };
-        var jsonResult = await client.MoveViewCallJson($"{Package}::shop::discounted_price", null, jsonArgs);
+        var jsonResult = await client.MoveViewCallJson(packageId, "shop", "discounted_price", null, jsonArgs);
 
         if (jsonResult.Error != null)
         {
@@ -67,7 +68,7 @@ class Program
             MoveViewArg.U64(1)
         };
 
-        var shopResult = await client.MoveViewCall($"{Package}::shop::sale_at", null, shopArgs);
+        var shopResult = await client.MoveViewCall(packageId, "shop", "sale_at", null, shopArgs);
 
         if (shopResult.Error != null)
         {
@@ -87,7 +88,7 @@ class Program
         Console.WriteLine();
 
         var shopJsonArgs = new[] { $"\"{Shop}\"", "\"1\"" };
-        var shopJsonResult = await client.MoveViewCallJson($"{Package}::shop::sale_at", null, shopJsonArgs);
+        var shopJsonResult = await client.MoveViewCallJson(packageId, "shop", "sale_at", null, shopJsonArgs);
 
         if (shopJsonResult.Error != null)
         {

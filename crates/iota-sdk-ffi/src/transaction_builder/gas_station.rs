@@ -19,10 +19,12 @@ pub struct GasStation(pub(crate) iota_sdk::transaction_builder::GasStation);
 impl GasStation {
     /// Create a gas station reachable at `url`.
     ///
-    /// `reservation_duration` is how long the station holds the gas it
-    /// reserves, defaulting to 60 seconds. `headers` are sent with every
-    /// request, typically to carry an authorization token. `http_options`
-    /// describes the HTTP client the requests go out on.
+    /// `reservation_duration` is how long the station holds the gas it reserves, defaulting to 60
+    /// seconds. `headers` are sent with every request, typically to carry an authorization token.
+    /// `http_options` describes the HTTP client the requests go out on.
+    ///
+    /// Request paths are appended to the path of `url`, so a station served under a path prefix is
+    /// reached through that prefix. The query of `url` is sent with every request.
     #[uniffi::constructor(default(reservation_duration = None, headers = None, http_options = None))]
     pub fn new(
         url: String,
@@ -37,9 +39,8 @@ impl GasStation {
         if let Some(duration) = reservation_duration {
             builder = builder.reservation_duration(duration);
         }
-        if let Some(options) = http_options {
-            builder = builder.http_client(options.build()?);
-        }
+        let http_client = http_options.unwrap_or_default().build()?;
+        builder = builder.http_client(http_client);
         for (name, values) in headers.into_iter().flatten() {
             let name: iota_sdk::transaction_builder::HeaderName =
                 name.parse().map_err(SdkFfiError::new)?;
@@ -54,5 +55,15 @@ impl GasStation {
     /// The URL this station is reached at.
     pub fn url(&self) -> String {
         self.0.url().to_string()
+    }
+}
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod tests {
+    use super::GasStation;
+
+    #[test]
+    fn new_without_http_options() {
+        GasStation::new("http://127.0.0.1:9527".to_owned(), None, None, None).unwrap();
     }
 }

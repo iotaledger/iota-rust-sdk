@@ -81,9 +81,9 @@ impl Secp256k1PrivateKey {
     where
         R: rand_core::CryptoRng,
     {
-        // Almost every 32-byte value is a valid secp256k1 private key, but a
-        // few (zero, or values at/above the curve order) are not. Draw fresh
-        // bytes until we get a valid key; in practice this never repeats.
+        // Almost every 32-byte value is a valid secp256k1 private key, but a few (zero, or values
+        // at/above the curve order) are not. Draw fresh bytes until we get a valid key; in practice
+        // this never repeats.
         loop {
             let mut buf: [u8; Self::LENGTH] = [0; Self::LENGTH];
             rng.fill_bytes(&mut buf);
@@ -93,15 +93,13 @@ impl Secp256k1PrivateKey {
         }
     }
 
-    /// Generate a new private key using the operating system's random number
-    /// generator.
+    /// Generate a new private key using the operating system's random number generator.
     #[cfg(feature = "rand")]
     pub fn random() -> Self {
         Self::random_with(rand_core::UnwrapErr(getrandom_4::SysRng))
     }
 
-    /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
-    /// format).
+    /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary format).
     #[cfg(feature = "pem")]
     pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
         k256::pkcs8::DecodePrivateKey::from_pkcs8_der(bytes)
@@ -145,9 +143,9 @@ impl Secp256k1PrivateKey {
         Self(private_key.to_bytes().into())
     }
 
-    /// Re-expose the raw private key through k256, used only as a PKCS#8/PEM
-    /// codec. Don't sign with the returned key — use this type's `Signer` impl
-    /// (`try_sign`) instead, so signing goes through fastcrypto.
+    /// Re-expose the raw private key through k256, used only as a PKCS#8/PEM codec. Don't sign with
+    /// the returned key — use this type's `Signer` impl (`try_sign`) instead, so signing goes
+    /// through fastcrypto.
     #[cfg(feature = "pem")]
     fn to_k256(&self) -> k256::ecdsa::SigningKey {
         k256::ecdsa::SigningKey::from_slice(&self.0).expect("validated on construction")
@@ -208,15 +206,28 @@ impl crate::FromMnemonic for Secp256k1PrivateKey {
     where
         Self: Sized,
     {
-        use std::str::FromStr;
+        let path = path
+            .parse::<crate::DerivationPath>()
+            .map_err(|e| crate::PrivateKeyError::Bip32(e.to_string()))?;
+        Self::from_mnemonic_with_derivation_path(phrase, &path, password)
+    }
 
+    fn from_mnemonic_with_derivation_path(
+        phrase: &str,
+        path: &crate::DerivationPath,
+        password: impl Into<Option<String>>,
+    ) -> Result<Self, Self::Error>
+    where
+        Self: Sized,
+    {
         use crate::ToFromBytes;
 
         let mnemonic = bip39::Mnemonic::parse_in_normalized(bip39::Language::English, phrase)
             .map_err(|e| crate::PrivateKeyError::Bip39(e.to_string()))?;
         let seed = mnemonic.to_seed(password.into().unwrap_or_default());
-        let child_xprv = bip32::DerivationPath::from_str(&path)
-            .and_then(|path| bip32::XPrv::derive_from_path(seed, &path))
+        let mut bip32_path = bip32::DerivationPath::default();
+        bip32_path.extend(path.indices().iter().copied().map(bip32::ChildNumber));
+        let child_xprv = bip32::XPrv::derive_from_path(seed, &bip32_path)
             .map_err(|e| crate::PrivateKeyError::Bip32(e.to_string()))?;
         Self::from_bytes(child_xprv.private_key().to_bytes())
     }
@@ -316,9 +327,9 @@ impl Secp256k1VerifyingKey {
         )
     }
 
-    /// Re-expose the public key through k256, used only as a PKCS#8/PEM codec.
-    /// Don't verify with the returned key — use this type's `Verifier` impl
-    /// instead, so verification goes through fastcrypto.
+    /// Re-expose the public key through k256, used only as a PKCS#8/PEM codec. Don't verify with
+    /// the returned key — use this type's `Verifier` impl instead, so verification goes through
+    /// fastcrypto.
     #[cfg(feature = "pem")]
     fn to_k256(&self) -> k256::ecdsa::VerifyingKey {
         k256::ecdsa::VerifyingKey::from_sec1_bytes(self.0.as_ref())
@@ -503,8 +514,8 @@ mod tests {
         assert_eq!(external_sig, b64);
     }
 
-    // The secp256k1 order n. A signature `(r, s)` has a malleable counterpart
-    // `(r, n - s)`; fastcrypto (libsecp256k1) only accepts the low-S form.
+    // The secp256k1 order n. A signature `(r, s)` has a malleable counterpart `(r, n - s)`;
+    // fastcrypto (libsecp256k1) only accepts the low-S form.
     const SECP256K1_ORDER: [u8; 32] = [
         0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
         0xFE, 0xBA, 0xAE, 0xDC, 0xE6, 0xAF, 0x48, 0xA0, 0x3B, 0xBF, 0xD2, 0x5E, 0x8C, 0xD0, 0x36,

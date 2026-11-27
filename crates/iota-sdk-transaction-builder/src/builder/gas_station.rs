@@ -96,8 +96,8 @@ pub enum GasStationError {
 
 /// The IOTA gas station, sponsoring transactions over its HTTP API.
 ///
-/// A station is configured once and reused for any number of transactions;
-/// build one with [`GasStation::builder`].
+/// A station is configured once and reused for any number of transactions; build one with
+/// [`GasStation::builder`].
 ///
 /// # Example
 ///
@@ -120,14 +120,16 @@ pub struct GasStation {
     http_client: reqwest::Client,
     headers: HeaderMap<HeaderValue>,
     reservation_duration: Duration,
-    /// The version check result, kept so the station is probed once rather
-    /// than once per reservation. Racing callers may both probe, which is
-    /// harmless.
+    /// The version check result, kept so the station is probed once rather than once per
+    /// reservation. Racing callers may both probe, which is harmless.
     checked_version: OnceLock<GasStationVersion>,
 }
 
 impl GasStation {
     /// Start configuring a gas station reachable at `url`.
+    ///
+    /// Request paths are appended to the path of `url`, so a station served under a path prefix is
+    /// reached through that prefix. The query of `url` is sent with every request.
     pub fn builder(url: Url) -> GasStationBuilder {
         GasStationBuilder {
             url,
@@ -168,9 +170,8 @@ pub struct GasStationBuilder {
 impl GasStationBuilder {
     /// Send requests with this HTTP client instead of a default one.
     ///
-    /// Set this to control timeouts, proxies, TLS roots or connection pooling;
-    /// without it the station builds a [`reqwest::Client`] with reqwest's own
-    /// defaults.
+    /// Set this to control timeouts, proxies, TLS roots or connection pooling; without it the
+    /// station builds a [`reqwest::Client`] with reqwest's own defaults.
     pub fn http_client(mut self, client: reqwest::Client) -> Self {
         self.http_client = Some(client);
         self
@@ -190,8 +191,7 @@ impl GasStationBuilder {
         self
     }
 
-    /// How long the station should hold the gas it reserves. Defaults to 60
-    /// seconds.
+    /// How long the station should hold the gas it reserves. Defaults to 60 seconds.
     pub fn reservation_duration(mut self, duration: Duration) -> Self {
         self.reservation_duration = duration;
         self
@@ -265,8 +265,8 @@ impl std::fmt::Display for GasStationVersion {
 impl FromStr for GasStationVersion {
     type Err = VersionParsingError;
 
-    // Disable this lint as looping over a range allows for checking that we have at
-    // least 3 segments.
+    // Disable this lint as looping over a range allows for checking that we have at least 3
+    // segments.
     #[allow(clippy::needless_range_loop)]
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         if s.is_empty() {
@@ -380,9 +380,7 @@ struct ExecuteTxResponse {
 
 impl GasStation {
     fn endpoint(&self, kind: GasStationRequestKind) -> Result<Url, GasStationError> {
-        self.url
-            .join(kind.as_path())
-            .map_err(GasStationError::InvalidUrl)
+        kind.url(&self.url).map_err(GasStationError::InvalidUrl)
     }
 
     async fn gas_station_version(&self) -> Result<GasStationVersion, GasStationError> {
@@ -420,8 +418,8 @@ impl GasStation {
         })?;
 
         // We only care about the version.
-        // Using `rfind` instead of `find` because the pkg's version might have a suffix
-        // like "-alpha".
+        // Using `rfind` instead of `find` because the pkg's version might have a suffix like
+        // "-alpha".
         let separator_idx = version_info
             .rfind('-')
             .ok_or_else(|| GasStationError::Response {
@@ -494,13 +492,11 @@ impl GasStation {
         })
     }
 
-    /// Execute a transaction against a reservation and return the gas
-    /// station's own JSON effects.
+    /// Execute a transaction against a reservation and return the gas station's own JSON effects.
     ///
-    /// The station reports effects in a JSON-RPC shape that cannot be turned
-    /// back into [`TransactionEffects`](iota_types::TransactionEffects); use
-    /// this when that JSON is what you want, and
-    /// [`execute_with_gas_sponsor`](crate::TransactionBuilder::execute_with_gas_sponsor)
+    /// The station reports effects in a JSON-RPC shape that cannot be turned back into
+    /// [`TransactionEffects`](iota_types::TransactionEffects); use this when that JSON is what you
+    /// want, and [`execute_with_gas_sponsor`](crate::TransactionBuilder::execute_with_gas_sponsor)
     /// when you want typed effects.
     pub async fn execute_reserved_json(
         &self,
@@ -623,9 +619,50 @@ pub(crate) enum GasStationRequestKind {
 impl GasStationRequestKind {
     const fn as_path(&self) -> &str {
         match self {
-            Self::ReserveGas => "/v1/reserve_gas",
-            Self::ExecuteTx => "/v1/execute_tx",
-            Self::Version => "/version",
+            Self::ReserveGas => "v1/reserve_gas",
+            Self::ExecuteTx => "v1/execute_tx",
+            Self::Version => "version",
+        }
+    }
+
+    /// The URL of this request to a station reachable at `base`.
+    fn url(&self, base: &Url) -> Result<Url, <Url as FromStr>::Err> {
+        let mut base = base.clone();
+        if !base.path().ends_with('/') {
+            base.set_path(&format!("{}/", base.path()));
+        }
+        let mut url = base.join(self.as_path())?;
+        url.set_query(base.query());
+        Ok(url)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn endpoints_keep_the_base_path() {
+        for (base, expected) in [
+            ("http://0.0.0.0:9527", "http://0.0.0.0:9527/v1/reserve_gas"),
+            ("http://0.0.0.0:9527/", "http://0.0.0.0:9527/v1/reserve_gas"),
+            (
+                "https://example.com/gas",
+                "https://example.com/gas/v1/reserve_gas",
+            ),
+            (
+                "https://example.com/gas/",
+                "https://example.com/gas/v1/reserve_gas",
+            ),
+            (
+                "https://example.com/gas?key=abc",
+                "https://example.com/gas/v1/reserve_gas?key=abc",
+            ),
+        ] {
+            let url = GasStationRequestKind::ReserveGas
+                .url(&base.parse().unwrap())
+                .unwrap();
+            assert_eq!(url.as_str(), expected, "base {base}");
         }
     }
 }

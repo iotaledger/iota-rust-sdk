@@ -37,8 +37,7 @@ impl GetServiceInfoResponse {
             .ok_or_else(|| TryFromProtoError::missing(Self::EXECUTED_CHECKPOINT_HEIGHT_FIELD.name))
     }
 
-    /// Get the Unix timestamp of the most recently executed checkpoint in
-    /// milliseconds.
+    /// Get the Unix timestamp of the most recently executed checkpoint in milliseconds.
     pub fn checkpoint_executed_timestamp_ms(
         &self,
     ) -> Result<iota_types::CheckpointTimestamp, TryFromProtoError> {
@@ -49,8 +48,7 @@ impl GetServiceInfoResponse {
             .map_err(|e| e.nested(Self::EXECUTED_CHECKPOINT_TIMESTAMP_FIELD.name))
     }
 
-    /// Get the lowest checkpoint for which checkpoints and transaction data are
-    /// available.
+    /// Get the lowest checkpoint for which checkpoints and transaction data are available.
     pub fn checkpoint_lowest(
         &self,
     ) -> Result<iota_types::CheckpointSequenceNumber, TryFromProtoError> {

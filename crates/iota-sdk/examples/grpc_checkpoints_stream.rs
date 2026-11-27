@@ -3,9 +3,8 @@
 
 //! Tail recent checkpoints over gRPC.
 //!
-//! This is one of gRPC's headline features — there's no equivalent in the
-//! GraphQL client. We open a server-streaming RPC and pull a handful of
-//! checkpoint summaries out of it.
+//! This is one of gRPC's headline features — there's no equivalent in the GraphQL client. We open a
+//! server-streaming RPC and pull a handful of checkpoint summaries out of it.
 
 use eyre::Result;
 use futures::StreamExt;
@@ -17,15 +16,14 @@ const HOW_MANY: u64 = 5;
 async fn main() -> Result<()> {
     let client = GrpcClient::new_localnet()?;
 
-    // Pick a starting point a few checkpoints behind head so the example
-    // returns promptly instead of waiting on new blocks.
+    // Pick a starting point a few checkpoints behind head so the example returns promptly instead
+    // of waiting on new blocks.
     let head = client.checkpoint_latest().await?.body().sequence_number();
     let start = head.saturating_sub(HOW_MANY - 1);
     let end = head;
 
-    // Only ask for the summary (also the default mask), which keeps the
-    // message small. Add fields such as `CHECKPOINT_CONTENTS` to pull more
-    // data per checkpoint.
+    // Only ask for the summary (also the default mask), which keeps the message small. Add fields
+    // such as `CHECKPOINT_CONTENTS` to pull more data per checkpoint.
     let mut stream = client
         .checkpoints_stream()
         .start_sequence_number(start)

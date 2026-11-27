@@ -5,5 +5,5 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-iota-sdk = "^3.0.0-alpha"
+iota-sdk = { version = "^3.0.0-rc.1", features = ["graphql-tls-ring", "graphql-tls-webpki-roots"] }
 tokio = "1.53.1"

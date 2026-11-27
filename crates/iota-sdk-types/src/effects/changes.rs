@@ -1,18 +1,16 @@
 // Copyright (c) 2026 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Derivation of a transaction's balance and object changes from its effects
-//! and the objects it read and wrote.
+//! Derivation of a transaction's balance and object changes from its effects and the objects it
+//! read and wrote.
 //!
-//! Effects say which objects changed and how, but not what they contain, so
-//! the caller supplies the objects: `input_objects` at the versions
-//! [`TransactionEffectsV1::modified_at_versions`] gives, and `output_objects`
-//! as the transaction wrote them. Operates purely on that in-memory data.
+//! Effects say which objects changed and how, but not what they contain, so the caller supplies the
+//! objects: `input_objects` at the versions [`TransactionEffectsV1::modified_at_versions`] gives,
+//! and `output_objects` as the transaction wrote them. Operates purely on that in-memory data.
 //!
-//! An object missing from those sets is an error rather than a skipped entry:
-//! a missing input coin would make a balance delta numerically wrong, and a
-//! missing object would drop a change from the result, with no way for the
-//! caller to tell the result was incomplete.
+//! An object missing from those sets is an error rather than a skipped entry: a missing input coin
+//! would make a balance delta numerically wrong, and a missing object would drop a change from the
+//! result, with no way for the caller to tell the result was incomplete.
 
 use std::{collections::BTreeMap, ops::Neg};
 
@@ -40,12 +38,11 @@ pub enum DeriveChangesError {
     },
 }
 
-/// The net change in balance of one coin type for one owner, summed over
-/// every coin of that type the transaction touched.
+/// The net change in balance of one coin type for one owner, summed over every coin of that type
+/// the transaction touched.
 ///
-/// Not a wire type: this is the output of
-/// [`TransactionEffectsV1::balance_changes`], computed from the effects and
-/// the objects they name.
+/// Not a wire type: this is the output of [`TransactionEffectsV1::balance_changes`], computed from
+/// the effects and the objects they name.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct BalanceChange {
     pub(crate) owner: Owner,
@@ -94,18 +91,16 @@ impl crate::TreeDisplay for BalanceChange {
 
 /// What a transaction did to one object, named as a kind.
 ///
-/// Not a wire type: this is the output of
-/// [`TransactionEffectsV1::object_changes`], computed from the effects and the
-/// objects they name.
+/// Not a wire type: this is the output of [`TransactionEffectsV1::object_changes`], computed from
+/// the effects and the objects they name.
 ///
-/// The effects name every object a transaction changed but carry no contents,
-/// so `object_type` has to come from the object itself. Where only the effects
-/// are at hand, [`ChangedObject`](crate::ChangedObject) carries each side's
-/// version, digest and owner, and the object sets report the version each
-/// changed object ends at.
+/// The effects name every object a transaction changed but carry no contents, so `object_type` has
+/// to come from the object itself. Where only the effects are at hand,
+/// [`ChangedObject`](crate::ChangedObject) carries each side's version, digest and owner, and the
+/// object sets report the version each changed object ends at.
 ///
-/// There is no kind for a mutated package, so a system package upgrade — which
-/// keeps its id and is therefore a mutate — is not reported at all.
+/// There is no kind for a mutated package, so a system package upgrade — which keeps its id and is
+/// therefore a mutate — is not reported at all.
 #[derive(Clone, Debug, Eq, PartialEq)]
 #[non_exhaustive]
 pub enum ObjectChange {
@@ -242,19 +237,17 @@ impl crate::TreeDisplay for ObjectChange {
 crate::impl_tree_display!(BalanceChange, ObjectChange);
 
 impl TransactionEffectsV1 {
-    /// The balance changes of this transaction, from these effects and the
-    /// objects it read and wrote.
+    /// The balance changes of this transaction, from these effects and the objects it read and
+    /// wrote.
     ///
-    /// For a failed transaction only the gas charge is reported, which needs no
-    /// objects; a transaction that names no gas object reports nothing.
-    /// `mocked_object` excludes an object mocked during simulation, which is
-    /// in neither object set — today that is the gas coin a local run mints.
-    /// Object changes have no equivalent, so a mocked object that is not a coin
+    /// For a failed transaction only the gas charge is reported, which needs no objects; a
+    /// transaction that names no gas object reports nothing. `mocked_object` excludes an object
+    /// mocked during simulation, which is in neither object set — today that is the gas coin a
+    /// local run mints. Object changes have no equivalent, so a mocked object that is not a coin
     /// still errors there.
     ///
-    /// Errors if any object these effects name is missing from the sets — a
-    /// missing input coin would corrupt the delta of any coin whose output is
-    /// present.
+    /// Errors if any object these effects name is missing from the sets — a missing input coin
+    /// would corrupt the delta of any coin whose output is present.
     pub fn balance_changes<'a>(
         &self,
         input_objects: impl IntoIterator<Item = &'a Object>,
@@ -319,16 +312,15 @@ impl TransactionEffectsV1 {
             .collect())
     }
 
-    /// The object changes of this transaction, from these effects and the
-    /// objects it read and wrote.
+    /// The object changes of this transaction, from these effects and the objects it read and
+    /// wrote.
     ///
-    /// `sender` is the transaction's, which the effects do not carry.
-    /// `input_objects` provides the types of deleted and wrapped objects, so it
-    /// must hold them at the versions
+    /// `sender` is the transaction's, which the effects do not carry. `input_objects` provides the
+    /// types of deleted and wrapped objects, so it must hold them at the versions
     /// [`TransactionEffectsV1::modified_at_versions`] gives.
     ///
-    /// Errors if an object these effects name is missing from the sets —
-    /// skipping it would drop a change from the result.
+    /// Errors if an object these effects name is missing from the sets — skipping it would drop a
+    /// change from the result.
     pub fn object_changes<'a>(
         &self,
         sender: Address,
@@ -348,8 +340,8 @@ impl TransactionEffectsV1 {
             .map(|o| ((o.id(), o.version()), o))
             .collect();
 
-        // Input objects are the objects at their modified-at versions, so they are
-        // unique per id and provide the pre-transaction state of removed objects.
+        // Input objects are the objects at their modified-at versions, so they are unique per id
+        // and provide the pre-transaction state of removed objects.
         let inputs_by_id: BTreeMap<ObjectId, &Object> =
             input_objects.into_iter().map(|o| (o.id(), o)).collect();
 
@@ -373,8 +365,8 @@ impl TransactionEffectsV1 {
                         object_type,
                         object_id,
                         version,
-                        // A mutated object was read at some version, so the
-                        // effects always name one for it.
+                        // A mutated object was read at some version, so the effects always name one
+                        // for it.
                         previous_version: *modified_at_versions
                             .get(&object_id)
                             .expect("a mutated object has a modified-at version"),
@@ -417,8 +409,8 @@ impl TransactionEffectsV1 {
             let object_id = removed_object.object_id;
             let version = removed_object.version;
             let Some(object) = inputs_by_id.get(&object_id) else {
-                // The input object lives at its modified-at version, not at the
-                // removed reference's (tombstone) version.
+                // The input object lives at its modified-at version, not at the removed reference's
+                // (tombstone) version.
                 return Err(DeriveChangesError::MissingObject {
                     object_id,
                     version: modified_at_versions
@@ -451,9 +443,8 @@ impl TransactionEffectsV1 {
     }
 }
 
-/// Look up an object and return its owner, coin type and balance if it is a
-/// coin. Returns `None` for non-coins; errors if the object is missing from
-/// the set or its coin contents are malformed.
+/// Look up an object and return its owner, coin type and balance if it is a coin. Returns `None`
+/// for non-coins; errors if the object is missing from the set or its coin contents are malformed.
 fn coin_owner_type_value(
     objects: &BTreeMap<(ObjectId, Version), &Object>,
     id: ObjectId,
@@ -506,8 +497,7 @@ mod tests {
         ObjectDigest::new([byte; 32])
     }
 
-    /// A coin of `coin_type`, whose contents lead with its id as every Move
-    /// object's must.
+    /// A coin of `coin_type`, whose contents lead with its id as every Move object's must.
     fn coin(
         id: ObjectId,
         version: u64,
@@ -606,8 +596,7 @@ mod tests {
         }
     }
 
-    /// Value moved out of one coin and into another shows up as a matching
-    /// pair of deltas.
+    /// Value moved out of one coin and into another shows up as a matching pair of deltas.
     #[test]
     fn a_coin_transfer_nets_out_per_owner() {
         let sender = Owner::Address(address(1));
@@ -641,8 +630,8 @@ mod tests {
         );
     }
 
-    /// Two coins of the same type reaching one owner sum into a single entry,
-    /// rather than one entry per coin object.
+    /// Two coins of the same type reaching one owner sum into a single entry, rather than one entry
+    /// per coin object.
     #[test]
     fn coins_of_one_type_sum_into_a_single_entry() {
         let sender = Owner::Address(address(1));
@@ -732,8 +721,8 @@ mod tests {
         );
     }
 
-    /// A coin the effects name but the caller did not supply is an error, not
-    /// a silently wrong delta.
+    /// A coin the effects name but the caller did not supply is an error, not a silently wrong
+    /// delta.
     #[test]
     fn a_missing_input_coin_is_an_error() {
         let owner = Owner::Address(address(1));
@@ -751,8 +740,8 @@ mod tests {
         );
     }
 
-    /// An object mocked during simulation is in neither object set, so naming
-    /// it keeps the run from erroring on it.
+    /// An object mocked during simulation is in neither object set, so naming it keeps the run from
+    /// erroring on it.
     #[test]
     fn a_mocked_object_is_excluded() {
         let owner = Owner::Address(address(1));
@@ -769,8 +758,8 @@ mod tests {
         assert!(effects.balance_changes(&[], &[], None).is_err());
     }
 
-    /// A failed transaction changed nothing but still paid gas, so the charge
-    /// is reported without consulting any object.
+    /// A failed transaction changed nothing but still paid gas, so the charge is reported without
+    /// consulting any object.
     #[test]
     fn a_failed_transaction_reports_only_the_gas_charge() {
         let owner = Owner::Address(address(1));
@@ -800,8 +789,8 @@ mod tests {
         );
     }
 
-    /// A transaction that names no gas object has no owner to charge, so a
-    /// failure reports nothing rather than an invented one.
+    /// A transaction that names no gas object has no owner to charge, so a failure reports nothing
+    /// rather than an invented one.
     #[test]
     fn a_failed_transaction_without_a_gas_object_reports_nothing() {
         let mut effects = effects(Vec::new());
@@ -861,9 +850,8 @@ mod tests {
         assert_eq!(changes[0].amount, -10);
     }
 
-    /// Every write and removal kind reaches the matching variant. The result
-    /// is grouped by kind rather than following the order of the effects,
-    /// since it walks the object sets in turn.
+    /// Every write and removal kind reaches the matching variant. The result is grouped by kind
+    /// rather than following the order of the effects, since it walks the object sets in turn.
     #[test]
     fn object_changes_report_each_kind() {
         let sender = address(1);
@@ -911,8 +899,8 @@ mod tests {
                     version: Version::from_u64(LAMPORT),
                     digest: digest(1),
                 },
-                // A removed object is reported at the version this transaction
-                // assigned, not the version it was read at.
+                // A removed object is reported at the version this transaction assigned, not the
+                // version it was read at.
                 ObjectChange::Deleted {
                     sender,
                     object_type: object_type.clone(),
@@ -929,8 +917,8 @@ mod tests {
         );
     }
 
-    /// An unwrapped object is a write with no input state whose id already
-    /// existed, so it is neither created nor mutated.
+    /// An unwrapped object is a write with no input state whose id already existed, so it is
+    /// neither created nor mutated.
     #[test]
     fn an_unwrapped_object_is_reported_as_unwrapped() {
         let sender = address(1);
@@ -955,9 +943,9 @@ mod tests {
         ));
     }
 
-    /// A newly published package is reported with its module names. So is a
-    /// user package upgrade, which lands at a fresh id. A system package
-    /// upgrade keeps its id and so is a mutate, which packages do not report.
+    /// A newly published package is reported with its module names. So is a user package upgrade,
+    /// which lands at a fresh id. A system package upgrade keeps its id and so is a mutate, which
+    /// packages do not report.
     #[test]
     fn a_published_package_is_reported_with_its_modules() {
         use std::collections::BTreeMap;
@@ -1039,8 +1027,8 @@ mod tests {
         );
     }
 
-    /// An object the effects wrote but the caller did not supply is an error,
-    /// since skipping it would drop a change from the result.
+    /// An object the effects wrote but the caller did not supply is an error, since skipping it
+    /// would drop a change from the result.
     #[test]
     fn a_missing_output_object_is_an_error() {
         let sender = address(1);
@@ -1058,8 +1046,8 @@ mod tests {
         );
     }
 
-    /// A removed object is looked up at its modified-at version, so the error
-    /// names that rather than the tombstone version.
+    /// A removed object is looked up at its modified-at version, so the error names that rather
+    /// than the tombstone version.
     #[test]
     fn a_missing_removed_object_is_named_at_its_input_version() {
         let sender = address(1);

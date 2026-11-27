@@ -15,18 +15,17 @@ pub struct UpgradePolicy(pub iota_sdk::types::UpgradePolicy);
 
 #[uniffi::export]
 impl UpgradePolicy {
-    /// The least restrictive policy. Permits changes to all function
-    /// implementations, the removal of ability constraints on generic type
-    /// parameters in function signatures, and modifications to private,
-    /// public(friend), and entry function signatures. However, public function
+    /// The least restrictive policy. Permits changes to all function implementations, the removal
+    /// of ability constraints on generic type parameters in function signatures, and modifications
+    /// to private, public(friend), and entry function signatures. However, public function
     /// signatures and existing types cannot be changed.
     #[uniffi::constructor]
     pub fn compatible() -> Self {
         Self(iota_sdk::types::UpgradePolicy::Compatible)
     }
 
-    /// Allows adding new functionalities (e.g., new public functions or
-    /// structs) but restricts changes to existing functionalities.
+    /// Allows adding new functionalities (e.g., new public functions or structs) but restricts
+    /// changes to existing functionalities.
     #[uniffi::constructor]
     pub fn additive() -> Self {
         Self(iota_sdk::types::UpgradePolicy::Additive)
@@ -44,8 +43,7 @@ impl UpgradePolicy {
     }
 }
 
-/// Type corresponding to the output of `iota move build
-/// --dump-bytecode-as-base64`
+/// Type corresponding to the output of `iota move build --dump-bytecode-as-base64`
 #[derive(Debug, derive_more::From, uniffi::Object)]
 #[uniffi::export(Debug)]
 pub struct MovePackageData(pub iota_sdk::types::MovePackageData);

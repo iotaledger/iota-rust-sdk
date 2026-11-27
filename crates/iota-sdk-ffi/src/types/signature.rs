@@ -20,9 +20,8 @@ use crate::{
 ///
 /// # BCS
 ///
-/// Flag `%d05` is reserved: it was formerly used for the now-removed zklogin
-/// authenticator (which was never enabled on chain) and is intentionally
-/// skipped.
+/// Flag `%d05` is reserved: it was formerly used for the now-removed zklogin authenticator (which
+/// was never enabled on chain) and is intentionally skipped.
 #[derive(Clone, uniffi::Enum)]
 #[repr(u8)]
 pub enum SignatureScheme {
@@ -68,19 +67,18 @@ impl From<SignatureScheme> for iota_sdk::types::SignatureScheme {
 
 /// A signature from a user
 ///
-/// A `UserSignature` is most commonly used to authorize the execution and
-/// inclusion of a transaction to the blockchain.
+/// A `UserSignature` is most commonly used to authorize the execution and inclusion of a
+/// transaction to the blockchain.
 ///
 /// # BCS
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// Note: Due to historical reasons, signatures are serialized slightly
-/// different from the majority of the types in IOTA. In particular if a
-/// signature is ever embedded in another structure it generally is serialized
-/// as `bytes` meaning it has a length prefix that defines the length of
-/// the completely serialized signature.
+/// Note: Due to historical reasons, signatures are serialized slightly different from the majority
+/// of the types in IOTA. In particular if a signature is ever embedded in another structure it
+/// generally is serialized as `bytes` meaning it has a length prefix that defines the length of the
+/// completely serialized signature.
 #[derive(Debug, derive_more::From, Eq, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq)]
 pub struct UserSignature(pub iota_sdk::types::UserSignature);
@@ -146,8 +144,7 @@ impl UserSignature {
         self.0.is_simple()
     }
 
-    /// Convert this signature into a simple signature if it is one, or return
-    /// `None` otherwise
+    /// Convert this signature into a simple signature if it is one, or return `None` otherwise
     pub fn as_opt_simple(&self) -> Option<Arc<SimpleSignature>> {
         self.0
             .as_opt_simple()
@@ -156,8 +153,7 @@ impl UserSignature {
             .map(Arc::new)
     }
 
-    /// Convert this signature into a simple signature if it is one, or panic
-    /// otherwise
+    /// Convert this signature into a simple signature if it is one, or panic otherwise
     pub fn as_simple(&self) -> SimpleSignature {
         self.0.as_simple().clone().into()
     }
@@ -167,8 +163,8 @@ impl UserSignature {
         self.0.is_multisig()
     }
 
-    /// Convert this signature into a multisig aggregated signature if it is
-    /// one, or return `None` otherwise
+    /// Convert this signature into a multisig aggregated signature if it is one, or return `None`
+    /// otherwise
     pub fn as_opt_multisig(&self) -> Option<Arc<MultisigAggregatedSignature>> {
         self.0
             .as_opt_multisig()
@@ -177,8 +173,7 @@ impl UserSignature {
             .map(Arc::new)
     }
 
-    /// Convert this signature into a multisig aggregated signature if it is
-    /// one, or panic otherwise
+    /// Convert this signature into a multisig aggregated signature if it is one, or panic otherwise
     pub fn as_multisig(&self) -> MultisigAggregatedSignature {
         self.0.as_multisig().clone().into()
     }
@@ -188,8 +183,7 @@ impl UserSignature {
         self.0.is_passkey_authenticator()
     }
 
-    /// Convert this signature into a passkey authenticator if it is one, or
-    /// return `None` otherwise
+    /// Convert this signature into a passkey authenticator if it is one, or return `None` otherwise
     pub fn as_opt_passkey_authenticator(&self) -> Option<Arc<PasskeyAuthenticator>> {
         self.0
             .as_opt_passkey_authenticator()
@@ -198,8 +192,7 @@ impl UserSignature {
             .map(Arc::new)
     }
 
-    /// Convert this signature into a passkey authenticator if it is one, or
-    /// panic otherwise
+    /// Convert this signature into a passkey authenticator if it is one, or panic otherwise
     pub fn as_passkey_authenticator(&self) -> PasskeyAuthenticator {
         self.0.as_passkey_authenticator().clone().into()
     }
@@ -209,8 +202,7 @@ impl UserSignature {
         self.0.is_move_authenticator()
     }
 
-    /// Convert this signature into a move authenticator if it is one, or return
-    /// `None` otherwise
+    /// Convert this signature into a move authenticator if it is one, or return `None` otherwise
     pub fn as_opt_move_authenticator(&self) -> Option<Arc<MoveAuthenticator>> {
         self.0
             .as_opt_move_authenticator()
@@ -219,8 +211,7 @@ impl UserSignature {
             .map(Arc::new)
     }
 
-    /// Convert this signature into a move authenticator if it is one, or panic
-    /// otherwise
+    /// Convert this signature into a move authenticator if it is one, or panic otherwise
     pub fn as_move_authenticator(&self) -> MoveAuthenticator {
         self.0.as_move_authenticator().clone().into()
     }
@@ -228,20 +219,18 @@ impl UserSignature {
 
 /// A basic signature
 ///
-/// This enumeration defines the set of simple or basic signature schemes
-/// supported by IOTA. Most signature schemes supported by IOTA end up
-/// comprising of a at least one simple signature scheme.
+/// This enumeration defines the set of simple or basic signature schemes supported by IOTA. Most
+/// signature schemes supported by IOTA end up comprising of a at least one simple signature scheme.
 ///
 /// # BCS
 ///
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// Note: Due to historical reasons, signatures are serialized slightly
-/// different from the majority of the types in IOTA. In particular if a
-/// signature is ever embedded in another structure it generally is serialized
-/// as `bytes` meaning it has a length prefix that defines the length of
-/// the completely serialized signature.
+/// Note: Due to historical reasons, signatures are serialized slightly different from the majority
+/// of the types in IOTA. In particular if a signature is ever embedded in another structure it
+/// generally is serialized as `bytes` meaning it has a length prefix that defines the length of the
+/// completely serialized signature.
 #[derive(Debug, derive_more::From, Eq, Hash, PartialEq, uniffi::Object)]
 #[uniffi::export(Debug, Eq, Hash)]
 pub struct SimpleSignature(pub iota_sdk::types::SimpleSignature);
@@ -290,8 +279,8 @@ impl SimpleSignature {
         self.0.to_base64()
     }
 
-    /// Decode a signature from the Base64 form produced by `to_base64`, i.e.
-    /// base64 over the `flag || sig || pubkey` bytes.
+    /// Decode a signature from the Base64 form produced by `to_base64`, i.e. base64 over the
+    /// `flag || sig || pubkey` bytes.
     #[uniffi::constructor]
     pub fn from_base64(base64: String) -> Result<Self> {
         Ok(iota_sdk::types::SimpleSignature::from_base64(&base64).map(Self)?)
