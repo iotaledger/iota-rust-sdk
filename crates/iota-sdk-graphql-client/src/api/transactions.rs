@@ -697,7 +697,7 @@ mod tests {
         query_types::{AddressTransactionRelationship, TransactionsFilter},
         test_utils::{
             assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
-            test_client, test_transaction,
+            test_client, test_transaction, with_response,
         },
     };
 
@@ -929,6 +929,43 @@ mod tests {
         })
         .await;
         assert_forward_page(&vars);
+    }
+
+    #[tokio::test]
+    async fn effects_queries_reject_effects_without_bcs() {
+        let digest = test_transaction().digest();
+
+        let result = with_response(
+            r#"{"data":{"transactionBlock":{"effects":{"bcs":null}}}}"#,
+            |client| async move { client.transaction_effects(digest).await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("transaction effects bcs"))
+        ));
+
+        let result = with_response(
+            r#"{"data":{"transactionBlock":{"bcs":"AA==","effects":{"bcs":null}}}}"#,
+            |client| async move { client.transaction_data_effects(digest).await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("transaction effects bcs"))
+        ));
+
+        let result = with_response(
+            r#"{"data":{"transactionBlocks":{"nodes":[{"bcs":"AA==","effects":{"bcs":null}}],"pageInfo":{"hasPreviousPage":false,"hasNextPage":false,"startCursor":null,"endCursor":null}}}}"#,
+            |client| async move { client.transactions_data_effects().await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField(
+                "transaction bcs or effects"
+            ))
+        ));
     }
 
     #[tokio::test]

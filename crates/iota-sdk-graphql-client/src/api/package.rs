@@ -104,8 +104,13 @@ impl ListPackageVersionsQuery {
         let bcs = pc
             .nodes
             .iter()
-            .map(|p| &p.bcs)
-            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .map(|p| {
+                let b64 = p
+                    .bcs
+                    .as_ref()
+                    .ok_or(GraphQLError::EmptyResponseField("package bcs"))?;
+                crate::base64::decode(b64.0.as_str())
+            })
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
@@ -192,8 +197,13 @@ impl ListPackagesQuery {
         let bcs = pc
             .nodes
             .iter()
-            .map(|p| &p.bcs)
-            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .map(|p| {
+                let b64 = p
+                    .bcs
+                    .as_ref()
+                    .ok_or(GraphQLError::EmptyResponseField("package bcs"))?;
+                crate::base64::decode(b64.0.as_str())
+            })
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
@@ -345,7 +355,8 @@ impl GetPackageQuery {
 
         response
             .package
-            .and_then(|x| x.bcs)
+            .map(|x| x.bcs.ok_or(GraphQLError::EmptyResponseField("package bcs")))
+            .transpose()?
             .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| package_from_bcs(&bcs))
@@ -410,7 +421,8 @@ impl GetPackageLatestQuery {
 
         response
             .latest_package
-            .and_then(|x| x.bcs)
+            .map(|x| x.bcs.ok_or(GraphQLError::EmptyResponseField("package bcs")))
+            .transpose()?
             .map(|bcs| crate::base64::decode(&bcs.0))
             .transpose()?
             .map(|bcs| package_from_bcs(&bcs))
@@ -526,9 +538,10 @@ mod tests {
 
     use crate::{
         Direction, PaginationFilter,
+        error::GraphQLError,
         test_utils::{
             assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
-            test_client,
+            test_client, with_response,
         },
     };
 
@@ -659,6 +672,52 @@ mod tests {
         })
         .await;
         assert_forward_page(&vars);
+    }
+
+    #[tokio::test]
+    async fn package_listings_reject_a_package_without_bcs() {
+        let result = with_response(
+            r#"{"data":{"packageVersions":{"nodes":[{"bcs":null}],"pageInfo":{"hasPreviousPage":false,"hasNextPage":false,"startCursor":null,"endCursor":null}}}}"#,
+            |client| async move { client.package_versions(Address::FRAMEWORK).await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("package bcs"))
+        ));
+
+        let result = with_response(
+            r#"{"data":{"packages":{"nodes":[{"bcs":null}],"pageInfo":{"hasPreviousPage":false,"hasNextPage":false,"startCursor":null,"endCursor":null}}}}"#,
+            |client| async move { client.packages().await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("package bcs"))
+        ));
+    }
+
+    #[tokio::test]
+    async fn package_lookups_reject_a_package_without_bcs() {
+        let result = with_response(
+            r#"{"data":{"package":{"bcs":null}}}"#,
+            |client| async move { client.package(Address::FRAMEWORK).await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("package bcs"))
+        ));
+
+        let result = with_response(
+            r#"{"data":{"latestPackage":{"bcs":null}}}"#,
+            |client| async move { client.package_latest(Address::FRAMEWORK).await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("package bcs"))
+        ));
     }
 
     #[tokio::test]
