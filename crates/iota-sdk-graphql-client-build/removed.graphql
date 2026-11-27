@@ -1,6 +1,48 @@
 # Definitions removed from the node's schema, kept until the next major release of
 # iota-sdk-graphql-client. Use `extend <kind> <Name> { ... }` with a closing `}` on its own line to
-# restore fields or values of a definition that still exists; anything else is appended as is.
+# restore fields or values of a definition that still exists, where a field the definition still
+# has replaces its signature there, e.g. to restore a removed argument; anything else is appended as
+# is.
+
+extend type Address {
+	transactionBlocks(first: Int, after: String, last: Int, before: String, relation: AddressTransactionBlockRelationship, filter: TransactionBlockFilter, scanLimit: Int @deprecated(reason: "`scanLimit` will be removed with v1.38, along with the support for combining complex filters.")): TransactionBlockConnection!
+}
+
+extend type Checkpoint {
+	transactionBlocks(first: Int, after: String, last: Int, before: String, filter: TransactionBlockFilter, scanLimit: Int @deprecated(reason: "`scanLimit` will be removed with v1.38, along with the support for combining complex filters.")): TransactionBlockConnection!
+}
+
+extend type Coin {
+	receivedTransactionBlocks(first: Int, after: String, last: Int, before: String, filter: TransactionBlockFilter, scanLimit: Int @deprecated(reason: "`scanLimit` will be removed with v1.38, along with the support for combining complex filters.")): TransactionBlockConnection!
+}
+
+extend type CoinMetadata {
+	receivedTransactionBlocks(first: Int, after: String, last: Int, before: String, filter: TransactionBlockFilter, scanLimit: Int @deprecated(reason: "`scanLimit` will be removed with v1.38, along with the support for combining complex filters.")): TransactionBlockConnection!
+}
+
+extend type Epoch {
+	transactionBlocks(first: Int, after: String, last: Int, before: String, filter: TransactionBlockFilter, scanLimit: Int @deprecated(reason: "`scanLimit` will be removed with v1.38, along with the support for combining complex filters.")): TransactionBlockConnection!
+}
+
+extend interface IObject {
+	receivedTransactionBlocks(first: Int, after: String, last: Int, before: String, filter: TransactionBlockFilter, scanLimit: Int @deprecated(reason: "`scanLimit` will be removed with v1.38, along with the support for combining complex filters.")): TransactionBlockConnection!
+}
+
+extend type MoveObject {
+	receivedTransactionBlocks(first: Int, after: String, last: Int, before: String, filter: TransactionBlockFilter, scanLimit: Int @deprecated(reason: "`scanLimit` will be removed with v1.38, along with the support for combining complex filters.")): TransactionBlockConnection!
+}
+
+extend type MovePackage {
+	receivedTransactionBlocks(first: Int, after: String, last: Int, before: String, filter: TransactionBlockFilter, scanLimit: Int @deprecated(reason: "`scanLimit` will be removed with v1.38, along with the support for combining complex filters.")): TransactionBlockConnection!
+}
+
+extend type NameRegistration {
+	receivedTransactionBlocks(first: Int, after: String, last: Int, before: String, filter: TransactionBlockFilter, scanLimit: Int @deprecated(reason: "`scanLimit` will be removed with v1.38, along with the support for combining complex filters.")): TransactionBlockConnection!
+}
+
+extend type Object {
+	receivedTransactionBlocks(first: Int, after: String, last: Int, before: String, filter: TransactionBlockFilter, scanLimit: Int @deprecated(reason: "`scanLimit` will be removed with v1.38, along with the support for combining complex filters.")): TransactionBlockConnection!
+}
 
 extend type Query {
 	"""
@@ -8,4 +50,16 @@ extend type Query {
 	This includes all transactions, even if they are not checkpointed yet.
 	"""
 	transactionBlocksByDigests(digests: [String!]!): [TransactionBlock]! @deprecated(reason: "Use `transactionsByDigests` instead. Will be removed in v1.38.")
+	transactionBlocks(first: Int, after: String, last: Int, before: String, filter: TransactionBlockFilter, scanLimit: Int @deprecated(reason: "`scanLimit` will be removed with v1.38, along with the support for combining complex filters.")): TransactionBlockConnection!
+}
+
+extend type ServiceConfig {
+	"""
+	Maximum number of candidates to scan when gathering a page of results.
+	"""
+	maxScanLimit: Int!
+}
+
+extend type StakedIota {
+	receivedTransactionBlocks(first: Int, after: String, last: Int, before: String, filter: TransactionBlockFilter, scanLimit: Int @deprecated(reason: "`scanLimit` will be removed with v1.38, along with the support for combining complex filters.")): TransactionBlockConnection!
 }
