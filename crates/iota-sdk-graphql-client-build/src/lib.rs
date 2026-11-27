@@ -153,9 +153,10 @@ fn remove_union_member(schema: &mut String, name: &str, member: &str) {
 /// Merges the definitions the node removed back into its schema, so that the generated
 /// `query_types::schema` module only loses items in a major release.
 ///
-/// The body of each `extend <kind> <Name> {` block in `removed` is inserted at the top of the
-/// matching definition in `schema`, as cynic ignores extensions. Anything else in `removed` is
-/// appended as is.
+/// The fields and values of each `extend <kind> <Name> {` block in `removed` are inserted at the
+/// top of the matching definition in `schema`, as cynic ignores extensions, except that a field the
+/// definition still has replaces its signature there, e.g. to restore a removed argument. Anything
+/// else in `removed` is appended as is.
 fn merge_removed(schema: &str, removed: &str) -> String {
     let mut schema = schema.to_owned();
     let mut lines = removed.lines();
@@ -167,10 +168,61 @@ fn merge_removed(schema: &str, removed: &str) -> String {
         };
         let header = block_header(line, header);
         let body = block_body(&mut lines, line);
+        let mut inserted = String::new();
+        let mut description = String::new();
+        let mut in_description = false;
+        for line in body.lines() {
+            if line.trim() == "\"\"\"" {
+                in_description = !in_description;
+            }
+            if in_description || line.trim() == "\"\"\"" {
+                description.push_str(line);
+                description.push('\n');
+                continue;
+            }
+            if !replace_field(&mut schema, header, line) {
+                inserted.push_str(&description);
+                inserted.push_str(line);
+                inserted.push('\n');
+            }
+            description.clear();
+        }
         let position = definition_body_start(&schema, header);
-        schema.insert_str(position, &body);
+        schema.insert_str(position, &inserted);
     }
     schema
+}
+
+/// Replaces the signature of the field `line` defines in the `header` definition of `schema` with
+/// `line`, keeping its description. Returns whether the definition has that field.
+fn replace_field(schema: &mut String, header: &str, line: &str) -> bool {
+    let Some(name_end) = line
+        .char_indices()
+        .skip(1)
+        .find(|&(_, c)| !c.is_ascii_alphanumeric() && c != '_')
+        .map(|(index, _)| index)
+    else {
+        return false;
+    };
+    let name = &line[..name_end];
+    if !line[name_end..].starts_with(['(', ':']) {
+        return false;
+    }
+    let start = definition_body_start(schema, header);
+    let end = definition_body_end(schema, start);
+    let mut offset = start;
+    for existing in schema[start..end].split_inclusive('\n') {
+        if existing
+            .strip_prefix(name)
+            .is_some_and(|rest| rest.starts_with(['(', ':']))
+        {
+            let signature = existing.trim_end_matches('\n');
+            schema.replace_range(offset..offset + signature.len(), line);
+            return true;
+        }
+        offset += existing.len();
+    }
+    false
 }
 
 /// Returns the `<kind> <Name>` of the `extend <kind> <Name> {` block opened by `line`, given the
@@ -242,6 +294,16 @@ mod tests {
     }
 
     #[test]
+    fn fields_still_defined_are_replaced() {
+        let schema = "type Query {\n\t\"\"\"\n\tA.\n\t\"\"\"\n\ta(first: Int): Int\n\tab: Int\n}\n";
+        let removed = "extend type Query {\n\t\"\"\"\n\tGone.\n\t\"\"\"\n\ta(first: Int, limit: Int): Int\n\t\"\"\"\n\tB.\n\t\"\"\"\n\tb: Int\n}\n";
+        assert_eq!(
+            merge_removed(schema, removed),
+            "type Query {\n\t\"\"\"\n\tB.\n\t\"\"\"\n\tb: Int\n\t\"\"\"\n\tA.\n\t\"\"\"\n\ta(first: Int, limit: Int): Int\n\tab: Int\n}\n"
+        );
+    }
+
+    #[test]
     fn other_definitions_are_appended() {
         let removed = "# comment\ntype Gone {\n\te: Int\n}";
         assert_eq!(
@@ -258,10 +320,11 @@ mod tests {
 
     #[test]
     fn removed_definitions_merge_into_the_schema() {
-        merge_removed(
+        let schema = merge_removed(
             include_str!("../schema.graphql"),
             include_str!("../removed.graphql"),
         );
+        assert_eq!(schema.matches(", scanLimit: Int @deprecated").count(), 12);
     }
 
     const UNSTABLE_SCHEMA: &str = "\"\"\"\nNew.\n\"\"\"\nunion New = A\n\ntype Query {\n\ta: Int\n\t\"\"\"\n\tNew.\n\t\"\"\"\n\tb: Int\n}\n\ntype A {\n\tc: Int\n}\n\nunion Kind = A | B | C\n";
