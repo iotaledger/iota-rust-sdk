@@ -11,7 +11,7 @@ use iota_types::{Address, MovePackage, Object, Version};
 use crate::{
     GraphQLClient, MoveFunction, MoveModule, Page,
     api::define_query,
-    error::GraphQLResult,
+    error::{GraphQLError, GraphQLResult},
     pagination::{PaginationFilter, PaginationFilterResponse},
     query_types::{
         LatestPackageQueryFragment, MovePackageVersionFilter, NormalizedMoveFunctionQueryArgs,
@@ -104,18 +104,18 @@ impl ListPackageVersionsQuery {
         let bcs = pc
             .nodes
             .iter()
-            .map(|p| &p.bcs)
-            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .map(|p| {
+                let b64 = p
+                    .bcs
+                    .as_ref()
+                    .ok_or(GraphQLError::EmptyResponseField("package bcs"))?;
+                crate::base64::decode(b64.0.as_str())
+            })
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
-            .map(|b| {
-                Ok(bcs::from_bytes::<Object>(b)
-                    .map_err(iota_types::BcsError::new)?
-                    .data
-                    .into_package())
-            })
-            .collect::<Result<Vec<_>, iota_types::BcsError>>()?;
+            .map(|b| package_from_bcs(b))
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -197,18 +197,18 @@ impl ListPackagesQuery {
         let bcs = pc
             .nodes
             .iter()
-            .map(|p| &p.bcs)
-            .filter_map(|b64| b64.as_ref().map(|b| crate::base64::decode(b.0.as_str())))
+            .map(|p| {
+                let b64 = p
+                    .bcs
+                    .as_ref()
+                    .ok_or(GraphQLError::EmptyResponseField("package bcs"))?;
+                crate::base64::decode(b64.0.as_str())
+            })
             .collect::<crate::error::GraphQLResult<Vec<_>>>()?;
         let packages = bcs
             .iter()
-            .map(|b| {
-                Ok(bcs::from_bytes::<Object>(b)
-                    .map_err(iota_types::BcsError::new)?
-                    .data
-                    .into_package())
-            })
-            .collect::<Result<Vec<_>, iota_types::BcsError>>()?;
+            .map(|b| package_from_bcs(b))
+            .collect::<GraphQLResult<Vec<_>>>()?;
 
         Ok(Page::new(page_info, packages))
     }
@@ -353,14 +353,14 @@ impl GetPackageQuery {
 
         let response = self.client.run_query(&operation).await?;
 
-        Ok(response
+        response
             .package
-            .and_then(|x| x.bcs)
+            .map(|x| x.bcs.ok_or(GraphQLError::EmptyResponseField("package bcs")))
+            .transpose()?
             .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
-            .transpose()?
-            .map(|obj| obj.data.into_package()))
+            .map(|bcs| package_from_bcs(&bcs))
+            .transpose()
     }
 }
 
@@ -419,14 +419,14 @@ impl GetPackageLatestQuery {
 
         let response = self.client.run_query(&operation).await?;
 
-        Ok(response
+        response
             .latest_package
-            .and_then(|x| x.bcs)
+            .map(|x| x.bcs.ok_or(GraphQLError::EmptyResponseField("package bcs")))
+            .transpose()?
             .map(|bcs| crate::base64::decode(&bcs.0))
             .transpose()?
-            .map(|bcs| bcs::from_bytes::<Object>(&bcs).map_err(iota_types::BcsError::new))
-            .transpose()?
-            .map(|obj| obj.data.into_package()))
+            .map(|bcs| package_from_bcs(&bcs))
+            .transpose()
     }
 }
 
@@ -523,17 +523,49 @@ impl GraphQLClient {
     }
 }
 
+/// Decode an object's BCS and return it as a package.
+fn package_from_bcs(bcs: &[u8]) -> GraphQLResult<MovePackage> {
+    bcs::from_bytes::<Object>(bcs)
+        .map_err(iota_types::BcsError::new)?
+        .data
+        .into_opt_package()
+        .ok_or_else(|| GraphQLError::Deserialization("object is not a package".into()))
+}
+
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
     use iota_types::{Address, Version};
 
     use crate::{
         Direction, PaginationFilter,
+        error::GraphQLError,
         test_utils::{
             assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
-            test_client,
+            test_client, with_response,
         },
     };
+
+    #[test]
+    fn package_from_bcs_rejects_non_package_objects() {
+        let object = iota_types::Object::new(
+            iota_types::ObjectData::Struct(
+                iota_types::MoveStruct::new(
+                    iota_types::MoveObjectType::new(iota_types::StructTag::new_gas_coin()),
+                    Version::from_u64(1),
+                    vec![0; iota_types::ObjectId::LENGTH + 8],
+                )
+                .unwrap(),
+            ),
+            iota_types::Owner::Address(Address::ZERO),
+            iota_types::TransactionDigest::ZERO,
+            0,
+        );
+        let bcs = bcs::to_bytes(&object).unwrap();
+        assert!(matches!(
+            super::package_from_bcs(&bcs),
+            Err(crate::error::GraphQLError::Deserialization(_))
+        ));
+    }
 
     #[tokio::test]
     async fn package_latest_sends_the_address_without_a_version() {
@@ -640,6 +672,52 @@ mod tests {
         })
         .await;
         assert_forward_page(&vars);
+    }
+
+    #[tokio::test]
+    async fn package_listings_reject_a_package_without_bcs() {
+        let result = with_response(
+            r#"{"data":{"packageVersions":{"nodes":[{"bcs":null}],"pageInfo":{"hasPreviousPage":false,"hasNextPage":false,"startCursor":null,"endCursor":null}}}}"#,
+            |client| async move { client.package_versions(Address::FRAMEWORK).await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("package bcs"))
+        ));
+
+        let result = with_response(
+            r#"{"data":{"packages":{"nodes":[{"bcs":null}],"pageInfo":{"hasPreviousPage":false,"hasNextPage":false,"startCursor":null,"endCursor":null}}}}"#,
+            |client| async move { client.packages().await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("package bcs"))
+        ));
+    }
+
+    #[tokio::test]
+    async fn package_lookups_reject_a_package_without_bcs() {
+        let result = with_response(
+            r#"{"data":{"package":{"bcs":null}}}"#,
+            |client| async move { client.package(Address::FRAMEWORK).await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("package bcs"))
+        ));
+
+        let result = with_response(
+            r#"{"data":{"latestPackage":{"bcs":null}}}"#,
+            |client| async move { client.package_latest(Address::FRAMEWORK).await },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(GraphQLError::EmptyResponseField("package bcs"))
+        ));
     }
 
     #[tokio::test]
