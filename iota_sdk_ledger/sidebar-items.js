@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ApduError","LedgerError"],"struct":["ApduAnswer","ApduCommand","AppVersion","HidDeviceInfo","Ledger","LedgerSigner"],"trait":["MaybeSendSync","Transport"],"type":["TransportFuture"]};

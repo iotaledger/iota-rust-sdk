@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["LedgerError","LedgerTransportError"],"fn":["uniffi_iota_sdk_ffi_fn_init_callback_vtable_ledgertransport"],"struct":["Ledger","LedgerAppVersion","LedgerSigner","UniFfiTraitVtableLedgerTransport"],"trait":["LedgerTransport"]};

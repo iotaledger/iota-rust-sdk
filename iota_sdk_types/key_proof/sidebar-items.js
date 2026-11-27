@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["key_proof_message_v1"]};

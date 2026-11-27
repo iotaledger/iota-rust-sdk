@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["end_of_epoch_data_from_bcs","end_of_epoch_data_from_json"],"struct":["CheckpointCommitment","CheckpointContents","CheckpointContentsV1","CheckpointSummary","CheckpointTransactionInfo","EndOfEpochData","SignedCheckpointSummary"],"type":["CheckpointSequenceNumber","CheckpointTimestamp","EpochId","ProtocolVersion","StakeUnit"]};

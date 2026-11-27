@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["coin_metadata","coin_treasury","regulated_coin_metadata"],"struct":["CoinMetadata","CoinMetadataFieldPathBuilder","CoinTreasury","CoinTreasuryFieldPathBuilder","RegulatedCoinMetadata","RegulatedCoinMetadataFieldPathBuilder"]};

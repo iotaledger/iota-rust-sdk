@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["GraphQLError"],"struct":["ErrorExtensions","HttpResponse"],"type":["GraphQLResult","QueryError"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["G1","G2","GT","Scalar","UncompressedG1"]};
