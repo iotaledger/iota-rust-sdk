@@ -505,12 +505,46 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
     fn try_from(value: TxBlockEffects) -> Result<Self, Self::Error> {
         let effects = value
             .effects
-            .map(|fx| crate::base64::decode(fx.bcs.unwrap().0.as_str()))
+            .and_then(|fx| fx.bcs)
+            .map(|bcs| crate::base64::decode(bcs.0.as_str()))
             .transpose()?
             .map(|bcs| {
                 bcs::from_bytes::<TransactionEffects>(&bcs).map_err(iota_types::BcsError::new)
             })
             .transpose()?;
         effects.ok_or(GraphQLError::EmptyResponseField("transaction effects bcs"))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn missing_effects_bcs_is_an_error() {
+        for value in [
+            TxBlockEffects { effects: None },
+            TxBlockEffects {
+                effects: Some(TransactionBlockEffects { bcs: None }),
+            },
+        ] {
+            assert!(matches!(
+                TransactionEffects::try_from(value),
+                Err(GraphQLError::EmptyResponseField("transaction effects bcs"))
+            ));
+        }
+    }
+
+    #[test]
+    fn invalid_effects_bcs_is_an_error() {
+        let value = TxBlockEffects {
+            effects: Some(TransactionBlockEffects {
+                bcs: Some(Base64("AQ==".to_owned())),
+            }),
+        };
+        assert!(matches!(
+            TransactionEffects::try_from(value),
+            Err(GraphQLError::Deserialization(_))
+        ));
     }
 }
