@@ -2272,7 +2272,8 @@ pub mod public_key {
 
     /// Rust version of the Move `iota::public_key::PublicKey` type.
     ///
-    /// Move checks the scheme and the key bytes when it creates a `PublicKey`; this copy does not.
+    /// Move checks the scheme and the key bytes when it creates a `PublicKey`; this mirror does
+    /// not.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(
@@ -2335,6 +2336,19 @@ pub mod public_key {
                     Err(AccountSignatureSchemeError::Unsupported(flag))
                 );
             }
+        }
+
+        #[cfg(feature = "serde")]
+        #[test]
+        fn bcs_is_the_flag_then_the_length_prefixed_key() {
+            let key = PublicKey {
+                scheme: SignatureScheme { flag: 0x02 },
+                raw_bytes: vec![1; 33],
+            };
+            let bytes = bcs::to_bytes(&key).unwrap();
+            assert_eq!(bytes[..2], [0x02, 33]);
+            assert_eq!(bytes[2..], [1; 33]);
+            assert_eq!(bcs::from_bytes::<PublicKey>(&bytes).unwrap(), key);
         }
     }
 }
