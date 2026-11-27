@@ -35,15 +35,13 @@ impl MultisigVerifier {
         iota_sdk::crypto::multisig::MultisigVerifier::new().into()
     }
 
-    /// Reject partially signed multisigs whose committee mixes Ed25519 with
-    /// other key schemes. Such a multisig is still accepted when every member
-    /// has signed. `MultisigAggregator::finish` applies the same rule through
-    /// its verifier.
+    /// Reject partially signed multisigs whose committee mixes Ed25519 with other key schemes. Such
+    /// a multisig is still accepted when every member has signed. `MultisigAggregator::finish`
+    /// applies the same rule through its verifier.
     ///
-    /// Enabled by default. The network accepted such multisigs before protocol
-    /// version 39 (node release 1.35), so disabling it accepts them again, but
-    /// a partially signed one can then not be told apart from one forged
-    /// through a committee whose address collides with the signer's.
+    /// Enabled by default. The network accepted such multisigs before protocol version 39 (node
+    /// release 1.35), so disabling it accepts them again, but a partially signed one can then not
+    /// be told apart from one forged through a committee whose address collides with the signer's.
     pub fn with_reject_partially_signed_mixed_ed25519(self: Arc<Self>, reject: bool) -> Arc<Self> {
         {
             let mut lock = self.0.write().expect("error writing to verifier");
@@ -88,14 +86,12 @@ impl UserSignatureVerifier {
         iota_sdk::crypto::multisig::UserSignatureVerifier::new().into()
     }
 
-    /// Reject partially signed multisigs whose committee mixes Ed25519 with
-    /// other key schemes. Such a multisig is still accepted when every member
-    /// has signed.
+    /// Reject partially signed multisigs whose committee mixes Ed25519 with other key schemes. Such
+    /// a multisig is still accepted when every member has signed.
     ///
-    /// Enabled by default. The network accepted such multisigs before protocol
-    /// version 39 (node release 1.35), so disabling it accepts them again, but
-    /// a partially signed one can then not be told apart from one forged
-    /// through a committee whose address collides with the signer's.
+    /// Enabled by default. The network accepted such multisigs before protocol version 39 (node
+    /// release 1.35), so disabling it accepts them again, but a partially signed one can then not
+    /// be told apart from one forged through a committee whose address collides with the signer's.
     pub fn with_reject_partially_signed_mixed_ed25519(self: Arc<Self>, reject: bool) -> Arc<Self> {
         {
             let mut lock = self.0.write().expect("error writing to verifier");
@@ -104,8 +100,9 @@ impl UserSignatureVerifier {
         self
     }
 
-    /// Replaces the verifier used for multisig signatures, including the
-    /// setting from `with_reject_partially_signed_mixed_ed25519`.
+    /// Replaces the verifier used for multisig signatures, including the setting from
+    /// `with_reject_partially_signed_mixed_ed25519`. Copies the current settings of
+    /// `multisig_verifier`; later changes to it are not picked up.
     pub fn with_multisig_verifier(
         self: Arc<Self>,
         multisig_verifier: &MultisigVerifier,
@@ -122,11 +119,18 @@ impl UserSignatureVerifier {
         self
     }
 
-    /// The verifier used for passkey signatures.
+    /// The verifier used for direct passkey signatures. Passkey members of a multisig are checked
+    /// by the multisig verifier instead. Copies the current settings of `passkey_verifier`; later
+    /// changes to it, such as `with_address`, are not picked up.
     pub fn with_passkey_verifier(self: Arc<Self>, passkey_verifier: &PasskeyVerifier) -> Arc<Self> {
+        let passkey_verifier = passkey_verifier
+            .0
+            .read()
+            .expect("error reading verifier")
+            .clone();
         {
             let mut lock = self.0.write().expect("error writing to verifier");
-            *lock = std::mem::take(&mut *lock).with_passkey_verifier(passkey_verifier.0.clone());
+            *lock = std::mem::take(&mut *lock).with_passkey_verifier(passkey_verifier);
         }
         self
     }
@@ -168,6 +172,8 @@ impl MultisigAggregator {
         )
     }
 
+    /// Returns a copy of the current verifier; changes to it are not applied to the aggregator. Use
+    /// `set_verifier` to change it.
     pub fn verifier(&self) -> MultisigVerifier {
         self.0
             .read()
@@ -177,6 +183,7 @@ impl MultisigAggregator {
             .into()
     }
 
+    /// Copies the current settings of `verifier`; later changes to it are not picked up.
     pub fn set_verifier(&self, verifier: &MultisigVerifier) {
         *self
             .0

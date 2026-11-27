@@ -3,9 +3,9 @@
 
 //! Foreign-language equivalent of the Rust APIs that take a `reqwest::Client`.
 //!
-//! The Rust APIs let callers hand over a fully built `reqwest::Client`. uniffi
-//! has no way to carry one across the boundary, so the bindings describe what
-//! they want instead and the client is built here.
+//! The Rust APIs let callers hand over a fully built `reqwest::Client`. uniffi has no way to carry
+//! one across the boundary, so the bindings describe what they want instead and the client is built
+//! here.
 
 use crate::error::{Result, SdkFfiError};
 
@@ -15,18 +15,18 @@ const USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VE
 /// How the SDK should build the HTTP client backing a connection.
 #[derive(Debug, Default, uniffi::Record)]
 pub struct HttpClientOptions {
-    /// Additional DER-encoded CA certificates to trust, on top of the platform
-    /// trust store and the bundled roots.
+    /// Additional DER-encoded CA certificates to trust, on top of the platform trust store and the
+    /// bundled roots.
     #[uniffi(default = [])]
     pub extra_root_certificates: Vec<Vec<u8>>,
     /// Ignore the platform trust store, trusting only the bundled roots and
-    /// `extra_root_certificates`. Combined with `exclude_bundled_roots`,
-    /// only `extra_root_certificates` is trusted, which must then be non-empty.
+    /// `extra_root_certificates`. Combined with `exclude_bundled_roots`, only
+    /// `extra_root_certificates` is trusted, which must then be non-empty.
     #[uniffi(default = false)]
     pub exclude_platform_roots: bool,
-    /// Ignore the bundled Mozilla roots, trusting only the platform trust store
-    /// and `extra_root_certificates`. Combined with `exclude_platform_roots`,
-    /// only `extra_root_certificates` is trusted, which must then be non-empty.
+    /// Ignore the bundled Mozilla roots, trusting only the platform trust store and
+    /// `extra_root_certificates`. Combined with `exclude_platform_roots`, only
+    /// `extra_root_certificates` is trusted, which must then be non-empty.
     #[uniffi(default = false)]
     pub exclude_bundled_roots: bool,
     /// Total request timeout in milliseconds. `None` leaves it unbounded.
@@ -73,10 +73,9 @@ impl HttpClientOptions {
             roots.push(parse_root_certificate(der)?);
         }
 
-        // Merging keeps the platform store and adds these as a floor. reqwest
-        // only supports that where `rustls-platform-verifier` accepts extra
-        // roots; elsewhere — Android in particular — the roots have to stand
-        // alone.
+        // Merging keeps the platform store and adds these as a floor. reqwest only supports that
+        // where `rustls-platform-verifier` accepts extra roots; elsewhere — Android in particular —
+        // the roots have to stand alone.
         #[cfg(any(all(unix, not(target_os = "android")), target_os = "windows"))]
         let merge_supported = true;
         #[cfg(not(any(all(unix, not(target_os = "android")), target_os = "windows")))]
@@ -98,10 +97,10 @@ impl HttpClientOptions {
         })
     }
 
-    /// On wasm32 the browser owns both certificate verification and request
-    /// deadlines, and reqwest's wasm builder exposes neither. Asking for them
-    /// is refused rather than silently ignored, so that a caller never believes
-    /// it has pinned a root or bounded a request when it has not.
+    /// On wasm32 the browser owns both certificate verification and request deadlines, and
+    /// reqwest's wasm builder exposes neither. Asking for them is refused rather than silently
+    /// ignored, so that a caller never believes it has pinned a root or bounded a request when it
+    /// has not.
     #[cfg(target_arch = "wasm32")]
     fn apply_transport(&self, builder: reqwest::ClientBuilder) -> Result<reqwest::ClientBuilder> {
         if self.exclude_platform_roots {
@@ -137,17 +136,17 @@ fn parse_root_certificate(der: &[u8]) -> Result<reqwest::Certificate> {
     reqwest::Certificate::from_der(der).map_err(SdkFfiError::new)
 }
 
-/// `reqwest` is built with `rustls-no-provider` across this workspace, so a
-/// provider has to be installed before any client is built. The first caller
-/// wins, so an application that has already chosen one keeps it.
+/// `reqwest` is built with `rustls-no-provider` across this workspace, so a provider has to be
+/// installed before any client is built. The first caller wins, so an application that has already
+/// chosen one keeps it.
 #[cfg(not(target_arch = "wasm32"))]
 fn base_builder() -> reqwest::ClientBuilder {
     let _ = rustls::crypto::ring::default_provider().install_default();
     reqwest::Client::builder().user_agent(USER_AGENT)
 }
 
-/// On wasm32 the browser owns certificate verification, so there is no provider
-/// and no trust anchors to configure.
+/// On wasm32 the browser owns certificate verification, so there is no provider and no trust
+/// anchors to configure.
 #[cfg(target_arch = "wasm32")]
 fn base_builder() -> reqwest::ClientBuilder {
     reqwest::Client::builder().user_agent(USER_AGENT)

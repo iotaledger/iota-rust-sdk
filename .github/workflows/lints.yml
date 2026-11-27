@@ -24,6 +24,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Install libudev for hidapi
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
+
       - uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
         with:
           tool: cargo-hack
@@ -97,6 +100,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install libudev for hidapi
+        if: matrix.flags == '--all-features'
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
       - name: Install cargo-udeps
         # Built from source (cached) because the prebuilt musl-static binary
         # intermittently segfaults while unpacking the large iota monorepo

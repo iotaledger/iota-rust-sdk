@@ -37,6 +37,12 @@ pub enum TransactionBuilderError {
     MissingProtocolValue { name: String },
     #[error("Invalid protocol value: {name} = {value}")]
     InvalidProtocolValue { name: String, value: String },
+    #[error("{name} protocol limit {limit} exceeded by gas value {value}")]
+    GasAboveProtocolLimit {
+        name: String,
+        value: u64,
+        limit: u64,
+    },
     #[error("Unknown shared object mutability for object {0}")]
     SharedObjectMutability(ObjectId),
     #[error("only programmable transactions can be converted into a TransactionBuilder")]
@@ -45,6 +51,20 @@ pub enum TransactionBuilderError {
         "command {command} refers to {argument:?}, which is neither an input of the transaction nor the result of an earlier command"
     )]
     InvalidArgument { command: usize, argument: Argument },
+    #[cfg(feature = "unstable")]
+    #[error("a transaction can have at most one transaction dependency input")]
+    MultipleTransactionDependencies,
+    #[cfg(feature = "unstable")]
+    #[error(
+        "argument {argument_index} of command {command} is the transaction dependency input, which no command may use"
+    )]
+    TransactionDependencyInputUsed {
+        command: usize,
+        argument_index: usize,
+    },
+    #[cfg(feature = "unstable")]
+    #[error("a transaction with a transaction dependency input must set an epoch expiration")]
+    TransactionDependencyRequiresExpiration,
     #[error("Invalid account for move authenticator: {0}")]
     InvalidMoveAuthAccount(String),
     #[error("Invalid argument for move authenticator: {0}")]
@@ -55,6 +75,8 @@ pub enum TransactionBuilderError {
         "sponsor {sponsor} was set on the transaction, but the gas sponsor supplies the gas payment"
     )]
     SponsorAddressConflict { sponsor: Address },
+    #[error("the gas sponsor named the sender {sender} as the gas owner")]
+    SponsorIsSender { sender: Address },
     #[error("the gas sponsor executed transaction {got}, expected {expected}")]
     SponsorDigestMismatch {
         expected: TransactionDigest,
@@ -89,8 +111,7 @@ impl TransactionBuilderError {
     }
 }
 
-/// A response from a [`TransactionBuilderLedgerClient`] that does not match
-/// what was requested.
+/// A response from a [`TransactionBuilderLedgerClient`] that does not match what was requested.
 ///
 /// [`TransactionBuilderLedgerClient`]: crate::TransactionBuilderLedgerClient
 #[derive(Debug, thiserror::Error)]

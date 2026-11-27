@@ -13,8 +13,7 @@ use crate::{
 };
 
 define_query! {
-    /// Query for [`GraphQLClient::move_view_call_json`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::move_view_call_json`]. Await it to send the request.
     pub struct MoveViewCallJsonQuery {
         client: GraphQLClient,
         function_name: String,
@@ -50,8 +49,7 @@ impl MoveViewCallJsonQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::move_view_call`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::move_view_call`]. Await it to send the request.
     pub struct MoveViewCallQuery {
         client: GraphQLClient,
         function_name: String,
@@ -68,15 +66,15 @@ impl MoveViewCallQuery {
         self
     }
 
-    /// Set the type arguments of the Move function from Rust types, e.g.
-    /// `generics::<(u64, String)>()`.
+    /// Set the type arguments of the Move function from Rust types, e.g. `generics::<(u64,
+    /// String)>()`.
     pub fn generics<G: MoveTypes>(mut self) -> Self {
         self.type_arguments = Some(G::type_tags());
         self
     }
 
-    /// Set the typed arguments passed into the Move function, replacing the
-    /// ones set so far. A single argument is wrapped in a list or tuple.
+    /// Set the typed arguments passed into the Move function, replacing the ones set so far. A
+    /// single argument is wrapped in a list or tuple.
     pub fn arguments(mut self, arguments: impl MoveViewArgList) -> Self {
         self.arguments = Some(arguments.to_json_vec());
         self
@@ -85,8 +83,7 @@ impl MoveViewCallQuery {
     /// Append a single typed argument passed into the Move function.
     ///
     /// A collection is appended as one argument, i.e. a Move vector; use
-    /// [`arguments`](Self::arguments) to pass a collection as the whole
-    /// argument list.
+    /// [`arguments`](Self::arguments) to pass a collection as the whole argument list.
     pub fn argument(mut self, argument: impl MoveViewArg) -> Self {
         self.arguments
             .get_or_insert_default()
@@ -108,8 +105,7 @@ impl MoveViewCallQuery {
     }
 }
 
-/// The fully qualified name of a Move function, as
-/// `<package_id>::<module_name>::<function_name>`.
+/// The fully qualified name of a Move function, as `<package_id>::<module_name>::<function_name>`.
 fn function_name(package: ObjectId, module: &str, function: &str) -> String {
     format!("{package}::{module}::{function}")
 }
@@ -117,21 +113,19 @@ fn function_name(package: ObjectId, module: &str, function: &str) -> String {
 impl GraphQLClient {
     /// Execute a Move View Function with raw JSON arguments.
     ///
-    /// This is an alternative to [`GraphQLClient::move_view_call`] that accepts
-    /// raw JSON values instead of typed arguments.
+    /// This is an alternative to [`GraphQLClient::move_view_call`] that accepts raw JSON values
+    /// instead of typed arguments.
     ///
-    /// A View Function is a function in a Move module with a return type that
-    /// does not alter the state of the ledger. When using this interface,
-    /// no transactions are submitted to the network for inclusion into the
-    /// ledger.
+    /// A View Function is a function in a Move module with a return type that does not alter the
+    /// state of the ledger. When using this interface, no transactions are submitted to the network
+    /// for inclusion into the ledger.
     ///
-    /// The function is `function` in the module `module` of the package
-    /// `package`. Set its type arguments with
-    /// [`type_arguments`](MoveViewCallJsonQuery::type_arguments) and its JSON
+    /// The function is `function` in the module `module` of the package `package`. Set its type
+    /// arguments with [`type_arguments`](MoveViewCallJsonQuery::type_arguments) and its JSON
     /// arguments with [`arguments`](MoveViewCallJsonQuery::arguments).
     ///
-    /// Resolves to a `MoveViewResult` containing either execution results
-    /// (return values) or an error.
+    /// Resolves to a `MoveViewResult` containing either execution results (return values) or an
+    /// error.
     pub fn move_view_call_json(
         &self,
         package: impl Into<ObjectId>,
@@ -148,24 +142,21 @@ impl GraphQLClient {
 
     /// Execute a Move View Function.
     ///
-    /// A View Function is a function in a Move module with a return type that
-    /// does not alter the state of the ledger. When using this interface,
-    /// no transactions are submitted to the network for inclusion into the
-    /// ledger.
+    /// A View Function is a function in a Move module with a return type that does not alter the
+    /// state of the ledger. When using this interface, no transactions are submitted to the network
+    /// for inclusion into the ledger.
     ///
-    /// This method allows calling nearly any Move function with a return type
-    /// and any arguments. The function's result values are provided and
-    /// decoded using the appropriate Move type, then formatted in JSON.
+    /// This method allows calling nearly any Move function with a return type and any arguments.
+    /// The function's result values are provided and decoded using the appropriate Move type, then
+    /// formatted in JSON.
     ///
-    /// The use of this interface does not require signature checks (even for
-    /// functions that take Owned Objects as input) or gas coins, as it does
-    /// not alter ledger state. Spam attacks are dealt with at the RPC level
-    /// rather than execution level.
+    /// The use of this interface does not require signature checks (even for functions that take
+    /// Owned Objects as input) or gas coins, as it does not alter ledger state. Spam attacks are
+    /// dealt with at the RPC level rather than execution level.
     ///
-    /// The function is `function` in the module `module` of the package
-    /// `package`. Set its typed arguments with
-    /// [`arguments`](MoveViewCallQuery::arguments) and its type arguments
-    /// with [`type_arguments`](MoveViewCallQuery::type_arguments).
+    /// The function is `function` in the module `module` of the package `package`. Set its typed
+    /// arguments with [`arguments`](MoveViewCallQuery::arguments) and its type arguments with
+    /// [`type_arguments`](MoveViewCallQuery::type_arguments).
     ///
     /// # Example
     /// ```rust,ignore
@@ -191,8 +182,8 @@ impl GraphQLClient {
     ///     .await?;
     /// ```
     ///
-    /// Resolves to a `MoveViewResult` containing either execution results
-    /// (return values) or an error.
+    /// Resolves to a `MoveViewResult` containing either execution results (return values) or an
+    /// error.
     pub fn move_view_call(
         &self,
         package: impl Into<ObjectId>,

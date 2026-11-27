@@ -25,11 +25,11 @@ impl GraphQLClient {
         Ok(self.client().chain_id().await?)
     }
 
-    /// Get the reference gas price for the provided epoch or the last known one
-    /// if no epoch is provided.
+    /// Get the reference gas price for the provided epoch or the last known one if no epoch is
+    /// provided.
     ///
-    /// This will return `Ok(None)` if the epoch requested is not available in
-    /// the GraphQL service (e.g., due to pruning).
+    /// This will return `Ok(None)` if the epoch requested is not available in the GraphQL service
+    /// (e.g., due to pruning).
     #[uniffi::method(default(epoch = None))]
     pub async fn reference_gas_price(&self, epoch: Option<u64>) -> Result<Option<u64>> {
         Ok(self
@@ -50,9 +50,8 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Get the list of active validators for the provided epoch, including
-    /// related metadata. If no epoch is provided, it will return the active
-    /// validators for the current epoch.
+    /// Get the list of active validators for the provided epoch, including related metadata. If no
+    /// epoch is provided, it will return the active validators for the current epoch.
     #[uniffi::method(default(epoch = None, pagination_filter = None))]
     pub async fn active_validators(
         &self,

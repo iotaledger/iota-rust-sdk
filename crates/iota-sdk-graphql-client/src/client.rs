@@ -13,6 +13,7 @@ use crate::{
     error::{ErrorExtensions, GraphQLError, GraphQLResult},
     pagination::{Direction, PaginationFilter, PaginationFilterResponse},
     query_types::{ServiceConfig, ServiceConfigQueryFragment},
+    version_check::check_client_version,
 };
 
 pub(crate) const DEFAULT_ITEMS_PER_PAGE: i32 = 10;
@@ -28,13 +29,11 @@ pub static USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_P
 
 /// Helper function to convert a GraphQL response to a `Result`.
 ///
-/// A GraphQL response may carry `errors` together with (possibly partial)
-/// `data` — for example when a request exceeds the server's max page size, the
-/// failing field is set to `null` in `data` and the reason is reported in
-/// `errors`. In that case the errors take precedence, so any populated `errors`
-/// list is surfaced as a query error rather than being treated as a
-/// success. A response with neither `data` nor `errors` is reported as an empty
-/// response error instead of panicking.
+/// A GraphQL response may carry `errors` together with (possibly partial) `data` — for example when
+/// a request exceeds the server's max page size, the failing field is set to `null` in `data` and
+/// the reason is reported in `errors`. In that case the errors take precedence, so any populated
+/// `errors` list is surfaced as a query error rather than being treated as a success. A response
+/// with neither `data` nor `errors` is reported as an empty response error instead of panicking.
 pub(crate) fn response_to_result<T>(
     response: GraphQlResponse<T, ErrorExtensions>,
 ) -> GraphQLResult<T> {
@@ -46,8 +45,7 @@ pub(crate) fn response_to_result<T>(
 }
 
 crate::api::define_query! {
-    /// Query for [`GraphQLClient::max_page_size`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::max_page_size`]. Await it to send the request.
     pub struct GetMaxPageSizeQuery {
         client: GraphQLClient,
     }
@@ -63,8 +61,8 @@ impl GetMaxPageSizeQuery {
     }
 }
 
-/// The GraphQL client for interacting with the IOTA blockchain.
-/// By default, it uses the `reqwest` crate as the HTTP client.
+/// The GraphQL client for interacting with the IOTA blockchain. By default, it uses the `reqwest`
+/// crate as the HTTP client.
 #[derive(Clone, Debug)]
 pub struct GraphQLClient {
     /// The URL of the GraphQL server.
@@ -72,11 +70,13 @@ pub struct GraphQLClient {
     /// The reqwest client.
     pub(crate) inner: reqwest::Client,
     pub(crate) service_config: Arc<OnceLock<ServiceConfig>>,
+    /// The URL subscriptions connect to, when set explicitly.
+    pub(crate) subscription_url: Option<Url>,
 }
 
-/// Builds a [`GraphQLClient`] on top of the default HTTP client, so that
-/// timeouts and headers can be set without losing the crate's user agent and
-/// trust anchors. Created by [`GraphQLClient::builder`].
+/// Builds a [`GraphQLClient`] on top of the default HTTP client, so that timeouts and headers can
+/// be set without losing the crate's user agent and trust anchors. Created by
+/// [`GraphQLClient::builder`].
 #[derive(Debug)]
 pub struct GraphQLClientBuilder {
     server: String,
@@ -84,8 +84,8 @@ pub struct GraphQLClientBuilder {
 }
 
 impl GraphQLClientBuilder {
-    /// Total timeout of each request, from connecting until the response body
-    /// has been read. No timeout is set by default.
+    /// Total timeout of each request, from connecting until the response body has been read. No
+    /// timeout is set by default.
     #[cfg(not(target_arch = "wasm32"))]
     pub fn timeout(mut self, timeout: std::time::Duration) -> Self {
         self.http = self.http.timeout(timeout);
@@ -99,15 +99,15 @@ impl GraphQLClientBuilder {
         self
     }
 
-    /// Add headers sent with every request, for example an API key. A header
-    /// already set under the same name is replaced.
+    /// Add headers sent with every request, for example an API key. A header already set under the
+    /// same name is replaced.
     pub fn default_headers(mut self, headers: reqwest::header::HeaderMap) -> Self {
         self.http = self.http.default_headers(headers);
         self
     }
 
-    /// Adjust the underlying [`reqwest::ClientBuilder`] for anything not
-    /// covered by the other setters.
+    /// Adjust the underlying [`reqwest::ClientBuilder`] for anything not covered by the other
+    /// setters.
     pub fn configure(
         mut self,
         f: impl FnOnce(reqwest::ClientBuilder) -> reqwest::ClientBuilder,
@@ -117,13 +117,7 @@ impl GraphQLClientBuilder {
     }
 
     /// Build the client.
-    ///
-    /// An `https` or `wss` address is rejected on a build without a crypto
-    /// provider, as with [`GraphQLClient::new`].
     pub fn build(self) -> GraphQLResult<GraphQLClient> {
-        if let Some(scheme) = crate::tls::unsupported_scheme(&self.server) {
-            return Err(GraphQLError::TlsUnavailable(scheme));
-        }
         GraphQLClient::new_with_reqwest_client(&self.server, self.http.build()?)
     }
 }
@@ -131,22 +125,14 @@ impl GraphQLClientBuilder {
 impl GraphQLClient {
     /// Create a new GraphQL client with the provided server address.
     ///
-    /// The HTTP client is built for you, trusting the platform store plus the
-    /// bundled Mozilla roots. Use [`Self::new_with_reqwest_client`] to supply
-    /// your own.
-    ///
-    /// An `https` or `wss` address is rejected on a build without a crypto
-    /// provider, since no request to it could succeed. See the crate README.
+    /// The HTTP client is built for you, trusting the platform store plus the bundled Mozilla
+    /// roots. Use [`Self::new_with_reqwest_client`] to supply your own.
     pub fn new(server: &str) -> GraphQLResult<Self> {
-        if let Some(scheme) = crate::tls::unsupported_scheme(server) {
-            return Err(GraphQLError::TlsUnavailable(scheme));
-        }
         Self::new_with_reqwest_client(server, crate::tls::default_http_client_builder().build()?)
     }
 
-    /// Start building a client for `server` from this crate's default HTTP
-    /// client, keeping its user agent and trust anchors while letting you set
-    /// timeouts and headers.
+    /// Start building a client for `server` from this crate's default HTTP client, keeping its user
+    /// agent and trust anchors while letting you set timeouts and headers.
     pub fn builder(server: &str) -> GraphQLClientBuilder {
         GraphQLClientBuilder {
             server: server.to_owned(),
@@ -154,25 +140,31 @@ impl GraphQLClient {
         }
     }
 
-    /// Create a new GraphQL client that issues its requests through the
-    /// supplied [`reqwest::Client`].
+    /// Create a new GraphQL client that issues its requests through the supplied
+    /// [`reqwest::Client`].
     ///
-    /// This is the way to choose your own trust anchors, TLS backend, proxies
-    /// or timeouts.
+    /// This is the way to choose your own trust anchors, TLS backend, proxies or timeouts.
     ///
-    /// Note that on a build with `tls-ring` or `tls-aws-lc`, `reqwest` has no
-    /// crypto provider to fall back on, so building the client panics unless
-    /// one has been installed for the process. See the crate README.
+    /// Note that on a build with `tls-ring` or `tls-aws-lc`, `reqwest` has no crypto provider to
+    /// fall back on, so building the client panics unless one has been installed for the process.
+    /// See the crate README.
     ///
-    /// The client is used as given: the SDK does not set its user agent, so
-    /// callers who want to be identifiable should apply [`USER_AGENT`]
-    /// themselves.
+    /// The client is used as given: the SDK does not set its user agent, so callers who want to be
+    /// identifiable should apply [`USER_AGENT`] themselves.
     pub fn new_with_reqwest_client(server: &str, client: reqwest::Client) -> GraphQLResult<Self> {
         Ok(Self {
             rpc: reqwest::Url::parse(server)?,
             inner: client,
             service_config: Default::default(),
+            subscription_url: None,
         })
+    }
+
+    /// Connect subscriptions to `url` instead of the `subscriptions` endpoint under the RPC URL. An
+    /// `http` or `https` URL is upgraded to `ws` or `wss`.
+    pub fn with_subscription_url(mut self, url: &str) -> GraphQLResult<Self> {
+        self.subscription_url = Some(Url::parse(url)?);
+        Ok(self)
     }
 
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
@@ -204,8 +196,8 @@ impl GraphQLClient {
         &self.rpc
     }
 
-    /// Get the GraphQL service configuration, including complexity limits, read
-    /// and mutation limits, supported versions, and others.
+    /// Get the GraphQL service configuration, including complexity limits, read and mutation
+    /// limits, supported versions, and others.
     pub async fn service_config(&self) -> GraphQLResult<&ServiceConfig> {
         // If the value is already initialized, return it
         if let Some(service_config) = self.service_config.get() {
@@ -224,8 +216,8 @@ impl GraphQLClient {
     }
 
     /// Run a query on the GraphQL server and return the response.
-    /// This method returns [`cynic::GraphQlResponse`]  over the query type `T`,
-    /// and it is intended to be used with custom queries.
+    /// This method returns [`cynic::GraphQlResponse`]  over the query type `T`, and it is intended
+    /// to be used with custom queries.
     pub async fn run_query<T, V>(&self, operation: &Operation<T, V>) -> GraphQLResult<T>
     where
         T: serde::de::DeserializeOwned,
@@ -237,9 +229,10 @@ impl GraphQLClient {
         )
     }
 
-    /// POST a JSON-serializable GraphQL request body and decode the JSON
-    /// response, surfacing the HTTP status and a truncated body on any non-2xx
-    /// response or on a decode failure.
+    /// POST a JSON-serializable GraphQL request body and decode the JSON response, surfacing the
+    /// HTTP status and a truncated body on any non-2xx response or on a decode failure.
+    ///
+    /// Fails with [`GraphQLError::OutdatedClient`] first when the indexer requires a newer client.
     async fn post_query<R>(&self, body: &impl serde::Serialize) -> GraphQLResult<R>
     where
         R: serde::de::DeserializeOwned,
@@ -250,6 +243,7 @@ impl GraphQLClient {
             .json(body)
             .send()
             .await?;
+        check_client_version(resp.headers())?;
         let status = resp.status();
         let url = resp.url().clone();
         let bytes = resp.bytes().await?;
@@ -261,12 +255,11 @@ impl GraphQLClient {
             .map_err(|e| GraphQLError::json(url, status, &bytes, target_type, e))
     }
 
-    /// Run a JSON query on the GraphQL server and return the response data.
-    /// This method expects a JSON map holding the GraphQL query string and
-    /// matching GraphQL variables. Any GraphQL error in the response is
-    /// returned as an error, even if partial data is present. In general, it
-    /// is recommended to use [`run_query`](`Self::run_query`) which guarantees
-    /// valid GraphQL query syntax and returns a proper response type.
+    /// Run a JSON query on the GraphQL server and return the response data. This method expects a
+    /// JSON map holding the GraphQL query string and matching GraphQL variables. Any GraphQL error
+    /// in the response is returned as an error, even if partial data is present. In general, it is
+    /// recommended to use [`run_query`](`Self::run_query`) which guarantees valid GraphQL query
+    /// syntax and returns a proper response type.
     pub async fn run_query_from_json(
         &self,
         json: serde_json::Map<String, serde_json::Value>,
@@ -277,8 +270,8 @@ impl GraphQLClient {
         )
     }
 
-    /// Handle pagination filters and return the appropriate values. If limit is
-    /// omitted, it will use the max page size from the service config.
+    /// Handle pagination filters and return the appropriate values. If limit is omitted, it will
+    /// use the max page size from the service config.
     pub async fn pagination_filter(
         &self,
         pagination_filter: PaginationFilter,
@@ -329,9 +322,8 @@ mod tests {
         assert_eq!(client.rpc_server(), &MAINNET_HOST.parse().unwrap());
     }
 
-    // A response carrying both partial `data` and a populated `errors` list
-    // (e.g. an oversized page request) must surface the errors instead of
-    // panicking on the unreachable arm.
+    // A response carrying both partial `data` and a populated `errors` list (e.g. an oversized page
+    // request) must surface the errors instead of panicking on the unreachable arm.
     #[test]
     fn test_response_to_result_data_and_errors() {
         let response: GraphQlResponse<serde_json::Value, ErrorExtensions> =
@@ -357,6 +349,27 @@ mod tests {
             errors[0].extensions.as_ref().unwrap().code.as_deref(),
             Some("BAD_USER_INPUT")
         );
+    }
+
+    #[test]
+    fn test_response_to_result_data_pruned() {
+        let response: GraphQlResponse<serde_json::Value, ErrorExtensions> =
+            serde_json::from_value(json!({
+                "data": null,
+                "errors": [{
+                    "message": "Requested data has been pruned: checkpoint 0 has been pruned",
+                    "path": ["checkpoint"],
+                    "extensions": { "code": "DATA_PRUNED", "oldestAvailableCheckpoint": 7 },
+                }],
+            }))
+            .unwrap();
+
+        let GraphQLError::Query(errors) = response_to_result(response).unwrap_err() else {
+            panic!("expected GraphQLError::Query");
+        };
+        let extensions = errors[0].extensions.as_ref().unwrap();
+        assert_eq!(extensions.code.as_deref(), Some("DATA_PRUNED"));
+        assert_eq!(extensions.oldest_available_checkpoint, Some(7));
     }
 
     #[test]
@@ -397,6 +410,36 @@ mod tests {
                 )
             })
             .unwrap();
+    }
+
+    /// Without a provider feature `reqwest` may have no TLS, and would then send an `https` request
+    /// to a proxy unencrypted.
+    #[cfg(not(any(feature = "tls-ring", feature = "tls-aws-lc")))]
+    #[tokio::test]
+    async fn https_skips_the_environment_proxy_without_tls() {
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        // SAFETY: nextest runs each test in its own process, so no other thread reads the
+        // environment meanwhile.
+        unsafe {
+            std::env::set_var(
+                "HTTPS_PROXY",
+                format!("http://{}", listener.local_addr().unwrap()),
+            )
+        };
+
+        let client = GraphQLClient::new("https://graphql.testnet.iota.cafe").unwrap();
+        // The listener never answers, so a request that reached it would hang.
+        let _ = tokio::time::timeout(
+            Duration::from_millis(500),
+            client.run_query_from_json(Default::default()),
+        )
+        .await;
+        assert!(
+            tokio::time::timeout(Duration::from_millis(200), listener.accept())
+                .await
+                .is_err(),
+            "the request went to the proxy"
+        );
     }
 
     async fn bind() -> (TcpListener, String) {
@@ -458,6 +501,75 @@ mod tests {
             panic!("expected a request error, got {err:?}");
         };
         assert!(err.is_timeout(), "{err:?}");
+    }
+
+    /// Runs a query against an indexer answering with `response` and asserts that it fails because
+    /// the indexer requires `iota-sdk-graphql-client` 999.0.0.
+    async fn assert_query_rejected_for_newer_sdk(response: &'static [u8]) {
+        let (listener, url) = bind().await;
+        let _server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            let mut buf = vec![0; 4096];
+            let _ = socket.read(&mut buf).await.unwrap();
+            socket.write_all(response).await.unwrap();
+        });
+
+        let client = GraphQLClient::new(&url).unwrap();
+        let err = client
+            .run_query_from_json(Default::default())
+            .await
+            .unwrap_err();
+        let GraphQLError::OutdatedClient { minimum, current } = err else {
+            panic!("expected an outdated client error, got {err:?}");
+        };
+        assert_eq!(minimum, "999.0.0");
+        assert_eq!(current, crate::CRATE_VERSION);
+    }
+
+    #[tokio::test]
+    async fn rejects_response_from_indexer_requiring_newer_sdk() {
+        // The body is not JSON, so decoding it would fail differently.
+        assert_query_rejected_for_newer_sdk(
+            b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\n\
+              x-iota-sdk-graphql-client-version-min: 999.0.0\r\n\
+              content-length: 3\r\n\r\nnot",
+        )
+        .await;
+    }
+
+    #[tokio::test]
+    async fn rejects_error_response_from_indexer_requiring_newer_sdk() {
+        // Without the check, the status would fail the query with `GraphQLError::Http`.
+        assert_query_rejected_for_newer_sdk(
+            b"HTTP/1.1 500 Internal Server Error\r\ncontent-type: text/plain\r\n\
+              x-iota-sdk-graphql-client-version-min: 999.0.0\r\n\
+              content-length: 4\r\n\r\nboom",
+        )
+        .await;
+    }
+
+    #[tokio::test]
+    async fn accepts_response_from_indexer_supporting_this_sdk() {
+        let (listener, url) = bind().await;
+        let _server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            let mut buf = vec![0; 4096];
+            let _ = socket.read(&mut buf).await.unwrap();
+            let response = format!(
+                "HTTP/1.1 200 OK\r\ncontent-type: application/json\r\n\
+                 x-iota-sdk-graphql-client-version-min: {}\r\n\
+                 content-length: 11\r\n\r\n{{\"data\":{{}}}}",
+                crate::CRATE_VERSION
+            );
+            socket.write_all(response.as_bytes()).await.unwrap();
+        });
+
+        let client = GraphQLClient::new(&url).unwrap();
+        let data = client
+            .run_query_from_json(Default::default())
+            .await
+            .unwrap();
+        assert_eq!(data, json!({}));
     }
 
     #[test]

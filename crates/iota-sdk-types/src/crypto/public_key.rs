@@ -29,11 +29,11 @@ pub enum PublicKeyError {
 /// The BCS serialized form of this type is specified in
 /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-types/bcs-schema.abnf).
 ///
-/// The gap in the flag values of the `public-key` rule is intentional, as not
-/// all signature schemes support public keys.
+/// The gap in the flag values of the `public-key` rule is intentional, as not all signature schemes
+/// support public keys.
 ///
-/// There is also a base64 encoding for this type, used by [`Self::to_base64`]
-/// and [`Self::from_base64`], defined as:
+/// There is also a base64 encoding for this type, used by [`Self::to_base64`] and
+/// [`Self::from_base64`], defined as:
 ///
 /// ```text
 /// base64-public-key = string ; which is valid base64 encoded
@@ -76,8 +76,7 @@ impl PublicKey {
         }
     }
 
-    /// Encode this public key as a base64 string of its scheme-flagged byte
-    /// representation
+    /// Encode this public key as a base64 string of its scheme-flagged byte representation
     pub fn to_base64(&self) -> String {
         let mut bytes: Vec<u8> = Vec::new();
 
@@ -87,8 +86,7 @@ impl PublicKey {
         Base64::encode_string(&bytes)
     }
 
-    /// Decode a public key from a base64 string of its scheme-flagged byte
-    /// representation
+    /// Decode a public key from a base64 string of its scheme-flagged byte representation
     pub fn from_base64(s: &str) -> Result<Self, PublicKeyError> {
         let bytes = Base64::decode_vec(s).map_err(|_| PublicKeyError::Base64)?;
 
@@ -145,11 +143,10 @@ mod serialization {
 
     /// Flat wire shape for `PublicKey`.
     ///
-    /// The BCS variant tags are `PublicKey`'s own historical flag values
-    /// (0x00 Ed25519, 0x01 Secp256k1, 0x02 Secp256r1, 0x04 Passkey) — note
-    /// that passkey public keys use tag `0x04` here even though the passkey
-    /// *signature scheme* flag is `0x06`. The `ZkLoginDeprecated` placeholder
-    /// holds the `0x03` slot and is rejected by the deserializer.
+    /// The BCS variant tags are `PublicKey`'s own historical flag values (0x00 Ed25519, 0x01
+    /// Secp256k1, 0x02 Secp256r1, 0x04 Passkey) — note that passkey public keys use tag `0x04` here
+    /// even though the passkey *signature scheme* flag is `0x06`. The `ZkLoginDeprecated`
+    /// placeholder holds the `0x03` slot and is rejected by the deserializer.
     #[derive(Deserialize, Serialize)]
     #[cfg_attr(
         feature = "bcs-schema",
@@ -258,9 +255,8 @@ mod tests {
     use super::*;
     use crate::UserSignature;
 
-    /// The passkey tag in the `PublicKey` BCS enum must be
-    /// `0x04`. Locking this in here guards against accidental reordering,
-    /// since the tag is part of the on-chain wire format.
+    /// The passkey tag in the `PublicKey` BCS enum must be `0x04`. Locking this in here guards
+    /// against accidental reordering, since the tag is part of the on-chain wire format.
     #[test]
     fn passkey_member_public_key_bcs_tag() {
         let passkey_b64 = "BiVYDmenOnqS+thmz5m5SrZnWaKXZLVxgh+rri6LHXs25B0AAAAAnQF7InR5cGUiOiJ3ZWJhdXRobi5nZXQiLCAiY2hhbGxlbmdlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3MyIsImNyb3NzT3JpZ2luIjpmYWxzZSwgInVua25vd24iOiAidW5rbm93biJ9YgJMwqcOmZI7F/N+K5SMe4DRYCb4/cDWW68SFneSHoD2GxKKhksbpZ5rZpdrjSYABTCsFQQBpLORzTvbj4edWKd/AsEBeovrGvHR9Ku7critg6k7qvfFlPUngujXfEzXd8Eg";

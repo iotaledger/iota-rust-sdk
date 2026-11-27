@@ -68,8 +68,7 @@ impl VersionedCheckpointSummary {
     }
 }
 
-/// Versioned BCS envelope for
-/// [`iota_types::ValidatorAggregatedSignature`].
+/// Versioned BCS envelope for [`iota_types::ValidatorAggregatedSignature`].
 #[derive(Serialize, Deserialize)]
 #[non_exhaustive]
 pub enum VersionedValidatorAggregatedSignature {

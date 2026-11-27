@@ -6,6 +6,7 @@ all:: ci ## Default target, runs the CI process
 check-features: ## Check feature flags for crates
 	$(MAKE) -C crates/iota-sdk-types check-features
 	$(MAKE) -C crates/iota-sdk-crypto check-features
+	$(MAKE) -C crates/iota-sdk-ledger check-features
 	$(MAKE) -C crates/iota-sdk-graphql-client check-features
 	$(MAKE) -C crates/iota-sdk-move-types check-features
 	$(MAKE) -C crates/iota-sdk-transaction-builder check-features
@@ -26,12 +27,10 @@ fetch-compiled-packages: ## Fetch the compiled Move packages if missing or out o
 clippy: ## Run Clippy linter
 	cargo clippy --all-features --all-targets
 
-# `iota-sdk` is left out of `cargo semver-checks`, which diffs against the
-# latest crates.io release: its latest stable one is the unrelated legacy SDK
-# that previously held the name, so it stays excluded until 3.0.0 is published.
+# `iota-sdk-ledger` has no release to diff against until it is first published.
 .PHONY: semver-checks
 semver-checks: ## Check the published crates for breaking API changes
-	cargo semver-checks --workspace --exclude iota-sdk
+	cargo semver-checks --workspace --exclude iota-sdk-ledger
 
 .PHONY: test
 test: fetch-compiled-packages ## Run unit tests
@@ -54,6 +53,15 @@ package_%.json: crates/integration-tests/%/Move.toml crates/integration-tests/%/
 .PHONY: test-with-localnet
 test-with-localnet: package_test_example_v1.json package_test_example_v2.json ## Run tests with localnet
 	cargo nextest run -p iota-sdk-graphql-client -p integration-tests
+	cargo nextest run --no-default-features -p iota-sdk-graphql-client
+
+.PHONY: speculos-start
+speculos-start: ## Start the Speculos emulator with the IOTA Ledger app
+	./scripts/speculos/run_speculos.sh start
+
+.PHONY: speculos-stop
+speculos-stop: ## Stop the Speculos emulator
+	./scripts/speculos/run_speculos.sh stop
 
 # Verify that individual SDK crates compile to wasm32-unknown-unknown.
 # This is a quick compatibility check, not the full WASM bindings build.
@@ -62,6 +70,7 @@ wasm32: ## Check that SDK crates compile to wasm32
 	$(MAKE) -C crates/iota-sdk wasm
 	$(MAKE) -C crates/iota-sdk-crypto wasm
 	$(MAKE) -C crates/iota-sdk-graphql-client wasm
+	$(MAKE) -C crates/iota-sdk-ledger wasm
 	$(MAKE) -C crates/iota-sdk-move-types wasm
 	$(MAKE) -C crates/iota-sdk-transaction-builder wasm
 	$(MAKE) -C crates/iota-sdk-types wasm
@@ -201,7 +210,7 @@ GO_LIB_DIR := $(GO_TARGET_DIR)/release
 # (sets LIB_EXT, used to locate libiota_sdk_ffi). Set FFI_BUILD_ARGS to pass
 # extra cargo arguments.
 define build_binding
-cargo build -p iota-sdk-ffi --lib --release $(FFI_BUILD_ARGS); \
+cargo build -p iota-sdk-ffi --lib --release --features ledger-hid $(FFI_BUILD_ARGS); \
 case "$$(uname -s)" in \
 	Darwin)   LIB_EXT=".dylib" ;; \
 	Linux)    LIB_EXT=".so" ;; \
@@ -269,7 +278,7 @@ go-example:
 
 .PHONY: go-examples
 go-examples: ## Run all Go bindings examples
-	@for example in $$(find bindings/go/examples/* -type d -not -name release -exec basename {} \;); do \
+	@for example in $$(find bindings/go/examples/* -type d -not -name release -not -name "ledger_*" -exec basename {} \;); do \
 		$(MAKE) go-example "$$example" || exit $$?; \
 	done
 
@@ -307,7 +316,7 @@ kotlin-android: ## Build Android native libraries for all ABIs
 
 .PHONY: kotlin-examples
 kotlin-examples: ## Run all Kotlin bindings examples
-	@for example in $$(find bindings/kotlin/examples -name "*.kt" -not -path "*/release/*" -not -path "*/android-demo/*" -exec basename {} .kt \;); do \
+	@for example in $$(find bindings/kotlin/examples -name "*.kt" -not -path "*/release/*" -not -path "*/android-demo/*" -not -name "Ledger*" -exec basename {} .kt \;); do \
 		$(MAKE) kotlin-example "$$example" || exit $$?; \
 	done
 
@@ -333,7 +342,7 @@ python-example:
 
 .PHONY: python-examples
 python-examples: ## Run all Python bindings examples
-	@for example in $$(find bindings/python/examples -name "*.py" -not -path "*/release/*" -exec basename {} .py \;); do \
+	@for example in $$(find bindings/python/examples -name "*.py" -not -path "*/release/*" -not -name "ledger_*" -exec basename {} .py \;); do \
 		$(MAKE) python-example "$$example" || exit $$?; \
 	done
 
@@ -357,7 +366,7 @@ csharp-example:
 
 .PHONY: csharp-examples
 csharp-examples: ## Run all C# bindings examples
-	@for example in $$(find bindings/csharp/examples -name "*.csproj" -not -path "*/Release/*" -exec dirname {} \; | xargs -n 1 basename); do \
+	@for example in $$(find bindings/csharp/examples -name "*.csproj" -not -path "*/Release/*" -not -name "Ledger*" -exec dirname {} \; | xargs -n 1 basename); do \
 		$(MAKE) csharp-example "$$example" || exit $$?; \
 	done
 
@@ -391,7 +400,7 @@ swift-example:
 
 .PHONY: swift-examples
 swift-examples: ## Run all Swift bindings examples
-	@for example in $$(find bindings/swift/examples -name "*.swift" -not -path "*/release/*" -exec basename {} .swift \;); do \
+	@for example in $$(find bindings/swift/examples -name "*.swift" -not -path "*/release/*" -not -name "Ledger*" -exec basename {} .swift \;); do \
 		$(MAKE) swift-example "$$example" || exit $$?; \
 	done
 
@@ -416,7 +425,7 @@ wasm-example:
 
 .PHONY: wasm-examples
 wasm-examples: ## Run all WASM bindings examples
-	@for example in $$(find bindings/wasm/examples -name "*.mjs" -not -name "_*" -not -path "*/release/*" -exec basename {} .mjs \;); do \
+	@for example in $$(find bindings/wasm/examples -name "*.mjs" -not -name "_*" -not -name "ledger_*" -not -path "*/release/*" -exec basename {} .mjs \;); do \
 		$(MAKE) wasm-example "$$example" || exit $$?; \
 	done
 
@@ -442,11 +451,18 @@ example:
 	@# `move-types`) build and run; extra features are additive.
 	@cargo run --all-features --example $(word 2,$(MAKECMDGOALS)) || exit $$?;
 
+.PHONY: ledger-example
+ledger-example: speculos-start ## Run the Ledger example on Speculos. Usage: make ledger-example [lang=go|kotlin|python|csharp|swift|wasm] (default: Rust)
+	@python3 scripts/speculos/approve.py Review "Sign transaction" & approver=$$!; \
+	LEDGER_SIMULATOR=1 $(MAKE) $(if $(lang),$(lang)-)example ledger_sign_send_iota || { kill $$approver; exit 1; }; \
+	wait $$approver
+
 .PHONY: examples
 examples: ## Run all Rust examples
 	@# NOTE: -maxdepth 1 -type f excludes package-based examples like polling-indexer
 	@# that require external services (e.g. PostgreSQL). Run those separately.
-	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" -exec basename {} .rs \;); do \
+	@# The Ledger examples need a device or the Speculos emulator.
+	@for example in $$(find crates/iota-sdk/examples -maxdepth 1 -type f -name "*.rs" ! -name "ledger_*" -exec basename {} .rs \;); do \
 		$(MAKE) example "$$example" || exit $$?; \
 	done
 

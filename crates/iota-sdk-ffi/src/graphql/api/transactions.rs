@@ -90,8 +90,7 @@ impl GraphQLClient {
     }
 
     /// Get a page of transactions related to the given address.
-    /// `relation` selects how the address relates to them, defaulting to the
-    /// transactions it sent.
+    /// `relation` selects how the address relates to them, defaulting to the transactions it sent.
     #[uniffi::method(default(relation = None, filter = None, pagination_filter = None))]
     pub async fn address_transactions(
         &self,
@@ -137,8 +136,7 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Get a page of transactions' data and effects based on the provided
-    /// filters.
+    /// Get a page of transactions' data and effects based on the provided filters.
     #[uniffi::method(default(pagination_filter = None, filter = None))]
     pub async fn transactions_data_effects(
         &self,
@@ -160,9 +158,9 @@ impl GraphQLClient {
 
     /// Execute a transaction.
     ///
-    /// If the wait fails, the error is returned although the transaction was
-    /// executed, and its effects are lost. To keep them, pass no `wait_for`
-    /// and call `wait_for_transaction` on the client afterwards.
+    /// If the wait fails, the error is returned although the transaction was executed, and its
+    /// effects are lost. To keep them, pass no `wait_for` and call `wait_for_transaction` on the
+    /// client afterwards.
     #[uniffi::method(default(wait_for = None))]
     pub async fn execute_transaction(
         &self,
@@ -184,10 +182,9 @@ impl GraphQLClient {
             .into())
     }
 
-    /// Returns whether the transaction for the given digest has been indexed
-    /// on the node. This means that it can be queried by its digest and its
-    /// effects will be usable for subsequent transactions. To check for
-    /// full finalization, use `is_transaction_finalized`.
+    /// Returns whether the transaction for the given digest has been indexed on the node. This
+    /// means that it can be queried by its digest and its effects will be usable for subsequent
+    /// transactions. To check for full finalization, use `is_transaction_finalized`.
     #[uniffi::method]
     pub async fn is_transaction_indexed_on_node(&self, digest: &TransactionDigest) -> Result<bool> {
         Ok(self
@@ -196,16 +193,16 @@ impl GraphQLClient {
             .await?)
     }
 
-    /// Returns whether the transaction for the given digest has been included
-    /// in a checkpoint (finalized).
+    /// Returns whether the transaction for the given digest has been included in a checkpoint
+    /// (finalized).
     #[uniffi::method]
     pub async fn is_transaction_finalized(&self, digest: &TransactionDigest) -> Result<bool> {
         Ok(self.client().is_transaction_finalized(**digest).await?)
     }
 
-    /// Wait for the indexing (on the node, not the indexer) or finalization of
-    /// a transaction by its digest. An optional timeout can be provided,
-    /// which, if exceeded, will return an error (default 60s).
+    /// Wait for the indexing (on the node, not the indexer) or finalization of a transaction by its
+    /// digest. An optional timeout can be provided, which, if exceeded, will return an error
+    /// (default 60s).
     #[uniffi::method(default(timeout = None))]
     pub async fn wait_for_transaction(
         &self,

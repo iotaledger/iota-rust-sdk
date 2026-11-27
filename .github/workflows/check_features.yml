@@ -31,6 +31,9 @@ jobs:
         with:
           ref: ${{ github.event.inputs.branch-or-commit || github.ref }}
 
+      - name: Install libudev for hidapi
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
+
       - uses: taiki-e/install-action@5b4d68e2e660441203ab128a23676f1e4faf1532 # v2.86.3
         with:
           tool: cargo-hack

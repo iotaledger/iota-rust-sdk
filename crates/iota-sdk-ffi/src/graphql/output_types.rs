@@ -20,12 +20,10 @@ pub enum GraphQLTransactionArgument {
     },
     /// The result of another transaction command.
     Result {
-        /// The index of the previous command (0-indexed) that returned this
-        /// result.
+        /// The index of the previous command (0-indexed) that returned this result.
         cmd: u32,
-        /// If the previous command returns multiple values, this is the index
-        /// of the individual result among the multiple results from
-        /// that command (also 0-indexed).
+        /// If the previous command returns multiple values, this is the index of the individual
+        /// result among the multiple results from that command (also 0-indexed).
         index: Option<u32>,
     },
 }
@@ -104,8 +102,7 @@ impl From<iota_sdk::graphql_client::DryRunMutation> for GraphQLDryRunMutation {
     }
 }
 
-/// Effects of a single command in the dry run, including mutated references
-/// and return values.
+/// Effects of a single command in the dry run, including mutated references and return values.
 #[derive(uniffi::Record)]
 pub struct GraphQLDryRunEffect {
     /// Changes made to arguments that were mutably borrowed by this command.
@@ -127,22 +124,21 @@ impl From<iota_sdk::graphql_client::DryRunEffect> for GraphQLDryRunEffect {
     }
 }
 
-/// The result of a simulation (dry run), which includes the effects of the
-/// transaction, any errors that may have occurred, and intermediate results for
-/// each command.
+/// The result of a simulation (dry run), which includes the effects of the transaction, any errors
+/// that may have occurred, and intermediate results for each command.
 #[derive(uniffi::Record)]
 pub struct GraphQLDryRunResult {
     /// The error that occurred during dry run execution, if any.
     pub error: Option<String>,
-    /// The intermediate results for each command of the dry run execution,
-    /// including contents of mutated references and return values.
+    /// The intermediate results for each command of the dry run execution, including contents of
+    /// mutated references and return values.
     pub results: Vec<GraphQLDryRunEffect>,
     /// The transaction that was dry run, without signatures.
     pub transaction: Option<Arc<Transaction>>,
     /// The effects of the transaction execution.
     pub effects: Option<Arc<TransactionEffects>>,
-    /// The gas price to use. This is the reference gas price, or a higher
-    /// price if an input object is congested.
+    /// The gas price to use. This is the reference gas price, or a higher price if an input object
+    /// is congested.
     pub suggested_gas_price: Option<u64>,
 }
 

@@ -141,8 +141,8 @@ pub struct GrpcSimulatedTransaction {
     pub transaction: Option<GrpcExecutedTransaction>,
     /// The suggested gas price (in NANOS).
     pub suggested_gas_price: Option<u64>,
-    /// The intermediate results/outputs for each command of the transaction,
-    /// if the simulation succeeded.
+    /// The intermediate results/outputs for each command of the transaction, if the simulation
+    /// succeeded.
     pub command_results: Option<Vec<GrpcCommandResult>>,
     /// The execution error, if the simulation failed.
     pub execution_error: Option<GrpcSimulatedExecutionError>,
@@ -178,8 +178,8 @@ impl TryFrom<&proto::transaction_execution_service::SimulatedTransaction>
     }
 }
 
-/// The result of simulating a single transaction in a batch: either the
-/// simulated transaction or an error.
+/// The result of simulating a single transaction in a batch: either the simulated transaction or an
+/// error.
 #[derive(uniffi::Record)]
 pub struct GrpcSimulatedTransactionResult {
     /// The simulated transaction, if the simulation succeeded.
@@ -202,8 +202,7 @@ pub struct GrpcSimulateTransactionInput {
 impl GrpcClient {
     /// Simulate a transaction.
     ///
-    /// If `skip_checks` is `true`, the VM checks are skipped during the
-    /// simulation.
+    /// If `skip_checks` is `true`, the VM checks are skipped during the simulation.
     ///
     /// The optional `read_mask` controls which fields the server returns.
     #[uniffi::method(default(skip_checks = false, read_mask = None))]
@@ -227,10 +226,9 @@ impl GrpcClient {
 
     /// Simulate a batch of transactions.
     ///
-    /// An error the server reports for one transaction does not abort the
-    /// rest of the batch; each result carries either the simulated transaction
-    /// or the server's error message. A transaction the server returns but
-    /// that cannot be decoded fails the whole call.
+    /// An error the server reports for one transaction does not abort the rest of the batch; each
+    /// result carries either the simulated transaction or the server's error message. A transaction
+    /// the server returns but that cannot be decoded fails the whole call.
     #[uniffi::method(default(read_mask = None))]
     pub async fn simulate_transactions(
         &self,

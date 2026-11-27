@@ -28,14 +28,12 @@ pub struct GrpcOwnedObjectPage {
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GrpcClient {
-    /// List a single page of objects owned by an address, optionally filtered
-    /// by object type.
+    /// List a single page of objects owned by an address, optionally filtered by object type.
     ///
     /// Pass the returned `next_page_token` back in to retrieve the next page.
     ///
-    /// The optional `read_mask` controls which fields the server returns.
-    /// If `None`, the object reference and the BCS-encoded object are
-    /// returned.
+    /// The optional `read_mask` controls which fields the server returns. If `None`, the object
+    /// reference and the BCS-encoded object are returned.
     #[uniffi::method(default(
         object_type = None,
         page_size = None,
@@ -76,13 +74,11 @@ impl GrpcClient {
         })
     }
 
-    /// List all objects owned by an address, optionally filtered by object
-    /// type, auto-paginating up to `limit` objects. If `limit` is `None`,
-    /// all objects are returned.
+    /// List all objects owned by an address, optionally filtered by object type, auto-paginating up
+    /// to `limit` objects. If `limit` is `None`, all objects are returned.
     ///
-    /// The optional `read_mask` controls which fields the server returns.
-    /// If `None`, the object reference and the BCS-encoded object are
-    /// returned.
+    /// The optional `read_mask` controls which fields the server returns. If `None`, the object
+    /// reference and the BCS-encoded object are returned.
     #[uniffi::method(default(object_type = None, limit = None, read_mask = None))]
     pub async fn all_owned_objects(
         &self,

@@ -11,11 +11,9 @@ pub const X_IOTA_CHAIN: &str = "x-iota-chain";
 /// Current checkpoint height
 pub const X_IOTA_CHECKPOINT_HEIGHT: &str = "x-iota-checkpoint-height";
 
-/// Lowest available checkpoint for which transaction and checkpoint data can be
-/// requested.
+/// Lowest available checkpoint for which transaction and checkpoint data can be requested.
 ///
-/// Specifically this is the lowest checkpoint for which the following data can
-/// be requested:
+/// Specifically this is the lowest checkpoint for which the following data can be requested:
 ///  - checkpoints
 ///  - transactions
 ///  - effects
@@ -24,16 +22,14 @@ pub const X_IOTA_LOWEST_AVAILABLE_CHECKPOINT: &str = "x-iota-lowest-available-ch
 
 /// Lowest available checkpoint for which object data can be requested.
 ///
-/// Specifically this is the lowest checkpoint for which input/output object
-/// data will be available.
+/// Specifically this is the lowest checkpoint for which input/output object data will be available.
 pub const X_IOTA_LOWEST_AVAILABLE_CHECKPOINT_OBJECTS: &str =
     "x-iota-lowest-available-checkpoint-objects";
 
 /// Current epoch of the chain
 pub const X_IOTA_EPOCH: &str = "x-iota-epoch";
 
-/// Current timestamp of the chain - represented as number of milliseconds from
-/// the Unix epoch
+/// Current timestamp of the chain - represented as number of milliseconds from the Unix epoch
 pub const X_IOTA_TIMESTAMP_MS: &str = "x-iota-timestamp-ms";
 
 /// Current timestamp of the chain - encoded in the [RFC 3339] format.
@@ -43,3 +39,7 @@ pub const X_IOTA_TIMESTAMP: &str = "x-iota-timestamp";
 
 /// Server version string
 pub const X_IOTA_SERVER: &str = "x-iota-server";
+
+/// Lowest `iota-sdk-grpc-client` version able to decode the server's responses, as a semantic
+/// version. Clients below it fail their calls instead of decoding wire values they do not know.
+pub const X_IOTA_SDK_GRPC_CLIENT_VERSION_MIN: &str = "x-iota-sdk-grpc-client-version-min";

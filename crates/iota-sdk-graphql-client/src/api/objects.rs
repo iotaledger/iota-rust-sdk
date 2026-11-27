@@ -52,8 +52,8 @@ impl ListObjectsQuery {
         self
     }
 
-    /// Stream every item, page by page, starting at the pagination's cursor
-    /// and in its direction, with its limit as the page size.
+    /// Stream every item, page by page, starting at the pagination's cursor and in its direction,
+    /// with its limit as the page size.
     pub fn stream(self) -> impl Stream<Item = GraphQLResult<Object>> + Unpin {
         let pagination = self.pagination.clone();
         stream_paginated_query(move |page| self.clone().pagination(page).send(), pagination)
@@ -146,8 +146,7 @@ impl GetObjectQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::move_object_contents`]. Await it to send the
-    /// request.
+    /// Query for [`GraphQLClient::move_object_contents`]. Await it to send the request.
     pub struct GetMoveObjectContentsQuery {
         client: GraphQLClient,
         object_id: ObjectId,
@@ -180,8 +179,7 @@ impl GetMoveObjectContentsQuery {
 }
 
 define_query! {
-    /// Query for [`GraphQLClient::move_object_contents_bcs`]. Await it to send
-    /// the request.
+    /// Query for [`GraphQLClient::move_object_contents_bcs`]. Await it to send the request.
     pub struct GetMoveObjectContentsBcsQuery {
         client: GraphQLClient,
         object_id: ObjectId,
@@ -244,9 +242,8 @@ impl GetObjectBcsQuery {
 impl GraphQLClient {
     /// Return an object based on the provided [`Address`](iota_types::Address).
     ///
-    /// If the object does not exist (e.g., due to pruning), this will resolve
-    /// to `Ok(None)`. Similarly, if this is not an object but an address, it
-    /// will resolve to `Ok(None)`.
+    /// If the object does not exist (e.g., due to pruning), this will resolve to `Ok(None)`.
+    /// Similarly, if this is not an object but an address, it will resolve to `Ok(None)`.
     pub fn object(&self, object_id: ObjectId) -> GetObjectQuery {
         GetObjectQuery {
             client: self.clone(),
@@ -257,8 +254,8 @@ impl GraphQLClient {
 
     /// Return a page of objects.
     ///
-    /// Use [`ListObjectsQuery::filter`] together with
-    /// [`ObjectFilter::with_owner`] to get the objects owned by an address.
+    /// Use [`ListObjectsQuery::filter`] together with [`ObjectFilter::with_owner`] to get the
+    /// objects owned by an address.
     ///
     /// # Example
     ///
@@ -282,9 +279,8 @@ impl GraphQLClient {
 
     /// Return the contents JSON of an object that is a Move object.
     ///
-    /// If the object does not exist (e.g., due to pruning), this will resolve
-    /// to `Ok(None)`. Similarly, if this is not an object but an address, it
-    /// will resolve to `Ok(None)`.
+    /// If the object does not exist (e.g., due to pruning), this will resolve to `Ok(None)`.
+    /// Similarly, if this is not an object but an address, it will resolve to `Ok(None)`.
     pub fn move_object_contents(&self, object_id: ObjectId) -> GetMoveObjectContentsQuery {
         GetMoveObjectContentsQuery {
             client: self.clone(),
@@ -295,9 +291,8 @@ impl GraphQLClient {
 
     /// Return the BCS of an object that is a Move object.
     ///
-    /// If the object does not exist (e.g., due to pruning), this will resolve
-    /// to `Ok(None)`. Similarly, if this is not an object but an address, it
-    /// will resolve to `Ok(None)`.
+    /// If the object does not exist (e.g., due to pruning), this will resolve to `Ok(None)`.
+    /// Similarly, if this is not an object but an address, it will resolve to `Ok(None)`.
     pub fn move_object_contents_bcs(&self, object_id: ObjectId) -> GetMoveObjectContentsBcsQuery {
         GetMoveObjectContentsBcsQuery {
             client: self.clone(),

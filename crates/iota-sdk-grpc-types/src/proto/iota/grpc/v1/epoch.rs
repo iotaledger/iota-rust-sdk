@@ -108,13 +108,12 @@ impl Epoch {
 
     /// Get the raw BCS-encoded system state bytes.
     ///
-    /// This is a snapshot of IOTA's SystemState
-    /// (`0x3::iota_system::SystemState`) at the beginning of the epoch (for
-    /// past epochs) or the current state (for the current epoch).
+    /// This is a snapshot of IOTA's SystemState (`0x3::iota_system::SystemState`) at the beginning
+    /// of the epoch (for past epochs) or the current state (for the current epoch).
     ///
     /// Requires `bcs_system_state` in the read_mask.
-    // TODO: Implement when IotaSystemState type is available in iota-sdk-types.
-    // Use `system_state_bcs()` for raw bytes access in the meantime.
+    // TODO: Implement when IotaSystemState type is available in iota-sdk-types. Use
+    // `system_state_bcs()` for raw bytes access in the meantime.
     // See https://github.com/iotaledger/iota/issues/10077
     //
     // pub fn system_state(&self) -> Result<iota_types::IotaSystemState,
@@ -139,8 +138,7 @@ impl Epoch {
 
     /// Get the last checkpoint sequence number in this epoch.
     ///
-    /// Returns `Ok(None)` for the current in-progress epoch (field not yet
-    /// set).
+    /// Returns `Ok(None)` for the current in-progress epoch (field not yet set).
     pub fn last_checkpoint_sequence_number(
         &self,
     ) -> Result<Option<iota_types::CheckpointSequenceNumber>, TryFromProtoError> {
@@ -159,8 +157,7 @@ impl Epoch {
 
     /// Get the epoch end time in milliseconds.
     ///
-    /// Returns `Ok(None)` for the current in-progress epoch (field not yet
-    /// set).
+    /// Returns `Ok(None)` for the current in-progress epoch (field not yet set).
     pub fn end_ms(&self) -> Result<Option<iota_types::CheckpointTimestamp>, TryFromProtoError> {
         self.end
             .map(|ts| {
@@ -188,8 +185,7 @@ impl Epoch {
 
     /// Get the proof of how this epoch closed.
     ///
-    /// Returns `Ok(None)` for the current in-progress epoch (field not yet
-    /// set).
+    /// Returns `Ok(None)` for the current in-progress epoch (field not yet set).
     ///
     /// Requires `epoch_close_proof` in the read_mask.
     pub fn epoch_close_proof(&self) -> Result<Option<&EpochCloseProof>, TryFromProtoError> {
@@ -211,8 +207,7 @@ impl EpochCloseProof {
 
     /// Get the effects of the epoch-change transaction.
     ///
-    /// Requires `epoch_close_proof.end_of_epoch_transaction_effects` in the
-    /// read_mask.
+    /// Requires `epoch_close_proof.end_of_epoch_transaction_effects` in the read_mask.
     pub fn end_of_epoch_transaction_effects(
         &self,
     ) -> Result<&TransactionEffects, TryFromProtoError> {
@@ -225,11 +220,9 @@ impl EpochCloseProof {
 
     /// Get the events emitted by the epoch-change transaction.
     ///
-    /// May be empty on safe-mode boundaries, which mutate the system state
-    /// without emitting events.
+    /// May be empty on safe-mode boundaries, which mutate the system state without emitting events.
     ///
-    /// Requires `epoch_close_proof.end_of_epoch_transaction_events` in the
-    /// read_mask.
+    /// Requires `epoch_close_proof.end_of_epoch_transaction_events` in the read_mask.
     pub fn end_of_epoch_transaction_events(&self) -> Result<&TransactionEvents, TryFromProtoError> {
         self.end_of_epoch_transaction_events
             .as_ref()
@@ -238,17 +231,14 @@ impl EpochCloseProof {
             })
     }
 
-    /// Get the raw BCS bytes of the system-state wrapper object (`0x5`) and
-    /// its inner state object, as written by this epoch boundary for the
-    /// next epoch's start state.
+    /// Get the raw BCS bytes of the system-state wrapper object (`0x5`) and its inner state object,
+    /// as written by this epoch boundary for the next epoch's start state.
     ///
-    /// Each entry is preserved byte-for-byte as originally written (not
-    /// wrapped, unlike `Object.bcs` elsewhere in this API), so their digests
-    /// can be verified against the written-object digests in
-    /// `end_of_epoch_transaction_effects`.
+    /// Each entry is preserved byte-for-byte as originally written (not wrapped, unlike
+    /// `Object.bcs` elsewhere in this API), so their digests can be verified against the
+    /// written-object digests in `end_of_epoch_transaction_effects`.
     ///
-    /// Requires `epoch_close_proof.bcs_next_epoch_system_state_objects` in
-    /// the read_mask.
+    /// Requires `epoch_close_proof.bcs_next_epoch_system_state_objects` in the read_mask.
     pub fn bcs_next_epoch_system_state_objects(&self) -> &[BcsData] {
         &self.bcs_next_epoch_system_state_objects
     }
@@ -267,8 +257,8 @@ impl ProtocolConfig {
 
     /// Get the feature flags map.
     ///
-    /// Requires `feature_flags` in the read_mask to return all flags.
-    /// Use `feature_flags.{name}` to request only specific named flags.
+    /// Requires `feature_flags` in the read_mask to return all flags. Use `feature_flags.{name}` to
+    /// request only specific named flags.
     pub fn feature_flags(
         &self,
     ) -> Result<&std::collections::BTreeMap<String, bool>, TryFromProtoError> {
@@ -280,8 +270,8 @@ impl ProtocolConfig {
 
     /// Get the protocol attributes map.
     ///
-    /// Requires `attributes` in the read_mask to return all attributes.
-    /// Use `attributes.{name}` to request only specific named attributes.
+    /// Requires `attributes` in the read_mask to return all attributes. Use `attributes.{name}` to
+    /// request only specific named attributes.
     pub fn attributes(
         &self,
     ) -> Result<&std::collections::BTreeMap<String, String>, TryFromProtoError> {

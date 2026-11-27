@@ -9,10 +9,9 @@ use crate::types::{
     transaction::{Input, SharedObjectReference},
 };
 
-/// MoveAuthenticator is a signature variant that enables a method of
-/// authentication through Move code. This type represents the data received
-/// by the Move authenticate function during the Account Abstraction
-/// authentication flow.
+/// MoveAuthenticator is a signature variant that enables a method of authentication through Move
+/// code. This type represents the data received by the Move authenticate function during the
+/// Account Abstraction authentication flow.
 ///
 /// # BCS
 ///
@@ -30,8 +29,8 @@ impl MoveAuthenticator {
         ))
     }
 
-    /// Convert this move authenticator into a version 1 move authenticator if
-    /// it is one, or panic otherwise
+    /// Convert this move authenticator into a version 1 move authenticator if it is one, or panic
+    /// otherwise
     pub fn as_v1(&self) -> Arc<MoveAuthenticatorV1> {
         Arc::new(MoveAuthenticatorV1(self.0.as_v1().clone()))
     }

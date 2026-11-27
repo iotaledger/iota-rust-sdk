@@ -37,8 +37,7 @@ impl TryFrom<&CheckpointSummary> for iota_types::CheckpointSummary {
 impl CheckpointSummary {
     /// Get the digest of this checkpoint summary.
     ///
-    /// **Read mask:** `"checkpoint.summary.digest"` (see
-    /// [`CHECKPOINT_SUMMARY_DIGEST`]).
+    /// **Read mask:** `"checkpoint.summary.digest"` (see [`CHECKPOINT_SUMMARY_DIGEST`]).
     ///
     /// [`CHECKPOINT_SUMMARY_DIGEST`]: crate::read_masks::CHECKPOINT_SUMMARY_DIGEST
     pub fn digest(&self) -> Result<iota_types::CheckpointDigest, TryFromProtoError> {
@@ -47,8 +46,7 @@ impl CheckpointSummary {
 
     /// Deserialize the checkpoint summary from BCS.
     ///
-    /// **Read mask:** `"checkpoint.summary.bcs"` (see
-    /// [`CHECKPOINT_SUMMARY_BCS`]).
+    /// **Read mask:** `"checkpoint.summary.bcs"` (see [`CHECKPOINT_SUMMARY_BCS`]).
     ///
     /// [`CHECKPOINT_SUMMARY_BCS`]: crate::read_masks::CHECKPOINT_SUMMARY_BCS
     pub fn summary(&self) -> Result<iota_types::CheckpointSummary, TryFromProtoError> {
@@ -66,8 +64,8 @@ impl TryFrom<&CheckpointContents> for iota_types::CheckpointContents {
             .bcs
             .as_ref()
             .ok_or_else(|| TryFromProtoError::missing(CheckpointContents::BCS_FIELD.name))?;
-        // CheckpointContents has a custom Serialize impl that embeds
-        // a BCS enum discriminant byte, so no versioned wrapper needed.
+        // CheckpointContents has a custom Serialize impl that embeds a BCS enum discriminant byte,
+        // so no versioned wrapper needed.
         BcsData::deserialize(bcs)
             .map_err(|e| TryFromProtoError::invalid(CheckpointContents::BCS_FIELD, e))
     }
@@ -76,8 +74,7 @@ impl TryFrom<&CheckpointContents> for iota_types::CheckpointContents {
 impl CheckpointContents {
     /// Get the digest of this checkpoint contents.
     ///
-    /// **Read mask:** `"checkpoint.contents.digest"` (see
-    /// [`CHECKPOINT_CONTENTS_DIGEST`]).
+    /// **Read mask:** `"checkpoint.contents.digest"` (see [`CHECKPOINT_CONTENTS_DIGEST`]).
     ///
     /// [`CHECKPOINT_CONTENTS_DIGEST`]: crate::read_masks::CHECKPOINT_CONTENTS_DIGEST
     pub fn digest(&self) -> Result<iota_types::CheckpointContentsDigest, TryFromProtoError> {
@@ -86,8 +83,7 @@ impl CheckpointContents {
 
     /// Deserialize the checkpoint contents from BCS.
     ///
-    /// **Read mask:** `"checkpoint.contents.bcs"` (see
-    /// [`CHECKPOINT_CONTENTS_BCS`]).
+    /// **Read mask:** `"checkpoint.contents.bcs"` (see [`CHECKPOINT_CONTENTS_BCS`]).
     ///
     /// [`CHECKPOINT_CONTENTS_BCS`]: crate::read_masks::CHECKPOINT_CONTENTS_BCS
     pub fn contents(&self) -> Result<iota_types::CheckpointContents, TryFromProtoError> {

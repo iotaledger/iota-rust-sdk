@@ -3,8 +3,7 @@
 
 //! High-level API for StateService operations.
 //!
-//! Provides ergonomic methods for querying owned objects, dynamic fields,
-//! and coin information.
+//! Provides ergonomic methods for querying owned objects, dynamic fields, and coin information.
 
 pub mod coin_info;
 pub mod coins;

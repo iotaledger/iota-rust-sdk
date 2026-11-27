@@ -19,10 +19,12 @@ pub struct GasStation(pub(crate) iota_sdk::transaction_builder::GasStation);
 impl GasStation {
     /// Create a gas station reachable at `url`.
     ///
-    /// `reservation_duration` is how long the station holds the gas it
-    /// reserves, defaulting to 60 seconds. `headers` are sent with every
-    /// request, typically to carry an authorization token. `http_options`
-    /// describes the HTTP client the requests go out on.
+    /// `reservation_duration` is how long the station holds the gas it reserves, defaulting to 60
+    /// seconds. `headers` are sent with every request, typically to carry an authorization token.
+    /// `http_options` describes the HTTP client the requests go out on.
+    ///
+    /// Request paths are appended to the path of `url`, so a station served under a path prefix is
+    /// reached through that prefix. The query of `url` is sent with every request.
     #[uniffi::constructor(default(reservation_duration = None, headers = None, http_options = None))]
     pub fn new(
         url: String,

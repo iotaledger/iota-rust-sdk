@@ -25,9 +25,8 @@ pub struct GrpcCoinPage {
 
 #[uniffi::export(async_runtime = "tokio")]
 impl GrpcClient {
-    /// List a single page of coins owned by an address, optionally filtered
-    /// by coin type (the inner type `T` of `Coin<T>`). If `coin_type` is
-    /// `None`, coins of all types are returned.
+    /// List a single page of coins owned by an address, optionally filtered by coin type (the inner
+    /// type `T` of `Coin<T>`). If `coin_type` is `None`, coins of all types are returned.
     ///
     /// Pass the returned `next_page_token` back in to retrieve the next page.
     #[uniffi::method(default(coin_type = None, page_size = None, page_token = None))]
@@ -59,10 +58,9 @@ impl GrpcClient {
         })
     }
 
-    /// List all coins owned by an address, optionally filtered by coin type
-    /// (the inner type `T` of `Coin<T>`), auto-paginating up to `limit`
-    /// coins. If `coin_type` is `None`, coins of all types are returned. If
-    /// `limit` is `None`, all coins are returned.
+    /// List all coins owned by an address, optionally filtered by coin type (the inner type `T` of
+    /// `Coin<T>`), auto-paginating up to `limit` coins. If `coin_type` is `None`, coins of all
+    /// types are returned. If `limit` is `None`, all coins are returned.
     #[uniffi::method(default(coin_type = None, limit = None))]
     pub async fn all_coins(
         &self,

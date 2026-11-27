@@ -77,11 +77,10 @@ impl SignatureFromBytesError {
 
 /// Utility for calculating base64 encoding lengths.
 ///
-/// In the Base64 encoding each character is used to represent 6 bits (log2(64)
-/// = 6). This means that 4 characters are used to represent 4*6 = 24 bits = 3
-/// bytes. So you need 4*(`n`/3) characters in order to represent `n` bytes, and
-/// this needs to be rounded up to a multiple of 4. The number of unused padding
-/// characters resulting from the rounding will be 0, 1, 2, or 3.
+/// In the Base64 encoding each character is used to represent 6 bits (log2(64) = 6). This means
+/// that 4 characters are used to represent 4*6 = 24 bits = 3 bytes. So you need 4*(`n`/3)
+/// characters in order to represent `n` bytes, and this needs to be rounded up to a multiple of 4.
+/// The number of unused padding characters resulting from the rounding will be 0, 1, 2, or 3.
 const fn base64_encoded_length(len: usize) -> usize {
     ((4 * len / 3) + 3) & !3
 }
@@ -166,11 +165,9 @@ macro_rules! impl_base64_helper {
                 assert_eq!(array, a);
             }
 
-            // Fuzz the `FromStr` impl to ensure it never panics on
-            // arbitrary input. The strategy is restricted to the base64
-            // alphabet so that decode often succeeds, which exercises the
-            // length-validation path rather than bailing out early on
-            // invalid characters.
+            // Fuzz the `FromStr` impl to ensure it never panics on arbitrary input. The strategy is
+            // restricted to the base64 alphabet so that decode often succeeds, which exercises the
+            // length-validation path rather than bailing out early on invalid characters.
             #[proptest]
             fn fromstr_does_not_panic(#[strategy("[A-Za-z0-9+/=]{0,128}")] s: String) {
                 let _ = s.parse::<$fromstr>();

@@ -65,9 +65,8 @@ impl Verifier<UserSignature> for SimpleVerifier {
 
 crate::impl_iota_verifier!(SimpleVerifier);
 
-// Implements `IotaVerifier` for `PublicKey`: schemes whose feature is
-// enabled delegate to the inner public key, disabled ones report the missing
-// feature.
+// Implements `IotaVerifier` for `PublicKey`: schemes whose feature is enabled delegate to the inner
+// public key, disabled ones report the missing feature.
 macro_rules! impl_iota_verifier_for_public_key {
     ($($variant:ident = $feature:literal),+ $(,)?) => {
         impl IotaVerifier for PublicKey {
@@ -136,10 +135,9 @@ mod keypair {
         inner: InnerKeypair,
     }
 
-    // Private enum behind an opaque struct on purpose: the variants are
-    // feature-gated, so exposing them would tie the public API (and any
-    // downstream `match`) to the set of enabled features, and adding a new
-    // scheme would be a breaking change. This way construction only happens
+    // Private enum behind an opaque struct on purpose: the variants are feature-gated, so exposing
+    // them would tie the public API (and any downstream `match`) to the set of enabled features,
+    // and adding a new scheme would be a breaking change. This way construction only happens
     // through validated paths (`From` impls, `from_bytes`, `from_der`).
     #[derive(Clone, Debug)]
     enum InnerKeypair {
@@ -188,8 +186,7 @@ mod keypair {
             self.verifying_key().public_key()
         }
 
-        /// Returns the inner ed25519 private key, or `None` if this keypair
-        /// uses another scheme.
+        /// Returns the inner ed25519 private key, or `None` if this keypair uses another scheme.
         #[cfg(feature = "ed25519")]
         pub fn as_opt_ed25519(&self) -> Option<&crate::ed25519::Ed25519PrivateKey> {
             match &self.inner {
@@ -209,8 +206,7 @@ mod keypair {
             self.as_opt_ed25519().expect("not an ed25519 private key")
         }
 
-        /// Returns the inner secp256k1 private key, or `None` if this keypair
-        /// uses another scheme.
+        /// Returns the inner secp256k1 private key, or `None` if this keypair uses another scheme.
         #[cfg(feature = "secp256k1")]
         pub fn as_opt_secp256k1(&self) -> Option<&crate::secp256k1::Secp256k1PrivateKey> {
             match &self.inner {
@@ -231,8 +227,7 @@ mod keypair {
                 .expect("not a secp256k1 private key")
         }
 
-        /// Returns the inner secp256r1 private key, or `None` if this keypair
-        /// uses another scheme.
+        /// Returns the inner secp256r1 private key, or `None` if this keypair uses another scheme.
         #[cfg(feature = "secp256r1")]
         pub fn as_opt_secp256r1(&self) -> Option<&crate::secp256r1::Secp256r1PrivateKey> {
             match &self.inner {
@@ -328,8 +323,7 @@ mod keypair {
             }
         }
 
-        /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary
-        /// format).
+        /// Deserialize PKCS#8 private key from ASN.1 DER-encoded data (binary format).
         #[cfg(feature = "pem")]
         pub fn from_der(bytes: &[u8]) -> Result<Self, SignatureError> {
             let private_key =
@@ -461,10 +455,9 @@ mod keypair {
         inner: InnerVerifyingKey,
     }
 
-    // Private enum behind an opaque struct on purpose: the variants are
-    // feature-gated, so exposing them would tie the public API (and any
-    // downstream `match`) to the set of enabled features, and adding a new
-    // scheme would be a breaking change. This way construction only happens
+    // Private enum behind an opaque struct on purpose: the variants are feature-gated, so exposing
+    // them would tie the public API (and any downstream `match`) to the set of enabled features,
+    // and adding a new scheme would be a breaking change. This way construction only happens
     // through validated paths (`From` impls, `from_der`).
     #[derive(Clone, Debug, Eq, PartialEq)]
     enum InnerVerifyingKey {
@@ -899,8 +892,8 @@ mod tests {
         assert!(result.is_err());
     }
 
-    // The CLI, the keystore and this crate all encode with the Bech32
-    // checksum, so a Bech32m checksum over the same payload must not decode.
+    // The CLI, the keystore and this crate all encode with the Bech32 checksum, so a Bech32m
+    // checksum over the same payload must not decode.
     #[cfg(feature = "bech32")]
     #[test]
     fn test_bech32_rejects_bech32m_checksum() {

@@ -90,10 +90,9 @@ impl From<iota_sdk::graphql_client::TransactionDataEffects> for GraphQLTransacti
 
 /// Filter for transaction queries.
 ///
-/// Holds at most one of the function, kind, address and object filters that
-/// the GraphQL service can only serve one of at a time, so each of those
-/// setters replaces whichever was set before; the sender, checkpoint and
-/// digest filters can be combined with them and with each other freely.
+/// Holds at most one of the function, kind, address and object filters that the GraphQL service can
+/// only serve one of at a time, so each of those setters replaces whichever was set before; the
+/// sender, checkpoint and digest filters can be combined with them and with each other freely.
 #[derive(Default, uniffi::Object)]
 pub struct GraphQLTransactionsFilter(
     RwLock<iota_sdk::graphql_client::query_types::TransactionsFilter>,
@@ -127,8 +126,8 @@ impl GraphQLTransactionsFilter {
         Self::default()
     }
 
-    /// Select by package, module, or function name, e.g. `"0x03"`,
-    /// `"0x03::iota_system"`, or `"0x03::iota_system::request_add_stake"`.
+    /// Select by package, module, or function name, e.g. `"0x03"`, `"0x03::iota_system"`, or
+    /// `"0x03::iota_system::request_add_stake"`.
     ///
     /// Replaces the selector already set, if any.
     pub fn with_function(self: Arc<Self>, function: String) -> Arc<Self> {
@@ -253,48 +252,43 @@ impl From<GraphQLObjectRef> for iota_sdk::graphql_client::query_types::ObjectRef
 
 #[derive(uniffi::Record)]
 pub struct GraphQLEpoch {
-    /// The epoch's id as a sequence number that starts at 0 and is incremented
-    /// by one at every epoch change.
+    /// The epoch's id as a sequence number that starts at 0 and is incremented by one at every
+    /// epoch change.
     pub epoch_id: u64,
     /// The storage fees paid for transactions executed during the epoch.
     #[uniffi(default = None)]
     pub fund_inflow: Option<String>,
-    /// The storage fee rebates paid to users who deleted the data associated
-    /// with past transactions.
+    /// The storage fee rebates paid to users who deleted the data associated with past
+    /// transactions.
     #[uniffi(default = None)]
     pub fund_outflow: Option<String>,
     /// The storage fund available in this epoch.
-    /// This fund is used to redistribute storage fees from past transactions
-    /// to future validators.
+    /// This fund is used to redistribute storage fees from past transactions to future validators.
     #[uniffi(default = None)]
     pub fund_size: Option<String>,
-    /// A commitment by the committee at the end of epoch on the contents of the
-    /// live object set at that time. This can be used to verify state
-    /// snapshots.
+    /// A commitment by the committee at the end of epoch on the contents of the live object set at
+    /// that time. This can be used to verify state snapshots.
     #[uniffi(default = None)]
     pub live_object_set_digest: Option<String>,
-    /// The difference between the fund inflow and outflow, representing
-    /// the net amount of storage fees accumulated in this epoch.
+    /// The difference between the fund inflow and outflow, representing the net amount of storage
+    /// fees accumulated in this epoch.
     #[uniffi(default = None)]
     pub net_inflow: Option<String>,
-    /// The epoch's corresponding protocol configuration, including the feature
-    /// flags and the configuration options.
+    /// The epoch's corresponding protocol configuration, including the feature flags and the
+    /// configuration options.
     #[uniffi(default = None)]
     pub protocol_configs: Option<GraphQLProtocolConfigs>,
-    /// The minimum gas price that a quorum of validators are guaranteed to sign
-    /// a transaction for.
+    /// The minimum gas price that a quorum of validators are guaranteed to sign a transaction for.
     #[uniffi(default = None)]
     pub reference_gas_price: Option<String>,
-    /// The epoch's starting timestamp. RFC3339 in UTC with format:
-    /// YYYY-MM-DDTHH:MM:SS.mmmZ
+    /// The epoch's starting timestamp. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
     pub start_timestamp: String,
-    /// The epoch's ending timestamp. Note that this is available only on epochs
-    /// that have ended. RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
+    /// The epoch's ending timestamp. Note that this is available only on epochs that have ended.
+    /// RFC3339 in UTC with format: YYYY-MM-DDTHH:MM:SS.mmmZ
     #[uniffi(default = None)]
     pub end_timestamp: Option<String>,
-    /// The value of the `version` field of `0x5`, the
-    /// `0x3::iota::IotaSystemState` object.  This version changes whenever
-    /// the fields contained in the system state object (held in a dynamic
+    /// The value of the `version` field of `0x5`, the `0x3::iota::IotaSystemState` object.  This
+    /// version changes whenever the fields contained in the system state object (held in a dynamic
     /// field attached to `0x5`) change.
     #[uniffi(default = None)]
     pub system_state_version: Option<u64>,
@@ -310,10 +304,8 @@ pub struct GraphQLEpoch {
     /// The total number of transaction in this epoch.
     #[uniffi(default = None)]
     pub total_transactions: Option<u64>,
-    /// Validator related properties. For active validators, see
-    /// `active_validators` API.
-    /// For epochs other than the current the data provided refer to the start
-    /// of the epoch.
+    /// Validator related properties. For active validators, see `active_validators` API.
+    /// For epochs other than the current the data provided refer to the start of the epoch.
     #[uniffi(default = None)]
     pub validator_set: Option<GraphQLValidatorSet>,
 }
@@ -388,28 +380,25 @@ pub struct GraphQLValidatorSet {
     /// Size of the inactive pools `Table`.
     #[uniffi(default = None)]
     pub inactive_pools_size: Option<i32>,
-    /// Object ID of the wrapped object `TableVec` storing the pending active
-    /// validators.
+    /// Object ID of the wrapped object `TableVec` storing the pending active validators.
     #[uniffi(default = None)]
     pub pending_active_validators_id: Option<Arc<ObjectId>>,
     /// Size of the pending active validators table.
     #[uniffi(default = None)]
     pub pending_active_validators_size: Option<i32>,
-    /// Validators that are pending removal from the active validator set,
-    /// expressed as indices in to `activeValidators`.
+    /// Validators that are pending removal from the active validator set, expressed as indices in
+    /// to `activeValidators`.
     #[uniffi(default = None)]
     pub pending_removals: Option<Vec<i32>>,
-    /// Object ID of the `Table` storing the mapping from staking pool ids to
-    /// the addresses of the corresponding validators. This is needed
-    /// because a validator's address can potentially change but the object
-    /// ID of its pool will not.
+    /// Object ID of the `Table` storing the mapping from staking pool ids to the addresses of the
+    /// corresponding validators. This is needed because a validator's address can potentially
+    /// change but the object ID of its pool will not.
     #[uniffi(default = None)]
     pub staking_pool_mappings_id: Option<Arc<ObjectId>>,
     /// Size of the stake pool mappings `Table`.
     #[uniffi(default = None)]
     pub staking_pool_mappings_size: Option<i32>,
-    /// Total amount of stake for all active validators at the beginning of the
-    /// epoch.
+    /// Total amount of stake for all active validators at the beginning of the epoch.
     #[uniffi(default = None)]
     pub total_stake: Option<String>,
     /// Size of the validator candidates `Table`.
@@ -485,30 +474,27 @@ impl From<GraphQLEventFilter> for iota_sdk::graphql_client::query_types::EventFi
 /// An event as returned by the GraphQL `events` query.
 ///
 /// This is a faithful view of the GraphQL response, distinct from the chain
-/// [`Event`](crate::types::events::Event). Three fields are optional, for two
-/// different reasons:
+/// [`Event`](crate::types::events::Event). Three fields are optional, for two different reasons:
 ///
-/// - `package_id`, `module` and `sender` are absent for events emitted by the
-///   system or at genesis (e.g. the genesis validator
-///   `0x3::validator::StakingRequestEvent`s): on chain their sender is the zero
-///   address and their emitting module can't be resolved, both of which the
-///   GraphQL server reports as `null`.
-/// - `timestamp` is absent for events not yet included in a checkpoint (e.g.
-///   from a dry run or a just-executed transaction).
+/// - `package_id`, `module` and `sender` are absent for events emitted by the system or at genesis
+///   (e.g. the genesis validator `0x3::validator::StakingRequestEvent`s): on chain their sender is
+///   the zero address and their emitting module can't be resolved, both of which the GraphQL server
+///   reports as `null`.
+/// - `timestamp` is absent for events not yet included in a checkpoint (e.g. from a dry run or a
+///   just-executed transaction).
 ///
-/// `move_type`, `contents`, `data` and `json` are always present (non-null in
-/// the GraphQL schema). Unlike the chain `Event`, this type is not
-/// BCS/JSON-serializable as a chain event.
+/// `move_type`, `contents`, `data` and `json` are always present (non-null in the GraphQL schema).
+/// Unlike the chain `Event`, this type is not BCS/JSON-serializable as a chain event.
 #[derive(uniffi::Record)]
 pub struct GraphQLEvent {
-    /// Package id of the top-level function invoked by a MoveCall command which
-    /// triggered this event to be emitted. `None` for system events.
+    /// Package id of the top-level function invoked by a MoveCall command which triggered this
+    /// event to be emitted. `None` for system events.
     pub package_id: Option<Arc<ObjectId>>,
-    /// Module name of the top-level function invoked by a MoveCall command
-    /// which triggered this event to be emitted. `None` for system events.
+    /// Module name of the top-level function invoked by a MoveCall command which triggered this
+    /// event to be emitted. `None` for system events.
     pub module: Option<String>,
-    /// Address of the account that sent the transaction where this event was
-    /// emitted. `None` for system events.
+    /// Address of the account that sent the transaction where this event was emitted. `None` for
+    /// system events.
     pub sender: Option<Arc<Address>>,
     /// The type of the event emitted
     pub move_type: String,
@@ -585,8 +571,8 @@ impl From<GraphQLObjectFilter> for iota_sdk::graphql_client::query_types::Object
     }
 }
 
-/// The output of a dynamic field query, that includes the name, value, and
-/// value's json representation.
+/// The output of a dynamic field query, that includes the name, value, and value's json
+/// representation.
 #[derive(uniffi::Record)]
 pub struct GraphQLDynamicFieldOutput {
     /// The name of the dynamic field
@@ -609,8 +595,7 @@ impl From<iota_sdk::graphql_client::DynamicFieldOutput> for GraphQLDynamicFieldO
     }
 }
 
-/// The name part of a dynamic field, including its type, bcs, and json
-/// representation.
+/// The name part of a dynamic field, including its type, bcs, and json representation.
 #[derive(uniffi::Record)]
 pub struct GraphQLDynamicFieldName {
     /// The type name of this dynamic field name
@@ -687,26 +672,24 @@ pub struct GraphQLValidator {
     /// The validator's gas price quote for the next epoch.
     #[uniffi(default = None)]
     pub next_epoch_gas_price: Option<u64>,
-    /// The total number of IOTA tokens in this pool plus
-    /// the pending stake amount for this epoch.
+    /// The total number of IOTA tokens in this pool plus the pending stake amount for this epoch.
     #[uniffi(default = None)]
     pub next_epoch_stake: Option<u64>,
-    /// The validator's current valid `Cap` object. Validators can delegate
-    /// the operation ability to another address. The address holding this `Cap`
-    /// object can then update the reference gas price and tallying rule on
-    /// behalf of the validator.
+    /// The validator's current valid `Cap` object. Validators can delegate the operation ability
+    /// to another address. The address holding this `Cap` object can then update the reference
+    /// gas price and tallying rule on behalf of the validator.
     #[uniffi(default = None)]
     pub operation_cap: Option<Vec<u8>>,
-    /// Pending pool token withdrawn during the current epoch, emptied at epoch
-    /// boundaries. Zero for past epochs.
+    /// Pending pool token withdrawn during the current epoch, emptied at epoch boundaries. Zero
+    /// for past epochs.
     #[uniffi(default = None)]
     pub pending_pool_token_withdraw: Option<u64>,
-    /// Pending stake amount for the current epoch, emptied at epoch boundaries.
-    /// Zero for past epochs.
+    /// Pending stake amount for the current epoch, emptied at epoch boundaries. Zero for past
+    /// epochs.
     #[uniffi(default = None)]
     pub pending_stake: Option<u64>,
-    /// Pending stake withdrawn during the current epoch, emptied at epoch
-    /// boundaries. Zero for past epochs.
+    /// Pending stake withdrawn during the current epoch, emptied at epoch boundaries. Zero for
+    /// past epochs.
     #[uniffi(default = None)]
     pub pending_total_iota_withdraw: Option<u64>,
     /// Total number of pool tokens issued by the pool.
@@ -726,8 +709,7 @@ pub struct GraphQLValidator {
     /// The total number of IOTA tokens in this pool.
     #[uniffi(default = None)]
     pub staking_pool_iota_balance: Option<u64>,
-    /// The voting power of this validator in basis points (e.g., 100 = 1%
-    /// voting power).
+    /// The voting power of this validator in basis points (e.g., 100 = 1% voting power).
     #[uniffi(default = None)]
     pub voting_power: Option<i32>,
 }
@@ -885,6 +867,9 @@ pub enum GraphQLTransactionBlockKindInput {
     ConsensusCommitPrologueV1,
     RandomnessStateUpdate,
     EndOfEpochTx,
+    /// A claim of the sender's address as an account object.
+    #[cfg(feature = "unstable")]
+    ClaimAccount,
 }
 
 impl From<SdkTransactionBlockKindInput> for GraphQLTransactionBlockKindInput {
@@ -898,6 +883,8 @@ impl From<SdkTransactionBlockKindInput> for GraphQLTransactionBlockKindInput {
             }
             SdkTransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
             SdkTransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
+            #[cfg(feature = "unstable")]
+            SdkTransactionBlockKindInput::ClaimAccount => Self::ClaimAccount,
             _ => unimplemented!(
                 "a new TransactionBlockKindInput enum variant was added and needs to be handled"
             ),
@@ -916,6 +903,8 @@ impl From<GraphQLTransactionBlockKindInput> for SdkTransactionBlockKindInput {
             }
             GraphQLTransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
             GraphQLTransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
+            #[cfg(feature = "unstable")]
+            GraphQLTransactionBlockKindInput::ClaimAccount => Self::ClaimAccount,
         }
     }
 }
@@ -927,8 +916,8 @@ pub enum GraphQLAddressTransactionRelationship {
     Sent,
     /// Transactions that sent objects to the address.
     Recv,
-    /// Transactions that affected the address: it is the sender, a recipient,
-    /// or the owner of the gas payment.
+    /// Transactions that affected the address: it is the sender, a recipient, or the owner of the
+    /// gas payment.
     Affected,
 }
 
@@ -992,8 +981,8 @@ impl From<GraphQLPageInfo> for iota_sdk::graphql_client::query_types::PageInfo {
     }
 }
 
-/// Pagination options for querying the GraphQL server. It defaults to forward
-/// pagination with the GraphQL server's max page size.
+/// Pagination options for querying the GraphQL server. It defaults to forward pagination with the
+/// GraphQL server's max page size.
 #[derive(uniffi::Record)]
 pub struct GraphQLPaginationFilter {
     /// The direction of pagination.
@@ -1001,8 +990,8 @@ pub struct GraphQLPaginationFilter {
     /// An opaque cursor used for pagination.
     #[uniffi(default = None)]
     pub cursor: Option<String>,
-    /// The maximum number of items to return. If this is omitted, it will
-    /// lazily query the service configuration for the max page size.
+    /// The maximum number of items to return. If this is omitted, it will lazily query the service
+    /// configuration for the max page size.
     #[uniffi(default = None)]
     pub limit: Option<i32>,
 }
@@ -1075,22 +1064,18 @@ impl From<GraphQLMoveObject> for iota_sdk::graphql_client::query_types::MoveObje
 
 /// Information about the configuration of the protocol.
 /// Constants that control how the chain operates.
-/// These can only change during protocol upgrades which happen on epoch
-/// boundaries.
+/// These can only change during protocol upgrades which happen on epoch boundaries.
 #[derive(uniffi::Record)]
 pub struct GraphQLProtocolConfigs {
-    /// The protocol is not required to change on every epoch boundary, so the
-    /// protocol version tracks which change to the protocol these configs
-    /// are from.
+    /// The protocol is not required to change on every epoch boundary, so the protocol version
+    /// tracks which change to the protocol these configs are from.
     pub protocol_version: u64,
-    /// List all available feature flags and their values. Feature flags are a
-    /// form of boolean configuration that are usually used to gate features
-    /// while they are in development. Once a flag has been enabled, it is
-    /// rare for it to be disabled.
+    /// List all available feature flags and their values. Feature flags are a form of boolean
+    /// configuration that are usually used to gate features while they are in development. Once a
+    /// flag has been enabled, it is rare for it to be disabled.
     pub feature_flags: Vec<GraphQLProtocolConfigFeatureFlag>,
-    /// List all available configurations and their values. These configurations
-    /// can take any value (but they will all be represented in string
-    /// form), and do not include feature flags.
+    /// List all available configurations and their values. These configurations can take any value
+    /// (but they will all be represented in string form), and do not include feature flags.
     pub configs: Vec<GraphQLProtocolConfigAttr>,
 }
 
@@ -1114,9 +1099,8 @@ impl From<GraphQLProtocolConfigs> for iota_sdk::graphql_client::query_types::Pro
     }
 }
 
-/// Feature flags are a form of boolean configuration that are usually used to
-/// gate features while they are in development. Once a lag has been enabled, it
-/// is rare for it to be disabled.
+/// Feature flags are a form of boolean configuration that are usually used to gate features while
+/// they are in development. Once a lag has been enabled, it is rare for it to be disabled.
 #[derive(uniffi::Record)]
 pub struct GraphQLProtocolConfigFeatureFlag {
     pub key: String,
@@ -1210,9 +1194,9 @@ impl TryFrom<iota_sdk::graphql_client::query_types::CoinMetadata> for GraphQLCoi
             icon_url: value.icon_url,
             name: value.name,
             symbol: value.symbol,
-            // The GraphQL `BigInt` scalar carries the supply as a decimal
-            // string; on-chain a coin's supply is a `u64`, so parse it into one
-            // to expose a native integer (e.g. `bigint` in TS) to bindings.
+            // The GraphQL `BigInt` scalar carries the supply as a decimal string; on-chain a coin's
+            // supply is a `u64`, so parse it into one to expose a native integer (e.g. `bigint` in
+            // TS) to bindings.
             supply: value.supply.map(u64::try_from).transpose()?,
             version: value.version,
         })
@@ -1316,8 +1300,7 @@ impl From<iota_sdk::graphql_client::MoveAbility> for GraphQLMoveAbility {
     }
 }
 
-/// A type parameter of a Move function, with the abilities it is constrained
-/// to.
+/// A type parameter of a Move function, with the abilities it is constrained to.
 #[derive(uniffi::Record)]
 pub struct GraphQLMoveFunctionTypeParameter {
     pub constraints: Vec<GraphQLMoveAbility>,
@@ -1567,17 +1550,15 @@ impl From<iota_sdk::graphql_client::MoveEnum> for GraphQLMoveEnum {
 
 /// The result of executing a Move View Function.
 ///
-/// Execution errors are captured in the `error` field, in which case the
-/// `results` field will be `None`. On success, the `results` field will contain
-/// the return values of the Move view function, and the `error` field will be
-/// `None`.
+/// Execution errors are captured in the `error` field, in which case the `results` field will be
+/// `None`. On success, the `results` field will contain the return values of the Move view
+/// function, and the `error` field will be `None`.
 #[derive(uniffi::Record)]
 pub struct GraphQLMoveViewResult {
     /// Execution error from executing the Move view function.
     #[uniffi(default = None)]
     pub error: Option<String>,
-    /// The return values of the Move view function, resolved and formatted as
-    /// JSON.
+    /// The return values of the Move view function, resolved and formatted as JSON.
     #[uniffi(default = None)]
     pub results: Option<Vec<String>>,
 }
@@ -1603,50 +1584,41 @@ pub struct GraphQLServiceConfig {
     /// List of all features that are enabled on this RPC service.
     pub enabled_features: Vec<GraphQLFeature>,
     // TODO This field is retrieved as a string, instead of i32
-    /// Maximum estimated cost of a database query used to serve a GraphQL
-    /// request.  This is measured in the same units that the database uses
-    /// in EXPLAIN queries.
+    /// Maximum estimated cost of a database query used to serve a GraphQL request.  This is
+    /// measured in the same units that the database uses in EXPLAIN queries.
     // pub max_db_query_cost: i32,
-    /// Maximum nesting allowed in struct fields when calculating the layout of
-    /// a single Move Type.
+    /// Maximum nesting allowed in struct fields when calculating the layout of a single Move Type.
     pub max_move_value_depth: i32,
-    /// The maximum number of output nodes in a GraphQL response.
-    /// Non-connection nodes have a count of 1, while connection nodes are
-    /// counted as the specified 'first' or 'last' number of items, or the
-    /// default_page_size as set by the server if those arguments are not
-    /// set. Counts accumulate multiplicatively down the query tree. For
-    /// example, if a query starts with a connection of first: 10 and has a
-    /// field to a connection with last: 20, the count at the second level
-    /// would be 200 nodes. This is then summed to the count of 10 nodes
-    /// at the first level, for a total of 210 nodes.
+    /// The maximum number of output nodes in a GraphQL response. Non-connection nodes have a count
+    /// of 1, while connection nodes are counted as the specified 'first' or 'last' number of
+    /// items, or the default_page_size as set by the server if those arguments are not set.
+    /// Counts accumulate multiplicatively down the query tree. For example, if a query starts
+    /// with a connection of first: 10 and has a field to a connection with last: 20, the count
+    /// at the second level would be 200 nodes. This is then summed to the count of 10 nodes at
+    /// the first level, for a total of 210 nodes.
     pub max_output_nodes: i32,
     /// Maximum number of elements allowed on a single page of a connection.
     pub max_page_size: i32,
     /// The maximum depth a GraphQL query can be to be accepted by this service.
     pub max_query_depth: i32,
-    /// The maximum number of nodes (field names) the service will accept in a
-    /// single query.
+    /// The maximum number of nodes (field names) the service will accept in a single query.
     pub max_query_nodes: i32,
     /// Maximum length of a query payload string.
     pub max_query_payload_size: i32,
-    /// Maximum nesting allowed in type arguments in Move Types resolved by this
-    /// service.
+    /// Maximum nesting allowed in type arguments in Move Types resolved by this service.
     pub max_type_argument_depth: i32,
-    /// Maximum number of type arguments passed into a generic instantiation of
-    /// a Move Type resolved by this service.
+    /// Maximum number of type arguments passed into a generic instantiation of a Move Type
+    /// resolved by this service.
     pub max_type_argument_width: i32,
-    /// Maximum number of structs that need to be processed when calculating the
-    /// layout of a single Move Type.
+    /// Maximum number of structs that need to be processed when calculating the layout of a single
+    /// Move Type.
     pub max_type_nodes: i32,
-    /// Maximum time in milliseconds spent waiting for a response from fullnode
-    /// after issuing a transaction to execute. Note that the transaction
-    /// may still succeed even in the case of a timeout. Transactions are
-    /// idempotent, so a transaction that times out should be resubmitted
-    /// until the network returns a definite response (success or failure, not
-    /// timeout).
+    /// Maximum time in milliseconds spent waiting for a response from fullnode after issuing a
+    /// transaction to execute. Note that the transaction may still succeed even in the case of a
+    /// timeout. Transactions are idempotent, so a transaction that times out should be resubmitted
+    /// until the network returns a definite response (success or failure, not timeout).
     pub mutation_timeout_ms: i32,
-    /// Maximum time in milliseconds that will be spent to serve one query
-    /// request.
+    /// Maximum time in milliseconds that will be spent to serve one query request.
     pub request_timeout_ms: i32,
 }
 

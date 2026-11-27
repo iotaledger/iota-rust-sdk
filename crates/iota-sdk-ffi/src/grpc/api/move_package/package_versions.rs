@@ -89,8 +89,8 @@ impl GrpcClient {
         })
     }
 
-    /// List all versions of a Move package, auto-paginating up to `limit`
-    /// versions. If `limit` is `None`, all versions are returned.
+    /// List all versions of a Move package, auto-paginating up to `limit` versions. If `limit` is
+    /// `None`, all versions are returned.
     #[uniffi::method(default(limit = None))]
     pub async fn all_package_versions(
         &self,

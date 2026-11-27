@@ -52,8 +52,8 @@ impl HeadersInterceptor {
 
     /// Enable HTTP bearer authentication.
     ///
-    /// Returns an error if the token contains characters that are invalid
-    /// in HTTP header values (e.g. control characters).
+    /// Returns an error if the token contains characters that are invalid in HTTP header values
+    /// (e.g. control characters).
     pub fn bearer_auth<T>(
         &mut self,
         token: T,

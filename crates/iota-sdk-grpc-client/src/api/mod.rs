@@ -3,9 +3,9 @@
 
 //! High-level API for gRPC client operations.
 //!
-//! This module provides wrappers around the raw gRPC service clients.
-//! Proto types are exposed directly with lazy conversion methods, allowing
-//! users to convert only what they need to SDK types.
+//! This module provides wrappers around the raw gRPC service clients. Proto types are exposed
+//! directly with lazy conversion methods, allowing users to convert only what they need to SDK
+//! types.
 
 mod common;
 pub mod execution;
@@ -26,15 +26,14 @@ pub use metadata::MetadataEnvelope;
 
 /// An item from a checkpoint data stream.
 ///
-/// When `filter_checkpoints` is enabled, the server may skip checkpoints that
-/// don't match the provided filters. In that case, `Progress` items are sent
-/// periodically to indicate liveness and the current scan position. When
-/// `filter_checkpoints` is disabled, only `Checkpoint` items are produced.
+/// When `filter_checkpoints` is enabled, the server may skip checkpoints that don't match the
+/// provided filters. In that case, `Progress` items are sent periodically to indicate liveness and
+/// the current scan position. When `filter_checkpoints` is disabled, only `Checkpoint` items are
+/// produced.
 ///
 /// For liveness detection with `filter_checkpoints`, wrap `stream.next()` in
-/// `tokio::time::timeout()` — if neither a `Checkpoint` nor a `Progress`
-/// arrives within your chosen duration plus some buffer for connection latency,
-/// the connection is likely dead.
+/// `tokio::time::timeout()` — if neither a `Checkpoint` nor a `Progress` arrives within your chosen
+/// duration plus some buffer for connection latency, the connection is likely dead.
 #[derive(Clone, Debug)]
 #[non_exhaustive]
 pub enum CheckpointStreamItem {
@@ -48,8 +47,7 @@ pub enum CheckpointStreamItem {
 }
 
 impl CheckpointStreamItem {
-    /// Returns the contained checkpoint, or `None` if this is a progress
-    /// message.
+    /// Returns the contained checkpoint, or `None` if this is a progress message.
     pub fn into_checkpoint(self) -> Option<CheckpointResponse> {
         match self {
             Self::Checkpoint(c) => Some(*c),
@@ -57,8 +55,7 @@ impl CheckpointStreamItem {
         }
     }
 
-    /// Returns the progress sequence number, or `None` if this is a
-    /// checkpoint.
+    /// Returns the progress sequence number, or `None` if this is a checkpoint.
     pub fn into_progress(self) -> Option<CheckpointSequenceNumber> {
         match self {
             Self::Checkpoint(_) => None,
@@ -81,10 +78,9 @@ impl CheckpointStreamItem {
 
 /// Response for a checkpoint query.
 ///
-/// Contains checkpoint summary, signature, contents, transactions, and events.
-/// Fields are proto types that can be accessed directly or converted to SDK
-/// types using their conversion methods (e.g.,
-/// `response.summary()?.summary()?`, `response.contents()?.contents()?`).
+/// Contains checkpoint summary, signature, contents, transactions, and events. Fields are proto
+/// types that can be accessed directly or converted to SDK types using their conversion methods
+/// (e.g., `response.summary()?.summary()?`, `response.contents()?.contents()?`).
 #[derive(Clone, Debug)]
 pub struct CheckpointResponse {
     pub(crate) sequence_number: CheckpointSequenceNumber,
@@ -105,22 +101,21 @@ impl CheckpointResponse {
 
     /// Get the checkpoint summary.
     ///
-    /// Returns the proto
-    /// [`CheckpointSummary`](iota_grpc_types::v1::checkpoint::CheckpointSummary)
+    /// Returns the proto [`CheckpointSummary`](iota_grpc_types::v1::checkpoint::CheckpointSummary)
     /// which provides:
-    /// - [`digest()`](iota_grpc_types::v1::checkpoint::CheckpointSummary::digest) — the summary digest
-    /// - [`summary()`](iota_grpc_types::v1::checkpoint::CheckpointSummary::summary) — the deserialized SDK `CheckpointSummary`
+    /// - [`digest()`](iota_grpc_types::v1::checkpoint::CheckpointSummary::digest) — the summary
+    ///   digest
+    /// - [`summary()`](iota_grpc_types::v1::checkpoint::CheckpointSummary::summary) — the
+    ///   deserialized SDK `CheckpointSummary`
     ///
-    /// **Read mask:** `"checkpoint.summary"` (see
-    /// [`CHECKPOINT_RESPONSE_SUMMARY`])
+    /// **Read mask:** `"checkpoint.summary"` (see [`CHECKPOINT_RESPONSE_SUMMARY`])
     pub fn summary(&self) -> GrpcResult<&iota_grpc_types::v1::checkpoint::CheckpointSummary> {
         self.summary
             .as_ref()
             .ok_or_else(|| TryFromProtoError::missing("summary").into())
     }
 
-    /// Build a [`SignedCheckpointSummary`](iota_types::SignedCheckpointSummary)
-    /// from the response.
+    /// Build a [`SignedCheckpointSummary`](iota_types::SignedCheckpointSummary) from the response.
     ///
     /// Requires the checkpoint summary and signature to be present.
     ///
@@ -134,8 +129,7 @@ impl CheckpointResponse {
 
     /// Get the validator aggregated signature for the checkpoint.
     ///
-    /// **Read mask:** `"checkpoint.signature"` (see
-    /// [`CHECKPOINT_RESPONSE_SIGNATURE`])
+    /// **Read mask:** `"checkpoint.signature"` (see [`CHECKPOINT_RESPONSE_SIGNATURE`])
     pub fn signature(
         &self,
     ) -> GrpcResult<&iota_grpc_types::v1::signatures::ValidatorAggregatedSignature> {
@@ -147,13 +141,13 @@ impl CheckpointResponse {
     /// Get the checkpoint contents.
     ///
     /// Returns the proto
-    /// [`CheckpointContents`](iota_grpc_types::v1::checkpoint::CheckpointContents)
-    /// which provides:
-    /// - [`digest()`](iota_grpc_types::v1::checkpoint::CheckpointContents::digest) — the contents digest
-    /// - [`contents()`](iota_grpc_types::v1::checkpoint::CheckpointContents::contents) — the deserialized SDK `CheckpointContents`
+    /// [`CheckpointContents`](iota_grpc_types::v1::checkpoint::CheckpointContents) which provides:
+    /// - [`digest()`](iota_grpc_types::v1::checkpoint::CheckpointContents::digest) — the contents
+    ///   digest
+    /// - [`contents()`](iota_grpc_types::v1::checkpoint::CheckpointContents::contents) — the
+    ///   deserialized SDK `CheckpointContents`
     ///
-    /// **Read mask:** `"checkpoint.contents"` (see
-    /// [`CHECKPOINT_RESPONSE_CONTENTS`])
+    /// **Read mask:** `"checkpoint.contents"` (see [`CHECKPOINT_RESPONSE_CONTENTS`])
     pub fn contents(&self) -> GrpcResult<&iota_grpc_types::v1::checkpoint::CheckpointContents> {
         self.contents
             .as_ref()
@@ -162,10 +156,9 @@ impl CheckpointResponse {
 
     /// Get the executed transactions in this checkpoint.
     ///
-    /// Returns proto
-    /// [`ExecutedTransaction`](iota_grpc_types::v1::transaction::ExecutedTransaction)
-    /// values. Which sub-fields are populated depends on the read mask; use
-    /// paths like `"transactions.effects"` or `"transactions.transaction"`.
+    /// Returns proto [`ExecutedTransaction`](iota_grpc_types::v1::transaction::ExecutedTransaction)
+    /// values. Which sub-fields are populated depends on the read mask; use paths like
+    /// `"transactions.effects"` or `"transactions.transaction"`.
     ///
     /// **Read mask:** `"transactions"` for all sub-fields (see
     /// [`CHECKPOINT_RESPONSE_EXECUTED_TRANSACTIONS`])
@@ -177,23 +170,18 @@ impl CheckpointResponse {
 
     /// Get the top-level events for this checkpoint.
     ///
-    /// Returns proto [`Event`](iota_grpc_types::v1::event::Event) values.
-    /// Which sub-fields are populated depends on the read mask; use paths like
-    /// `"events.bcs"` or `"events.event_type"`.
+    /// Returns proto [`Event`](iota_grpc_types::v1::event::Event) values. Which sub-fields are
+    /// populated depends on the read mask; use paths like `"events.bcs"` or `"events.event_type"`.
     ///
-    /// **Read mask:** `"events"` for all sub-fields (see
-    /// [`CHECKPOINT_RESPONSE_EVENTS`])
+    /// **Read mask:** `"events"` for all sub-fields (see [`CHECKPOINT_RESPONSE_EVENTS`])
     pub fn events(&self) -> &Vec<iota_grpc_types::v1::event::Event> {
         &self.events
     }
 
-    /// Build a full
-    /// [`CheckpointData`](iota_types::CheckpointData)
-    /// from the response.
+    /// Build a full [`CheckpointData`](iota_types::CheckpointData) from the response.
     ///
-    /// Requires the checkpoint summary, signature, contents, and all
-    /// transaction data (transaction, signatures, effects, events,
-    /// input_objects, output_objects) to be present in the response.
+    /// Requires the checkpoint summary, signature, contents, and all transaction data (transaction,
+    /// signatures, effects, events, input_objects, output_objects) to be present in the response.
     ///
     /// **Read mask:** see [`CHECKPOINT_RESPONSE_CHECKPOINT_DATA`]
     ///

@@ -45,8 +45,8 @@ impl GraphQLClient {
         Ok(iota_sdk::graphql_client::GraphQLClient::new(&server)?.into())
     }
 
-    /// Create a new GraphQL client with the provided server address, using an
-    /// HTTP client built to the given options.
+    /// Create a new GraphQL client with the provided server address, using an HTTP client built to
+    /// the given options.
     #[uniffi::constructor]
     pub fn new_with_http_options(server: String, options: HttpClientOptions) -> Result<Self> {
         Ok(
@@ -56,6 +56,13 @@ impl GraphQLClient {
             )?
             .into(),
         )
+    }
+
+    /// A copy of this client whose subscriptions connect to `url` instead of the `subscriptions`
+    /// endpoint under the RPC URL. An `http` or `https` URL is upgraded to `ws` or `wss`.
+    pub fn with_subscription_url(&self, url: String) -> Result<Arc<Self>> {
+        let client = (*self.0).clone().with_subscription_url(&url)?;
+        Ok(Arc::new(client.into()))
     }
 
     /// Create a new GraphQL client connected to the `mainnet` GraphQL server:
@@ -91,8 +98,8 @@ impl GraphQLClient {
         Ok(self.client().max_page_size().await?)
     }
 
-    /// Get the GraphQL service configuration, including complexity limits, read
-    /// and mutation limits, supported versions, and others.
+    /// Get the GraphQL service configuration, including complexity limits, read and mutation
+    /// limits, supported versions, and others.
     pub async fn service_config(&self) -> Result<GraphQLServiceConfig> {
         Ok(self.client().service_config().await?.clone().into())
     }
@@ -110,8 +117,7 @@ impl GraphQLClient {
             .await?)
     }
 
-    /// Create a new transaction builder with the given sender address, backed
-    /// by this client.
+    /// Create a new transaction builder with the given sender address, backed by this client.
     pub fn transaction_builder(self: Arc<Self>, sender: &Address) -> GraphQLTransactionBuilder {
         TransactionBuilder::new(sender).with_graphql_client(self)
     }

@@ -54,9 +54,9 @@ impl ValidatorCommittee {
     ///  - Has a nonzero total stake that fits in a [`StakeUnit`]
     ///  - Contains no duplicate public keys
     ///
-    /// Deserialization and the public fields both bypass this check, so a
-    /// committee that came off the wire or out of a checkpoint payload has to
-    /// be validated before its stake is used to derive a quorum threshold.
+    /// Deserialization and the public fields both bypass this check, so a committee that came off
+    /// the wire or out of a checkpoint payload has to be validated before its stake is used to
+    /// derive a quorum threshold.
     pub fn validate(&self) -> Result<(), ValidatorCommitteeError> {
         if self.members.is_empty() {
             return Err(ValidatorCommitteeError::EmptyCommittee);
@@ -82,9 +82,8 @@ impl ValidatorCommittee {
         Ok(())
     }
 
-    /// The combined stake of all members, or
-    /// [`ValidatorCommitteeError::StakeOverflow`] if it does not fit in a
-    /// [`StakeUnit`].
+    /// The combined stake of all members, or [`ValidatorCommitteeError::StakeOverflow`] if it does
+    /// not fit in a [`StakeUnit`].
     pub fn total_stake(&self) -> Result<StakeUnit, ValidatorCommitteeError> {
         self.members
             .iter()
@@ -94,12 +93,11 @@ impl ValidatorCommittee {
             .ok_or(ValidatorCommitteeError::StakeOverflow)
     }
 
-    /// The stake a quorum of a committee with `total_stake` needs: more than
-    /// two thirds of it, `floor(2 * total_stake / 3) + 1`.
+    /// The stake a quorum of a committee with `total_stake` needs: more than two thirds of it,
+    /// `floor(2 * total_stake / 3) + 1`.
     ///
-    /// Any two quorums then overlap in more than the third of the stake that
-    /// may be faulty. A total of zero gives a threshold of 1, which nothing can
-    /// reach.
+    /// Any two quorums then overlap in more than the third of the stake that may be faulty. A total
+    /// of zero gives a threshold of 1, which nothing can reach.
     ///
     /// `total_stake` should be [`Self::total_stake`] of a committee that passed
     /// [`Self::validate`]: a total that wrapped, or one from an unvalidated
@@ -112,8 +110,8 @@ impl ValidatorCommittee {
     /// assert_eq!(ValidatorCommittee::quorum_threshold(9_998), 6_666);
     /// ```
     pub const fn quorum_threshold(total_stake: StakeUnit) -> StakeUnit {
-        // Widened so the doubling cannot overflow; the result is at most the
-        // larger of `total_stake` and 1, so it fits back.
+        // Widened so the doubling cannot overflow; the result is at most the larger of
+        // `total_stake` and 1, so it fits back.
         (total_stake as u128 * 2 / 3 + 1) as StakeUnit
     }
 }
@@ -186,11 +184,10 @@ pub struct ValidatorAggregatedSignature {
 pub struct SignerBitmapError(String);
 
 impl ValidatorAggregatedSignature {
-    /// Construct an aggregated signature from the committee indices of the
-    /// validators that signed.
+    /// Construct an aggregated signature from the committee indices of the validators that signed.
     ///
-    /// Indices are deduplicated and stored in ascending order regardless of
-    /// the order they are supplied in.
+    /// Indices are deduplicated and stored in ascending order regardless of the order they are
+    /// supplied in.
     pub fn new(
         epoch: EpochId,
         signature: Bls12381Signature,
@@ -203,9 +200,8 @@ impl ValidatorAggregatedSignature {
         }
     }
 
-    /// Construct an aggregated signature from a signer set in the
-    /// [RoaringBitmap serialized form], as it appears in the BCS encoding
-    /// of this type.
+    /// Construct an aggregated signature from a signer set in the [RoaringBitmap serialized form],
+    /// as it appears in the BCS encoding of this type.
     ///
     /// [RoaringBitmap serialized form]: https://github.com/RoaringBitmap/RoaringFormatSpec
     #[cfg(feature = "serde")]
@@ -232,8 +228,8 @@ impl ValidatorAggregatedSignature {
         self.bitmap.len()
     }
 
-    /// The signer set in the [RoaringBitmap serialized form], as it appears in
-    /// the BCS encoding of this type.
+    /// The signer set in the [RoaringBitmap serialized form], as it appears in the BCS encoding of
+    /// this type.
     ///
     /// [RoaringBitmap serialized form]: https://github.com/RoaringBitmap/RoaringFormatSpec
     #[cfg(feature = "serde")]
@@ -263,8 +259,8 @@ type RoaringBitMapSerialization = ::serde_with::As<
     >,
 >;
 
-// Similar to Digest...unfortunately validator's public key material is
-// serialized with the length (96) prefixed
+// Similar to Digest...unfortunately validator's public key material is serialized with the length
+// (96) prefixed
 #[cfg(feature = "serde")]
 type ValidatorPublicKeySerialization = ::serde_with::As<
     ::serde_with::IfIsHumanReadable<::serde_with::DisplayFromStr, BinaryValidatorPublicKey>,
