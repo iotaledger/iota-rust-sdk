@@ -1,0 +1,46 @@
+# Definitions the node only serves on devnet, stripped from the schema unless the `unstable` feature
+# is enabled. Delete them from here once the node serves them on testnet and mainnet.
+# `extend <kind> <Name> { ... }`, with a closing `}` on its own line, removes those lines from a
+# definition; `extend union <Name> = A | B` removes members from a union; anything else is a
+# definition removed as is.
+
+# Claiming the sender's address as an account object, iotaledger/iota#13774.
+"""
+The type of account created by a claim.
+"""
+union AccountClaimKind = SmartAccountClaim
+
+"""
+A transaction that claims the sender's address as an account object.
+"""
+type ClaimAccountTransaction {
+	"""
+	The type of account created by the claim.
+	"""
+	kind: AccountClaimKind!
+}
+
+"""
+Parameters the claimed SmartAccount was created with.
+"""
+type SmartAccountClaim {
+	"""
+	The signature scheme flag byte of the public key (0=Ed25519,
+	1=Secp256k1, 2=Secp256r1, 3=MultiSig, 6=Passkey).
+	"""
+	publicKeyScheme: Int!
+	"""
+	Raw public key bytes of the claimed address, without the scheme flag
+	prefix. For MultiSig this is a BCS-encoded multisig public key.
+	"""
+	publicKeyRawBytes: Base64!
+}
+
+extend union TransactionBlockKind = ClaimAccountTransaction
+
+extend enum TransactionBlockKindInput {
+	"""
+	A claim of the sender's address as an account object.
+	"""
+	CLAIM_ACCOUNT
+}

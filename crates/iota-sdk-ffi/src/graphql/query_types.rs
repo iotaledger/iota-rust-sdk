@@ -867,6 +867,9 @@ pub enum GraphQLTransactionBlockKindInput {
     ConsensusCommitPrologueV1,
     RandomnessStateUpdate,
     EndOfEpochTx,
+    /// A claim of the sender's address as an account object.
+    #[cfg(feature = "unstable")]
+    ClaimAccount,
 }
 
 impl From<SdkTransactionBlockKindInput> for GraphQLTransactionBlockKindInput {
@@ -880,6 +883,8 @@ impl From<SdkTransactionBlockKindInput> for GraphQLTransactionBlockKindInput {
             }
             SdkTransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
             SdkTransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
+            #[cfg(feature = "unstable")]
+            SdkTransactionBlockKindInput::ClaimAccount => Self::ClaimAccount,
             _ => unimplemented!(
                 "a new TransactionBlockKindInput enum variant was added and needs to be handled"
             ),
@@ -898,6 +903,8 @@ impl From<GraphQLTransactionBlockKindInput> for SdkTransactionBlockKindInput {
             }
             GraphQLTransactionBlockKindInput::RandomnessStateUpdate => Self::RandomnessStateUpdate,
             GraphQLTransactionBlockKindInput::EndOfEpochTx => Self::EndOfEpochTx,
+            #[cfg(feature = "unstable")]
+            GraphQLTransactionBlockKindInput::ClaimAccount => Self::ClaimAccount,
         }
     }
 }

@@ -12,7 +12,7 @@ description = "GraphQL RPC Client for the IOTA Blockchain"
 workspace = true
 
 [features]
-# Unstable APIs that may change or be removed in any release.
+# Keeps the definitions the node only serves on devnet, listed in unstable.graphql, in the schema.
 unstable = []
 
 [dependencies]
