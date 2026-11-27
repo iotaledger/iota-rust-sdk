@@ -31,7 +31,8 @@ use crate::{
     GrpcClient, GrpcError, InterceptedChannel,
     api::{
         CheckpointResponse, CheckpointStreamError, CheckpointStreamItem, GrpcResult,
-        MetadataEnvelope, ProtocolError, TryFromProtoError, define_query, saturating_usize_to_u32,
+        MetadataEnvelope, ProtocolError, TryFromProtoError, define_query, record_status, rpc_span,
+        saturating_usize_to_u32,
     },
 };
 
@@ -107,7 +108,7 @@ impl GetCheckpointQuery {
         let response = service_client.get_checkpoint(request).await?;
         let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
 
-        let reassembled = GrpcClient::reassemble_checkpoint_data_stream(stream);
+        let reassembled = GrpcClient::reassemble_checkpoint_data_stream(stream, rpc_span());
         futures::pin_mut!(reassembled);
 
         // Skip any progress messages and find the first checkpoint
@@ -151,7 +152,10 @@ impl CheckpointStreamOptions {
         let (stream, metadata) = MetadataEnvelope::from(response).into_parts();
 
         Ok(MetadataEnvelope::new(
-            Box::pin(GrpcClient::reassemble_checkpoint_data_stream(stream)),
+            Box::pin(GrpcClient::reassemble_checkpoint_data_stream(
+                stream,
+                rpc_span(),
+            )),
             metadata,
         ))
     }
@@ -554,6 +558,7 @@ impl GrpcClient {
     /// [`CheckpointStreamItem::Progress`] when a progress message arrives.
     fn reassemble_checkpoint_data_stream<S, E>(
         stream: S,
+        span: tracing::Span,
     ) -> impl Stream<Item = GrpcResult<CheckpointStreamItem>>
     where
         S: Stream<
@@ -573,7 +578,12 @@ impl GrpcClient {
             let mut current_events: Vec<event::Event> = Vec::new();
 
             while let Some(data) = stream.next().await {
-                let data = data.map_err(|e| e.into())?;
+                let data = data.map_err(|e| {
+                    let error: GrpcError = e.into();
+                    record_status(&span, &error);
+                    span.in_scope(|| tracing::debug!(%error, "checkpoint stream failed"));
+                    error
+                })?;
 
                 match data.payload {
                     Some(checkpoint_data::Payload::Checkpoint(checkpoint)) => {
@@ -636,6 +646,12 @@ impl GrpcClient {
                             }.into()))?;
                         }
 
+                        span.in_scope(|| tracing::trace!(
+                            sequence_number,
+                            transactions = current_transactions.len(),
+                            events = current_events.len(),
+                            "checkpoint reassembled"
+                        ));
                         let response = CheckpointResponse {
                             sequence_number,
                             summary: current_summary.take(),
@@ -649,6 +665,10 @@ impl GrpcClient {
                     }
 
                     Some(checkpoint_data::Payload::Progress(progress)) => {
+                        span.in_scope(|| tracing::trace!(
+                            latest_scanned_sequence_number = progress.latest_scanned_sequence_number,
+                            "checkpoint stream progress"
+                        ));
                         yield CheckpointStreamItem::Progress {
                             latest_scanned_sequence_number: progress.latest_scanned_sequence_number,
                         };

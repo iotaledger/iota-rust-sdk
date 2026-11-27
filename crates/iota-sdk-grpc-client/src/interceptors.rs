@@ -76,6 +76,9 @@ impl tonic::service::Interceptor for &HeadersInterceptor {
         &mut self,
         mut request: tonic::Request<()>,
     ) -> std::result::Result<tonic::Request<()>, tonic::Status> {
+        if let Some(method) = request.extensions().get::<tonic::GrpcMethod<'static>>() {
+            crate::api::record_rpc(method);
+        }
         if !self.headers.is_empty() {
             request
                 .metadata_mut()

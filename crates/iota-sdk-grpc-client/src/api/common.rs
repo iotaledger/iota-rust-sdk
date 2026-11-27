@@ -21,9 +21,65 @@ use iota_grpc_types::{
 };
 use iota_types::{ObjectId, TransactionDigest, Version};
 use serde::Serialize;
+use tracing::Instrument;
 
 use super::MetadataEnvelope;
 use crate::checked_channel::OutdatedClientError;
+
+const RPC_SPAN: &str = "grpc_request";
+
+/// Run `rpc` in a DEBUG span and log a DEBUG event when it completes. The
+/// interceptor fills in the method with [`record_rpc`].
+pub(crate) async fn in_rpc_span<T>(rpc: impl Future<Output = GrpcResult<T>>) -> GrpcResult<T> {
+    let span = tracing::debug_span!(
+        RPC_SPAN,
+        "rpc.method" = tracing::field::Empty,
+        "rpc.grpc.status_code" = tracing::field::Empty,
+    );
+    async {
+        let start = std::time::Instant::now();
+        let result = rpc.await;
+        let elapsed_ms = start.elapsed().as_millis() as u64;
+        match &result {
+            Ok(_) => {
+                span.record("rpc.grpc.status_code", tonic::Code::Ok as i32);
+                tracing::debug!(elapsed_ms, "rpc completed");
+            }
+            Err(error) => {
+                record_status(&span, error);
+                tracing::debug!(elapsed_ms, %error, "rpc failed");
+            }
+        }
+        result
+    }
+    .instrument(span.clone())
+    .await
+}
+
+/// The current span if [`in_rpc_span`] opened it, a disabled span otherwise.
+pub(crate) fn rpc_span() -> tracing::Span {
+    let span = tracing::Span::current();
+    if span
+        .metadata()
+        .is_some_and(|m| m.name() == RPC_SPAN && m.target() == module_path!())
+    {
+        span
+    } else {
+        tracing::Span::none()
+    }
+}
+
+/// Record the RPC being sent on the span [`in_rpc_span`] opened.
+pub(crate) fn record_rpc(method: &tonic::GrpcMethod<'_>) {
+    rpc_span().record("rpc.method", method.method());
+}
+
+/// Record the status the server sent with `error`, if it sent one.
+pub(crate) fn record_status(span: &tracing::Span, error: &GrpcError) {
+    if let GrpcError::Grpc(status) = error {
+        span.record("rpc.grpc.status_code", status.code() as i32);
+    }
+}
 
 /// Errors that can occur during gRPC client API operations.
 #[derive(Debug, thiserror::Error)]
@@ -477,7 +533,7 @@ macro_rules! define_query {
             >;
 
             fn into_future(self) -> Self::IntoFuture {
-                Box::pin(self.send())
+                Box::pin($crate::api::in_rpc_span(self.send()))
             }
         }
     };
@@ -683,7 +739,10 @@ macro_rules! define_list_query {
                         );
                     }
 
-                    let response = service_client.$rpc_method(request).await?;
+                    let response = $crate::api::in_rpc_span(async {
+                        Ok(service_client.$rpc_method(request).await?)
+                    })
+                    .await?;
                     let (body, metadata) =
                         $crate::api::MetadataEnvelope::from(response).into_parts();
                     if result_metadata.is_none() {

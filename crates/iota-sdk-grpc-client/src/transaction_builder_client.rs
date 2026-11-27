@@ -20,6 +20,7 @@ use iota_types::{
     Address, Object, ObjectId, SignedTransaction, StructTag, Transaction, TransactionDigest,
     TransactionEffects, UserSignature, Version,
 };
+use tracing::Instrument;
 
 use crate::{
     GrpcClient,
@@ -247,25 +248,27 @@ impl TransactionBuilderExecutionClient for GrpcClient {
 
         let poll = async {
             let mut interval = tokio::time::interval(WAIT_FOR_TRANSACTION_POLL_INTERVAL);
+            let mut attempt = 0u32;
             loop {
                 interval.tick().await;
+                attempt += 1;
                 let response = self.transactions([digest]).read_mask(mask.clone()).await;
 
                 // An absent transaction is not indexed yet — keep polling.
-                if let Some(tx) = single_item(response)? {
-                    let ready = match wait_for {
-                        WaitForTransaction::IndexedOnNode => true,
-                        WaitForTransaction::Finalized => tx.checkpoint_sequence_number().is_ok(),
-                        _ => unreachable!("checked above"),
-                    };
-                    if ready {
-                        return Ok(());
-                    }
+                let ready = single_item(response)?.is_some_and(|tx| match wait_for {
+                    WaitForTransaction::IndexedOnNode => true,
+                    WaitForTransaction::Finalized => tx.checkpoint_sequence_number().is_ok(),
+                    _ => unreachable!("checked above"),
+                });
+                tracing::trace!(attempt, ready, "checked transaction status");
+                if ready {
+                    return Ok(());
                 }
             }
         };
 
         tokio::time::timeout(WAIT_FOR_TRANSACTION_TIMEOUT, poll)
+            .instrument(tracing::debug_span!("wait_for_transaction", %digest))
             .await
             .map_err(|_| {
                 GrpcError::from(tonic::Status::deadline_exceeded(format!(
