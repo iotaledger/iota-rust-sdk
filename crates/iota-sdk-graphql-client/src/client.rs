@@ -61,9 +61,48 @@ impl GetMaxPageSizeQuery {
     }
 }
 
+// Copied in `iota-sdk-transaction-builder` (`gas_station.rs`) with `mask_error_url`; change both.
+pub(crate) fn mask_credentials(url: &Url) -> Url {
+    let mut url = url.clone();
+    // Both setters fail only on URLs that cannot carry credentials at all.
+    if !url.username().is_empty() {
+        let _ = url.set_username("omitted");
+    }
+    if url.password().is_some() {
+        let _ = url.set_password(Some("omitted"));
+    }
+    if url.query().is_some() {
+        // A bare `?SECRET` parses as a name with an empty value.
+        let names: Vec<String> = url
+            .query_pairs()
+            .map(|(name, value)| {
+                if value.is_empty() {
+                    "omitted".to_owned()
+                } else {
+                    name.into_owned()
+                }
+            })
+            .collect();
+        url.query_pairs_mut()
+            .clear()
+            .extend_pairs(names.iter().map(|name| (name, "omitted")));
+    }
+    url
+}
+
+pub(crate) fn mask_error_url(mut error: reqwest::Error) -> reqwest::Error {
+    if let Some(url) = error.url_mut() {
+        *url = mask_credentials(url);
+    }
+    error
+}
+
 /// The GraphQL client for interacting with the IOTA blockchain. By default, it uses the `reqwest`
 /// crate as the HTTP client.
-#[derive(Clone, Debug)]
+///
+/// `Debug` prints only the server URL, with its username, password and query values replaced by
+/// `omitted`.
+#[derive(Clone)]
 pub struct GraphQLClient {
     /// The URL of the GraphQL server.
     pub(crate) rpc: Url,
@@ -74,13 +113,38 @@ pub struct GraphQLClient {
     pub(crate) subscription_url: Option<Url>,
 }
 
+// The HTTP client is left out: one passed to `new_with_reqwest_client` prints its default headers.
+impl std::fmt::Debug for GraphQLClient {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("GraphQLClient")
+            .field("rpc", &mask_credentials(&self.rpc))
+            .finish_non_exhaustive()
+    }
+}
+
 /// Builds a [`GraphQLClient`] on top of the default HTTP client, so that timeouts and headers can
 /// be set without losing the crate's user agent and trust anchors. Created by
 /// [`GraphQLClient::builder`].
-#[derive(Debug)]
+///
+/// `Debug` prints only the server URL, with its username, password and query values replaced by
+/// `omitted`.
 pub struct GraphQLClientBuilder {
     server: String,
     http: reqwest::ClientBuilder,
+}
+
+// The HTTP client builder is left out: headers added through `configure` are not marked sensitive
+// and would be printed.
+impl std::fmt::Debug for GraphQLClientBuilder {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let server = match Url::parse(&self.server) {
+            Ok(url) => mask_credentials(&url).to_string(),
+            Err(_) => "<invalid URL>".to_owned(),
+        };
+        f.debug_struct("GraphQLClientBuilder")
+            .field("server", &server)
+            .finish_non_exhaustive()
+    }
 }
 
 impl GraphQLClientBuilder {
@@ -101,7 +165,10 @@ impl GraphQLClientBuilder {
 
     /// Add headers sent with every request, for example an API key. A header already set under the
     /// same name is replaced.
-    pub fn default_headers(mut self, headers: reqwest::header::HeaderMap) -> Self {
+    pub fn default_headers(mut self, mut headers: reqwest::header::HeaderMap) -> Self {
+        for value in headers.values_mut() {
+            value.set_sensitive(true);
+        }
         self.http = self.http.default_headers(headers);
         self
     }
@@ -245,7 +312,7 @@ impl GraphQLClient {
             .await?;
         check_client_version(resp.headers())?;
         let status = resp.status();
-        let url = resp.url().clone();
+        let url = mask_credentials(resp.url());
         let bytes = resp.bytes().await?;
         let target_type = std::any::type_name::<R>();
         if !status.is_success() {
@@ -448,10 +515,9 @@ mod tests {
         (listener, url)
     }
 
-    #[tokio::test]
-    async fn builder_sends_default_headers_and_keeps_user_agent() {
-        let (listener, url) = bind().await;
-        let server = tokio::spawn(async move {
+    /// Answers one request with an empty GraphQL response and returns the request, lowercased.
+    fn capture_request(listener: TcpListener) -> tokio::task::JoinHandle<String> {
+        tokio::spawn(async move {
             let (mut socket, _) = listener.accept().await.unwrap();
             let mut buf = vec![0; 4096];
             let n = socket.read(&mut buf).await.unwrap();
@@ -462,7 +528,13 @@ mod tests {
                 .await
                 .unwrap();
             String::from_utf8_lossy(&buf[..n]).to_lowercase()
-        });
+        })
+    }
+
+    #[tokio::test]
+    async fn builder_sends_default_headers_and_keeps_user_agent() {
+        let (listener, url) = bind().await;
+        let server = capture_request(listener);
 
         let mut headers = HeaderMap::new();
         headers.insert("x-api-key", HeaderValue::from_static("secret"));
@@ -575,5 +647,111 @@ mod tests {
     #[test]
     fn builder_rejects_invalid_url() {
         assert!(GraphQLClient::builder("not a url").build().is_err());
+    }
+
+    #[test]
+    fn debug_hides_credentials() {
+        let mut headers = HeaderMap::new();
+        headers.insert("x-api-key", HeaderValue::from_static("header-secret"));
+        let builder = GraphQLClient::builder(
+            "http://user:url-secret@127.0.0.1:9999/graphql?key=query-secret",
+        )
+        .default_headers(headers);
+        let http = format!("{:?}", builder.http);
+        assert!(!http.contains("header-secret"), "{http}");
+        let debug = format!("{builder:?}");
+        assert!(debug.contains("omitted:omitted@127.0.0.1:9999"), "{debug}");
+        assert!(!debug.contains("secret"), "{debug}");
+
+        let debug = format!("{:?}", builder.build().unwrap());
+        assert!(debug.contains(r#"username: "omitted""#), "{debug}");
+        assert!(debug.contains(r#"password: Some("omitted")"#), "{debug}");
+        assert!(debug.contains(r#"query: Some("key=omitted")"#), "{debug}");
+        assert!(!debug.contains("secret"), "{debug}");
+
+        let debug = format!("{:?}", GraphQLClient::builder("http://127.0.0.1:9999"));
+        assert!(!debug.contains("omitted"), "{debug}");
+
+        let debug = format!(
+            "{:?}",
+            GraphQLClient::builder("http://user:url-secret@[bad")
+        );
+        assert!(debug.contains("<invalid URL>"), "{debug}");
+        assert!(!debug.contains("secret"), "{debug}");
+    }
+
+    #[test]
+    fn mask_credentials_masks_query_values() {
+        for (url, expected) in [
+            (
+                "http://127.0.0.1/graphql?key=secret&network=testnet",
+                "http://127.0.0.1/graphql?key=omitted&network=omitted",
+            ),
+            (
+                "http://127.0.0.1/graphql?secret",
+                "http://127.0.0.1/graphql?omitted=omitted",
+            ),
+            ("http://127.0.0.1/graphql", "http://127.0.0.1/graphql"),
+        ] {
+            let masked = mask_credentials(&url.parse().unwrap());
+            assert_eq!(masked.as_str(), expected, "{url}");
+        }
+    }
+
+    #[tokio::test]
+    async fn request_errors_hide_query_values() {
+        // Nothing listens on port 1, so the request fails.
+        let client = GraphQLClient::new("http://127.0.0.1:1/graphql?key=query-secret").unwrap();
+        let err = client
+            .run_query_from_json(Default::default())
+            .await
+            .unwrap_err();
+        assert!(matches!(err, GraphQLError::Request(_)), "{err:?}");
+        let display = err.to_string();
+        assert!(display.contains("key=omitted"), "{display}");
+        assert!(!display.contains("secret"), "{display}");
+        assert!(!format!("{err:?}").contains("secret"), "{err:?}");
+    }
+
+    #[tokio::test]
+    async fn http_errors_hide_query_values() {
+        let (listener, url) = bind().await;
+        let _server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            let mut buf = vec![0; 4096];
+            let _ = socket.read(&mut buf).await.unwrap();
+            socket
+                .write_all(b"HTTP/1.1 500 Internal Server Error\r\ncontent-length: 4\r\n\r\nboom")
+                .await
+                .unwrap();
+        });
+
+        let client = GraphQLClient::new(&format!("{url}?key=query-secret")).unwrap();
+        let err = client
+            .run_query_from_json(Default::default())
+            .await
+            .unwrap_err();
+        assert!(matches!(err, GraphQLError::Http { .. }), "{err:?}");
+        let display = err.to_string();
+        assert!(display.contains("key=omitted"), "{display}");
+        assert!(!display.contains("secret"), "{display}");
+        assert!(!format!("{err:?}").contains("secret"), "{err:?}");
+    }
+
+    #[tokio::test]
+    async fn url_credentials_are_still_sent_as_basic_auth() {
+        let (listener, url) = bind().await;
+        let server = capture_request(listener);
+
+        let url = url.replace("http://", "http://user:secret@");
+        let client = GraphQLClient::builder(&url).build().unwrap();
+        let _ = client.run_query_from_json(Default::default()).await;
+
+        let request = server.await.unwrap();
+        // base64 of `user:secret`, lowercased with the rest of the request
+        assert!(
+            request.contains("authorization: basic dxnlcjpzzwnyzxq="),
+            "{request}"
+        );
     }
 }
