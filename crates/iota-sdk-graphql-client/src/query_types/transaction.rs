@@ -505,7 +505,11 @@ impl TryFrom<TxBlockEffects> for TransactionEffects {
     fn try_from(value: TxBlockEffects) -> Result<Self, Self::Error> {
         let effects = value
             .effects
-            .map(|fx| crate::base64::decode(fx.bcs.unwrap().0.as_str()))
+            .map(|fx| {
+                fx.bcs
+                    .ok_or(GraphQLError::EmptyResponseField("transaction effects bcs"))
+                    .and_then(|bcs| crate::base64::decode(bcs.0.as_str()))
+            })
             .transpose()?
             .map(|bcs| {
                 bcs::from_bytes::<TransactionEffects>(&bcs).map_err(iota_types::BcsError::new)
