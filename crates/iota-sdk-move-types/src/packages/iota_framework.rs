@@ -2176,6 +2176,7 @@ pub mod signature_scheme {
     /// Rust version of the Move `iota::signature_scheme::SignatureScheme` type.
     #[derive(Clone, Copy, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(
         all(test, not(target_arch = "wasm32")),
         derive(iota_bcs_schema::MoveShape)
@@ -2276,6 +2277,7 @@ pub mod public_key {
     /// not.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(
         all(test, not(target_arch = "wasm32")),
         derive(iota_bcs_schema::MoveShape)
@@ -2362,6 +2364,7 @@ pub mod builtin_authenticator_functions {
     /// type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(
         all(test, not(target_arch = "wasm32")),
         derive(iota_bcs_schema::MoveShape)
@@ -2375,6 +2378,7 @@ pub mod builtin_authenticator_functions {
     /// type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(
         all(test, not(target_arch = "wasm32")),
         derive(iota_bcs_schema::MoveShape)
@@ -2388,6 +2392,7 @@ pub mod builtin_authenticator_functions {
     /// type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(
         all(test, not(target_arch = "wasm32")),
         derive(iota_bcs_schema::MoveShape)
@@ -2404,6 +2409,7 @@ pub mod builtin_authenticator_functions {
     /// the Rust mirror carries a `dummy_field` to preserve the BCS wire format.
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(
         all(test, not(target_arch = "wasm32")),
         derive(iota_bcs_schema::MoveShape)
@@ -2421,6 +2427,7 @@ pub mod smart_account {
     /// Rust version of the Move `iota::smart_account::SmartAccount` type.
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
     #[cfg_attr(
         all(test, not(target_arch = "wasm32")),
         derive(iota_bcs_schema::MoveShape)
