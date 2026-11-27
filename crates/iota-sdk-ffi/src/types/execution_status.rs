@@ -218,6 +218,11 @@ pub enum ExecutionError {
     /// failed without running its commands.
     #[cfg(feature = "unstable")]
     TransactionDependencyFailed { dependency: Arc<TransactionDigest> },
+    /// Transaction is canceled because the transaction named as its dependency was still pending
+    /// when this transaction could not be deferred any longer. A higher gas price does not make
+    /// the dependency execute sooner; the transaction can be submitted again.
+    #[cfg(feature = "unstable")]
+    ExecutionCanceledDueToPendingTransactionDependency,
 }
 
 /// Holds an [`ExecutionError`] so it can be nested inside another [`ExecutionError`].
@@ -414,6 +419,10 @@ impl From<iota_sdk::types::ExecutionError> for ExecutionError {
                     dependency: Arc::new(dependency.into()),
                 }
             }
+            #[cfg(feature = "unstable")]
+            iota_sdk::types::ExecutionError::ExecutionCanceledDueToPendingTransactionDependency => {
+                Self::ExecutionCanceledDueToPendingTransactionDependency
+            }
             _ => unimplemented!(
                 "a new ExecutionError enum variant was added and needs to be handled"
             ),
@@ -571,6 +580,10 @@ impl From<ExecutionError> for iota_sdk::types::ExecutionError {
                 Self::TransactionDependencyFailed {
                     dependency: **dependency,
                 }
+            }
+            #[cfg(feature = "unstable")]
+            ExecutionError::ExecutionCanceledDueToPendingTransactionDependency => {
+                Self::ExecutionCanceledDueToPendingTransactionDependency
             }
         }
     }
@@ -904,6 +917,20 @@ mod tests {
         assert!(matches!(
             ffi_error,
             ExecutionError::TransactionDependencyFailed { .. }
+        ));
+        assert_eq!(iota_sdk::types::ExecutionError::from(ffi_error), error);
+    }
+
+    #[test]
+    fn pending_transaction_dependency_cancellation_converts_both_ways() {
+        let error =
+            iota_sdk::types::ExecutionError::ExecutionCanceledDueToPendingTransactionDependency;
+
+        let ffi_error = ExecutionError::from(error.clone());
+
+        assert!(matches!(
+            ffi_error,
+            ExecutionError::ExecutionCanceledDueToPendingTransactionDependency
         ));
         assert_eq!(iota_sdk::types::ExecutionError::from(ffi_error), error);
     }
