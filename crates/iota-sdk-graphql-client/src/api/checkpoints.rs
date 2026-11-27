@@ -62,14 +62,7 @@ impl ListCheckpointsQuery {
         let response = client.run_query(&Self::operation(&pagination)).await?;
 
         let cc = response.checkpoints;
-        let page_info = cc.page_info;
-        let nodes = cc
-            .nodes
-            .into_iter()
-            .map(|c| c.try_into())
-            .collect::<GraphQLResult<Vec<_>>>()?;
-
-        Ok(Page::new(page_info, nodes))
+        Page::new(cc.page_info, cc.nodes).try_map(TryInto::try_into)
     }
 }
 

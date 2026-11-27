@@ -49,6 +49,17 @@ impl<T> Page<T> {
             data: self.data.into_iter().map(map_fn).collect(),
         }
     }
+
+    pub fn try_map<F: FnMut(T) -> Result<U, E>, U, E>(self, map_fn: F) -> Result<Page<U>, E> {
+        Ok(Page {
+            page_info: self.page_info,
+            data: self
+                .data
+                .into_iter()
+                .map(map_fn)
+                .collect::<Result<_, _>>()?,
+        })
+    }
 }
 
 /// Pagination direction.
@@ -78,4 +89,37 @@ pub struct PaginationFilterResponse {
     pub before: Option<String>,
     pub first: Option<i32>,
     pub last: Option<i32>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn page() -> Page<u32> {
+        Page::new(
+            PageInfo {
+                has_previous_page: true,
+                has_next_page: true,
+                start_cursor: Some("s".to_owned()),
+                end_cursor: Some("e".to_owned()),
+            },
+            vec![1, 2, 3],
+        )
+    }
+
+    #[test]
+    fn try_map_keeps_the_page_info_and_the_order() {
+        let page = page().try_map(|n| Ok::<_, ()>(n * 10)).unwrap();
+        assert_eq!(page.data, [10, 20, 30]);
+        assert!(page.page_info.has_previous_page);
+        assert!(page.page_info.has_next_page);
+        assert_eq!(page.page_info.start_cursor.as_deref(), Some("s"));
+        assert_eq!(page.page_info.end_cursor.as_deref(), Some("e"));
+    }
+
+    #[test]
+    fn try_map_returns_the_first_error() {
+        let result = page().try_map(|n| if n >= 2 { Err(n) } else { Ok(n) });
+        assert_eq!(result.err(), Some(2));
+    }
 }

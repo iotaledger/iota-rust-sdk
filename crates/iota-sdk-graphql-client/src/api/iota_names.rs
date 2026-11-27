@@ -87,14 +87,11 @@ impl ListIotaNamesRegistrationsQuery {
             return Ok(Page::new_empty());
         };
 
-        Ok(Page::new(
+        Page::new(
             iota_names_registrations.page_info,
-            iota_names_registrations
-                .nodes
-                .into_iter()
-                .map(TryInto::try_into)
-                .collect::<GraphQLResult<Vec<_>>>()?,
-        ))
+            iota_names_registrations.nodes,
+        )
+        .try_map(TryInto::try_into)
     }
 }
 
