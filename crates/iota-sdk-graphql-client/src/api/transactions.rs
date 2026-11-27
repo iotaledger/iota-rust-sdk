@@ -498,25 +498,28 @@ impl GetTransactionDataEffectsQuery {
         });
         let response = self.client.run_query(&operation).await?;
 
-        match response.transaction_block.map(|tx| (tx.bcs, tx.effects)) {
-            Some((Some(bcs), Some(effects))) => {
-                let effects_bcs = effects
-                    .bcs
-                    .ok_or(GraphQLError::EmptyResponseField("transaction effects bcs"))?;
-                let bcs = crate::base64::decode(bcs.0.as_str())?;
-                let effects = crate::base64::decode(effects_bcs.0.as_str())?;
-                let transaction: SenderSignedTransaction =
-                    bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
-                let effects: TransactionEffects =
-                    bcs::from_bytes(&effects).map_err(iota_types::BcsError::new)?;
+        let Some(tx) = response.transaction_block else {
+            return Ok(None);
+        };
+        let (Some(bcs), Some(effects)) = (tx.bcs, tx.effects) else {
+            return Err(GraphQLError::EmptyResponseField(
+                "transaction bcs or effects",
+            ));
+        };
+        let effects_bcs = effects
+            .bcs
+            .ok_or(GraphQLError::EmptyResponseField("transaction effects bcs"))?;
+        let bcs = crate::base64::decode(bcs.0.as_str())?;
+        let effects = crate::base64::decode(effects_bcs.0.as_str())?;
+        let transaction: SenderSignedTransaction =
+            bcs::from_bytes(&bcs).map_err(iota_types::BcsError::new)?;
+        let effects: TransactionEffects =
+            bcs::from_bytes(&effects).map_err(iota_types::BcsError::new)?;
 
-                Ok(Some(TransactionDataEffects {
-                    signed_transaction: transaction.into(),
-                    effects,
-                }))
-            }
-            _ => Ok(None),
-        }
+        Ok(Some(TransactionDataEffects {
+            signed_transaction: transaction.into(),
+            effects,
+        }))
     }
 }
 

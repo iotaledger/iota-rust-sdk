@@ -540,6 +540,9 @@ mod tests {
                 bcs: Some(Base64("AQ==".to_owned())),
             }),
         };
-        assert!(TransactionEffects::try_from(value).is_err());
+        assert!(matches!(
+            TransactionEffects::try_from(value),
+            Err(GraphQLError::Deserialization(_))
+        ));
     }
 }

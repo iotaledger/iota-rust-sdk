@@ -202,13 +202,19 @@ mod tests {
             value: None,
             name: Some(move_value("not a type", "AQ==")),
         };
-        assert!(DynamicFieldOutput::try_from(field).is_err());
+        assert!(matches!(
+            DynamicFieldOutput::try_from(field),
+            Err(GraphQLError::Parse(_))
+        ));
 
         let field = DynamicField {
             value: None,
             name: Some(move_value("u8", "not base64!")),
         };
-        assert!(DynamicFieldOutput::try_from(field).is_err());
+        assert!(matches!(
+            DynamicFieldOutput::try_from(field),
+            Err(GraphQLError::Parse(_))
+        ));
     }
 
     #[test]
@@ -220,7 +226,10 @@ mod tests {
             ))),
             name: Some(move_value("u8", "AQ==")),
         };
-        assert!(DynamicFieldOutput::try_from(field).is_err());
+        assert!(matches!(
+            DynamicFieldOutput::try_from(field),
+            Err(GraphQLError::Parse(_))
+        ));
 
         let field = DynamicField {
             value: Some(DynamicFieldValue::MoveObject(MoveObjectContents {
@@ -228,7 +237,10 @@ mod tests {
             })),
             name: Some(move_value("u8", "AQ==")),
         };
-        assert!(DynamicFieldOutput::try_from(field).is_err());
+        assert!(matches!(
+            DynamicFieldOutput::try_from(field),
+            Err(GraphQLError::Parse(_))
+        ));
     }
 
     #[test]
