@@ -2174,6 +2174,11 @@ pub mod account {
 #[cfg(feature = "unstable")]
 pub mod signature_scheme {
     /// Rust version of the Move `iota::signature_scheme::SignatureScheme` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Copy, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2275,6 +2280,11 @@ pub mod public_key {
     ///
     /// Move checks the scheme and the key bytes when it creates a `PublicKey`; this mirror does
     /// not.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2362,6 +2372,11 @@ pub mod builtin_authenticator_functions {
 
     /// Rust version of the Move `iota::builtin_authenticator_functions::PublicKeyAttached` event
     /// type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2376,6 +2391,11 @@ pub mod builtin_authenticator_functions {
 
     /// Rust version of the Move `iota::builtin_authenticator_functions::PublicKeyDetached` event
     /// type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2390,6 +2410,11 @@ pub mod builtin_authenticator_functions {
 
     /// Rust version of the Move `iota::builtin_authenticator_functions::PublicKeyRotated` event
     /// type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2407,6 +2432,11 @@ pub mod builtin_authenticator_functions {
     ///
     /// Dynamic-field key under which an account stores its public key. The Move struct is empty;
     /// the Rust mirror carries a `dummy_field` to preserve the BCS wire format.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Default, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
@@ -2425,6 +2455,11 @@ pub mod smart_account {
     use super::{authenticator_function::AuthenticatorFunctionRefV1, object::UID};
 
     /// Rust version of the Move `iota::smart_account::SmartAccount` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
     #[derive(Clone, Debug, Eq, PartialEq)]
     #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
     #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
