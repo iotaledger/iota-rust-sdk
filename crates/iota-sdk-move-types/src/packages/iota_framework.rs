@@ -2170,6 +2170,330 @@ pub mod account {
     }
 }
 
+/// Types from `0x2::signature_scheme`.
+#[cfg(feature = "unstable")]
+pub mod signature_scheme {
+    /// Rust version of the Move `iota::signature_scheme::SignatureScheme` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct SignatureScheme {
+        pub flag: u8,
+    }
+
+    impl TryFrom<SignatureScheme> for iota_types::SignatureScheme {
+        type Error = AccountSignatureSchemeError;
+
+        fn try_from(scheme: SignatureScheme) -> Result<Self, Self::Error> {
+            iota_types::SignatureScheme::from_byte(scheme.flag)
+                .ok()
+                .filter(|scheme| is_account_scheme(*scheme))
+                .ok_or(AccountSignatureSchemeError::Unsupported(scheme.flag))
+        }
+    }
+
+    impl TryFrom<iota_types::SignatureScheme> for SignatureScheme {
+        type Error = AccountSignatureSchemeError;
+
+        fn try_from(scheme: iota_types::SignatureScheme) -> Result<Self, Self::Error> {
+            if is_account_scheme(scheme) {
+                Ok(Self {
+                    flag: scheme.to_u8(),
+                })
+            } else {
+                Err(AccountSignatureSchemeError::Unsupported(scheme.to_u8()))
+            }
+        }
+    }
+
+    fn is_account_scheme(scheme: iota_types::SignatureScheme) -> bool {
+        use iota_types::SignatureScheme::*;
+        matches!(
+            scheme,
+            Ed25519 | Secp256k1 | Secp256r1 | Multisig | PasskeyAuthenticator
+        )
+    }
+
+    /// Error returned by the conversions between [`SignatureScheme`] and
+    /// [`iota_types::SignatureScheme`].
+    #[derive(Clone, Debug, Eq, PartialEq, thiserror::Error)]
+    #[non_exhaustive]
+    pub enum AccountSignatureSchemeError {
+        /// The flag is unknown or names a scheme that accounts cannot use.
+        #[error("signature scheme flag {0:#04x} is not supported for account public keys")]
+        Unsupported(u8),
+    }
+
+    #[cfg(test)]
+    mod tests {
+        #[cfg(target_arch = "wasm32")]
+        use wasm_bindgen_test::wasm_bindgen_test as test;
+
+        use super::*;
+
+        #[test]
+        fn conversions_accept_only_account_schemes() {
+            const ACCOUNT_FLAGS: [u8; 5] = [0x00, 0x01, 0x02, 0x03, 0x06];
+            for flag in 0..=u8::MAX {
+                let move_scheme = SignatureScheme { flag };
+                let result = iota_types::SignatureScheme::try_from(move_scheme);
+                if ACCOUNT_FLAGS.contains(&flag) {
+                    let scheme = result.expect("account scheme converts");
+                    assert_eq!(scheme.to_u8(), flag);
+                    assert_eq!(SignatureScheme::try_from(scheme), Ok(move_scheme));
+                } else {
+                    assert_eq!(result, Err(AccountSignatureSchemeError::Unsupported(flag)));
+                }
+            }
+        }
+
+        #[test]
+        fn rejects_known_schemes_accounts_cannot_use() {
+            for scheme in [
+                iota_types::SignatureScheme::Bls12381,
+                iota_types::SignatureScheme::MoveAuthenticator,
+            ] {
+                assert_eq!(
+                    SignatureScheme::try_from(scheme),
+                    Err(AccountSignatureSchemeError::Unsupported(scheme.to_u8()))
+                );
+            }
+        }
+    }
+}
+
+/// Types from `0x2::public_key`.
+#[cfg(feature = "unstable")]
+pub mod public_key {
+    use super::signature_scheme::{AccountSignatureSchemeError, SignatureScheme};
+
+    /// Rust version of the Move `iota::public_key::PublicKey` type.
+    ///
+    /// Move checks the scheme and the key bytes when it creates a `PublicKey`; this mirror does
+    /// not.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct PublicKey {
+        pub scheme: SignatureScheme,
+        /// Key material without the scheme flag. For MultiSig it is the BCS-encoded committee.
+        pub raw_bytes: Vec<u8>,
+    }
+
+    impl PublicKey {
+        /// The signature scheme of the key.
+        ///
+        /// Returns an error if [`Self::scheme`] is not the flag of a scheme that accounts can use.
+        pub fn signature_scheme(
+            &self,
+        ) -> Result<iota_types::SignatureScheme, AccountSignatureSchemeError> {
+            self.scheme.try_into()
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        #[cfg(target_arch = "wasm32")]
+        use wasm_bindgen_test::wasm_bindgen_test as test;
+
+        use super::*;
+
+        #[test]
+        fn signature_scheme_returns_account_schemes() {
+            use iota_types::SignatureScheme::*;
+            for scheme in [
+                Ed25519,
+                Secp256k1,
+                Secp256r1,
+                Multisig,
+                PasskeyAuthenticator,
+            ] {
+                let key = PublicKey {
+                    scheme: SignatureScheme {
+                        flag: scheme.to_u8(),
+                    },
+                    raw_bytes: vec![1; 32],
+                };
+                assert_eq!(key.signature_scheme(), Ok(scheme));
+            }
+        }
+
+        #[test]
+        fn signature_scheme_fails_on_invalid_flags() {
+            for flag in [0x04, 0x05, 0x07, 0x08, 0xFF] {
+                let key = PublicKey {
+                    scheme: SignatureScheme { flag },
+                    raw_bytes: vec![1; 32],
+                };
+                assert_eq!(
+                    key.signature_scheme(),
+                    Err(AccountSignatureSchemeError::Unsupported(flag))
+                );
+            }
+        }
+
+        #[cfg(feature = "serde")]
+        #[test]
+        fn bcs_is_the_flag_then_the_length_prefixed_key() {
+            let key = PublicKey {
+                scheme: SignatureScheme { flag: 0x02 },
+                raw_bytes: vec![1; 33],
+            };
+            let bytes = bcs::to_bytes(&key).unwrap();
+            assert_eq!(bytes[..2], [0x02, 33]);
+            assert_eq!(bytes[2..], [1; 33]);
+            assert_eq!(bcs::from_bytes::<PublicKey>(&bytes).unwrap(), key);
+        }
+    }
+}
+
+/// Types from `0x2::builtin_authenticator_functions`.
+#[cfg(feature = "unstable")]
+pub mod builtin_authenticator_functions {
+    use super::{object::ID, public_key::PublicKey};
+
+    /// Rust version of the Move `iota::builtin_authenticator_functions::PublicKeyAttached` event
+    /// type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct PublicKeyAttached {
+        pub account_id: ID,
+        pub public_key: PublicKey,
+    }
+
+    /// Rust version of the Move `iota::builtin_authenticator_functions::PublicKeyDetached` event
+    /// type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct PublicKeyDetached {
+        pub account_id: ID,
+        pub public_key: PublicKey,
+    }
+
+    /// Rust version of the Move `iota::builtin_authenticator_functions::PublicKeyRotated` event
+    /// type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct PublicKeyRotated {
+        pub account_id: ID,
+        pub from: PublicKey,
+        pub to: PublicKey,
+    }
+
+    /// Rust version of the Move `iota::builtin_authenticator_functions::PublicKeyFieldName` type.
+    ///
+    /// Dynamic-field key under which an account stores its public key. The Move struct is empty;
+    /// the Rust mirror carries a `dummy_field` to preserve the BCS wire format.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
+    #[derive(Clone, Debug, Default, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct PublicKeyFieldName {
+        dummy_field: bool,
+    }
+}
+
+/// Types from `0x2::smart_account`.
+#[cfg(feature = "unstable")]
+pub mod smart_account {
+    use super::{authenticator_function::AuthenticatorFunctionRefV1, object::UID};
+
+    /// Rust version of the Move `iota::smart_account::SmartAccount` type.
+    ///
+    /// # BCS
+    ///
+    /// The BCS serialized form of this type is specified in
+    /// [`bcs-schema.abnf`](https://github.com/iotaledger/iota-rust-sdk/blob/develop/crates/iota-sdk-move-types/bcs-schema.abnf).
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(feature = "bcs-schema", derive(iota_bcs_schema::BcsSchema))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct SmartAccount {
+        pub id: UID,
+    }
+
+    #[cfg(feature = "serde")]
+    impl SmartAccount {
+        /// Decode a [`SmartAccount`] from BCS bytes without verifying the on-chain type tag.
+        pub fn from_bcs(bytes: &[u8]) -> Result<Self, iota_types::BcsError> {
+            bcs::from_bytes(bytes).map_err(iota_types::BcsError::new)
+        }
+    }
+
+    impl_try_from_object!(SmartAccount);
+
+    /// Rust version of the Move `iota::smart_account::SmartAccountBuilder` type.
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]
+    #[cfg_attr(
+        all(test, not(target_arch = "wasm32")),
+        derive(iota_bcs_schema::MoveShape)
+    )]
+    pub struct SmartAccountBuilder {
+        pub account: SmartAccount,
+        pub authenticator: AuthenticatorFunctionRefV1<SmartAccount>,
+    }
+}
+
 /// Types from `0x2::coin_manager`.
 pub mod coin_manager {
     use core::marker::PhantomData;

@@ -373,6 +373,8 @@ impl StructTag {
         account::AuthenticatorFunctionRefV1Key
     );
     add_struct_tag_ctor!(@with_module FRAMEWORK, deny_list::ConfigKey, deny_list::AddressKey, deny_list::GlobalPauseKey);
+    #[cfg(feature = "unstable")]
+    add_struct_tag_ctor!(FRAMEWORK, smart_account::SmartAccount);
     add_struct_tag_ctor!(
         SYSTEM,
         iota_system::IotaSystemState,

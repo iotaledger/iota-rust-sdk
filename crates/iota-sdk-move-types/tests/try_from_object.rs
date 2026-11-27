@@ -482,6 +482,25 @@ mod synthetic {
         ));
     }
 
+    #[cfg(feature = "unstable")]
+    #[test]
+    fn smart_account_roundtrip_and_tag_check() {
+        use iota_sdk_move_types::iota_framework::smart_account::SmartAccount;
+
+        let value = SmartAccount {
+            id: UID::new(ObjectId::new([7; 32])),
+        };
+        let object = synthetic_object("0x2::smart_account::SmartAccount", &value);
+        let decoded = SmartAccount::try_from(&object).expect("tag matches");
+        assert_eq!(decoded, value);
+
+        let object = synthetic_object("0x123::foo::FOO", &value);
+        assert!(matches!(
+            SmartAccount::try_from(&object),
+            Err(FromObjectError::WrongType)
+        ));
+    }
+
     #[test]
     fn package_metadata_v1_roundtrip_and_tag_check() {
         let value = PackageMetadataV1 {

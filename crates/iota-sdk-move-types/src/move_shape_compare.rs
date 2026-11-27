@@ -106,7 +106,7 @@ fn expected_entries() -> Vec<Entry> {
     // macro-expansion time into `Shape::TypeParameter(0)`, so the body of `move_shape()` never
     // references the chosen type. `()` keeps the instantiation noise-free.
     use Package::*;
-    vec![
+    let mut entries = vec![
         // -- 0x2 iota-framework -----------------------------------------------
         entry!(IotaFramework, "object", "ID", iota_framework::object::ID),
         entry!(IotaFramework, "object", "UID", iota_framework::object::UID),
@@ -1146,7 +1146,69 @@ fn expected_entries() -> Vec<Entry> {
             "StorageDepositReturnUnlockCondition",
             stardust::storage_deposit_return_unlock_condition::StorageDepositReturnUnlockCondition
         ),
+    ];
+    entries.extend(unstable_entries());
+    entries
+}
+
+#[cfg(feature = "unstable")]
+fn unstable_entries() -> Vec<Entry> {
+    use Package::*;
+    vec![
+        entry!(
+            IotaFramework,
+            "signature_scheme",
+            "SignatureScheme",
+            iota_framework::signature_scheme::SignatureScheme
+        ),
+        entry!(
+            IotaFramework,
+            "public_key",
+            "PublicKey",
+            iota_framework::public_key::PublicKey
+        ),
+        entry!(
+            IotaFramework,
+            "builtin_authenticator_functions",
+            "PublicKeyAttached",
+            iota_framework::builtin_authenticator_functions::PublicKeyAttached
+        ),
+        entry!(
+            IotaFramework,
+            "builtin_authenticator_functions",
+            "PublicKeyDetached",
+            iota_framework::builtin_authenticator_functions::PublicKeyDetached
+        ),
+        entry!(
+            IotaFramework,
+            "builtin_authenticator_functions",
+            "PublicKeyRotated",
+            iota_framework::builtin_authenticator_functions::PublicKeyRotated
+        ),
+        entry!(
+            IotaFramework,
+            "builtin_authenticator_functions",
+            "PublicKeyFieldName",
+            iota_framework::builtin_authenticator_functions::PublicKeyFieldName
+        ),
+        entry!(
+            IotaFramework,
+            "smart_account",
+            "SmartAccount",
+            iota_framework::smart_account::SmartAccount
+        ),
+        entry!(
+            IotaFramework,
+            "smart_account",
+            "SmartAccountBuilder",
+            iota_framework::smart_account::SmartAccountBuilder
+        ),
     ]
+}
+
+#[cfg(not(feature = "unstable"))]
+fn unstable_entries() -> Vec<Entry> {
+    Vec::new()
 }
 
 // ---------------------------------------------------------------------------
@@ -1198,15 +1260,15 @@ fn check_struct(
         .filter(|f| !matches!(f.shape, Shape::Phantom))
         .collect();
 
-    if rust_fields.len() != move_def.fields.len() {
+    if rust_fields.len() != move_def.fields.0.len() {
         return Err(format!(
             "{move_module}::{move_struct}: field count mismatch — Rust has {} (after phantom filter), Move has {}",
             rust_fields.len(),
-            move_def.fields.len()
+            move_def.fields.0.len()
         ));
     }
 
-    for (rf, mf) in rust_fields.iter().zip(move_def.fields.iter()) {
+    for (rf, mf) in rust_fields.iter().zip(move_def.fields.0.values()) {
         let move_name: &str = mf.name.as_ref().as_str();
         if rf.name != move_name {
             return Err(format!(
@@ -1245,7 +1307,7 @@ fn check_enum(
         ));
     }
 
-    for (rv, mv) in rust_variants.iter().zip(move_def.variants.iter()) {
+    for (rv, mv) in rust_variants.iter().zip(move_def.variants.values()) {
         let move_variant_name: &str = mv.name.as_ref().as_str();
         if rv.name != move_variant_name {
             return Err(format!(
@@ -1259,15 +1321,15 @@ fn check_enum(
             .iter()
             .filter(|f| !matches!(f.shape, Shape::Phantom))
             .collect();
-        if rust_fields.len() != mv.fields.len() {
+        if rust_fields.len() != mv.fields.0.len() {
             return Err(format!(
                 "{move_module}::{move_enum}::{}: field count mismatch — Rust has {} (after phantom filter), Move has {}",
                 rv.name,
                 rust_fields.len(),
-                mv.fields.len()
+                mv.fields.0.len()
             ));
         }
-        for (rf, mf) in rust_fields.iter().zip(mv.fields.iter()) {
+        for (rf, mf) in rust_fields.iter().zip(mv.fields.0.values()) {
             let move_field_name: &str = mf.name.as_ref().as_str();
             if rf.name != move_field_name {
                 return Err(format!(
@@ -1442,6 +1504,7 @@ fn shapes_match() {
 ///
 /// The file stores one record per three lines: the type name, its kind (`public struct` / `public
 /// enum`), and its `address::module` path.
+#[cfg(feature = "unstable")]
 fn published_api_types() -> std::collections::BTreeSet<(String, String, String)> {
     let manifest =
         String::from_utf8(read_artifact("published_api.txt")).expect("manifest is UTF-8");
@@ -1465,6 +1528,7 @@ fn published_api_types() -> std::collections::BTreeSet<(String, String, String)>
 }
 
 /// The `(address, module, name)` keys currently registered in [`expected_entries`].
+#[cfg(feature = "unstable")]
 fn registered_types() -> std::collections::BTreeSet<(String, String, String)> {
     expected_entries()
         .iter()
@@ -1482,6 +1546,8 @@ fn registered_types() -> std::collections::BTreeSet<(String, String, String)> {
 /// correspond to a real published type. Without this guard a new mirror could be added but left out
 /// of [`expected_entries`] — silently skipping its shape check — or an upstream type could go
 /// unmirrored entirely, leaving [`shapes_match`]'s "exhaustive" claim unenforced.
+// The pinned published API lists the types behind `unstable`.
+#[cfg(feature = "unstable")]
 #[test]
 fn registry_matches_published_api() {
     let published = published_api_types();
