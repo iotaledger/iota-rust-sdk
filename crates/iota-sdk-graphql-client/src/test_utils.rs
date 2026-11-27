@@ -4,6 +4,8 @@
 
 //! Test utilities shared across the crate.
 
+use std::time::Duration;
+
 use crate::GraphQLClient;
 
 /// Number of coins expected from a faucet request.
@@ -31,38 +33,65 @@ pub(crate) fn backward_page() -> crate::PaginationFilter {
     }
 }
 
+pub(crate) struct SentRequest {
+    pub operation: String,
+    pub variables: serde_json::Value,
+}
+
+/// Run `send` against a local server that answers the n-th request with the n-th body of
+/// `responses` and every later one with `{}`, and return the requests in arrival order together
+/// with what `send` returned.
+pub(crate) async fn scripted<Fut: Future>(
+    responses: Vec<serde_json::Value>,
+    send: impl FnOnce(GraphQLClient) -> Fut,
+) -> (Vec<SentRequest>, Fut::Output) {
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let client = GraphQLClient::new(&format!("http://{}", listener.local_addr().unwrap())).unwrap();
+    let requests = std::sync::Mutex::new(Vec::new());
+    let serve = async {
+        let mut bodies = responses.into_iter();
+        loop {
+            let body = bodies.next().unwrap_or_else(|| serde_json::json!({}));
+            let request = answer_one_request(&listener, &body.to_string()).await;
+            requests.lock().unwrap().push(SentRequest {
+                operation: request["operationName"]
+                    .as_str()
+                    .unwrap_or_default()
+                    .to_owned(),
+                variables: request["variables"].clone(),
+            });
+        }
+    };
+    let output = tokio::select! {
+        output = tokio::time::timeout(Duration::from_secs(10), send(client)) => {
+            output.expect("send did not finish")
+        }
+        _ = serve => unreachable!(),
+    };
+    (requests.into_inner().unwrap(), output)
+}
+
 /// Run `send` against a local server that answers every request with `{}`, and return the variables
 /// of the first request that is not the service config query, which pagination sends first.
 pub(crate) async fn sent_variables<Fut: Future>(
     operation: &str,
     send: impl FnOnce(GraphQLClient) -> Fut,
 ) -> serde_json::Value {
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
-    let client = GraphQLClient::new(&format!("http://{}", listener.local_addr().unwrap())).unwrap();
-    let server = async {
-        let request = async {
-            loop {
-                let request = answer_one_request(&listener).await;
-                if request["operationName"] != "ServiceConfigQueryFragment" {
-                    assert_eq!(request["operationName"], operation);
-                    break request["variables"].clone();
-                }
-            }
-        };
-        tokio::time::timeout(std::time::Duration::from_secs(5), request)
-            .await
-            .expect("no request sent")
-    };
-    let (variables, _) = tokio::join!(server, send(client));
-    variables
+    let (requests, _) = scripted(Vec::new(), send).await;
+    let request = requests
+        .into_iter()
+        .find(|request| request.operation != "ServiceConfigQueryFragment")
+        .expect("no request sent");
+    assert_eq!(request.operation, operation);
+    request.variables
 }
 
-async fn answer_one_request(listener: &tokio::net::TcpListener) -> serde_json::Value {
+async fn answer_one_request(listener: &tokio::net::TcpListener, body: &str) -> serde_json::Value {
     use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
     let (mut stream, _) = listener.accept().await.unwrap();
     let mut request = Vec::new();
-    let body = loop {
+    let request_body = loop {
         let mut chunk = [0; 4096];
         let read = stream.read(&mut chunk).await.unwrap();
         assert!(read > 0, "connection closed before the request body");
@@ -83,10 +112,52 @@ async fn answer_one_request(listener: &tokio::net::TcpListener) -> serde_json::V
         }
     };
     stream
-        .write_all(b"HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: 2\r\nconnection: close\r\n\r\n{}")
+        .write_all(
+            format!(
+                "HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: {}\r\nconnection: close\r\n\r\n{body}",
+                body.len()
+            )
+            .as_bytes(),
+        )
         .await
         .unwrap();
-    serde_json::from_slice(&body).unwrap()
+    serde_json::from_slice(&request_body).unwrap()
+}
+
+/// A service config response whose only value of interest is `max_page_size`.
+pub(crate) fn service_config_body(max_page_size: i32) -> serde_json::Value {
+    serde_json::json!({ "data": { "serviceConfig": {
+        "defaultPageSize": 20,
+        "enabledFeatures": [],
+        "maxMoveValueDepth": 128,
+        "maxOutputNodes": 100_000,
+        "maxPageSize": max_page_size,
+        "maxQueryDepth": 20,
+        "maxQueryNodes": 300,
+        "maxQueryPayloadSize": 5_000,
+        "maxTypeArgumentDepth": 16,
+        "maxTypeArgumentWidth": 32,
+        "maxTypeNodes": 256,
+        "mutationTimeoutMs": 74_000,
+        "requestTimeoutMs": 40_000,
+    } } })
+}
+
+/// A value drawn from the type's proptest strategy with a fixed seed.
+pub(crate) fn arbitrary<T: proptest::arbitrary::Arbitrary>() -> T {
+    use proptest::strategy::{Strategy, ValueTree};
+
+    proptest::arbitrary::any::<T>()
+        .new_tree(&mut proptest::test_runner::TestRunner::deterministic())
+        .unwrap()
+        .current()
+}
+
+/// The BCS bytes of `value`, Base64-encoded as the server sends them.
+pub(crate) fn base64_bcs<T: serde::Serialize>(value: &T) -> String {
+    use base64ct::Encoding;
+
+    base64ct::Base64::encode_string(&bcs::to_bytes(value).unwrap())
 }
 
 pub(crate) fn forward_page() -> crate::PaginationFilter {

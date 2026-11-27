@@ -380,6 +380,7 @@ mod tests {
         })
         .await;
         assert_eq!(vars["filter"]["owner"], Address::FRAMEWORK.to_string());
+        assert!(vars["filter"]["type"].is_null());
         assert_backward_page(&vars);
 
         let vars = sent_variables("ObjectsQueryFragment", |client| async move {

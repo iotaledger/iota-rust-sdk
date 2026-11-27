@@ -682,14 +682,19 @@ mod tests {
     use std::time::Duration;
 
     use base64ct::Encoding;
-    use iota_types::{Address, Ed25519PublicKey, Ed25519Signature, SimpleSignature, UserSignature};
+    use iota_types::{
+        Address, Ed25519PublicKey, Ed25519Signature, SimpleSignature, TransactionEffects,
+        UserSignature,
+    };
+    use serde_json::json;
 
     use crate::{
         GraphQLClient, GraphQLError, WaitForTransaction,
         query_types::{AddressTransactionRelationship, TransactionsFilter},
         test_utils::{
-            assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
-            test_client, test_transaction,
+            arbitrary, assert_backward_page, assert_forward_page, backward_page, base64_bcs,
+            forward_page, scripted, sent_variables, service_config_body, test_client,
+            test_transaction,
         },
     };
 
@@ -793,6 +798,117 @@ mod tests {
         .await
         .expect("the query's own timeout fires first");
         assert!(matches!(result, Err(GraphQLError::Timeout)));
+    }
+
+    #[tokio::test]
+    async fn transactions_without_setters_send_no_filter_and_the_max_page_size() {
+        let (requests, _) = scripted(vec![service_config_body(50)], |client| async move {
+            let _ = client.transactions().await;
+        })
+        .await;
+        let transactions = requests.last().unwrap();
+        assert_eq!(transactions.operation, "TransactionBlocksQueryFragment");
+        assert!(transactions.variables["filter"].is_null());
+        assert_eq!(transactions.variables["first"], 50);
+
+        let (requests, _) = scripted(vec![service_config_body(50)], |client| async move {
+            let _ = client.address_transactions(Address::STD).await;
+        })
+        .await;
+        let transactions = requests.last().unwrap();
+        assert_eq!(transactions.operation, "AddressTransactionsQueryFragment");
+        assert!(transactions.variables["relation"].is_null());
+        assert!(transactions.variables["filter"].is_null());
+        assert_eq!(transactions.variables["first"], 50);
+    }
+
+    #[tokio::test]
+    async fn wait_for_transaction_polls_until_indexed() {
+        let digest = test_transaction().digest();
+        let (requests, result) = scripted(
+            vec![
+                json!({ "data": { "isTransactionIndexedOnNode": false } }),
+                json!({ "data": { "isTransactionIndexedOnNode": true } }),
+            ],
+            |client| async move {
+                client
+                    .wait_for_transaction(digest, WaitForTransaction::IndexedOnNode)
+                    .await
+            },
+        )
+        .await;
+        result.unwrap();
+        assert_eq!(requests.len(), 2);
+        assert!(
+            requests
+                .iter()
+                .all(|request| request.operation == "TransactionBlockIndexedQueryFragment")
+        );
+    }
+
+    #[tokio::test]
+    async fn wait_for_transaction_polls_until_finalized() {
+        let digest = test_transaction().digest();
+        let (requests, result) = scripted(
+            vec![
+                json!({ "data": { "transactionBlock": null } }),
+                json!({ "data": { "transactionBlock": { "effects": { "checkpoint": null } } } }),
+                json!({ "data": { "transactionBlock": { "effects": { "checkpoint": { "bcs": null } } } } }),
+            ],
+            |client| async move {
+                client
+                    .wait_for_transaction(digest, WaitForTransaction::Finalized)
+                    .await
+            },
+        )
+        .await;
+        result.unwrap();
+        assert_eq!(requests.len(), 3);
+        assert!(
+            requests
+                .iter()
+                .all(|request| request.operation == "TransactionBlockCheckpointQueryFragment")
+        );
+    }
+
+    #[tokio::test]
+    async fn execute_transaction_returns_the_effects_and_then_waits() {
+        let transaction = test_transaction();
+        let digest = transaction.digest();
+        let signature = UserSignature::Simple(SimpleSignature::Ed25519 {
+            signature: Ed25519Signature::new([1; 64]),
+            public_key: Ed25519PublicKey::new([2; 32]),
+        });
+        let effects: TransactionEffects = arbitrary();
+        let executed = json!({
+            "data": { "executeTransactionBlock": { "effects": { "bcs": base64_bcs(&effects) } } }
+        });
+        let (requests, result) = scripted(
+            vec![
+                executed,
+                json!({ "data": { "isTransactionIndexedOnNode": true } }),
+            ],
+            |client| async move {
+                client
+                    .execute_transaction(&[signature], &transaction)
+                    .wait_for(WaitForTransaction::IndexedOnNode)
+                    .await
+            },
+        )
+        .await;
+        assert_eq!(result.unwrap(), effects);
+        assert_eq!(requests[1].variables["digest"], digest.to_string());
+        let operations: Vec<_> = requests
+            .iter()
+            .map(|request| request.operation.as_str())
+            .collect();
+        assert_eq!(
+            operations,
+            [
+                "ExecuteTransactionQueryFragment",
+                "TransactionBlockIndexedQueryFragment"
+            ]
+        );
     }
 
     fn sent_by_framework() -> TransactionsFilter {

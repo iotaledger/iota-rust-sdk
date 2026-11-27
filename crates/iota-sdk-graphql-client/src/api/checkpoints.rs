@@ -227,9 +227,26 @@ mod tests {
     use iota_types::CheckpointDigest;
 
     use crate::test_utils::{
-        assert_backward_page, assert_forward_page, backward_page, forward_page, sent_variables,
-        test_client,
+        assert_backward_page, assert_forward_page, backward_page, forward_page, scripted,
+        sent_variables, service_config_body, test_client,
     };
+
+    #[tokio::test]
+    async fn checkpoints_without_setters_sends_the_max_page_size_forward() {
+        let (requests, _) = scripted(vec![service_config_body(50)], |client| async move {
+            let _ = client.checkpoints().await;
+        })
+        .await;
+        let [config, checkpoints] = &requests[..] else {
+            panic!("{} requests", requests.len());
+        };
+        assert_eq!(config.operation, "ServiceConfigQueryFragment");
+        assert_eq!(checkpoints.operation, "CheckpointsQueryFragment");
+        assert_eq!(checkpoints.variables["first"], 50);
+        assert!(checkpoints.variables["after"].is_null());
+        assert!(checkpoints.variables["last"].is_null());
+        assert!(checkpoints.variables["before"].is_null());
+    }
 
     #[tokio::test]
     async fn total_transaction_blocks_send_the_checkpoint() {
