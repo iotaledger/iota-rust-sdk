@@ -208,6 +208,9 @@ pub enum TransactionBlockKindInput {
     ConsensusCommitPrologueV1,
     RandomnessStateUpdate,
     EndOfEpochTx,
+    /// A claim of the sender's address as an account object.
+    #[cfg(feature = "unstable")]
+    ClaimAccount,
 }
 
 /// The relationship between an address and a transaction.
