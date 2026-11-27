@@ -384,13 +384,21 @@ pub enum ExecutionError {
     AccountNotSharedObject { object_id: ObjectId },
     /// The transaction named as a dependency did not execute successfully, so this transaction
     /// failed without running its commands.
-    // Keep this variant last while it is gated: BCS tags follow variant order, so a variant after
-    // it would get another tag without `unstable`.
+    // Keep the gated variants last while they are gated: BCS tags follow variant order, so a
+    // variant after them would get another tag without `unstable`.
     #[cfg(feature = "unstable")]
     #[error(
         "Transaction {dependency} that this transaction depends on did not execute successfully"
     )]
     TransactionDependencyFailed { dependency: TransactionDigest },
+    /// Transaction is canceled because the transaction named as its dependency was still pending
+    /// when this transaction could not be deferred any longer. A higher gas price does not make
+    /// the dependency execute sooner; the transaction can be submitted again.
+    #[cfg(feature = "unstable")]
+    #[error(
+        "Transaction is canceled because the transaction it depends on was still pending. It can be submitted again."
+    )]
+    ExecutionCanceledDueToPendingTransactionDependency,
 }
 
 impl ExecutionError {
@@ -449,7 +457,10 @@ impl ExecutionError {
 
 #[cfg(feature = "unstable")]
 impl ExecutionError {
-    crate::def_is!(TransactionDependencyFailed);
+    crate::def_is!(
+        TransactionDependencyFailed,
+        ExecutionCanceledDueToPendingTransactionDependency,
+    );
 }
 
 /// Location in move bytecode where an error occurred

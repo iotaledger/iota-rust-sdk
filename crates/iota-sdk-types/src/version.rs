@@ -87,6 +87,12 @@ impl Version {
 
     pub const RANDOMNESS_UNAVAILABLE: Self = Self(Self::MAX_VALID_EXCL.0 + 3);
 
+    /// Special version that is assigned to the gas object of a transaction which is canceled
+    /// because the transaction it depends on was still pending when it could not be deferred any
+    /// longer.
+    #[cfg(feature = "unstable")]
+    pub const TRANSACTION_DEPENDENCY_PENDING: Self = Self(Self::MAX_VALID_EXCL.0 + 4);
+
     // NOTE: if you want to add new Version constants used for cancellation reasons different than
     // those used for cancellations due to shared object congestion, please make sure their offset
     // is less than CONGESTED_BASE_OFFSET_FOR_GAS_PRICE_FEEDBACK
@@ -196,7 +202,15 @@ impl Version {
     /// Checks if this version is canceled, i.e., the corresponding object appears in a canceled
     /// transaction.
     pub fn is_canceled(&self) -> bool {
-        *self == Self::CANCELED_READ || *self == Self::RANDOMNESS_UNAVAILABLE || self.is_congested()
+        #[cfg(feature = "unstable")]
+        let transaction_dependency_pending = *self == Self::TRANSACTION_DEPENDENCY_PENDING;
+        #[cfg(not(feature = "unstable"))]
+        let transaction_dependency_pending = false;
+
+        *self == Self::CANCELED_READ
+            || *self == Self::RANDOMNESS_UNAVAILABLE
+            || transaction_dependency_pending
+            || self.is_congested()
     }
 
     /// Checks if this version is valid, i.e., the corresponding object does not appear in a
@@ -263,5 +277,21 @@ impl PartialOrd<u64> for Version {
 impl PartialOrd<Version> for u64 {
     fn partial_cmp(&self, other: &Version) -> Option<std::cmp::Ordering> {
         self.partial_cmp(&other.0)
+    }
+}
+
+#[cfg(all(test, feature = "unstable"))]
+mod tests {
+    #[cfg(target_arch = "wasm32")]
+    use wasm_bindgen_test::wasm_bindgen_test as test;
+
+    use super::*;
+
+    #[test]
+    fn transaction_dependency_pending_is_a_cancellation_without_a_gas_price() {
+        let version = Version::TRANSACTION_DEPENDENCY_PENDING;
+        assert!(version.is_canceled());
+        assert!(!version.is_valid());
+        assert!(!version.is_congested());
     }
 }
