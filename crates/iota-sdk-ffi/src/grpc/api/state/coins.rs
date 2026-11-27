@@ -28,6 +28,9 @@ impl GrpcClient {
     /// List a single page of coins owned by an address, optionally filtered by coin type (the inner
     /// type `T` of `Coin<T>`). If `coin_type` is `None`, coins of all types are returned.
     ///
+    /// Results are only guaranteed to be up to date with transactions that are finalized
+    /// (`WaitForTransaction::Finalized`).
+    ///
     /// Pass the returned `next_page_token` back in to retrieve the next page.
     #[uniffi::method(default(coin_type = None, page_size = None, page_token = None))]
     pub async fn coins(

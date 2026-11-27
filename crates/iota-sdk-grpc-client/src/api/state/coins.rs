@@ -69,6 +69,11 @@ fn coin_object_type(coin_type: Option<StructTag>) -> String {
 impl GrpcClient {
     /// List coins owned by an address.
     ///
+    /// Results are only guaranteed to be up to date with transactions that are finalized
+    /// ([`WaitForTransaction::Finalized`]).
+    ///
+    /// [`WaitForTransaction::Finalized`]: iota_transaction_builder::WaitForTransaction::Finalized
+    ///
     /// Returns a query builder. Await it directly for a single page (with access to
     /// `next_page_token`), or call `.collect(limit)` to auto-paginate through all results. Filter
     /// by coin type with [`coin_type`](GetCoinsQuery::coin_type) and page with

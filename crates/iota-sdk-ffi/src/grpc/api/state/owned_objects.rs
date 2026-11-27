@@ -30,6 +30,9 @@ pub struct GrpcOwnedObjectPage {
 impl GrpcClient {
     /// List a single page of objects owned by an address, optionally filtered by object type.
     ///
+    /// Results are only guaranteed to be up to date with transactions that are finalized
+    /// (`WaitForTransaction::Finalized`).
+    ///
     /// Pass the returned `next_page_token` back in to retrieve the next page.
     ///
     /// The optional `read_mask` controls which fields the server returns. If `None`, the object

@@ -53,6 +53,11 @@ impl ListOwnedObjectsQuery {
 impl GrpcClient {
     /// List objects owned by an address.
     ///
+    /// Results are only guaranteed to be up to date with transactions that are finalized
+    /// ([`WaitForTransaction::Finalized`]).
+    ///
+    /// [`WaitForTransaction::Finalized`]: iota_transaction_builder::WaitForTransaction::Finalized
+    ///
     /// Returns a query builder. Await it directly for a single page (with access to
     /// `next_page_token`), or call `.collect(limit)` to auto-paginate through all results. Filter
     /// by type with [`object_type`](ListOwnedObjectsQuery::object_type), choose the returned fields
