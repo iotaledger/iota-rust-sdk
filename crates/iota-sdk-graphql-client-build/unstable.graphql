@@ -44,3 +44,17 @@ extend enum TransactionBlockKindInput {
 	"""
 	CLAIM_ACCOUNT
 }
+
+# Transaction dependency inputs, iotaledger/iota#13499.
+"""
+The transaction this transaction depends on: it executes after that
+transaction, and fails if that transaction failed. No command can use this input.
+"""
+type TransactionDependencyInput {
+	"""
+	Digest of the transaction depended on.
+	"""
+	digest: String!
+}
+
+extend union TransactionInput = TransactionDependencyInput

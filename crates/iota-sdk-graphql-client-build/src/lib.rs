@@ -304,6 +304,7 @@ mod tests {
             "ClaimAccountTransaction",
             "SmartAccountClaim",
             "CLAIM_ACCOUNT",
+            "TransactionDependencyInput",
         ] {
             assert!(!schema.contains(name), "`{name}` is still in the schema");
         }
