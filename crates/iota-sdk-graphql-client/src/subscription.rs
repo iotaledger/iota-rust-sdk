@@ -334,6 +334,7 @@ where
         loop {
             match connect(cursor.clone()).await {
                 Ok(mut subscription) => {
+                    tracing::debug!(cursor = cursor.as_deref(), "subscription connected");
                     while let Some(item) = subscription.next().await {
                         match item {
                             Ok(Outcome::Item { value, cursor: next }) => {
@@ -349,18 +350,27 @@ where
                             }),
                             Ok(Outcome::Skip) => {}
                             Err(error) => {
+                                tracing::debug!(%error, "subscription failed");
                                 yield Err(error);
                                 break;
                             }
                         }
                     }
+                    tracing::debug!("subscription disconnected");
                 }
-                Err(error @ GraphQLError::OutdatedClient { .. }) => {
+                Err(error) => {
+                    tracing::debug!(%error, "subscription connect failed");
+                    let outdated = matches!(error, GraphQLError::OutdatedClient { .. });
                     yield Err(error);
-                    return;
+                    if outdated {
+                        return;
+                    }
                 }
-                Err(error) => yield Err(error),
             }
+            tracing::debug!(
+                backoff_ms = backoff.as_millis() as u64,
+                "reconnecting subscription after backoff"
+            );
             crate::wait::sleep(backoff).await;
             backoff = (backoff * 2).min(MAX_BACKOFF);
         }

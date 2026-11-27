@@ -14,6 +14,7 @@ use iota_types::{
     Address, SenderSignedTransaction, SignedTransaction, Transaction, TransactionDigest,
     TransactionEffects, UserSignature,
 };
+use tracing::Instrument;
 
 use crate::{
     GraphQLClient, TransactionDataEffects,
@@ -405,20 +406,25 @@ impl WaitForTransactionQuery {
         crate::wait::timeout(
             self.timeout.unwrap_or_else(|| Duration::from_secs(60)),
             async {
+                let mut attempt = 0u32;
                 loop {
-                    if match self.wait_for {
+                    attempt += 1;
+                    let found = match self.wait_for {
                         WaitForTransaction::IndexedOnNode => client.is_transaction_indexed_on_node(digest).await?,
                         WaitForTransaction::Finalized => client.is_transaction_finalized(digest).await?,
                         _ => unimplemented!(
                             "a new WaitForTransaction enum variant was added and needs to be handled"
                         ),
-                    } {
+                    };
+                    tracing::trace!(attempt, found, "checked transaction status");
+                    if found {
                         break Ok(());
                     }
                     crate::wait::sleep(Duration::from_millis(100)).await;
                 }
             },
         )
+        .instrument(tracing::debug_span!("wait_for_transaction", %digest))
         .await
         .map_err(|_| GraphQLError::Timeout)?
     }
